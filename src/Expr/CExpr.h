@@ -1,0 +1,179 @@
+#ifndef CEXPR_H
+#define CEXPR_H
+
+enum CExprOpType {
+  CEXPR_OP_UNKNOWN           = -1,
+  CEXPR_OP_OPEN_RBRACKET     = 0,
+  CEXPR_OP_CLOSE_RBRACKET    = 1,
+  CEXPR_OP_LOGICAL_NOT       = 2,
+  CEXPR_OP_BIT_NOT           = 3,
+  CEXPR_OP_INCREMENT         = 4,
+  CEXPR_OP_DECREMENT         = 5,
+  CEXPR_OP_UNARY_PLUS        = 6,
+  CEXPR_OP_UNARY_MINUS       = 7,
+  CEXPR_OP_POWER             = 8,
+  CEXPR_OP_TIMES             = 9,
+  CEXPR_OP_DIVIDE            = 10,
+  CEXPR_OP_MODULUS           = 11,
+  CEXPR_OP_PLUS              = 12,
+  CEXPR_OP_MINUS             = 13,
+  CEXPR_OP_BIT_LSHIFT        = 14,
+  CEXPR_OP_BIT_RSHIFT        = 15,
+  CEXPR_OP_LESS              = 16,
+  CEXPR_OP_LESS_EQUAL        = 17,
+  CEXPR_OP_GREATER           = 18,
+  CEXPR_OP_GREATER_EQUAL     = 19,
+  CEXPR_OP_EQUAL             = 20,
+  CEXPR_OP_NOT_EQUAL         = 21,
+  CEXPR_OP_APPROX_EQUAL      = 22,
+  CEXPR_OP_BIT_AND           = 23,
+  CEXPR_OP_BIT_XOR           = 24,
+  CEXPR_OP_BIT_OR            = 25,
+  CEXPR_OP_LOGICAL_AND       = 26,
+  CEXPR_OP_LOGICAL_OR        = 27,
+  CEXPR_OP_QUESTION          = 28,
+  CEXPR_OP_COLON             = 29,
+  CEXPR_OP_EQUALS            = 30,
+  CEXPR_OP_PLUS_EQUALS       = 31,
+  CEXPR_OP_MINUS_EQUALS      = 32,
+  CEXPR_OP_TIMES_EQUALS      = 33,
+  CEXPR_OP_DIVIDE_EQUALS     = 34,
+  CEXPR_OP_MODULUS_EQUALS    = 35,
+  CEXPR_OP_BIT_AND_EQUALS    = 36,
+  CEXPR_OP_BIT_XOR_EQUALS    = 37,
+  CEXPR_OP_BIT_OR_EQUALS     = 38,
+  CEXPR_OP_BIT_LSHIFT_EQUALS = 39,
+  CEXPR_OP_BIT_RSHIFT_EQUALS = 40,
+  CEXPR_OP_COMMA             = 41
+};
+
+enum CExprValueType {
+  CEXPR_VALUE_NONE    = 0,
+  CEXPR_VALUE_BOOLEAN = (1<<0),
+  CEXPR_VALUE_INTEGER = (1<<1),
+  CEXPR_VALUE_REAL    = (1<<2),
+  CEXPR_VALUE_STRING  = (1<<3),
+  CEXPR_VALUE_NULL    = (1<<4)
+};
+
+class CExprValue;
+class CExprPToken;
+class CExprIToken;
+class CExprCToken;
+class CExprEToken;
+class CExprVariable;
+class CExprFunction;
+class CExprOperator;
+
+#include <CRefPtr.h>
+#include <CAutoPtr.h>
+#include <CStrUtil.h>
+
+typedef CRefPtr<CExprValue>    CExprValuePtr;
+typedef CRefPtr<CExprPToken>   CExprPTokenPtr;
+typedef CRefPtr<CExprCToken>   CExprCTokenPtr;
+typedef CRefPtr<CExprIToken>   CExprITokenPtr;
+typedef CRefPtr<CExprEToken>   CExprETokenPtr;
+typedef CRefPtr<CExprVariable> CExprVariablePtr;
+typedef CRefPtr<CExprFunction> CExprFunctionPtr;
+typedef CRefPtr<CExprOperator> CExprOperatorPtr;
+
+typedef CExprValuePtr (*CExprFunctionProc)(const std::vector<CExprValuePtr> &values);
+
+class CExprValueBase {
+ public:
+  virtual ~CExprValueBase() { }
+
+  virtual CExprValueBase *dup() const { return 0; }
+
+  virtual bool getBooleanValue(bool        &) const { return false; }
+  virtual bool getIntegerValue(long        &) const { return false; }
+  virtual bool getRealValue   (double      &) const { return false; }
+  virtual bool getStringValue (std::string &) const { return false; }
+
+  virtual void setBooleanValue(bool               ) { assert(false); }
+  virtual void setIntegerValue(long               ) { assert(false); }
+  virtual void setRealValue   (double             ) { assert(false); }
+  virtual void setStringValue (const std::string &) { assert(false); }
+
+  virtual CExprValuePtr execUnaryOp(CExprOpType) const {
+    return CExprValuePtr();
+  }
+
+  virtual CExprValuePtr execBinaryOp(CExprValuePtr, CExprOpType) const {
+    return CExprValuePtr();
+  }
+
+  virtual void print(std::ostream &os) const {
+    os << "<null>";
+  }
+};
+
+//-------
+
+#include <CExprBValue.h>
+#include <CExprIValue.h>
+#include <CExprRValue.h>
+#include <CExprSValue.h>
+#include <CExprValue.h>
+#include <CExprVariable.h>
+#include <CExprFunction.h>
+#include <CExprOperator.h>
+#include <CExprParse.h>
+#include <CExprInterp.h>
+#include <CExprCompile.h>
+#include <CExprExecute.h>
+#include <CExprError.h>
+
+//-------
+
+#define CExprInst CExpr::instance()
+
+class CExpr {
+ public:
+  static CExpr *instance();
+
+ ~CExpr() { }
+
+  bool getDebug() const { return debug_; }
+  void setDebug(bool b) { debug_ = b; }
+
+  bool getTrace() const { return trace_; }
+  void setTrace(bool b) { trace_ = b; }
+
+  bool getDegrees() const { return degrees_; }
+  void setDegrees(bool b) { degrees_ = b; }
+
+  CExprValuePtr evaluateExpression(const std::string &str);
+
+  CExprPTokenStack parseLine(const std::string &line);
+  CExprITokenPtr   interpPTokenStack(const CExprPTokenStack &stack);
+  CExprCTokenStack compileIToken(CExprITokenPtr itoken);
+  CExprValuePtr    executeCTokenStack(const CExprCTokenStack &stack);
+
+  CExprVariablePtr getVariable(const std::string &name) const;
+  CExprVariablePtr createVariable(const std::string &name, CExprValuePtr value);
+  CExprVariablePtr createRealVariable(const std::string &name, double x);
+
+  CExprFunctionPtr lookupFunction(const std::string &name);
+
+  bool isOperatorChar(char c) const;
+  CExprOperatorPtr getOperator(CExprOpType type) const;
+
+ private:
+  CExpr();
+
+ private:
+  bool                       debug_;
+  bool                       trace_;
+  bool                       degrees_;
+  CAutoPtr<CExprParse>       parse_;
+  CAutoPtr<CExprInterp>      interp_;
+  CAutoPtr<CExprCompile>     compile_;
+  CAutoPtr<CExprExecute>     execute_;
+  CAutoPtr<CExprOperatorMgr> operatorMgr_;
+  CAutoPtr<CExprVariableMgr> variableMgr_;
+  CAutoPtr<CExprFunctionMgr> functionMgr_;
+};
+
+#endif
