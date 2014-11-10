@@ -7,12 +7,13 @@ class CExprFunctionMgr {
 
   CExprFunctionPtr lookupFunction(const std::string &name);
 
-  CExprFunctionPtr addFunction(const std::string &name, const std::string &args,
-                               CExprFunctionProc proc);
+  CExprFunctionPtr addProcFunction(const std::string &name, const std::string &args,
+                                   CExprFunctionProc proc);
 
-  void removeFunction(CExprFunctionPtr function) {
-    functions_.remove(function);
-  }
+  CExprFunctionPtr addUserFunction(const std::string &name, const std::vector<std::string> &args,
+                                   const std::string &proc);
+
+  void removeFunction(CExprFunctionPtr function);
 
  private:
   friend class CExpr;
@@ -33,36 +34,79 @@ struct CExprFunctionArg {
 
 class CExprFunction {
  public:
-  typedef std::vector<CExprFunctionArg> Args;
-  typedef std::vector<CExprValuePtr>    Values;
+  typedef std::vector<CExprValuePtr> Values;
 
  public:
-  CExprFunction(const std::string &name, const Args &args, CExprFunctionProc proc);
-  CExprFunction(const std::string &name, const std::string &argsStr, CExprFunctionProc proc);
+  CExprFunction(const std::string &name) :
+   name_(name) {
+  }
+
+  virtual ~CExprFunction() { }
 
   const std::string &getName() const { return name_; }
 
-  uint getNumArgs() const { return args_.size(); }
+  virtual uint numArgs() const = 0;
 
-  CExprValueType getArgType(uint i) const { return args_[i].type; }
+  virtual CExprValueType argType(uint) const { return CEXPR_VALUE_ANY; }
 
-  CExprValuePtr exec(const Values &values) {
-    return (*proc_)(values);
-  }
+  virtual CExprValuePtr exec(const Values &values) = 0;
 
   friend std::ostream &operator<<(std::ostream &os, const CExprFunction &fn) {
-    os << fn.name_ << "(" << ")";
+    fn.print(os);
 
     return os;
   }
+
+  virtual void print(std::ostream &os) const {
+    os << name_ << "(" << ")";
+  }
+
+ protected:
+  std::string name_;
+};
+
+class CExprProcFunction : public CExprFunction {
+ public:
+  typedef std::vector<CExprFunctionArg> Args;
+
+ public:
+  CExprProcFunction(const std::string &name, const Args &args, CExprFunctionProc proc);
+  CExprProcFunction(const std::string &name, const std::string &argsStr, CExprFunctionProc proc);
+
+  uint numArgs() const { return args_.size(); }
+
+  CExprValueType argType(uint i) const { return args_[i].type; }
+
+  CExprValuePtr exec(const Values &values);
 
  private:
   void parseArgs(const std::string &argsStr, Args &args);
 
  private:
-  std::string       name_;
   Args              args_;
   CExprFunctionProc proc_;
+};
+
+class CExprUserFunction : public CExprFunction {
+ public:
+  typedef std::vector<std::string> Args;
+
+ public:
+  CExprUserFunction(const std::string &name, const Args &args, const std::string &proc);
+
+  uint numArgs() const { return args_.size(); }
+
+  CExprValuePtr exec(const Values &values);
+
+  void print(std::ostream &os) const {
+    CExprFunction::print(os);
+
+    os << "= " << proc_;
+  }
+
+ private:
+  Args        args_;
+  std::string proc_;
 };
 
 #endif

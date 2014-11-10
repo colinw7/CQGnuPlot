@@ -94,7 +94,7 @@ drawAxis(const CAxis2D &axis, double pos, COrientation direction)
       if (direction == CORIENTATION_HORIZONTAL)
         drawXString(CPoint2D(pos1, pos ), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP   ,  8, str);
       else
-        drawYString(CPoint2D(pos , pos1), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, -8, str);
+        drawYString(CPoint2D(pos , pos1), CHALIGN_TYPE_RIGHT , 0, CVALIGN_TYPE_CENTER, -8, str);
     }
 
     /*------*/
@@ -156,7 +156,7 @@ drawAxis(const CAxis2D &axis, double pos, COrientation direction)
     if (direction == CORIENTATION_HORIZONTAL)
       drawXString(CPoint2D(pos1, pos ), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP   ,  8, str);
     else
-      drawYString(CPoint2D(pos , pos1), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, -8, str);
+      drawYString(CPoint2D(pos , pos1), CHALIGN_TYPE_RIGHT , 0, CVALIGN_TYPE_CENTER, -8, str);
   }
 
   /*------*/
@@ -170,7 +170,7 @@ drawAxis(const CAxis2D &axis, double pos, COrientation direction)
   if (direction == CORIENTATION_HORIZONTAL)
     drawXString(CPoint2D(mid, pos), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP   ,  32, astr);
   else
-    drawYString(CPoint2D(pos, mid), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, -32, astr);
+    drawYString(CPoint2D(pos, mid), CHALIGN_TYPE_RIGHT , 0, CVALIGN_TYPE_CENTER, -32, astr);
 
   /*------*/
 
@@ -190,14 +190,14 @@ drawAxisTick(const CPoint2D &pos, CDirectionType type, bool large)
   if (type == CDIRECTION_TYPE_LEFT || type == CDIRECTION_TYPE_RIGHT) {
     int dx = (type == CDIRECTION_TYPE_LEFT ? -1 : 1);
 
-    double x1 = pos.x + dx*pixelLengthToWindowLength(psize);
+    double x1 = pos.x + dx*pixelWidthToWindowWidth(psize);
 
     drawLine(pos, CPoint2D(x1, pos.y));
   }
   else {
     int dy = (type == CDIRECTION_TYPE_DOWN  ? -1 : 1);
 
-    double y1 = pos.y + dy*pixelLengthToWindowLength(psize);
+    double y1 = pos.y + dy*pixelHeightToWindowHeight(psize);
 
     drawLine(pos, CPoint2D(pos.x, y1));
   }
@@ -208,8 +208,7 @@ CDrawAxis2D::
 drawXString(const CPoint2D &pos, CHAlignType halign, int x_offset,
             CVAlignType valign, int y_offset, const std::string &str)
 {
-  /* Calculate width and height of string (max width and
-     sum of heights of all lines) */
+  /* Calculate width and height of string (max width and sum of heights of all lines) */
 
   CFontPtr font;
 
@@ -255,9 +254,9 @@ drawXString(const CPoint2D &pos, CHAlignType halign, int x_offset,
   double x1, y1;
 
   if      (valign == CVALIGN_TYPE_TOP)
-    y1 = pos.y - pixelLengthToWindowLength(height1);
+    y1 = pos.y - pixelHeightToWindowHeight(height1);
   else if (valign == CVALIGN_TYPE_CENTER)
-    y1 = pos.y - pixelLengthToWindowLength(height1/2);
+    y1 = pos.y - pixelHeightToWindowHeight(height1/2);
   else if (valign == CVALIGN_TYPE_BOTTOM)
     y1 = pos.y;
 
@@ -269,12 +268,11 @@ drawXString(const CPoint2D &pos, CHAlignType halign, int x_offset,
     if      (halign == CHALIGN_TYPE_LEFT)
       x1 = pos.x;
     else if (halign == CHALIGN_TYPE_CENTER)
-      x1 = pos.x - pixelLengthToWindowLength(width2/2);
+      x1 = pos.x - pixelWidthToWindowWidth(width2/2);
     else if (halign == CHALIGN_TYPE_RIGHT)
-      x1 = pos.x - pixelLengthToWindowLength(width2);
+      x1 = pos.x - pixelWidthToWindowWidth(width2);
 
-    CPoint2D w(x1 + pixelLengthToWindowLength(x_offset),
-               y1 - pixelLengthToWindowLength(y_offset));
+    CPoint2D w(x1 + pixelWidthToWindowWidth(x_offset), y1 - pixelHeightToWindowHeight(y_offset));
 
     fillText(w, str2);
 
@@ -289,12 +287,11 @@ drawXString(const CPoint2D &pos, CHAlignType halign, int x_offset,
   if      (halign == CHALIGN_TYPE_LEFT)
     x1 = pos.x;
   else if (halign == CHALIGN_TYPE_CENTER)
-    x1 = pos.x - pixelLengthToWindowLength(width2/2);
+    x1 = pos.x - pixelWidthToWindowWidth(width2/2);
   else if (halign == CHALIGN_TYPE_RIGHT)
-    x1 = pos.x - pixelLengthToWindowLength(width2);
+    x1 = pos.x - pixelWidthToWindowWidth(width2);
 
-  CPoint2D w(x1 + pixelLengthToWindowLength(x_offset),
-             y1 - pixelLengthToWindowLength(y_offset));
+  CPoint2D w(x1 + pixelWidthToWindowWidth(x_offset), y1 - pixelHeightToWindowHeight(y_offset));
 
   fillText(w, str1);
 }
@@ -304,8 +301,7 @@ CDrawAxis2D::
 drawYString(const CPoint2D &pos, CHAlignType halign, int x_offset,
             CVAlignType valign, int y_offset, const std::string &str)
 {
-  /* Calculate width and height of string (max width and
-     sum of heights of all lines) */
+  /* Calculate width and height of string (max width and sum of heights of all lines) */
 
   CFontPtr font;
 
@@ -353,9 +349,9 @@ drawYString(const CPoint2D &pos, CHAlignType halign, int x_offset,
   if      (halign == CHALIGN_TYPE_LEFT)
     x1 = pos.x;
   else if (halign == CHALIGN_TYPE_CENTER)
-    x1 = pos.x - pixelLengthToWindowLength(height1/2);
+    x1 = pos.x - pixelHeightToWindowHeight(height1/2);
   else if (halign == CHALIGN_TYPE_RIGHT)
-    x1 = pos.x - pixelLengthToWindowLength(height1);
+    x1 = pos.x - pixelHeightToWindowHeight(height1);
 
   while (pstr1 != std::string::npos) {
     std::string str2 = str1.substr(0, pstr1);
@@ -365,12 +361,11 @@ drawYString(const CPoint2D &pos, CHAlignType halign, int x_offset,
     if      (valign == CVALIGN_TYPE_TOP)
       y1 = pos.y;
     else if (valign == CVALIGN_TYPE_CENTER)
-      y1 = pos.y - pixelLengthToWindowLength(width2/2);
+      y1 = pos.y - pixelWidthToWindowWidth(width2/2);
     else if (valign == CVALIGN_TYPE_BOTTOM)
-      y1 = pos.y - pixelLengthToWindowLength(width2);
+      y1 = pos.y - pixelWidthToWindowWidth(width2);
 
-    CPoint2D w(x1 + pixelLengthToWindowLength(x_offset),
-               y1 - pixelLengthToWindowLength(y_offset));
+    CPoint2D w(x1 + pixelWidthToWindowWidth(x_offset), y1 - pixelHeightToWindowHeight(y_offset));
 
     fillText(w, str2);
 
@@ -385,12 +380,11 @@ drawYString(const CPoint2D &pos, CHAlignType halign, int x_offset,
   if      (valign == CVALIGN_TYPE_TOP)
     y1 = pos.y;
   else if (valign == CVALIGN_TYPE_CENTER)
-    y1 = pos.y - pixelLengthToWindowLength(width2/2);
+    y1 = pos.y - pixelWidthToWindowWidth(width2/2);
   else if (valign == CVALIGN_TYPE_BOTTOM)
-    y1 = pos.y - pixelLengthToWindowLength(width2);
+    y1 = pos.y - pixelWidthToWindowWidth(width2);
 
-  CPoint2D w(x1 + pixelLengthToWindowLength(x_offset),
-             y1 - pixelLengthToWindowLength(y_offset));
+  CPoint2D w(x1 + pixelWidthToWindowWidth(x_offset), y1 - pixelHeightToWindowHeight(y_offset));
 
   fillText(w, str1);
 }

@@ -785,10 +785,10 @@ compilePostfixExpression(CExprITokenPtr itoken)
       return;
     }
 
-    uint function_num_args = function->getNumArgs();
+    uint function_num_args = function->numArgs();
 
     for (uint i = num_args; i < function_num_args; ++i) {
-      if (! (function->getArgType(i) & CEXPR_VALUE_NULL))
+      if (! (function->argType(i) & CEXPR_VALUE_NULL))
         break;
 
       stackValue(CExprValuePtr());

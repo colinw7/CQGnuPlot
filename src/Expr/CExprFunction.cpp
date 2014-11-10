@@ -39,7 +39,7 @@ CEXPR_ANGLE1_FUNC(Cos, ::cos)
 CEXPR_ANGLE1_FUNC(Tan, ::tan)
 
 static CExprBuiltinFunction
-builtin_functions[] = {
+builtinFns[] = {
   { "sqrt" , "r" , CExprFunctionSqrt  },
   { "exp"  , "r" , CExprFunctionExp   },
   { "log"  , "r" , CExprFunctionLog   },
@@ -53,8 +53,8 @@ builtin_functions[] = {
 CExprFunctionMgr::
 CExprFunctionMgr()
 {
-  for (uint i = 0; builtin_functions[i].proc != 0; ++i)
-    addFunction(builtin_functions[i].name, builtin_functions[i].args, builtin_functions[i].proc);
+  for (uint i = 0; builtinFns[i].proc; ++i)
+    addProcFunction(builtinFns[i].name, builtinFns[i].args, builtinFns[i].proc);
 }
 
 CExprFunctionPtr
@@ -72,32 +72,51 @@ lookupFunction(const std::string &name)
 
 CExprFunctionPtr
 CExprFunctionMgr::
-addFunction(const std::string &name, const std::string &argsStr, CExprFunctionProc proc)
+addProcFunction(const std::string &name, const std::string &argsStr, CExprFunctionProc proc)
 {
-  CExprFunctionPtr function(new CExprFunction(name, argsStr, proc));
+  CExprFunctionPtr function(new CExprProcFunction(name, argsStr, proc));
 
   functions_.push_back(function);
 
   return function;
 }
 
+CExprFunctionPtr
+CExprFunctionMgr::
+addUserFunction(const std::string &name, const std::vector<std::string> &args,
+                const std::string &proc)
+{
+  CExprFunctionPtr function(new CExprUserFunction(name, args, proc));
+
+  functions_.push_back(function);
+
+  return function;
+}
+
+void
+CExprFunctionMgr::
+removeFunction(CExprFunctionPtr function)
+{
+  functions_.remove(function);
+}
+
 //----------
 
-CExprFunction::
-CExprFunction(const std::string &name, const Args &args, CExprFunctionProc proc) :
- name_(name), args_(args), proc_(proc)
+CExprProcFunction::
+CExprProcFunction(const std::string &name, const Args &args, CExprFunctionProc proc) :
+ CExprFunction(name), args_(args), proc_(proc)
 {
 }
 
-CExprFunction::
-CExprFunction(const std::string &name, const std::string &argsStr, CExprFunctionProc proc) :
- name_(name), args_(), proc_(proc)
+CExprProcFunction::
+CExprProcFunction(const std::string &name, const std::string &argsStr, CExprFunctionProc proc) :
+ CExprFunction(name), args_(), proc_(proc)
 {
   parseArgs(argsStr, args_);
 }
 
 void
-CExprFunction::
+CExprProcFunction::
 parseArgs(const std::string &argsStr, Args &args)
 {
   std::vector<std::string> args1;
@@ -128,4 +147,70 @@ parseArgs(const std::string &argsStr, Args &args)
 
     args[i].type = (CExprValueType) types;
   }
+}
+
+CExprValuePtr
+CExprProcFunction::
+exec(const Values &values)
+{
+  assert(values.size() == numArgs());
+
+  return (*proc_)(values);
+}
+
+//----------
+
+CExprUserFunction::
+CExprUserFunction(const std::string &name, const Args &args, const std::string &proc) :
+ CExprFunction(name), args_(args), proc_(proc)
+{
+}
+
+
+CExprValuePtr
+CExprUserFunction::
+exec(const Values &values)
+{
+  typedef std::map<std::string,CExprValuePtr> VarValues;
+
+  VarValues varValues;
+
+  assert(values.size() == numArgs());
+
+  // set arg values (save previous values)
+  for (uint i = 0; i < numArgs(); ++i) {
+    const std::string &arg = args_[i];
+
+    CExprVariablePtr var = CExprInst->getVariable(arg);
+
+    if (var.isValid()) {
+      varValues[arg] = var->getValue();
+
+      var->setValue(values[i]);
+    }
+    else {
+      varValues[arg] = CExprValuePtr();
+
+      CExprInst->createVariable(arg, values[i]);
+    }
+  }
+
+  // run proc
+  CExprValuePtr value = CExprInst->evaluateExpression(proc_);
+
+  // restore variables
+  for (VarValues::const_iterator p = varValues.begin(); p != varValues.end(); ++p) {
+    const std::string varName = (*p).first;
+    CExprValuePtr     value   = (*p).second;
+
+    if (value.isValid()) {
+      CExprVariablePtr var = CExprInst->getVariable(varName);
+
+      var->setValue(value);
+    }
+    else
+      CExprInst->removeVariable(varName);
+  }
+
+  return value;
 }

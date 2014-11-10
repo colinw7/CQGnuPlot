@@ -19,15 +19,17 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
 
   void setPainter(QPainter *painter);
 
-  void drawPoint(const CGnuPlot::Point &p);
-  void drawLine (const CGnuPlot::Point &p1, const CGnuPlot::Point &p2);
+  void drawPoint (const Point &p);
+  void drawLine  (const Point &p1, const Point &p2);
+  void drawBezier(const Point &p1, const Point &p2, const Point &p3, const Point &p4);
 
   void drawText(const CGnuPlot::Point &p, const std::string &text);
 
-  void windowToPixel(double x, double y, int *px, int *py);
-  void pixelToWindow(int px, int py, double *wx, double *wy);
+  void windowToPixel(double x, double y, double *px, double *py);
+  void pixelToWindow(double px, double py, double *wx, double *wy);
 
-  double pixelLengthToWindowLength(double p);
+  double pixelWidthToWindowWidth  (double p);
+  double pixelHeightToWindowHeight(double p);
 
   CFontPtr getFont() const { return font_; }
 
@@ -48,10 +50,27 @@ main(int argc, char **argv)
 {
   CQApp app(argc, argv);
 
+  bool debug = false;
+
+  std::vector<std::string> files;
+
+  for (int i = 1; i < argc; i++) {
+    if (argv[i][0] == '-') {
+      if (argv[i][1] == 'd')
+        debug = true;
+    }
+    else
+      files.push_back(argv[i]);
+  }
+
   CQGnuPlot plot;
 
-  if (argc > 1)
-    plot.load(argv[1]);
+  plot.setDebug(debug);
+
+  uint num_files = files.size();
+
+  for (uint i = 0; i < num_files; i++)
+    plot.load(files[i]);
 
   plot.resize(400, 400);
 
@@ -322,20 +341,23 @@ setPainter(QPainter *painter)
 
 void
 CQGnuPlotRenderer::
-drawPoint(const CGnuPlot::Point &point)
+drawPoint(const Point &point)
 {
-  int px, py;
+  double px, py;
 
   windowToPixel(point.x, point.y, &px, &py);
 
-  painter_->drawPoint(px, py);
+  int ss = 2;
+
+  painter_->drawLine(QPoint(px - ss, py - ss), QPoint(px + ss, py + ss));
+  painter_->drawLine(QPoint(px - ss, py + ss), QPoint(px + ss, py - ss));
 }
 
 void
 CQGnuPlotRenderer::
-drawLine(const CGnuPlot::Point &point1, const CGnuPlot::Point &point2)
+drawLine(const Point &point1, const Point &point2)
 {
-  int px1, py1, px2, py2;
+  double px1, py1, px2, py2;
 
   windowToPixel(point1.x, point1.y, &px1, &py1);
   windowToPixel(point2.x, point2.y, &px2, &py2);
@@ -345,9 +367,28 @@ drawLine(const CGnuPlot::Point &point1, const CGnuPlot::Point &point2)
 
 void
 CQGnuPlotRenderer::
+drawBezier(const Point &point1, const Point &point2, const Point &point3, const Point &point4)
+{
+  double px1, py1, px2, py2, px3, py3, px4, py4;
+
+  windowToPixel(point1.x, point1.y, &px1, &py1);
+  windowToPixel(point2.x, point2.y, &px2, &py2);
+  windowToPixel(point3.x, point3.y, &px3, &py3);
+  windowToPixel(point4.x, point4.y, &px4, &py4);
+
+  QPainterPath path;
+
+  path.moveTo(px1, py1);
+  path.cubicTo(px2, py2, px3, py3, px4, py4);
+
+  painter_->drawPath(path);
+}
+
+void
+CQGnuPlotRenderer::
 drawText(const CGnuPlot::Point &point, const std::string &text)
 {
-  int px, py;
+  double px, py;
 
   windowToPixel(point.x, point.y, &px, &py);
 
@@ -381,12 +422,12 @@ setFont(CFontPtr font)
 
 void
 CQGnuPlotRenderer::
-windowToPixel(double wx, double wy, int *px, int *py)
+windowToPixel(double wx, double wy, double *px, double *py)
 {
-  int m = pw_/10;
+  int margin = pw_/10;
 
-  int pxmin = m, pxmax = pw_ - m;
-  int pymin = m, pymax = ph_ - m;
+  int pxmin = margin, pxmax = pw_ - margin;
+  int pymin = margin, pymax = ph_ - margin;
 
   *px = ((wx - xmin_)/(xmax_ - xmin_))*(pxmax - pxmin) + pxmin;
   *py = ((wy - ymax_)/(ymin_ - ymax_))*(pymax - pymin) + pymin;
@@ -394,12 +435,12 @@ windowToPixel(double wx, double wy, int *px, int *py)
 
 void
 CQGnuPlotRenderer::
-pixelToWindow(int px, int py, double *wx, double *wy)
+pixelToWindow(double px, double py, double *wx, double *wy)
 {
-  int m = pw_/10;
+  int margin = pw_/10;
 
-  int pxmin = m, pxmax = pw_ - m;
-  int pymin = m, pymax = ph_ - m;
+  int pxmin = margin, pxmax = pw_ - margin;
+  int pymin = margin, pymax = ph_ - margin;
 
   *wx = (px - pxmin)*(xmax_ - xmin_)/(pxmax - pxmin) + xmin_;
   *wy = (py - pymin)*(ymin_ - ymax_)/(pymax - pymin) + ymax_;
@@ -407,14 +448,26 @@ pixelToWindow(int px, int py, double *wx, double *wy)
 
 double
 CQGnuPlotRenderer::
-pixelLengthToWindowLength(double p)
+pixelWidthToWindowWidth(double w)
 {
   double wx1, wy1, wx2, wy2;
 
   pixelToWindow(0, 0, &wx1, &wy1);
-  pixelToWindow(p, p, &wx2, &wy2);
+  pixelToWindow(w, w, &wx2, &wy2);
 
-  return (wx2 - wx1);
+  return fabs(wx2 - wx1);
+}
+
+double
+CQGnuPlotRenderer::
+pixelHeightToWindowHeight(double h)
+{
+  double wx1, wy1, wx2, wy2;
+
+  pixelToWindow(0, 0, &wx1, &wy1);
+  pixelToWindow(h, h, &wx2, &wy2);
+
+  return fabs(wy2 - wy1);
 }
 
 //-----------

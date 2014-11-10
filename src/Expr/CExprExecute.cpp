@@ -437,7 +437,7 @@ executeFunction(CExprFunctionPtr function)
 
   uint i = 0;
 
-  uint num_args = function->getNumArgs();
+  uint num_args = function->numArgs();
 
   for ( ; i < num_args; i++) {
     CExprETokenPtr etoken = unstackEToken();
@@ -447,10 +447,10 @@ executeFunction(CExprFunctionPtr function)
 
     CExprValuePtr value1 = etokenToValue(etoken);
 
-    if (! value1.isValid() && ! (function->getArgType(i) & CEXPR_VALUE_NULL))
+    if (! value1.isValid() && ! (function->argType(i) & CEXPR_VALUE_NULL))
       break;
 
-    if (! value1.isValid() && ! value1->convToType(function->getArgType(i)))
+    if (! value1.isValid() && ! value1->convToType(function->argType(i)))
       break;
 
     values.push_back(value1);

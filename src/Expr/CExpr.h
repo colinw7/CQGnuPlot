@@ -53,7 +53,10 @@ enum CExprValueType {
   CEXPR_VALUE_INTEGER = (1<<1),
   CEXPR_VALUE_REAL    = (1<<2),
   CEXPR_VALUE_STRING  = (1<<3),
-  CEXPR_VALUE_NULL    = (1<<4)
+  CEXPR_VALUE_NULL    = (1<<4),
+
+  CEXPR_VALUE_ANY = (CEXPR_VALUE_BOOLEAN | CEXPR_VALUE_INTEGER |
+                     CEXPR_VALUE_REAL | CEXPR_VALUE_STRING)
 };
 
 class CExprValue;
@@ -154,8 +157,11 @@ class CExpr {
   CExprVariablePtr getVariable(const std::string &name) const;
   CExprVariablePtr createVariable(const std::string &name, CExprValuePtr value);
   CExprVariablePtr createRealVariable(const std::string &name, double x);
+  void removeVariable(const std::string &name);
 
   CExprFunctionPtr lookupFunction(const std::string &name);
+  CExprFunctionPtr addFunction(const std::string &name, const std::vector<std::string> &args,
+                               const std::string &proc);
 
   bool isOperatorChar(char c) const;
   CExprOperatorPtr getOperator(CExprOpType type) const;

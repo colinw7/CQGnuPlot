@@ -27,7 +27,8 @@ class CDrawAxis2D {
   virtual void getFont(CFontPtr &font) = 0;
   virtual void setFont(CFontPtr  font) = 0;
 
-  virtual double pixelLengthToWindowLength(double p) = 0;
+  virtual double pixelWidthToWindowWidth  (double p) = 0;
+  virtual double pixelHeightToWindowHeight(double p) = 0;
 
   virtual void setLineDash(const CLineDash &dash) = 0;
 

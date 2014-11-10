@@ -106,11 +106,26 @@ createRealVariable(const std::string &name, double x)
   return variableMgr_->createVariable(name, CExprValue::createRealValue(x));
 }
 
+void
+CExpr::
+removeVariable(const std::string &name)
+{
+  variableMgr_->removeVariable(variableMgr_->getVariable(name));
+}
+
 CExprFunctionPtr
 CExpr::
 lookupFunction(const std::string &name)
 {
   return functionMgr_->lookupFunction(name);
+}
+
+CExprFunctionPtr
+CExpr::
+addFunction(const std::string &name, const std::vector<std::string> &args,
+            const std::string &proc)
+{
+  return functionMgr_->addUserFunction(name, args, proc);
 }
 
 bool
