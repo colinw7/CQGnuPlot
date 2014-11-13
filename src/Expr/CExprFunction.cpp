@@ -1,5 +1,6 @@
 #include <CExprI.h>
 #include <cmath>
+#include <cstdlib>
 
 struct CExprBuiltinFunction {
   const char        *name;
@@ -7,36 +8,59 @@ struct CExprBuiltinFunction {
   CExprFunctionProc  proc;
 };
 
-#define CEXPR_REAL1_FUNC(NAME, F) \
+#define CEXPR_REAL_1_FUNC(NAME, F) \
 static CExprValuePtr \
 CExprFunction##NAME(const CExprFunction::Values &values) { \
+  assert(values.size() == 1); \
   double real; \
-  if (values.size() < 1 || ! values[0]->getRealValue(real)) \
-    return CExprValuePtr(); \
-  double result = F(real); \
-  return CExprValue::createRealValue(result); \
+  if (values[0]->getRealValue(real)) \
+    return CExprValue::createRealValue(F(real)); \
+  return CExprValuePtr(); \
 }
 
-#define CEXPR_ANGLE1_FUNC(NAME, F) \
+#define CEXPR_ANGLE_1_FUNC(NAME, F) \
 static CExprValuePtr \
 CExprFunction##NAME(const CExprFunction::Values &values) { \
+  assert(values.size() == 1); \
   double real; \
-  if (values.size() < 1 || ! values[0]->getRealValue(real)) \
-    return CExprValuePtr(); \
-  if (CExprInst->getDegrees()) \
-    real = M_PI*real/180.0; \
-  double result = F(real); \
-  return CExprValue::createRealValue(result); \
+  if (values[0]->getRealValue(real)) { \
+    if (CExprInst->getDegrees()) \
+      real = M_PI*real/180.0; \
+    return CExprValue::createRealValue(F(real)); \
+  } \
+  return CExprValuePtr(); \
 }
 
-CEXPR_REAL1_FUNC(Sqrt , ::sqrt)
-CEXPR_REAL1_FUNC(Exp  , ::exp)
-CEXPR_REAL1_FUNC(Log  , ::log)
-CEXPR_REAL1_FUNC(Log10, ::log10)
+#define CEXPR_REAL_INTEGER_1_FUNC(NAME, RF, IF) \
+static CExprValuePtr \
+CExprFunction##NAME(const CExprFunction::Values &values) { \
+  assert(values.size() == 1); \
+  if      (values[0]->isRealValue()) { \
+    double real; \
+    if (values[0]->getRealValue(real)) \
+      return CExprValue::createRealValue(RF(real)); \
+  } \
+  else if (values[0]->isIntegerValue()) { \
+    long integer; \
+    if (values[0]->getIntegerValue(integer)) \
+      return CExprValue::createIntegerValue(IF(integer)); \
+  } \
+  else { \
+    assert(false); \
+  } \
+  return CExprValuePtr(); \
+}
 
-CEXPR_ANGLE1_FUNC(Sin, ::sin)
-CEXPR_ANGLE1_FUNC(Cos, ::cos)
-CEXPR_ANGLE1_FUNC(Tan, ::tan)
+CEXPR_REAL_1_FUNC(Sqrt , ::sqrt)
+CEXPR_REAL_1_FUNC(Exp  , ::exp)
+CEXPR_REAL_1_FUNC(Log  , ::log)
+CEXPR_REAL_1_FUNC(Log10, ::log10)
+
+CEXPR_ANGLE_1_FUNC(Sin, ::sin)
+CEXPR_ANGLE_1_FUNC(Cos, ::cos)
+CEXPR_ANGLE_1_FUNC(Tan, ::tan)
+
+CEXPR_REAL_INTEGER_1_FUNC(Abs, ::fabs, ::abs)
 
 static CExprBuiltinFunction
 builtinFns[] = {
@@ -47,25 +71,28 @@ builtinFns[] = {
   { "sin"  , "r" , CExprFunctionSin   },
   { "cos"  , "r" , CExprFunctionCos   },
   { "tan"  , "r" , CExprFunctionTan   },
+  { "abs"  , "ri", CExprFunctionAbs   },
   { ""     , ""  , 0                  }
 };
 
 CExprFunctionMgr::
 CExprFunctionMgr()
 {
-  for (uint i = 0; builtinFns[i].proc; ++i)
-    addProcFunction(builtinFns[i].name, builtinFns[i].args, builtinFns[i].proc);
+  for (uint i = 0; builtinFns[i].proc; ++i) {
+    CExprFunctionPtr function =
+      addProcFunction(builtinFns[i].name, builtinFns[i].args, builtinFns[i].proc);
+
+    function->setBuiltin(true);
+  }
 }
 
 CExprFunctionPtr
 CExprFunctionMgr::
-lookupFunction(const std::string &name)
+getFunction(const std::string &name)
 {
-  FunctionList::const_iterator p1, p2;
-
-  for (p1 = functions_.begin(), p2 = functions_.end(); p1 != p2; ++p1)
-    if ((*p1)->getName() == name)
-      return *p1;
+  for (FunctionList::const_iterator p = functions_.begin(); p != functions_.end(); ++p)
+    if ((*p)->name() == name)
+      return *p;
 
   return CExprFunctionPtr();
 }
@@ -74,7 +101,26 @@ CExprFunctionPtr
 CExprFunctionMgr::
 addProcFunction(const std::string &name, const std::string &argsStr, CExprFunctionProc proc)
 {
-  CExprFunctionPtr function(new CExprProcFunction(name, argsStr, proc));
+  Args args;
+
+  (void) parseArgs(argsStr, args);
+
+  CExprFunctionPtr function(new CExprProcFunction(name, args, proc));
+
+  functions_.push_back(function);
+
+  return function;
+}
+
+CExprFunctionPtr
+CExprFunctionMgr::
+addObjFunction(const std::string &name, const std::string &argsStr, CExprFunctionObj &proc)
+{
+  Args args;
+
+  (void) parseArgs(argsStr, args);
+
+  CExprFunctionPtr function(new CExprObjFunction(name, args, proc));
 
   functions_.push_back(function);
 
@@ -100,25 +146,20 @@ removeFunction(CExprFunctionPtr function)
   functions_.remove(function);
 }
 
-//----------
-
-CExprProcFunction::
-CExprProcFunction(const std::string &name, const Args &args, CExprFunctionProc proc) :
- CExprFunction(name), args_(args), proc_(proc)
-{
-}
-
-CExprProcFunction::
-CExprProcFunction(const std::string &name, const std::string &argsStr, CExprFunctionProc proc) :
- CExprFunction(name), args_(), proc_(proc)
-{
-  parseArgs(argsStr, args_);
-}
-
 void
-CExprProcFunction::
+CExprFunctionMgr::
+getFunctionNames(std::vector<std::string> &names) const
+{
+  for (FunctionList::const_iterator p = functions_.begin(); p != functions_.end(); ++p)
+    names.push_back((*p)->name());
+}
+
+bool
+CExprFunctionMgr::
 parseArgs(const std::string &argsStr, Args &args)
 {
+  bool rc = true;
+
   std::vector<std::string> args1;
 
   CStrUtil::addTokens(argsStr, args1, ", ");
@@ -143,10 +184,22 @@ parseArgs(const std::string &argsStr, Args &args)
         types |= CEXPR_VALUE_STRING;
       else if (args1[i][j] == 'n')
         types |= CEXPR_VALUE_NULL;
+      else
+        rc = false;
     }
 
     args[i].type = (CExprValueType) types;
   }
+
+  return rc;
+}
+
+//----------
+
+CExprProcFunction::
+CExprProcFunction(const std::string &name, const Args &args, CExprFunctionProc proc) :
+ CExprFunction(name), args_(args), proc_(proc)
+{
 }
 
 CExprValuePtr
@@ -156,6 +209,23 @@ exec(const Values &values)
   assert(values.size() == numArgs());
 
   return (*proc_)(values);
+}
+
+//----------
+
+CExprObjFunction::
+CExprObjFunction(const std::string &name, const Args &args, CExprFunctionObj &proc) :
+ CExprFunction(name), args_(args), proc_(proc)
+{
+}
+
+CExprValuePtr
+CExprObjFunction::
+exec(const Values &values)
+{
+  assert(values.size() == numArgs());
+
+  return proc_(values);
 }
 
 //----------

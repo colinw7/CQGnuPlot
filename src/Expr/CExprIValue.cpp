@@ -40,10 +40,18 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
     }
     case CEXPR_OP_TIMES:
       return CExprValue::createIntegerValue(integer_ * irhs);
-    case CEXPR_OP_DIVIDE:
+    case CEXPR_OP_DIVIDE: {
+      // divide by zero
+      if (irhs == 0) return CExprValuePtr();
+
       return CExprValue::createIntegerValue(integer_ / irhs);
-    case CEXPR_OP_MODULUS:
+    }
+    case CEXPR_OP_MODULUS: {
+      // divide by zero
+      if (irhs == 0) return CExprValuePtr();
+
       return CExprValue::createIntegerValue(integer_ % irhs);
+    }
     case CEXPR_OP_PLUS:
       return CExprValue::createIntegerValue(integer_ + irhs);
     case CEXPR_OP_MINUS:

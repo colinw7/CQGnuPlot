@@ -778,7 +778,7 @@ compilePostfixExpression(CExprITokenPtr itoken)
 
     const std::string &identifier = itoken0->getIdentifier();
 
-    CExprFunctionPtr function = CExprInst->lookupFunction(identifier);
+    CExprFunctionPtr function = CExprInst->getFunction(identifier);
 
     if (! function.isValid()) {
       setLastError("Invalid Function");

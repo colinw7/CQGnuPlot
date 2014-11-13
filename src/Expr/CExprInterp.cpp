@@ -56,7 +56,7 @@ class CExprInterpImpl {
   void           addITokenToType(CExprITokenPtr, CExprITokenPtr);
   CExprITokenPtr collapseITokenToType(CExprITokenPtr, CExprITokenType);
   void           deleteCollapsedIToken(CExprITokenPtr, CExprITokenPtr);
-  bool           isOperatorIToken(CExprITokenPtr, CExprOpType);
+  bool           isOperatorIToken(const CExprITokenPtr &itoken, CExprOpType type);
   bool           isIdentifierIToken(CExprITokenPtr);
   bool           isIntegerIToken(CExprITokenPtr);
   bool           isRealIToken(CExprITokenPtr);
@@ -303,7 +303,7 @@ readAssignmentExpression()
 
 /*
  * <conditional_expression>:= <logical_or_expression>
- * <conditional_expression>:= <logical_or_expression> ?  <expression> : <conditional_expression>
+ * <conditional_expression>:= <logical_or_expression> ? <expression> : <conditional_expression>
  */
 
 CExprITokenPtr
@@ -1302,7 +1302,7 @@ deleteCollapsedIToken(CExprITokenPtr itoken, CExprITokenPtr itoken1)
 
 bool
 CExprInterpImpl::
-isOperatorIToken(CExprITokenPtr itoken, CExprOpType id)
+isOperatorIToken(const CExprITokenPtr &itoken, CExprOpType id)
 {
   if (! itoken.isValid())
     return false;

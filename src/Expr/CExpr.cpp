@@ -113,11 +113,18 @@ removeVariable(const std::string &name)
   variableMgr_->removeVariable(variableMgr_->getVariable(name));
 }
 
+void
+CExpr::
+getVariableNames(std::vector<std::string> &names) const
+{
+  variableMgr_->getVariableNames(names);
+}
+
 CExprFunctionPtr
 CExpr::
-lookupFunction(const std::string &name)
+getFunction(const std::string &name)
 {
-  return functionMgr_->lookupFunction(name);
+  return functionMgr_->getFunction(name);
 }
 
 CExprFunctionPtr
@@ -126,6 +133,20 @@ addFunction(const std::string &name, const std::vector<std::string> &args,
             const std::string &proc)
 {
   return functionMgr_->addUserFunction(name, args, proc);
+}
+
+CExprFunctionPtr
+CExpr::
+addFunction(const std::string &name, const std::string &argsStr, CExprFunctionObj &func)
+{
+  return functionMgr_->addObjFunction(name, argsStr, func);
+}
+
+void
+CExpr::
+getFunctionNames(std::vector<std::string> &names) const
+{
+  functionMgr_->getFunctionNames(names);
 }
 
 bool

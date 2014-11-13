@@ -203,7 +203,7 @@ executeQuestionOperator()
   CExprETokenPtr etoken2 = unstackEToken();
   CExprETokenPtr etoken3 = unstackEToken();
 
-  if (! etoken1.isValid() || ! ! etoken2.isValid() || ! etoken3.isValid())
+  if (! etoken1.isValid())
     return;
 
   CExprValuePtr value1 = etokenToValue(etoken1);
@@ -218,10 +218,18 @@ executeQuestionOperator()
 
   CExprValuePtr value2;
 
-  if (flag)
+  if (flag) {
+    if (! etoken2.isValid())
+      return;
+
     value2 = etokenToValue(etoken2);
-  else
+  }
+  else {
+    if (! etoken3.isValid())
+      return;
+
     value2 = etokenToValue(etoken3);
+  }
 
   if (! value2.isValid())
     return;

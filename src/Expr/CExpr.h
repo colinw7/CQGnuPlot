@@ -158,10 +158,14 @@ class CExpr {
   CExprVariablePtr createVariable(const std::string &name, CExprValuePtr value);
   CExprVariablePtr createRealVariable(const std::string &name, double x);
   void removeVariable(const std::string &name);
+  void getVariableNames(std::vector<std::string> &names) const;
 
-  CExprFunctionPtr lookupFunction(const std::string &name);
+  CExprFunctionPtr getFunction(const std::string &name);
   CExprFunctionPtr addFunction(const std::string &name, const std::vector<std::string> &args,
                                const std::string &proc);
+  CExprFunctionPtr addFunction(const std::string &name, const std::string &argsStr,
+                               CExprFunctionObj &proc);
+  void getFunctionNames(std::vector<std::string> &names) const;
 
   bool isOperatorChar(char c) const;
   CExprOperatorPtr getOperator(CExprOpType type) const;
