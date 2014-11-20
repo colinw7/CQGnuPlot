@@ -2,7 +2,7 @@
 #include <cstring>
 
 /*
- *   CExprOperator Token        | Precedence   | Associativity
+ *   Operator Token        | Precedence   | Associativity
  * ------------------------+--------------+--------------
  *                         |              |
  *  ( )                    |  16          |  L -> R
@@ -73,11 +73,14 @@ operator_data[] = {
   { CEXPR_OP_BIT_OR_EQUALS    , "|=" , },
   { CEXPR_OP_BIT_LSHIFT_EQUALS, "<<=", },
   { CEXPR_OP_BIT_RSHIFT_EQUALS, ">>=", },
+#ifdef GNUPLOT_EXPR
+  { CEXPR_OP_OPEN_SBRACKET    , "["  , },
+  { CEXPR_OP_CLOSE_SBRACKET   , "]"  , },
+  { CEXPR_OP_CONCAT           , "."  , },
+#endif
   { CEXPR_OP_COMMA            , ","  , },
   { CEXPR_OP_UNKNOWN          , 0    , }
 };
-
-static char operator_chars [] = "()!~*/%+-<>=!&^|?:,";
 
 CExprOperatorMgr::
 CExprOperatorMgr()
@@ -99,15 +102,30 @@ getOperator(CExprOpType type) const
   return CExprOperatorPtr();
 }
 
-bool
-CExprOperatorMgr::
-isOperatorChar(char c) const
-{
-  return (strchr(operator_chars, c) != 0);
-}
+//------
 
 CExprOperator::
 CExprOperator(CExprOpType type, const std::string &name) :
  type_(type), name_(name)
 {
+}
+
+bool
+CExprOperator::
+isOperatorChar(char c)
+{
+#ifdef GNUPLOT_EXPR
+  static char operator_chars[] = "()!~*/%+-<>=!&^|?:,[].";
+#else
+  static char operator_chars[] = "()!~*/%+-<>=!&^|?:,";
+#endif
+
+  return (strchr(operator_chars, c) != 0);
+}
+
+bool
+CExprOperator::
+isOperatorStr(char c)
+{
+  return (c == 'n' || c == 'e');
 }

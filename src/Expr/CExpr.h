@@ -44,7 +44,12 @@ enum CExprOpType {
   CEXPR_OP_BIT_OR_EQUALS     = 38,
   CEXPR_OP_BIT_LSHIFT_EQUALS = 39,
   CEXPR_OP_BIT_RSHIFT_EQUALS = 40,
-  CEXPR_OP_COMMA             = 41
+#ifdef GNUPLOT_EXPR
+  CEXPR_OP_OPEN_SBRACKET     = 41,
+  CEXPR_OP_CLOSE_SBRACKET    = 42,
+  CEXPR_OP_CONCAT            = 43,
+#endif
+  CEXPR_OP_COMMA             = 44
 };
 
 enum CExprValueType {
@@ -107,6 +112,10 @@ class CExprValueBase {
     return CExprValuePtr();
   }
 
+  virtual CExprValuePtr subscript(const std::vector<CExprValuePtr> &) const {
+    return CExprValuePtr();
+  }
+
   virtual void print(std::ostream &os) const {
     os << "<null>";
   }
@@ -147,12 +156,15 @@ class CExpr {
   bool getDegrees() const { return degrees_; }
   void setDegrees(bool b) { degrees_ = b; }
 
+  bool evaluateExpression(const std::string &str, std::vector<CExprValuePtr> &values);
   CExprValuePtr evaluateExpression(const std::string &str);
 
   CExprPTokenStack parseLine(const std::string &line);
   CExprITokenPtr   interpPTokenStack(const CExprPTokenStack &stack);
   CExprCTokenStack compileIToken(CExprITokenPtr itoken);
-  CExprValuePtr    executeCTokenStack(const CExprCTokenStack &stack);
+
+  bool executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values);
+  CExprValuePtr executeCTokenStack(const CExprCTokenStack &stack);
 
   CExprVariablePtr getVariable(const std::string &name) const;
   CExprVariablePtr createVariable(const std::string &name, CExprValuePtr value);
@@ -164,11 +176,15 @@ class CExpr {
   CExprFunctionPtr addFunction(const std::string &name, const std::vector<std::string> &args,
                                const std::string &proc);
   CExprFunctionPtr addFunction(const std::string &name, const std::string &argsStr,
-                               CExprFunctionObj &proc);
+                               CExprFunctionObj *proc);
   void getFunctionNames(std::vector<std::string> &names) const;
 
-  bool isOperatorChar(char c) const;
   CExprOperatorPtr getOperator(CExprOpType type) const;
+
+  CExprValuePtr createBooleanValue(bool b);
+  CExprValuePtr createIntegerValue(long i);
+  CExprValuePtr createRealValue(double r);
+  CExprValuePtr createStringValue(const std::string &s);
 
  private:
   CExpr();
@@ -184,6 +200,58 @@ class CExpr {
   CAutoPtr<CExprOperatorMgr> operatorMgr_;
   CAutoPtr<CExprVariableMgr> variableMgr_;
   CAutoPtr<CExprFunctionMgr> functionMgr_;
+};
+
+//------
+
+template<typename T>
+class CExprUtil {
+ public:
+  static bool getTypeValue(CExprValuePtr value, T &v);
+
+  static CExprValuePtr createValue(const T &v);
+
+  static std::string argTypeStr();
+};
+
+template<>
+class CExprUtil<bool> {
+ public:
+  static bool getTypeValue(CExprValuePtr value, bool &b) { return value->getBooleanValue(b); }
+
+  static CExprValuePtr createValue(const bool &b) { return CExprInst->createBooleanValue(b); }
+
+  static std::string argTypeStr() { return "b"; }
+};
+
+template<>
+class CExprUtil<long> {
+ public:
+  static bool getTypeValue(CExprValuePtr value, long &i) { return value->getIntegerValue(i); }
+
+  static CExprValuePtr createValue(const long &i) { return CExprInst->createIntegerValue(i); }
+
+  static std::string argTypeStr() { return "i"; }
+};
+
+template<>
+class CExprUtil<double> {
+ public:
+  static bool getTypeValue(CExprValuePtr value, double &r) { return value->getRealValue(r); }
+
+  static CExprValuePtr createValue(const double &r) { return CExprInst->createRealValue(r); }
+
+  static std::string argTypeStr() { return "r"; }
+};
+
+template<>
+class CExprUtil<std::string> {
+ public:
+  static bool getTypeValue(CExprValuePtr value, std::string &s) { return value->getStringValue(s); }
+
+  static CExprValuePtr createValue(const std::string &s) { return CExprInst->createStringValue(s); }
+
+  static std::string argTypeStr() { return "s"; }
 };
 
 #endif

@@ -8,11 +8,11 @@ execUnaryOp(CExprOpType op) const
 {
   switch (op) {
     case CEXPR_OP_UNARY_PLUS:
-      return CExprValue::createIntegerValue(integer_);
+      return CExprInst->createIntegerValue(integer_);
     case CEXPR_OP_UNARY_MINUS:
-      return CExprValue::createIntegerValue(-integer_);
+      return CExprInst->createIntegerValue(-integer_);
     case CEXPR_OP_BIT_NOT:
-      return CExprValue::createIntegerValue(~integer_);
+      return CExprInst->createIntegerValue(~integer_);
     default:
       return CExprValuePtr();
   }
@@ -36,48 +36,48 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
       if (error_code != 0)
         return CExprValuePtr();
       else
-        return CExprValue::createIntegerValue(integer);
+        return CExprInst->createIntegerValue(integer);
     }
     case CEXPR_OP_TIMES:
-      return CExprValue::createIntegerValue(integer_ * irhs);
+      return CExprInst->createIntegerValue(integer_ * irhs);
     case CEXPR_OP_DIVIDE: {
       // divide by zero
       if (irhs == 0) return CExprValuePtr();
 
-      return CExprValue::createIntegerValue(integer_ / irhs);
+      return CExprInst->createIntegerValue(integer_ / irhs);
     }
     case CEXPR_OP_MODULUS: {
       // divide by zero
       if (irhs == 0) return CExprValuePtr();
 
-      return CExprValue::createIntegerValue(integer_ % irhs);
+      return CExprInst->createIntegerValue(integer_ % irhs);
     }
     case CEXPR_OP_PLUS:
-      return CExprValue::createIntegerValue(integer_ + irhs);
+      return CExprInst->createIntegerValue(integer_ + irhs);
     case CEXPR_OP_MINUS:
-      return CExprValue::createIntegerValue(integer_ - irhs);
+      return CExprInst->createIntegerValue(integer_ - irhs);
     case CEXPR_OP_BIT_LSHIFT:
-      return CExprValue::createIntegerValue(integer_ << irhs);
+      return CExprInst->createIntegerValue(integer_ << irhs);
     case CEXPR_OP_BIT_RSHIFT:
-      return CExprValue::createIntegerValue(integer_ >> irhs);
+      return CExprInst->createIntegerValue(integer_ >> irhs);
     case CEXPR_OP_LESS:
-      return CExprValue::createBooleanValue(integer_ < irhs);
+      return CExprInst->createBooleanValue(integer_ < irhs);
     case CEXPR_OP_LESS_EQUAL:
-      return CExprValue::createBooleanValue(integer_ <= irhs);
+      return CExprInst->createBooleanValue(integer_ <= irhs);
     case CEXPR_OP_GREATER:
-      return CExprValue::createBooleanValue(integer_ > irhs);
+      return CExprInst->createBooleanValue(integer_ > irhs);
     case CEXPR_OP_GREATER_EQUAL:
-      return CExprValue::createBooleanValue(integer_ >= irhs);
+      return CExprInst->createBooleanValue(integer_ >= irhs);
     case CEXPR_OP_EQUAL:
-      return CExprValue::createBooleanValue(integer_ == irhs);
+      return CExprInst->createBooleanValue(integer_ == irhs);
     case CEXPR_OP_NOT_EQUAL:
-      return CExprValue::createBooleanValue(integer_ != irhs);
+      return CExprInst->createBooleanValue(integer_ != irhs);
     case CEXPR_OP_BIT_AND:
-      return CExprValue::createIntegerValue(integer_ & irhs);
+      return CExprInst->createIntegerValue(integer_ & irhs);
     case CEXPR_OP_BIT_XOR:
-      return CExprValue::createIntegerValue(integer_ ^ irhs);
+      return CExprInst->createIntegerValue(integer_ ^ irhs);
     case CEXPR_OP_BIT_OR:
-      return CExprValue::createIntegerValue(integer_ | irhs);
+      return CExprInst->createIntegerValue(integer_ | irhs);
     default:
       return CExprValuePtr();
   }

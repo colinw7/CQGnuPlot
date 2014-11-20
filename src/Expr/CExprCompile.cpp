@@ -584,6 +584,12 @@ compileShiftExpression(CExprITokenPtr itoken)
  * <additive_expression>:= <additive_expression> -
  *                         <multiplicative_expression>
  */
+#ifdef GNUPLOT_EXPR
+/*
+ * <additive_expression>:= <additive_expression> .
+ *                         <multiplicative_expression>
+ */
+#endif
 
 void
 CExprCompileImpl::
@@ -600,10 +606,14 @@ compileAdditiveExpression(CExprITokenPtr itoken)
 
     CExprOperatorPtr op = itoken1->getOperator();
 
-    if (op->getType() == CEXPR_OP_PLUS)
+    if      (op->getType() == CEXPR_OP_PLUS)
       stackOperator(CExprInst->getOperator(CEXPR_OP_PLUS ));
-    else
+    else if (op->getType() == CEXPR_OP_MINUS)
       stackOperator(CExprInst->getOperator(CEXPR_OP_MINUS));
+#ifdef GNUPLOT_EXPR
+    else if (op->getType() == CEXPR_OP_CONCAT)
+      stackOperator(CExprInst->getOperator(CEXPR_OP_CONCAT));
+#endif
   }
   else
     compileMultiplicativeExpression(itoken->getChild(0));
@@ -743,6 +753,9 @@ compileUnaryExpression(CExprITokenPtr itoken)
 
 /*
  * <postfix_expression>:= <primary_expression>
+#ifdef GNUPLOT_EXPR
+ * <postfix_expression>:= <identifier> [ <expression> ]
+#endif
  * <postfix_expression>:= <identifier> ( <argument_expression_list>(opt) )
  * <postfix_expression>:= <postfix_expression> ++
  * <postfix_expression>:= <postfix_expression> --
@@ -765,6 +778,8 @@ compilePostfixExpression(CExprITokenPtr itoken)
   CExprOperatorPtr op = itoken1->getOperator();
 
   if      (op->getType() == CEXPR_OP_OPEN_RBRACKET) {
+    stackOperator(op);
+
     uint num_args = 0;
 
     if (num_children == 4) {
@@ -796,13 +811,54 @@ compilePostfixExpression(CExprITokenPtr itoken)
       ++num_args;
     }
 
-    if (function_num_args != num_args) {
-      setLastError("Function called with wrong number of arguments");
-      return;
+    if (function->isVariableArgs()) {
+      if (function_num_args > num_args) {
+        setLastError("Function called with too few arguments");
+        return;
+      }
+    }
+    else {
+      if (function_num_args != num_args) {
+        setLastError("Function called with wrong number of arguments");
+        return;
+      }
     }
 
     stackFunction(function);
   }
+#ifdef GNUPLOT_EXPR
+  else if (op->getType() == CEXPR_OP_OPEN_SBRACKET) {
+    // <var> [ <ind> ]
+    if (num_children == 4) {
+      CExprITokenPtr itoken0 = itoken->getChild(0);
+
+      const std::string &identifier = itoken0->getIdentifier();
+
+      stackIdentifier(identifier);
+
+      stackOperator(CExprInst->getOperator(CEXPR_OP_OPEN_SBRACKET));
+
+      compileExpression(itoken->getChild(2));
+
+      stackOperator(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
+    }
+    // <var> [ <ind> : <ind> ]
+    else {
+      CExprITokenPtr itoken0 = itoken->getChild(0);
+
+      const std::string &identifier = itoken0->getIdentifier();
+
+      stackIdentifier(identifier);
+
+      stackOperator(CExprInst->getOperator(CEXPR_OP_OPEN_SBRACKET));
+
+      compileExpression(itoken->getChild(2));
+      compileExpression(itoken->getChild(4));
+
+      stackOperator(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
+    }
+  }
+#endif
   else if (op->getType() == CEXPR_OP_INCREMENT) {
     compilePostfixExpression(itoken->getChild(0));
 
@@ -1026,4 +1082,57 @@ CExprCompileImpl::
 getLastError()
 {
   return last_error_message;
+}
+
+//------
+
+void
+CExprCToken::
+print(std::ostream &os) const
+{
+  switch (type_) {
+    case CEXPR_CTOKEN_IDENTIFIER:
+      os << "<identifier>";
+      break;
+    case CEXPR_CTOKEN_OPERATOR:
+      os << "<operator>";
+      break;
+    case CEXPR_CTOKEN_INTEGER:
+      os << "<integer>";
+      break;
+    case CEXPR_CTOKEN_REAL:
+      os << "<real>";
+      break;
+    case CEXPR_CTOKEN_STRING:
+      os << "<string>";
+      break;
+    case CEXPR_CTOKEN_FUNCTION:
+      os << "<function>";
+      break;
+    case CEXPR_CTOKEN_VALUE:
+      os << "<value>";
+      break;
+    default:
+      os << "<-?->";
+      break;
+  }
+
+  base_->print(os);
+
+  os << " ";
+}
+
+//------
+
+void
+CExprCTokenStack::
+print(std::ostream &os) const
+{
+  uint len = stack_.size();
+
+  for (uint i = 0; i < len; ++i) {
+    if (i > 0) os << " ";
+
+    stack_[i]->print(os);
+  }
 }

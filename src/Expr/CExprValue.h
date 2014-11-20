@@ -3,22 +3,6 @@
 
 class CExprValue {
  public:
-  static CExprValuePtr createBooleanValue(bool boolean) {
-    return CExprValuePtr(new CExprValue(CExprBooleanValue(boolean)));
-  }
-
-  static CExprValuePtr createIntegerValue(long integer) {
-    return CExprValuePtr(new CExprValue(CExprIntegerValue(integer)));
-  }
-
-  static CExprValuePtr createRealValue(double real) {
-    return CExprValuePtr(new CExprValue(CExprRealValue(real)));
-  }
-
-  static CExprValuePtr createStringValue(const std::string &str) {
-    return CExprValuePtr(new CExprValue(CExprStringValue(str)));
-  }
-
   CExprValue();
 
   CExprValue(const CExprBooleanValue &boolean);
@@ -56,6 +40,7 @@ class CExprValue {
 
   CExprValuePtr execUnaryOp(CExprOpType op) const;
   CExprValuePtr execBinaryOp(CExprValuePtr rhs, CExprOpType op) const;
+  CExprValuePtr subscript(const std::vector<CExprValuePtr> &values) const;
 
   void print(std::ostream &os) const;
 

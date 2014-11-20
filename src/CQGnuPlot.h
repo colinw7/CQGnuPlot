@@ -5,6 +5,7 @@
 #include <CQPanZoomIFace.h>
 
 class CQGnuPlot;
+class CQGnuPlotRenderer;
 
 class CQGnuPlotCanvas : public QWidget {
   Q_OBJECT
@@ -14,6 +15,8 @@ class CQGnuPlotCanvas : public QWidget {
 
  private:
   void paintEvent(QPaintEvent *);
+
+  void mouseMoveEvent(QMouseEvent *);
 
  private:
   CQGnuPlot *plot_;
@@ -32,12 +35,16 @@ class CQGnuPlot : public QMainWindow, public CGnuPlot,
 
   void paint(QPainter *p);
 
+  CGnuPlot::Plot *plot() const { return plot_; }
+
+  void showPos(double wx, double wy);
+
  private:
   void timeout();
 
   void stateChanged(CGnuPlot::ChangeState);
 
-  void paintPlot(QPainter *p, CGnuPlot::Plot *plot);
+  void paintPlot(CGnuPlot::Plot *plot);
 
   void drawPoint(QPainter *p, const CGnuPlot::Point &point);
   void drawLine(QPainter *p, const CGnuPlot::Point &point1, const CGnuPlot::Point &point2);
@@ -74,7 +81,9 @@ class CQGnuPlot : public QMainWindow, public CGnuPlot,
   void yAxisSlot(bool show);
 
  private:
-  CQGnuPlotCanvas *canvas_;
-  CQMouseMode     *zoomMode_;
-  CQMouseMode     *panMode_;
+  CQGnuPlotCanvas   *canvas_;
+  CQGnuPlotRenderer *renderer_;
+  CQMouseMode       *zoomMode_;
+  CQMouseMode       *panMode_;
+  CGnuPlot::Plot    *plot_;
 };

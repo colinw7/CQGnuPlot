@@ -6,11 +6,13 @@ class CExprExecuteImpl {
 
  ~CExprExecuteImpl() { }
 
+  bool executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values);
+
   CExprValuePtr executeCTokenStack(const CExprCTokenStack &stack);
 
  private:
-  void           executeToken(CExprCTokenPtr);
-  void           executeOperator(CExprOperatorPtr);
+  void           executeToken(const CExprCTokenPtr &ctoken);
+  void           executeOperator(const CExprOperatorPtr &op);
   void           executeQuestionOperator();
   void           executeUnaryOperator(CExprOpType type);
   void           executeLogicalUnaryOperator(CExprOpType type);
@@ -20,15 +22,19 @@ class CExprExecuteImpl {
   void           executeBitwiseBinaryOperator(CExprOpType type);
   void           executeColonOperator();
   void           executeCommaOperator();
+#ifdef GNUPLOT_EXPR
+  void           executeSubscriptOperator();
+#endif
   void           executeEqualsOperator();
-  CExprValuePtr  executeFunction(CExprFunctionPtr function);
-  CExprValuePtr  etokenToValue(CExprETokenPtr);
+  CExprValuePtr  executeFunction(const CExprFunctionPtr &function);
+  CExprValuePtr  etokenToValue(const CExprETokenPtr &etoken);
 #if 0
   CExprValueType etokenToValueType(CExprETokenPtr);
 #endif
   void           stackIdentifier(const std::string &identifier);
   void           stackValue(CExprValuePtr value);
-  void           stackEToken(CExprETokenPtr);
+  void           stackOperator(CExprOperatorPtr op);
+  void           stackEToken(CExprETokenPtr etoken);
   CExprETokenPtr unstackEToken();
 
  private:
@@ -49,6 +55,13 @@ CExprExecute::
 {
 }
 
+bool
+CExprExecute::
+executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values)
+{
+  return impl_->executeCTokenStack(stack, values);
+}
+
 CExprValuePtr
 CExprExecute::
 executeCTokenStack(const CExprCTokenStack &stack)
@@ -58,9 +71,9 @@ executeCTokenStack(const CExprCTokenStack &stack)
 
 //------------
 
-CExprValuePtr
+bool
 CExprExecuteImpl::
-executeCTokenStack(const CExprCTokenStack &stack)
+executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values)
 {
   ctoken_stack_ = stack;
 
@@ -74,20 +87,50 @@ executeCTokenStack(const CExprCTokenStack &stack)
     executeToken(ctoken);
 
     if (CExprInst->getDebug())
-      std::cerr << "Stack:" << etoken_stack_ << std::endl;
+      std::cerr << "EToken Stack:" << etoken_stack_ << std::endl;
   }
 
-  CExprETokenPtr etoken = unstackEToken();
+  std::deque<CExprValuePtr> values1;
 
-  if (! etoken.isValid())
+  bool rc = true;
+
+  while (! etoken_stack_.empty()) {
+    CExprETokenPtr etoken = unstackEToken();
+
+    if (etoken.isValid()) {
+      CExprValuePtr value = etokenToValue(etoken);
+
+      if (value.isValid())
+        values1.push_front(value);
+      else
+        rc = false;
+    }
+    else
+      rc = false;
+  }
+
+  std::copy(values1.begin(), values1.end(), std::back_inserter(values));
+
+  return rc;
+}
+
+CExprValuePtr
+CExprExecuteImpl::
+executeCTokenStack(const CExprCTokenStack &stack)
+{
+  std::vector<CExprValuePtr> values;
+
+  (void) executeCTokenStack(stack, values);
+
+  if (values.empty())
     return CExprValuePtr();
 
-  return etokenToValue(etoken);
+  return values.back();
 }
 
 void
 CExprExecuteImpl::
-executeToken(CExprCTokenPtr ctoken)
+executeToken(const CExprCTokenPtr &ctoken)
 {
   switch (ctoken->getType()) {
     case CEXPR_CTOKEN_IDENTIFIER:
@@ -99,21 +142,21 @@ executeToken(CExprCTokenPtr ctoken)
 
       break;
     case CEXPR_CTOKEN_INTEGER: {
-      CExprValuePtr value = CExprValue::createIntegerValue(ctoken->getInteger());
+      CExprValuePtr value = CExprInst->createIntegerValue(ctoken->getInteger());
 
       stackValue(value);
 
       break;
     }
     case CEXPR_CTOKEN_REAL: {
-      CExprValuePtr value = CExprValue::createRealValue(ctoken->getReal());
+      CExprValuePtr value = CExprInst->createRealValue(ctoken->getReal());
 
       stackValue(value);
 
       break;
     }
     case CEXPR_CTOKEN_STRING: {
-      CExprValuePtr value = CExprValue::createStringValue(ctoken->getString());
+      CExprValuePtr value = CExprInst->createStringValue(ctoken->getString());
 
       stackValue(value);
 
@@ -137,7 +180,7 @@ executeToken(CExprCTokenPtr ctoken)
 
 void
 CExprExecuteImpl::
-executeOperator(CExprOperatorPtr op)
+executeOperator(const CExprOperatorPtr &op)
 {
   CExprOpType type = op->getType();
 
@@ -164,6 +207,9 @@ executeOperator(CExprOperatorPtr op)
     case CEXPR_OP_GREATER_EQUAL:
     case CEXPR_OP_EQUAL:
     case CEXPR_OP_NOT_EQUAL:
+#ifdef GNUPLOT_EXPR
+    case CEXPR_OP_CONCAT:
+#endif
       executeBinaryOperator(type);
       break;
     case CEXPR_OP_LOGICAL_AND:
@@ -189,6 +235,17 @@ executeOperator(CExprOperatorPtr op)
     case CEXPR_OP_COMMA:
       executeCommaOperator();
       break;
+    case CEXPR_OP_OPEN_RBRACKET:
+      stackOperator(op);
+      break;
+#ifdef GNUPLOT_EXPR
+    case CEXPR_OP_OPEN_SBRACKET:
+      stackOperator(op);
+      break;
+    case CEXPR_OP_CLOSE_SBRACKET:
+      executeSubscriptOperator();
+      break;
+#endif
     default:
       std::cerr << "Invalid operator for 'executeOperator'" << std::endl;
       break;
@@ -338,6 +395,12 @@ executeBinaryOperator(CExprOpType type)
     if (! value2->convToReal()) return;
   }
 
+#ifdef GNUPLOT_EXPR
+  if (value2->isStringValue() && ! value1->isStringValue()) {
+    if (! value1->convToString()) return;
+  }
+#endif
+
   CExprValuePtr value = value1->execBinaryOp(value2, type);
 
   stackValue(value);
@@ -407,6 +470,48 @@ executeCommaOperator()
 {
 }
 
+#ifdef GNUPLOT_EXPR
+void
+CExprExecuteImpl::
+executeSubscriptOperator()
+{
+  std::deque<CExprETokenPtr> etokens;
+
+  CExprETokenPtr etoken1 = unstackEToken();
+
+  while (etoken1.isValid() && etoken1->getType() != CEXPR_ETOKEN_OPERATOR) {
+    etokens.push_front(etoken1);
+
+    etoken1 = unstackEToken();
+  }
+
+  CExprETokenPtr etoken2 = unstackEToken();
+
+  if (! etoken2.isValid())
+    return;
+
+  std::vector<CExprValuePtr> values;
+
+  for (uint i = 0; i < etokens.size(); ++i) {
+    CExprValuePtr value = etokenToValue(etokens[i]);
+
+    if (! value.isValid())
+      return;
+
+    values.push_back(value);
+  }
+
+  CExprValuePtr value2 = etokenToValue(etoken2);
+
+  if (! value2.isValid())
+    return;
+
+  CExprValuePtr value = value2->subscript(values);
+
+  stackValue(value);
+}
+#endif
+
 void
 CExprExecuteImpl::
 executeEqualsOperator()
@@ -439,40 +544,49 @@ executeEqualsOperator()
 
 CExprValuePtr
 CExprExecuteImpl::
-executeFunction(CExprFunctionPtr function)
+executeFunction(const CExprFunctionPtr &function)
 {
-  std::vector<CExprValuePtr> values;
+  //uint num_args = function->numArgs();
 
-  uint i = 0;
+  std::deque<CExprValuePtr> values;
 
-  uint num_args = function->numArgs();
+  CExprETokenPtr etoken = unstackEToken();
+  assert(etoken.isValid());
 
-  for ( ; i < num_args; i++) {
-    CExprETokenPtr etoken = unstackEToken();
-
-    if (! etoken.isValid())
-      break;
-
+  while (etoken->getType() != CEXPR_ETOKEN_OPERATOR) {
     CExprValuePtr value1 = etokenToValue(etoken);
 
-    if (! value1.isValid() && ! (function->argType(i) & CEXPR_VALUE_NULL))
-      break;
+    CExprValueType argType = function->argType(values.size());
 
-    if (! value1.isValid() && ! value1->convToType(function->argType(i)))
-      break;
+    if (! value1.isValid()) {
+      if (! (argType & CEXPR_VALUE_NULL))
+        return CExprValuePtr();
+    }
+    else {
+      if (! (argType & CEXPR_VALUE_NULL) && ! value1->convToType(argType)) {
+        std::cerr << "Invalid type for function argument" << std::endl;
+        return CExprValuePtr();
+      }
+    }
 
-    values.push_back(value1);
+    values.push_front(value1);
+
+    etoken = unstackEToken();
+    assert(etoken.isValid());
   }
 
-  if (i < num_args)
-    return CExprValuePtr();
+  assert(etoken->getType() == CEXPR_ETOKEN_OPERATOR);
 
-  return function->exec(values);
+  std::vector<CExprValuePtr> values1;
+
+  std::copy(values.begin(), values.end(), std::back_inserter(values1));
+
+  return function->exec(values1);
 }
 
 CExprValuePtr
 CExprExecuteImpl::
-etokenToValue(CExprETokenPtr etoken)
+etokenToValue(const CExprETokenPtr &etoken)
 {
   switch (etoken->getType()) {
     case CEXPR_ETOKEN_IDENTIFIER: {
@@ -542,6 +656,17 @@ stackValue(CExprValuePtr value)
 
 void
 CExprExecuteImpl::
+stackOperator(CExprOperatorPtr op)
+{
+  if (! op.isValid()) return;
+
+  CExprETokenPtr etoken = CExprEToken::createOperatorToken(op);
+
+  stackEToken(etoken);
+}
+
+void
+CExprExecuteImpl::
 stackEToken(CExprETokenPtr etoken)
 {
   etoken_stack_.addToken(etoken);
@@ -554,4 +679,66 @@ unstackEToken()
   CExprETokenPtr etoken = etoken_stack_.pop_back();
 
   return etoken;
+}
+
+//------
+
+CExprETokenPtr
+CExprEToken::
+createIdentifierToken(const std::string &identifier)
+{
+  CExprETokenPtr etoken(new CExprEToken);
+
+  etoken->type_ = CEXPR_ETOKEN_IDENTIFIER;
+  etoken->base_ = new CExprETokenIdentifier(identifier);
+
+  return etoken;
+}
+
+CExprETokenPtr
+CExprEToken::
+createValueToken(CExprValuePtr value)
+{
+  CExprETokenPtr etoken(new CExprEToken);
+
+  etoken->type_ = CEXPR_ETOKEN_VALUE;
+  etoken->base_ = new CExprETokenValue(value);
+
+  return etoken;
+}
+
+CExprETokenPtr
+CExprEToken::
+createOperatorToken(CExprOperatorPtr op)
+{
+  CExprETokenPtr etoken(new CExprEToken);
+
+  etoken->type_ = CEXPR_ETOKEN_OPERATOR;
+  etoken->base_ = new CExprETokenOperator(op);
+
+  return etoken;
+}
+
+void
+CExprEToken::
+print(std::ostream &os) const
+{
+  switch (type_) {
+    case CEXPR_ETOKEN_IDENTIFIER:
+      os << "<identifier>";
+      break;
+    case CEXPR_ETOKEN_VALUE:
+      os << "<value>";
+      break;
+    case CEXPR_ETOKEN_OPERATOR:
+      os << "<operator>";
+      break;
+    default:
+      os << "<-?->";
+      break;
+  }
+
+  base_->print(os);
+
+  os << " ";
 }

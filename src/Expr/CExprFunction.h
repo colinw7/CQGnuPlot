@@ -1,6 +1,8 @@
 #ifndef CExprFunction_H
 #define CExprFunction_H
 
+class CExpr;
+
 class CExprFunctionObj {
  public:
   CExprFunctionObj() { }
@@ -11,24 +13,30 @@ class CExprFunctionObj {
 };
 
 struct CExprFunctionArg {
-  CExprFunctionArg() : type(CEXPR_VALUE_NONE) { }
+  CExprFunctionArg(CExprValueType type1=CEXPR_VALUE_NONE) :
+   type(type1) {
+  }
 
   CExprValueType type;
 };
 
 class CExprFunctionMgr {
  public:
+  friend class CExpr;
+
   typedef std::vector<CExprFunctionArg> Args;
 
  public:
  ~CExprFunctionMgr() { }
+
+  void addFunctions();
 
   CExprFunctionPtr getFunction(const std::string &name);
 
   CExprFunctionPtr addProcFunction(const std::string &name, const std::string &args,
                                    CExprFunctionProc proc);
   CExprFunctionPtr addObjFunction(const std::string &name, const std::string &args,
-                                  CExprFunctionObj &proc);
+                                  CExprFunctionObj *proc);
   CExprFunctionPtr addUserFunction(const std::string &name, const std::vector<std::string> &args,
                                    const std::string &proc);
 
@@ -36,17 +44,16 @@ class CExprFunctionMgr {
 
   void getFunctionNames(std::vector<std::string> &names) const;
 
-  bool parseArgs(const std::string &argsStr, Args &args);
+  static bool parseArgs(const std::string &argsStr, Args &args, bool &variableArgs);
 
  private:
-  friend class CExpr;
-
-  CExprFunctionMgr();
+  CExprFunctionMgr(CExpr *expr);
 
  private:
   typedef std::list<CExprFunctionPtr> FunctionList;
 
-  FunctionList functions_;
+  CExpr        *expr_;
+  FunctionList  functions_;
 };
 
 class CExprFunction {
@@ -55,7 +62,7 @@ class CExprFunction {
 
  public:
   CExprFunction(const std::string &name) :
-   name_(name), builtin_(false) {
+   name_(name), builtin_(false), variableArgs_(false) {
   }
 
   virtual ~CExprFunction() { }
@@ -64,6 +71,9 @@ class CExprFunction {
 
   bool isBuiltin() const { return builtin_; }
   void setBuiltin(bool b) { builtin_ = b; }
+
+  bool isVariableArgs() const { return variableArgs_; }
+  void setVariableArgs(bool b) { variableArgs_ = b; }
 
   virtual uint numArgs() const = 0;
 
@@ -84,6 +94,7 @@ class CExprFunction {
  protected:
   std::string name_;
   bool        builtin_;
+  bool        variableArgs_;
 };
 
 class CExprProcFunction : public CExprFunction {
@@ -96,7 +107,9 @@ class CExprProcFunction : public CExprFunction {
 
   uint numArgs() const { return args_.size(); }
 
-  CExprValueType argType(uint i) const { return args_[i].type; }
+  CExprValueType argType(uint i) const {
+    return (i < args_.size() ? args_[i].type : CEXPR_VALUE_NULL);
+  }
 
   CExprValuePtr exec(const Values &values);
 
@@ -110,20 +123,19 @@ class CExprObjFunction : public CExprFunction {
   typedef std::vector<CExprFunctionArg> Args;
 
  public:
-  CExprObjFunction(const std::string &name, const Args &args, CExprFunctionObj &proc);
+  CExprObjFunction(const std::string &name, const Args &args, CExprFunctionObj *proc);
 
   uint numArgs() const { return args_.size(); }
 
-  CExprValueType argType(uint i) const { return args_[i].type; }
+  CExprValueType argType(uint i) const {
+    return (i < args_.size() ? args_[i].type : CEXPR_VALUE_NULL);
+  }
 
   CExprValuePtr exec(const Values &values);
 
  private:
-  void parseArgs(const std::string &argsStr, Args &args);
-
- private:
   Args              args_;
-  CExprFunctionObj &proc_;
+  CExprFunctionObj *proc_;
 };
 
 class CExprUserFunction : public CExprFunction {

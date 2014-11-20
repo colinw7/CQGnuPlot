@@ -23,7 +23,20 @@ CExpr() :
 
   operatorMgr_ = new CExprOperatorMgr;
   variableMgr_ = new CExprVariableMgr;
-  functionMgr_ = new CExprFunctionMgr;
+  functionMgr_ = new CExprFunctionMgr(this);
+
+  functionMgr_->addFunctions();
+}
+
+bool
+CExpr::
+evaluateExpression(const std::string &str, std::vector<CExprValuePtr> &values)
+{
+  CExprPTokenStack pstack = parseLine(str);
+  CExprITokenPtr   itoken = interpPTokenStack(pstack);
+  CExprCTokenStack cstack = compileIToken(itoken);
+
+  return executeCTokenStack(cstack, values);
 }
 
 CExprValuePtr
@@ -73,6 +86,23 @@ compileIToken(CExprITokenPtr itoken)
   return cstack;
 }
 
+bool
+CExpr::
+executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values)
+{
+  if (! execute_->executeCTokenStack(stack, values))
+    return false;
+
+  if (getDebug()) {
+    std::cerr << "Values:";
+    for (uint i = 0; i < values.size(); ++i)
+      std::cerr << " " << values[i] << std::endl;
+    std::cerr << std::endl;
+  }
+
+  return true;
+}
+
 CExprValuePtr
 CExpr::
 executeCTokenStack(const CExprCTokenStack &stack)
@@ -103,7 +133,7 @@ CExprVariablePtr
 CExpr::
 createRealVariable(const std::string &name, double x)
 {
-  return variableMgr_->createVariable(name, CExprValue::createRealValue(x));
+  return variableMgr_->createVariable(name, createRealValue(x));
 }
 
 void
@@ -137,7 +167,7 @@ addFunction(const std::string &name, const std::vector<std::string> &args,
 
 CExprFunctionPtr
 CExpr::
-addFunction(const std::string &name, const std::string &argsStr, CExprFunctionObj &func)
+addFunction(const std::string &name, const std::string &argsStr, CExprFunctionObj *func)
 {
   return functionMgr_->addObjFunction(name, argsStr, func);
 }
@@ -149,16 +179,37 @@ getFunctionNames(std::vector<std::string> &names) const
   functionMgr_->getFunctionNames(names);
 }
 
-bool
-CExpr::
-isOperatorChar(char c) const
-{
-  return operatorMgr_->isOperatorChar(c);
-}
-
 CExprOperatorPtr
 CExpr::
 getOperator(CExprOpType type) const
 {
   return operatorMgr_->getOperator(type);
+}
+
+CExprValuePtr
+CExpr::
+createBooleanValue(bool boolean)
+{
+  return CExprValuePtr(new CExprValue(CExprBooleanValue(boolean)));
+}
+
+CExprValuePtr
+CExpr::
+createIntegerValue(long integer)
+{
+  return CExprValuePtr(new CExprValue(CExprIntegerValue(integer)));
+}
+
+CExprValuePtr
+CExpr::
+createRealValue(double real)
+{
+  return CExprValuePtr(new CExprValue(CExprRealValue(real)));
+}
+
+CExprValuePtr
+CExpr::
+createStringValue(const std::string &str)
+{
+  return CExprValuePtr(new CExprValue(CExprStringValue(str)));
 }

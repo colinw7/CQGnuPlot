@@ -8,10 +8,9 @@
 #  define DEBUG_PRINT(a)
 #endif
 
-class Trace {
- private:
-  std::string name_;
+//------
 
+class Trace {
  public:
   Trace(const std::string &name) : name_(name) {
     std::cerr << ">" << name_ << std::endl;
@@ -20,15 +19,14 @@ class Trace {
  ~Trace() {
     std::cerr << "<" << name_ << std::endl;
   }
+
+ private:
+  std::string name_;
 };
 
-class CExprInterpImpl {
- private:
-  CExprPTokenStack ptoken_stack_;
-  CExprITokenStack itoken_stack_;
-  bool             error_flag;
-  std::string      last_error_message;
+//------
 
+class CExprInterpImpl {
  public:
   CExprITokenPtr interpStack(const CExprPTokenStack &stack);
 
@@ -73,7 +71,46 @@ class CExprInterpImpl {
   void           setLastError(const std::string &str);
   bool           isError();
   std::string    getLastError();
+
+ private:
+  CExprPTokenStack ptoken_stack_;
+  CExprITokenStack itoken_stack_;
+  bool             error_flag;
+  std::string      last_error_message;
 };
+
+//-----------
+
+namespace CExprInterpUtil {
+  const char *getTypeName(CExprITokenType type) {
+    switch (type) {
+      case CEXPR_EXPRESSION               : return "expression";
+      case CEXPR_ASSIGNMENT_EXPRESSION    : return "assignment_expression";
+      case CEXPR_CONDITIONAL_EXPRESSION   : return "conditional_expression";
+      case CEXPR_LOGICAL_OR_EXPRESSION    : return "logical_or_expression";
+      case CEXPR_LOGICAL_AND_EXPRESSION   : return "logical_and_expression";
+      case CEXPR_INCLUSIVE_OR_EXPRESSION  : return "inclusive_or_expression";
+      case CEXPR_EXCLUSIVE_OR_EXPRESSION  : return "exclusive_or_expression";
+      case CEXPR_AND_EXPRESSION           : return "and_expression";
+      case CEXPR_EQUALITY_EXPRESSION      : return "equality_expression";
+      case CEXPR_RELATIONAL_EXPRESSION    : return "relational_expression";
+      case CEXPR_SHIFT_EXPRESSION         : return "shift_expression";
+      case CEXPR_ADDITIVE_EXPRESSION      : return "additive_expression";
+      case CEXPR_MULTIPLICATIVE_EXPRESSION: return "multiplicative_expression";
+      case CEXPR_POWER_EXPRESSION         : return "power_expression";
+      case CEXPR_UNARY_EXPRESSION         : return "unary_expression";
+      case CEXPR_POSTFIX_EXPRESSION       : return "postfix_expression";
+      case CEXPR_PRIMARY_EXPRESSION       : return "primary_expression";
+      case CEXPR_ARGUMENT_EXPRESSION_LIST : return "argument_expression_list";
+      case CEXPR_ITOKEN_IDENTIFIER        : return "identifier";
+      case CEXPR_ITOKEN_OPERATOR          : return "operator";
+      case CEXPR_ITOKEN_INTEGER           : return "integer";
+      case CEXPR_ITOKEN_REAL              : return "real";
+      case CEXPR_ITOKEN_STRING            : return "string";
+      default                             : return "<-?->";
+    }
+  }
+}
 
 //-----------
 
@@ -803,6 +840,11 @@ readShiftExpression()
  * <additive_expression>:= <additive_expression> + <multiplicative_expression>
  * <additive_expression>:= <additive_expression> - <multiplicative_expression>
  */
+#ifdef GNUPLOT_EXPR
+/*
+ * <additive_expression>:= <additive_expression> . <multiplicative_expression>
+ */
+#endif
 
 CExprITokenPtr
 CExprInterpImpl::
@@ -825,8 +867,14 @@ readAdditiveExpression()
   if (itoken.isValid()) {
     CExprITokenPtr itoken1 = unstackIToken();
 
+#ifdef GNUPLOT_EXPR
+    while (isOperatorIToken(itoken1, CEXPR_OP_PLUS ) ||
+           isOperatorIToken(itoken1, CEXPR_OP_MINUS) ||
+           isOperatorIToken(itoken1, CEXPR_OP_CONCAT)) {
+#else
     while (isOperatorIToken(itoken1, CEXPR_OP_PLUS ) ||
            isOperatorIToken(itoken1, CEXPR_OP_MINUS)) {
+#endif
       CExprITokenPtr itoken2 = readMultiplicativeExpression();
 
       if (itoken2.isValid()) {
@@ -839,10 +887,14 @@ readAdditiveExpression()
         itoken = itoken3;
       }
       else {
-        if (isOperatorIToken(itoken1, CEXPR_OP_PLUS))
+        if      (isOperatorIToken(itoken1, CEXPR_OP_PLUS))
           setLastError("Missing right expression for '+'");
-        else
-          setLastError("Missing right expression for '*'");
+        else if (isOperatorIToken(itoken1, CEXPR_OP_MINUS))
+          setLastError("Missing right expression for '-'");
+#ifdef GNUPLOT_EXPR
+        else if (isOperatorIToken(itoken1, CEXPR_OP_CONCAT))
+          setLastError("Missing right expression for '.'");
+#endif
 
         stackIToken(itoken1);
         stackIToken(itoken);
@@ -1025,6 +1077,9 @@ readUnaryExpression()
 
 /*
  * <postfix_expression>:= <primary_expression>
+#ifdef GNUPLOT_EXPR
+ * <postfix_expression>:= <identifier> [ <expression> ( : <expression> ) ]
+#endif
  * <postfix_expression>:= <identifier> ( <argument_expression_list>(opt) )
  * <postfix_expression>:= <postfix_expression> ++
  * <postfix_expression>:= <postfix_expression> --
@@ -1068,6 +1123,60 @@ readPostfixExpression()
           }
         }
       }
+#ifdef GNUPLOT_EXPR
+      else if (isOperatorIToken(itoken2, CEXPR_OP_OPEN_SBRACKET)) {
+        CExprITokenPtr itoken3 = readExpression();
+
+        if (itoken3.isValid() || ! isError()) {
+          CExprITokenPtr itoken4 = unstackIToken();
+
+          if      (isOperatorIToken(itoken4, CEXPR_OP_CLOSE_SBRACKET)) {
+            itoken = CExprIToken::createIToken(CEXPR_POSTFIX_EXPRESSION);
+
+            addITokenToType(itoken1, itoken);
+            addITokenToType(itoken2, itoken);
+            addITokenToType(itoken3, itoken);
+            addITokenToType(itoken4, itoken);
+          }
+          else if (isOperatorIToken(itoken4, CEXPR_OP_COLON)) {
+            CExprITokenPtr itoken5 = readExpression();
+
+            if (itoken5.isValid() || ! isError()) {
+              CExprITokenPtr itoken6 = unstackIToken();
+
+              if (isOperatorIToken(itoken6, CEXPR_OP_CLOSE_SBRACKET)) {
+                itoken = CExprIToken::createIToken(CEXPR_POSTFIX_EXPRESSION);
+
+                addITokenToType(itoken1, itoken);
+                addITokenToType(itoken2, itoken);
+                addITokenToType(itoken3, itoken);
+                addITokenToType(itoken4, itoken);
+                addITokenToType(itoken5, itoken);
+                addITokenToType(itoken6, itoken);
+              }
+              else {
+                setLastError("Missing close square bracket");
+
+                stackIToken(itoken6);
+                stackIToken(itoken5);
+                stackIToken(itoken4);
+                stackIToken(itoken3);
+                stackIToken(itoken2);
+                stackIToken(itoken1);
+              }
+            }
+          }
+          else {
+            setLastError("Missing colon or close square bracket");
+
+            stackIToken(itoken4);
+            stackIToken(itoken3);
+            stackIToken(itoken2);
+            stackIToken(itoken1);
+          }
+        }
+      }
+#endif
       else {
         stackIToken(itoken2);
         stackIToken(itoken1);
@@ -1442,7 +1551,7 @@ void
 CExprInterpImpl::
 printTypeIToken1(std::ostream &os, CExprITokenPtr itoken)
 {
-  os << "<" << CIToken::getTypeName(itoken->getType()) << ">";
+  os << "<" << CExprInterpUtil::getTypeName(itoken->getType()) << ">";
 
   itoken->print(os, false);
 
@@ -1577,4 +1686,124 @@ CExprInterpImpl::
 getLastError()
 {
   return last_error_message;
+}
+
+//------
+
+CExprIToken::
+CExprIToken(CExprITokenType type) :
+ type_(type), base_(0)
+{
+}
+
+CExprIToken::
+CExprIToken(CExprPTokenPtr ptoken) :
+ type_(CEXPR_ITOKEN_NONE), base_(0)
+{
+  switch (ptoken->getType()) {
+    case CEXPR_PTOKEN_IDENTIFIER:
+      type_ = CEXPR_ITOKEN_IDENTIFIER;
+      base_ = new CExprITokenIdentifier(ptoken->getIdentifier());
+
+      break;
+    case CEXPR_PTOKEN_OPERATOR:
+      type_ = CEXPR_ITOKEN_OPERATOR;
+      base_ = new CExprITokenOperator(ptoken->getOperator());
+
+      break;
+    case CEXPR_PTOKEN_INTEGER:
+      type_ = CEXPR_ITOKEN_INTEGER;
+      base_ = new CExprITokenInteger(ptoken->getInteger());
+
+      break;
+    case CEXPR_PTOKEN_REAL:
+      type_ = CEXPR_ITOKEN_REAL;
+      base_ = new CExprITokenReal(ptoken->getReal());
+
+      break;
+    case CEXPR_PTOKEN_STRING:
+      type_ = CEXPR_ITOKEN_STRING;
+      base_ = new CExprITokenString(ptoken->getString());
+
+      break;
+    default:
+      break;
+  }
+}
+
+CExprIToken *
+CExprIToken::
+dup() const
+{
+  CExprIToken *itoken = new CExprIToken;
+
+  itoken->type_ = type_;
+  itoken->base_ = (base_ ? base_->dup() : 0);
+
+  uint num_children = children_.size();
+
+  for (uint i = 0; i < num_children; ++i)
+    itoken->children_.push_back(children_[i]);
+
+  return itoken;
+}
+
+uint
+CExprIToken::
+countITokenChildrenOfType(CExprITokenType type)
+{
+  uint num_children1 = 0;
+
+  uint num_children = getNumChildren();
+
+  for (uint i = 0; i < num_children; i++) {
+    if      (getChild(i)->getType() == type)
+      ++num_children1;
+    else if (getChild(i)->getNumChildren() > 0) {
+      num_children1 += getChild(i)->countITokenChildrenOfType( type);
+    }
+  }
+
+  return num_children1;
+}
+
+void
+CExprIToken::
+print(std::ostream &os, bool children) const
+{
+  if (base_)
+    base_->print(os);
+  else
+    os << "<" << CExprInterpUtil::getTypeName(type_) << ">";
+
+  if (children) {
+    uint num_children = children_.size();
+
+    if (num_children > 0) {
+      os << " [";
+
+      for (uint i = 0; i < num_children; i++) {
+        if (i > 0) os << " ";
+
+        children_[i]->print(os);
+      }
+
+      os << "]";
+    }
+  }
+}
+
+//------
+
+void
+CExprITokenStack::
+print(std::ostream &os) const
+{
+  uint len = stack_.size();
+
+  for (uint i = 0; i < len; ++i) {
+    if (i > 0) os << " ";
+
+    stack_[i]->print(os);
+  }
 }

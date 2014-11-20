@@ -276,38 +276,7 @@ class CExprCToken {
     return base_.cast<CExprCTokenValue>()->getValue();
   }
 
-  void print(std::ostream &os) const {
-    switch (type_) {
-      case CEXPR_CTOKEN_IDENTIFIER:
-        os << "<identifier>";
-        break;
-      case CEXPR_CTOKEN_OPERATOR:
-        os << "<operator>";
-        break;
-      case CEXPR_CTOKEN_INTEGER:
-        os << "<integer>";
-        break;
-      case CEXPR_CTOKEN_REAL:
-        os << "<real>";
-        break;
-      case CEXPR_CTOKEN_STRING:
-        os << "<string>";
-        break;
-      case CEXPR_CTOKEN_FUNCTION:
-        os << "<function>";
-        break;
-      case CEXPR_CTOKEN_VALUE:
-        os << "<value>";
-        break;
-      default:
-        os << "<-?->";
-        break;
-    }
-
-    base_->print(os);
-
-    os << " ";
-  }
+  void print(std::ostream &os) const;
 
   friend std::ostream &operator<<(std::ostream &os, const CExprCToken &token) {
     token.print(os);
@@ -344,15 +313,7 @@ class CExprCTokenStack {
     stack_.clear();
   }
 
-  void print(std::ostream &os) const {
-    uint len = stack_.size();
-
-    for (uint i = 0; i < len; ++i) {
-      if (i > 0) os << " ";
-
-      stack_[i]->print(os);
-    }
-  }
+  void print(std::ostream &os) const;
 
   friend std::ostream &operator<<(std::ostream &os, const CExprCTokenStack &stack) {
     stack.print(os);

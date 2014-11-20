@@ -87,7 +87,7 @@ setRealValue(double x)
   if (value_->isRealValue())
     value_->setRealValue(x);
   else
-    value_ = CExprValue::createRealValue(x);
+    value_ = CExprInst->createRealValue(x);
 }
 
 CExprValuePtr

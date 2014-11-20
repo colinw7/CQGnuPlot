@@ -4,7 +4,8 @@
 enum CExprETokenType {
   CEXPR_ETOKEN_NONE       = 0,
   CEXPR_ETOKEN_IDENTIFIER = 1,
-  CEXPR_ETOKEN_VALUE      = 2
+  CEXPR_ETOKEN_VALUE      = 2,
+  CEXPR_ETOKEN_OPERATOR   = 3
 };
 
 class CExprETokenBase {
@@ -56,25 +57,31 @@ class CExprETokenValue : public CExprETokenBase {
   CExprValuePtr value_;
 };
 
+class CExprETokenOperator : public CExprETokenBase {
+ public:
+  CExprETokenOperator(CExprOperatorPtr op) :
+   op_(op) {
+  }
+
+  CExprOperatorPtr getOperator() const { return op_; }
+
+  CExprETokenOperator *dup() const {
+    return new CExprETokenOperator(op_);
+  }
+
+  void print(std::ostream &os) const {
+    os << *op_;
+  }
+
+ private:
+  CExprOperatorPtr op_;
+};
+
 class CExprEToken {
  public:
-  static CExprETokenPtr createIdentifierToken(const std::string &identifier) {
-    CExprETokenPtr etoken(new CExprEToken);
-
-    etoken->type_ = CEXPR_ETOKEN_IDENTIFIER;
-    etoken->base_ = new CExprETokenIdentifier(identifier);
-
-    return etoken;
-  }
-
-  static CExprETokenPtr createValueToken(CExprValuePtr value) {
-    CExprETokenPtr etoken(new CExprEToken);
-
-    etoken->type_ = CEXPR_ETOKEN_VALUE;
-    etoken->base_ = new CExprETokenValue(value);
-
-    return etoken;
-  }
+  static CExprETokenPtr createIdentifierToken(const std::string &identifier);
+  static CExprETokenPtr createValueToken(CExprValuePtr value);
+  static CExprETokenPtr createOperatorToken(CExprOperatorPtr op);
 
   CExprEToken() :
    type_(CEXPR_ETOKEN_NONE), base_(0) {
@@ -94,23 +101,13 @@ class CExprEToken {
     return base_.cast<CExprETokenValue>()->getValue();
   }
 
-  void print(std::ostream &os) const {
-    switch (type_) {
-      case CEXPR_ETOKEN_IDENTIFIER:
-        os << "<identifier>";
-        break;
-      case CEXPR_ETOKEN_VALUE:
-        os << "<value>";
-        break;
-      default:
-        os << "<-?->";
-        break;
-    }
+  CExprOperatorPtr getOperator() const {
+    assert(type_ == CEXPR_ETOKEN_OPERATOR);
 
-    base_->print(os);
-
-    os << " ";
+    return base_.cast<CExprETokenOperator>()->getOperator();
   }
+
+  void print(std::ostream &os) const;
 
   friend std::ostream &operator<<(std::ostream &os, const CExprEToken &token) {
     token.print(os);
@@ -130,6 +127,8 @@ class CExprETokenStack {
  ~CExprETokenStack() {
     clear();
   }
+
+  bool empty() const { return stack_.empty(); }
 
   void addToken(CExprETokenPtr token) {
     stack_.push_back(token);
@@ -176,6 +175,8 @@ class CExprExecuteImpl;
 class CExprExecute {
  public:
  ~CExprExecute();
+
+  bool executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values);
 
   CExprValuePtr executeCTokenStack(const CExprCTokenStack &);
 

@@ -11,15 +11,16 @@ class CExprStringValue : public CExprValueBase {
     return new CExprStringValue(str_);
   }
 
-  bool getBooleanValue(bool        &b) const { b = CStrUtil::toBool   (str_); return true; }
-  bool getIntegerValue(long        &l) const { l = CStrUtil::toInteger(str_); return true; }
-  bool getRealValue   (double      &r) const { r = CStrUtil::toReal   (str_); return true; }
+  bool getBooleanValue(bool        &b) const { return CStrUtil::toBool   (str_, &b); }
+  bool getIntegerValue(long        &l) const { return CStrUtil::toInteger(str_, &l); }
+  bool getRealValue   (double      &r) const { return CStrUtil::toReal   (str_, &r); }
   bool getStringValue (std::string &s) const { s = str_; return true; }
 
   void setStringValue(const std::string &s) { str_ = s; }
 
   CExprValuePtr execUnaryOp(CExprOpType op) const;
   CExprValuePtr execBinaryOp(CExprValuePtr rhs, CExprOpType op) const;
+  CExprValuePtr subscript(const std::vector<CExprValuePtr> &values) const;
 
   void print(std::ostream &os) const {
     os << str_;

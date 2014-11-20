@@ -145,13 +145,16 @@ bool
 CExprValue::
 convToType(CExprValueType type)
 {
-  if      (type == CEXPR_VALUE_BOOLEAN)
+  if (type & type_) return true;
+
+  // TODO: conversion order
+  if      (type & CEXPR_VALUE_BOOLEAN)
     return convToBoolean();
-  else if (type == CEXPR_VALUE_INTEGER)
+  else if (type & CEXPR_VALUE_INTEGER)
     return convToInteger();
-  else if (type == CEXPR_VALUE_REAL)
+  else if (type & CEXPR_VALUE_REAL)
     return convToReal();
-  else if (type == CEXPR_VALUE_STRING)
+  else if (type & CEXPR_VALUE_STRING)
     return convToString();
   else
     return false;
@@ -237,6 +240,13 @@ CExprValue::
 execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 {
   return base_->execBinaryOp(rhs, op);
+}
+
+CExprValuePtr
+CExprValue::
+subscript(const std::vector<CExprValuePtr> &values) const
+{
+  return base_->subscript(values);
 }
 
 void

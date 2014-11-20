@@ -8,9 +8,9 @@ execUnaryOp(CExprOpType op) const
 {
   switch (op) {
     case CEXPR_OP_UNARY_PLUS:
-      return CExprValue::createRealValue(real_);
+      return CExprInst->createRealValue(real_);
     case CEXPR_OP_UNARY_MINUS:
-      return CExprValue::createRealValue(-real_);
+      return CExprInst->createRealValue(-real_);
     default:
       return CExprValuePtr();
   }
@@ -34,12 +34,12 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
       if (error_code != 0)
         return CExprValuePtr();
 
-      return CExprValue::createRealValue(real);
+      return CExprInst->createRealValue(real);
     }
     case CEXPR_OP_TIMES:
-      return CExprValue::createRealValue(real_ * rrhs);
+      return CExprInst->createRealValue(real_ * rrhs);
     case CEXPR_OP_DIVIDE:
-      return CExprValue::createRealValue(real_ / rrhs);
+      return CExprInst->createRealValue(real_ / rrhs);
     case CEXPR_OP_MODULUS: {
       int error_code;
 
@@ -48,24 +48,24 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
       if (error_code != 0)
         return CExprValuePtr();
 
-      return CExprValue::createRealValue(real);
+      return CExprInst->createRealValue(real);
     }
     case CEXPR_OP_PLUS:
-      return CExprValue::createRealValue(real_ + rrhs);
+      return CExprInst->createRealValue(real_ + rrhs);
     case CEXPR_OP_MINUS:
-      return CExprValue::createRealValue(real_ - rrhs);
+      return CExprInst->createRealValue(real_ - rrhs);
     case CEXPR_OP_LESS:
-      return CExprValue::createBooleanValue(real_ < rrhs);
+      return CExprInst->createBooleanValue(real_ < rrhs);
     case CEXPR_OP_LESS_EQUAL:
-      return CExprValue::createBooleanValue(real_ <= rrhs);
+      return CExprInst->createBooleanValue(real_ <= rrhs);
     case CEXPR_OP_GREATER:
-      return CExprValue::createBooleanValue(real_ > rrhs);
+      return CExprInst->createBooleanValue(real_ > rrhs);
     case CEXPR_OP_GREATER_EQUAL:
-      return CExprValue::createBooleanValue(real_ >= rrhs);
+      return CExprInst->createBooleanValue(real_ >= rrhs);
     case CEXPR_OP_EQUAL:
-      return CExprValue::createBooleanValue(real_ == rrhs);
+      return CExprInst->createBooleanValue(real_ == rrhs);
     case CEXPR_OP_NOT_EQUAL:
-      return CExprValue::createBooleanValue(real_ != rrhs);
+      return CExprInst->createBooleanValue(real_ != rrhs);
     default:
       return CExprValuePtr();
   }

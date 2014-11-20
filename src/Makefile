@@ -14,7 +14,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-CXXFLAGS      = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
+CXXFLAGS      = -m64 -pipe -std=c++11 -DGNUPLOT_EXPR -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I. -I../include -I. -IMouseMode -IExpr -I../include -I../../CQApp/include -I../../CQUtil/include -I../../CFont/include -I../../CImageLib/include -I../../CReadLine/include -I../../CFile/include -I../../COS/include -I../../CUtil/include -I../../CMath/include -I../../CStrUtil/include -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I.
 LINK          = g++
 LFLAGS        = -m64
@@ -384,6 +384,17 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
 		/usr/include/qt5/QtWidgets/QMainWindow \
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -504,14 +515,6 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		/usr/include/qt5/QtGui/QKeyEvent \
 		/usr/include/qt5/QtGui/QTransform \
 		MouseMode/CQPanZoomIFace.h \
-		../../CMath/include/CBBox2D.h \
-		../../CMath/include/CMathGen.h \
-		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
-		../../CMath/include/CVector2D.h \
-		../../CMath/include/CSize2D.h \
-		../../CMath/include/CISize2D.h \
 		CQGnuPlot.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlot.h -o moc_CQGnuPlot.cpp
 
@@ -1055,6 +1058,7 @@ compiler_clean: compiler_moc_header_clean
 		MouseMode/CQPanMouseMode.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
+		../../CUtil/include/CAutoPtr.h \
 		/usr/include/qt5/QtWidgets/QMainWindow \
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		../../CFont/include/CFontMgr.h \
@@ -1071,7 +1075,9 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qmenubar.h \
 		/usr/include/qt5/QtWidgets/qmenu.h \
 		/usr/include/qt5/QtWidgets/qaction.h \
-		/usr/include/qt5/QtWidgets/qactiongroup.h
+		/usr/include/qt5/QtWidgets/qactiongroup.h \
+		/usr/include/qt5/QtWidgets/QStatusBar \
+		/usr/include/qt5/QtWidgets/qstatusbar.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlot.o CQGnuPlot.cpp
 
 ../obj/CGnuPlot.o: CGnuPlot.cpp CGnuPlot.h \
@@ -1079,6 +1085,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
 		CUnixFile.h \
 		CParseLine.h \
 		CAxis2D.h \
@@ -1088,17 +1105,14 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CFile/include/CDir.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		../../CReadLine/include/CReadLine.h \
 		../../CReadLine/include/CHistory.h \
+		CStrUniqueMatch.h \
 		Expr/CExpr.h \
-		../../CUtil/include/CAutoPtr.h \
-		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -1226,7 +1240,9 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprExecute.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		../../CStrUtil/include/CPrintF.h \
+		../../CStrUtil/include/CConv.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprFunction.o Expr/CExprFunction.cpp
 
 ../obj/CExprInterp.o: Expr/CExprInterp.cpp Expr/CExprI.h \

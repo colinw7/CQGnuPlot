@@ -9,8 +9,6 @@ class CExprOperatorMgr {
 
   CExprOperatorPtr getOperator(CExprOpType type) const;
 
-  bool isOperatorChar(char c) const;
-
  private:
   friend class CExpr;
 
@@ -24,6 +22,9 @@ class CExprOperatorMgr {
 
 class CExprOperator {
  public:
+  static bool isOperatorChar(char c);
+  static bool isOperatorStr(char c);
+
   CExprOperator(CExprOpType type, const std::string &name);
 
   CExprOpType getType() const { return type_; }

@@ -188,30 +188,7 @@ class CExprPToken {
     return base_.cast<CExprPTokenString>()->getString();
   }
 
-  void printQualified(std::ostream &os) const {
-    switch (type_) {
-      case CEXPR_PTOKEN_IDENTIFIER:
-        os << "<identifier>";
-        break;
-      case CEXPR_PTOKEN_OPERATOR:
-        os << "<operator>";
-        break;
-      case CEXPR_PTOKEN_INTEGER:
-        os << "<integer>";
-        break;
-      case CEXPR_PTOKEN_REAL:
-        os << "<real>";
-        break;
-      case CEXPR_PTOKEN_STRING:
-        os << "<string>";
-        break;
-      default:
-        os << "<-?->";
-        break;
-    }
-
-    base_->print(os);
-  }
+  void printQualified(std::ostream &os) const;
 
   void print(std::ostream &os) const {
     base_->print(os);
@@ -260,15 +237,7 @@ class CExprPTokenStack {
     return ptoken;
   }
 
-  void print(std::ostream &os) const {
-    uint len = stack_.size();
-
-    for (uint i = 0; i < len; ++i) {
-      if (i > 0) os << " ";
-
-      stack_[i]->printQualified(os);
-    }
-  }
+  void print(std::ostream &os) const;
 
   friend std::ostream &operator<<(std::ostream &os, const CExprPTokenStack &stack) {
     stack.print(os);
@@ -300,5 +269,9 @@ class CExprParse {
  private:
   CAutoPtr<CExprParseImpl> impl_;
 };
+
+namespace CExprParseUtil {
+  bool stringToNumber(const std::string &str, uint *i, long &integer, double &real, bool &is_int);
+}
 
 #endif

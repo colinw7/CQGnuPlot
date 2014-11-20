@@ -2,6 +2,7 @@
 #define CPARSE_LINE_H
 
 #include <cassert>
+#include <cstring>
 
 class CParseLine {
  public:
@@ -16,6 +17,8 @@ class CParseLine {
   }
 
   const std::string &str() const { return str_; }
+
+  std::string substr() const { return substr(pos_); }
 
   std::string substr(int pos) const {
     assert(pos >= 0 && pos <= len_);
