@@ -7,8 +7,10 @@ class CStrUniqueMatch {
   CStrUniqueMatch() { }
 
   void addValue(const std::string &str, const T &value) {
-    strValues_[str  ] = value;
-    valueStrs_[value] = str;
+    // name must match unique value but value can have many names
+    strValues_[str] = value;
+
+    valueStrs_[value].push_back(str);
   }
 
   int numValues() const { return strValues_.size(); }
@@ -35,7 +37,7 @@ class CStrUniqueMatch {
   }
 
   const std::string &lookup(const T &value) {
-    return valueStrs_[value];
+    return *valueStrs_[value].begin();
   }
 
   void values(std::vector<std::string> &values) {
@@ -44,11 +46,12 @@ class CStrUniqueMatch {
   }
 
  private:
-  typedef std::map<std::string,T> StringValueMap;
-  typedef std::map<T,std::string> ValueStringMap;
+  typedef std::map<std::string,T>  StringValueMap;
+  typedef std::vector<std::string> Strings;
+  typedef std::map<T,Strings>      ValueStringsMap;
 
-  StringValueMap strValues_;
-  ValueStringMap valueStrs_;
+  StringValueMap  strValues_;
+  ValueStringsMap valueStrs_;
 };
 
 #endif

@@ -15,10 +15,10 @@ CXX           = g++
 DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 CXXFLAGS      = -m64 -pipe -std=c++11 -DGNUPLOT_EXPR -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I. -I../include -I. -IMouseMode -IExpr -I../include -I../../CQApp/include -I../../CQUtil/include -I../../CFont/include -I../../CImageLib/include -I../../CReadLine/include -I../../CFile/include -I../../COS/include -I../../CUtil/include -I../../CMath/include -I../../CStrUtil/include -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I.
+INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I. -I../include -I. -IMouseMode -IExpr -I../include -I../../CQApp/include -I../../CQUtil/include -I../../CFont/include -I../../CImageLib/include -I../../CReadLine/include -I../../CFile/include -I../../COS/include -I../../CUtil/include -I../../CMath/include -I../../CStrUtil/include -I../../CRGBName/include -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I.
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L../lib -L../../CQUtil/lib -L../../CReadLine/lib -L../../CFont/lib -L../../CUtil/lib -L../../CImageLib/lib -L../../CConfig/lib -L../../CFile/lib -L../../COS/lib -L../../CStrUtil/lib -L../../CRegExp/lib -lCQUtil -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig -lCFile -lCOS -lCStrUtil -lCRegExp -lpng -ljpeg -ltre -lreadline -lQt5Widgets -L/usr/lib/x86_64-linux-gnu -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L../lib -L../../CQUtil/lib -L../../CReadLine/lib -L../../CFont/lib -L../../CUtil/lib -L../../CImageLib/lib -L../../CConfig/lib -L../../CFile/lib -L../../COS/lib -L../../CStrUtil/lib -L../../CRegExp/lib -L../../CRGBName/lib -lCQUtil -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig -lCRGBName -lCFile -lCOS -lCStrUtil -lCRegExp -lpng -ljpeg -ltre -lreadline -lQt5Widgets -L/usr/lib/x86_64-linux-gnu -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
@@ -47,6 +47,7 @@ OBJECTS_DIR   = ../obj/
 
 SOURCES       = CQGnuPlot.cpp \
 		CGnuPlot.cpp \
+		CGnuPlotAxis.cpp \
 		Expr/CExprBValue.cpp \
 		Expr/CExprCompile.cpp \
 		Expr/CExpr.cpp \
@@ -63,14 +64,13 @@ SOURCES       = CQGnuPlot.cpp \
 		Expr/CExprVariable.cpp \
 		MouseMode/CQMouseMode.cpp \
 		MouseMode/CQPanMouseMode.cpp \
-		MouseMode/CQZoomMouseMode.cpp \
-		CAxis2D.cpp \
-		CDrawAxis2D.cpp moc_CQGnuPlot.cpp \
+		MouseMode/CQZoomMouseMode.cpp moc_CQGnuPlot.cpp \
 		moc_CQMouseMode.cpp \
 		moc_CQPanMouseMode.cpp \
 		moc_CQZoomMouseMode.cpp
 OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CGnuPlot.o \
+		../obj/CGnuPlotAxis.o \
 		../obj/CExprBValue.o \
 		../obj/CExprCompile.o \
 		../obj/CExpr.o \
@@ -88,8 +88,6 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CQMouseMode.o \
 		../obj/CQPanMouseMode.o \
 		../obj/CQZoomMouseMode.o \
-		../obj/CAxis2D.o \
-		../obj/CDrawAxis2D.o \
 		../obj/moc_CQGnuPlot.o \
 		../obj/moc_CQMouseMode.o \
 		../obj/moc_CQPanMouseMode.o \
@@ -353,7 +351,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d ../obj/CQGnuPlot1.0.0 || mkdir -p ../obj/CQGnuPlot1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h Expr/CExprBValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExpr.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h MouseMode/CQMouseMode.h MouseMode/CQPanMouseMode.h MouseMode/CQPanZoomIFace.h MouseMode/CQZoomMouseMode.h CAxis2D.h CDrawAxis2D.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CGnuPlot.cpp Expr/CExprBValue.cpp Expr/CExprCompile.cpp Expr/CExpr.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp MouseMode/CQMouseMode.cpp MouseMode/CQPanMouseMode.cpp MouseMode/CQZoomMouseMode.cpp CAxis2D.cpp CDrawAxis2D.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CGnuPlot.h CGnuPlotAxis.h Expr/CExprBValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExpr.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h MouseMode/CQMouseMode.h MouseMode/CQPanMouseMode.h MouseMode/CQPanZoomIFace.h MouseMode/CQZoomMouseMode.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CGnuPlot.cpp CGnuPlotAxis.cpp Expr/CExprBValue.cpp Expr/CExprCompile.cpp Expr/CExpr.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp MouseMode/CQMouseMode.cpp MouseMode/CQPanMouseMode.cpp MouseMode/CQZoomMouseMode.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
 
 
 clean:compiler_clean 
@@ -395,6 +393,7 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CUtil/include/CAlignType.h \
 		/usr/include/qt5/QtWidgets/QMainWindow \
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -1096,15 +1095,12 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CUtil/include/CAlignType.h \
 		CUnixFile.h \
 		CParseLine.h \
-		CAxis2D.h \
-		CDrawAxis2D.h \
+		CGnuPlotAxis.h \
 		COrientation.h \
-		../../CUtil/include/CAlignType.h \
 		CDirectionType.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
 		../../CFile/include/CDir.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
@@ -1112,6 +1108,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CReadLine/include/CReadLine.h \
 		../../CReadLine/include/CHistory.h \
 		CStrUniqueMatch.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
 		Expr/CExpr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -1125,8 +1123,40 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprExecute.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlot.o CGnuPlot.cpp
+
+../obj/CGnuPlotAxis.o: CGnuPlotAxis.cpp CGnuPlotAxis.h \
+		COrientation.h \
+		../../CUtil/include/CAlignType.h \
+		CDirectionType.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlot.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotAxis.o CGnuPlotAxis.cpp
 
 ../obj/CExprBValue.o: Expr/CExprBValue.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -1985,27 +2015,6 @@ compiler_clean: compiler_moc_header_clean
 		cursors/zoom.xbm \
 		cursors/zoommask.xbm
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQZoomMouseMode.o MouseMode/CQZoomMouseMode.cpp
-
-../obj/CAxis2D.o: CAxis2D.cpp CAxis2D.h \
-		../../CMath/include/CMathGen.h \
-		../../COS/include/NaN.h \
-		../../CStrUtil/include/CStrUtil.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CAxis2D.o CAxis2D.cpp
-
-../obj/CDrawAxis2D.o: CDrawAxis2D.cpp CDrawAxis2D.h \
-		COrientation.h \
-		../../CUtil/include/CAlignType.h \
-		CDirectionType.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
-		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
-		CAxis2D.h \
-		../../CFont/include/CFont.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CDrawAxis2D.o CDrawAxis2D.cpp
 
 ../obj/moc_CQGnuPlot.o: moc_CQGnuPlot.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlot.o moc_CQGnuPlot.cpp

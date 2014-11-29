@@ -44,8 +44,8 @@ class CExprInterpImpl {
   CExprITokenPtr readShiftExpression();
   CExprITokenPtr readAdditiveExpression();
   CExprITokenPtr readMultiplicativeExpression();
-  CExprITokenPtr readPowerExpression();
   CExprITokenPtr readUnaryExpression();
+  CExprITokenPtr readPowerExpression();
   CExprITokenPtr readPostfixExpression();
   CExprITokenPtr readPrimaryExpression();
   CExprITokenPtr readArgumentExpressionList();
@@ -97,8 +97,8 @@ namespace CExprInterpUtil {
       case CEXPR_SHIFT_EXPRESSION         : return "shift_expression";
       case CEXPR_ADDITIVE_EXPRESSION      : return "additive_expression";
       case CEXPR_MULTIPLICATIVE_EXPRESSION: return "multiplicative_expression";
-      case CEXPR_POWER_EXPRESSION         : return "power_expression";
       case CEXPR_UNARY_EXPRESSION         : return "unary_expression";
+      case CEXPR_POWER_EXPRESSION         : return "power_expression";
       case CEXPR_POSTFIX_EXPRESSION       : return "postfix_expression";
       case CEXPR_PRIMARY_EXPRESSION       : return "primary_expression";
       case CEXPR_ARGUMENT_EXPRESSION_LIST : return "argument_expression_list";
@@ -914,10 +914,10 @@ readAdditiveExpression()
 }
 
 /*
- * <multiplicative_expression>:= <power_expression>
- * <multiplicative_expression>:= <multiplicative_expression> * <power_expression>
- * <multiplicative_expression>:= <multiplicative_expression> / <power_expression>
- * <multiplicative_expression>:= <multiplicative_expression> % <power_expression>
+ * <multiplicative_expression>:= <unary_expression>
+ * <multiplicative_expression>:= <multiplicative_expression> * <unary_expression>
+ * <multiplicative_expression>:= <multiplicative_expression> / <unary_expression>
+ * <multiplicative_expression>:= <multiplicative_expression> % <unary_expression>
  */
 
 CExprITokenPtr
@@ -929,7 +929,7 @@ readMultiplicativeExpression()
   CExprITokenPtr itoken = readITokenOfType(CEXPR_MULTIPLICATIVE_EXPRESSION);
 
   if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readPowerExpression();
+    CExprITokenPtr itoken1 = readUnaryExpression();
 
     if (itoken1.isValid()) {
       itoken = CExprIToken::createIToken(CEXPR_MULTIPLICATIVE_EXPRESSION);
@@ -944,7 +944,7 @@ readMultiplicativeExpression()
     while (isOperatorIToken(itoken1, CEXPR_OP_TIMES  ) ||
            isOperatorIToken(itoken1, CEXPR_OP_DIVIDE ) ||
            isOperatorIToken(itoken1, CEXPR_OP_MODULUS)) {
-      CExprITokenPtr itoken2 = readPowerExpression();
+      CExprITokenPtr itoken2 = readUnaryExpression();
 
       if (itoken2.isValid()) {
         CExprITokenPtr itoken3 = CExprIToken::createIToken(CEXPR_MULTIPLICATIVE_EXPRESSION);
@@ -970,58 +970,7 @@ readMultiplicativeExpression()
 }
 
 /*
- * <power_expression>:= <unary_expression>
- * <power_expression>:= <unary_expression> ** <power_expression>
- */
-
-CExprITokenPtr
-CExprInterpImpl::
-readPowerExpression()
-{
-  DEBUG_ENTER("readPowerExpression");
-
-  CExprITokenPtr itoken = readITokenOfType(CEXPR_POWER_EXPRESSION);
-
-  if (itoken.isValid())
-    return itoken;
-
-  CExprITokenPtr itoken1 = readUnaryExpression();
-
-  if (! itoken1.isValid())
-    return itoken;
-
-  CExprITokenPtr itoken2 = unstackIToken();
-
-  if (isOperatorIToken(itoken2, CEXPR_OP_POWER)) {
-    CExprITokenPtr itoken3 = readPowerExpression();
-
-    if (itoken3.isValid()) {
-      itoken = CExprIToken::createIToken(CEXPR_POWER_EXPRESSION);
-
-      addITokenToType(itoken1, itoken);
-      addITokenToType(itoken2, itoken);
-      addITokenToType(itoken3, itoken);
-    }
-    else {
-      stackIToken(itoken2);
-      stackIToken(itoken1);
-    }
-  }
-  else {
-    stackIToken(itoken2);
-
-    itoken = CExprIToken::createIToken(CEXPR_POWER_EXPRESSION);
-
-    addITokenToType(itoken1, itoken);
-  }
-
-  DEBUG_PRINT(itoken);
-
-  return itoken;
-}
-
-/*
- * <unary_expression>:= <postfix_expression>
+ * <unary_expression>:= <power_expression>
  * <unary_expression>:= ++ <unary_expression>
  * <unary_expression>:= -- <unary_expression>
  * <unary_expression>:= +  <unary_expression>
@@ -1061,13 +1010,64 @@ readUnaryExpression()
 
     stackIToken(itoken1);
 
-    itoken1 = readPostfixExpression();
+    itoken1 = readPowerExpression();
 
     if (itoken1.isValid()) {
       itoken = CExprIToken::createIToken(CEXPR_UNARY_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
     }
+  }
+
+  DEBUG_PRINT(itoken);
+
+  return itoken;
+}
+
+/*
+ * <power_expression>:= <postfix_expression>
+ * <power_expression>:= <postfix_expression> ** <power_expression>
+ */
+
+CExprITokenPtr
+CExprInterpImpl::
+readPowerExpression()
+{
+  DEBUG_ENTER("readPowerExpression");
+
+  CExprITokenPtr itoken = readITokenOfType(CEXPR_POWER_EXPRESSION);
+
+  if (itoken.isValid())
+    return itoken;
+
+  CExprITokenPtr itoken1 = readPostfixExpression();
+
+  if (! itoken1.isValid())
+    return itoken;
+
+  CExprITokenPtr itoken2 = unstackIToken();
+
+  if (isOperatorIToken(itoken2, CEXPR_OP_POWER)) {
+    CExprITokenPtr itoken3 = readPowerExpression();
+
+    if (itoken3.isValid()) {
+      itoken = CExprIToken::createIToken(CEXPR_POWER_EXPRESSION);
+
+      addITokenToType(itoken1, itoken);
+      addITokenToType(itoken2, itoken);
+      addITokenToType(itoken3, itoken);
+    }
+    else {
+      stackIToken(itoken2);
+      stackIToken(itoken1);
+    }
+  }
+  else {
+    stackIToken(itoken2);
+
+    itoken = CExprIToken::createIToken(CEXPR_POWER_EXPRESSION);
+
+    addITokenToType(itoken1, itoken);
   }
 
   DEBUG_PRINT(itoken);

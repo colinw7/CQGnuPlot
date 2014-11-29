@@ -44,17 +44,20 @@ static QColor colors[] = {
 
 class CQGnuPlotRenderer : public CGnuPlotRenderer {
  public:
-  CQGnuPlotRenderer(CQGnuPlot *app);
+  CQGnuPlotRenderer(CQGnuPlotWindow *window);
+ ~CQGnuPlotRenderer();
 
   void setPainter(QPainter *painter);
 
-  void setPlot(CGnuPlot::Plot *plot) { plot_ = plot; }
+  void drawPoint  (const CPoint2D &p);
+  void drawSymbol (const CPoint2D &p, int type, double size);
+  void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width);
+  void drawRect   (const CBBox2D &rect);
+  void patternRect(const CBBox2D &rect, int pattern);
+  void fillRect   (const CBBox2D &rect, const CGnuPlot::Color &color);
+  void drawBezier (const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3, const CPoint2D &p4);
 
-  void drawPoint (const CPoint2D &p);
-  void drawSymbol(const CPoint2D &p, int i);
-  void drawLine  (const CPoint2D &p1, const CPoint2D &p2);
-  void drawRect  (const CBBox2D &rect);
-  void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3, const CPoint2D &p4);
+  void drawPolygon(const std::vector<CPoint2D> &points, double w, bool fill);
 
   void drawText(const CPoint2D &p, const std::string &text);
 
@@ -64,18 +67,23 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   double pixelWidthToWindowWidth  (double p);
   double pixelHeightToWindowHeight(double p);
 
+  double windowWidthToPixelWidth  (double w);
+  double windowHeightToPixelHeight(double w);
+
+  void setMapping(bool b) { mapping_ = b; }
+
   CFontPtr getFont() const { return font_; }
 
   void setFont(CFontPtr font);
 
  private:
-  CQGnuPlot      *app_;
-  CGnuPlot::Plot *plot_;
-  QPainter       *painter_;
-  CFontPtr        font_;
-  int             pw_, ph_;
-  double          xmin_, xmax_;
-  double          ymin_, ymax_;
+  CQGnuPlotWindow *window_;
+  QPainter        *painter_;
+  CFontPtr         font_;
+  int              pw_, ph_;
+  double           xmin_, xmax_;
+  double           ymin_, ymax_;
+  bool             mapping_;
 };
 
 int
@@ -111,18 +119,57 @@ main(int argc, char **argv)
   for (uint i = 0; i < num_files; i++)
     plot.load(files[i]);
 
-  plot.resize(400, 400);
-
-  plot.show();
-
   plot.loop();
 
   return 0;
 }
 
+//------
+
 CQGnuPlot::
-CQGnuPlot() :
- QMainWindow(), plot_(0)
+CQGnuPlot()
+{
+}
+
+CQGnuPlot::
+~CQGnuPlot()
+{
+}
+
+CGnuPlotWindow *
+CQGnuPlot::
+createWindow()
+{
+  CQGnuPlotWindow *window = new CQGnuPlotWindow(this);
+
+  window->resize(600, 600);
+
+  window->show();
+
+  return window;
+}
+
+void
+CQGnuPlot::
+timeout()
+{
+  qApp->processEvents();
+}
+
+void
+CQGnuPlot::
+load(const std::string &filename)
+{
+  CGnuPlot::load(filename);
+}
+
+//------
+
+uint CQGnuPlotWindow::lastId;
+
+CQGnuPlotWindow::
+CQGnuPlotWindow(CQGnuPlot *plot) :
+ QMainWindow(), CGnuPlotWindow(plot), id_(++lastId), plot_(plot)
 {
   canvas_ = new CQGnuPlotCanvas(this);
 
@@ -160,7 +207,9 @@ CQGnuPlot() :
   QAction *yAxisAction = new QAction("&Y Axis", this);
 
   xAxisAction->setCheckable(true);
+  xAxisAction->setChecked  (true);
   yAxisAction->setCheckable(true);
+  yAxisAction->setChecked  (true);
 
   connect(xAxisAction, SIGNAL(triggered(bool)), this, SLOT(xAxisSlot(bool)));
   connect(yAxisAction, SIGNAL(triggered(bool)), this, SLOT(yAxisSlot(bool)));
@@ -171,45 +220,47 @@ CQGnuPlot() :
   QAction *helpAction = new QAction("&Help", this);
 
   helpMenu->addAction(helpAction);
+
+  //---
+
+  showPos(0, 0);
 }
 
-void
-CQGnuPlot::
-timeout()
+CQGnuPlotWindow::
+~CQGnuPlotWindow()
 {
-  qApp->processEvents();
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 stateChanged(CGnuPlot::ChangeState)
 {
   redraw();
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 redraw()
 {
   canvas_->update();
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 redrawOverlay()
 {
   redraw();
 }
 
 QPointF
-CQGnuPlot::
+CQGnuPlotWindow::
 pixelToWindow(const QPoint &p)
 {
   return QPointF(p.x(), p.y());
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 setCursor(QCursor cursor)
 {
   canvas_->setCursor(cursor);
@@ -217,93 +268,86 @@ setCursor(QCursor cursor)
 
 // Pan
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 panBy(double, double)
 {
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 panTo(const CPoint2D &)
 {
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 panLeft()
 {
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 panRight()
 {
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 panUp()
 {
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 panDown()
 {
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 resetPan()
 {
 }
 
 // Zoom
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 zoomTo(const CBBox2D &)
 {
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 zoomIn(const CPoint2D &)
 {
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 zoomOut(const CPoint2D &)
 {
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 zoomIn()
 {
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 zoomOut()
 {
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 resetZoom()
 {
 }
 
 void
-CQGnuPlot::
-load(const std::string &filename)
-{
-  CGnuPlot::load(filename);
-}
-
-void
-CQGnuPlot::
+CQGnuPlotWindow::
 xAxisSlot(bool checked)
 {
   showXAxis(checked);
@@ -312,7 +356,7 @@ xAxisSlot(bool checked)
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 yAxisSlot(bool checked)
 {
   showYAxis(checked);
@@ -321,39 +365,23 @@ yAxisSlot(bool checked)
 }
 
 void
-CQGnuPlot::
+CQGnuPlotWindow::
 paint(QPainter *p)
 {
   renderer_->setPainter(p);
+
+  p->setRenderHint(QPainter::Antialiasing);
+  p->setRenderHint(QPainter::TextAntialiasing);
 
   p->fillRect(canvas_->rect(), QBrush(QColor(255,255,255)));
 
   p->setPen(QColor(0,0,0));
 
-  paintStart();
-
-  uint np = CGnuPlot::numPlots();
-
-  for (uint i = 0; i < np; ++i) {
-    CGnuPlot::Plot *plot = CGnuPlot::getPlot(i);
-
-    paintPlot(plot);
-  }
-
-  paintEnd();
+  draw();
 }
 
 void
-CQGnuPlot::
-paintPlot(CGnuPlot::Plot *plot)
-{
-  plot_ = plot;
-
-  plot->draw();
-}
-
-void
-CQGnuPlot::
+CQGnuPlotWindow::
 showPos(double wx, double wy)
 {
   statusBar()->showMessage(QString("%1 %2").arg(wx).arg(wy));
@@ -362,16 +390,18 @@ showPos(double wx, double wy)
 //-----------
 
 CQGnuPlotRenderer::
-CQGnuPlotRenderer(CQGnuPlot *app) :
- app_(app), plot_(0), pw_(1), ph_(1), xmin_(0), xmax_(1), ymin_(0), ymax_(1)
+CQGnuPlotRenderer(CQGnuPlotWindow *window) :
+ window_(window), pw_(1), ph_(1), xmin_(0), xmax_(1), ymin_(0), ymax_(1), mapping_(true)
 {
-  pw_ = app_->canvas()->width ();
-  ph_ = app_->canvas()->height();
-
-  app_->getXRange(&xmin_, &xmax_);
-  app_->getYRange(&ymin_, &ymax_);
+  pw_ = window_->canvas()->width ();
+  ph_ = window_->canvas()->height();
 
   font_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
+}
+
+CQGnuPlotRenderer::
+~CQGnuPlotRenderer()
+{
 }
 
 void
@@ -380,11 +410,10 @@ setPainter(QPainter *painter)
 {
   painter_ = painter;
 
-  pw_ = app_->canvas()->width ();
-  ph_ = app_->canvas()->height();
+  pw_ = window_->canvas()->width ();
+  ph_ = window_->canvas()->height();
 
-  app_->getXRange(&xmin_, &xmax_);
-  app_->getYRange(&ymin_, &ymax_);
+  window_->getDisplayRange(&xmin_, &ymin_, &xmax_, &ymax_);
 }
 
 void
@@ -400,22 +429,144 @@ drawPoint(const CPoint2D &point)
 
 void
 CQGnuPlotRenderer::
-drawSymbol(const CPoint2D &point, int)
+drawSymbol(const CPoint2D &point, int type, double size)
 {
+  QPen   pen  (QColor(0,0,0));
+  QBrush brush(QColor(0,0,0));
+
   double px, py;
 
   windowToPixel(point.x, point.y, &px, &py);
 
-  int ss = 2;
+  int ss = 4*size;
 
-  painter_->drawLine(QPoint(px - ss, py - ss), QPoint(px + ss, py + ss));
-  painter_->drawLine(QPoint(px - ss, py + ss), QPoint(px + ss, py - ss));
+  int type1 = type % 14;
+
+  switch (type1) {
+    case 0: { // point
+      painter_->drawPoint(QPointF(px, py));
+      break;
+    }
+    case 1: { // plus
+      painter_->drawLine(QPointF(px - ss, py     ), QPointF(px + ss, py     ));
+      painter_->drawLine(QPointF(px     , py - ss), QPointF(px     , py + ss));
+      break;
+    }
+    case 2: { // cross
+      painter_->drawLine(QPointF(px - ss, py - ss), QPointF(px + ss, py + ss));
+      painter_->drawLine(QPointF(px - ss, py + ss), QPointF(px + ss, py - ss));
+      break;
+    }
+    case 3: { // star
+      painter_->drawLine(QPointF(px - ss, py     ), QPointF(px + ss, py     ));
+      painter_->drawLine(QPointF(px     , py - ss), QPointF(px     , py + ss));
+      painter_->drawLine(QPointF(px - ss, py - ss), QPointF(px + ss, py + ss));
+      painter_->drawLine(QPointF(px - ss, py + ss), QPointF(px + ss, py - ss));
+      break;
+    }
+    case 4: { // box
+      QPainterPath path;
+      path.moveTo(QPointF(px - ss, py - ss));
+      path.lineTo(QPointF(px + ss, py - ss));
+      path.lineTo(QPointF(px + ss, py + ss));
+      path.lineTo(QPointF(px - ss, py + ss));
+      path.closeSubpath();
+      painter_->strokePath(path, pen);
+      break;
+    }
+    case 5: { // filled box
+      QPainterPath path;
+      path.moveTo(QPointF(px - ss, py - ss));
+      path.lineTo(QPointF(px + ss, py - ss));
+      path.lineTo(QPointF(px + ss, py + ss));
+      path.lineTo(QPointF(px - ss, py + ss));
+      path.closeSubpath();
+      painter_->fillPath(path, brush);
+      break;
+    }
+    case 6: { // circle
+      QPainterPath path;
+      path.addEllipse(QRectF(px - ss, py - ss, 2*ss, 2*ss));
+      painter_->strokePath(path, pen);
+      break;
+    }
+    case 7: { // fill circle
+      QPainterPath path;
+      path.addEllipse(QRectF(px - ss, py - ss, 2*ss, 2*ss));
+      painter_->fillPath(path, brush);
+      break;
+    }
+    case 8: { // triangle
+      QPainterPath path;
+      path.moveTo(QPointF(px     , py - ss));
+      path.lineTo(QPointF(px + ss, py + ss));
+      path.lineTo(QPointF(px - ss, py + ss));
+      path.closeSubpath();
+      painter_->strokePath(path, pen);
+      break;
+    }
+    case 9: { // filled triangle
+      QPainterPath path;
+      path.moveTo(QPointF(px     , py - ss));
+      path.lineTo(QPointF(px + ss, py + ss));
+      path.lineTo(QPointF(px - ss, py + ss));
+      path.closeSubpath();
+      painter_->fillPath(path, brush);
+      break;
+    }
+    case 10: { // inv triangle
+      QPainterPath path;
+      path.moveTo(QPointF(px     , py + ss));
+      path.lineTo(QPointF(px + ss, py - ss));
+      path.lineTo(QPointF(px - ss, py - ss));
+      path.closeSubpath();
+      painter_->strokePath(path, pen);
+      break;
+    }
+    case 11: { // filled inv triangle
+      QPainterPath path;
+      path.moveTo(QPointF(px     , py + ss));
+      path.lineTo(QPointF(px + ss, py - ss));
+      path.lineTo(QPointF(px - ss, py - ss));
+      path.closeSubpath();
+      painter_->fillPath(path, brush);
+      break;
+    }
+    case 12: { // diamond
+      QPainterPath path;
+      path.moveTo(QPointF(px - ss, py     ));
+      path.lineTo(QPointF(px     , py - ss));
+      path.lineTo(QPointF(px + ss, py     ));
+      path.lineTo(QPointF(px     , py + ss));
+      path.closeSubpath();
+      painter_->strokePath(path, pen);
+      break;
+    }
+    case 13: { // filled diamond
+      QPainterPath path;
+      path.moveTo(QPointF(px - ss, py     ));
+      path.lineTo(QPointF(px     , py - ss));
+      path.lineTo(QPointF(px + ss, py     ));
+      path.lineTo(QPointF(px     , py + ss));
+      path.closeSubpath();
+      painter_->fillPath(path, brush);
+      break;
+    }
+    default:
+      break;
+  }
 }
 
 void
 CQGnuPlotRenderer::
-drawLine(const CPoint2D &point1, const CPoint2D &point2)
+drawLine(const CPoint2D &point1, const CPoint2D &point2, double width)
 {
+  QPen p = painter_->pen();
+
+  p.setWidthF(width);
+
+  painter_->setPen(p);
+
   double px1, py1, px2, py2;
 
   windowToPixel(point1.x, point1.y, &px1, &py1);
@@ -438,6 +589,52 @@ drawRect(const CBBox2D &rect)
 
 void
 CQGnuPlotRenderer::
+patternRect(const CBBox2D &rect, int pattern)
+{
+  static Qt::BrushStyle patterns[] = {
+    Qt::BDiagPattern,
+    Qt::FDiagPattern,
+    Qt::HorPattern,
+    Qt::VerPattern,
+    Qt::CrossPattern,
+    Qt::DiagCrossPattern,
+    Qt::Dense7Pattern,
+    Qt::Dense6Pattern,
+    Qt::Dense5Pattern,
+    Qt::Dense4Pattern,
+    Qt::Dense3Pattern,
+    Qt::Dense2Pattern,
+    Qt::Dense1Pattern,
+  };
+
+  static int npatterns = sizeof(patterns)/sizeof(patterns[0]);
+
+  double px1, py1, px2, py2;
+
+  windowToPixel(rect.getXMin(), rect.getYMin(), &px1, &py1);
+  windowToPixel(rect.getXMax(), rect.getYMax(), &px2, &py2);
+
+  QBrush b(QBrush(patterns[pattern % npatterns]));
+
+  painter_->fillRect(px1, py1, px2 - px1, py2 - py1, b);
+}
+
+void
+CQGnuPlotRenderer::
+fillRect(const CBBox2D &rect, const CGnuPlot::Color &color)
+{
+  double px1, py1, px2, py2;
+
+  windowToPixel(rect.getXMin(), rect.getYMin(), &px1, &py1);
+  windowToPixel(rect.getXMax(), rect.getYMax(), &px2, &py2);
+
+  QBrush b(QColor(255*color.r, 255*color.g, 255*color.b), Qt::SolidPattern);
+
+  painter_->fillRect(px1, py1, px2 - px1, py2 - py1, b);
+}
+
+void
+CQGnuPlotRenderer::
 drawBezier(const CPoint2D &point1, const CPoint2D &point2,
            const CPoint2D &point3, const CPoint2D &point4)
 {
@@ -454,6 +651,40 @@ drawBezier(const CPoint2D &point1, const CPoint2D &point2,
   path.cubicTo(px2, py2, px3, py3, px4, py4);
 
   painter_->drawPath(path);
+}
+
+void
+CQGnuPlotRenderer::
+drawPolygon(const std::vector<CPoint2D> &points, double w, bool fill)
+{
+  QPainterPath path;
+
+  double px, py;
+
+  windowToPixel(points[0].x, points[0].y, &px, &py);
+
+  path.moveTo(px, py);
+
+  for (uint i = 1; i < points.size(); ++i) {
+    windowToPixel(points[i].x, points[i].y, &px, &py);
+
+    path.lineTo(px, py);
+  }
+
+  path.closeSubpath();
+
+  if (! fill) {
+    QPen pen(QColor(0,0,0));
+
+    pen.setWidthF(w);
+
+    painter_->strokePath(path, pen);
+  }
+  else {
+    QBrush brush(QColor(0,0,0));
+
+    painter_->fillPath(path, brush);
+  }
 }
 
 void
@@ -496,6 +727,12 @@ void
 CQGnuPlotRenderer::
 windowToPixel(double wx, double wy, double *px, double *py)
 {
+  if (! mapping_) {
+    *px = wx;
+    *py = wy;
+    return;
+  }
+
   int margin = pw_/10;
 
   int pxmin = margin, pxmax = pw_ - margin;
@@ -509,6 +746,12 @@ void
 CQGnuPlotRenderer::
 pixelToWindow(double px, double py, double *wx, double *wy)
 {
+  if (! mapping_) {
+    *wx = px;
+    *wy = py;
+    return;
+  }
+
   int margin = pw_/10;
 
   int pxmin = margin, pxmax = pw_ - margin;
@@ -527,7 +770,7 @@ pixelWidthToWindowWidth(double w)
   pixelToWindow(0, 0, &wx1, &wy1);
   pixelToWindow(w, w, &wx2, &wy2);
 
-  return fabs(wx2 - wx1);
+  return wx2 - wx1;
 }
 
 double
@@ -539,18 +782,47 @@ pixelHeightToWindowHeight(double h)
   pixelToWindow(0, 0, &wx1, &wy1);
   pixelToWindow(h, h, &wx2, &wy2);
 
+  return wy1 - wy2;
+}
+
+double
+CQGnuPlotRenderer::
+windowWidthToPixelWidth(double w)
+{
+  double wx1, wy1, wx2, wy2;
+
+  windowToPixel(0, 0, &wx1, &wy1);
+  windowToPixel(w, w, &wx2, &wy2);
+
+  return fabs(wx2 - wx1);
+}
+
+double
+CQGnuPlotRenderer::
+windowHeightToPixelHeight(double h)
+{
+  double wx1, wy1, wx2, wy2;
+
+  windowToPixel(0, 0, &wx1, &wy1);
+  windowToPixel(h, h, &wx2, &wy2);
+
   return fabs(wy2 - wy1);
 }
 
 //-----------
 
 CQGnuPlotCanvas::
-CQGnuPlotCanvas(CQGnuPlot *plot) :
- QWidget(NULL), plot_(plot)
+CQGnuPlotCanvas(CQGnuPlotWindow *window) :
+ QWidget(0), window_(window)
 {
   setFocusPolicy(Qt::StrongFocus);
 
   setMouseTracking(true);
+}
+
+CQGnuPlotCanvas::
+~CQGnuPlotCanvas()
+{
 }
 
 void
@@ -559,20 +831,20 @@ paintEvent(QPaintEvent *)
 {
   QPainter p(this);
 
-  plot_->paint(&p);
+  window_->paint(&p);
 }
 
 void
 CQGnuPlotCanvas::
 mouseMoveEvent(QMouseEvent *e)
 {
-  if (! plot_->plot()) return;
-
-  CQGnuPlotRenderer *renderer = static_cast<CQGnuPlotRenderer *>(plot_->renderer());
+  CQGnuPlotRenderer *renderer = static_cast<CQGnuPlotRenderer *>(window_->renderer());
 
   double wx, wy;
 
   renderer->pixelToWindow(e->pos().x(), e->pos().y(), &wx, &wy);
 
-  plot_->showPos(wx, wy);
+  window_->unmapLogPoint(&wx, &wy);
+
+  window_->showPos(wx, wy);
 }

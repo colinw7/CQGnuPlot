@@ -5,8 +5,6 @@
 #include <CQPanZoomIFace.h>
 #include <CBBox2D.h>
 
-#define PAN_MOUSE_MODE_ID 1002
-
 class CQMenuItem;
 
 class CQPanMouseMode : public CQMouseMode {

@@ -133,8 +133,17 @@ parseLine(CExprPTokenStack &stack, const std::string &line)
   CStrUtil::skipSpace(line, &i);
 
   while (i < line.size()) {
-    if      (CExprOperator::isOperatorChar(line[i]))
-      ptoken = readOperator(line, &i);
+    if      (CExprOperator::isOperatorChar(line[i])) {
+      if ((line[i] == '-' || line[i] == '+') && i < line.size() - 1 && isdigit(line[i + 1]))
+        ptoken = readNumber(line, &i);
+      else
+        ptoken = readOperator(line, &i);
+
+#ifdef GNUPLOT_EXPR
+      if (! ptoken.isValid() && line[i] == '.')
+        ptoken = readNumber(line, &i);
+#endif
+    }
 #ifdef GNUPLOT_EXPR
     else if (CExprOperator::isOperatorStr(line[i])) {
       ptoken = readOperatorStr(line, &i);
@@ -143,10 +152,10 @@ parseLine(CExprPTokenStack &stack, const std::string &line)
         ptoken = readIdentifier(line, &i);
     }
 #endif
-    else if (line[i] == '_' || isalpha(line[i]))
-      ptoken = readIdentifier(line, &i);
     else if (isNumber(line, i))
       ptoken = readNumber(line, &i);
+    else if (line[i] == '_' || isalpha(line[i]))
+      ptoken = readIdentifier(line, &i);
     else if (line[i] == '\'' || line[i] == '\"')
       ptoken = readString(line, &i);
     else {
@@ -160,6 +169,9 @@ parseLine(CExprPTokenStack &stack, const std::string &line)
 
       return false;
     }
+
+    if (! ptoken.isValid())
+      return false;
 
     stack.addToken(ptoken);
 
@@ -486,10 +498,18 @@ readOperator(const std::string &str, uint *i)
       (*i)++;
       id = CEXPR_OP_CLOSE_SBRACKET;
       break;
-    case '.':
+    case '.': {
+      uint i1 = (*i) + 1;
+
+      if (i1 < str.size() && isdigit(str[i1]))
+        return CExprPTokenPtr();
+
       (*i)++;
+
       id = CEXPR_OP_CONCAT;
+
       break;
+    }
 #endif
     case ',':
       (*i)++;
@@ -510,6 +530,7 @@ readOperator(const std::string &str, uint *i)
   return createOperatorToken(op);
 }
 
+#ifdef GNUPLOT_EXPR
 CExprPTokenPtr
 CExprParseImpl::
 readOperatorStr(const std::string &str, uint *i)
@@ -536,6 +557,7 @@ readOperatorStr(const std::string &str, uint *i)
 
   return createOperatorToken(op);
 }
+#endif
 
 CExprPTokenPtr
 CExprParseImpl::

@@ -225,6 +225,12 @@ class CExprPTokenStack {
     return stack_[i];
   }
 
+  CExprPTokenPtr lastToken() const {
+    if (stack_.empty()) return CExprPTokenPtr();
+
+    return stack_[stack_.size() - 1];
+  }
+
   void clear() {
     stack_.clear();
   }

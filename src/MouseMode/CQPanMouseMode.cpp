@@ -10,7 +10,7 @@
 
 CQPanMouseMode::
 CQPanMouseMode(CQMouseModeIFace *iface, CQPanZoomIFace *panIFace) :
- CQMouseMode(PAN_MOUSE_MODE_ID, iface), panIFace_(panIFace)
+ CQMouseMode(iface->getPanModeId(), iface), panIFace_(panIFace)
 {
 }
 

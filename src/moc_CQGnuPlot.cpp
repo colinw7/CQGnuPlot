@@ -85,28 +85,29 @@ int CQGnuPlotCanvas::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     return _id;
 }
-struct qt_meta_stringdata_CQGnuPlot_t {
+struct qt_meta_stringdata_CQGnuPlotWindow_t {
     QByteArrayData data[5];
-    char stringdata[37];
+    char stringdata[43];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    offsetof(qt_meta_stringdata_CQGnuPlot_t, stringdata) + ofs \
+    offsetof(qt_meta_stringdata_CQGnuPlotWindow_t, stringdata) + ofs \
         - idx * sizeof(QByteArrayData) \
     )
-static const qt_meta_stringdata_CQGnuPlot_t qt_meta_stringdata_CQGnuPlot = {
+static const qt_meta_stringdata_CQGnuPlotWindow_t qt_meta_stringdata_CQGnuPlotWindow = {
     {
-QT_MOC_LITERAL(0, 0, 9),
-QT_MOC_LITERAL(1, 10, 9),
-QT_MOC_LITERAL(2, 20, 0),
-QT_MOC_LITERAL(3, 21, 4),
-QT_MOC_LITERAL(4, 26, 9)
+QT_MOC_LITERAL(0, 0, 15),
+QT_MOC_LITERAL(1, 16, 9),
+QT_MOC_LITERAL(2, 26, 0),
+QT_MOC_LITERAL(3, 27, 4),
+QT_MOC_LITERAL(4, 32, 9)
     },
-    "CQGnuPlot\0xAxisSlot\0\0show\0yAxisSlot\0"
+    "CQGnuPlotWindow\0xAxisSlot\0\0show\0"
+    "yAxisSlot\0"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_CQGnuPlot[] = {
+static const uint qt_meta_data_CQGnuPlotWindow[] = {
 
  // content:
        7,       // revision
@@ -130,10 +131,10 @@ static const uint qt_meta_data_CQGnuPlot[] = {
        0        // eod
 };
 
-void CQGnuPlot::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void CQGnuPlotWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
-        CQGnuPlot *_t = static_cast<CQGnuPlot *>(_o);
+        CQGnuPlotWindow *_t = static_cast<CQGnuPlotWindow *>(_o);
         switch (_id) {
         case 0: _t->xAxisSlot((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 1: _t->yAxisSlot((*reinterpret_cast< bool(*)>(_a[1]))); break;
@@ -142,32 +143,32 @@ void CQGnuPlot::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
     }
 }
 
-const QMetaObject CQGnuPlot::staticMetaObject = {
-    { &QMainWindow::staticMetaObject, qt_meta_stringdata_CQGnuPlot.data,
-      qt_meta_data_CQGnuPlot,  qt_static_metacall, 0, 0}
+const QMetaObject CQGnuPlotWindow::staticMetaObject = {
+    { &QMainWindow::staticMetaObject, qt_meta_stringdata_CQGnuPlotWindow.data,
+      qt_meta_data_CQGnuPlotWindow,  qt_static_metacall, 0, 0}
 };
 
 
-const QMetaObject *CQGnuPlot::metaObject() const
+const QMetaObject *CQGnuPlotWindow::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *CQGnuPlot::qt_metacast(const char *_clname)
+void *CQGnuPlotWindow::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_CQGnuPlot.stringdata))
-        return static_cast<void*>(const_cast< CQGnuPlot*>(this));
-    if (!strcmp(_clname, "CGnuPlot"))
-        return static_cast< CGnuPlot*>(const_cast< CQGnuPlot*>(this));
+    if (!strcmp(_clname, qt_meta_stringdata_CQGnuPlotWindow.stringdata))
+        return static_cast<void*>(const_cast< CQGnuPlotWindow*>(this));
+    if (!strcmp(_clname, "CGnuPlotWindow"))
+        return static_cast< CGnuPlotWindow*>(const_cast< CQGnuPlotWindow*>(this));
     if (!strcmp(_clname, "CQMouseModeIFace"))
-        return static_cast< CQMouseModeIFace*>(const_cast< CQGnuPlot*>(this));
+        return static_cast< CQMouseModeIFace*>(const_cast< CQGnuPlotWindow*>(this));
     if (!strcmp(_clname, "CQPanZoomIFace"))
-        return static_cast< CQPanZoomIFace*>(const_cast< CQGnuPlot*>(this));
+        return static_cast< CQPanZoomIFace*>(const_cast< CQGnuPlotWindow*>(this));
     return QMainWindow::qt_metacast(_clname);
 }
 
-int CQGnuPlot::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int CQGnuPlotWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QMainWindow::qt_metacall(_c, _id, _a);
     if (_id < 0)

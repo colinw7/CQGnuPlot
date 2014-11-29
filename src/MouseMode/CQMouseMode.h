@@ -11,6 +11,9 @@
 
 #include <cassert>
 
+#define ZOOM_MOUSE_MODE_ID 1001
+#define PAN_MOUSE_MODE_ID  1002
+
 class QMenu;
 class CQMenu;
 class CQMenuItem;
@@ -20,6 +23,9 @@ class CQToolBar;
 class CQMouseModeIFace {
  public:
   CQMouseModeIFace() { }
+
+  virtual uint getZoomModeId() const { return ZOOM_MOUSE_MODE_ID; }
+  virtual uint getPanModeId () const { return PAN_MOUSE_MODE_ID ; }
 
   virtual void redraw() = 0;
   virtual void redrawOverlay() = 0;

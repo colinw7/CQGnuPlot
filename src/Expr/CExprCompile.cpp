@@ -19,8 +19,8 @@ class CExprCompileImpl {
   void        compileShiftExpression(CExprITokenPtr itoken);
   void        compileAdditiveExpression(CExprITokenPtr itoken);
   void        compileMultiplicativeExpression(CExprITokenPtr itoken);
-  void        compilePowerExpression(CExprITokenPtr itoken);
   void        compileUnaryExpression(CExprITokenPtr itoken);
+  void        compilePowerExpression(CExprITokenPtr itoken);
   void        compilePostfixExpression(CExprITokenPtr itoken);
   void        compilePrimaryExpression(CExprITokenPtr itoken);
   void        compileArgumentExpressionList(CExprITokenPtr itoken);
@@ -620,13 +620,10 @@ compileAdditiveExpression(CExprITokenPtr itoken)
 }
 
 /*
- * <multiplicative_expression>:= <power_expression>
- * <multiplicative_expression>:= <multiplicative_expression> *
- *                               <power_expression>
- * <multiplicative_expression>:= <multiplicative_expression> /
- *                               <power_expression>
- * <multiplicative_expression>:= <multiplicative_expression> %
- *                               <power_expression>
+ * <multiplicative_expression>:= <unary_expression>
+ * <multiplicative_expression>:= <multiplicative_expression> * <unary_expression>
+ * <multiplicative_expression>:= <multiplicative_expression> / <unary_expression>
+ * <multiplicative_expression>:= <multiplicative_expression> % <unary_expression>
  */
 
 void
@@ -638,7 +635,7 @@ compileMultiplicativeExpression(CExprITokenPtr itoken)
   if (num_children == 3) {
     compileMultiplicativeExpression(itoken->getChild(0));
 
-    compilePowerExpression(itoken->getChild(2));
+    compileUnaryExpression(itoken->getChild(2));
 
     CExprITokenPtr itoken1 = itoken->getChild(1);
 
@@ -652,33 +649,11 @@ compileMultiplicativeExpression(CExprITokenPtr itoken)
       stackOperator(CExprInst->getOperator(CEXPR_OP_MODULUS));
   }
   else
-    compilePowerExpression(itoken->getChild(0));
-}
-
-/*
- * <power_expression>:= <unary_expression>
- * <power_expression>:= <unary_expression> ** <power_expression>
- */
-
-void
-CExprCompileImpl::
-compilePowerExpression(CExprITokenPtr itoken)
-{
-  uint num_children = itoken->getNumChildren();
-
-  if (num_children == 3) {
-    compileUnaryExpression(itoken->getChild(0));
-
-    compilePowerExpression(itoken->getChild(2));
-
-    stackOperator(CExprInst->getOperator(CEXPR_OP_POWER));
-  }
-  else
     compileUnaryExpression(itoken->getChild(0));
 }
 
 /*
- * <unary_expression>:= <postfix_expression>
+ * <unary_expression>:= <power_expression>
  * <unary_expression>:= ++ <unary_expression>
  * <unary_expression>:= -- <unary_expression>
  * <unary_expression>:= +  <unary_expression>
@@ -746,6 +721,28 @@ compileUnaryExpression(CExprITokenPtr itoken)
       default:
         break;
     }
+  }
+  else
+    compilePowerExpression(itoken->getChild(0));
+}
+
+/*
+ * <power_expression>:= <postfix_expression>
+ * <power_expression>:= <postfix_expression> ** <power_expression>
+ */
+
+void
+CExprCompileImpl::
+compilePowerExpression(CExprITokenPtr itoken)
+{
+  uint num_children = itoken->getNumChildren();
+
+  if (num_children == 3) {
+    compilePostfixExpression(itoken->getChild(0));
+
+    compilePowerExpression(itoken->getChild(2));
+
+    stackOperator(CExprInst->getOperator(CEXPR_OP_POWER));
   }
   else
     compilePostfixExpression(itoken->getChild(0));

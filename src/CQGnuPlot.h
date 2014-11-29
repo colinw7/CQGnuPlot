@@ -4,14 +4,15 @@
 #include <CQMouseMode.h>
 #include <CQPanZoomIFace.h>
 
-class CQGnuPlot;
+class CQGnuPlotWindow;
 class CQGnuPlotRenderer;
 
 class CQGnuPlotCanvas : public QWidget {
   Q_OBJECT
 
  public:
-  CQGnuPlotCanvas(CQGnuPlot *plot);
+  CQGnuPlotCanvas(CQGnuPlotWindow *window);
+ ~CQGnuPlotCanvas();
 
  private:
   void paintEvent(QPaintEvent *);
@@ -19,29 +20,39 @@ class CQGnuPlotCanvas : public QWidget {
   void mouseMoveEvent(QMouseEvent *);
 
  private:
-  CQGnuPlot *plot_;
+  CQGnuPlotWindow *window_;
 };
 
-class CQGnuPlot : public QMainWindow, public CGnuPlot,
-                  public CQMouseModeIFace, public CQPanZoomIFace {
+class CQGnuPlot : public CGnuPlot {
+ public:
+  CQGnuPlot();
+ ~CQGnuPlot();
+
+  CGnuPlotWindow *createWindow();
+
+  void timeout();
+
+  void load(const std::string &filename);
+};
+
+class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
+                        public CQMouseModeIFace, public CQPanZoomIFace {
   Q_OBJECT
 
  public:
-  CQGnuPlot();
+  CQGnuPlotWindow(CQGnuPlot *plot);
+ ~CQGnuPlotWindow();
 
   CQGnuPlotCanvas *canvas() const { return canvas_; }
 
-  void load(const std::string &filename);
-
   void paint(QPainter *p);
-
-  CGnuPlot::Plot *plot() const { return plot_; }
 
   void showPos(double wx, double wy);
 
- private:
-  void timeout();
+  uint getZoomModeId() const { return ZOOM_MOUSE_MODE_ID + 1000*id_; }
+  uint getPanModeId () const { return PAN_MOUSE_MODE_ID  + 1000*id_; }
 
+ private:
   void stateChanged(CGnuPlot::ChangeState);
 
   void paintPlot(CGnuPlot::Plot *plot);
@@ -81,9 +92,12 @@ class CQGnuPlot : public QMainWindow, public CGnuPlot,
   void yAxisSlot(bool show);
 
  private:
+  static uint lastId;
+
+  uint               id_;
+  CQGnuPlot         *plot_;
   CQGnuPlotCanvas   *canvas_;
   CQGnuPlotRenderer *renderer_;
   CQMouseMode       *zoomMode_;
   CQMouseMode       *panMode_;
-  CGnuPlot::Plot    *plot_;
 };

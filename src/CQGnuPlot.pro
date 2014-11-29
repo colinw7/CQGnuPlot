@@ -16,6 +16,7 @@ CONFIG += debug
 SOURCES += \
 CQGnuPlot.cpp \
 CGnuPlot.cpp \
+CGnuPlotAxis.cpp \
 Expr/CExprBValue.cpp \
 Expr/CExprCompile.cpp \
 Expr/CExpr.cpp \
@@ -33,11 +34,11 @@ Expr/CExprVariable.cpp \
 MouseMode/CQMouseMode.cpp \
 MouseMode/CQPanMouseMode.cpp \
 MouseMode/CQZoomMouseMode.cpp \
-CAxis2D.cpp \
-CDrawAxis2D.cpp \
 
 HEADERS += \
 CQGnuPlot.h \
+CGnuPlot.h \
+CGnuPlotAxis.h \
 Expr/CExprBValue.h \
 Expr/CExprCompile.h \
 Expr/CExprError.h \
@@ -57,8 +58,6 @@ MouseMode/CQMouseMode.h \
 MouseMode/CQPanMouseMode.h \
 MouseMode/CQPanZoomIFace.h \
 MouseMode/CQZoomMouseMode.h \
-CAxis2D.h \
-CDrawAxis2D.h \
 
 DESTDIR     = ../bin
 OBJECTS_DIR = ../obj
@@ -76,6 +75,7 @@ INCLUDEPATH += \
 ../../CUtil/include \
 ../../CMath/include \
 ../../CStrUtil/include \
+../../CRGBName/include \
 
 unix:LIBS += \
 -L$$LIB_DIR \
@@ -89,6 +89,7 @@ unix:LIBS += \
 -L../../COS/lib \
 -L../../CStrUtil/lib \
 -L../../CRegExp/lib \
+-L../../CRGBName/lib \
 -lCQUtil -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
--lCFile -lCOS -lCStrUtil -lCRegExp \
+-lCRGBName -lCFile -lCOS -lCStrUtil -lCRegExp \
 -lpng -ljpeg -ltre -lreadline

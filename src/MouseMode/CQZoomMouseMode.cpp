@@ -13,7 +13,7 @@
 
 CQZoomMouseMode::
 CQZoomMouseMode(CQMouseModeIFace *iface, CQPanZoomIFace *zoomIFace) :
- CQMouseMode(ZOOM_MOUSE_MODE_ID, iface), zoomIFace_(zoomIFace)
+ CQMouseMode(iface->getZoomModeId(), iface), zoomIFace_(zoomIFace)
 {
   zoomCursor_ = QCursor(QBitmap::fromData(QSize(16,16), zoom_bits),
                         QBitmap::fromData(QSize(16,16), zoommask_bits),
