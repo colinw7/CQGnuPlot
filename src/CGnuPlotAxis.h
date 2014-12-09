@@ -29,6 +29,7 @@ class CGnuPlotAxis {
   uint getNumMinorTicks() const { return num_ticks2_; }
 
   uint getTickIncrement() const { return tick_increment_; }
+  void setTickIncrement(uint tick_increment);
 
   const double *getTickSpaces   () const { return &tick_spaces_[0]; }
   uint          getNumTickSpaces() const { return tick_spaces_.size(); }
@@ -36,18 +37,18 @@ class CGnuPlotAxis {
   void setTickInside(bool b) { tick_inside_ = b; }
 
   double getTickSpace(int i) const { return tick_spaces_[i]; }
-
-  const std::string &getLabel() const { return label_; }
-
-  bool getDisplayed() const { return displayed_; }
-
-  void setRange(double start, double end);
-
-  void setTickIncrement(uint tick_increment);
-
   void setTickSpaces(double *tick_spaces, uint num_tick_spaces);
 
+  const std::string &getLabel() const { return label_; }
   void setLabel(const std::string &str);
+
+  bool isDisplayed() const { return displayed_; }
+  void setDisplayed(bool b) { displayed_ = b; }
+
+  bool hasLine() const { return line_; }
+  void setLine(bool b) { line_ = b; }
+
+  void setRange(double start, double end);
 
   double getMajorIncrement() const;
   double getMinorIncrement() const;
@@ -88,6 +89,7 @@ class CGnuPlotAxis {
   bool                tick_inside_;
   std::string         label_;
   bool                displayed_;
+  bool                line_;
   CFontPtr            font_;
 };
 

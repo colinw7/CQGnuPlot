@@ -86,8 +86,8 @@ int CQGnuPlotCanvas::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     return _id;
 }
 struct qt_meta_stringdata_CQGnuPlotWindow_t {
-    QByteArrayData data[5];
-    char stringdata[43];
+    QByteArrayData data[23];
+    char stringdata[210];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -100,10 +100,32 @@ QT_MOC_LITERAL(0, 0, 15),
 QT_MOC_LITERAL(1, 16, 9),
 QT_MOC_LITERAL(2, 26, 0),
 QT_MOC_LITERAL(3, 27, 4),
-QT_MOC_LITERAL(4, 32, 9)
+QT_MOC_LITERAL(4, 32, 9),
+QT_MOC_LITERAL(5, 42, 8),
+QT_MOC_LITERAL(6, 51, 7),
+QT_MOC_LITERAL(7, 59, 7),
+QT_MOC_LITERAL(8, 67, 7),
+QT_MOC_LITERAL(9, 75, 6),
+QT_MOC_LITERAL(10, 82, 6),
+QT_MOC_LITERAL(11, 89, 6),
+QT_MOC_LITERAL(12, 96, 6),
+QT_MOC_LITERAL(13, 103, 6),
+QT_MOC_LITERAL(14, 110, 5),
+QT_MOC_LITERAL(15, 116, 10),
+QT_MOC_LITERAL(16, 127, 11),
+QT_MOC_LITERAL(17, 139, 9),
+QT_MOC_LITERAL(18, 149, 12),
+QT_MOC_LITERAL(19, 162, 8),
+QT_MOC_LITERAL(20, 171, 9),
+QT_MOC_LITERAL(21, 181, 9),
+QT_MOC_LITERAL(22, 191, 17)
     },
     "CQGnuPlotWindow\0xAxisSlot\0\0show\0"
-    "yAxisSlot\0"
+    "yAxisSlot\0enable3D\0rotateX\0rotateY\0"
+    "rotateZ\0xmin3D\0xmax3D\0ymin3D\0ymax3D\0"
+    "near3D\0far3D\0marginLeft\0marginRight\0"
+    "marginTop\0marginBottom\0hidden3D\0"
+    "surface3D\0contour3D\0trianglePattern3D\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -114,7 +136,7 @@ static const uint qt_meta_data_CQGnuPlotWindow[] = {
        0,       // classname
        0,    0, // classinfo
        2,   14, // methods
-       0,    0, // properties
+      18,   30, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
@@ -127,6 +149,26 @@ static const uint qt_meta_data_CQGnuPlotWindow[] = {
  // slots: parameters
     QMetaType::Void, QMetaType::Bool,    3,
     QMetaType::Void, QMetaType::Bool,    3,
+
+ // properties: name, type, flags
+       5, QMetaType::Bool, 0x00095103,
+       6, QMetaType::Double, 0x00095103,
+       7, QMetaType::Double, 0x00095103,
+       8, QMetaType::Double, 0x00095103,
+       9, QMetaType::Double, 0x00095003,
+      10, QMetaType::Double, 0x00095003,
+      11, QMetaType::Double, 0x00095003,
+      12, QMetaType::Double, 0x00095003,
+      13, QMetaType::Double, 0x00095103,
+      14, QMetaType::Double, 0x00095103,
+      15, QMetaType::Double, 0x00095103,
+      16, QMetaType::Double, 0x00095103,
+      17, QMetaType::Double, 0x00095103,
+      18, QMetaType::Double, 0x00095103,
+      19, QMetaType::Bool, 0x00095103,
+      20, QMetaType::Bool, 0x00095103,
+      21, QMetaType::Bool, 0x00095103,
+      22, QMetaType::Int, 0x00095103,
 
        0        // eod
 };
@@ -182,6 +224,71 @@ int CQGnuPlotWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
             *reinterpret_cast<int*>(_a[0]) = -1;
         _id -= 2;
     }
+#ifndef QT_NO_PROPERTIES
+      else if (_c == QMetaObject::ReadProperty) {
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: *reinterpret_cast< bool*>(_v) = enable3D(); break;
+        case 1: *reinterpret_cast< double*>(_v) = rotateX(); break;
+        case 2: *reinterpret_cast< double*>(_v) = rotateY(); break;
+        case 3: *reinterpret_cast< double*>(_v) = rotateZ(); break;
+        case 4: *reinterpret_cast< double*>(_v) = xmin3D(); break;
+        case 5: *reinterpret_cast< double*>(_v) = xmax3D(); break;
+        case 6: *reinterpret_cast< double*>(_v) = ymin3D(); break;
+        case 7: *reinterpret_cast< double*>(_v) = ymax3D(); break;
+        case 8: *reinterpret_cast< double*>(_v) = near3D(); break;
+        case 9: *reinterpret_cast< double*>(_v) = far3D(); break;
+        case 10: *reinterpret_cast< double*>(_v) = marginLeft(); break;
+        case 11: *reinterpret_cast< double*>(_v) = marginRight(); break;
+        case 12: *reinterpret_cast< double*>(_v) = marginTop(); break;
+        case 13: *reinterpret_cast< double*>(_v) = marginBottom(); break;
+        case 14: *reinterpret_cast< bool*>(_v) = hidden3D(); break;
+        case 15: *reinterpret_cast< bool*>(_v) = surface3D(); break;
+        case 16: *reinterpret_cast< bool*>(_v) = contour3D(); break;
+        case 17: *reinterpret_cast< int*>(_v) = trianglePattern3D(); break;
+        }
+        _id -= 18;
+    } else if (_c == QMetaObject::WriteProperty) {
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: setEnable3D(*reinterpret_cast< bool*>(_v)); break;
+        case 1: setRotateX(*reinterpret_cast< double*>(_v)); break;
+        case 2: setRotateY(*reinterpret_cast< double*>(_v)); break;
+        case 3: setRotateZ(*reinterpret_cast< double*>(_v)); break;
+        case 4: setXMin3D(*reinterpret_cast< double*>(_v)); break;
+        case 5: setXMax3D(*reinterpret_cast< double*>(_v)); break;
+        case 6: setYMin3D(*reinterpret_cast< double*>(_v)); break;
+        case 7: setYMax3D(*reinterpret_cast< double*>(_v)); break;
+        case 8: setNear3D(*reinterpret_cast< double*>(_v)); break;
+        case 9: setFar3D(*reinterpret_cast< double*>(_v)); break;
+        case 10: setMarginLeft(*reinterpret_cast< double*>(_v)); break;
+        case 11: setMarginRight(*reinterpret_cast< double*>(_v)); break;
+        case 12: setMarginTop(*reinterpret_cast< double*>(_v)); break;
+        case 13: setMarginBottom(*reinterpret_cast< double*>(_v)); break;
+        case 14: setHidden3D(*reinterpret_cast< bool*>(_v)); break;
+        case 15: setSurface3D(*reinterpret_cast< bool*>(_v)); break;
+        case 16: setContour3D(*reinterpret_cast< bool*>(_v)); break;
+        case 17: setTrianglePattern3D(*reinterpret_cast< int*>(_v)); break;
+        }
+        _id -= 18;
+    } else if (_c == QMetaObject::ResetProperty) {
+        _id -= 18;
+    } else if (_c == QMetaObject::QueryPropertyDesignable) {
+        _id -= 18;
+    } else if (_c == QMetaObject::QueryPropertyScriptable) {
+        _id -= 18;
+    } else if (_c == QMetaObject::QueryPropertyStored) {
+        _id -= 18;
+    } else if (_c == QMetaObject::QueryPropertyEditable) {
+        _id -= 18;
+    } else if (_c == QMetaObject::QueryPropertyUser) {
+        _id -= 18;
+    } else if (_c == QMetaObject::RegisterPropertyMetaType) {
+        if (_id < 18)
+            *reinterpret_cast<int*>(_a[0]) = -1;
+        _id -= 18;
+    }
+#endif // QT_NO_PROPERTIES
     return _id;
 }
 QT_END_MOC_NAMESPACE

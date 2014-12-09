@@ -53,7 +53,8 @@ CGnuPlotAxis(CGnuPlotWindow *window, COrientation direction, double start, doubl
  tick_spaces_   (),
  tick_inside_   (false),
  label_         (""),
- displayed_     (true)
+ displayed_     (true),
+ line_          (true)
 {
   calc();
 }
@@ -337,7 +338,7 @@ drawAxis(double pos)
 {
   std::string str;
 
-  if (! getDisplayed())
+  if (! isDisplayed())
     return;
 
   // bool rotatedText = (direction_ == CORIENTATION_VERTICAL);
@@ -350,10 +351,12 @@ drawAxis(double pos)
 
   /* Draw Axis Line */
 
-  if (direction_ == CORIENTATION_HORIZONTAL)
-    drawLine(CPoint2D(getStart(), pos), CPoint2D(getEnd(), pos));
-  else
-    drawLine(CPoint2D(pos, getStart()), CPoint2D(pos, getEnd()));
+  if (hasLine()) {
+    if (direction_ == CORIENTATION_HORIZONTAL)
+      drawLine(CPoint2D(getStart(), pos), CPoint2D(getEnd(), pos));
+    else
+      drawLine(CPoint2D(pos, getStart()), CPoint2D(pos, getEnd()));
+  }
 
   /*------*/
 
@@ -538,12 +541,12 @@ void
 CGnuPlotAxis::
 drawGrid(double start, double end)
 {
-  //static double grid_dashes[]   = {1, 3};
-  //static uint   num_grid_dashes = 2;
+  static double grid_dashes[]   = {1, 3};
+  static uint   num_grid_dashes = 2;
 
-  /*------*/
+  CGnuPlotRenderer *renderer = window_->renderer();
 
-  //setLineDash(CLineDash(grid_dashes, num_grid_dashes));
+  renderer->setLineDash(CLineDash(grid_dashes, num_grid_dashes));
 
   /*------*/
 
@@ -570,7 +573,7 @@ drawGrid(double start, double end)
 
   /*------*/
 
-  //setLineDash(CLineDash());
+  renderer->setLineDash(CLineDash());
 }
 
 void

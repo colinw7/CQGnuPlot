@@ -127,15 +127,24 @@ CExprParseImpl::
 parseLine(CExprPTokenStack &stack, const std::string &line)
 {
   CExprPTokenPtr ptoken;
+  CExprPTokenPtr lastPToken;
 
   uint i = 0;
 
   CStrUtil::skipSpace(line, &i);
 
   while (i < line.size()) {
+    lastPToken = ptoken;
+
+    //---
+
     if      (CExprOperator::isOperatorChar(line[i])) {
-      if ((line[i] == '-' || line[i] == '+') && i < line.size() - 1 && isdigit(line[i + 1]))
-        ptoken = readNumber(line, &i);
+      if (! lastPToken.isValid() || lastPToken->getType() == CEXPR_PTOKEN_OPERATOR) {
+        if ((line[i] == '-' || line[i] == '+') && i < line.size() - 1 && isdigit(line[i + 1]))
+          ptoken = readNumber(line, &i);
+        else
+          ptoken = readOperator(line, &i);
+      }
       else
         ptoken = readOperator(line, &i);
 

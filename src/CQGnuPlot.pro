@@ -17,6 +17,13 @@ SOURCES += \
 CQGnuPlot.cpp \
 CGnuPlot.cpp \
 CGnuPlotAxis.cpp \
+CGnuPlotContour.cpp \
+CQPropertyDelegate.cpp \
+CQPropertyEditor.cpp \
+CQPropertyItem.cpp \
+CQPropertyTree.cpp \
+CQPaletteChooser.cpp \
+CQPaletteDialog.cpp \
 Expr/CExprBValue.cpp \
 Expr/CExprCompile.cpp \
 Expr/CExpr.cpp \
@@ -39,6 +46,13 @@ HEADERS += \
 CQGnuPlot.h \
 CGnuPlot.h \
 CGnuPlotAxis.h \
+CGnuPlotContour.h \
+CQPropertyDelegate.h \
+CQPropertyEditor.h \
+CQPropertyItem.h \
+CQPropertyTree.h \
+CQPaletteChooser.h \
+CQPaletteDialog.h \
 Expr/CExprBValue.h \
 Expr/CExprCompile.h \
 Expr/CExprError.h \

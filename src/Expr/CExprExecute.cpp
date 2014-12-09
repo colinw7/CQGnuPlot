@@ -11,13 +11,13 @@ class CExprExecuteImpl {
   CExprValuePtr executeCTokenStack(const CExprCTokenStack &stack);
 
  private:
-  void           executeToken(const CExprCTokenPtr &ctoken);
-  void           executeOperator(const CExprOperatorPtr &op);
+  bool           executeToken(const CExprCTokenPtr &ctoken);
+  bool           executeOperator(const CExprOperatorPtr &op);
   void           executeQuestionOperator();
   void           executeUnaryOperator(CExprOpType type);
   void           executeLogicalUnaryOperator(CExprOpType type);
   void           executeBitwiseUnaryOperator(CExprOpType type);
-  void           executeBinaryOperator(CExprOpType type);
+  bool           executeBinaryOperator(CExprOpType type);
   void           executeLogicalBinaryOperator(CExprOpType type);
   void           executeBitwiseBinaryOperator(CExprOpType type);
   void           executeColonOperator();
@@ -84,7 +84,8 @@ executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &va
   for (uint i = 0; i < num_ctokens; ++i) {
     CExprCTokenPtr ctoken = ctoken_stack_.getToken(i);
 
-    executeToken(ctoken);
+    if (! executeToken(ctoken))
+      return false;
 
     if (CExprInst->getDebug())
       std::cerr << "EToken Stack:" << etoken_stack_ << std::endl;
@@ -128,7 +129,7 @@ executeCTokenStack(const CExprCTokenStack &stack)
   return values.back();
 }
 
-void
+bool
 CExprExecuteImpl::
 executeToken(const CExprCTokenPtr &ctoken)
 {
@@ -138,7 +139,8 @@ executeToken(const CExprCTokenPtr &ctoken)
 
       break;
     case CEXPR_CTOKEN_OPERATOR:
-      executeOperator(ctoken->getOperator());
+      if (! executeOperator(ctoken->getOperator()))
+        return false;
 
       break;
     case CEXPR_CTOKEN_INTEGER: {
@@ -176,9 +178,11 @@ executeToken(const CExprCTokenPtr &ctoken)
     default:
       break;
   }
+
+  return true;
 }
 
-void
+bool
 CExprExecuteImpl::
 executeOperator(const CExprOperatorPtr &op)
 {
@@ -210,7 +214,9 @@ executeOperator(const CExprOperatorPtr &op)
 #ifdef GNUPLOT_EXPR
     case CEXPR_OP_CONCAT:
 #endif
-      executeBinaryOperator(type);
+      if (! executeBinaryOperator(type))
+        return false;
+
       break;
     case CEXPR_OP_LOGICAL_AND:
     case CEXPR_OP_LOGICAL_OR:
@@ -246,10 +252,13 @@ executeOperator(const CExprOperatorPtr &op)
       executeSubscriptOperator();
       break;
 #endif
-    default:
+    default: {
       std::cerr << "Invalid operator for 'executeOperator'" << std::endl;
-      break;
+      return false;
+    }
   }
+
+  return true;
 }
 
 void
@@ -374,7 +383,7 @@ executeBitwiseUnaryOperator(CExprOpType type)
 
 /* <value1> <value2> <binary_op> */
 
-void
+bool
 CExprExecuteImpl::
 executeBinaryOperator(CExprOpType type)
 {
@@ -382,28 +391,33 @@ executeBinaryOperator(CExprOpType type)
   CExprETokenPtr etoken1 = unstackEToken();
 
   if (! etoken1.isValid() || ! etoken2.isValid())
-    return;
+    return false;
 
   CExprValuePtr value1 = etokenToValue(etoken1);
   CExprValuePtr value2 = etokenToValue(etoken2);
 
   if (! value1.isValid() || ! value2.isValid())
-    return;
+    return false;
 
   if (value1->isRealValue() || value2->isRealValue()) {
-    if (! value1->convToReal()) return;
-    if (! value2->convToReal()) return;
+    if (! value1->convToReal()) return false;
+    if (! value2->convToReal()) return false;
   }
 
 #ifdef GNUPLOT_EXPR
   if (value2->isStringValue() && ! value1->isStringValue()) {
-    if (! value1->convToString()) return;
+    if (! value1->convToString()) return false;
   }
 #endif
 
   CExprValuePtr value = value1->execBinaryOp(value2, type);
 
+  if (! value.isValid())
+    return false;
+
   stackValue(value);
+
+  return true;
 }
 
 /* <value1> <value2> <binary_op> */
@@ -605,34 +619,6 @@ etokenToValue(const CExprETokenPtr &etoken)
 
   return CExprValuePtr();
 }
-
-#if 0
-CExprValueType
-ExprExecute::
-etokenToValueType(CExprETokenPtr etoken)
-{
-  CExprValueType type = CEXPR_VALUE_NONE;
-
-  switch (etoken->getType()) {
-    case CEXPR_ETOKEN_IDENTIFIER: {
-      CExprVariablePtr variable = CExprInst->getVariable(etoken->getIdentifier());
-
-      if (variable)
-        type = variable->getValueType();
-
-      break;
-    }
-    case CEXPR_ETOKEN_VALUE:
-      type = etoken->getValue()->getType();
-
-      break;
-    default:
-      break;
-  }
-
-  return type;
-}
-#endif
 
 void
 CExprExecuteImpl::

@@ -15,7 +15,12 @@
 #include <CPoint2D.h>
 #include <CBBox2D.h>
 #include <CAlignType.h>
+#include <CCoordFrame3D.h>
+#include <CLineDash.h>
+#include <CMatrix3DH.h>
 #include <NaN.h>
+
+#include <CGnuPlotContour.h>
 
 #define ACCESSOR(T,V,G,S) \
 const T &G() const { return V; } \
@@ -104,6 +109,7 @@ class CGnuPlot {
     ARROW_VAR,
     KEY_VAR,
     LABEL_VAR,
+    OBJECT_VAR,
     TIMESTAMP_VAR,
     TITLE_VAR,
 
@@ -253,6 +259,8 @@ class CGnuPlot {
     CIRCLES_STYLE,
     ELLIPSES_STYLE,
     PM3D_STYLE,
+    TEST_TERMINAL_STYLE,
+    TEST_PALETTE_STYLE,
   };
 
   enum SeparatorType {
@@ -288,6 +296,52 @@ class CGnuPlot {
     CB_LOGSCALE
   };
 
+  enum TestType {
+    TEST_NONE,
+    TEST_TERMINAL,
+    TEST_PALETTE
+  };
+
+  enum ColorModel {
+    COLOR_MODEL_RGB,
+    COLOR_MODEL_HSV,
+    COLOR_MODEL_CMY,
+    COLOR_MODEL_YIQ,
+    COLOR_MODEL_XYZ,
+  };
+
+  enum SymbolType {
+    SYMBOL_NONE,
+    SYMBOL_POINT,
+    SYMBOL_PLUS,
+    SYMBOL_CROSS,
+    SYMBOL_STAR,
+    SYMBOL_BOX,
+    SYMBOL_FILLED_BOX,
+    SYMBOL_CIRCLE,
+    SYMBOL_FILLED_CIRCLE,
+    SYMBOL_TRIANGLE,
+    SYMBOL_FILLED_TRIANGLE,
+    SYMBOL_INV_TRIANGLE,
+    SYMBOL_FILLED_INV_TRIANGLE,
+    SYMBOL_DIAMOND,
+    SYMBOL_FILLED_DIAMOND,
+    SYMBOL_LAST=SYMBOL_FILLED_DIAMOND
+  };
+
+  enum PatternType {
+    PATTERN_NONE,
+    PATTERN_HATCH,
+    PATTERN_DENSE,
+    PATTERN_FG,
+    PATTERN_FDIAG,
+    PATTERN_BDIAG,
+    PATTERN_FDIAG1,
+    PATTERN_BDIAG1,
+    PATTERN_BG,
+    PATTERN_LAST=PATTERN_BG
+  };
+
   //---
 
   struct Separator {
@@ -318,6 +372,11 @@ class CGnuPlot {
 
     bool getX(double &x) const;
     bool getY(double &y) const;
+    bool getZ(double &z) const;
+
+    double getX() const;
+    double getY() const;
+    double getZ() const;
 
     bool getValue(int n, double &r) const;
     bool getValue(int n, std::string &str) const;
@@ -336,7 +395,8 @@ class CGnuPlot {
     bool operator!=(const Point &p) const { return ! (*this == p); }
   };
 
-  typedef std::vector<Point> Points;
+  typedef std::vector<Point>     Points2D;
+  typedef std::map<int,Points2D> Points3D;
 
   //---
 
@@ -379,21 +439,11 @@ class CGnuPlot {
 
   //---
 
-  struct Color {
-    double r;
-    double g;
-    double b;
-    double a;
-
-    Color() : r(0), g(0), b(0), a(1) { }
-  };
-
-  //---
-
   class FillStyle {
    public:
     FillStyle() :
-     style_(FILL_EMPTY), density_(1.0), pattern_(0), border_(true), borderLine_(-1) {
+     style_(FILL_EMPTY), density_(1.0), pattern_(CGnuPlot::PATTERN_NONE),
+     border_(true), borderLine_(-1) {
     }
 
     FillType style() const { return style_; }
@@ -402,8 +452,8 @@ class CGnuPlot {
     double density() const { return density_; }
     void setDensity(double d) { density_ = d; }
 
-    int pattern() const { return pattern_; }
-    void setPattern(int p) { pattern_ = p; }
+    CGnuPlot::PatternType pattern() const { return pattern_; }
+    void setPattern(CGnuPlot::PatternType p) { pattern_ = p; }
 
     bool border() const { return border_; }
     void setBorder(bool b) { border_ = b; }
@@ -412,11 +462,11 @@ class CGnuPlot {
     void setBorderLine(int b) { borderLine_ = b; }
 
    private:
-    FillType style_;
-    double   density_;
-    int      pattern_;
-    bool     border_;
-    int      borderLine_;
+    FillType              style_;
+    double                density_;
+    CGnuPlot::PatternType pattern_;
+    bool                  border_;
+    int                   borderLine_;
   };
 
   //---
@@ -433,13 +483,13 @@ class CGnuPlot {
     double width() const { return width_; }
     void setWidth(double width) { width_ = width; }
 
-    const Color &color() const { return color_; }
-    void setColor(const Color &c) { color_ = c; }
+    const CRGBA &color() const { return color_; }
+    void setColor(const CRGBA &c) { color_ = c; }
 
    private:
     int    type_;
     double width_;
-    Color  color_;
+    CRGBA  color_;
   };
 
   //---
@@ -485,6 +535,8 @@ class CGnuPlot {
     Title() : offset(0) { }
   };
 
+  //---
+
   struct AxisData {
     bool        displayed;
     bool        border;
@@ -501,10 +553,13 @@ class CGnuPlot {
   struct AxesData {
     AxisData xaxis;
     AxisData yaxis;
+    AxisData zaxis;
     bool     border;
 
     AxesData() { }
   };
+
+  //---
 
   struct Key {
     bool        displayed;
@@ -513,16 +568,23 @@ class CGnuPlot {
     Key() : displayed(true) { }
   };
 
+  //---
+
   struct Position {
     CPoint2D p;
 
     Position(double x=0.0, double y=0.0) : p(x, y) { }
+
+    Position(const CPoint2D &p1) : p(p1) { }
   };
+
+  //---
 
   struct Arrow {
     Arrow() :
      ind(-1), from(0,0), to(1,1), relative(false), length(-1), angle(-1), backAngle(-1),
-     fhead(false), thead(true), filled(false), front(false), lineType(-1), lineWidth(-1) {
+     fhead(false), thead(true), filled(false), front(false), lineType(-1), lineWidth(-1),
+     c(0,0,0) {
     }
 
     int      ind;
@@ -536,9 +598,12 @@ class CGnuPlot {
     bool     front;
     int      lineType;
     double   lineWidth;
+    CRGBA    c;
   };
 
   typedef std::vector<Arrow> Arrows;
+
+  //---
 
   struct Label {
     Label() :
@@ -559,6 +624,127 @@ class CGnuPlot {
 
   //---
 
+  struct Palette {
+    typedef std::map<double,CRGBA> ColorMap;
+
+    ColorModel colorModel;
+    ColorMap   colors;
+
+    void addColor(double v, const CRGBA &c) {
+      colors[v] = c;
+    }
+
+    CRGBA getColor(double x) const {
+      if (colors.empty()) {
+        Palette *th = const_cast<Palette *>(this);
+
+        th->addColor(0.0, CRGBA(0,0,0));
+        th->addColor(1.0, CRGBA(1,1,1));
+      }
+
+      double min = colors. begin()->first;
+      double max = colors.rbegin()->first;
+
+      ColorMap::const_iterator p = colors.begin();
+
+      double x1    = ((*p).first - min)/(max - min);
+      CRGBA  rgba1 = (*p).second;
+
+      if (x <= x1) return rgba1;
+
+      for (++p; p != colors.end(); ++p) {
+        double x2    = ((*p).first - min)/(max - min);
+        CRGBA  rgba2 = (*p).second;
+
+        if (x <= x2) {
+          double m = (x - x1)/(x2 - x1);
+
+          return (1.0 - m)*rgba1 + m*rgba2;
+        }
+
+        x1    = x2;
+        rgba1 = rgba2;
+      }
+
+      return rgba1;
+    }
+  };
+
+  struct Camera {
+    bool          enabled;
+    CCoordFrame3D coordFrame;
+    CVector3D     direction;
+    double        fov;
+    double        xmin, xmax;
+    double        ymin, ymax;
+    double        near, far;
+    CMatrix3DH    projMatrix;
+    double        rotateX, rotateY, rotateZ;
+
+    Camera() :
+     enabled(true), direction(0,0,1), fov(90), xmin(-1), xmax(1), ymin(-1), ymax(1),
+     near(0.1), far(100), rotateX(60.0), rotateY(0.0), rotateZ(45.0) {
+      init();
+    }
+
+    void init() {
+      coordFrame.init();
+
+      setDirection(CVector3D(0,0,1));
+
+      //projMatrix.buildPerspective(fov, 1.0, near, far);
+      projMatrix.buildOrtho(xmin, xmax, ymin, ymax, near, far);
+      //projMatrix.buildFrustrum(-2, 2, -2, 2, near, far);
+
+      rotateDX(M_PI*rotateX/180.0);
+      rotateDY(M_PI*rotateY/180.0);
+      rotateDZ(M_PI*rotateZ/180.0);
+    }
+
+    void setPosition(const CPoint3D &position) {
+      coordFrame.setOrigin(position);
+    }
+
+    void setDirection(const CVector3D &dir) {
+      CVector3D right, up, dir1;
+
+      coordFrame.getBasis(right, up, dir1);
+
+      dir1 = dir.unit();
+
+      right = dir1 .crossProduct(up );
+      up    = right.crossProduct(dir1);
+
+      if (COrthonormalBasis3DT<double>::validate(right, up, dir1)) {
+        coordFrame.setBasis(right, up, dir1);
+
+        direction = dir;
+      }
+    }
+
+    void moveDX(double dx) { coordFrame.moveX(dx); }
+    void moveDY(double dy) { coordFrame.moveY(dy); }
+    void moveDZ(double dz) { coordFrame.moveZ(dz); }
+
+    void rotateDX(double dx) { coordFrame.rotateAboutX(dx); }
+    void rotateDY(double dy) { coordFrame.rotateAboutY(dy); }
+    void rotateDZ(double dz) { coordFrame.rotateAboutZ(dz); }
+
+    CPoint3D transform(const CPoint3D &p) const {
+      if (! enabled) return p;
+
+      CPoint3D p1 = coordFrame.transformTo(p);
+
+      CPoint3D p2;
+
+      projMatrix.multiplyPoint(p1, p2);
+
+      return p2;
+    }
+  };
+
+  //---
+
   class Plot {
    public:
     Plot(CGnuPlotWindow *window);
@@ -568,16 +754,42 @@ class CGnuPlot {
 
     CGnuPlotWindow *window() const { return window_; }
 
-    const Points &getPoints() const { return points_; }
+    void set3D(bool b) { is3D_ = b; }
+    bool is3D() const { return is3D_; }
 
-    uint numPoints() const { return points_.size(); }
+    const Points2D &getPoints2D() const { assert(! is3D_); return points2D_; }
 
-    const Point &getPoint(int i) const { return points_[i]; }
+    uint numPoints2D() const { assert(! is3D_); return points2D_.size(); }
+
+    const Point &getPoint2D(int i) const { assert(! is3D_); return points2D_[i]; }
+
+    std::pair<int,int> numPoints3D() const {
+      assert(is3D_);
+
+      if (points3D_.empty()) return std::pair<int,int>(0,0);
+
+      return std::pair<int,int>(points3D_.begin()->second.size(), points3D_.size());
+    }
+
+    const Point &getPoint3D(int ix, int iy) const {
+      assert(is3D_);
+
+      Points3D::const_iterator p = points3D_.find(iy);
+
+      if (p != points3D_.end())
+        return (*p).second[ix];
+      else
+        assert(false);
+    }
 
     void clearPoints();
 
-    void addPoint(double x, double y);
-    void addPoint(const Values &value, bool discontinuity=false);
+    void addPoint2D(double x, double y);
+    void addPoint2D(const Values &value, bool discontinuity=false);
+
+    void addPoint3D(int iy, double x, double y, double z);
+
+    void reset3D();
 
     void fit();
     void smooth();
@@ -609,14 +821,26 @@ class CGnuPlot {
 
     void setFitX(bool b) { fitX_ = b; }
     bool getFitX() const { return fitX_; }
+
     void setFitY(bool b) { fitY_ = b; }
     bool getFitY() const { return fitY_; }
 
-    void draw();
+    void setFitZ(bool b) { fitZ_ = b; }
+    bool getFitZ() const { return fitZ_; }
+
+    void draw2D();
+    void draw3D();
 
    private:
+    typedef std::vector<CPoint2D>         Points;
+    typedef std::pair<double,Points>      ZPoints;
+    typedef std::vector<ZPoints>          ZPointsArray;
+    typedef std::map<double,ZPointsArray> ZPolygons;
+
     CGnuPlotWindow* window_;
-    Points          points_;
+    bool            is3D_;
+    Points2D        points2D_;
+    Points3D        points3D_;
     int             ind_;
     double          xmin_, xmax_, ymin_, ymax_;
     PlotStyle       style_;
@@ -625,7 +849,12 @@ class CGnuPlot {
     PointStyle      pointStyle_;
     COptInt         lineStyleNum_;
     Smooth          smooth_;
-    bool            fitX_, fitY_;
+    bool            fitX_, fitY_, fitZ_;
+    CGnuPlotContour contour_;
+    bool            contourSet_;
+    ZPolygons       surface_;
+    bool            surfaceSet_;
+    COptReal        surfaceZMin_, surfaceZMax_;
   };
 
   //---
@@ -676,10 +905,21 @@ class CGnuPlot {
   void setSmooth(Smooth s) { smooth_ = s; }
   Smooth getSmooth() const { return smooth_; }
 
+  const Palette &palette() const { return palette_; }
+  void setPalette(const Palette &p) { palette_ = p; }
+
+  const Camera &camera() const { return camera_; }
+  Camera &camera() { return camera_; }
+  void setCamera(const Camera &c) { camera_ = c; }
+
   void setFitX(bool b) { fitX_ = b; }
   bool getFitX() const { return fitX_; }
+
   void setFitY(bool b) { fitY_ = b; }
   bool getFitY() const { return fitY_; }
+
+  void setFitZ(bool b) { fitZ_ = b; }
+  bool getFitZ() const { return fitZ_; }
 
   bool load(const std::string &filename);
 
@@ -719,7 +959,7 @@ class CGnuPlot {
   void loadCmd(const std::string &args);
   void saveCmd(const std::string &args);
 
-  bool plotCmd  (const std::string &args);
+  void plotCmd  (const std::string &args);
   void replotCmd(const std::string &args);
   void splotCmd (const std::string &args);
 
@@ -744,13 +984,13 @@ class CGnuPlot {
   void pauseCmd (const std::string &args);
   void rereadCmd(const std::string &args);
 
-  Plot *addFunction(CGnuPlotWindow *window, const std::string &str, PlotStyle style);
+  Plot *addFunction2D(CGnuPlotWindow *window, const std::string &str, PlotStyle style);
+  Plot *addFunction3D(CGnuPlotWindow *window, const std::string &str, PlotStyle style);
 
-  Plot *addFile(CGnuPlotWindow *window, const std::string &filename, PlotStyle style,
-                const UsingCols &usingCols, const Index &index=Index(),
-                const Every &every=Every());
-
-  void getNumX(int *nx) const;
+  Plot *addFile2D(CGnuPlotWindow *window, const std::string &filename, PlotStyle style,
+                  const UsingCols &usingCols, const Index &index=Index(),
+                  const Every &every=Every());
+  Plot *addFile3D(CGnuPlotWindow *window, const std::string &filename);
 
   void setSeparator(Separator sep) { separator_ = sep; }
   const Separator &getSeparator() const { return separator_; }
@@ -817,10 +1057,40 @@ class CGnuPlot {
     isamples2 = isamples2_;
   }
 
+  void setIsoSamples(int isamples1, int isamples2) {
+    isoSamples1_ = isamples1;
+    isoSamples2_ = isamples2;
+  }
+
+  void getIsoSamples(int &isamples1, int &isamples2) const {
+    isamples1 = isoSamples1_;
+    isamples2 = isoSamples2_;
+  }
+
+  bool parseColor(CParseLine &line, CRGBA &c);
+
   bool parseString(const std::string &line, std::string &filename);
   bool parseString(CParseLine &line, std::string &filename);
 
   bool parsePosition(CParseLine &line, Position &pos);
+
+  bool hidden3D() const { return hidden3D_; }
+  void setHidden3D(bool b) { hidden3D_ = b; }
+
+  bool surface3D() const { return surface3D_; }
+  void setSurface3D(bool b) { surface3D_ = b; }
+
+  bool contour3D() const { return contour3D_; }
+  void setContour3D(bool b) { contour3D_ = b; }
+
+  bool pm3D() const { return pm3D_; }
+  void setPm3D(bool b) { pm3D_ = b; }
+
+  int trianglePattern3D() const { return trianglePattern3D_; }
+  void setTrianglePattern3D(int n) { trianglePattern3D_ = n; }
+
+  std::string readFunction  (CParseLine &line);
+  std::string readIdentifier(CParseLine &line);
 
   std::string readNonSpace(CParseLine &line);
   std::string readNonSpaceNonComma(CParseLine &line);
@@ -856,10 +1126,18 @@ class CGnuPlot {
   Key                              key_;
   Arrows                           arrows_;
   Labels                           labels_;
-  bool                             fitX_, fitY_;
+  Palette                          palette_;
+  Camera                           camera_;
+  bool                             fitX_, fitY_, fitZ_;
   LogScaleMap                      logScale_;
   std::string                      dummyVar1_, dummyVar2_;
   int                              isamples1_, isamples2_;
+  int                              isoSamples1_, isoSamples2_;
+  bool                             hidden3D_;
+  bool                             surface3D_;
+  bool                             contour3D_;
+  bool                             pm3D_;
+  int                              trianglePattern3D_;
   CAutoPtr<CGnuPlotReadLine>       readLine_;
   mutable std::vector<std::string> fields_;
 };
@@ -875,6 +1153,9 @@ class CGnuPlotWindow {
   CGnuPlotWindow(CGnuPlot *plot);
 
   virtual ~CGnuPlotWindow();
+
+  void set3D(bool b);
+  bool is3D() const { return is3D_; }
 
   CGnuPlot *plot() const { return plot_; }
 
@@ -914,6 +1195,20 @@ class CGnuPlotWindow {
     *ymin = axesData().yaxis.min.getValue(-1);
     *ymax = axesData().yaxis.max.getValue(1);
   }
+  void getZRange(double *zmin, double *zmax) {
+    *zmin = axesData().zaxis.min.getValue(-1);
+    *zmax = axesData().zaxis.max.getValue(1);
+  }
+
+  double marginLeft  () const { return margin_.getLeft  (); }
+  double marginRight () const { return margin_.getRight (); }
+  double marginTop   () const { return margin_.getTop   (); }
+  double marginBottom() const { return margin_.getBottom(); }
+
+  void setMarginLeft  (double m) { margin_.setLeft  (m); }
+  void setMarginRight (double m) { margin_.setRight (m); }
+  void setMarginTop   (double m) { margin_.setTop   (m); }
+  void setMarginBottom(double m) { margin_.setBottom(m); }
 
   void getDisplayRange(double *xmin, double *ymin, double *xmax, double *ymax) const;
 
@@ -922,6 +1217,42 @@ class CGnuPlotWindow {
 
   const Labels &labels() const { return labels_; }
   void setLabels(const Labels &labels) { labels_ = labels; }
+
+  bool hidden3D() const { return hidden3D_; }
+  void setHidden3D(bool b) { hidden3D_ = b; }
+
+  bool surface3D() const { return surface3D_; }
+  void setSurface3D(bool b) { surface3D_ = b; }
+
+  bool contour3D() const { return contour3D_; }
+  void setContour3D(bool b) { contour3D_ = b; }
+
+  bool pm3D() const { return pm3D_; }
+  void setPm3D(bool b) { pm3D_ = b; }
+
+  int trianglePattern3D() const { return trianglePattern3D_; }
+  void setTrianglePattern3D(int n) { trianglePattern3D_ = n; }
+
+  const CGnuPlot::Palette &palette() const { return palette_; }
+  void setPalette(const CGnuPlot::Palette &p) { palette_ = p; }
+
+  const CGnuPlot::Camera &camera() const { return camera_; }
+  void setCamera(const CGnuPlot::Camera &c) { camera_ = c; }
+
+  void setCameraEnabled(bool b);
+
+  void setCameraRotateX(double a);
+  void setCameraRotateY(double a);
+  void setCameraRotateZ(double a);
+
+  void setCameraXMin(double x);
+  void setCameraXMax(double x);
+  void setCameraYMin(double y);
+  void setCameraYMax(double y);
+  void setCameraNear(double z);
+  void setCameraFar (double z);
+
+  void reset3D();
 
   void mapLogPoint  (double *x, double *y) const;
   void unmapLogPoint(double *x, double *y) const;
@@ -937,13 +1268,21 @@ class CGnuPlotWindow {
   void drawLabel(const CGnuPlot::Label &label);
 
   void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                        CVAlignType valign, int y_offset, const std::string &str);
+                        CVAlignType valign, int y_offset, const std::string &str,
+                        const CRGBA &c=CRGBA(0,0,0));
   void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                        CVAlignType valign, int y_offset, const std::string &str);
+                        CVAlignType valign, int y_offset, const std::string &str,
+                        const CRGBA &c=CRGBA(0,0,0));
 
-  void drawRotatedText(const CPoint2D &p, const std::string &text);
+  void drawRotatedText(const CPoint2D &p, const std::string &text,
+                       const CRGBA &c=CRGBA(0,0,0), double a=90);
+
+  CPoint2D pixelToWindow(const CPoint2D &p) const;
+  CPoint2D windowToPixel(const CPoint2D &p) const;
 
  private:
+  void drawTerminal();
+  void drawPalette();
   void drawPlots();
   void paintStart();
   void paintEnd();
@@ -951,6 +1290,7 @@ class CGnuPlotWindow {
  private:
   typedef std::vector<CGnuPlot::Plot *> Plots;
 
+  bool                   is3D_;
   CGnuPlot*              plot_;
   CGnuPlot::PlotStyle    style_;
   Plots                  plots_;
@@ -961,6 +1301,14 @@ class CGnuPlotWindow {
   CAutoPtr<CGnuPlotAxis> yaxis_;
   Arrows                 arrows_;
   Labels                 labels_;
+  CBBox2D                margin_;
+  CGnuPlot::Palette      palette_;
+  CGnuPlot::Camera       camera_;
+  bool                   hidden3D_;
+  bool                   surface3D_;
+  bool                   contour3D_;
+  bool                   pm3D_;
+  int                    trianglePattern3D_;
 };
 
 //------
@@ -978,17 +1326,26 @@ class CGnuPlotRenderer {
 
   virtual void setFont(CFontPtr font) = 0;
 
-  virtual void drawPoint  (const CPoint2D &p) = 0;
-  virtual void drawSymbol (const CPoint2D &p, int type, double size) = 0;
-  virtual void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width=1.0) = 0;
-  virtual void drawRect   (const CBBox2D &rect) = 0;
-  virtual void drawPolygon(const std::vector<CPoint2D> &points, double w, bool fixed=false) = 0;
-  virtual void patternRect(const CBBox2D &rect, int pattern=0) = 0;
-  virtual void fillRect   (const CBBox2D &rect, const CGnuPlot::Color &color) = 0;
+  virtual void setLineDash(const CLineDash &line_dash) = 0;
+
+  virtual void drawPoint  (const CPoint2D &p, const CRGBA &c=CRGBA(0,0,0)) = 0;
+  virtual void drawSymbol (const CPoint2D &p, CGnuPlot::SymbolType type, double size,
+                           const CRGBA &c=CRGBA(0,0,0)) = 0;
+  virtual void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width=1.0,
+                           const CRGBA &c=CRGBA(0,0,0)) = 0;
+  virtual void drawRect   (const CBBox2D &rect, const CRGBA &c=CRGBA(0,0,0)) = 0;
+  virtual void drawPolygon(const std::vector<CPoint2D> &points, double w,
+                           const CRGBA &c=CRGBA(0,0,0)) = 0;
+  virtual void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c=CRGBA(0,0,0)) = 0;
+  virtual void patternRect(const CBBox2D &rect,
+                           CGnuPlot::PatternType pattern=CGnuPlot::PATTERN_NONE,
+                           const CRGBA &fg=CRGBA(0,0,0), const CRGBA &bg=CRGBA(1,1,1)) = 0;
+  virtual void fillRect   (const CBBox2D &rect, const CRGBA &c) = 0;
   virtual void drawBezier (const CPoint2D &p1, const CPoint2D &p2,
                            const CPoint2D &p3, const CPoint2D &p4) = 0;
 
-  virtual void drawText(const CPoint2D &p, const std::string &text) = 0;
+  virtual void drawText(const CPoint2D &p, const std::string &text,
+                        const CRGBA &c=CRGBA(0,0,0)) = 0;
 
   virtual double pixelWidthToWindowWidth  (double w) = 0;
   virtual double pixelHeightToWindowHeight(double h) = 0;

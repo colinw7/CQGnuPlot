@@ -1,0 +1,36 @@
+/* XPM */
+
+static const char *
+palette_dialog_data[] = {
+  /* width height num_colors chars_per_pixel x_hot y_hot */
+  "16 16 9 1 0 0",
+
+  /* colors */
+  ". s symbol1 c #000000 m black",
+  "# s symbol2 c #ffffff m white",
+  "a s symbol3 c #ffffff m white",
+  "b s symbol4 c #000000 m black",
+  "c s symbol5 c #ff0000 m black",
+  "d s symbol6 c #0000ff m black",
+  "e s symbol7 c #cccccc m white",
+  "f s symbol8 c #006400 m black",
+  "  s mask c none",
+
+  /* pixels */
+  "                ",
+  " .............. ",
+  " .eeeeeeeeeeee. ",
+  " .eeeeeeeeeeee. ",
+  " .eeebbbbbbeee. ",
+  " .eebaaaaaabee. ",
+  " .ebaaaffaaabe. ",
+  " .ebaccffddabe. ",
+  " .ebaccaadd#be. ",
+  " .ebaaaabaa#be. ",
+  " .ebaaabebaabe. ",
+  " .eeba#beebbee. ",
+  " .eeebbeeeeeee. ",
+  " .eeeeeeeeeeee. ",
+  " .............. ",
+  "                ",
+};
