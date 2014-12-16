@@ -1,6 +1,8 @@
 #ifndef CExprVariable_H
 #define CExprVariable_H
 
+#include <list>
+
 class CExprVariableMgr {
  public:
  ~CExprVariableMgr();

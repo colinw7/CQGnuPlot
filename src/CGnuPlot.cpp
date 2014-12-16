@@ -1,6 +1,8 @@
 #include <CGnuPlot.h>
-#include <CGnuPlotAxis.h>
+#include <CGnuPlotWindow.h>
+#include <CGnuPlotPlot.h>
 #include <CGnuPlotContour.h>
+#include <CGnuPlotStyle.h>
 
 #include <CUnixFile.h>
 #include <CParseLine.h>
@@ -16,56 +18,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <climits>
-
-namespace {
-  double Deg2Rad(double d) { return M_PI*d/180.0; }
-  double Rad2Deg(double d) { return 180.0*d/M_PI; }
-}
-
-//------
-
-static std::vector<CRGBA> colors;
-
-void initColors() {
-  if (colors.empty()) {
-    colors.push_back(CRGBName::toRGBA("#FF0000")); // red
-    colors.push_back(CRGBName::toRGBA("#00FF00")); // green
-    colors.push_back(CRGBName::toRGBA("#0000FF")); // blue
-    colors.push_back(CRGBName::toRGBA("#FF00FF")); // magenta
-    colors.push_back(CRGBName::toRGBA("#00FFFF")); // cyan
-    colors.push_back(CRGBName::toRGBA("#FFFF00")); // yellow
-    colors.push_back(CRGBName::toRGBA("#000000")); // black
-    colors.push_back(CRGBName::toRGBA("#FF8000")); // orange
-    colors.push_back(CRGBName::toRGBA("#888888")); // gray
-  }
-}
-
-CRGBA indexColor(int i) {
-  initColors();
-
-  if (i < 1) return CRGBA(0,0,0);
-
-  return colors[(i - 1) % colors.size()];
-}
-
-CGnuPlot::SymbolType indexSymbol(int i) {
-  if (i <  0) return CGnuPlot::SYMBOL_NONE;
-  if (i == 0) return CGnuPlot::SYMBOL_POINT;
-
-  int i1 = i - 1;
-  int ii = int(CGnuPlot::SYMBOL_LAST) - 1;
-
-  return (CGnuPlot::SymbolType)((i1 % ii) + CGnuPlot::SYMBOL_PLUS);
-}
-
-CGnuPlot::PatternType indexPattern(int i) {
-  if (i <= 0) return CGnuPlot::PATTERN_NONE;
-
-  int i1 = i - 1;
-  int ii = int(CGnuPlot::PATTERN_LAST);
-
-  return (CGnuPlot::PatternType)((i1 % ii) + CGnuPlot::PATTERN_HATCH);
-}
 
 //------
 
@@ -153,6 +105,7 @@ namespace CGnuPlotUtil {
     nameValues.addValue("ylabel"     , CGnuPlot::YLABEL_VAR);
     nameValues.addValue("xrange"     , CGnuPlot::XRANGE_VAR); // x2, y2, z, cb
     nameValues.addValue("yrange"     , CGnuPlot::YRANGE_VAR); // y, x2, y2, z, cb
+    nameValues.addValue("tics"       , CGnuPlot::TICS_VAR);
     nameValues.addValue("xtics"      , CGnuPlot::XTICS_VAR); // x2, y2, z, cb
     nameValues.addValue("ytics"      , CGnuPlot::YTICS_VAR);
     nameValues.addValue("mxtics"     , CGnuPlot::MXTICS_VAR);
@@ -487,8 +440,8 @@ CGnuPlot::
 CGnuPlot() :
  debug_(false), edebug_(false), commentChars_("#"), printAppend_(false),
  dataStyle_(POINTS_STYLE), functionStyle_(LINES_STYLE), smooth_(SMOOTH_NONE),
- histogramStyle_(HISTOGRAM_STYLE_NONE), angleType_(ANGLE_RADIANS), fitX_(true), fitY_(true),
- isamples1_(100), isamples2_(100), isoSamples1_(10), isoSamples2_(10),
+ histogramStyle_(HISTOGRAM_STYLE_NONE), angleType_(ANGLE_RADIANS), margin_(10,10,10,10),
+ fitX_(true), fitY_(true), isamples1_(100), isamples2_(100), isoSamples1_(10), isoSamples2_(10),
  hidden3D_(false), surface3D_(true), contour3D_(false), pm3D_(false), trianglePattern3D_(3)
 {
   CExprInst->createRealVariable("pi", M_PI);
@@ -566,6 +519,17 @@ bool
 CGnuPlot::
 parseLine(const std::string &str)
 {
+  std::string::size_type p = str.find(';');
+
+  if (p != std::string::npos) {
+    if (! parseLine(str.substr(0, p)))
+      return false;
+
+    return parseLine(str.substr(p + 1));
+  }
+
+  //---
+
   // get first space separated word
   CParseLine line(str);
 
@@ -858,9 +822,54 @@ void
 CGnuPlot::
 plotCmd(const std::string &args)
 {
-  CGnuPlotWindow *window = createWindow();
+  typedef std::vector<CGnuPlotPlot *> Plots;
 
-  windows_.push_back(window);
+  Plots plots;
+
+  CBBox2D region;
+
+  CGnuPlotWindow *window;
+
+  if (multiplot().enabled) {
+    if (! windows_.empty())
+      window = windows_.back();
+    else {
+      window = createWindow();
+
+      window->set3D(false);
+
+      windows_.push_back(window);
+    }
+
+    int n = window->numPlots();
+
+    double dx = 1.0/multiplot().cols;
+    double dy = 1.0/multiplot().rows;
+
+    int ix = n % multiplot().cols;
+    int iy = n / multiplot().cols;
+
+    double x1 = plotSize_.x.getValue(ix*dx);
+    double y1 = plotSize_.y.getValue(iy*dy);
+    double x2 = x1 + plotSize_.xsize.getValue(dx);
+    double y2 = y1 + plotSize_.ysize.getValue(dy);
+
+    region = CBBox2D(x1, y1, x2, y2);
+  }
+  else {
+    window = createWindow();
+
+    window->set3D(false);
+
+    double x1 = plotSize_.x.getValue(0.0);
+    double y1 = plotSize_.y.getValue(0.0);
+    double x2 = x1 + plotSize_.xsize.getValue(1.0);
+    double y2 = y1 + plotSize_.ysize.getValue(1.0);
+
+    region = CBBox2D(x1, y1, x2, y2);
+
+    windows_.push_back(window);
+  }
 
   //----
 
@@ -976,7 +985,7 @@ plotCmd(const std::string &args)
     }
     else {
       // function
-      function = readNonSpaceNonComma(line);
+      function = readFunction(line);
 
       if (isDebug())
         std::cerr << "Function: " << function << std::endl;
@@ -1266,6 +1275,8 @@ plotCmd(const std::string &args)
         if (isDebug())
           std::cerr << "title " << titleStr << std::endl;
 
+        keyData_.title = titleStr;
+
         line.skipSpace();
       }
       // disable title
@@ -1299,23 +1310,27 @@ plotCmd(const std::string &args)
 
     //---
 
-    window->setStyle(style);
-    window->setAxesData(axesData());
-
     if      (! filename.empty()) {
-      if  (usingCols.empty())
+      if      (usingCols.empty()) {
         usingCols.push_back(UsingCol(1));
-
-      if (usingCols.size() == 1) {
+        usingCols.push_back(UsingCol(2));
+      }
+      else if (usingCols.size() == 1) {
         usingCols.push_back(UsingCol(0));
 
         std::swap(usingCols[0], usingCols[1]);
       }
 
-      (void) addFile2D(window, filename, style, usingCols, index, every);
+      Plots plots1 = addFile2D(window, filename, region, style, usingCols, index, every);
+
+      std::copy(plots1.begin(), plots1.end(), std::back_inserter(plots));
     }
-    else if (! function.empty())
-      (void) addFunction2D(window, function, style);
+    else if (! function.empty()) {
+      CGnuPlotPlot *plot = addFunction2D(window, function, region, style);
+
+      if (plot)
+        plots.push_back(plot);
+    }
     else
       break;
 
@@ -1330,11 +1345,41 @@ plotCmd(const std::string &args)
     line.skipSpace();
   }
 
-  window->setTitle (title ());
-  window->setArrows(arrows());
-  window->setLabels(labels());
+  window->setTitle(title());
 
-  window->setPalette(palette());
+  //---
+
+  if (plots.empty())
+    return;
+
+  //---
+
+  for (auto plot : plots) {
+    plot->fit();
+
+    plot->smooth();
+  }
+
+  //---
+
+  if (plots.size() > 1) {
+    CGnuPlotPlot *plot = createPlot(window);
+
+    plot->setStyle(plots[0]->getStyle());
+
+    plot->addSubPlots(plots);
+
+    plot->setHistogramStyle(histogramStyle());
+
+    plot->setFitX(true);
+    plot->setFitY(true);
+
+    plot->fit();
+
+    window->addPlot(plot);
+  }
+  else
+    window->addPlot(plots[0]);
 
   //---
 
@@ -1360,11 +1405,17 @@ void
 CGnuPlot::
 splotCmd(const std::string &args)
 {
-  CGnuPlotWindow *window = createWindow();
+  CGnuPlotWindow *window;
 
-  window->set3D(true);
+  if (multiplot().enabled && ! windows_.empty())
+    window = windows_.back();
+  else {
+    window = createWindow();
 
-  windows_.push_back(window);
+    windows_.push_back(window);
+
+    window->set3D(true);
+  }
 
   //----
 
@@ -1824,9 +1875,6 @@ splotCmd(const std::string &args)
 
     //---
 
-    window->setStyle(style);
-    window->setAxesData(axesData());
-
     if      (! filename.empty()) {
       if  (usingCols.empty())
         usingCols.push_back(UsingCol(1));
@@ -1859,18 +1907,14 @@ splotCmd(const std::string &args)
     line.skipSpace();
   }
 
-  window->setTitle (title ());
-  window->setArrows(arrows());
-  window->setLabels(labels());
+  window->setTitle(title ());
 
-  window->setPalette(palette());
   window->setCamera(camera());
 
   window->setHidden3D(hidden3D());
   window->setSurface3D(surface3D());
   window->setContour3D(contour3D());
   window->setPm3D(pm3D());
-  window->setTrianglePattern3D(trianglePattern3D());
 
   //---
 
@@ -2077,6 +2121,101 @@ setCmd(const std::string &args)
   // set border {<integer>} {front | back} {linewidth | lw <line_width>}
   //            {{linestyle | ls <line_style>} | {linetype | lt <line_type>}}
   else if (var == BORDER_VAR) {
+    axesData().borders = 0xFF;
+  }
+  // set bmargin <val>
+  else if (var == BMARGIN_VAR) {
+    std::string arg = readNonSpace(line);
+
+    double r = -1;
+
+    (void) CStrUtil::toReal(arg, &r);
+
+    margin_.setBottom(r);
+  }
+  // set lmargin <val>
+  else if (var == LMARGIN_VAR) {
+    std::string arg = readNonSpace(line);
+
+    double r = -1;
+
+    (void) CStrUtil::toReal(arg, &r);
+
+    margin_.setLeft(r);
+  }
+  // set rmargin <val>
+  else if (var == RMARGIN_VAR) {
+    std::string arg = readNonSpace(line);
+
+    double r = -1;
+
+    (void) CStrUtil::toReal(arg, &r);
+
+    margin_.setRight(r);
+  }
+  // set tmargin <val>
+  else if (var == TMARGIN_VAR) {
+    std::string arg = readNonSpace(line);
+
+    double r = -1;
+
+    (void) CStrUtil::toReal(arg, &r);
+
+    margin_.setTop(r);
+  }
+  // set multiplot { title <page title> {font <fontspec>} {enhanced|noenhanced} }
+  //               { layout <rows>,<cols> {rowsfirst|columnsfirst} {downwards|upwards}
+  //                 {scale <xscale>{,<yscale>}} {offset <xoff>{,<yoff>}} }
+  else if (var == MULTIPLOT_VAR) {
+    multiplot().enabled = true;
+
+    std::string arg = readNonSpace(line);
+
+    while (arg != "") {
+      if      (arg == "title") {
+        std::string titleStr; parseString(line, titleStr);
+      }
+      else if (arg == "font") {
+        (void) readNonSpace(line);
+      }
+      else if (arg == "enhanced") {
+      }
+      else if (arg == "noenhanced") {
+      }
+      else if (arg == "layout") {
+        std::string rowStr = readNonSpaceNonComma(line);
+
+        CStrUtil::toInteger(rowStr, &multiplot().rows);
+
+        line.skipSpace();
+
+        if (line.isChar(',')) {
+          line.skipChar();
+
+          std::string colStr = readNonSpace(line);
+
+          CStrUtil::toInteger(colStr, &multiplot().cols);
+        }
+      }
+      else if (arg == "rowsfirst") {
+      }
+      else if (arg == "columnsfirst") {
+      }
+      else if (arg == "downwards") {
+      }
+      else if (arg == "upwards") {
+      }
+      else if (arg == "scale") {
+        std::string xStr = readNonSpaceNonComma(line);
+        std::string yStr = readNonSpace(line);
+      }
+      else if (arg == "offset") {
+        std::string xStr = readNonSpaceNonComma(line);
+        std::string yStr = readNonSpace(line);
+      }
+
+      arg = readNonSpace(line);
+    }
   }
 
   // set logscale <axes> {<base>}
@@ -2103,16 +2242,16 @@ setCmd(const std::string &args)
   else if (var == ORIGIN_VAR) {
     std::string arg = readNonSpaceNonComma(line);
 
-    double x;
+    double r;
 
-    CStrUtil::toReal(arg, &x);
+    if (CStrUtil::toReal(arg, &r))
+      plotSize_.x = r;
 
     if (line.isChar(',')) {
       line.skipChar(); arg = readNonSpaceNonComma(line); line.skipSpace();
 
-      double y;
-
-      CStrUtil::toReal(arg, &y);
+      if (CStrUtil::toReal(arg, &r))
+        plotSize_.y = r;
     }
   }
   // set size {{no}square | ratio <r> | noratio} {<xscale>,<yscale>}
@@ -2121,26 +2260,35 @@ setCmd(const std::string &args)
 
     while (arg != "") {
       if      (arg == "square" || arg == "nosquare") {
+        plotSize_.square = (arg == "square");
       }
       else if (arg == "ratio") {
         arg = readNonSpaceNonComma(line);
+
+        double r;
+
+        if (CStrUtil::toReal(arg, &r))
+          plotSize_.ratio = r;
       }
       else if (arg == "noratio") {
+        plotSize_.ratio.setInvalid();
       }
       else if (CStrUtil::isReal(arg)) {
-        double x;
+        double r;
 
-        CStrUtil::toReal(arg, &x);
+        if (CStrUtil::toReal(arg, &r))
+          plotSize_.xsize = r;
 
         line.skipSpace();
 
         if (line.isChar(',')) {
           line.skipChar(); arg = readNonSpaceNonComma(line); line.skipSpace();
 
-          double y;
-
-          CStrUtil::toReal(arg, &y);
+          if (CStrUtil::toReal(arg, &r))
+            plotSize_.ysize = r;
         }
+        else
+          plotSize_.ysize = r;
       }
       else {
         std::cerr << "Bad arg \'" << arg << "\'" << std::endl;
@@ -2484,12 +2632,12 @@ setCmd(const std::string &args)
       std::string styleStr = readNonSpace(line);
 
       if (styleStr == "user") {
-        setStyleIncrement(STYLE_INCREMENT_USER);
+        setStyleIncrementType(STYLE_INCREMENT_USER);
 
         setLineStyleNum(COptInt(1));
       }
       else {
-        setStyleIncrement(STYLE_INCREMENT_DEFAULT);
+        setStyleIncrementType(STYLE_INCREMENT_DEFAULT);
 
         resetLineStyleNum();
       }
@@ -2757,6 +2905,19 @@ setCmd(const std::string &args)
       pointStyle().setSize(r > 0 ? r : 1.0);
   }
 
+  // set grid {{no}{m}xtics} {{no}{m}ytics} {{no}{m}ztics}
+  //          {{no}{m}x2tics} {{no}{m}y2tics}
+  //          {{no}{m}cbtics}
+  //          {polar {<angle>}}
+  //          {layerdefault | front | back}
+  //          { {linestyle <major_linestyle>} | {linetype | lt <major_linetype>}
+  //            {linewidth | lw <major_linewidth>}
+  //            { , {linestyle | ls <minor_linestyle>} | {linetype | lt <minor_linetype>}
+  //            {linewidth | lw <minor_linewidth>} } }
+  else if (var == GRID_VAR) {
+    axesData().xaxis.grid = true;
+    axesData().yaxis.grid = true;
+  }
   // set xlabel "<label>"
   else if (var == XLABEL_VAR) {
     std::string labelStr;
@@ -2777,6 +2938,8 @@ setCmd(const std::string &args)
   }
   // set xrange { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} } | restore
   else if (var == XRANGE_VAR) {
+    line.skipSpace();
+
     if (line.isChar('[')) {
       line.skipChar();
 
@@ -2803,6 +2966,8 @@ setCmd(const std::string &args)
   }
   // set yrange { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} } | restore
   else if (var == YRANGE_VAR) {
+    line.skipSpace();
+
     if (line.isChar('[')) {
       line.skipChar();
 
@@ -2827,12 +2992,20 @@ setCmd(const std::string &args)
       }
     }
   }
+  // set tics {axis | border} {{no}mirror}
+  //          {in | out} {scale {default | <major> {,<minor>}}}
+  //          {{no}rotate {by <ang>}} {offset <offset> | nooffset}
+  //          {left | right | center | autojustify}
+  //          { format "formatstring" } { font "name{,<size>}" }
+  //          { textcolor <colorspec> }
+  else if (var == TICS_VAR) {
+  }
   // set xtics {axis | border} {{no}mirror}
   //           {in | out} {scale {default | <major> {,<minor>}}}
   //           {{no}rotate {by <ang>}} {offset <offset> | nooffset}
   //           {left | right | center | autojustify}
   //           {add}
-  //           {  autofreq | <incr> | <start>, <incr> {,<end>} |
+  //           { autofreq | <incr> | <start>, <incr> {,<end>} |
   //             ({"<label>"} <pos> {<level>} {,{"<label>"}...) }
   //           { format "formatstring" } { font "name{,<size>}" }
   //           { rangelimited }
@@ -3195,7 +3368,7 @@ showCmd(const std::string &args)
   }
 
   else if (var == XLABEL_VAR) {
-    std::cerr << "xlable is \"" << axesData().xaxis.str << "\", " <<
+    std::cerr << "xlabel is \"" << axesData().xaxis.str << "\", " <<
                  "offset at ((character units) 0, 0, 0)" << std::endl;
   }
   else if (var == YLABEL_VAR) {
@@ -3268,18 +3441,28 @@ unsetCmd(const std::string &args)
   if (! CGnuPlotUtil::stringToValue(args1[0], var))
     var = NO_VAR;
 
-  if      (var == TABLE_VAR)
-    setTableFile("");
-  else if (var == TITLE_VAR)
-    title().str = "";
+  if      (var == MULTIPLOT_VAR)
+    multiplot().enabled = false;
+  else if (var == BORDER_VAR)
+    axesData().borders = 0;
   else if (var == ARROW_VAR)
     arrows_.clear();
+  else if (var == KEY_VAR) {
+  }
+  else if (var == TITLE_VAR)
+    title().str = "";
   else if (var == LABEL_VAR)
     labels_.clear();
+  else if (var == GRID_VAR) {
+    axesData().xaxis.grid = false;
+    axesData().yaxis.grid = false;
+  }
   else if (var == XLABEL_VAR)
     axesData().xaxis.str = "";
   else if (var == YLABEL_VAR)
     axesData().yaxis.str = "";
+  else if (var == TICS_VAR) {
+  }
   else if (var == XTICS_VAR)
     axesData().xaxis.showTics = false;
   else if (var == YTICS_VAR)
@@ -3292,6 +3475,8 @@ unsetCmd(const std::string &args)
     setContour3D(false);
   else if (var == PM3D_VAR)
     setPm3D(false);
+  else if (var == TABLE_VAR)
+    setTableFile("");
   else if (var == DEBUG_VAR)
     setDebug(false);
   else if (var == EDEBUG_VAR)
@@ -3324,6 +3509,12 @@ void
 CGnuPlot::
 clearCmd(const std::string &)
 {
+  double x = plotSize_.x    .getValue(0.0);
+  double y = plotSize_.y    .getValue(0.0);
+  double w = plotSize_.xsize.getValue(1.0);
+  double h = plotSize_.ysize.getValue(1.0);
+
+  clearRect_ = CBBox2D(x, y, x + w, y + h);
 }
 
 // lower {winid:i}
@@ -3352,14 +3543,28 @@ testCmd(const std::string &args)
 
   CGnuPlotWindow *window = createWindow();
 
-  if (arg == "palette")
-    window->setStyle(TEST_PALETTE_STYLE);
-  else
-    window->setStyle(TEST_TERMINAL_STYLE);
-
   windows_.push_back(window);
 
-  window->setPalette(palette());
+  CGnuPlotPlot *plot = createPlot(window);
+
+  if (arg == "palette") {
+    plot->setStyle(TEST_PALETTE_STYLE);
+
+    plot->setMargin(CRange2D(5, 10, 5, 10));
+    plot->setRange(CBBox2D(0.0, 0.0, 1.0, 1.0));
+  }
+  else {
+    plot->setStyle(TEST_TERMINAL_STYLE);
+
+    plot->setMargin(CRange2D(0, 0, 0, 0));
+    plot->setRange(CBBox2D(0.0, 0.0, 1.0, 1.0));
+  }
+
+  plot->setPalette(palette());
+
+  window->addPlot(plot);
+
+  window->stateChanged(CHANGE_STATE_PLOT_ADDED);
 }
 
 // fit [ {ranges} ]
@@ -3419,9 +3624,17 @@ createWindow()
   return new CGnuPlotWindow(this);
 }
 
-CGnuPlot::Plot *
+CGnuPlotPlot *
 CGnuPlot::
-addFunction2D(CGnuPlotWindow *window, const std::string &function, PlotStyle style)
+createPlot(CGnuPlotWindow *window)
+{
+  return new CGnuPlotPlot(window);
+}
+
+CGnuPlotPlot *
+CGnuPlot::
+addFunction2D(CGnuPlotWindow *window, const std::string &function, const CBBox2D &region,
+              PlotStyle style)
 {
   CParseLine line(function);
 
@@ -3466,24 +3679,53 @@ addFunction2D(CGnuPlotWindow *window, const std::string &function, PlotStyle sty
 
   const std::string &tableFile = getTableFile();
 
-  Plot *plot = 0;
+  CGnuPlotPlot *plot = 0;
 
   if (tableFile.empty()) {
-    plot = new Plot(window);
+    plot = createPlot(window);
 
     plot->set3D(false);
 
-    plot->setStyle(style);
+    if (clearRect_.isValid()) {
+      plot->setClearRect(clearRect_.getValue());
 
-    window->addPlot(plot);
+      clearRect_.setInvalid();
+    }
+
+    if (keyData_.title == "")
+      keyData_.title = function;
+
+    plot->setRegion(region);
+
+    plot->setStyle(style);
+    plot->setFillStyle(fillStyle());
+    plot->setLineStyle(lineStyle());
+    plot->setPointStyle(pointStyle());
+    plot->setLineStyleNum(lineStyleNum());
+    plot->setHistogramStyle(histogramStyle());
+    plot->setAxesData(axesData());
+    plot->setKeyData(keyData());
+    plot->setMargin(margin());
+    plot->setLogScaleMap(logScaleMap());
+
+    plot->setArrows(arrows());
+    plot->setLabels(labels());
+
+    plot->setPalette(palette());
+
+    plot->setTrianglePattern3D(trianglePattern3D());
+
+    keyData_.title = "";
+
+    incLineStyle();
   }
 
   //---
 
   double xmin, ymin, xmax, ymax;
 
-  window->getXRange(&xmin, &xmax);
-  window->getYRange(&ymin, &ymax);
+  getXRange(&xmin, &xmax);
+  getYRange(&ymin, &ymax);
 
   //---
 
@@ -3503,6 +3745,7 @@ addFunction2D(CGnuPlotWindow *window, const std::string &function, PlotStyle sty
   for (int i = 0; i <= nx; ++i, x += d) {
     xvar->setRealValue(x);
 
+    // TODO: only execute in loop
     CExprPTokenStack pstack = CExprInst->parseLine(function);
     CExprITokenPtr   itoken = CExprInst->interpPTokenStack(pstack);
     CExprCTokenStack cstack = CExprInst->compileIToken(itoken);
@@ -3526,7 +3769,7 @@ addFunction2D(CGnuPlotWindow *window, const std::string &function, PlotStyle sty
   return plot;
 }
 
-CGnuPlot::Plot *
+CGnuPlotPlot *
 CGnuPlot::
 addFunction3D(CGnuPlotWindow *window, const std::string &function, PlotStyle style)
 {
@@ -3573,14 +3816,32 @@ addFunction3D(CGnuPlotWindow *window, const std::string &function, PlotStyle sty
 
   const std::string &tableFile = getTableFile();
 
-  Plot *plot = 0;
+  CGnuPlotPlot *plot = 0;
 
   if (tableFile.empty()) {
-    plot = new Plot(window);
+    plot = createPlot(window);
 
     plot->set3D(true);
 
     plot->setStyle(style);
+    plot->setFillStyle(fillStyle());
+    plot->setLineStyle(lineStyle());
+    plot->setPointStyle(pointStyle());
+    plot->setLineStyleNum(lineStyleNum());
+    plot->setHistogramStyle(histogramStyle());
+    plot->setAxesData(axesData());
+    plot->setKeyData(keyData());
+    plot->setMargin(margin());
+    plot->setLogScaleMap(logScaleMap());
+
+    plot->setArrows(arrows());
+    plot->setLabels(labels());
+
+    plot->setPalette(palette());
+
+    plot->setTrianglePattern3D(trianglePattern3D());
+
+    incLineStyle();
 
     window->addPlot(plot);
   }
@@ -3589,9 +3850,9 @@ addFunction3D(CGnuPlotWindow *window, const std::string &function, PlotStyle sty
 
   double xmin, ymin, xmax, ymax, zmin, zmax;
 
-  window->getXRange(&xmin, &xmax);
-  window->getYRange(&ymin, &ymax);
-  window->getZRange(&zmin, &zmax);
+  getXRange(&xmin, &xmax);
+  getYRange(&ymin, &ymax);
+  getZRange(&zmin, &zmax);
 
   //---
 
@@ -3641,25 +3902,29 @@ addFunction3D(CGnuPlotWindow *window, const std::string &function, PlotStyle sty
   return plot;
 }
 
-CGnuPlot::Plot *
+CGnuPlot::Plots
 CGnuPlot::
-addFile2D(CGnuPlotWindow *window, const std::string &filename, PlotStyle style,
-          const UsingCols &usingCols, const Index &index, const Every &every)
+addFile2D(CGnuPlotWindow *window, const std::string &filename, const CBBox2D &region,
+          PlotStyle style, const UsingCols &usingCols, const Index &index, const Every &every)
 {
-  Plot *plot = 0;
+  Plots plots;
 
   //---
 
-  int  bline         = 0;
-  int  setNum        = 1;
-  int  pointNum      = 0;
-  bool discontinuity = false;
-
-  int pointNum1 = every.start;
-
   // open file
   CUnixFile file(filename);
-  if (! file.open()) return 0;
+
+  if (! file.open())
+    return plots;
+
+  //---
+
+  int           bline         = 0;
+  int           setNum        = 1;
+  int           pointNum      = 0;
+  int           pointNum1     = every.start;
+  bool          discontinuity = false;
+  CGnuPlotPlot *plot          = 0;
 
   //---
 
@@ -3675,12 +3940,6 @@ addFile2D(CGnuPlotWindow *window, const std::string &filename, PlotStyle style,
       else if (bline == 2) {
         setNum   += index.step;
         pointNum  = 0;
-
-        if (plot) {
-          plot->fit();
-
-          plot->smooth();
-        }
 
         plot = 0;
       }
@@ -3734,13 +3993,44 @@ addFile2D(CGnuPlotWindow *window, const std::string &filename, PlotStyle style,
     //---
 
     if (! plot) {
-      plot = new Plot(window);
+      plot = createPlot(window);
 
       plot->set3D(false);
 
-      plot->setStyle(style);
+      if (clearRect_.isValid()) {
+        plot->setClearRect(clearRect_.getValue());
 
-      window->addPlot(plot);
+        clearRect_.setInvalid();
+      }
+
+      if (keyData_.title == "")
+        keyData_.title = "\"" + filename + "\"";
+
+      plot->setRegion(region);
+
+      plot->setStyle(style);
+      plot->setFillStyle(fillStyle());
+      plot->setLineStyle(lineStyle());
+      plot->setPointStyle(pointStyle());
+      plot->setLineStyleNum(lineStyleNum());
+      plot->setHistogramStyle(histogramStyle());
+      plot->setAxesData(axesData());
+      plot->setKeyData(keyData());
+      plot->setMargin(margin());
+      plot->setLogScaleMap(logScaleMap());
+
+      plot->setArrows(arrows());
+      plot->setLabels(labels());
+
+      plot->setPalette(palette());
+
+      plot->setTrianglePattern3D(trianglePattern3D());
+
+      keyData_.title = "";
+
+      incLineStyle();
+
+      plots.push_back(plot);
     }
 
     if (pointNum == pointNum1) {
@@ -3761,22 +4051,14 @@ addFile2D(CGnuPlotWindow *window, const std::string &filename, PlotStyle style,
     discontinuity = false;
   }
 
-  //---
-
-  if (plot) {
-    plot->fit();
-
-    plot->smooth();
-  }
-
-  return plot;
+  return plots;
 }
 
-CGnuPlot::Plot *
+CGnuPlotPlot *
 CGnuPlot::
 addFile3D(CGnuPlotWindow *window, const std::string &filename)
 {
-  Plot *plot = 0;
+  CGnuPlotPlot *plot = 0;
 
   //---
 
@@ -3836,9 +4118,18 @@ addFile3D(CGnuPlotWindow *window, const std::string &filename)
 
   //---
 
-  plot = new Plot(window);
+  plot = createPlot(window);
 
   plot->set3D(true);
+
+  plot->setFillStyle(fillStyle());
+  plot->setLineStyle(lineStyle());
+  plot->setPointStyle(pointStyle());
+  plot->setLineStyleNum(lineStyleNum());
+  plot->setHistogramStyle(histogramStyle());
+  plot->setAxesData(axesData());
+  plot->setKeyData(keyData());
+  plot->setMargin(margin());
 
   int iy = 0;
 
@@ -3854,11 +4145,35 @@ addFile3D(CGnuPlotWindow *window, const std::string &filename)
     }
   }
 
+  plot->setArrows(arrows());
+  plot->setLabels(labels());
+
+  plot->setPalette(palette());
+
+  plot->setTrianglePattern3D(trianglePattern3D());
+
+  incLineStyle();
+
   window->addPlot(plot);
 
   //---
 
   return plot;
+}
+
+void
+CGnuPlot::
+incLineStyle()
+{
+  ++styleIncrement_.colorInd;
+
+  lineStyle().setColor(CGnuPlotStyle::instance()->indexColor(styleIncrement_.colorInd));
+
+  if (fillStyle().style() == CGnuPlot::FILL_PATTERN)
+    fillStyle().setPattern((CGnuPlot::PatternType) (fillStyle().pattern() + 1));
+
+  if (lineStyleNum().isValid())
+    setLineStyleNum(COptInt(lineStyleNum().getValue(1) + 1));
 }
 
 void
@@ -4085,1647 +4400,25 @@ readNonSpaceNonComma(CParseLine &line)
 
 //------
 
-CGnuPlotWindow::
-CGnuPlotWindow(CGnuPlot *plot) :
- is3D_(false), plot_(plot), style_(CGnuPlot::POINTS_STYLE), renderer_(0),
- margin_(10,10,10,10), hidden3D_(false), surface3D_(true), contour3D_(false), pm3D_(false),
- trianglePattern3D_(3)
-{
-  xaxis_ = new CGnuPlotAxis(this, CORIENTATION_HORIZONTAL);
-  yaxis_ = new CGnuPlotAxis(this, CORIENTATION_VERTICAL);
-
-  xaxis_->setLine(false);
-  yaxis_->setLine(false);
-}
-
-CGnuPlotWindow::
-~CGnuPlotWindow()
-{
-}
-
-void
-CGnuPlotWindow::
-set3D(bool b)
-{
-  is3D_ = b;
-}
-
-void
-CGnuPlotWindow::
-setRenderer(CGnuPlotRenderer *renderer)
-{
-  renderer_ = renderer;
-}
-
-void
-CGnuPlotWindow::
-showXAxis(bool show)
-{
-  axesData().xaxis.displayed = show;
-
-  stateChanged(CGnuPlot::CHANGE_STATE_AXIS_DISPLAY);
-}
-
-void
-CGnuPlotWindow::
-showYAxis(bool show)
-{
-  axesData().yaxis.displayed = show;
-
-  stateChanged(CGnuPlot::CHANGE_STATE_AXIS_DISPLAY);
-}
-
-void
-CGnuPlotWindow::
-setCameraEnabled(bool b)
-{
-  camera_.enabled = b;
-
-  reset3D();
-}
-
-void
-CGnuPlotWindow::
-setCameraRotateX(double a)
-{
-  camera_.rotateX = a;
-
-  camera_.init();
-
-  reset3D();
-}
-
-void
-CGnuPlotWindow::
-setCameraRotateY(double a)
-{
-  camera_.rotateY = a;
-
-  camera_.init();
-
-  reset3D();
-}
-
-void
-CGnuPlotWindow::
-setCameraRotateZ(double a)
-{
-  camera_.rotateZ = a;
-
-  camera_.init();
-
-  reset3D();
-}
-
-void
-CGnuPlotWindow::
-setCameraXMin(double x)
-{
-  camera_.xmin = x;
-
-  camera_.init();
-
-  reset3D();
-}
-
-void
-CGnuPlotWindow::
-setCameraXMax(double x)
-{
-  camera_.xmax = x;
-
-  camera_.init();
-
-  reset3D();
-}
-
-void
-CGnuPlotWindow::
-setCameraYMin(double y)
-{
-  camera_.ymin = y;
-
-  camera_.init();
-
-  reset3D();
-}
-
-void
-CGnuPlotWindow::
-setCameraYMax(double y)
-{
-  camera_.ymax = y;
-
-  camera_.init();
-
-  reset3D();
-}
-
-void
-CGnuPlotWindow::
-setCameraNear(double z)
-{
-  camera_.near = z;
-
-  camera_.init();
-
-  reset3D();
-}
-
-void
-CGnuPlotWindow::
-setCameraFar(double z)
-{
-  camera_.far = z;
-
-  camera_.init();
-
-  reset3D();
-}
-
-void
-CGnuPlotWindow::
-reset3D()
-{
-  for (auto plot : plots_)
-    plot->reset3D();
-}
-
-void
-CGnuPlotWindow::
-paintStart()
-{
-  renderer_->setWindow(this);
-
-  if (! is3D()) {
-    double xmin, ymin, xmax, ymax;
-
-    //getDisplayRange(&xmin, &ymin, &xmax, &ymax);
-    calcXRange(&xmin, &xmax);
-    calcYRange(&ymin, &ymax);
-
-    if (! title().str.empty()) {
-      drawHAlignedText(CPoint2D((xmin + xmax)/2.0, ymax), CHALIGN_TYPE_CENTER, 0,
-                       CVALIGN_TYPE_BOTTOM, -4, title().str);
-    }
-
-    if (axesData().xaxis.displayed) {
-      xaxis_->setLabel(axesData().xaxis.str);
-      xaxis_->setRange(xmin, xmax);
-
-      if (plot()->getLogScale(CGnuPlot::X_LOGSCALE)) {
-        xaxis_->setLogarithmic(plot()->getLogScale(CGnuPlot::X_LOGSCALE));
-        xaxis_->setTickInside(true);
-      }
-      else {
-        xaxis_->resetLogarithmic();
-        xaxis_->setTickInside(false);
-      }
-
-      xaxis_->setFont(renderer_->getFont());
-      xaxis_->drawAxis(ymin);
-    }
-
-    if (axesData().yaxis.displayed) {
-      yaxis_->setLabel(axesData().yaxis.str);
-      yaxis_->setRange(ymin, ymax);
-
-      if (plot()->getLogScale(CGnuPlot::Y_LOGSCALE)) {
-        yaxis_->setLogarithmic(plot()->getLogScale(CGnuPlot::Y_LOGSCALE));
-        yaxis_->setTickInside(true);
-      }
-      else {
-        yaxis_->resetLogarithmic();
-        yaxis_->setTickInside(false);
-      }
-
-      yaxis_->setFont(renderer_->getFont());
-      yaxis_->drawAxis(xmin);
-    }
-  }
-}
-
-void
-CGnuPlotWindow::
-paintEnd()
-{
-}
-
-void
-CGnuPlotWindow::
-addPlot(CGnuPlot::Plot *plot)
-{
-  if (plot_->isDebug())
-    std::cerr << "Add Plot" << std::endl;
-
-  plot->setInd(plots_.size() + 1);
-
-  plot->setFillStyle   (plot_->fillStyle ());
-  plot->setLineStyle   (plot_->lineStyle ());
-  plot->setPointStyle  (plot_->pointStyle());
-  plot->setLineStyleNum(plot_->lineStyleNum());
-
-  if (plot_->fillStyle().style() == CGnuPlot::FILL_PATTERN)
-    plot_->fillStyle().setPattern((CGnuPlot::PatternType) (plot_->fillStyle().pattern() + 1));
-
-  plot_->setLineStyleNum(COptInt(plot_->lineStyleNum().getValue(1) + 1));
-
-  plots_.push_back(plot);
-}
-
-void
-CGnuPlotWindow::
-getDisplayRange(double *xmin, double *ymin, double *xmax, double *ymax) const
-{
-  calcXRange(xmin, xmax);
-  calcYRange(ymin, ymax);
-
-  mapLogPoint(xmin, ymin);
-  mapLogPoint(xmax, ymax);
-}
-
-void
-CGnuPlotWindow::
-mapLogPoint(double *x, double *y) const
-{
-  int xbase = plot()->getLogScale(CGnuPlot::X_LOGSCALE);
-  int ybase = plot()->getLogScale(CGnuPlot::Y_LOGSCALE);
-
-  double xlogscale = (xbase > 1 ? log(xbase) : 1);
-  double ylogscale = (ybase > 1 ? log(ybase) : 1);
-
-  if (xbase > 1) *x = log(std::max(*x, 0.5))/xlogscale;
-  if (ybase > 1) *y = log(std::max(*y, 0.5))/ylogscale;
-}
-
-void
-CGnuPlotWindow::
-unmapLogPoint(double *x, double *y) const
-{
-  int xbase = plot()->getLogScale(CGnuPlot::X_LOGSCALE);
-  int ybase = plot()->getLogScale(CGnuPlot::Y_LOGSCALE);
-
-  double xlogscale = (xbase > 1 ? log(xbase) : 1);
-  double ylogscale = (ybase > 1 ? log(ybase) : 1);
-
-  if (xbase > 1) *x = exp((*x)*xlogscale);
-  if (ybase > 1) *y = exp((*y)*ylogscale);
-}
-
-void
-CGnuPlotWindow::
-calcXRange(double *xmin, double *xmax) const
-{
-  if (axesData().xaxis.min.isValid() && axesData().xaxis.max.isValid()) {
-    *xmin = axesData().xaxis.min.getValue();
-    *xmax = axesData().xaxis.max.getValue();
-    return;
-  }
-
-  if (! plots_.empty()) {
-    COptReal xmin1, xmax1;
-
-    for (auto plot : plots_) {
-      plot->fit();
-
-      double xmin2, xmax2;
-
-      plot->getXRange(&xmin2, &xmax2);
-
-      xmin1.updateMin(xmin2);
-      xmax1.updateMax(xmax2);
-    }
-
-    CGnuPlotWindow *th = const_cast<CGnuPlotWindow *>(this);
-
-    th->axesData().xaxis.min = xmin1;
-    th->axesData().xaxis.max = xmax1;
-  }
-  else {
-    double xmin1 = -10, xmax1 = 10;
-
-    *xmin = axesData().xaxis.min.getValue(xmin1);
-    *xmax = axesData().xaxis.max.getValue(xmax1);
-  }
-}
-
-void
-CGnuPlotWindow::
-calcYRange(double *ymin, double *ymax) const
-{
-  if (axesData().yaxis.min.isValid() && axesData().yaxis.max.isValid()) {
-    *ymin = axesData().yaxis.min.getValue();
-    *ymax = axesData().yaxis.max.getValue();
-    return;
-  }
-
-  if (! plots_.empty()) {
-    COptReal ymin1, ymax1;
-
-    for (uint i = 0; i < plots_.size(); ++i) {
-      CGnuPlot::Plot *plot = plots_[i];
-
-      plot->fit();
-
-      double ymin2, ymax2;
-
-      plot->getYRange(&ymin2, &ymax2);
-
-      ymin1.updateMin(ymin2);
-      ymax1.updateMax(ymax2);
-    }
-
-    CGnuPlotWindow *th = const_cast<CGnuPlotWindow *>(this);
-
-    th->axesData().yaxis.min = ymin1;
-    th->axesData().yaxis.max = ymax1;
-  }
-  else {
-    double ymin1 = -1, ymax1 = 1;
-
-    *ymin = axesData().yaxis.min.getValue(ymin1);
-    *ymax = axesData().yaxis.max.getValue(ymax1);
-  }
-}
-
-void
-CGnuPlotWindow::
-draw()
-{
-  if      (getStyle() == CGnuPlot::TEST_TERMINAL_STYLE)
-    drawTerminal();
-  else if (getStyle() == CGnuPlot::TEST_PALETTE_STYLE)
-    drawPalette();
-  else {
-    paintStart();
-
-    drawPlots();
-
-    drawAnnotations();
-
-    paintEnd();
-  }
-}
-
-void
-CGnuPlotWindow::
-drawTerminal()
-{
-  static double grid_dashes[]   = {1, 3};
-  static uint   num_grid_dashes = 2;
-
-  //---
-
-  axesData().xaxis.min = 0.0;
-  axesData().xaxis.max = 1.0;
-  axesData().yaxis.min = 0.0;
-  axesData().yaxis.max = 1.0;
-
-  margin_ = CBBox2D(0, 0, 0, 0);
-
-  //---
-
-  double px1, py1, px2, py2;
-
-  renderer_->windowToPixel(0.0, 0.0, &px1, &py1);
-  renderer_->windowToPixel(1.0, 1.0, &px2, &py2);
-
-  double pxm = (px1 + px2)/2.0;
-  double pym = (py1 + py2)/2.0;
-
-  int pw = px2 - px1;
-  int ph = py1 - py2;
-
-  CFontPtr font = renderer_->getFont();
-
-  double font_size = font->getCharAscent() + font->getCharDescent();
-
-  //---
-
-  renderer_->setLineDash(CLineDash(grid_dashes, num_grid_dashes));
-
-  renderer_->drawLine(CPoint2D(0.5, 0.0), CPoint2D(0.5, 1.0));
-  renderer_->drawLine(CPoint2D(0.0, 0.5), CPoint2D(1.0, 0.5));
-
-  renderer_->setLineDash(CLineDash());
-
-  //---
-
-  drawHAlignedText(pixelToWindow(CPoint2D(px1 + 4, py2 + 4)), CHALIGN_TYPE_LEFT, 0,
-                   CVALIGN_TYPE_TOP, 0, "terminal test", CRGBA(1,0,0));
-
-  //---
-
-  // symbols on right
-  int    nlines = ph/font_size;
-  double dy     = 1.0/nlines;
-
-  for (int i = 0; i < nlines; ++i) {
-    std::string str = CStrUtil::toString(i - 1);
-
-    double w = font->getStringWidth(str);
-
-    CRGBA c = indexColor(i - 1);
-
-    double x, y;
-
-    renderer_->pixelToWindow(px2 - 48 - w, py2 + font->getCharAscent(), &x, &y);
-
-    renderer_->drawText(CPoint2D(x, y - i*dy), str, c);
-
-    double x1, y1, x2, y2;
-
-    renderer_->pixelToWindow(px2 - 48, py2 + font->getCharAscent()/2, &x1, &y1);
-    renderer_->pixelToWindow(px2 - 24, py2 + font->getCharAscent()/2, &x2, &y2);
-
-    renderer_->drawLine(CPoint2D(x1, y1 - i*dy), CPoint2D(x2, y1 - i*dy), 0, c);
-
-    renderer_->pixelToWindow(px2 - 16, py2 + font->getCharAscent()/2, &x1, &y1);
-
-    renderer_->drawSymbol(CPoint2D(x1, y1 - i*dy), indexSymbol(i - 1), 1.0, c);
-  }
-
-  //---
-
-  // text in center
-  drawHAlignedText(pixelToWindow(CPoint2D(pxm, pym - 5*font_size)), CHALIGN_TYPE_LEFT, 0,
-                   CVALIGN_TYPE_CENTER, 0, "left justified");
-  drawHAlignedText(pixelToWindow(CPoint2D(pxm, pym - 4*font_size)), CHALIGN_TYPE_CENTER, 0,
-                   CVALIGN_TYPE_CENTER, 0, "centre+d text");
-  drawHAlignedText(pixelToWindow(CPoint2D(pxm, pym - 3*font_size)), CHALIGN_TYPE_RIGHT, 0,
-                   CVALIGN_TYPE_CENTER, 0, "right justified");
-
-  drawHAlignedText(pixelToWindow(CPoint2D(pxm, pym - font_size)), CHALIGN_TYPE_CENTER, 0,
-                   CVALIGN_TYPE_CENTER, 0, "test of character width", indexColor(4));
-  drawHAlignedText(CPoint2D(0.5, 0.5), CHALIGN_TYPE_CENTER, 0,
-                   CVALIGN_TYPE_CENTER, 0, "12345678901234567890", indexColor(4));
-
-  double w = font->getStringWidth("12345678901234567890");
-
-  double x1, y1, x2, y2;
-
-  renderer_->pixelToWindow(pxm - w/2, pym + font_size/2, &x1, &y1);
-  renderer_->pixelToWindow(pxm + w/2, pym - font_size/2, &x2, &y2);
-
-  renderer_->drawRect(CBBox2D(x1, y1, x2, y2), indexColor(4));
-
-  //---
-
-  // rotated text on left
-  drawVAlignedText(pixelToWindow(CPoint2D(1*font_size, pym)), CHALIGN_TYPE_CENTER, 0,
-                   CVALIGN_TYPE_CENTER, 0, "rotated ce+ntered text", CRGBA(0,1,0));
-
-  drawRotatedText(pixelToWindow(CPoint2D(2*font_size, pym)),
-                  "rotated by +45 deg"    , CRGBA(0,1,0),  45);
-  drawRotatedText(pixelToWindow(CPoint2D(3*font_size, pym)),
-                  "rotated by -45 deg"    , CRGBA(0,1,0), -45);
-
-  //---
-
-  // filled polygons
-  double pl = pw/16;
-
-  CPoint2D pp1 = CPoint2D(pxm + pw/4, pym - ph/4);
-  CPoint2D pp2 = pp1 + CPoint2D(pl, pl);
-
-  drawHAlignedText(pixelToWindow(pp1 - CPoint2D(0, pl)), CHALIGN_TYPE_CENTER, 0,
-                   CVALIGN_TYPE_BOTTOM, 0, "filled polygons:");
-
-  std::vector<CPoint2D> points1, points2;
-
-  for (int i = 0; i < 6; ++i) {
-    double a = Deg2Rad(i*60);
-
-    points1.push_back(pixelToWindow(pp1 + CPoint2D(pl*cos(a), pl*sin(a))));
-    points2.push_back(pixelToWindow(pp2 + CPoint2D(pl*cos(a), pl*sin(a))));
-  }
-
-  renderer_->fillPolygon(points1, CRGBA(0,0,1));
-  renderer_->fillPolygon(points2, CRGBA(0,1,0,0.5));
-
-  //---
-
-  // arrows
-  CPoint2D ac = pixelToWindow(CPoint2D(pxm - 100, pym + 100));
-  double   al = 50;
-
-  for (int i = 0; i < 8; ++i) {
-    CGnuPlot::Arrow arrow;
-
-    double a = i*Deg2Rad(45);
-
-    double dx = al*cos(a);
-    double dy = -al*sin(a);
-
-    CPoint2D ac1 = pixelToWindow(CPoint2D(pxm - 100 + dx, pym + 100 + dy));
-
-    arrow.from = ac;
-    arrow.to   = ac1;
-
-    arrow.length = renderer_->pixelWidthToWindowWidth(al/5);
-    arrow.angle  = 30;
-
-    arrow.fhead = (i == 7);
-    arrow.thead = (i != 3 && i != 7);
-
-    arrow.filled = (i == 2);
-    arrow.empty  = (i == 1 || i == 4 || i == 5 || i == 6 || i == 7);
-
-    arrow.c = CRGBA(1,0,0);
-
-    drawArrow(arrow);
-  }
-
-  //---
-
-  // pattern fill
-  double ptw = pw/30;
-  double pth = ph/8;
-  double ptb = 4;
-
-  for (int i = 0; i <= 9; ++i) {
-    double px = pxm + i*(ptw + ptb);
-
-    CPoint2D p1 = pixelToWindow(CPoint2D(px      , py1 - pth));
-    CPoint2D p2 = pixelToWindow(CPoint2D(px + ptw, py1      ));
-
-    renderer_->patternRect(CBBox2D(p1, p2), indexPattern(i), CRGBA(0,0,0), CRGBA(1,1,1));
-
-    renderer_->drawRect(CBBox2D(p1, p2), CRGBA(0,0,0));
-
-    drawHAlignedText(pixelToWindow(CPoint2D(px + ptw/2, py1 - pth)), CHALIGN_TYPE_CENTER, 0,
-                     CVALIGN_TYPE_BOTTOM, 0, CStrUtil::strprintf("%d", i));
-  }
-
-  drawHAlignedText(pixelToWindow(CPoint2D(pxm + 4*(ptw + ptb), py1 - pth - font_size)),
-                   CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, 0,
-                   "pattern fill");
-
-  //---
-
-  // line width bottom left
-  int ll  = pw/8;
-  int lb1 = 8;
-  int lb2 = 8;
-
-  for (int i = 1; i <= 6; ++i) {
-    renderer_->drawLine(pixelToWindow(CPoint2D(px1 + lb1     , py1 - i*font_size)),
-                        pixelToWindow(CPoint2D(px1 + lb1 + ll, py1 - i*font_size)), i);
-
-    drawHAlignedText(pixelToWindow(CPoint2D(px1 + lb1 + lb2 + ll, py1 - i*font_size)),
-                     CHALIGN_TYPE_LEFT, 0, CVALIGN_TYPE_CENTER, 0,
-                     CStrUtil::strprintf("lw %d", i));
-  }
-
-  drawHAlignedText(pixelToWindow(CPoint2D(px1 + lb1 + ll/2, py1 - 7*font_size - 4)),
-                   CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP, 0,
-                   "linewidth");
-}
-
-void
-CGnuPlotWindow::
-drawPalette()
-{
-  axesData().xaxis.min = 0.0;
-  axesData().xaxis.max = 1.0;
-  axesData().yaxis.min = 0.0;
-  axesData().yaxis.max = 1.0;
-
-  margin_ = CBBox2D(5, 10, 5, 10);
-
-  double px1, py1, px2, py2;
-
-  renderer_->windowToPixel(0.0, 0.0, &px1, &py1);
-  renderer_->windowToPixel(1.0, 1.0, &px2, &py2);
-
-  double wx1, wy1, wx2, wy2;
-
-  renderer_->pixelToWindow(0, py1 + 32, &wx1, &wy1);
-  renderer_->pixelToWindow(0, py1 + 64, &wx2, &wy2);
-
-  bool   first = true;
-  double r1, g1, b1, m1, x1;
-
-  for (double i = px1; i <= px2; i += 1.0) {
-    double wx, wy;
-
-    renderer_->pixelToWindow(i, 0, &wx, &wy);
-
-    CRGBA c = palette_.getColor(wx);
-
-    renderer_->drawLine(CPoint2D(wx, wy1), CPoint2D(wx, wy2), 0.0, c);
-
-    //double x = (i - px1)/(px2 - px1);
-
-    double x2 = wx;
-    double r2 = c.getRed  ();
-    double g2 = c.getGreen();
-    double b2 = c.getBlue ();
-    //double m2 = (r2 + g2 + b2)/3.0;
-    double m2 = c.getGray();
-
-    if (! first) {
-      renderer_->drawLine(CPoint2D(x1, r1), CPoint2D(x2, r2), 0, CRGBA(1,0,0));
-      renderer_->drawLine(CPoint2D(x1, g1), CPoint2D(x2, g2), 0, CRGBA(0,1,0));
-      renderer_->drawLine(CPoint2D(x1, b1), CPoint2D(x2, b2), 0, CRGBA(0,0,1));
-      renderer_->drawLine(CPoint2D(x1, m1), CPoint2D(x2, m2), 0, CRGBA(0,0,0));
-    }
-
-    x1 = x2;
-    r1 = r2;
-    g1 = g2;
-    b1 = b2;
-    m1 = m2;
-
-    first = false;
-  }
-
-  renderer_->drawRect(CBBox2D(0.0, wy1, 1.0, wy2), CRGBA(0,0,0));
-
-  xaxis_->setFont(renderer_->getFont());
-  yaxis_->setFont(renderer_->getFont());
-
-  xaxis_->drawAxis(0.0);
-  yaxis_->drawAxis(0.0);
-
-  xaxis_->drawGrid(0.0, 1.0);
-  yaxis_->drawGrid(0.0, 1.0);
-}
-
-void
-CGnuPlotWindow::
-drawPlots()
-{
-  if (getStyle() == CGnuPlot::HISTOGRAMS_STYLE) {
-    if (! renderer_) return;
-
-    //---
-
-    double xmin, ymin, xmax, ymax;
-
-    calcXRange(&xmin, &xmax);
-    calcYRange(&ymin, &ymax);
-
-    //---
-
-    uint np = 0;
-
-    for (auto plot : plots_)
-      np = std::max(np, plot->numPoints2D());
-
-    if (np == 0) return;
-
-    //---
-
-    if      (plot_->getHistogramStyle() == CGnuPlot::HISTOGRAM_STYLE_CLUSTERED) {
-      axesData().yaxis.min = 0.0;
-      axesData().yaxis.max = ymax;
-
-      double w = 0.5*(xmax - xmin)/(np*numPlots());
-
-      for (auto plot : plots_) {
-        CGnuPlot::LineStyle lineStyle = plot->lineStyle();
-
-        if (plot->lineStyleNum().isValid())
-          lineStyle = this->plot()->lineStyles(plot->lineStyleNum().getValue());
-
-        //---
-
-        double d = (plot->ind() - 1 - numPlots()/2.0)*w;
-
-        for (auto point : plot->getPoints2D()) {
-          double x, y;
-
-          if (! point.getX(x) || ! point.getY(y))
-            continue;
-
-          CBBox2D bbox(x + d, 0.0, x + d + w, y);
-
-          if      (plot->fillStyle().style() == CGnuPlot::FILL_PATTERN)
-            renderer_->patternRect(bbox, plot->fillStyle().pattern());
-          else if (plot->fillStyle().style() == CGnuPlot::FILL_SOLID)
-            renderer_->fillRect(bbox, lineStyle.color());
-
-          renderer_->drawRect(bbox);
-        }
-      }
-    }
-    else if (plot_->getHistogramStyle() == CGnuPlot::HISTOGRAM_STYLE_ROWSTACKED) {
-      ymin = 0;
-      ymax = 0;
-
-      for (auto plot : plots_) {
-        double ymin1, ymax1;
-
-        plot->getYRange(&ymin1, &ymax1);
-
-        ymax += ymax1;
-      }
-
-      axesData().yaxis.min = ymin;
-      axesData().yaxis.max = ymax;
-
-      //---
-
-      double w = (xmax - xmin)/(np - 1);
-      double x = xmin - w/2.0;
-
-      for (uint i = 0; i < np; ++i) {
-        double h = 0;
-
-        for (auto plot : plots_) {
-          CGnuPlot::LineStyle lineStyle = plot->lineStyle();
-
-          if (plot->lineStyleNum().isValid())
-            lineStyle = this->plot()->lineStyles(plot->lineStyleNum().getValue());
-
-          //---
-
-          const CGnuPlot::Point &point = plot->getPoint2D(i);
-
-          double y;
-
-          if (! point.getY(y))
-            continue;
-
-          CBBox2D bbox(x, h, x + w, h + y);
-
-          if      (plot->fillStyle().style() == CGnuPlot::FILL_PATTERN)
-            renderer_->patternRect(bbox, plot->fillStyle().pattern());
-          else if (plot->fillStyle().style() == CGnuPlot::FILL_SOLID)
-            renderer_->fillRect(bbox, lineStyle.color());
-
-          renderer_->drawRect(bbox);
-
-          h += y;
-        }
-
-        x += w;
-      }
-    }
-  }
-  else {
-    if (is3D()) {
-      for (auto plot : plots_)
-        plot->draw3D();
-    }
-    else {
-      for (auto plot : plots_)
-        plot->draw2D();
-    }
-  }
-}
-
-void
-CGnuPlotWindow::
-drawAnnotations()
-{
-  for (auto arrow : arrows_)
-    drawArrow(arrow);
-
-  for (auto label : labels_)
-    drawLabel(label);
-}
-
-void
-CGnuPlotWindow::
-drawArrow(const CGnuPlot::Arrow &arrow)
-{
-  CPoint2D from = arrow.from.p;
-  CPoint2D to   = (arrow.relative ? arrow.from.p + arrow.to.p : arrow.to.p);
-
-  double fx, fy, tx, ty;
-
-  renderer_->windowToPixel(from.x, from.y, &fx, &fy);
-  renderer_->windowToPixel(to  .x, to  .y, &tx, &ty);
-
-  double w = (arrow.lineWidth > 0 ? arrow.lineWidth : 1);
-
-  double a = atan2(ty - fy, tx - fx);
-
-  double aa = Deg2Rad(arrow.angle > 0 ? arrow.angle : 30);
-
-  double l  = (arrow.length > 0 ? renderer_->windowWidthToPixelWidth(arrow.length) : 16);
-  double l1 = l*cos(aa);
-
-  double c = cos(a), s = sin(a);
-
-  double x1 = fx, y1 = fy;
-  double x4 = tx, y4 = ty;
-
-  double x2 = x1 + l1*c;
-  double y2 = y1 + l1*s;
-  double x3 = x4 - l1*c;
-  double y3 = y4 - l1*s;
-
-  double x11 = x1, y11 = y1;
-  double x41 = x4, y41 = y4;
-
-  if (arrow.fhead) {
-    if (arrow.filled || arrow.empty) {
-      x11 = x2;
-      y11 = y2;
-    }
-    else {
-      x11 = x1 + w*c;
-      y11 = y1 + w*s;
-    }
-  }
-
-  if (arrow.thead) {
-    if (arrow.filled || arrow.empty) {
-      x41 = x3;
-      y41 = y3;
-    }
-    else {
-      x41 = x4 - w*c;
-      y41 = y4 - w*s;
-    }
-  }
-
-  double ba = Deg2Rad(arrow.backAngle > 0 ? arrow.backAngle : 90);
-
-  renderer_->setMapping(false);
-
-  if (arrow.fhead) {
-    double a1 = a + aa;
-    double a2 = a - aa;
-
-    double c1 = cos(a1), s1 = sin(a1);
-    double c2 = cos(a2), s2 = sin(a2);
-
-    double xf1 = x1 + l*c1;
-    double yf1 = y1 + l*s1;
-    double xf2 = x1 + l*c2;
-    double yf2 = y1 + l*s2;
-
-    double xf3 = x2, yf3 = y2;
-
-    if (! arrow.filled && ! arrow.empty) {
-      renderer_->drawLine(CPoint2D(x1, y1), CPoint2D(xf1, yf1), w, arrow.c);
-      renderer_->drawLine(CPoint2D(x1, y1), CPoint2D(xf2, yf2), w, arrow.c);
-    }
-    else {
-      if (ba > aa && ba < M_PI) {
-        double a3 = a + ba;
-
-        double c3 = cos(a3), s3 = sin(a3);
-
-        CMathGeom2D::IntersectLine(x1, y1, x2, y2, xf1, yf1, xf1 - 10*c3, yf1 - 10*s3, &xf3, &yf3);
-
-        x11 = xf3;
-        y11 = yf3;
-      }
-
-      std::vector<CPoint2D> points;
-
-      points.push_back(CPoint2D(x1 , y1 ));
-      points.push_back(CPoint2D(xf1, yf1));
-      points.push_back(CPoint2D(xf3, yf3));
-      points.push_back(CPoint2D(xf2, yf2));
-
-      if (arrow.filled)
-        renderer_->fillPolygon(points, arrow.c);
-      else
-        renderer_->drawPolygon(points, w, arrow.c);
-    }
-  }
-
-  if (arrow.thead) {
-    double a1 = a + M_PI - aa;
-    double a2 = a + M_PI + aa;
-
-    double c1 = cos(a1), s1 = sin(a1);
-    double c2 = cos(a2), s2 = sin(a2);
-
-    double xt1 = x4 + l*c1;
-    double yt1 = y4 + l*s1;
-    double xt2 = x4 + l*c2;
-    double yt2 = y4 + l*s2;
-
-    double xt3 = x3, yt3 = y3;
-
-    if (! arrow.filled && ! arrow.empty) {
-      renderer_->drawLine(CPoint2D(x4, y4), CPoint2D(xt1, yt1), w, arrow.c);
-      renderer_->drawLine(CPoint2D(x4, y4), CPoint2D(xt2, yt2), w, arrow.c);
-    }
-    else {
-      if (ba > aa && ba < M_PI) {
-        double a3 = a + M_PI - ba;
-
-        double c3 = cos(a3), s3 = sin(a3);
-
-        CMathGeom2D::IntersectLine(x3, y3, x4, y4, xt1, yt1, xt1 - 10*c3, yt1 - 10*s3, &xt3, &yt3);
-
-        x41 = xt3;
-        y41 = yt3;
-      }
-
-      std::vector<CPoint2D> points;
-
-      points.push_back(CPoint2D(x4 , y4 ));
-      points.push_back(CPoint2D(xt1, yt1));
-      points.push_back(CPoint2D(xt3, yt3));
-      points.push_back(CPoint2D(xt2, yt2));
-
-      if (arrow.filled)
-        renderer_->fillPolygon(points, arrow.c);
-      else
-        renderer_->drawPolygon(points, w, arrow.c);
-    }
-  }
-
-  renderer_->drawLine(CPoint2D(x11, y11), CPoint2D(x41, y41), w, arrow.c);
-
-  renderer_->setMapping(true);
-}
-
-void
-CGnuPlotWindow::
-drawLabel(const CGnuPlot::Label &label)
-{
-  CVAlignType valign = (label.front ? CVALIGN_TYPE_TOP : CVALIGN_TYPE_CENTER);
-
-  drawHAlignedText(label.pos.p, label.align, 0, valign, 0, label.text);
-}
-
-void
-CGnuPlotWindow::
-drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                 CVAlignType valign, int y_offset, const std::string &str, const CRGBA &c)
-{
-  CFontPtr font = renderer_->getFont();
-
-  /* Calculate width and height of string (max width and sum of heights of all lines) */
-  double font_size = font->getCharAscent() + font->getCharDescent();
-
-  double width1  = 0;
-  double height1 = 0;
-
-  std::string str1 = str;
-
-  std::string::size_type pstr1 = str1.find('\n');
-
-  while (pstr1 != std::string::npos) {
-    std::string str2 = str1.substr(0, pstr1);
-
-    double width2 = font->getStringWidth(str2);
-
-    width1   = std::max(width1, width2);
-    height1 += font_size;
-
-    str1  = str1.substr(pstr1 + 1);
-    pstr1 = str1.find('\n');
-  }
-
-  double width2 = font->getStringWidth(str1);
-
-  width1   = std::max(width1, width2);
-  height1 += font_size;
-
-  /*-------*/
-
-  /* Draw each line using X and Y alignment */
-
-  str1 = str;
-
-  pstr1 = str1.find('\n');
-
-  double x1, y1;
-
-  if      (valign == CVALIGN_TYPE_TOP)
-    y1 = pos.y;
-  else if (valign == CVALIGN_TYPE_CENTER)
-    y1 = pos.y + renderer_->pixelHeightToWindowHeight(height1/2);
-  else if (valign == CVALIGN_TYPE_BOTTOM)
-    y1 = pos.y + renderer_->pixelHeightToWindowHeight(height1);
-
-  y1 -= renderer_->pixelHeightToWindowHeight(font->getCharAscent());
-
-  while (pstr1 != std::string::npos) {
-    std::string str2 = str1.substr(0, pstr1);
-
-    double width2 = font->getStringWidth(str2);
-
-    if      (halign == CHALIGN_TYPE_LEFT)
-      x1 = pos.x;
-    else if (halign == CHALIGN_TYPE_CENTER)
-      x1 = pos.x - renderer_->pixelWidthToWindowWidth(width2/2);
-    else if (halign == CHALIGN_TYPE_RIGHT)
-      x1 = pos.x - renderer_->pixelWidthToWindowWidth(width2);
-
-    CPoint2D w(x1 + renderer_->pixelWidthToWindowWidth  (x_offset),
-               y1 - renderer_->pixelHeightToWindowHeight(y_offset));
-
-    renderer_->drawText(w, str2, c);
-
-    y1 -= renderer_->pixelHeightToWindowHeight(font_size);
-
-    str1 = str1.substr(pstr1 + 1);
-    pstr1 = str1.find('\n');
-  }
-
-  width2 = font->getStringWidth(str1);
-
-  if      (halign == CHALIGN_TYPE_LEFT)
-    x1 = pos.x;
-  else if (halign == CHALIGN_TYPE_CENTER)
-    x1 = pos.x - renderer_->pixelWidthToWindowWidth(width2/2);
-  else if (halign == CHALIGN_TYPE_RIGHT)
-    x1 = pos.x - renderer_->pixelWidthToWindowWidth(width2);
-
-  CPoint2D w(x1 + renderer_->pixelWidthToWindowWidth  (x_offset),
-             y1 - renderer_->pixelHeightToWindowHeight(y_offset));
-
-  renderer_->drawText(w, str1, c);
-}
-
-void
-CGnuPlotWindow::
-drawVAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                 CVAlignType valign, int y_offset, const std::string &str, const CRGBA &c)
-{
-  CFontPtr font = renderer_->getFont();
-
-  /* Calculate width and height of string (max width and sum of heights of all lines) */
-  int font_size = font->getISize();
-
-  int width1  = 0;
-  int height1 = 0;
-
-  std::string str1 = str;
-
-  std::string::size_type pstr1 = str1.find('\n');
-
-  while (pstr1 != std::string::npos) {
-    std::string str2 = str1.substr(0, pstr1);
-
-    int width2 = font->getIStringWidth(str2);
-
-    width1   = std::max(width1, width2);
-    height1 += font_size + 1;
-
-    str1  = str1.substr(pstr1 + 1);
-    pstr1 = str1.find('\n');
-  }
-
-  int width2 = font->getIStringWidth(str1);
-
-  width1   = std::max(width1, width2);
-  height1 += font_size;
-
-  /*-------*/
-
-  /* Draw each line using X and Y alignment */
-
-  str1 = str;
-
-  pstr1 = str1.find('\n');
-
-  double x1, y1;
-
-  if      (halign == CHALIGN_TYPE_LEFT)
-    x1 = pos.x;
-  else if (halign == CHALIGN_TYPE_CENTER)
-    x1 = pos.x - renderer_->pixelWidthToWindowWidth(height1/2);
-  else if (halign == CHALIGN_TYPE_RIGHT)
-    x1 = pos.x - renderer_->pixelWidthToWindowWidth(height1);
-
-  while (pstr1 != std::string::npos) {
-    std::string str2 = str1.substr(0, pstr1);
-
-    int width2 = font->getIStringWidth(str2);
-
-    if      (valign == CVALIGN_TYPE_TOP)
-      y1 = pos.y;
-    else if (valign == CVALIGN_TYPE_CENTER)
-      y1 = pos.y - renderer_->pixelHeightToWindowHeight(width2/2);
-    else if (valign == CVALIGN_TYPE_BOTTOM)
-      y1 = pos.y - renderer_->pixelHeightToWindowHeight(width2);
-
-    CPoint2D w(x1 + renderer_->pixelWidthToWindowWidth  (x_offset),
-               y1 - renderer_->pixelHeightToWindowHeight(y_offset));
-
-    renderer_->drawText(w, str2, c);
-
-    x1 += renderer_->pixelWidthToWindowWidth(font_size + 1);
-
-    str1  = str1.substr(pstr1 + 1);
-    pstr1 = str1.find('\n');
-  }
-
-  width2 = font->getIStringWidth(str1);
-
-  if      (valign == CVALIGN_TYPE_TOP)
-    y1 = pos.y;
-  else if (valign == CVALIGN_TYPE_CENTER)
-    y1 = pos.y - renderer_->pixelHeightToWindowHeight(width2/2);
-  else if (valign == CVALIGN_TYPE_BOTTOM)
-    y1 = pos.y - renderer_->pixelHeightToWindowHeight(width2);
-
-  CPoint2D w(x1 + renderer_->pixelWidthToWindowWidth  (x_offset),
-             y1 - renderer_->pixelHeightToWindowHeight(y_offset));
-
-  drawRotatedText(w, str1, c, 90);
-}
-
-void
-CGnuPlotWindow::
-drawRotatedText(const CPoint2D &p, const std::string &text, const CRGBA &c, double a)
-{
-  CFontPtr font  = renderer_->getFont();
-  CFontPtr rfont = font->rotated(a);
-
-  renderer_->setFont(rfont);
-
-  renderer_->drawText(p, text, c);
-
-  renderer_->setFont(font);
-}
-
-CPoint2D
-CGnuPlotWindow::
-pixelToWindow(const CPoint2D &p) const
-{
-  double x, y;
-
-  renderer_->pixelToWindow(p.x, p.y, &x, &y);
-
-  return CPoint2D(x, y);
-}
-
-CPoint2D
-CGnuPlotWindow::
-windowToPixel(const CPoint2D &p) const
-{
-  double x, y;
-
-  renderer_->windowToPixel(p.x, p.y, &x, &y);
-
-  return CPoint2D(x, y);
-}
-
-//------
-
-CGnuPlot::Plot::
-Plot(CGnuPlotWindow *window) :
- window_(window), is3D_(false), ind_(0), xmin_(0), xmax_(100), ymin_(0), ymax_(100),
- style_(POINTS_STYLE), smooth_(SMOOTH_NONE), fitX_(false), fitY_(false),
- contour_(window), contourSet_(false), surfaceSet_(false)
-{
-  setSmooth(plot()->getSmooth());
-
-  setFitX(plot()->getFitX());
-  setFitY(plot()->getFitY());
-}
-
-CGnuPlot::Plot::
-~Plot()
-{
-}
-
-CGnuPlot *
-CGnuPlot::Plot::
-plot() const
-{
-  return window_->plot();
-}
-
-void
-CGnuPlot::Plot::
-clearPoints()
-{
-  if (plot()->isDebug())
-    std::cerr << "Clear Points" << std::endl;
-
-  points2D_.clear();
-  points3D_.clear();
-
-  reset3D();
-}
-
-void
-CGnuPlot::Plot::
-addPoint2D(double x, double y)
-{
-  assert(! is3D_);
-
-  std::vector<CExprValuePtr> values;
-
-  values.push_back(CExprInst->createRealValue(x));
-  values.push_back(CExprInst->createRealValue(y));
-
-  addPoint2D(values, false);
-}
-
-void
-CGnuPlot::Plot::
-addPoint2D(const Values &values, bool discontinuity)
-{
-  assert(! is3D_);
-
-  if (plot()->isDebug()) {
-    std::cerr << "Add Point [" << points2D_.size() << "] " << "(";
-
-    for (uint i = 0; i < values.size(); ++i) {
-      if (i > 0) std::cerr << ",";
-
-      std::cerr << values[i];
-    }
-
-    std::cerr << ")" << std::endl;
-  }
-
-  points2D_.push_back(Point(values, discontinuity));
-}
-
-void
-CGnuPlot::Plot::
-addPoint3D(int iy, double x, double y, double z)
-{
-  assert(is3D_);
-
-  std::vector<CExprValuePtr> values;
-
-  values.push_back(CExprInst->createRealValue(x));
-  values.push_back(CExprInst->createRealValue(y));
-  values.push_back(CExprInst->createRealValue(z));
-
-  if (plot()->isDebug()) {
-    std::cerr << "Add Point [" << points3D_[iy].size() << "," << iy << "] " << "(";
-
-    for (uint i = 0; i < values.size(); ++i) {
-      if (i > 0) std::cerr << ",";
-
-      std::cerr << values[i];
-    }
-
-    std::cerr << ")" << std::endl;
-  }
-
-  points3D_[iy].push_back(Point(values, false));
-
-  reset3D();
-}
-
-void
-CGnuPlot::Plot::
-reset3D()
-{
-  contourSet_ = false;
-  surfaceSet_ = false;
-}
-
-void
-CGnuPlot::Plot::
-fit()
-{
-  if (! getFitX() && ! getFitY())
-    return;
-
-  COptReal xmin, ymin, zmin, xmax, ymax, zmax;
-
-  if (! is3D_) {
-    uint np = numPoints2D();
-
-    for (uint i = 0; i < np; ++i) {
-      Point p = getPoint2D(i);
-
-      double x, y;
-
-      if (p.getX(x)) {
-        xmin.updateMin(x); xmax.updateMax(x);
-      }
-
-      if (p.getY(y)) {
-        ymin.updateMin(y); ymax.updateMax(y);
-      }
-    }
-  }
-  else {
-    std::pair<int,int> np = numPoints3D();
-
-    for (int iy = 0; iy < np.second; ++iy) {
-      for (int ix = 0; ix < np.first; ++ix) {
-        const Point &point = getPoint3D(ix, iy);
-
-        double x = point.getX();
-        double y = point.getY();
-        double z = point.getZ();
-
-        xmin.updateMin(x); xmax.updateMax(x);
-        ymin.updateMin(y); ymax.updateMax(y);
-        zmin.updateMin(z); zmax.updateMax(z);
-      }
-    }
-  }
-
-  if (getFitX() && xmin.isValid() && xmax.isValid()) {
-    xmin_ = xmin.getValue();
-    xmax_ = xmax.getValue();
-  }
-
-  if (getFitY() && ymin.isValid() && ymax.isValid()) {
-    ymin_ = ymin.getValue();
-    ymax_ = ymax.getValue();
-  }
-}
-
-void
-CGnuPlot::Plot::
-smooth()
-{
-  if (! is3D_) {
-    if (smooth_ == SMOOTH_UNIQUE) {
-      typedef std::vector<double>     Values;
-      typedef std::map<double,Values> Points;
-
-      Points points;
-
-      for (uint i = 0; i < numPoints2D(); ++i) {
-        double x, y;
-
-        points2D_[i].getX(x);
-        points2D_[i].getY(y);
-
-        points[x].push_back(y);
-      }
-
-      clearPoints();
-
-      for (Points::iterator p = points.begin(); p != points.end(); ++p) {
-        double x = (*p).first;
-        double y = 0.0;
-
-        int np = (*p).second.size();
-
-        for (int i = 0; i < np; ++i)
-          y += (*p).second[i];
-
-        y /= np;
-
-        addPoint2D(x, y);
-      }
-    }
-  }
-}
-
-void
-CGnuPlot::Plot::
-draw3D()
-{
-  assert(is3D_);
-
-  CGnuPlotRenderer *renderer = window_->renderer();
-  if (! renderer) return;
-
-  const Camera &camera = window()->camera();
-
-  std::pair<int,int> np = numPoints3D();
-
-  //---
-
-  if (window_->contour3D()) {
-    if (! contourSet_) {
-      std::vector<double> xc, yc, zc;
-
-      xc.resize(np.first);
-      yc.resize(np.second);
-      zc.resize(np.first*np.second);
-
-      for (int iy = 0; iy < np.second; ++iy) {
-        for (int ix = 0; ix < np.first; ++ix) {
-          const Point &point = getPoint3D(ix, iy);
-
-          double x, y;
-
-          point.getX(x); point.getY(y);
-
-          xc[ix] = x;
-          yc[iy] = y;
-
-          zc[iy*np.first + ix] = point.getZ();
-        }
-      }
-
-      contour_.setData(&xc[0], &yc[0], &zc[0], np.first, np.second);
-
-      contourSet_ = true;
-    }
-
-    contour_.drawContour();
-  }
-
-  //---
-
-  if (window()->surface3D() || window()->pm3D()) {
-    if (! surfaceSet_) {
-      surfaceZMin_.setInvalid();
-      surfaceZMax_.setInvalid();
-
-      for (int iy = 1; iy < np.second; ++iy) {
-        for (int ix = 1; ix < np.first; ++ix) {
-          const Point &point1 = getPoint3D(ix - 1, iy - 1);
-          const Point &point2 = getPoint3D(ix - 1, iy    );
-          const Point &point3 = getPoint3D(ix    , iy    );
-          const Point &point4 = getPoint3D(ix    , iy - 1);
-
-          double z1 = (point1.getZ() + point2.getZ() + point3.getZ() + point4.getZ())/4;
-
-          surfaceZMin_.updateMin(z1);
-          surfaceZMax_.updateMax(z1);
-
-          CPoint3D p1(0,0,0), p2(0,0,0), p3(0,0,0), p4(0,0,0);
-
-          double x, y, z;
-
-          if (point1.getX(x) && point1.getY(y) && point1.getZ(z))
-            p1 = camera.transform(CPoint3D(x, y, z));
-          if (point2.getX(x) && point2.getY(y) && point2.getZ(z))
-            p2 = camera.transform(CPoint3D(x, y, z));
-          if (point3.getX(x) && point3.getY(y) && point3.getZ(z))
-            p3 = camera.transform(CPoint3D(x, y, z));
-          if (point4.getX(x) && point4.getY(y) && point4.getZ(z))
-            p4 = camera.transform(CPoint3D(x, y, z));
-
-          double zm = (p1.z + p2.z + p3.z + p4.z)/4;
-
-          std::vector<CPoint2D> poly;
-
-          poly.push_back(CPoint2D(p1.x, p1.y));
-          poly.push_back(CPoint2D(p2.x, p2.y));
-          poly.push_back(CPoint2D(p3.x, p3.y));
-          poly.push_back(CPoint2D(p4.x, p4.y));
-
-          surface_[-zm].push_back(ZPoints(z1, poly));
-        }
-      }
-
-      surfaceSet_ = true;
-    }
-  }
-
-  if (window()->surface3D()) {
-    if (window()->hidden3D()) {
-      for (auto polys : surface_) {
-        for (auto poly : polys.second) {
-          renderer->fillPolygon(poly.second, CRGBA(0.8,0.8,0.8));
-          renderer->drawPolygon(poly.second, 0, CRGBA(0,0,0));
-        }
-      }
-    }
-    else {
-      int pattern = window()->trianglePattern3D();
-
-      for (auto polys : surface_) {
-        for (auto poly : polys.second) {
-          if (pattern & 1) renderer->drawLine(poly.second[0], poly.second[1]);
-          if (pattern & 2) renderer->drawLine(poly.second[0], poly.second[3]);
-          if (pattern & 4) renderer->drawLine(poly.second[0], poly.second[2]);
-        }
-      }
-    }
-  }
-
-  if (window()->pm3D()) {
-    for (auto polys : surface_) {
-      for (auto poly : polys.second) {
-        double z = poly.first;
-
-        double r = (                      z - surfaceZMin_.getValue())/
-                   (surfaceZMax_.getValue() - surfaceZMin_.getValue());
-
-        CRGBA c = window()->palette().getColor(r);
-
-        renderer->fillPolygon(poly.second, c);
-      }
-    }
-  }
-}
-
-void
-CGnuPlot::Plot::
-draw2D()
-{
-  assert(! is3D_);
-
-  CGnuPlotRenderer *renderer = window_->renderer();
-  if (! renderer) return;
-
-  LineStyle lineStyle = this->lineStyle();
-
-  if (lineStyleNum().isValid())
-    lineStyle = plot()->lineStyles(lineStyleNum().getValue());
-
-  uint np = numPoints2D();
-
-  if (getSmooth() == SMOOTH_BEZIER) {
-    for (uint i1 = 0, i2 = 1, i3 = 2, i4 = 3; i4 < np;
-           i1 = i4, i2 = i1 + 1, i3 = i2 + 1, i4 = i3 + 1) {
-      const Point &point1 = getPoint2D(i1);
-      const Point &point2 = getPoint2D(i2);
-      const Point &point3 = getPoint2D(i3);
-      const Point &point4 = getPoint2D(i4);
-
-      double x1, y1, x2, y2, x3, y3, x4, y4;
-
-      if (! point1.getX(x1) || ! point1.getY(y1) || ! point2.getX(x2) || ! point2.getY(y2) ||
-          ! point3.getX(x3) || ! point3.getY(y3) || ! point4.getX(x4) || ! point4.getY(y4))
-        continue;
-
-      renderer->drawBezier(CPoint2D(x1, y1), CPoint2D(x2, y2), CPoint2D(x3, y3), CPoint2D(x4, y4));
-    }
-  }
-  else if (style_ == LABELS_STYLE) {
-    for (uint i = 0; i < np; ++i) {
-      const Point &point = getPoint2D(i);
-
-      double x, y;
-
-      if (! point.getX(x) || ! point.getY(y))
-        continue;
-
-      std::string str;
-
-      if (! point.getValue(3, str))
-        continue;
-
-      renderer->drawText(CPoint2D(x, y), str);
-    }
-  }
-  else {
-    if (style_ == LINES_STYLE || style_ == LINES_POINTS_STYLE) {
-      for (uint i1 = 0, i2 = 1; i2 < np; i1 = i2++) {
-        const Point &point1 = getPoint2D(i1);
-        const Point &point2 = getPoint2D(i2);
-
-        double x1, y1, x2, y2;
-
-        if (! point1.getX(x1) || ! point1.getY(y1) || ! point2.getX(x2) || ! point2.getY(y2))
-          continue;
-
-        renderer->drawLine(CPoint2D(x1, y1), CPoint2D(x2, y2), lineStyle.width());
-      }
-    }
-
-    if (style_ == DOTS_STYLE) {
-      for (uint i = 0; i < np; ++i) {
-        const Point &point = getPoint2D(i);
-
-        double x, y;
-
-        if (! point.getX(x) || ! point.getY(y))
-          continue;
-
-        renderer->drawPoint(CPoint2D(x, y));
-      }
-    }
-
-    if (style_ == POINTS_STYLE || style_ == LINES_POINTS_STYLE) {
-      for (uint i = 0; i < np; ++i) {
-        const Point &point = getPoint2D(i);
-
-        double x, y;
-
-        if (! point.getX(x) || ! point.getY(y))
-          continue;
-
-        double size = pointStyle().size();
-
-        if (pointStyle().varSize()) {
-          if (! point.getValue(3, size))
-            size = 1;
-        }
-
-        window()->mapLogPoint(&x, &y);
-
-        renderer->drawSymbol(CPoint2D(x, y), (CGnuPlot::SymbolType) pointStyle().type(), size);
-      }
-    }
-  }
-}
-
-//------
-
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 Point() :
  values(), discontinuity(false)
 {
 }
 
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 Point(const Values &values, bool discontinuity) :
  values(values), discontinuity(discontinuity)
 {
 }
 
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 ~Point()
 {
 }
 
 bool
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 getX(double &x) const
 {
   x = 0.0;
@@ -5737,7 +4430,7 @@ getX(double &x) const
 }
 
 bool
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 getY(double &y) const
 {
   y = 0.0;
@@ -5749,7 +4442,7 @@ getY(double &y) const
 }
 
 bool
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 getZ(double &z) const
 {
   z = 0.0;
@@ -5761,7 +4454,7 @@ getZ(double &z) const
 }
 
 double
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 getX() const
 {
   double x = 0.0;
@@ -5772,7 +4465,7 @@ getX() const
 }
 
 double
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 getY() const
 {
   double y = 0.0;
@@ -5783,7 +4476,7 @@ getY() const
 }
 
 double
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 getZ() const
 {
   double z = 0.0;
@@ -5794,7 +4487,7 @@ getZ() const
 }
 
 bool
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 getValue(int n, double &r) const
 {
   r = 0.0;
@@ -5806,7 +4499,7 @@ getValue(int n, double &r) const
 }
 
 bool
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 getValue(int n, std::string &str) const
 {
   str = "";
@@ -5818,7 +4511,7 @@ getValue(int n, std::string &str) const
 }
 
 int
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 cmp(const Point &p) const
 {
   double x1, y1, x2, y2;
@@ -5838,7 +4531,7 @@ cmp(const Point &p) const
 }
 
 void
-CGnuPlot::Point::
+CGnuPlotPlot::Point::
 print(std::ostream &os) const
 {
   os << "(";

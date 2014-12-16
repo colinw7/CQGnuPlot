@@ -1,5 +1,5 @@
-#ifndef CAXIS_2D_H
-#define CAXIS_2D_H
+#ifndef CGnuPlotAxis_H
+#define CGnuPlotAxis_H
 
 #include <COrientation.h>
 #include <CAlignType.h>
@@ -11,11 +11,11 @@
 
 #include <sys/types.h>
 
-class CGnuPlotWindow;
+class CGnuPlotPlot;
 
 class CGnuPlotAxis {
  public:
-  CGnuPlotAxis(CGnuPlotWindow *window, COrientation direction, double start=0.0, double end=1.0);
+  CGnuPlotAxis(CGnuPlotPlot *plot, COrientation direction, double start=0.0, double end=1.0);
  ~CGnuPlotAxis();
 
   double getStart() const { return start1_; }
@@ -25,18 +25,19 @@ class CGnuPlotAxis {
   void setLogarithmic(int base) { assert(base > 1); logarithmic_ = base; }
   void resetLogarithmic() { logarithmic_ = 0; }
 
-  uint getNumMajorTicks() const { return num_ticks1_; }
-  uint getNumMinorTicks() const { return num_ticks2_; }
+  uint getNumMajorTicks() const { return numTicks1_; }
+  uint getNumMinorTicks() const { return numTicks2_; }
 
-  uint getTickIncrement() const { return tick_increment_; }
+  uint getTickIncrement() const { return tickIncrement_; }
   void setTickIncrement(uint tick_increment);
 
-  const double *getTickSpaces   () const { return &tick_spaces_[0]; }
-  uint          getNumTickSpaces() const { return tick_spaces_.size(); }
+  const double *getTickSpaces   () const { return &tickSpaces_[0]; }
+  uint          getNumTickSpaces() const { return tickSpaces_.size(); }
 
-  void setTickInside(bool b) { tick_inside_ = b; }
+  bool isTickInside() const { return tickInside_; }
+  void setTickInside(bool b) { tickInside_ = b; }
 
-  double getTickSpace(int i) const { return tick_spaces_[i]; }
+  double getTickSpace(int i) const { return tickSpaces_[i]; }
   void setTickSpaces(double *tick_spaces, uint num_tick_spaces);
 
   const std::string &getLabel() const { return label_; }
@@ -45,8 +46,17 @@ class CGnuPlotAxis {
   bool isDisplayed() const { return displayed_; }
   void setDisplayed(bool b) { displayed_ = b; }
 
-  bool hasLine() const { return line_; }
-  void setLine(bool b) { line_ = b; }
+  bool drawLine() const { return drawLine_; }
+  void setDrawLine(bool b) { drawLine_ = b; }
+
+  bool drawTicMark() const { return drawTicMark_; }
+  void setDrawTicMark(bool b) { drawTicMark_ = b; }
+
+  bool drawTicLabel() const { return drawTicLabel_; }
+  void setDrawTicLabel(bool b) { drawTicLabel_ = b; }
+
+  bool drawLabel() const { return drawLabel_; }
+  void setDrawLabel(bool b) { drawLabel_ = b; }
 
   void setRange(double start, double end);
 
@@ -78,18 +88,21 @@ class CGnuPlotAxis {
                         CVAlignType valign, int y_offset, const std::string &str);
 
  private:
-  CGnuPlotWindow*     window_;
+  CGnuPlotPlot*       plot_;
   COrientation        direction_;
   double              start_, end_;
   double              start1_, end1_;
   int                 logarithmic_;
-  uint                num_ticks1_, num_ticks2_;
-  uint                tick_increment_;
-  std::vector<double> tick_spaces_;
-  bool                tick_inside_;
+  uint                numTicks1_, numTicks2_;
+  uint                tickIncrement_;
+  std::vector<double> tickSpaces_;
+  bool                tickInside_;
   std::string         label_;
   bool                displayed_;
-  bool                line_;
+  bool                drawLine_;
+  bool                drawTicMark_;
+  bool                drawTicLabel_;
+  bool                drawLabel_;
   CFontPtr            font_;
 };
 

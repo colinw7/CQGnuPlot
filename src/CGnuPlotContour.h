@@ -1,14 +1,15 @@
-#ifndef CContour_H
-#define CContour_H
+#ifndef CGnuPlotContour_H
+#define CGnuPlotContour_H
 
 #include <vector>
 #include <CRGBA.h>
+#include <COptVal.h>
 
-class CGnuPlotWindow;
+class CGnuPlotPlot;
 
 class CGnuPlotContour {
  public:
-  CGnuPlotContour(CGnuPlotWindow *window);
+  CGnuPlotContour(CGnuPlotPlot *plot);
 
   bool solid() const { return solid_; }
   void setSolid(bool b) { solid_ = b; }
@@ -30,16 +31,14 @@ class CGnuPlotContour {
                       double, double, double, double, const std::vector<double> &);
 
  private:
-  CGnuPlotWindow*     window_;
+  CGnuPlotPlot*       plot_;
   bool                solid_;
   std::vector<double> x_, y_, z_;
   std::vector<double> levels_;
   std::vector<CRGBA>  colors_;
-  double              xmin_, ymin_, zmin_;
-  double              xmax_, ymax_, zmax_;
-  int                 w_, h_;
-  double              min_x_, min_y_;
-  double              min_z_;
+  COptReal            xmin_, ymin_, zmin_;
+  COptReal            xmax_, ymax_, zmax_;
+  double              min_x_, min_y_, min_z_;
 };
 
 #endif
