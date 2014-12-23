@@ -94,7 +94,7 @@ CExprOperatorPtr
 CExprOperatorMgr::
 getOperator(CExprOpType type) const
 {
-  OperatorMap::const_iterator p = operator_map_.find(type);
+  auto p = operator_map_.find(type);
 
   if (p != operator_map_.end())
     return (*p).second;

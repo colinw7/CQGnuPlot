@@ -23,9 +23,10 @@ int CGnuPlotPlot::nextId_ = 1;
 CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotWindow *window) :
  window_(window), id_(nextId_++), is3D_(false), parentPlot_(0), region_(0,0,1,1),
- margin_(10,10,10,10), ind_(0), style_(CGnuPlot::POINTS_STYLE), smooth_(CGnuPlot::SMOOTH_NONE),
- histogramStyle_(CGnuPlot::HISTOGRAM_STYLE_NONE), fitX_(false), fitY_(false), contour_(this),
- contourSet_(false), surfaceSet_(false), trianglePattern3D_(3), renderer_(0)
+ margin_(10,10,10,10), ind_(0), style_(CGnuPlot::PlotStyle::POINTS),
+ smooth_(CGnuPlot::Smooth::NONE), histogramStyle_(CGnuPlot::HistogramStyle::NONE),
+ fitX_(false), fitY_(false), contour_(this), contourSet_(false), surfaceSet_(false),
+ trianglePattern3D_(3), renderer_(0)
 {
   setSmooth(plot()->getSmooth());
 
@@ -50,6 +51,35 @@ CGnuPlotPlot::
 plot() const
 {
   return window_->plot();
+}
+
+void
+CGnuPlotPlot::
+init()
+{
+  CGnuPlot *plot = this->plot();
+
+  setFillStyle (plot->fillStyle ());
+  setLineStyle (plot->lineStyle ());
+  setPointStyle(plot->pointStyle());
+
+  setLineStyleNum(plot->lineStyleNum());
+  setHistogramStyle(plot->histogramStyle());
+
+  setAxesData(plot->axesData());
+  setKeyData (plot->keyData ());
+  setMargin  (plot->margin  ());
+  setPlotSize(plot->plotSize());
+
+  setLogScaleMap(plot->logScaleMap());
+  setPalette(plot->palette());
+  setTrianglePattern3D(plot->trianglePattern3D());
+
+  setArrows    (plot->arrows    ());
+  setLabels    (plot->labels    ());
+  setRectangles(plot->rectangles());
+  setEllipses  (plot->ellipses  ());
+  setPolygons  (plot->polygons  ());
 }
 
 void
@@ -225,7 +255,7 @@ CGnuPlotPlot::
 smooth()
 {
   if (! is3D_) {
-    if (smooth_ == CGnuPlot::SMOOTH_UNIQUE) {
+    if (smooth_ == CGnuPlot::Smooth::UNIQUE) {
       typedef std::vector<double>     Values;
       typedef std::map<double,Values> Points;
 
@@ -242,16 +272,14 @@ smooth()
 
       clearPoints();
 
-      for (Points::iterator p = points.begin(); p != points.end(); ++p) {
-        double x = (*p).first;
+      for (const auto &p : points) {
+        double x = p.first;
         double y = 0.0;
 
-        int numPoints = (*p).second.size();
+        for (const auto &p1 : p.second)
+          y += p1;
 
-        for (int i = 0; i < numPoints; ++i)
-          y += (*p).second[i];
-
-        y /= numPoints;
+        y /= p.second.size();
 
         addPoint2D(x, y);
       }
@@ -264,7 +292,7 @@ CGnuPlotPlot::
 axesData() const
 {
   if (! subPlots_.empty()) {
-    if (getStyle() == CGnuPlot::HISTOGRAMS_STYLE)
+    if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS)
       return axesData_;
     else
       return subPlots_[0]->axesData();
@@ -278,7 +306,7 @@ CGnuPlotPlot::
 setAxesData(const AxesData &a)
 {
   if (! subPlots_.empty()) {
-    if (getStyle() != CGnuPlot::HISTOGRAMS_STYLE) {
+    if (getStyle() != CGnuPlot::PlotStyle::HISTOGRAMS) {
       for (auto plot : subPlots_)
         plot->setAxesData(a);
     }
@@ -293,7 +321,7 @@ showXAxis(bool show)
 {
   axesData_.xaxis.displayed = show;
 
-  stateChanged(CGnuPlot::CHANGE_STATE_AXIS_DISPLAY);
+  stateChanged(CGnuPlot::ChangeState::AXIS_DISPLAY);
 }
 
 void
@@ -302,7 +330,55 @@ showYAxis(bool show)
 {
   axesData_.yaxis.displayed = show;
 
-  stateChanged(CGnuPlot::CHANGE_STATE_AXIS_DISPLAY);
+  stateChanged(CGnuPlot::ChangeState::AXIS_DISPLAY);
+}
+
+const CGnuPlot::KeyData &
+CGnuPlotPlot::
+rootKeyData() const
+{
+  if (parentPlot_)
+    return parentPlot_->keyData_;
+  else
+    return keyData_;
+}
+
+void
+CGnuPlotPlot::
+setRootKeyData(const KeyData &k)
+{
+  if (parentPlot_)
+    parentPlot_->keyData_ = k;
+  else
+    keyData_ = k;
+}
+
+const CGnuPlot::KeyData &
+CGnuPlotPlot::
+keyData() const
+{
+  if (! subPlots_.empty()) {
+    if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS)
+      return keyData_;
+    else
+      return subPlots_[0]->keyData();
+  }
+  else
+    return keyData_;
+}
+
+void
+CGnuPlotPlot::
+setKeyData(const KeyData &k)
+{
+  if (! subPlots_.empty()) {
+    if (getStyle() != CGnuPlot::PlotStyle::HISTOGRAMS) {
+      for (auto plot : subPlots_)
+        plot->setKeyData(k);
+    }
+  }
+
+  keyData_ = k;
 }
 
 const CBBox2D &
@@ -310,7 +386,7 @@ CGnuPlotPlot::
 region() const
 {
   if (! subPlots_.empty()) {
-    if (getStyle() == CGnuPlot::HISTOGRAMS_STYLE)
+    if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS)
       return region_;
     else
       return subPlots_[0]->region();
@@ -324,7 +400,7 @@ CGnuPlotPlot::
 setRegion(const CBBox2D &r)
 {
   if (! subPlots_.empty()) {
-    if (getStyle() != CGnuPlot::HISTOGRAMS_STYLE) {
+    if (getStyle() != CGnuPlot::PlotStyle::HISTOGRAMS) {
       for (auto plot : subPlots_)
         plot->setRegion(r);
     }
@@ -338,7 +414,7 @@ CGnuPlotPlot::
 margin() const
 {
   if (! subPlots_.empty()) {
-    if (getStyle() == CGnuPlot::HISTOGRAMS_STYLE)
+    if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS)
       return margin_;
     else
       return subPlots_[0]->margin();
@@ -352,13 +428,41 @@ CGnuPlotPlot::
 setMargin(const CRange2D &m)
 {
   if (! subPlots_.empty()) {
-    if (getStyle() != CGnuPlot::HISTOGRAMS_STYLE) {
+    if (getStyle() != CGnuPlot::PlotStyle::HISTOGRAMS) {
       for (auto plot : subPlots_)
         plot->setMargin(m);
     }
   }
 
   margin_ = m;
+}
+
+const CGnuPlot::PlotSize &
+CGnuPlotPlot::
+plotSize() const
+{
+  if (! subPlots_.empty()) {
+    if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS)
+      return plotSize_;
+    else
+      return subPlots_[0]->plotSize();
+  }
+  else
+    return plotSize_;
+}
+
+void
+CGnuPlotPlot::
+setPlotSize(const PlotSize &s)
+{
+  if (! subPlots_.empty()) {
+    if (getStyle() != CGnuPlot::PlotStyle::HISTOGRAMS) {
+      for (auto plot : subPlots_)
+        plot->setPlotSize(s);
+    }
+  }
+
+  plotSize_ = s;
 }
 
 void
@@ -368,8 +472,13 @@ draw(int ind)
   renderer_->setMargin(margin());
   renderer_->setRange(getDisplayRange());
 
+  if (plotSize().ratio.isValid())
+    renderer_->setRatio(plotSize().ratio.getValue());
+  else
+    renderer_->unsetRatio();
+
   if (! subPlots_.empty()) {
-    if (getStyle() == CGnuPlot::HISTOGRAMS_STYLE)
+    if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS)
       drawHistogram(subPlots_);
     else {
       int ind1 = 0;
@@ -382,13 +491,13 @@ draw(int ind)
     }
   }
   else {
-    if      (getStyle() == CGnuPlot::HISTOGRAMS_STYLE) {
+    if      (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS) {
       if (! parentPlot_)
         drawHistogram({ this });
     }
-    else if (getStyle() == CGnuPlot::TEST_TERMINAL_STYLE)
+    else if (getStyle() == CGnuPlot::PlotStyle::TEST_TERMINAL)
       drawTerminal();
-    else if (getStyle() == CGnuPlot::TEST_PALETTE_STYLE)
+    else if (getStyle() == CGnuPlot::PlotStyle::TEST_PALETTE)
       drawPalette();
     else {
       if (is3D_)
@@ -439,7 +548,7 @@ drawHistogram(const Plots &plots)
 
   //---
 
-  if      (getHistogramStyle() == CGnuPlot::HISTOGRAM_STYLE_CLUSTERED) {
+  if      (getHistogramStyle() == CGnuPlot::HistogramStyle::CLUSTERED) {
     CBBox2D range(xmin, ymin, xmax, ymax);
 
     renderer_->setRange(range);
@@ -464,16 +573,16 @@ drawHistogram(const Plots &plots)
 
         CBBox2D bbox(x + d, ymin, x + d + w, y);
 
-        if      (plot->fillStyle().style() == CGnuPlot::FILL_PATTERN)
+        if      (plot->fillStyle().style() == CGnuPlot::FillType::PATTERN)
           renderer_->patternRect(bbox, plot->fillStyle().pattern());
-        else if (plot->fillStyle().style() == CGnuPlot::FILL_SOLID)
+        else if (plot->fillStyle().style() == CGnuPlot::FillType::SOLID)
           renderer_->fillRect(bbox, lineStyle.color(CRGBA(255,255,255)));
 
         renderer_->drawRect(bbox);
       }
     }
   }
-  else if (getHistogramStyle() == CGnuPlot::HISTOGRAM_STYLE_ROWSTACKED) {
+  else if (getHistogramStyle() == CGnuPlot::HistogramStyle::ROWSTACKED) {
     ymin = 0;
     ymax = 0;
 
@@ -512,9 +621,9 @@ drawHistogram(const Plots &plots)
 
         CBBox2D bbox(x, h, x + w, h + y);
 
-        if      (plot->fillStyle().style() == CGnuPlot::FILL_PATTERN)
+        if      (plot->fillStyle().style() == CGnuPlot::FillType::PATTERN)
           renderer_->patternRect(bbox, plot->fillStyle().pattern());
-        else if (plot->fillStyle().style() == CGnuPlot::FILL_SOLID)
+        else if (plot->fillStyle().style() == CGnuPlot::FillType::SOLID)
           renderer_->fillRect(bbox, lineStyle.color(CRGBA(255,255,255)));
 
         renderer_->drawRect(bbox);
@@ -704,7 +813,7 @@ draw2D(int ind)
 
   uint np = numPoints2D();
 
-  if (getSmooth() == CGnuPlot::SMOOTH_BEZIER) {
+  if (getSmooth() == CGnuPlot::Smooth::BEZIER) {
     for (uint i1 = 0, i2 = 1, i3 = 2, i4 = 3; i4 < np;
            i1 = i4, i2 = i1 + 1, i3 = i2 + 1, i4 = i3 + 1) {
       const Point &point1 = getPoint2D(i1);
@@ -721,7 +830,7 @@ draw2D(int ind)
       renderer_->drawBezier(CPoint2D(x1, y1), CPoint2D(x2, y2), CPoint2D(x3, y3), CPoint2D(x4, y4));
     }
   }
-  else if (style_ == CGnuPlot::LABELS_STYLE) {
+  else if (style_ == CGnuPlot::PlotStyle::LABELS) {
     for (uint i = 0; i < np; ++i) {
       const Point &point = getPoint2D(i);
 
@@ -739,7 +848,7 @@ draw2D(int ind)
     }
   }
   else {
-    if (style_ == CGnuPlot::LINES_STYLE || style_ == CGnuPlot::LINES_POINTS_STYLE) {
+    if (style_ == CGnuPlot::PlotStyle::LINES || style_ == CGnuPlot::PlotStyle::LINES_POINTS) {
       for (uint i1 = 0, i2 = 1; i2 < np; i1 = i2++) {
         const Point &point1 = getPoint2D(i1);
         const Point &point2 = getPoint2D(i2);
@@ -754,7 +863,7 @@ draw2D(int ind)
       }
     }
 
-    if (style_ == CGnuPlot::DOTS_STYLE) {
+    if (style_ == CGnuPlot::PlotStyle::DOTS) {
       for (uint i = 0; i < np; ++i) {
         const Point &point = getPoint2D(i);
 
@@ -767,7 +876,7 @@ draw2D(int ind)
       }
     }
 
-    if (style_ == CGnuPlot::POINTS_STYLE || style_ == CGnuPlot::LINES_POINTS_STYLE) {
+    if (style_ == CGnuPlot::PlotStyle::POINTS || style_ == CGnuPlot::PlotStyle::LINES_POINTS) {
       for (uint i = 0; i < np; ++i) {
         const Point &point = getPoint2D(i);
 
@@ -776,7 +885,7 @@ draw2D(int ind)
         if (! point.getX(x) || ! point.getY(y))
           continue;
 
-        double size = pointStyle().size();
+        double size = pointSize();
 
         if (pointStyle().varSize()) {
           if (! point.getValue(3, size))
@@ -785,7 +894,7 @@ draw2D(int ind)
 
         mapLogPoint(&x, &y);
 
-        renderer_->drawSymbol(CPoint2D(x, y), (CGnuPlot::SymbolType) pointStyle().type(), size,
+        renderer_->drawSymbol(CPoint2D(x, y), pointType(), size,
                               lineStyle.color(CRGBA(1,0,0)));
       }
     }
@@ -807,23 +916,27 @@ drawAxes(double xmin, double ymin, double xmax, double ymax)
   double ymin1 = yaxis.getStart();
   double ymax1 = yaxis.getEnd  ();
 
-  if (axesData().borders & (1<<0))
-    renderer_->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmax1, ymin1));
+  if (axesData().borders) {
+    double bw = axesData().borderWidth;
 
-  if (axesData().borders & (1<<1))
-    renderer_->drawLine(CPoint2D(xmin1, ymax1), CPoint2D(xmax1, ymax1));
+    if (axesData().borders & (1<<0))
+      renderer_->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmax1, ymin1), bw);
 
-  if (axesData().borders & (1<<2))
-    renderer_->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmin1, ymax1));
+    if (axesData().borders & (1<<1))
+      renderer_->drawLine(CPoint2D(xmin1, ymax1), CPoint2D(xmax1, ymax1), bw);
 
-  if (axesData().borders & (1<<3))
-    renderer_->drawLine(CPoint2D(xmax1, ymin1), CPoint2D(xmax1, ymax1));
+    if (axesData().borders & (1<<2))
+      renderer_->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmin1, ymax1), bw);
+
+    if (axesData().borders & (1<<3))
+      renderer_->drawLine(CPoint2D(xmax1, ymin1), CPoint2D(xmax1, ymax1), bw);
+  }
 
   if (axesData().xaxis.displayed) {
     xaxis.setLabel(axesData().xaxis.str);
 
-    if (getLogScale(CGnuPlot::X_LOGSCALE))
-      xaxis.setLogarithmic(getLogScale(CGnuPlot::X_LOGSCALE));
+    if (getLogScale(CGnuPlot::LogScale::X))
+      xaxis.setLogarithmic(getLogScale(CGnuPlot::LogScale::X));
     else
       xaxis.resetLogarithmic();
 
@@ -833,10 +946,12 @@ drawAxes(double xmin, double ymin, double xmax, double ymax)
 
     xaxis.setTickInside(true);
     xaxis.setDrawTicLabel(true);
+    xaxis.setDrawLabel(true);
     xaxis.drawAxis(ymin1);
 
     xaxis.setTickInside(false);
     xaxis.setDrawTicLabel(false);
+    xaxis.setDrawLabel(false);
     xaxis.drawAxis(ymax1);
   }
 
@@ -846,8 +961,8 @@ drawAxes(double xmin, double ymin, double xmax, double ymax)
   if (axesData().yaxis.displayed) {
     yaxis.setLabel(axesData().yaxis.str);
 
-    if (getLogScale(CGnuPlot::Y_LOGSCALE))
-      yaxis.setLogarithmic(getLogScale(CGnuPlot::Y_LOGSCALE));
+    if (getLogScale(CGnuPlot::LogScale::Y))
+      yaxis.setLogarithmic(getLogScale(CGnuPlot::LogScale::Y));
     else
       yaxis.resetLogarithmic();
 
@@ -857,10 +972,12 @@ drawAxes(double xmin, double ymin, double xmax, double ymax)
 
     yaxis.setTickInside(true);
     yaxis.setDrawTicLabel(true);
+    yaxis.setDrawLabel(true);
     yaxis.drawAxis(xmin1);
 
     yaxis.setTickInside(false);
     yaxis.setDrawTicLabel(false);
+    yaxis.setDrawLabel(false);
     yaxis.drawAxis(xmax1);
   }
 
@@ -1161,70 +1278,139 @@ void
 CGnuPlotPlot::
 drawKey()
 {
+  if (! getKeyDisplayed()) return;
+
   CFontPtr font = renderer_->getFont();
 
   double font_size = font->getCharAscent() + font->getCharDescent();
 
-  double pw = pixelWidthToWindowWidth(1);
+  double pw = pixelWidthToWindowWidth  (1);
   double ph = pixelHeightToWindowHeight(1);
 
-  double x = axesData().xaxis.max.getValue(1.0) - 100*pw;
-  double y = axesData().yaxis.max.getValue(1.0) - 16*ph;
+  double bx = 8*pw;
+  double by = 8*ph;
+  double ll = 64*pw;
+
+  CSize2D size;
+
+  double textWidth = 0.0, textHeight = 0.0;
 
   if      (! subPlots_.empty()) {
+    for (auto plot : subPlots_) {
+      std::string label = plot->keyData_.title;
+
+      textWidth = std::max(textWidth, font->getStringWidth(label)*pw);
+
+      textHeight += font_size*ph;
+    }
+  }
+  else {
+    std::string label = keyData_.title;
+
+    textWidth  = std::max(textWidth, font->getStringWidth(label)*pw);
+    textHeight = font_size*ph;
+  }
+
+  size = CSize2D(textWidth + ll + 3*bx, textHeight + 2*by);
+
+  CHAlignType halign = getKeyHAlign();
+  CVAlignType valign = getKeyVAlign();
+
+  double x1 = 0, y1 = 0;
+
+  if      (halign == CHALIGN_TYPE_LEFT)
+    x1 = axesData().xaxis.min.getValue(0) + bx;
+  else if (halign == CHALIGN_TYPE_RIGHT)
+    x1 = axesData().xaxis.max.getValue(1) - bx - size.width;
+  else if (halign == CHALIGN_TYPE_CENTER)
+    x1 = (axesData().xaxis.min.getValue(0) + axesData().xaxis.max.getValue(1) - size.width)/2;
+
+  if      (valign == CVALIGN_TYPE_TOP)
+    y1 = axesData().yaxis.max.getValue(1) - by - size.height;
+  else if (valign == CVALIGN_TYPE_BOTTOM)
+    y1 = axesData().yaxis.min.getValue(0) + by;
+  else if (valign == CVALIGN_TYPE_CENTER)
+    y1 = (axesData().yaxis.min.getValue(0) + axesData().yaxis.max.getValue(1) - size.height)/2;
+
+  double x2 = x1 + size.width;
+  double y2 = y1 + size.height;
+
+  if      (! subPlots_.empty()) {
+    if (keyData_.box) {
+      CBBox2D bbox(x1, y1, x2, y2);
+
+      renderer_->drawRect(bbox);
+    }
+
+    double y = y2 - by;
+
     for (auto plot : subPlots_) {
       CGnuPlot::PlotStyle style     = plot->getStyle();
       CGnuPlot::LineStyle lineStyle = plot->calcLineStyle();
 
-      if (getStyle() == CGnuPlot::HISTOGRAMS_STYLE) {
+      double xx = x2 - ll - bx;
+      double yy = y - font_size*ph/2;
+
+      if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS) {
         double h = (font_size - 4)*ph;
 
-        CBBox2D bbox(x, y - h/2, x + 64*pw, y + h/2);
+        CBBox2D bbox(xx, yy - h/2, xx + ll, yy + h/2);
 
-        if      (plot->fillStyle().style() == CGnuPlot::FILL_PATTERN)
+        if      (plot->fillStyle().style() == CGnuPlot::FillType::PATTERN)
           renderer_->patternRect(bbox, plot->fillStyle().pattern());
-        else if (plot->fillStyle().style() == CGnuPlot::FILL_SOLID)
+        else if (plot->fillStyle().style() == CGnuPlot::FillType::SOLID)
           renderer_->fillRect(bbox, lineStyle.color(CRGBA(255,255,255)));
 
         renderer_->drawRect(bbox);
       }
       else {
-        if (style == CGnuPlot::LINES_STYLE || style == CGnuPlot::LINES_POINTS_STYLE)
-          renderer_->drawLine(CPoint2D(x, y), CPoint2D(x + 64*pw, y),
+        if (style == CGnuPlot::PlotStyle::LINES || style == CGnuPlot::PlotStyle::LINES_POINTS)
+          renderer_->drawLine(CPoint2D(xx, yy), CPoint2D(xx + ll, yy),
                               lineStyle.width(), lineStyle.color(CRGBA(1,0,0)));
 
-        if (style == CGnuPlot::POINTS_STYLE || style == CGnuPlot::LINES_POINTS_STYLE)
-          renderer_->drawSymbol(CPoint2D(x + 32*pw, y), (CGnuPlot::SymbolType) pointStyle().type(),
-                                pointStyle().size(), lineStyle.color(CRGBA(1,0,0)));
+        if (style == CGnuPlot::PlotStyle::POINTS || style == CGnuPlot::PlotStyle::LINES_POINTS)
+          renderer_->drawSymbol(CPoint2D(xx + ll/2, yy), plot->pointType(),
+                                plot->pointSize(), lineStyle.color(CRGBA(1,0,0)));
       }
 
       std::string label = plot->keyData_.title;
 
       //double lw = font->getStringWidth(label);
 
-      drawHAlignedText(CPoint2D(x - 8*pw, y), CHALIGN_TYPE_RIGHT, 0,
-                       CVALIGN_TYPE_CENTER, 0, label);
+      drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
+                       CVALIGN_TYPE_TOP, 0, label);
 
       y -= font_size*ph;
     }
   }
   else if (! parentPlot_) {
+    if (keyData_.box) {
+      CBBox2D bbox(x1, y1, x2, y2);
+
+      renderer_->drawRect(bbox);
+    }
+
+    double y = y2 - by;
+
+    double xx = x2 - ll - bx;
+    double yy = y - font_size*ph/2;
+
     CGnuPlot::LineStyle lineStyle = calcLineStyle();
 
-    if (style_ == CGnuPlot::LINES_STYLE || style_ == CGnuPlot::LINES_POINTS_STYLE)
-      renderer_->drawLine(CPoint2D(x, y), CPoint2D(x + 64*pw, y),
+    if (style_ == CGnuPlot::PlotStyle::LINES || style_ == CGnuPlot::PlotStyle::LINES_POINTS)
+      renderer_->drawLine(CPoint2D(xx, yy), CPoint2D(xx + ll, yy),
                           lineStyle.width(), lineStyle.color(CRGBA(1,0,0)));
 
-    if (style_ == CGnuPlot::POINTS_STYLE || style_ == CGnuPlot::LINES_POINTS_STYLE)
-      renderer_->drawSymbol(CPoint2D(x + 32*pw, y), (CGnuPlot::SymbolType) pointStyle().type(),
-                            pointStyle().size(), lineStyle.color(CRGBA(1,0,0)));
+    if (style_ == CGnuPlot::PlotStyle::POINTS || style_ == CGnuPlot::PlotStyle::LINES_POINTS)
+      renderer_->drawSymbol(CPoint2D(xx + ll/2, yy), pointType(),
+                            pointSize(), lineStyle.color(CRGBA(1,0,0)));
 
     std::string label = keyData_.title;
 
     //double lw = font->getStringWidth(label);
 
-    drawHAlignedText(CPoint2D(x - 8*pw, y), CHALIGN_TYPE_RIGHT, 0,
-                     CVALIGN_TYPE_CENTER, 0, label);
+    drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
+                     CVALIGN_TYPE_TOP, 0, label);
   }
 }
 
@@ -1237,6 +1423,15 @@ drawAnnotations()
 
   for (auto label : labels_)
     drawLabel(label);
+
+  for (auto rect : rects_)
+    drawRectangle(rect);
+
+  for (auto ellipse : ellipses_)
+    drawEllipse(ellipse);
+
+  for (auto poly : polygons_)
+    drawPolygon(poly);
 }
 
 void
@@ -1403,6 +1598,30 @@ drawLabel(const CGnuPlot::Label &label)
 
 void
 CGnuPlotPlot::
+drawRectangle(const CGnuPlot::Rectangle &rect)
+{
+  renderer_->fillRect(CBBox2D(rect.from, rect.to), rect.fillColor);
+  renderer_->drawRect(CBBox2D(rect.from, rect.to), rect.strokeColor);
+}
+
+void
+CGnuPlotPlot::
+drawEllipse(const CGnuPlot::Ellipse &ellipse)
+{
+  renderer_->fillEllipse(ellipse.p.p, ellipse.rx, ellipse.ry, ellipse.fillColor);
+  renderer_->drawEllipse(ellipse.p.p, ellipse.rx, ellipse.ry, ellipse.strokeColor);
+}
+
+void
+CGnuPlotPlot::
+drawPolygon(const CGnuPlot::Polygon &poly)
+{
+  renderer_->fillPolygon(poly.points, poly.fillColor);
+  renderer_->drawPolygon(poly.points, 1.0, poly.strokeColor);
+}
+
+void
+CGnuPlotPlot::
 drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
                  CVAlignType valign, int y_offset, const std::string &str, const CRGBA &c)
 {
@@ -1550,8 +1769,8 @@ void
 CGnuPlotPlot::
 mapLogPoint(double *x, double *y) const
 {
-  int xbase = getLogScale(CGnuPlot::X_LOGSCALE);
-  int ybase = getLogScale(CGnuPlot::Y_LOGSCALE);
+  int xbase = getLogScale(CGnuPlot::LogScale::X);
+  int ybase = getLogScale(CGnuPlot::LogScale::Y);
 
   double xlogscale = (xbase > 1 ? log(xbase) : 1);
   double ylogscale = (ybase > 1 ? log(ybase) : 1);
@@ -1564,8 +1783,8 @@ void
 CGnuPlotPlot::
 unmapLogPoint(double *x, double *y) const
 {
-  int xbase = getLogScale(CGnuPlot::X_LOGSCALE);
-  int ybase = getLogScale(CGnuPlot::Y_LOGSCALE);
+  int xbase = getLogScale(CGnuPlot::LogScale::X);
+  int ybase = getLogScale(CGnuPlot::LogScale::Y);
 
   double xlogscale = (xbase > 1 ? log(xbase) : 1);
   double ylogscale = (ybase > 1 ? log(ybase) : 1);

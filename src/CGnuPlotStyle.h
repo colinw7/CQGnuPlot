@@ -23,22 +23,24 @@ class CGnuPlotStyle {
   }
 
   CGnuPlot::SymbolType indexSymbol(int i) {
-    if (i <  0) return CGnuPlot::SYMBOL_NONE;
-    if (i == 0) return CGnuPlot::SYMBOL_POINT;
+    if (i <  0) return CGnuPlot::SymbolType::NONE;
+    if (i == 0) return CGnuPlot::SymbolType::POINT;
 
     int i1 = i - 1;
-    int ii = int(CGnuPlot::SYMBOL_LAST) - 1;
+    int ii = int(CGnuPlot::SymbolType::LAST) - 1;
 
-    return (CGnuPlot::SymbolType)((i1 % ii) + CGnuPlot::SYMBOL_PLUS);
+    return static_cast<CGnuPlot::SymbolType>(
+            (i1 % ii) + static_cast<int>(CGnuPlot::SymbolType::PLUS));
   }
 
   CGnuPlot::PatternType indexPattern(int i) {
-    if (i <= 0) return CGnuPlot::PATTERN_NONE;
+    if (i <= 0) return CGnuPlot::PatternType::NONE;
 
     int i1 = i - 1;
-    int ii = int(CGnuPlot::PATTERN_LAST);
+    int ii = int(CGnuPlot::PatternType::LAST);
 
-    return (CGnuPlot::PatternType)((i1 % ii) + CGnuPlot::PATTERN_HATCH);
+    return static_cast<CGnuPlot::PatternType>(
+            (i1 % ii) + static_cast<int>(CGnuPlot::PatternType::HATCH));
   }
 
  private:

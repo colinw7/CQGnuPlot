@@ -34,9 +34,11 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   Q_PROPERTY(bool surface3D READ surface3D WRITE setSurface3D)
   Q_PROPERTY(bool contour3D READ contour3D WRITE setContour3D)
 
+  Q_PROPERTY(QString title READ title WRITE setTitle)
+
  public:
   CQGnuPlotWindow(CQGnuPlot *plot);
- ~CQGnuPlotWindow();
+ ~CQGnuPlotWindow() override;
 
   CQGnuPlotCanvas *canvas() const { return canvas_; }
 
@@ -75,13 +77,16 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   void setNear3D(double z);
   void setFar3D (double z);
 
+  QString title() const;
+  void setTitle(const QString &s);
+
   CQGnuPlotPlot *currentPlot() const { return currentPlot_; }
   void setCurrentPlot(CQGnuPlotPlot *plot);
 
   CQGnuPlotPlot *getPlotAt(const QPoint &pos);
 
  private:
-  void stateChanged(CGnuPlot::ChangeState);
+  void stateChanged(CGnuPlot::ChangeState) override;
 
   void paintPlot(CGnuPlotPlot *plot);
 

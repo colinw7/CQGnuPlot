@@ -91,10 +91,8 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
   QAction *xAxisAction = new QAction("&X Axis", this);
   QAction *yAxisAction = new QAction("&Y Axis", this);
 
-  xAxisAction->setCheckable(true);
-  xAxisAction->setChecked  (true);
-  yAxisAction->setCheckable(true);
-  yAxisAction->setChecked  (true);
+  xAxisAction->setCheckable(true); xAxisAction->setChecked(true);
+  yAxisAction->setCheckable(true); yAxisAction->setChecked(true);
 
   connect(xAxisAction, SIGNAL(triggered(bool)), this, SLOT(xAxisSlot(bool)));
   connect(yAxisAction, SIGNAL(triggered(bool)), this, SLOT(yAxisSlot(bool)));
@@ -159,6 +157,8 @@ addProperties()
     tree_->addProperty("", this, "contour3D");
   }
 
+  tree_->addProperty("", this, "title");
+
   for (auto plot : plots()) {
     const Plots &subPlots = plot->subPlots();
 
@@ -198,11 +198,22 @@ addPlotProperties(CGnuPlotPlot *plot, bool child)
     tree_->addProperty(name, plot1, "xmax")->setEditorFactory(redit2_);
     tree_->addProperty(name, plot1, "ymax")->setEditorFactory(redit2_);
 
+    tree_->addProperty(name, plot1, "ratio")->setEditorFactory(redit2_);
+
     tree_->addProperty(name, plot1, "xlabel");
     tree_->addProperty(name, plot1, "ylabel");
     tree_->addProperty(name, plot1, "xtics");
     tree_->addProperty(name, plot1, "ytics");
+    tree_->addProperty(name, plot1, "xgrid");
+    tree_->addProperty(name, plot1, "ygrid");
+
     tree_->addProperty(name, plot1, "borders");
+    tree_->addProperty(name, plot1, "borderWidth")->setEditorFactory(redit3_);
+
+    tree_->addProperty(name, plot1, "keyDisplayed");
+    tree_->addProperty(name, plot1, "keyBox");
+    tree_->addProperty(name, plot1, "keyHAlign");
+    tree_->addProperty(name, plot1, "keyVAlign");
 
     if (plot->window()->is3D())
       tree_->addProperty(name, plot1, "trianglePattern3D");
@@ -210,6 +221,8 @@ addPlotProperties(CGnuPlotPlot *plot, bool child)
   else {
     tree_->addProperty(name, plot1, "lineColor");
     tree_->addProperty(name, plot1, "lineWidth");
+    tree_->addProperty(name, plot1, "pointType");
+    tree_->addProperty(name, plot1, "pointSize");
   }
 }
 
@@ -301,6 +314,26 @@ setFar3D(double z)
   setCameraFar(z);
 
   redraw();
+}
+
+QString
+CQGnuPlotWindow::
+title() const
+{
+  CGnuPlot::Title title = CGnuPlotWindow::title();
+
+  return title.str.c_str();
+}
+
+void
+CQGnuPlotWindow::
+setTitle(const QString &s)
+{
+  CGnuPlot::Title title = CGnuPlotWindow::title();
+
+  title.str = s.toStdString();
+
+  CGnuPlotWindow::setTitle(title);
 }
 
 void
@@ -489,7 +522,6 @@ CQGnuPlotWindow::
 showPos(double wx, double wy)
 {
   posLabel_->setText(QString("%1 %2").arg(wx).arg(wy));
-  //statusBar()->showMessage(QString("%1 %2").arg(wx).arg(wy));
 }
 
 void

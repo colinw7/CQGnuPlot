@@ -150,10 +150,11 @@ paintStart()
 {
   renderer_->setMargin(CRange2D(0,0,0,0));
   renderer_->setRange (CBBox2D(0,0,1,1));
+  renderer_->setRegion(CBBox2D(0,0,1,1));
 
   if (! title().str.empty()) {
     renderer_->drawHAlignedText(CPoint2D(0.5, 1), CHALIGN_TYPE_CENTER, 0,
-                                CVALIGN_TYPE_BOTTOM, -4, title().str);
+                                CVALIGN_TYPE_TOP, 8, title().str);
   }
 }
 

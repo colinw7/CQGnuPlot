@@ -15,7 +15,7 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
 
   std::string str1 = str;
 
-  std::string::size_type pstr1 = str1.find('\n');
+  auto pstr1 = str1.find('\n');
 
   while (pstr1 != std::string::npos) {
     std::string str2 = str1.substr(0, pstr1);
@@ -106,7 +106,7 @@ drawVAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
 
   std::string str1 = str;
 
-  std::string::size_type pstr1 = str1.find('\n');
+  auto pstr1 = str1.find('\n');
 
   while (pstr1 != std::string::npos) {
     std::string str2 = str1.substr(0, pstr1);

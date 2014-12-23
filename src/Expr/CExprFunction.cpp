@@ -428,9 +428,9 @@ CExprFunctionPtr
 CExprFunctionMgr::
 getFunction(const std::string &name)
 {
-  for (FunctionList::const_iterator p = functions_.begin(); p != functions_.end(); ++p)
-    if ((*p)->name() == name)
-      return *p;
+  for (const auto &func : functions_)
+    if (func->name() == name)
+      return func;
 
   return CExprFunctionPtr();
 }
@@ -494,8 +494,8 @@ void
 CExprFunctionMgr::
 getFunctionNames(std::vector<std::string> &names) const
 {
-  for (FunctionList::const_iterator p = functions_.begin(); p != functions_.end(); ++p)
-    names.push_back((*p)->name());
+  for (const auto &func : functions_)
+    names.push_back(func->name());
 }
 
 bool
@@ -622,9 +622,9 @@ exec(const Values &values)
   CExprValuePtr value = CExprInst->evaluateExpression(proc_);
 
   // restore variables
-  for (VarValues::const_iterator p = varValues.begin(); p != varValues.end(); ++p) {
-    const std::string varName = (*p).first;
-    CExprValuePtr     value   = (*p).second;
+  for (const auto &v : varValues) {
+    const std::string varName = v.first;
+    CExprValuePtr     value   = v.second;
 
     if (value.isValid()) {
       CExprVariablePtr var = CExprInst->getVariable(varName);

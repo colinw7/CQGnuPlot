@@ -31,6 +31,7 @@ CQPropertyItem.cpp \
 CQPropertyTree.cpp \
 CQPaletteChooser.cpp \
 CQPaletteDialog.cpp \
+CSymbol2D.cpp \
 Expr/CExprBValue.cpp \
 Expr/CExprCompile.cpp \
 Expr/CExpr.cpp \
@@ -70,6 +71,7 @@ CQPropertyTree.h \
 CQPaletteChooser.h \
 CQPaletteDialog.h \
 CStrUniqueMatch.h \
+CSymbol2D.h \
 Expr/CExprBValue.h \
 Expr/CExprCompile.h \
 Expr/CExprError.h \

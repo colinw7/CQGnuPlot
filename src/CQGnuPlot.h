@@ -9,12 +9,12 @@ class CQGnuPlotPlot;
 class CQGnuPlot : public CGnuPlot {
  public:
   CQGnuPlot();
- ~CQGnuPlot();
+ ~CQGnuPlot() override;
 
-  CGnuPlotWindow *createWindow();
-  CGnuPlotPlot   *createPlot(CGnuPlotWindow *window);
+  CGnuPlotWindow *createWindow() override;
+  CGnuPlotPlot   *createPlot(CGnuPlotWindow *window) override;
 
-  void timeout();
+  void timeout() override;
 
   void load(const std::string &filename);
 };

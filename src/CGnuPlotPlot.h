@@ -18,12 +18,17 @@ typedef CRefPtr<CExprValue> CExprValuePtr;
 
 class CGnuPlotPlot {
  public:
-  typedef std::vector<CGnuPlot::Arrow> Arrows;
-  typedef std::vector<CGnuPlot::Label> Labels;
-  typedef std::vector<CExprValuePtr>   Values;
-  typedef std::vector<CGnuPlotPlot *>  Plots;
-  typedef CGnuPlot::AxesData           AxesData;
-  typedef CGnuPlot::KeyData            KeyData;
+  typedef std::vector<CGnuPlot::Arrow>     Arrows;
+  typedef std::vector<CGnuPlot::Label>     Labels;
+  typedef std::vector<CGnuPlot::Rectangle> Rectangles;
+  typedef std::vector<CGnuPlot::Ellipse>   Ellipses;
+  typedef std::vector<CGnuPlot::Polygon>   Polygons;
+  typedef std::vector<CExprValuePtr>       Values;
+  typedef std::vector<CGnuPlotPlot *>      Plots;
+  typedef CGnuPlot::AxesData               AxesData;
+  typedef CGnuPlot::KeyData                KeyData;
+  typedef CGnuPlot::PlotSize               PlotSize;
+  typedef CGnuPlot::SymbolType             SymbolType;
 
   struct Point {
     Values values;
@@ -80,6 +85,8 @@ class CGnuPlotPlot {
   void set3D(bool b) { is3D_ = b; }
   bool is3D() const { return is3D_; }
 
+  void init();
+
   const Plots &subPlots() const { return subPlots_; }
   void addSubPlots(const Plots &plots);
 
@@ -118,6 +125,14 @@ class CGnuPlotPlot {
 
   //---
 
+  const PlotSize &plotSize() const;
+  void setPlotSize(const PlotSize &s);
+
+  double getRatio() const { return plotSize().ratio.getValue(1.0); }
+  void setRatio(double r) { PlotSize s = plotSize(); s.ratio = r; setPlotSize(s); }
+
+  //---
+
   void setClearRect(const CBBox2D &r) { clearRect_ = r; }
 
   const Points2D &getPoints2D() const { assert(! is3D_); return points2D_; }
@@ -137,7 +152,7 @@ class CGnuPlotPlot {
   const Point &getPoint3D(int ix, int iy) const {
     assert(is3D_);
 
-    Points3D::const_iterator p = points3D_.find(iy);
+    auto p = points3D_.find(iy);
 
     if (p != points3D_.end())
       return (*p).second[ix];
@@ -180,9 +195,6 @@ class CGnuPlotPlot {
   const CGnuPlot::LineStyle &lineStyle() const { return lineStyle_; }
   void setLineStyle(const CGnuPlot::LineStyle &s) { lineStyle_ = s; }
 
-  const CGnuPlot::PointStyle &pointStyle() const { return pointStyle_; }
-  void setPointStyle(const CGnuPlot::PointStyle &s) { pointStyle_ = s; }
-
   const COptInt &lineStyleNum() const { return lineStyleNum_; }
   void setLineStyleNum(const COptInt &style) { lineStyleNum_ = style; }
   void resetLineStyleNum() { lineStyleNum_.setInvalid(); }
@@ -194,6 +206,15 @@ class CGnuPlotPlot {
 
   double lineWidth() const { return lineStyle_.width(); }
   void setLineWidth(double w) { lineStyle_.setWidth(w); }
+
+  const CGnuPlot::PointStyle &pointStyle() const { return pointStyle_; }
+  void setPointStyle(const CGnuPlot::PointStyle &s) { pointStyle_ = s; }
+
+  SymbolType pointType() const { return static_cast<SymbolType>(pointStyle_.type()); }
+  void setPointType(SymbolType type) { pointStyle_.setType(type); }
+
+  double pointSize() const { return pointStyle_.size(); }
+  void setPointSize(double s) { pointStyle_.setSize(s); }
 
   void setHistogramStyle(CGnuPlot::HistogramStyle style) { histogramStyle_ = style; }
   CGnuPlot::HistogramStyle getHistogramStyle() { return histogramStyle_; }
@@ -230,6 +251,7 @@ class CGnuPlotPlot {
 
   const std::string &getXLabel() const { return axesData().xaxis.str; }
   void setXLabel(const std::string &s) { AxesData a = axesData(); a.xaxis.str = s; setAxesData(a); }
+
   const std::string &getYLabel() const { return axesData().yaxis.str; }
   void setYLabel(const std::string &s) { AxesData a = axesData(); a.yaxis.str = s; setAxesData(a); }
 
@@ -239,13 +261,37 @@ class CGnuPlotPlot {
   bool getYTics() const { return axesData().yaxis.showTics; }
   void setYTics(bool b) { AxesData a = axesData(); a.yaxis.showTics = b; setAxesData(a); }
 
+  bool getXGrid() const { return axesData().xaxis.grid; }
+  void setXGrid(bool b) { AxesData a = axesData(); a.xaxis.grid = b; setAxesData(a); }
+
+  bool getYGrid() const { return axesData().yaxis.grid; }
+  void setYGrid(bool b) { AxesData a = axesData(); a.yaxis.grid = b; setAxesData(a); }
+
   int getBorders() const { return axesData().borders; }
   void setBorders(int b) { AxesData a = axesData(); a.borders = b; setAxesData(a); }
 
+  int getBorderWidth() const { return axesData().borderWidth; }
+  void setBorderWidth(double w) { AxesData a = axesData(); a.borderWidth = w; setAxesData(a); }
+
   //---
 
-  const KeyData &keyData() const { return keyData_; }
-  void setKeyData(const KeyData &k) { keyData_ = k; }
+  const KeyData &keyData() const;
+  void setKeyData(const KeyData &k);
+
+  const KeyData &rootKeyData() const;
+  void setRootKeyData(const KeyData &k);
+
+  bool getKeyDisplayed() const { return rootKeyData().displayed; }
+  void setKeyDisplayed(bool b) { KeyData k = rootKeyData(); k.displayed = b; setRootKeyData(k); }
+
+  bool getKeyBox() const { return rootKeyData().box; }
+  void setKeyBox(bool b) { KeyData k = rootKeyData(); k.box = b; setRootKeyData(k); }
+
+  CHAlignType getKeyHAlign() const { return rootKeyData().halign; }
+  void setKeyHAlign(CHAlignType a) { KeyData k = rootKeyData(); k.halign = a; setRootKeyData(k); }
+
+  CVAlignType getKeyVAlign() const { return rootKeyData().valign; }
+  void setKeyVAlign(CVAlignType a) { KeyData k = rootKeyData(); k.valign = a; setRootKeyData(k); }
 
   //---
 
@@ -263,6 +309,15 @@ class CGnuPlotPlot {
 
   const Labels &labels() const { return labels_; }
   void setLabels(const Labels &labels) { labels_ = labels; }
+
+  const Rectangles &rectangles() const { return rects_; }
+  void setRectangles(const Rectangles &rects) { rects_ = rects; }
+
+  const Ellipses &ellipses() const { return ellipses_; }
+  void setEllipses(const Ellipses &ellipses) { ellipses_ = ellipses; }
+
+  const Polygons &polygons() const { return polygons_; }
+  void setPolygons(const Polygons &polygons) { polygons_ = polygons; }
 
   void setRenderer(CGnuPlotRenderer *renderer);
   CGnuPlotRenderer *renderer() const { return renderer_; }
@@ -291,6 +346,9 @@ class CGnuPlotPlot {
 
   void drawArrow(const CGnuPlot::Arrow &arrow);
   void drawLabel(const CGnuPlot::Label &label);
+  void drawRectangle(const CGnuPlot::Rectangle &rect);
+  void drawEllipse(const CGnuPlot::Ellipse &ellipse);
+  void drawPolygon(const CGnuPlot::Polygon &poly);
 
   void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
                         CVAlignType valign, int y_offset, const std::string &str,
@@ -310,7 +368,8 @@ class CGnuPlotPlot {
   void setLogScaleMap(const CGnuPlot::LogScaleMap &logScale) { logScale_ = logScale; }
 
   int getLogScale(CGnuPlot::LogScale scale) const {
-    CGnuPlot::LogScaleMap::const_iterator p = logScale_.find(scale);
+    auto p = logScale_.find(scale);
+
     return (p != logScale_.end() ? (*p).second : 0);
   }
 
@@ -337,6 +396,7 @@ class CGnuPlotPlot {
   CGnuPlotPlot*            parentPlot_;
   CBBox2D                  region_;
   CRange2D                 margin_;
+  PlotSize                 plotSize_;
   COptValT<CBBox2D>        clearRect_;
   Plots                    subPlots_;
   Points2D                 points2D_;
@@ -344,6 +404,9 @@ class CGnuPlotPlot {
   int                      ind_;
   Arrows                   arrows_;
   Labels                   labels_;
+  Rectangles               rects_;
+  Ellipses                 ellipses_;
+  Polygons                 polygons_;
   CGnuPlot::Palette        palette_;
   CGnuPlot::PlotStyle      style_;
   CGnuPlot::FillStyle      fillStyle_;

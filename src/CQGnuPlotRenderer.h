@@ -21,42 +21,48 @@ namespace {
 class CQGnuPlotRenderer : public CGnuPlotRenderer {
  public:
   CQGnuPlotRenderer(CQGnuPlotCanvas *canvas);
- ~CQGnuPlotRenderer();
+ ~CQGnuPlotRenderer() override;
 
+  QPainter *painter() const { return painter_; }
   void setPainter(QPainter *painter);
 
-  void drawPoint  (const CPoint2D &p, const CRGBA &c);
-  void drawSymbol (const CPoint2D &p, CGnuPlot::SymbolType type, double size, const CRGBA &c);
-  void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c);
-  void drawRect   (const CBBox2D &rect, const CRGBA &c);
+  void drawPoint  (const CPoint2D &p, const CRGBA &c) override;
+  void drawSymbol (const CPoint2D &p, CGnuPlot::SymbolType type,
+                   double size, const CRGBA &c) override;
+  void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c) override;
+  void drawRect   (const CBBox2D &rect, const CRGBA &c) override;
   void patternRect(const CBBox2D &rect, CGnuPlot::PatternType pattern,
-                   const CRGBA &fg, const CRGBA &bg);
-  void fillRect   (const CBBox2D &rect, const CRGBA &c);
-  void drawBezier (const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3, const CPoint2D &p4);
+                   const CRGBA &fg, const CRGBA &bg) override;
+  void fillRect   (const CBBox2D &rect, const CRGBA &c) override;
+  void drawBezier (const CPoint2D &p1, const CPoint2D &p2,
+                   const CPoint2D &p3, const CPoint2D &p4) override;
 
-  void drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c);
-  void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c);
+  void drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c) override;
+  void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c) override;
 
-  void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c);
+  void drawEllipse(const CPoint2D &center, double rx, double ry, const CRGBA &c) override;
+  void fillEllipse(const CPoint2D &center, double rx, double ry, const CRGBA &c) override;
 
-  int pixelWidth () { return pw_; }
-  int pixelHeight() { return ph_; }
+  void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) override;
 
-  void windowToPixel(double x, double y, double *px, double *py);
-  void pixelToWindow(double px, double py, double *wx, double *wy);
+  int pixelWidth () override { return pw_; }
+  int pixelHeight() override { return ph_; }
 
-  double pixelWidthToWindowWidth  (double p);
-  double pixelHeightToWindowHeight(double p);
+  void windowToPixel(double x, double y, double *px, double *py) override;
+  void pixelToWindow(double px, double py, double *wx, double *wy) override;
 
-  double windowWidthToPixelWidth  (double w);
-  double windowHeightToPixelHeight(double w);
+  double pixelWidthToWindowWidth  (double p) override;
+  double pixelHeightToWindowHeight(double p) override;
 
-  void setMapping(bool b) { mapping_ = b; }
+  double windowWidthToPixelWidth  (double w) override;
+  double windowHeightToPixelHeight(double w) override;
 
-  CFontPtr getFont() const { return font_; }
-  void setFont(CFontPtr font);
+  void setMapping(bool b) override { mapping_ = b; }
 
-  void setLineDash(const CLineDash &line_dash);
+  CFontPtr getFont() const override { return font_; }
+  void setFont(CFontPtr font) override;
+
+  void setLineDash(const CLineDash &line_dash) override;
 
  private:
   CQGnuPlotCanvas *canvas_;

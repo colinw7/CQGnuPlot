@@ -4,7 +4,23 @@
 template<typename T>
 class CStrUniqueMatch {
  public:
+  typedef std::pair<std::string, T> NameValue;
+
+ public:
   CStrUniqueMatch() { }
+
+  CStrUniqueMatch(std::initializer_list<NameValue> values) {
+    addValues(values);
+  }
+
+  void addValues(std::initializer_list<NameValue> values) {
+    for (const auto &v : values)
+      addValue(v);
+  }
+
+  void addValue(const NameValue &nameValue) {
+    addValue(nameValue.first, nameValue.second);
+  }
 
   void addValue(const std::string &str, const T &value) {
     // name must match unique value but value can have many names

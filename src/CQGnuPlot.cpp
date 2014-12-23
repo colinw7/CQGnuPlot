@@ -33,10 +33,8 @@ main(int argc, char **argv)
   plot.setDebug(debug);
   plot.setExprDebug(edebug);
 
-  uint num_files = files.size();
-
-  for (uint i = 0; i < num_files; i++)
-    plot.load(files[i]);
+  for (const auto &file : files)
+    plot.load(file);
 
   plot.loop();
 

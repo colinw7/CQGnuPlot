@@ -31,9 +31,9 @@ CExprVariablePtr
 CExprVariableMgr::
 getVariable(const std::string &name) const
 {
-  for (VariableList::const_iterator p = variables_.begin(); p != variables_.end(); ++p)
-    if ((*p)->name() == name)
-      return *p;
+  for (const auto &var : variables_)
+    if (var->name() == name)
+      return var;
 
   return CExprVariablePtr();
 }
@@ -56,8 +56,8 @@ void
 CExprVariableMgr::
 getVariableNames(std::vector<std::string> &names) const
 {
-  for (VariableList::const_iterator p = variables_.begin(); p != variables_.end(); ++p)
-    names.push_back((*p)->name());
+  for (const auto &var : variables_)
+    names.push_back(var->name());
 }
 
 //------
