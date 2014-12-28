@@ -101,13 +101,17 @@ namespace CGnuPlotUtil {
     nameValues.addValue("autoscale"  , CGnuPlot::VariableName::AUTOSCALE);
     nameValues.addValue("format"     , CGnuPlot::VariableName::FORMAT);
     nameValues.addValue("grid"       , CGnuPlot::VariableName::GRID);
-    nameValues.addValue("xlabel"     , CGnuPlot::VariableName::XLABEL); // x2, y2, z, cb
+    nameValues.addValue("xlabel"     , CGnuPlot::VariableName::XLABEL); // z, cb
     nameValues.addValue("ylabel"     , CGnuPlot::VariableName::YLABEL);
+    nameValues.addValue("x2label"    , CGnuPlot::VariableName::X2LABEL);
+    nameValues.addValue("y2label"    , CGnuPlot::VariableName::Y2LABEL);
     nameValues.addValue("xrange"     , CGnuPlot::VariableName::XRANGE); // x2, y2, z, cb
     nameValues.addValue("yrange"     , CGnuPlot::VariableName::YRANGE); // y, x2, y2, z, cb
     nameValues.addValue("tics"       , CGnuPlot::VariableName::TICS);
-    nameValues.addValue("xtics"      , CGnuPlot::VariableName::XTICS); // x2, y2, z, cb
+    nameValues.addValue("xtics"      , CGnuPlot::VariableName::XTICS); // z, cb
     nameValues.addValue("ytics"      , CGnuPlot::VariableName::YTICS);
+    nameValues.addValue("x2tics"     , CGnuPlot::VariableName::X2TICS);
+    nameValues.addValue("y2tics"     , CGnuPlot::VariableName::Y2TICS);
     nameValues.addValue("mxtics"     , CGnuPlot::VariableName::MXTICS);
     nameValues.addValue("ticscale"   , CGnuPlot::VariableName::TICSCALE);
     nameValues.addValue("zeroaxis"   , CGnuPlot::VariableName::ZEROAXIS);
@@ -115,6 +119,7 @@ namespace CGnuPlotUtil {
     nameValues.addValue("locale"     , CGnuPlot::VariableName::LOCALE);
     nameValues.addValue("timefmt"    , CGnuPlot::VariableName::TIMEFMT);
     nameValues.addValue("xdata"      , CGnuPlot::VariableName::XDATA);
+    nameValues.addValue("ydata"      , CGnuPlot::VariableName::YDATA);
     nameValues.addValue("xdtics"     , CGnuPlot::VariableName::XDTICS);
     nameValues.addValue("xmtics"     , CGnuPlot::VariableName::XMTICS);
 
@@ -167,52 +172,53 @@ namespace CGnuPlotUtil {
   }
 
   void initNameValues(CStrUniqueMatch<CGnuPlot::PlotVar> &nameValues) {
-    nameValues.addValue("using"    , CGnuPlot::PlotVar::USING);
-    nameValues.addValue("index"    , CGnuPlot::PlotVar::INDEX);
-    nameValues.addValue("every"    , CGnuPlot::PlotVar::EVERY);
-    nameValues.addValue("with"     , CGnuPlot::PlotVar::WITH);
-    nameValues.addValue("title"    , CGnuPlot::PlotVar::TITLE);
-    nameValues.addValue("notitle"  , CGnuPlot::PlotVar::NOTITLE);
-    nameValues.addValue("smooth"   , CGnuPlot::PlotVar::SMOOTH);
-    nameValues.addValue("pointsize", CGnuPlot::PlotVar::POINTSIZE);
+    nameValues.addValues({{"index"    , CGnuPlot::PlotVar::INDEX},
+                          {"every"    , CGnuPlot::PlotVar::EVERY},
+                          {"using"    , CGnuPlot::PlotVar::USING},
+                          {"axes"     , CGnuPlot::PlotVar::AXES},
+                          {"title"    , CGnuPlot::PlotVar::TITLE},
+                          {"notitle"  , CGnuPlot::PlotVar::NOTITLE},
+                          {"smooth"   , CGnuPlot::PlotVar::SMOOTH},
+                          {"with"     , CGnuPlot::PlotVar::WITH},
+                          {"pointsize", CGnuPlot::PlotVar::POINTSIZE}});
   }
 
   void initNameValues(CStrUniqueMatch<CGnuPlot::PlotStyle> &nameValues) {
-    nameValues.addValue("lines"         , CGnuPlot::PlotStyle::LINES);
-    nameValues.addValue("l"             , CGnuPlot::PlotStyle::LINES);
-    nameValues.addValue("points"        , CGnuPlot::PlotStyle::POINTS);
-    nameValues.addValue("p"             , CGnuPlot::PlotStyle::POINTS);
-    nameValues.addValue("linespoints"   , CGnuPlot::PlotStyle::LINES_POINTS);
-    nameValues.addValue("dots"          , CGnuPlot::PlotStyle::DOTS);
-    nameValues.addValue("impulses"      , CGnuPlot::PlotStyle::IMPULSES);
-    nameValues.addValue("labels"        , CGnuPlot::PlotStyle::LABELS);
-    nameValues.addValue("steps"         , CGnuPlot::PlotStyle::STEPS);
-    nameValues.addValue("fsteps"        , CGnuPlot::PlotStyle::FSTEPS);
-    nameValues.addValue("histeps"       , CGnuPlot::PlotStyle::HISTEPS);
-    nameValues.addValue("errorbars"     , CGnuPlot::PlotStyle::ERRORBARS);
-    nameValues.addValue("errorlines"    , CGnuPlot::PlotStyle::ERRORLINES);
-    nameValues.addValue("financebars"   , CGnuPlot::PlotStyle::FINANCEBARS);
-    nameValues.addValue("xerrorbars"    , CGnuPlot::PlotStyle::XERRORBARS);
-    nameValues.addValue("xerrorlines"   , CGnuPlot::PlotStyle::XERRORLINES);
-    nameValues.addValue("xyerrorbars"   , CGnuPlot::PlotStyle::XYERRORBARS);
-    nameValues.addValue("xyerrorlines"  , CGnuPlot::PlotStyle::XYERRORLINES);
-    nameValues.addValue("yerrorbars"    , CGnuPlot::PlotStyle::YERRORBARS);
-    nameValues.addValue("yerrorlines"   , CGnuPlot::PlotStyle::YERRORLINES);
-    nameValues.addValue("vectors"       , CGnuPlot::PlotStyle::VECTORS);
+    nameValues.addValues({{"lines"         , CGnuPlot::PlotStyle::LINES},
+                          {"l"             , CGnuPlot::PlotStyle::LINES},
+                          {"points"        , CGnuPlot::PlotStyle::POINTS},
+                          {"p"             , CGnuPlot::PlotStyle::POINTS},
+                          {"linespoints"   , CGnuPlot::PlotStyle::LINES_POINTS},
+                          {"dots"          , CGnuPlot::PlotStyle::DOTS},
+                          {"impulses"      , CGnuPlot::PlotStyle::IMPULSES},
+                          {"labels"        , CGnuPlot::PlotStyle::LABELS},
+                          {"steps"         , CGnuPlot::PlotStyle::STEPS},
+                          {"fsteps"        , CGnuPlot::PlotStyle::FSTEPS},
+                          {"histeps"       , CGnuPlot::PlotStyle::HISTEPS},
+                          {"errorbars"     , CGnuPlot::PlotStyle::ERRORBARS},
+                          {"errorlines"    , CGnuPlot::PlotStyle::ERRORLINES},
+                          {"financebars"   , CGnuPlot::PlotStyle::FINANCEBARS},
+                          {"xerrorbars"    , CGnuPlot::PlotStyle::XERRORBARS},
+                          {"xerrorlines"   , CGnuPlot::PlotStyle::XERRORLINES},
+                          {"xyerrorbars"   , CGnuPlot::PlotStyle::XYERRORBARS},
+                          {"xyerrorlines"  , CGnuPlot::PlotStyle::XYERRORLINES},
+                          {"yerrorbars"    , CGnuPlot::PlotStyle::YERRORBARS},
+                          {"yerrorlines"   , CGnuPlot::PlotStyle::YERRORLINES},
+                          {"vectors"       , CGnuPlot::PlotStyle::VECTORS},
 
-    nameValues.addValue("boxes"         , CGnuPlot::PlotStyle::BOXES);
-    nameValues.addValue("boxerrorbars"  , CGnuPlot::PlotStyle::BOXERRORBARS);
-    nameValues.addValue("boxxyerrorbars", CGnuPlot::PlotStyle::BOXXYERRORBARS);
-    nameValues.addValue("boxplot"       , CGnuPlot::PlotStyle::BOXPLOT);
-    nameValues.addValue("candlesticks"  , CGnuPlot::PlotStyle::CANDLESTICKS);
-    nameValues.addValue("filledcurves"  , CGnuPlot::PlotStyle::FILLEDCURVES);
-    nameValues.addValue("histograms"    , CGnuPlot::PlotStyle::HISTOGRAMS);
-    nameValues.addValue("image"         , CGnuPlot::PlotStyle::IMAGE);
-    nameValues.addValue("rgbimage"      , CGnuPlot::PlotStyle::RGBIMAGE);
-    nameValues.addValue("rgbalpha"      , CGnuPlot::PlotStyle::RGBALPHA);
-    nameValues.addValue("circles"       , CGnuPlot::PlotStyle::CIRCLES);
-    nameValues.addValue("ellipses"      , CGnuPlot::PlotStyle::ELLIPSES);
-    nameValues.addValue("pm3d"          , CGnuPlot::PlotStyle::PM3D);
+                          {"boxes"         , CGnuPlot::PlotStyle::BOXES},
+                          {"boxerrorbars"  , CGnuPlot::PlotStyle::BOXERRORBARS},
+                          {"boxxyerrorbars", CGnuPlot::PlotStyle::BOXXYERRORBARS},
+                          {"boxplot"       , CGnuPlot::PlotStyle::BOXPLOT},
+                          {"candlesticks"  , CGnuPlot::PlotStyle::CANDLESTICKS},
+                          {"filledcurves"  , CGnuPlot::PlotStyle::FILLEDCURVES},
+                          {"histograms"    , CGnuPlot::PlotStyle::HISTOGRAMS},
+                          {"image"         , CGnuPlot::PlotStyle::IMAGE},
+                          {"rgbimage"      , CGnuPlot::PlotStyle::RGBIMAGE},
+                          {"rgbalpha"      , CGnuPlot::PlotStyle::RGBALPHA},
+                          {"circles"       , CGnuPlot::PlotStyle::CIRCLES},
+                          {"ellipses"      , CGnuPlot::PlotStyle::ELLIPSES},
+                          {"pm3d"          , CGnuPlot::PlotStyle::PM3D}});
   }
 
   void initNameValues(CStrUniqueMatch<CGnuPlot::Smooth> &nameValues) {
@@ -288,86 +294,6 @@ namespace CGnuPlotUtil {
     }
 
     return cstr;
-  }
-
-  //------
-
-  CExprValuePtr decodeUsingCol(const CGnuPlot::UsingCol &col, int setNum, int pointNum,
-                               const std::vector<std::string> &fields,
-                               const std::string &missing, bool &skip, bool debug) {
-    skip = false;
-
-    int nf = fields.size();
-
-    if (col.isInt) {
-      if      (col.ival == 0)
-        return CExprInst->createRealValue(pointNum);
-      else if (col.ival == -2)
-        return CExprInst->createRealValue(setNum);
-      else if (col.ival > 0 && col.ival <= nf) {
-        double val;
-
-        const std::string &field = fields[col.ival - 1];
-
-        if (field == missing) {
-          skip = true;
-          return CExprValuePtr();
-        }
-
-        if (CStrUtil::toReal(field, &val))
-          return CExprInst->createRealValue(val);
-        else
-          return CExprInst->createStringValue(field);
-      }
-      else
-        return CExprValuePtr();
-    }
-    else {
-      std::string expr = col.str;
-
-      // TODO: easier to define $1 variables
-      auto pos = expr.find('$');
-
-      while (pos != std::string::npos) {
-        int pos1 = ++pos;
-
-        while (isdigit(expr[pos1]))
-          ++pos1;
-
-        std::string numStr = expr.substr(pos, pos1 - pos);
-
-        int icol = 0;
-
-        (void) CStrUtil::toInteger(numStr, &icol);
-
-        COptReal x1;
-
-        if      (icol == 0)
-          x1 = pointNum;
-        else if (icol == -2)
-          x1 = setNum;
-        else if (icol > 0 && icol <= nf) {
-          double x2 = 0.0;
-
-          const std::string &field = fields[icol - 1];
-
-          if (field != missing && CStrUtil::toReal(field, &x2))
-            x1 = x2;
-        }
-
-        if (x1.isValid())
-          expr = expr.substr(0, pos - 1) + CStrUtil::toString(x1.getValue()) + expr.substr(pos1);
-        else
-          expr = expr.substr(0, pos - 1) + "NaN" + expr.substr(pos1);
-
-        pos = expr.find('$');
-      }
-
-      if (debug)
-        std::cerr << "expr " << expr << std::endl;
-
-      return CExprInst->evaluateExpression(expr);
-    }
   }
 }
 
@@ -889,7 +815,7 @@ plotCmd(const std::string &args)
       while (line.isValid() && ! line.isChar(']'))
         xrange += line.getChar();
 
-      if (line.isValid())
+      if (line.isChar(']'))
         line.skipChar();
 
       if (line.isChar('[')) {
@@ -898,7 +824,7 @@ plotCmd(const std::string &args)
         while (line.isValid() && ! line.isChar(']'))
           yrange += line.getChar();
 
-        if (line.isValid())
+        if (line.isChar(']'))
           line.skipChar();
       }
 
@@ -911,25 +837,91 @@ plotCmd(const std::string &args)
       CStrUtil::addFields(yrange, yfields, ":");
 
       if (xfields.size() == 2) {
-        double xmin = -10, xmax = 10;
-        (void) CStrUtil::toReal(xfields[0], &xmin);
-        (void) CStrUtil::toReal(xfields[1], &xmax);
+        struct tm tm1; memset(&tm1, 0, sizeof(tm));
+
+        double   x;
+        COptReal xmin, xmax;
+
+        if (axesData().xaxis.isTime) {
+          int len = xfields[0].size();
+
+          if (len > 0 && xfields[0][0] == '"' && xfields[0][len - 1] == '"') {
+            strptime(xfields[0].substr(1, len - 2).c_str(), timeFmt_.c_str(), &tm1);
+
+            xmin = mktime(&tm1);
+          }
+        }
+        else {
+          if (CStrUtil::toReal(xfields[0], &x))
+            xmin = x;
+        }
+
+        if (axesData().xaxis.isTime) {
+          int len = xfields[1].size();
+
+          if (len > 0 && xfields[1][0] == '"' && xfields[1][len - 1] == '"') {
+            strptime(xfields[1].substr(1, len - 2).c_str(), timeFmt_.c_str(), &tm1);
+
+            xmax = mktime(&tm1);
+          }
+        }
+        else {
+          if (CStrUtil::toReal(xfields[1], &x))
+            xmax = x;
+        }
+
         if (isDebug())
-          std::cerr << "XRange=(" << xmin << "," << xmax << ")" << std::endl;
-        axesData().xaxis.min = xmin;
-        axesData().xaxis.max = xmax;
-        setFitX(false);
+          std::cerr << "XRange=(" << xmin.getValue(-10) << "," <<
+                                     xmax.getValue( 10) << ")" << std::endl;
+
+        if (xmin.isValid()) axesData().xaxis.min = xmin;
+        if (xmax.isValid()) axesData().xaxis.max = xmax;
+
+        setFitX(! xmin.isValid() || ! xmax.isValid());
       }
 
       if (yfields.size() == 2) {
-        double ymin = -1, ymax = 1;
-        (void) CStrUtil::toReal(yfields[0], &ymin);
-        (void) CStrUtil::toReal(yfields[1], &ymax);
+        struct tm tm1; memset(&tm1, 0, sizeof(tm));
+
+        double   y;
+        COptReal ymin, ymax;
+
+        if (axesData().yaxis.isTime) {
+          int len = yfields[0].size();
+
+          if (len > 0 && yfields[0][0] == '"' && yfields[0][len - 1] == '"') {
+            strptime(yfields[0].substr(1, len - 2).c_str(), timeFmt_.c_str(), &tm1);
+
+            ymin = mktime(&tm1);
+          }
+        }
+        else {
+          if (CStrUtil::toReal(yfields[0], &y))
+            ymin = y;
+        }
+
+        if (axesData().yaxis.isTime) {
+          int len = yfields[1].size();
+
+          if (len > 0 && yfields[1][0] == '"' && yfields[1][len - 1] == '"') {
+            strptime(yfields[1].substr(1, len - 2).c_str(), timeFmt_.c_str(), &tm1);
+
+            ymax = mktime(&tm1);
+          }
+        }
+        else {
+          if (CStrUtil::toReal(yfields[1], &y))
+            ymax = y;
+        }
+
         if (isDebug())
-          std::cerr << "YRange=(" << ymin << "," << ymax << ")" << std::endl;
-        axesData().yaxis.min = ymin;
-        axesData().yaxis.max = ymax;
-        setFitY(false);
+          std::cerr << "YRange=(" << ymin.getValue(-1) << "," <<
+                                     ymax.getValue( 1) << ")" << std::endl;
+
+        if (ymin.isValid()) axesData().yaxis.min = ymin;
+        if (ymax.isValid()) axesData().yaxis.max = ymax;
+
+        setFitY(! ymin.isValid() || ! ymax.isValid());
       }
 
       line.skipSpace();
@@ -1083,7 +1075,7 @@ plotCmd(const std::string &args)
           usingCols.push_back(UsingCol(usingStrs[i]));
       }
       // read index range
-      // <start>[:<end>[:<step>]]
+      // index <start>[:<end>[:<step>]]
       else if (plotVar == PlotVar::INDEX) {
         std::string indexStr = readNonSpaceNonComma(line);
 
@@ -1113,7 +1105,7 @@ plotCmd(const std::string &args)
         }
       }
       // read every range
-      // <step>[:<start>[:<end>]]
+      // every <step>[:<start>[:<end>]]
       else if (plotVar == PlotVar::EVERY) {
         std::string everyStr = readNonSpaceNonComma(line);
 
@@ -1278,6 +1270,23 @@ plotCmd(const std::string &args)
 
         line.skipSpace();
       }
+      // axes <axes>
+      else if (plotVar == PlotVar::AXES) {
+        std::string axesStr = readNonSpaceNonComma(line);
+
+        if      (axesStr == "x1y1") {
+          xind_ = 1; yind_ = 1;
+        }
+        else if (axesStr == "x1y2") {
+          xind_ = 1; yind_ = 2;
+        }
+        else if (axesStr == "x2y1") {
+          xind_ = 2; yind_ = 1;
+        }
+        else if (axesStr == "x2y2") {
+          xind_ = 2; yind_ = 2;
+        }
+      }
       // pointsize <size>
       else if (plotVar == PlotVar::POINTSIZE) {
         // TODO: just for this plot ?
@@ -1345,8 +1354,9 @@ plotCmd(const std::string &args)
   if (plots.size() > 1) {
     CGnuPlotPlot *plot = createPlot(window);
 
-    plot->setStyle  (plots[0]->getStyle());
-    plot->setKeyData(plots[0]->keyData());
+    plot->setStyle   (plots[0]->getStyle());
+    plot->setKeyData (plots[0]->keyData ());
+    plot->setAxesData(plots[0]->axesData());
 
     plot->addSubPlots(plots);
 
@@ -1928,17 +1938,14 @@ setCmd(const std::string &args)
       if (line.isChar('"')) {
         std::string chars;
 
-        if (! parseString(line, chars)) {
-          std::cerr << "Invalid character string" << std::endl;
-          return;
-        }
+        if (parseString(line, chars, "Invalid character string")) {
+          if (chars.size() != 1) {
+            std::cerr << "Only one character allowed for separator" << std::endl;
+            return;
+          }
 
-        if (chars.size() != 1) {
-          std::cerr << "Only one character allowed for separator" << std::endl;
-          return;
+          setSeparator(Separator(chars[0]));
         }
-
-        setSeparator(Separator(chars[0]));
       }
       else {
         std::string sepStr = readNonSpace(line);
@@ -1954,12 +1961,8 @@ setCmd(const std::string &args)
       if (line.isValid()) {
         std::string chars;
 
-        if (! parseString(line, chars)) {
-          std::cerr << "Invalid character string" << std::endl;
-          return;
-        }
-
-        setCommentChars(chars);
+        if (! parseString(line, chars, "Invalid character string"))
+          setCommentChars(chars);
       }
       else
         setCommentChars("#");
@@ -1969,12 +1972,8 @@ setCmd(const std::string &args)
       if (line.isValid()) {
         std::string chars;
 
-        if (! parseString(line, chars)) {
-          std::cerr << "Invalid character string" << std::endl;
-          return;
-        }
-
-        setMissingStr(chars);
+        if (parseString(line, chars, "Invalid character string"))
+          setMissingStr(chars);
       }
       else
         setMissingStr("");
@@ -2158,7 +2157,9 @@ setCmd(const std::string &args)
 
     while (arg != "") {
       if      (arg == "title") {
-        std::string titleStr; parseString(line, titleStr);
+        std::string titleStr;
+
+        parseString(line, titleStr);
       }
       else if (arg == "font") {
         (void) readNonSpace(line);
@@ -2469,12 +2470,16 @@ setCmd(const std::string &args)
         std::string headerStr = readNonSpace(line);
       }
       else if (arg == "title") {
-        std::string titleStr; parseString(line, titleStr);
+        std::string titleStr;
+
+        parseString(line, titleStr);
       }
       else if (arg == "enhanced") { }
       else if (arg == "noenhanced") { }
       else if (arg == "font") {
-        std::string fontStr; parseString(line, fontStr);
+        std::string fontStr;
+
+        parseString(line, fontStr);
       }
       else if (arg == "textcolor") {
         std::string colorStr = readNonSpace(line);
@@ -2789,10 +2794,8 @@ setCmd(const std::string &args)
   else if (var == VariableName::TITLE) {
     std::string titleStr;
 
-    if (parseString(line, titleStr))
+    if (parseString(line, titleStr, "Invalid title string"))
       title().str = titleStr;
-    else
-      std::cerr << "Invalid title string" << std::endl;
   }
 
   // set style [data|function|increment] <args>
@@ -3083,6 +3086,17 @@ setCmd(const std::string &args)
       pointStyle().setSize(r > 0 ? r : 1.0);
   }
 
+  // set format {<axes>} {"<format-string>"}
+  else if (var == VariableName::FORMAT) {
+    std::string arg = readNonSpace(line);
+
+    std::string formatStr;
+
+    if (parseString(line, formatStr, "Invalid format string")) {
+      if      (arg == "x") axesData().xaxis.format = formatStr;
+      else if (arg == "y") axesData().yaxis.format = formatStr;
+    }
+  }
   // set grid {{no}{m}xtics} {{no}{m}ytics} {{no}{m}ztics}
   //          {{no}{m}x2tics} {{no}{m}y2tics}
   //          {{no}{m}cbtics}
@@ -3100,19 +3114,29 @@ setCmd(const std::string &args)
   else if (var == VariableName::XLABEL) {
     std::string labelStr;
 
-    if (parseString(line, labelStr))
+    if (parseString(line, labelStr, "Invalid xlabel string"))
       axesData().xaxis.str = labelStr;
-    else
-      std::cerr << "Invalid xlabel string" << std::endl;
   }
   // set ylabel "<label>"
   else if (var == VariableName::YLABEL) {
     std::string labelStr;
 
-    if (parseString(line, labelStr))
+    if (parseString(line, labelStr, "Invalid ylabel string"))
       axesData().yaxis.str = labelStr;
-    else
-      std::cerr << "Invalid ylabel string" << std::endl;
+  }
+  // set x2label "<label>"
+  else if (var == VariableName::X2LABEL) {
+    std::string labelStr;
+
+    if (parseString(line, labelStr, "Invalid x2label string"))
+      axesData().x2axis.str = labelStr;
+  }
+  // set y2label "<label>"
+  else if (var == VariableName::Y2LABEL) {
+    std::string labelStr;
+
+    if (parseString(line, labelStr, "Invalid ylabel string"))
+      axesData().y2axis.str = labelStr;
   }
   // set xrange { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} } | restore
   else if (var == VariableName::XRANGE) {
@@ -3189,10 +3213,52 @@ setCmd(const std::string &args)
   //           { rangelimited }
   //           { textcolor <colorspec> }
   else if (var == VariableName::XTICS) {
-    axesData().xaxis.showTics = true;
+    parseAxesTics(line, axesData().xaxis);
   }
   else if (var == VariableName::YTICS) {
-    axesData().yaxis.showTics = true;
+    parseAxesTics(line, axesData().yaxis);
+  }
+  else if (var == VariableName::X2TICS) {
+    parseAxesTics(line, axesData().x2axis);
+  }
+  else if (var == VariableName::Y2TICS) {
+    parseAxesTics(line, axesData().y2axis);
+  }
+
+  // set timefmt "<format string>"
+  //
+  // Format  Description
+  // ------  -----------
+  // %d      day of the month, 1--31
+  // %m      month of the year, 1--12
+  // %y      year, 0--99
+  // %Y      year, 4-digit
+  // %j      day of the year, 1--365
+  // %H      hour, 0--24
+  // %M      minute, 0--60
+  // %s      seconds since the Unix epoch (1970-01-01, 00:00 UTC)
+  // %S      second, integer 0--60 on output, (double) on input
+  // %b      three-character abbreviation of the name of the month
+  // %B      name of the month
+  else if (var == VariableName::TIMEFMT) {
+    std::string fmt;
+
+    if (parseString(line, fmt, "Invalid time format"))
+      timeFmt_ = fmt;
+  }
+  // set xdata {time}
+  else if (var == VariableName::XDATA) {
+    std::string arg = readNonSpace(line);
+
+    if (arg == "time")
+      axesData().xaxis.isTime = true;
+  }
+  // set ydata {time}
+  else if (var == VariableName::YDATA) {
+    std::string arg = readNonSpace(line);
+
+    if (arg == "time")
+      axesData().yaxis.isTime = true;
   }
 
   // set hidden3d {defaults} |
@@ -3361,39 +3427,28 @@ setCmd(const std::string &args)
   else if (var == VariableName::OUTPUT) {
     std::string filename;
 
-    if (! parseString(line, filename)) {
-      std::cerr << "Invalid filename" << std::endl;
-      return;
-    }
-
-    setOutputFile(filename);
+    if (parseString(line, filename, "Invalid filename"))
+      setOutputFile(filename);
   }
   // set print ["<filename>"] [append]
   else if (var == VariableName::PRINT) {
     std::string filename;
 
-    if (! parseString(line, filename)) {
-      std::cerr << "Invalid filename" << std::endl;
-      return;
+    if (parseString(line, filename, "Invalid filename")) {
+      setPrintFile(filename);
+
+      std::string arg = readNonSpace(line);
+
+      if (arg == "append")
+        setPrintAppend(true);
     }
-
-    setPrintFile(filename);
-
-    std::string arg = readNonSpace(line);
-
-    if (arg == "append")
-      setPrintAppend(true);
   }
   // set table ["<filename>"]
   else if (var == VariableName::TABLE) {
     std::string filename;
 
-    if (! parseString(line, filename)) {
-      std::cerr << "Invalid filename" << std::endl;
-      return;
-    }
-
-    setTableFile(filename);
+    if (parseString(line, filename, "Invalid filename"))
+      setTableFile(filename);
   }
   // set terminal <type> [<args>]
   else if (var == VariableName::TERMINAL) {
@@ -4146,8 +4201,8 @@ addFile2D(CGnuPlotWindow *window, const std::string &filename, const CBBox2D &re
 
     for (uint i = 0; i < usingCols.size(); ++i) {
       CExprValuePtr value =
-        CGnuPlotUtil::decodeUsingCol(usingCols[i], setNum, pointNum,
-                                     fields_, missing, skip, isDebug());
+        decodeUsingCol(i, usingCols[i], setNum, pointNum, fields_, missing, skip, isDebug());
+
       if (skip) continue;
 
       values.push_back(value);
@@ -4318,6 +4373,96 @@ addFile3D(CGnuPlotWindow *window, const std::string &filename)
   return plot;
 }
 
+CExprValuePtr
+CGnuPlot::
+decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum,
+               const std::vector<std::string> &fields,
+               const std::string &missing, bool &skip, bool debug)
+{
+  CExprValuePtr value;
+
+  skip = false;
+
+  int nf = fields.size();
+
+  if (col.isInt) {
+    if      (col.ival == 0)
+      value = CExprInst->createRealValue(pointNum);
+    else if (col.ival == -2)
+      value = CExprInst->createRealValue(setNum);
+    else if (col.ival > 0 && col.ival <= nf) {
+      double val;
+
+      const std::string &field = fields[col.ival - 1];
+
+      if (field == missing) {
+        skip = true;
+        return CExprValuePtr();
+      }
+
+      if      ((i == 0 && axesData().xaxis.isTime) || (i == 1 && axesData().yaxis.isTime)) {
+        struct tm tm1; memset(&tm1, 0, sizeof(tm));
+
+        strptime(field.c_str(), timeFmt_.c_str(), &tm1);
+
+        value = CExprInst->createRealValue(mktime(&tm1));
+      }
+      else if (CStrUtil::toReal(field, &val))
+        value = CExprInst->createRealValue(val);
+      else
+        value = CExprInst->createStringValue(field);
+    }
+  }
+  else {
+    std::string expr = col.str;
+
+    // TODO: easier to define $1 variables
+    auto pos = expr.find('$');
+
+    while (pos != std::string::npos) {
+      int pos1 = ++pos;
+
+      while (isdigit(expr[pos1]))
+        ++pos1;
+
+      std::string numStr = expr.substr(pos, pos1 - pos);
+
+      int icol = 0;
+
+      (void) CStrUtil::toInteger(numStr, &icol);
+
+      COptReal x1;
+
+      if      (icol == 0)
+        x1 = pointNum;
+      else if (icol == -2)
+        x1 = setNum;
+      else if (icol > 0 && icol <= nf) {
+        double x2 = 0.0;
+
+        const std::string &field = fields[icol - 1];
+
+        if (field != missing && CStrUtil::toReal(field, &x2))
+          x1 = x2;
+      }
+
+      if (x1.isValid())
+        expr = expr.substr(0, pos - 1) + CStrUtil::toString(x1.getValue()) + expr.substr(pos1);
+      else
+        expr = expr.substr(0, pos - 1) + "NaN" + expr.substr(pos1);
+
+      pos = expr.find('$');
+    }
+
+    if (debug)
+      std::cerr << "expr " << expr << std::endl;
+
+    value = CExprInst->evaluateExpression(expr);
+  }
+
+  return value;
+}
+
 void
 CGnuPlot::
 incLineStyle()
@@ -4351,6 +4496,80 @@ setAngleType(AngleType type)
   CExprInst->setDegrees(angleType_ == AngleType::DEGREES);
 }
 
+// set xtics {axis | border} {{no}mirror}
+//           {in | out} {scale {default | <major> {,<minor>}}}
+//           {{no}rotate {by <ang>}} {offset <offset> | nooffset}
+//           {left | right | center | autojustify}
+//           {add}
+//           { autofreq | <incr> | <start>, <incr> {,<end>} |
+//             ({"<label>"} <pos> {<level>} {,{"<label>"}...) }
+//           { format "formatstring" } { font "name{,<size>}" }
+//           { rangelimited }
+//           { textcolor <colorspec> }
+bool
+CGnuPlot::
+parseAxesTics(CParseLine &line, AxisData& axis)
+{
+  axis.showTics = true;
+
+  std::string arg = readNonSpace(line);
+
+  while (arg != "") {
+    if      (arg == "axis"  ) { }
+    else if (arg == "border") { }
+    else if (arg == "mirror" || arg == "nomirror") {
+      axis.mirror = (arg == "mirror");
+    }
+    else if (arg == "in") { }
+    else if (arg == "out") { }
+    else if (arg == "scale") {
+      std::string arg1 = readNonSpaceNonComma(line);
+
+      line.skipSpace();
+
+      if (line.isChar(','))
+        arg1 = readNonSpaceNonComma(line);
+    }
+    else if (arg == "rotate") {
+      std::string arg1 = readNonSpaceNonComma(line);
+
+      if (arg1 == "by")
+        arg1 = readNonSpaceNonComma(line);
+    }
+    else if (arg == "norotate") { }
+    else if (arg == "offset") {
+      std::string arg1 = readNonSpaceNonComma(line);
+    }
+    else if (arg == "nooffset") { }
+    else if (arg == "left") { }
+    else if (arg == "right") { }
+    else if (arg == "center") { }
+    else if (arg == "autojustify") { }
+    else if (arg == "add") { }
+    else if (arg == "autofreq") { }
+    else if (arg == "format") {
+      std::string formatStr;
+
+      if (parseString(line, formatStr, "Invalid format")) {
+      }
+    }
+    else if (arg == "font") {
+      std::string fontStr;
+
+      if (parseString(line, fontStr, "Invalid font")) {
+      }
+    }
+    else if (arg == "rangelimited") { }
+    else if (arg == "textcolor") {
+      std::string arg1 = readNonSpaceNonComma(line);
+    }
+
+    arg = readNonSpace(line);
+  }
+
+  return true;
+}
+
 bool
 CGnuPlot::
 parseColorSpec(CParseLine &line, CRGBA &c)
@@ -4360,17 +4579,16 @@ parseColorSpec(CParseLine &line, CRGBA &c)
   if (colorTypeStr == "rgbcolor" || colorTypeStr == "rgb") {
     std::string colorValueStr;
 
-    if (! parseString(line, colorValueStr))
-      std::cerr << "Invalid color string" << std::endl;
+    if (parseString(line, colorValueStr, "Invalid color string")) {
+      double r, g, b;
 
-    double r, g, b;
+      if (! CRGBName::lookup(colorValueStr, &r, &g, &b)) {
+        std::cerr << "Invalid color string" << std::endl;
+        return false;
+      }
 
-    if (! CRGBName::lookup(colorValueStr, &r, &g, &b)) {
-      std::cerr << "Invalid color string" << std::endl;
-      return false;
+      c = CRGBA(r, g, b);
     }
-
-    c = CRGBA(r, g, b);
   }
   else {
     std::cerr << "Invalid color spec" << std::endl;
@@ -4389,15 +4607,13 @@ parseColor(CParseLine &line, CRGBA &c)
   if (line.isChar('"') || line.isChar('\'')) {
     std::string name;
 
-    if (! parseString(line, name))
-      return false;
-
-    c = CRGBName::toRGBA(name);
-
-    return true;
+    if (parseString(line, name, "Invalid color string")) {
+      c = CRGBName::toRGBA(name);
+      return true;
+    }
   }
-  else
-    return false;
+
+  return false;
 }
 
 bool
@@ -4496,7 +4712,7 @@ parseReal(CParseLine &line, double &r)
 
 bool
 CGnuPlot::
-parseString(CParseLine &line, std::string &str)
+parseString(CParseLine &line, std::string &str, const std::string &msg)
 {
   line.skipSpace();
 
@@ -4536,6 +4752,9 @@ parseString(CParseLine &line, std::string &str)
       line.skipChar();
   }
   else {
+    if (msg != "")
+      std::cerr << msg << std::endl;
+
     return false;
   }
 

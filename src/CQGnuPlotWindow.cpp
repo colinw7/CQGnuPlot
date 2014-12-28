@@ -183,37 +183,50 @@ addPlotProperties(CGnuPlotPlot *plot, bool child)
   QString name = QString("Plot%1").arg(plot->id());
 
   if (! child) {
-    tree_->addProperty(name, plot1, "regionLeft"  )->setEditorFactory(redit2_);
-    tree_->addProperty(name, plot1, "regionBottom")->setEditorFactory(redit2_);
-    tree_->addProperty(name, plot1, "regionRight" )->setEditorFactory(redit2_);
-    tree_->addProperty(name, plot1, "regionTop"   )->setEditorFactory(redit2_);
+    QString regionName = name + "/region";
 
-    tree_->addProperty(name, plot1, "marginLeft"  )->setEditorFactory(redit3_);
-    tree_->addProperty(name, plot1, "marginRight" )->setEditorFactory(redit3_);
-    tree_->addProperty(name, plot1, "marginTop"   )->setEditorFactory(redit3_);
-    tree_->addProperty(name, plot1, "marginBottom")->setEditorFactory(redit3_);
+    tree_->addProperty(regionName, plot1, "regionLeft"  )->setEditorFactory(redit2_);
+    tree_->addProperty(regionName, plot1, "regionBottom")->setEditorFactory(redit2_);
+    tree_->addProperty(regionName, plot1, "regionRight" )->setEditorFactory(redit2_);
+    tree_->addProperty(regionName, plot1, "regionTop"   )->setEditorFactory(redit2_);
 
-    tree_->addProperty(name, plot1, "xmin")->setEditorFactory(redit2_);
-    tree_->addProperty(name, plot1, "ymin")->setEditorFactory(redit2_);
-    tree_->addProperty(name, plot1, "xmax")->setEditorFactory(redit2_);
-    tree_->addProperty(name, plot1, "ymax")->setEditorFactory(redit2_);
+    QString marginName = name + "/margin";
+
+    tree_->addProperty(marginName, plot1, "marginLeft"  )->setEditorFactory(redit3_);
+    tree_->addProperty(marginName, plot1, "marginRight" )->setEditorFactory(redit3_);
+    tree_->addProperty(marginName, plot1, "marginTop"   )->setEditorFactory(redit3_);
+    tree_->addProperty(marginName, plot1, "marginBottom")->setEditorFactory(redit3_);
+
+    QString rangeName = name + "/range";
+
+    tree_->addProperty(rangeName, plot1, "xmin")->setEditorFactory(redit2_);
+    tree_->addProperty(rangeName, plot1, "ymin")->setEditorFactory(redit2_);
+    tree_->addProperty(rangeName, plot1, "xmax")->setEditorFactory(redit2_);
+    tree_->addProperty(rangeName, plot1, "ymax")->setEditorFactory(redit2_);
 
     tree_->addProperty(name, plot1, "ratio")->setEditorFactory(redit2_);
 
-    tree_->addProperty(name, plot1, "xlabel");
-    tree_->addProperty(name, plot1, "ylabel");
-    tree_->addProperty(name, plot1, "xtics");
-    tree_->addProperty(name, plot1, "ytics");
-    tree_->addProperty(name, plot1, "xgrid");
-    tree_->addProperty(name, plot1, "ygrid");
+    QString axesName = name + "/axes";
+
+    tree_->addProperty(axesName, plot1, "xlabel");
+    tree_->addProperty(axesName, plot1, "ylabel");
+    tree_->addProperty(axesName, plot1, "xtics");
+    tree_->addProperty(axesName, plot1, "ytics");
+    tree_->addProperty(axesName, plot1, "xticsMirror");
+    tree_->addProperty(axesName, plot1, "yticsMirror");
+    tree_->addProperty(axesName, plot1, "xgrid");
+    tree_->addProperty(axesName, plot1, "ygrid");
+
+    QString keyName = name + "/key";
 
     tree_->addProperty(name, plot1, "borders");
     tree_->addProperty(name, plot1, "borderWidth")->setEditorFactory(redit3_);
 
-    tree_->addProperty(name, plot1, "keyDisplayed");
-    tree_->addProperty(name, plot1, "keyBox");
-    tree_->addProperty(name, plot1, "keyHAlign");
-    tree_->addProperty(name, plot1, "keyVAlign");
+    tree_->addProperty(keyName, plot1, "keyDisplayed");
+    tree_->addProperty(keyName, plot1, "keyHAlign");
+    tree_->addProperty(keyName, plot1, "keyVAlign");
+    tree_->addProperty(keyName, plot1, "keyBox");
+    tree_->addProperty(keyName, plot1, "keyReverse");
 
     if (plot->window()->is3D())
       tree_->addProperty(name, plot1, "trianglePattern3D");
@@ -521,7 +534,10 @@ void
 CQGnuPlotWindow::
 showPos(double wx, double wy)
 {
-  posLabel_->setText(QString("%1 %2").arg(wx).arg(wy));
+  std::string xstr = (currentPlot_ ? currentPlot_->formatX(wx) : CStrUtil::toString(wx));
+  std::string ystr = (currentPlot_ ? currentPlot_->formatY(wy) : CStrUtil::toString(wy));
+
+  posLabel_->setText(QString("%1 %2").arg(xstr.c_str()).arg(ystr.c_str()));
 }
 
 void

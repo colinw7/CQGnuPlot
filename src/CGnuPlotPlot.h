@@ -26,6 +26,7 @@ class CGnuPlotPlot {
   typedef std::vector<CExprValuePtr>       Values;
   typedef std::vector<CGnuPlotPlot *>      Plots;
   typedef CGnuPlot::AxesData               AxesData;
+  typedef CGnuPlot::AxisData               AxisData;
   typedef CGnuPlot::KeyData                KeyData;
   typedef CGnuPlot::PlotSize               PlotSize;
   typedef CGnuPlot::SymbolType             SymbolType;
@@ -216,8 +217,8 @@ class CGnuPlotPlot {
   double pointSize() const { return pointStyle_.size(); }
   void setPointSize(double s) { pointStyle_.setSize(s); }
 
+  CGnuPlot::HistogramStyle getHistogramStyle() const { return histogramStyle_; }
   void setHistogramStyle(CGnuPlot::HistogramStyle style) { histogramStyle_ = style; }
-  CGnuPlot::HistogramStyle getHistogramStyle() { return histogramStyle_; }
 
   //---
 
@@ -258,8 +259,14 @@ class CGnuPlotPlot {
   bool getXTics() const { return axesData().xaxis.showTics; }
   void setXTics(bool b) { AxesData a = axesData(); a.xaxis.showTics = b; setAxesData(a); }
 
+  bool getXTicsMirror() const { return axesData().xaxis.mirror; }
+  void setXTicsMirror(bool b) { AxesData a = axesData(); a.xaxis.mirror = b; setAxesData(a); }
+
   bool getYTics() const { return axesData().yaxis.showTics; }
   void setYTics(bool b) { AxesData a = axesData(); a.yaxis.showTics = b; setAxesData(a); }
+
+  bool getYTicsMirror() const { return axesData().yaxis.mirror; }
+  void setYTicsMirror(bool b) { AxesData a = axesData(); a.yaxis.mirror = b; setAxesData(a); }
 
   bool getXGrid() const { return axesData().xaxis.grid; }
   void setXGrid(bool b) { AxesData a = axesData(); a.xaxis.grid = b; setAxesData(a); }
@@ -283,6 +290,9 @@ class CGnuPlotPlot {
 
   bool getKeyDisplayed() const { return rootKeyData().displayed; }
   void setKeyDisplayed(bool b) { KeyData k = rootKeyData(); k.displayed = b; setRootKeyData(k); }
+
+  bool getKeyReverse() const { return rootKeyData().reverse; }
+  void setKeyReverse(bool b) { KeyData k = rootKeyData(); k.reverse = b; setRootKeyData(k); }
 
   bool getKeyBox() const { return rootKeyData().box; }
   void setKeyBox(bool b) { KeyData k = rootKeyData(); k.box = b; setRootKeyData(k); }
@@ -328,9 +338,9 @@ class CGnuPlotPlot {
   int trianglePattern3D() const { return trianglePattern3D_; }
   void setTrianglePattern3D(int n) { trianglePattern3D_ = n; }
 
-  void draw(int ind=0);
+  void draw();
 
-  void draw2D(int ind);
+  void draw2D();
   void draw3D();
 
   void drawHistogram(const Plots &plots);
@@ -338,7 +348,10 @@ class CGnuPlotPlot {
   void drawTerminal();
   void drawPalette();
 
-  void drawAxes(double xmin, double ymin, double xmax, double ymax);
+  void drawAxes();
+  void drawBorder();
+  void drawXAxes(int xind, bool other);
+  void drawYAxes(int yind, bool other);
 
   void drawKey();
 
@@ -350,17 +363,20 @@ class CGnuPlotPlot {
   void drawEllipse(const CGnuPlot::Ellipse &ellipse);
   void drawPolygon(const CGnuPlot::Polygon &poly);
 
-  void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                        CVAlignType valign, int y_offset, const std::string &str,
+  void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                        CVAlignType valign, double y_offset, const std::string &str,
                         const CRGBA &c=CRGBA(0,0,0));
-  void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                        CVAlignType valign, int y_offset, const std::string &str,
+  void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                        CVAlignType valign, double y_offset, const std::string &str,
                         const CRGBA &c=CRGBA(0,0,0));
 
   void drawRotatedText(const CPoint2D &p, const std::string &text,
                        const CRGBA &c=CRGBA(0,0,0), double a=90);
 
   void drawLine(const CPoint2D &p1, const CPoint2D &p2, double w, const CRGBA &c);
+
+  std::string formatX(double x) const;
+  std::string formatY(double y) const;
 
   void mapLogPoint  (double *x, double *y) const;
   void unmapLogPoint(double *x, double *y) const;
@@ -415,6 +431,8 @@ class CGnuPlotPlot {
   COptInt                  lineStyleNum_;
   AxesData                 axesData_;
   KeyData                  keyData_;
+  int                      xind_ { 1 };
+  int                      yind_ { 1 };
   CGnuPlot::LogScaleMap    logScale_;
   CGnuPlot::Smooth         smooth_;
   CGnuPlot::HistogramStyle histogramStyle_;

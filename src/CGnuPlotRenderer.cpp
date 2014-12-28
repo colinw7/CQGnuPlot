@@ -2,8 +2,8 @@
 
 void
 CGnuPlotRenderer::
-drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                 CVAlignType valign, int y_offset, const std::string &str, const CRGBA &c)
+drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                 CVAlignType valign, double y_offset, const std::string &str, const CRGBA &c)
 {
   CFontPtr font = getFont();
 
@@ -93,8 +93,8 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
 
 void
 CGnuPlotRenderer::
-drawVAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                 CVAlignType valign, int y_offset, const std::string &str, const CRGBA &c)
+drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                 CVAlignType valign, double y_offset, const std::string &str, const CRGBA &c)
 {
   CFontPtr font = getFont();
 
@@ -141,6 +141,8 @@ drawVAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
     x1 = pos.x - pixelWidthToWindowWidth(height1/2);
   else if (halign == CHALIGN_TYPE_RIGHT)
     x1 = pos.x - pixelWidthToWindowWidth(height1);
+
+  x1 += pixelWidthToWindowWidth(font->getCharAscent());
 
   while (pstr1 != std::string::npos) {
     std::string str2 = str1.substr(0, pstr1);

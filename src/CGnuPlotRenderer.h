@@ -68,11 +68,11 @@ class CGnuPlotRenderer {
 
   //---
 
-  void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                        CVAlignType valign, int y_offset, const std::string &str,
+  void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                        CVAlignType valign, double y_offset, const std::string &str,
                         const CRGBA &c=CRGBA(0,0,0));
-  void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                        CVAlignType valign, int y_offset, const std::string &str,
+  void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                        CVAlignType valign, double y_offset, const std::string &str,
                         const CRGBA &c=CRGBA(0,0,0));
 
   void drawRotatedText(const CPoint2D &p, const std::string &text,

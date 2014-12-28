@@ -40,8 +40,14 @@ class CGnuPlotAxis {
   double getTickSpace(int i) const { return tickSpaces_[i]; }
   void setTickSpaces(double *tick_spaces, uint num_tick_spaces);
 
+  bool isLabelInside() const { return labelInside_; }
+  void setLabelInside(bool b) { labelInside_ = b; }
+
   const std::string &getLabel() const { return label_; }
   void setLabel(const std::string &str);
+
+  const std::string &getTimeFormat() const { return timeFmt_; }
+  void setTimeFormat(const std::string &ftm);
 
   bool isDisplayed() const { return displayed_; }
   void setDisplayed(bool b) { displayed_ = b; }
@@ -49,11 +55,14 @@ class CGnuPlotAxis {
   bool drawLine() const { return drawLine_; }
   void setDrawLine(bool b) { drawLine_ = b; }
 
-  bool drawTicMark() const { return drawTicMark_; }
-  void setDrawTicMark(bool b) { drawTicMark_ = b; }
+  bool drawTickMark() const { return drawTickMark_; }
+  void setDrawTickMark(bool b) { drawTickMark_ = b; }
 
-  bool drawTicLabel() const { return drawTicLabel_; }
-  void setDrawTicLabel(bool b) { drawTicLabel_ = b; }
+  bool drawMinorTickMark() const { return drawMinorTickMark_; }
+  void setDrawMinorTickMark(bool b) { drawMinorTickMark_ = b; }
+
+  bool drawTickLabel() const { return drawTickLabel_; }
+  void setDrawTickLabel(bool b) { drawTickLabel_ = b; }
 
   bool drawLabel() const { return drawLabel_; }
   void setDrawLabel(bool b) { drawLabel_ = b; }
@@ -82,10 +91,10 @@ class CGnuPlotAxis {
 
   void drawLine(const CPoint2D &p1, const CPoint2D &p2);
 
-  void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                        CVAlignType valign, int y_offset, const std::string &str);
-  void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                        CVAlignType valign, int y_offset, const std::string &str);
+  void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                        CVAlignType valign, double y_offset, const std::string &str);
+  void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                        CVAlignType valign, double y_offset, const std::string &str);
 
  private:
   CGnuPlotPlot*       plot_;
@@ -97,11 +106,14 @@ class CGnuPlotAxis {
   uint                tickIncrement_;
   std::vector<double> tickSpaces_;
   bool                tickInside_;
+  bool                labelInside_;
   std::string         label_;
+  std::string         timeFmt_;
   bool                displayed_;
   bool                drawLine_;
-  bool                drawTicMark_;
-  bool                drawTicLabel_;
+  bool                drawTickMark_;
+  bool                drawMinorTickMark_;
+  bool                drawTickLabel_;
   bool                drawLabel_;
   CFontPtr            font_;
 };

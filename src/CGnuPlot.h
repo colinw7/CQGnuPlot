@@ -8,6 +8,7 @@
 #include <climits>
 #include <sys/types.h>
 
+#include <CExpr.h>
 #include <CFont.h>
 #include <CAutoPtr.h>
 #include <CStrUtil.h>
@@ -29,6 +30,8 @@ class CGnuPlotWindow;
 class CGnuPlotPlot;
 class CGnuPlotReadLine;
 class CParseLine;
+
+typedef CRefPtr<CExprValue> CExprValuePtr;
 
 //------
 
@@ -118,11 +121,15 @@ class CGnuPlot {
     GRID,
     XLABEL,
     YLABEL,
+    X2LABEL,
+    Y2LABEL,
     XRANGE,
     YRANGE,
     TICS,
     XTICS,
     YTICS,
+    X2TICS,
+    Y2TICS,
     MXTICS,
     TICSCALE,
     ZEROAXIS,
@@ -130,6 +137,7 @@ class CGnuPlot {
     LOCALE,
     TIMEFMT,
     XDATA,
+    YDATA,
     XDTICS,
     XMTICS,
 
@@ -210,14 +218,15 @@ class CGnuPlot {
   };
 
   enum class PlotVar {
-    USING,
     INDEX,
     EVERY,
-    WITH,
+    USING,
+    AXES,
     TITLE,
     NOTITLE,
     SMOOTH,
-    POINTSIZE,
+    WITH,
+    POINTSIZE
   };
 
   enum class PlotStyle {
@@ -488,24 +497,30 @@ class CGnuPlot {
   //---
 
   struct AxisData {
-    AxisData() { }
+    AxisData(int i) : ind(i) { }
 
+    int         ind;
     bool        displayed { true };
     bool        grid      { false };
+    bool        mirror    { true };
+    bool        isTime    { false };
     COptReal    min;
     COptReal    max;
     std::string str;
     double      offset    { 0 };
+    std::string format;
     bool        showTics  { true };
   };
 
   struct AxesData {
     AxesData() { }
 
-    AxisData xaxis;
-    AxisData yaxis;
-    AxisData zaxis;
-    int      borders { 0xFF };
+    AxisData xaxis       { 1 };
+    AxisData yaxis       { 1 };
+    AxisData zaxis       { 1 };
+    AxisData x2axis      { 2 };
+    AxisData y2axis      { 2 };
+    int      borders     { 0xFF };
     double   borderWidth { 1.0 };
     COptInt  borderStyle;
     COptInt  borderType;
@@ -523,13 +538,13 @@ class CGnuPlot {
   struct KeyData {
     KeyData() { }
 
-    bool                     displayed  { true };
-    CHAlignType              halign     { CHALIGN_TYPE_RIGHT };
-    CVAlignType              valign     { CVALIGN_TYPE_TOP   };
-    bool                     vertical   { true };
-    bool                     right      { true };
-    bool                     reverse    { false };
-    bool                     invert     { false };
+    bool                     displayed  { true };               // key displayed
+    CHAlignType              halign     { CHALIGN_TYPE_RIGHT }; // key horizontal side
+    CVAlignType              valign     { CVALIGN_TYPE_TOP   }; // key vertical side
+    bool                     vertical   { true };               // ??
+    bool                     right      { true };               // text justification
+    bool                     reverse    { false };              // reverse text and sample
+    bool                     invert     { false };              // invert plot order
     bool                     autotitle  { true };
     COptReal                 sampLen;
     COptReal                 spacing;
@@ -831,6 +846,9 @@ class CGnuPlot {
   CRange2D &margin() { return margin_; }
   void setMargin(const CRange2D &b) { margin_ = b; }
 
+  int xind() const { return xind_; }
+  int yind() const { return yind_; }
+
   const PlotSize &plotSize() const { return plotSize_; }
   PlotSize &plotSize() { return plotSize_; }
   void setPlotSize(const PlotSize &s) { plotSize_ = s; }
@@ -957,6 +975,10 @@ class CGnuPlot {
 
   CGnuPlotPlot *addFile3D(CGnuPlotWindow *window, const std::string &filename);
 
+  CExprValuePtr decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum,
+                               const std::vector<std::string> &fields,
+                               const std::string &missing, bool &skip, bool debug);
+
   void setSeparator(Separator sep) { separator_ = sep; }
   const Separator &getSeparator() const { return separator_; }
 
@@ -1026,12 +1048,14 @@ class CGnuPlot {
     isamples2 = isoSamples2_;
   }
 
+  bool parseAxesTics(CParseLine &line, AxisData& axis);
+
   bool parseColor(CParseLine &line, CRGBA &c);
   bool parseColorSpec(CParseLine &line, CRGBA &c);
 
   bool parseInteger(CParseLine &line, int &i);
   bool parseReal(CParseLine &line, double &r);
-  bool parseString(CParseLine &line, std::string &filename);
+  bool parseString(CParseLine &line, std::string &filename, const std::string &msg="");
 
   bool parsePosition(CParseLine &line, Position &pos);
   bool parseSize(CParseLine &line, CSize2D &size);
@@ -1089,6 +1113,8 @@ class CGnuPlot {
   AxesData                         axesData_;
   KeyData                          keyData_;
   CRange2D                         margin_ { 10, 10, 10, 10 };
+  int                              xind_ { 1 };
+  int                              yind_ { 1 };
   Arrows                           arrows_;
   Labels                           labels_;
   Rectangles                       rects_;
@@ -1099,8 +1125,10 @@ class CGnuPlot {
   bool                             fitX_ { false };
   bool                             fitY_ { false };
   bool                             fitZ_ { false };
+  std::string                      timeFmt_;
   LogScaleMap                      logScale_;
-  std::string                      dummyVar1_, dummyVar2_;
+  std::string                      dummyVar1_;
+  std::string                      dummyVar2_;
   int                              isamples1_   { 100 };
   int                              isamples2_   { 100 };
   int                              isoSamples1_ {  10 };

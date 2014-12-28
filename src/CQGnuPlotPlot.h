@@ -34,20 +34,23 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
 
   Q_PROPERTY(double ratio READ getRatio WRITE setRatio)
 
-  Q_PROPERTY(QString xlabel  READ getXLabel  WRITE setXLabel)
-  Q_PROPERTY(QString ylabel  READ getYLabel  WRITE setYLabel)
-  Q_PROPERTY(bool    xtics   READ getXTics   WRITE setXTics)
-  Q_PROPERTY(bool    ytics   READ getYTics   WRITE setYTics)
-  Q_PROPERTY(bool    xgrid   READ getXGrid   WRITE setXGrid)
-  Q_PROPERTY(bool    ygrid   READ getYGrid   WRITE setYGrid)
+  Q_PROPERTY(QString xlabel      READ getXLabel      WRITE setXLabel)
+  Q_PROPERTY(QString ylabel      READ getYLabel      WRITE setYLabel)
+  Q_PROPERTY(bool    xtics       READ getXTics       WRITE setXTics)
+  Q_PROPERTY(bool    ytics       READ getYTics       WRITE setYTics)
+  Q_PROPERTY(bool    xticsMirror READ getXTicsMirror WRITE setXTicsMirror)
+  Q_PROPERTY(bool    yticsMirror READ getYTicsMirror WRITE setYTicsMirror)
+  Q_PROPERTY(bool    xgrid       READ getXGrid       WRITE setXGrid)
+  Q_PROPERTY(bool    ygrid       READ getYGrid       WRITE setYGrid)
 
   Q_PROPERTY(int     borders     READ getBorders     WRITE setBorders    )
   Q_PROPERTY(double  borderWidth READ getBorderWidth WRITE setBorderWidth)
 
   Q_PROPERTY(bool         keyDisplayed READ getKeyDisplayed WRITE setKeyDisplayed)
-  Q_PROPERTY(bool         keyBox       READ getKeyBox       WRITE setKeyBox      )
   Q_PROPERTY(CQHAlignType keyHAlign    READ getKeyHAlign    WRITE setKeyHAlign   )
   Q_PROPERTY(CQVAlignType keyVAlign    READ getKeyVAlign    WRITE setKeyVAlign   )
+  Q_PROPERTY(bool         keyBox       READ getKeyBox       WRITE setKeyBox      )
+  Q_PROPERTY(bool         keyReverse   READ getKeyReverse   WRITE setKeyReverse  )
 
   Q_PROPERTY(QColor       lineColor READ lineColor WRITE setLineColor)
   Q_PROPERTY(double       lineWidth READ lineWidth WRITE setLineWidth)

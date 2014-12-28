@@ -41,24 +41,26 @@ axes_increment_tests[MAX_GAP_TESTS] = {
 
 CGnuPlotAxis::
 CGnuPlotAxis(CGnuPlotPlot *plot, COrientation direction, double start, double end) :
- plot_         (plot),
- direction_    (direction),
- start_        (start),
- end_          (end),
- start1_       (start),
- end1_         (end),
- logarithmic_  (0),
- numTicks1_    (1),
- numTicks2_    (0),
- tickIncrement_(0),
- tickSpaces_   (),
- tickInside_   (false),
- label_        (""),
- displayed_    (true),
- drawLine_     (true),
- drawTicMark_  (true),
- drawTicLabel_ (true),
- drawLabel_    (true)
+ plot_             (plot),
+ direction_        (direction),
+ start_            (start),
+ end_              (end),
+ start1_           (start),
+ end1_             (end),
+ logarithmic_      (0),
+ numTicks1_        (1),
+ numTicks2_        (0),
+ tickIncrement_    (0),
+ tickSpaces_       (),
+ tickInside_       (false),
+ labelInside_      (false),
+ label_            (""),
+ displayed_        (true),
+ drawLine_         (true),
+ drawTickMark_     (true),
+ drawMinorTickMark_(true),
+ drawTickLabel_    (true),
+ drawLabel_        (true)
 {
   calc();
 }
@@ -103,6 +105,13 @@ setLabel(const std::string &str)
   label_ = str;
 }
 
+void
+CGnuPlotAxis::
+setTimeFormat(const std::string &fmt)
+{
+  timeFmt_ = fmt;
+}
+
 bool
 CGnuPlotAxis::
 calc()
@@ -112,14 +121,14 @@ calc()
 
   //------
 
-  /* Ensure Axis Start and End are in the Correct Order */
+  // Ensure Axis Start and End are in the Correct Order
 
   double min_axis = std::min(start_, end_);
   double max_axis = std::max(start_, end_);
 
   //------
 
-  /* Calculate Length */
+  // Calculate Length
 
   double length = fabs(max_axis - min_axis);
 
@@ -128,13 +137,13 @@ calc()
 
   //------
 
-  /* Calculate nearest Power of Ten to Length */
+  // Calculate nearest Power of Ten to Length
 
   int power = CMathGen::RoundDown(log10(length));
 
   //------
 
-  /* Set Default Increment to 0.1 * Power of Ten */
+  // Set Default Increment to 0.1 * Power of Ten
 
   double increment = 0.1;
 
@@ -147,21 +156,21 @@ calc()
 
   //------
 
-  /* Calculate other test Increments */
+  // Calculate other test Increments
 
   for (int i = 0; i < MAX_GAP_TESTS; i++)
     axes_increment_tests[i].inc_factor = increment*axes_increment_tests[i].factor;
 
   //------
 
-  /* Set Default Start/End to Force Update */
+  // Set Default Start/End to Force Update
 
   start1_ = 0.0;
   end1_   = 0.0;
 
   //------
 
-  /* Test each Increment in turn */
+  // Test each Increment in turn
 
   uint num_gaps, num_gap_ticks;
 
@@ -185,7 +194,7 @@ calc()
 
   //------
 
-  /* Set the Gap Positions */
+  // Set the Gap Positions
 
   numTicks1_ = CMathGen::RoundDown((end1_ - start1_)/increment + 0.5);
   numTicks2_ = num_gap_ticks;
@@ -198,7 +207,7 @@ CGnuPlotAxis::
 testAxisGaps(double start, double end, double test_increment, uint test_num_gap_ticks,
              double *start1, double *end1, double *increment, uint *num_gaps, uint *num_gap_ticks)
 {
-  /* Calculate New Start and End implied by the Test Increment */
+  // Calculate New Start and End implied by the Test Increment
 
   double new_start = CMathGen::RoundDown(start/test_increment)*test_increment;
   double new_end   = CMathGen::RoundUp  (end  /test_increment)*test_increment;
@@ -213,7 +222,7 @@ testAxisGaps(double start, double end, double test_increment, uint test_num_gap_
 
   //------
 
-  /* If nothing set yet just update values and return */
+  // If nothing set yet just update values and return
 
   if (*start1 == 0.0 && *end1 == 0.0) {
     *start1 = new_start;
@@ -228,9 +237,9 @@ testAxisGaps(double start, double end, double test_increment, uint test_num_gap_
 
   //------
 
-  /* If the current number of gaps is not within the acceptable range
-     and the new number of gaps is within the acceptable range then
-     update current */
+  // If the current number of gaps is not within the acceptable range
+  // and the new number of gaps is within the acceptable range then
+  // update current
 
   if ((    *num_gaps <  MIN_GOOD_TICKS ||     *num_gaps >  MAX_GOOD_TICKS) &&
       (test_num_gaps >= MIN_GOOD_TICKS && test_num_gaps <= MAX_GOOD_TICKS)) {
@@ -246,21 +255,21 @@ testAxisGaps(double start, double end, double test_increment, uint test_num_gap_
 
   //------
 
-  /* If the current number of gaps is not within the acceptable range
-     and the new number of gaps is not within the acceptable range then
-     consider it for update of current if better fit */
+  // If the current number of gaps is not within the acceptable range
+  // and the new number of gaps is not within the acceptable range then
+  // consider it for update of current if better fit
 
   if ((    *num_gaps < MIN_GOOD_TICKS ||     *num_gaps > MAX_GOOD_TICKS) &&
       (test_num_gaps < MIN_GOOD_TICKS || test_num_gaps > MAX_GOOD_TICKS)) {
-    /* Calculate how close fit is to required range */
+    // Calculate how close fit is to required range
 
     double delta1 = fabs(new_start - start) + fabs(new_end - end);
 
     //------
 
-    /* If better fit than current fit or equally good fit and
-       number of gaps is nearer to optimum (OPTIMUM_TICKS) then
-       update current */
+    // If better fit than current fit or equally good fit and
+    // number of gaps is nearer to optimum (OPTIMUM_TICKS) then
+    // update current
 
     double delta2 = fabs(*start1 - start) + fabs(*end1 - end);
 
@@ -280,21 +289,21 @@ testAxisGaps(double start, double end, double test_increment, uint test_num_gap_
 
   //------
 
-  /* If the current number of gaps is within the acceptable range
-     and the new number of gaps is within the acceptable range then
-     consider it for update of current if better fit */
+  // If the current number of gaps is within the acceptable range
+  // and the new number of gaps is within the acceptable range then
+  // consider it for update of current if better fit
 
   if ((    *num_gaps >= MIN_GOOD_TICKS &&     *num_gaps <= MAX_GOOD_TICKS) &&
       (test_num_gaps >= MIN_GOOD_TICKS && test_num_gaps <= MAX_GOOD_TICKS)) {
-    /* Calculate how close fit is to required range */
+    // Calculate how close fit is to required range
 
     double delta1 = fabs(new_start - start) + fabs(new_end - end);
 
     //------
 
-    /* If better fit than current fit or equally good fit and
-       number of gaps is nearer to optimum (OPTIMUM_TICKS) then
-       update current */
+    // If better fit than current fit or equally good fit and
+    // number of gaps is nearer to optimum (OPTIMUM_TICKS) then
+    // update current
 
     double delta2 = fabs(*start1 - start) + fabs(*end1 - end);
 
@@ -333,7 +342,10 @@ std::string
 CGnuPlotAxis::
 getValueStr(double pos) const
 {
-  return CStrUtil::toString(pos);
+  if (direction_ == CORIENTATION_HORIZONTAL)
+    return plot_->formatX(pos);
+  else
+    return plot_->formatY(pos);
 }
 
 void
@@ -351,9 +363,9 @@ drawAxis(double pos)
   double maxW = 0;
   double maxH = font_->getCharHeight();
 
-  /*------*/
+  //------*/
 
-  /* Draw Axis Line */
+  // Draw Axis Line
 
   if (drawLine()) {
     if (direction_ == CORIENTATION_HORIZONTAL)
@@ -362,9 +374,9 @@ drawAxis(double pos)
       drawLine(CPoint2D(pos, getStart()), CPoint2D(pos, getEnd()));
   }
 
-  /*------*/
+  //------*/
 
-  /* Draw Ticks Marks and Labels */
+  // Draw Ticks Marks and Labels
 
   double increment = getMajorIncrement();
 
@@ -372,18 +384,18 @@ drawAxis(double pos)
   double pos2 = pos1;
 
   for (uint i = 0; i < getNumMajorTicks(); i++) {
-    /* Calculate Next Tick Point */
+    // Calculate Next Tick Point
 
     pos2 = (i + 1)*increment + getStart();
 
-    /*------*/
+    //------*/
 
-    /* Draw Major Tick */
+    // Draw Major Tick
 
     if (pos1 >= getStart() && pos1 <= getEnd()) {
-      /* Draw Tick Mark */
+      // Draw Tick Mark
 
-      if (drawTicMark()) {
+      if (drawTickMark()) {
         if (direction_ == CORIENTATION_HORIZONTAL)
           drawAxisTick(CPoint2D(pos1, pos),
            (tickInside_ ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), true);
@@ -392,42 +404,56 @@ drawAxis(double pos)
            (tickInside_ ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), true);
       }
 
-      /*------*/
+      //------*/
 
-      /* Create Tick Label (Override with application supplied string if required) */
+      // Create Tick Label (Override with application supplied string if required)
 
       str = getValueStr(pos1);
 
       maxW = std::max(maxW, font_->getStringWidth(str));
 
-      /*------*/
+      //------*/
 
-      /* Draw Tick Label */
+      // Draw Tick Label
 
-      if (drawTicLabel()) {
-        if (direction_ == CORIENTATION_HORIZONTAL)
-          drawHAlignedText(CPoint2D(pos1, pos ), CHALIGN_TYPE_CENTER, 0,
-                           CVALIGN_TYPE_TOP, 8, str);
-        else {
-          if (rotatedText)
-            drawVAlignedText(CPoint2D(pos, pos1), CHALIGN_TYPE_RIGHT,  0,
-                             CVALIGN_TYPE_CENTER, -8, str);
+      if (drawTickLabel()) {
+        if (direction_ == CORIENTATION_HORIZONTAL) {
+          if (isLabelInside())
+            drawHAlignedText(CPoint2D(pos1, pos), CHALIGN_TYPE_CENTER, 0,
+                             CVALIGN_TYPE_BOTTOM, -8, str);
           else
-            drawHAlignedText(CPoint2D(pos, pos1), CHALIGN_TYPE_RIGHT, -8,
-                             CVALIGN_TYPE_CENTER,  0, str);
+            drawHAlignedText(CPoint2D(pos1, pos), CHALIGN_TYPE_CENTER, 0,
+                             CVALIGN_TYPE_TOP   ,  8, str);
+        }
+        else {
+          if (rotatedText) {
+            if (isLabelInside())
+              drawVAlignedText(CPoint2D(pos, pos1), CHALIGN_TYPE_LEFT , 0,
+                               CVALIGN_TYPE_CENTER,  8, str);
+            else
+              drawVAlignedText(CPoint2D(pos, pos1), CHALIGN_TYPE_RIGHT, 0,
+                               CVALIGN_TYPE_CENTER, -8, str);
+          }
+          else
+            if (isLabelInside())
+              drawHAlignedText(CPoint2D(pos, pos1), CHALIGN_TYPE_LEFT ,  8,
+                               CVALIGN_TYPE_CENTER, 0, str);
+            else
+              drawHAlignedText(CPoint2D(pos, pos1), CHALIGN_TYPE_RIGHT, -8,
+                               CVALIGN_TYPE_CENTER, 0, str);
         }
       }
     }
 
-    /*------*/
+    //------*/
 
-    /* Draw Minor Ticks (use user defined distribution if defined) */
+    // Draw Minor Ticks (use user defined distribution if defined)
 
     if (getTickSpaces() == 0) {
       for (uint j = 1; j < getNumMinorTicks(); j++) {
         double pos3 = j*(pos2 - pos1)/getNumMinorTicks() + pos1;
 
-        if (drawTicMark()) {
+        if (drawTickMark() && drawMinorTickMark()) {
           if (pos3 >= getStart() && pos3 <= getEnd()) {
             if (direction_ == CORIENTATION_HORIZONTAL)
               drawAxisTick(CPoint2D(pos3, pos),
@@ -443,7 +469,7 @@ drawAxis(double pos)
       for (uint j = 1; j <= getNumTickSpaces() - 2; j++) {
         double pos3 = getTickSpace(j)*(pos2 - pos1) + pos1;
 
-        if (drawTicMark()) {
+        if (drawTickMark() && drawMinorTickMark()) {
           if (pos3 >= getStart() && pos3 <= getEnd()) {
             if (direction_ == CORIENTATION_HORIZONTAL)
               drawAxisTick(CPoint2D(pos3, pos),
@@ -456,19 +482,19 @@ drawAxis(double pos)
       }
     }
 
-    /*------*/
+    //------*/
 
     pos1 = pos2;
   }
 
-  /*------*/
+  //------*/
 
-  /* Draw Last Major Tick */
+  // Draw Last Major Tick
 
   if (pos1 >= getStart() && pos1 <= getEnd()) {
-    /* Draw Tick Mark */
+    // Draw Tick Mark
 
-    if (drawTicMark()) {
+    if (drawTickMark()) {
       if (direction_ == CORIENTATION_HORIZONTAL)
         drawAxisTick(CPoint2D(pos1, pos),
           (tickInside_ ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), true);
@@ -477,34 +503,49 @@ drawAxis(double pos)
           (tickInside_ ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), true);
     }
 
-    /*------*/
+    //------*/
 
-    /* Create Tick Label (Override with application supplied string if required) */
+    // Create Tick Label (Override with application supplied string if required)
 
     str = getValueStr(pos1);
 
-    /*------*/
+    //------*/
 
-    /* Draw Tick Label */
+    // Draw Tick Label
 
-    if (drawTicLabel()) {
-      if (direction_ == CORIENTATION_HORIZONTAL)
-        drawHAlignedText(CPoint2D(pos1, pos ), CHALIGN_TYPE_CENTER, 0,
-                         CVALIGN_TYPE_TOP, 8, str);
-      else {
-        if (rotatedText)
-          drawVAlignedText(CPoint2D(pos, pos1), CHALIGN_TYPE_RIGHT,  0,
-                           CVALIGN_TYPE_CENTER, -8, str);
+    if (drawTickLabel()) {
+      if (direction_ == CORIENTATION_HORIZONTAL) {
+        if (isLabelInside())
+          drawHAlignedText(CPoint2D(pos1, pos), CHALIGN_TYPE_CENTER, 0,
+                           CVALIGN_TYPE_BOTTOM, -8, str);
         else
-          drawHAlignedText(CPoint2D(pos, pos1), CHALIGN_TYPE_RIGHT, -8,
-                           CVALIGN_TYPE_CENTER,  0, str);
+          drawHAlignedText(CPoint2D(pos1, pos), CHALIGN_TYPE_CENTER, 0,
+                           CVALIGN_TYPE_TOP   ,  8, str);
+      }
+      else {
+        if (rotatedText) {
+          if (isLabelInside())
+            drawVAlignedText(CPoint2D(pos, pos1), CHALIGN_TYPE_LEFT , 0,
+                             CVALIGN_TYPE_CENTER,  8, str);
+          else
+            drawVAlignedText(CPoint2D(pos, pos1), CHALIGN_TYPE_RIGHT, 0,
+                             CVALIGN_TYPE_CENTER, -8, str);
+        }
+        else {
+          if (isLabelInside())
+            drawHAlignedText(CPoint2D(pos, pos1), CHALIGN_TYPE_LEFT ,  8,
+                             CVALIGN_TYPE_CENTER, 0, str);
+          else
+            drawHAlignedText(CPoint2D(pos, pos1), CHALIGN_TYPE_RIGHT, -8,
+                             CVALIGN_TYPE_CENTER, 0, str);
+        }
       }
     }
   }
 
-  /*------*/
+  //------*/
 
-  /* Draw Axis Label */
+  // Draw Axis Label
 
   if (drawLabel()) {
     double x1 = getStart(), y1 = pos;
@@ -519,12 +560,22 @@ drawAxis(double pos)
 
     const std::string &astr = getLabel();
 
-    if (direction_ == CORIENTATION_HORIZONTAL)
-      drawHAlignedText(CPoint2D(mid, pos), CHALIGN_TYPE_CENTER, 0,
-                       CVALIGN_TYPE_TOP, maxH + 12, astr);
-    else
-      drawVAlignedText(CPoint2D(pos, mid), CHALIGN_TYPE_RIGHT , -maxW - 12,
-                       CVALIGN_TYPE_CENTER, 0, astr);
+    if (direction_ == CORIENTATION_HORIZONTAL) {
+      if (isLabelInside())
+        drawHAlignedText(CPoint2D(mid, pos), CHALIGN_TYPE_CENTER, 0,
+                         CVALIGN_TYPE_BOTTOM, -(maxH + 12), astr);
+      else
+        drawHAlignedText(CPoint2D(mid, pos), CHALIGN_TYPE_CENTER, 0,
+                         CVALIGN_TYPE_TOP   ,   maxH + 12 , astr);
+    }
+    else {
+      if (isLabelInside())
+        drawVAlignedText(CPoint2D(pos, mid), CHALIGN_TYPE_LEFT ,    maxW + 12 ,
+                         CVALIGN_TYPE_CENTER, 0, astr);
+      else
+        drawVAlignedText(CPoint2D(pos, mid), CHALIGN_TYPE_RIGHT , -(maxW + 12),
+                         CVALIGN_TYPE_CENTER, 0, astr);
+    }
   }
 }
 
@@ -532,20 +583,20 @@ void
 CGnuPlotAxis::
 drawAxisTick(const CPoint2D &pos, CDirectionType type, bool large)
 {
-  int psize = 6;
+  double psize = 6;
 
   if (! large)
     psize = 3;
 
   if (type == CDIRECTION_TYPE_LEFT || type == CDIRECTION_TYPE_RIGHT) {
-    int dx = (type == CDIRECTION_TYPE_LEFT ? -1 : 1);
+    double dx = (type == CDIRECTION_TYPE_LEFT ? -1 : 1);
 
     double x1 = pos.x + dx*plot_->pixelWidthToWindowWidth(psize);
 
     drawLine(pos, CPoint2D(x1, pos.y));
   }
   else {
-    int dy = (type == CDIRECTION_TYPE_DOWN  ? -1 : 1);
+    double dy = (type == CDIRECTION_TYPE_DOWN  ? -1 : 1);
 
     double y1 = pos.y + dy*plot_->pixelHeightToWindowHeight(psize);
 
@@ -564,7 +615,7 @@ drawGrid(double start, double end)
 
   renderer->setLineDash(CLineDash(grid_dashes, num_grid_dashes));
 
-  /*------*/
+  //------*/
 
   if (direction_ == CORIENTATION_HORIZONTAL) { // x-axis
     double xincrement = getMajorIncrement();
@@ -587,7 +638,7 @@ drawGrid(double start, double end)
     }
   }
 
-  /*------*/
+  //------*/
 
   renderer->setLineDash(CLineDash());
 }
@@ -609,8 +660,8 @@ drawLine(const CPoint2D &p1, const CPoint2D &p2)
 
 void
 CGnuPlotAxis::
-drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                 CVAlignType valign, int y_offset, const std::string &str)
+drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                 CVAlignType valign, double y_offset, const std::string &str)
 {
   double x = pos.x, y = pos.y;
 
@@ -621,8 +672,8 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
 
 void
 CGnuPlotAxis::
-drawVAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                 CVAlignType valign, int y_offset, const std::string &str)
+drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                 CVAlignType valign, double y_offset, const std::string &str)
 {
   double x = pos.x, y = pos.y;
 

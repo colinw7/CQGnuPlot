@@ -71,6 +71,9 @@ init()
   setMargin  (plot->margin  ());
   setPlotSize(plot->plotSize());
 
+  xind_ = plot->xind();
+  yind_ = plot->yind();
+
   setLogScaleMap(plot->logScaleMap());
   setPalette(plot->palette());
   setTrianglePattern3D(plot->trianglePattern3D());
@@ -189,15 +192,31 @@ fit()
   if (! getFitX() && ! getFitY())
     return;
 
-  COptReal xmin, ymin, zmin, xmax, ymax, zmax;
-
   if (! subPlots_.empty()) {
+    COptReal xmin, ymin, xmax, ymax, xmin2, ymin2, xmax2, ymax2;
+
     for (auto plot : subPlots_) {
-      xmin.updateMin(plot->axesData_.xaxis.min); xmax.updateMax(plot->axesData_.xaxis.max);
-      ymin.updateMin(plot->axesData_.yaxis.min); ymax.updateMax(plot->axesData_.yaxis.max);
+      xmin .updateMin(plot->axesData_.xaxis .min); xmax .updateMax(plot->axesData_.xaxis .max);
+      ymin .updateMin(plot->axesData_.yaxis .min); ymax .updateMax(plot->axesData_.yaxis .max);
+
+      xmin2.updateMin(plot->axesData_.x2axis.min); xmax2.updateMax(plot->axesData_.x2axis.max);
+      ymin2.updateMin(plot->axesData_.y2axis.min); ymax2.updateMax(plot->axesData_.y2axis.max);
     }
+
+    axesData_.xaxis .min = xmin ; axesData_.xaxis .max = xmax ;
+    axesData_.yaxis .min = ymin ; axesData_.yaxis .max = ymax ;
+    axesData_.x2axis.min = xmin2; axesData_.x2axis.max = xmax2;
+    axesData_.y2axis.min = ymin2; axesData_.y2axis.max = ymax2;
+
+    for (auto plot : subPlots_)
+      plot->axesData_= axesData_;
   }
   else {
+    AxisData &xaxis = (xind_ == 2 ? axesData_.x2axis : axesData_.xaxis);
+    AxisData &yaxis = (yind_ == 2 ? axesData_.y2axis : axesData_.yaxis);
+
+    COptReal xmin, ymin, zmin, xmax, ymax, zmax;
+
     if (! is3D_) {
       uint np = numPoints2D();
 
@@ -232,21 +251,22 @@ fit()
         }
       }
     }
-  }
 
-  if (getFitX() && xmin.isValid() && xmax.isValid()) {
-    axesData_.xaxis.min = xmin;
-    axesData_.xaxis.max = xmax;
-  }
+    if (getFitX()) {
+      if (! xaxis.min.isValid() && xmin.isValid())
+        xaxis.min = xmin;
 
-  if (getFitY() && ymin.isValid() && ymax.isValid()) {
-    axesData_.yaxis.min = ymin;
-    axesData_.yaxis.max = ymax;
-  }
+      if (! xaxis.max.isValid() && xmax.isValid())
+        xaxis.max = xmax;
+    }
 
-  if (! subPlots_.empty()) {
-    for (auto plot : subPlots_)
-      plot->axesData_ = axesData_;
+    if (getFitY()) {
+      if (! yaxis.min.isValid() && ymin.isValid())
+        yaxis.min = ymin;
+
+      if (! yaxis.max.isValid() && ymax.isValid())
+        yaxis.max = ymax;
+    }
   }
 }
 
@@ -467,7 +487,7 @@ setPlotSize(const PlotSize &s)
 
 void
 CGnuPlotPlot::
-draw(int ind)
+draw()
 {
   renderer_->setMargin(margin());
   renderer_->setRange(getDisplayRange());
@@ -477,19 +497,21 @@ draw(int ind)
   else
     renderer_->unsetRatio();
 
+  // root plot with children
   if (! subPlots_.empty()) {
     if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS)
       drawHistogram(subPlots_);
     else {
-      int ind1 = 0;
-
       for (auto plot : subPlots_) {
         plot->setRenderer(renderer_);
 
-        plot->draw(ind1++);
+        plot->draw();
       }
+
+      drawAxes();
     }
   }
+  // normal plot (root with no children or child)
   else {
     if      (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS) {
       if (! parentPlot_)
@@ -502,8 +524,12 @@ draw(int ind)
     else {
       if (is3D_)
         draw3D();
-      else
-        draw2D(ind);
+      else {
+        draw2D();
+
+        if (! parentPlot_)
+          drawAxes();
+      }
     }
 
     drawAnnotations();
@@ -549,7 +575,7 @@ drawHistogram(const Plots &plots)
   //---
 
   if      (getHistogramStyle() == CGnuPlot::HistogramStyle::CLUSTERED) {
-    CBBox2D range(xmin, ymin, xmax, ymax);
+    CBBox2D range(xmin - 1, ymin, xmax + 1, ymax);
 
     renderer_->setRange(range);
 
@@ -574,11 +600,12 @@ drawHistogram(const Plots &plots)
         CBBox2D bbox(x + d, ymin, x + d + w, y);
 
         if      (plot->fillStyle().style() == CGnuPlot::FillType::PATTERN)
-          renderer_->patternRect(bbox, plot->fillStyle().pattern());
+          renderer_->patternRect(bbox, plot->fillStyle().pattern(),
+                                 lineStyle.color(CRGBA(0,0,0)));
         else if (plot->fillStyle().style() == CGnuPlot::FillType::SOLID)
           renderer_->fillRect(bbox, lineStyle.color(CRGBA(255,255,255)));
 
-        renderer_->drawRect(bbox);
+        renderer_->drawRect(bbox, lineStyle.color(CRGBA(0,0,0)));
       }
     }
   }
@@ -594,7 +621,7 @@ drawHistogram(const Plots &plots)
       ymax += ymax1;
     }
 
-    CBBox2D range(xmin, ymin, xmax, ymax);
+    CBBox2D range(xmin - 1, ymin, xmax + 1, ymax);
 
     axesData_.yaxis.max.setValue(ymin);
     axesData_.yaxis.max.setValue(ymax);
@@ -622,11 +649,12 @@ drawHistogram(const Plots &plots)
         CBBox2D bbox(x, h, x + w, h + y);
 
         if      (plot->fillStyle().style() == CGnuPlot::FillType::PATTERN)
-          renderer_->patternRect(bbox, plot->fillStyle().pattern());
+          renderer_->patternRect(bbox, plot->fillStyle().pattern(),
+                                 lineStyle.color(CRGBA(0,0,0)));
         else if (plot->fillStyle().style() == CGnuPlot::FillType::SOLID)
           renderer_->fillRect(bbox, lineStyle.color(CRGBA(255,255,255)));
 
-        renderer_->drawRect(bbox);
+        renderer_->drawRect(bbox, lineStyle.color(CRGBA(0,0,0)));
 
         h += y;
       }
@@ -635,9 +663,7 @@ drawHistogram(const Plots &plots)
     }
   }
 
-  double dx = (xmax - xmin)/10;
-
-  drawAxes(xmin - dx, ymin, xmax + dx, ymax);
+  drawAxes();
 }
 
 void
@@ -775,7 +801,7 @@ draw3D()
 
 void
 CGnuPlotPlot::
-draw2D(int ind)
+draw2D()
 {
   assert(! is3D_);
 
@@ -796,16 +822,15 @@ draw2D(int ind)
 
   //---
 
-  double xmin = axesData().xaxis.min.getValue(0.0);
-  double ymin = axesData().yaxis.min.getValue(0.0);
-  double xmax = axesData().xaxis.max.getValue(1.0);
-  double ymax = axesData().yaxis.max.getValue(1.0);
+  const AxisData &xaxis = (xind_ == 2 ? axesData().x2axis : axesData().xaxis);
+  const AxisData &yaxis = (yind_ == 2 ? axesData().y2axis : axesData().yaxis);
+
+  double xmin = xaxis.min.getValue(0.0);
+  double ymin = yaxis.min.getValue(0.0);
+  double xmax = xaxis.max.getValue(1.0);
+  double ymax = yaxis.max.getValue(1.0);
 
   clip_ = CBBox2D(xmin, ymin, xmax, ymax);
-
-  if (ind == 0) {
-    drawAxes(xmin, ymin, xmax, ymax);
-  }
 
   //---
 
@@ -903,20 +928,46 @@ draw2D(int ind)
 
 void
 CGnuPlotPlot::
-drawAxes(double xmin, double ymin, double xmax, double ymax)
+drawAxes()
 {
-  CGnuPlotAxis xaxis(this, CORIENTATION_HORIZONTAL);
-  CGnuPlotAxis yaxis(this, CORIENTATION_VERTICAL);
+  assert(! parentPlot_);
 
-  xaxis.setRange(xmin, xmax);
-  yaxis.setRange(ymin, ymax);
+  std::set<int> xSet, ySet;
 
-  double xmin1 = xaxis.getStart();
-  double xmax1 = xaxis.getEnd  ();
-  double ymin1 = yaxis.getStart();
-  double ymax1 = yaxis.getEnd  ();
+  if (! subPlots_.empty()) {
+    for (auto plot : subPlots_) {
+      xSet.insert(plot->xind_);
+      ySet.insert(plot->yind_);
+    }
+  }
+  else {
+    xSet.insert(1);
+    ySet.insert(1);
+  }
 
+  drawBorder();
+
+  for (const auto &xi : xSet)
+    drawXAxes(xi, xi == 1 && xSet.find(2) == xSet.end());
+
+  for (const auto &yi : ySet)
+    drawYAxes(yi, yi == 1 && ySet.find(2) == ySet.end());
+}
+
+void
+CGnuPlotPlot::
+drawBorder()
+{
   if (axesData().borders) {
+    CBBox2D bbox = getDisplayRange();
+
+    renderer_->setRange(bbox);
+
+    double xmin1 = bbox.getLeft  ();
+    double ymin1 = bbox.getBottom();
+    double xmax1 = bbox.getRight ();
+    double ymax1 = bbox.getTop   ();
+
     double bw = axesData().borderWidth;
 
     if (axesData().borders & (1<<0))
@@ -931,58 +982,160 @@ drawAxes(double xmin, double ymin, double xmax, double ymax)
     if (axesData().borders & (1<<3))
       renderer_->drawLine(CPoint2D(xmax1, ymin1), CPoint2D(xmax1, ymax1), bw);
   }
+}
 
-  if (axesData().xaxis.displayed) {
-    xaxis.setLabel(axesData().xaxis.str);
+void
+CGnuPlotPlot::
+drawXAxes(int xind, bool drawOther)
+{
+  AxisData &xaxis = (xind == 2 ? axesData_.x2axis : axesData_.xaxis);
+  AxisData &yaxis = axesData_.yaxis;
+
+  double xmin = xaxis.min.getValue(0.0);
+  double xmax = xaxis.max.getValue(1.0);
+
+  double ymin = yaxis.min.getValue(0.0);
+  double ymax = yaxis.max.getValue(1.0);
+
+  CGnuPlotAxis plotXAxis(this, CORIENTATION_HORIZONTAL);
+  CGnuPlotAxis plotYAxis(this, CORIENTATION_VERTICAL);
+
+  plotXAxis.setRange(xmin, xmax);
+  plotYAxis.setRange(ymin, ymax);
+
+  double xmin1 = plotXAxis.getStart();
+  double xmax1 = plotXAxis.getEnd  ();
+  double ymin1 = plotYAxis.getStart();
+  double ymax1 = plotYAxis.getEnd  ();
+
+  if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS) {
+    if (getHistogramStyle() == CGnuPlot::HistogramStyle::CLUSTERED ||
+        getHistogramStyle() == CGnuPlot::HistogramStyle::ROWSTACKED) {
+      xmin1 -= 1;
+      xmax1 += 1;
+    }
+
+    if (getHistogramStyle() == CGnuPlot::HistogramStyle::ROWSTACKED)
+      ymin1 = 0;
+
+    plotXAxis.setDrawMinorTickMark(false);
+  }
+
+  renderer_->setRange(CBBox2D(xmin1, ymin1, xmax1, ymax1));
+
+  if (xaxis.displayed) {
+    plotXAxis.setLabel(xaxis.str);
 
     if (getLogScale(CGnuPlot::LogScale::X))
-      xaxis.setLogarithmic(getLogScale(CGnuPlot::LogScale::X));
+      plotXAxis.setLogarithmic(getLogScale(CGnuPlot::LogScale::X));
     else
-      xaxis.resetLogarithmic();
+      plotXAxis.resetLogarithmic();
 
-    xaxis.setFont(renderer_->getFont());
-    xaxis.setDrawLine(false);
-    xaxis.setDrawTicMark(axesData().xaxis.showTics);
+    plotXAxis.setFont(renderer_->getFont());
+    plotXAxis.setDrawLine(false);
+    plotXAxis.setDrawTickMark(xaxis.showTics);
 
-    xaxis.setTickInside(true);
-    xaxis.setDrawTicLabel(true);
-    xaxis.setDrawLabel(true);
-    xaxis.drawAxis(ymin1);
+    // draw major (bottom)
+    plotXAxis.setTickInside(xind == 1);
+    plotXAxis.setDrawTickLabel(true);
+    plotXAxis.setLabelInside(xind == 2);
+    plotXAxis.setDrawLabel(true);
 
-    xaxis.setTickInside(false);
-    xaxis.setDrawTicLabel(false);
-    xaxis.setDrawLabel(false);
-    xaxis.drawAxis(ymax1);
+    if (xaxis.isTime)
+      plotXAxis.setTimeFormat(xaxis.format);
+
+    plotXAxis.drawAxis(xind == 2 ? ymax1 : ymin1);
+
+    // draw minor (top)
+    if (drawOther) {
+      plotXAxis.setTickInside(false);
+      plotXAxis.setDrawTickLabel(false);
+      plotXAxis.setDrawLabel(false);
+      plotXAxis.setDrawTickMark(xaxis.mirror);
+
+      plotXAxis.drawAxis(ymax1);
+    }
   }
 
-  if (axesData().xaxis.grid)
-    xaxis.drawGrid(ymin1, ymax1);
+  if (xaxis.grid)
+    plotXAxis.drawGrid(ymin1, ymax1);
+}
 
-  if (axesData().yaxis.displayed) {
-    yaxis.setLabel(axesData().yaxis.str);
+void
+CGnuPlotPlot::
+drawYAxes(int yind, bool drawOther)
+{
+  AxisData &yaxis = (yind == 2 ? axesData_.y2axis : axesData_.yaxis);
+  AxisData &xaxis = axesData_.xaxis;
+
+  double xmin = xaxis.min.getValue(0.0);
+  double xmax = xaxis.max.getValue(1.0);
+
+  double ymin = yaxis.min.getValue(0.0);
+  double ymax = yaxis.max.getValue(1.0);
+
+  CGnuPlotAxis plotXAxis(this, CORIENTATION_HORIZONTAL);
+  CGnuPlotAxis plotYAxis(this, CORIENTATION_VERTICAL);
+
+  plotXAxis.setRange(xmin, xmax);
+  plotYAxis.setRange(ymin, ymax);
+
+  double xmin1 = plotXAxis.getStart();
+  double xmax1 = plotXAxis.getEnd  ();
+  double ymin1 = plotYAxis.getStart();
+  double ymax1 = plotYAxis.getEnd  ();
+
+  if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS) {
+    if (getHistogramStyle() == CGnuPlot::HistogramStyle::CLUSTERED ||
+        getHistogramStyle() == CGnuPlot::HistogramStyle::ROWSTACKED) {
+      xmin1 -= 1;
+      xmax1 += 1;
+    }
+
+    if (getHistogramStyle() == CGnuPlot::HistogramStyle::ROWSTACKED)
+      ymin1 = 0;
+
+    plotYAxis.setDrawMinorTickMark(false);
+  }
+
+  renderer_->setRange(CBBox2D(xmin1, ymin1, xmax1, ymax1));
+
+  if (yaxis.displayed) {
+    plotYAxis.setLabel(yaxis.str);
 
     if (getLogScale(CGnuPlot::LogScale::Y))
-      yaxis.setLogarithmic(getLogScale(CGnuPlot::LogScale::Y));
+      plotYAxis.setLogarithmic(getLogScale(CGnuPlot::LogScale::Y));
     else
-      yaxis.resetLogarithmic();
+      plotYAxis.resetLogarithmic();
 
-    yaxis.setFont(renderer_->getFont());
-    yaxis.setDrawLine(false);
-    yaxis.setDrawTicMark(axesData().yaxis.showTics);
+    plotYAxis.setFont(renderer_->getFont());
+    plotYAxis.setDrawLine(false);
+    plotYAxis.setDrawTickMark(yaxis.showTics);
 
-    yaxis.setTickInside(true);
-    yaxis.setDrawTicLabel(true);
-    yaxis.setDrawLabel(true);
-    yaxis.drawAxis(xmin1);
+    // draw major (left)
+    plotYAxis.setTickInside(yind == 1);
+    plotYAxis.setDrawTickLabel(true);
+    plotYAxis.setLabelInside(yind == 2);
+    plotYAxis.setDrawLabel(true);
 
-    yaxis.setTickInside(false);
-    yaxis.setDrawTicLabel(false);
-    yaxis.setDrawLabel(false);
-    yaxis.drawAxis(xmax1);
+    if (yaxis.isTime)
+      plotYAxis.setTimeFormat(yaxis.format);
+
+    plotYAxis.drawAxis(yind == 2 ? xmax1 : xmin1);
+
+    // draw right
+    if (drawOther) {
+      plotYAxis.setTickInside(false);
+      plotYAxis.setDrawTickLabel(false);
+      plotYAxis.setDrawLabel(false);
+      plotYAxis.setDrawTickMark(yaxis.mirror);
+
+      plotYAxis.drawAxis(xmax1);
+    }
   }
 
-  if (axesData().yaxis.grid)
-    yaxis.drawGrid(xmin1, xmax1);
+  if (yaxis.grid)
+    plotYAxis.drawGrid(xmin1, xmax1);
 }
 
 CGnuPlot::LineStyle
@@ -1280,6 +1433,10 @@ drawKey()
 {
   if (! getKeyDisplayed()) return;
 
+  CBBox2D bbox = getDisplayRange();
+
+  renderer_->setRange(bbox);
+
   CFontPtr font = renderer_->getFont();
 
   double font_size = font->getCharAscent() + font->getCharDescent();
@@ -1319,18 +1476,18 @@ drawKey()
   double x1 = 0, y1 = 0;
 
   if      (halign == CHALIGN_TYPE_LEFT)
-    x1 = axesData().xaxis.min.getValue(0) + bx;
+    x1 = bbox.getLeft () + bx;
   else if (halign == CHALIGN_TYPE_RIGHT)
-    x1 = axesData().xaxis.max.getValue(1) - bx - size.width;
+    x1 = bbox.getRight() - bx - size.width;
   else if (halign == CHALIGN_TYPE_CENTER)
-    x1 = (axesData().xaxis.min.getValue(0) + axesData().xaxis.max.getValue(1) - size.width)/2;
+    x1 = bbox.getXMid() - size.width/2;
 
   if      (valign == CVALIGN_TYPE_TOP)
-    y1 = axesData().yaxis.max.getValue(1) - by - size.height;
+    y1 = bbox.getTop   () - by - size.height;
   else if (valign == CVALIGN_TYPE_BOTTOM)
-    y1 = axesData().yaxis.min.getValue(0) + by;
+    y1 = bbox.getBottom() + by;
   else if (valign == CVALIGN_TYPE_CENTER)
-    y1 = (axesData().yaxis.min.getValue(0) + axesData().yaxis.max.getValue(1) - size.height)/2;
+    y1 = bbox.getYMid() - size.height/2;
 
   double x2 = x1 + size.width;
   double y2 = y1 + size.height;
@@ -1348,7 +1505,7 @@ drawKey()
       CGnuPlot::PlotStyle style     = plot->getStyle();
       CGnuPlot::LineStyle lineStyle = plot->calcLineStyle();
 
-      double xx = x2 - ll - bx;
+      double xx = (keyData_.reverse ? x1 + bx : x2 - ll - bx);
       double yy = y - font_size*ph/2;
 
       if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS) {
@@ -1357,11 +1514,12 @@ drawKey()
         CBBox2D bbox(xx, yy - h/2, xx + ll, yy + h/2);
 
         if      (plot->fillStyle().style() == CGnuPlot::FillType::PATTERN)
-          renderer_->patternRect(bbox, plot->fillStyle().pattern());
+          renderer_->patternRect(bbox, plot->fillStyle().pattern(),
+                                 lineStyle.color(CRGBA(0,0,0)));
         else if (plot->fillStyle().style() == CGnuPlot::FillType::SOLID)
           renderer_->fillRect(bbox, lineStyle.color(CRGBA(255,255,255)));
 
-        renderer_->drawRect(bbox);
+        renderer_->drawRect(bbox, lineStyle.color(CRGBA(0,0,0)));
       }
       else {
         if (style == CGnuPlot::PlotStyle::LINES || style == CGnuPlot::PlotStyle::LINES_POINTS)
@@ -1377,8 +1535,12 @@ drawKey()
 
       //double lw = font->getStringWidth(label);
 
-      drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
-                       CVALIGN_TYPE_TOP, 0, label);
+      if (keyData_.reverse)
+        drawHAlignedText(CPoint2D(xx + ll + bx, y), CHALIGN_TYPE_LEFT, 0,
+                         CVALIGN_TYPE_TOP, 0, label);
+      else
+        drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
+                         CVALIGN_TYPE_TOP, 0, label);
 
       y -= font_size*ph;
     }
@@ -1392,7 +1554,7 @@ drawKey()
 
     double y = y2 - by;
 
-    double xx = x2 - ll - bx;
+    double xx = (keyData_.reverse ? x1 + bx : x2 - ll - bx);
     double yy = y - font_size*ph/2;
 
     CGnuPlot::LineStyle lineStyle = calcLineStyle();
@@ -1409,8 +1571,12 @@ drawKey()
 
     //double lw = font->getStringWidth(label);
 
-    drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
-                     CVALIGN_TYPE_TOP, 0, label);
+    if (keyData_.reverse)
+      drawHAlignedText(CPoint2D(xx + ll + bx, y), CHALIGN_TYPE_LEFT, 0,
+                       CVALIGN_TYPE_TOP, 0, label);
+    else
+      drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
+                       CVALIGN_TYPE_TOP, 0, label);
   }
 }
 
@@ -1622,16 +1788,16 @@ drawPolygon(const CGnuPlot::Polygon &poly)
 
 void
 CGnuPlotPlot::
-drawHAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                 CVAlignType valign, int y_offset, const std::string &str, const CRGBA &c)
+drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                 CVAlignType valign, double y_offset, const std::string &str, const CRGBA &c)
 {
   renderer_->drawHAlignedText(pos, halign, x_offset, valign, y_offset, str, c);
 }
 
 void
 CGnuPlotPlot::
-drawVAlignedText(const CPoint2D &pos, CHAlignType halign, int x_offset,
-                 CVAlignType valign, int y_offset, const std::string &str, const CRGBA &c)
+drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                 CVAlignType valign, double y_offset, const std::string &str, const CRGBA &c)
 {
   renderer_->drawVAlignedText(pos, halign, x_offset, valign, y_offset, str, c);
 }
@@ -1664,45 +1830,113 @@ getDisplayRange() const
   calcXRange(&xmin, &xmax);
   calcYRange(&ymin, &ymax);
 
-  return CBBox2D(xmin, ymin, xmax, ymax);
+  CGnuPlotAxis plotXAxis(const_cast<CGnuPlotPlot *>(this), CORIENTATION_HORIZONTAL);
+  CGnuPlotAxis plotYAxis(const_cast<CGnuPlotPlot *>(this), CORIENTATION_VERTICAL);
+
+  plotXAxis.setRange(xmin, xmax);
+  plotYAxis.setRange(ymin, ymax);
+
+  double xmin1 = plotXAxis.getStart();
+  double xmax1 = plotXAxis.getEnd  ();
+  double ymin1 = plotYAxis.getStart();
+  double ymax1 = plotYAxis.getEnd  ();
+
+  if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS) {
+    if (getHistogramStyle() == CGnuPlot::HistogramStyle::CLUSTERED ||
+        getHistogramStyle() == CGnuPlot::HistogramStyle::ROWSTACKED) {
+      xmin1 -= 1;
+      xmax1 += 1;
+    }
+
+    if (getHistogramStyle() == CGnuPlot::HistogramStyle::ROWSTACKED)
+      ymin1 = 0;
+  }
+
+  return CBBox2D(xmin1, ymin1, xmax1, ymax1);
 }
 
 void
 CGnuPlotPlot::
 calcXRange(double *xmin, double *xmax) const
 {
-  if (! axesData().xaxis.min.isValid() || ! axesData().xaxis.max.isValid()) {
+  const AxisData &xaxis = (xind_ == 2 ? axesData().x2axis : axesData().xaxis);
+
+  if (! xaxis.min.isValid() || ! xaxis.max.isValid()) {
     double xmin1, xmax1;
 
     getXRange(&xmin1, &xmax1);
 
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
-    th->axesData_.xaxis.min = xmin1;
-    th->axesData_.xaxis.max = xmax1;
+    AxisData &xaxis = (xind_ == 2 ? th->axesData_.x2axis : th->axesData_.xaxis);
+
+    xaxis.min = xmin1;
+    xaxis.max = xmax1;
   }
 
-  *xmin = axesData().xaxis.min.getValue();
-  *xmax = axesData().xaxis.max.getValue();
+  *xmin = xaxis.min.getValue(-10);
+  *xmax = xaxis.max.getValue( 10);
 }
 
 void
 CGnuPlotPlot::
 calcYRange(double *ymin, double *ymax) const
 {
-  if (! axesData().yaxis.min.isValid() || ! axesData().yaxis.max.isValid()) {
+  const AxisData &yaxis = (yind_ == 2 ? axesData().y2axis : axesData().yaxis);
+
+  if (! yaxis.min.isValid() || ! axesData().yaxis.max.isValid()) {
     double ymin1, ymax1;
 
     getYRange(&ymin1, &ymax1);
 
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
-    th->axesData_.yaxis.min = ymin1;
-    th->axesData_.yaxis.max = ymax1;
+    AxisData &yaxis = (yind_ == 2 ? th->axesData_.y2axis : th->axesData_.yaxis);
+
+    yaxis.min = ymin1;
+    yaxis.max = ymax1;
   }
 
-  *ymin = axesData().yaxis.min.getValue();
-  *ymax = axesData().yaxis.max.getValue();
+  *ymin = yaxis.min.getValue(-1);
+  *ymax = yaxis.max.getValue( 1);
+}
+
+std::string
+CGnuPlotPlot::
+formatX(double x) const
+{
+  if (axesData().xaxis.isTime) {
+    static char buffer[512];
+
+    time_t t(x);
+
+    struct tm *tm1 = localtime(&t);
+
+    (void) strftime(buffer, 512, axesData().xaxis.format.c_str(), tm1);
+
+    return buffer;
+  }
+  else
+    return CStrUtil::toString(x);
+}
+
+std::string
+CGnuPlotPlot::
+formatY(double y) const
+{
+  if (axesData().yaxis.isTime) {
+    static char buffer[512];
+
+    time_t t(y);
+
+    struct tm *tm1 = localtime(&t);
+
+    (void) strftime(buffer, 512, axesData().yaxis.format.c_str(), tm1);
+
+    return buffer;
+  }
+  else
+    return CStrUtil::toString(y);
 }
 
 CPoint2D
