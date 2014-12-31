@@ -163,24 +163,39 @@ addProperties()
     const Plots &subPlots = plot->subPlots();
 
     if (! subPlots.empty()) {
-      addPlotProperties(plot);
+      addPlotProperties(plot, true, false);
 
-      for (auto subPlot : subPlots)
-        addPlotProperties(subPlot, true);
+      if (plot->getHistogramStyle() == CGnuPlot::HistogramStyle::CLUSTERED ||
+          plot->getHistogramStyle() == CGnuPlot::HistogramStyle::ROWSTACKED) {
+        for (auto subPlot : subPlots)
+          addPlotProperties(subPlot, true, true);
+      }
+      else {
+        for (auto subPlot : subPlots)
+          addPlotProperties(subPlot, false, true);
+      }
     }
     else {
-      addPlotProperties(plot);
+      addPlotProperties(plot, true, false);
     }
   }
 }
 
 void
 CQGnuPlotWindow::
-addPlotProperties(CGnuPlotPlot *plot, bool child)
+addPlotProperties(CGnuPlotPlot *plot, bool styleProperties, bool child)
 {
   CQGnuPlotPlot *plot1 = static_cast<CQGnuPlotPlot *>(plot);
 
   QString name = QString("Plot%1").arg(plot->id());
+
+  CGnuPlotPlot *parent = plot->parentPlot();
+
+  while (parent) {
+    name = QString("Plot%1/%2").arg(parent->id()).arg(name);
+
+    parent = parent->parentPlot();
+  }
 
   if (! child) {
     QString regionName = name + "/region";
@@ -231,11 +246,14 @@ addPlotProperties(CGnuPlotPlot *plot, bool child)
     if (plot->window()->is3D())
       tree_->addProperty(name, plot1, "trianglePattern3D");
   }
-  else {
-    tree_->addProperty(name, plot1, "lineColor");
-    tree_->addProperty(name, plot1, "lineWidth");
-    tree_->addProperty(name, plot1, "pointType");
-    tree_->addProperty(name, plot1, "pointSize");
+
+  if (styleProperties) {
+    tree_->addProperty(name, plot1, "fillType"   );
+    tree_->addProperty(name, plot1, "fillPattern");
+    tree_->addProperty(name, plot1, "lineColor"  );
+    tree_->addProperty(name, plot1, "lineWidth"  );
+    tree_->addProperty(name, plot1, "pointType"  );
+    tree_->addProperty(name, plot1, "pointSize"  );
   }
 }
 
@@ -509,6 +527,35 @@ getPlotAt(const QPoint &pos)
   }
 
   return 0;
+}
+
+void
+CQGnuPlotWindow::
+mouseMove(const QPoint &qp)
+{
+  for (auto plot : plots()) {
+    CPoint2D p = plot->pixelToWindow(CPoint2D(qp.x(), qp.y()));
+
+    plot->unmapLogPoint(&p.x, &p.y);
+
+    static_cast<CQGnuPlotPlot *>(plot)->mouseMove(p);
+  }
+}
+
+bool
+CQGnuPlotWindow::
+mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
+{
+  for (auto plot : plots()) {
+    CPoint2D p = plot->pixelToWindow(CPoint2D(qp.x(), qp.y()));
+
+    plot->unmapLogPoint(&p.x, &p.y);
+
+    if (static_cast<CQGnuPlotPlot *>(plot)->mouseTip(p, tip))
+      return true;
+  }
+
+  return false;
 }
 
 void

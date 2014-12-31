@@ -217,22 +217,22 @@ drawRect(const CBBox2D &rect, const CRGBA &c)
 
 void
 CQGnuPlotRenderer::
-patternRect(const CBBox2D &rect, CGnuPlot::PatternType pattern, const CRGBA &fg, const CRGBA &bg)
+patternRect(const CBBox2D &rect, CGnuPlot::FillPattern pattern, const CRGBA &fg, const CRGBA &bg)
 {
   CRGBA c = fg;
 
   Qt::BrushStyle qpattern;
 
   switch (pattern) {
-    case CGnuPlot::PatternType::NONE  : qpattern = Qt::NoBrush         ; break;
-    case CGnuPlot::PatternType::HATCH : qpattern = Qt::DiagCrossPattern; break;
-    case CGnuPlot::PatternType::DENSE : qpattern = Qt::Dense2Pattern   ; break;
-    case CGnuPlot::PatternType::FG    : qpattern = Qt::SolidPattern    ; break;
-    case CGnuPlot::PatternType::FDIAG : qpattern = Qt::BDiagPattern    ; break;
-    case CGnuPlot::PatternType::BDIAG : qpattern = Qt::FDiagPattern    ; break;
-    case CGnuPlot::PatternType::FDIAG1: qpattern = Qt::HorPattern      ; break;
-    case CGnuPlot::PatternType::BDIAG1: qpattern = Qt::VerPattern      ; break;
-    case CGnuPlot::PatternType::BG    : qpattern = Qt::SolidPattern    ; c = bg; break;
+    case CGnuPlot::FillPattern::NONE  : qpattern = Qt::NoBrush         ; break;
+    case CGnuPlot::FillPattern::HATCH : qpattern = Qt::DiagCrossPattern; break;
+    case CGnuPlot::FillPattern::DENSE : qpattern = Qt::Dense2Pattern   ; break;
+    case CGnuPlot::FillPattern::FG    : qpattern = Qt::SolidPattern    ; break;
+    case CGnuPlot::FillPattern::FDIAG : qpattern = Qt::BDiagPattern    ; break;
+    case CGnuPlot::FillPattern::BDIAG : qpattern = Qt::FDiagPattern    ; break;
+    case CGnuPlot::FillPattern::FDIAG1: qpattern = Qt::HorPattern      ; break;
+    case CGnuPlot::FillPattern::BDIAG1: qpattern = Qt::VerPattern      ; break;
+    case CGnuPlot::FillPattern::BG    : qpattern = Qt::SolidPattern    ; c = bg; break;
     default                           : qpattern = Qt::NoBrush         ; break;
   }
 

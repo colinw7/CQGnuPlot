@@ -335,7 +335,7 @@ class CGnuPlot {
     LAST=FILLED_DIAMOND
   };
 
-  enum class PatternType {
+  enum class FillPattern {
     NONE,
     HATCH,
     DENSE,
@@ -411,14 +411,14 @@ class CGnuPlot {
    public:
     FillStyle()  { }
 
-    FillType style() const { return style_; }
+    const FillType &style() const { return style_; }
     void setStyle(FillType style) { style_ = style; }
 
     double density() const { return density_; }
     void setDensity(double d) { density_ = d; }
 
-    PatternType pattern() const { return pattern_; }
-    void setPattern(PatternType p) { pattern_ = p; }
+    const FillPattern &pattern() const { return pattern_; }
+    void setPattern(FillPattern p) { pattern_ = p; }
 
     bool border() const { return border_; }
     void setBorder(bool b) { border_ = b; }
@@ -429,7 +429,7 @@ class CGnuPlot {
    private:
     FillType    style_     { FillType::EMPTY };
     double      density_   { 1.0 };
-    PatternType pattern_   { PatternType::NONE };
+    FillPattern pattern_   { FillPattern::NONE };
     bool        border_    { true };
     int         borderLine_{ -1};
   };
@@ -497,6 +497,8 @@ class CGnuPlot {
   //---
 
   struct AxisData {
+    typedef std::map<int,std::string> TicLabelMap;
+
     AxisData(int i) : ind(i) { }
 
     int         ind;
@@ -507,6 +509,7 @@ class CGnuPlot {
     COptReal    min;
     COptReal    max;
     std::string str;
+    TicLabelMap ticlabel;
     double      offset    { 0 };
     std::string format;
     bool        showTics  { true };
@@ -975,9 +978,10 @@ class CGnuPlot {
 
   CGnuPlotPlot *addFile3D(CGnuPlotWindow *window, const std::string &filename);
 
-  CExprValuePtr decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum,
-                               const std::vector<std::string> &fields,
-                               const std::string &missing, bool &skip, bool debug);
+  CExprValuePtr decodeUsingCol(int i, const CGnuPlot::UsingCol &col,
+                               int setNum, int pointNum, bool &skip);
+
+  CExprValuePtr getFieldValue(int i, int ival, int setNum, int pointNum, bool &skip);
 
   void setSeparator(Separator sep) { separator_ = sep; }
   const Separator &getSeparator() const { return separator_; }
@@ -1135,6 +1139,7 @@ class CGnuPlot {
   int                              isoSamples2_ {  10 };
   PlotSize                         plotSize_;
   Multiplot                        multiplot_;
+  CGnuPlotWindow*                  multiWindow_ { 0 };
   COptValT<CBBox2D>                clearRect_;
   bool                             hidden3D_  { false };
   bool                             surface3D_ {  true };

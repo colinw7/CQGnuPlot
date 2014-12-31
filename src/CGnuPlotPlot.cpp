@@ -574,6 +574,9 @@ drawHistogram(const Plots &plots)
 
   //---
 
+  double xb = pixelWidthToWindowWidth(1);
+  double xf = 1.0;
+
   if      (getHistogramStyle() == CGnuPlot::HistogramStyle::CLUSTERED) {
     CBBox2D range(xmin - 1, ymin, xmax + 1, ymax);
 
@@ -582,10 +585,13 @@ drawHistogram(const Plots &plots)
     axesData_.yaxis.max.setValue(ymin);
     axesData_.yaxis.max.setValue(ymax);
 
-    double w = 0.5*(xmax - xmin)/(numPoints*numPlots);
+    double w = xf*(xmax - xmin)/(numPoints*numPlots) - 2*xb;
 
     for (auto plot : plots) {
       CGnuPlot::LineStyle lineStyle = plot->calcLineStyle();
+
+      FillType    fillType    = plot->fillType();
+      FillPattern fillPattern = plot->fillPattern();
 
       //---
 
@@ -599,13 +605,10 @@ drawHistogram(const Plots &plots)
 
         CBBox2D bbox(x + d, ymin, x + d + w, y);
 
-        if      (plot->fillStyle().style() == CGnuPlot::FillType::PATTERN)
-          renderer_->patternRect(bbox, plot->fillStyle().pattern(),
-                                 lineStyle.color(CRGBA(0,0,0)));
-        else if (plot->fillStyle().style() == CGnuPlot::FillType::SOLID)
-          renderer_->fillRect(bbox, lineStyle.color(CRGBA(255,255,255)));
+        CRGBA c = (fillType == CGnuPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(255,255,255));
 
-        renderer_->drawRect(bbox, lineStyle.color(CRGBA(0,0,0)));
+        drawBar(x, y, bbox, fillType, fillPattern, lineStyle.color(c),
+                lineStyle.color(CRGBA(0,0,0)));
       }
     }
   }
@@ -637,6 +640,9 @@ drawHistogram(const Plots &plots)
       for (auto plot : plots) {
         CGnuPlot::LineStyle lineStyle = plot->calcLineStyle();
 
+        FillPattern fillPattern = plot->fillPattern();
+        FillType    fillType    = plot->fillType();
+
         //---
 
         const CGnuPlotPlot::Point &point = plot->getPoint2D(i);
@@ -648,13 +654,10 @@ drawHistogram(const Plots &plots)
 
         CBBox2D bbox(x, h, x + w, h + y);
 
-        if      (plot->fillStyle().style() == CGnuPlot::FillType::PATTERN)
-          renderer_->patternRect(bbox, plot->fillStyle().pattern(),
-                                 lineStyle.color(CRGBA(0,0,0)));
-        else if (plot->fillStyle().style() == CGnuPlot::FillType::SOLID)
-          renderer_->fillRect(bbox, lineStyle.color(CRGBA(255,255,255)));
+        CRGBA c = (fillType == CGnuPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(255,255,255));
 
-        renderer_->drawRect(bbox, lineStyle.color(CRGBA(0,0,0)));
+        drawBar(x, y, bbox, fillType, fillPattern, lineStyle.color(c),
+                lineStyle.color(CRGBA(0,0,0)));
 
         h += y;
       }
@@ -664,6 +667,19 @@ drawHistogram(const Plots &plots)
   }
 
   drawAxes();
+}
+
+void
+CGnuPlotPlot::
+drawBar(double /*x*/, double /*y*/, const CBBox2D &bbox, FillType fillType,
+        FillPattern fillPattern, const CRGBA &fillColor, const CRGBA &lineColor)
+{
+  if      (fillType == CGnuPlot::FillType::PATTERN)
+    renderer_->patternRect(bbox, fillPattern, fillColor);
+  else if (fillType == CGnuPlot::FillType::SOLID)
+    renderer_->fillRect(bbox, fillColor);
+
+  renderer_->drawRect(bbox, lineColor);
 }
 
 void
@@ -1009,6 +1025,8 @@ drawXAxes(int xind, bool drawOther)
   double ymax1 = plotYAxis.getEnd  ();
 
   if (getStyle() == CGnuPlot::PlotStyle::HISTOGRAMS) {
+    plotXAxis.setMajorIncrement(1);
+
     if (getHistogramStyle() == CGnuPlot::HistogramStyle::CLUSTERED ||
         getHistogramStyle() == CGnuPlot::HistogramStyle::ROWSTACKED) {
       xmin1 -= 1;
@@ -1899,6 +1917,34 @@ calcYRange(double *ymin, double *ymax) const
 
   *ymin = yaxis.min.getValue(-1);
   *ymax = yaxis.max.getValue( 1);
+}
+
+std::string
+CGnuPlotPlot::
+getXAxisValueStr(int i, double x) const
+{
+  const AxisData &xaxis = (xind_ == 2 ? axesData().x2axis : axesData().xaxis);
+
+  auto pl = xaxis.ticlabel.find(i);
+
+  if (pl != xaxis.ticlabel.end())
+    return (*pl).second;
+
+  return formatX(x);
+}
+
+std::string
+CGnuPlotPlot::
+getYAxisValueStr(int i, double y) const
+{
+  const AxisData &yaxis = (yind_ == 2 ? axesData().y2axis : axesData().yaxis);
+
+  auto pl = yaxis.ticlabel.find(i);
+
+  if (pl != yaxis.ticlabel.end())
+    return (*pl).second;
+
+  return formatY(y);
 }
 
 std::string

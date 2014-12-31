@@ -97,6 +97,69 @@ setKeyVAlign(const CQVAlignType &a)
   }
 }
 
+CQGnuPlotPlot::CQFillType
+CQGnuPlotPlot::
+fillType() const
+{
+  FillType type = CGnuPlotPlot::fillType();
+
+  switch (type) {
+    case FillType::EMPTY  : return FillNone;
+    case FillType::SOLID  : return FillSolid;
+    case FillType::PATTERN: return FillPatterned;
+    default               : return FillNone;
+  }
+}
+
+void
+CQGnuPlotPlot::
+setFillType(const CQFillType &type)
+{
+  switch (type) {
+    case FillNone     : CGnuPlotPlot::setFillType(FillType::EMPTY); break;
+    case FillSolid    : CGnuPlotPlot::setFillType(FillType::SOLID); break;
+    case FillPatterned: CGnuPlotPlot::setFillType(FillType::PATTERN); break;
+  }
+}
+
+CQGnuPlotPlot::CQFillPattern
+CQGnuPlotPlot::
+fillPattern() const
+{
+  FillPattern pattern = CGnuPlotPlot::fillPattern();
+
+  switch (pattern) {
+    case FillPattern::NONE  : return PatternNone;
+    case FillPattern::HATCH : return PatternHatch;
+    case FillPattern::DENSE : return PatternDense;
+    case FillPattern::FG    : return PatternFg;
+    case FillPattern::FDIAG : return PatternFDiag;
+    case FillPattern::BDIAG : return PatternBDiag;
+    case FillPattern::FDIAG1: return PatternFDiag1;
+    case FillPattern::BDIAG1: return PatternBDiag1;
+    case FillPattern::BG    : return PatternBg;
+    default                 : return PatternNone;
+  }
+}
+
+void
+CQGnuPlotPlot::
+setFillPattern(const CQFillPattern &pattern)
+{
+  switch (pattern) {
+    case PatternNone  : CGnuPlotPlot::setFillPattern(FillPattern::NONE); break;
+    case PatternHatch : CGnuPlotPlot::setFillPattern(FillPattern::HATCH); break;
+    case PatternDense : CGnuPlotPlot::setFillPattern(FillPattern::DENSE); break;
+    case PatternFg    : CGnuPlotPlot::setFillPattern(FillPattern::FG); break;
+    case PatternFDiag : CGnuPlotPlot::setFillPattern(FillPattern::FDIAG); break;
+    case PatternBDiag : CGnuPlotPlot::setFillPattern(FillPattern::BDIAG); break;
+    case PatternFDiag1: CGnuPlotPlot::setFillPattern(FillPattern::FDIAG1); break;
+    case PatternBDiag1: CGnuPlotPlot::setFillPattern(FillPattern::BDIAG1); break;
+    case PatternBg    : CGnuPlotPlot::setFillPattern(FillPattern::BG); break;
+    default           : CGnuPlotPlot::setFillPattern(FillPattern::NONE); break;
+  }
+}
+
 CQGnuPlotPlot::CQSymbolType
 CQGnuPlotPlot::
 pointType() const
@@ -143,4 +206,64 @@ setPointType(const CQSymbolType &type)
     case SymbolFilledDiamond  : CGnuPlotPlot::setPointType(SymbolType::FILLED_DIAMOND); break;
     default                   : CGnuPlotPlot::setPointType(SymbolType::CROSS); break;
   }
+}
+
+void
+CQGnuPlotPlot::
+draw()
+{
+  bars_.clear();
+
+  CGnuPlotPlot::draw();
+}
+
+void
+CQGnuPlotPlot::
+drawBar(double x, double y, const CBBox2D &bbox, FillType fillType,
+        FillPattern fillPattern, const CRGBA &fillColor, const CRGBA &lineColor)
+{
+  if (selectedPos_.isValid() && bbox.inside(selectedPos_.getValue()))
+    CGnuPlotPlot::drawBar(x, y, bbox, CGnuPlot::FillType::SOLID,
+                          fillPattern, CRGBA(0.5,0.5,0.5), CRGBA(1,1,1));
+  else
+    CGnuPlotPlot::drawBar(x, y, bbox, fillType, fillPattern, fillColor, lineColor);
+
+  bars_.push_back(Bar(x, y, bbox));
+}
+
+void
+CQGnuPlotPlot::
+mouseMove(const CPoint2D &p)
+{
+  selectedPos_.setInvalid();
+
+  for (auto &bar : bars_) {
+    if (! bar.bbox.inside(p))
+      continue;
+
+    selectedPos_ = p;
+
+    window_->redraw();
+
+    return;
+  }
+}
+
+bool
+CQGnuPlotPlot::
+mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
+{
+  selectedPos_.setInvalid();
+
+  for (auto &bar : bars_) {
+    if (! bar.bbox.inside(p))
+      continue;
+
+    tip.str  = QString("%1,%2").arg(bar.x).arg(bar.y);
+    tip.rect = CQUtil::toQRect(bar.bbox);
+
+    return true;
+  }
+
+  return false;
 }

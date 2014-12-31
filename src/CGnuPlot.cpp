@@ -23,152 +23,152 @@
 
 namespace CGnuPlotUtil {
   void initNameValues(CStrUniqueMatch<CGnuPlot::CommandName> &nameValues) {
-    nameValues.addValue("bind"   , CGnuPlot::CommandName::BIND);
-    nameValues.addValue("call"   , CGnuPlot::CommandName::CALL);
-    nameValues.addValue("cd"     , CGnuPlot::CommandName::CD);
-    nameValues.addValue("clear"  , CGnuPlot::CommandName::CLEAR);
-    nameValues.addValue("exit"   , CGnuPlot::CommandName::EXIT);
-    nameValues.addValue("fit"    , CGnuPlot::CommandName::FIT);
-    nameValues.addValue("help"   , CGnuPlot::CommandName::HELP);
-    nameValues.addValue("history", CGnuPlot::CommandName::HISTORY);
-    nameValues.addValue("if"     , CGnuPlot::CommandName::IF);
-    nameValues.addValue("load"   , CGnuPlot::CommandName::LOAD);
-    nameValues.addValue("lower"  , CGnuPlot::CommandName::LOWER);
-    nameValues.addValue("pause"  , CGnuPlot::CommandName::PAUSE);
-    nameValues.addValue("plot"   , CGnuPlot::CommandName::PLOT);
-    nameValues.addValue("print"  , CGnuPlot::CommandName::PRINT);
-    nameValues.addValue("pwd"    , CGnuPlot::CommandName::PWD);
-    nameValues.addValue("quit"   , CGnuPlot::CommandName::QUIT);
-    nameValues.addValue("raise"  , CGnuPlot::CommandName::RAISE);
-    nameValues.addValue("replot" , CGnuPlot::CommandName::REPLOT);
-    nameValues.addValue("reread" , CGnuPlot::CommandName::REREAD);
-    nameValues.addValue("reset"  , CGnuPlot::CommandName::RESET);
-    nameValues.addValue("save"   , CGnuPlot::CommandName::SAVE);
-    nameValues.addValue("set"    , CGnuPlot::CommandName::SET);
-    nameValues.addValue("shell"  , CGnuPlot::CommandName::SHELL);
-    nameValues.addValue("show"   , CGnuPlot::CommandName::SHOW);
-    nameValues.addValue("splot"  , CGnuPlot::CommandName::SPLOT);
-    nameValues.addValue("system" , CGnuPlot::CommandName::SYSTEM);
-    nameValues.addValue("test"   , CGnuPlot::CommandName::TEST);
-    nameValues.addValue("unset"  , CGnuPlot::CommandName::UNSET);
-    nameValues.addValue("update" , CGnuPlot::CommandName::UPDATE);
+    nameValues.addValues({{"bind"   , CGnuPlot::CommandName::BIND},
+                          {"call"   , CGnuPlot::CommandName::CALL},
+                          {"cd"     , CGnuPlot::CommandName::CD},
+                          {"clear"  , CGnuPlot::CommandName::CLEAR},
+                          {"exit"   , CGnuPlot::CommandName::EXIT},
+                          {"fit"    , CGnuPlot::CommandName::FIT},
+                          {"help"   , CGnuPlot::CommandName::HELP},
+                          {"history", CGnuPlot::CommandName::HISTORY},
+                          {"if"     , CGnuPlot::CommandName::IF},
+                          {"load"   , CGnuPlot::CommandName::LOAD},
+                          {"lower"  , CGnuPlot::CommandName::LOWER},
+                          {"pause"  , CGnuPlot::CommandName::PAUSE},
+                          {"plot"   , CGnuPlot::CommandName::PLOT},
+                          {"print"  , CGnuPlot::CommandName::PRINT},
+                          {"pwd"    , CGnuPlot::CommandName::PWD},
+                          {"quit"   , CGnuPlot::CommandName::QUIT},
+                          {"raise"  , CGnuPlot::CommandName::RAISE},
+                          {"replot" , CGnuPlot::CommandName::REPLOT},
+                          {"reread" , CGnuPlot::CommandName::REREAD},
+                          {"reset"  , CGnuPlot::CommandName::RESET},
+                          {"save"   , CGnuPlot::CommandName::SAVE},
+                          {"set"    , CGnuPlot::CommandName::SET},
+                          {"shell"  , CGnuPlot::CommandName::SHELL},
+                          {"show"   , CGnuPlot::CommandName::SHOW},
+                          {"splot"  , CGnuPlot::CommandName::SPLOT},
+                          {"system" , CGnuPlot::CommandName::SYSTEM},
+                          {"test"   , CGnuPlot::CommandName::TEST},
+                          {"unset"  , CGnuPlot::CommandName::UNSET},
+                          {"update" , CGnuPlot::CommandName::UPDATE}});
   }
 
   void initNameValues(CStrUniqueMatch<CGnuPlot::VariableName> &nameValues) {
-    nameValues.addValue("datafile"   , CGnuPlot::VariableName::DATAFILE);
-    nameValues.addValue("decimalsign", CGnuPlot::VariableName::DECIMALSIGN);
-    nameValues.addValue("encoding"   , CGnuPlot::VariableName::ENCODING);
-    nameValues.addValue("fit"        , CGnuPlot::VariableName::FIT);
-    nameValues.addValue("fontpath"   , CGnuPlot::VariableName::FONTPATH);
-    nameValues.addValue("historysize", CGnuPlot::VariableName::HISTORYSIZE);
-    nameValues.addValue("loadpath"   , CGnuPlot::VariableName::LOADPATH);
-    nameValues.addValue("macros"     , CGnuPlot::VariableName::MACROS);
-    nameValues.addValue("mouse"      , CGnuPlot::VariableName::MOUSE);
+    nameValues.addValues({{"datafile"   , CGnuPlot::VariableName::DATAFILE},
+                          {"decimalsign", CGnuPlot::VariableName::DECIMALSIGN},
+                          {"encoding"   , CGnuPlot::VariableName::ENCODING},
+                          {"fit"        , CGnuPlot::VariableName::FIT},
+                          {"fontpath"   , CGnuPlot::VariableName::FONTPATH},
+                          {"historysize", CGnuPlot::VariableName::HISTORYSIZE},
+                          {"loadpath"   , CGnuPlot::VariableName::LOADPATH},
+                          {"macros"     , CGnuPlot::VariableName::MACROS},
+                          {"mouse"      , CGnuPlot::VariableName::MOUSE},
 
-    nameValues.addValue("angles"     , CGnuPlot::VariableName::ANGLES);
-    nameValues.addValue("dummy"      , CGnuPlot::VariableName::DUMMY);
-    nameValues.addValue("mapping"    , CGnuPlot::VariableName::MAPPING);
-    nameValues.addValue("parametric" , CGnuPlot::VariableName::PARAMETRIC);
-    nameValues.addValue("polar"      , CGnuPlot::VariableName::POLAR);
-    nameValues.addValue("samples"    , CGnuPlot::VariableName::SAMPLES);
-    nameValues.addValue("zero"       , CGnuPlot::VariableName::ZERO);
+                          {"angles"     , CGnuPlot::VariableName::ANGLES},
+                          {"dummy"      , CGnuPlot::VariableName::DUMMY},
+                          {"mapping"    , CGnuPlot::VariableName::MAPPING},
+                          {"parametric" , CGnuPlot::VariableName::PARAMETRIC},
+                          {"polar"      , CGnuPlot::VariableName::POLAR},
+                          {"samples"    , CGnuPlot::VariableName::SAMPLES},
+                          {"zero"       , CGnuPlot::VariableName::ZERO},
 
-    nameValues.addValue("border"     , CGnuPlot::VariableName::BORDER);
-    nameValues.addValue("clip"       , CGnuPlot::VariableName::CLIP);
-    nameValues.addValue("logscale"   , CGnuPlot::VariableName::LOGSCALE);
-    nameValues.addValue("bmargin"    , CGnuPlot::VariableName::BMARGIN);
-    nameValues.addValue("lmargin"    , CGnuPlot::VariableName::LMARGIN);
-    nameValues.addValue("rmargin"    , CGnuPlot::VariableName::RMARGIN);
-    nameValues.addValue("tmargin"    , CGnuPlot::VariableName::TMARGIN);
-    nameValues.addValue("multiplot"  , CGnuPlot::VariableName::MULTIPLOT);
-    nameValues.addValue("offsets"    , CGnuPlot::VariableName::OFFSETS);
-    nameValues.addValue("origin"     , CGnuPlot::VariableName::ORIGIN);
-    nameValues.addValue("size"       , CGnuPlot::VariableName::SIZE);
+                          {"border"     , CGnuPlot::VariableName::BORDER},
+                          {"clip"       , CGnuPlot::VariableName::CLIP},
+                          {"logscale"   , CGnuPlot::VariableName::LOGSCALE},
+                          {"bmargin"    , CGnuPlot::VariableName::BMARGIN},
+                          {"lmargin"    , CGnuPlot::VariableName::LMARGIN},
+                          {"rmargin"    , CGnuPlot::VariableName::RMARGIN},
+                          {"tmargin"    , CGnuPlot::VariableName::TMARGIN},
+                          {"multiplot"  , CGnuPlot::VariableName::MULTIPLOT},
+                          {"offsets"    , CGnuPlot::VariableName::OFFSETS},
+                          {"origin"     , CGnuPlot::VariableName::ORIGIN},
+                          {"size"       , CGnuPlot::VariableName::SIZE},
 
-    nameValues.addValue("arrow"      , CGnuPlot::VariableName::ARROW);
-    nameValues.addValue("key"        , CGnuPlot::VariableName::KEY);
-    nameValues.addValue("label"      , CGnuPlot::VariableName::LABEL);
-    nameValues.addValue("object"     , CGnuPlot::VariableName::OBJECT);
-    nameValues.addValue("timestamp"  , CGnuPlot::VariableName::TIMESTAMP);
-    nameValues.addValue("title"      , CGnuPlot::VariableName::TITLE);
+                          {"arrow"      , CGnuPlot::VariableName::ARROW},
+                          {"key"        , CGnuPlot::VariableName::KEY},
+                          {"label"      , CGnuPlot::VariableName::LABEL},
+                          {"object"     , CGnuPlot::VariableName::OBJECT},
+                          {"timestamp"  , CGnuPlot::VariableName::TIMESTAMP},
+                          {"title"      , CGnuPlot::VariableName::TITLE},
 
-    nameValues.addValue("style"      , CGnuPlot::VariableName::STYLE);
+                          {"style"      , CGnuPlot::VariableName::STYLE},
 
-    nameValues.addValue("bars"       , CGnuPlot::VariableName::BARS);
-    nameValues.addValue("boxwidth"   , CGnuPlot::VariableName::BOXWIDTH);
-    nameValues.addValue("pointsize"  , CGnuPlot::VariableName::POINTSIZE);
+                          {"bars"       , CGnuPlot::VariableName::BARS},
+                          {"boxwidth"   , CGnuPlot::VariableName::BOXWIDTH},
+                          {"pointsize"  , CGnuPlot::VariableName::POINTSIZE},
 
-    nameValues.addValue("autoscale"  , CGnuPlot::VariableName::AUTOSCALE);
-    nameValues.addValue("format"     , CGnuPlot::VariableName::FORMAT);
-    nameValues.addValue("grid"       , CGnuPlot::VariableName::GRID);
-    nameValues.addValue("xlabel"     , CGnuPlot::VariableName::XLABEL); // z, cb
-    nameValues.addValue("ylabel"     , CGnuPlot::VariableName::YLABEL);
-    nameValues.addValue("x2label"    , CGnuPlot::VariableName::X2LABEL);
-    nameValues.addValue("y2label"    , CGnuPlot::VariableName::Y2LABEL);
-    nameValues.addValue("xrange"     , CGnuPlot::VariableName::XRANGE); // x2, y2, z, cb
-    nameValues.addValue("yrange"     , CGnuPlot::VariableName::YRANGE); // y, x2, y2, z, cb
-    nameValues.addValue("tics"       , CGnuPlot::VariableName::TICS);
-    nameValues.addValue("xtics"      , CGnuPlot::VariableName::XTICS); // z, cb
-    nameValues.addValue("ytics"      , CGnuPlot::VariableName::YTICS);
-    nameValues.addValue("x2tics"     , CGnuPlot::VariableName::X2TICS);
-    nameValues.addValue("y2tics"     , CGnuPlot::VariableName::Y2TICS);
-    nameValues.addValue("mxtics"     , CGnuPlot::VariableName::MXTICS);
-    nameValues.addValue("ticscale"   , CGnuPlot::VariableName::TICSCALE);
-    nameValues.addValue("zeroaxis"   , CGnuPlot::VariableName::ZEROAXIS);
+                          {"autoscale"  , CGnuPlot::VariableName::AUTOSCALE},
+                          {"format"     , CGnuPlot::VariableName::FORMAT},
+                          {"grid"       , CGnuPlot::VariableName::GRID},
+                          {"xlabel"     , CGnuPlot::VariableName::XLABEL}, // z, cb
+                          {"ylabel"     , CGnuPlot::VariableName::YLABEL},
+                          {"x2label"    , CGnuPlot::VariableName::X2LABEL},
+                          {"y2label"    , CGnuPlot::VariableName::Y2LABEL},
+                          {"xrange"     , CGnuPlot::VariableName::XRANGE}, // x2, y2, z, cb
+                          {"yrange"     , CGnuPlot::VariableName::YRANGE}, // y, x2, y2, z, cb
+                          {"tics"       , CGnuPlot::VariableName::TICS},
+                          {"xtics"      , CGnuPlot::VariableName::XTICS}, // z, cb
+                          {"ytics"      , CGnuPlot::VariableName::YTICS},
+                          {"x2tics"     , CGnuPlot::VariableName::X2TICS},
+                          {"y2tics"     , CGnuPlot::VariableName::Y2TICS},
+                          {"mxtics"     , CGnuPlot::VariableName::MXTICS},
+                          {"ticscale"   , CGnuPlot::VariableName::TICSCALE},
+                          {"zeroaxis"   , CGnuPlot::VariableName::ZEROAXIS},
 
-    nameValues.addValue("locale"     , CGnuPlot::VariableName::LOCALE);
-    nameValues.addValue("timefmt"    , CGnuPlot::VariableName::TIMEFMT);
-    nameValues.addValue("xdata"      , CGnuPlot::VariableName::XDATA);
-    nameValues.addValue("ydata"      , CGnuPlot::VariableName::YDATA);
-    nameValues.addValue("xdtics"     , CGnuPlot::VariableName::XDTICS);
-    nameValues.addValue("xmtics"     , CGnuPlot::VariableName::XMTICS);
+                          {"locale"     , CGnuPlot::VariableName::LOCALE},
+                          {"timefmt"    , CGnuPlot::VariableName::TIMEFMT},
+                          {"xdata"      , CGnuPlot::VariableName::XDATA},
+                          {"ydata"      , CGnuPlot::VariableName::YDATA},
+                          {"xdtics"     , CGnuPlot::VariableName::XDTICS},
+                          {"xmtics"     , CGnuPlot::VariableName::XMTICS},
 
-    nameValues.addValue("dgrid3d"    , CGnuPlot::VariableName::DGRID3D);
-    nameValues.addValue("hidden3d"   , CGnuPlot::VariableName::HIDDEN3D);
-    nameValues.addValue("isosamples" , CGnuPlot::VariableName::ISOSAMPLES);
-    nameValues.addValue("surface"    , CGnuPlot::VariableName::SURFACE);
-    nameValues.addValue("view"       , CGnuPlot::VariableName::VIEW);
-    nameValues.addValue("xyplane"    , CGnuPlot::VariableName::XYPLANE);
+                          {"dgrid3d"    , CGnuPlot::VariableName::DGRID3D},
+                          {"hidden3d"   , CGnuPlot::VariableName::HIDDEN3D},
+                          {"isosamples" , CGnuPlot::VariableName::ISOSAMPLES},
+                          {"surface"    , CGnuPlot::VariableName::SURFACE},
+                          {"view"       , CGnuPlot::VariableName::VIEW},
+                          {"xyplane"    , CGnuPlot::VariableName::XYPLANE},
 
-    nameValues.addValue("cplane"     , CGnuPlot::VariableName::CPLANE);
-    nameValues.addValue("cntrparam"  , CGnuPlot::VariableName::CNTRPARAM);
-    nameValues.addValue("contour"    , CGnuPlot::VariableName::CONTOUR);
+                          {"cplane"     , CGnuPlot::VariableName::CPLANE},
+                          {"cntrparam"  , CGnuPlot::VariableName::CNTRPARAM},
+                          {"contour"    , CGnuPlot::VariableName::CONTOUR},
 
-    nameValues.addValue("colorbox"   , CGnuPlot::VariableName::COLORBOX);
-    nameValues.addValue("palette"    , CGnuPlot::VariableName::PALETTE);
-    nameValues.addValue("pm3d"       , CGnuPlot::VariableName::PM3D);
+                          {"colorbox"   , CGnuPlot::VariableName::COLORBOX},
+                          {"palette"    , CGnuPlot::VariableName::PALETTE},
+                          {"pm3d"       , CGnuPlot::VariableName::PM3D},
 
-    nameValues.addValue("output"     , CGnuPlot::VariableName::OUTPUT);
-    nameValues.addValue("print"      , CGnuPlot::VariableName::PRINT);
-    nameValues.addValue("table"      , CGnuPlot::VariableName::TABLE);
-    nameValues.addValue("terminal"   , CGnuPlot::VariableName::TERMINAL);
-    nameValues.addValue("termoption" , CGnuPlot::VariableName::TERMOPTION);
+                          {"output"     , CGnuPlot::VariableName::OUTPUT},
+                          {"print"      , CGnuPlot::VariableName::PRINT},
+                          {"table"      , CGnuPlot::VariableName::TABLE},
+                          {"terminal"   , CGnuPlot::VariableName::TERMINAL},
+                          {"termoption" , CGnuPlot::VariableName::TERMOPTION},
 
-    nameValues.addValue("variables"  , CGnuPlot::VariableName::VARIABLES);
-    nameValues.addValue("functions"  , CGnuPlot::VariableName::FUNCTIONS);
-    nameValues.addValue("version"    , CGnuPlot::VariableName::VERSION);
+                          {"variables"  , CGnuPlot::VariableName::VARIABLES},
+                          {"functions"  , CGnuPlot::VariableName::FUNCTIONS},
+                          {"version"    , CGnuPlot::VariableName::VERSION},
 
-    nameValues.addValue("debug"      , CGnuPlot::VariableName::DEBUG);
-    nameValues.addValue("edebug"     , CGnuPlot::VariableName::EDEBUG);
+                          {"debug"      , CGnuPlot::VariableName::DEBUG},
+                          {"edebug"     , CGnuPlot::VariableName::EDEBUG}});
   }
 
   void initNameValues(CStrUniqueMatch<CGnuPlot::DataFileVar> &nameValues) {
-    nameValues.addValue("separator"   , CGnuPlot::DataFileVar::SEPARATOR);
-    nameValues.addValue("commentschar", CGnuPlot::DataFileVar::COMMENTS_CHAR);
-    nameValues.addValue("missing"     , CGnuPlot::DataFileVar::MISSING);
+    nameValues.addValues({{"separator"   , CGnuPlot::DataFileVar::SEPARATOR},
+                          {"commentschar", CGnuPlot::DataFileVar::COMMENTS_CHAR},
+                          {"missing"     , CGnuPlot::DataFileVar::MISSING}});
   }
 
   void initNameValues(CStrUniqueMatch<CGnuPlot::StyleVar> &nameValues) {
-    nameValues.addValue("data"     , CGnuPlot::StyleVar::DATA);
-    nameValues.addValue("function" , CGnuPlot::StyleVar::FUNCTION);
-    nameValues.addValue("increment", CGnuPlot::StyleVar::INCREMENT);
-    nameValues.addValue("line"     , CGnuPlot::StyleVar::LINE);
-    nameValues.addValue("fill"     , CGnuPlot::StyleVar::FILL);
-    nameValues.addValue("histogram", CGnuPlot::StyleVar::HISTOGRAM);
-    nameValues.addValue("rectangle", CGnuPlot::StyleVar::RECTANGLE);
-    nameValues.addValue("circle"   , CGnuPlot::StyleVar::CIRCLE);
-    nameValues.addValue("ellipse"  , CGnuPlot::StyleVar::ELLIPSE);
-    nameValues.addValue("arrow"    , CGnuPlot::StyleVar::ARROW);
+    nameValues.addValues({{"data"     , CGnuPlot::StyleVar::DATA},
+                          {"function" , CGnuPlot::StyleVar::FUNCTION},
+                          {"increment", CGnuPlot::StyleVar::INCREMENT},
+                          {"line"     , CGnuPlot::StyleVar::LINE},
+                          {"fill"     , CGnuPlot::StyleVar::FILL},
+                          {"histogram", CGnuPlot::StyleVar::HISTOGRAM},
+                          {"rectangle", CGnuPlot::StyleVar::RECTANGLE},
+                          {"circle"   , CGnuPlot::StyleVar::CIRCLE},
+                          {"ellipse"  , CGnuPlot::StyleVar::ELLIPSE},
+                          {"arrow"    , CGnuPlot::StyleVar::ARROW}});
   }
 
   void initNameValues(CStrUniqueMatch<CGnuPlot::PlotVar> &nameValues) {
@@ -754,15 +754,15 @@ plotCmd(const std::string &args)
   CGnuPlotWindow *window;
 
   if (multiplot().enabled) {
-    if (! windows_.empty())
-      window = windows_.back();
-    else {
-      window = createWindow();
+    if (! multiWindow_) {
+      multiWindow_ = createWindow();
 
-      window->set3D(false);
+      multiWindow_->set3D(false);
 
-      windows_.push_back(window);
+      windows_.push_back(multiWindow_);
     }
+
+    window = multiWindow_;
 
     int n = window->numPlots();
 
@@ -1033,10 +1033,7 @@ plotCmd(const std::string &args)
               if (line.isChar('('))
                 ++rbrackets;
 
-              if (rbrackets == 0)
-                usingStr += line.getChar();
-              else
-                line.skipChar();
+              usingStr += line.getChar();
             }
           }
           else {
@@ -1045,17 +1042,21 @@ plotCmd(const std::string &args)
             else if (line.isChar(')'))
               --rbrackets;
 
-            if (rbrackets > 0)
-              usingStr += line.getChar();
-            else
-              line.skipChar();
+            usingStr += line.getChar();
           }
         }
 
-        usingStr = CStrUtil::stripSpaces(usingStr);
-
         if (! usingStr.empty())
           usingStrs.push_back(usingStr);
+
+        for (auto &str : usingStrs) {
+          std::string str1 = CStrUtil::stripSpaces(str);
+
+          if (str1.size() > 0 && str1[0] == '(' && str1[str1.size() - 1] == ')')
+            str1 = CStrUtil::stripSpaces(str1.substr(1, str1.size() - 2));
+
+          str = str1;
+        }
 
         if (isDebug()) {
           std::cerr << "using ";
@@ -1071,8 +1072,8 @@ plotCmd(const std::string &args)
 
         line.skipSpace();
 
-        for (uint i = 0; i < usingStrs.size(); ++i)
-          usingCols.push_back(UsingCol(usingStrs[i]));
+        for (const auto &str : usingStrs)
+          usingCols.push_back(UsingCol(str));
       }
       // read index range
       // index <start>[:<end>[:<step>]]
@@ -1300,16 +1301,6 @@ plotCmd(const std::string &args)
     //---
 
     if      (! filename.empty()) {
-      if      (usingCols.empty()) {
-        usingCols.push_back(UsingCol(1));
-        usingCols.push_back(UsingCol(2));
-      }
-      else if (usingCols.size() == 1) {
-        usingCols.push_back(UsingCol(0));
-
-        std::swap(usingCols[0], usingCols[1]);
-      }
-
       Plots plots1 = addFile2D(window, filename, region, style, usingCols, index, every);
 
       std::copy(plots1.begin(), plots1.end(), std::back_inserter(plots));
@@ -1353,6 +1344,8 @@ plotCmd(const std::string &args)
 
   if (plots.size() > 1) {
     CGnuPlotPlot *plot = createPlot(window);
+
+    plot->setRegion(region);
 
     plot->setStyle   (plots[0]->getStyle());
     plot->setKeyData (plots[0]->keyData ());
@@ -1852,19 +1845,6 @@ splotCmd(const std::string &args)
     //---
 
     if      (! filename.empty()) {
-      if  (usingCols.empty())
-        usingCols.push_back(UsingCol(1));
-
-      if      (usingCols.size() == 1) {
-        usingCols.push_back(UsingCol(1));
-        usingCols.push_back(UsingCol(0));
-
-        std::swap(usingCols[0], usingCols[2]);
-      }
-      else if (usingCols.size() == 2) {
-        usingCols.push_back(UsingCol(0));
-      }
-
       (void) addFile3D(window, filename);
     }
     else if (! function.empty())
@@ -2891,7 +2871,7 @@ setCmd(const std::string &args)
           if (CStrUtil::toInteger(arg1, &l))
             patternNum = l;
 
-          fillStyle().setPattern((PatternType) patternNum);
+          fillStyle().setPattern((FillPattern) patternNum);
 
           line.skipSpace();
         }
@@ -3674,8 +3654,11 @@ unsetCmd(const std::string &args)
   if (! CGnuPlotUtil::stringToValue(args1[0], var))
     var = VariableName::NONE;
 
-  if      (var == VariableName::MULTIPLOT)
+  if      (var == VariableName::MULTIPLOT) {
     multiplot().enabled = false;
+
+    multiWindow_ = 0;
+  }
   else if (var == VariableName::BORDER)
     axesData().borders = 0;
   else if (var == VariableName::ARROW)
@@ -4131,7 +4114,7 @@ addFile2D(CGnuPlotWindow *window, const std::string &filename, const CBBox2D &re
   int           pointNum1     = every.start;
   bool          discontinuity = false;
   CGnuPlotPlot *plot          = 0;
-  bool          firstLine    = true;
+  bool          firstLine     = true;
 
   //---
 
@@ -4195,17 +4178,37 @@ addFile2D(CGnuPlotWindow *window, const std::string &filename, const CBBox2D &re
 
     bool skip = false;
 
-    const std::string &missing = getMissingStr();
-
     std::vector<CExprValuePtr> values;
 
     for (uint i = 0; i < usingCols.size(); ++i) {
-      CExprValuePtr value =
-        decodeUsingCol(i, usingCols[i], setNum, pointNum, fields_, missing, skip, isDebug());
+      CExprValuePtr value = decodeUsingCol(i, usingCols[i], setNum, pointNum, skip);
 
       if (skip) continue;
 
-      values.push_back(value);
+      if (value.isValid())
+        values.push_back(value);
+    }
+
+    if (values.empty()) {
+      CExprValuePtr value1 = getFieldValue(0, 1, setNum, pointNum, skip);
+
+      if (value1.isValid())
+        values.push_back(value1);
+
+      CExprValuePtr value2 = getFieldValue(1, 2, setNum, pointNum, skip);
+
+      if (value2.isValid())
+        values.push_back(value2);
+    }
+
+    if (values.size() == 1) {
+      CExprValuePtr value1 = getFieldValue(0, 0, setNum, pointNum, skip);
+
+      if (value1.isValid()) {
+        values.push_back(value1);
+
+        std::swap(values[0], values[1]);
+      }
     }
 
     //---
@@ -4222,8 +4225,8 @@ addFile2D(CGnuPlotWindow *window, const std::string &filename, const CBBox2D &re
       }
 
       if (keyData_.title == "") {
-        if (keyData_.columnhead && usingCols.size() > 1 && usingCols[1].isInt &&
-            usingCols[1].ival >= 1 && usingCols[1].ival <= int(keyData_.columns.size()))
+        if      (keyData_.columnhead && usingCols.size() > 1 && usingCols[1].isInt &&
+                 usingCols[1].ival >= 1 && usingCols[1].ival <= int(keyData_.columns.size()))
           keyData_.title = keyData_.columns[usingCols[1].ival - 1];
         else if (keyData_.columnNum.isValid() && keyData_.columnNum.getValue() >= 1 &&
                  keyData_.columnNum.getValue() <= int(keyData_.columns.size()))
@@ -4245,6 +4248,8 @@ addFile2D(CGnuPlotWindow *window, const std::string &filename, const CBBox2D &re
       plots.push_back(plot);
     }
 
+    //---
+
     if (pointNum == pointNum1) {
       plot->addPoint2D(values, discontinuity);
 
@@ -4262,6 +4267,9 @@ addFile2D(CGnuPlotWindow *window, const std::string &filename, const CBBox2D &re
     bline         = 0;
     discontinuity = false;
   }
+
+  for (auto plot : plots)
+    plot->setAxesData(axesData());
 
   return plots;
 }
@@ -4375,47 +4383,18 @@ addFile3D(CGnuPlotWindow *window, const std::string &filename)
 
 CExprValuePtr
 CGnuPlot::
-decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum,
-               const std::vector<std::string> &fields,
-               const std::string &missing, bool &skip, bool debug)
+decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum, bool &skip)
 {
   CExprValuePtr value;
 
   skip = false;
 
-  int nf = fields.size();
-
-  if (col.isInt) {
-    if      (col.ival == 0)
-      value = CExprInst->createRealValue(pointNum);
-    else if (col.ival == -2)
-      value = CExprInst->createRealValue(setNum);
-    else if (col.ival > 0 && col.ival <= nf) {
-      double val;
-
-      const std::string &field = fields[col.ival - 1];
-
-      if (field == missing) {
-        skip = true;
-        return CExprValuePtr();
-      }
-
-      if      ((i == 0 && axesData().xaxis.isTime) || (i == 1 && axesData().yaxis.isTime)) {
-        struct tm tm1; memset(&tm1, 0, sizeof(tm));
-
-        strptime(field.c_str(), timeFmt_.c_str(), &tm1);
-
-        value = CExprInst->createRealValue(mktime(&tm1));
-      }
-      else if (CStrUtil::toReal(field, &val))
-        value = CExprInst->createRealValue(val);
-      else
-        value = CExprInst->createStringValue(field);
-    }
-  }
+  if (col.isInt)
+    value = getFieldValue(i, col.ival, setNum, pointNum, skip);
   else {
     std::string expr = col.str;
 
+    // replace $N variables
     // TODO: easier to define $1 variables
     auto pos = expr.find('$');
 
@@ -4431,33 +4410,103 @@ decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum,
 
       (void) CStrUtil::toInteger(numStr, &icol);
 
-      COptReal x1;
+      CExprValuePtr value1 = getFieldValue(i, icol, setNum, pointNum, skip);
 
-      if      (icol == 0)
-        x1 = pointNum;
-      else if (icol == -2)
-        x1 = setNum;
-      else if (icol > 0 && icol <= nf) {
-        double x2 = 0.0;
+      double x1;
 
-        const std::string &field = fields[icol - 1];
-
-        if (field != missing && CStrUtil::toReal(field, &x2))
-          x1 = x2;
-      }
-
-      if (x1.isValid())
-        expr = expr.substr(0, pos - 1) + CStrUtil::toString(x1.getValue()) + expr.substr(pos1);
+      if (value1.isValid() && value1->getRealValue(x1))
+        expr = expr.substr(0, pos - 1) + CStrUtil::toString(x1) + expr.substr(pos1);
       else
         expr = expr.substr(0, pos - 1) + "NaN" + expr.substr(pos1);
 
       pos = expr.find('$');
     }
 
-    if (debug)
-      std::cerr << "expr " << expr << std::endl;
+    // check for axis label string
+    pos = expr.find('(');
 
-    value = CExprInst->evaluateExpression(expr);
+    if (pos != std::string::npos) {
+      std::string name = expr.substr(0, pos);
+
+      if (name == "xtic" || "xticlabels" || name == "ytic" || "yticlabels") {
+        std::string name1 = expr.substr(pos + 1);
+
+        auto p1 = name1.find(')');
+
+        if (p1 != std::string::npos)
+          name1 = name1.substr(0, p1);
+
+        CExprValuePtr value = CExprInst->evaluateExpression(name1);
+
+        long icol;
+
+        if (value.isValid() && value->getIntegerValue(icol)) {
+          CExprValuePtr value1 = getFieldValue(i, icol, setNum, pointNum, skip);
+
+          std::string str1;
+
+          if (value1.isValid() && value1->getStringValue(str1)) {
+            if (name == "xtic" || name == "xticlabels")
+              axesData().xaxis.ticlabel[pointNum] = str1;
+            else
+              axesData().yaxis.ticlabel[pointNum] = str1;
+          }
+        }
+
+        expr = "";
+      }
+    }
+
+    //----
+
+    if (expr != "") {
+      if (isDebug())
+        std::cerr << "expr " << expr << std::endl;
+
+      value = CExprInst->evaluateExpression(expr);
+    }
+  }
+
+  return value;
+}
+
+CExprValuePtr
+CGnuPlot::
+getFieldValue(int i, int ival, int setNum, int pointNum, bool &skip)
+{
+  skip = false;
+
+  CExprValuePtr value;
+
+  int nf = fields_.size();
+
+  if      (ival == 0)
+    value = CExprInst->createRealValue(pointNum);
+  else if (ival == -2)
+    value = CExprInst->createRealValue(setNum);
+  else if (ival > 0 && ival <= nf) {
+    const std::string &missing = getMissingStr();
+
+    const std::string &field = fields_[ival - 1];
+
+    if (field == missing) {
+      skip = true;
+      return CExprValuePtr();
+    }
+
+    double val;
+
+    if      ((i == 0 && axesData().xaxis.isTime) || (i == 1 && axesData().yaxis.isTime)) {
+      struct tm tm1; memset(&tm1, 0, sizeof(tm));
+
+      strptime(field.c_str(), timeFmt_.c_str(), &tm1);
+
+      value = CExprInst->createRealValue(mktime(&tm1));
+    }
+    else if (CStrUtil::toReal(field, &val))
+      value = CExprInst->createRealValue(val);
+    else
+      value = CExprInst->createStringValue(field);
   }
 
   return value;
@@ -4472,8 +4521,7 @@ incLineStyle()
   lineStyle().setColor(CGnuPlotStyle::instance()->indexColor(styleIncrement_.colorInd));
 
   if (fillStyle().style() == FillType::PATTERN)
-    fillStyle().setPattern(
-      static_cast<CGnuPlot::PatternType>(static_cast<int>(fillStyle().pattern()) + 1));
+    fillStyle().setPattern(static_cast<FillPattern>(static_cast<int>(fillStyle().pattern()) + 1));
 
   if (lineStyleNum().isValid())
     setLineStyleNum(COptInt(lineStyleNum().getValue(1) + 1));

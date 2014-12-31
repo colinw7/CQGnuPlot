@@ -1,9 +1,12 @@
 #ifndef CQGnuPlotPlot_H
 #define CQGnuPlotPlot_H
 
+#include <CQGnuPlot.h>
 #include <CGnuPlotPlot.h>
+
 #include <QObject>
 #include <QColor>
+#include <QRect>
 
 class CQGnuPlotWindow;
 class CQGnuPlotRenderer;
@@ -15,6 +18,8 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
 
   Q_ENUMS(CQHAlignType)
   Q_ENUMS(CQVAlignType)
+  Q_ENUMS(CQFillType)
+  Q_ENUMS(CQFillPattern)
   Q_ENUMS(CQSymbolType)
 
   Q_PROPERTY(double regionLeft   READ getRegionLeft   WRITE setRegionLeft  )
@@ -52,10 +57,12 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
   Q_PROPERTY(bool         keyBox       READ getKeyBox       WRITE setKeyBox      )
   Q_PROPERTY(bool         keyReverse   READ getKeyReverse   WRITE setKeyReverse  )
 
-  Q_PROPERTY(QColor       lineColor READ lineColor WRITE setLineColor)
-  Q_PROPERTY(double       lineWidth READ lineWidth WRITE setLineWidth)
-  Q_PROPERTY(CQSymbolType pointType READ pointType WRITE setPointType)
-  Q_PROPERTY(double       pointSize READ pointSize WRITE setPointSize)
+  Q_PROPERTY(CQFillType    fillType    READ fillType    WRITE setFillType   )
+  Q_PROPERTY(CQFillPattern fillPattern READ fillPattern WRITE setFillPattern)
+  Q_PROPERTY(QColor        lineColor   READ lineColor   WRITE setLineColor  )
+  Q_PROPERTY(double        lineWidth   READ lineWidth   WRITE setLineWidth  )
+  Q_PROPERTY(CQSymbolType  pointType   READ pointType   WRITE setPointType  )
+  Q_PROPERTY(double        pointSize   READ pointSize   WRITE setPointSize  )
 
   Q_PROPERTY(int trianglePattern3D READ trianglePattern3D WRITE setTrianglePattern3D)
 
@@ -70,6 +77,24 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
     AlignTop,
     AlignBottom,
     AlignVCenter
+  };
+
+  enum CQFillType {
+    FillNone,
+    FillSolid,
+    FillPatterned
+  };
+
+  enum CQFillPattern {
+    PatternNone,
+    PatternHatch,
+    PatternDense,
+    PatternFg,
+    PatternFDiag,
+    PatternBDiag,
+    PatternFDiag1,
+    PatternBDiag1,
+    PatternBg
   };
 
   enum CQSymbolType {
@@ -112,14 +137,43 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
   CQVAlignType getKeyVAlign() const;
   void setKeyVAlign(const CQVAlignType &a);
 
+  CQFillType fillType() const;
+  void setFillType(const CQFillType &type);
+
+  CQFillPattern fillPattern() const;
+  void setFillPattern(const CQFillPattern &f);
+
   CQSymbolType pointType() const;
   void setPointType(const CQSymbolType &type);
 
   void stateChanged(CGnuPlot::ChangeState) override { }
 
+  void draw();
+
+  void drawBar(double x, double y, const CBBox2D &bbox, FillType fillType,
+               FillPattern fillPattern, const CRGBA &fillColor, const CRGBA &lineColor);
+
+  void mouseMove(const CPoint2D &p);
+
+  bool mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip);
+
  private:
-  CQGnuPlotWindow   *window_;
-  CQGnuPlotRenderer *renderer_;
+  struct Bar {
+    Bar(double x1, double y1, const CBBox2D &bbox1) :
+     x(x1), y(y1), bbox(bbox1) {
+    }
+
+    double  x;
+    double  y;
+    CBBox2D bbox;
+  };
+
+  typedef std::vector<Bar> Bars;
+
+  CQGnuPlotWindow*   window_;
+  CQGnuPlotRenderer* renderer_;
+  COptValT<CPoint2D> selectedPos_;
+  Bars               bars_;
 };
 
 #endif

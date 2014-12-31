@@ -40,7 +40,7 @@ class CGnuPlotRenderer {
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
   virtual void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c=CRGBA(0,0,0)) = 0;
   virtual void patternRect(const CBBox2D &rect,
-                           CGnuPlot::PatternType pattern=CGnuPlot::PatternType::NONE,
+                           CGnuPlot::FillPattern pattern=CGnuPlot::FillPattern::NONE,
                            const CRGBA &fg=CRGBA(0,0,0), const CRGBA &bg=CRGBA(1,1,1)) = 0;
   virtual void fillRect   (const CBBox2D &rect, const CRGBA &c) = 0;
   virtual void drawBezier (const CPoint2D &p1, const CPoint2D &p2,

@@ -29,6 +29,8 @@ class CGnuPlotPlot {
   typedef CGnuPlot::AxisData               AxisData;
   typedef CGnuPlot::KeyData                KeyData;
   typedef CGnuPlot::PlotSize               PlotSize;
+  typedef CGnuPlot::FillType               FillType;
+  typedef CGnuPlot::FillPattern            FillPattern;
   typedef CGnuPlot::SymbolType             SymbolType;
 
   struct Point {
@@ -85,6 +87,8 @@ class CGnuPlotPlot {
 
   void set3D(bool b) { is3D_ = b; }
   bool is3D() const { return is3D_; }
+
+  CGnuPlotPlot *parentPlot() const { return parentPlot_; }
 
   void init();
 
@@ -192,6 +196,12 @@ class CGnuPlotPlot {
 
   const CGnuPlot::FillStyle &fillStyle() const { return fillStyle_; }
   void setFillStyle(const CGnuPlot::FillStyle &f) { fillStyle_ = f; }
+
+  const FillType &fillType() const { return fillStyle_.style(); }
+  void setFillType(const FillType &f) { fillStyle_.setStyle(f); }
+
+  const FillPattern &fillPattern() const { return fillStyle_.pattern(); }
+  void setFillPattern(const FillPattern &f) { fillStyle_.setPattern(f); }
 
   const CGnuPlot::LineStyle &lineStyle() const { return lineStyle_; }
   void setLineStyle(const CGnuPlot::LineStyle &s) { lineStyle_ = s; }
@@ -338,10 +348,13 @@ class CGnuPlotPlot {
   int trianglePattern3D() const { return trianglePattern3D_; }
   void setTrianglePattern3D(int n) { trianglePattern3D_ = n; }
 
-  void draw();
+  virtual void draw();
 
   void draw2D();
   void draw3D();
+
+  virtual void drawBar(double x, double y, const CBBox2D &bbox, FillType fillType,
+                       FillPattern fillPattern, const CRGBA &fillColor, const CRGBA &lineColor);
 
   void drawHistogram(const Plots &plots);
 
@@ -374,6 +387,9 @@ class CGnuPlotPlot {
                        const CRGBA &c=CRGBA(0,0,0), double a=90);
 
   void drawLine(const CPoint2D &p1, const CPoint2D &p2, double w, const CRGBA &c);
+
+  std::string getXAxisValueStr(int i, double x) const;
+  std::string getYAxisValueStr(int i, double x) const;
 
   std::string formatX(double x) const;
   std::string formatY(double y) const;

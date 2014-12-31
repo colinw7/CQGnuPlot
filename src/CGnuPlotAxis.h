@@ -26,10 +26,18 @@ class CGnuPlotAxis {
   void resetLogarithmic() { logarithmic_ = 0; }
 
   uint getNumMajorTicks() const { return numTicks1_; }
+  void setNumMajorTicks(uint n) { numTicks1_ = n; }
+
   uint getNumMinorTicks() const { return numTicks2_; }
+  void setNumMinorTicks(uint n) { numTicks2_ = n; }
+
+  double getMajorIncrement() const;
+  void setMajorIncrement(double i);
+
+  double getMinorIncrement() const;
 
   uint getTickIncrement() const { return tickIncrement_; }
-  void setTickIncrement(uint tick_increment);
+  void setTickIncrement(uint tickIncrement);
 
   const double *getTickSpaces   () const { return &tickSpaces_[0]; }
   uint          getNumTickSpaces() const { return tickSpaces_.size(); }
@@ -38,7 +46,7 @@ class CGnuPlotAxis {
   void setTickInside(bool b) { tickInside_ = b; }
 
   double getTickSpace(int i) const { return tickSpaces_[i]; }
-  void setTickSpaces(double *tick_spaces, uint num_tick_spaces);
+  void setTickSpaces(double *tickSpaces, uint numTickSpaces);
 
   bool isLabelInside() const { return labelInside_; }
   void setLabelInside(bool b) { labelInside_ = b; }
@@ -69,10 +77,7 @@ class CGnuPlotAxis {
 
   void setRange(double start, double end);
 
-  double getMajorIncrement() const;
-  double getMinorIncrement() const;
-
-  std::string getValueStr(double pos) const;
+  std::string getValueStr(int i, double pos) const;
 
   void setFont(CFontPtr f) { font_ = f; }
 
@@ -83,38 +88,46 @@ class CGnuPlotAxis {
  private:
   bool calc();
 
-  bool testAxisGaps(double start, double end, double test_increment,
-                    uint test_num_gap_ticks, double *start1, double *end1,
-                    double *increment, uint *num_gaps, uint *num_gap_ticks);
+  bool testAxisGaps(double start, double end, double testIncrement,
+                    uint testNumGapTicks, double *start1, double *end1,
+                    double *increment, uint *numGaps, uint *numGapTicks);
 
   void drawAxisTick(const CPoint2D &p, CDirectionType type, bool large);
 
+  void drawTickLabel(const CPoint2D &p, const std::string &str);
+
+  void drawAxisLabel(const CPoint2D &p, const std::string &str, int maxSize);
+
   void drawLine(const CPoint2D &p1, const CPoint2D &p2);
 
-  void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
-                        CVAlignType valign, double y_offset, const std::string &str);
-  void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
-                        CVAlignType valign, double y_offset, const std::string &str);
+  void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
+                        CVAlignType valign, double yOffset, const std::string &str);
+  void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
+                        CVAlignType valign, double yOffset, const std::string &str);
 
  private:
-  CGnuPlotPlot*       plot_;
+  CGnuPlotPlot*       plot_              { 0 };
   COrientation        direction_;
-  double              start_, end_;
-  double              start1_, end1_;
-  int                 logarithmic_;
-  uint                numTicks1_, numTicks2_;
-  uint                tickIncrement_;
+  double              start_;
+  double              end_;
+  double              start1_;
+  double              end1_;
+  int                 logarithmic_       { 0 };
+  uint                numTicks1_         { 1 };
+  uint                numTicks2_         { 0 };
+  uint                tickIncrement_     { 0 };
+  double              majorIncrement_    { 0 };
   std::vector<double> tickSpaces_;
-  bool                tickInside_;
-  bool                labelInside_;
+  bool                tickInside_        { false };
+  bool                labelInside_       { false };
   std::string         label_;
   std::string         timeFmt_;
-  bool                displayed_;
-  bool                drawLine_;
-  bool                drawTickMark_;
-  bool                drawMinorTickMark_;
-  bool                drawTickLabel_;
-  bool                drawLabel_;
+  bool                displayed_         { true };
+  bool                drawLine_          { true };
+  bool                drawTickMark_      { true };
+  bool                drawMinorTickMark_ { true };
+  bool                drawTickLabel_     { true };
+  bool                drawLabel_         { true };
   CFontPtr            font_;
 };
 

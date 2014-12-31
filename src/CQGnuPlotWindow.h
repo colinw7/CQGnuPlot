@@ -1,6 +1,7 @@
 #ifndef CQGnuPlotWindow_H
 #define CQGnuPlotWindow_H
 
+#include <CQGnuPlot.h>
 #include <CGnuPlotWindow.h>
 
 #include <QMainWindow>
@@ -43,7 +44,7 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   CQGnuPlotCanvas *canvas() const { return canvas_; }
 
   void addProperties();
-  void addPlotProperties(CGnuPlotPlot *plot, bool child=false);
+  void addPlotProperties(CGnuPlotPlot *plot, bool parent=true, bool child=false);
 
   void paint(QPainter *p);
 
@@ -85,18 +86,24 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
 
   CQGnuPlotPlot *getPlotAt(const QPoint &pos);
 
+  void mouseMove(const QPoint &qp);
+
+  bool mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip);
+
+  void redraw();
+
  private:
   void stateChanged(CGnuPlot::ChangeState) override;
 
   void paintPlot(CGnuPlotPlot *plot);
 
-  // Mouse Mode
-  void redraw();
   void redrawOverlay();
 
   QPointF pixelToWindow(const QPoint &p);
 
   void setCursor(QCursor cursor);
+
+  // Mouse Mode
 
   // Pan
   void panBy(double dx, double dy);

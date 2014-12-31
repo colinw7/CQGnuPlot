@@ -18,6 +18,8 @@ class CQGnuPlotCanvas : public QWidget {
   void mousePressEvent(QMouseEvent *);
   void mouseMoveEvent(QMouseEvent *);
 
+  bool event(QEvent *e);
+
  private:
   CQGnuPlotWindow *window_;
 };
