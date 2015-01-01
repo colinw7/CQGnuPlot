@@ -15,23 +15,30 @@ CONFIG += debug
 # Input
 SOURCES += \
 CQGnuPlot.cpp \
-CQGnuPlotWindow.cpp \
-CQGnuPlotPlot.cpp \
 CQGnuPlotCanvas.cpp \
+CQGnuPlotLineStyle.cpp \
+CQGnuPlotObject.cpp \
+CQGnuPlotPlot.cpp \
 CQGnuPlotRenderer.cpp \
+CQGnuPlotUtil.cpp \
+CQGnuPlotWindow.cpp \
+\
 CGnuPlot.cpp \
-CGnuPlotWindow.cpp \
-CGnuPlotPlot.cpp \
-CGnuPlotContour.cpp \
 CGnuPlotAxis.cpp \
+CGnuPlotContour.cpp \
+CGnuPlotPlot.cpp \
 CGnuPlotRenderer.cpp \
+CGnuPlotWindow.cpp \
+\
 CQPropertyDelegate.cpp \
 CQPropertyEditor.cpp \
 CQPropertyItem.cpp \
 CQPropertyTree.cpp \
 CQPaletteChooser.cpp \
 CQPaletteDialog.cpp \
+\
 CSymbol2D.cpp \
+\
 Expr/CExprBValue.cpp \
 Expr/CExprCompile.cpp \
 Expr/CExpr.cpp \
@@ -46,32 +53,42 @@ Expr/CExprStrgen.cpp \
 Expr/CExprSValue.cpp \
 Expr/CExprValue.cpp \
 Expr/CExprVariable.cpp \
+\
 MouseMode/CQMouseMode.cpp \
 MouseMode/CQPanMouseMode.cpp \
 MouseMode/CQZoomMouseMode.cpp \
 
 HEADERS += \
 CQGnuPlot.h \
-CQGnuPlotWindow.h \
-CQGnuPlotPlot.h \
 CQGnuPlotCanvas.h \
+CQGnuPlotLineStyle.h \
+CQGnuPlotObject.h \
+CQGnuPlotPlot.h \
 CQGnuPlotRenderer.h \
+CQGnuPlotUtil.h \
+CQGnuPlotWindow.h \
+\
 CGnuPlot.h \
-CGnuPlotWindow.h \
-CGnuPlotPlot.h \
 CGnuPlotAxis.h \
 CGnuPlotContour.h \
+CGnuPlotLineStyle.h \
+CGnuPlotObject.h \
+CGnuPlotPlot.h \
 CGnuPlotRenderer.h \
 CGnuPlotStyle.h \
 CGnuPlotUtil.h \
+CGnuPlotWindow.h \
+\
 CQPropertyDelegate.h \
 CQPropertyEditor.h \
 CQPropertyItem.h \
 CQPropertyTree.h \
 CQPaletteChooser.h \
 CQPaletteDialog.h \
+\
 CStrUniqueMatch.h \
 CSymbol2D.h \
+\
 Expr/CExprBValue.h \
 Expr/CExprCompile.h \
 Expr/CExprError.h \
@@ -87,6 +104,7 @@ Expr/CExprRValue.h \
 Expr/CExprSValue.h \
 Expr/CExprValue.h \
 Expr/CExprVariable.h \
+\
 MouseMode/CQMouseMode.h \
 MouseMode/CQPanMouseMode.h \
 MouseMode/CQPanZoomIFace.h \

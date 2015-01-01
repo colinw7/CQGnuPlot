@@ -8,6 +8,9 @@
 
 class CGnuPlotRenderer {
  public:
+  typedef CGnuPlotTypes::SymbolType SymbolType;
+
+ public:
   CGnuPlotRenderer() { }
 
   virtual ~CGnuPlotRenderer() { }
@@ -31,7 +34,7 @@ class CGnuPlotRenderer {
   virtual void setLineDash(const CLineDash &line_dash) = 0;
 
   virtual void drawPoint  (const CPoint2D &p, const CRGBA &c=CRGBA(0,0,0)) = 0;
-  virtual void drawSymbol (const CPoint2D &p, CGnuPlot::SymbolType type, double size,
+  virtual void drawSymbol (const CPoint2D &p, SymbolType type, double size,
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
   virtual void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width=1.0,
                            const CRGBA &c=CRGBA(0,0,0)) = 0;

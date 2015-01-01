@@ -35,6 +35,11 @@ typedef CRefPtr<CExprValue> CExprValuePtr;
 
 //------
 
+#include <CGnuPlotLineStyle.h>
+#include <CGnuPlotObject.h>
+
+//------
+
 class CGnuPlot {
  public:
   enum class CommandName {
@@ -316,25 +321,6 @@ class CGnuPlot {
     XYZ,
   };
 
-  enum class SymbolType {
-    NONE,
-    POINT,
-    PLUS,
-    CROSS,
-    STAR,
-    BOX,
-    FILLED_BOX,
-    CIRCLE,
-    FILLED_CIRCLE,
-    TRIANGLE,
-    FILLED_TRIANGLE,
-    INV_TRIANGLE,
-    FILLED_INV_TRIANGLE,
-    DIAMOND,
-    FILLED_DIAMOND,
-    LAST=FILLED_DIAMOND
-  };
-
   enum class FillPattern {
     NONE,
     HATCH,
@@ -436,24 +422,7 @@ class CGnuPlot {
 
   //---
 
-  class LineStyle {
-   public:
-    LineStyle() { }
-
-    int type() const { return type_; }
-    void setType(int type) { type_ = type; }
-
-    double width() const { return width_; }
-    void setWidth(double width) { width_ = width; }
-
-    CRGBA color(const CRGBA &c) const { return color_.getValue(c); }
-    void setColor(const CRGBA &c) { color_ = c; }
-
-   private:
-    int             type_  { 1 };
-    double          width_ { 1 };
-    COptValT<CRGBA> color_;
-  };
+  typedef std::map<int,CGnuPlotLineStyleP> LineStyles;
 
   //---
 
@@ -461,19 +430,11 @@ class CGnuPlot {
    public:
     PointStyle() { }
 
-    SymbolType type() const { return type_; }
-    void setType(SymbolType type) { type_ = type; }
-
-    double size() const { return size_; }
-    void setSize(double s) { size_ = s; }
-
     bool varSize() const { return varSize_; }
     void setVarSize(bool b) { varSize_ = b; }
 
   private:
-    SymbolType type_    { SymbolType::PLUS };
-    double     size_    { 1 };
-    bool       varSize_ { false };
+    bool varSize_ { false };
   };
 
   //---
@@ -541,21 +502,23 @@ class CGnuPlot {
   struct KeyData {
     KeyData() { }
 
-    bool                     displayed  { true };               // key displayed
-    CHAlignType              halign     { CHALIGN_TYPE_RIGHT }; // key horizontal side
-    CVAlignType              valign     { CVALIGN_TYPE_TOP   }; // key vertical side
-    bool                     vertical   { true };               // ??
-    bool                     right      { true };               // text justification
-    bool                     reverse    { false };              // reverse text and sample
-    bool                     invert     { false };              // invert plot order
-    bool                     autotitle  { true };
-    COptReal                 sampLen;
-    COptReal                 spacing;
-    std::string              title;
-    bool                     box { false };
-    bool                     columnhead { false };
-    COptInt                  columnNum;
-    std::vector<std::string> columns;
+    typedef std::vector<std::string> Columns;
+
+    bool        displayed  { true };               // key displayed
+    CHAlignType halign     { CHALIGN_TYPE_RIGHT }; // key horizontal side
+    CVAlignType valign     { CVALIGN_TYPE_TOP   }; // key vertical side
+    bool        vertical   { true };               // ??
+    bool        right      { true };               // text justification
+    bool        reverse    { false };              // reverse text and sample
+    bool        invert     { false };              // invert plot order
+    bool        autotitle  { true };
+    COptReal    sampLen;
+    COptReal    spacing;
+    std::string title;
+    bool        box { false };
+    bool        columnhead { false };
+    COptInt     columnNum;
+    Columns     columns;
   };
 
   //---
@@ -592,84 +555,11 @@ class CGnuPlot {
 
   //---
 
-  struct Arrow {
-    Arrow() { }
-
-    int      ind      { -1 };
-    Position from     { 0, 0 };
-    Position to       { 1, 1 };
-    bool     relative { false };
-    double   length   { -1 };
-    double   angle    { -1 };
-    double   backAngle{ -1 };
-    bool     fhead    { false };
-    bool     thead    { true };
-    bool     filled   { false };
-    bool     empty    { false };
-    bool     front    { false };
-    int      lineType { -1 };
-    double   lineWidth{ -1 };
-    CRGBA    c        { 0, 0, 0 };
-  };
-
-  typedef std::vector<Arrow> Arrows;
-
-  //---
-
-  struct Label {
-    Label() { }
-
-    int         ind   { -1 };
-    std::string text;
-    CHAlignType align { CHALIGN_TYPE_LEFT };
-    Position    pos   { 0, 0 };
-    std::string font;
-    double      angle { -1 };
-    bool        front { false };
-    double      offset{ 0.0 };
-  };
-
-  typedef std::vector<Label> Labels;
-
-  //---
-
-  struct Object {
-    Object() { }
-
-    CRGBA strokeColor { 0, 0, 0 };
-    CRGBA fillColor   { 0, 0, 0, 0 };
-  };
-
-  struct Ellipse : public Object {
-    Ellipse() { }
-
-    Position p  { 0, 0 };
-    double   rx { 1 };
-    double   ry { 1 };
-  };
-
-  typedef std::vector<Ellipse> Ellipses;
-
-  //---
-
-  struct Polygon : public Object {
-    Polygon() { }
-
-    std::vector<CPoint2D> points;
-  };
-
-  typedef std::vector<Polygon> Polygons;
-
-  //---
-
-  struct Rectangle : public Object {
-    Rectangle() { }
-
-    CPoint2D from { 0, 0 };
-    CPoint2D to   { 1, 1 };
-  };
-
-  typedef std::vector<Rectangle> Rectangles;
+  typedef std::vector<CGnuPlotArrowP>     Arrows;
+  typedef std::vector<CGnuPlotLabelP>     Labels;
+  typedef std::vector<CGnuPlotEllipseP>   Ellipses;
+  typedef std::vector<CGnuPlotPolygonP>   Polygons;
+  typedef std::vector<CGnuPlotRectangleP> Rectangles;
 
   //---
 
@@ -816,23 +706,19 @@ class CGnuPlot {
   FillStyle &fillStyle() { return fillStyle_; }
   void setFillStyle(const FillStyle &s) { fillStyle_ = s; }
 
-  const LineStyle &lineStyle() const { return lineStyle_; }
-  LineStyle &lineStyle() { return lineStyle_; }
-  void setLineStyle(const LineStyle &s) { lineStyle_ = s; }
+  CGnuPlotLineStyleP lineStyle();
+  void setLineStyle(CGnuPlotLineStyleP ls) { lineStyle_ = ls; }
+
+  CGnuPlotLineStyleP getLineStyleInd(int ind);
+  void setLineStyleInd(int ind);
 
   const PointStyle &pointStyle() const { return pointStyle_; }
   PointStyle &pointStyle() { return pointStyle_; }
   void setPointStyle(const PointStyle &s) { pointStyle_ = s; }
 
-  const COptInt &lineStyleNum() const { return lineStyleNum_; }
-  void setLineStyleNum(const COptInt &style) { lineStyleNum_ = style; }
-  void resetLineStyleNum() { lineStyleNum_.setInvalid(); }
+  const LineStyles &lineStyles() const { return lineStyles_; }
 
-  LineStyle lineStyles(int i) const {
-    auto p = lineStyles_.find(i);
-
-    return (p != lineStyles_.end() ? (*p).second : LineStyle());
-  }
+  CGnuPlotLineStyleP lineStyle(int i) const;
 
   HistogramStyle histogramStyle() { return histogramStyle_; }
   void setHistogramStyle(HistogramStyle style) { histogramStyle_ = style; }
@@ -915,6 +801,14 @@ class CGnuPlot {
   virtual CGnuPlotWindow *createWindow();
 
   virtual CGnuPlotPlot *createPlot(CGnuPlotWindow *window);
+
+  virtual CGnuPlotLineStyle *createLineStyle();
+
+  virtual CGnuPlotArrow     *createArrow();
+  virtual CGnuPlotLabel     *createLabel();
+  virtual CGnuPlotEllipse   *createEllipse();
+  virtual CGnuPlotPolygon   *createPolygon();
+  virtual CGnuPlotRectangle *createRectangle();
 
   virtual void timeout() { }
 
@@ -1089,65 +983,65 @@ class CGnuPlot {
 
  private:
   typedef std::vector<CGnuPlotWindow *> Windows;
-  typedef std::map<int,LineStyle>       LineStyles;
+  typedef std::vector<std::string>      Fields;
+  typedef CAutoPtr<CGnuPlotReadLine>    ReadLineP;
 
-  bool                             debug_  { false };
-  bool                             edebug_ { false };
-  Windows                          windows_;
-  Separator                        separator_;
-  std::string                      commentChars_ { "#" };
-  std::string                      missingStr_;
-  BoxWidth                         boxWidth_;
-  std::string                      outputFile_;
-  std::string                      printFile_;
-  bool                             printAppend_ { false };
-  std::string                      tableFile_;
-  PlotStyle                        dataStyle_      { PlotStyle::POINTS };
-  PlotStyle                        functionStyle_  { PlotStyle::LINES };
-  Smooth                           smooth_         { Smooth::NONE };
-  HistogramStyle                   histogramStyle_ { HistogramStyle::NONE };
-  AngleType                        angleType_      { AngleType::RADIANS };
-  FillStyle                        fillStyle_;
-  LineStyle                        lineStyle_;
-  PointStyle                       pointStyle_;
-  COptInt                          lineStyleNum_;
-  LineStyles                       lineStyles_;
-  StyleIncrement                   styleIncrement_;
-  Title                            title_;
-  AxesData                         axesData_;
-  KeyData                          keyData_;
-  CRange2D                         margin_ { 10, 10, 10, 10 };
-  int                              xind_ { 1 };
-  int                              yind_ { 1 };
-  Arrows                           arrows_;
-  Labels                           labels_;
-  Rectangles                       rects_;
-  Ellipses                         ellipses_;
-  Polygons                         polygons_;
-  Palette                          palette_;
-  Camera                           camera_;
-  bool                             fitX_ { false };
-  bool                             fitY_ { false };
-  bool                             fitZ_ { false };
-  std::string                      timeFmt_;
-  LogScaleMap                      logScale_;
-  std::string                      dummyVar1_;
-  std::string                      dummyVar2_;
-  int                              isamples1_   { 100 };
-  int                              isamples2_   { 100 };
-  int                              isoSamples1_ {  10 };
-  int                              isoSamples2_ {  10 };
-  PlotSize                         plotSize_;
-  Multiplot                        multiplot_;
-  CGnuPlotWindow*                  multiWindow_ { 0 };
-  COptValT<CBBox2D>                clearRect_;
-  bool                             hidden3D_  { false };
-  bool                             surface3D_ {  true };
-  bool                             contour3D_ { false };
-  bool                             pm3D_      { false };
-  int                              trianglePattern3D_ { 3 };
-  CAutoPtr<CGnuPlotReadLine>       readLine_;
-  mutable std::vector<std::string> fields_;
+  bool               debug_  { false };
+  bool               edebug_ { false };
+  Windows            windows_;
+  Separator          separator_;
+  std::string        commentChars_ { "#" };
+  std::string        missingStr_;
+  BoxWidth           boxWidth_;
+  std::string        outputFile_;
+  std::string        printFile_;
+  bool               printAppend_ { false };
+  std::string        tableFile_;
+  PlotStyle          dataStyle_      { PlotStyle::POINTS };
+  PlotStyle          functionStyle_  { PlotStyle::LINES };
+  Smooth             smooth_         { Smooth::NONE };
+  HistogramStyle     histogramStyle_ { HistogramStyle::NONE };
+  AngleType          angleType_      { AngleType::RADIANS };
+  FillStyle          fillStyle_;
+  CGnuPlotLineStyleP lineStyle_;
+  PointStyle         pointStyle_;
+  LineStyles         lineStyles_;
+  StyleIncrement     styleIncrement_;
+  Title              title_;
+  AxesData           axesData_;
+  KeyData            keyData_;
+  CRange2D           margin_ { 10, 10, 10, 10 };
+  int                xind_ { 1 };
+  int                yind_ { 1 };
+  Arrows             arrows_;
+  Labels             labels_;
+  Rectangles         rects_;
+  Ellipses           ellipses_;
+  Polygons           polygons_;
+  Palette            palette_;
+  Camera             camera_;
+  bool               fitX_ { false };
+  bool               fitY_ { false };
+  bool               fitZ_ { false };
+  std::string        timeFmt_;
+  LogScaleMap        logScale_;
+  std::string        dummyVar1_;
+  std::string        dummyVar2_;
+  int                isamples1_   { 100 };
+  int                isamples2_   { 100 };
+  int                isoSamples1_ {  10 };
+  int                isoSamples2_ {  10 };
+  PlotSize           plotSize_;
+  Multiplot          multiplot_;
+  CGnuPlotWindow*    multiWindow_ { 0 };
+  COptValT<CBBox2D>  clearRect_;
+  bool               hidden3D_  { false };
+  bool               surface3D_ {  true };
+  bool               contour3D_ { false };
+  bool               pm3D_      { false };
+  int                trianglePattern3D_ { 3 };
+  ReadLineP          readLine_;
+  mutable Fields     fields_;
 };
 
 #endif

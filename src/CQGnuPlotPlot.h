@@ -20,7 +20,6 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
   Q_ENUMS(CQVAlignType)
   Q_ENUMS(CQFillType)
   Q_ENUMS(CQFillPattern)
-  Q_ENUMS(CQSymbolType)
 
   Q_PROPERTY(double regionLeft   READ getRegionLeft   WRITE setRegionLeft  )
   Q_PROPERTY(double regionRight  READ getRegionRight  WRITE setRegionRight )
@@ -57,11 +56,12 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
   Q_PROPERTY(bool         keyBox       READ getKeyBox       WRITE setKeyBox      )
   Q_PROPERTY(bool         keyReverse   READ getKeyReverse   WRITE setKeyReverse  )
 
-  Q_PROPERTY(CQFillType    fillType    READ fillType    WRITE setFillType   )
-  Q_PROPERTY(CQFillPattern fillPattern READ fillPattern WRITE setFillPattern)
-  Q_PROPERTY(QColor        lineColor   READ lineColor   WRITE setLineColor  )
-  Q_PROPERTY(double        lineWidth   READ lineWidth   WRITE setLineWidth  )
-  Q_PROPERTY(CQSymbolType  pointType   READ pointType   WRITE setPointType  )
+  Q_PROPERTY(int                   lineStyleId READ lineStyleId WRITE setLineStyleId)
+  Q_PROPERTY(CQFillType            fillType    READ fillType    WRITE setFillType   )
+  Q_PROPERTY(CQFillPattern         fillPattern READ fillPattern WRITE setFillPattern)
+  Q_PROPERTY(QColor                lineColor   READ lineColor   WRITE setLineColor  )
+  Q_PROPERTY(double                lineWidth   READ lineWidth   WRITE setLineWidth  )
+  Q_PROPERTY(CQGnuPlot::SymbolType pointType   READ pointType   WRITE setPointType  )
   Q_PROPERTY(double        pointSize   READ pointSize   WRITE setPointSize  )
 
   Q_PROPERTY(int trianglePattern3D READ trianglePattern3D WRITE setTrianglePattern3D)
@@ -97,23 +97,6 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
     PatternBg
   };
 
-  enum CQSymbolType {
-    SymbolPoint,
-    SymbolPlus,
-    SymbolCross,
-    SymbolStar,
-    SymbolBox,
-    SymbolFilledBox,
-    SymbolCircle,
-    SymbolFilledCircle,
-    SymbolTriangle,
-    SymbolFilledTriangle,
-    SymbolITriangle,
-    SymbolFilledITriangle,
-    SymbolDiamond,
-    SymbolFilledDiamond
-  };
-
  public:
   CQGnuPlotPlot(CQGnuPlotWindow *window);
 
@@ -143,8 +126,8 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
   CQFillPattern fillPattern() const;
   void setFillPattern(const CQFillPattern &f);
 
-  CQSymbolType pointType() const;
-  void setPointType(const CQSymbolType &type);
+  CQGnuPlot::SymbolType pointType() const;
+  void setPointType(const CQGnuPlot::SymbolType &type);
 
   void stateChanged(CGnuPlot::ChangeState) override { }
 

@@ -12,6 +12,9 @@
 
 class CQSymbol2DRenderer : public CSymbol2DRenderer {
  public:
+  typedef CGnuPlotTypes::SymbolType SymbolType;
+
+ public:
   CQSymbol2DRenderer(CQGnuPlotRenderer *r, const CPoint2D &p, double size=1.0) :
    r_(r), stroke_(false), fill_(false) {
     r_->windowToPixel(p.x, p.y, &px_, &py_);
@@ -19,16 +22,16 @@ class CQSymbol2DRenderer : public CSymbol2DRenderer {
     ss_ = 4*size;
   }
 
-  void drawSymbolType(CGnuPlot::SymbolType type) {
-    if      (type == CGnuPlot::SymbolType::POINT) {
+  void drawSymbolType(SymbolType type) {
+    if      (type == SymbolType::POINT) {
       r_->painter()->setPen(pen_);
       r_->painter()->drawPoint(QPointF(px_, py_));
     }
-    else if (type == CGnuPlot::SymbolType::CIRCLE) {
+    else if (type == SymbolType::CIRCLE) {
       path_.addEllipse(QRectF(px_ - ss_, py_ - ss_, 2*ss_, 2*ss_));
       r_->painter()->strokePath(path_, pen_);
     }
-    else if (type == CGnuPlot::SymbolType::FILLED_CIRCLE) {
+    else if (type == SymbolType::FILLED_CIRCLE) {
       path_.addEllipse(QRectF(px_ - ss_, py_ - ss_, 2*ss_, 2*ss_));
       r_->painter()->fillPath(path_, brush_);
     }
@@ -111,7 +114,7 @@ drawPoint(const CPoint2D &point, const CRGBA &c)
 
 void
 CQGnuPlotRenderer::
-drawSymbol(const CPoint2D &point, CGnuPlot::SymbolType type, double size, const CRGBA &c)
+drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c)
 {
   CQSymbol2DRenderer r(this, point, size);
 
@@ -119,59 +122,59 @@ drawSymbol(const CPoint2D &point, CGnuPlot::SymbolType type, double size, const 
   QBrush brush(toQColor(c));
 
   switch (type) {
-    case CGnuPlot::SymbolType::POINT: { // point
+    case SymbolType::POINT: { // point
       r.setPen(pen); r.drawSymbolType(type);
       break;
     }
-    case CGnuPlot::SymbolType::PLUS: { // plus
+    case SymbolType::PLUS: { // plus
       r.setPen(pen); r.drawSymbol(CSYMBOL_PLUS);
       break;
     }
-    case CGnuPlot::SymbolType::CROSS: { // cross
+    case SymbolType::CROSS: { // cross
       r.setPen(pen); r.drawSymbol(CSYMBOL_CROSS);
       break;
     }
-    case CGnuPlot::SymbolType::STAR: { // star
+    case SymbolType::STAR: { // star
       r.setPen(pen); r.drawSymbol(CSYMBOL_STAR1);
       break;
     }
-    case CGnuPlot::SymbolType::BOX: { // box
+    case SymbolType::BOX: { // box
       r.setPen(pen); r.drawSymbol(CSYMBOL_BOX);
       break;
     }
-    case CGnuPlot::SymbolType::FILLED_BOX: { // filled box
+    case SymbolType::FILLED_BOX: { // filled box
       r.setBrush(brush); r.drawSymbol(CSYMBOL_BOX);
       break;
     }
-    case CGnuPlot::SymbolType::CIRCLE: { // circle
+    case SymbolType::CIRCLE: { // circle
       r.setPen(pen); r.drawSymbolType(type);
       break;
     }
-    case CGnuPlot::SymbolType::FILLED_CIRCLE: { // fill circle
+    case SymbolType::FILLED_CIRCLE: { // fill circle
       r.setBrush(brush); r.drawSymbolType(type);
       break;
     }
-    case CGnuPlot::SymbolType::TRIANGLE: { // triangle
+    case SymbolType::TRIANGLE: { // triangle
       r.setPen(pen); r.drawSymbol(CSYMBOL_TRIANGLE);
       break;
     }
-    case CGnuPlot::SymbolType::FILLED_TRIANGLE: { // filled triangle
+    case SymbolType::FILLED_TRIANGLE: { // filled triangle
       r.setBrush(brush); r.drawSymbol(CSYMBOL_TRIANGLE);
       break;
     }
-    case CGnuPlot::SymbolType::INV_TRIANGLE: { // inv triangle
+    case SymbolType::INV_TRIANGLE: { // inv triangle
       r.setPen(pen); r.drawSymbol(CSYMBOL_ITRIANGLE);
       break;
     }
-    case CGnuPlot::SymbolType::FILLED_INV_TRIANGLE: { // filled inv triangle
+    case SymbolType::FILLED_INV_TRIANGLE: { // filled inv triangle
       r.setBrush(brush); r.drawSymbol(CSYMBOL_ITRIANGLE);
       break;
     }
-    case CGnuPlot::SymbolType::DIAMOND: { // diamond
+    case SymbolType::DIAMOND: { // diamond
       r.setPen(pen); r.drawSymbol(CSYMBOL_DIAMOND);
       break;
     }
-    case CGnuPlot::SymbolType::FILLED_DIAMOND: { // filled diamond
+    case SymbolType::FILLED_DIAMOND: { // filled diamond
       r.setBrush(brush); r.drawSymbol(CSYMBOL_DIAMOND);
       break;
     }

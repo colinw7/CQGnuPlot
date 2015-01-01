@@ -3,6 +3,8 @@
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotCanvas.h>
 #include <CQGnuPlotRenderer.h>
+#include <CQGnuPlotLineStyle.h>
+#include <CQGnuPlotObject.h>
 
 #include <CQZoomMouseMode.h>
 #include <CQPanMouseMode.h>
@@ -157,33 +159,44 @@ addProperties()
     tree_->addProperty("", this, "contour3D");
   }
 
-  tree_->addProperty("", this, "title");
+  const CGnuPlot::LineStyles &lineStyles = plot_->lineStyles();
+
+  for (const auto &ls : lineStyles) {
+    CQGnuPlotLineStyle *ls1 = static_cast<CQGnuPlotLineStyle *>(ls.second.getPtr());
+
+    QString name = QString("lineStyle%1").arg(ls1->ind());
+
+    tree_->addProperty(name, ls1, "width"    );
+    tree_->addProperty(name, ls1, "color"    );
+    tree_->addProperty(name, ls1, "pointType");
+    tree_->addProperty(name, ls1, "pointSize");
+  }
 
   for (auto plot : plots()) {
     const Plots &subPlots = plot->subPlots();
 
     if (! subPlots.empty()) {
-      addPlotProperties(plot, true, false);
+      addPlotProperties(plot, true, true);
 
       if (plot->getHistogramStyle() == CGnuPlot::HistogramStyle::CLUSTERED ||
           plot->getHistogramStyle() == CGnuPlot::HistogramStyle::ROWSTACKED) {
         for (auto subPlot : subPlots)
-          addPlotProperties(subPlot, true, true);
+          addPlotProperties(subPlot, true, false);
       }
       else {
         for (auto subPlot : subPlots)
-          addPlotProperties(subPlot, false, true);
+          addPlotProperties(subPlot, false, false);
       }
     }
     else {
-      addPlotProperties(plot, true, false);
+      addPlotProperties(plot, true, true);
     }
   }
 }
 
 void
 CQGnuPlotWindow::
-addPlotProperties(CGnuPlotPlot *plot, bool styleProperties, bool child)
+addPlotProperties(CGnuPlotPlot *plot, bool styleProperties, bool isRoot)
 {
   CQGnuPlotPlot *plot1 = static_cast<CQGnuPlotPlot *>(plot);
 
@@ -197,7 +210,7 @@ addPlotProperties(CGnuPlotPlot *plot, bool styleProperties, bool child)
     parent = parent->parentPlot();
   }
 
-  if (! child) {
+  if (isRoot) {
     QString regionName = name + "/region";
 
     tree_->addProperty(regionName, plot1, "regionLeft"  )->setEditorFactory(redit2_);
@@ -248,12 +261,121 @@ addPlotProperties(CGnuPlotPlot *plot, bool styleProperties, bool child)
   }
 
   if (styleProperties) {
+    tree_->addProperty(name, plot1, "lineStyleId");
+
     tree_->addProperty(name, plot1, "fillType"   );
     tree_->addProperty(name, plot1, "fillPattern");
     tree_->addProperty(name, plot1, "lineColor"  );
     tree_->addProperty(name, plot1, "lineWidth"  );
     tree_->addProperty(name, plot1, "pointType"  );
     tree_->addProperty(name, plot1, "pointSize"  );
+  }
+
+  //---
+
+  int ia = 0;
+
+  const auto &arrows = plot->arrows();
+
+  for (const auto &a : arrows) {
+    QString name1 = QString("%1/arrow%2").arg(name).arg(ia + 1);
+
+    CQGnuPlotArrow *a1 = static_cast<CQGnuPlotArrow *>(a.getPtr());
+
+    tree_->addProperty(name1, a1, "from");
+    tree_->addProperty(name1, a1, "to");
+    tree_->addProperty(name1, a1, "relative");
+    tree_->addProperty(name1, a1, "length");
+    tree_->addProperty(name1, a1, "angle");
+    tree_->addProperty(name1, a1, "backAngle");
+    tree_->addProperty(name1, a1, "fhead");
+    tree_->addProperty(name1, a1, "thead");
+    tree_->addProperty(name1, a1, "filled");
+    tree_->addProperty(name1, a1, "empty");
+    tree_->addProperty(name1, a1, "front");
+    tree_->addProperty(name1, a1, "lineType");
+    tree_->addProperty(name1, a1, "lineWidth");
+    tree_->addProperty(name1, a1, "strokeColor");
+
+    ++ia;
+  }
+
+  //---
+
+  int il = 0;
+
+  const auto &labels = plot->labels();
+
+  for (const auto &l : labels) {
+    QString name1 = QString("%1/label%2").arg(name).arg(il + 1);
+
+    CQGnuPlotLabel *l1 = static_cast<CQGnuPlotLabel *>(l.getPtr());
+
+    tree_->addProperty(name1, l1, "text");
+    tree_->addProperty(name1, l1, "pos");
+    tree_->addProperty(name1, l1, "font");
+    tree_->addProperty(name1, l1, "angle");
+    tree_->addProperty(name1, l1, "front");
+    tree_->addProperty(name1, l1, "offset");
+    tree_->addProperty(name1, l1, "strokeColor");
+
+    ++il;
+  }
+
+  //---
+
+  int ir = 0;
+
+  const auto &rectangles = plot->rectangles();
+
+  for (const auto &r : rectangles) {
+    QString name1 = QString("%1/rectangle%2").arg(name).arg(ir + 1);
+
+    CQGnuPlotRectangle *r1 = static_cast<CQGnuPlotRectangle *>(r.getPtr());
+
+    tree_->addProperty(name1, r1, "from");
+    tree_->addProperty(name1, r1, "to");
+    tree_->addProperty(name1, r1, "strokeColor");
+    tree_->addProperty(name1, r1, "fillColor");
+
+    ++ir;
+  }
+
+  //---
+
+  int ie = 0;
+
+  const auto &ellipses = plot->ellipses();
+
+  for (const auto &e : ellipses) {
+    QString name1 = QString("%1/ellipse%2").arg(name).arg(ie + 1);
+
+    CQGnuPlotEllipse *e1 = static_cast<CQGnuPlotEllipse *>(e.getPtr());
+
+    tree_->addProperty(name1, e1, "center");
+    tree_->addProperty(name1, e1, "rx");
+    tree_->addProperty(name1, e1, "ry");
+    tree_->addProperty(name1, e1, "strokeColor");
+    tree_->addProperty(name1, e1, "fillColor");
+
+    ++ie;
+  }
+
+  //---
+
+  int ip = 0;
+
+  const auto &polygons = plot->polygons();
+
+  for (const auto &p : polygons) {
+    QString name1 = QString("%1/polygon%2").arg(name).arg(ip + 1);
+
+    CQGnuPlotPolygon *p1 = static_cast<CQGnuPlotPolygon *>(p.getPtr());
+
+    tree_->addProperty(name1, p1, "strokeColor");
+    tree_->addProperty(name1, p1, "fillColor");
+
+    ++ip;
   }
 }
 
@@ -508,9 +630,11 @@ void
 CQGnuPlotWindow::
 setCurrentPlot(CQGnuPlotPlot *plot)
 {
-  currentPlot_ = plot;
+  if (plot != currentPlot_) {
+    currentPlot_ = plot;
 
-  addProperties();
+    addProperties();
+  }
 }
 
 CQGnuPlotPlot *

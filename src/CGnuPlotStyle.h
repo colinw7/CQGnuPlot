@@ -6,6 +6,9 @@
 
 class CGnuPlotStyle {
  public:
+  typedef CGnuPlotTypes::SymbolType SymbolType;
+
+ public:
   static CGnuPlotStyle *instance() {
     static CGnuPlotStyle *inst;
 
@@ -22,15 +25,14 @@ class CGnuPlotStyle {
     return colors_[(i - 1) % colors_.size()];
   }
 
-  CGnuPlot::SymbolType indexSymbol(int i) {
-    if (i <  0) return CGnuPlot::SymbolType::NONE;
-    if (i == 0) return CGnuPlot::SymbolType::POINT;
+  SymbolType indexSymbol(int i) {
+    if (i <  0) return SymbolType::NONE;
+    if (i == 0) return SymbolType::POINT;
 
     int i1 = i - 1;
-    int ii = int(CGnuPlot::SymbolType::LAST) - 1;
+    int ii = int(SymbolType::LAST) - 1;
 
-    return static_cast<CGnuPlot::SymbolType>(
-            (i1 % ii) + static_cast<int>(CGnuPlot::SymbolType::PLUS));
+    return static_cast<SymbolType>((i1 % ii) + static_cast<int>(SymbolType::PLUS));
   }
 
   CGnuPlot::FillPattern indexPattern(int i) {

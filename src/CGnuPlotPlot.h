@@ -3,6 +3,7 @@
 
 #include <CGnuPlot.h>
 #include <CGnuPlotContour.h>
+#include <CGnuPlotObject.h>
 
 #include <CExpr.h>
 #include <CRefPtr.h>
@@ -18,20 +19,28 @@ typedef CRefPtr<CExprValue> CExprValuePtr;
 
 class CGnuPlotPlot {
  public:
-  typedef std::vector<CGnuPlot::Arrow>     Arrows;
-  typedef std::vector<CGnuPlot::Label>     Labels;
-  typedef std::vector<CGnuPlot::Rectangle> Rectangles;
-  typedef std::vector<CGnuPlot::Ellipse>   Ellipses;
-  typedef std::vector<CGnuPlot::Polygon>   Polygons;
-  typedef std::vector<CExprValuePtr>       Values;
-  typedef std::vector<CGnuPlotPlot *>      Plots;
-  typedef CGnuPlot::AxesData               AxesData;
-  typedef CGnuPlot::AxisData               AxisData;
-  typedef CGnuPlot::KeyData                KeyData;
-  typedef CGnuPlot::PlotSize               PlotSize;
-  typedef CGnuPlot::FillType               FillType;
-  typedef CGnuPlot::FillPattern            FillPattern;
-  typedef CGnuPlot::SymbolType             SymbolType;
+  typedef std::vector<CGnuPlotArrowP>     Arrows;
+  typedef std::vector<CGnuPlotLabelP>     Labels;
+  typedef std::vector<CGnuPlotEllipseP>   Ellipses;
+  typedef std::vector<CGnuPlotPolygonP>   Polygons;
+  typedef std::vector<CGnuPlotRectangleP> Rectangles;
+  typedef std::vector<CExprValuePtr>      Values;
+  typedef std::vector<CGnuPlotPlot *>     Plots;
+  typedef CGnuPlot::AxesData              AxesData;
+  typedef CGnuPlot::AxisData              AxisData;
+  typedef CGnuPlot::KeyData               KeyData;
+  typedef CGnuPlot::PlotSize              PlotSize;
+  typedef CGnuPlot::PlotStyle             PlotStyle;
+  typedef CGnuPlot::FillStyle             FillStyle;
+  typedef CGnuPlot::FillType              FillType;
+  typedef CGnuPlot::FillPattern           FillPattern;
+  typedef CGnuPlot::Palette               Palette;
+  typedef CGnuPlot::PointStyle            PointStyle;
+  typedef CGnuPlot::HistogramStyle        HistogramStyle;
+  typedef CGnuPlot::LogScaleMap           LogScaleMap;
+  typedef CGnuPlot::LogScale              LogScale;
+  typedef CGnuPlot::Smooth                Smooth;
+  typedef CGnuPlotTypes::SymbolType       SymbolType;
 
   struct Point {
     Values values;
@@ -91,6 +100,8 @@ class CGnuPlotPlot {
   CGnuPlotPlot *parentPlot() const { return parentPlot_; }
 
   void init();
+
+  void addObjects();
 
   const Plots &subPlots() const { return subPlots_; }
   void addSubPlots(const Plots &plots);
@@ -188,14 +199,14 @@ class CGnuPlotPlot {
   int ind() const { return ind_; }
   void setInd(int ind) { ind_ = ind; }
 
-  CGnuPlot::PlotStyle getStyle() const { return style_; }
-  void setStyle(CGnuPlot::PlotStyle style) { style_ = style; }
+  PlotStyle getStyle() const { return style_; }
+  void setStyle(PlotStyle style) { style_ = style; }
 
-  void setSmooth(CGnuPlot::Smooth s) { smooth_ = s; }
-  CGnuPlot::Smooth getSmooth() const { return smooth_; }
+  void setSmooth(Smooth s) { smooth_ = s; }
+  Smooth getSmooth() const { return smooth_; }
 
-  const CGnuPlot::FillStyle &fillStyle() const { return fillStyle_; }
-  void setFillStyle(const CGnuPlot::FillStyle &f) { fillStyle_ = f; }
+  const FillStyle &fillStyle() const { return fillStyle_; }
+  void setFillStyle(const FillStyle &f) { fillStyle_ = f; }
 
   const FillType &fillType() const { return fillStyle_.style(); }
   void setFillType(const FillType &f) { fillStyle_.setStyle(f); }
@@ -203,32 +214,31 @@ class CGnuPlotPlot {
   const FillPattern &fillPattern() const { return fillStyle_.pattern(); }
   void setFillPattern(const FillPattern &f) { fillStyle_.setPattern(f); }
 
-  const CGnuPlot::LineStyle &lineStyle() const { return lineStyle_; }
-  void setLineStyle(const CGnuPlot::LineStyle &s) { lineStyle_ = s; }
+  CGnuPlotLineStyleP lineStyle() const;
+  void setLineStyle(CGnuPlotLineStyleP ls) { lineStyle_ = ls; }
 
-  const COptInt &lineStyleNum() const { return lineStyleNum_; }
-  void setLineStyleNum(const COptInt &style) { lineStyleNum_ = style; }
-  void resetLineStyleNum() { lineStyleNum_.setInvalid(); }
+  CGnuPlotLineStyleP calcLineStyle() const;
 
-  CGnuPlot::LineStyle calcLineStyle() const;
+  int lineStyleId() const { return lineStyle()->ind(); }
+  void setLineStyleId(int ind);
 
-  CRGBA lineColor() const { return lineStyle_.color(CRGBA(0,0,0)); }
-  void setLineColor(const CRGBA &c) { lineStyle_.setColor(c); }
+  CRGBA lineColor() const { return lineStyle()->color(CRGBA(0,0,0)); }
+  void setLineColor(const CRGBA &c) { lineStyle()->setColor(c); }
 
-  double lineWidth() const { return lineStyle_.width(); }
-  void setLineWidth(double w) { lineStyle_.setWidth(w); }
+  double lineWidth() const { return lineStyle()->width(); }
+  void setLineWidth(double w) { lineStyle()->setWidth(w); }
 
-  const CGnuPlot::PointStyle &pointStyle() const { return pointStyle_; }
-  void setPointStyle(const CGnuPlot::PointStyle &s) { pointStyle_ = s; }
+  SymbolType pointType() const { return lineStyle()->pointType(); }
+  void setPointType(SymbolType type) { lineStyle()->setPointType(type); }
 
-  SymbolType pointType() const { return static_cast<SymbolType>(pointStyle_.type()); }
-  void setPointType(SymbolType type) { pointStyle_.setType(type); }
+  double pointSize() const { return lineStyle()->pointSize(); }
+  void setPointSize(double s) { lineStyle()->setPointSize(s); }
 
-  double pointSize() const { return pointStyle_.size(); }
-  void setPointSize(double s) { pointStyle_.setSize(s); }
+  const PointStyle &pointStyle() const { return pointStyle_; }
+  void setPointStyle(const PointStyle &s) { pointStyle_ = s; }
 
-  CGnuPlot::HistogramStyle getHistogramStyle() const { return histogramStyle_; }
-  void setHistogramStyle(CGnuPlot::HistogramStyle style) { histogramStyle_ = style; }
+  HistogramStyle getHistogramStyle() const { return histogramStyle_; }
+  void setHistogramStyle(HistogramStyle style) { histogramStyle_ = style; }
 
   //---
 
@@ -342,8 +352,8 @@ class CGnuPlotPlot {
   void setRenderer(CGnuPlotRenderer *renderer);
   CGnuPlotRenderer *renderer() const { return renderer_; }
 
-  const CGnuPlot::Palette &palette() const { return palette_; }
-  void setPalette(const CGnuPlot::Palette &p) { palette_ = p; }
+  const Palette &palette() const { return palette_; }
+  void setPalette(const Palette &p) { palette_ = p; }
 
   int trianglePattern3D() const { return trianglePattern3D_; }
   void setTrianglePattern3D(int n) { trianglePattern3D_ = n; }
@@ -370,11 +380,12 @@ class CGnuPlotPlot {
 
   void drawAnnotations();
 
-  void drawArrow(const CGnuPlot::Arrow &arrow);
-  void drawLabel(const CGnuPlot::Label &label);
-  void drawRectangle(const CGnuPlot::Rectangle &rect);
-  void drawEllipse(const CGnuPlot::Ellipse &ellipse);
-  void drawPolygon(const CGnuPlot::Polygon &poly);
+  void drawArrow(const CGnuPlotArrowP &arrow);
+  void drawLabel(const CGnuPlotLabelP &label);
+
+  void drawEllipse  (const CGnuPlotEllipseP   &ellipse);
+  void drawPolygon  (const CGnuPlotPolygonP   &poly);
+  void drawRectangle(const CGnuPlotRectangleP &rect);
 
   void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
                         CVAlignType valign, double y_offset, const std::string &str,
@@ -397,9 +408,9 @@ class CGnuPlotPlot {
   void mapLogPoint  (double *x, double *y) const;
   void unmapLogPoint(double *x, double *y) const;
 
-  void setLogScaleMap(const CGnuPlot::LogScaleMap &logScale) { logScale_ = logScale; }
+  void setLogScaleMap(const LogScaleMap &logScale) { logScale_ = logScale; }
 
-  int getLogScale(CGnuPlot::LogScale scale) const {
+  int getLogScale(LogScale scale) const {
     auto p = logScale_.find(scale);
 
     return (p != logScale_.end() ? (*p).second : 0);
@@ -422,45 +433,44 @@ class CGnuPlotPlot {
 
   static int nextId_;
 
-  CGnuPlotWindow*          window_;
-  int                      id_;
-  bool                     is3D_;
-  CGnuPlotPlot*            parentPlot_;
-  CBBox2D                  region_;
-  CRange2D                 margin_;
-  PlotSize                 plotSize_;
-  COptValT<CBBox2D>        clearRect_;
-  Plots                    subPlots_;
-  Points2D                 points2D_;
-  Points3D                 points3D_;
-  int                      ind_;
-  Arrows                   arrows_;
-  Labels                   labels_;
-  Rectangles               rects_;
-  Ellipses                 ellipses_;
-  Polygons                 polygons_;
-  CGnuPlot::Palette        palette_;
-  CGnuPlot::PlotStyle      style_;
-  CGnuPlot::FillStyle      fillStyle_;
-  CGnuPlot::LineStyle      lineStyle_;
-  CGnuPlot::PointStyle     pointStyle_;
-  COptInt                  lineStyleNum_;
-  AxesData                 axesData_;
-  KeyData                  keyData_;
-  int                      xind_ { 1 };
-  int                      yind_ { 1 };
-  CGnuPlot::LogScaleMap    logScale_;
-  CGnuPlot::Smooth         smooth_;
-  CGnuPlot::HistogramStyle histogramStyle_;
-  bool                     fitX_, fitY_, fitZ_;
-  CGnuPlotContour          contour_;
-  bool                     contourSet_;
-  ZPolygons                surface_;
-  bool                     surfaceSet_;
-  COptReal                 surfaceZMin_, surfaceZMax_;
-  int                      trianglePattern3D_;
-  CGnuPlotRenderer*        renderer_;
-  CBBox2D                  clip_;
+  CGnuPlotWindow*    window_;
+  int                id_;
+  bool               is3D_;
+  CGnuPlotPlot*      parentPlot_;
+  CBBox2D            region_;
+  CRange2D           margin_;
+  PlotSize           plotSize_;
+  COptValT<CBBox2D>  clearRect_;
+  Plots              subPlots_;
+  Points2D           points2D_;
+  Points3D           points3D_;
+  int                ind_;
+  Arrows             arrows_;
+  Labels             labels_;
+  Rectangles         rects_;
+  Ellipses           ellipses_;
+  Polygons           polygons_;
+  Palette            palette_;
+  PlotStyle          style_;
+  FillStyle          fillStyle_;
+  CGnuPlotLineStyleP lineStyle_;
+  PointStyle         pointStyle_;
+  AxesData           axesData_;
+  KeyData            keyData_;
+  int                xind_ { 1 };
+  int                yind_ { 1 };
+  LogScaleMap        logScale_;
+  Smooth             smooth_;
+  HistogramStyle     histogramStyle_;
+  bool               fitX_, fitY_, fitZ_;
+  CGnuPlotContour    contour_;
+  bool               contourSet_;
+  ZPolygons          surface_;
+  bool               surfaceSet_;
+  COptReal           surfaceZMin_, surfaceZMax_;
+  int                trianglePattern3D_;
+  CGnuPlotRenderer*  renderer_;
+  CBBox2D            clip_;
 };
 
 #endif

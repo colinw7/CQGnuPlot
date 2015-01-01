@@ -1,6 +1,8 @@
 #include <CQGnuPlot.h>
 #include <CQGnuPlotWindow.h>
 #include <CQGnuPlotPlot.h>
+#include <CQGnuPlotLineStyle.h>
+#include <CQGnuPlotObject.h>
 
 #include <CQApp.h>
 #include <CQUtil.h>
@@ -75,6 +77,48 @@ createPlot(CGnuPlotWindow *window)
   CQGnuPlotPlot *plot = new CQGnuPlotPlot(qwindow);
 
   return plot;
+}
+
+CGnuPlotLineStyle *
+CQGnuPlot::
+createLineStyle()
+{
+  return new CQGnuPlotLineStyle;
+}
+
+CGnuPlotArrow *
+CQGnuPlot::
+createArrow()
+{
+  return new CQGnuPlotArrow;
+}
+
+CGnuPlotLabel *
+CQGnuPlot::
+createLabel()
+{
+  return new CQGnuPlotLabel;
+}
+
+CGnuPlotEllipse *
+CQGnuPlot::
+createEllipse()
+{
+  return new CQGnuPlotEllipse;
+}
+
+CGnuPlotPolygon *
+CQGnuPlot::
+createPolygon()
+{
+  return new CQGnuPlotPolygon;
+}
+
+CGnuPlotRectangle *
+CQGnuPlot::
+createRectangle()
+{
+  return new CQGnuPlotRectangle;
 }
 
 void

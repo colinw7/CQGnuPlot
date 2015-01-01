@@ -1,6 +1,7 @@
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotWindow.h>
 #include <CQGnuPlotRenderer.h>
+#include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
 
 CQGnuPlotPlot::
@@ -160,52 +161,18 @@ setFillPattern(const CQFillPattern &pattern)
   }
 }
 
-CQGnuPlotPlot::CQSymbolType
+CQGnuPlot::SymbolType
 CQGnuPlotPlot::
 pointType() const
 {
-  SymbolType type = CGnuPlotPlot::pointType();
-
-  switch (type) {
-    case SymbolType::POINT              : return SymbolPoint;
-    case SymbolType::PLUS               : return SymbolPlus;
-    case SymbolType::CROSS              : return SymbolCross;
-    case SymbolType::STAR               : return SymbolStar;
-    case SymbolType::BOX                : return SymbolBox;
-    case SymbolType::FILLED_BOX         : return SymbolFilledBox;
-    case SymbolType::CIRCLE             : return SymbolCircle;
-    case SymbolType::FILLED_CIRCLE      : return SymbolFilledCircle;
-    case SymbolType::TRIANGLE           : return SymbolTriangle;
-    case SymbolType::FILLED_TRIANGLE    : return SymbolFilledTriangle;
-    case SymbolType::INV_TRIANGLE       : return SymbolITriangle;
-    case SymbolType::FILLED_INV_TRIANGLE: return SymbolFilledITriangle;
-    case SymbolType::DIAMOND            : return SymbolDiamond;
-    case SymbolType::FILLED_DIAMOND     : return SymbolFilledDiamond;
-    default                             : return SymbolCross;
-  }
+  return CQGnuPlotUtil::symbolType(CGnuPlotPlot::pointType());
 }
 
 void
 CQGnuPlotPlot::
-setPointType(const CQSymbolType &type)
+setPointType(const CQGnuPlot::SymbolType &type)
 {
-  switch (type) {
-    case SymbolPoint          : CGnuPlotPlot::setPointType(SymbolType::POINT); break;
-    case SymbolPlus           : CGnuPlotPlot::setPointType(SymbolType::PLUS); break;
-    case SymbolCross          : CGnuPlotPlot::setPointType(SymbolType::CROSS); break;
-    case SymbolStar           : CGnuPlotPlot::setPointType(SymbolType::STAR); break;
-    case SymbolBox            : CGnuPlotPlot::setPointType(SymbolType::BOX); break;
-    case SymbolFilledBox      : CGnuPlotPlot::setPointType(SymbolType::FILLED_BOX); break;
-    case SymbolCircle         : CGnuPlotPlot::setPointType(SymbolType::CIRCLE); break;
-    case SymbolFilledCircle   : CGnuPlotPlot::setPointType(SymbolType::FILLED_CIRCLE); break;
-    case SymbolTriangle       : CGnuPlotPlot::setPointType(SymbolType::TRIANGLE); break;
-    case SymbolFilledTriangle : CGnuPlotPlot::setPointType(SymbolType::FILLED_TRIANGLE); break;
-    case SymbolITriangle      : CGnuPlotPlot::setPointType(SymbolType::INV_TRIANGLE); break;
-    case SymbolFilledITriangle: CGnuPlotPlot::setPointType(SymbolType::FILLED_INV_TRIANGLE); break;
-    case SymbolDiamond        : CGnuPlotPlot::setPointType(SymbolType::DIAMOND); break;
-    case SymbolFilledDiamond  : CGnuPlotPlot::setPointType(SymbolType::FILLED_DIAMOND); break;
-    default                   : CGnuPlotPlot::setPointType(SymbolType::CROSS); break;
-  }
+  CGnuPlotPlot::setPointType(CQGnuPlotUtil::symbolType(type));
 }
 
 void

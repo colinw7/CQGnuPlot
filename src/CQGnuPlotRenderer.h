@@ -27,8 +27,7 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void setPainter(QPainter *painter);
 
   void drawPoint  (const CPoint2D &p, const CRGBA &c) override;
-  void drawSymbol (const CPoint2D &p, CGnuPlot::SymbolType type,
-                   double size, const CRGBA &c) override;
+  void drawSymbol (const CPoint2D &p, SymbolType type, double size, const CRGBA &c) override;
   void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c) override;
   void drawRect   (const CBBox2D &rect, const CRGBA &c) override;
   void patternRect(const CBBox2D &rect, CGnuPlot::FillPattern pattern,
