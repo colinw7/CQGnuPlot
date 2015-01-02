@@ -15,7 +15,8 @@ class CGnuPlotPlot;
 
 class CGnuPlotAxis {
  public:
-  CGnuPlotAxis(CGnuPlotPlot *plot, COrientation direction, double start=0.0, double end=1.0);
+  CGnuPlotAxis(CGnuPlotPlot *plot=0, COrientation direction=CORIENTATION_HORIZONTAL,
+               double start=0.0, double end=1.0);
  ~CGnuPlotAxis();
 
   double getStart() const { return start1_; }

@@ -205,7 +205,6 @@ namespace CGnuPlotUtil {
                           {"yerrorbars"    , CGnuPlot::PlotStyle::YERRORBARS},
                           {"yerrorlines"   , CGnuPlot::PlotStyle::YERRORLINES},
                           {"vectors"       , CGnuPlot::PlotStyle::VECTORS},
-
                           {"boxes"         , CGnuPlot::PlotStyle::BOXES},
                           {"boxerrorbars"  , CGnuPlot::PlotStyle::BOXERRORBARS},
                           {"boxxyerrorbars", CGnuPlot::PlotStyle::BOXXYERRORBARS},
@@ -745,6 +744,8 @@ void
 CGnuPlot::
 plotCmd(const std::string &args)
 {
+  // TODO: update local line style copy
+
   typedef std::vector<CGnuPlotPlot *> Plots;
 
   Plots plots;
@@ -1290,8 +1291,7 @@ plotCmd(const std::string &args)
       }
       // pointsize <size>
       else if (plotVar == PlotVar::POINTSIZE) {
-        // TODO: just for this plot ?
-        double r;
+        double r = 1.0;
 
         if (parseReal(line, r))
           lineStyle()->setPointSize(r > 0 ? r : 1.0);
@@ -1841,8 +1841,7 @@ splotCmd(const std::string &args)
       }
       // pointsize <size>
       else if (plotVar == PlotVar::POINTSIZE) {
-        // TODO: just for this plot ?
-        double r;
+        double r = 1.0;
 
         if (parseReal(line, r))
           lineStyle()->setPointSize(r > 0 ? r : 1.0);
@@ -2343,18 +2342,16 @@ setCmd(const std::string &args)
         }
       }
       else if (arg == "filled" || arg == "empty" || arg == "nofilled") {
-        arrow->setFilled(arg == "filled");
+        arrow->setFilled(arg == "filled" || arg == "empty");
         arrow->setEmpty (arg == "empty" );
       }
       else if (arg == "front" || arg == "back") {
         arrow->setFront(arg == "front");
       }
       else if (arg == "linetype" || arg == "lt") {
-        arg = readNonSpace(line);
-
         int lt = 0;
 
-        if (CStrUtil::toInteger(arg, &lt))
+        if (parseInteger(line, lt))
           arrow->setLineType(lt);
       }
       else if (arg == "linewidth" || arg == "lw") {
@@ -2364,11 +2361,9 @@ setCmd(const std::string &args)
           arrow->setLineWidth(lw);
       }
       else if (arg == "linestyle" || arg == "ls") {
-        arg = readNonSpace(line);
-
         int linestyle = -1;
 
-        if (! CStrUtil::toInteger(arg, &linestyle))
+        if (! parseInteger(line, linestyle))
           linestyle = -1;
       }
       else {
@@ -2747,8 +2742,7 @@ setCmd(const std::string &args)
       }
       // set object <index> rectangle
       //            {from <position> {to|rto} <position> |
-      //            center <position> size <w>,<h> |
-      //            at <position> size <w>,<h>}
+      //            center|at <position> size <w>,<h> |
       else if (type == ObjectType::RECTANGLE) {
         CGnuPlotRectangleP rect = CGnuPlotRectangleP(createRectangle());
 
@@ -2761,7 +2755,7 @@ setCmd(const std::string &args)
         arg = readNonSpace(line);
 
         while (arg != "") {
-          if      (arg == "from" || arg == "at") {
+          if      (arg == "from") {
             if (parsePosition(line, p))
               from = p;
           }
@@ -2773,7 +2767,7 @@ setCmd(const std::string &args)
             if (parsePosition(line, p))
               rto = p;
           }
-          else if (arg == "center") {
+          else if (arg == "center" || arg == "at") {
             if (parsePosition(line, p))
               center = p;
           }
@@ -2788,6 +2782,18 @@ setCmd(const std::string &args)
 
             if (parseColorSpec(line, c))
               rect->setFillColor(c);
+          }
+          else if (arg == "fillstyle" || arg == "fs") {
+            int i;
+
+            if (parseInteger(line, i))
+              rect->setFillStyle(i);
+          }
+          else if (arg == "linewidth" || arg == "lw") {
+            double lw = 1.0;
+
+            if (parseReal(line, lw))
+              rect->setLineWidth(lw);
           }
 
           arg = readNonSpace(line);
@@ -2823,12 +2829,37 @@ setCmd(const std::string &args)
     else
       std::cerr << "Invalid object type" << std::endl;
   }
-  // set title "<title>"
+  // set title {"<text>"} {offset <offset>} {font "<font>{,<size>}"}
+  //           {{textcolor | tc} {<colorspec> | default}} {{no}enhanced}
   else if (var == VariableName::TITLE) {
-    std::string titleStr;
+    std::string s;
 
-    if (parseString(line, titleStr, "Invalid title string"))
-      title().str = titleStr;
+    if (parseString(line, s, "Invalid title string"))
+      title_.str = s;
+
+    std::string arg = readNonSpace(line);
+
+    while (arg != "") {
+      if      (arg == "offset") {
+        double r;
+
+        if (parseReal(line, r))
+          title_.offset = r;
+      }
+      else if (arg == "font") {
+        if (parseString(line, s, "Invalid font string"))
+          title_.font = s;
+      }
+      else if (arg == "textcolor" || arg == "tc") {
+        CRGBA c;
+
+        if (parseColorSpec(line, c))
+          title_.color = c;
+      }
+      else if (arg == "enhanced" || arg == "noenhanced") {
+        title_.enhanced = (arg == "enhanced");
+      }
+    }
   }
 
   // set style [data|function|increment] <args>
@@ -2884,6 +2915,83 @@ setCmd(const std::string &args)
     //                             [ linewidth | lw {type:i} ]
     //                             [ [ linestyle | ls {style:i} ] ]
     else if (var1 == StyleVar::ARROW) {
+      CGnuPlotArrow::ArrowStyle arrowStyle;
+
+      CGnuPlotArrow::ArrowStyle &arrowStyle1 = arrowStyle;
+
+      std::string arg = readNonSpace(line);
+
+      if (CStrUtil::isInteger(arg)) {
+        int arrowId = -1;
+
+        if (CStrUtil::toInteger(arg, &arrowId))
+          arrowStyle1 = arrowStyles_[arrowId];
+
+        arg = readNonSpace(line);
+      }
+
+      while (arg != "") {
+        if      (arg == "default") {
+          arrowStyle1 = CGnuPlotArrow::ArrowStyle();
+        }
+        else if (arg == "nohead" || arg == "head" || arg == "backhead" || arg == "heads") {
+          if      (arg == "nohead"  ) { arrowStyle1.fhead = false; arrowStyle1.thead = false; }
+          else if (arg == "head"    ) { arrowStyle1.fhead = false; arrowStyle1.thead = true ; }
+          else if (arg == "backhead") { arrowStyle1.fhead = true ; arrowStyle1.thead = false; }
+          else if (arg == "heads"   ) { arrowStyle1.fhead = true ; arrowStyle1.thead = true ; }
+        }
+        else if (arg == "size") {
+          double r = 1.0;
+
+          if (parseReal(line, r))
+            arrowStyle1.length = r;
+
+          if (line.isChar(',')) {
+            line.skipChar();
+
+            if (parseReal(line, r))
+              arrowStyle1.angle = r;
+
+            if (line.isChar(',')) {
+              line.skipChar();
+
+              if (parseReal(line, r))
+                arrowStyle1.backAngle = r;
+            }
+          }
+        }
+        else if (arg == "filled" || arg == "empty" || arg == "nofilled") {
+          arrowStyle1.filled = (arg == "filled" || arg == "empty");
+          arrowStyle1.empty  = (arg == "empty" );
+        }
+        else if (arg == "front" || arg == "back") {
+          arrowStyle1.front = (arg == "front");
+        }
+        else if (arg == "linetype" || arg == "lt") {
+          int lt = 0;
+
+          if (parseInteger(line, lt))
+            arrowStyle1.lineType = lt;
+        }
+        else if (arg == "linewidth" || arg == "lw") {
+          double lw = 1.0;
+
+          if (parseReal(line, lw))
+            arrowStyle1.lineWidth = lw;
+        }
+        else if (arg == "linestyle" || arg == "ls") {
+          int i = -1;
+
+          if (! parseInteger(line, i))
+            arrowStyle1.lineStyle = i;
+        }
+        else {
+          std::cerr << "Invalid arg '" << arg << "'" << std::endl;
+          break;
+        }
+
+        arg = readNonSpace(line);
+      }
     }
     // set style fill [ empty | solid [{density:r}] | pattern [{id:i}]]
     //                [ border [ {linetype:i} ] | noborder ]
@@ -2917,14 +3025,8 @@ setCmd(const std::string &args)
         if (! line.isString("border") && ! line.isString("noborder")) {
           int patternNum = 0;
 
-          std::string arg1 = readNonSpace(line);
-
-          long l;
-
-          if (CStrUtil::toInteger(arg1, &l))
-            patternNum = l;
-
-          fillStyle().setPattern((FillPattern) patternNum);
+          if (parseInteger(line, patternNum))
+            fillStyle().setPattern((FillPattern) patternNum);
 
           line.skipSpace();
         }
@@ -2939,11 +3041,9 @@ setCmd(const std::string &args)
           line.skipSpace();
 
           if (line.isValid()) {
-            std::string arg1 = readNonSpace(line);
+            int i;
 
-            long i;
-
-            if (CStrUtil::toInteger(arg1, &i))
+            if (parseInteger(line, i))
               fillBorderLine = i;
           }
 
@@ -2983,11 +3083,9 @@ setCmd(const std::string &args)
           std::string lwStr = readNonSpace(line);
 
           if (lwStr == "linewidth" || lwStr == "lw") {
-            std::string widthValue = readNonSpace(line);
+            int i;
 
-            long i;
-
-            if (! CStrUtil::toInteger(widthValue, &i))
+            if (! parseInteger(line, i))
               i = 0;
           }
         }
@@ -3080,10 +3178,10 @@ setCmd(const std::string &args)
 
     std::cerr << "setBarSize(" << size << ");" << std::endl;
   }
-  // boxwidth [ {size:r} ] [ absolute | relative ]
+  // set boxwidth [ {size:r} ] [ absolute | relative ]
   else if (var == VariableName::BOXWIDTH) {
     BoxWidthType boxWidthType = BoxWidthType::AUTO;
-    double       boxWidth     = getBoxWidth();
+    double       boxWidth     = getBoxWidth().width;
 
     if (line.isValid()) {
       std::string sizeStr = readNonSpace(line);
@@ -3106,15 +3204,13 @@ setCmd(const std::string &args)
       }
     }
 
-    setBoxWidth(boxWidth, boxWidthType);
+    setBoxWidth(BoxWidth(boxWidth, boxWidthType));
   }
-  // set pointsize {mult:r}
+  // set pointsize <size>
   else if (var == VariableName::POINTSIZE) {
-    std::string sizeStr = readNonSpace(line);
-
     double r = 1.0;
 
-    if (CStrUtil::toReal(sizeStr, &r))
+    if (parseReal(line, r))
       lineStyle()->setPointSize(r > 0 ? r : 1.0);
   }
 

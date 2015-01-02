@@ -29,7 +29,7 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void drawPoint  (const CPoint2D &p, const CRGBA &c) override;
   void drawSymbol (const CPoint2D &p, SymbolType type, double size, const CRGBA &c) override;
   void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c) override;
-  void drawRect   (const CBBox2D &rect, const CRGBA &c) override;
+  void drawRect   (const CBBox2D &rect, const CRGBA &c, double width) override;
   void patternRect(const CBBox2D &rect, CGnuPlot::FillPattern pattern,
                    const CRGBA &fg, const CRGBA &bg) override;
   void fillRect   (const CBBox2D &rect, const CRGBA &c) override;

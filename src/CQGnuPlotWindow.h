@@ -140,9 +140,7 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   CQMouseMode          *zoomMode_;
   CQMouseMode          *panMode_;
   CQPropertyTree       *tree_;
-  CQPropertyRealEditor *redit1_;
-  CQPropertyRealEditor *redit2_;
-  CQPropertyRealEditor *redit3_;
+  CQPropertyRealEditor *redit_[4];
   QLabel               *plotLabel_;
   QLabel               *posLabel_;
   CQGnuPlotPlot        *currentPlot_;

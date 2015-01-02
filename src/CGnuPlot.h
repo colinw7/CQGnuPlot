@@ -440,10 +440,18 @@ class CGnuPlot {
   //---
 
   struct BoxWidth {
-    BoxWidth() { }
+    BoxWidth(double w=1, BoxWidthType t=BoxWidthType::AUTO) :
+     width(w), type(t) {
+    }
 
     double       width { 1 };
     BoxWidthType type  { BoxWidthType::AUTO };
+
+    double getSpacing(double s) const {
+      if      (type == BoxWidthType::ABSOLUTE) return width;
+      else if (type == BoxWidthType::RELATIVE) return width*s;
+      else                                     return s;
+    }
   };
 
   //---
@@ -453,6 +461,9 @@ class CGnuPlot {
 
     std::string str;
     double      offset { 0 };
+    std::string font;
+    CRGBA       color;
+    bool        enhanced { false };
   };
 
   //---
@@ -554,6 +565,9 @@ class CGnuPlot {
   };
 
   //---
+
+  typedef CGnuPlotArrow::ArrowStyle ArrowStyle;
+  typedef std::map<int,ArrowStyle>  ArrowStyles;
 
   typedef std::vector<CGnuPlotArrowP>     Arrows;
   typedef std::vector<CGnuPlotLabelP>     Labels;
@@ -755,6 +769,9 @@ class CGnuPlot {
     *zmax = axesData().zaxis.max.getValue(1);
   }
 
+  void setBoxWidth(const BoxWidth &w) { boxWidth_ = w; }
+  const BoxWidth &getBoxWidth() const { return boxWidth_; }
+
   void setSmooth(Smooth s) { smooth_ = s; }
   Smooth getSmooth() const { return smooth_; }
 
@@ -886,10 +903,6 @@ class CGnuPlot {
   void setMissingStr(const std::string &chars) { missingStr_ = chars; }
   const std::string &getMissingStr() const { return missingStr_; }
 
-  void setBoxWidth(double w, BoxWidthType type) { boxWidth_.width = w; boxWidth_.type = type; }
-  double getBoxWidth() { return boxWidth_.width; }
-  BoxWidthType getBoxWidthType() { return boxWidth_.type; }
-
   void setOutputFile(const std::string &file) { outputFile_ = file; }
   const std::string &getOutputFile() const { return outputFile_; }
 
@@ -1000,7 +1013,7 @@ class CGnuPlot {
   PlotStyle          dataStyle_      { PlotStyle::POINTS };
   PlotStyle          functionStyle_  { PlotStyle::LINES };
   Smooth             smooth_         { Smooth::NONE };
-  HistogramStyle     histogramStyle_ { HistogramStyle::NONE };
+  HistogramStyle     histogramStyle_ { HistogramStyle::CLUSTERED };
   AngleType          angleType_      { AngleType::RADIANS };
   FillStyle          fillStyle_;
   CGnuPlotLineStyleP lineStyle_;
@@ -1014,6 +1027,7 @@ class CGnuPlot {
   int                xind_ { 1 };
   int                yind_ { 1 };
   Arrows             arrows_;
+  ArrowStyles        arrowStyles_;
   Labels             labels_;
   Rectangles         rects_;
   Ellipses           ellipses_;

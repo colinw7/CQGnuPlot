@@ -25,7 +25,7 @@ uint CQGnuPlotWindow::lastId;
 CQGnuPlotWindow::
 CQGnuPlotWindow(CQGnuPlot *plot) :
  QMainWindow(), CGnuPlotWindow(plot), id_(++lastId), plot_(plot),
- redit1_(0), redit2_(0), redit3_(0), currentPlot_(0)
+ redit_{0, 0, 0, 0}, currentPlot_(0)
 {
   QWidget *frame = new QWidget;
 
@@ -134,23 +134,24 @@ addProperties()
 {
   tree_->clear();
 
-  if (! redit1_) {
-    redit1_ = new CQPropertyRealEditor(0, 360, 1);
-    redit2_ = new CQPropertyRealEditor(-1000, 1000, 0.1);
-    redit3_ = new CQPropertyRealEditor(0, 50, 1);
+  if (! redit_[0]) {
+    redit_[0] = new CQPropertyRealEditor(0, 360, 1);
+    redit_[1] = new CQPropertyRealEditor(-1000, 1000, 0.1);
+    redit_[2] = new CQPropertyRealEditor(0, 50, 1);
+    redit_[3] = new CQPropertyRealEditor(0, 1, 0.05);
   }
 
   if (is3D()) {
     tree_->addProperty("", this, "enable3D");
-    tree_->addProperty("", this, "rotateX" )->setEditorFactory(redit1_);
-    tree_->addProperty("", this, "rotateY" )->setEditorFactory(redit1_);
-    tree_->addProperty("", this, "rotateZ" )->setEditorFactory(redit1_);
-    tree_->addProperty("", this, "xmin3D"  )->setEditorFactory(redit2_);
-    tree_->addProperty("", this, "xmax3D"  )->setEditorFactory(redit2_);
-    tree_->addProperty("", this, "ymin3D"  )->setEditorFactory(redit2_);
-    tree_->addProperty("", this, "ymax3D"  )->setEditorFactory(redit2_);
-    tree_->addProperty("", this, "near3D"  )->setEditorFactory(redit2_);
-    tree_->addProperty("", this, "far3D"   )->setEditorFactory(redit2_);
+    tree_->addProperty("", this, "rotateX" )->setEditorFactory(redit_[0]);
+    tree_->addProperty("", this, "rotateY" )->setEditorFactory(redit_[0]);
+    tree_->addProperty("", this, "rotateZ" )->setEditorFactory(redit_[0]);
+    tree_->addProperty("", this, "xmin3D"  )->setEditorFactory(redit_[1]);
+    tree_->addProperty("", this, "xmax3D"  )->setEditorFactory(redit_[1]);
+    tree_->addProperty("", this, "ymin3D"  )->setEditorFactory(redit_[1]);
+    tree_->addProperty("", this, "ymax3D"  )->setEditorFactory(redit_[1]);
+    tree_->addProperty("", this, "near3D"  )->setEditorFactory(redit_[1]);
+    tree_->addProperty("", this, "far3D"   )->setEditorFactory(redit_[1]);
   }
 
   if (is3D()) {
@@ -213,26 +214,26 @@ addPlotProperties(CGnuPlotPlot *plot, bool styleProperties, bool isRoot)
   if (isRoot) {
     QString regionName = name + "/region";
 
-    tree_->addProperty(regionName, plot1, "regionLeft"  )->setEditorFactory(redit2_);
-    tree_->addProperty(regionName, plot1, "regionBottom")->setEditorFactory(redit2_);
-    tree_->addProperty(regionName, plot1, "regionRight" )->setEditorFactory(redit2_);
-    tree_->addProperty(regionName, plot1, "regionTop"   )->setEditorFactory(redit2_);
+    tree_->addProperty(regionName, plot1, "regionLeft"  )->setEditorFactory(redit_[1]);
+    tree_->addProperty(regionName, plot1, "regionBottom")->setEditorFactory(redit_[1]);
+    tree_->addProperty(regionName, plot1, "regionRight" )->setEditorFactory(redit_[1]);
+    tree_->addProperty(regionName, plot1, "regionTop"   )->setEditorFactory(redit_[1]);
 
     QString marginName = name + "/margin";
 
-    tree_->addProperty(marginName, plot1, "marginLeft"  )->setEditorFactory(redit3_);
-    tree_->addProperty(marginName, plot1, "marginRight" )->setEditorFactory(redit3_);
-    tree_->addProperty(marginName, plot1, "marginTop"   )->setEditorFactory(redit3_);
-    tree_->addProperty(marginName, plot1, "marginBottom")->setEditorFactory(redit3_);
+    tree_->addProperty(marginName, plot1, "marginLeft"  )->setEditorFactory(redit_[2]);
+    tree_->addProperty(marginName, plot1, "marginRight" )->setEditorFactory(redit_[2]);
+    tree_->addProperty(marginName, plot1, "marginTop"   )->setEditorFactory(redit_[2]);
+    tree_->addProperty(marginName, plot1, "marginBottom")->setEditorFactory(redit_[2]);
 
     QString rangeName = name + "/range";
 
-    tree_->addProperty(rangeName, plot1, "xmin")->setEditorFactory(redit2_);
-    tree_->addProperty(rangeName, plot1, "ymin")->setEditorFactory(redit2_);
-    tree_->addProperty(rangeName, plot1, "xmax")->setEditorFactory(redit2_);
-    tree_->addProperty(rangeName, plot1, "ymax")->setEditorFactory(redit2_);
+    tree_->addProperty(rangeName, plot1, "xmin")->setEditorFactory(redit_[1]);
+    tree_->addProperty(rangeName, plot1, "ymin")->setEditorFactory(redit_[1]);
+    tree_->addProperty(rangeName, plot1, "xmax")->setEditorFactory(redit_[1]);
+    tree_->addProperty(rangeName, plot1, "ymax")->setEditorFactory(redit_[1]);
 
-    tree_->addProperty(name, plot1, "ratio")->setEditorFactory(redit2_);
+    tree_->addProperty(name, plot1, "ratio")->setEditorFactory(redit_[1]);
 
     QString axesName = name + "/axes";
 
@@ -248,7 +249,7 @@ addPlotProperties(CGnuPlotPlot *plot, bool styleProperties, bool isRoot)
     QString keyName = name + "/key";
 
     tree_->addProperty(name, plot1, "borders");
-    tree_->addProperty(name, plot1, "borderWidth")->setEditorFactory(redit3_);
+    tree_->addProperty(name, plot1, "borderWidth");
 
     tree_->addProperty(keyName, plot1, "keyDisplayed");
     tree_->addProperty(keyName, plot1, "keyHAlign");
@@ -261,14 +262,18 @@ addPlotProperties(CGnuPlotPlot *plot, bool styleProperties, bool isRoot)
   }
 
   if (styleProperties) {
+    tree_->addProperty(name, plot1, "plotStyle");
+    tree_->addProperty(name, plot1, "histogramStyle");
     tree_->addProperty(name, plot1, "lineStyleId");
 
-    tree_->addProperty(name, plot1, "fillType"   );
-    tree_->addProperty(name, plot1, "fillPattern");
-    tree_->addProperty(name, plot1, "lineColor"  );
-    tree_->addProperty(name, plot1, "lineWidth"  );
-    tree_->addProperty(name, plot1, "pointType"  );
-    tree_->addProperty(name, plot1, "pointSize"  );
+    tree_->addProperty(name, plot1, "fillType"     );
+    tree_->addProperty(name, plot1, "fillPattern"  );
+    tree_->addProperty(name, plot1, "lineColor"    );
+    tree_->addProperty(name, plot1, "lineWidth"    );
+    tree_->addProperty(name, plot1, "pointType"    );
+    tree_->addProperty(name, plot1, "pointSize"    );
+    tree_->addProperty(name, plot1, "boxWidthValue")->setEditorFactory(redit_[3]);
+    tree_->addProperty(name, plot1, "boxWidthType" );
   }
 
   //---
@@ -335,6 +340,8 @@ addPlotProperties(CGnuPlotPlot *plot, bool styleProperties, bool isRoot)
 
     tree_->addProperty(name1, r1, "from");
     tree_->addProperty(name1, r1, "to");
+    tree_->addProperty(name1, r1, "fillStyle");
+    tree_->addProperty(name1, r1, "lineWidth");
     tree_->addProperty(name1, r1, "strokeColor");
     tree_->addProperty(name1, r1, "fillColor");
 

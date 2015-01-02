@@ -59,6 +59,8 @@ init()
 {
   CGnuPlot *plot = this->plot();
 
+  setBoxWidth(plot->getBoxWidth());
+
   setFillStyle (plot->fillStyle ());
   setLineStyle (plot->lineStyle ());
   setPointStyle(plot->pointStyle());
@@ -224,20 +226,11 @@ fit()
     COptReal xmin, ymin, zmin, xmax, ymax, zmax;
 
     if (! is3D_) {
-      uint np = numPoints2D();
-
-      for (uint i = 0; i < np; ++i) {
-        Point p = getPoint2D(i);
-
+      for (const auto &p : getPoints2D()) {
         double x, y;
 
-        if (p.getX(x)) {
-          xmin.updateMin(x); xmax.updateMax(x);
-        }
-
-        if (p.getY(y)) {
-          ymin.updateMin(y); ymax.updateMax(y);
-        }
+        if (p.getX(x)) { xmin.updateMin(x); xmax.updateMax(x); }
+        if (p.getY(y)) { ymin.updateMin(y); ymax.updateMax(y); }
       }
     }
     else {
@@ -503,6 +496,12 @@ draw()
   else
     renderer_->unsetRatio();
 
+  //---
+
+  initPlotAxis();
+
+  //---
+
   // root plot with children
   if (! subPlots_.empty()) {
     if (getStyle() == PlotStyle::HISTOGRAMS)
@@ -539,7 +538,11 @@ draw()
     }
   }
 
+  //---
+
   drawAnnotations();
+
+  //---
 
   drawKey();
 }
@@ -565,8 +568,6 @@ drawHistogram(const Plots &plots)
   double xmax = xmax1.getValue(1);
   double ymax = ymax1.getValue(1);
 
-  ymin = 0.0; // TODO: needed
-
   //---
 
   uint numPlots = plots.size();
@@ -584,11 +585,14 @@ drawHistogram(const Plots &plots)
   double xf = 1.0;
 
   if      (getHistogramStyle() == HistogramStyle::CLUSTERED) {
-    CBBox2D range(xmin - 1, ymin, xmax + 1, ymax);
+    double y1 = std::min(0.0, ymin);
+    double y2 = std::max(0.0, ymin);
+
+    CBBox2D range(xmin - 1, y1, xmax + 1, ymax);
 
     renderer_->setRange(range);
 
-    axesData_.yaxis.max.setValue(ymin);
+    axesData_.yaxis.max.setValue(y1);
     axesData_.yaxis.max.setValue(ymax);
 
     double w = xf*(xmax - xmin)/(numPoints*numPlots) - 2*xb;
@@ -603,13 +607,13 @@ drawHistogram(const Plots &plots)
 
       double d = (plot->ind() - 1 - numPlots/2.0)*w;
 
-      for (auto point : plot->getPoints2D()) {
+      for (const auto &point : plot->getPoints2D()) {
         double x, y;
 
         if (! point.getX(x) || ! point.getY(y))
           continue;
 
-        CBBox2D bbox(x + d, ymin, x + d + w, y);
+        CBBox2D bbox(x + d, y2, x + d + w, y);
 
         CRGBA c = (fillType == FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(255,255,255));
 
@@ -878,9 +882,7 @@ draw2D()
     }
   }
   else if (style_ == PlotStyle::LABELS) {
-    for (uint i = 0; i < np; ++i) {
-      const Point &point = getPoint2D(i);
-
+    for (const auto &point : getPoints2D()) {
       double x, y;
 
       if (! point.getX(x) || ! point.getY(y))
@@ -911,9 +913,7 @@ draw2D()
     }
 
     if (style_ == PlotStyle::DOTS) {
-      for (uint i = 0; i < np; ++i) {
-        const Point &point = getPoint2D(i);
-
+      for (const auto &point : getPoints2D()) {
         double x, y;
 
         if (! point.getX(x) || ! point.getY(y))
@@ -924,9 +924,9 @@ draw2D()
     }
 
     if (style_ == PlotStyle::POINTS || style_ == PlotStyle::LINES_POINTS) {
-      for (uint i = 0; i < np; ++i) {
-        const Point &point = getPoint2D(i);
+      const CRGBA &c = lineStyle->color(CRGBA(1,0,0));
 
+      for (const auto &point : getPoints2D()) {
         double x, y;
 
         if (! point.getX(x) || ! point.getY(y))
@@ -941,8 +941,105 @@ draw2D()
 
         mapLogPoint(&x, &y);
 
-        renderer_->drawSymbol(CPoint2D(x, y), pointType(), size,
-                              lineStyle->color(CRGBA(1,0,0)));
+        renderer_->drawSymbol(CPoint2D(x, y), pointType(), size, c);
+      }
+    }
+
+    if (style_ == PlotStyle::HISTEPS || style_ == PlotStyle::STEPS ||
+        style_ == PlotStyle::FSTEPS) {
+      const CRGBA &c = lineStyle->color(CRGBA(1,0,0));
+
+      if      (style_ == PlotStyle::HISTEPS) {
+        for (uint i1 = 0, i2 = 1; i2 < np; i1 = i2++) {
+          const Point &point1 = getPoint2D(i1);
+          const Point &point2 = getPoint2D(i2);
+
+          CPoint2D p1, p2;
+
+          if (point1.getPoint(p1) && point2.getPoint(p2)) {
+            double xm = CGnuPlotUtil::avg({p1.x, p2.x});
+
+            CPoint2D p3(xm, p1.y);
+            CPoint2D p4(xm, p2.y);
+
+            drawLine(p1, p3, lineStyle->width(), c);
+            drawLine(p3, p4, lineStyle->width(), c);
+            drawLine(p4, p2, lineStyle->width(), c);
+          }
+        }
+      }
+      else if (style_ == PlotStyle::STEPS) {
+        for (uint i1 = 0, i2 = 1; i2 < np; i1 = i2++) {
+          const Point &point1 = getPoint2D(i1);
+          const Point &point2 = getPoint2D(i2);
+
+          CPoint2D p1, p2;
+
+          if (point1.getPoint(p1) && point2.getPoint(p2)) {
+            CPoint2D p3(p2.x, p1.y);
+
+            drawLine(p1, p3, lineStyle->width(), c);
+            drawLine(p3, p2, lineStyle->width(), c);
+          }
+        }
+      }
+      else if (style_ == PlotStyle::FSTEPS) {
+        for (uint i1 = 0, i2 = 1; i2 < np; i1 = i2++) {
+          const Point &point1 = getPoint2D(i1);
+          const Point &point2 = getPoint2D(i2);
+
+          CPoint2D p1, p2;
+
+          if (point1.getPoint(p1) && point2.getPoint(p2)) {
+            CPoint2D p3(p1.x, p2.y);
+
+            drawLine(p1, p3, lineStyle->width(), c);
+            drawLine(p3, p2, lineStyle->width(), c);
+          }
+        }
+      }
+
+      for (const auto &point : getPoints2D()) {
+        CPoint2D p;
+
+        if (point.getPoint(p))
+          renderer_->drawSymbol(p, SymbolType::FILLED_BOX, 1.0, c);
+      }
+    }
+
+    if (style_ == PlotStyle::BOXES) {
+      double xi = getBoxWidth().getSpacing(getXSpacing());
+
+    //double y1 = std::min(0.0, ymin);
+      double y2 = std::max(0.0, ymin);
+
+      const CRGBA &c = lineStyle->color(CRGBA(1,0,0));
+
+      for (const auto &point : getPoints2D()) {
+        CPoint2D p;
+
+        if (point.getPoint(p)) {
+          CBBox2D bbox(p.x - xi/2, y2, p.x + xi/2, p.y);
+
+          renderer_->drawRect(bbox, c);
+        }
+      }
+    }
+
+    if (style_ == PlotStyle::IMPULSES) {
+    //double y1 = std::min(0.0, ymin);
+      double y2 = std::max(0.0, ymin);
+
+      const CRGBA &c = lineStyle->color(CRGBA(1,0,0));
+
+      for (const auto &point : getPoints2D()) {
+        CPoint2D p;
+
+        if (point.getPoint(p)) {
+          CPoint2D p1(p.x, y2);
+
+          drawLine(p1, p, lineStyle->width(), c);
+        }
       }
     }
   }
@@ -985,10 +1082,8 @@ drawBorder()
 
     renderer_->setRange(bbox);
 
-    double xmin1 = bbox.getLeft  ();
-    double ymin1 = bbox.getBottom();
-    double xmax1 = bbox.getRight ();
-    double ymax1 = bbox.getTop   ();
+    double xmin1 = bbox.getLeft  (), ymin1 = bbox.getBottom();
+    double xmax1 = bbox.getRight (), ymax1 = bbox.getTop   ();
 
     double bw = axesData().borderWidth;
 
@@ -1011,19 +1106,9 @@ CGnuPlotPlot::
 drawXAxes(int xind, bool drawOther)
 {
   AxisData &xaxis = (xind == 2 ? axesData_.x2axis : axesData_.xaxis);
-  AxisData &yaxis = axesData_.yaxis;
 
-  double xmin = xaxis.min.getValue(0.0);
-  double xmax = xaxis.max.getValue(1.0);
-
-  double ymin = yaxis.min.getValue(0.0);
-  double ymax = yaxis.max.getValue(1.0);
-
-  CGnuPlotAxis plotXAxis(this, CORIENTATION_HORIZONTAL);
-  CGnuPlotAxis plotYAxis(this, CORIENTATION_VERTICAL);
-
-  plotXAxis.setRange(xmin, xmax);
-  plotYAxis.setRange(ymin, ymax);
+  CGnuPlotAxis &plotXAxis = (xind == 2 ? plotXAxis2_ : plotXAxis1_);
+  CGnuPlotAxis &plotYAxis = plotYAxis1_;
 
   double xmin1 = plotXAxis.getStart();
   double xmax1 = plotXAxis.getEnd  ();
@@ -1090,19 +1175,9 @@ CGnuPlotPlot::
 drawYAxes(int yind, bool drawOther)
 {
   AxisData &yaxis = (yind == 2 ? axesData_.y2axis : axesData_.yaxis);
-  AxisData &xaxis = axesData_.xaxis;
 
-  double xmin = xaxis.min.getValue(0.0);
-  double xmax = xaxis.max.getValue(1.0);
-
-  double ymin = yaxis.min.getValue(0.0);
-  double ymax = yaxis.max.getValue(1.0);
-
-  CGnuPlotAxis plotXAxis(this, CORIENTATION_HORIZONTAL);
-  CGnuPlotAxis plotYAxis(this, CORIENTATION_VERTICAL);
-
-  plotXAxis.setRange(xmin, xmax);
-  plotYAxis.setRange(ymin, ymax);
+  CGnuPlotAxis &plotXAxis = plotXAxis1_;
+  CGnuPlotAxis &plotYAxis = (yind == 2 ? plotYAxis2_ : plotYAxis1_);
 
   double xmin1 = plotXAxis.getStart();
   double xmax1 = plotXAxis.getEnd  ();
@@ -1160,6 +1235,51 @@ drawYAxes(int yind, bool drawOther)
 
   if (yaxis.grid)
     plotYAxis.drawGrid(xmin1, xmax1);
+}
+
+void
+CGnuPlotPlot::
+initPlotAxis()
+{
+  double xmin1 = axesData_.xaxis .min.getValue(0.0);
+  double xmax1 = axesData_.xaxis .max.getValue(1.0);
+  double ymin1 = axesData_.yaxis .min.getValue(0.0);
+  double ymax1 = axesData_.yaxis .max.getValue(1.0);
+
+  double xmin2 = axesData_.x2axis.min.getValue(0.0);
+  double xmax2 = axesData_.x2axis.max.getValue(1.0);
+  double ymin2 = axesData_.y2axis.min.getValue(0.0);
+  double ymax2 = axesData_.y2axis.max.getValue(1.0);
+
+  plotXAxis1_ = CGnuPlotAxis(this, CORIENTATION_HORIZONTAL); plotXAxis1_.setRange(xmin1, xmax1);
+  plotXAxis2_ = CGnuPlotAxis(this, CORIENTATION_HORIZONTAL); plotXAxis2_.setRange(xmin2, xmax2);
+
+  plotYAxis1_ = CGnuPlotAxis(this, CORIENTATION_VERTICAL  ); plotYAxis1_.setRange(ymin1, ymax1);
+  plotYAxis2_ = CGnuPlotAxis(this, CORIENTATION_VERTICAL  ); plotYAxis2_.setRange(ymin2, ymax2);
+}
+
+double
+CGnuPlotPlot::
+getXSpacing() const
+{
+  COptReal dx;
+
+  uint np = numPoints2D();
+
+  for (uint i1 = 0, i2 = 1; i2 < np; i1 = i2++) {
+    const Point &point1 = getPoint2D(i1);
+    const Point &point2 = getPoint2D(i2);
+
+    CPoint2D p1, p2;
+
+    if (point1.getPoint(p1) && point2.getPoint(p2)) {
+      double dx1 = std::abs(p2.x - p1.x);
+
+      dx.updateMin(dx1);
+    }
+  }
+
+  return dx.getValue(1);
 }
 
 CGnuPlotLineStyleP
@@ -1743,10 +1863,10 @@ drawArrow(const CGnuPlotArrowP &arrow)
       points.push_back(CPoint2D(xf3, yf3));
       points.push_back(CPoint2D(xf2, yf2));
 
-      if (arrow->getFilled())
-        renderer_->fillPolygon(points, arrow->getStrokeColor());
-      else
+      if (arrow->getEmpty())
         renderer_->drawPolygon(points, w, arrow->getStrokeColor());
+      else
+        renderer_->fillPolygon(points, arrow->getStrokeColor());
     }
   }
 
@@ -1787,10 +1907,10 @@ drawArrow(const CGnuPlotArrowP &arrow)
       points.push_back(CPoint2D(xt3, yt3));
       points.push_back(CPoint2D(xt2, yt2));
 
-      if (arrow->getFilled())
-        renderer_->fillPolygon(points, arrow->getStrokeColor());
-      else
+      if (arrow->getEmpty())
         renderer_->drawPolygon(points, w, arrow->getStrokeColor());
+      else
+        renderer_->fillPolygon(points, arrow->getStrokeColor());
     }
   }
 
@@ -1813,8 +1933,10 @@ void
 CGnuPlotPlot::
 drawRectangle(const CGnuPlotRectangleP &rect)
 {
-  renderer_->fillRect(CBBox2D(rect->getFrom(), rect->getTo()), rect->getFillColor  ());
-  renderer_->drawRect(CBBox2D(rect->getFrom(), rect->getTo()), rect->getStrokeColor());
+  renderer_->fillRect(CBBox2D(rect->getFrom(), rect->getTo()), rect->getFillColor());
+
+  renderer_->drawRect(CBBox2D(rect->getFrom(), rect->getTo()), rect->getStrokeColor(),
+                      rect->getLineWidth());
 }
 
 void

@@ -25,6 +25,21 @@ class CGnuPlotObject {
 
 class CGnuPlotArrow : public CGnuPlotObject {
  public:
+  struct ArrowStyle {
+    bool     fhead     { false };
+    bool     thead     { true };
+    double   length    { -1 };
+    double   angle     { -1 };
+    double   backAngle { -1 };
+    bool     filled    { false };
+    bool     empty     { false };
+    bool     front     { false };
+    int      lineType  { -1 };
+    double   lineWidth { -1 };
+    int      lineStyle { -1 };
+  };
+
+ public:
   CGnuPlotArrow() { }
 
   int getInd() const { return ind_; }
@@ -39,51 +54,45 @@ class CGnuPlotArrow : public CGnuPlotObject {
   bool getRelative() const { return relative_; }
   void setRelative(bool b) { relative_ = b; }
 
-  double getLength() const { return length_; }
-  void setLength(double l) { length_ = l; }
+  bool getFHead() const { return style_.fhead; }
+  void setFHead(bool b) { style_.fhead = b; }
 
-  double getAngle() const { return angle_; }
-  void setAngle(double a) { angle_ = a; }
+  bool getTHead() const { return style_.thead; }
+  void setTHead(bool b) { style_.thead = b; }
 
-  double getBackAngle() const { return backAngle_; }
-  void setBackAngle(double a) { backAngle_ = a; }
+  double getLength() const { return style_.length; }
+  void setLength(double l) { style_.length = l; }
 
-  bool getFHead() const { return fhead_; }
-  void setFHead(bool b) { fhead_ = b; }
+  double getAngle() const { return style_.angle; }
+  void setAngle(double a) { style_.angle = a; }
 
-  bool getTHead() const { return thead_; }
-  void setTHead(bool b) { thead_ = b; }
+  double getBackAngle() const { return style_.backAngle; }
+  void setBackAngle(double a) { style_.backAngle = a; }
 
-  bool getFilled() const { return filled_; }
-  void setFilled(bool b) { filled_ = b; }
+  bool getFilled() const { return style_.filled; }
+  void setFilled(bool b) { style_.filled = b; }
 
-  bool getEmpty() const { return empty_; }
-  void setEmpty(bool b) { empty_ = b; }
+  bool getEmpty() const { return style_.empty; }
+  void setEmpty(bool b) { style_.empty = b; }
 
-  bool getFront() const { return front_; }
-  void setFront(bool b) { front_ = b; }
+  bool getFront() const { return style_.front; }
+  void setFront(bool b) { style_.front = b; }
 
-  int getLineType() const { return lineType_; }
-  void setLineType(int t) { lineType_ = t; }
+  int getLineType() const { return style_.lineType; }
+  void setLineType(int t) { style_.lineType = t; }
 
-  double getLineWidth() const { return lineWidth_; }
-  void setLineWidth(double w) { lineWidth_ = w; }
+  double getLineWidth() const { return style_.lineWidth; }
+  void setLineWidth(double w) { style_.lineWidth = w; }
+
+  int getLineStyle() const { return style_.lineStyle; }
+  void setLineStyle(int t) { style_.lineStyle = t; }
 
  private:
-  int      ind_       { -1 };
-  CPoint2D from_      { 0, 0 };
-  CPoint2D to_        { 1, 1 };
-  bool     relative_  { false };
-  double   length_    { -1 };
-  double   angle_     { -1 };
-  double   backAngle_ { -1 };
-  bool     fhead_     { false };
-  bool     thead_     { true };
-  bool     filled_    { false };
-  bool     empty_     { false };
-  bool     front_     { false };
-  int      lineType_  { -1 };
-  double   lineWidth_ { -1 };
+  int        ind_      { -1 };
+  CPoint2D   from_     { 0, 0 };
+  CPoint2D   to_       { 1, 1 };
+  bool       relative_ { false };
+  ArrowStyle style_;
 };
 
 //---
@@ -179,9 +188,17 @@ class CGnuPlotRectangle : public CGnuPlotObject {
   const CPoint2D &getTo() const { return to_; }
   void setTo(const CPoint2D &p) { to_ = p; }
 
+  int getFillStyle() const { return fs_; }
+  void setFillStyle(int fs) { fs_ = fs; }
+
+  double getLineWidth() const { return lw_; }
+  void setLineWidth(double w) { lw_ = w; }
+
  private:
   CPoint2D from_ { 0, 0 };
   CPoint2D to_   { 1, 1 };
+  int      fs_   { -1 };
+  double   lw_   { 1 };
 };
 
 //---

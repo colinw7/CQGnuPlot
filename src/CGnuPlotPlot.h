@@ -4,6 +4,7 @@
 #include <CGnuPlot.h>
 #include <CGnuPlotContour.h>
 #include <CGnuPlotObject.h>
+#include <CGnuPlotAxis.h>
 
 #include <CExpr.h>
 #include <CRefPtr.h>
@@ -26,6 +27,8 @@ class CGnuPlotPlot {
   typedef std::vector<CGnuPlotRectangleP> Rectangles;
   typedef std::vector<CExprValuePtr>      Values;
   typedef std::vector<CGnuPlotPlot *>     Plots;
+  typedef CGnuPlot::BoxWidth              BoxWidth;
+  typedef CGnuPlot::BoxWidthType          BoxWidthType;
   typedef CGnuPlot::AxesData              AxesData;
   typedef CGnuPlot::AxisData              AxisData;
   typedef CGnuPlot::KeyData               KeyData;
@@ -62,6 +65,17 @@ class CGnuPlotPlot {
     double getX() const;
     double getY() const;
     double getZ() const;
+
+    bool getPoint(CPoint2D &p) const {
+      double x, y;
+
+      if (! getX(x) || ! getY(y))
+        return false;
+
+      p = CPoint2D(x, y);
+
+      return true;
+    }
 
     bool getValue(int n, double &r) const;
     bool getValue(int n, std::string &str) const;
@@ -198,6 +212,15 @@ class CGnuPlotPlot {
 
   int ind() const { return ind_; }
   void setInd(int ind) { ind_ = ind; }
+
+  void setBoxWidth(const BoxWidth &w) { boxWidth_ = w; }
+  const BoxWidth &getBoxWidth() const { return boxWidth_; }
+
+  const BoxWidthType &getBoxWidthType() const { return boxWidth_.type; }
+  void setBoxWidthType(const BoxWidthType &t) { boxWidth_.type = t; }
+
+  double getBoxWidthValue() const { return boxWidth_.width; }
+  void setBoxWidthValue(double s) { boxWidth_.width = s; }
 
   PlotStyle getStyle() const { return style_; }
   void setStyle(PlotStyle style) { style_ = style; }
@@ -372,9 +395,15 @@ class CGnuPlotPlot {
   void drawPalette();
 
   void drawAxes();
+
   void drawBorder();
+
   void drawXAxes(int xind, bool other);
   void drawYAxes(int yind, bool other);
+
+  void initPlotAxis();
+
+  double getXSpacing() const;
 
   void drawKey();
 
@@ -444,6 +473,7 @@ class CGnuPlotPlot {
   Plots              subPlots_;
   Points2D           points2D_;
   Points3D           points3D_;
+  BoxWidth           boxWidth_;
   int                ind_;
   Arrows             arrows_;
   Labels             labels_;
@@ -459,6 +489,8 @@ class CGnuPlotPlot {
   KeyData            keyData_;
   int                xind_ { 1 };
   int                yind_ { 1 };
+  CGnuPlotAxis       plotXAxis1_, plotXAxis2_;
+  CGnuPlotAxis       plotYAxis1_, plotYAxis2_;
   LogScaleMap        logScale_;
   Smooth             smooth_;
   HistogramStyle     histogramStyle_;

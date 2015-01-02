@@ -110,8 +110,10 @@ class CQGnuPlotPolygon : public CQGnuPlotObject, public CGnuPlotPolygon {
 class CQGnuPlotRectangle : public CQGnuPlotObject, public CGnuPlotRectangle {
   Q_OBJECT
 
-  Q_PROPERTY(QPointF from READ getFrom WRITE setFrom)
-  Q_PROPERTY(QPointF to   READ getTo   WRITE setTo  )
+  Q_PROPERTY(QPointF from      READ getFrom      WRITE setFrom     )
+  Q_PROPERTY(QPointF to        READ getTo        WRITE setTo       )
+  Q_PROPERTY(int     fillStyle READ getFillStyle WRITE setFillStyle)
+  Q_PROPERTY(double  lineWidth READ getLineWidth WRITE setLineWidth)
 
  public:
   CQGnuPlotRectangle();

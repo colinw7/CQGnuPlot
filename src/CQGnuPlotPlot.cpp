@@ -46,133 +46,116 @@ setLineColor(const QColor &c)
   CGnuPlotPlot::setLineColor(fromQColor(c));
 }
 
-CQGnuPlotPlot::CQHAlignType
+CQGnuPlot::CQHAlignType
 CQGnuPlotPlot::
-getKeyHAlign() const
+keyHAlign() const
 {
-  CHAlignType type = CGnuPlotPlot::getKeyHAlign();
-
-  switch (type) {
-    case CHALIGN_TYPE_LEFT  : return AlignLeft;
-    case CHALIGN_TYPE_RIGHT : return AlignRight;
-    case CHALIGN_TYPE_CENTER: return AlignHCenter;
-    default:                  return AlignLeft;
-  }
+  return CQGnuPlotUtil::alignConv(CGnuPlotPlot::getKeyHAlign());
 }
 
 void
 CQGnuPlotPlot::
-setKeyHAlign(const CQHAlignType &a)
+setKeyHAlign(const CQGnuPlot::CQHAlignType &a)
 {
-  switch (a) {
-    case AlignLeft   : CGnuPlotPlot::setKeyHAlign(CHALIGN_TYPE_LEFT  ); break;
-    case AlignRight  : CGnuPlotPlot::setKeyHAlign(CHALIGN_TYPE_RIGHT ); break;
-    case AlignHCenter: CGnuPlotPlot::setKeyHAlign(CHALIGN_TYPE_CENTER); break;
-    default:           CGnuPlotPlot::setKeyHAlign(CHALIGN_TYPE_LEFT  ); break;
-  }
+  CGnuPlotPlot::setKeyHAlign(CQGnuPlotUtil::alignConv(a));
 }
 
-CQGnuPlotPlot::CQVAlignType
+CQGnuPlot::CQVAlignType
 CQGnuPlotPlot::
-getKeyVAlign() const
+keyVAlign() const
 {
-  CVAlignType type = CGnuPlotPlot::getKeyVAlign();
-
-  switch (type) {
-    case CVALIGN_TYPE_BOTTOM: return AlignBottom;
-    case CVALIGN_TYPE_TOP   : return AlignTop;
-    case CVALIGN_TYPE_CENTER: return AlignVCenter;
-    default:                  return AlignBottom;
-  }
+  return CQGnuPlotUtil::alignConv(CGnuPlotPlot::getKeyVAlign());
 }
 
 void
 CQGnuPlotPlot::
-setKeyVAlign(const CQVAlignType &a)
+setKeyVAlign(const CQGnuPlot::CQVAlignType &a)
 {
-  switch (a) {
-    case AlignBottom : CGnuPlotPlot::setKeyVAlign(CVALIGN_TYPE_BOTTOM); break;
-    case AlignTop    : CGnuPlotPlot::setKeyVAlign(CVALIGN_TYPE_TOP   ); break;
-    case AlignVCenter: CGnuPlotPlot::setKeyVAlign(CVALIGN_TYPE_CENTER); break;
-    default:           CGnuPlotPlot::setKeyVAlign(CVALIGN_TYPE_BOTTOM); break;
-  }
+  CGnuPlotPlot::setKeyVAlign(CQGnuPlotUtil::alignConv(a));
 }
 
-CQGnuPlotPlot::CQFillType
+CQGnuPlot::CQPlotStyle
+CQGnuPlotPlot::
+plotStyle() const
+{
+  return CQGnuPlotUtil::plotStyleConv(CGnuPlotPlot::getStyle());
+}
+
+void
+CQGnuPlotPlot::
+setPlotStyle(const CQGnuPlot::CQPlotStyle &s)
+{
+  CGnuPlotPlot::setStyle(CQGnuPlotUtil::plotStyleConv(s));
+}
+
+CQGnuPlot::CQHistogramStyle
+CQGnuPlotPlot::
+histogramStyle() const
+{
+  return CQGnuPlotUtil::histogramStyleConv(CGnuPlotPlot::getHistogramStyle());
+}
+
+void
+CQGnuPlotPlot::
+setHistogramStyle(const CQGnuPlot::CQHistogramStyle &s)
+{
+  CGnuPlotPlot::setHistogramStyle(CQGnuPlotUtil::histogramStyleConv(s));
+}
+
+CQGnuPlot::CQFillType
 CQGnuPlotPlot::
 fillType() const
 {
-  FillType type = CGnuPlotPlot::fillType();
-
-  switch (type) {
-    case FillType::EMPTY  : return FillNone;
-    case FillType::SOLID  : return FillSolid;
-    case FillType::PATTERN: return FillPatterned;
-    default               : return FillNone;
-  }
+  return CQGnuPlotUtil::fillTypeConv(CGnuPlotPlot::fillType());
 }
 
 void
 CQGnuPlotPlot::
-setFillType(const CQFillType &type)
+setFillType(const CQGnuPlot::CQFillType &type)
 {
-  switch (type) {
-    case FillNone     : CGnuPlotPlot::setFillType(FillType::EMPTY); break;
-    case FillSolid    : CGnuPlotPlot::setFillType(FillType::SOLID); break;
-    case FillPatterned: CGnuPlotPlot::setFillType(FillType::PATTERN); break;
-  }
+  CGnuPlotPlot::setFillType(CQGnuPlotUtil::fillTypeConv(type));
 }
 
-CQGnuPlotPlot::CQFillPattern
+CQGnuPlot::CQFillPattern
 CQGnuPlotPlot::
 fillPattern() const
 {
-  FillPattern pattern = CGnuPlotPlot::fillPattern();
-
-  switch (pattern) {
-    case FillPattern::NONE  : return PatternNone;
-    case FillPattern::HATCH : return PatternHatch;
-    case FillPattern::DENSE : return PatternDense;
-    case FillPattern::FG    : return PatternFg;
-    case FillPattern::FDIAG : return PatternFDiag;
-    case FillPattern::BDIAG : return PatternBDiag;
-    case FillPattern::FDIAG1: return PatternFDiag1;
-    case FillPattern::BDIAG1: return PatternBDiag1;
-    case FillPattern::BG    : return PatternBg;
-    default                 : return PatternNone;
-  }
+  return CQGnuPlotUtil::fillPatternConv(CGnuPlotPlot::fillPattern());
 }
 
 void
 CQGnuPlotPlot::
-setFillPattern(const CQFillPattern &pattern)
+setFillPattern(const CQGnuPlot::CQFillPattern &pattern)
 {
-  switch (pattern) {
-    case PatternNone  : CGnuPlotPlot::setFillPattern(FillPattern::NONE); break;
-    case PatternHatch : CGnuPlotPlot::setFillPattern(FillPattern::HATCH); break;
-    case PatternDense : CGnuPlotPlot::setFillPattern(FillPattern::DENSE); break;
-    case PatternFg    : CGnuPlotPlot::setFillPattern(FillPattern::FG); break;
-    case PatternFDiag : CGnuPlotPlot::setFillPattern(FillPattern::FDIAG); break;
-    case PatternBDiag : CGnuPlotPlot::setFillPattern(FillPattern::BDIAG); break;
-    case PatternFDiag1: CGnuPlotPlot::setFillPattern(FillPattern::FDIAG1); break;
-    case PatternBDiag1: CGnuPlotPlot::setFillPattern(FillPattern::BDIAG1); break;
-    case PatternBg    : CGnuPlotPlot::setFillPattern(FillPattern::BG); break;
-    default           : CGnuPlotPlot::setFillPattern(FillPattern::NONE); break;
-  }
+  CGnuPlotPlot::setFillPattern(CQGnuPlotUtil::fillPatternConv(pattern));
 }
 
-CQGnuPlot::SymbolType
+CQGnuPlot::CQSymbolType
 CQGnuPlotPlot::
 pointType() const
 {
-  return CQGnuPlotUtil::symbolType(CGnuPlotPlot::pointType());
+  return CQGnuPlotUtil::symbolConv(CGnuPlotPlot::pointType());
 }
 
 void
 CQGnuPlotPlot::
-setPointType(const CQGnuPlot::SymbolType &type)
+setPointType(const CQGnuPlot::CQSymbolType &type)
 {
-  CGnuPlotPlot::setPointType(CQGnuPlotUtil::symbolType(type));
+  CGnuPlotPlot::setPointType(CQGnuPlotUtil::symbolConv(type));
+}
+
+CQGnuPlot::CQBoxWidthType
+CQGnuPlotPlot::
+getBoxWidthType() const
+{
+  return CQGnuPlotUtil::boxWidthTypeConv(CGnuPlotPlot::getBoxWidthType());
+}
+
+void
+CQGnuPlotPlot::
+setBoxWidthType(const CQGnuPlot::CQBoxWidthType &type)
+{
+  CGnuPlotPlot::setBoxWidthType(CQGnuPlotUtil::boxWidthTypeConv(type));
 }
 
 void

@@ -2,6 +2,7 @@
 #include <CQGnuPlotWindow.h>
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotCanvas.h>
+#include <CQGnuPlotUtil.h>
 #include <CGnuPlotUtil.h>
 #include <CSymbol2D.h>
 
@@ -204,40 +205,32 @@ drawLine(const CPoint2D &point1, const CPoint2D &point2, double width, const CRG
 
 void
 CQGnuPlotRenderer::
-drawRect(const CBBox2D &rect, const CRGBA &c)
+drawRect(const CBBox2D &rect, const CRGBA &c, double width)
 {
+  QPen p = painter_->pen();
+
+  p.setWidthF(width);
+  p.setColor(toQColor(c));
+
+  painter_->setPen(p);
+
   double px1, py1, px2, py2;
 
   windowToPixel(rect.getXMin(), rect.getYMin(), &px1, &py1);
   windowToPixel(rect.getXMax(), rect.getYMax(), &px2, &py2);
 
-  QPen pen(toQColor(c));
+  QRectF qrect(std::min(px1, px2), std::min(py1, py2), abs(px2 - px1), abs(py2 - py1));
 
-  painter_->setPen(pen);
-
-  painter_->drawRect(QRectF(px1, py1, px2 - px1, py2 - py1));
+  painter_->drawRect(qrect);
 }
 
 void
 CQGnuPlotRenderer::
 patternRect(const CBBox2D &rect, CGnuPlot::FillPattern pattern, const CRGBA &fg, const CRGBA &bg)
 {
-  CRGBA c = fg;
+  CRGBA c = (pattern == CGnuPlot::FillPattern::BG ? bg : fg);
 
-  Qt::BrushStyle qpattern;
-
-  switch (pattern) {
-    case CGnuPlot::FillPattern::NONE  : qpattern = Qt::NoBrush         ; break;
-    case CGnuPlot::FillPattern::HATCH : qpattern = Qt::DiagCrossPattern; break;
-    case CGnuPlot::FillPattern::DENSE : qpattern = Qt::Dense2Pattern   ; break;
-    case CGnuPlot::FillPattern::FG    : qpattern = Qt::SolidPattern    ; break;
-    case CGnuPlot::FillPattern::FDIAG : qpattern = Qt::BDiagPattern    ; break;
-    case CGnuPlot::FillPattern::BDIAG : qpattern = Qt::FDiagPattern    ; break;
-    case CGnuPlot::FillPattern::FDIAG1: qpattern = Qt::HorPattern      ; break;
-    case CGnuPlot::FillPattern::BDIAG1: qpattern = Qt::VerPattern      ; break;
-    case CGnuPlot::FillPattern::BG    : qpattern = Qt::SolidPattern    ; c = bg; break;
-    default                           : qpattern = Qt::NoBrush         ; break;
-  }
+  Qt::BrushStyle qpattern = CQGnuPlotUtil::fillPatternQtConv(pattern);
 
   double px1, py1, px2, py2;
 
@@ -246,7 +239,9 @@ patternRect(const CBBox2D &rect, CGnuPlot::FillPattern pattern, const CRGBA &fg,
 
   QBrush b(toQColor(c), qpattern);
 
-  painter_->fillRect(QRectF(px1, py1, px2 - px1, py2 - py1), b);
+  QRectF qrect(std::min(px1, px2), std::min(py1, py2), abs(px2 - px1), abs(py2 - py1));
+
+  painter_->fillRect(qrect, b);
 }
 
 void
@@ -260,7 +255,9 @@ fillRect(const CBBox2D &rect, const CRGBA &c)
 
   QBrush b(toQColor(c));
 
-  painter_->fillRect(QRectF(px1, py1, px2 - px1, py2 - py1), b);
+  QRectF qrect(std::min(px1, px2), std::min(py1, py2), abs(px2 - px1), abs(py2 - py1));
+
+  painter_->fillRect(qrect, b);
 }
 
 void

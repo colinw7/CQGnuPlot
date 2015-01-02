@@ -1,6 +1,5 @@
 #include <CQGnuPlotLineStyle.h>
 #include <CQGnuPlotUtil.h>
-#include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
 
 CQGnuPlotLineStyle::
@@ -22,16 +21,16 @@ setColor(const QColor &c)
   CGnuPlotLineStyle::setColor(CQUtil::colorToRGBA(c));
 }
 
-CQGnuPlot::SymbolType
+CQGnuPlot::CQSymbolType
 CQGnuPlotLineStyle::
 pointType() const
 {
-  return CQGnuPlotUtil::symbolType(CGnuPlotLineStyle::pointType());
+  return CQGnuPlotUtil::symbolConv(CGnuPlotLineStyle::pointType());
 }
 
 void
 CQGnuPlotLineStyle::
-setPointType(const CQGnuPlot::SymbolType &type)
+setPointType(const CQGnuPlot::CQSymbolType &type)
 {
-  CGnuPlotLineStyle::setPointType(CQGnuPlotUtil::symbolType(type));
+  CGnuPlotLineStyle::setPointType(CQGnuPlotUtil::symbolConv(type));
 }

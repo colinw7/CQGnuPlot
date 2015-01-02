@@ -38,7 +38,7 @@ class CGnuPlotRenderer {
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
   virtual void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width=1.0,
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
-  virtual void drawRect   (const CBBox2D &rect, const CRGBA &c=CRGBA(0,0,0)) = 0;
+  virtual void drawRect   (const CBBox2D &rect, const CRGBA &c=CRGBA(0,0,0), double w=1.0) = 0;
   virtual void drawPolygon(const std::vector<CPoint2D> &points, double w=1.0,
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
   virtual void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c=CRGBA(0,0,0)) = 0;

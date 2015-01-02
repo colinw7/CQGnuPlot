@@ -13,10 +13,29 @@ class CQGnuPlotPlot;
 class CQGnuPlot : public QObject, public CGnuPlot {
   Q_OBJECT
 
-  Q_ENUMS(SymbolType)
+  Q_ENUMS(CQSymbolType)
+  Q_ENUMS(CQHAlignType)
+  Q_ENUMS(CQVAlignType)
+  Q_ENUMS(CQPlotStyle)
+  Q_ENUMS(CQHistogramStyle)
+  Q_ENUMS(CQFillType)
+  Q_ENUMS(CQFillPattern)
+  Q_ENUMS(CQBoxWidthType)
 
  public:
-  enum SymbolType {
+  enum CQHAlignType {
+    AlignLeft,
+    AlignRight,
+    AlignHCenter
+  };
+
+  enum CQVAlignType {
+    AlignTop,
+    AlignBottom,
+    AlignVCenter
+  };
+
+  enum CQSymbolType {
     SymbolPoint,
     SymbolPlus,
     SymbolCross,
@@ -33,6 +52,54 @@ class CQGnuPlot : public QObject, public CGnuPlot {
     SymbolFilledDiamond
   };
 
+  enum CQPlotStyle {
+    PlotNone,
+    PlotLines,
+    PlotPoints,
+    PlotLinesPoints,
+    PlotDots,
+    PlotLabels,
+    PlotHiSteps,
+    PlotSteps,
+    PlotFSteps,
+    PlotHistograms,
+    PlotBoxes,
+    PlotImpulses,
+  };
+
+  enum CQHistogramStyle {
+    HistogramNone,
+    HistogramClustered,
+    HistogramErrorBars,
+    HistogramRowStacked,
+    HistogramColumnStacked,
+  };
+
+  enum CQFillType {
+    FillNone,
+    FillSolid,
+    FillPatterned
+  };
+
+  enum CQFillPattern {
+    PatternNone,
+    PatternHatch,
+    PatternDense,
+    PatternFg,
+    PatternFDiag,
+    PatternBDiag,
+    PatternFDiag1,
+    PatternBDiag1,
+    PatternBg
+  };
+
+  enum CQBoxWidthType {
+    BoxWidthAuto,
+    BoxWidthAbsolute,
+    BoxWidthRelative,
+  };
+
+ public:
   struct TipRect {
     QString str;
     QRectF  rect;

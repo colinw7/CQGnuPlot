@@ -16,11 +16,6 @@ class QPainter;
 class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
   Q_OBJECT
 
-  Q_ENUMS(CQHAlignType)
-  Q_ENUMS(CQVAlignType)
-  Q_ENUMS(CQFillType)
-  Q_ENUMS(CQFillPattern)
-
   Q_PROPERTY(double regionLeft   READ getRegionLeft   WRITE setRegionLeft  )
   Q_PROPERTY(double regionRight  READ getRegionRight  WRITE setRegionRight )
   Q_PROPERTY(double regionTop    READ getRegionTop    WRITE setRegionTop   )
@@ -50,52 +45,26 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
   Q_PROPERTY(int     borders     READ getBorders     WRITE setBorders    )
   Q_PROPERTY(double  borderWidth READ getBorderWidth WRITE setBorderWidth)
 
-  Q_PROPERTY(bool         keyDisplayed READ getKeyDisplayed WRITE setKeyDisplayed)
-  Q_PROPERTY(CQHAlignType keyHAlign    READ getKeyHAlign    WRITE setKeyHAlign   )
-  Q_PROPERTY(CQVAlignType keyVAlign    READ getKeyVAlign    WRITE setKeyVAlign   )
-  Q_PROPERTY(bool         keyBox       READ getKeyBox       WRITE setKeyBox      )
-  Q_PROPERTY(bool         keyReverse   READ getKeyReverse   WRITE setKeyReverse  )
+  Q_PROPERTY(bool                    keyDisplayed READ getKeyDisplayed WRITE setKeyDisplayed)
+  Q_PROPERTY(CQGnuPlot::CQHAlignType keyHAlign    READ keyHAlign       WRITE setKeyHAlign   )
+  Q_PROPERTY(CQGnuPlot::CQVAlignType keyVAlign    READ keyVAlign       WRITE setKeyVAlign   )
+  Q_PROPERTY(bool                    keyBox       READ getKeyBox       WRITE setKeyBox      )
+  Q_PROPERTY(bool                    keyReverse   READ getKeyReverse   WRITE setKeyReverse  )
 
-  Q_PROPERTY(int                   lineStyleId READ lineStyleId WRITE setLineStyleId)
-  Q_PROPERTY(CQFillType            fillType    READ fillType    WRITE setFillType   )
-  Q_PROPERTY(CQFillPattern         fillPattern READ fillPattern WRITE setFillPattern)
-  Q_PROPERTY(QColor                lineColor   READ lineColor   WRITE setLineColor  )
-  Q_PROPERTY(double                lineWidth   READ lineWidth   WRITE setLineWidth  )
-  Q_PROPERTY(CQGnuPlot::SymbolType pointType   READ pointType   WRITE setPointType  )
-  Q_PROPERTY(double        pointSize   READ pointSize   WRITE setPointSize  )
+  Q_PROPERTY(CQGnuPlot::CQPlotStyle      plotStyle      READ plotStyle      WRITE setPlotStyle     )
+  Q_PROPERTY(CQGnuPlot::CQHistogramStyle histogramStyle READ histogramStyle WRITE setHistogramStyle)
+
+  Q_PROPERTY(int                       lineStyleId    READ lineStyleId      WRITE setLineStyleId  )
+  Q_PROPERTY(CQGnuPlot::CQFillType     fillType       READ fillType         WRITE setFillType     )
+  Q_PROPERTY(CQGnuPlot::CQFillPattern  fillPattern    READ fillPattern      WRITE setFillPattern  )
+  Q_PROPERTY(QColor                    lineColor      READ lineColor        WRITE setLineColor    )
+  Q_PROPERTY(double                    lineWidth      READ lineWidth        WRITE setLineWidth    )
+  Q_PROPERTY(CQGnuPlot::CQSymbolType   pointType      READ pointType        WRITE setPointType    )
+  Q_PROPERTY(double                    pointSize      READ pointSize        WRITE setPointSize    )
+  Q_PROPERTY(double                    boxWidthValue  READ getBoxWidthValue WRITE setBoxWidthValue)
+  Q_PROPERTY(CQGnuPlot::CQBoxWidthType boxWidthType   READ getBoxWidthType  WRITE setBoxWidthType )
 
   Q_PROPERTY(int trianglePattern3D READ trianglePattern3D WRITE setTrianglePattern3D)
-
- public:
-  enum CQHAlignType {
-    AlignLeft,
-    AlignRight,
-    AlignHCenter
-  };
-
-  enum CQVAlignType {
-    AlignTop,
-    AlignBottom,
-    AlignVCenter
-  };
-
-  enum CQFillType {
-    FillNone,
-    FillSolid,
-    FillPatterned
-  };
-
-  enum CQFillPattern {
-    PatternNone,
-    PatternHatch,
-    PatternDense,
-    PatternFg,
-    PatternFDiag,
-    PatternBDiag,
-    PatternFDiag1,
-    PatternBDiag1,
-    PatternBg
-  };
 
  public:
   CQGnuPlotPlot(CQGnuPlotWindow *window);
@@ -114,20 +83,29 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
   QColor lineColor() const;
   void setLineColor(const QColor &c);
 
-  CQHAlignType getKeyHAlign() const;
-  void setKeyHAlign(const CQHAlignType &a);
+  CQGnuPlot::CQHAlignType keyHAlign() const;
+  void setKeyHAlign(const CQGnuPlot::CQHAlignType &a);
 
-  CQVAlignType getKeyVAlign() const;
-  void setKeyVAlign(const CQVAlignType &a);
+  CQGnuPlot::CQVAlignType keyVAlign() const;
+  void setKeyVAlign(const CQGnuPlot::CQVAlignType &a);
 
-  CQFillType fillType() const;
-  void setFillType(const CQFillType &type);
+  CQGnuPlot::CQPlotStyle plotStyle() const;
+  void setPlotStyle(const CQGnuPlot::CQPlotStyle &s);
 
-  CQFillPattern fillPattern() const;
-  void setFillPattern(const CQFillPattern &f);
+  CQGnuPlot::CQHistogramStyle histogramStyle() const;
+  void setHistogramStyle(const CQGnuPlot::CQHistogramStyle &s);
 
-  CQGnuPlot::SymbolType pointType() const;
-  void setPointType(const CQGnuPlot::SymbolType &type);
+  CQGnuPlot::CQFillType fillType() const;
+  void setFillType(const CQGnuPlot::CQFillType &type);
+
+  CQGnuPlot::CQFillPattern fillPattern() const;
+  void setFillPattern(const CQGnuPlot::CQFillPattern &f);
+
+  CQGnuPlot::CQSymbolType pointType() const;
+  void setPointType(const CQGnuPlot::CQSymbolType &type);
+
+  CQGnuPlot::CQBoxWidthType getBoxWidthType() const;
+  void setBoxWidthType(const CQGnuPlot::CQBoxWidthType &type);
 
   void stateChanged(CGnuPlot::ChangeState) override { }
 
