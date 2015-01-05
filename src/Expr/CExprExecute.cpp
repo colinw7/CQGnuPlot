@@ -412,9 +412,6 @@ executeBinaryOperator(CExprOpType type)
 
   CExprValuePtr value = value1->execBinaryOp(value2, type);
 
-  if (! value.isValid())
-    return false;
-
   stackValue(value);
 
   return true;

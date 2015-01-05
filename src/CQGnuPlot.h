@@ -58,13 +58,15 @@ class CQGnuPlot : public QObject, public CGnuPlot {
     PlotPoints,
     PlotLinesPoints,
     PlotDots,
+    PlotImpulses,
     PlotLabels,
     PlotHiSteps,
     PlotSteps,
     PlotFSteps,
     PlotHistograms,
     PlotBoxes,
-    PlotImpulses,
+    PlotCandelSticks,
+    PlotFilledCurves,
   };
 
   enum CQHistogramStyle {

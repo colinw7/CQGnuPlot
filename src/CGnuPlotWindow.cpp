@@ -16,6 +16,23 @@ CGnuPlotWindow::
 
 void
 CGnuPlotWindow::
+clear()
+{
+  is3D_ = false;
+
+  plots_.clear();
+
+  title_  = CGnuPlot::Title ();
+  camera_ = CGnuPlot::Camera();
+
+  hidden3D_  = false;
+  surface3D_ = false;
+  contour3D_ = false;
+  pm3D_      = false;
+}
+
+void
+CGnuPlotWindow::
 set3D(bool b)
 {
   is3D_ = b;

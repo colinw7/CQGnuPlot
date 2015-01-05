@@ -284,6 +284,8 @@ void
 CQGnuPlotRenderer::
 drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c)
 {
+  if (points.empty()) return;
+
   QPainterPath path;
 
   double px, py;
@@ -311,6 +313,8 @@ void
 CQGnuPlotRenderer::
 fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
 {
+  if (points.empty()) return;
+
   QPainterPath path;
 
   double px, py;

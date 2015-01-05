@@ -261,6 +261,8 @@ addPlotProperties(CGnuPlotPlot *plot, bool styleProperties, bool isRoot)
       tree_->addProperty(name, plot1, "trianglePattern3D");
   }
 
+  tree_->addProperty(name, plot1, "displayed");
+
   if (styleProperties) {
     tree_->addProperty(name, plot1, "plotStyle");
     tree_->addProperty(name, plot1, "histogramStyle");

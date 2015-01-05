@@ -27,6 +27,7 @@ CGnuPlot.cpp \
 CGnuPlotAxis.cpp \
 CGnuPlotContour.cpp \
 CGnuPlotPlot.cpp \
+CGnuPlotPoint.cpp \
 CGnuPlotRenderer.cpp \
 CGnuPlotWindow.cpp \
 \
@@ -37,6 +38,8 @@ CQPropertyTree.cpp \
 CQPaletteChooser.cpp \
 CQPaletteDialog.cpp \
 \
+CMathGeom2D.cpp \
+CArcToBezier.cpp \
 CSymbol2D.cpp \
 \
 Expr/CExprBValue.cpp \
@@ -86,8 +89,10 @@ CQPropertyTree.h \
 CQPaletteChooser.h \
 CQPaletteDialog.h \
 \
-CStrUniqueMatch.h \
+CMathGeom2D.h \
+CArcToBezier.h \
 CSymbol2D.h \
+CStrUniqueMatch.h \
 \
 Expr/CExprBValue.h \
 Expr/CExprCompile.h \

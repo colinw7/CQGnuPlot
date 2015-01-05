@@ -231,7 +231,11 @@ class CGnuPlot {
     NOTITLE,
     SMOOTH,
     WITH,
-    POINTSIZE
+    LINETYPE,
+    LINEWIDTH,
+    FILLSTYLE,
+    POINTSIZE,
+    WHISKERBARS
   };
 
   enum class PlotStyle {
@@ -474,9 +478,9 @@ class CGnuPlot {
     AxisData(int i) : ind(i) { }
 
     int         ind;
-    bool        displayed { true };
+    bool        displayed { true  };
     bool        grid      { false };
-    bool        mirror    { true };
+    bool        mirror    { true  };
     bool        isTime    { false };
     COptReal    min;
     COptReal    max;
@@ -516,6 +520,7 @@ class CGnuPlot {
     typedef std::vector<std::string> Columns;
 
     bool        displayed  { true };               // key displayed
+    bool        outside    { false };              // inside/outside plot area
     CHAlignType halign     { CHALIGN_TYPE_RIGHT }; // key horizontal side
     CVAlignType valign     { CVALIGN_TYPE_TOP   }; // key vertical side
     bool        vertical   { true };               // ??
@@ -540,6 +545,19 @@ class CGnuPlot {
     Position(double x=0.0, double y=0.0) : p(x, y) { }
 
     Position(const CPoint2D &p1) : p(p1) { }
+  };
+
+  //---
+
+  struct FilledCurve {
+    bool               closed { true };
+    bool               above  { false  };
+    bool               below  { false  };
+    int                xaxis  { 0 };
+    int                yaxis  { 0 };
+    COptReal           xval;
+    COptReal           yval;
+    COptValT<CPoint2D> xyval;
   };
 
   //---
@@ -778,6 +796,9 @@ class CGnuPlot {
   const Palette &palette() const { return palette_; }
   void setPalette(const Palette &p) { palette_ = p; }
 
+  const FilledCurve &filledCurve() const { return filledCurve_; }
+  void setFilledCurve(const FilledCurve &c) { filledCurve_ = c; }
+
   const LogScaleMap &logScaleMap() const { return logScale_; }
 
   int trianglePattern3D() const { return trianglePattern3D_; }
@@ -813,7 +834,11 @@ class CGnuPlot {
 
   bool load(const std::string &filename);
 
+  void initReadLine();
+
   void loop();
+
+  void prompt(const std::string &msg);
 
   virtual CGnuPlotWindow *createWindow();
 
@@ -888,6 +913,10 @@ class CGnuPlot {
                   const Every &every=Every());
 
   CGnuPlotPlot *addFile3D(CGnuPlotWindow *window, const std::string &filename);
+
+  void decodeXRange(const std::vector<std::string> &xfields);
+  void decodeYRange(const std::vector<std::string> &xfields);
+  void decodeZRange(const std::vector<std::string> &xfields);
 
   CExprValuePtr decodeUsingCol(int i, const CGnuPlot::UsingCol &col,
                                int setNum, int pointNum, bool &skip);
@@ -1008,6 +1037,7 @@ class CGnuPlot {
   BoxWidth           boxWidth_;
   std::string        outputFile_;
   std::string        printFile_;
+  std::string        lastPlotCmd_;
   bool               printAppend_ { false };
   std::string        tableFile_;
   PlotStyle          dataStyle_      { PlotStyle::POINTS };
@@ -1034,6 +1064,7 @@ class CGnuPlot {
   Polygons           polygons_;
   Palette            palette_;
   Camera             camera_;
+  FilledCurve        filledCurve_;
   bool               fitX_ { false };
   bool               fitY_ { false };
   bool               fitZ_ { false };

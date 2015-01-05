@@ -84,8 +84,10 @@ static CExprValuePtr \
 CExprFunction##NAME(const CExprFunction::Values &values) { \
   assert(values.size() == 1); \
   double real; \
-  if (values[0]->getRealValue(real)) \
-    return CExprInst->createRealValue(F(real)); \
+  if (values[0]->getRealValue(real)) { \
+    double real1 = F(real); \
+    return CExprInst->createRealValue(real1); \
+  } \
   return CExprValuePtr(); \
 }
 
@@ -97,7 +99,8 @@ CExprFunction##NAME(const CExprFunction::Values &values) { \
   if (values[0]->getRealValue(real)) { \
     if (CExprInst->getDegrees()) \
       real = M_PI*real/180.0; \
-    return CExprInst->createRealValue(F(real)); \
+    double real1 = F(real); \
+    return CExprInst->createRealValue(real1); \
   } \
   return CExprValuePtr(); \
 }
@@ -108,10 +111,13 @@ CExprFunction##NAME(const CExprFunction::Values &values) { \
   assert(values.size() == 1); \
   double real; \
   if (values[0]->getRealValue(real)) { \
-    real = F(real); \
+    errno = 0; \
+    double real1 = F(real); \
+    if (errno != 0) \
+      return CExprValuePtr(); \
     if (CExprInst->getDegrees()) \
-      real = 180.0*real/M_PI; \
-    return CExprInst->createRealValue(real); \
+      real = 180.0*real1/M_PI; \
+    return CExprInst->createRealValue(real1); \
   } \
   return CExprValuePtr(); \
 }
@@ -193,8 +199,10 @@ class CExprFunction##NAME : public CExprFunctionObj { \
     assert(values.size() == 1); \
     if (values[0]->isRealValue()) { \
       double real; \
-      if (values[0]->getRealValue(real)) \
-        return CExprInst->createRealValue(F(real)); \
+      if (values[0]->getRealValue(real)) { \
+        double real1 = F(real); \
+        return CExprInst->createRealValue(real1); \
+      } \
     } \
     return CExprValuePtr(); \
   } \
@@ -203,6 +211,7 @@ class CExprFunction##NAME : public CExprFunctionObj { \
 CEXPR_REAL_TO_REAL_FOBJ(Ceil , ::ceil)
 CEXPR_REAL_TO_REAL_FOBJ(Floor, ::floor)
 CEXPR_REAL_TO_REAL_FOBJ(Int  , static_cast<int>)
+CEXPR_REAL_TO_REAL_FOBJ(Real , static_cast<double>)
 
 #ifdef GNUPLOT_EXPR
 class CExprFunctionSPrintF : public CExprFunctionObj, public CPrintF {
@@ -345,7 +354,9 @@ CEXPR_REAL_TO_REAL_FUNC(ACosH, ::acosh)
 CEXPR_REAL_TO_REAL_FUNC(ATanH, ::atanh)
 
 #ifdef GNUPLOT_EXPR
-// TODO: besj0, besy0, besj1, besy1
+// TODO: besy0, besy1
+CEXPR_REAL_TO_REAL_FUNC(BesJ0 , ::j0)
+CEXPR_REAL_TO_REAL_FUNC(BesJ1 , ::j1)
 CEXPR_REAL_TO_REAL_FUNC(Erf   , ::erf)
 CEXPR_REAL_TO_REAL_FUNC(ErfC  , ::erfc)
 // TODO: inverf, invnorm, norm
@@ -376,6 +387,8 @@ builtinFns[] = {
   { "acosh" , "r"  , CExprFunctionACosH  },
   { "atanh" , "r"  , CExprFunctionATanH  },
 #ifdef GNUPLOT_EXPR
+  { "besj0" , "r"  , CExprFunctionBesJ0  },
+  { "besj1" , "r"  , CExprFunctionBesJ1  },
   { "erf"   , "r"  , CExprFunctionErf    },
   { "erfc"  , "r"  , CExprFunctionErfC   },
   { "gamma" , "r"  , CExprFunctionGamma  },
@@ -406,7 +419,8 @@ addFunctions()
   addObjFunction("abs"  , "ri", new CExprFunctionAbs);
   addObjFunction("ceil" , "r" , new CExprFunctionCeil);
   addObjFunction("floor", "r" , new CExprFunctionFloor);
-  addObjFunction("int"  , "r" , new CExprFunctionInt);
+  addObjFunction("int"  , "ri", new CExprFunctionInt);
+  addObjFunction("real" , "ri", new CExprFunctionReal);
   addObjFunction("sgn"  , "ri", new CExprFunctionSign);
 
 #ifdef GNUPLOT_EXPR

@@ -16,6 +16,8 @@ class CGnuPlotWindow {
 
   virtual ~CGnuPlotWindow();
 
+  void clear();
+
   void set3D(bool b);
   bool is3D() const { return is3D_; }
 

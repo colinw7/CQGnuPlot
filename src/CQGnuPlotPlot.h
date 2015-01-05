@@ -16,6 +16,8 @@ class QPainter;
 class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
   Q_OBJECT
 
+  Q_PROPERTY(bool displayed READ isDisplayed WRITE setDisplayed)
+
   Q_PROPERTY(double regionLeft   READ getRegionLeft   WRITE setRegionLeft  )
   Q_PROPERTY(double regionRight  READ getRegionRight  WRITE setRegionRight )
   Q_PROPERTY(double regionTop    READ getRegionTop    WRITE setRegionTop   )

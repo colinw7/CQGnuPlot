@@ -5,6 +5,7 @@
 #include <CGnuPlotContour.h>
 #include <CGnuPlotObject.h>
 #include <CGnuPlotAxis.h>
+#include <CGnuPlotPoint.h>
 
 #include <CExpr.h>
 #include <CRefPtr.h>
@@ -38,64 +39,15 @@ class CGnuPlotPlot {
   typedef CGnuPlot::FillType              FillType;
   typedef CGnuPlot::FillPattern           FillPattern;
   typedef CGnuPlot::Palette               Palette;
+  typedef CGnuPlot::FilledCurve           FilledCurve;
   typedef CGnuPlot::PointStyle            PointStyle;
   typedef CGnuPlot::HistogramStyle        HistogramStyle;
   typedef CGnuPlot::LogScaleMap           LogScaleMap;
   typedef CGnuPlot::LogScale              LogScale;
   typedef CGnuPlot::Smooth                Smooth;
   typedef CGnuPlotTypes::SymbolType       SymbolType;
-
-  struct Point {
-    Values values;
-    bool   discontinuity;
-
-    Point();
-    Point(const Values &values, bool discontinuity);
-
-   ~Point();
-
-    friend std::ostream &operator<<(std::ostream &os, const Point &p) {
-      p.print(os); return os;
-    }
-
-    bool getX(double &x) const;
-    bool getY(double &y) const;
-    bool getZ(double &z) const;
-
-    double getX() const;
-    double getY() const;
-    double getZ() const;
-
-    bool getPoint(CPoint2D &p) const {
-      double x, y;
-
-      if (! getX(x) || ! getY(y))
-        return false;
-
-      p = CPoint2D(x, y);
-
-      return true;
-    }
-
-    bool getValue(int n, double &r) const;
-    bool getValue(int n, std::string &str) const;
-
-    int cmp(const Point &p) const;
-
-    void print(std::ostream &os) const;
-
-    bool operator< (const Point &p) const { return (cmp(p) < 0); }
-    bool operator> (const Point &p) const { return (cmp(p) > 0); }
-    bool operator==(const Point &p) const { return (cmp(p) == 0); }
-
-    bool operator>=(const Point &p) const { return ! (*this < p); }
-    bool operator<=(const Point &p) const { return ! (*this > p); }
-
-    bool operator!=(const Point &p) const { return ! (*this == p); }
-  };
-
-  typedef std::vector<Point>     Points2D;
-  typedef std::map<int,Points2D> Points3D;
+  typedef std::vector<CGnuPlotPoint>      Points2D;
+  typedef std::map<int,Points2D>          Points3D;
 
  public:
   CGnuPlotPlot(CGnuPlotWindow *window);
@@ -110,6 +62,9 @@ class CGnuPlotPlot {
 
   void set3D(bool b) { is3D_ = b; }
   bool is3D() const { return is3D_; }
+
+  void setDisplayed(bool b) { displayed_ = b; }
+  bool isDisplayed() const { return displayed_; }
 
   CGnuPlotPlot *parentPlot() const { return parentPlot_; }
 
@@ -169,7 +124,7 @@ class CGnuPlotPlot {
 
   uint numPoints2D() const { assert(! is3D_); return points2D_.size(); }
 
-  const Point &getPoint2D(int i) const { assert(! is3D_); return points2D_[i]; }
+  const CGnuPlotPoint &getPoint2D(int i) const { assert(! is3D_); return points2D_[i]; }
 
   std::pair<int,int> numPoints3D() const {
     assert(is3D_);
@@ -179,7 +134,9 @@ class CGnuPlotPlot {
     return std::pair<int,int>(points3D_.begin()->second.size(), points3D_.size());
   }
 
-  const Point &getPoint3D(int ix, int iy) const {
+  const Points3D &getPoints3D() const { assert(! is3D_); return points3D_; }
+
+  const CGnuPlotPoint &getPoint3D(int ix, int iy) const {
     assert(is3D_);
 
     auto p = points3D_.find(iy);
@@ -193,6 +150,7 @@ class CGnuPlotPlot {
   void clearPoints();
 
   void addPoint2D(double x, double y);
+  void addPoint2D(double x, CExprValuePtr y);
   void addPoint2D(const Values &value, bool discontinuity=false);
 
   void addPoint3D(int iy, double x, double y, double z);
@@ -378,6 +336,9 @@ class CGnuPlotPlot {
   const Palette &palette() const { return palette_; }
   void setPalette(const Palette &p) { palette_ = p; }
 
+  const FilledCurve &filledCurve() const { return filledCurve_; }
+  void setFilledCurve(const FilledCurve &c) { filledCurve_ = c; }
+
   int trianglePattern3D() const { return trianglePattern3D_; }
   void setTrianglePattern3D(int n) { trianglePattern3D_ = n; }
 
@@ -385,6 +346,10 @@ class CGnuPlotPlot {
 
   void draw2D();
   void draw3D();
+
+  CBBox2D getRegionBBox() const;
+
+  void drawLines();
 
   virtual void drawBar(double x, double y, const CBBox2D &bbox, FillType fillType,
                        FillPattern fillPattern, const CRGBA &fillColor, const CRGBA &lineColor);
@@ -428,12 +393,15 @@ class CGnuPlotPlot {
 
   void drawLine(const CPoint2D &p1, const CPoint2D &p2, double w, const CRGBA &c);
 
+  void fillPolygon(const std::vector<CPoint2D> &polygons, const CRGBA &c);
+
   std::string getXAxisValueStr(int i, double x) const;
   std::string getYAxisValueStr(int i, double x) const;
 
   std::string formatX(double x) const;
   std::string formatY(double y) const;
 
+  void mapLogPoint  (CPoint2D &p) const;
   void mapLogPoint  (double *x, double *y) const;
   void unmapLogPoint(double *x, double *y) const;
 
@@ -464,6 +432,7 @@ class CGnuPlotPlot {
 
   CGnuPlotWindow*    window_;
   int                id_;
+  bool               displayed_ { true };
   bool               is3D_;
   CGnuPlotPlot*      parentPlot_;
   CBBox2D            region_;
@@ -481,6 +450,7 @@ class CGnuPlotPlot {
   Ellipses           ellipses_;
   Polygons           polygons_;
   Palette            palette_;
+  FilledCurve        filledCurve_;
   PlotStyle          style_;
   FillStyle          fillStyle_;
   CGnuPlotLineStyleP lineStyle_;

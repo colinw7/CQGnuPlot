@@ -57,6 +57,7 @@ SOURCES       = CQGnuPlot.cpp \
 		CGnuPlotAxis.cpp \
 		CGnuPlotContour.cpp \
 		CGnuPlotPlot.cpp \
+		CGnuPlotPoint.cpp \
 		CGnuPlotRenderer.cpp \
 		CGnuPlotWindow.cpp \
 		CQPropertyDelegate.cpp \
@@ -65,6 +66,8 @@ SOURCES       = CQGnuPlot.cpp \
 		CQPropertyTree.cpp \
 		CQPaletteChooser.cpp \
 		CQPaletteDialog.cpp \
+		CMathGeom2D.cpp \
+		CArcToBezier.cpp \
 		CSymbol2D.cpp \
 		Expr/CExprBValue.cpp \
 		Expr/CExprCompile.cpp \
@@ -107,6 +110,7 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CGnuPlotAxis.o \
 		../obj/CGnuPlotContour.o \
 		../obj/CGnuPlotPlot.o \
+		../obj/CGnuPlotPoint.o \
 		../obj/CGnuPlotRenderer.o \
 		../obj/CGnuPlotWindow.o \
 		../obj/CQPropertyDelegate.o \
@@ -115,6 +119,8 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CQPropertyTree.o \
 		../obj/CQPaletteChooser.o \
 		../obj/CQPaletteDialog.o \
+		../obj/CMathGeom2D.o \
+		../obj/CArcToBezier.o \
 		../obj/CSymbol2D.o \
 		../obj/CExprBValue.o \
 		../obj/CExprCompile.o \
@@ -405,7 +411,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d ../obj/CQGnuPlot1.0.0 || mkdir -p ../obj/CQGnuPlot1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotCanvas.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPlot.h CQGnuPlotRenderer.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot.h CGnuPlotAxis.h CGnuPlotContour.h CGnuPlotLineStyle.h CGnuPlotObject.h CGnuPlotPlot.h CGnuPlotRenderer.h CGnuPlotStyle.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CStrUniqueMatch.h CSymbol2D.h Expr/CExprBValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExpr.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h MouseMode/CQMouseMode.h MouseMode/CQPanMouseMode.h MouseMode/CQPanZoomIFace.h MouseMode/CQZoomMouseMode.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotCanvas.cpp CQGnuPlotLineStyle.cpp CQGnuPlotObject.cpp CQGnuPlotPlot.cpp CQGnuPlotRenderer.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotAxis.cpp CGnuPlotContour.cpp CGnuPlotPlot.cpp CGnuPlotRenderer.cpp CGnuPlotWindow.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CSymbol2D.cpp Expr/CExprBValue.cpp Expr/CExprCompile.cpp Expr/CExpr.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp MouseMode/CQMouseMode.cpp MouseMode/CQPanMouseMode.cpp MouseMode/CQZoomMouseMode.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotCanvas.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPlot.h CQGnuPlotRenderer.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot.h CGnuPlotAxis.h CGnuPlotContour.h CGnuPlotLineStyle.h CGnuPlotObject.h CGnuPlotPlot.h CGnuPlotRenderer.h CGnuPlotStyle.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExprBValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExpr.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h MouseMode/CQMouseMode.h MouseMode/CQPanMouseMode.h MouseMode/CQPanZoomIFace.h MouseMode/CQZoomMouseMode.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotCanvas.cpp CQGnuPlotLineStyle.cpp CQGnuPlotObject.cpp CQGnuPlotPlot.cpp CQGnuPlotRenderer.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotAxis.cpp CGnuPlotContour.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotRenderer.cpp CGnuPlotWindow.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExprBValue.cpp Expr/CExprCompile.cpp Expr/CExpr.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp MouseMode/CQMouseMode.cpp MouseMode/CQPanMouseMode.cpp MouseMode/CQZoomMouseMode.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
 
 
 clean:compiler_clean 
@@ -964,6 +970,10 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlot.h \
 		/usr/include/qt5/QtCore/qpoint.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
+		CGnuPlotAxis.h \
+		COrientation.h \
+		CDirectionType.h \
+		CGnuPlotPoint.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
 		/usr/include/qt5/QtGui/qrgb.h \
@@ -2156,6 +2166,10 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
+		CGnuPlotAxis.h \
+		COrientation.h \
+		CDirectionType.h \
+		CGnuPlotPoint.h \
 		CQGnuPlotLineStyle.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/QPointF \
@@ -2386,6 +2400,10 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
+		CGnuPlotAxis.h \
+		COrientation.h \
+		CDirectionType.h \
+		CGnuPlotPoint.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h \
 		../../CUtil/include/CLineDash.h \
@@ -2518,6 +2536,13 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qsize.h \
 		/usr/include/qt5/QtCore/qpoint.h \
 		CQGnuPlotUtil.h \
+		CQGnuPlotPlot.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		CGnuPlotAxis.h \
+		COrientation.h \
+		CDirectionType.h \
+		CGnuPlotPoint.h \
 		../../CQUtil/include/CQUtil.h \
 		/usr/include/qt5/QtCore/Qt \
 		/usr/include/qt5/QtCore/QEvent \
@@ -2892,6 +2917,10 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qpoint.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
+		CGnuPlotAxis.h \
+		COrientation.h \
+		CDirectionType.h \
+		CGnuPlotPoint.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
 		/usr/include/qt5/QtGui/qrgb.h \
@@ -3178,8 +3207,13 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
+		CGnuPlotAxis.h \
+		COrientation.h \
+		CDirectionType.h \
+		CGnuPlotPoint.h \
 		CQGnuPlotCanvas.h \
 		/usr/include/qt5/QtWidgets/QWidget \
+		CQGnuPlotUtil.h \
 		CGnuPlotUtil.h \
 		CSymbol2D.h \
 		../../CQUtil/include/CQFont.h \
@@ -3339,7 +3373,24 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
 		/usr/include/qt5/QtCore/qsize.h \
-		/usr/include/qt5/QtCore/qpoint.h
+		/usr/include/qt5/QtCore/qpoint.h \
+		CQGnuPlotPlot.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		CGnuPlotAxis.h \
+		COrientation.h \
+		CDirectionType.h \
+		CGnuPlotPoint.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		CEnumConv.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotUtil.o CQGnuPlotUtil.cpp
 
 ../obj/CQGnuPlotWindow.o: CQGnuPlotWindow.cpp CQGnuPlotWindow.h \
@@ -3516,6 +3567,10 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
+		CGnuPlotAxis.h \
+		COrientation.h \
+		CDirectionType.h \
+		CGnuPlotPoint.h \
 		CQGnuPlotCanvas.h \
 		/usr/include/qt5/QtWidgets/QWidget \
 		CQGnuPlotRenderer.h \
@@ -3623,6 +3678,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
+		CGnuPlotAxis.h \
+		COrientation.h \
+		CDirectionType.h \
+		CGnuPlotPoint.h \
 		CGnuPlotStyle.h \
 		../../CRGBName/include/CRGBName.h \
 		CUnixFile.h \
@@ -3636,10 +3695,13 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		../../CMath/include/CMathGeom2D.h \
+		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlot.o CGnuPlot.cpp
 
 ../obj/CGnuPlotAxis.o: CGnuPlotAxis.cpp CGnuPlotAxis.h \
@@ -3694,6 +3756,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
 		CGnuPlotRenderer.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h
@@ -3751,6 +3814,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotWindow.h \
 		CGnuPlotPlot.h \
+		CGnuPlotAxis.h \
+		COrientation.h \
+		CDirectionType.h \
+		CGnuPlotPoint.h \
 		CGnuPlotUtil.h \
 		../../CRGBName/include/CRGBName.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotContour.o CGnuPlotContour.cpp
@@ -3803,21 +3870,47 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotLineStyle.h \
 		CGnuPlotObject.h \
 		CGnuPlotContour.h \
+		CGnuPlotAxis.h \
+		COrientation.h \
+		CDirectionType.h \
+		CGnuPlotPoint.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CGnuPlotAxis.h \
-		COrientation.h \
-		CDirectionType.h \
 		CGnuPlotStyle.h \
 		../../CRGBName/include/CRGBName.h \
 		CGnuPlotUtil.h \
-		../../CMath/include/CMathGeom2D.h \
+		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPlot.o CGnuPlotPlot.cpp
+
+../obj/CGnuPlotPoint.o: CGnuPlotPoint.cpp CGnuPlotPoint.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPoint.o CGnuPlotPoint.cpp
 
 ../obj/CGnuPlotRenderer.o: CGnuPlotRenderer.cpp CGnuPlotRenderer.h \
 		CGnuPlot.h \
@@ -3919,6 +4012,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
+		CGnuPlotAxis.h \
+		COrientation.h \
+		CDirectionType.h \
+		CGnuPlotPoint.h \
 		CGnuPlotRenderer.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h
@@ -4844,6 +4941,38 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qlabel.h \
 		/usr/include/qt5/QtWidgets/qframe.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQPaletteDialog.o CQPaletteDialog.cpp
+
+../obj/CMathGeom2D.o: CMathGeom2D.cpp CMathGeom2D.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CArcToBezier.h \
+		../../CMath/include/CBezierToLine.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CMathGeom2D.o CMathGeom2D.cpp
+
+../obj/CArcToBezier.o: CArcToBezier.cpp CArcToBezier.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/C2Bezier2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CArcToBezier.o CArcToBezier.cpp
 
 ../obj/CSymbol2D.o: CSymbol2D.cpp CSymbol2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CSymbol2D.o CSymbol2D.cpp
