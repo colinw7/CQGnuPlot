@@ -4,59 +4,47 @@
 #include <CGnuPlot.h>
 #include <CGnuPlotContour.h>
 #include <CGnuPlotObject.h>
-#include <CGnuPlotAxis.h>
 #include <CGnuPlotPoint.h>
 
 #include <CExpr.h>
-#include <CRefPtr.h>
 #include <CBBox2D.h>
 #include <CRange2D.h>
 #include <vector>
 #include <map>
 
 class CGnuPlotWindow;
-class CGnuPlotRenderer;
+class CGnuPlotGroup;
 
-typedef CRefPtr<CExprValue> CExprValuePtr;
+typedef CRefPtr<CExprValue> CExprValueP;
 
 class CGnuPlotPlot {
  public:
-  typedef std::vector<CGnuPlotArrowP>     Arrows;
-  typedef std::vector<CGnuPlotLabelP>     Labels;
-  typedef std::vector<CGnuPlotEllipseP>   Ellipses;
-  typedef std::vector<CGnuPlotPolygonP>   Polygons;
-  typedef std::vector<CGnuPlotRectangleP> Rectangles;
-  typedef std::vector<CExprValuePtr>      Values;
-  typedef std::vector<CGnuPlotPlot *>     Plots;
-  typedef CGnuPlot::BoxWidth              BoxWidth;
-  typedef CGnuPlot::BoxWidthType          BoxWidthType;
-  typedef CGnuPlot::AxesData              AxesData;
-  typedef CGnuPlot::AxisData              AxisData;
-  typedef CGnuPlot::KeyData               KeyData;
-  typedef CGnuPlot::PlotSize              PlotSize;
-  typedef CGnuPlot::PlotStyle             PlotStyle;
-  typedef CGnuPlot::FillStyle             FillStyle;
-  typedef CGnuPlot::FillType              FillType;
-  typedef CGnuPlot::FillPattern           FillPattern;
-  typedef CGnuPlot::Palette               Palette;
-  typedef CGnuPlot::FilledCurve           FilledCurve;
-  typedef CGnuPlot::PointStyle            PointStyle;
-  typedef CGnuPlot::HistogramStyle        HistogramStyle;
-  typedef CGnuPlot::LogScaleMap           LogScaleMap;
-  typedef CGnuPlot::LogScale              LogScale;
-  typedef CGnuPlot::Smooth                Smooth;
-  typedef CGnuPlotTypes::SymbolType       SymbolType;
-  typedef std::vector<CGnuPlotPoint>      Points2D;
-  typedef std::map<int,Points2D>          Points3D;
+  typedef std::vector<CExprValueP>   Values;
+  typedef CGnuPlot::BoxWidth         BoxWidth;
+  typedef CGnuPlot::BoxWidthType     BoxWidthType;
+  typedef CGnuPlot::AxesData         AxesData;
+  typedef CGnuPlot::PlotStyle        PlotStyle;
+  typedef CGnuPlotTypes::FillType    FillType;
+  typedef CGnuPlotTypes::FillPattern FillPattern;
+  typedef CGnuPlot::Palette          Palette;
+  typedef CGnuPlot::FilledCurve      FilledCurve;
+  typedef CGnuPlot::PointStyle       PointStyle;
+  typedef CGnuPlot::Smooth           Smooth;
+  typedef CGnuPlotTypes::SymbolType  SymbolType;
+  typedef std::vector<CGnuPlotPoint> Points2D;
+  typedef std::map<int,Points2D>     Points3D;
 
  public:
-  CGnuPlotPlot(CGnuPlotWindow *window);
+  CGnuPlotPlot(CGnuPlotGroup *group);
 
   virtual ~CGnuPlotPlot();
 
-  CGnuPlot *plot() const;
+  CGnuPlot *app() const;
 
-  CGnuPlotWindow *window() const { return window_; }
+  CGnuPlotWindow *window() const;
+
+  CGnuPlotGroup *group() const { return group_; }
+  void setGroup(CGnuPlotGroup *g) { group_ = g; }
 
   int id() const { return id_; }
 
@@ -66,59 +54,14 @@ class CGnuPlotPlot {
   void setDisplayed(bool b) { displayed_ = b; }
   bool isDisplayed() const { return displayed_; }
 
-  CGnuPlotPlot *parentPlot() const { return parentPlot_; }
-
   void init();
 
-  void addObjects();
-
-  const Plots &subPlots() const { return subPlots_; }
-  void addSubPlots(const Plots &plots);
-
-  virtual void stateChanged(CGnuPlot::ChangeState) { }
-
   //---
 
-  // region of window
-  double getRegionLeft  () const { return region().getLeft  (); }
-  double getRegionRight () const { return region().getRight (); }
-  double getRegionTop   () const { return region().getTop   (); }
-  double getRegionBottom() const { return region().getBottom(); }
-
-  void setRegionLeft  (double v) { CBBox2D r = region(); r.setLeft  (v); setRegion(r); }
-  void setRegionRight (double v) { CBBox2D r = region(); r.setRight (v); setRegion(r); }
-  void setRegionTop   (double v) { CBBox2D r = region(); r.setTop   (v); setRegion(r); }
-  void setRegionBottom(double v) { CBBox2D r = region(); r.setBottom(v); setRegion(r); }
-
-  void setRegion(const CBBox2D &r);
-  const CBBox2D &region() const;
-
-  //---
-
-  double marginLeft  () const { return margin().left  (); }
-  double marginRight () const { return margin().right (); }
-  double marginTop   () const { return margin().top   (); }
-  double marginBottom() const { return margin().bottom(); }
-
-  void setMarginLeft  (double v) { CRange2D m = margin(); m.setLeft  (v); setMargin(m); }
-  void setMarginRight (double v) { CRange2D m = margin(); m.setRight (v); setMargin(m); }
-  void setMarginTop   (double v) { CRange2D m = margin(); m.setTop   (v); setMargin(m); }
-  void setMarginBottom(double v) { CRange2D m = margin(); m.setBottom(v); setMargin(m); }
-
-  const CRange2D &margin() const;
-  void setMargin(const CRange2D &m);
-
-  //---
-
-  const PlotSize &plotSize() const;
-  void setPlotSize(const PlotSize &s);
-
-  double getRatio() const { return plotSize().ratio.getValue(1.0); }
-  void setRatio(double r) { PlotSize s = plotSize(); s.ratio = r; setPlotSize(s); }
-
-  //---
-
+  const CBBox2D &clearRect() const { return clearRect_.getValue(); }
   void setClearRect(const CBBox2D &r) { clearRect_ = r; }
+
+  //---
 
   const Points2D &getPoints2D() const { assert(! is3D_); return points2D_; }
 
@@ -150,26 +93,27 @@ class CGnuPlotPlot {
   void clearPoints();
 
   void addPoint2D(double x, double y);
-  void addPoint2D(double x, CExprValuePtr y);
+  void addPoint2D(double x, CExprValueP y);
   void addPoint2D(const Values &value, bool discontinuity=false);
 
   void addPoint3D(int iy, double x, double y, double z);
 
-  void showXAxis(bool show);
-  void showYAxis(bool show);
+  //---
 
   void reset3D();
 
   void fit();
   void smooth();
 
-  CBBox2D getDisplayRange() const;
-
   void calcXRange(double *xmin, double *xmax) const;
   void calcYRange(double *ymin, double *ymax) const;
 
+  //---
+
   int ind() const { return ind_; }
   void setInd(int ind) { ind_ = ind; }
+
+  //---
 
   void setBoxWidth(const BoxWidth &w) { boxWidth_ = w; }
   const BoxWidth &getBoxWidth() const { return boxWidth_; }
@@ -186,8 +130,8 @@ class CGnuPlotPlot {
   void setSmooth(Smooth s) { smooth_ = s; }
   Smooth getSmooth() const { return smooth_; }
 
-  const FillStyle &fillStyle() const { return fillStyle_; }
-  void setFillStyle(const FillStyle &f) { fillStyle_ = f; }
+  const CGnuPlotFillStyle &fillStyle() const { return fillStyle_; }
+  void setFillStyle(const CGnuPlotFillStyle &f) { fillStyle_ = f; }
 
   const FillType &fillType() const { return fillStyle_.style(); }
   void setFillType(const FillType &f) { fillStyle_.setStyle(f); }
@@ -218,8 +162,8 @@ class CGnuPlotPlot {
   const PointStyle &pointStyle() const { return pointStyle_; }
   void setPointStyle(const PointStyle &s) { pointStyle_ = s; }
 
-  HistogramStyle getHistogramStyle() const { return histogramStyle_; }
-  void setHistogramStyle(HistogramStyle style) { histogramStyle_ = style; }
+  const std::string &keyTitle() const { return keyTitle_; }
+  void setKeyTitle(const std::string &s) { keyTitle_ = s; }
 
   //---
 
@@ -244,65 +188,17 @@ class CGnuPlotPlot {
 
   //---
 
-  const AxesData &axesData() const;
-  void setAxesData(const AxesData &a);
+  const AxesData &axesData() const { return axesData_; }
+  void setAxesData(const AxesData &a) { axesData_ = a; }
 
   void getXRange(double *xmin, double *xmax) const { *xmin = getXMin(); *xmax = getXMax(); }
   void getYRange(double *ymin, double *ymax) const { *ymin = getYMin(); *ymax = getYMax(); }
   void getZRange(double *zmin, double *zmax) const { *zmin = getZMin(); *zmax = getZMax(); }
 
-  const std::string &getXLabel() const { return axesData().xaxis.str; }
-  void setXLabel(const std::string &s) { AxesData a = axesData(); a.xaxis.str = s; setAxesData(a); }
-
-  const std::string &getYLabel() const { return axesData().yaxis.str; }
-  void setYLabel(const std::string &s) { AxesData a = axesData(); a.yaxis.str = s; setAxesData(a); }
-
-  bool getXTics() const { return axesData().xaxis.showTics; }
-  void setXTics(bool b) { AxesData a = axesData(); a.xaxis.showTics = b; setAxesData(a); }
-
-  bool getXTicsMirror() const { return axesData().xaxis.mirror; }
-  void setXTicsMirror(bool b) { AxesData a = axesData(); a.xaxis.mirror = b; setAxesData(a); }
-
-  bool getYTics() const { return axesData().yaxis.showTics; }
-  void setYTics(bool b) { AxesData a = axesData(); a.yaxis.showTics = b; setAxesData(a); }
-
-  bool getYTicsMirror() const { return axesData().yaxis.mirror; }
-  void setYTicsMirror(bool b) { AxesData a = axesData(); a.yaxis.mirror = b; setAxesData(a); }
-
-  bool getXGrid() const { return axesData().xaxis.grid; }
-  void setXGrid(bool b) { AxesData a = axesData(); a.xaxis.grid = b; setAxesData(a); }
-
-  bool getYGrid() const { return axesData().yaxis.grid; }
-  void setYGrid(bool b) { AxesData a = axesData(); a.yaxis.grid = b; setAxesData(a); }
-
-  int getBorders() const { return axesData().borders; }
-  void setBorders(int b) { AxesData a = axesData(); a.borders = b; setAxesData(a); }
-
-  int getBorderWidth() const { return axesData().borderWidth; }
-  void setBorderWidth(double w) { AxesData a = axesData(); a.borderWidth = w; setAxesData(a); }
-
   //---
 
-  const KeyData &keyData() const;
-  void setKeyData(const KeyData &k);
-
-  const KeyData &rootKeyData() const;
-  void setRootKeyData(const KeyData &k);
-
-  bool getKeyDisplayed() const { return rootKeyData().displayed; }
-  void setKeyDisplayed(bool b) { KeyData k = rootKeyData(); k.displayed = b; setRootKeyData(k); }
-
-  bool getKeyReverse() const { return rootKeyData().reverse; }
-  void setKeyReverse(bool b) { KeyData k = rootKeyData(); k.reverse = b; setRootKeyData(k); }
-
-  bool getKeyBox() const { return rootKeyData().box; }
-  void setKeyBox(bool b) { KeyData k = rootKeyData(); k.box = b; setRootKeyData(k); }
-
-  CHAlignType getKeyHAlign() const { return rootKeyData().halign; }
-  void setKeyHAlign(CHAlignType a) { KeyData k = rootKeyData(); k.halign = a; setRootKeyData(k); }
-
-  CVAlignType getKeyVAlign() const { return rootKeyData().valign; }
-  void setKeyVAlign(CVAlignType a) { KeyData k = rootKeyData(); k.valign = a; setRootKeyData(k); }
+  int xind() const { return xind_; }
+  int yind() const { return yind_; }
 
   //---
 
@@ -315,23 +211,7 @@ class CGnuPlotPlot {
   void setFitZ(bool b) { fitZ_ = b; }
   bool getFitZ() const { return fitZ_; }
 
-  const Arrows &arrows() const { return arrows_; }
-  void setArrows(const Arrows &arrows) { arrows_ = arrows; }
-
-  const Labels &labels() const { return labels_; }
-  void setLabels(const Labels &labels) { labels_ = labels; }
-
-  const Rectangles &rectangles() const { return rects_; }
-  void setRectangles(const Rectangles &rects) { rects_ = rects; }
-
-  const Ellipses &ellipses() const { return ellipses_; }
-  void setEllipses(const Ellipses &ellipses) { ellipses_ = ellipses; }
-
-  const Polygons &polygons() const { return polygons_; }
-  void setPolygons(const Polygons &polygons) { polygons_ = polygons; }
-
-  void setRenderer(CGnuPlotRenderer *renderer);
-  CGnuPlotRenderer *renderer() const { return renderer_; }
+  //---
 
   const Palette &palette() const { return palette_; }
   void setPalette(const Palette &p) { palette_ = p; }
@@ -342,87 +222,31 @@ class CGnuPlotPlot {
   int trianglePattern3D() const { return trianglePattern3D_; }
   void setTrianglePattern3D(int n) { trianglePattern3D_ = n; }
 
+  double whiskerBars() const { return whiskerBars_; }
+  void setWhiskerBars(double w) { whiskerBars_ = w; }
+
+  //---
+
   virtual void draw();
 
   void draw2D();
   void draw3D();
-
-  CBBox2D getRegionBBox() const;
 
   void drawLines();
 
   virtual void drawBar(double x, double y, const CBBox2D &bbox, FillType fillType,
                        FillPattern fillPattern, const CRGBA &fillColor, const CRGBA &lineColor);
 
-  void drawHistogram(const Plots &plots);
-
   void drawTerminal();
   void drawPalette();
 
-  void drawAxes();
-
-  void drawBorder();
-
-  void drawXAxes(int xind, bool other);
-  void drawYAxes(int yind, bool other);
-
-  void initPlotAxis();
-
   double getXSpacing() const;
-
-  void drawKey();
-
-  void drawAnnotations();
-
-  void drawArrow(const CGnuPlotArrowP &arrow);
-  void drawLabel(const CGnuPlotLabelP &label);
-
-  void drawEllipse  (const CGnuPlotEllipseP   &ellipse);
-  void drawPolygon  (const CGnuPlotPolygonP   &poly);
-  void drawRectangle(const CGnuPlotRectangleP &rect);
-
-  void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
-                        CVAlignType valign, double y_offset, const std::string &str,
-                        const CRGBA &c=CRGBA(0,0,0));
-  void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
-                        CVAlignType valign, double y_offset, const std::string &str,
-                        const CRGBA &c=CRGBA(0,0,0));
-
-  void drawRotatedText(const CPoint2D &p, const std::string &text,
-                       const CRGBA &c=CRGBA(0,0,0), double a=90);
 
   void drawLine(const CPoint2D &p1, const CPoint2D &p2, double w, const CRGBA &c);
 
   void fillPolygon(const std::vector<CPoint2D> &polygons, const CRGBA &c);
 
-  std::string getXAxisValueStr(int i, double x) const;
-  std::string getYAxisValueStr(int i, double x) const;
-
-  std::string formatX(double x) const;
-  std::string formatY(double y) const;
-
-  void mapLogPoint  (CPoint2D &p) const;
-  void mapLogPoint  (double *x, double *y) const;
-  void unmapLogPoint(double *x, double *y) const;
-
-  void setLogScaleMap(const LogScaleMap &logScale) { logScale_ = logScale; }
-
-  int getLogScale(LogScale scale) const {
-    auto p = logScale_.find(scale);
-
-    return (p != logScale_.end() ? (*p).second : 0);
-  }
-
-  void windowToPixel(double wx, double wy, double *px, double *py) const;
-  void pixelToWindow(double px, double py, double *wx, double *wy) const;
-
-  CPoint2D windowToPixel(const CPoint2D &p) const;
-  CPoint2D pixelToWindow(const CPoint2D &p) const;
-
-  double pixelWidthToWindowWidth  (double w) const;
-  double pixelHeightToWindowHeight(double h) const;
-
- private:
+ protected:
   typedef std::vector<CPoint2D>         Points;
   typedef std::pair<double,Points>      ZPoints;
   typedef std::vector<ZPoints>          ZPointsArray;
@@ -430,48 +254,36 @@ class CGnuPlotPlot {
 
   static int nextId_;
 
-  CGnuPlotWindow*    window_;
-  int                id_;
-  bool               displayed_ { true };
-  bool               is3D_;
-  CGnuPlotPlot*      parentPlot_;
-  CBBox2D            region_;
-  CRange2D           margin_;
-  PlotSize           plotSize_;
+  CGnuPlotGroup*     group_;                            // parent group
+  int                id_;                               // unique id
+  int                ind_       { 0 };                  // index in group
+  bool               displayed_ { true };               // is displayed
+  bool               is3D_      { false };              // is 3D
   COptValT<CBBox2D>  clearRect_;
-  Plots              subPlots_;
-  Points2D           points2D_;
-  Points3D           points3D_;
-  BoxWidth           boxWidth_;
-  int                ind_;
-  Arrows             arrows_;
-  Labels             labels_;
-  Rectangles         rects_;
-  Ellipses           ellipses_;
-  Polygons           polygons_;
+  Points2D           points2D_;                         // 2D points
+  Points3D           points3D_;                         // 3D points
+  BoxWidth           boxWidth_;                         // box widths
   Palette            palette_;
-  FilledCurve        filledCurve_;
-  PlotStyle          style_;
-  FillStyle          fillStyle_;
-  CGnuPlotLineStyleP lineStyle_;
-  PointStyle         pointStyle_;
+  FilledCurve        filledCurve_;                      // filled curve data
+  PlotStyle          style_       { PlotStyle::POINTS}; // plot style
+  CGnuPlotFillStyle  fillStyle_;                        // fill style
+  CGnuPlotLineStyleP lineStyle_;                        // line style
+  PointStyle         pointStyle_;                       // point style
   AxesData           axesData_;
-  KeyData            keyData_;
-  int                xind_ { 1 };
-  int                yind_ { 1 };
-  CGnuPlotAxis       plotXAxis1_, plotXAxis2_;
-  CGnuPlotAxis       plotYAxis1_, plotYAxis2_;
-  LogScaleMap        logScale_;
-  Smooth             smooth_;
-  HistogramStyle     histogramStyle_;
-  bool               fitX_, fitY_, fitZ_;
-  CGnuPlotContour    contour_;
-  bool               contourSet_;
-  ZPolygons          surface_;
-  bool               surfaceSet_;
+  std::string        keyTitle_;                         // title on key
+  int                xind_ { 1 };                       // xaxis index
+  int                yind_ { 1 };                       // yaxis index
+  Smooth             smooth_      { Smooth::NONE };     // smooth data
+  bool               fitX_ { false };                   // auto fit x
+  bool               fitY_ { false };                   // auto fit y
+  bool               fitZ_ { false };                   // auto fit z
+  CGnuPlotContour    contour_;                          // contour data
+  bool               contourSet_ { false };
+  ZPolygons          surface_;                          // surface data
+  bool               surfaceSet_ { false };
   COptReal           surfaceZMin_, surfaceZMax_;
-  int                trianglePattern3D_;
-  CGnuPlotRenderer*  renderer_;
+  int                trianglePattern3D_ { 3 };          // 3d surface pattern
+  double             whiskerBars_ { 0 };                // whisker bar data
   CBBox2D            clip_;
 };
 

@@ -11,13 +11,21 @@
 
 #include <sys/types.h>
 
-class CGnuPlotPlot;
+class CGnuPlot;
+class CGnuPlotGroup;
 
 class CGnuPlotAxis {
  public:
-  CGnuPlotAxis(CGnuPlotPlot *plot=0, COrientation direction=CORIENTATION_HORIZONTAL,
+  CGnuPlotAxis(CGnuPlotGroup *group=0, int ind=1, COrientation dir=CORIENTATION_HORIZONTAL,
                double start=0.0, double end=1.0);
  ~CGnuPlotAxis();
+
+  CGnuPlot *app() const;
+
+  CGnuPlotGroup *group() const { return group_; }
+
+  int ind() const { return ind_; }
+  void setInd(int i) { ind_ = i; }
 
   double getStart() const { return start1_; }
   double getEnd  () const { return end1_  ; }
@@ -107,7 +115,8 @@ class CGnuPlotAxis {
                         CVAlignType valign, double yOffset, const std::string &str);
 
  private:
-  CGnuPlotPlot*       plot_              { 0 };
+  CGnuPlotGroup*      group_             { 0 };
+  int                 ind_               { 1 };
   COrientation        direction_;
   double              start_;
   double              end_;

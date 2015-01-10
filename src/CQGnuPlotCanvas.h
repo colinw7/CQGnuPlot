@@ -12,6 +12,8 @@ class CQGnuPlotCanvas : public QWidget {
   CQGnuPlotCanvas(CQGnuPlotWindow *window);
  ~CQGnuPlotCanvas();
 
+  CQGnuPlotWindow *qwindow() const { return window_; }
+
  private:
   void paintEvent(QPaintEvent *);
 

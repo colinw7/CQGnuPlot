@@ -5,32 +5,29 @@
 
 #include <CGnuPlot.h>
 
-class CGnuPlotRenderer;
-
 class CGnuPlotWindow {
  public:
-  typedef std::vector<CGnuPlotPlot *> Plots;
+  typedef std::vector<CGnuPlotGroup *> Groups;
 
  public:
   CGnuPlotWindow(CGnuPlot *plot);
 
   virtual ~CGnuPlotWindow();
 
+  CGnuPlot *app() const { return plot_; }
+
   void clear();
 
   void set3D(bool b);
   bool is3D() const { return is3D_; }
 
-  CGnuPlot *plot() const { return plot_; }
+  const CISize2D &size() const { return size_; }
+  void setSize(const CISize2D &s) { size_ = s; }
 
-  void addPlot(CGnuPlotPlot *plot);
+  void addGroup(CGnuPlotGroup *group);
 
-  const Plots &plots() const { return plots_; }
-  uint numPlots() const { return plots_.size(); }
-
-  void setRenderer(CGnuPlotRenderer *renderer);
-
-  virtual void stateChanged(CGnuPlot::ChangeState) { }
+  const Groups &groups() const { return groups_; }
+  uint numGroups() const { return groups_.size(); }
 
   const CGnuPlot::Title &title() const { return title_; }
   CGnuPlot::Title &title() { return title_; }
@@ -69,20 +66,19 @@ class CGnuPlotWindow {
   void draw();
 
  private:
-  void paintStart();
-  void paintEnd();
+  void drawTitle();
 
  private:
-  bool              is3D_;
-  CGnuPlot*         plot_;
-  CGnuPlotRenderer* renderer_;
-  Plots             plots_;
-  CGnuPlot::Title   title_;
-  CGnuPlot::Camera  camera_;
-  bool              hidden3D_;
-  bool              surface3D_;
-  bool              contour3D_;
-  bool              pm3D_;
+  CGnuPlot*        plot_      { 0 };
+  CISize2D         size_      { 100, 100 };
+  bool             is3D_      { false };
+  Groups           groups_;
+  CGnuPlot::Title  title_;
+  CGnuPlot::Camera camera_;
+  bool             hidden3D_  { false };
+  bool             surface3D_ { true  };
+  bool             contour3D_ { false };
+  bool             pm3D_      { false };
 };
 
 #endif

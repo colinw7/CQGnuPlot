@@ -1,5 +1,6 @@
 #include <CQGnuPlotCanvas.h>
 #include <CQGnuPlotWindow.h>
+#include <CQGnuPlotGroup.h>
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotRenderer.h>
 
@@ -33,19 +34,19 @@ void
 CQGnuPlotCanvas::
 mousePressEvent(QMouseEvent *e)
 {
-  window_->setCurrentPlot(window_->getPlotAt(e->pos()));
+  window_->setCurrentGroup(window_->getGroupAt(e->pos()));
 }
 
 void
 CQGnuPlotCanvas::
 mouseMoveEvent(QMouseEvent *e)
 {
-  CQGnuPlotPlot *plot = window_->getPlotAt(e->pos());
+  CQGnuPlotGroup *group = window_->getGroupAt(e->pos());
 
-  if (plot) {
-    CPoint2D p = plot->pixelToWindow(CPoint2D(e->pos().x(), e->pos().y()));
+  if (group) {
+    CPoint2D p = group->pixelToWindow(CPoint2D(e->pos().x(), e->pos().y()));
 
-    plot->unmapLogPoint(&p.x, &p.y);
+    group->unmapLogPoint(&p.x, &p.y);
 
     window_->showPos(p.x, p.y);
   }

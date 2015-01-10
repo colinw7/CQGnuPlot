@@ -6,14 +6,19 @@
 #include <CBBox2D.h>
 #include <CFont.h>
 
+class CGnuPlotWindow;
+
 class CGnuPlotRenderer {
  public:
   typedef CGnuPlotTypes::SymbolType SymbolType;
 
  public:
-  CGnuPlotRenderer() { }
+  CGnuPlotRenderer();
 
-  virtual ~CGnuPlotRenderer() { }
+  virtual ~CGnuPlotRenderer();
+
+  void setWindow(CGnuPlotWindow *w) { window_ = w; }
+  CGnuPlotWindow *window() const { return window_; }
 
   const CBBox2D &region() { return region_; }
   void setRegion(const CBBox2D &region) { region_ = region; }
@@ -26,6 +31,11 @@ class CGnuPlotRenderer {
 
   void setRatio(double r) { ratio_ = r; }
   void unsetRatio() { ratio_.setInvalid(); }
+
+  bool mapping() const { return mapping_; }
+  void setMapping(bool b) { mapping_ = b; }
+
+  //---
 
   virtual CFontPtr getFont() const = 0;
 
@@ -43,11 +53,12 @@ class CGnuPlotRenderer {
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
   virtual void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c=CRGBA(0,0,0)) = 0;
   virtual void patternRect(const CBBox2D &rect,
-                           CGnuPlot::FillPattern pattern=CGnuPlot::FillPattern::NONE,
+                           CGnuPlotTypes::FillPattern pattern=CGnuPlotTypes::FillPattern::NONE,
                            const CRGBA &fg=CRGBA(0,0,0), const CRGBA &bg=CRGBA(1,1,1)) = 0;
   virtual void fillRect   (const CBBox2D &rect, const CRGBA &c) = 0;
   virtual void drawBezier (const CPoint2D &p1, const CPoint2D &p2,
-                           const CPoint2D &p3, const CPoint2D &p4) = 0;
+                           const CPoint2D &p3, const CPoint2D &p4, double width=1.0,
+                           const CRGBA &c=CRGBA(0,0,0)) = 0;
   virtual void drawEllipse(const CPoint2D &p, double dx, double ry,
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
   virtual void fillEllipse(const CPoint2D &p, double dx, double ry, const CRGBA &c) = 0;
@@ -55,19 +66,13 @@ class CGnuPlotRenderer {
   virtual void drawText(const CPoint2D &p, const std::string &text,
                         const CRGBA &c=CRGBA(0,0,0)) = 0;
 
-  virtual int pixelWidth () = 0;
-  virtual int pixelHeight() = 0;
+  //---
 
-  virtual double pixelWidthToWindowWidth  (double w) = 0;
-  virtual double pixelHeightToWindowHeight(double h) = 0;
+  void windowToPixel(const CPoint2D &w, CPoint2D &p);
+  void pixelToWindow(const CPoint2D &p, CPoint2D &w);
 
-  virtual double windowWidthToPixelWidth  (double w) = 0;
-  virtual double windowHeightToPixelHeight(double h) = 0;
-
-  virtual void windowToPixel(double x, double y, double *px, double *py) = 0;
-  virtual void pixelToWindow(double px, double py, double *wx, double *wy) = 0;
-
-  virtual void setMapping(bool b) = 0;
+  void windowToPixel(double x, double y, double *px, double *py);
+  void pixelToWindow(double px, double py, double *wx, double *wy);
 
   //---
 
@@ -81,11 +86,21 @@ class CGnuPlotRenderer {
   void drawRotatedText(const CPoint2D &p, const std::string &text,
                        const CRGBA &c=CRGBA(0,0,0), double a=90);
 
+  //---
+
+  double pixelWidthToWindowWidth  (double p);
+  double pixelHeightToWindowHeight(double p);
+
+  double windowWidthToPixelWidth  (double w);
+  double windowHeightToPixelHeight(double w);
+
  protected:
-  CBBox2D  region_; // window region (0,0) -> (1,1)
-  CRange2D margin_; // margin for plot
-  CBBox2D  range_ ; // data range
-  COptReal ratio_ ; // aspect ratio
+  CGnuPlotWindow *window_ { 0 };     // current window
+  bool            mapping_ { true }; // mapping enabled
+  CBBox2D         region_;           // window region (0,0) -> (1,1)
+  CRange2D        margin_;           // margin for plot
+  CBBox2D         range_;            // data range
+  COptReal        ratio_;            // aspect ratio
 };
 
 #endif

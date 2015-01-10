@@ -1,11 +1,12 @@
 #include <CGnuPlotWindow.h>
+#include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
+#include <CGnuPlotDevice.h>
 #include <CGnuPlotRenderer.h>
 
 CGnuPlotWindow::
 CGnuPlotWindow(CGnuPlot *plot) :
- is3D_(false), plot_(plot), renderer_(0), hidden3D_(false), surface3D_(true),
- contour3D_(false), pm3D_(false)
+ plot_(plot), size_(plot->getTerminalSize())
 {
 }
 
@@ -20,7 +21,7 @@ clear()
 {
   is3D_ = false;
 
-  plots_.clear();
+  groups_.clear();
 
   title_  = CGnuPlot::Title ();
   camera_ = CGnuPlot::Camera();
@@ -36,13 +37,6 @@ CGnuPlotWindow::
 set3D(bool b)
 {
   is3D_ = b;
-}
-
-void
-CGnuPlotWindow::
-setRenderer(CGnuPlotRenderer *renderer)
-{
-  renderer_ = renderer;
 }
 
 void
@@ -157,50 +151,50 @@ void
 CGnuPlotWindow::
 reset3D()
 {
-  for (auto plot : plots_)
-    plot->reset3D();
+  for (auto group : groups_)
+    group->reset3D();
 }
 
 void
 CGnuPlotWindow::
-paintStart()
-{
-  renderer_->setMargin(CRange2D(0,0,0,0));
-  renderer_->setRange (CBBox2D(0,0,1,1));
-  renderer_->setRegion(CBBox2D(0,0,1,1));
-
-  if (! title().str.empty()) {
-    renderer_->drawHAlignedText(CPoint2D(0.5, 1), CHALIGN_TYPE_CENTER, 0,
-                                CVALIGN_TYPE_TOP, 8, title().str);
-  }
-}
-
-void
-CGnuPlotWindow::
-paintEnd()
-{
-}
-
-void
-CGnuPlotWindow::
-addPlot(CGnuPlotPlot *plot)
+addGroup(CGnuPlotGroup *group)
 {
   if (plot_->isDebug())
-    std::cerr << "Add Plot" << std::endl;
+    std::cerr << "Add Group" << std::endl;
 
-  plot->setInd(plots_.size() + 1);
+  group->setInd(groups_.size() + 1);
 
-  plots_.push_back(plot);
+  groups_.push_back(group);
 }
 
 void
 CGnuPlotWindow::
 draw()
 {
-  paintStart();
+  app()->renderer()->setWindow(this);
 
-  for (auto plot : plots_)
-    plot->draw();
+  app()->device()->drawInit(this);
 
-  paintEnd();
+  drawTitle();
+
+  for (auto group : groups_)
+    group->draw();
+
+  app()->device()->drawTerm();
+}
+
+void
+CGnuPlotWindow::
+drawTitle()
+{
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setMargin(CRange2D(0,0,0,0));
+  renderer->setRange (CBBox2D(0,0,1,1));
+  renderer->setRegion(CBBox2D(0,0,1,1));
+
+  if (! title().str.empty()) {
+    renderer->drawHAlignedText(CPoint2D(0.5, 1), CHALIGN_TYPE_CENTER, 0,
+                               CVALIGN_TYPE_TOP, 8, title().str);
+  }
 }

@@ -3,28 +3,7 @@
 
 #include <CRGBA.h>
 #include <COptVal.h>
-#include <CRefPtr.h>
-
-namespace CGnuPlotTypes {
-  enum class SymbolType {
-    NONE,
-    POINT,
-    PLUS,
-    CROSS,
-    STAR,
-    BOX,
-    FILLED_BOX,
-    CIRCLE,
-    FILLED_CIRCLE,
-    TRIANGLE,
-    FILLED_TRIANGLE,
-    INV_TRIANGLE,
-    FILLED_INV_TRIANGLE,
-    DIAMOND,
-    FILLED_DIAMOND,
-    LAST=FILLED_DIAMOND
-  };
-}
+#include <CGnuPlotTypes.h>
 
 class CGnuPlotLineStyle {
  public:
@@ -60,6 +39,6 @@ class CGnuPlotLineStyle {
   double          pointSize_ { 1 };
 };
 
-typedef CRefPtr<CGnuPlotLineStyle> CGnuPlotLineStyleP;
+typedef std::shared_ptr<CGnuPlotLineStyle> CGnuPlotLineStyleP;
 
 #endif

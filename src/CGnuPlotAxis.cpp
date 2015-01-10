@@ -1,5 +1,6 @@
 #include <CGnuPlotAxis.h>
 #include <CGnuPlotWindow.h>
+#include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
 
@@ -40,8 +41,9 @@ axesIncrementTests[MAX_GAP_TESTS] = {
 };
 
 CGnuPlotAxis::
-CGnuPlotAxis(CGnuPlotPlot *plot, COrientation direction, double start, double end) :
- plot_      (plot),
+CGnuPlotAxis(CGnuPlotGroup *group, int ind, COrientation direction, double start, double end) :
+ group_     (group),
+ ind_       (ind),
  direction_ (direction),
  start_     (start),
  end_       (end),
@@ -55,6 +57,13 @@ CGnuPlotAxis(CGnuPlotPlot *plot, COrientation direction, double start, double en
 CGnuPlotAxis::
 ~CGnuPlotAxis()
 {
+}
+
+CGnuPlot *
+CGnuPlotAxis::
+app() const
+{
+  return group()->app();
 }
 
 void
@@ -361,9 +370,9 @@ CGnuPlotAxis::
 getValueStr(int i, double pos) const
 {
   if (direction_ == CORIENTATION_HORIZONTAL)
-    return plot_->getXAxisValueStr(i, pos);
+    return group_->getXAxisValueStr(ind_, i, pos);
   else
-    return plot_->getYAxisValueStr(i, pos);
+    return group_->getYAxisValueStr(ind_, i, pos);
 }
 
 void
@@ -523,12 +532,12 @@ drawAxis(double pos)
     double x1 = getStart(), y1 = pos;
     double x2 = getEnd  (), y2 = pos;
 
-    plot_->mapLogPoint(&x1, &y1);
-    plot_->mapLogPoint(&x2, &y2);
+    group_->mapLogPoint(&x1, &y1);
+    group_->mapLogPoint(&x2, &y2);
 
     double mid = (x1 + x2)/2;
 
-    plot_->unmapLogPoint(&mid, &y1);
+    group_->unmapLogPoint(&mid, &y1);
 
     const std::string &astr = getLabel();
 
@@ -551,14 +560,14 @@ drawAxisTick(const CPoint2D &pos, CDirectionType type, bool large)
   if (type == CDIRECTION_TYPE_LEFT || type == CDIRECTION_TYPE_RIGHT) {
     double dx = (type == CDIRECTION_TYPE_LEFT ? -1 : 1);
 
-    double x1 = pos.x + dx*plot_->pixelWidthToWindowWidth(psize);
+    double x1 = pos.x + dx*group_->pixelWidthToWindowWidth(psize);
 
     drawLine(pos, CPoint2D(x1, pos.y));
   }
   else {
     double dy = (type == CDIRECTION_TYPE_DOWN  ? -1 : 1);
 
-    double y1 = pos.y + dy*plot_->pixelHeightToWindowHeight(psize);
+    double y1 = pos.y + dy*group_->pixelHeightToWindowHeight(psize);
 
     drawLine(pos, CPoint2D(pos.x, y1));
   }
@@ -617,7 +626,7 @@ drawGrid(double start, double end)
   static double gridDashes[] = {1, 3};
   static uint   numGridDashes = 2;
 
-  CGnuPlotRenderer *renderer = plot_->renderer();
+  CGnuPlotRenderer *renderer = app()->renderer();
 
   renderer->setLineDash(CLineDash(gridDashes, numGridDashes));
 
@@ -653,13 +662,13 @@ void
 CGnuPlotAxis::
 drawLine(const CPoint2D &p1, const CPoint2D &p2)
 {
-  CGnuPlotRenderer *renderer = plot_->renderer();
+  CGnuPlotRenderer *renderer = app()->renderer();
 
   double x1 = p1.x, y1 = p1.y;
   double x2 = p2.x, y2 = p2.y;
 
-  plot_->mapLogPoint(&x1, &y1);
-  plot_->mapLogPoint(&x2, &y2);
+  group_->mapLogPoint(&x1, &y1);
+  group_->mapLogPoint(&x2, &y2);
 
   renderer->drawLine(CPoint2D(x1, y1), CPoint2D(x2, y2));
 }
@@ -669,11 +678,13 @@ CGnuPlotAxis::
 drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
                  CVAlignType valign, double yOffset, const std::string &str)
 {
+  CGnuPlotRenderer *renderer = app()->renderer();
+
   double x = pos.x, y = pos.y;
 
-  plot_->mapLogPoint(&x, &y);
+  group_->mapLogPoint(&x, &y);
 
-  plot_->drawHAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str);
+  renderer->drawHAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str);
 }
 
 void
@@ -681,9 +692,11 @@ CGnuPlotAxis::
 drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
                  CVAlignType valign, double yOffset, const std::string &str)
 {
+  CGnuPlotRenderer *renderer = app()->renderer();
+
   double x = pos.x, y = pos.y;
 
-  plot_->mapLogPoint(&x, &y);
+  group_->mapLogPoint(&x, &y);
 
-  plot_->drawVAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str);
+  renderer->drawVAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str);
 }

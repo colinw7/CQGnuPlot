@@ -17,7 +17,7 @@ class CQSymbol2DRenderer : public CSymbol2DRenderer {
 
  public:
   CQSymbol2DRenderer(CQGnuPlotRenderer *r, const CPoint2D &p, double size=1.0) :
-   r_(r), stroke_(false), fill_(false) {
+   r_(r) {
     r_->windowToPixel(p.x, p.y, &px_, &py_);
 
     ss_ = 4*size;
@@ -66,22 +66,22 @@ class CQSymbol2DRenderer : public CSymbol2DRenderer {
 
  private:
   CQGnuPlotRenderer *r_;
-  double             px_, py_;
-  double             ss_;
+  double             px_     { 0.0 };
+  double             py_     { 0.0 };
+  double             ss_     { 1.0 };
   QPainterPath       path_;
   QPen               pen_;
   QBrush             brush_;
-  bool               stroke_;
-  bool               fill_;
+  bool               stroke_ { false };
+  bool               fill_   { false };
 };
+
+//-----
 
 CQGnuPlotRenderer::
 CQGnuPlotRenderer(CQGnuPlotCanvas *canvas) :
- canvas_(canvas), pw_(1), ph_(1), mapping_(true)
+ canvas_(canvas)
 {
-  pw_ = canvas_->width ();
-  ph_ = canvas_->height();
-
   font_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
 }
 
@@ -92,12 +92,20 @@ CQGnuPlotRenderer::
 
 void
 CQGnuPlotRenderer::
+setCanvas(CQGnuPlotCanvas *canvas)
+{
+  canvas_ = canvas;
+}
+
+void
+CQGnuPlotRenderer::
 setPainter(QPainter *painter)
 {
+  assert(canvas_);
+
   painter_ = painter;
 
-  pw_ = canvas_->width ();
-  ph_ = canvas_->height();
+  window()->setSize(CISize2D(canvas_->width(), canvas_->height()));
 }
 
 void
@@ -226,9 +234,10 @@ drawRect(const CBBox2D &rect, const CRGBA &c, double width)
 
 void
 CQGnuPlotRenderer::
-patternRect(const CBBox2D &rect, CGnuPlot::FillPattern pattern, const CRGBA &fg, const CRGBA &bg)
+patternRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
+            const CRGBA &fg, const CRGBA &bg)
 {
-  CRGBA c = (pattern == CGnuPlot::FillPattern::BG ? bg : fg);
+  CRGBA c = (pattern == CGnuPlotTypes::FillPattern::BG ? bg : fg);
 
   Qt::BrushStyle qpattern = CQGnuPlotUtil::fillPatternQtConv(pattern);
 
@@ -263,7 +272,8 @@ fillRect(const CBBox2D &rect, const CRGBA &c)
 void
 CQGnuPlotRenderer::
 drawBezier(const CPoint2D &point1, const CPoint2D &point2,
-           const CPoint2D &point3, const CPoint2D &point4)
+           const CPoint2D &point3, const CPoint2D &point4,
+           double width, const CRGBA &c)
 {
   double px1, py1, px2, py2, px3, py3, px4, py4;
 
@@ -277,7 +287,11 @@ drawBezier(const CPoint2D &point1, const CPoint2D &point2,
   path.moveTo(px1, py1);
   path.cubicTo(px2, py2, px3, py3, px4, py4);
 
-  painter_->drawPath(path);
+  QPen pen(toQColor(c));
+
+  pen.setWidthF(width);
+
+  painter_->strokePath(path, pen);
 }
 
 void
@@ -447,21 +461,24 @@ setLineDash(const CLineDash &dash)
   painter_->setPen(pen);
 }
 
+#if 0
 void
 CQGnuPlotRenderer::
 windowToPixel(double wx, double wy, double *px, double *py)
 {
-  if (! mapping_) {
+  const CISize2D &s = qwindow_->size();
+
+  if (! mapping()) {
     *px = wx;
     *py = wy;
     return;
   }
 
   // place on screen
-  double pxmin = region_.getLeft  ()*pw_;
-  double pymin = region_.getBottom()*ph_;
-  double pxmax = region_.getRight ()*pw_;
-  double pymax = region_.getTop   ()*ph_;
+  double pxmin = region_.getLeft  ()*s.width;
+  double pymin = region_.getBottom()*s.height;
+  double pxmax = region_.getRight ()*s.width;
+  double pymax = region_.getTop   ()*s.height;
 
   double pw = pxmax - pxmin;
   double ph = pymax - pymin;
@@ -510,17 +527,19 @@ void
 CQGnuPlotRenderer::
 pixelToWindow(double px, double py, double *wx, double *wy)
 {
-  if (! mapping_) {
+  const CISize2D &s = qwindow_->size();
+
+  if (! mapping()) {
     *wx = px;
     *wy = py;
     return;
   }
 
   // place on screen
-  double pxmin = region_.getLeft  ()*pw_;
-  double pymin = region_.getBottom()*ph_;
-  double pxmax = region_.getRight ()*pw_;
-  double pymax = region_.getTop   ()*ph_;
+  double pxmin = region_.getLeft  ()*s.width;
+  double pymin = region_.getBottom()*s.height;
+  double pxmax = region_.getRight ()*s.width;
+  double pymax = region_.getTop   ()*s.height;
 
   double pw = pxmax - pxmin;
   double ph = pymax - pymin;
@@ -564,51 +583,4 @@ pixelToWindow(double px, double py, double *wx, double *wy)
   *wx = CGnuPlotUtil::map(px, pxmin, pxmax, range_.getXMin(), range_.getXMax());
   *wy = CGnuPlotUtil::map(py, pymax, pymin, range_.getYMin(), range_.getYMax());
 }
-
-double
-CQGnuPlotRenderer::
-pixelWidthToWindowWidth(double w)
-{
-  double wx1, wy1, wx2, wy2;
-
-  pixelToWindow(0, 0, &wx1, &wy1);
-  pixelToWindow(w, w, &wx2, &wy2);
-
-  return wx2 - wx1;
-}
-
-double
-CQGnuPlotRenderer::
-pixelHeightToWindowHeight(double h)
-{
-  double wx1, wy1, wx2, wy2;
-
-  pixelToWindow(0, 0, &wx1, &wy1);
-  pixelToWindow(h, h, &wx2, &wy2);
-
-  return wy1 - wy2;
-}
-
-double
-CQGnuPlotRenderer::
-windowWidthToPixelWidth(double w)
-{
-  double wx1, wy1, wx2, wy2;
-
-  windowToPixel(0, 0, &wx1, &wy1);
-  windowToPixel(w, w, &wx2, &wy2);
-
-  return fabs(wx2 - wx1);
-}
-
-double
-CQGnuPlotRenderer::
-windowHeightToPixelHeight(double h)
-{
-  double wx1, wy1, wx2, wy2;
-
-  windowToPixel(0, 0, &wx1, &wy1);
-  windowToPixel(h, h, &wx2, &wy2);
-
-  return fabs(wy2 - wy1);
-}
+#endif

@@ -1,4 +1,16 @@
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotWindow.h>
+#include <CGnuPlotUtil.h>
+
+CGnuPlotRenderer::
+CGnuPlotRenderer()
+{
+}
+
+CGnuPlotRenderer::
+~CGnuPlotRenderer()
+{
+}
 
 void
 CGnuPlotRenderer::
@@ -194,4 +206,188 @@ drawRotatedText(const CPoint2D &p, const std::string &text, const CRGBA &c, doub
   drawText(p, text, c);
 
   setFont(font);
+}
+
+double
+CGnuPlotRenderer::
+pixelWidthToWindowWidth(double w)
+{
+  double wx1, wy1, wx2, wy2;
+
+  pixelToWindow(0, 0, &wx1, &wy1);
+  pixelToWindow(w, w, &wx2, &wy2);
+
+  return wx2 - wx1;
+}
+
+double
+CGnuPlotRenderer::
+pixelHeightToWindowHeight(double h)
+{
+  double wx1, wy1, wx2, wy2;
+
+  pixelToWindow(0, 0, &wx1, &wy1);
+  pixelToWindow(h, h, &wx2, &wy2);
+
+  return wy1 - wy2;
+}
+
+double
+CGnuPlotRenderer::
+windowWidthToPixelWidth(double w)
+{
+  double wx1, wy1, wx2, wy2;
+
+  windowToPixel(0, 0, &wx1, &wy1);
+  windowToPixel(w, w, &wx2, &wy2);
+
+  return fabs(wx2 - wx1);
+}
+
+double
+CGnuPlotRenderer::
+windowHeightToPixelHeight(double h)
+{
+  double wx1, wy1, wx2, wy2;
+
+  windowToPixel(0, 0, &wx1, &wy1);
+  windowToPixel(h, h, &wx2, &wy2);
+
+  return fabs(wy2 - wy1);
+}
+
+void
+CGnuPlotRenderer::
+windowToPixel(const CPoint2D &w, CPoint2D &p)
+{
+  windowToPixel(w.x, w.y, &p.x, &p.y);
+}
+
+void
+CGnuPlotRenderer::
+pixelToWindow(const CPoint2D &p, CPoint2D &w)
+{
+  pixelToWindow(p.x, p.y, &w.x, &w.y);
+}
+
+void
+CGnuPlotRenderer::
+windowToPixel(double wx, double wy, double *px, double *py)
+{
+  const CISize2D &s = window()->size();
+
+  if (! mapping_) {
+    *px = wx;
+    *py = wy;
+    return;
+  }
+
+  // place on screen
+  double pxmin = region_.getLeft  ()*s.width;
+  double pymin = region_.getBottom()*s.height;
+  double pxmax = region_.getRight ()*s.width;
+  double pymax = region_.getTop   ()*s.height;
+
+  double pw = pxmax - pxmin;
+  double ph = pymax - pymin;
+
+  // add margin
+  double ps = std::min(pw, ph);
+
+  double lmargin = ps*margin_.left  ()/100.0;
+  double rmargin = ps*margin_.right ()/100.0;
+  double tmargin = ps*margin_.top   ()/100.0;
+  double bmargin = ps*margin_.bottom()/100.0;
+
+  pxmin += lmargin; pxmax -= rmargin;
+  pymin += tmargin; pymax -= bmargin;
+
+  // adjust for ratio
+  if (ratio_.isValid() && ratio_.getValue() > 0.0) {
+    double ratio = ratio_.getValue();
+
+    pw = pxmax - pxmin;
+    ph = pymax - pymin;
+
+    double pr = (1.0*pw)/ph;
+
+    double pw1 = pw*ratio/pr;
+    double ph1 = ph;
+
+    if (pw1 > pw) {
+      ph1 *= pw/pw1;
+      pw1  = pw;
+    }
+
+    double pxc = (pxmin + pxmax)/2.0;
+    double pyc = (pymin + pymax)/2.0;
+
+    pxmin = pxc - pw1/2.0; pxmax = pxc + pw1/2.0;
+    pymin = pyc - ph1/2.0; pymax = pyc + ph1/2.0;
+  }
+
+  // map
+  *px = CGnuPlotUtil::map(wx, range_.getXMin(), range_.getXMax(), pxmin, pxmax);
+  *py = CGnuPlotUtil::map(wy, range_.getYMin(), range_.getYMax(), pymax, pymin);
+}
+
+void
+CGnuPlotRenderer::
+pixelToWindow(double px, double py, double *wx, double *wy)
+{
+  const CISize2D &s = window()->size();
+
+  if (! mapping_) {
+    *wx = px;
+    *wy = py;
+    return;
+  }
+
+  // place on screen
+  double pxmin = region_.getLeft  ()*s.width;
+  double pymin = region_.getBottom()*s.height;
+  double pxmax = region_.getRight ()*s.width;
+  double pymax = region_.getTop   ()*s.height;
+
+  double pw = pxmax - pxmin;
+  double ph = pymax - pymin;
+
+  // add margin
+  double ps = std::min(pw, ph);
+
+  double lmargin = ps*margin_.left  ()/100.0;
+  double rmargin = ps*margin_.right ()/100.0;
+  double tmargin = ps*margin_.top   ()/100.0;
+  double bmargin = ps*margin_.bottom()/100.0;
+
+  pxmin += lmargin; pxmax -= rmargin;
+  pymin += tmargin; pymax -= bmargin;
+
+  // adjust for ratio
+  if (ratio_.isValid() && ratio_.getValue() > 0.0) {
+    double ratio = ratio_.getValue();
+
+    pw = pxmax - pxmin;
+    ph = pymax - pymin;
+
+    double pr = (1.0*pw)/ph;
+
+    double pw1 = pw*ratio/pr;
+    double ph1 = ph;
+
+    if (pw1 > pw) {
+      ph1 *= pw/pw1;
+      pw1  = pw;
+    }
+
+    double pxc = (pxmin + pxmax)/2.0;
+    double pyc = (pymin + pymax)/2.0;
+
+    pxmin = pxc - pw1/2.0; pxmax = pxc + pw1/2.0;
+    pymin = pyc - ph1/2.0; pymax = pyc + ph1/2.0;
+  }
+
+  // map
+  *wx = CGnuPlotUtil::map(px, pxmin, pxmax, range_.getXMin(), range_.getXMax());
+  *wy = CGnuPlotUtil::map(py, pymax, pymin, range_.getYMin(), range_.getYMax());
 }

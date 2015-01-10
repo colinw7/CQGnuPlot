@@ -63,6 +63,13 @@ CGnuPlotContour(CGnuPlotPlot *plot) :
   colors_ = std::vector<CRGBA>(&contour_colors[0], &contour_colors[20]);
 }
 
+CGnuPlot *
+CGnuPlotContour::
+app() const
+{
+  return plot_->app();
+}
+
 void
 CGnuPlotContour::
 setData(double *x, double *y, double *z, int no_x, int no_y)
@@ -107,7 +114,7 @@ void
 CGnuPlotContour::
 drawContourLines()
 {
-  CGnuPlotRenderer *renderer = plot_->renderer();
+  CGnuPlotRenderer *renderer = app()->renderer();
 
   const CGnuPlot::Camera &camera = plot_->window()->camera();
 
@@ -291,7 +298,7 @@ CGnuPlotContour::
 fillContourBox(double x1, double y1, double x2, double y2,
                double z1, double z2, double z3, double z4, const std::vector<double> &levels)
 {
-  CGnuPlotRenderer *renderer = plot_->renderer();
+  CGnuPlotRenderer *renderer = app()->renderer();
 
   const CGnuPlot::Camera &camera = plot_->window()->camera();
 

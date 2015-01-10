@@ -1,32 +1,17 @@
-#ifndef CQGnuPlotRenderer_H
-#define CQGnuPlotRenderer_H
+#ifndef CGnuPlotSVGRenderer_H
+#define CGnuPlotSVGRenderer_H
 
 #include <CGnuPlot.h>
 #include <CGnuPlotRenderer.h>
-#include <QColor>
 
-class CQGnuPlotCanvas;
-class QPainter;
+class CGnuPlotSVGDevice;
 
-namespace {
-  inline QColor toQColor(const CRGBA &c) {
-    return QColor(c.getRedI(),c.getGreenI(),c.getBlueI(),c.getAlphaI());
-  }
-
-  inline CRGBA fromQColor(const QColor &c) {
-    return CRGBA(c.redF(),c.greenF(),c.blueF(),c.alphaF());
-  }
-}
-
-class CQGnuPlotRenderer : public CGnuPlotRenderer {
+class CGnuPlotSVGRenderer : public CGnuPlotRenderer {
  public:
-  CQGnuPlotRenderer(CQGnuPlotCanvas *canvas=0);
- ~CQGnuPlotRenderer() override;
+  CGnuPlotSVGRenderer(CGnuPlotSVGDevice *device);
+ ~CGnuPlotSVGRenderer() override;
 
-  void setCanvas(CQGnuPlotCanvas *canvas);
-
-  QPainter *painter() const { return painter_; }
-  void setPainter(QPainter *painter);
+  std::ostream &os();
 
   void drawPoint  (const CPoint2D &p, const CRGBA &c) override;
   void drawSymbol (const CPoint2D &p, SymbolType type, double size, const CRGBA &c) override;
@@ -52,9 +37,8 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void setLineDash(const CLineDash &line_dash) override;
 
  private:
-  CQGnuPlotCanvas *canvas_;
-  QPainter        *painter_ { 0 };
-  CFontPtr         font_;
+  CGnuPlotSVGDevice *device_;
+  CFontPtr           font_;
 };
 
 #endif

@@ -35,14 +35,14 @@ class CGnuPlotStyle {
     return static_cast<SymbolType>((i1 % ii) + static_cast<int>(SymbolType::PLUS));
   }
 
-  CGnuPlot::FillPattern indexPattern(int i) {
-    if (i <= 0) return CGnuPlot::FillPattern::NONE;
+  CGnuPlotTypes::FillPattern indexPattern(int i) {
+    if (i <= 0) return CGnuPlotTypes::FillPattern::NONE;
 
     int i1 = i - 1;
-    int ii = int(CGnuPlot::FillPattern::LAST);
+    int ii = int(CGnuPlotTypes::FillPattern::LAST);
 
-    return static_cast<CGnuPlot::FillPattern>(
-            (i1 % ii) + static_cast<int>(CGnuPlot::FillPattern::HATCH));
+    return static_cast<CGnuPlotTypes::FillPattern>(
+            (i1 % ii) + static_cast<int>(CGnuPlotTypes::FillPattern::HATCH));
   }
 
  private:

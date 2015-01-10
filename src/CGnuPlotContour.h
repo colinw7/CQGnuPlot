@@ -5,11 +5,16 @@
 #include <CRGBA.h>
 #include <COptVal.h>
 
+class CGnuPlot;
 class CGnuPlotPlot;
 
 class CGnuPlotContour {
  public:
   CGnuPlotContour(CGnuPlotPlot *plot);
+
+  CGnuPlot *app() const;
+
+  CGnuPlotPlot *plot() const { return plot_; }
 
   bool solid() const { return solid_; }
   void setSolid(bool b) { solid_ = b; }

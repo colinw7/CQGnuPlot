@@ -16,6 +16,8 @@ CONFIG += debug
 SOURCES += \
 CQGnuPlot.cpp \
 CQGnuPlotCanvas.cpp \
+CQGnuPlotDevice.cpp \
+CQGnuPlotGroup.cpp \
 CQGnuPlotLineStyle.cpp \
 CQGnuPlotObject.cpp \
 CQGnuPlotPlot.cpp \
@@ -26,9 +28,13 @@ CQGnuPlotWindow.cpp \
 CGnuPlot.cpp \
 CGnuPlotAxis.cpp \
 CGnuPlotContour.cpp \
+CGnuPlotGroup.cpp \
+CGnuPlotObject.cpp \
 CGnuPlotPlot.cpp \
 CGnuPlotPoint.cpp \
 CGnuPlotRenderer.cpp \
+CGnuPlotSVGDevice.cpp \
+CGnuPlotSVGRenderer.cpp \
 CGnuPlotWindow.cpp \
 \
 CQPropertyDelegate.cpp \
@@ -64,6 +70,8 @@ MouseMode/CQZoomMouseMode.cpp \
 HEADERS += \
 CQGnuPlot.h \
 CQGnuPlotCanvas.h \
+CQGnuPlotDevice.h \
+CQGnuPlotGroup.h \
 CQGnuPlotLineStyle.h \
 CQGnuPlotObject.h \
 CQGnuPlotPlot.h \
@@ -74,11 +82,18 @@ CQGnuPlotWindow.h \
 CGnuPlot.h \
 CGnuPlotAxis.h \
 CGnuPlotContour.h \
+CGnuPlotDevice.h \
+CGnuPlotFillStyle.h \
+CGnuPlotGroup.h \
 CGnuPlotLineStyle.h \
 CGnuPlotObject.h \
 CGnuPlotPlot.h \
+CGnuPlotPoint.h \
 CGnuPlotRenderer.h \
+CGnuPlotSVGDevice.h \
+CGnuPlotSVGRenderer.h \
 CGnuPlotStyle.h \
+CGnuPlotTypes.h \
 CGnuPlotUtil.h \
 CGnuPlotWindow.h \
 \

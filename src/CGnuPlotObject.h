@@ -1,14 +1,21 @@
 #ifndef CGnuPlotObject_H
 #define CGnuPlotObject_H
 
-#include <CRefPtr.h>
 #include <CRGBA.h>
 #include <CPoint2D.h>
 #include <CAlignType.h>
+#include <vector>
+#include <memory>
+
+class CGnuPlotRenderer;
+
+//---
 
 class CGnuPlotObject {
  public:
   CGnuPlotObject() { }
+
+  virtual ~CGnuPlotObject() { }
 
   const CRGBA &getStrokeColor() const { return strokeColor_; }
   void setStrokeColor(const CRGBA &c) { strokeColor_ = c; }
@@ -41,6 +48,8 @@ class CGnuPlotArrow : public CGnuPlotObject {
 
  public:
   CGnuPlotArrow() { }
+
+  virtual ~CGnuPlotArrow() { }
 
   int getInd() const { return ind_; }
   void setInd(int t) { ind_ = t; }
@@ -87,6 +96,8 @@ class CGnuPlotArrow : public CGnuPlotObject {
   int getLineStyle() const { return style_.lineStyle; }
   void setLineStyle(int t) { style_.lineStyle = t; }
 
+  void draw(CGnuPlotRenderer *renderer) const;
+
  private:
   int        ind_      { -1 };
   CPoint2D   from_     { 0, 0 };
@@ -100,6 +111,8 @@ class CGnuPlotArrow : public CGnuPlotObject {
 class CGnuPlotLabel : public CGnuPlotObject {
  public:
   CGnuPlotLabel() { }
+
+  virtual ~CGnuPlotLabel() { }
 
   int getInd() const { return ind_; }
   void setInd(int t) { ind_ = t; }
@@ -125,6 +138,8 @@ class CGnuPlotLabel : public CGnuPlotObject {
   double getOffset() const { return offset_; }
   void setOffset(double o) { offset_ = o; }
 
+  void draw(CGnuPlotRenderer *renderer) const;
+
  private:
   int         ind_    { -1 };
   std::string text_;
@@ -142,6 +157,8 @@ class CGnuPlotEllipse : public CGnuPlotObject {
  public:
   CGnuPlotEllipse() { }
 
+  virtual ~CGnuPlotEllipse() { }
+
   const CPoint2D &getCenter() const { return p_; }
   void setCenter(const CPoint2D &p) { p_ = p; }
 
@@ -150,6 +167,8 @@ class CGnuPlotEllipse : public CGnuPlotObject {
 
   double getRY() const { return ry_; }
   void setRY(double y) { ry_ = y; }
+
+  void draw(CGnuPlotRenderer *renderer) const;
 
  private:
   CPoint2D p_  { 0, 0 };
@@ -166,11 +185,15 @@ class CGnuPlotPolygon : public CGnuPlotObject {
  public:
   CGnuPlotPolygon() { }
 
+  virtual ~CGnuPlotPolygon() { }
+
   void addPoint(const CPoint2D &p) {
     points_.push_back(p);
   }
 
   const Points &getPoints() const { return points_; }
+
+  void draw(CGnuPlotRenderer *renderer) const;
 
  private:
   Points points_;
@@ -181,6 +204,8 @@ class CGnuPlotPolygon : public CGnuPlotObject {
 class CGnuPlotRectangle : public CGnuPlotObject {
  public:
   CGnuPlotRectangle() { }
+
+  virtual ~CGnuPlotRectangle() { }
 
   const CPoint2D &getFrom() const { return from_; }
   void setFrom(const CPoint2D &p) { from_ = p; }
@@ -194,6 +219,8 @@ class CGnuPlotRectangle : public CGnuPlotObject {
   double getLineWidth() const { return lw_; }
   void setLineWidth(double w) { lw_ = w; }
 
+  void draw(CGnuPlotRenderer *renderer) const;
+
  private:
   CPoint2D from_ { 0, 0 };
   CPoint2D to_   { 1, 1 };
@@ -203,10 +230,10 @@ class CGnuPlotRectangle : public CGnuPlotObject {
 
 //---
 
-typedef CRefPtr<CGnuPlotArrow>     CGnuPlotArrowP;
-typedef CRefPtr<CGnuPlotLabel>     CGnuPlotLabelP;
-typedef CRefPtr<CGnuPlotEllipse>   CGnuPlotEllipseP;
-typedef CRefPtr<CGnuPlotPolygon>   CGnuPlotPolygonP;
-typedef CRefPtr<CGnuPlotRectangle> CGnuPlotRectangleP;
+typedef std::shared_ptr<CGnuPlotArrow>     CGnuPlotArrowP;
+typedef std::shared_ptr<CGnuPlotLabel>     CGnuPlotLabelP;
+typedef std::shared_ptr<CGnuPlotEllipse>   CGnuPlotEllipseP;
+typedef std::shared_ptr<CGnuPlotPolygon>   CGnuPlotPolygonP;
+typedef std::shared_ptr<CGnuPlotRectangle> CGnuPlotRectangleP;
 
 #endif

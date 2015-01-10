@@ -9,6 +9,7 @@
 #include <CQPanZoomIFace.h>
 
 class CQGnuPlot;
+class CQGnuPlotGroup;
 class CQGnuPlotPlot;
 class CQGnuPlotCanvas;
 class CQGnuPlotRenderer;
@@ -41,10 +42,15 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   CQGnuPlotWindow(CQGnuPlot *plot);
  ~CQGnuPlotWindow() override;
 
+  CQGnuPlot *qapp() const { return plot_; }
+
   CQGnuPlotCanvas *canvas() const { return canvas_; }
 
+  void setSize(const CISize2D &s);
+
   void addProperties();
-  void addPlotProperties(CGnuPlotPlot *plot, bool parent=true, bool child=false);
+  void addGroupProperties(CGnuPlotGroup *group);
+  void addPlotProperties(CGnuPlotPlot *plot);
 
   void paint(QPainter *p);
 
@@ -81,10 +87,10 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   QString title() const;
   void setTitle(const QString &s);
 
-  CQGnuPlotPlot *currentPlot() const { return currentPlot_; }
-  void setCurrentPlot(CQGnuPlotPlot *plot);
+  CQGnuPlotGroup *currentGroup() const { return currentGroup_; }
+  void setCurrentGroup(CQGnuPlotGroup *group);
 
-  CQGnuPlotPlot *getPlotAt(const QPoint &pos);
+  CQGnuPlotGroup *getGroupAt(const QPoint &pos);
 
   void mouseMove(const QPoint &qp);
 
@@ -93,8 +99,6 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   void redraw();
 
  private:
-  void stateChanged(CGnuPlot::ChangeState) override;
-
   void paintPlot(CGnuPlotPlot *plot);
 
   void redrawOverlay();
@@ -140,10 +144,10 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   CQMouseMode          *zoomMode_;
   CQMouseMode          *panMode_;
   CQPropertyTree       *tree_;
-  CQPropertyRealEditor *redit_[4];
+  CQPropertyRealEditor *redit_[4]     { 0, 0, 0, 0 };
   QLabel               *plotLabel_;
   QLabel               *posLabel_;
-  CQGnuPlotPlot        *currentPlot_;
+  CQGnuPlotGroup       *currentGroup_ { 0 };
 };
 
 #endif

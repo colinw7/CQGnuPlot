@@ -3,6 +3,11 @@
 
 #include <algorithm>
 
+namespace {
+  inline double Deg2Rad(double d) { return M_PI*d/180.0; }
+  inline double Rad2Deg(double d) { return 180.0*d/M_PI; }
+}
+
 namespace CGnuPlotUtil {
   inline double avg(std::initializer_list<double> l) {
     return std::accumulate(l.begin(), l.end(), 0.0)/l.size();

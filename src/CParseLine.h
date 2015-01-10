@@ -64,6 +64,19 @@ class CParseLine {
       ++pos_;
   }
 
+  bool skipSpaceAndChar(char c) {
+    skipSpace();
+
+    if (! isChar(c))
+      return false;
+
+    skipChar();
+
+    skipSpace();
+
+    return true;
+  }
+
   void skipNonSpace() {
     while (pos_ < len_ && ! isSpace())
       ++pos_;
@@ -99,6 +112,8 @@ class CParseLine {
   }
 
   bool isOneOf(const std::string &chars) const {
+    if (pos_ > len_) return false;
+
     return std::strchr(chars.c_str(), str_[pos_]) != 0;
   }
 

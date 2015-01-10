@@ -1,16 +1,14 @@
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotWindow.h>
+#include <CQGnuPlotGroup.h>
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
 
 CQGnuPlotPlot::
-CQGnuPlotPlot(CQGnuPlotWindow *window) :
- CGnuPlotPlot(window), window_(window), renderer_(0)
+CQGnuPlotPlot(CQGnuPlotGroup *group) :
+ CGnuPlotPlot(group), group_(group)
 {
-  renderer_ = new CQGnuPlotRenderer(canvas());
-
-  setRenderer(renderer_);
 }
 
 CQGnuPlotPlot::
@@ -18,18 +16,18 @@ CQGnuPlotPlot::
 {
 }
 
+CQGnuPlotWindow *
+CQGnuPlotPlot::
+qwindow() const
+{
+  return qgroup()->qwindow();
+}
+
 CQGnuPlotCanvas *
 CQGnuPlotPlot::
 canvas() const
 {
-  return window_->canvas();
-}
-
-void
-CQGnuPlotPlot::
-setPainter(QPainter *p)
-{
-  renderer_->setPainter(p);
+  return qwindow()->canvas();
 }
 
 QColor
@@ -46,34 +44,6 @@ setLineColor(const QColor &c)
   CGnuPlotPlot::setLineColor(fromQColor(c));
 }
 
-CQGnuPlot::CQHAlignType
-CQGnuPlotPlot::
-keyHAlign() const
-{
-  return CQGnuPlotUtil::alignConv(CGnuPlotPlot::getKeyHAlign());
-}
-
-void
-CQGnuPlotPlot::
-setKeyHAlign(const CQGnuPlot::CQHAlignType &a)
-{
-  CGnuPlotPlot::setKeyHAlign(CQGnuPlotUtil::alignConv(a));
-}
-
-CQGnuPlot::CQVAlignType
-CQGnuPlotPlot::
-keyVAlign() const
-{
-  return CQGnuPlotUtil::alignConv(CGnuPlotPlot::getKeyVAlign());
-}
-
-void
-CQGnuPlotPlot::
-setKeyVAlign(const CQGnuPlot::CQVAlignType &a)
-{
-  CGnuPlotPlot::setKeyVAlign(CQGnuPlotUtil::alignConv(a));
-}
-
 CQGnuPlot::CQPlotStyle
 CQGnuPlotPlot::
 plotStyle() const
@@ -86,20 +56,6 @@ CQGnuPlotPlot::
 setPlotStyle(const CQGnuPlot::CQPlotStyle &s)
 {
   CGnuPlotPlot::setStyle(CQGnuPlotUtil::plotStyleConv(s));
-}
-
-CQGnuPlot::CQHistogramStyle
-CQGnuPlotPlot::
-histogramStyle() const
-{
-  return CQGnuPlotUtil::histogramStyleConv(CGnuPlotPlot::getHistogramStyle());
-}
-
-void
-CQGnuPlotPlot::
-setHistogramStyle(const CQGnuPlot::CQHistogramStyle &s)
-{
-  CGnuPlotPlot::setHistogramStyle(CQGnuPlotUtil::histogramStyleConv(s));
 }
 
 CQGnuPlot::CQFillType
@@ -173,7 +129,7 @@ drawBar(double x, double y, const CBBox2D &bbox, FillType fillType,
         FillPattern fillPattern, const CRGBA &fillColor, const CRGBA &lineColor)
 {
   if (selectedPos_.isValid() && bbox.inside(selectedPos_.getValue()))
-    CGnuPlotPlot::drawBar(x, y, bbox, CGnuPlot::FillType::SOLID,
+    CGnuPlotPlot::drawBar(x, y, bbox, CGnuPlotTypes::FillType::SOLID,
                           fillPattern, CRGBA(0.5,0.5,0.5), CRGBA(1,1,1));
   else
     CGnuPlotPlot::drawBar(x, y, bbox, fillType, fillPattern, fillColor, lineColor);
@@ -193,7 +149,7 @@ mouseMove(const CPoint2D &p)
 
     selectedPos_ = p;
 
-    window_->redraw();
+    qwindow()->redraw();
 
     return;
   }

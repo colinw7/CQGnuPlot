@@ -7,8 +7,8 @@
 #include <QString>
 #include <QRect>
 
-class CQGnuPlotWindow;
-class CQGnuPlotPlot;
+class CQGnuPlotDevice;
+class CQGnuPlotRenderer;
 
 class CQGnuPlot : public QObject, public CGnuPlot {
   Q_OBJECT
@@ -111,19 +111,12 @@ class CQGnuPlot : public QObject, public CGnuPlot {
   CQGnuPlot();
  ~CQGnuPlot() override;
 
-  CGnuPlotWindow    *createWindow() override;
-  CGnuPlotPlot      *createPlot(CGnuPlotWindow *window) override;
-  CGnuPlotLineStyle *createLineStyle() override;
+  CQGnuPlotDevice *qdevice() const { return device_; }
 
-  CGnuPlotArrow     *createArrow();
-  CGnuPlotLabel     *createLabel();
-  CGnuPlotEllipse   *createEllipse();
-  CGnuPlotPolygon   *createPolygon();
-  CGnuPlotRectangle *createRectangle();
+  CQGnuPlotRenderer *qrenderer() const;
 
-  void timeout() override;
-
-  void load(const std::string &filename);
+ private:
+  CQGnuPlotDevice *device_;
 };
 
 #endif

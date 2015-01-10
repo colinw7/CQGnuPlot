@@ -197,14 +197,20 @@ class CExprFunction##NAME : public CExprFunctionObj { \
  public: \
   CExprValuePtr operator()(const CExprFunction::Values &values) { \
     assert(values.size() == 1); \
+    double real; \
     if (values[0]->isRealValue()) { \
-      double real; \
-      if (values[0]->getRealValue(real)) { \
-        double real1 = F(real); \
-        return CExprInst->createRealValue(real1); \
-      } \
+      if (! values[0]->getRealValue(real)) return CExprValuePtr(); \
     } \
-    return CExprValuePtr(); \
+    else if (values[0]->isIntegerValue()) { \
+      long integer = 0; \
+      if (! values[0]->getIntegerValue(integer)) return CExprValuePtr(); \
+      real = integer; \
+    } \
+    else { \
+      return CExprValuePtr(); \
+    } \
+    double real1 = F(real); \
+    return CExprInst->createRealValue(real1); \
   } \
 };
 

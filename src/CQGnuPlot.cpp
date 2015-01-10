@@ -1,5 +1,7 @@
 #include <CQGnuPlot.h>
+#include <CQGnuPlotDevice.h>
 #include <CQGnuPlotWindow.h>
+#include <CQGnuPlotGroup.h>
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotLineStyle.h>
 #include <CQGnuPlotObject.h>
@@ -14,17 +16,35 @@ main(int argc, char **argv)
 
   bool debug  = false;
   bool edebug = false;
+  bool svg    = false;
+  bool exit   = false;
+
+  std::string ofile = "";
 
   std::vector<std::string> files;
 
   for (int i = 1; i < argc; i++) {
     if (argv[i][0] == '-') {
-      if      (argv[i][1] == 'd')
+      std::string arg = (argv[i][1] == '-' ? &argv[i][1] : &argv[i][1]);
+
+      if      (arg == "d")
         debug = true;
-      else if (argv[i][1] == 'D') {
+      else if (arg == "D") {
         debug  = true;
         edebug = true;
       }
+      else if (arg == "o") {
+        ++i;
+
+        if (i < argc)
+          ofile = argv[i];
+      }
+      else if (arg == "svg") {
+        svg   = true;
+        ofile = "temp.svg";
+      }
+      else if (arg == "x")
+        exit = true;
     }
     else
       files.push_back(argv[i]);
@@ -35,19 +55,29 @@ main(int argc, char **argv)
   plot.setDebug(debug);
   plot.setExprDebug(edebug);
 
+  if (svg) {
+    plot.setDevice("SVG");
+
+    if (ofile != "")
+      plot.setOutputFile(ofile);
+  }
+
   for (const auto &file : files)
     plot.load(file);
 
-  plot.loop();
+  if (! exit)
+    plot.loop();
 
   return 0;
 }
 
-//------
-
 CQGnuPlot::
 CQGnuPlot()
 {
+  device_ = new CQGnuPlotDevice;
+
+  addDevice("Qt", device_);
+  setDevice("Qt");
 }
 
 CQGnuPlot::
@@ -55,82 +85,9 @@ CQGnuPlot::
 {
 }
 
-CGnuPlotWindow *
+CQGnuPlotRenderer *
 CQGnuPlot::
-createWindow()
+qrenderer() const
 {
-  CQGnuPlotWindow *window = new CQGnuPlotWindow(this);
-
-  window->resize(1000, 800);
-
-  window->show();
-
-  return window;
-}
-
-CGnuPlotPlot *
-CQGnuPlot::
-createPlot(CGnuPlotWindow *window)
-{
-  CQGnuPlotWindow *qwindow = static_cast<CQGnuPlotWindow *>(window);
-
-  CQGnuPlotPlot *plot = new CQGnuPlotPlot(qwindow);
-
-  return plot;
-}
-
-CGnuPlotLineStyle *
-CQGnuPlot::
-createLineStyle()
-{
-  return new CQGnuPlotLineStyle;
-}
-
-CGnuPlotArrow *
-CQGnuPlot::
-createArrow()
-{
-  return new CQGnuPlotArrow;
-}
-
-CGnuPlotLabel *
-CQGnuPlot::
-createLabel()
-{
-  return new CQGnuPlotLabel;
-}
-
-CGnuPlotEllipse *
-CQGnuPlot::
-createEllipse()
-{
-  return new CQGnuPlotEllipse;
-}
-
-CGnuPlotPolygon *
-CQGnuPlot::
-createPolygon()
-{
-  return new CQGnuPlotPolygon;
-}
-
-CGnuPlotRectangle *
-CQGnuPlot::
-createRectangle()
-{
-  return new CQGnuPlotRectangle;
-}
-
-void
-CQGnuPlot::
-timeout()
-{
-  qApp->processEvents();
-}
-
-void
-CQGnuPlot::
-load(const std::string &filename)
-{
-  CGnuPlot::load(filename);
+  return qdevice()->qrenderer();
 }
