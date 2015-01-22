@@ -28,6 +28,8 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   QPainter *painter() const { return painter_; }
   void setPainter(QPainter *painter);
 
+  void clear(const CRGBA &c);
+
   void drawPoint  (const CPoint2D &p, const CRGBA &c) override;
   void drawSymbol (const CPoint2D &p, SymbolType type, double size, const CRGBA &c) override;
   void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c) override;
@@ -41,8 +43,8 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c) override;
   void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c) override;
 
-  void drawEllipse(const CPoint2D &center, double rx, double ry, const CRGBA &c) override;
-  void fillEllipse(const CPoint2D &center, double rx, double ry, const CRGBA &c) override;
+  void drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c) override;
+  void fillEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c) override;
 
   void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) override;
 

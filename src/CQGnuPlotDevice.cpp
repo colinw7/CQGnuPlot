@@ -70,35 +70,45 @@ CGnuPlotArrow *
 CQGnuPlotDevice::
 createArrow()
 {
-  return new CQGnuPlotArrow;
+  CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
+
+  return new CQGnuPlotArrow(qapp);
 }
 
 CGnuPlotLabel *
 CQGnuPlotDevice::
 createLabel()
 {
-  return new CQGnuPlotLabel;
+  CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
+
+  return new CQGnuPlotLabel(qapp);
 }
 
 CGnuPlotEllipse *
 CQGnuPlotDevice::
 createEllipse()
 {
-  return new CQGnuPlotEllipse;
+  CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
+
+  return new CQGnuPlotEllipse(qapp);
 }
 
 CGnuPlotPolygon *
 CQGnuPlotDevice::
 createPolygon()
 {
-  return new CQGnuPlotPolygon;
+  CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
+
+  return new CQGnuPlotPolygon(qapp);
 }
 
 CGnuPlotRectangle *
 CQGnuPlotDevice::
 createRectangle()
 {
-  return new CQGnuPlotRectangle;
+  CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
+
+  return new CQGnuPlotRectangle(qapp);
 }
 
 void

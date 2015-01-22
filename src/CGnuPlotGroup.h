@@ -15,7 +15,6 @@ class CGnuPlotGroup {
   typedef std::vector<CGnuPlotRectangleP> Rectangles;
   typedef CGnuPlot::AxesData              AxesData;
   typedef CGnuPlot::AxisData              AxisData;
-  typedef CGnuPlot::KeyData               KeyData;
   typedef CGnuPlot::PlotSize              PlotSize;
   typedef CGnuPlot::PlotStyle             PlotStyle;
   typedef CGnuPlot::LogScaleMap           LogScaleMap;
@@ -32,6 +31,9 @@ class CGnuPlotGroup {
 
   int ind() const { return ind_; }
   void setInd(int ind) { ind_ = ind; }
+
+  const CGnuPlot::Title &title() const { return title_; }
+  void setTitle(const CGnuPlot::Title &t) { title_ = t; }
 
   const Plots &plots() const { return plots_; }
   void addSubPlots(const Plots &plots);
@@ -61,58 +63,72 @@ class CGnuPlotGroup {
 
   //---
 
-  const AxesData &axesData() const;
-  void setAxesData(const AxesData &a);
+  const AxesData &axesData() const { return axesData_; }
+  void setAxesData(const AxesData &a) { axesData_ = a; }
+
+  double getXMin() const { return axesData().xaxis.min.getValue(-10); }
+  double getXMax() const { return axesData().xaxis.max.getValue( 10); }
+  double getYMin() const { return axesData().yaxis.min.getValue(-1); }
+  double getYMax() const { return axesData().yaxis.max.getValue( 1); }
+  double getZMin() const { return axesData().zaxis.min.getValue(-1); }
+  double getZMax() const { return axesData().zaxis.max.getValue( 1); }
+
+  void setXMin(double x) { axesData_.xaxis.min.setValue(x); }
+  void setXMax(double x) { axesData_.xaxis.max.setValue(x); }
+  void setYMin(double y) { axesData_.yaxis.min.setValue(y); }
+  void setYMax(double y) { axesData_.yaxis.max.setValue(y); }
+  void setZMin(double z) { axesData_.zaxis.min.setValue(z); }
+  void setZMax(double z) { axesData_.zaxis.max.setValue(z); }
 
   const std::string &getXLabel() const { return axesData().xaxis.str; }
-  void setXLabel(const std::string &s) { AxesData a = axesData(); a.xaxis.str = s; setAxesData(a); }
+  void setXLabel(const std::string &s) { axesData_.xaxis.str = s; }
 
   const std::string &getYLabel() const { return axesData().yaxis.str; }
-  void setYLabel(const std::string &s) { AxesData a = axesData(); a.yaxis.str = s; setAxesData(a); }
+  void setYLabel(const std::string &s) { axesData_.yaxis.str = s; }
 
   bool getXTics() const { return axesData().xaxis.showTics; }
-  void setXTics(bool b) { AxesData a = axesData(); a.xaxis.showTics = b; setAxesData(a); }
+  void setXTics(bool b) { axesData_.xaxis.showTics = b; }
 
   bool getXTicsMirror() const { return axesData().xaxis.mirror; }
-  void setXTicsMirror(bool b) { AxesData a = axesData(); a.xaxis.mirror = b; setAxesData(a); }
+  void setXTicsMirror(bool b) { axesData_.xaxis.mirror = b; }
 
   bool getYTics() const { return axesData().yaxis.showTics; }
-  void setYTics(bool b) { AxesData a = axesData(); a.yaxis.showTics = b; setAxesData(a); }
+  void setYTics(bool b) { axesData_.yaxis.showTics = b; }
 
   bool getYTicsMirror() const { return axesData().yaxis.mirror; }
-  void setYTicsMirror(bool b) { AxesData a = axesData(); a.yaxis.mirror = b; setAxesData(a); }
+  void setYTicsMirror(bool b) { axesData_.yaxis.mirror = b; }
 
   bool getXGrid() const { return axesData().xaxis.grid; }
-  void setXGrid(bool b) { AxesData a = axesData(); a.xaxis.grid = b; setAxesData(a); }
+  void setXGrid(bool b) { axesData_.xaxis.grid = b; }
 
   bool getYGrid() const { return axesData().yaxis.grid; }
-  void setYGrid(bool b) { AxesData a = axesData(); a.yaxis.grid = b; setAxesData(a); }
+  void setYGrid(bool b) { axesData_.yaxis.grid = b; }
 
   int getBorders() const { return axesData().borders; }
-  void setBorders(int b) { AxesData a = axesData(); a.borders = b; setAxesData(a); }
+  void setBorders(int b) { axesData_.borders = b; }
 
   int getBorderWidth() const { return axesData().borderWidth; }
-  void setBorderWidth(double w) { AxesData a = axesData(); a.borderWidth = w; setAxesData(a); }
+  void setBorderWidth(double w) { axesData_.borderWidth = w; }
 
   //---
 
-  const KeyData &keyData() const { return keyData_; }
-  void setKeyData(const KeyData &k) { keyData_ = k; }
+  const CGnuPlotKeyData &keyData() const { return keyData_; }
+  void setKeyData(const CGnuPlotKeyData &k) { keyData_ = k; }
 
-  bool getKeyDisplayed() const { return keyData().displayed; }
-  void setKeyDisplayed(bool b) { KeyData k = keyData(); k.displayed = b; setKeyData(k); }
+  bool getKeyDisplayed() const { return keyData().displayed(); }
+  void setKeyDisplayed(bool b) { keyData_.setDisplayed(b); }
 
-  bool getKeyReverse() const { return keyData().reverse; }
-  void setKeyReverse(bool b) { KeyData k = keyData(); k.reverse = b; setKeyData(k); }
+  bool getKeyReverse() const { return keyData().reverse(); }
+  void setKeyReverse(bool b) { keyData_.setReverse(b); }
 
-  bool getKeyBox() const { return keyData().box; }
-  void setKeyBox(bool b) { KeyData k = keyData(); k.box = b; setKeyData(k); }
+  bool getKeyBox() const { return keyData().box(); }
+  void setKeyBox(bool b) { keyData_.setBox(b); }
 
-  CHAlignType getKeyHAlign() const { return keyData().halign; }
-  void setKeyHAlign(CHAlignType a) { KeyData k = keyData(); k.halign = a; setKeyData(k); }
+  CHAlignType getKeyHAlign() const { return keyData().halign(); }
+  void setKeyHAlign(CHAlignType a) { keyData_.setHAlign(a); }
 
-  CVAlignType getKeyVAlign() const { return keyData().valign; }
-  void setKeyVAlign(CVAlignType a) { KeyData k = keyData(); k.valign = a; setKeyData(k); }
+  CVAlignType getKeyVAlign() const { return keyData().valign(); }
+  void setKeyVAlign(CVAlignType a) { keyData_.setVAlign(a); }
 
   //---
 
@@ -127,8 +143,8 @@ class CGnuPlotGroup {
   void setRegionTop   (double v) { CBBox2D r = region(); r.setTop   (v); setRegion(r); }
   void setRegionBottom(double v) { CBBox2D r = region(); r.setBottom(v); setRegion(r); }
 
-  const CBBox2D &region() const;
-  void setRegion(const CBBox2D &r);
+  const CBBox2D &region() const { return region_; }
+  void setRegion(const CBBox2D &r) { region_ = r; }
 
   //-----
 
@@ -142,13 +158,13 @@ class CGnuPlotGroup {
   void setMarginTop   (double v) { CRange2D m = margin(); m.setTop   (v); setMargin(m); }
   void setMarginBottom(double v) { CRange2D m = margin(); m.setBottom(v); setMargin(m); }
 
-  const CRange2D &margin() const;
-  void setMargin(const CRange2D &m);
+  const CRange2D &margin() const { return margin_; }
+  void setMargin(const CRange2D &m) { margin_ = m; }
 
   //-----
 
-  const PlotSize &plotSize() const;
-  void setPlotSize(const PlotSize &s);
+  const PlotSize &plotSize() const { return plotSize_; }
+  void setPlotSize(const PlotSize &s) { plotSize_ = s; }
 
   double getRatio() const { return plotSize().ratio.getValue(1.0); }
   void setRatio(double r) { PlotSize s = plotSize(); s.ratio = r; setPlotSize(s); }
@@ -181,6 +197,8 @@ class CGnuPlotGroup {
 
   void initPlotAxis();
 
+  void drawTitle();
+
   void drawHistogram(const Plots &plots);
 
   void drawAxes();
@@ -207,8 +225,9 @@ class CGnuPlotGroup {
 
   //-----
 
-  bool hasHistograms() const;
-  void getHistograms(Plots &plots) const;
+  bool hasPlotStyle(PlotStyle plotStyle) const;
+
+  void getPlotsOfStyle(Plots &plots, PlotStyle plotStyle) const;
 
   //-----
 
@@ -237,6 +256,7 @@ class CGnuPlotGroup {
   CGnuPlotWindow* window_;                                 // parent window
   int             id_;                                     // unique id
   int             ind_            {0};                     // group index in window
+  CGnuPlot::Title title_;
   Plots           plots_;                                  // plots
   CBBox2D         region_         {0,0,1,1};               // region of window
   CRange2D        margin_         {10,10,10,10};           // margin around plots
@@ -244,7 +264,7 @@ class CGnuPlotGroup {
   HistogramStyle  histogramStyle_ { HistogramStyle::NONE}; // histogram style
   AxesData        axesData_;                               // axes data
   LogScaleMap     logScale_;                               // log axis data
-  KeyData         keyData_;                                // key data
+  CGnuPlotKeyData keyData_;                                // key data
   Arrows          arrows_;                                 // arrow annotations
   Labels          labels_;                                 // label annotations
   Rectangles      rects_;                                  // rectangle annotations

@@ -62,7 +62,10 @@ class CGnuPlotPoint {
   int getNumValues() const { return values_.size(); }
 
   bool getValue(int n, double &r) const;
+  bool getValue(int n, int &i) const;
   bool getValue(int n, std::string &str) const;
+
+  bool isDiscontinuity() const { return discontinuity_; }
 
   int cmp(const CGnuPlotPoint &p) const;
 

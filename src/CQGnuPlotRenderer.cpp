@@ -110,6 +110,13 @@ setPainter(QPainter *painter)
 
 void
 CQGnuPlotRenderer::
+clear(const CRGBA &c)
+{
+  painter_->fillRect(canvas_->rect(), QBrush(toQColor(c)));
+}
+
+void
+CQGnuPlotRenderer::
 drawPoint(const CPoint2D &point, const CRGBA &c)
 {
   double px, py;
@@ -227,7 +234,7 @@ drawRect(const CBBox2D &rect, const CRGBA &c, double width)
   windowToPixel(rect.getXMin(), rect.getYMin(), &px1, &py1);
   windowToPixel(rect.getXMax(), rect.getYMax(), &px2, &py2);
 
-  QRectF qrect(std::min(px1, px2), std::min(py1, py2), abs(px2 - px1), abs(py2 - py1));
+  QRectF qrect(std::min(px1, px2), std::min(py1, py2), fabs(px2 - px1), fabs(py2 - py1));
 
   painter_->drawRect(qrect);
 }
@@ -248,7 +255,7 @@ patternRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
 
   QBrush b(toQColor(c), qpattern);
 
-  QRectF qrect(std::min(px1, px2), std::min(py1, py2), abs(px2 - px1), abs(py2 - py1));
+  QRectF qrect(std::min(px1, px2), std::min(py1, py2), fabs(px2 - px1), fabs(py2 - py1));
 
   painter_->fillRect(qrect, b);
 }
@@ -264,7 +271,7 @@ fillRect(const CBBox2D &rect, const CRGBA &c)
 
   QBrush b(toQColor(c));
 
-  QRectF qrect(std::min(px1, px2), std::min(py1, py2), abs(px2 - px1), abs(py2 - py1));
+  QRectF qrect(std::min(px1, px2), std::min(py1, py2), fabs(px2 - px1), fabs(py2 - py1));
 
   painter_->fillRect(qrect, b);
 }
@@ -352,38 +359,68 @@ fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
 
 void
 CQGnuPlotRenderer::
-drawEllipse(const CPoint2D &center, double rx, double ry, const CRGBA &c)
+drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c)
 {
   double px1, py1, px2, py2;
 
   windowToPixel(center.x - rx, center.y - ry, &px1, &py1);
   windowToPixel(center.x + rx, center.y + ry, &px2, &py2);
 
-  QRectF rect(std::min(px1, px2), std::min(py1, py2), abs(px2 - px1), abs(py2 - py1));
+  QRectF rect(std::min(px1, px2), std::min(py1, py2), fabs(px2 - px1), fabs(py2 - py1));
 
   QPainterPath path;
 
   path.addEllipse(rect);
 
+  QMatrix m = painter_->worldMatrix();
+
+  painter_->setWorldMatrix(QMatrix());
+
+  QTransform t1, t2, t3;
+
+  double px = (px1 + px2)/2.0;
+  double py = (py1 + py2)/2.0;
+
+  t1.translate(px, py); t2.rotate(-a); t3.translate(-px, -py);
+
+  painter_->setWorldTransform(t3*t2*t1);
+
   painter_->strokePath(path, QPen(toQColor(c)));
+
+  painter_->setWorldMatrix(m);
 }
 
 void
 CQGnuPlotRenderer::
-fillEllipse(const CPoint2D &center, double rx, double ry, const CRGBA &c)
+fillEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c)
 {
   double px1, py1, px2, py2;
 
   windowToPixel(center.x - rx, center.y - ry, &px1, &py1);
   windowToPixel(center.x + rx, center.y + ry, &px2, &py2);
 
-  QRectF rect(std::min(px1, px2), std::min(py1, py2), abs(px2 - px1), abs(py2 - py1));
+  QRectF rect(std::min(px1, px2), std::min(py1, py2), fabs(px2 - px1), fabs(py2 - py1));
 
   QPainterPath path;
 
   path.addEllipse(rect);
 
+  QMatrix m = painter_->worldMatrix();
+
+  painter_->setWorldMatrix(QMatrix());
+
+  QTransform t1, t2, t3;
+
+  double px = (px1 + px2)/2.0;
+  double py = (py1 + py2)/2.0;
+
+  t1.translate(px, py); t2.rotate(-a); t3.translate(-px, -py);
+
+  painter_->setWorldTransform(t3*t2*t1);
+
   painter_->fillPath(path, QBrush(toQColor(c)));
+
+  painter_->setWorldMatrix(m);
 }
 
 void
@@ -406,9 +443,7 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 
   QTransform t1, t2, t3;
 
-  t1.translate(px, py);
-  t2.rotate   (-qfont->getAngle());
-  t3.translate(-px, -py);
+  t1.translate(px, py); t2.rotate(-qfont->getAngle()); t3.translate(-px, -py);
 
   painter_->setWorldTransform(t3*t2*t1);
 

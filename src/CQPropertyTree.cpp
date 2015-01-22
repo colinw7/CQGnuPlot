@@ -24,6 +24,13 @@ CQPropertyTree(QWidget *parent) :
   setItemDelegate(delegate);
 }
 
+void
+CQPropertyTree::
+clear()
+{
+  QTreeWidget::clear();
+}
+
 CQPropertyItem *
 CQPropertyTree::
 addProperty(const QString &path, QObject *object, const QString &name)

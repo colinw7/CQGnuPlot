@@ -23,7 +23,6 @@ clear()
 
   groups_.clear();
 
-  title_  = CGnuPlot::Title ();
   camera_ = CGnuPlot::Camera();
 
   hidden3D_  = false;
@@ -171,30 +170,16 @@ void
 CGnuPlotWindow::
 draw()
 {
-  app()->renderer()->setWindow(this);
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setWindow(this);
 
   app()->device()->drawInit(this);
 
-  drawTitle();
+  renderer->clear(backgroundColor());
 
   for (auto group : groups_)
     group->draw();
 
   app()->device()->drawTerm();
-}
-
-void
-CGnuPlotWindow::
-drawTitle()
-{
-  CGnuPlotRenderer *renderer = app()->renderer();
-
-  renderer->setMargin(CRange2D(0,0,0,0));
-  renderer->setRange (CBBox2D(0,0,1,1));
-  renderer->setRegion(CBBox2D(0,0,1,1));
-
-  if (! title().str.empty()) {
-    renderer->drawHAlignedText(CPoint2D(0.5, 1), CHALIGN_TYPE_CENTER, 0,
-                               CVALIGN_TYPE_TOP, 8, title().str);
-  }
 }

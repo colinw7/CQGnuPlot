@@ -44,6 +44,14 @@ namespace CGnuPlotTypes {
     PLOT_ADDED,
     AXIS_DISPLAY,
   };
+
+  enum class CoordSys {
+    FIRST,
+    SECOND,
+    GRAPH,
+    SCREEN,
+    CHARACTER
+  };
 }
 
 #endif

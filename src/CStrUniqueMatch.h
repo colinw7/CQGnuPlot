@@ -32,7 +32,7 @@ class CStrUniqueMatch {
   int numValues() const { return strValues_.size(); }
 
   bool match(const std::string &str, T &value) {
-    std::vector<T> partialValues;
+    std::set<T> partialValues;
 
     for (auto &v : strValues_) {
       if (v.first == str) {
@@ -41,13 +41,13 @@ class CStrUniqueMatch {
       }
 
       if (v.first.find(str) == 0)
-        partialValues.push_back(v.second);
+        partialValues.insert(v.second);
     }
 
     if (partialValues.size() != 1)
       return false;
 
-    value = partialValues[0];
+    value = *partialValues.begin();
 
     return true;
   }

@@ -77,6 +77,23 @@ getValue(int n, double &r) const
 
 bool
 CGnuPlotPoint::
+getValue(int n, int &i) const
+{
+  if (int(values_.size()) < n || ! values_[n - 1].isValid())
+    return false;
+
+  long l;
+
+  if (! values_[n - 1]->getIntegerValue(l))
+    return false;
+
+  i = l;
+
+  return true;
+}
+
+bool
+CGnuPlotPoint::
 getValue(int n, std::string &str) const
 {
   if (int(values_.size()) < n || ! values_[n - 1].isValid())

@@ -88,8 +88,6 @@ class CGnuPlotAxis {
 
   std::string getValueStr(int i, double pos) const;
 
-  void setFont(CFontPtr f) { font_ = f; }
-
   void drawAxis(double pos);
 
   void drawGrid(double start, double end);
@@ -115,30 +113,31 @@ class CGnuPlotAxis {
                         CVAlignType valign, double yOffset, const std::string &str);
 
  private:
-  CGnuPlotGroup*      group_             { 0 };
-  int                 ind_               { 1 };
-  COrientation        direction_;
-  double              start_;
-  double              end_;
-  double              start1_;
-  double              end1_;
-  int                 logarithmic_       { 0 };
-  uint                numTicks1_         { 1 };
-  uint                numTicks2_         { 0 };
-  uint                tickIncrement_     { 0 };
-  double              majorIncrement_    { 0 };
-  std::vector<double> tickSpaces_;
-  bool                tickInside_        { false };
-  bool                labelInside_       { false };
-  std::string         label_;
-  std::string         timeFmt_;
-  bool                displayed_         { true };
-  bool                drawLine_          { true };
-  bool                drawTickMark_      { true };
-  bool                drawMinorTickMark_ { true };
-  bool                drawTickLabel_     { true };
-  bool                drawLabel_         { true };
-  CFontPtr            font_;
+  typedef std::vector<double> TickSpaces;
+
+  CGnuPlotGroup* group_             { 0 };
+  int            ind_               { 1 };
+  COrientation   direction_;
+  double         start_;
+  double         end_;
+  double         start1_;
+  double         end1_;
+  int            logarithmic_       { 0 };
+  uint           numTicks1_         { 1 };
+  uint           numTicks2_         { 0 };
+  uint           tickIncrement_     { 0 };
+  double         majorIncrement_    { 0 };
+  TickSpaces     tickSpaces_;
+  bool           tickInside_        { false };
+  bool           labelInside_       { false };
+  std::string    label_;
+  std::string    timeFmt_;
+  bool           displayed_         { true };
+  bool           drawLine_          { true };
+  bool           drawTickMark_      { true };
+  bool           drawMinorTickMark_ { true };
+  bool           drawTickLabel_     { true };
+  bool           drawLabel_         { true };
 };
 
 #endif

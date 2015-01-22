@@ -37,6 +37,8 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
 
   Q_PROPERTY(int trianglePattern3D READ trianglePattern3D WRITE setTrianglePattern3D)
 
+  Q_PROPERTY(double imageAngle READ imageAngle WRITE setImageAngle)
+
  public:
   CQGnuPlotPlot(CQGnuPlotGroup *group);
 

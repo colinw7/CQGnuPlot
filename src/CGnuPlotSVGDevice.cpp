@@ -48,35 +48,35 @@ CGnuPlotArrow *
 CGnuPlotSVGDevice::
 createArrow()
 {
-  return new CGnuPlotArrow;
+  return new CGnuPlotArrow(plot_);
 }
 
 CGnuPlotLabel *
 CGnuPlotSVGDevice::
 createLabel()
 {
-  return new CGnuPlotLabel;
+  return new CGnuPlotLabel(plot_);
 }
 
 CGnuPlotEllipse *
 CGnuPlotSVGDevice::
 createEllipse()
 {
-  return new CGnuPlotEllipse;
+  return new CGnuPlotEllipse(plot_);
 }
 
 CGnuPlotPolygon *
 CGnuPlotSVGDevice::
 createPolygon()
 {
-  return new CGnuPlotPolygon;
+  return new CGnuPlotPolygon(plot_);
 }
 
 CGnuPlotRectangle *
 CGnuPlotSVGDevice::
 createRectangle()
 {
-  return new CGnuPlotRectangle;
+  return new CGnuPlotRectangle(plot_);
 }
 
 void

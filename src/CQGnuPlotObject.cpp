@@ -1,4 +1,5 @@
 #include <CQGnuPlotObject.h>
+#include <CQGnuPlot.h>
 #include <CQUtil.h>
 
 CQGnuPlotObject::
@@ -38,8 +39,8 @@ setFillColor(const QColor &c)
 //---
 
 CQGnuPlotArrow::
-CQGnuPlotArrow() :
- CQGnuPlotObject(this)
+CQGnuPlotArrow(CQGnuPlot *plot) :
+ CQGnuPlotObject(this), CGnuPlotArrow(plot)
 {
 }
 
@@ -74,8 +75,8 @@ setTo(const QPointF &p)
 //---
 
 CQGnuPlotLabel::
-CQGnuPlotLabel() :
- CQGnuPlotObject(this)
+CQGnuPlotLabel(CQGnuPlot *plot) :
+ CQGnuPlotObject(this), CGnuPlotLabel(plot)
 {
 }
 
@@ -124,8 +125,8 @@ setFont(const QString &s)
 //---
 
 CQGnuPlotEllipse::
-CQGnuPlotEllipse() :
- CQGnuPlotObject(this)
+CQGnuPlotEllipse(CQGnuPlot *plot) :
+ CQGnuPlotObject(this), CGnuPlotEllipse(plot)
 {
 }
 
@@ -146,16 +147,16 @@ setCenter(const QPointF &p)
 //---
 
 CQGnuPlotPolygon::
-CQGnuPlotPolygon() :
- CQGnuPlotObject(this)
+CQGnuPlotPolygon(CQGnuPlot *plot) :
+ CQGnuPlotObject(this), CGnuPlotPolygon(plot)
 {
 }
 
 //---
 
 CQGnuPlotRectangle::
-CQGnuPlotRectangle() :
- CQGnuPlotObject(this)
+CQGnuPlotRectangle(CQGnuPlot *plot) :
+ CQGnuPlotObject(this), CGnuPlotRectangle(plot)
 {
 }
 

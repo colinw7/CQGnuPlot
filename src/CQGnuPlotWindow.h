@@ -36,8 +36,6 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   Q_PROPERTY(bool surface3D READ surface3D WRITE setSurface3D)
   Q_PROPERTY(bool contour3D READ contour3D WRITE setContour3D)
 
-  Q_PROPERTY(QString title READ title WRITE setTitle)
-
  public:
   CQGnuPlotWindow(CQGnuPlot *plot);
  ~CQGnuPlotWindow() override;
@@ -83,9 +81,6 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   void setYMax3D(double y);
   void setNear3D(double z);
   void setFar3D (double z);
-
-  QString title() const;
-  void setTitle(const QString &s);
 
   CQGnuPlotGroup *currentGroup() const { return currentGroup_; }
   void setCurrentGroup(CQGnuPlotGroup *group);

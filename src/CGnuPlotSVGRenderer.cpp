@@ -162,6 +162,13 @@ os()
 
 void
 CGnuPlotSVGRenderer::
+clear(const CRGBA &)
+{
+  // TODO
+}
+
+void
+CGnuPlotSVGRenderer::
 drawPoint(const CPoint2D &point, const CRGBA &c)
 {
   CPoint2D p;
@@ -368,7 +375,7 @@ fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
 
 void
 CGnuPlotSVGRenderer::
-drawEllipse(const CPoint2D &center, double rx, double ry, const CRGBA &c)
+drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c)
 {
   double px1, py1, px2, py2;
 
@@ -378,13 +385,14 @@ drawEllipse(const CPoint2D &center, double rx, double ry, const CRGBA &c)
   CBBox2D rect1(std::min(px1, px2), std::min(py1, py2), std::max(px1, px2), std::max(py1, py2));
 
   os() << "<ellipse cx=\"" << rect1.getCenter().x << "\" cy=\"" << rect1.getCenter().y << "\" " <<
-          "rx=\"" << rect1.getWidth()/2 << "\" ry=\"" << rect1.getHeight()/2 << "\"" <<
+          "rx=\"" << rect1.getWidth()/2 << "\" ry=\"" << rect1.getHeight()/2 << "\" " <<
+          "transform=\"rotate(" << a << ")\" " <<
           "style=\"" << strokeColor(c) << " " << fillNone() << "\"/>\n";
 }
 
 void
 CGnuPlotSVGRenderer::
-fillEllipse(const CPoint2D &center, double rx, double ry, const CRGBA &c)
+fillEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c)
 {
   double px1, py1, px2, py2;
 
@@ -394,7 +402,8 @@ fillEllipse(const CPoint2D &center, double rx, double ry, const CRGBA &c)
   CBBox2D rect1(std::min(px1, px2), std::min(py1, py2), std::max(px1, px2), std::max(py1, py2));
 
   os() << "<ellipse cx=\"" << rect1.getCenter().x << "\" cy=\"" << rect1.getCenter().y << "\" " <<
-          "rx=\"" << rect1.getWidth()/2 << "\" ry=\"" << rect1.getHeight()/2 << "\"" <<
+          "rx=\"" << rect1.getWidth()/2 << "\" ry=\"" << rect1.getHeight()/2 << "\" " <<
+          "transform=\"rotate(" << a << ")\" " <<
           "style=\"" << strokeNone() << " " << fillColor(c) << "\"/>\n";
 }
 

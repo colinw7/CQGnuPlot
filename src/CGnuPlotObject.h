@@ -1,6 +1,7 @@
 #ifndef CGnuPlotObject_H
 #define CGnuPlotObject_H
 
+#include <CGnuPlotArrowStyle.h>
 #include <CRGBA.h>
 #include <CPoint2D.h>
 #include <CAlignType.h>
@@ -13,7 +14,9 @@ class CGnuPlotRenderer;
 
 class CGnuPlotObject {
  public:
-  CGnuPlotObject() { }
+  CGnuPlotObject(CGnuPlot *plot) :
+   plot_(plot) {
+  }
 
   virtual ~CGnuPlotObject() { }
 
@@ -23,31 +26,19 @@ class CGnuPlotObject {
   const CRGBA &getFillColor() const { return fillColor_; }
   void setFillColor(const CRGBA &c) { fillColor_ = c; }
 
- private:
-  CRGBA strokeColor_ { 0, 0, 0 };
-  CRGBA fillColor_   { 0, 0, 0, 0 };
+ protected:
+  CGnuPlot *plot_;
+  CRGBA     strokeColor_ { 0, 0, 0 };
+  CRGBA     fillColor_   { 0, 0, 0, 0 };
 };
 
 //---
 
 class CGnuPlotArrow : public CGnuPlotObject {
  public:
-  struct ArrowStyle {
-    bool     fhead     { false };
-    bool     thead     { true };
-    double   length    { -1 };
-    double   angle     { -1 };
-    double   backAngle { -1 };
-    bool     filled    { false };
-    bool     empty     { false };
-    bool     front     { false };
-    int      lineType  { -1 };
-    double   lineWidth { -1 };
-    int      lineStyle { -1 };
-  };
-
- public:
-  CGnuPlotArrow() { }
+  CGnuPlotArrow(CGnuPlot *plot) :
+   CGnuPlotObject(plot) {
+  }
 
   virtual ~CGnuPlotArrow() { }
 
@@ -63,54 +54,73 @@ class CGnuPlotArrow : public CGnuPlotObject {
   bool getRelative() const { return relative_; }
   void setRelative(bool b) { relative_ = b; }
 
-  bool getFHead() const { return style_.fhead; }
-  void setFHead(bool b) { style_.fhead = b; }
+  const CGnuPlotArrowStyle &style() const { return style_; }
+  void setStyle(const CGnuPlotArrowStyle &s) { style_ = s; }
 
-  bool getTHead() const { return style_.thead; }
-  void setTHead(bool b) { style_.thead = b; }
+  bool getFHead() const { return style_.fhead(); }
+  void setFHead(bool b) { style_.setFHead(b); }
 
-  double getLength() const { return style_.length; }
-  void setLength(double l) { style_.length = l; }
+  bool getTHead() const { return style_.thead(); }
+  void setTHead(bool b) { style_.setTHead(b); }
 
-  double getAngle() const { return style_.angle; }
-  void setAngle(double a) { style_.angle = a; }
+  const CGnuPlotCoordValue &getLength() const { return style_.length(); }
+  void setLength(const CGnuPlotCoordValue &l) { style_.setLength(l); }
 
-  double getBackAngle() const { return style_.backAngle; }
-  void setBackAngle(double a) { style_.backAngle = a; }
+  double getLengthValue() const { return style_.lengthValue(); }
+  void setLengthValue(double l) { style_.setLengthValue(l); }
 
-  bool getFilled() const { return style_.filled; }
-  void setFilled(bool b) { style_.filled = b; }
+  double getAngle() const { return style_.angle(); }
+  void setAngle(double a) { style_.setAngle(a); }
 
-  bool getEmpty() const { return style_.empty; }
-  void setEmpty(bool b) { style_.empty = b; }
+  double getBackAngle() const { return style_.backAngle(); }
+  void setBackAngle(double a) { style_.setBackAngle(a); }
 
-  bool getFront() const { return style_.front; }
-  void setFront(bool b) { style_.front = b; }
+  bool getFilled() const { return style_.filled(); }
+  void setFilled(bool b) { style_.setFilled(b); }
 
-  int getLineType() const { return style_.lineType; }
-  void setLineType(int t) { style_.lineType = t; }
+  bool getEmpty() const { return style_.empty(); }
+  void setEmpty(bool b) { style_.setEmpty(b); }
 
-  double getLineWidth() const { return style_.lineWidth; }
-  void setLineWidth(double w) { style_.lineWidth = w; }
+  bool getFront() const { return style_.front(); }
+  void setFront(bool b) { style_.setFront(b); }
 
-  int getLineStyle() const { return style_.lineStyle; }
-  void setLineStyle(int t) { style_.lineStyle = t; }
+  double getLineWidth() const { return style_.lineWidth(plot_); }
+  void setLineWidth(double w) { style_.setLineWidth(w); }
+
+  int getLineStyle() const { return style_.lineStyle(); }
+  void setLineStyle(int t) { style_.setLineStyle(t); }
+
+  bool getVariable() const { return style_.variable(); }
+  void setVariable(bool b) { style_.setVariable(b); }
+
+  const COptReal &getVarValue() const { return style_.varValue(); }
+  void setVarValue(double r) { style_.setVarValue(r); }
+
+  CRGBA getLineColor() const;
 
   void draw(CGnuPlotRenderer *renderer) const;
 
+  void print(std::ostream &os) const {
+    style_.print(plot_, os);
+
+    os << " from " << from_ << (relative_ ? " rto " : " to ") << to_;
+  }
+
  private:
-  int        ind_      { -1 };
-  CPoint2D   from_     { 0, 0 };
-  CPoint2D   to_       { 1, 1 };
-  bool       relative_ { false };
-  ArrowStyle style_;
+  int                ind_      { -1 };
+  CPoint2D           from_     { 0, 0 };
+  CPoint2D           to_       { 1, 1 };
+  bool               relative_ { false };
+  CGnuPlotArrowStyle style_;
 };
 
 //---
 
 class CGnuPlotLabel : public CGnuPlotObject {
  public:
-  CGnuPlotLabel() { }
+  CGnuPlotLabel(CGnuPlot *plot) :
+   CGnuPlotObject(plot) {
+  }
 
   virtual ~CGnuPlotLabel() { }
 
@@ -140,6 +150,10 @@ class CGnuPlotLabel : public CGnuPlotObject {
 
   void draw(CGnuPlotRenderer *renderer) const;
 
+  void print(std::ostream &os) const {
+    os << " \"" << text_ << "\"" << " at " << pos_;
+  }
+
  private:
   int         ind_    { -1 };
   std::string text_;
@@ -155,7 +169,9 @@ class CGnuPlotLabel : public CGnuPlotObject {
 
 class CGnuPlotEllipse : public CGnuPlotObject {
  public:
-  CGnuPlotEllipse() { }
+  CGnuPlotEllipse(CGnuPlot *plot) :
+   CGnuPlotObject(plot) {
+  }
 
   virtual ~CGnuPlotEllipse() { }
 
@@ -183,7 +199,9 @@ class CGnuPlotPolygon : public CGnuPlotObject {
   typedef std::vector<CPoint2D> Points;
 
  public:
-  CGnuPlotPolygon() { }
+  CGnuPlotPolygon(CGnuPlot *plot) :
+   CGnuPlotObject(plot) {
+  }
 
   virtual ~CGnuPlotPolygon() { }
 
@@ -203,7 +221,9 @@ class CGnuPlotPolygon : public CGnuPlotObject {
 
 class CGnuPlotRectangle : public CGnuPlotObject {
  public:
-  CGnuPlotRectangle() { }
+  CGnuPlotRectangle(CGnuPlot *plot) :
+   CGnuPlotObject(plot) {
+  }
 
   virtual ~CGnuPlotRectangle() { }
 

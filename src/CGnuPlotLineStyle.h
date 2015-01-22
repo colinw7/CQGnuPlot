@@ -4,6 +4,7 @@
 #include <CRGBA.h>
 #include <COptVal.h>
 #include <CGnuPlotTypes.h>
+#include <sstream>
 
 class CGnuPlotLineStyle {
  public:
@@ -27,8 +28,26 @@ class CGnuPlotLineStyle {
   SymbolType pointType() const { return pointType_; }
   void setPointType(SymbolType type) { pointType_ = type; }
 
-  double pointSize() const { return pointSize_; }
+  double pointSize() const { return pointSize_.getValue(1); }
   void setPointSize(double s) { pointSize_ = s; }
+
+  void print(std::ostream &os) const {
+    os << "linetype " << type_ << " linewidth " << width_ << " pointtype " << int(pointType_) <<
+          " pointsize " << pointSizeStr() << " pointinterval " << pointInterval_;
+  }
+
+ private:
+  std::string pointSizeStr() const {
+    if (pointSize_.isValid()) {
+      std::stringstream os;
+
+      os << pointSize_.getValue();
+
+      return os.str();
+    }
+    else
+      return "default";
+  }
 
  private:
   int             ind_       { -1 };
@@ -36,7 +55,8 @@ class CGnuPlotLineStyle {
   double          width_     { 1 };
   COptValT<CRGBA> color_;
   SymbolType      pointType_ { SymbolType::PLUS };
-  double          pointSize_ { 1 };
+  COptReal        pointSize_;
+  double          pointInterval_ { 0 };
 };
 
 typedef std::shared_ptr<CGnuPlotLineStyle> CGnuPlotLineStyleP;

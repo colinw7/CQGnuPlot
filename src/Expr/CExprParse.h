@@ -151,7 +151,7 @@ class CExprPToken {
   }
 
   CExprPToken() :
-   type_(CEXPR_PTOKEN_UNKNOWN), base_(0) {
+   type_(CEXPR_PTOKEN_UNKNOWN), base_() {
   }
 
  ~CExprPToken() { }

@@ -43,6 +43,8 @@ class CGnuPlotRenderer {
 
   virtual void setLineDash(const CLineDash &line_dash) = 0;
 
+  virtual void clear(const CRGBA &c) = 0;
+
   virtual void drawPoint  (const CPoint2D &p, const CRGBA &c=CRGBA(0,0,0)) = 0;
   virtual void drawSymbol (const CPoint2D &p, SymbolType type, double size,
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
@@ -59,9 +61,10 @@ class CGnuPlotRenderer {
   virtual void drawBezier (const CPoint2D &p1, const CPoint2D &p2,
                            const CPoint2D &p3, const CPoint2D &p4, double width=1.0,
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
-  virtual void drawEllipse(const CPoint2D &p, double dx, double ry,
+  virtual void drawEllipse(const CPoint2D &p, double dx, double ry, double a=0,
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
-  virtual void fillEllipse(const CPoint2D &p, double dx, double ry, const CRGBA &c) = 0;
+  virtual void fillEllipse(const CPoint2D &p, double dx, double ry, double a=0,
+                           const CRGBA &c=CRGBA(1,1,1)) = 0;
 
   virtual void drawText(const CPoint2D &p, const std::string &text,
                         const CRGBA &c=CRGBA(0,0,0)) = 0;

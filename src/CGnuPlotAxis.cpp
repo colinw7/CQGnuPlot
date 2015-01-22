@@ -379,15 +379,21 @@ void
 CGnuPlotAxis::
 drawAxis(double pos)
 {
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  CFontPtr font = renderer->getFont();
+
+  //---
+
   std::string str;
 
   if (! isDisplayed())
     return;
 
   double maxW = 0;
-  double maxH = font_->getCharHeight();
+  double maxH = font->getCharHeight();
 
-  //------*/
+  //---
 
   // Draw Axis Line
 
@@ -398,7 +404,7 @@ drawAxis(double pos)
       drawLine(CPoint2D(pos, getStart()), CPoint2D(pos, getEnd()));
   }
 
-  //------*/
+  //---
 
   // Draw Ticks Marks and Labels
 
@@ -434,7 +440,7 @@ drawAxis(double pos)
 
       str = getValueStr(i, pos1);
 
-      maxW = std::max(maxW, font_->getStringWidth(str));
+      maxW = std::max(maxW, font->getStringWidth(str));
 
       //------*/
 

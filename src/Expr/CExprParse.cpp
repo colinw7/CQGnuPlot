@@ -144,10 +144,9 @@ parseLine(CExprPTokenStack &stack, const std::string &line, uint &i)
   CExprPTokenPtr ptoken;
   CExprPTokenPtr lastPToken;
 
-  CStrUtil::skipSpace(line, &i);
-
-  while (i < line.size()) {
+  while (true) {
     CStrUtil::skipSpace(line, &i);
+    if (i >= line.size()) break;
 
     if      (CExprOperator::isOperatorChar(line[i])) {
       CExprOpType lastOpType =
@@ -223,7 +222,7 @@ CExprParseImpl::
 parseError(const std::string &msg, const std::string &line, uint i)
 {
   std::cerr << msg << " \"" << line.substr(0, i - 1) << "#" << line[i] << "#" <<
-               line.substr(i + 1) << std::endl;
+               (i < line.size() ? line.substr(i + 1) : "") << std::endl;
 
   for (uint j = 0; j < i; j++)
     std::cerr << " ";
@@ -425,6 +424,7 @@ readOperator(const std::string &str, uint *i)
     case '-':
       (*i)++;
 
+#ifndef GNUPLOT_EXPR
       if      (*i < str.size() && str[*i] == '-') {
         (*i)++;
         id = CEXPR_OP_DECREMENT;
@@ -434,6 +434,7 @@ readOperator(const std::string &str, uint *i)
         id = CEXPR_OP_MINUS_EQUALS;
       }
       else
+#endif
         id = CEXPR_OP_MINUS;
 
       break;

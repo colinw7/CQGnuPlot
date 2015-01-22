@@ -168,9 +168,11 @@ class CExpr {
 
   CExprVariablePtr getVariable(const std::string &name) const;
   CExprVariablePtr createVariable(const std::string &name, CExprValuePtr value);
-  CExprVariablePtr createRealVariable(const std::string &name, double x);
   void removeVariable(const std::string &name);
   void getVariableNames(std::vector<std::string> &names) const;
+
+  CExprVariablePtr createRealVariable(const std::string &name, double x);
+  CExprVariablePtr createIntegerVariable(const std::string &name, long l);
 
   CExprFunctionPtr getFunction(const std::string &name);
   CExprFunctionPtr addFunction(const std::string &name, const std::vector<std::string> &args,

@@ -85,62 +85,6 @@ fit()
     plot->setAxesData(axesData_);
 }
 
-const CGnuPlot::AxesData &
-CGnuPlotGroup::
-axesData() const
-{
-  return axesData_;
-}
-
-void
-CGnuPlotGroup::
-setAxesData(const AxesData &a)
-{
-  axesData_ = a;
-}
-
-const CBBox2D &
-CGnuPlotGroup::
-region() const
-{
-  return region_;
-}
-
-void
-CGnuPlotGroup::
-setRegion(const CBBox2D &r)
-{
-  region_ = r;
-}
-
-const CRange2D &
-CGnuPlotGroup::
-margin() const
-{
-  return margin_;
-}
-
-void
-CGnuPlotGroup::
-setMargin(const CRange2D &m)
-{
-  margin_ = m;
-}
-
-const CGnuPlot::PlotSize &
-CGnuPlotGroup::
-plotSize() const
-{
-  return plotSize_;
-}
-
-void
-CGnuPlotGroup::
-setPlotSize(const PlotSize &s)
-{
-  plotSize_ = s;
-}
-
 void
 CGnuPlotGroup::
 reset3D()
@@ -188,11 +132,15 @@ draw()
 
   //---
 
+  drawTitle();
+
+  //---
+
   // root plot with children
-  if (hasHistograms()) {
+  if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
     Plots hplots;
 
-    getHistograms(hplots);
+    getPlotsOfStyle(hplots, PlotStyle::HISTOGRAMS);
 
     drawHistogram(hplots);
   }
@@ -206,7 +154,8 @@ draw()
 
   //---
 
-  drawAxes();
+  if (! hasPlotStyle(PlotStyle::PARALLELAXES))
+    drawAxes();
 
   //---
 
@@ -236,6 +185,25 @@ initPlotAxis()
 
   plotYAxis1_ = CGnuPlotAxis(this, 1, CORIENTATION_VERTICAL  ); plotYAxis1_.setRange(ymin1, ymax1);
   plotYAxis2_ = CGnuPlotAxis(this, 2, CORIENTATION_VERTICAL  ); plotYAxis2_.setRange(ymin2, ymax2);
+}
+
+void
+CGnuPlotGroup::
+drawTitle()
+{
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setRange(region());
+
+  double xmin = region().getXMin();
+  double xmax = region().getXMax();
+//double ymin = region().getYMin();
+  double ymax = region().getYMax();
+
+  if (! title().str.empty()) {
+    renderer->drawHAlignedText(CPoint2D((xmin + xmax)/2, ymax), CHALIGN_TYPE_CENTER, 0,
+                               CVALIGN_TYPE_BOTTOM, -8, title().str);
+  }
 }
 
 void
@@ -434,7 +402,7 @@ drawXAxes(int xind, bool drawOther)
   double ymin1 = plotYAxis.getStart();
   double ymax1 = plotYAxis.getEnd  ();
 
-  if (hasHistograms()) {
+  if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
     plotXAxis.setMajorIncrement(1);
 
     if (getHistogramStyle() == HistogramStyle::CLUSTERED ||
@@ -459,7 +427,6 @@ drawXAxes(int xind, bool drawOther)
     else
       plotXAxis.resetLogarithmic();
 
-    plotXAxis.setFont(renderer->getFont());
     plotXAxis.setDrawLine(false);
     plotXAxis.setDrawTickMark(xaxis.showTics);
 
@@ -505,7 +472,7 @@ drawYAxes(int yind, bool drawOther)
 //double ymin1 = plotYAxis.getStart();
 //double ymax1 = plotYAxis.getEnd  ();
 
-  if (hasHistograms()) {
+  if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
     if (getHistogramStyle() == HistogramStyle::CLUSTERED ||
         getHistogramStyle() == HistogramStyle::ROWSTACKED) {
       xmin1 -= 1;
@@ -528,7 +495,6 @@ drawYAxes(int yind, bool drawOther)
     else
       plotYAxis.resetLogarithmic();
 
-    plotYAxis.setFont(renderer->getFont());
     plotYAxis.setDrawLine(false);
     plotYAxis.setDrawTickMark(yaxis.showTics);
 
@@ -572,7 +538,7 @@ drawKey()
 
   //---
 
-  CBBox2D rbbox = (keyData().outside ? getRegionBBox() : bbox);
+  CBBox2D rbbox = (keyData().outside() ? getRegionBBox() : bbox);
 
   //---
 
@@ -623,7 +589,7 @@ drawKey()
   double x2 = x1 + size.width;
   double y2 = y1 + size.height;
 
-  if (keyData().box) {
+  if (keyData().box()) {
     CBBox2D bbox1(x1, y1, x2, y2);
 
     renderer->drawRect(bbox1);
@@ -635,10 +601,11 @@ drawKey()
     PlotStyle          style     = plot->getStyle();
     CGnuPlotLineStyleP lineStyle = plot->calcLineStyle();
 
-    double xx = (keyData().reverse ? x1 + bx : x2 - ll - bx);
+    double xx = (keyData().reverse() ? x1 + bx : x2 - ll - bx);
     double yy = y - font_size*ph/2;
 
-    if (hasHistograms() || style == PlotStyle::BOXES || style == PlotStyle::CANDLESTICKS) {
+    if (hasPlotStyle(PlotStyle::HISTOGRAMS) ||
+        style == PlotStyle::BOXES || style == PlotStyle::CANDLESTICKS) {
       double h = (font_size - 4)*ph;
 
       CBBox2D hbbox(xx, yy - h/2, xx + ll, yy + h/2);
@@ -651,8 +618,19 @@ drawKey()
 
       renderer->drawRect(hbbox, lineStyle->color(CRGBA(0,0,0)));
     }
+    else if (style == PlotStyle::VECTORS) {
+      CGnuPlotArrow arrow(app());
+
+      arrow.setStyle(plot->arrowStyle());
+
+      arrow.setFrom(CPoint2D(xx, yy));
+      arrow.setTo  (CPoint2D(xx + ll, yy));
+
+      arrow.draw(renderer);
+    }
     else {
-      if (style == PlotStyle::LINES || style == PlotStyle::LINES_POINTS)
+      if (style == PlotStyle::LINES || style == PlotStyle::LINES_POINTS ||
+          style == PlotStyle::IMPULSES)
         renderer->drawLine(CPoint2D(xx, yy), CPoint2D(xx + ll, yy),
                            lineStyle->width(), lineStyle->color(CRGBA(1,0,0)));
 
@@ -672,7 +650,7 @@ drawKey()
 
     //double lw = font->getStringWidth(label);
 
-    if (keyData().reverse)
+    if (keyData().reverse())
       renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), CHALIGN_TYPE_LEFT, 0,
                                  CVALIGN_TYPE_TOP, 0, label);
     else
@@ -812,7 +790,7 @@ getDisplayRange(int xind, int yind) const
   double ymin1 = plotYAxis.getStart();
   double ymax1 = plotYAxis.getEnd  ();
 
-  if (hasHistograms()) {
+  if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
     CGnuPlot::HistogramStyle hstyle = getHistogramStyle();
 
     if (hstyle == CGnuPlot::HistogramStyle::CLUSTERED ||
@@ -830,10 +808,10 @@ getDisplayRange(int xind, int yind) const
 
 bool
 CGnuPlotGroup::
-hasHistograms() const
+hasPlotStyle(PlotStyle style) const
 {
   for (auto plot : plots_) {
-    if (plot->getStyle() == PlotStyle::HISTOGRAMS)
+    if (plot->getStyle() == style)
       return true;
   }
 
@@ -842,10 +820,10 @@ hasHistograms() const
 
 void
 CGnuPlotGroup::
-getHistograms(Plots &plots) const
+getPlotsOfStyle(Plots &plots, PlotStyle style) const
 {
   for (auto plot : plots_) {
-    if (plot->getStyle() == PlotStyle::HISTOGRAMS)
+    if (plot->getStyle() == style)
       plots.push_back(plot);
   }
 }

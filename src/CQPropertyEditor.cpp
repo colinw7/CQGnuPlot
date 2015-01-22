@@ -118,6 +118,7 @@ createEdit(QWidget *parent)
 
   spin->setRange(min_, max_);
   spin->setSingleStep(step_);
+  spin->setDecimals(6);
 
   return spin;
 }

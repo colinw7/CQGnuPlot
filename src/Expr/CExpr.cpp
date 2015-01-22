@@ -136,6 +136,13 @@ createRealVariable(const std::string &name, double x)
   return variableMgr_->createVariable(name, createRealValue(x));
 }
 
+CExprVariablePtr
+CExpr::
+createIntegerVariable(const std::string &name, long l)
+{
+  return variableMgr_->createVariable(name, createIntegerValue(l));
+}
+
 void
 CExpr::
 removeVariable(const std::string &name)

@@ -12,6 +12,8 @@
 #include <vector>
 #include <map>
 
+typedef unsigned char uchar;
+
 class CGnuPlotWindow;
 class CGnuPlotGroup;
 
@@ -33,6 +35,8 @@ class CGnuPlotPlot {
   typedef CGnuPlotTypes::SymbolType  SymbolType;
   typedef std::vector<CGnuPlotPoint> Points2D;
   typedef std::map<int,Points2D>     Points3D;
+  typedef std::vector<uchar>         ImageData;
+  typedef CGnuPlot::ImageStyle       ImageStyle;
 
  public:
   CGnuPlotPlot(CGnuPlotGroup *group);
@@ -69,6 +73,10 @@ class CGnuPlotPlot {
 
   const CGnuPlotPoint &getPoint2D(int i) const { assert(! is3D_); return points2D_[i]; }
 
+  //---
+
+  const Points3D &getPoints3D() const { assert(! is3D_); return points3D_; }
+
   std::pair<int,int> numPoints3D() const {
     assert(is3D_);
 
@@ -76,8 +84,6 @@ class CGnuPlotPlot {
 
     return std::pair<int,int>(points3D_.begin()->second.size(), points3D_.size());
   }
-
-  const Points3D &getPoints3D() const { assert(! is3D_); return points3D_; }
 
   const CGnuPlotPoint &getPoint3D(int ix, int iy) const {
     assert(is3D_);
@@ -90,7 +96,31 @@ class CGnuPlotPlot {
       assert(false);
   }
 
+  //---
+
+  bool isBinary() const { return binary_; }
+  void setBinary(bool b) { binary_ = b; }
+
+  bool isMatrix() const { return matrix_; }
+  void setMatrix(bool m) { matrix_ = m; }
+
+  //---
+
+  const ImageData &imageData() const { return imageData_; }
+
+  void setImageData(const ImageData &imageData) { imageData_ = imageData; }
+
+  const ImageStyle &imageStyle() const { return imageStyle_; }
+  void setImageStyle(const ImageStyle &imageStyle) { imageStyle_ = imageStyle; }
+
+  double imageAngle() const { return imageStyle_.a.getValue(0.0); }
+  void setImageAngle(double a) { imageStyle_.a = a; }
+
+  //---
+
   void clearPoints();
+
+  //---
 
   void addPoint2D(double x, double y);
   void addPoint2D(double x, CExprValueP y);
@@ -107,6 +137,8 @@ class CGnuPlotPlot {
 
   void calcXRange(double *xmin, double *xmax) const;
   void calcYRange(double *ymin, double *ymax) const;
+
+  void calcBoxPlotRange();
 
   //---
 
@@ -126,6 +158,11 @@ class CGnuPlotPlot {
 
   PlotStyle getStyle() const { return style_; }
   void setStyle(PlotStyle style) { style_ = style; }
+
+  bool isImageStyle() const {
+    return (style_ == PlotStyle::IMAGE || style_ == PlotStyle::RGBIMAGE ||
+            style_ == PlotStyle::RGBALPHA);
+  }
 
   void setSmooth(Smooth s) { smooth_ = s; }
   Smooth getSmooth() const { return smooth_; }
@@ -162,6 +199,9 @@ class CGnuPlotPlot {
   const PointStyle &pointStyle() const { return pointStyle_; }
   void setPointStyle(const PointStyle &s) { pointStyle_ = s; }
 
+  const CGnuPlotArrowStyle &arrowStyle() const { return arrowStyle_; }
+  void setArrowStyle(const CGnuPlotArrowStyle &as) { arrowStyle_ = as; }
+
   const std::string &keyTitle() const { return keyTitle_; }
   void setKeyTitle(const std::string &s) { keyTitle_ = s; }
 
@@ -174,17 +214,19 @@ class CGnuPlotPlot {
   double getZMin() const { return axesData().zaxis.min.getValue(-1); }
   double getZMax() const { return axesData().zaxis.max.getValue( 1); }
 
-  void setXMin(double x) { AxesData a = axesData(); a.xaxis.min.setValue(x); setAxesData(a); }
-  void setXMax(double x) { AxesData a = axesData(); a.xaxis.max.setValue(x); setAxesData(a); }
-  void setYMin(double y) { AxesData a = axesData(); a.yaxis.min.setValue(y); setAxesData(a); }
-  void setYMax(double y) { AxesData a = axesData(); a.yaxis.max.setValue(y); setAxesData(a); }
-  void setZMin(double z) { AxesData a = axesData(); a.zaxis.min.setValue(z); setAxesData(a); }
-  void setZMax(double z) { AxesData a = axesData(); a.zaxis.max.setValue(z); setAxesData(a); }
+  void setXMin(double x) { axesData_.xaxis.min.setValue(x); updateGroupRange(); }
+  void setXMax(double x) { axesData_.xaxis.max.setValue(x); updateGroupRange(); }
+  void setYMin(double y) { axesData_.yaxis.min.setValue(y); updateGroupRange(); }
+  void setYMax(double y) { axesData_.yaxis.max.setValue(y); updateGroupRange(); }
+  void setZMin(double z) { axesData_.zaxis.min.setValue(z); updateGroupRange(); }
+  void setZMax(double z) { axesData_.zaxis.max.setValue(z); updateGroupRange(); }
 
   void setRange(const CBBox2D &b) {
     setXMin(b.getXMin()); setYMin(b.getYMin());
     setXMax(b.getXMax()); setYMax(b.getYMax());
   }
+
+  void updateGroupRange();
 
   //---
 
@@ -199,17 +241,6 @@ class CGnuPlotPlot {
 
   int xind() const { return xind_; }
   int yind() const { return yind_; }
-
-  //---
-
-  void setFitX(bool b) { fitX_ = b; }
-  bool getFitX() const { return fitX_; }
-
-  void setFitY(bool b) { fitY_ = b; }
-  bool getFitY() const { return fitY_; }
-
-  void setFitZ(bool b) { fitZ_ = b; }
-  bool getFitZ() const { return fitZ_; }
 
   //---
 
@@ -232,7 +263,28 @@ class CGnuPlotPlot {
   void draw2D();
   void draw3D();
 
-  void drawLines();
+  void drawBoxErrorBars  (const CBBox2D &bbox);
+  void drawBoxes         (const CBBox2D &bbox);
+  void drawBoxPlot       (const CBBox2D &bbox);
+  void drawBoxXYErrorBars(const CBBox2D &bbox);
+  void drawCandleSticks  (const CBBox2D &bbox);
+  void drawCircles       (const CBBox2D &bbox);
+  void drawEllipses      (const CBBox2D &bbox);
+  void drawDots          (const CBBox2D &bbox);
+  void drawFilledCurves  (const CBBox2D &bbox);
+  void drawFinanceBars   (const CBBox2D &bbox);
+  void drawSteps         (const CBBox2D &bbox);
+  void drawBinaryImage   (const CBBox2D &bbox);
+  void drawImage         (const CBBox2D &bbox);
+  void drawImpulses      (const CBBox2D &bbox);
+  void drawLabels        (const CBBox2D &bbox);
+  void drawLines         ();
+  void drawParallelAxes  (const CBBox2D &bbox);
+  void drawPoints        ();
+  void drawVectors       (const CBBox2D &bbox);
+
+  double decodeImageUsingColor(int col, const CRGBA &c) const;
+  double indexImageColor(int i, const CRGBA &c) const;
 
   virtual void drawBar(double x, double y, const CBBox2D &bbox, FillType fillType,
                        FillPattern fillPattern, const CRGBA &fillColor, const CRGBA &lineColor);
@@ -262,6 +314,10 @@ class CGnuPlotPlot {
   COptValT<CBBox2D>  clearRect_;
   Points2D           points2D_;                         // 2D points
   Points3D           points3D_;                         // 3D points
+  ImageData          imageData_;                        // image data
+  bool               binary_ { false };
+  bool               matrix_ { false };
+  ImageStyle         imageStyle_;
   BoxWidth           boxWidth_;                         // box widths
   Palette            palette_;
   FilledCurve        filledCurve_;                      // filled curve data
@@ -269,14 +325,12 @@ class CGnuPlotPlot {
   CGnuPlotFillStyle  fillStyle_;                        // fill style
   CGnuPlotLineStyleP lineStyle_;                        // line style
   PointStyle         pointStyle_;                       // point style
+  CGnuPlotArrowStyle arrowStyle_;                       // arrow style
   AxesData           axesData_;
   std::string        keyTitle_;                         // title on key
   int                xind_ { 1 };                       // xaxis index
   int                yind_ { 1 };                       // yaxis index
   Smooth             smooth_      { Smooth::NONE };     // smooth data
-  bool               fitX_ { false };                   // auto fit x
-  bool               fitY_ { false };                   // auto fit y
-  bool               fitZ_ { false };                   // auto fit z
   CGnuPlotContour    contour_;                          // contour data
   bool               contourSet_ { false };
   ZPolygons          surface_;                          // surface data

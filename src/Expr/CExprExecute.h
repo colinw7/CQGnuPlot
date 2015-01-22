@@ -84,7 +84,7 @@ class CExprEToken {
   static CExprETokenPtr createOperatorToken(CExprOperatorPtr op);
 
   CExprEToken() :
-   type_(CEXPR_ETOKEN_NONE), base_(0) {
+   type_(CEXPR_ETOKEN_NONE), base_() {
   }
 
   CExprETokenType getType() const { return type_; }

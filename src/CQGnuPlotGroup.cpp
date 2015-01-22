@@ -25,6 +25,26 @@ setPainter(QPainter *p)
   renderer->setPainter(p);
 }
 
+QString
+CQGnuPlotGroup::
+title() const
+{
+  CGnuPlot::Title title = CGnuPlotGroup::title();
+
+  return title.str.c_str();
+}
+
+void
+CQGnuPlotGroup::
+setTitle(const QString &s)
+{
+  CGnuPlot::Title title = CGnuPlotGroup::title();
+
+  title.str = s.toStdString();
+
+  CGnuPlotGroup::setTitle(title);
+}
+
 CQGnuPlot::CQHistogramStyle
 CQGnuPlotGroup::
 histogramStyle() const

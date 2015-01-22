@@ -29,10 +29,6 @@ class CGnuPlotWindow {
   const Groups &groups() const { return groups_; }
   uint numGroups() const { return groups_.size(); }
 
-  const CGnuPlot::Title &title() const { return title_; }
-  CGnuPlot::Title &title() { return title_; }
-  void setTitle(const CGnuPlot::Title &t) { title_ = t; }
-
   bool hidden3D() const { return hidden3D_; }
   void setHidden3D(bool b) { hidden3D_ = b; }
 
@@ -61,24 +57,24 @@ class CGnuPlotWindow {
   void setCameraNear(double z);
   void setCameraFar (double z);
 
+  const CRGBA &backgroundColor() const { return backgroundColor_; }
+  void setBackgroundColor(const CRGBA &c) { backgroundColor_ = c; }
+
   void reset3D();
 
   void draw();
-
- private:
-  void drawTitle();
 
  private:
   CGnuPlot*        plot_      { 0 };
   CISize2D         size_      { 100, 100 };
   bool             is3D_      { false };
   Groups           groups_;
-  CGnuPlot::Title  title_;
   CGnuPlot::Camera camera_;
   bool             hidden3D_  { false };
   bool             surface3D_ { true  };
   bool             contour3D_ { false };
   bool             pm3D_      { false };
+  CRGBA            backgroundColor_ { 1, 1, 1};
 };
 
 #endif

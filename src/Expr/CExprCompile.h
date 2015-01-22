@@ -229,7 +229,7 @@ class CExprCToken {
   }
 
   CExprCToken() :
-   type_(CEXPR_CTOKEN_NONE), base_(0) {
+   type_(CEXPR_CTOKEN_NONE), base_() {
   }
 
   CExprCTokenType getType() const { return type_; }

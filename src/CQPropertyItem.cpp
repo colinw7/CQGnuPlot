@@ -163,8 +163,22 @@ setEditorData(const QString &value)
   CQUtil::PropInfo propInfo;
 
   if (CQUtil::getPropInfo(object_, name_, &propInfo) && propInfo.isWritable()) {
-    if (! CQUtil::setProperty(object_, name_, value))
-      std::cerr << "Failed to set property " << name_.toStdString() << std::endl;
+    if (propInfo.isEnumType()) {
+      const QStringList &names = propInfo.enumNames();
+
+      for (int i = 0; i < names.size(); ++i) {
+        if (value == names[i]) {
+          QVariant v(i);
+
+          if (! CQUtil::setProperty(object_, name_, v))
+            std::cerr << "Failed to set property " << name_.toStdString() << std::endl;
+        }
+      }
+    }
+    else {
+      if (! CQUtil::setProperty(object_, name_, value))
+        std::cerr << "Failed to set property " << name_.toStdString() << std::endl;
+    }
 
     emit valueChanged(object_, name_);
   }

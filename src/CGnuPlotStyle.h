@@ -3,6 +3,7 @@
 
 #include <CRGBA.h>
 #include <CRGBName.h>
+#include <CGnuPlotTypes.h>
 
 class CGnuPlotStyle {
  public:

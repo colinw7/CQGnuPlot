@@ -168,7 +168,7 @@ addProperties()
   for (const auto &ls : lineStyles) {
     CQGnuPlotLineStyle *ls1 = static_cast<CQGnuPlotLineStyle *>(ls.second.get());
 
-    QString name = QString("lineStyle%1").arg(ls1->ind());
+    QString name = QString("LineStyles/lineStyle%1").arg(ls1->ind());
 
     tree_->addProperty(name, ls1, "width"    );
     tree_->addProperty(name, ls1, "color"    );
@@ -194,6 +194,8 @@ addGroupProperties(CGnuPlotGroup *group)
 
   QString name = QString("Group%1").arg(group->id());
 
+  tree_->addProperty(name, this, "title");
+
   QString regionName = name + "/region";
 
   tree_->addProperty(regionName, qgroup, "regionLeft"  )->setEditorFactory(redit_[1]);
@@ -211,6 +213,11 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(name, qgroup, "ratio")->setEditorFactory(redit_[1]);
 
   QString axesName = name + "/axes";
+
+  tree_->addProperty(axesName, qgroup, "xmin")->setEditorFactory(redit_[1]);
+  tree_->addProperty(axesName, qgroup, "xmax")->setEditorFactory(redit_[1]);
+  tree_->addProperty(axesName, qgroup, "ymin")->setEditorFactory(redit_[1]);
+  tree_->addProperty(axesName, qgroup, "ymax")->setEditorFactory(redit_[1]);
 
   tree_->addProperty(axesName, qgroup, "xlabel");
   tree_->addProperty(axesName, qgroup, "ylabel");
@@ -362,6 +369,12 @@ addPlotProperties(CGnuPlotPlot *plot)
   if (plot->window()->is3D())
     tree_->addProperty(name, qplot, "trianglePattern3D");
 
+  if (plot->isImageStyle()) {
+    QString imageName = name + "/image";
+
+    tree_->addProperty(imageName, qplot, "imageAngle")->setEditorFactory(redit_[0]);
+  }
+
   tree_->addProperty(name, qplot, "displayed");
 
   tree_->addProperty(name, qplot, "plotStyle");
@@ -465,26 +478,6 @@ setFar3D(double z)
   setCameraFar(z);
 
   redraw();
-}
-
-QString
-CQGnuPlotWindow::
-title() const
-{
-  CGnuPlot::Title title = CGnuPlotWindow::title();
-
-  return title.str.c_str();
-}
-
-void
-CQGnuPlotWindow::
-setTitle(const QString &s)
-{
-  CGnuPlot::Title title = CGnuPlotWindow::title();
-
-  title.str = s.toStdString();
-
-  CGnuPlotWindow::setTitle(title);
 }
 
 void

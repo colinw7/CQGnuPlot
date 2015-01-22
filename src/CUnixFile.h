@@ -28,7 +28,7 @@ class CUnixFile {
     fp_ = fopen(filename_.c_str(), "r");
 
     if (! fp_) {
-      std::cerr << "Failed to open'" << filename_ << "'" << std::endl;
+      std::cerr << "Failed to open '" << filename_ << "'" << std::endl;
       return false;
     }
 
@@ -49,13 +49,27 @@ class CUnixFile {
 
     line = "";
 
-    char c;
+    int c;
 
-    while (fp_ && ((c = fgetc(fp_)) != EOF)) {
-      line += c;
-
+    while ((c = fgetc(fp_)) != EOF) {
       if (c == '\n') break;
+
+      line += uchar(c);
     }
+
+    return true;
+  }
+
+  bool readChar(uchar &c) {
+    if (! fp_ || feof(fp_))
+      return false;
+
+    int c1 = fgetc(fp_);
+
+    if (c1 == EOF)
+      return false;
+
+    c = uchar(c1);
 
     return true;
   }

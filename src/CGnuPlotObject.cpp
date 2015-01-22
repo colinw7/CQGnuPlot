@@ -1,7 +1,20 @@
 #include <CGnuPlotObject.h>
+#include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotUtil.h>
+#include <CGnuPlotStyle.h>
 #include <CMathGeom2D.h>
+
+CRGBA
+CGnuPlotArrow::
+getLineColor() const
+{
+  int ls = getLineStyle();
+
+  CGnuPlotLineStyleP lsp = plot_->getLineStyleInd(ls);
+
+  return lsp->color();
+}
 
 void
 CGnuPlotArrow::
@@ -23,7 +36,9 @@ draw(CGnuPlotRenderer *renderer) const
 
   double aa = Deg2Rad(arrow->getAngle() > 0 ? arrow->getAngle() : 30);
 
-  double l = (arrow->getLength() > 0 ? renderer->windowWidthToPixelWidth(arrow->getLength()) : 16);
+  const CGnuPlotCoordValue &al = arrow->getLength();
+
+  double l = (al.value > 0 ? al.pixelXValue(renderer) : 16);
 
   double l1 = l*cos(aa);
 
@@ -66,6 +81,11 @@ draw(CGnuPlotRenderer *renderer) const
 
   renderer->setMapping(false);
 
+  CRGBA lc = arrow->getLineColor();
+
+  if (arrow->getVariable() && arrow->getVarValue().isValid())
+    lc = CGnuPlotStyle::instance()->indexColor(arrow->getVarValue().getValue());
+
   if (arrow->getFHead()) {
     double a1 = a + aa;
     double a2 = a - aa;
@@ -81,8 +101,8 @@ draw(CGnuPlotRenderer *renderer) const
     double xf3 = x2, yf3 = y2;
 
     if (! arrow->getFilled() && ! arrow->getEmpty()) {
-      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf1, yf1), w, arrow->getStrokeColor());
-      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf2, yf2), w, arrow->getStrokeColor());
+      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf1, yf1), w, lc);
+      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf2, yf2), w, lc);
     }
     else {
       if (ba > aa && ba < M_PI) {
@@ -104,9 +124,9 @@ draw(CGnuPlotRenderer *renderer) const
       points.push_back(CPoint2D(xf2, yf2));
 
       if (arrow->getEmpty())
-        renderer->drawPolygon(points, w, arrow->getStrokeColor());
+        renderer->drawPolygon(points, w, lc);
       else
-        renderer->fillPolygon(points, arrow->getStrokeColor());
+        renderer->fillPolygon(points, lc);
     }
   }
 
@@ -125,8 +145,8 @@ draw(CGnuPlotRenderer *renderer) const
     double xt3 = x3, yt3 = y3;
 
     if (! arrow->getFilled() && ! arrow->getEmpty()) {
-      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt1, yt1), w, arrow->getStrokeColor());
-      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt2, yt2), w, arrow->getStrokeColor());
+      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt1, yt1), w, lc);
+      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt2, yt2), w, lc);
     }
     else {
       if (ba > aa && ba < M_PI) {
@@ -148,13 +168,13 @@ draw(CGnuPlotRenderer *renderer) const
       points.push_back(CPoint2D(xt2, yt2));
 
       if (arrow->getEmpty())
-        renderer->drawPolygon(points, w, arrow->getStrokeColor());
+        renderer->drawPolygon(points, w, lc);
       else
-        renderer->fillPolygon(points, arrow->getStrokeColor());
+        renderer->fillPolygon(points, lc);
     }
   }
 
-  renderer->drawLine(CPoint2D(x11, y11), CPoint2D(x41, y41), w, arrow->getStrokeColor());
+  renderer->drawLine(CPoint2D(x11, y11), CPoint2D(x41, y41), w, lc);
 
   renderer->setMapping(true);
 }
@@ -189,8 +209,8 @@ draw(CGnuPlotRenderer *renderer) const
 {
   const CGnuPlotEllipse *e = this;
 
-  renderer->fillEllipse(e->getCenter(), e->getRX(), e->getRY(), e->getFillColor  ());
-  renderer->drawEllipse(e->getCenter(), e->getRX(), e->getRY(), e->getStrokeColor());
+  renderer->fillEllipse(e->getCenter(), e->getRX(), e->getRY(), 0, e->getFillColor  ());
+  renderer->drawEllipse(e->getCenter(), e->getRX(), e->getRY(), 0, e->getStrokeColor());
 }
 
 void
@@ -201,4 +221,57 @@ draw(CGnuPlotRenderer *renderer) const
 
   renderer->fillPolygon(poly->getPoints(), poly->getFillColor());
   renderer->drawPolygon(poly->getPoints(), 1.0, poly->getStrokeColor());
+}
+
+//------
+
+double
+CGnuPlotArrowStyle::
+lineWidth(CGnuPlot *plot) const
+{
+  if (lineWidth_.isValid())
+   return lineWidth_.getValue();
+
+  if (lineStyle_.isValid()) {
+    CGnuPlotLineStyleP ls = plot->lineStyle(lineStyle_.getValue());
+
+    return (ls ? ls->width() : 1);
+  }
+  else
+    return 1;
+}
+
+void
+CGnuPlotArrowStyle::
+print(CGnuPlot *plot, std::ostream &os) const
+{
+  os << headStr() << " " << filledStr() << " " << frontStr() <<
+        " linetype " << lineStyle_ << " linewidth " << lineWidth(plot);
+
+  if (length_.value > 0.0 || angle_ >= 0.0 || backAngle_ >= 0.0) {
+    os << " arrow head" << (fhead_ && thead_ ? "s" : "") << ": " << filledStr();
+    os << ", length "; length_.print(os);
+    os << ", angle " << angle_ << ", backangle " << backAngle_;
+  }
+}
+
+//------
+
+double
+CGnuPlotCoordValue::
+pixelXValue(CGnuPlotRenderer *renderer) const
+{
+  if      (system == CGnuPlotTypes::CoordSys::SECOND)
+    return value; // TODO
+  else if (system == CGnuPlotTypes::CoordSys::GRAPH)
+    return value; // TODO
+  else if (system == CGnuPlotTypes::CoordSys::SCREEN) {
+    const CISize2D &s = renderer->window()->size();
+
+    return value*s.width;
+  }
+  else if (system == CGnuPlotTypes::CoordSys::CHARACTER)
+    return value;
+  else
+    return renderer->windowWidthToPixelWidth(value);
 }
