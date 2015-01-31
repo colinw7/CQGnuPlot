@@ -22,8 +22,21 @@ class CGnuPlotLineStyle {
   double width() const { return width_; }
   void setWidth(double width) { width_ = width; }
 
-  CRGBA color(const CRGBA &c=CRGBA(0,0,0)) const { return color_.getValue(c); }
-  void setColor(const CRGBA &c) { color_ = c; }
+  const CLineDash &dash() const { return dash_; }
+  void setDash(const CLineDash &d) { dash_ = d; }
+
+  const CGnuPlotColorSpec &colorSpec() const { return color_; }
+  void setColorSpec(const CGnuPlotColorSpec &c) { color_ = c; }
+
+  const CRGBA &color(const CRGBA &c) const {
+    if (color_.type() == CGnuPlotColorSpec::Type::RGB ||
+        color_.type() == CGnuPlotColorSpec::Type::INDEX)
+      return color_.color();
+    else
+      return c;
+  }
+
+  void setColor(const CRGBA &c) { color_.setRGB(c); }
 
   SymbolType pointType() const { return pointType_; }
   void setPointType(SymbolType type) { pointType_ = type; }
@@ -50,13 +63,14 @@ class CGnuPlotLineStyle {
   }
 
  private:
-  int             ind_       { -1 };
-  int             type_      { 1 };
-  double          width_     { 1 };
-  COptValT<CRGBA> color_;
-  SymbolType      pointType_ { SymbolType::PLUS };
-  COptReal        pointSize_;
-  double          pointInterval_ { 0 };
+  int               ind_       { -1 };
+  int               type_      { 1 };
+  double            width_     { 1 };
+  CLineDash         dash_;
+  CGnuPlotColorSpec color_;
+  SymbolType        pointType_ { SymbolType::PLUS };
+  COptReal          pointSize_;
+  double            pointInterval_ { 0 };
 };
 
 typedef std::shared_ptr<CGnuPlotLineStyle> CGnuPlotLineStyleP;

@@ -79,6 +79,13 @@ createRectangle()
   return new CGnuPlotRectangle(plot_);
 }
 
+CGnuPlotAxis *
+CGnuPlotSVGDevice::
+createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir)
+{
+  return new CGnuPlotAxis(group, id, dir);
+}
+
 void
 CGnuPlotSVGDevice::
 stateChanged(CGnuPlotWindow *window, CGnuPlotTypes::ChangeState state)

@@ -17,7 +17,9 @@
 #include <CPoint2D.h>
 #include <CBBox2D.h>
 #include <CRange2D.h>
+#include <CLineDash.h>
 #include <CCoordFrame3D.h>
+#include <COrientation.h>
 #include <CMatrix3DH.h>
 #include <CRGBA.h>
 #include <CAlignType.h>
@@ -27,13 +29,15 @@
 const T &G() const { return V; } \
 void S(const T &t) { V = t; }
 
-class CUnixFile;
-class CGnuPlotWindow;
+class CGnuPlotAxis;
+class CGnuPlotDevice;
 class CGnuPlotGroup;
 class CGnuPlotPlot;
-class CGnuPlotDevice;
 class CGnuPlotReadLine;
 class CGnuPlotSVGDevice;
+class CGnuPlotWindow;
+
+class CUnixFile;
 class CParseLine;
 
 typedef CRefPtr<CExprValue>             CExprValueP;
@@ -54,35 +58,41 @@ class CGnuPlot {
  public:
   enum class CommandName {
     NONE,
+    BIND,
+    CALL,
+    CD,
+    CLEAR,
+    DO,
+    EVALUATE,
     EXIT,
+    FIT,
     HELP,
     HISTORY,
-    PRINT,
-    QUIT,
-    CD,
-    PWD,
-    CALL,
-    LOAD,
-    SAVE,
-    PLOT,
-    REPLOT,
-    SPLOT,
-    SET,
-    SHOW,
-    RESET,
-    UNSET,
-    SHELL,
-    SYSTEM,
-    CLEAR,
-    LOWER,
-    RAISE,
-    TEST,
-    FIT,
-    UPDATE,
-    BIND,
     IF,
+    LOAD,
+    LOWER,
     PAUSE,
-    REREAD
+    PLOT,
+    PRINT,
+    PWD,
+    QUIT,
+    RAISE,
+    REPLOT,
+    REFRESH,
+    REREAD,
+    RESET,
+    SAVE,
+    SET,
+    SHELL,
+    SHOW,
+    SPLOT,
+    STATS,
+    SYSTEM,
+    TEST,
+    UNDEFINE,
+    UNSET,
+    UPDATE,
+    WHILE
   };
 
   enum class VariableName {
@@ -93,6 +103,7 @@ class CGnuPlot {
     ENCODING,
     FIT,
     FONTPATH,
+    HISTORY,
     HISTORYSIZE,
     LOADPATH,
     MACROS,
@@ -113,6 +124,7 @@ class CGnuPlot {
     LMARGIN,
     RMARGIN,
     TMARGIN,
+    MARGINS,
     MULTIPLOT,
     OFFSETS,
     ORIGIN,
@@ -126,6 +138,8 @@ class CGnuPlot {
     TITLE,
 
     STYLE,
+    DASHTYPE,
+    LINETYPE,
 
     BARS,
     BOXWIDTH,
@@ -139,22 +153,38 @@ class CGnuPlot {
     X2LABEL,
     Y2LABEL,
     XRANGE,
+    X2RANGE,
     YRANGE,
+    Y2RANGE,
+    ZRANGE,
     CBRANGE,
+    TRANGE,
+    RRANGE,
     TICS,
     XTICS,
     YTICS,
     X2TICS,
     Y2TICS,
+    ZTICS,
+    CBTICS,
+    RTICS,
     MXTICS,
+    MYTICS,
+    MZTICS,
+    MX2TICS,
+    MY2TICS,
     TICSCALE,
     ZEROAXIS,
+    RAXIS,
     PAXIS,
+    LINK,
 
     LOCALE,
     TIMEFMT,
     XDATA,
     YDATA,
+    X2DATA,
+    Y2DATA,
     XDTICS,
     XMTICS,
 
@@ -170,6 +200,7 @@ class CGnuPlot {
     CONTOUR,
 
     COLORBOX,
+    COLORSEQUENCE,
     PALETTE,
     PM3D,
 
@@ -231,70 +262,79 @@ class CGnuPlot {
   };
 
   enum class PlotVar {
-    INDEX,
-    EVERY,
-    USING,
-    AXES,
-    TITLE,
-    NOTITLE,
-    SMOOTH,
-    WITH,
-    LINETYPE,
-    LINEWIDTH,
-    FILLSTYLE,
-    ARROWSTYLE,
-    POINTSIZE,
-    HEADS,
-    BINARY,
-    MATRIX,
     ARRAY,
-    FLIP,
-    FLIPY,
-    FORMAT,
-    ORIGIN,
+    ARROWSTYLE,
+    AXES,
+    BINARY,
     CENTER,
+    DASHTYPE,
     DX,
     DY,
+    DZ,
+    ENDIAN,
+    EVERY,
+    FILETYPE,
+    FILLSTYLE,
+    FLIP,
+    FLIPX,
+    FLIPY,
+    FLIPZ,
+    FORMAT,
+    HEADS,
+    INDEX,
+    LINETYPE,
+    LINEWIDTH,
+    MATRIX,
+    NOTITLE,
+    ORIGIN,
+    POINTSIZE,
     ROTATION,
-    WHISKERBARS
+    SCAN,
+    SKIP,
+    SMOOTH,
+    TITLE,
+    TRANSPOSE,
+    USING,
+    WHISKERBARS,
+    WITH
   };
 
   enum class PlotStyle {
     NONE,
-    LINES,
-    POINTS,
-    LINES_POINTS,
+    BOXERRORBARS,
+    BOXES,
+    BOXPLOT,
+    BOXXYERRORBARS,
+    CANDLESTICKS,
+    CIRCLES,
     DOTS,
-    IMPULSES,
-    PARALLELAXES,
-    LABELS,
-    STEPS,
-    FSTEPS,
-    HISTEPS,
-    FILLSTEPS,
-    FINANCEBARS,
+    ELLIPSES,
     ERRORBARS,
     ERRORLINES,
-    XERRORBARS,
-    XERRORLINES,
-    YERRORBARS,
-    YERRORLINES,
-    XYERRORBARS,
-    XYERRORLINES,
-    VECTORS,
-    BOXES,
-    BOXERRORBARS,
-    BOXXYERRORBARS,
-    BOXPLOT,
-    CANDLESTICKS,
     FILLEDCURVES,
+    FILLSTEPS,
+    FINANCEBARS,
+    FSTEPS,
+    HISTEPS,
     HISTOGRAMS,
     IMAGE,
-    RGBIMAGE,
-    RGBALPHA,
-    CIRCLES,
-    ELLIPSES,
+    IMPULSES,
+    LABELS,
+    LINES,
+    LINES_POINTS,
+    PARALLELAXES,
     PM3D,
+    POINTS,
+    RGBALPHA,
+    RGBIMAGE,
+    STEPS,
+    VECTORS,
+    XERRORBARS,
+    XERRORLINES,
+    XYERRORBARS,
+    XYERRORLINES,
+    YERRORBARS,
+    YERRORLINES,
     TEST_TERMINAL,
     TEST_PALETTE
   };
@@ -491,6 +531,8 @@ class CGnuPlot {
     bool        displayed { true  };
     bool        grid      { false };
     bool        mirror    { true  };
+    bool        reverse   { false };
+    bool        writeback { false };
     bool        isTime    { false };
     COptReal    min;
     COptReal    max;
@@ -498,6 +540,7 @@ class CGnuPlot {
     TicLabelMap ticlabel;
     double      offset    { 0 };
     std::string format;
+    std::string font;
     bool        showTics  { true };
   };
 
@@ -506,12 +549,11 @@ class CGnuPlot {
   struct AxesData {
     AxesData() { }
 
-    AxisData xaxis       { 1 };
-    AxisData yaxis       { 1 };
-    AxisData zaxis       { 1 };
-    AxisData x2axis      { 2 };
-    AxisData y2axis      { 2 };
+    IAxisMap xaxis;
+    IAxisMap yaxis;
+    IAxisMap zaxis;
     IAxisMap paxis;
+    IAxisMap taxis;
     int      borders     { 0xFF };
     double   borderWidth { 1.0 };
     COptInt  borderStyle;
@@ -575,6 +617,7 @@ class CGnuPlot {
   //---
 
   typedef std::map<int,CGnuPlotArrowStyle> ArrowStyles;
+  typedef std::map<int,CLineDash>          LineDashes;
 
   typedef std::vector<CGnuPlotArrowP>     Arrows;
   typedef std::vector<CGnuPlotLabelP>     Labels;
@@ -705,6 +748,22 @@ class CGnuPlot {
   };
 
   typedef std::vector<CGnuPlotPlot *> Plots;
+  typedef std::vector<std::string>    Statements;
+
+  class PrefValueBase {
+   public:
+    PrefValueBase() { }
+
+    virtual ~PrefValueBase() { }
+
+    virtual void set(const std::string &str) = 0;
+
+    virtual void reset() = 0;
+
+    virtual void print(std::ostream &os) const = 0;
+  };
+
+  typedef std::map<CGnuPlot::VariableName,PrefValueBase *> VarPrefs;
 
  public:
   CGnuPlot();
@@ -732,7 +791,6 @@ class CGnuPlot {
   void setFunctionStyle(PlotStyle style) { functionStyle_ = style; }
 
   const CGnuPlotFillStyle &fillStyle() const { return fillStyle_; }
-  CGnuPlotFillStyle &fillStyle() { return fillStyle_; }
   void setFillStyle(const CGnuPlotFillStyle &s) { fillStyle_ = s; }
 
   CGnuPlotLineStyleP lineStyle();
@@ -754,9 +812,6 @@ class CGnuPlot {
   const CGnuPlotArrowStyle &arrowStyle() const { return arrowStyle_; }
   void setArrowStyle(const CGnuPlotArrowStyle &as) { arrowStyle_ = as; }
 
-  const AxesData &axesData() const { return axesData_; }
-  void setAxesData(const AxesData &a) { axesData_ = a; }
-
   const CGnuPlotKeyData &keyData() const { return keyData_; }
   void setKeyData(const CGnuPlotKeyData &k) { keyData_ = k; }
 
@@ -776,18 +831,29 @@ class CGnuPlot {
   PlotSize &plotSize() { return plotSize_; }
   void setPlotSize(const PlotSize &s) { plotSize_ = s; }
 
+  //---
+
+  const AxesData &axesData() const { return axesData_; }
+  void setAxesData(const AxesData &a) { axesData_ = a; }
+
   void getXRange(double *xmin, double *xmax) {
-    *xmin = axesData().xaxis.min.getValue(-10);
-    *xmax = axesData().xaxis.max.getValue(10);
+    *xmin = axesData_.xaxis[1].min.getValue(-10);
+    *xmax = axesData_.xaxis[1].max.getValue(10);
   }
   void getYRange(double *ymin, double *ymax) {
-    *ymin = axesData().yaxis.min.getValue(-1);
-    *ymax = axesData().yaxis.max.getValue(1);
+    *ymin = axesData_.yaxis[1].min.getValue(-1);
+    *ymax = axesData_.yaxis[1].max.getValue(1);
   }
   void getZRange(double *zmin, double *zmax) {
-    *zmin = axesData().zaxis.min.getValue(-1);
-    *zmax = axesData().zaxis.max.getValue(1);
+    *zmin = axesData_.zaxis[1].min.getValue(-1);
+    *zmax = axesData_.zaxis[1].max.getValue(1);
   }
+  void getTRange(double *tmin, double *tmax) {
+    *tmin = axesData_.taxis[1].min.getValue(0);
+    *tmax = axesData_.taxis[1].max.getValue(M_PI);
+  }
+
+  //---
 
   void setBoxWidth(const BoxWidth &w) { boxWidth_ = w; }
   const BoxWidth &getBoxWidth() const { return boxWidth_; }
@@ -874,6 +940,8 @@ class CGnuPlot {
   CGnuPlotPolygon   *createPolygon();
   CGnuPlotRectangle *createRectangle();
 
+  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir);
+
   CGnuPlotRenderer *renderer();
 
   void timeout();
@@ -893,7 +961,7 @@ class CGnuPlot {
 
  private:
   bool parseLine(const std::string &str);
-  bool parseStatement(const std::string &statement);
+  bool parseStatement(int &i, const Statements &statements);
 
   void exitCmd   (const std::string &args);
   void helpCmd   (const std::string &args);
@@ -907,14 +975,17 @@ class CGnuPlot {
   void loadCmd(const std::string &args);
   void saveCmd(const std::string &args);
 
-  void plotCmd  (const std::string &args);
-  void replotCmd(const std::string &args);
-  void splotCmd (const std::string &args);
+  void plotCmd   (const std::string &args);
+  void replotCmd (const std::string &args);
+  void refreshCmd(const std::string &args);
+  void splotCmd  (const std::string &args);
 
-  void plotForCmd(const std::string &var, const std::string &start, const std::string &end,
-                  const std::string &inc, const std::string &args);
-  void setForCmd(const std::string &var, const std::string &start, const std::string &end,
-                 const std::string &inc, const std::string &args);
+  void plotForCmd (const std::string &var, const std::string &start, const std::string &end,
+                   const std::string &inc, const std::string &args);
+  void setForCmd  (const std::string &var, const std::string &start, const std::string &end,
+                   const std::string &inc, const std::string &args);
+  void unsetForCmd(const std::string &var, const std::string &start, const std::string &end,
+                   const std::string &inc, const std::string &args);
 
   bool parseFor(CParseLine &line, std::string &var, std::string &start, std::string &end,
                 std::string &inc, std::string &lcmd, std::string &rcmd);
@@ -922,10 +993,12 @@ class CGnuPlot {
   void setCmd  (const std::string &args);
   void showCmd (const std::string &args);
   void resetCmd(const std::string &args);
+  void undefCmd(const std::string &args);
   void unsetCmd(const std::string &args);
 
   void shellCmd (const std::string &args);
   void systemCmd(const std::string &args);
+  void statsCmd (const std::string &args);
 
   void clearCmd(const std::string &args);
   void lowerCmd(const std::string &args);
@@ -935,10 +1008,19 @@ class CGnuPlot {
   void fitCmd   (const std::string &args);
   void updateCmd(const std::string &args);
 
-  void bindCmd  (const std::string &args);
-  void ifCmd    (const std::string &args);
-  void pauseCmd (const std::string &args);
-  void rereadCmd(const std::string &args);
+  void bindCmd    (const std::string &args);
+  void ifCmd      (int &i, const Statements &statements);
+  void doCmd      (const std::string &args);
+  void whileCmd   (const std::string &args);
+  void evaluateCmd(const std::string &args);
+  void pauseCmd   (const std::string &args);
+  void rereadCmd  (const std::string &args);
+
+  void readBlockLines(Statements &lines, std::string &eline, int depth);
+
+  bool parseBoolExpression(CParseLine &line, bool &res);
+
+  bool parseExpression(CParseLine &line, std::string &expr);
 
   bool parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle);
 
@@ -955,6 +1037,8 @@ class CGnuPlot {
   CGnuPlotPlot *addFile3D(CGnuPlotWindowP window, const std::string &filename);
 
   void parseFileLine(const std::string &str, std::vector<std::string> &fields);
+
+  bool parseAxisRange(CParseLine &line, AxisData &axis, bool hasArgs=true);
 
   bool parseRange(CParseLine &line, std::vector<std::string> &fields);
 
@@ -984,28 +1068,20 @@ class CGnuPlot {
   const std::string &getTableFile() const { return tableFile_; }
 
   void setAngleType(AngleType type);
-  AngleType getAngleType() { return angleType_; }
+  AngleType getAngleType() const;
 
   void setStyleIncrementType(StyleIncrementType s) { styleIncrement_.type = s; }
   StyleIncrementType getStyleIncrementType() { return styleIncrement_.type; }
 
   const Title &title() const { return title_; }
-  Title &title() { return title_; }
   void setTitle(const Title &t) { title_ = t; }
 
   void setLogScale(LogScale scale, int base) {
     logScale_[scale] = base;
   }
 
-  void setDummyVars(const std::string &dummyVar1, const std::string &dummyVar2) {
-    dummyVar1_ = dummyVar1;
-    dummyVar2_ = dummyVar2;
-  }
-
-  void getDummyVars(std::string &dummyVar1, std::string &dummyVar2) const {
-    if (! dummyVar1_.empty()) dummyVar1 = dummyVar1_;
-    if (! dummyVar2_.empty()) dummyVar2 = dummyVar2_;
-  }
+  void setDummyVars(const std::string &dummyVar1, const std::string &dummyVar2);
+  void getDummyVars(std::string &dummyVar1, std::string &dummyVar2) const;
 
   void setSamples(int isamples1, int isamples2) {
     isamples1_ = isamples1;
@@ -1062,14 +1138,20 @@ class CGnuPlot {
 
   std::string readNonSpace(CParseLine &line);
   std::string readNonSpaceNonComma(CParseLine &line);
+  std::string readNonSpaceNonChar(CParseLine &line, char c);
+  std::string readNonSpaceNonChar(CParseLine &line, const std::string &c);
   std::string readName(CParseLine &line);
+
+  bool fileReadLine(std::string &line);
 
  private:
   typedef std::map<std::string,CGnuPlotDevice*> Devices;
   typedef std::vector<CGnuPlotWindowP>          Windows;
   typedef std::vector<std::string>              Fields;
   typedef std::vector<std::string>              FileLines;
+  typedef std::deque<std::string>               BufferLines;
   typedef CAutoPtr<CGnuPlotReadLine>            ReadLineP;
+  typedef std::map<std::string,std::string>     DummyVarMap;
 
   bool                debug_  { false };
   bool                edebug_ { false };
@@ -1077,6 +1159,8 @@ class CGnuPlot {
   CGnuPlotDevice*     device_ { 0 };
   Devices             devices_;
   CUnixFile*          file_ { 0 };
+  int                 fileLineNum_ { 0 };
+  BufferLines         bufferLines_;
   FileLines           fileLines_;
   Windows             windows_;
   Separator           separator_;
@@ -1095,13 +1179,14 @@ class CGnuPlot {
   PlotStyle           functionStyle_  { PlotStyle::LINES };
   Smooth              smooth_         { Smooth::NONE };
   HistogramStyle      histogramStyle_ { HistogramStyle::CLUSTERED };
-  AngleType           angleType_      { AngleType::RADIANS };
+//AngleType           angleType_      { AngleType::RADIANS };
   CGnuPlotFillStyle   fillStyle_;
   CGnuPlotLineStyleP  lineStyle_;
   PointStyle          pointStyle_;
   LineStyles          lineStyles_;
   StyleIncrement      styleIncrement_;
   Title               title_;
+  VarPrefs            varPrefs_;
   AxesData            axesData_;
   CGnuPlotKeyData     keyData_;
   CBBox2D             region_ { 0, 0, 1, 1 };
@@ -1112,8 +1197,12 @@ class CGnuPlot {
   Arrows              arrows_;
   ArrowStyles         arrowStyles_;
   CGnuPlotArrowStyle  arrowStyle_;
+  LineDashes          lineDashes_;
   bool                binary_ { false };
   bool                matrix_ { false };
+  bool                clip_ { false };
+  bool                parametric_ { false };
+  bool                polar_ { false };
   ImageStyle          imageStyle_;
   Labels              labels_;
   Rectangles          rects_;
@@ -1124,8 +1213,7 @@ class CGnuPlot {
   FilledCurve         filledCurve_;
   std::string         timeFmt_;
   LogScaleMap         logScale_;
-  std::string         dummyVar1_;
-  std::string         dummyVar2_;
+  DummyVarMap         dummyVars_;
   int                 isamples1_   { 100 };
   int                 isamples2_   { 100 };
   int                 isoSamples1_ {  10 };

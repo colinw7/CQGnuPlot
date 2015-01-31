@@ -15,20 +15,28 @@ class CGnuPlotColorSpec {
 
   CGnuPlotColorSpec() { }
 
+  Type type() const { return type_; }
+
   void setRGB(const CRGBA &c) {
     type_ = Type::RGB;
     c_    = c;
   }
 
+  bool isVariable() const { return type_ == Type::VARIABLE; }
+  bool isPalette () const { return type_ == Type::PALETTE ; }
+  bool isIndex   () const { return type_ == Type::INDEX   ; }
+
   void setVariable() {
     type_ = Type::VARIABLE;
-    c_    =  CRGBA(0,0,0);
+    c_    = CRGBA(0,0,0);
   }
 
   void setPalette() {
     type_ = Type::PALETTE;
-    c_    =  CRGBA(0,0,0);
+    c_    = CRGBA(0,0,0);
   }
+
+  int index() const { return i_; }
 
   void setIndex(int i) {
     type_ = Type::INDEX;

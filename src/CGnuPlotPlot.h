@@ -25,6 +25,7 @@ class CGnuPlotPlot {
   typedef CGnuPlot::BoxWidth         BoxWidth;
   typedef CGnuPlot::BoxWidthType     BoxWidthType;
   typedef CGnuPlot::AxesData         AxesData;
+  typedef CGnuPlot::AxisData         AxisData;
   typedef CGnuPlot::PlotStyle        PlotStyle;
   typedef CGnuPlotTypes::FillType    FillType;
   typedef CGnuPlotTypes::FillPattern FillPattern;
@@ -176,25 +177,23 @@ class CGnuPlotPlot {
   const FillPattern &fillPattern() const { return fillStyle_.pattern(); }
   void setFillPattern(const FillPattern &f) { fillStyle_.setPattern(f); }
 
-  CGnuPlotLineStyleP lineStyle() const;
-  void setLineStyle(CGnuPlotLineStyleP ls) { lineStyle_ = ls; }
+  const CGnuPlotLineStyle &lineStyle() const { return  lineStyle_; }
+  void setLineStyle(const CGnuPlotLineStyle &ls) { lineStyle_ = ls; }
 
-  CGnuPlotLineStyleP calcLineStyle() const;
-
-  int lineStyleId() const { return lineStyle()->ind(); }
+  int lineStyleId() const { return lineStyle().ind(); }
   void setLineStyleId(int ind);
 
-  CRGBA lineColor() const { return lineStyle()->color(CRGBA(0,0,0)); }
-  void setLineColor(const CRGBA &c) { lineStyle()->setColor(c); }
+  const CRGBA &lineColor(const CRGBA &c) const { return lineStyle().color(c); }
+  void setLineColor(const CRGBA &c) { lineStyle_.setColor(c); }
 
-  double lineWidth() const { return lineStyle()->width(); }
-  void setLineWidth(double w) { lineStyle()->setWidth(w); }
+  double lineWidth() const { return lineStyle().width(); }
+  void setLineWidth(double w) { lineStyle_.setWidth(w); }
 
-  SymbolType pointType() const { return lineStyle()->pointType(); }
-  void setPointType(SymbolType type) { lineStyle()->setPointType(type); }
+  SymbolType pointType() const { return lineStyle().pointType(); }
+  void setPointType(SymbolType type) { lineStyle_.setPointType(type); }
 
-  double pointSize() const { return lineStyle()->pointSize(); }
-  void setPointSize(double s) { lineStyle()->setPointSize(s); }
+  double pointSize() const { return lineStyle().pointSize(); }
+  void setPointSize(double s) { lineStyle_.setPointSize(s); }
 
   const PointStyle &pointStyle() const { return pointStyle_; }
   void setPointStyle(const PointStyle &s) { pointStyle_ = s; }
@@ -207,19 +206,39 @@ class CGnuPlotPlot {
 
   //---
 
-  double getXMin() const { return axesData().xaxis.min.getValue(-10); }
-  double getXMax() const { return axesData().xaxis.max.getValue( 10); }
-  double getYMin() const { return axesData().yaxis.min.getValue(-1); }
-  double getYMax() const { return axesData().yaxis.max.getValue( 1); }
-  double getZMin() const { return axesData().zaxis.min.getValue(-1); }
-  double getZMax() const { return axesData().zaxis.max.getValue( 1); }
+  const AxisData &xaxis(int ind) const {
+    return const_cast<CGnuPlotPlot *>(this)->axesData_.xaxis[ind];
+  }
+  const AxisData &yaxis(int ind) const {
+    return const_cast<CGnuPlotPlot *>(this)->axesData_.yaxis[ind];
+  }
+  const AxisData &zaxis(int ind) const {
+    return const_cast<CGnuPlotPlot *>(this)->axesData_.zaxis[ind];
+  }
+  const AxisData &paxis(int ind) const {
+    return const_cast<CGnuPlotPlot *>(this)->axesData_.paxis[ind];
+  }
 
-  void setXMin(double x) { axesData_.xaxis.min.setValue(x); updateGroupRange(); }
-  void setXMax(double x) { axesData_.xaxis.max.setValue(x); updateGroupRange(); }
-  void setYMin(double y) { axesData_.yaxis.min.setValue(y); updateGroupRange(); }
-  void setYMax(double y) { axesData_.yaxis.max.setValue(y); updateGroupRange(); }
-  void setZMin(double z) { axesData_.zaxis.min.setValue(z); updateGroupRange(); }
-  void setZMax(double z) { axesData_.zaxis.max.setValue(z); updateGroupRange(); }
+  AxisData &xaxis(int ind) { return const_cast<CGnuPlotPlot *>(this)->axesData_.xaxis[ind]; }
+  AxisData &yaxis(int ind) { return const_cast<CGnuPlotPlot *>(this)->axesData_.yaxis[ind]; }
+  AxisData &zaxis(int ind) { return const_cast<CGnuPlotPlot *>(this)->axesData_.zaxis[ind]; }
+  AxisData &paxis(int ind) { return const_cast<CGnuPlotPlot *>(this)->axesData_.paxis[ind]; }
+
+  //---
+
+  double getXMin() const { return xaxis(1).min.getValue(-10); }
+  double getXMax() const { return xaxis(1).max.getValue( 10); }
+  double getYMin() const { return yaxis(1).min.getValue(-1); }
+  double getYMax() const { return yaxis(1).max.getValue( 1); }
+  double getZMin() const { return zaxis(1).min.getValue(-1); }
+  double getZMax() const { return zaxis(1).max.getValue( 1); }
+
+  void setXMin(double x) { xaxis(1).min.setValue(x); updateGroupRange(); }
+  void setXMax(double x) { xaxis(1).max.setValue(x); updateGroupRange(); }
+  void setYMin(double y) { yaxis(1).min.setValue(y); updateGroupRange(); }
+  void setYMax(double y) { yaxis(1).max.setValue(y); updateGroupRange(); }
+  void setZMin(double z) { zaxis(1).min.setValue(z); updateGroupRange(); }
+  void setZMax(double z) { zaxis(1).max.setValue(z); updateGroupRange(); }
 
   void setRange(const CBBox2D &b) {
     setXMin(b.getXMin()); setYMin(b.getYMin());
@@ -282,6 +301,7 @@ class CGnuPlotPlot {
   void drawParallelAxes  (const CBBox2D &bbox);
   void drawPoints        ();
   void drawVectors       (const CBBox2D &bbox);
+  void drawXYErrorBars   (const CBBox2D &bbox);
 
   double decodeImageUsingColor(int col, const CRGBA &c) const;
   double indexImageColor(int i, const CRGBA &c) const;
@@ -294,7 +314,10 @@ class CGnuPlotPlot {
 
   double getXSpacing() const;
 
-  void drawLine(const CPoint2D &p1, const CPoint2D &p2, double w, const CRGBA &c);
+  void drawPath(const std::vector<CPoint2D> &points, double w=1.0, const CRGBA &c=CRGBA(0,0,0),
+                const CLineDash &dash=CLineDash());
+  void drawLine(const CPoint2D &p1, const CPoint2D &p2, double w=1.0, const CRGBA &c=CRGBA(0,0,0),
+                const CLineDash &dash=CLineDash());
 
   void fillPolygon(const std::vector<CPoint2D> &polygons, const CRGBA &c);
 
@@ -323,7 +346,7 @@ class CGnuPlotPlot {
   FilledCurve        filledCurve_;                      // filled curve data
   PlotStyle          style_       { PlotStyle::POINTS}; // plot style
   CGnuPlotFillStyle  fillStyle_;                        // fill style
-  CGnuPlotLineStyleP lineStyle_;                        // line style
+  CGnuPlotLineStyle  lineStyle_;                        // line style
   PointStyle         pointStyle_;                       // point style
   CGnuPlotArrowStyle arrowStyle_;                       // arrow style
   AxesData           axesData_;
@@ -338,7 +361,6 @@ class CGnuPlotPlot {
   COptReal           surfaceZMin_, surfaceZMax_;
   int                trianglePattern3D_ { 3 };          // 3d surface pattern
   double             whiskerBars_ { 0 };                // whisker bar data
-  CBBox2D            clip_;
 };
 
 #endif

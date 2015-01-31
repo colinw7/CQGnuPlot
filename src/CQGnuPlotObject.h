@@ -9,14 +9,14 @@
 
 class CQGnuPlot;
 
-class CQGnuPlotObject : public QObject {
+class CQGnuPlotAnnotation : public QObject {
   Q_OBJECT
 
   Q_PROPERTY(QColor strokeColor READ getStrokeColor WRITE setStrokeColor)
   Q_PROPERTY(QColor fillColor   READ getFillColor   WRITE setFillColor  )
 
  public:
-  CQGnuPlotObject(CGnuPlotObject *obj);
+  CQGnuPlotAnnotation(CGnuPlotAnnotation *obj);
 
   QColor getStrokeColor() const;
   void setStrokeColor(const QColor &c);
@@ -25,12 +25,12 @@ class CQGnuPlotObject : public QObject {
   void setFillColor(const QColor &c);
 
  private:
-  CGnuPlotObject *obj_;
+  CGnuPlotAnnotation *obj_;
 };
 
 //---
 
-class CQGnuPlotArrow : public CQGnuPlotObject, public CGnuPlotArrow {
+class CQGnuPlotArrow : public CQGnuPlotAnnotation, public CGnuPlotArrow {
   Q_OBJECT
 
   Q_PROPERTY(QPointF from      READ getFrom        WRITE setFrom       )
@@ -59,7 +59,7 @@ class CQGnuPlotArrow : public CQGnuPlotObject, public CGnuPlotArrow {
 
 //---
 
-class CQGnuPlotLabel : public CQGnuPlotObject, public CGnuPlotLabel {
+class CQGnuPlotLabel : public CQGnuPlotAnnotation, public CGnuPlotLabel {
   Q_OBJECT
 
   Q_PROPERTY(QString text   READ getText   WRITE setText  )
@@ -84,7 +84,7 @@ class CQGnuPlotLabel : public CQGnuPlotObject, public CGnuPlotLabel {
 
 //---
 
-class CQGnuPlotEllipse : public CQGnuPlotObject, public CGnuPlotEllipse {
+class CQGnuPlotEllipse : public CQGnuPlotAnnotation, public CGnuPlotEllipse {
   Q_OBJECT
 
   Q_PROPERTY(QPointF center READ getCenter WRITE setCenter)
@@ -100,7 +100,7 @@ class CQGnuPlotEllipse : public CQGnuPlotObject, public CGnuPlotEllipse {
 
 //---
 
-class CQGnuPlotPolygon : public CQGnuPlotObject, public CGnuPlotPolygon {
+class CQGnuPlotPolygon : public CQGnuPlotAnnotation, public CGnuPlotPolygon {
   Q_OBJECT
 
  public:
@@ -109,7 +109,7 @@ class CQGnuPlotPolygon : public CQGnuPlotObject, public CGnuPlotPolygon {
 
 //---
 
-class CQGnuPlotRectangle : public CQGnuPlotObject, public CGnuPlotRectangle {
+class CQGnuPlotRectangle : public CQGnuPlotAnnotation, public CGnuPlotRectangle {
   Q_OBJECT
 
   Q_PROPERTY(QPointF from      READ getFrom      WRITE setFrom     )

@@ -6,19 +6,20 @@
 
 class CGnuPlotGroup {
  public:
-  typedef CGnuPlot::HistogramStyle        HistogramStyle;
-  typedef std::vector<CGnuPlotPlot *>     Plots;
-  typedef std::vector<CGnuPlotArrowP>     Arrows;
-  typedef std::vector<CGnuPlotLabelP>     Labels;
-  typedef std::vector<CGnuPlotEllipseP>   Ellipses;
-  typedef std::vector<CGnuPlotPolygonP>   Polygons;
-  typedef std::vector<CGnuPlotRectangleP> Rectangles;
-  typedef CGnuPlot::AxesData              AxesData;
-  typedef CGnuPlot::AxisData              AxisData;
-  typedef CGnuPlot::PlotSize              PlotSize;
-  typedef CGnuPlot::PlotStyle             PlotStyle;
-  typedef CGnuPlot::LogScaleMap           LogScaleMap;
-  typedef CGnuPlot::LogScale              LogScale;
+  typedef CGnuPlot::HistogramStyle              HistogramStyle;
+  typedef std::vector<CGnuPlotPlot *>           Plots;
+  typedef std::vector<CGnuPlotArrowP>           Arrows;
+  typedef std::vector<CGnuPlotLabelP>           Labels;
+  typedef std::vector<CGnuPlotEllipseP>         Ellipses;
+  typedef std::vector<CGnuPlotPolygonP>         Polygons;
+  typedef std::vector<CGnuPlotRectangleP>       Rectangles;
+  typedef CGnuPlot::AxesData                    AxesData;
+  typedef CGnuPlot::AxisData                    AxisData;
+  typedef CGnuPlot::PlotSize                    PlotSize;
+  typedef CGnuPlot::PlotStyle                   PlotStyle;
+  typedef CGnuPlot::LogScaleMap                 LogScaleMap;
+  typedef CGnuPlot::LogScale                    LogScale;
+  typedef std::map<std::string, CGnuPlotAxis *> Axes;
 
  public:
   CGnuPlotGroup(CGnuPlotWindow *window);
@@ -66,48 +67,68 @@ class CGnuPlotGroup {
   const AxesData &axesData() const { return axesData_; }
   void setAxesData(const AxesData &a) { axesData_ = a; }
 
-  double getXMin() const { return axesData().xaxis.min.getValue(-10); }
-  double getXMax() const { return axesData().xaxis.max.getValue( 10); }
-  double getYMin() const { return axesData().yaxis.min.getValue(-1); }
-  double getYMax() const { return axesData().yaxis.max.getValue( 1); }
-  double getZMin() const { return axesData().zaxis.min.getValue(-1); }
-  double getZMax() const { return axesData().zaxis.max.getValue( 1); }
+  const AxisData &xaxis(int ind) const {
+    return const_cast<CGnuPlotGroup *>(this)->axesData_.xaxis[ind];
+  }
+  const AxisData &yaxis(int ind) const {
+    return const_cast<CGnuPlotGroup *>(this)->axesData_.yaxis[ind];
+  }
+  const AxisData &zaxis(int ind) const {
+    return const_cast<CGnuPlotGroup *>(this)->axesData_.zaxis[ind];
+  }
+  const AxisData &paxis(int ind) const {
+    return const_cast<CGnuPlotGroup *>(this)->axesData_.paxis[ind];
+  }
 
-  void setXMin(double x) { axesData_.xaxis.min.setValue(x); }
-  void setXMax(double x) { axesData_.xaxis.max.setValue(x); }
-  void setYMin(double y) { axesData_.yaxis.min.setValue(y); }
-  void setYMax(double y) { axesData_.yaxis.max.setValue(y); }
-  void setZMin(double z) { axesData_.zaxis.min.setValue(z); }
-  void setZMax(double z) { axesData_.zaxis.max.setValue(z); }
+  AxisData &xaxis(int ind) { return const_cast<CGnuPlotGroup *>(this)->axesData_.xaxis[ind]; }
+  AxisData &yaxis(int ind) { return const_cast<CGnuPlotGroup *>(this)->axesData_.yaxis[ind]; }
+  AxisData &zaxis(int ind) { return const_cast<CGnuPlotGroup *>(this)->axesData_.zaxis[ind]; }
+  AxisData &paxis(int ind) { return const_cast<CGnuPlotGroup *>(this)->axesData_.paxis[ind]; }
 
-  const std::string &getXLabel() const { return axesData().xaxis.str; }
-  void setXLabel(const std::string &s) { axesData_.xaxis.str = s; }
+  //---
 
-  const std::string &getYLabel() const { return axesData().yaxis.str; }
-  void setYLabel(const std::string &s) { axesData_.yaxis.str = s; }
+  double getXMin() const { return xaxis(1).min.getValue(-10); }
+  double getXMax() const { return xaxis(1).max.getValue( 10); }
+  double getYMin() const { return yaxis(1).min.getValue(-1); }
+  double getYMax() const { return yaxis(1).max.getValue( 1); }
+  double getZMin() const { return zaxis(1).min.getValue(-1); }
+  double getZMax() const { return zaxis(1).max.getValue( 1); }
 
-  bool getXTics() const { return axesData().xaxis.showTics; }
-  void setXTics(bool b) { axesData_.xaxis.showTics = b; }
+  void setXMin(double x) { xaxis(1).min.setValue(x); }
+  void setXMax(double x) { xaxis(1).max.setValue(x); }
+  void setYMin(double y) { yaxis(1).min.setValue(y); }
+  void setYMax(double y) { yaxis(1).max.setValue(y); }
+  void setZMin(double z) { zaxis(1).min.setValue(z); }
+  void setZMax(double z) { zaxis(1).max.setValue(z); }
 
-  bool getXTicsMirror() const { return axesData().xaxis.mirror; }
-  void setXTicsMirror(bool b) { axesData_.xaxis.mirror = b; }
+  const std::string &getXLabel() const { return xaxis(1).str; }
+  void setXLabel(const std::string &s) { xaxis(1).str = s; }
 
-  bool getYTics() const { return axesData().yaxis.showTics; }
-  void setYTics(bool b) { axesData_.yaxis.showTics = b; }
+  const std::string &getYLabel() const { return yaxis(1).str; }
+  void setYLabel(const std::string &s) { yaxis(1).str = s; }
 
-  bool getYTicsMirror() const { return axesData().yaxis.mirror; }
-  void setYTicsMirror(bool b) { axesData_.yaxis.mirror = b; }
+  bool getXTics() const { return xaxis(1).showTics; }
+  void setXTics(bool b) { xaxis(1).showTics = b; }
 
-  bool getXGrid() const { return axesData().xaxis.grid; }
-  void setXGrid(bool b) { axesData_.xaxis.grid = b; }
+  bool getXTicsMirror() const { return xaxis(1).mirror; }
+  void setXTicsMirror(bool b) { xaxis(1).mirror = b; }
 
-  bool getYGrid() const { return axesData().yaxis.grid; }
-  void setYGrid(bool b) { axesData_.yaxis.grid = b; }
+  bool getYTics() const { return yaxis(1).showTics; }
+  void setYTics(bool b) { yaxis(1).showTics = b; }
 
-  int getBorders() const { return axesData().borders; }
+  bool getYTicsMirror() const { return yaxis(1).mirror; }
+  void setYTicsMirror(bool b) { yaxis(1).mirror = b; }
+
+  bool getXGrid() const { return xaxis(1).grid; }
+  void setXGrid(bool b) { xaxis(1).grid = b; }
+
+  bool getYGrid() const { return yaxis(1).grid; }
+  void setYGrid(bool b) { yaxis(1).grid = b; }
+
+  int getBorders() const { return axesData_.borders; }
   void setBorders(int b) { axesData_.borders = b; }
 
-  int getBorderWidth() const { return axesData().borderWidth; }
+  int getBorderWidth() const { return axesData_.borderWidth; }
   void setBorderWidth(double w) { axesData_.borderWidth = w; }
 
   //---
@@ -186,6 +207,10 @@ class CGnuPlotGroup {
 
   //-----
 
+  const Axes &axes() const { return axes_; }
+
+  //-----
+
   void showXAxis(bool show);
   void showYAxis(bool show);
 
@@ -194,8 +219,6 @@ class CGnuPlotGroup {
   void reset3D();
 
   void draw();
-
-  void initPlotAxis();
 
   void drawTitle();
 
@@ -209,13 +232,13 @@ class CGnuPlotGroup {
   void drawKey();
   void drawAnnotations();
 
+  CGnuPlotAxis *getPlotAxis(char c, int ind);
+
   //-----
 
-  std::string getXAxisValueStr(int ind, int i, double x) const;
-  std::string getYAxisValueStr(int ind, int i, double x) const;
+  std::string getAxisValueStr(const std::string &id, int i, double r) const;
 
-  std::string formatX(double x) const;
-  std::string formatY(double y) const;
+  std::string formatAxisValue(const AxisData &axis, double r) const;
 
   //-----
 
@@ -270,8 +293,7 @@ class CGnuPlotGroup {
   Rectangles      rects_;                                  // rectangle annotations
   Ellipses        ellipses_;                               // ellipse annotations
   Polygons        polygons_;                               // ploygon annotations
-  CGnuPlotAxis    plotXAxis1_, plotXAxis2_;
-  CGnuPlotAxis    plotYAxis1_, plotYAxis2_;
+  Axes            axes_;
 };
 
 #endif

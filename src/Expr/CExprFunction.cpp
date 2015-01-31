@@ -5,6 +5,14 @@
 #include <cstring>
 
 #ifdef GNUPLOT_EXPR
+namespace {
+
+double invnorm(double x) {
+  return sqrt(2)/erf(2*x - 1);
+}
+
+}
+
 class CExprSubStr {
  public:
   std::string operator()(const std::string &str, int i1, int i2) {
@@ -361,44 +369,46 @@ CEXPR_REAL_TO_REAL_FUNC(ATanH, ::atanh)
 
 #ifdef GNUPLOT_EXPR
 // TODO: besy0, besy1
-CEXPR_REAL_TO_REAL_FUNC(BesJ0 , ::j0)
-CEXPR_REAL_TO_REAL_FUNC(BesJ1 , ::j1)
-CEXPR_REAL_TO_REAL_FUNC(Erf   , ::erf)
-CEXPR_REAL_TO_REAL_FUNC(ErfC  , ::erfc)
+CEXPR_REAL_TO_REAL_FUNC(BesJ0  , ::j0)
+CEXPR_REAL_TO_REAL_FUNC(BesJ1  , ::j1)
+CEXPR_REAL_TO_REAL_FUNC(Erf    , ::erf)
+CEXPR_REAL_TO_REAL_FUNC(ErfC   , ::erfc)
 // TODO: inverf, invnorm, norm
-CEXPR_REAL_TO_REAL_FUNC(Gamma , ::gamma)
+CEXPR_REAL_TO_REAL_FUNC(Gamma  , ::gamma)
 // TODO: igamma
-CEXPR_REAL_TO_REAL_FUNC(LGamma, ::lgamma)
+CEXPR_REAL_TO_REAL_FUNC(LGamma , ::lgamma)
+CEXPR_REAL_TO_REAL_FUNC(InvNorm, ::invnorm)
 // TODO: lambertw
 // TODO: abs (complex), arg(complex), imag(complex), real(complex)
 #endif
 
 static CExprBuiltinFunction
 builtinFns[] = {
-  { "sqrt"  , "r"  , CExprFunctionSqrt   },
-  { "exp"   , "r"  , CExprFunctionExp    },
-  { "log"   , "r"  , CExprFunctionLog    },
-  { "log10" , "r"  , CExprFunctionLog10  },
-  { "sin"   , "r"  , CExprFunctionSin    },
-  { "cos"   , "r"  , CExprFunctionCos    },
-  { "tan"   , "r"  , CExprFunctionTan    },
-  { "asin"  , "r"  , CExprFunctionASin   },
-  { "acos"  , "r"  , CExprFunctionACos   },
-  { "atan"  , "r"  , CExprFunctionATan   },
-  { "atan2" , "r,r", CExprFunctionATan2  },
-  { "sinh"  , "r"  , CExprFunctionSinH   },
-  { "cosh"  , "r"  , CExprFunctionCosH   },
-  { "tanh"  , "r"  , CExprFunctionTanH   },
-  { "asinh" , "r"  , CExprFunctionASinH  },
-  { "acosh" , "r"  , CExprFunctionACosH  },
-  { "atanh" , "r"  , CExprFunctionATanH  },
+  { "sqrt"   , "r"  , CExprFunctionSqrt    },
+  { "exp"    , "r"  , CExprFunctionExp     },
+  { "log"    , "r"  , CExprFunctionLog     },
+  { "log10"  , "r"  , CExprFunctionLog10   },
+  { "sin"    , "r"  , CExprFunctionSin     },
+  { "cos"    , "r"  , CExprFunctionCos     },
+  { "tan"    , "r"  , CExprFunctionTan     },
+  { "asin"   , "r"  , CExprFunctionASin    },
+  { "acos"   , "r"  , CExprFunctionACos    },
+  { "atan"   , "r"  , CExprFunctionATan    },
+  { "atan2"  , "r,r", CExprFunctionATan2   },
+  { "sinh"   , "r"  , CExprFunctionSinH    },
+  { "cosh"   , "r"  , CExprFunctionCosH    },
+  { "tanh"   , "r"  , CExprFunctionTanH    },
+  { "asinh"  , "r"  , CExprFunctionASinH   },
+  { "acosh"  , "r"  , CExprFunctionACosH   },
+  { "atanh"  , "r"  , CExprFunctionATanH   },
 #ifdef GNUPLOT_EXPR
-  { "besj0" , "r"  , CExprFunctionBesJ0  },
-  { "besj1" , "r"  , CExprFunctionBesJ1  },
-  { "erf"   , "r"  , CExprFunctionErf    },
-  { "erfc"  , "r"  , CExprFunctionErfC   },
-  { "gamma" , "r"  , CExprFunctionGamma  },
-  { "lgamma", "r"  , CExprFunctionLGamma },
+  { "besj0"  , "r"  , CExprFunctionBesJ0   },
+  { "besj1"  , "r"  , CExprFunctionBesJ1   },
+  { "erf"    , "r"  , CExprFunctionErf     },
+  { "erfc"   , "r"  , CExprFunctionErfC    },
+  { "gamma"  , "r"  , CExprFunctionGamma   },
+  { "lgamma" , "r"  , CExprFunctionLGamma  },
+  { "invnorm", "r"  , CExprFunctionInvNorm },
 #endif
   { "", "", 0 }
 };

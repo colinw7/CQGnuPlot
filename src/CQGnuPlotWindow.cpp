@@ -6,6 +6,7 @@
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotLineStyle.h>
 #include <CQGnuPlotObject.h>
+#include <CQGnuPlotAxis.h>
 
 #include <CQZoomMouseMode.h>
 #include <CQPanMouseMode.h>
@@ -240,6 +241,16 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(keyName, qgroup, "keyReverse");
 
   tree_->addProperty(name, qgroup, "histogramStyle");
+
+  //---
+
+  for (const auto &axis : qgroup->axes()) {
+    CQGnuPlotAxis *qaxis = dynamic_cast<CQGnuPlotAxis *>(axis.second);
+
+    QString axisName = name + "/axes_" + QString(qaxis->id().c_str());
+
+    tree_->addProperty(axisName, qaxis, "displayed");
+  }
 
   //---
 
@@ -694,8 +705,19 @@ void
 CQGnuPlotWindow::
 showPos(double wx, double wy)
 {
-  std::string xstr = (currentGroup_ ? currentGroup_->formatX(wx) : CStrUtil::toString(wx));
-  std::string ystr = (currentGroup_ ? currentGroup_->formatY(wy) : CStrUtil::toString(wy));
+  std::string xstr, ystr;
+
+  if (currentGroup_) {
+    const CGnuPlot::AxisData &xaxis = currentGroup_->xaxis(1);
+    const CGnuPlot::AxisData &yaxis = currentGroup_->yaxis(1);
+
+    xstr = currentGroup_->formatAxisValue(xaxis, wx);
+    ystr = currentGroup_->formatAxisValue(yaxis, wy);
+  }
+  else {
+    xstr = CStrUtil::toString(wx);
+    ystr = CStrUtil::toString(wy);
+  }
 
   posLabel_->setText(QString("%1 %2").arg(xstr.c_str()).arg(ystr.c_str()));
 }

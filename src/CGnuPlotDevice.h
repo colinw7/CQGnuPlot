@@ -1,21 +1,23 @@
 #ifndef CGnuPlotDevice_H
 #define CGnuPlotDevice_H
 
+#include <COrientation.h>
 #include <CGnuPlotTypes.h>
 
 #include <string>
 
-class CGnuPlotWindow;
-class CGnuPlotGroup;
-class CGnuPlotPlot;
-class CGnuPlotLineStyle;
+class CGnuPlot;
 class CGnuPlotArrow;
-class CGnuPlotLabel;
+class CGnuPlotAxis;
 class CGnuPlotEllipse;
+class CGnuPlotGroup;
+class CGnuPlotLabel;
+class CGnuPlotLineStyle;
+class CGnuPlotPlot;
 class CGnuPlotPolygon;
 class CGnuPlotRectangle;
 class CGnuPlotRenderer;
-class CGnuPlot;
+class CGnuPlotWindow;
 
 class CGnuPlotDevice {
  public:
@@ -43,6 +45,9 @@ class CGnuPlotDevice {
   virtual CGnuPlotEllipse   *createEllipse() = 0;
   virtual CGnuPlotPolygon   *createPolygon() = 0;
   virtual CGnuPlotRectangle *createRectangle() = 0;
+
+  virtual CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
+                                   COrientation dir) = 0;
 
   virtual void timeout() { }
 

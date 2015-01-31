@@ -2,35 +2,35 @@
 #include <CQGnuPlot.h>
 #include <CQUtil.h>
 
-CQGnuPlotObject::
-CQGnuPlotObject(CGnuPlotObject *obj) :
+CQGnuPlotAnnotation::
+CQGnuPlotAnnotation(CGnuPlotAnnotation *obj) :
  obj_(obj)
 {
 }
 
 QColor
-CQGnuPlotObject::
+CQGnuPlotAnnotation::
 getStrokeColor() const
 {
   return CQUtil::rgbaToColor(obj_->getStrokeColor());
 }
 
 void
-CQGnuPlotObject::
+CQGnuPlotAnnotation::
 setStrokeColor(const QColor &c)
 {
   obj_->setStrokeColor(CQUtil::colorToRGBA(c));
 }
 
 QColor
-CQGnuPlotObject::
+CQGnuPlotAnnotation::
 getFillColor() const
 {
   return CQUtil::rgbaToColor(obj_->getFillColor());
 }
 
 void
-CQGnuPlotObject::
+CQGnuPlotAnnotation::
 setFillColor(const QColor &c)
 {
   obj_->setFillColor(CQUtil::colorToRGBA(c));
@@ -40,7 +40,7 @@ setFillColor(const QColor &c)
 
 CQGnuPlotArrow::
 CQGnuPlotArrow(CQGnuPlot *plot) :
- CQGnuPlotObject(this), CGnuPlotArrow(plot)
+ CQGnuPlotAnnotation(this), CGnuPlotArrow(plot)
 {
 }
 
@@ -76,7 +76,7 @@ setTo(const QPointF &p)
 
 CQGnuPlotLabel::
 CQGnuPlotLabel(CQGnuPlot *plot) :
- CQGnuPlotObject(this), CGnuPlotLabel(plot)
+ CQGnuPlotAnnotation(this), CGnuPlotLabel(plot)
 {
 }
 
@@ -126,7 +126,7 @@ setFont(const QString &s)
 
 CQGnuPlotEllipse::
 CQGnuPlotEllipse(CQGnuPlot *plot) :
- CQGnuPlotObject(this), CGnuPlotEllipse(plot)
+ CQGnuPlotAnnotation(this), CGnuPlotEllipse(plot)
 {
 }
 
@@ -148,7 +148,7 @@ setCenter(const QPointF &p)
 
 CQGnuPlotPolygon::
 CQGnuPlotPolygon(CQGnuPlot *plot) :
- CQGnuPlotObject(this), CGnuPlotPolygon(plot)
+ CQGnuPlotAnnotation(this), CGnuPlotPolygon(plot)
 {
 }
 
@@ -156,7 +156,7 @@ CQGnuPlotPolygon(CQGnuPlot *plot) :
 
 CQGnuPlotRectangle::
 CQGnuPlotRectangle(CQGnuPlot *plot) :
- CQGnuPlotObject(this), CGnuPlotRectangle(plot)
+ CQGnuPlotAnnotation(this), CGnuPlotRectangle(plot)
 {
 }
 

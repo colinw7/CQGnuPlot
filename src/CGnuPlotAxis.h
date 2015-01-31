@@ -16,16 +16,17 @@ class CGnuPlotGroup;
 
 class CGnuPlotAxis {
  public:
-  CGnuPlotAxis(CGnuPlotGroup *group=0, int ind=1, COrientation dir=CORIENTATION_HORIZONTAL,
-               double start=0.0, double end=1.0);
- ~CGnuPlotAxis();
+  CGnuPlotAxis(CGnuPlotGroup *group=0, const std::string &id="",
+               COrientation dir=CORIENTATION_HORIZONTAL, double start=0.0, double end=1.0);
+
+  virtual ~CGnuPlotAxis();
 
   CGnuPlot *app() const;
 
   CGnuPlotGroup *group() const { return group_; }
 
-  int ind() const { return ind_; }
-  void setInd(int i) { ind_ = i; }
+  const std::string &id() const { return id_; }
+  void setId(const std::string &id) { id_ = id; }
 
   double getStart() const { return start1_; }
   double getEnd  () const { return end1_  ; }
@@ -69,14 +70,17 @@ class CGnuPlotAxis {
   bool isDisplayed() const { return displayed_; }
   void setDisplayed(bool b) { displayed_ = b; }
 
-  bool drawLine() const { return drawLine_; }
+  bool isDrawLine() const { return drawLine_; }
   void setDrawLine(bool b) { drawLine_ = b; }
 
   bool drawTickMark() const { return drawTickMark_; }
   void setDrawTickMark(bool b) { drawTickMark_ = b; }
 
-  bool drawMinorTickMark() const { return drawMinorTickMark_; }
+  bool isDrawMinorTickMark() const { return drawMinorTickMark_; }
   void setDrawMinorTickMark(bool b) { drawMinorTickMark_ = b; }
+
+  bool clip() const { return clip_; }
+  void setClip(bool b) { clip_ = b; }
 
   bool drawTickLabel() const { return drawTickLabel_; }
   void setDrawTickLabel(bool b) { drawTickLabel_ = b; }
@@ -105,6 +109,7 @@ class CGnuPlotAxis {
 
   void drawAxisLabel(const CPoint2D &p, const std::string &str, int maxSize);
 
+  void drawClipLine(const CPoint2D &p1, const CPoint2D &p2);
   void drawLine(const CPoint2D &p1, const CPoint2D &p2);
 
   void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
@@ -116,12 +121,13 @@ class CGnuPlotAxis {
   typedef std::vector<double> TickSpaces;
 
   CGnuPlotGroup* group_             { 0 };
-  int            ind_               { 1 };
-  COrientation   direction_;
-  double         start_;
-  double         end_;
-  double         start1_;
-  double         end1_;
+  std::string    id_                { "" };
+  COrientation   direction_         { CORIENTATION_HORIZONTAL };
+  double         start_             { 0 };
+  double         end_               { 1 };
+  double         start1_            { 0 };
+  double         end1_              { 1 };
+  bool           reverse_           { false };
   int            logarithmic_       { 0 };
   uint           numTicks1_         { 1 };
   uint           numTicks2_         { 0 };
@@ -138,6 +144,7 @@ class CGnuPlotAxis {
   bool           drawMinorTickMark_ { true };
   bool           drawTickLabel_     { true };
   bool           drawLabel_         { true };
+  bool           clip_              { false };
 };
 
 #endif

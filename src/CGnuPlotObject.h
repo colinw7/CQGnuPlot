@@ -20,6 +20,20 @@ class CGnuPlotObject {
 
   virtual ~CGnuPlotObject() { }
 
+ protected:
+  CGnuPlot *plot_;
+};
+
+//---
+
+class CGnuPlotAnnotation : public CGnuPlotObject {
+ public:
+  CGnuPlotAnnotation(CGnuPlot *plot) :
+   CGnuPlotObject(plot) {
+  }
+
+  virtual ~CGnuPlotAnnotation() { }
+
   const CRGBA &getStrokeColor() const { return strokeColor_; }
   void setStrokeColor(const CRGBA &c) { strokeColor_ = c; }
 
@@ -27,17 +41,16 @@ class CGnuPlotObject {
   void setFillColor(const CRGBA &c) { fillColor_ = c; }
 
  protected:
-  CGnuPlot *plot_;
-  CRGBA     strokeColor_ { 0, 0, 0 };
-  CRGBA     fillColor_   { 0, 0, 0, 0 };
+  CRGBA strokeColor_ { 0, 0, 0 };
+  CRGBA fillColor_   { 0, 0, 0, 0 };
 };
 
 //---
 
-class CGnuPlotArrow : public CGnuPlotObject {
+class CGnuPlotArrow : public CGnuPlotAnnotation {
  public:
   CGnuPlotArrow(CGnuPlot *plot) :
-   CGnuPlotObject(plot) {
+   CGnuPlotAnnotation(plot) {
   }
 
   virtual ~CGnuPlotArrow() { }
@@ -116,10 +129,10 @@ class CGnuPlotArrow : public CGnuPlotObject {
 
 //---
 
-class CGnuPlotLabel : public CGnuPlotObject {
+class CGnuPlotLabel : public CGnuPlotAnnotation {
  public:
   CGnuPlotLabel(CGnuPlot *plot) :
-   CGnuPlotObject(plot) {
+   CGnuPlotAnnotation(plot) {
   }
 
   virtual ~CGnuPlotLabel() { }
@@ -167,10 +180,10 @@ class CGnuPlotLabel : public CGnuPlotObject {
 
 //---
 
-class CGnuPlotEllipse : public CGnuPlotObject {
+class CGnuPlotEllipse : public CGnuPlotAnnotation {
  public:
   CGnuPlotEllipse(CGnuPlot *plot) :
-   CGnuPlotObject(plot) {
+   CGnuPlotAnnotation(plot) {
   }
 
   virtual ~CGnuPlotEllipse() { }
@@ -194,13 +207,13 @@ class CGnuPlotEllipse : public CGnuPlotObject {
 
 //---
 
-class CGnuPlotPolygon : public CGnuPlotObject {
+class CGnuPlotPolygon : public CGnuPlotAnnotation {
  public:
   typedef std::vector<CPoint2D> Points;
 
  public:
   CGnuPlotPolygon(CGnuPlot *plot) :
-   CGnuPlotObject(plot) {
+   CGnuPlotAnnotation(plot) {
   }
 
   virtual ~CGnuPlotPolygon() { }
@@ -219,10 +232,10 @@ class CGnuPlotPolygon : public CGnuPlotObject {
 
 //---
 
-class CGnuPlotRectangle : public CGnuPlotObject {
+class CGnuPlotRectangle : public CGnuPlotAnnotation {
  public:
   CGnuPlotRectangle(CGnuPlot *plot) :
-   CGnuPlotObject(plot) {
+   CGnuPlotAnnotation(plot) {
   }
 
   virtual ~CGnuPlotRectangle() { }

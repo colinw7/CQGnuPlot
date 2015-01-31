@@ -24,6 +24,7 @@ CQGnuPlotPlot.cpp \
 CQGnuPlotRenderer.cpp \
 CQGnuPlotUtil.cpp \
 CQGnuPlotWindow.cpp \
+CQGnuPlotAxis.cpp \
 \
 CGnuPlot.cpp \
 CGnuPlotAxis.cpp \
@@ -78,6 +79,7 @@ CQGnuPlotPlot.h \
 CQGnuPlotRenderer.h \
 CQGnuPlotUtil.h \
 CQGnuPlotWindow.h \
+CQGnuPlotAxis.h \
 \
 CGnuPlot.h \
 CGnuPlotAxis.h \

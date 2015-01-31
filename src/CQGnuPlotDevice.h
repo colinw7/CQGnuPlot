@@ -27,7 +27,9 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
   CGnuPlotPolygon   *createPolygon() override;
   CGnuPlotRectangle *createRectangle() override;
 
-  void timeout();
+  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir) override;
+
+  void timeout() override;
 
   void stateChanged(CGnuPlotWindow *, CGnuPlotTypes::ChangeState) override;
 

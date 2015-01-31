@@ -35,6 +35,9 @@ class CGnuPlotRenderer {
   bool mapping() const { return mapping_; }
   void setMapping(bool b) { mapping_ = b; }
 
+  const CBBox2D &clip() { return clip_; }
+  void setClip(const CBBox2D &r) { clip_ = r; }
+
   //---
 
   virtual CFontPtr getFont() const = 0;
@@ -48,8 +51,10 @@ class CGnuPlotRenderer {
   virtual void drawPoint  (const CPoint2D &p, const CRGBA &c=CRGBA(0,0,0)) = 0;
   virtual void drawSymbol (const CPoint2D &p, SymbolType type, double size,
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
+  virtual void drawPath   (const std::vector<CPoint2D> &points, double width=1.0,
+                           const CRGBA &c=CRGBA(0,0,0), const CLineDash &dash=CLineDash()) = 0;
   virtual void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width=1.0,
-                           const CRGBA &c=CRGBA(0,0,0)) = 0;
+                           const CRGBA &c=CRGBA(0,0,0), const CLineDash &dash=CLineDash()) = 0;
   virtual void drawRect   (const CBBox2D &rect, const CRGBA &c=CRGBA(0,0,0), double w=1.0) = 0;
   virtual void drawPolygon(const std::vector<CPoint2D> &points, double w=1.0,
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
@@ -79,6 +84,8 @@ class CGnuPlotRenderer {
 
   //---
 
+  bool clipLine(CPoint2D &p1, CPoint2D &p2);
+
   void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
                         CVAlignType valign, double y_offset, const std::string &str,
                         const CRGBA &c=CRGBA(0,0,0));
@@ -104,6 +111,7 @@ class CGnuPlotRenderer {
   CRange2D        margin_;           // margin for plot
   CBBox2D         range_;            // data range
   COptReal        ratio_;            // aspect ratio
+  CBBox2D         clip_;             // clip area
 };
 
 #endif

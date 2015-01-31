@@ -28,12 +28,15 @@ class CGnuPlotSVGDevice : public CGnuPlotDevice {
   CGnuPlotPolygon   *createPolygon() override;
   CGnuPlotRectangle *createRectangle() override;
 
-  void stateChanged(CGnuPlotWindow *window, CGnuPlotTypes::ChangeState state);
+  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
+                           COrientation dir) override;
 
-  void timeout();
+  void stateChanged(CGnuPlotWindow *window, CGnuPlotTypes::ChangeState state) override;
 
-  void drawInit(CGnuPlotWindow *window);
-  void drawTerm();
+  void timeout() override;
+
+  void drawInit(CGnuPlotWindow *window) override;
+  void drawTerm() override;
 
   std::ostream &os() { return *os_; }
 

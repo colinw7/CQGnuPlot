@@ -2,6 +2,8 @@
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotUtil.h>
 
+#include <CMathGeom2D.h>
+
 CGnuPlotRenderer::
 CGnuPlotRenderer()
 {
@@ -10,6 +12,23 @@ CGnuPlotRenderer()
 CGnuPlotRenderer::
 ~CGnuPlotRenderer()
 {
+}
+
+bool
+CGnuPlotRenderer::
+clipLine(CPoint2D &p1, CPoint2D &p2)
+{
+  double x1 = p1.x, y1 = p1.y;
+  double x2 = p2.x, y2 = p2.y;
+
+  if (! CMathGeom2D::clipLine(clip_.getXMin(), clip_.getYMin(), clip_.getXMax(), clip_.getYMax(),
+                              &x1, &y1, &x2, &y2))
+    return false;
+
+  p1 = CPoint2D(x1, y1);
+  p2 = CPoint2D(x2, y2);
+
+  return true;
 }
 
 void

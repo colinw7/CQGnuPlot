@@ -13,7 +13,7 @@ getLineColor() const
 
   CGnuPlotLineStyleP lsp = plot_->getLineStyleInd(ls);
 
-  return lsp->color();
+  return lsp->color(CRGBA(0,0,0));
 }
 
 void

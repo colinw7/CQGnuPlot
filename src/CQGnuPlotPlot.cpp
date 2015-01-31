@@ -34,7 +34,7 @@ QColor
 CQGnuPlotPlot::
 lineColor() const
 {
-  return toQColor(CGnuPlotPlot::lineColor());
+  return toQColor(CGnuPlotPlot::lineColor(CRGBA(0,0,0)));
 }
 
 void

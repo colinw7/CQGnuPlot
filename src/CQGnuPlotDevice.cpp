@@ -5,6 +5,7 @@
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotLineStyle.h>
 #include <CQGnuPlotObject.h>
+#include <CQGnuPlotAxis.h>
 
 #include <QApplication>
 
@@ -109,6 +110,15 @@ createRectangle()
   CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
 
   return new CQGnuPlotRectangle(qapp);
+}
+
+CGnuPlotAxis *
+CQGnuPlotDevice::
+createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir)
+{
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+
+  return new CQGnuPlotAxis(qgroup, id, dir);
 }
 
 void
