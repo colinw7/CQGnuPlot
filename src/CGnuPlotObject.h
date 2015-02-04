@@ -2,13 +2,26 @@
 #define CGnuPlotObject_H
 
 #include <CGnuPlotArrowStyle.h>
+#include <CGnuPlotColorSpec.h>
+#include <CGnuPlotPosition.h>
+
 #include <CRGBA.h>
+#include <CBBox2D.h>
+#include <CSize2D.h>
 #include <CPoint2D.h>
 #include <CAlignType.h>
 #include <vector>
 #include <memory>
 
 class CGnuPlotRenderer;
+
+//---
+
+enum class CGnuPlotLayer {
+  FRONT,
+  BACK,
+  BEHIND
+};
 
 //---
 
@@ -37,12 +50,18 @@ class CGnuPlotAnnotation : public CGnuPlotObject {
   const CRGBA &getStrokeColor() const { return strokeColor_; }
   void setStrokeColor(const CRGBA &c) { strokeColor_ = c; }
 
-  const CRGBA &getFillColor() const { return fillColor_; }
-  void setFillColor(const CRGBA &c) { fillColor_ = c; }
+  const CGnuPlotColorSpec &getFillColor() const { return fillColor_; }
+  void setFillColor(const CGnuPlotColorSpec &c) { fillColor_ = c; }
+
+  const CGnuPlotLayer &getLayer() const { return layer_; }
+  void setLayer(const CGnuPlotLayer &l) { layer_ = l; }
+
+  virtual void draw(CGnuPlotRenderer *renderer) const = 0;
 
  protected:
-  CRGBA strokeColor_ { 0, 0, 0 };
-  CRGBA fillColor_   { 0, 0, 0, 0 };
+  CRGBA             strokeColor_ { 0, 0, 0 };
+  CGnuPlotColorSpec fillColor_;
+  CGnuPlotLayer     layer_       { CGnuPlotLayer::FRONT };
 };
 
 //---
@@ -111,7 +130,7 @@ class CGnuPlotArrow : public CGnuPlotAnnotation {
 
   CRGBA getLineColor() const;
 
-  void draw(CGnuPlotRenderer *renderer) const;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
   void print(std::ostream &os) const {
     style_.print(plot_, os);
@@ -119,7 +138,7 @@ class CGnuPlotArrow : public CGnuPlotAnnotation {
     os << " from " << from_ << (relative_ ? " rto " : " to ") << to_;
   }
 
- private:
+ protected:
   int                ind_      { -1 };
   CPoint2D           from_     { 0, 0 };
   CPoint2D           to_       { 1, 1 };
@@ -161,13 +180,13 @@ class CGnuPlotLabel : public CGnuPlotAnnotation {
   double getOffset() const { return offset_; }
   void setOffset(double o) { offset_ = o; }
 
-  void draw(CGnuPlotRenderer *renderer) const;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
   void print(std::ostream &os) const {
     os << " \"" << text_ << "\"" << " at " << pos_;
   }
 
- private:
+ protected:
   int         ind_    { -1 };
   std::string text_;
   CHAlignType align_  { CHALIGN_TYPE_LEFT };
@@ -197,9 +216,9 @@ class CGnuPlotEllipse : public CGnuPlotAnnotation {
   double getRY() const { return ry_; }
   void setRY(double y) { ry_ = y; }
 
-  void draw(CGnuPlotRenderer *renderer) const;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
- private:
+ protected:
   CPoint2D p_  { 0, 0 };
   double   rx_ { 1 };
   double   ry_ { 1 };
@@ -224,9 +243,9 @@ class CGnuPlotPolygon : public CGnuPlotAnnotation {
 
   const Points &getPoints() const { return points_; }
 
-  void draw(CGnuPlotRenderer *renderer) const;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
- private:
+ protected:
   Points points_;
 };
 
@@ -240,25 +259,38 @@ class CGnuPlotRectangle : public CGnuPlotAnnotation {
 
   virtual ~CGnuPlotRectangle() { }
 
-  const CPoint2D &getFrom() const { return from_; }
-  void setFrom(const CPoint2D &p) { from_ = p; }
+  const CGnuPlotPosition &getFrom() const { return from_.getValue(); }
+  void setFrom(const CGnuPlotPosition &p) { from_ = p; }
 
-  const CPoint2D &getTo() const { return to_; }
-  void setTo(const CPoint2D &p) { to_ = p; }
+  const CGnuPlotPosition &getTo() const { return to_.getValue(); }
+  void setTo(const CGnuPlotPosition &p) { to_ = p; }
 
-  int getFillStyle() const { return fs_; }
+  const CGnuPlotPosition &getRTo() const { return rto_.getValue(); }
+  void setRTo(const CGnuPlotPosition &p) { rto_ = p; }
+
+  const CGnuPlotPosition &getCenter() const { return center_.getValue(); }
+  void setCenter(const CGnuPlotPosition &p) { center_ = p; }
+
+  const CSize2D &getSize() const { return size_.getValue(); }
+  void setSize(const CSize2D &p) { size_ = p; }
+
+  int getFillStyle() const { return fs_.getValue(-1); }
   void setFillStyle(int fs) { fs_ = fs; }
 
-  double getLineWidth() const { return lw_; }
+  double getLineWidth() const { return lw_.getValue(0); }
   void setLineWidth(double w) { lw_ = w; }
 
-  void draw(CGnuPlotRenderer *renderer) const;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
- private:
-  CPoint2D from_ { 0, 0 };
-  CPoint2D to_   { 1, 1 };
-  int      fs_   { -1 };
-  double   lw_   { 1 };
+ protected:
+  COptValT<CGnuPlotPosition> from_;
+  COptValT<CGnuPlotPosition> to_;
+  COptValT<CGnuPlotPosition> rto_;
+  COptValT<CGnuPlotPosition> center_;
+  COptValT<CSize2D>          size_;
+  COptValT<int>              fs_;
+  COptValT<double >          lw_;
+  mutable CBBox2D            bbox_;
 };
 
 //---

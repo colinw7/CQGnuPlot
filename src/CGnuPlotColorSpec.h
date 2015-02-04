@@ -22,6 +22,7 @@ class CGnuPlotColorSpec {
     c_    = c;
   }
 
+  bool isRGB     () const { return type_ == Type::RGB     ; }
   bool isVariable() const { return type_ == Type::VARIABLE; }
   bool isPalette () const { return type_ == Type::PALETTE ; }
   bool isIndex   () const { return type_ == Type::INDEX   ; }

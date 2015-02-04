@@ -299,6 +299,7 @@ class CGnuPlotPlot {
   void drawLabels        (const CBBox2D &bbox);
   void drawLines         ();
   void drawParallelAxes  (const CBBox2D &bbox);
+  void drawPieChart      (const CBBox2D &bbox);
   void drawPoints        ();
   void drawVectors       (const CBBox2D &bbox);
   void drawXYErrorBars   (const CBBox2D &bbox);

@@ -20,6 +20,12 @@ class CGnuPlotRenderer {
   void setWindow(CGnuPlotWindow *w) { window_ = w; }
   CGnuPlotWindow *window() const { return window_; }
 
+  int width() const { return width_; }
+  void setWidth(int w) { width_ = w; }
+
+  int height() const { return height_; }
+  void setHeight(int h) { height_ = h; }
+
   const CBBox2D &region() { return region_; }
   void setRegion(const CBBox2D &region) { region_ = region; }
 
@@ -74,6 +80,9 @@ class CGnuPlotRenderer {
   virtual void drawText(const CPoint2D &p, const std::string &text,
                         const CRGBA &c=CRGBA(0,0,0)) = 0;
 
+  virtual void drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2,
+                            const CRGBA &c=CRGBA(1,1,1)) = 0;
+
   //---
 
   void windowToPixel(const CPoint2D &w, CPoint2D &p);
@@ -106,6 +115,8 @@ class CGnuPlotRenderer {
 
  protected:
   CGnuPlotWindow *window_ { 0 };     // current window
+  int             width_ { 100 };    // pixel width
+  int             height_ { 100 };   // pixel height
   bool            mapping_ { true }; // mapping enabled
   CBBox2D         region_;           // window region (0,0) -> (1,1)
   CRange2D        margin_;           // margin for plot

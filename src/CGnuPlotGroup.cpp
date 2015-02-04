@@ -75,6 +75,17 @@ addObjects()
 
 void
 CGnuPlotGroup::
+getAnnotations(Annotations &annotations) const
+{
+  for (const auto &a : arrows    ()) annotations.push_back(a.get());
+  for (const auto &l : labels    ()) annotations.push_back(l.get());
+  for (const auto &r : rectangles()) annotations.push_back(r.get());
+  for (const auto &e : ellipses  ()) annotations.push_back(e.get());
+  for (const auto &p : polygons  ()) annotations.push_back(p.get());
+}
+
+void
+CGnuPlotGroup::
 fit()
 {
   COptReal xmin, ymin, xmax, ymax, xmin2, ymin2, xmax2, ymax2;
@@ -137,7 +148,12 @@ draw()
   else
     renderer->unsetRatio();
 
+  drawAnnotations(CGnuPlotLayer::BEHIND);
+  drawAnnotations(CGnuPlotLayer::BACK);
+
   //---
+
+  // draw plot
 
   drawTitle();
 
@@ -165,11 +181,12 @@ draw()
 
   //---
 
-  drawAnnotations();
+  drawKey();
 
   //---
 
-  drawKey();
+  // draw front
+  drawAnnotations(CGnuPlotLayer::FRONT);
 }
 
 CGnuPlotAxis *
@@ -608,6 +625,15 @@ drawKey()
 
   double textWidth = 0.0, textHeight = 0.0;
 
+  std::string header;
+
+  if (keyData().title().isValid()) {
+    header = keyData().title().getValue();
+
+    if (header != "")
+      textHeight += font_size*ph;
+  }
+
   for (auto plot : plots_) {
     std::string label = plot->keyTitle();
 
@@ -647,6 +673,13 @@ drawKey()
   }
 
   double y = y2 - by;
+
+  if (header != "") {
+    renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), CHALIGN_TYPE_CENTER, 0,
+                               CVALIGN_TYPE_TOP, 0, header, CRGBA(0,0,0));
+
+    y -= font_size*ph;
+  }
 
   for (auto plot : plots_) {
     PlotStyle                style     = plot->getStyle();
@@ -718,12 +751,21 @@ drawKey()
 
     //double lw = font->getStringWidth(label);
 
+    CRGBA tc = CRGBA(0,0,0);
+
+    if      (keyData().textColor().isVariable())
+      tc = lineStyle.color(tc);
+    else if (keyData().textColor().isIndex())
+      tc = CGnuPlotStyle::instance()->indexColor(keyData().textColor().index());
+    else if (keyData().textColor().isRGB())
+      tc = keyData().textColor().color();
+
     if (keyData().reverse())
       renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), CHALIGN_TYPE_LEFT, 0,
-                                 CVALIGN_TYPE_TOP, 0, label);
+                                 CVALIGN_TYPE_TOP, 0, label, tc);
     else
       renderer->drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
-                                 CVALIGN_TYPE_TOP, 0, label);
+                                 CVALIGN_TYPE_TOP, 0, label, tc);
 
     y -= font_size*ph;
   }
@@ -731,24 +773,29 @@ drawKey()
 
 void
 CGnuPlotGroup::
-drawAnnotations()
+drawAnnotations(CGnuPlotLayer layer)
 {
   CGnuPlotRenderer *renderer = app()->renderer();
 
   for (auto arrow : arrows_)
-    arrow->draw(renderer);
+    if (arrow->getLayer() == layer)
+      arrow->draw(renderer);
 
   for (auto label : labels_)
-    label->draw(renderer);
+    if (label->getLayer() == layer)
+      label->draw(renderer);
 
   for (auto rect : rects_)
-    rect->draw(renderer);
+    if (rect->getLayer() == layer)
+      rect->draw(renderer);
 
   for (auto ellipse : ellipses_)
-    ellipse->draw(renderer);
+    if (ellipse->getLayer() == layer)
+      ellipse->draw(renderer);
 
   for (auto poly : polygons_)
-    poly->draw(renderer);
+    if (poly->getLayer() == layer)
+      poly->draw(renderer);
 }
 
 std::string

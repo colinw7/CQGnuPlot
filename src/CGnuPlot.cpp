@@ -7,12 +7,13 @@
 #include <CGnuPlotStyle.h>
 #include <CGnuPlotSVGDevice.h>
 #include <CGnuPlotUtil.h>
+#include <CGnuPlotNameValues.h>
+#include <CGnuPlotPrefValue.h>
 
 #include <CUnixFile.h>
 #include <CParseLine.h>
 #include <CDir.h>
 #include <CReadLine.h>
-#include <CStrUniqueMatch.h>
 #include <CExpr.h>
 #include <CRGBName.h>
 #include <CMathGeom2D.h>
@@ -22,388 +23,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <climits>
-
-//------
-
-namespace CGnuPlotUtil {
-  void initNameValues(CStrUniqueMatch<CGnuPlot::CommandName> &nameValues) {
-    nameValues.addValues({{"bind"    , CGnuPlot::CommandName::BIND},
-                          {"call"    , CGnuPlot::CommandName::CALL},
-                          {"cd"      , CGnuPlot::CommandName::CD},
-                          {"clear"   , CGnuPlot::CommandName::CLEAR},
-                          {"do"      , CGnuPlot::CommandName::DO},
-                          {"evaluate", CGnuPlot::CommandName::EVALUATE},
-                          {"exit"    , CGnuPlot::CommandName::EXIT},
-                          {"fit"     , CGnuPlot::CommandName::FIT},
-                          {"help"    , CGnuPlot::CommandName::HELP},
-                          {"history" , CGnuPlot::CommandName::HISTORY},
-                          {"if"      , CGnuPlot::CommandName::IF},
-                          {"load"    , CGnuPlot::CommandName::LOAD},
-                          {"lower"   , CGnuPlot::CommandName::LOWER},
-                          {"pause"   , CGnuPlot::CommandName::PAUSE},
-                          {"plot"    , CGnuPlot::CommandName::PLOT},
-                          {"print"   , CGnuPlot::CommandName::PRINT},
-                          {"pwd"     , CGnuPlot::CommandName::PWD},
-                          {"quit"    , CGnuPlot::CommandName::QUIT},
-                          {"raise"   , CGnuPlot::CommandName::RAISE},
-                          {"replot"  , CGnuPlot::CommandName::REPLOT},
-                          {"refresh" , CGnuPlot::CommandName::REFRESH},
-                          {"reread"  , CGnuPlot::CommandName::REREAD},
-                          {"reset"   , CGnuPlot::CommandName::RESET},
-                          {"save"    , CGnuPlot::CommandName::SAVE},
-                          {"set"     , CGnuPlot::CommandName::SET},
-                          {"shell"   , CGnuPlot::CommandName::SHELL},
-                          {"show"    , CGnuPlot::CommandName::SHOW},
-                          {"splot"   , CGnuPlot::CommandName::SPLOT},
-                          {"stats"   , CGnuPlot::CommandName::STATS},
-                          {"system"  , CGnuPlot::CommandName::SYSTEM},
-                          {"test"    , CGnuPlot::CommandName::TEST},
-                          {"unset"   , CGnuPlot::CommandName::UNSET},
-                          {"update"  , CGnuPlot::CommandName::UPDATE},
-                          {"while"   , CGnuPlot::CommandName::WHILE}});
-  }
-
-  void initNameValues(CStrUniqueMatch<CGnuPlot::VariableName> &nameValues) {
-    nameValues.addValues({{"datafile"   , CGnuPlot::VariableName::DATAFILE},
-                          {"decimalsign", CGnuPlot::VariableName::DECIMALSIGN},
-                          {"encoding"   , CGnuPlot::VariableName::ENCODING},
-                          {"fit"        , CGnuPlot::VariableName::FIT},
-                          {"fontpath"   , CGnuPlot::VariableName::FONTPATH},
-                          {"history"    , CGnuPlot::VariableName::HISTORY},
-                          {"historysize", CGnuPlot::VariableName::HISTORYSIZE},
-                          {"loadpath"   , CGnuPlot::VariableName::LOADPATH},
-                          {"macros"     , CGnuPlot::VariableName::MACROS},
-                          {"mouse"      , CGnuPlot::VariableName::MOUSE},
-
-                          {"angles"     , CGnuPlot::VariableName::ANGLES},
-                          {"dummy"      , CGnuPlot::VariableName::DUMMY},
-                          {"mapping"    , CGnuPlot::VariableName::MAPPING},
-                          {"parametric" , CGnuPlot::VariableName::PARAMETRIC},
-                          {"polar"      , CGnuPlot::VariableName::POLAR},
-                          {"samples"    , CGnuPlot::VariableName::SAMPLES},
-                          {"zero"       , CGnuPlot::VariableName::ZERO},
-
-                          {"border"     , CGnuPlot::VariableName::BORDER},
-                          {"clip"       , CGnuPlot::VariableName::CLIP},
-                          {"logscale"   , CGnuPlot::VariableName::LOGSCALE},
-                          {"bmargin"    , CGnuPlot::VariableName::BMARGIN},
-                          {"lmargin"    , CGnuPlot::VariableName::LMARGIN},
-                          {"rmargin"    , CGnuPlot::VariableName::RMARGIN},
-                          {"tmargin"    , CGnuPlot::VariableName::TMARGIN},
-                          {"margins"    , CGnuPlot::VariableName::MARGINS},
-                          {"multiplot"  , CGnuPlot::VariableName::MULTIPLOT},
-                          {"offsets"    , CGnuPlot::VariableName::OFFSETS},
-                          {"origin"     , CGnuPlot::VariableName::ORIGIN},
-                          {"size"       , CGnuPlot::VariableName::SIZE},
-
-                          {"arrow"      , CGnuPlot::VariableName::ARROW},
-                          {"key"        , CGnuPlot::VariableName::KEY},
-                          {"label"      , CGnuPlot::VariableName::LABEL},
-                          {"object"     , CGnuPlot::VariableName::OBJECT},
-                          {"timestamp"  , CGnuPlot::VariableName::TIMESTAMP},
-                          {"title"      , CGnuPlot::VariableName::TITLE},
-
-                          {"style"      , CGnuPlot::VariableName::STYLE},
-                          {"dashtype"   , CGnuPlot::VariableName::DASHTYPE},
-
-                          {"bars"       , CGnuPlot::VariableName::BARS},
-                          {"boxwidth"   , CGnuPlot::VariableName::BOXWIDTH},
-                          {"pointsize"  , CGnuPlot::VariableName::POINTSIZE},
-
-                          {"autoscale"  , CGnuPlot::VariableName::AUTOSCALE},
-                          {"format"     , CGnuPlot::VariableName::FORMAT},
-                          {"grid"       , CGnuPlot::VariableName::GRID},
-                          {"xlabel"     , CGnuPlot::VariableName::XLABEL}, // z, cb
-                          {"ylabel"     , CGnuPlot::VariableName::YLABEL},
-                          {"x2label"    , CGnuPlot::VariableName::X2LABEL},
-                          {"y2label"    , CGnuPlot::VariableName::Y2LABEL},
-                          {"xrange"     , CGnuPlot::VariableName::XRANGE},
-                          {"x2range"    , CGnuPlot::VariableName::X2RANGE},
-                          {"yrange"     , CGnuPlot::VariableName::YRANGE},
-                          {"y2range"    , CGnuPlot::VariableName::Y2RANGE},
-                          {"zrange"     , CGnuPlot::VariableName::ZRANGE},
-                          {"cbrange"    , CGnuPlot::VariableName::CBRANGE},
-                          {"rrange"     , CGnuPlot::VariableName::RRANGE},
-                          {"trange"     , CGnuPlot::VariableName::TRANGE},
-                          {"tics"       , CGnuPlot::VariableName::TICS},
-                          {"xtics"      , CGnuPlot::VariableName::XTICS},
-                          {"ytics"      , CGnuPlot::VariableName::YTICS},
-                          {"x2tics"     , CGnuPlot::VariableName::X2TICS},
-                          {"y2tics"     , CGnuPlot::VariableName::Y2TICS},
-                          {"ztics"      , CGnuPlot::VariableName::ZTICS},
-                          {"cbtics"     , CGnuPlot::VariableName::CBTICS},
-                          {"rtics"      , CGnuPlot::VariableName::RTICS},
-                          {"mxtics"     , CGnuPlot::VariableName::MXTICS},
-                          {"mytics"     , CGnuPlot::VariableName::MYTICS},
-                          {"mztics"     , CGnuPlot::VariableName::MZTICS},
-                          {"mx2tics"    , CGnuPlot::VariableName::MX2TICS},
-                          {"my2tics"    , CGnuPlot::VariableName::MY2TICS},
-                          {"ticscale"   , CGnuPlot::VariableName::TICSCALE},
-                          {"zeroaxis"   , CGnuPlot::VariableName::ZEROAXIS},
-                          {"raxis"      , CGnuPlot::VariableName::RAXIS},
-                          {"paxis"      , CGnuPlot::VariableName::PAXIS},
-                          {"link"       , CGnuPlot::VariableName::LINK},
-
-                          {"locale"     , CGnuPlot::VariableName::LOCALE},
-                          {"timefmt"    , CGnuPlot::VariableName::TIMEFMT},
-                          {"xdata"      , CGnuPlot::VariableName::XDATA},
-                          {"ydata"      , CGnuPlot::VariableName::YDATA},
-                          {"x2data"     , CGnuPlot::VariableName::X2DATA},
-                          {"y2data"     , CGnuPlot::VariableName::Y2DATA},
-                          {"xdtics"     , CGnuPlot::VariableName::XDTICS},
-                          {"xmtics"     , CGnuPlot::VariableName::XMTICS},
-
-                          {"dgrid3d"    , CGnuPlot::VariableName::DGRID3D},
-                          {"hidden3d"   , CGnuPlot::VariableName::HIDDEN3D},
-                          {"isosamples" , CGnuPlot::VariableName::ISOSAMPLES},
-                          {"surface"    , CGnuPlot::VariableName::SURFACE},
-                          {"view"       , CGnuPlot::VariableName::VIEW},
-                          {"xyplane"    , CGnuPlot::VariableName::XYPLANE},
-
-                          {"cplane"     , CGnuPlot::VariableName::CPLANE},
-                          {"cntrparam"  , CGnuPlot::VariableName::CNTRPARAM},
-                          {"contour"    , CGnuPlot::VariableName::CONTOUR},
-
-                          {"colorbox"   , CGnuPlot::VariableName::COLORBOX},
-                          {"palette"    , CGnuPlot::VariableName::PALETTE},
-                          {"pm3d"       , CGnuPlot::VariableName::PM3D},
-
-                          {"output"     , CGnuPlot::VariableName::OUTPUT},
-                          {"print"      , CGnuPlot::VariableName::PRINT},
-                          {"table"      , CGnuPlot::VariableName::TABLE},
-                          {"terminal"   , CGnuPlot::VariableName::TERMINAL},
-                          {"termoption" , CGnuPlot::VariableName::TERMOPTION},
-
-                          {"variables"  , CGnuPlot::VariableName::VARIABLES},
-                          {"functions"  , CGnuPlot::VariableName::FUNCTIONS},
-                          {"version"    , CGnuPlot::VariableName::VERSION},
-
-                          {"debug"      , CGnuPlot::VariableName::DEBUG},
-                          {"edebug"     , CGnuPlot::VariableName::EDEBUG}});
-  }
-
-  void initNameValues(CStrUniqueMatch<CGnuPlot::DataFileVar> &nameValues) {
-    nameValues.addValues({{"separator"   , CGnuPlot::DataFileVar::SEPARATOR},
-                          {"commentschar", CGnuPlot::DataFileVar::COMMENTS_CHAR},
-                          {"missing"     , CGnuPlot::DataFileVar::MISSING}});
-  }
-
-  void initNameValues(CStrUniqueMatch<CGnuPlot::StyleVar> &nameValues) {
-    nameValues.addValues({{"data"     , CGnuPlot::StyleVar::DATA},
-                          {"function" , CGnuPlot::StyleVar::FUNCTION},
-                          {"increment", CGnuPlot::StyleVar::INCREMENT},
-                          {"line"     , CGnuPlot::StyleVar::LINE},
-                          {"fill"     , CGnuPlot::StyleVar::FILL},
-                          {"boxplot"  , CGnuPlot::StyleVar::BOXPLOT},
-                          {"histogram", CGnuPlot::StyleVar::HISTOGRAM},
-                          {"rectangle", CGnuPlot::StyleVar::RECTANGLE},
-                          {"circle"   , CGnuPlot::StyleVar::CIRCLE},
-                          {"ellipse"  , CGnuPlot::StyleVar::ELLIPSE},
-                          {"arrow"    , CGnuPlot::StyleVar::ARROW}});
-  }
-
-  void initNameValues(CStrUniqueMatch<CGnuPlot::PlotVar> &nameValues) {
-    nameValues.addValues({{"index"      , CGnuPlot::PlotVar::INDEX},
-                          {"every"      , CGnuPlot::PlotVar::EVERY},
-                          {"using"      , CGnuPlot::PlotVar::USING},
-                          {"axes"       , CGnuPlot::PlotVar::AXES},
-                          {"title"      , CGnuPlot::PlotVar::TITLE},
-                          {"notitle"    , CGnuPlot::PlotVar::NOTITLE},
-                          {"smooth"     , CGnuPlot::PlotVar::SMOOTH},
-                          {"w"          , CGnuPlot::PlotVar::WITH},
-                          {"with"       , CGnuPlot::PlotVar::WITH},
-                          {"linetype"   , CGnuPlot::PlotVar::LINETYPE},
-                          {"lt"         , CGnuPlot::PlotVar::LINETYPE},
-                          {"linewidth"  , CGnuPlot::PlotVar::LINEWIDTH},
-                          {"lw"         , CGnuPlot::PlotVar::LINEWIDTH},
-                          {"fillstyle"  , CGnuPlot::PlotVar::FILLSTYLE},
-                          {"fs"         , CGnuPlot::PlotVar::FILLSTYLE},
-                          {"dashtype"   , CGnuPlot::PlotVar::DASHTYPE},
-                          {"dt"         , CGnuPlot::PlotVar::DASHTYPE},
-                          {"pointsize"  , CGnuPlot::PlotVar::POINTSIZE},
-                          {"arrowstyle" , CGnuPlot::PlotVar::ARROWSTYLE},
-                          {"as"         , CGnuPlot::PlotVar::ARROWSTYLE},
-                          {"heads"      , CGnuPlot::PlotVar::HEADS},
-                          {"binary"     , CGnuPlot::PlotVar::BINARY},
-                          {"matrix"     , CGnuPlot::PlotVar::MATRIX},
-                          {"array"      , CGnuPlot::PlotVar::ARRAY},
-                          {"skip"       , CGnuPlot::PlotVar::SKIP},
-                          {"flip"       , CGnuPlot::PlotVar::FLIP},
-                          {"flipx"      , CGnuPlot::PlotVar::FLIPX},
-                          {"flipy"      , CGnuPlot::PlotVar::FLIPY},
-                          {"flipz"      , CGnuPlot::PlotVar::FLIPZ},
-                          {"format"     , CGnuPlot::PlotVar::FORMAT},
-                          {"endian"     , CGnuPlot::PlotVar::ENDIAN},
-                          {"filetype"   , CGnuPlot::PlotVar::FILETYPE},
-                          {"scan"       , CGnuPlot::PlotVar::SCAN},
-                          {"transpose"  , CGnuPlot::PlotVar::TRANSPOSE},
-                          {"origin"     , CGnuPlot::PlotVar::ORIGIN},
-                          {"center"     , CGnuPlot::PlotVar::CENTER},
-                          {"dx"         , CGnuPlot::PlotVar::DX},
-                          {"dy"         , CGnuPlot::PlotVar::DY},
-                          {"dz"         , CGnuPlot::PlotVar::DZ},
-                          {"rotation"   , CGnuPlot::PlotVar::ROTATION},
-                          {"rotate"     , CGnuPlot::PlotVar::ROTATION},
-                          {"whiskerbars", CGnuPlot::PlotVar::WHISKERBARS}});
-  }
-
-  void initNameValues(CStrUniqueMatch<CGnuPlot::PlotStyle> &nameValues) {
-    nameValues.addValues({{"lines"         , CGnuPlot::PlotStyle::LINES},
-                          {"l"             , CGnuPlot::PlotStyle::LINES},
-                          {"line"          , CGnuPlot::PlotStyle::LINES},
-                          {"points"        , CGnuPlot::PlotStyle::POINTS},
-                          {"p"             , CGnuPlot::PlotStyle::POINTS},
-                          {"linespoints"   , CGnuPlot::PlotStyle::LINES_POINTS},
-                          {"dots"          , CGnuPlot::PlotStyle::DOTS},
-                          {"impulses"      , CGnuPlot::PlotStyle::IMPULSES},
-                          {"parallelaxes"  , CGnuPlot::PlotStyle::PARALLELAXES},
-                          {"labels"        , CGnuPlot::PlotStyle::LABELS},
-                          {"steps"         , CGnuPlot::PlotStyle::STEPS},
-                          {"fsteps"        , CGnuPlot::PlotStyle::FSTEPS},
-                          {"histeps"       , CGnuPlot::PlotStyle::HISTEPS},
-                          {"fillsteps"     , CGnuPlot::PlotStyle::FILLSTEPS},
-                          {"errorbars"     , CGnuPlot::PlotStyle::ERRORBARS},
-                          {"errorlines"    , CGnuPlot::PlotStyle::ERRORLINES},
-                          {"financebars"   , CGnuPlot::PlotStyle::FINANCEBARS},
-                          {"xerrorbars"    , CGnuPlot::PlotStyle::XERRORBARS},
-                          {"xerrorlines"   , CGnuPlot::PlotStyle::XERRORLINES},
-                          {"xyerrorbars"   , CGnuPlot::PlotStyle::XYERRORBARS},
-                          {"xyerrorlines"  , CGnuPlot::PlotStyle::XYERRORLINES},
-                          {"yerrorbars"    , CGnuPlot::PlotStyle::YERRORBARS},
-                          {"yerrorlines"   , CGnuPlot::PlotStyle::YERRORLINES},
-                          {"vectors"       , CGnuPlot::PlotStyle::VECTORS},
-                          {"boxes"         , CGnuPlot::PlotStyle::BOXES},
-                          {"boxerrorbars"  , CGnuPlot::PlotStyle::BOXERRORBARS},
-                          {"boxxyerrorbars", CGnuPlot::PlotStyle::BOXXYERRORBARS},
-                          {"boxplot"       , CGnuPlot::PlotStyle::BOXPLOT},
-                          {"candlesticks"  , CGnuPlot::PlotStyle::CANDLESTICKS},
-                          {"filledcurves"  , CGnuPlot::PlotStyle::FILLEDCURVES},
-                          {"histograms"    , CGnuPlot::PlotStyle::HISTOGRAMS},
-                          {"image"         , CGnuPlot::PlotStyle::IMAGE},
-                          {"rgbimage"      , CGnuPlot::PlotStyle::RGBIMAGE},
-                          {"rgbalpha"      , CGnuPlot::PlotStyle::RGBALPHA},
-                          {"circles"       , CGnuPlot::PlotStyle::CIRCLES},
-                          {"ellipses"      , CGnuPlot::PlotStyle::ELLIPSES},
-                          {"pm3d"          , CGnuPlot::PlotStyle::PM3D}});
-  }
-
-  void initNameValues(CStrUniqueMatch<CGnuPlot::Smooth> &nameValues) {
-    nameValues.addValues({{"unique"   , CGnuPlot::Smooth::UNIQUE},
-                          {"frequency", CGnuPlot::Smooth::FREQUENCY},
-                          {"bezier"   , CGnuPlot::Smooth::BEZIER},
-                          {"sbezier"  , CGnuPlot::Smooth::SBEZIER},
-                          {"csplines" , CGnuPlot::Smooth::CSPLINES},
-                          {"acsplines", CGnuPlot::Smooth::ACSPLINES}});
-  }
-
-  void initNameValues(CStrUniqueMatch<CGnuPlotTypes::FillType> &nameValues) {
-    nameValues.addValues({{"empty"  , CGnuPlotTypes::FillType::EMPTY},
-                          {"solid"  , CGnuPlotTypes::FillType::SOLID},
-                          {"pattern", CGnuPlotTypes::FillType::PATTERN}});
-  }
-
-  void initNameValues(CStrUniqueMatch<CGnuPlot::HistogramStyle> &nameValues) {
-    nameValues.addValues({{"clustered"    , CGnuPlot::HistogramStyle::CLUSTERED},
-                          {"errorbars"    , CGnuPlot::HistogramStyle::ERRORBARS},
-                          {"rowstacked"   , CGnuPlot::HistogramStyle::ROWSTACKED},
-                          {"columnstacked", CGnuPlot::HistogramStyle::COLUMNSTACKED}});
-  }
-
-  void initNameValues(CStrUniqueMatch<CGnuPlot::AngleType> &nameValues) {
-    nameValues.addValues({{"radians", CGnuPlot::AngleType::RADIANS},
-                          {"degrees", CGnuPlot::AngleType::DEGREES}});
-  }
-
-  void initNameValues(CStrUniqueMatch<CGnuPlotTypes::CoordSys> &nameValues) {
-    nameValues.addValues({{"first"  , CGnuPlotTypes::CoordSys::FIRST    },
-                          {"second" , CGnuPlotTypes::CoordSys::SECOND   },
-                          {"graph"  , CGnuPlotTypes::CoordSys::GRAPH    },
-                          {"screen" , CGnuPlotTypes::CoordSys::SCREEN   },
-                          {"degrees", CGnuPlotTypes::CoordSys::CHARACTER}});
-  }
-
-  //------
-
-  template<typename T>
-  CStrUniqueMatch<T> &getNameValues() {
-    static CStrUniqueMatch<T> nameValues;
-
-    if (! nameValues.numValues())
-      initNameValues(nameValues);
-
-    return nameValues;
-  }
-
-  template<typename T>
-  bool stringToValue(const std::string &str, T &value) {
-    return getNameValues<T>().match(str, value);
-  }
-
-  template<typename T>
-  bool stringToValueWithErr(const std::string &str, T &value, const std::string &err) {
-    if (! stringToValue(str, value)) {
-      std::cerr << "Invalid " << err << " '" << str << "'" << std::endl;
-      return false;
-    }
-    return true;
-  }
-
-  template<typename T>
-  std::string valueToString(const T &value) {
-    return getNameValues<T>().lookup(value);
-  }
-
-  template<typename T>
-  std::string valueStrings() {
-    std::vector<std::string> strs;
-
-    getNameValues<T>().values(strs);
-
-    std::string cstr;
-
-    for (const auto &str : strs) {
-      if (! cstr.empty()) str += ", ";
-
-      cstr += "'" + str + "'";
-    }
-
-    return cstr;
-  }
-}
-
-//------
-
-template<typename T>
-class CGnuPlotPrefValue : public CGnuPlot::PrefValueBase {
- public:
-  CGnuPlotPrefValue(const std::string &name, const T &init) :
-   name_(name), value_(init), init_(init) {
-  }
-
-  const T &get() const { return value_; }
-
-  void set(const T &value) { value_ = value; }
-
-  void set(const std::string &str) {
-    T value;
-
-    if (CGnuPlotUtil::stringToValueWithErr<T>(str, value, name_))
-      set(value);
-  }
-
-  void reset() {
-    value_ = init_;
-  }
-
-  void print(std::ostream &os) const {
-    os << name_ << " is " << CGnuPlotUtil::valueToString<T>(value_) << std::endl;
-  }
-
- private:
-  std::string name_;
-  T           value_;
-  T           init_;
-};
 
 //------
 
@@ -748,7 +367,14 @@ parseStatement(int &i, const Statements &statements)
     }
     // variable assignment
     else if (line.skipSpaceAndChar('=')) {
-      CExprValueP value = CExprInst->evaluateExpression(line.substr());
+      std::string expr = line.substr();
+
+      auto p = expr.find('#');
+
+      if (p != std::string::npos)
+        expr = expr.substr(0, p);
+
+      CExprValueP value = evaluateExpression(expr);
 
       if (! value.isValid())
         return false;
@@ -765,7 +391,7 @@ parseStatement(int &i, const Statements &statements)
 
   CommandName commandName;
 
-  if (! CGnuPlotUtil::stringToValue(identifier, commandName))
+  if (! CStrUniqueMatch::stringToValue(identifier, commandName))
     commandName = CommandName::NONE;
 
   // process command
@@ -1118,7 +744,9 @@ plotCmd(const std::string &args)
     //  "<filename>" | <expression>
     PlotStyle style(PlotStyle::POINTS);
 
-    std::string filename, function;
+    std::string filename;
+
+    std::vector<std::string> functions;
 
     line.skipSpace();
 
@@ -1156,8 +784,12 @@ plotCmd(const std::string &args)
     }
     else {
       // function
+      std::string function;
+
       if (! parseFunction(line, function))
         return;
+
+      functions.push_back(function);
 
       if (parametric_) {
         if (line.skipSpaceAndChar(',')) {
@@ -1166,12 +798,14 @@ plotCmd(const std::string &args)
           if (! parseFunction(line, function1))
            return;
 
-          function += "," + function1;
+          functions.push_back(function1);
         }
       }
 
-      if (isDebug())
-        std::cerr << "Function: " << function << std::endl;
+      if (isDebug()) {
+        for (const auto &f : functions)
+          std::cerr << "Function: " << f << std::endl;
+      }
 
       style = getFunctionStyle();
     }
@@ -1200,7 +834,7 @@ plotCmd(const std::string &args)
 
       PlotVar plotVar;
 
-      if (! CGnuPlotUtil::stringToValueWithErr(option, plotVar, "plot var"))
+      if (! CStrUniqueMatch::stringToValueWithErr(option, plotVar, "plot var"))
         break;
 
       line.skipSpace();
@@ -1343,9 +977,9 @@ plotCmd(const std::string &args)
       else if (plotVar == PlotVar::WITH) {
         std::string withStr = readNonSpaceNonComma(line);
 
-        if (CGnuPlotUtil::stringToValueWithErr(withStr, style, "plot style")) {
+        if (CStrUniqueMatch::stringToValueWithErr(withStr, style, "plot style")) {
           if (isDebug())
-            std::cerr << "with " << CGnuPlotUtil::valueToString(style) << std::endl;
+            std::cerr << "with " << CStrUniqueMatch::valueToString(style) << std::endl;
 
           if (style == CGnuPlot::PlotStyle::FILLEDCURVES) {
             int         pos = line.pos();
@@ -1545,7 +1179,7 @@ plotCmd(const std::string &args)
 
         Smooth smooth;
 
-        if (CGnuPlotUtil::stringToValueWithErr(smoothStr, smooth, "smooth type"))
+        if (CStrUniqueMatch::stringToValueWithErr(smoothStr, smooth, "smooth type"))
           setSmooth(smooth);
 
         line.skipSpace();
@@ -1751,8 +1385,8 @@ plotCmd(const std::string &args)
       else
         plots1 = addFile2D(group, filename, style, usingCols, index, every);
     }
-    else if (! function.empty()) {
-      CGnuPlotPlot *plot = addFunction2D(group, function, style);
+    else if (! functions.empty()) {
+      CGnuPlotPlot *plot = addFunction2D(group, functions, style);
 
       if (plot)
         plots1.push_back(plot);
@@ -1823,9 +1457,9 @@ CGnuPlot::
 plotForCmd(const std::string &var, const std::string &start, const std::string &end,
            const std::string &inc, const std::string &args)
 {
-  CExprValuePtr value1 = CExprInst->evaluateExpression(start);
-  CExprValuePtr value2 = CExprInst->evaluateExpression(end);
-  CExprValuePtr value3 = (inc != "" ? CExprInst->evaluateExpression(inc) : CExprValuePtr());
+  CExprValuePtr value1 = evaluateExpression(start);
+  CExprValuePtr value2 = evaluateExpression(end);
+  CExprValuePtr value3 = (inc != "" ? evaluateExpression(inc) : CExprValuePtr());
 
   long i1 = 0, i2 = 1, i3 = 1;
 
@@ -2115,7 +1749,7 @@ decodeRange(const std::vector<std::string> &fields, AxisData &axis)
     }
     else {
       if (field != "*") {
-        CExprValueP evalue = CExprInst->evaluateExpression(field);
+        CExprValueP evalue = evaluateExpression(field);
 
         double r;
 
@@ -2270,7 +1904,7 @@ splotCmd(const std::string &args)
 
       PlotVar plotVar;
 
-      if (! CGnuPlotUtil::stringToValueWithErr(option, plotVar, "plot var"))
+      if (! CStrUniqueMatch::stringToValueWithErr(option, plotVar, "plot var"))
         break;
 
       line.skipSpace();
@@ -2418,9 +2052,9 @@ splotCmd(const std::string &args)
       else if (plotVar == PlotVar::WITH) {
         std::string withStr = readNonSpaceNonComma(line);
 
-        if (CGnuPlotUtil::stringToValueWithErr(withStr, style, "plot style")) {
+        if (CStrUniqueMatch::stringToValueWithErr(withStr, style, "plot style")) {
           if (isDebug())
-            std::cerr << "with " << CGnuPlotUtil::valueToString(style) << std::endl;
+            std::cerr << "with " << CStrUniqueMatch::valueToString(style) << std::endl;
         }
 
         line.skipSpace();
@@ -2537,7 +2171,7 @@ splotCmd(const std::string &args)
 
         Smooth smooth;
 
-        if (CGnuPlotUtil::stringToValueWithErr(smoothStr, smooth, "smooth type"))
+        if (CStrUniqueMatch::stringToValueWithErr(smoothStr, smooth, "smooth type"))
           setSmooth(smooth);
 
         line.skipSpace();
@@ -2623,7 +2257,7 @@ setCmd(const std::string &args)
 
   VariableName var;
 
-  if (! CGnuPlotUtil::stringToValue(option, var))
+  if (! CStrUniqueMatch::stringToValue(option, var))
     var = VariableName::NONE;
 
   // --- Configuration ---
@@ -2639,7 +2273,7 @@ setCmd(const std::string &args)
 
     DataFileVar var1;
 
-    if (! CGnuPlotUtil::stringToValueWithErr(varStr, var1, "data file type"))
+    if (! CStrUniqueMatch::stringToValueWithErr(varStr, var1, "data file type"))
       return;
 
     line.skipSpace();
@@ -2819,6 +2453,12 @@ setCmd(const std::string &args)
         if (! parseInteger(line, i))
           axesData_.borderType = i;
       }
+      else {
+        int i;
+
+        if (getIntegerVariable(arg, i))
+          axesData_.borders = i;
+      }
 
       arg = readNonSpace(line);
     }
@@ -2933,6 +2573,8 @@ setCmd(const std::string &args)
         std::string xStr = readNonSpaceNonComma(line);
         std::string yStr = readNonSpace(line);
       }
+      else
+        std::cerr << "Invalid arg " << arg << std::endl;
 
       arg = readNonSpace(line);
     }
@@ -3035,10 +2677,10 @@ setCmd(const std::string &args)
     }
 
     if (arg == "from") {
-      Position p;
+      CGnuPlotPosition p;
 
       if (parsePosition(line, p))
-        arrow->setFrom(p.p);
+        arrow->setFrom(p.point());
 
       arg = readNonSpace(line);
 
@@ -3047,7 +2689,7 @@ setCmd(const std::string &args)
           arrow->setRelative(true);
 
         if (parsePosition(line, p))
-          arrow->setTo(p.p);
+          arrow->setTo(p.point());
 
         arg = readNonSpace(line);
       }
@@ -3212,7 +2854,8 @@ setCmd(const std::string &args)
       else if (arg == "title") {
         std::string titleStr;
 
-        parseString(line, titleStr);
+        if (parseString(line, titleStr))
+          keyData_.setTitle(titleStr);
       }
       else if (arg == "enhanced") { }
       else if (arg == "noenhanced") { }
@@ -3222,7 +2865,16 @@ setCmd(const std::string &args)
         parseString(line, fontStr);
       }
       else if (arg == "textcolor") {
-        std::string colorStr = readNonSpace(line);
+        CGnuPlotColorSpec c;
+
+        if (parseColorSpec(line, c))
+          keyData_.setTextColor(c);
+      }
+      else if (arg == "linetype" || arg == "lt") {
+        int lt;
+
+        if (! parseInteger(line, lt))
+          keyData_.setLineType(lt);
       }
       else if (arg == "box") {
         keyData_.setBox(true);
@@ -3285,10 +2937,10 @@ setCmd(const std::string &args)
 
     while (arg != "") {
       if      (arg == "at") {
-        Position p;
+        CGnuPlotPosition p;
 
         if (parsePosition(line, p))
-          label->setPos(p.p);
+          label->setPos(p.point());
       }
       else if (arg == "left" || "center" || arg == "right") {
         label->setAlign(arg != "left" ?
@@ -3365,16 +3017,13 @@ setCmd(const std::string &args)
 
     std::string arg = readNonSpace(line);
 
-    ObjectType type;
+    CGnuPlotTypes::ObjectType type;
 
-    if (CStrUniqueMatch<ObjectType>({{"circle"   , ObjectType::CIRCLE   },
-                                     {"ellipse"  , ObjectType::ELLIPSE  },
-                                     {"polygon"  , ObjectType::POLYGON  },
-                                     {"rectangle", ObjectType::RECTANGLE}}).match(arg, type)) {
+    if (CStrUniqueMatch::stringToValue(arg, type)) {
       // set object <index> circle {at|center} <position> size <radius>
       //            {arc [<begin>:<end>]}
       //            {<other-object-properties>}
-      if      (type == ObjectType::CIRCLE) {
+      if      (type == CGnuPlotTypes::ObjectType::CIRCLE) {
         CGnuPlotEllipseP ellipse = CGnuPlotEllipseP(createEllipse());
 
         CSize2D size(1,1);
@@ -3383,10 +3032,10 @@ setCmd(const std::string &args)
 
         while (arg != "") {
           if      (arg == "at" || arg == "circle") {
-            Position p;
+            CGnuPlotPosition p;
 
             if (parsePosition(line, p))
-              ellipse->setCenter(p.p);
+              ellipse->setCenter(p.point());
           }
           else if (arg == "size") {
             arg = readNonSpace(line);
@@ -3405,8 +3054,10 @@ setCmd(const std::string &args)
             CGnuPlotColorSpec c;
 
             if (parseColorSpec(line, c))
-              ellipse->setFillColor(c.color());
+              ellipse->setFillColor(c);
           }
+          else
+            std::cerr << "Invalid arg " << arg << std::endl;
 
           arg = readNonSpace(line);
         }
@@ -3416,7 +3067,7 @@ setCmd(const std::string &args)
       // set object <index> ellipse {at|center} <position> size <w>,<h>
       //            {angle <orientation>} {units xy|xx|yy}
       //            {<other-object-properties>}
-      else if (type == ObjectType::ELLIPSE) {
+      else if (type == CGnuPlotTypes::ObjectType::ELLIPSE) {
         CGnuPlotEllipseP ellipse = CGnuPlotEllipseP(createEllipse());
 
         CSize2D size(1,1);
@@ -3425,10 +3076,10 @@ setCmd(const std::string &args)
 
         while (arg != "") {
           if      (arg == "at" || arg == "center") {
-            Position p;
+            CGnuPlotPosition p;
 
             if (parsePosition(line, p))
-              ellipse->setCenter(p.p);
+              ellipse->setCenter(p.point());
           }
           else if (arg == "size") {
             if (! parseSize(line, size))
@@ -3447,8 +3098,10 @@ setCmd(const std::string &args)
             CGnuPlotColorSpec c;
 
             if (parseColorSpec(line, c))
-              ellipse->setFillColor(c.color());
+              ellipse->setFillColor(c);
           }
+          else
+            std::cerr << "Invalid arg " << arg << std::endl;
 
           arg = readNonSpace(line);
         }
@@ -3458,10 +3111,10 @@ setCmd(const std::string &args)
       // set object <index> polygon
       //            from <position> to <position> ... {to <position>} |
       //            from <position> rto <position> ... {rto <position>}
-      else if (type == ObjectType::POLYGON) {
+      else if (type == CGnuPlotTypes::ObjectType::POLYGON) {
         CGnuPlotPolygonP poly = CGnuPlotPolygonP(createPolygon());
 
-        Position from, to;
+        CGnuPlotPosition from, to;
 
         arg = readNonSpace(line);
 
@@ -3470,20 +3123,22 @@ setCmd(const std::string &args)
             if (! parsePosition(line, from))
               return;
 
-            poly->addPoint(from.p);
+            poly->addPoint(from.point());
           }
           else if (arg == "to") {
             if (! parsePosition(line, to))
               return;
 
-            poly->addPoint(to.p);
+            poly->addPoint(to.point());
           }
           else if (arg == "fillcolor" || arg == "fc") {
             CGnuPlotColorSpec c;
 
             if (parseColorSpec(line, c))
-              poly->setFillColor(c.color());
+              poly->setFillColor(c);
           }
+          else
+            std::cerr << "Invalid arg " << arg << std::endl;
 
           arg = readNonSpace(line);
         }
@@ -3493,51 +3148,46 @@ setCmd(const std::string &args)
       // set object <index> rectangle
       //            {from <position> {to|rto} <position> |
       //            center|at <position> size <w>,<h> |
-      else if (type == ObjectType::RECTANGLE) {
+      else if (type == CGnuPlotTypes::ObjectType::RECTANGLE) {
         CGnuPlotRectangleP rect = CGnuPlotRectangleP(createRectangle());
 
-        COptValT<Position> from, to, rto;
-        COptValT<Position> center;
-        COptValT<CSize2D>  size;
-
-        Position p;
+        CGnuPlotPosition p;
+        CSize2D          size;
 
         arg = readNonSpace(line);
 
         while (arg != "") {
           if      (arg == "from") {
             if (parsePosition(line, p))
-              from = p;
+              rect->setFrom(p);
           }
           else if (arg == "to") {
             if (parsePosition(line, p))
-              to = p;
+              rect->setTo(p);
           }
           else if (arg == "rto") {
             if (parsePosition(line, p))
-              rto = p;
+              rect->setRTo(p);
           }
           else if (arg == "center" || arg == "at") {
             if (parsePosition(line, p))
-              center = p;
+              rect->setCenter(p);
           }
           else if (arg == "size") {
-            CSize2D size1;
-
-            if (parseSize(line, size1))
-              size = size1;
+            if (parseSize(line, size))
+              rect->setSize(size);
           }
           else if (arg == "fillcolor" || arg == "fc") {
             CGnuPlotColorSpec c;
 
             if (parseColorSpec(line, c))
-              rect->setFillColor(c.color());
+              rect->setFillColor(c);
           }
           else if (arg == "fillstyle" || arg == "fs") {
-            int i;
+            int fs;
 
-            if (parseInteger(line, i))
-              rect->setFillStyle(i);
+            if (parseInteger(line, fs))
+              rect->setFillStyle(fs);
           }
           else if (arg == "linewidth" || arg == "lw") {
             double lw = 1.0;
@@ -3545,33 +3195,14 @@ setCmd(const std::string &args)
             if (parseReal(line, lw))
               rect->setLineWidth(lw);
           }
+          else if (arg == "behind") {
+            rect->setLayer(CGnuPlotLayer::BEHIND);
+          }
+          else
+            std::cerr << "Invalid arg " << arg << std::endl;
 
           arg = readNonSpace(line);
         }
-
-        CBBox2D bbox(0,0,1,1);
-
-        if      (from.isValid()) {
-          if      (to.isValid())
-            bbox = CBBox2D(from.getValue().p, to.getValue().p);
-          else if (rto.isValid())
-            bbox = CBBox2D(from.getValue().p, from.getValue().p + rto.getValue().p);
-          else if (size.isValid()) {
-            CPoint2D s(size.getValue().width, size.getValue().height);
-
-            bbox = CBBox2D(from.getValue().p, from.getValue().p + s);
-          }
-        }
-        else if (center.isValid()) {
-          if (size.isValid()) {
-            CPoint2D s(size.getValue().width, size.getValue().height);
-
-            bbox = CBBox2D(center.getValue().p - s/2, center.getValue().p + s/2);
-          }
-        }
-
-        rect->setFrom(bbox.getMin());
-        rect->setTo  (bbox.getMax());
 
         rects_.push_back(rect);
       }
@@ -3617,7 +3248,7 @@ setCmd(const std::string &args)
         title_.enhanced = (arg == "enhanced");
       }
       else
-        break;
+        std::cerr << "Invalid arg " << arg << std::endl;
 
       arg = readNonSpace(line);
     }
@@ -3629,7 +3260,7 @@ setCmd(const std::string &args)
 
     StyleVar var1;
 
-    if (! CGnuPlotUtil::stringToValueWithErr(var1Str, var1, "style type"))
+    if (! CStrUniqueMatch::stringToValueWithErr(var1Str, var1, "style type"))
       return;
 
     line.skipSpace();
@@ -3640,7 +3271,7 @@ setCmd(const std::string &args)
 
       PlotStyle style(PlotStyle::NONE);
 
-      if (CGnuPlotUtil::stringToValueWithErr(styleStr, style, "plot style"))
+      if (CStrUniqueMatch::stringToValueWithErr(styleStr, style, "plot style"))
         setDataStyle(style);
     }
     // set style function {style}
@@ -3649,7 +3280,7 @@ setCmd(const std::string &args)
 
       PlotStyle style(PlotStyle::NONE);
 
-      if (CGnuPlotUtil::stringToValueWithErr(styleStr, style, "plot style"))
+      if (CStrUniqueMatch::stringToValueWithErr(styleStr, style, "plot style"))
         setFunctionStyle(style);
     }
     // set style increment { user | default }
@@ -3767,7 +3398,7 @@ setCmd(const std::string &args)
 
       CGnuPlotTypes::FillType fillType;
 
-      if (CGnuPlotUtil::stringToValueWithErr(styleStr, fillType, "fill type"))
+      if (CStrUniqueMatch::stringToValueWithErr(styleStr, fillType, "fill type"))
         fillStyle_.setStyle(fillType);
 
       line.skipSpace();
@@ -3832,7 +3463,7 @@ setCmd(const std::string &args)
 
       HistogramStyle histogramStyle;
 
-      if (CGnuPlotUtil::stringToValueWithErr(styleStr, histogramStyle, "histogram style"))
+      if (CStrUniqueMatch::stringToValueWithErr(styleStr, histogramStyle, "histogram style"))
         setHistogramStyle(histogramStyle);
 
       if (histogramStyle == HistogramStyle::CLUSTERED ||
@@ -3956,6 +3587,8 @@ setCmd(const std::string &args)
           double a;
           parseReal(line, a);
         }
+        else
+          std::cerr << "Invalid arg " << arg << std::endl;
 
         arg = readNonSpace(line);
       }
@@ -4012,6 +3645,8 @@ setCmd(const std::string &args)
         else if (arg == "sorted" || arg == "unsorted") {
           boxPlot_.sorted = (arg == "sorted");
         }
+        else
+          std::cerr << "Invalid arg " << arg << std::endl;
 
         arg = readNonSpace(line);
       }
@@ -4472,6 +4107,8 @@ setCmd(const std::string &args)
           }
         }
       }
+      else
+        std::cerr << "Invalid arg " << arg << std::endl;
 
       arg = readNonSpace(line);
     }
@@ -4544,6 +4181,8 @@ setCmd(const std::string &args)
         if (parseColorSpec(line, c))
           setBackgroundColor(c.color());
       }
+      else
+        std::cerr << "Invalid arg " << arg << std::endl;
 
       arg = readNonSpace(line);
     }
@@ -4551,7 +4190,7 @@ setCmd(const std::string &args)
   // set termoption [no]enhanced
   // set termoption font "<name> [, <size:i> ]"
   else if (var == VariableName::TERMOPTION) {
-    std::cerr << "Unhandled option '" << option << "'" << std::endl;
+    std::cerr << "Unhandled term option '" << option << "'" << std::endl;
   }
   else if (var == VariableName::DEBUG) {
     setDebug(true);
@@ -4569,9 +4208,9 @@ CGnuPlot::
 setForCmd(const std::string &var, const std::string &start, const std::string &end,
           const std::string &inc, const std::string &args)
 {
-  CExprValuePtr value1 = CExprInst->evaluateExpression(start);
-  CExprValuePtr value2 = CExprInst->evaluateExpression(end);
-  CExprValuePtr value3 = (inc != "" ? CExprInst->evaluateExpression(inc) : CExprValuePtr());
+  CExprValuePtr value1 = evaluateExpression(start);
+  CExprValuePtr value2 = evaluateExpression(end);
+  CExprValuePtr value3 = (inc != "" ? evaluateExpression(inc) : CExprValuePtr());
 
   long i1 = 0, i2 = 1, i3 = 1;
 
@@ -4621,7 +4260,7 @@ showCmd(const std::string &args)
 
   VariableName var;
 
-  if (! CGnuPlotUtil::stringToValue(args1[0], var))
+  if (! CStrUniqueMatch::stringToValue(args1[0], var))
     var = VariableName::NONE;
 
   if      (var == VariableName::VARIABLES) {
@@ -4674,16 +4313,21 @@ showCmd(const std::string &args)
       std::cerr << "Comments chars are \"" << getCommentChars() << "\"" << std::endl;
     }
   }
+  // show title
   else if (var == VariableName::TITLE) {
     std::cerr << "title is \"" << title_.str << "\", " <<
                  "offset at ((character units) 0, 0, 0)" << std::endl;
   }
+  // show arrow
   else if (var == VariableName::ARROW) {
     for (const auto &arrow : arrows_) {
        std::cerr << "arrow " << arrow->getInd() << ",";
        arrow->print(std::cerr);
        std::cerr << std::endl;
     }
+  }
+  // show object
+  else if (var == VariableName::OBJECT) {
   }
   else if (var == VariableName::LABEL) {
     for (const auto &label : labels_) {
@@ -4701,7 +4345,7 @@ showCmd(const std::string &args)
 
     if      (show.empty() || show.find("data") != show.end()) {
       std::cerr << "Data are plotted with " <<
-        CGnuPlotUtil::valueToString<PlotStyle>(getDataStyle()) << std::endl;
+        CStrUniqueMatch::valueToString<PlotStyle>(getDataStyle()) << std::endl;
     }
     else if (show.find("arrow") != show.end()) {
       for (const auto &as : arrowStyles_) {
@@ -4734,6 +4378,8 @@ showCmd(const std::string &args)
     getSamples(isamples1, isamples2);
 
     std::cerr << "sampling rate is " << isamples1 << ", " << isamples2 << std::endl;
+  }
+  else if (var == VariableName::BORDER) {
   }
   else if (var == VariableName::ANGLES) {
     varPrefs_[VariableName::ANGLES]->print(std::cerr);
@@ -4817,7 +4463,7 @@ unsetCmd(const std::string &args)
 
   VariableName var;
 
-  if (! CGnuPlotUtil::stringToValue(args1[0], var))
+  if (! CStrUniqueMatch::stringToValue(args1[0], var))
     var = VariableName::NONE;
 
   //---
@@ -4881,6 +4527,8 @@ unsetCmd(const std::string &args)
   // unset polar
   else if (var == VariableName::POLAR)
     polar_ = false;
+  else if (var == VariableName::ZEROAXIS) {
+  }
   else if (var == VariableName::DEBUG)
     setDebug(false);
   else if (var == VariableName::EDEBUG)
@@ -4894,9 +4542,9 @@ CGnuPlot::
 unsetForCmd(const std::string &var, const std::string &start, const std::string &end,
             const std::string &inc, const std::string &args)
 {
-  CExprValuePtr value1 = CExprInst->evaluateExpression(start);
-  CExprValuePtr value2 = CExprInst->evaluateExpression(end);
-  CExprValuePtr value3 = (inc != "" ? CExprInst->evaluateExpression(inc) : CExprValuePtr());
+  CExprValuePtr value1 = evaluateExpression(start);
+  CExprValuePtr value2 = evaluateExpression(end);
+  CExprValuePtr value3 = (inc != "" ? evaluateExpression(inc) : CExprValuePtr());
 
   long i1 = 0, i2 = 1, i3 = 1;
 
@@ -5264,7 +4912,7 @@ parseBoolExpression(CParseLine &line, bool &res)
   if (! parseExpression(line, expr))
     return false;
 
-  CExprValuePtr value = CExprInst->evaluateExpression(expr);
+  CExprValuePtr value = evaluateExpression(expr);
 
   long l;
 
@@ -5372,9 +5020,9 @@ doCmd(const std::string &args)
   }
 
   if (arg1 != "") {
-    CExprValuePtr value1 = CExprInst->evaluateExpression(arg1);
-    CExprValuePtr value2 = CExprInst->evaluateExpression(arg2);
-    CExprValuePtr value3 = (arg3 != "" ? CExprInst->evaluateExpression(arg3) : CExprValuePtr());
+    CExprValuePtr value1 = evaluateExpression(arg1);
+    CExprValuePtr value2 = evaluateExpression(arg2);
+    CExprValuePtr value3 = (arg3 != "" ? evaluateExpression(arg3) : CExprValuePtr());
 
     long i1 = 0, i2 = 1, i3 = 1;
 
@@ -5436,7 +5084,7 @@ whileCmd(const std::string &args)
   readBlockLines(lines, eline, 1);
 
   while (true) {
-    CExprValuePtr value = CExprInst->evaluateExpression(expr);
+    CExprValuePtr value = evaluateExpression(expr);
 
     long l;
 
@@ -5457,7 +5105,7 @@ void
 CGnuPlot::
 evaluateCmd(const std::string &args)
 {
-  CExprValuePtr value = CExprInst->evaluateExpression(args);
+  CExprValuePtr value = evaluateExpression(args);
 
   std::string str;
 
@@ -5590,9 +5238,9 @@ stateChanged(CGnuPlotWindow *window, CGnuPlotTypes::ChangeState state)
 
 CGnuPlotPlot *
 CGnuPlot::
-addFunction2D(CGnuPlotGroup *group, const std::string &function, PlotStyle style)
+addFunction2D(CGnuPlotGroup *group, const std::vector<std::string> &functions, PlotStyle style)
 {
-  CParseLine line(function);
+  CParseLine line(functions[0]);
 
   // check for <var> = <expr>
   std::string identifier;
@@ -5601,7 +5249,7 @@ addFunction2D(CGnuPlotGroup *group, const std::string &function, PlotStyle style
 
   // variable assignment
   if (line.skipSpaceAndChar('=')) {
-    CExprValueP value = CExprInst->evaluateExpression(line.substr());
+    CExprValueP value = evaluateExpression(line.substr());
 
     if (value.isValid())
       CExprInst->createVariable(identifier, value);
@@ -5628,7 +5276,7 @@ addFunction2D(CGnuPlotGroup *group, const std::string &function, PlotStyle style
     }
 
     if (plot->keyTitle() == "")
-      plot->setKeyTitle(function);
+      plot->setKeyTitle(functions[0]);
 
     plot->setStyle(style);
 
@@ -5658,14 +5306,12 @@ addFunction2D(CGnuPlotGroup *group, const std::string &function, PlotStyle style
     double x  = xmin;
     double dx = (xmax - xmin)/nx;
 
-    if (function == "NaN") {
+    if (functions[0] == "NaN") {
       for (int i = 0; i <= nx; ++i, x += dx)
         plot->addPoint2D(x, CExprValueP());
     }
     else {
-      CExprPTokenStack pstack = CExprInst->parseLine(function);
-      CExprITokenPtr   itoken = CExprInst->interpPTokenStack(pstack);
-      CExprCTokenStack cstack = CExprInst->compileIToken(itoken);
+      CExprCTokenStack cstack = compileExpression(functions[0]);
 
       for (int i = 0; i <= nx; ++i, x += dx) {
         xvar->setRealValue(x);
@@ -5702,14 +5348,12 @@ addFunction2D(CGnuPlotGroup *group, const std::string &function, PlotStyle style
     double a  = tmin;
     double da = (tmax - tmin)/nx;
 
-    if (function == "NaN") {
+    if (functions[0] == "NaN") {
       for (int i = 0; i <= nx; ++i, a += da)
         plot->addPoint2D(a, CExprValueP());
     }
     else {
-      CExprPTokenStack pstack = CExprInst->parseLine(function);
-      CExprITokenPtr   itoken = CExprInst->interpPTokenStack(pstack);
-      CExprCTokenStack cstack = CExprInst->compileIToken(itoken);
+      CExprCTokenStack cstack = compileExpression(functions[0]);
 
       for (int i = 0; i <= nx; ++i, a += da) {
         double c = cos(a);
@@ -5737,10 +5381,6 @@ addFunction2D(CGnuPlotGroup *group, const std::string &function, PlotStyle style
     }
   }
   else if (parametric_) {
-    std::vector<std::string> functions;
-
-    CStrUtil::addFields(function, functions, ",", /*skipEmpty*/true);
-
     if (functions.size() < 2)
       return 0;
 
@@ -5764,21 +5404,13 @@ addFunction2D(CGnuPlotGroup *group, const std::string &function, PlotStyle style
     bool f1 = (functions[0] != "NaN");
     bool f2 = (functions[1] != "NaN");
 
-    CExprPTokenStack pstack1, pstack2;
-    CExprITokenPtr   itoken1, itoken2;
     CExprCTokenStack cstack1, cstack2;
 
-    if (f1) {
-      pstack1 = CExprInst->parseLine(functions[0]);
-      itoken1 = CExprInst->interpPTokenStack(pstack1);
-      cstack1 = CExprInst->compileIToken(itoken1);
-    }
+    if (f1)
+      cstack1 = compileExpression(functions[0]);
 
-    if (f2) {
-      pstack2 = CExprInst->parseLine(functions[1]);
-      itoken2 = CExprInst->interpPTokenStack(pstack2);
-      cstack2 = CExprInst->compileIToken(itoken2);
-    }
+    if (f2)
+      cstack2 = compileExpression(functions[1]);
 
     for (int i = 0; i <= nx; ++i, t += dt) {
       tvar->setRealValue(t);
@@ -5833,7 +5465,7 @@ addFunction3D(CGnuPlotWindowP window, const std::string &function, PlotStyle sty
 
   // variable assignment
   if (line.skipSpaceAndChar('=')) {
-    CExprValueP value = CExprInst->evaluateExpression(line.substr());
+    CExprValueP value = evaluateExpression(line.substr());
 
     if (value.isValid())
       CExprInst->createVariable(identifier, value);
@@ -5902,7 +5534,7 @@ addFunction3D(CGnuPlotWindowP window, const std::string &function, PlotStyle sty
     for (int ix = 0; ix <= nx; ++ix, x += dx) {
       xvar->setRealValue(x);
 
-      CExprValueP value = CExprInst->evaluateExpression(function);
+      CExprValueP value = evaluateExpression(function);
 
       double z = 0.0;
 
@@ -6422,7 +6054,7 @@ decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum, b
         if (p1 != std::string::npos)
           name1 = name1.substr(0, p1);
 
-        CExprValueP value = CExprInst->evaluateExpression(name1);
+        CExprValueP value = evaluateExpression(name1);
 
         long icol;
 
@@ -6449,11 +6081,40 @@ decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum, b
       if (isDebug())
         std::cerr << "expr " << expr << std::endl;
 
-      value = CExprInst->evaluateExpression(expr);
+      value = evaluateExpression(expr);
     }
   }
 
   return value;
+}
+
+CExprValueP
+CGnuPlot::
+evaluateExpression(const std::string &expr) const
+{
+  CExprValueP value = CExprInst->evaluateExpression(expr);
+
+  if (! value.isValid())
+    std::cerr << "Eval failed: " << expr << std::endl;
+
+  return value;
+}
+
+CExprCTokenStack
+CGnuPlot::
+compileExpression(const std::string &expr) const
+{
+  CExprPTokenStack pstack = CExprInst->parseLine(expr);
+  CExprITokenPtr   itoken = CExprInst->interpPTokenStack(pstack);
+
+  CExprCTokenStack cstack;
+
+  if (itoken.isValid())
+    cstack = CExprInst->compileIToken(itoken);
+  else
+    std::cerr << "Eval failed: " << expr << std::endl;
+
+  return cstack;
 }
 
 CExprValueP
@@ -6710,6 +6371,8 @@ parseAxesTics(CParseLine &line, AxisData &axis)
       std::string arg1 = readNonSpaceNonComma(line);
     }
     // TODO: incr | start,end,incr
+    else
+      std::cerr << "Invalid arg " << arg << std::endl;
 
     arg = readNonSpace(line);
   }
@@ -6751,18 +6414,10 @@ parseColorSpec(CParseLine &line, CGnuPlotColorSpec &c)
   else if (arg == "variable")
     c.setVariable();
   else {
-    std::string id;
+    int ind;
 
-    CExprVariablePtr var = CExprInst->getVariable(arg);
-
-    if (var.isValid()) {
-      CExprValuePtr value = var->value();
-
-      long l = 0;
-
-      if (value->getIntegerValue(l))
-        c.setIndex(l);
-    }
+    if (getIntegerVariable(arg, ind))
+      c.setIndex(ind);
   }
 
   return true;
@@ -6798,19 +6453,8 @@ parseInteger(CParseLine &line, int &i)
     if (! readIdentifier(line, id))
       return false;
 
-    CExprVariablePtr var = CExprInst->getVariable(id);
-
-    if (! var.isValid())
+    if (! getIntegerVariable(id, i))
       return false;
-
-    CExprValuePtr value = var->value();
-
-    long l = 0;
-
-    if (! value->getIntegerValue(l))
-      return false;
-
-    i = l;
   }
   else {
     int pos = line.pos();
@@ -6835,6 +6479,27 @@ parseInteger(CParseLine &line, int &i)
 
     line.skipSpace();
   }
+
+  return true;
+}
+
+bool
+CGnuPlot::
+getIntegerVariable(const std::string &name, int &value)
+{
+  CExprVariablePtr var = CExprInst->getVariable(name);
+
+  if (! var.isValid())
+    return false;
+
+  CExprValuePtr evalue = var->value();
+
+  long l = 0;
+
+  if (! evalue->getIntegerValue(l))
+    return false;
+
+  value = l;
 
   return true;
 }
@@ -6945,7 +6610,7 @@ parseString(CParseLine &line, std::string &str, const std::string &msg)
 
 bool
 CGnuPlot::
-parsePosition(CParseLine &line, Position &pos)
+parsePosition(CParseLine &line, CGnuPlotPosition &pos)
 {
   line.skipSpace();
 
@@ -6955,10 +6620,10 @@ parsePosition(CParseLine &line, Position &pos)
 
     CGnuPlotTypes::CoordSys system;
 
-    if (! CGnuPlotUtil::stringToValueWithErr(name, system, "coord system"))
+    if (! CStrUniqueMatch::stringToValueWithErr(name, system, "coord system"))
       return false;
 
-    pos.system = system;
+    pos.setSystem(system);
   }
 
   double r;
@@ -6976,7 +6641,7 @@ parsePosition(CParseLine &line, Position &pos)
 
   double y = r;
 
-  pos.p = CPoint2D(x, y);
+  pos.setPoint(CPoint2D(x, y));
 
   return true;
 }
@@ -6993,10 +6658,10 @@ parseCoordReal(CParseLine &line, CGnuPlotCoordValue &v)
 
     CGnuPlotTypes::CoordSys system;
 
-    if (! CGnuPlotUtil::stringToValueWithErr(name, system, "coord system"))
+    if (! CStrUniqueMatch::stringToValueWithErr(name, system, "coord system"))
       return false;
 
-    v.system = system;
+    v.setSystem(system);
 
     line.skipSpace();
   }
@@ -7006,7 +6671,7 @@ parseCoordReal(CParseLine &line, CGnuPlotCoordValue &v)
   if (! parseReal(line, r))
     return false;
 
-  v.value = r;
+  v.setValue(r);
 
   return true;
 }
@@ -7161,7 +6826,7 @@ fileReadLine(std::string &line)
 //std::cerr << "buffer: " << line << std::endl;
   }
   else {
-    if (! file_->readLine(line))
+    if (! file_ || ! file_->readLine(line))
       return false;
 
     ++fileLineNum_;

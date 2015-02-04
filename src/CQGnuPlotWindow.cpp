@@ -52,6 +52,9 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
 
   connect(tree_, SIGNAL(valueChanged(QObject *, const QString &)), canvas_, SLOT(update()));
 
+  connect(tree_, SIGNAL(itemClicked(QObject *, const QString &)),
+          this, SLOT(itemClickedSlot(QObject *, const QString &)));
+
   rlayout->addWidget(tree_);
 
   QFrame *buttonFrame = new QFrame;
@@ -681,6 +684,9 @@ paint(QPainter *p)
 {
   CQGnuPlotRenderer *qrenderer = qapp()->qrenderer();
 
+  qrenderer->setWidth (width ());
+  qrenderer->setHeight(height());
+
   qrenderer->setWindow(this);
   qrenderer->setCanvas(canvas());
   qrenderer->setPainter(p);
@@ -728,4 +734,25 @@ pixelToWindow(double px, double py, double *wx, double *wy)
 {
   *wx = px/(canvas_->width () - 1);
   *wy = py/(canvas_->height() - 1);
+}
+
+void
+CQGnuPlotWindow::
+itemClickedSlot(QObject *obj, const QString &path)
+{
+  for (auto group : groups()) {
+    CGnuPlotGroup::Annotations annotations;
+
+    group->getAnnotations(annotations);
+
+    for (auto &a : annotations)
+      dynamic_cast<CQGnuPlotAnnotation *>(a)->setSelected(false);
+  }
+
+  CQGnuPlotAnnotation *ann = dynamic_cast<CQGnuPlotAnnotation *>(obj);
+
+  if (ann)
+    ann->setSelected(true);
+
+  canvas_->update();
 }

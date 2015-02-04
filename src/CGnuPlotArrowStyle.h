@@ -25,8 +25,8 @@ class CGnuPlotArrowStyle {
   const CGnuPlotCoordValue &length() const { return length_; }
   void setLength(const CGnuPlotCoordValue &l) { length_ = l; }
 
-  double lengthValue() const { return length_.value; }
-  void setLengthValue(double l) { length_.value = l; }
+  double lengthValue() const { return length_.value(); }
+  void setLengthValue(double l) { length_.setValue(l); }
 
   double angle() const { return angle_; }
   void setAngle(double a) { angle_ = a; }

@@ -129,6 +129,8 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   void xAxisSlot(bool show);
   void yAxisSlot(bool show);
 
+  void itemClickedSlot(QObject *obj, const QString &path);
+
  private:
   static uint lastId;
 

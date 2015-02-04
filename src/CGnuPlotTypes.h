@@ -52,6 +52,13 @@ namespace CGnuPlotTypes {
     SCREEN,
     CHARACTER
   };
+
+  enum class ObjectType {
+    CIRCLE,
+    ELLIPSE,
+    POLYGON,
+    RECTANGLE
+  };
 }
 
 #endif

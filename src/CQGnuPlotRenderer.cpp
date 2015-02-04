@@ -490,6 +490,31 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 
 void
 CQGnuPlotRenderer::
+drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2, const CRGBA &c)
+{
+  QPainterPath path;
+
+  double x1, y1, x2, y2;
+
+  windowToPixel(pc.x - r, pc.y + r, &x1, &y1);
+  windowToPixel(pc.x + r, pc.y - r, &x2, &y2);
+
+  double dangle = angle2 - angle1;
+
+  path.moveTo(QPointF((x1 + x2)/2, (y1 + y2)/2));
+
+  path.arcTo(QRectF(x1, y1, x2 - x1, y2 - y1), angle1, dangle);
+
+  path.closeSubpath();
+
+  painter_->setPen  (QColor(0,0,0));
+  painter_->setBrush(toQColor(c));
+
+  painter_->drawPath(path);
+}
+
+void
+CQGnuPlotRenderer::
 setFont(CFontPtr font)
 {
   font_ = font;
@@ -529,127 +554,3 @@ setLineDash(const CLineDash &dash)
 
   painter_->setPen(pen);
 }
-
-#if 0
-void
-CQGnuPlotRenderer::
-windowToPixel(double wx, double wy, double *px, double *py)
-{
-  const CISize2D &s = qwindow_->size();
-
-  if (! mapping()) {
-    *px = wx;
-    *py = wy;
-    return;
-  }
-
-  // place on screen
-  double pxmin = region_.getLeft  ()*s.width;
-  double pymin = region_.getBottom()*s.height;
-  double pxmax = region_.getRight ()*s.width;
-  double pymax = region_.getTop   ()*s.height;
-
-  double pw = pxmax - pxmin;
-  double ph = pymax - pymin;
-
-  // add margin
-  double ps = std::min(pw, ph);
-
-  double lmargin = ps*margin_.left  ()/100.0;
-  double rmargin = ps*margin_.right ()/100.0;
-  double tmargin = ps*margin_.top   ()/100.0;
-  double bmargin = ps*margin_.bottom()/100.0;
-
-  pxmin += lmargin; pxmax -= rmargin;
-  pymin += tmargin; pymax -= bmargin;
-
-  // adjust for ratio
-  if (ratio_.isValid() && ratio_.getValue() > 0.0) {
-    double ratio = ratio_.getValue();
-
-    pw = pxmax - pxmin;
-    ph = pymax - pymin;
-
-    double pr = (1.0*pw)/ph;
-
-    double pw1 = pw*ratio/pr;
-    double ph1 = ph;
-
-    if (pw1 > pw) {
-      ph1 *= pw/pw1;
-      pw1  = pw;
-    }
-
-    double pxc = (pxmin + pxmax)/2.0;
-    double pyc = (pymin + pymax)/2.0;
-
-    pxmin = pxc - pw1/2.0; pxmax = pxc + pw1/2.0;
-    pymin = pyc - ph1/2.0; pymax = pyc + ph1/2.0;
-  }
-
-  // map
-  *px = CGnuPlotUtil::map(wx, range_.getXMin(), range_.getXMax(), pxmin, pxmax);
-  *py = CGnuPlotUtil::map(wy, range_.getYMin(), range_.getYMax(), pymax, pymin);
-}
-
-void
-CQGnuPlotRenderer::
-pixelToWindow(double px, double py, double *wx, double *wy)
-{
-  const CISize2D &s = qwindow_->size();
-
-  if (! mapping()) {
-    *wx = px;
-    *wy = py;
-    return;
-  }
-
-  // place on screen
-  double pxmin = region_.getLeft  ()*s.width;
-  double pymin = region_.getBottom()*s.height;
-  double pxmax = region_.getRight ()*s.width;
-  double pymax = region_.getTop   ()*s.height;
-
-  double pw = pxmax - pxmin;
-  double ph = pymax - pymin;
-
-  // add margin
-  double ps = std::min(pw, ph);
-
-  double lmargin = ps*margin_.left  ()/100.0;
-  double rmargin = ps*margin_.right ()/100.0;
-  double tmargin = ps*margin_.top   ()/100.0;
-  double bmargin = ps*margin_.bottom()/100.0;
-
-  pxmin += lmargin; pxmax -= rmargin;
-  pymin += tmargin; pymax -= bmargin;
-
-  // adjust for ratio
-  if (ratio_.isValid() && ratio_.getValue() > 0.0) {
-    double ratio = ratio_.getValue();
-
-    pw = pxmax - pxmin;
-    ph = pymax - pymin;
-
-    double pr = (1.0*pw)/ph;
-
-    double pw1 = pw*ratio/pr;
-    double ph1 = ph;
-
-    if (pw1 > pw) {
-      ph1 *= pw/pw1;
-      pw1  = pw;
-    }
-
-    double pxc = (pxmin + pxmax)/2.0;
-    double pyc = (pymin + pymax)/2.0;
-
-    pxmin = pxc - pw1/2.0; pxmax = pxc + pw1/2.0;
-    pymin = pyc - ph1/2.0; pymax = pyc + ph1/2.0;
-  }
-
-  // map
-  *wx = CGnuPlotUtil::map(px, pxmin, pxmax, range_.getXMin(), range_.getXMax());
-  *wy = CGnuPlotUtil::map(py, pymax, pymin, range_.getYMin(), range_.getYMax());
-}
-#endif

@@ -177,7 +177,7 @@ fit()
   if (! fitX && ! fitY) return;
 
   if (! is3D_) {
-    if (style_ == PlotStyle::PARALLELAXES) {
+    if      (style_ == PlotStyle::PARALLELAXES) {
       int nc = 0;
 
       for (const auto &p : getPoints2D())
@@ -190,6 +190,13 @@ fit()
       xaxis.max = nc;
 
       yaxis.min = 0;
+      yaxis.max = 1;
+    }
+    else if (style_ == PlotStyle::PIECHART) {
+      xaxis.min = -1;
+      xaxis.max = 1;
+
+      yaxis.min = -1;
       yaxis.max = 1;
     }
 
@@ -662,6 +669,9 @@ draw2D()
   }
   else if (style_ == PlotStyle::PARALLELAXES) {
     drawParallelAxes(bbox);
+  }
+  else if (style_ == PlotStyle::PIECHART) {
+    drawPieChart(bbox);
   }
   else if (style_ == PlotStyle::POINTS) {
     drawPoints();
@@ -1994,6 +2004,75 @@ drawParallelAxes(const CBBox2D & /*bbox*/)
 
 void
 CGnuPlotPlot::
+drawPieChart(const CBBox2D &bbox)
+{
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  CPoint2D pc = bbox.getCenter();
+  double   r  = bbox.getWidth()/2;
+
+  CPoint2D p1;
+
+  double sum = 0;
+
+  typedef std::pair<std::string,double> NameValue;
+
+  std::vector<NameValue> values;
+
+  for (const auto &point : getPoints2D()) {
+    std::string name;
+    double      value;
+
+    if (point.getValue(1, name) && point.getValue(2, value)) {
+      values.push_back(NameValue(name, value));
+
+      sum += value;
+    }
+  }
+
+  int    i      = 0;
+  double angle1 = 90.0;
+
+  for (const auto &v : values) {
+    double value = v.second;
+
+    double dangle = 360.0*value/sum;
+    double angle2 = angle1 - dangle;
+
+    const CRGBA &c = CGnuPlotStyle::instance()->indexColor(i + 1);
+
+    renderer->drawPieSlice(pc, r, angle1, angle2, c);
+
+    angle1 = angle2;
+
+    ++i;
+  }
+
+  CFontPtr font = renderer->getFont();
+
+  angle1 = M_PI/2.0;
+
+  for (const auto &v : values) {
+    const std::string &name  = v.first;
+    double             value = v.second;
+
+    double dangle = 2.0*M_PI*value/sum;
+    double angle2 = angle1 - dangle;
+
+    double tangle = (angle1 + angle2)/2;
+
+    double x = pc.x + 0.5*r*cos(tangle);
+    double y = pc.y + 0.5*r*sin(tangle);
+
+    // aligned ?
+    renderer->drawText(CPoint2D(x, y), name, CRGBA(0,0,0));
+
+    angle1 = angle2;
+  }
+}
+
+void
+CGnuPlotPlot::
 drawLines()
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
@@ -2105,7 +2184,10 @@ void
 CGnuPlotPlot::
 setLineStyleId(int ind)
 {
-  setLineStyle(*app()->lineStyle(ind));
+  CGnuPlotLineStyleP ls = app()->lineStyle(ind);
+
+  if (ls.get())
+    setLineStyle(*ls);
 }
 
 void

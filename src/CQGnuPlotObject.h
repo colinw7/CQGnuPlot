@@ -14,6 +14,7 @@ class CQGnuPlotAnnotation : public QObject {
 
   Q_PROPERTY(QColor strokeColor READ getStrokeColor WRITE setStrokeColor)
   Q_PROPERTY(QColor fillColor   READ getFillColor   WRITE setFillColor  )
+  Q_PROPERTY(bool   selected    READ isSelected     WRITE setSelected   )
 
  public:
   CQGnuPlotAnnotation(CGnuPlotAnnotation *obj);
@@ -24,8 +25,12 @@ class CQGnuPlotAnnotation : public QObject {
   QColor getFillColor() const;
   void setFillColor(const QColor &c);
 
+  bool isSelected() const { return selected_; }
+  void setSelected(bool b) { selected_ = b; }
+
  private:
   CGnuPlotAnnotation *obj_;
+  bool                selected_;
 };
 
 //---
@@ -125,6 +130,8 @@ class CQGnuPlotRectangle : public CQGnuPlotAnnotation, public CGnuPlotRectangle 
 
   QPointF getTo() const;
   void setTo(const QPointF &p);
+
+  void draw(CGnuPlotRenderer *renderer) const override;
 };
 
 #endif

@@ -59,24 +59,32 @@ class CGnuPlotKeyData {
   const Columns &columns() const { return columns_; }
   void setColumns(const Columns &c) { columns_ = c; }
 
+  int lineType() const { return lineType_.getValue(); }
+  void setLineType(int lt) { lineType_ = lt; }
+
+  const CGnuPlotColorSpec &textColor() const { return textColor_; }
+  void setTextColor(const CGnuPlotColorSpec &c) { textColor_ = c; }
+
  private:
-  bool        displayed_  { true };               // key displayed
-  bool        outside_    { false };              // inside/outside plot area
-  CHAlignType halign_     { CHALIGN_TYPE_RIGHT }; // key horizontal side
-  CVAlignType valign_     { CVALIGN_TYPE_TOP   }; // key vertical side
-  bool        vertical_   { true };               // ??
-  bool        right_      { true };               // text justification
-  bool        reverse_    { false };              // reverse text and sample
-  bool        invert_     { false };              // invert plot order
-  bool        autotitle_  { true };
-  bool        opaque_     { false };              // draw opaque
-  COptReal    sampLen_;
-  COptReal    spacing_;
-  COptString  title_;
-  bool        box_ { false };
-  bool        columnhead_ { false };
-  COptInt     columnNum_;
-  Columns     columns_;
+  bool              displayed_  { true };               // key displayed
+  bool              outside_    { false };              // inside/outside plot area
+  CHAlignType       halign_     { CHALIGN_TYPE_RIGHT }; // key horizontal side
+  CVAlignType       valign_     { CVALIGN_TYPE_TOP   }; // key vertical side
+  bool              vertical_   { true };               // ??
+  bool              right_      { true };               // text justification
+  bool              reverse_    { false };              // reverse text and sample
+  bool              invert_     { false };              // invert plot order
+  bool              autotitle_  { true };
+  bool              opaque_     { false };              // draw opaque
+  COptReal          sampLen_;
+  COptReal          spacing_;
+  COptString        title_;
+  bool              box_ { false };
+  bool              columnhead_ { false };
+  COptInt           columnNum_;
+  Columns           columns_;
+  COptInt           lineType_;
+  CGnuPlotColorSpec textColor_;
 };
 
 #endif

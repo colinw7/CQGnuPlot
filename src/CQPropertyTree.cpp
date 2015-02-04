@@ -3,6 +3,7 @@
 #include <CQPropertyDelegate.h>
 
 #include <QHeaderView>
+#include <iostream>
 
 CQPropertyTree::
 CQPropertyTree(QWidget *parent) :
@@ -22,6 +23,10 @@ CQPropertyTree(QWidget *parent) :
   CQPropertyDelegate *delegate = new CQPropertyDelegate(this);
 
   setItemDelegate(delegate);
+
+  connect(this, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
+          this, SLOT(itemClickedSlot(QTreeWidgetItem *, int)));
+
 }
 
 void
@@ -83,4 +88,42 @@ addProperty(const QString &path, QObject *object, const QString &name)
     addTopLevelItem(item);
 
   return item;
+}
+
+void
+CQPropertyTree::
+itemClickedSlot(QTreeWidgetItem *item, int /*column*/)
+{
+  QString path;
+
+  QTreeWidgetItem *item1 = item;
+
+  while (item1) {
+    if (path.length())
+      path = item1->data(0, Qt::DisplayRole).toString() + "/" + path;
+    else
+      path = item1->data(0, Qt::DisplayRole).toString();
+
+    item1 = item1->parent();
+  }
+
+  item1 = item;
+
+  int n = item1->childCount();
+
+  while (n > 0) {
+    item1 = item1->child(0);
+
+    n = item1->childCount();
+  }
+
+  QObject *obj = 0;
+
+  if (CQPropertyItem::isType(item1->type())) {
+    CQPropertyItem *item2 = static_cast<CQPropertyItem *>(item1);
+
+    obj = item2->getObject();
+  }
+
+  emit itemClicked(obj, path);
 }

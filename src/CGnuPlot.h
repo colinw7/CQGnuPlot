@@ -50,6 +50,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotFillStyle.h>
 #include <CGnuPlotCoordValue.h>
 #include <CGnuPlotKeyData.h>
+#include <CGnuPlotPosition.h>
 #include <CGnuPlotObject.h>
 
 //------
@@ -323,6 +324,7 @@ class CGnuPlot {
     LINES,
     LINES_POINTS,
     PARALLELAXES,
+    PIECHART,
     PM3D,
     POINTS,
     RGBALPHA,
@@ -380,13 +382,6 @@ class CGnuPlot {
     CMY,
     YIQ,
     XYZ,
-  };
-
-  enum class ObjectType {
-    CIRCLE,
-    ELLIPSE,
-    POLYGON,
-    RECTANGLE
   };
 
   //---
@@ -565,18 +560,6 @@ class CGnuPlot {
 
     StyleIncrementType type     { StyleIncrementType::USER };
     int                styleInd { 0 };
-  };
-
-  //---
-
-  struct Position {
-    CPoint2D                p      { 0, 0 };
-    CGnuPlotTypes::CoordSys system { CGnuPlotTypes::CoordSys::FIRST };
-
-    Position(const CPoint2D &p1=CPoint2D(0,0),
-             CGnuPlotTypes::CoordSys s=CGnuPlotTypes::CoordSys::FIRST) :
-     p(p1), system(s) {
-    }
   };
 
   //---
@@ -1024,7 +1007,8 @@ class CGnuPlot {
 
   bool parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle);
 
-  CGnuPlotPlot *addFunction2D(CGnuPlotGroup *group, const std::string &str, PlotStyle style);
+  CGnuPlotPlot *addFunction2D(CGnuPlotGroup *group, const std::vector<std::string> &functions,
+                              PlotStyle style);
   CGnuPlotPlot *addFunction3D(CGnuPlotWindowP window, const std::string &str, PlotStyle style);
 
   Plots addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
@@ -1046,6 +1030,10 @@ class CGnuPlot {
 
   CExprValueP decodeUsingCol(int i, const CGnuPlot::UsingCol &col,
                              int setNum, int pointNum, bool &skip);
+
+  CExprValueP evaluateExpression(const std::string &expr) const;
+
+  CExprCTokenStack compileExpression(const std::string &expr) const;
 
   CExprValueP getFieldValue(int i, int ival, int setNum, int pointNum, bool &skip);
 
@@ -1110,9 +1098,11 @@ class CGnuPlot {
 
   bool parseInteger(CParseLine &line, int &i);
   bool parseReal(CParseLine &line, double &r);
-  bool parseString(CParseLine &line, std::string &filename, const std::string &msg="");
+  bool parseString(CParseLine &line, std::string &str, const std::string &msg="");
 
-  bool parsePosition(CParseLine &line, Position &pos);
+  bool getIntegerVariable(const std::string &name, int &value);
+
+  bool parsePosition(CParseLine &line, CGnuPlotPosition &pos);
   bool parseCoordReal(CParseLine &line, CGnuPlotCoordValue &v);
   bool parseSize(CParseLine &line, CSize2D &size);
 

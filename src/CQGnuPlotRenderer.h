@@ -51,6 +51,9 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
 
   void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) override;
 
+  void drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2,
+                    const CRGBA &c) override;
+
   CFontPtr getFont() const override { return font_; }
   void setFont(CFontPtr font) override;
 

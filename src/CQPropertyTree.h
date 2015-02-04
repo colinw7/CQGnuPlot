@@ -14,4 +14,9 @@ class CQPropertyTree : public QTreeWidget {
 
  signals:
   void valueChanged(QObject *obj, const QString &name);
+
+  void itemClicked(QObject *obj, const QString &path);
+
+ private slots:
+  void itemClickedSlot(QTreeWidgetItem *item, int column);
 };

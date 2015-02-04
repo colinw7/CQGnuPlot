@@ -1,10 +1,11 @@
 #include <CQGnuPlotObject.h>
 #include <CQGnuPlot.h>
+#include <CGnuPlotRenderer.h>
 #include <CQUtil.h>
 
 CQGnuPlotAnnotation::
 CQGnuPlotAnnotation(CGnuPlotAnnotation *obj) :
- obj_(obj)
+ obj_(obj), selected_(false)
 {
 }
 
@@ -26,14 +27,18 @@ QColor
 CQGnuPlotAnnotation::
 getFillColor() const
 {
-  return CQUtil::rgbaToColor(obj_->getFillColor());
+  return CQUtil::rgbaToColor(obj_->getFillColor().color());
 }
 
 void
 CQGnuPlotAnnotation::
 setFillColor(const QColor &c)
 {
-  obj_->setFillColor(CQUtil::colorToRGBA(c));
+  CGnuPlotColorSpec spec;
+
+  spec.setRGB(CQUtil::colorToRGBA(c));
+
+  obj_->setFillColor(spec);
 }
 
 //---
@@ -164,7 +169,7 @@ QPointF
 CQGnuPlotRectangle::
 getFrom() const
 {
-  return CQUtil::toQPoint(CGnuPlotRectangle::getFrom());
+  return CQUtil::toQPoint(CGnuPlotRectangle::getFrom().point());
 }
 
 void
@@ -178,7 +183,7 @@ QPointF
 CQGnuPlotRectangle::
 getTo() const
 {
-  return CQUtil::toQPoint(CGnuPlotRectangle::getTo());
+  return CQUtil::toQPoint(CGnuPlotRectangle::getTo().point());
 }
 
 void
@@ -186,4 +191,14 @@ CQGnuPlotRectangle::
 setTo(const QPointF &p)
 {
   CGnuPlotRectangle::setTo(CQUtil::fromQPoint(p));
+}
+
+void
+CQGnuPlotRectangle::
+draw(CGnuPlotRenderer *renderer) const
+{
+  CGnuPlotRectangle::draw(renderer);
+
+  if (isSelected())
+    renderer->drawRect(bbox_, CRGBA(1,0,0), 2);
 }

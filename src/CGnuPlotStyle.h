@@ -5,6 +5,8 @@
 #include <CRGBName.h>
 #include <CGnuPlotTypes.h>
 
+#include <vector>
+
 class CGnuPlotStyle {
  public:
   typedef CGnuPlotTypes::SymbolType SymbolType;
@@ -55,9 +57,9 @@ class CGnuPlotStyle {
       colors_.push_back(CRGBName::toRGBA("#FF00FF")); // magenta
       colors_.push_back(CRGBName::toRGBA("#00FFFF")); // cyan
       colors_.push_back(CRGBName::toRGBA("#FFFF00")); // yellow
-      colors_.push_back(CRGBName::toRGBA("#000000")); // black
       colors_.push_back(CRGBName::toRGBA("#FF8000")); // orange
       colors_.push_back(CRGBName::toRGBA("#888888")); // gray
+    //colors_.push_back(CRGBName::toRGBA("#000000")); // black
     }
   }
 

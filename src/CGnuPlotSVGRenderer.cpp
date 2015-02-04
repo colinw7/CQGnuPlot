@@ -450,6 +450,25 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 
 void
 CGnuPlotSVGRenderer::
+drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2, const CRGBA &c)
+{
+  double x1, y1, x2, y2;
+
+  windowToPixel(pc.x - r, pc.y - r, &x1, &y1);
+  windowToPixel(pc.x + r, pc.y + r, &x2, &y2);
+
+  double dangle = angle2 - angle1;
+
+  // TODO: !!!!
+  os() << "<path d=\"M " << x1 << " " << y1;
+  os() << " L " << dangle << " " << dangle;
+  os() << " L " << x2 << " " << y2;
+
+  os() << "z\" style=\"" << fillColor(c) << " " << strokeNone() << "\"/>\n";
+}
+
+void
+CGnuPlotSVGRenderer::
 setFont(CFontPtr font)
 {
   font_ = font;

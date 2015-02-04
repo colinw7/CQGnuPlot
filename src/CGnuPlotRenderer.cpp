@@ -73,7 +73,7 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
 
   pstr1 = str1.find('\n');
 
-  double x1, y1;
+  double x1 = 0, y1 = 0;
 
   if      (valign == CVALIGN_TYPE_TOP)
     y1 = pos.y;
@@ -164,7 +164,7 @@ drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
 
   pstr1 = str1.find('\n');
 
-  double x1, y1;
+  double x1 = 0, y1 = 0;
 
   if      (halign == CHALIGN_TYPE_LEFT)
     x1 = pos.x;

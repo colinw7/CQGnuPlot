@@ -29,10 +29,12 @@ CQGnuPlotAxis.cpp \
 CGnuPlot.cpp \
 CGnuPlotAxis.cpp \
 CGnuPlotContour.cpp \
+CGnuPlotCoordValue.cpp \
 CGnuPlotGroup.cpp \
 CGnuPlotObject.cpp \
 CGnuPlotPlot.cpp \
 CGnuPlotPoint.cpp \
+CGnuPlotPosition.cpp \
 CGnuPlotRenderer.cpp \
 CGnuPlotSVGDevice.cpp \
 CGnuPlotSVGRenderer.cpp \
@@ -82,15 +84,22 @@ CQGnuPlotWindow.h \
 CQGnuPlotAxis.h \
 \
 CGnuPlot.h \
+CGnuPlotArrowStyle.h \
 CGnuPlotAxis.h \
+CGnuPlotColorSpec.h \
 CGnuPlotContour.h \
+CGnuPlotCoordValue.h \
 CGnuPlotDevice.h \
 CGnuPlotFillStyle.h \
 CGnuPlotGroup.h \
+CGnuPlotKeyData.h \
 CGnuPlotLineStyle.h \
+CGnuPlotNameValues.h \
 CGnuPlotObject.h \
 CGnuPlotPlot.h \
 CGnuPlotPoint.h \
+CGnuPlotPosition.h \
+CGnuPlotPrefValue.h \
 CGnuPlotRenderer.h \
 CGnuPlotSVGDevice.h \
 CGnuPlotSVGRenderer.h \

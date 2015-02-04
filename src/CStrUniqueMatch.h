@@ -2,14 +2,14 @@
 #define CStrUniqueMatch_H
 
 template<typename T>
-class CStrUniqueMatch {
+class CStrUniqueMatchValues {
  public:
   typedef std::pair<std::string, T> NameValue;
 
  public:
-  CStrUniqueMatch() { }
+  CStrUniqueMatchValues() { }
 
-  CStrUniqueMatch(std::initializer_list<NameValue> values) {
+  CStrUniqueMatchValues(std::initializer_list<NameValue> values) {
     addValues(values);
   }
 
@@ -69,5 +69,56 @@ class CStrUniqueMatch {
   StringValueMap  strValues_;
   ValueStringsMap valueStrs_;
 };
+
+namespace CStrUniqueMatch {
+  template<typename T>
+  inline void initNameValues(CStrUniqueMatchValues<T> &) { }
+
+  template<typename T>
+  inline CStrUniqueMatchValues<T> &getNameValues() {
+    static CStrUniqueMatchValues<T> nameValues;
+
+    if (! nameValues.numValues())
+      initNameValues<T>(nameValues);
+
+    return nameValues;
+  }
+
+  template<typename T>
+  inline bool stringToValue(const std::string &str, T &value) {
+    return getNameValues<T>().match(str, value);
+  }
+
+  template<typename T>
+  inline bool stringToValueWithErr(const std::string &str, T &value, const std::string &err) {
+    if (! stringToValue(str, value)) {
+      std::cerr << "Invalid " << err << " '" << str << "'" << std::endl;
+      return false;
+    }
+    return true;
+  }
+
+  template<typename T>
+  inline std::string valueToString(const T &value) {
+    return getNameValues<T>().lookup(value);
+  }
+
+  template<typename T>
+  inline std::string valueStrings() {
+    std::vector<std::string> strs;
+
+    getNameValues<T>().values(strs);
+
+    std::string cstr;
+
+    for (const auto &str : strs) {
+      if (! cstr.empty()) cstr += ", ";
+
+      cstr += "'" + str + "'";
+    }
+
+    return cstr;
+  }
+}
 
 #endif

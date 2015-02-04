@@ -38,7 +38,7 @@ draw(CGnuPlotRenderer *renderer) const
 
   const CGnuPlotCoordValue &al = arrow->getLength();
 
-  double l = (al.value > 0 ? al.pixelXValue(renderer) : 16);
+  double l = (al.value() > 0 ? al.pixelXValue(renderer) : 16);
 
   double l1 = l*cos(aa);
 
@@ -195,12 +195,36 @@ void
 CGnuPlotRectangle::
 draw(CGnuPlotRenderer *renderer) const
 {
+  bbox_ = CBBox2D(0,0,1,1);
+
+  if      (from_.isValid()) {
+    if      (to_.isValid()) {
+      CPoint2D from = from_.getValue().getPoint(renderer);
+      CPoint2D to   = to_  .getValue().getPoint(renderer);
+
+      bbox_ = CBBox2D(from, to);
+    }
+    else if (rto_.isValid())
+      bbox_ = CBBox2D(from_.getValue().point(), from_.getValue().point() + rto_.getValue().point());
+    else if (size_.isValid()) {
+      CPoint2D s(size_.getValue().width, size_.getValue().height);
+
+      bbox_ = CBBox2D(from_.getValue().point(), from_.getValue().point() + s);
+    }
+  }
+  else if (center_.isValid()) {
+    if (size_.isValid()) {
+      CPoint2D s(size_.getValue().width, size_.getValue().height);
+
+      bbox_ = CBBox2D(center_.getValue().point() - s/2, center_.getValue().point() + s/2);
+    }
+  }
+
   const CGnuPlotRectangle *rect = this;
 
-  renderer->fillRect(CBBox2D(rect->getFrom(), rect->getTo()), rect->getFillColor());
+  renderer->fillRect(bbox_, rect->getFillColor().color());
 
-  renderer->drawRect(CBBox2D(rect->getFrom(), rect->getTo()), rect->getStrokeColor(),
-                     rect->getLineWidth());
+  renderer->drawRect(bbox_, rect->getStrokeColor(), rect->getLineWidth());
 }
 
 void
@@ -209,7 +233,7 @@ draw(CGnuPlotRenderer *renderer) const
 {
   const CGnuPlotEllipse *e = this;
 
-  renderer->fillEllipse(e->getCenter(), e->getRX(), e->getRY(), 0, e->getFillColor  ());
+  renderer->fillEllipse(e->getCenter(), e->getRX(), e->getRY(), 0, e->getFillColor().color());
   renderer->drawEllipse(e->getCenter(), e->getRX(), e->getRY(), 0, e->getStrokeColor());
 }
 
@@ -219,7 +243,7 @@ draw(CGnuPlotRenderer *renderer) const
 {
   const CGnuPlotPolygon *poly = this;
 
-  renderer->fillPolygon(poly->getPoints(), poly->getFillColor());
+  renderer->fillPolygon(poly->getPoints(), poly->getFillColor().color());
   renderer->drawPolygon(poly->getPoints(), 1.0, poly->getStrokeColor());
 }
 
@@ -248,30 +272,9 @@ print(CGnuPlot *plot, std::ostream &os) const
   os << headStr() << " " << filledStr() << " " << frontStr() <<
         " linetype " << lineStyle_ << " linewidth " << lineWidth(plot);
 
-  if (length_.value > 0.0 || angle_ >= 0.0 || backAngle_ >= 0.0) {
+  if (length_.value() > 0.0 || angle_ >= 0.0 || backAngle_ >= 0.0) {
     os << " arrow head" << (fhead_ && thead_ ? "s" : "") << ": " << filledStr();
     os << ", length "; length_.print(os);
     os << ", angle " << angle_ << ", backangle " << backAngle_;
   }
-}
-
-//------
-
-double
-CGnuPlotCoordValue::
-pixelXValue(CGnuPlotRenderer *renderer) const
-{
-  if      (system == CGnuPlotTypes::CoordSys::SECOND)
-    return value; // TODO
-  else if (system == CGnuPlotTypes::CoordSys::GRAPH)
-    return value; // TODO
-  else if (system == CGnuPlotTypes::CoordSys::SCREEN) {
-    const CISize2D &s = renderer->window()->size();
-
-    return value*s.width;
-  }
-  else if (system == CGnuPlotTypes::CoordSys::CHARACTER)
-    return value;
-  else
-    return renderer->windowWidthToPixelWidth(value);
 }

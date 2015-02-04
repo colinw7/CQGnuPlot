@@ -2,32 +2,44 @@
 #define CGnuPlotCoordValue_H
 
 #include <CGnuPlotTypes.h>
+
 #include <ostream>
 
 class CGnuPlotRenderer;
 
-struct CGnuPlotCoordValue {
-  double                  value  { 0.0 };
-  CGnuPlotTypes::CoordSys system { CGnuPlotTypes::CoordSys::FIRST };
+class CGnuPlotCoordValue {
+ public:
+  typedef CGnuPlotTypes::CoordSys CoordSys;
 
-  CGnuPlotCoordValue(double v=0.0, CGnuPlotTypes::CoordSys s=CGnuPlotTypes::CoordSys::FIRST) :
-   value(v), system(s) {
+ public:
+  CGnuPlotCoordValue(double v=0.0, CoordSys s=CGnuPlotTypes::CoordSys::FIRST) :
+   value_(v), system_(s) {
   }
+
+  double value() const { return value_; }
+  void setValue(double v) { value_ = v; }
+
+  CoordSys system() const { return system_; }
+  void setSystem(CoordSys s) { system_ = s; }
 
   double pixelXValue(CGnuPlotRenderer *renderer) const;
 
   void print(std::ostream &os, const std::string &axis="x") const {
-    if      (system == CGnuPlotTypes::CoordSys::SECOND)
+    if      (system_ == CGnuPlotTypes::CoordSys::SECOND)
       os << "(second " << axis << " axis) ";
-    else if (system == CGnuPlotTypes::CoordSys::GRAPH)
+    else if (system_ == CGnuPlotTypes::CoordSys::GRAPH)
       os << "(graph units) ";
-    else if (system == CGnuPlotTypes::CoordSys::SCREEN)
+    else if (system_ == CGnuPlotTypes::CoordSys::SCREEN)
       os << "(screen units) ";
-    else if (system == CGnuPlotTypes::CoordSys::CHARACTER)
+    else if (system_ == CGnuPlotTypes::CoordSys::CHARACTER)
       os << "(character units) ";
 
-    os << value;
+    os << value_;
   }
+
+ private:
+  double   value_  { 0.0 };
+  CoordSys system_ { CoordSys::FIRST };
 };
 
 #endif

@@ -224,7 +224,7 @@ parseError(const std::string &msg, const std::string &line, uint i)
   std::cerr << msg << " \"" << line.substr(0, i - 1) << "#" << line[i] << "#" <<
                (i < line.size() ? line.substr(i + 1) : "") << std::endl;
 
-  for (uint j = 0; j < i; j++)
+  for (uint j = 0; j < i + msg.size() + 1; j++)
     std::cerr << " ";
 
   std::cerr << "^" << std::endl;

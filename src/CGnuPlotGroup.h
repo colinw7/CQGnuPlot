@@ -13,6 +13,7 @@ class CGnuPlotGroup {
   typedef std::vector<CGnuPlotEllipseP>         Ellipses;
   typedef std::vector<CGnuPlotPolygonP>         Polygons;
   typedef std::vector<CGnuPlotRectangleP>       Rectangles;
+  typedef std::vector<CGnuPlotAnnotation *>     Annotations;
   typedef CGnuPlot::AxesData                    AxesData;
   typedef CGnuPlot::AxisData                    AxisData;
   typedef CGnuPlot::PlotSize                    PlotSize;
@@ -44,6 +45,8 @@ class CGnuPlotGroup {
   void init();
 
   void addObjects();
+
+  void getAnnotations(Annotations &annotations) const;
 
   const Arrows &arrows() const { return arrows_; }
   void setArrows(const Arrows &arrows) { arrows_ = arrows; }
@@ -230,7 +233,8 @@ class CGnuPlotGroup {
   void drawYAxes(int yind, bool other);
 
   void drawKey();
-  void drawAnnotations();
+
+  void drawAnnotations(CGnuPlotLayer layer);
 
   CGnuPlotAxis *getPlotAxis(char c, int ind);
 
