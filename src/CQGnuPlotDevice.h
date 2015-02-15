@@ -2,10 +2,15 @@
 #define CQGnuPlotDevice_H
 
 #include <CGnuPlotDevice.h>
+#include <vector>
 
 class CQGnuPlotRenderer;
+class CQGnuPlotObject;
 
 class CQGnuPlotDevice : public CGnuPlotDevice {
+ public:
+  typedef std::vector<CQGnuPlotObject *> Objects;
+
  public:
   CQGnuPlotDevice();
 
@@ -21,13 +26,21 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
 
   CGnuPlotLineStyle *createLineStyle() override;
 
-  CGnuPlotArrow     *createArrow() override;
-  CGnuPlotLabel     *createLabel() override;
-  CGnuPlotEllipse   *createEllipse() override;
-  CGnuPlotPolygon   *createPolygon() override;
-  CGnuPlotRectangle *createRectangle() override;
+  CGnuPlotArrow     *createArrow    (CGnuPlotGroup *group) override;
+  CGnuPlotLabel     *createLabel    (CGnuPlotGroup *group) override;
+  CGnuPlotEllipse   *createEllipse  (CGnuPlotGroup *group) override;
+  CGnuPlotPolygon   *createPolygon  (CGnuPlotGroup *group) override;
+  CGnuPlotRectangle *createRectangle(CGnuPlotGroup *group) override;
 
   CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir) override;
+
+  CGnuPlotKey  *createKey(CGnuPlotGroup *group) override;
+
+  CGnuPlotBar    *createBar   (CGnuPlotPlot *plot) override;
+  CGnuPlotPie    *createPie   (CGnuPlotPlot *plot) override;
+  CGnuPlotBubble *createBubble(CGnuPlotPlot *plot) override;
+
+  const Objects &objects() const { return objects_; }
 
   void timeout() override;
 
@@ -37,6 +50,7 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
 
  private:
   CQGnuPlotRenderer *renderer_;
+  Objects            objects_;
 };
 
 #endif

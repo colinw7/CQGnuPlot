@@ -1,0 +1,36 @@
+
+
+*******************************************************************************
+Sun Jan 25 18:21:19 2015
+
+
+FIT:    data read from 'lcdemo.dat'
+        format = z
+        #datapoints = 37
+        residuals are weighted equally (unit weight)
+
+function used for fitting: l(x)
+	l(x) = y0 + m*x
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   y0            m            
+   0 7.2979392911e+02   0.00e+00  3.29e+00    1.100000e+00  -1.000000e-01
+   5 6.5712492162e-06  -1.47e-05  3.29e-05    1.080166e+00  -1.181519e-03
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 6.57125e-06
+rel. change during last iteration : -1.47226e-10
+
+degrees of freedom    (FIT_NDF)                        : 35
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000433301
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.8775e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+y0              = 1.08017          +/- 0.001321     (0.1223%)
+m               = -0.00118152      +/- 2.926e-05    (2.476%)
+
+correlation matrix of the fit parameters:
+                y0     m      
+y0              1.000 
+m              -0.999  1.000 

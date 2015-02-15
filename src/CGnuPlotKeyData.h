@@ -1,6 +1,10 @@
 #ifndef CGnuPlotKeyData_H
 #define CGnuPlotKeyData_H
 
+#include <CGnuPlotColorSpec.h>
+#include <CAlignType.h>
+#include <COptVal.h>
+
 class CGnuPlotKeyData {
  public:
   typedef std::vector<std::string> Columns;
@@ -53,13 +57,13 @@ class CGnuPlotKeyData {
   bool columnhead() const { return columnhead_; }
   void setColumnhead(bool b) { columnhead_ = b; }
 
-  COptInt columnNum() const { return columnNum_; }
+  const COptInt &columnNum() const { return columnNum_; }
   void setColumnNum(int i) { columnNum_ = i; }
 
   const Columns &columns() const { return columns_; }
   void setColumns(const Columns &c) { columns_ = c; }
 
-  int lineType() const { return lineType_.getValue(); }
+  const COptInt &lineType() const { return lineType_; }
   void setLineType(int lt) { lineType_ = lt; }
 
   const CGnuPlotColorSpec &textColor() const { return textColor_; }

@@ -9,6 +9,7 @@ CQGnuPlotGroup::
 CQGnuPlotGroup(CQGnuPlotWindow *window) :
  CGnuPlotGroup(window), window_(window)
 {
+  setObjectName("group");
 }
 
 CQGnuPlotGroup::
@@ -59,39 +60,59 @@ setHistogramStyle(const CQGnuPlot::CQHistogramStyle &s)
   CGnuPlotGroup::setHistogramStyle(CQGnuPlotUtil::histogramStyleConv(s));
 }
 
-CQGnuPlot::CQHAlignType
+void
 CQGnuPlotGroup::
-keyHAlign() const
+draw()
 {
-  return CQGnuPlotUtil::alignConv(CGnuPlotGroup::getKeyHAlign());
+  CGnuPlotGroup::draw();
+
+  if (isSelected()) {
+    CGnuPlotRenderer *renderer = app()->renderer();
+
+    renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);
+  }
 }
 
 void
 CQGnuPlotGroup::
-setKeyHAlign(const CQGnuPlot::CQHAlignType &a)
+mousePress(const QPoint &qp)
 {
-  CGnuPlotGroup::setKeyHAlign(CQGnuPlotUtil::alignConv(a));
-}
+  CGnuPlotRenderer *renderer = app()->renderer();
 
-CQGnuPlot::CQVAlignType
-CQGnuPlotGroup::
-keyVAlign() const
-{
-  return CQGnuPlotUtil::alignConv(CGnuPlotGroup::getKeyVAlign());
-}
+  renderer->setRegion(region());
 
-void
-CQGnuPlotGroup::
-setKeyVAlign(const CQGnuPlot::CQVAlignType &a)
-{
-  CGnuPlotGroup::setKeyVAlign(CQGnuPlotUtil::alignConv(a));
-}
-
-void
-CQGnuPlotGroup::
-mouseMove(const CPoint2D &p)
-{
   for (auto &plot : plots()) {
+    renderer->setRange(getDisplayRange(plot->xind(), plot->yind()));
+
+    CPoint2D p;
+
+    renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
+
+    unmapLogPoint(&p.x, &p.y);
+
+    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+    qplot->mousePress(p);
+  }
+}
+
+void
+CQGnuPlotGroup::
+mouseMove(const QPoint &qp)
+{
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setRegion(region());
+
+  for (auto &plot : plots()) {
+    renderer->setRange(getDisplayRange(plot->xind(), plot->yind()));
+
+    CPoint2D p;
+
+    renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
+
+    unmapLogPoint(&p.x, &p.y);
+
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
     qplot->mouseMove(p);
@@ -100,9 +121,21 @@ mouseMove(const CPoint2D &p)
 
 bool
 CQGnuPlotGroup::
-mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
+mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
 {
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setRegion(region());
+
   for (auto &plot : plots()) {
+    renderer->setRange(getDisplayRange(plot->xind(), plot->yind()));
+
+    CPoint2D p;
+
+    renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
+
+    unmapLogPoint(&p.x, &p.y);
+
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
     if (qplot->mouseTip(p, tip))

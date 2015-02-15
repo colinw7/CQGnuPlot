@@ -150,7 +150,7 @@ void
 CGnuPlotWindow::
 reset3D()
 {
-  for (auto group : groups_)
+  for (auto &group : groups_)
     group->reset3D();
 }
 
@@ -164,6 +164,20 @@ addGroup(CGnuPlotGroup *group)
   group->setInd(groups_.size() + 1);
 
   groups_.push_back(group);
+}
+
+void
+CGnuPlotWindow::
+fitGroups()
+{
+  double y  = 0.0;
+  double dy = 1.0/groups_.size();
+
+  for (auto &group : groups_) {
+    group->setRegion(CBBox2D(0.0, y, 1.0, y + dy));
+
+    y += dy;
+  }
 }
 
 void

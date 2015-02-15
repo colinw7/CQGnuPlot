@@ -14,6 +14,8 @@
 #include <memory>
 
 class CGnuPlotRenderer;
+class CGnuPlotPlot;
+class CGnuPlotGroup;
 
 //---
 
@@ -33,19 +35,53 @@ class CGnuPlotObject {
 
   virtual ~CGnuPlotObject() { }
 
+  virtual void draw() const = 0;
+
  protected:
-  CGnuPlot *plot_;
+  CGnuPlot *plot_ { 0 };
 };
 
 //---
 
-class CGnuPlotAnnotation : public CGnuPlotObject {
+class CGnuPlotPlotObject {
  public:
-  CGnuPlotAnnotation(CGnuPlot *plot) :
-   CGnuPlotObject(plot) {
+  CGnuPlotPlotObject(CGnuPlotPlot *plot) :
+   plot_(plot) {
   }
 
-  virtual ~CGnuPlotAnnotation() { }
+  virtual ~CGnuPlotPlotObject() { }
+
+  virtual void draw() const = 0;
+
+ protected:
+  CGnuPlotPlot *plot_ { 0 };
+};
+
+//---
+
+class CGnuPlotGroupObject {
+ public:
+  CGnuPlotGroupObject(CGnuPlotGroup *group) :
+   group_(group) {
+  }
+
+  virtual ~CGnuPlotGroupObject() { }
+
+  virtual void draw() const = 0;
+
+ protected:
+  CGnuPlotGroup *group_ { 0 };
+};
+
+//---
+
+class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
+ public:
+  CGnuPlotGroupAnnotation(CGnuPlotGroup *group) :
+   CGnuPlotGroupObject(group) {
+  }
+
+  virtual ~CGnuPlotGroupAnnotation() { }
 
   const CRGBA &getStrokeColor() const { return strokeColor_; }
   void setStrokeColor(const CRGBA &c) { strokeColor_ = c; }
@@ -56,8 +92,6 @@ class CGnuPlotAnnotation : public CGnuPlotObject {
   const CGnuPlotLayer &getLayer() const { return layer_; }
   void setLayer(const CGnuPlotLayer &l) { layer_ = l; }
 
-  virtual void draw(CGnuPlotRenderer *renderer) const = 0;
-
  protected:
   CRGBA             strokeColor_ { 0, 0, 0 };
   CGnuPlotColorSpec fillColor_;
@@ -66,13 +100,23 @@ class CGnuPlotAnnotation : public CGnuPlotObject {
 
 //---
 
-class CGnuPlotArrow : public CGnuPlotAnnotation {
+class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
  public:
-  CGnuPlotArrow(CGnuPlot *plot) :
-   CGnuPlotAnnotation(plot) {
+  CGnuPlotArrow(CGnuPlotGroup *group) :
+   CGnuPlotGroupAnnotation(group) {
   }
 
   virtual ~CGnuPlotArrow() { }
+
+  CGnuPlotArrow *setData(const CGnuPlotArrow *arrow) {
+    ind_      = arrow->ind_;
+    from_     = arrow->from_;
+    to_       = arrow->to_;
+    relative_ = arrow->relative_;
+    style_    = arrow->style_;
+
+    return this;
+  }
 
   int getInd() const { return ind_; }
   void setInd(int t) { ind_ = t; }
@@ -116,7 +160,7 @@ class CGnuPlotArrow : public CGnuPlotAnnotation {
   bool getFront() const { return style_.front(); }
   void setFront(bool b) { style_.setFront(b); }
 
-  double getLineWidth() const { return style_.lineWidth(plot_); }
+  double getLineWidth() const;
   void setLineWidth(double w) { style_.setLineWidth(w); }
 
   int getLineStyle() const { return style_.lineStyle(); }
@@ -130,13 +174,9 @@ class CGnuPlotArrow : public CGnuPlotAnnotation {
 
   CRGBA getLineColor() const;
 
-  void draw(CGnuPlotRenderer *renderer) const override;
+  void draw() const override;
 
-  void print(std::ostream &os) const {
-    style_.print(plot_, os);
-
-    os << " from " << from_ << (relative_ ? " rto " : " to ") << to_;
-  }
+  void print(std::ostream &os) const;
 
  protected:
   int                ind_      { -1 };
@@ -148,13 +188,26 @@ class CGnuPlotArrow : public CGnuPlotAnnotation {
 
 //---
 
-class CGnuPlotLabel : public CGnuPlotAnnotation {
+class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
  public:
-  CGnuPlotLabel(CGnuPlot *plot) :
-   CGnuPlotAnnotation(plot) {
+  CGnuPlotLabel(CGnuPlotGroup *group) :
+   CGnuPlotGroupAnnotation(group) {
   }
 
   virtual ~CGnuPlotLabel() { }
+
+  CGnuPlotLabel *setData(const CGnuPlotLabel *label) {
+    ind_    = label->ind_;
+    text_   = label->text_;
+    align_  = label->align_;
+    pos_    = label->pos_;
+    font_   = label->font_;
+    angle_  = label->angle_;
+    front_  = label->front_;
+    offset_ = label->offset_;
+
+    return this;
+  }
 
   int getInd() const { return ind_; }
   void setInd(int t) { ind_ = t; }
@@ -180,7 +233,7 @@ class CGnuPlotLabel : public CGnuPlotAnnotation {
   double getOffset() const { return offset_; }
   void setOffset(double o) { offset_ = o; }
 
-  void draw(CGnuPlotRenderer *renderer) const override;
+  void draw() const override;
 
   void print(std::ostream &os) const {
     os << " \"" << text_ << "\"" << " at " << pos_;
@@ -199,13 +252,21 @@ class CGnuPlotLabel : public CGnuPlotAnnotation {
 
 //---
 
-class CGnuPlotEllipse : public CGnuPlotAnnotation {
+class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {
  public:
-  CGnuPlotEllipse(CGnuPlot *plot) :
-   CGnuPlotAnnotation(plot) {
+  CGnuPlotEllipse(CGnuPlotGroup *group) :
+   CGnuPlotGroupAnnotation(group) {
   }
 
   virtual ~CGnuPlotEllipse() { }
+
+  CGnuPlotEllipse *setData(const CGnuPlotEllipse *ellipse) {
+    p_  = ellipse->p_;
+    rx_ = ellipse->rx_;
+    ry_ = ellipse->ry_;
+
+    return this;
+  }
 
   const CPoint2D &getCenter() const { return p_; }
   void setCenter(const CPoint2D &p) { p_ = p; }
@@ -216,7 +277,7 @@ class CGnuPlotEllipse : public CGnuPlotAnnotation {
   double getRY() const { return ry_; }
   void setRY(double y) { ry_ = y; }
 
-  void draw(CGnuPlotRenderer *renderer) const override;
+  void draw() const override;
 
  protected:
   CPoint2D p_  { 0, 0 };
@@ -226,16 +287,22 @@ class CGnuPlotEllipse : public CGnuPlotAnnotation {
 
 //---
 
-class CGnuPlotPolygon : public CGnuPlotAnnotation {
+class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
  public:
   typedef std::vector<CPoint2D> Points;
 
  public:
-  CGnuPlotPolygon(CGnuPlot *plot) :
-   CGnuPlotAnnotation(plot) {
+  CGnuPlotPolygon(CGnuPlotGroup *group) :
+   CGnuPlotGroupAnnotation(group) {
   }
 
   virtual ~CGnuPlotPolygon() { }
+
+  CGnuPlotPolygon *setData(const CGnuPlotPolygon *poly) {
+    points_ = poly->points_;
+
+    return this;
+  }
 
   void addPoint(const CPoint2D &p) {
     points_.push_back(p);
@@ -243,7 +310,7 @@ class CGnuPlotPolygon : public CGnuPlotAnnotation {
 
   const Points &getPoints() const { return points_; }
 
-  void draw(CGnuPlotRenderer *renderer) const override;
+  void draw() const override;
 
  protected:
   Points points_;
@@ -251,13 +318,26 @@ class CGnuPlotPolygon : public CGnuPlotAnnotation {
 
 //---
 
-class CGnuPlotRectangle : public CGnuPlotAnnotation {
+class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
  public:
-  CGnuPlotRectangle(CGnuPlot *plot) :
-   CGnuPlotAnnotation(plot) {
+  CGnuPlotRectangle(CGnuPlotGroup *group) :
+   CGnuPlotGroupAnnotation(group) {
   }
 
   virtual ~CGnuPlotRectangle() { }
+
+  CGnuPlotRectangle *setData(const CGnuPlotRectangle *rect) {
+    from_   = rect->from_;
+    to_     = rect->to_;
+    rto_    = rect->rto_;
+    center_ = rect->center_;
+    size_   = rect->size_;
+    fs_     = rect->fs_;
+    lw_     = rect->lw_;
+    bbox_   = rect->bbox_;
+
+    return this;
+  }
 
   const CGnuPlotPosition &getFrom() const { return from_.getValue(); }
   void setFrom(const CGnuPlotPosition &p) { from_ = p; }
@@ -280,7 +360,7 @@ class CGnuPlotRectangle : public CGnuPlotAnnotation {
   double getLineWidth() const { return lw_.getValue(0); }
   void setLineWidth(double w) { lw_ = w; }
 
-  void draw(CGnuPlotRenderer *renderer) const override;
+  void draw() const override;
 
  protected:
   COptValT<CGnuPlotPosition> from_;

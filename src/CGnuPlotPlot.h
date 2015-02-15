@@ -5,6 +5,7 @@
 #include <CGnuPlotContour.h>
 #include <CGnuPlotObject.h>
 #include <CGnuPlotPoint.h>
+#include <CGnuPlotCache.h>
 
 #include <CExpr.h>
 #include <CBBox2D.h>
@@ -16,28 +17,80 @@ typedef unsigned char uchar;
 
 class CGnuPlotWindow;
 class CGnuPlotGroup;
+class CGnuPlotBar;
+class CGnuPlotPie;
+class CGnuPlotBubble;
 
 typedef CRefPtr<CExprValue> CExprValueP;
 
+//------
+
+template<>
+class CGnuPlotCacheFactory<CGnuPlotBar> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotBar *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+template<>
+class CGnuPlotCacheFactory<CGnuPlotPie> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotPie *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+template<>
+class CGnuPlotCacheFactory<CGnuPlotBubble> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotBubble *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+//------
+
 class CGnuPlotPlot {
  public:
-  typedef std::vector<CExprValueP>   Values;
-  typedef CGnuPlot::BoxWidth         BoxWidth;
-  typedef CGnuPlot::BoxWidthType     BoxWidthType;
-  typedef CGnuPlot::AxesData         AxesData;
-  typedef CGnuPlot::AxisData         AxisData;
-  typedef CGnuPlot::PlotStyle        PlotStyle;
-  typedef CGnuPlotTypes::FillType    FillType;
-  typedef CGnuPlotTypes::FillPattern FillPattern;
-  typedef CGnuPlot::Palette          Palette;
-  typedef CGnuPlot::FilledCurve      FilledCurve;
-  typedef CGnuPlot::PointStyle       PointStyle;
-  typedef CGnuPlot::Smooth           Smooth;
-  typedef CGnuPlotTypes::SymbolType  SymbolType;
-  typedef std::vector<CGnuPlotPoint> Points2D;
-  typedef std::map<int,Points2D>     Points3D;
-  typedef std::vector<uchar>         ImageData;
-  typedef CGnuPlot::ImageStyle       ImageStyle;
+  typedef std::vector<CExprValueP>      Values;
+  typedef CGnuPlot::BoxWidth            BoxWidth;
+  typedef CGnuPlot::BoxWidthType        BoxWidthType;
+  typedef CGnuPlot::AxesData            AxesData;
+  typedef CGnuPlot::AxisData            AxisData;
+  typedef CGnuPlot::PlotStyle           PlotStyle;
+  typedef CGnuPlotTypes::FillType       FillType;
+  typedef CGnuPlotTypes::FillPattern    FillPattern;
+  typedef CGnuPlot::Palette             Palette;
+  typedef CGnuPlot::FilledCurve         FilledCurve;
+  typedef CGnuPlot::PointStyle          PointStyle;
+  typedef CGnuPlot::Smooth              Smooth;
+  typedef CGnuPlotTypes::SymbolType     SymbolType;
+  typedef std::vector<CGnuPlotPoint>    Points2D;
+  typedef std::map<int,Points2D>        Points3D;
+  typedef std::vector<uchar>            ImageData;
+  typedef CGnuPlot::ImageStyle          ImageStyle;
+  typedef CGnuPlotCache<CGnuPlotBar>    BarCache;
+  typedef CGnuPlotCache<CGnuPlotPie>    PieCache;
+  typedef CGnuPlotCache<CGnuPlotBubble> BubbleCache;
+  typedef std::vector<CGnuPlotBar *>    Bars;
+  typedef std::vector<CGnuPlotPie *>    Pies;
+  typedef std::vector<CGnuPlotBubble *> Bubbles;
 
  public:
   CGnuPlotPlot(CGnuPlotGroup *group);
@@ -247,6 +300,8 @@ class CGnuPlotPlot {
 
   void updateGroupRange();
 
+  const CBBox2D &getBBox() const { return bbox_; }
+
   //---
 
   const AxesData &axesData() const { return axesData_; }
@@ -275,6 +330,10 @@ class CGnuPlotPlot {
   double whiskerBars() const { return whiskerBars_; }
   void setWhiskerBars(double w) { whiskerBars_ = w; }
 
+  const Bars    &bars   () const { return barCache_   .objects(); }
+  const Pies    &pies   () const { return pieCache_   .objects(); }
+  const Bubbles &bubbles() const { return bubbleCache_.objects(); }
+
   //---
 
   virtual void draw();
@@ -282,33 +341,35 @@ class CGnuPlotPlot {
   void draw2D();
   void draw3D();
 
-  void drawBoxErrorBars  (const CBBox2D &bbox);
-  void drawBoxes         (const CBBox2D &bbox);
-  void drawBoxPlot       (const CBBox2D &bbox);
-  void drawBoxXYErrorBars(const CBBox2D &bbox);
-  void drawCandleSticks  (const CBBox2D &bbox);
-  void drawCircles       (const CBBox2D &bbox);
-  void drawEllipses      (const CBBox2D &bbox);
-  void drawDots          (const CBBox2D &bbox);
-  void drawFilledCurves  (const CBBox2D &bbox);
-  void drawFinanceBars   (const CBBox2D &bbox);
-  void drawSteps         (const CBBox2D &bbox);
-  void drawBinaryImage   (const CBBox2D &bbox);
-  void drawImage         (const CBBox2D &bbox);
-  void drawImpulses      (const CBBox2D &bbox);
-  void drawLabels        (const CBBox2D &bbox);
-  void drawLines         ();
-  void drawParallelAxes  (const CBBox2D &bbox);
-  void drawPieChart      (const CBBox2D &bbox);
-  void drawPoints        ();
-  void drawVectors       (const CBBox2D &bbox);
-  void drawXYErrorBars   (const CBBox2D &bbox);
+  void drawBoxErrorBars      ();
+  void drawBoxes             ();
+  void drawBoxPlot           ();
+  void drawBoxXYErrorBars    ();
+  void drawBubbleChart       ();
+  void drawCandleSticks      ();
+  void drawCircles           ();
+  void drawEllipses          ();
+  void drawDots              ();
+  void drawFilledCurves      ();
+  void drawFinanceBars       ();
+  void drawClusteredHistogram(double y2, double d, double w);
+  void drawStackedHistogram  (int i, const CBBox2D &bbox);
+  void drawSteps             ();
+  void drawBinaryImage       ();
+  void drawImage             ();
+  void drawImpulses          ();
+  void drawLabels            ();
+  void drawLines             ();
+  void drawParallelAxes      ();
+  void drawPieChart          ();
+  void drawPoints            ();
+  void drawVectors           ();
+  void drawXYErrorBars       ();
+
+  void setNumBars(int n);
 
   double decodeImageUsingColor(int col, const CRGBA &c) const;
   double indexImageColor(int i, const CRGBA &c) const;
-
-  virtual void drawBar(double x, double y, const CBBox2D &bbox, FillType fillType,
-                       FillPattern fillPattern, const CRGBA &fillColor, const CRGBA &lineColor);
 
   void drawTerminal();
   void drawPalette();
@@ -321,6 +382,10 @@ class CGnuPlotPlot {
                 const CLineDash &dash=CLineDash());
 
   void fillPolygon(const std::vector<CPoint2D> &polygons, const CRGBA &c);
+
+  CGnuPlotBar    *createBar   () const;
+  CGnuPlotPie    *createPie   () const;
+  CGnuPlotBubble *createBubble() const;
 
  protected:
   typedef std::vector<CPoint2D>         Points;
@@ -345,7 +410,7 @@ class CGnuPlotPlot {
   BoxWidth           boxWidth_;                         // box widths
   Palette            palette_;
   FilledCurve        filledCurve_;                      // filled curve data
-  PlotStyle          style_       { PlotStyle::POINTS}; // plot style
+  PlotStyle          style_ { PlotStyle::POINTS};       // plot style
   CGnuPlotFillStyle  fillStyle_;                        // fill style
   CGnuPlotLineStyle  lineStyle_;                        // line style
   PointStyle         pointStyle_;                       // point style
@@ -354,7 +419,8 @@ class CGnuPlotPlot {
   std::string        keyTitle_;                         // title on key
   int                xind_ { 1 };                       // xaxis index
   int                yind_ { 1 };                       // yaxis index
-  Smooth             smooth_      { Smooth::NONE };     // smooth data
+  CBBox2D            bbox_ { 0, 0, 1, 1 };              // bounding box
+  Smooth             smooth_ { Smooth::NONE };          // smooth data
   CGnuPlotContour    contour_;                          // contour data
   bool               contourSet_ { false };
   ZPolygons          surface_;                          // surface data
@@ -362,6 +428,32 @@ class CGnuPlotPlot {
   COptReal           surfaceZMin_, surfaceZMax_;
   int                trianglePattern3D_ { 3 };          // 3d surface pattern
   double             whiskerBars_ { 0 };                // whisker bar data
+  BarCache           barCache_;
+  PieCache           pieCache_;
+  BubbleCache        bubbleCache_;
 };
+
+//------
+
+inline CGnuPlotBar *
+CGnuPlotCacheFactory<CGnuPlotBar>::
+make()
+{
+  return plot_->createBar();
+}
+
+inline CGnuPlotPie *
+CGnuPlotCacheFactory<CGnuPlotPie>::
+make()
+{
+  return plot_->createPie();
+}
+
+inline CGnuPlotBubble *
+CGnuPlotCacheFactory<CGnuPlotBubble>::
+make()
+{
+  return plot_->createBubble();
+}
 
 #endif

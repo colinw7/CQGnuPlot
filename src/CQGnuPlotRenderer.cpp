@@ -82,7 +82,6 @@ CQGnuPlotRenderer::
 CQGnuPlotRenderer(CQGnuPlotCanvas *canvas) :
  canvas_(canvas)
 {
-  font_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
 }
 
 CQGnuPlotRenderer::
@@ -461,7 +460,7 @@ void
 CQGnuPlotRenderer::
 drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 {
-  CQFont *qfont = font_.cast<CQFont>();
+  CQFont *qfont = getFont().cast<CQFont>();
 
   painter_->setFont(qfont->getQFont());
 
@@ -517,9 +516,9 @@ void
 CQGnuPlotRenderer::
 setFont(CFontPtr font)
 {
-  font_ = font;
+  CGnuPlotRenderer::setFont(font);
 
-  painter_->setFont(CQUtil::toQFont(font_));
+  painter_->setFont(CQUtil::toQFont(getFont()));
 }
 
 void

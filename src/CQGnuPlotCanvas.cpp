@@ -34,7 +34,13 @@ void
 CQGnuPlotCanvas::
 mousePressEvent(QMouseEvent *e)
 {
-  window_->setCurrentGroup(window_->getGroupAt(e->pos()));
+  CQGnuPlotGroup *group = window_->getGroupAt(e->pos());
+
+  if (group) {
+    window_->setCurrentGroup(group);
+
+    group->mousePress(e->pos());
+  }
 }
 
 void
@@ -44,7 +50,15 @@ mouseMoveEvent(QMouseEvent *e)
   CQGnuPlotGroup *group = window_->getGroupAt(e->pos());
 
   if (group) {
-    CPoint2D p = group->pixelToWindow(CPoint2D(e->pos().x(), e->pos().y()));
+    CGnuPlotRenderer *renderer = group->app()->renderer();
+
+    renderer->setRegion(group->region());
+
+    renderer->setRange(group->getDisplayRange(1, 1));
+
+    CPoint2D p;
+
+    renderer->pixelToWindow(CPoint2D(e->pos().x(), e->pos().y()), p);
 
     group->unmapLogPoint(&p.x, &p.y);
 

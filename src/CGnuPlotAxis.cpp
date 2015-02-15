@@ -391,6 +391,17 @@ drawAxis(double pos)
   double maxW = 0;
   double maxH = font->getCharHeight();
 
+  if (direction_ == CORIENTATION_HORIZONTAL) {
+    double py = renderer->pixelHeightToWindowHeight(2);
+
+    bbox_ = CBBox2D(getStart(), pos - py, getEnd(), pos + py);
+  }
+  else {
+    double px = renderer->pixelWidthToWindowWidth(2);
+
+    bbox_ = CBBox2D(pos - px, getStart(), pos + px, getEnd());
+  }
+
   //---
 
   // Draw Axis Line
@@ -578,14 +589,14 @@ drawAxisTick(const CPoint2D &p, CDirectionType type, bool large)
   if (type == CDIRECTION_TYPE_LEFT || type == CDIRECTION_TYPE_RIGHT) {
     double dx = (type == CDIRECTION_TYPE_LEFT ? -1 : 1);
 
-    double x1 = p1.x + dx*group_->pixelWidthToWindowWidth(psize);
+    double x1 = p1.x + dx*renderer->pixelWidthToWindowWidth(psize);
 
     drawLine(p1, CPoint2D(x1, p1.y));
   }
   else {
     double dy = (type == CDIRECTION_TYPE_DOWN  ? -1 : 1);
 
-    double y1 = p1.y + dy*group_->pixelHeightToWindowHeight(psize);
+    double y1 = p1.y + dy*renderer->pixelHeightToWindowHeight(psize);
 
     drawLine(p1, CPoint2D(p1.x, y1));
   }

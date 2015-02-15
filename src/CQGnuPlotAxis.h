@@ -1,26 +1,28 @@
 #ifndef CQGnuPlotAxis_H
 #define CQGnuPlotAxis_H
 
-#include <QObject>
+#include <CQGnuPlotObject.h>
 #include <CGnuPlotAxis.h>
 
 class CQGnuPlotGroup;
 
-class CQGnuPlotAxis : public QObject, public CGnuPlotAxis {
+class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   Q_OBJECT
 
-  Q_PROPERTY(bool displayed READ isDisplayed WRITE setDisplayed)
+  Q_PROPERTY(bool    displayed READ isDisplayed WRITE setDisplayed)
+  Q_PROPERTY(double  start     READ getStart)
+  Q_PROPERTY(double  end       READ getEnd)
+  Q_PROPERTY(QString label     READ getLabel    WRITE setLabel)
 
  public:
   CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, COrientation dir,
                 double start=0.0, double end=1.0);
  ~CQGnuPlotAxis();
 
-  bool isDisplayed() const;
-  void setDisplayed(bool b);
+  QString getLabel() const;
+  void setLabel(const QString &str);
 
- private:
-  bool displayed_;
+  void drawAxis(double pos) override;
 };
 
 #endif

@@ -3,13 +3,12 @@
 
 #include <CQGnuPlot.h>
 #include <CGnuPlotGroup.h>
-
-#include <QObject>
+#include <CQGnuPlotObject.h>
 
 class CQGnuPlotWindow;
 class QPainter;
 
-class CQGnuPlotGroup : public QObject, public CGnuPlotGroup {
+class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   Q_OBJECT
 
   Q_PROPERTY(QString title READ title WRITE setTitle)
@@ -31,8 +30,6 @@ class CQGnuPlotGroup : public QObject, public CGnuPlotGroup {
   Q_PROPERTY(double ymin READ getYMin WRITE setYMin)
   Q_PROPERTY(double ymax READ getYMax WRITE setYMax)
 
-  Q_PROPERTY(QString xlabel      READ getXLabel      WRITE setXLabel)
-  Q_PROPERTY(QString ylabel      READ getYLabel      WRITE setYLabel)
   Q_PROPERTY(bool    xtics       READ getXTics       WRITE setXTics)
   Q_PROPERTY(bool    ytics       READ getYTics       WRITE setYTics)
   Q_PROPERTY(bool    xticsMirror READ getXTicsMirror WRITE setXTicsMirror)
@@ -42,12 +39,6 @@ class CQGnuPlotGroup : public QObject, public CGnuPlotGroup {
 
   Q_PROPERTY(int     borders     READ getBorders     WRITE setBorders    )
   Q_PROPERTY(double  borderWidth READ getBorderWidth WRITE setBorderWidth)
-
-  Q_PROPERTY(bool                    keyDisplayed READ getKeyDisplayed WRITE setKeyDisplayed)
-  Q_PROPERTY(CQGnuPlot::CQHAlignType keyHAlign    READ keyHAlign       WRITE setKeyHAlign   )
-  Q_PROPERTY(CQGnuPlot::CQVAlignType keyVAlign    READ keyVAlign       WRITE setKeyVAlign   )
-  Q_PROPERTY(bool                    keyBox       READ getKeyBox       WRITE setKeyBox      )
-  Q_PROPERTY(bool                    keyReverse   READ getKeyReverse   WRITE setKeyReverse  )
 
   Q_PROPERTY(CQGnuPlot::CQHistogramStyle histogramStyle READ histogramStyle WRITE setHistogramStyle)
 
@@ -68,17 +59,14 @@ class CQGnuPlotGroup : public QObject, public CGnuPlotGroup {
   QString getYLabel() const { return CGnuPlotGroup::getYLabel().c_str(); }
   void setYLabel(const QString &s) { CGnuPlotGroup::setYLabel(s.toStdString()); }
 
-  CQGnuPlot::CQHAlignType keyHAlign() const;
-  void setKeyHAlign(const CQGnuPlot::CQHAlignType &a);
-
-  CQGnuPlot::CQVAlignType keyVAlign() const;
-  void setKeyVAlign(const CQGnuPlot::CQVAlignType &a);
-
   CQGnuPlot::CQHistogramStyle histogramStyle() const;
   void setHistogramStyle(const CQGnuPlot::CQHistogramStyle &s);
 
-  void mouseMove(const CPoint2D &p);
-  bool mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip);
+  void draw() override;
+
+  void mousePress(const QPoint &qp);
+  void mouseMove (const QPoint &qp);
+  bool mouseTip  (const QPoint &qp, CQGnuPlot::TipRect &tip);
 
  private:
   CQGnuPlotWindow *window_;

@@ -16,6 +16,7 @@ class CQGnuPlotRenderer;
 class CQPropertyTree;
 class CQPropertyRealEditor;
 class QLabel;
+class QTimer;
 
 class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
                         public CQMouseModeIFace, public CQPanZoomIFace {
@@ -46,7 +47,7 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
 
   void setSize(const CISize2D &s);
 
-  void addProperties();
+  void updateProperties();
   void addGroupProperties(CGnuPlotGroup *group);
   void addPlotProperties(CGnuPlotPlot *plot);
 
@@ -87,18 +88,21 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
 
   CQGnuPlotGroup *getGroupAt(const QPoint &pos);
 
-  void mouseMove(const QPoint &qp);
+  void mousePress(const QPoint &qp);
+  void mouseMove (const QPoint &qp);
+  bool mouseTip  (const QPoint &qp, CQGnuPlot::TipRect &tip);
 
-  bool mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip);
+  void selectObject(const QObject *);
 
   void redraw();
+
+ public slots:
+  void addProperties();
 
  private:
   void paintPlot(CGnuPlotPlot *plot);
 
   void redrawOverlay();
-
-  QPointF pixelToWindow(const QPoint &p);
 
   void setCursor(QCursor cursor);
 
@@ -123,27 +127,30 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   void zoomOut  ();
   void resetZoom();
 
+  QPointF pixelToWindow(const QPoint &p);
+
   void pixelToWindow(double px, double py, double *wx, double *wy);
 
  private slots:
   void xAxisSlot(bool show);
   void yAxisSlot(bool show);
 
-  void itemClickedSlot(QObject *obj, const QString &path);
+  void itemSelectedSlot(QObject *obj, const QString &path);
 
  private:
   static uint lastId;
 
-  uint                  id_;
-  CQGnuPlot            *plot_;
-  CQGnuPlotRenderer    *renderer_;
-  CQGnuPlotCanvas      *canvas_;
-  CQMouseMode          *zoomMode_;
-  CQMouseMode          *panMode_;
-  CQPropertyTree       *tree_;
+  uint                  id_           { 0 };
+  CQGnuPlot            *plot_         { 0 };
+  CQGnuPlotRenderer    *renderer_     { 0 };
+  CQGnuPlotCanvas      *canvas_       { 0 };
+  CQMouseMode          *zoomMode_     { 0 };
+  CQMouseMode          *panMode_      { 0 };
+  CQPropertyTree       *tree_         { 0 };
   CQPropertyRealEditor *redit_[4]     { 0, 0, 0, 0 };
-  QLabel               *plotLabel_;
-  QLabel               *posLabel_;
+  QTimer               *propTimer_    { 0 };
+  QLabel               *plotLabel_    { 0 };
+  QLabel               *posLabel_     { 0 };
   CQGnuPlotGroup       *currentGroup_ { 0 };
 };
 

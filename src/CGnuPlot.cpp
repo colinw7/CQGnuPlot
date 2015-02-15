@@ -89,6 +89,66 @@ class CGnuPlotStringValidFn : public CExprFunctionObj {
 
 //------
 
+namespace {
+  bool readOptionString(CParseLine &line, std::string &id) {
+    line.skipSpace();
+
+    if (! line.isValid())
+      return false;
+
+    char c = line.lookChar();
+
+    if (! isalpha(c))
+      return false;
+
+    id += line.getChar();
+
+    while (line.isValid()) {
+      char c = line.lookChar();
+
+      if (! isalnum(c) && c != '_')
+        break;
+
+      id += line.getChar();
+    }
+
+    return true;
+  }
+
+  template<typename T>
+  bool parseOptionValue(CParseLine &line, T &value, const std::string &msg="") {
+    int pos = line.pos();
+
+    std::string option;
+
+    if (! readOptionString(line, option)) {
+      line.setPos(pos);
+      return false;
+    }
+
+    T value1;
+
+    if (msg != "") {
+      if (! CStrUniqueMatch::stringToValueWithErr(option, value1, msg)) {
+        line.setPos(pos);
+        return false;
+      }
+    }
+    else {
+      if (! CStrUniqueMatch::stringToValue(option, value1)) {
+        line.setPos(pos);
+        return false;
+      }
+    }
+
+    value = value1;
+
+    return true;
+  }
+}
+
+//------
+
 CGnuPlot::
 CGnuPlot()
 {
@@ -135,10 +195,10 @@ bool
 CGnuPlot::
 setDevice(const std::string &name)
 {
-  std::string name1 = CStrUtil::toLower(name);
+  auto name1 = CStrUtil::toLower(name);
 
   for (const auto &d : devices_) {
-    std::string name2 = CStrUtil::toLower(d.second->name());
+    auto name2 = CStrUtil::toLower(d.second->name());
 
     if (name1 == name2) {
       if (device_ && CStrUtil::toLower(device_->name()) == name1)
@@ -197,6 +257,13 @@ load(const std::string &filename)
   return true;
 }
 
+bool
+CGnuPlot::
+exec(const std::string &cmd)
+{
+  return parseLine(cmd);
+}
+
 void
 CGnuPlot::
 initReadLine()
@@ -217,12 +284,12 @@ loop()
   for (;;) {
     readLine_->setPrompt("> ");
 
-    std::string line = readLine_->readLine();
+    auto line = readLine_->readLine();
 
     while (line[line.size() - 1] == '\\') {
       readLine_->setPrompt("+> ");
 
-      std::string line1 = readLine_->readLine();
+      auto line1 = readLine_->readLine();
 
       line = line.substr(0, line.size() - 1) + line1;
     }
@@ -257,7 +324,7 @@ parseLine(const std::string &str)
   if      (line.isChar('!')) {
     line.skipChar();
 
-    std::string cmd = line.substr();
+    auto cmd = line.substr();
 
     FILE *fp = popen(cmd.c_str(), "r");
 
@@ -289,12 +356,12 @@ parseLine(const std::string &str)
 //std::cerr << "parse:" << str << std::endl;
   Statements statements;
 
-  std::string str1 = str;
+  auto str1 = str;
 
   auto p = str1.find(';');
 
   while (p != std::string::npos) {
-    std::string str2 = str1.substr(0, p);
+    auto str2 = str1.substr(0, p);
 
     statements.push_back(str2);
 
@@ -322,6 +389,8 @@ parseStatement(int &i, const Statements &statements)
   //---
 
   // get command name or variable name
+  int pos = line.pos();
+
   std::string identifier;
 
   (void) readIdentifier(line, identifier);
@@ -367,7 +436,7 @@ parseStatement(int &i, const Statements &statements)
     }
     // variable assignment
     else if (line.skipSpaceAndChar('=')) {
-      std::string expr = line.substr();
+      auto expr = line.substr();
 
       auto p = expr.find('#');
 
@@ -387,12 +456,14 @@ parseStatement(int &i, const Statements &statements)
 
   //---
 
-  std::string args = line.substr();
+  line.setPos(pos);
 
-  CommandName commandName;
+  CommandName commandName = CommandName::NONE;
 
-  if (! CStrUniqueMatch::stringToValue(identifier, commandName))
-    commandName = CommandName::NONE;
+  if (! parseOptionValue(line, commandName, "command name"))
+    return false;
+
+  auto args = line.substr();
 
   // process command
   switch (commandName) {
@@ -438,10 +509,7 @@ parseStatement(int &i, const Statements &statements)
     case CommandName::EVALUATE: evaluateCmd(args); break;
     case CommandName::PAUSE   : pauseCmd   (args); break;
     case CommandName::REREAD  : rereadCmd  (args); break;
-    default: {
-      std::cerr << "Invalid command: " << identifier << std::endl;
-      return false;
-    }
+    default                   : break;
   }
 
   return true;
@@ -560,7 +628,7 @@ callCmd(const std::string &args)
   std::vector<std::string> args1;
 
   while (line.isValid()) {
-    std::string arg = readNonSpace(line);
+    auto arg = readNonSpace(line);
 
     args1.push_back(arg);
   }
@@ -646,14 +714,13 @@ plotCmd(const std::string &args)
 
     int n = window->numGroups();
 
-    double dx = 1.0/multiplot().cols;
-    double dy = 1.0/multiplot().rows;
+    double dx = multiplot().dx();
+    double dy = multiplot().dy();
 
-    int ix = n % multiplot().cols;
-    int iy = n / multiplot().cols;
+    CIPoint2D pos = multiplot().pos(n);
 
-    double x1 = plotSize_.x.getValue(ix*dx);
-    double y1 = plotSize_.y.getValue(iy*dy);
+    double x1 = plotSize_.x.getValue(pos.x*dx);
+    double y1 = plotSize_.y.getValue(pos.y*dy);
     double x2 = x1 + plotSize_.xsize.getValue(dx);
     double y2 = y1 + plotSize_.ysize.getValue(dy);
 
@@ -758,15 +825,17 @@ plotCmd(const std::string &args)
         filename = lastFilename;
       // special filename '-' (read lines from stdin)
       else if (filename == "-") {
-        fileLines_.clear();
+        CGnuPlotFile::Lines lines;
 
         std::string line;
 
         while (fileReadLine(line)) {
           if (line == "e") break;
 
-          fileLines_.push_back(line);
+          lines.push_back(line);
         }
+
+        dataFile_.setLines(lines);
       }
       // special filename '+' (expression file)
       else if (filename == "+") {
@@ -815,8 +884,9 @@ plotCmd(const std::string &args)
     //---
 
     UsingCols usingCols;
-    Index     index;
-    Every     every;
+
+    dataFile_.resetIndices();
+    dataFile_.resetEvery  ();
 
     setSmooth(Smooth::NONE);
 
@@ -827,14 +897,9 @@ plotCmd(const std::string &args)
     //   <plot_data> [, <plot_data> ...]
     // TODO: using must come before title and with
     while (line.isValid() && ! line.isChar(',')) {
-      std::string option;
-
-      if (! readIdentifier(line, option))
-        break;
-
       PlotVar plotVar;
 
-      if (! CStrUniqueMatch::stringToValueWithErr(option, plotVar, "plot var"))
+      if (! parseOptionValue(line, plotVar, "plot var"))
         break;
 
       line.skipSpace();
@@ -907,39 +972,36 @@ plotCmd(const std::string &args)
       else if (plotVar == PlotVar::INDEX) {
         std::string indexStr = readNonSpaceNonComma(line);
 
-        if (isDebug())
-          std::cerr << "index " << indexStr << std::endl;
-
         line.skipSpace();
 
         std::vector<std::string> inds;
 
         CStrUtil::addFields(indexStr, inds, ":", /*skipEmpty*/true);
 
+        int indexStart, indexEnd, indexStep;
+
         if      (inds.size() > 2) {
-          (void) CStrUtil::toInteger(inds[0], &index.start);
-          (void) CStrUtil::toInteger(inds[1], &index.end);
-          (void) CStrUtil::toInteger(inds[2], &index.step);
+          (void) CStrUtil::toInteger(inds[0], &indexStart);
+          (void) CStrUtil::toInteger(inds[1], &indexEnd);
+          (void) CStrUtil::toInteger(inds[2], &indexStep);
         }
         else if (inds.size() > 1) {
-          (void) CStrUtil::toInteger(inds[0], &index.start);
-          (void) CStrUtil::toInteger(inds[1], &index.end);
-          index.step = 1;
+          (void) CStrUtil::toInteger(inds[0], &indexStart);
+          (void) CStrUtil::toInteger(inds[1], &indexEnd);
+          indexStep = 1;
         }
         else if (inds.size() > 0) {
-          (void) CStrUtil::toInteger(inds[0], &index.start);
-          index.end  = index.start;
-          index.step = 1;
+          (void) CStrUtil::toInteger(inds[0], &indexStart);
+          indexEnd  = indexStart;
+          indexStep = 1;
         }
+
+        dataFile_.setIndices(indexStart, indexEnd, indexStep);
       }
-      // read every range
       // every <step>[:<start>[:<end>]]
       // TODO (6 values [ipoint:iblock:spoint:epoint:eblock])
       else if (plotVar == PlotVar::EVERY) {
         std::string everyStr = readNonSpaceNonComma(line);
-
-        if (isDebug())
-          std::cerr << "every " << everyStr << std::endl;
 
         line.skipSpace();
 
@@ -947,21 +1009,25 @@ plotCmd(const std::string &args)
 
         CStrUtil::addFields(everyStr, inds, ":", /*skipEmpty*/true);
 
+        int everyStart, everyEnd, everyStep;
+
         if      (inds.size() > 2) {
-          (void) CStrUtil::toInteger(inds[0], &every.step);
-          (void) CStrUtil::toInteger(inds[1], &every.start);
-          (void) CStrUtil::toInteger(inds[2], &every.end);
+          (void) CStrUtil::toInteger(inds[0], &everyStep);
+          (void) CStrUtil::toInteger(inds[1], &everyStart);
+          (void) CStrUtil::toInteger(inds[2], &everyEnd);
         }
         else if (inds.size() > 1) {
-          (void) CStrUtil::toInteger(inds[0], &every.step);
-          (void) CStrUtil::toInteger(inds[1], &every.start);
-          every.end = INT_MAX;
+          (void) CStrUtil::toInteger(inds[0], &everyStep);
+          (void) CStrUtil::toInteger(inds[1], &everyStart);
+          everyEnd = std::numeric_limits<int>::max();
         }
         else if (inds.size() > 0) {
-          (void) CStrUtil::toInteger(inds[0], &every.step);
-          every.start = 0;
-          every.end   = INT_MAX;
+          (void) CStrUtil::toInteger(inds[0], &everyStep);
+          everyStart = 0;
+          everyEnd   = std::numeric_limits<int>::max();
         }
+
+        dataFile_.setEvery(everyStart, everyEnd, everyStep);
       }
       // with <style> { {linestyle | ls <line_style>} |
       //                {{linetype | lt <line_type>}
@@ -975,9 +1041,7 @@ plotCmd(const std::string &args)
       //              }
       // <style<[:<style>[...]]]
       else if (plotVar == PlotVar::WITH) {
-        std::string withStr = readNonSpaceNonComma(line);
-
-        if (CStrUniqueMatch::stringToValueWithErr(withStr, style, "plot style")) {
+        if (parseOptionValue(line, style, "plot style")) {
           if (isDebug())
             std::cerr << "with " << CStrUniqueMatch::valueToString(style) << std::endl;
 
@@ -1058,12 +1122,10 @@ plotCmd(const std::string &args)
           if      (line.isString("linestyle") || line.isString("ls")) {
             line.skipNonSpace();
 
-            std::string styleStr = readNonSpaceNonComma(line);
+            int i;
 
-            long l;
-
-            if (CStrUtil::toInteger(styleStr, &l))
-              setLineStyleInd(l);
+            if (parseInteger(line, i))
+              setLineStyleInd(i);
           }
           else if (line.isString("linetype") || line.isString("lt")) {
             line.skipNonSpace();
@@ -1094,10 +1156,10 @@ plotCmd(const std::string &args)
 
             std::string typeStr = readNonSpaceNonComma(line);
 
-            long l;
+            int i;
 
-            if (CStrUtil::toInteger(typeStr, &l))
-              lineStyle.setPointType(static_cast<CGnuPlotTypes::SymbolType>(l));
+            if (parseInteger(line, i))
+              lineStyle.setPointType(static_cast<CGnuPlotTypes::SymbolType>(i));
           }
           else if (line.isString("pointsize") || line.isString("ps")) {
             line.skipNonSpace();
@@ -1172,14 +1234,9 @@ plotCmd(const std::string &args)
       }
       // smooth type
       else if (plotVar == PlotVar::SMOOTH) {
-        std::string smoothStr = readNonSpaceNonComma(line);
-
-        if (isDebug())
-          std::cerr << "smooth " << smoothStr << std::endl;
-
         Smooth smooth;
 
-        if (CStrUniqueMatch::stringToValueWithErr(smoothStr, smooth, "smooth type"))
+        if (parseOptionValue(line, smooth, "smooth type"))
           setSmooth(smooth);
 
         line.skipSpace();
@@ -1294,14 +1351,10 @@ plotCmd(const std::string &args)
       else if (plotVar == PlotVar::ORIGIN) {
         if (line.skipSpaceAndChar('=')) {
           if (line.skipSpaceAndChar('(')) {
-            double r;
+            CPoint2D o;
 
-            if (parseReal(line, r))
-              imageStyle_.xo = r;
-
-            if (line.skipSpaceAndChar(','))
-              if (parseReal(line, r))
-                imageStyle_.yo = r;
+            if (parsePoint(line, o))
+              imageStyle_.o = o;
 
             (void) line.skipSpaceAndChar(')');
           }
@@ -1311,14 +1364,10 @@ plotCmd(const std::string &args)
       else if (plotVar == PlotVar::CENTER) {
         if (line.skipSpaceAndChar('=')) {
           if (line.skipSpaceAndChar('(')) {
-            double r;
+            CPoint2D c;
 
-            if (parseReal(line, r))
-              imageStyle_.cx = r;
-
-            if (line.skipSpaceAndChar(','))
-              if (parseReal(line, r))
-                imageStyle_.cy = r;
+            if (parsePoint(line, c))
+              imageStyle_.c = c;
 
             (void) line.skipSpaceAndChar(')');
           }
@@ -1383,7 +1432,7 @@ plotCmd(const std::string &args)
         }
       }
       else
-        plots1 = addFile2D(group, filename, style, usingCols, index, every);
+        plots1 = addFile2D(group, filename, style, usingCols);
     }
     else if (! functions.empty()) {
       CGnuPlotPlot *plot = addFunction2D(group, functions, style);
@@ -1434,9 +1483,6 @@ plotCmd(const std::string &args)
   group->init();
 
   group->setTitle(title());
-
-  group->setKeyData (keyData());
-  group->setAxesData(axesData());
 
   group->addSubPlots(plots);
 
@@ -1891,8 +1937,9 @@ splotCmd(const std::string &args)
     //---
 
     UsingCols usingCols;
-    Index     index;
-    Every     every;
+
+    dataFile_.resetIndices();
+    dataFile_.resetEvery  ();
 
     setSmooth(Smooth::NONE);
 
@@ -1900,11 +1947,9 @@ splotCmd(const std::string &args)
     //   <plot_data> [, <plot_data> ...]
     // TODO: using must come before title and with
     while (line.isValid() && ! line.isChar(',')) {
-      std::string option = readNonSpace(line);
-
       PlotVar plotVar;
 
-      if (! CStrUniqueMatch::stringToValueWithErr(option, plotVar, "plot var"))
+      if (! parseOptionValue(line, plotVar, "plot var"))
         break;
 
       line.skipSpace();
@@ -1983,38 +2028,36 @@ splotCmd(const std::string &args)
       else if (plotVar == PlotVar::INDEX) {
         std::string indexStr = readNonSpaceNonComma(line);
 
-        if (isDebug())
-          std::cerr << "index " << indexStr << std::endl;
-
         line.skipSpace();
 
         std::vector<std::string> inds;
 
         CStrUtil::addFields(indexStr, inds, ":", /*skipEmpty*/true);
 
+        int indexStart, indexEnd, indexStep;
+
         if      (inds.size() > 2) {
-          (void) CStrUtil::toInteger(inds[0], &index.start);
-          (void) CStrUtil::toInteger(inds[1], &index.end);
-          (void) CStrUtil::toInteger(inds[2], &index.step);
+          (void) CStrUtil::toInteger(inds[0], &indexStart);
+          (void) CStrUtil::toInteger(inds[1], &indexEnd);
+          (void) CStrUtil::toInteger(inds[2], &indexStep);
         }
         else if (inds.size() > 1) {
-          (void) CStrUtil::toInteger(inds[0], &index.start);
-          (void) CStrUtil::toInteger(inds[1], &index.end);
-          index.step = 1;
+          (void) CStrUtil::toInteger(inds[0], &indexStart);
+          (void) CStrUtil::toInteger(inds[1], &indexEnd);
+          indexStep = 1;
         }
         else if (inds.size() > 0) {
-          (void) CStrUtil::toInteger(inds[0], &index.start);
-          index.end  = index.start;
-          index.step = 1;
+          (void) CStrUtil::toInteger(inds[0], &indexStart);
+          indexEnd  = indexStart;
+          indexStep = 1;
         }
+
+        dataFile_.setIndices(indexStart, indexEnd, indexStep);
       }
-      // read every range
       // every <step>[:<start>[:<end>]]
+      // TODO (6 values [ipoint:iblock:spoint:epoint:eblock])
       else if (plotVar == PlotVar::EVERY) {
         std::string everyStr = readNonSpaceNonComma(line);
-
-        if (isDebug())
-          std::cerr << "every " << everyStr << std::endl;
 
         line.skipSpace();
 
@@ -2022,21 +2065,25 @@ splotCmd(const std::string &args)
 
         CStrUtil::addFields(everyStr, inds, ":", /*skipEmpty*/true);
 
+        int everyStart, everyEnd, everyStep;
+
         if      (inds.size() > 2) {
-          (void) CStrUtil::toInteger(inds[0], &every.step);
-          (void) CStrUtil::toInteger(inds[1], &every.start);
-          (void) CStrUtil::toInteger(inds[2], &every.end);
+          (void) CStrUtil::toInteger(inds[0], &everyStep);
+          (void) CStrUtil::toInteger(inds[1], &everyStart);
+          (void) CStrUtil::toInteger(inds[2], &everyEnd);
         }
         else if (inds.size() > 1) {
-          (void) CStrUtil::toInteger(inds[0], &every.step);
-          (void) CStrUtil::toInteger(inds[1], &every.start);
-          every.end = INT_MAX;
+          (void) CStrUtil::toInteger(inds[0], &everyStep);
+          (void) CStrUtil::toInteger(inds[1], &everyStart);
+          everyEnd = std::numeric_limits<int>::max();
         }
         else if (inds.size() > 0) {
-          (void) CStrUtil::toInteger(inds[0], &every.step);
-          every.start = 0;
-          every.end   = INT_MAX;
+          (void) CStrUtil::toInteger(inds[0], &everyStep);
+          everyStart = 0;
+          everyEnd   = std::numeric_limits<int>::max();
         }
+
+        dataFile_.setEvery(everyStart, everyEnd, everyStep);
       }
       // with <style> { {linestyle | ls <line_style>} |
       //                {{linetype | lt <line_type>}
@@ -2050,9 +2097,7 @@ splotCmd(const std::string &args)
       //              }
       // <style<[:<style>[...]]]
       else if (plotVar == PlotVar::WITH) {
-        std::string withStr = readNonSpaceNonComma(line);
-
-        if (CStrUniqueMatch::stringToValueWithErr(withStr, style, "plot style")) {
+        if (parseOptionValue(line, style, "plot style")) {
           if (isDebug())
             std::cerr << "with " << CStrUniqueMatch::valueToString(style) << std::endl;
         }
@@ -2065,12 +2110,10 @@ splotCmd(const std::string &args)
           if      (line.isString("linestyle") || line.isString("ls")) {
             line.skipNonSpace();
 
-            std::string styleStr = readNonSpaceNonComma(line);
+            int i;
 
-            long l;
-
-            if (CStrUtil::toInteger(styleStr, &l))
-              setLineStyleInd(l);
+            if (parseInteger(line, i))
+              setLineStyleInd(i);
           }
           else if (line.isString("linetype") || line.isString("lt")) {
             line.skipNonSpace();
@@ -2099,12 +2142,10 @@ splotCmd(const std::string &args)
           else if (line.isString("pointtype") || line.isString("pt")) {
             line.skipNonSpace();
 
-            std::string typeStr = readNonSpaceNonComma(line);
+            int i;
 
-            long l;
-
-            if (CStrUtil::toInteger(typeStr, &l))
-              lineStyle()->setPointType(static_cast<CGnuPlotTypes::SymbolType>(l));
+            if (parseInteger(line, i))
+              lineStyle()->setPointType(static_cast<CGnuPlotTypes::SymbolType>(i));
           }
           else if (line.isString("pointsize") || line.isString("ps")) {
             line.skipNonSpace();
@@ -2164,14 +2205,9 @@ splotCmd(const std::string &args)
       }
       // smooth type
       else if (plotVar == PlotVar::SMOOTH) {
-        std::string smoothStr = readNonSpaceNonComma(line);
-
-        if (isDebug())
-          std::cerr << "smooth " << smoothStr << std::endl;
-
         Smooth smooth;
 
-        if (CStrUniqueMatch::stringToValueWithErr(smoothStr, smooth, "smooth type"))
+        if (parseOptionValue(line, smooth, "smooth type"))
           setSmooth(smooth);
 
         line.skipSpace();
@@ -2220,7 +2256,7 @@ splotCmd(const std::string &args)
 }
 
 // set ...
-void
+bool
 CGnuPlot::
 setCmd(const std::string &args)
 {
@@ -2234,31 +2270,22 @@ setCmd(const std::string &args)
     std::string var, start, end, inc, lcmd, rcmd;
 
     if (! parseFor(line, var, start, end, inc, lcmd, rcmd))
-      return;
+      return false;
 
     setForCmd(var, start, end, inc, lcmd);
 
     if (rcmd != "")
       setCmd(rcmd);
 
-    return;
+    return false;
   }
 
   //----
 
-  std::string option = readNonSpace(line);
-
-  //---
-
-  if (option.empty()) {
-    std::cerr << "Missing option name." << std::endl;
-    return;
-  }
-
   VariableName var;
 
-  if (! CStrUniqueMatch::stringToValue(option, var))
-    var = VariableName::NONE;
+  if (! parseOptionValue(line, var, "option name"))
+    return false;
 
   // --- Configuration ---
 
@@ -2269,12 +2296,10 @@ setCmd(const std::string &args)
   // set datafile commentschar ["<chars>"]
   // set datafile binary
   if      (var == VariableName::DATAFILE) {
-    std::string varStr = readNonSpace(line);
-
     DataFileVar var1;
 
-    if (! CStrUniqueMatch::stringToValueWithErr(varStr, var1, "data file type"))
-      return;
+    if (! parseOptionValue(line, var1, "data file type"))
+      return false;
 
     line.skipSpace();
 
@@ -2286,17 +2311,17 @@ setCmd(const std::string &args)
         if (parseString(line, chars, "Invalid character string")) {
           if (chars.size() != 1) {
             std::cerr << "Only one character allowed for separator" << std::endl;
-            return;
+            return false;
           }
 
-          setSeparator(Separator(chars[0]));
+          dataFile_.setSeparator(chars[0]);
         }
       }
       else {
         std::string sepStr = readNonSpace(line);
 
         if (sepStr == "whitespace")
-          setSeparator(Separator());
+          dataFile_.resetSeparator();
         else
           std::cerr << "Invalid separator type" << std::endl;
       }
@@ -2307,10 +2332,10 @@ setCmd(const std::string &args)
         std::string chars;
 
         if (! parseString(line, chars, "Invalid character string"))
-          setCommentChars(chars);
+          dataFile_.setCommentChars(chars);
       }
       else
-        setCommentChars("#");
+        dataFile_.setCommentChars("#");
     }
     // set datafile missing ["<chars>"]
     else if (var1 == DataFileVar::MISSING) {
@@ -2399,24 +2424,14 @@ setCmd(const std::string &args)
 
     getSamples(isamples1, isamples2);
 
-    long n;
+    int i;
 
-    std::string samples1, samples2;
+    if (parseInteger(line, i))
+      isamples1 = i;
 
-    if (line.isValid()) {
-      samples1 = readNonSpaceNonComma(line);
-
-      if (CStrUtil::toInteger(samples1, &n))
-        isamples1 = n;
-
-      if (line.skipSpaceAndChar(',')) {
-        if (line.isValid()) {
-          samples2 = line.readNonSpace();
-
-          if (CStrUtil::toInteger(samples2, &n))
-            isamples2 = n;
-        }
-      }
+    if (line.skipSpaceAndChar(',')) {
+      if (parseInteger(line, i))
+        isamples2 = i;
     }
 
     setSamples(isamples1, isamples2);
@@ -2530,6 +2545,7 @@ setCmd(const std::string &args)
   //                 {scale <xscale>{,<yscale>}} {offset <xoff>{,<yoff>}} }
   else if (var == VariableName::MULTIPLOT) {
     multiplot().enabled = true;
+    multiplot().autoFit = true;
 
     std::string arg = readNonSpace(line);
 
@@ -2547,15 +2563,17 @@ setCmd(const std::string &args)
       else if (arg == "noenhanced") {
       }
       else if (arg == "layout") {
-        std::string rowStr = readNonSpaceNonComma(line);
+        int i;
 
-        CStrUtil::toInteger(rowStr, &multiplot().rows);
+        if (parseInteger(line, i))
+          multiplot().rows = i;
 
         if (line.skipSpaceAndChar(',')) {
-          std::string colStr = readNonSpace(line);
-
-          CStrUtil::toInteger(colStr, &multiplot().cols);
+          if (parseInteger(line, i))
+            multiplot().cols = i;
         }
+
+        multiplot().autoFit = false;
       }
       else if (arg == "rowsfirst") {
       }
@@ -2663,18 +2681,14 @@ setCmd(const std::string &args)
   //                       { {linestyle | ls <line_style>} | {linetype | lt <line_type>}
   //                         {linewidth | lw <line_width} } } }
   else if (var == VariableName::ARROW) {
-    CGnuPlotArrowP arrow(createArrow());
+    CGnuPlotArrowP arrow(new CGnuPlotArrow(0));
+
+    int i = 0;
+
+    if (parseInteger(line, i))
+      arrow->setInd(i);
 
     std::string arg = readNonSpace(line);
-
-    if (CStrUtil::isInteger(arg)) {
-      int arrowId = -1;
-
-      if (CStrUtil::toInteger(arg, &arrowId))
-        arrow->setInd(arrowId);
-
-      arg = readNonSpace(line);
-    }
 
     if (arg == "from") {
       CGnuPlotPosition p;
@@ -2716,7 +2730,7 @@ setCmd(const std::string &args)
       else if (arg == "size") {
         CGnuPlotCoordValue v;
 
-        if (parseCoordReal(line, v))
+        if (parseCoordValue(line, v))
           arrow->setLength(v);
 
         if (line.skipSpaceAndChar(',')) {
@@ -2781,7 +2795,7 @@ setCmd(const std::string &args)
   //         {{no}autotitle {columnheader}}
   //         {title "<text>"} {{no}enhanced}
   //         {font "<face>,<size>"} {textcolor <colorspec>}
-  //         {{no}box { {linestyle | ls <line_style>}
+  //         {{no}box { {linestyle | ls <line_style>} } }
   else if (var == VariableName::KEY) {
     bool hSet = false;
 
@@ -2873,18 +2887,14 @@ setCmd(const std::string &args)
       else if (arg == "linetype" || arg == "lt") {
         int lt;
 
-        if (! parseInteger(line, lt))
+        if (parseInteger(line, lt))
           keyData_.setLineType(lt);
+      }
+      else if (arg == "linestyle" || arg == "ls") {
+        std::string styleStr = readNonSpace(line);
       }
       else if (arg == "box") {
         keyData_.setBox(true);
-
-        line.skipSpace();
-
-        if (line.isString("linestyle") || line.isString("ls")) {
-          line.skipNonSpace();
-          std::string styleStr = readNonSpace(line);
-        }
       }
       else if (arg == "nobox") {
         keyData_.setBox(false);
@@ -2916,15 +2926,14 @@ setCmd(const std::string &args)
 
     line.skipSpace();
 
-    if (isdigit(line.lookChar())) {
-      std::string arg = readNonSpace(line);
+    int i;
 
-      (void) CStrUtil::toInteger(arg, &labelId);
+    if (parseInteger(line, i))
+      labelId = i;
 
-      line.skipSpace();
-    }
+    line.skipSpace();
 
-    CGnuPlotLabelP label(createLabel());
+    CGnuPlotLabelP label(new CGnuPlotLabel(0));
 
     if (line.isChar('"') || line.isChar('\'')) {
       std::string t;
@@ -3015,20 +3024,18 @@ setCmd(const std::string &args)
     if (! parseInteger(line, ind))
       ind = -1;
 
-    std::string arg = readNonSpace(line);
-
     CGnuPlotTypes::ObjectType type;
 
-    if (CStrUniqueMatch::stringToValue(arg, type)) {
+    if (parseOptionValue(line, type)) {
       // set object <index> circle {at|center} <position> size <radius>
       //            {arc [<begin>:<end>]}
       //            {<other-object-properties>}
       if      (type == CGnuPlotTypes::ObjectType::CIRCLE) {
-        CGnuPlotEllipseP ellipse = CGnuPlotEllipseP(createEllipse());
+        CGnuPlotEllipseP ellipse = CGnuPlotEllipseP(new CGnuPlotEllipse(0));
 
         CSize2D size(1,1);
 
-        arg = readNonSpace(line);
+        std::string arg = readNonSpace(line);
 
         while (arg != "") {
           if      (arg == "at" || arg == "circle") {
@@ -3068,11 +3075,11 @@ setCmd(const std::string &args)
       //            {angle <orientation>} {units xy|xx|yy}
       //            {<other-object-properties>}
       else if (type == CGnuPlotTypes::ObjectType::ELLIPSE) {
-        CGnuPlotEllipseP ellipse = CGnuPlotEllipseP(createEllipse());
+        CGnuPlotEllipseP ellipse = CGnuPlotEllipseP(new CGnuPlotEllipse(0));
 
         CSize2D size(1,1);
 
-        arg = readNonSpace(line);
+        std::string arg = readNonSpace(line);
 
         while (arg != "") {
           if      (arg == "at" || arg == "center") {
@@ -3112,22 +3119,22 @@ setCmd(const std::string &args)
       //            from <position> to <position> ... {to <position>} |
       //            from <position> rto <position> ... {rto <position>}
       else if (type == CGnuPlotTypes::ObjectType::POLYGON) {
-        CGnuPlotPolygonP poly = CGnuPlotPolygonP(createPolygon());
+        CGnuPlotPolygonP poly = CGnuPlotPolygonP(new CGnuPlotPolygon(0));
 
         CGnuPlotPosition from, to;
 
-        arg = readNonSpace(line);
+        std::string arg = readNonSpace(line);
 
         while (arg != "") {
           if      (arg == "from") {
             if (! parsePosition(line, from))
-              return;
+              return false;
 
             poly->addPoint(from.point());
           }
           else if (arg == "to") {
             if (! parsePosition(line, to))
-              return;
+              return false;
 
             poly->addPoint(to.point());
           }
@@ -3147,14 +3154,14 @@ setCmd(const std::string &args)
       }
       // set object <index> rectangle
       //            {from <position> {to|rto} <position> |
-      //            center|at <position> size <w>,<h> |
+      //            center|at <position> size <w>,<h>}
       else if (type == CGnuPlotTypes::ObjectType::RECTANGLE) {
-        CGnuPlotRectangleP rect = CGnuPlotRectangleP(createRectangle());
+        CGnuPlotRectangleP rect = CGnuPlotRectangleP(new CGnuPlotRectangle(0));
 
         CGnuPlotPosition p;
         CSize2D          size;
 
-        arg = readNonSpace(line);
+        std::string arg = readNonSpace(line);
 
         while (arg != "") {
           if      (arg == "from") {
@@ -3256,31 +3263,25 @@ setCmd(const std::string &args)
 
   // set style [data|function|increment] <args>
   else if (var == VariableName::STYLE) {
-    std::string var1Str = readNonSpace(line);
-
     StyleVar var1;
 
-    if (! CStrUniqueMatch::stringToValueWithErr(var1Str, var1, "style type"))
-      return;
+    if (! parseOptionValue(line, var1, "style type"))
+      return false;
 
     line.skipSpace();
 
     // set style data {style}
     if      (var1 == StyleVar::DATA) {
-      std::string styleStr = readNonSpace(line);
-
       PlotStyle style(PlotStyle::NONE);
 
-      if (CStrUniqueMatch::stringToValueWithErr(styleStr, style, "plot style"))
+      if (parseOptionValue(line, style, "plot style"))
         setDataStyle(style);
     }
     // set style function {style}
     else if (var1 == StyleVar::FUNCTION) {
-      std::string styleStr = readNonSpace(line);
-
       PlotStyle style(PlotStyle::NONE);
 
-      if (CStrUniqueMatch::stringToValueWithErr(styleStr, style, "plot style"))
+      if (parseOptionValue(line, style, "plot style"))
         setFunctionStyle(style);
     }
     // set style increment { user | default }
@@ -3335,7 +3336,7 @@ setCmd(const std::string &args)
         else if (arg == "size") {
           CGnuPlotCoordValue v;
 
-          if (parseCoordReal(line, v))
+          if (parseCoordValue(line, v))
             arrowStyle1->setLength(v);
 
           if (line.skipSpaceAndChar(',')) {
@@ -3394,11 +3395,9 @@ setCmd(const std::string &args)
     //                 {transparent} pattern {id}}
     //                {border {lt} {lc <colorspec>} | noborder}
     else if (var1 == StyleVar::FILL) {
-      std::string styleStr = readNonSpace(line);
-
       CGnuPlotTypes::FillType fillType;
 
-      if (CStrUniqueMatch::stringToValueWithErr(styleStr, fillType, "fill type"))
+      if (parseOptionValue(line, fillType, "fill type"))
         fillStyle_.setStyle(fillType);
 
       line.skipSpace();
@@ -3459,11 +3458,9 @@ setCmd(const std::string &args)
     //                       rowstacked |
     //                       columnstacked
     else if (var1 == StyleVar::HISTOGRAM) {
-      std::string styleStr = readNonSpace(line);
-
       HistogramStyle histogramStyle;
 
-      if (CStrUniqueMatch::stringToValueWithErr(styleStr, histogramStyle, "histogram style"))
+      if (parseOptionValue(line, histogramStyle, "histogram style"))
         setHistogramStyle(histogramStyle);
 
       if (histogramStyle == HistogramStyle::CLUSTERED ||
@@ -3497,12 +3494,12 @@ setCmd(const std::string &args)
     else if (var1 == StyleVar::LINE) {
       std::string indStr = readNonSpace(line);
 
-      long l;
+      int i;
 
       int ind = 0;
 
-      if (CStrUtil::toInteger(indStr, &l))
-        ind = l;
+      if (parseInteger(line, i))
+        ind = i;
 
       CGnuPlotLineStyleP lineStyle = getLineStyleInd(ind);
 
@@ -3525,10 +3522,10 @@ setCmd(const std::string &args)
             lineStyle->setWidth(r);
         }
         else if (arg == "pointtype" || arg == "pt") {
-          std::string typeStr = readNonSpace(line);
+          int i;
 
-          if (CStrUtil::toInteger(typeStr, &l))
-            lineStyle->setPointType(static_cast<CGnuPlotTypes::SymbolType>(l));
+          if (parseInteger(line, i))
+            lineStyle->setPointType(static_cast<CGnuPlotTypes::SymbolType>(i));
         }
         else if (arg == "pointsize" || arg == "ps") {
           if (parseReal(line, r))
@@ -3660,7 +3657,7 @@ setCmd(const std::string &args)
     int type;
 
     if (! parseInteger(line, type))
-      return;
+      return false;
 
     std::vector<double> dashes;
 
@@ -3668,7 +3665,7 @@ setCmd(const std::string &args)
       double l;
 
       if (! parseReal(line, l))
-        return;
+        return false;
 
       dashes.push_back(l);
 
@@ -3680,13 +3677,13 @@ setCmd(const std::string &args)
       }
 
       if (! line.skipSpaceAndChar(')'))
-        return;
+        return false;
     }
 
     lineDashes_[type] = CLineDash(dashes);
   }
 
-  // set bars {small | large | fullwidth | {size} ] {front | back}
+  // set bars {small | large | fullwidth | size} ] {front | back}
   else if (var == VariableName::BARS) {
     line.skipSpace();
 
@@ -3876,7 +3873,7 @@ setCmd(const std::string &args)
   //           {left | right | center | autojustify}
   //           {add}
   //           { autofreq | <incr> | <start>, <incr> {,<end>} |
-  //             ({"<label>"} <pos> {<level>} {,{"<label>"}...) }
+  //             ({"<label>"} <pos> {<level>} {,{"<label>"}...) }}
   //           { format "formatstring" } { font "name{,<size>}" }
   //           { rangelimited }
   //           { textcolor <colorspec> }
@@ -3900,12 +3897,12 @@ setCmd(const std::string &args)
   // set zeroaxis
   else if (var == VariableName::ZEROAXIS) {
   }
-  // set paxis <no> {range <range-options> | {tics <tic-options>}
+  // set paxis <no> {range <range-options> | {tics <tic-options>}}
   else if (var == VariableName::PAXIS) {
     int i;
 
     if (! parseInteger(line, i))
-      return;
+      return false;
 
     std::string arg = readNonSpace(line);
 
@@ -3968,12 +3965,10 @@ setCmd(const std::string &args)
     std::string arg = readNonSpace(line);
 
     if (arg == "trianglepattern") {
-      arg = readNonSpace(line);
+      int i;
 
-      int n;
-
-      if (CStrUtil::toInteger(arg, &n))
-        setTrianglePattern3D(n);
+      if (parseInteger(line, i))
+        setTrianglePattern3D(i);
     }
     else
       setHidden3D(true);
@@ -3984,23 +3979,17 @@ setCmd(const std::string &args)
 
     getIsoSamples(isamples1, isamples2);
 
-    long n;
-
-    std::string samples1, samples2;
-
     if (line.isValid()) {
-      samples1 = readNonSpaceNonComma(line);
+      int i;
 
-      if (CStrUtil::toInteger(samples1, &n)) {
-        isamples1 = n;
-        isamples2 = n;
+      if (parseInteger(line, i)) {
+        isamples1 = i;
+        isamples2 = i;
       }
 
       if (line.skipSpaceAndChar(',')) {
-        samples2 = line.readNonSpace();
-
-        if (CStrUtil::toInteger(samples2, &n))
-          isamples2 = n;
+        if (parseInteger(line, i))
+          isamples2 = i;
       }
     }
 
@@ -4190,7 +4179,6 @@ setCmd(const std::string &args)
   // set termoption [no]enhanced
   // set termoption font "<name> [, <size:i> ]"
   else if (var == VariableName::TERMOPTION) {
-    std::cerr << "Unhandled term option '" << option << "'" << std::endl;
   }
   else if (var == VariableName::DEBUG) {
     setDebug(true);
@@ -4198,9 +4186,8 @@ setCmd(const std::string &args)
   else if (var == VariableName::EDEBUG) {
     setExprDebug(true);
   }
-  else {
-    std::cerr << "Unhandled option '" << option << "'" << std::endl;
-  }
+
+  return true;
 }
 
 void
@@ -4234,7 +4221,7 @@ std::cerr << "set " << args << std::endl;
 // show plot
 // show [ variables [all] | functions ]
 // show [ all | version ] [ long ]
-void
+bool
 CGnuPlot::
 showCmd(const std::string &args)
 {
@@ -4253,14 +4240,14 @@ showCmd(const std::string &args)
 
   if (args1.size() == 0) {
     std::cerr << "Missing option name." << std::endl;
-    return;
+    return false;
   }
 
   //---
 
   VariableName var;
 
-  if (! CStrUniqueMatch::stringToValue(args1[0], var))
+  if (! parseOptionValue(line, var))
     var = VariableName::NONE;
 
   if      (var == VariableName::VARIABLES) {
@@ -4304,13 +4291,17 @@ showCmd(const std::string &args)
                      "\" in datafile is interpreted as missing value" << std::endl;
     }
     if (show.empty() || show.find("separator") != show.end()) {
-      if (getSeparator().type == SeparatorType::WHITESPACE)
-        std::cerr << "datafile fields separated by whitespace" << std::endl;
+      std::cerr << "datafile fields separated by ";
+
+      if (! dataFile_.getSeparator())
+        std::cerr << "whitespace";
      else
-        std::cerr << "datafile fields separated by \"" << getSeparator().c << "\"" << std::endl;
+        std::cerr << "\"" << dataFile_.getSeparator() << "\"";
+
+      std::cerr << std::endl;
     }
     if (show.empty() || show.find("commentschar") != show.end()) {
-      std::cerr << "Comments chars are \"" << getCommentChars() << "\"" << std::endl;
+      std::cerr << "Comments chars are \"" << dataFile_.commentChars() << "\"" << std::endl;
     }
   }
   // show title
@@ -4398,6 +4389,8 @@ showCmd(const std::string &args)
   else {
     std::cerr << "Unhandled option name '" << args1[0] << "'" << std::endl;
   }
+
+  return false;
 }
 
 // reset
@@ -4417,7 +4410,7 @@ undefCmd(const std::string &)
 }
 
 // unset ...
-void
+bool
 CGnuPlot::
 unsetCmd(const std::string &args)
 {
@@ -4431,15 +4424,22 @@ unsetCmd(const std::string &args)
     std::string var, start, end, inc, lcmd, rcmd;
 
     if (! parseFor(line, var, start, end, inc, lcmd, rcmd))
-      return;
+      return false;
 
     unsetForCmd(var, start, end, inc, lcmd);
 
     if (rcmd != "")
       unsetCmd(rcmd);
 
-    return;
+    return false;
   }
+
+  //---
+
+  VariableName var;
+
+  if (! parseOptionValue(line, var, "option name"))
+    return false;
 
   //----
 
@@ -4454,21 +4454,12 @@ unsetCmd(const std::string &args)
     line.skipSpace();
   }
 
-  if (args1.size() == 0) {
-    std::cerr << "Missing option name." << std::endl;
-    return;
-  }
-
-  //---
-
-  VariableName var;
-
-  if (! CStrUniqueMatch::stringToValue(args1[0], var))
-    var = VariableName::NONE;
-
   //---
 
   if      (var == VariableName::MULTIPLOT) {
+    if (multiplot().autoFit)
+      multiWindow_->fitGroups();
+
     multiplot().enabled = false;
 
     multiWindow_ = 0;
@@ -4533,8 +4524,8 @@ unsetCmd(const std::string &args)
     setDebug(false);
   else if (var == VariableName::EDEBUG)
     CExprInst->setDebug(false);
-  else
-    std::cerr << "Unhandled option name '" << args1[0] << "'" << std::endl;
+
+  return false;
 }
 
 void
@@ -5171,46 +5162,18 @@ createLineStyle()
   return (device_ ? device_->createLineStyle() : new CGnuPlotLineStyle);
 }
 
-CGnuPlotArrow *
-CGnuPlot::
-createArrow()
-{
-  return (device_ ? device_->createArrow() : new CGnuPlotArrow(this));
-}
-
-CGnuPlotLabel *
-CGnuPlot::
-createLabel()
-{
-  return (device_ ? device_->createLabel() : new CGnuPlotLabel(this));
-}
-
-CGnuPlotEllipse *
-CGnuPlot::
-createEllipse()
-{
-  return (device_ ? device_->createEllipse() : new CGnuPlotEllipse(this));
-}
-
-CGnuPlotPolygon *
-CGnuPlot::
-createPolygon()
-{
-  return (device_ ? device_->createPolygon() : new CGnuPlotPolygon(this));
-}
-
-CGnuPlotRectangle *
-CGnuPlot::
-createRectangle()
-{
-  return (device_ ? device_->createRectangle() : new CGnuPlotRectangle(this));
-}
-
 CGnuPlotAxis *
 CGnuPlot::
 createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir)
 {
   return (device_ ? device_->createAxis(group, id, dir) : new CGnuPlotAxis(group, id, dir));
+}
+
+CGnuPlotKey *
+CGnuPlot::
+createKey(CGnuPlotGroup *group)
+{
+  return (device_ ? device_->createKey(group) : new CGnuPlotKey(group));
 }
 
 CGnuPlotRenderer *
@@ -5559,7 +5522,7 @@ addFunction3D(CGnuPlotWindowP window, const std::string &function, PlotStyle sty
 CGnuPlot::Plots
 CGnuPlot::
 addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-          const UsingCols &usingCols, const Index &index, const Every &every)
+          const UsingCols &usingCols)
 {
   Plots plots;
 
@@ -5573,182 +5536,160 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     if (! file.open())
       return plots;
 
-    fileLines_.clear();
+    CGnuPlotFile::Lines lines;
 
     std::string line;
 
     while (file.readLine(line))
-      fileLines_.push_back(line);
+      lines.push_back(line);
+
+    dataFile_.setLines(lines);
   }
 
   //---
 
-  int           bline         = 0;
-  int           setNum        = 1;
-  int           pointNum      = 0;
-  int           pointNum1     = every.start;
-  bool          discontinuity = false;
-  CGnuPlotPlot *plot          = 0;
-  bool          firstLine     = true;
+  dataFile_.processLines();
 
-  //---
+  // plot per set
+  for (int setNum = 0; setNum < dataFile_.numSets(); ++setNum) {
+    // create plot
+    CGnuPlotPlot *plot = createPlot(group);
 
-  // process each line in file
-  for (const auto &l : fileLines_) {
-    if (l.empty()) {
-      ++bline;
+    plot->set3D(false);
 
-      if      (bline == 1)
-        discontinuity = true;
-      else if (bline == 2) {
-        setNum   += index.step;
-        pointNum  = 0;
+    if (clearRect_.isValid()) {
+      plot->setClearRect(clearRect_.getValue());
 
-        plot = 0;
-      }
-
-      continue;
+      clearRect_.setInvalid();
     }
 
-    //---
+    if (plot->keyTitle() == "") {
+      std::string title;
 
-    std::string line = l;
+      if      (keyData_.columnhead() && usingCols.size() > 1 && usingCols[1].isInt &&
+               usingCols[1].ival >= 1 && usingCols[1].ival <= int(keyData_.columns().size()))
+        title = keyData_.columns()[usingCols[1].ival - 1];
+      else if (keyData_.columnNum().isValid() && keyData_.columnNum().getValue() >= 1 &&
+               keyData_.columnNum().getValue() <= int(keyData_.columns().size()))
+        title = keyData_.columns()[keyData_.columnNum().getValue()];
+      else
+        title = "\"" + filename + "\"";
 
-    auto hp = line.find(getCommentChars());
+      plot->setKeyTitle(title);
+    }
 
-    if (hp != std::string::npos) {
-      line = CStrUtil::stripSpaces(line.substr(0, hp));
+    plot->setStyle(style);
 
-      if (line.empty()) {
-        bline = 0;
+    plot->init();
+
+    plots.push_back(plot);
+
+    int pointNum = 0;
+
+    // add fields (discontinuity per subset)
+    for (int subSetNum = 0; subSetNum < dataFile_.numSubSets(setNum); ++subSetNum) {
+      // use first line for columnheaders if option enabled
+      if (subSetNum == 0 && keyData_.columnhead()) {
+        const CGnuPlotFile::Fields &fields = dataFile_.fields(setNum, subSetNum, 0);
+
+        keyData_.setColumns(fields);
+
         continue;
       }
-    }
 
-    //---
+      for (int lineNum = 0;
+            lineNum < dataFile_.numLines(setNum, subSetNum); ++lineNum, ++pointNum) {
+        // first point of each new set is a discontinuity
+        bool discontinuity = (subSetNum > 0 && lineNum == 0);
 
-    // get fields from line
-    parseFileLine(line, fields_);
+        //---
 
-    //---
+        // convert fields on line to values
+        // (None: save fields as used by columnhead function)
+        // (TODO: save current file setNum, subSetNum and lineNum instead)
+        fields_ = dataFile_.fields(setNum, subSetNum, lineNum);
 
-    if (firstLine) {
-      firstLine = false;
+        std::vector<CExprValueP> values;
 
-      if (keyData_.columnhead()) {
-        keyData_.setColumns(fields_);
-        continue;
-      }
-    }
+        if (isMatrix()) {
+          double r;
 
-    //---
+          for (const auto &field : fields_) {
+            CExprValueP value;
 
-    if (setNum < index.start || setNum > index.end)
-      continue;
+            if (CStrUtil::toReal(field, &r))
+              value = CExprInst->createRealValue(r);
+            else
+              value = CExprInst->createStringValue(field);
 
-    //---
-
-    bool skip = false;
-
-    std::vector<CExprValueP> values;
-
-    if (isMatrix()) {
-      double r;
-
-      for (const auto &field : fields_) {
-        CExprValueP value;
-
-        if (CStrUtil::toReal(field, &r))
-          value = CExprInst->createRealValue(r);
-        else
-          value = CExprInst->createStringValue(field);
-
-        values.push_back(value);
-      }
-    }
-    else {
-      for (uint i = 0; i < usingCols.size(); ++i) {
-        CExprValueP value = decodeUsingCol(i, usingCols[i], setNum, pointNum, skip);
-
-        if (skip) continue;
-
-        if (value.isValid())
-          values.push_back(value);
-      }
-
-      if      (values.empty()) {
-        // all values
-        for (uint i = 0; i < fields_.size(); ++i) {
-          CExprValueP value = getFieldValue(i, i + 1, setNum, pointNum, skip);
-
-          if (value.isValid())
             values.push_back(value);
+          }
         }
-      }
-      else if (values.size() == 1) {
-        CExprValueP value1 = getFieldValue(0, 0, setNum, pointNum, skip);
+        else {
+          bool skip = false;
+          bool bad  = false;
 
-        if (value1.isValid()) {
-          values.push_back(value1);
+          // no columns specified so use all columns
+          if (usingCols.empty()) {
+            for (uint i = 0; i < fields_.size(); ++i) {
+              CExprValueP value = getFieldValue(i, i + 1, setNum, pointNum, skip);
 
-          std::swap(values[0], values[1]);
+              if (! value.isValid()) bad = true;
+
+              values.push_back(value);
+            }
+          }
+          // extract specified columns
+          else {
+            for (uint i = 0; i < usingCols.size(); ++i) {
+              bool ignore = false;
+
+              CExprValueP value = decodeUsingCol(i, usingCols[i], setNum, pointNum, skip, ignore);
+
+              if (! ignore) {
+                if (! value.isValid()) bad = true;
+
+                values.push_back(value);
+              }
+            }
+
+#if 0
+            // no values then use all values (TODO: remove)
+            if      (values.empty()) {
+              // all values
+              for (uint i = 0; i < fields_.size(); ++i) {
+                CExprValueP value = getFieldValue(i, i + 1, setNum, pointNum, skip);
+
+                if (value.isValid())
+                  values.push_back(value);
+              }
+            }
+#endif
+
+            // one value then auto add the point number
+            if (values.size() == 1) {
+              CExprValueP value1 = getFieldValue(0, 0, setNum, pointNum, skip);
+
+              if (value1.isValid()) {
+                values.push_back(value1);
+
+                std::swap(values[0], values[1]);
+              }
+            }
+          }
+
+          if      (skip)
+            discontinuity = true;
+          else if (bad)
+            continue;
         }
+
+        //---
+
+        // add values
+        plot->addPoint2D(values, discontinuity);
       }
     }
-
-    //---
-
-    if (! plot) {
-      plot = createPlot(group);
-
-      plot->set3D(false);
-
-      if (clearRect_.isValid()) {
-        plot->setClearRect(clearRect_.getValue());
-
-        clearRect_.setInvalid();
-      }
-
-      if (plot->keyTitle() == "") {
-        std::string title;
-
-        if      (keyData_.columnhead() && usingCols.size() > 1 && usingCols[1].isInt &&
-                 usingCols[1].ival >= 1 && usingCols[1].ival <= int(keyData_.columns().size()))
-          title = keyData_.columns()[usingCols[1].ival - 1];
-        else if (keyData_.columnNum().isValid() && keyData_.columnNum().getValue() >= 1 &&
-                 keyData_.columnNum().getValue() <= int(keyData_.columns().size()))
-          title = keyData_.columns()[keyData_.columnNum().getValue()];
-        else
-          title = "\"" + filename + "\"";
-
-        plot->setKeyTitle(title);
-      }
-
-      plot->setStyle(style);
-
-      plot->init();
-
-      plots.push_back(plot);
-    }
-
-    //---
-
-    if (pointNum == pointNum1) {
-      plot->addPoint2D(values, discontinuity);
-
-      if (pointNum1 < INT_MAX)
-        pointNum1 += every.step;
-
-      if (pointNum1 > every.end)
-        pointNum1 = INT_MAX;
-    }
-
-    ++pointNum;
-
-    //---
-
-    bline         = 0;
-    discontinuity = false;
   }
 
   for (auto plot : plots)
@@ -5815,7 +5756,7 @@ addFile3D(CGnuPlotWindowP window, const std::string &filename)
   std::string line;
 
   while (file.readLine(line)) {
-    auto hp = line.find(getCommentChars());
+    auto hp = line.find(dataFile_.commentChars());
 
     if (hp != std::string::npos) {
       line = CStrUtil::stripSpaces(line.substr(0, hp));
@@ -5831,10 +5772,13 @@ addFile3D(CGnuPlotWindowP window, const std::string &filename)
 
     fields.clear();
 
-    if (getSeparator().type == SeparatorType::WHITESPACE)
+    if (! dataFile_.getSeparator())
       CStrUtil::addWords(line, fields);
-    else
-      CStrUtil::addFields(line, fields, std::string(&getSeparator().c, 1), /*skipEmpty*/true);
+    else {
+      char c = dataFile_.getSeparator();
+
+      CStrUtil::addFields(line, fields, std::string(&c, 1), /*skipEmpty*/true);
+    }
 
     //---
 
@@ -5904,108 +5848,15 @@ addFile3D(CGnuPlotWindowP window, const std::string &filename)
   return plot;
 }
 
-void
-CGnuPlot::
-parseFileLine(const std::string &str, std::vector<std::string> &fields)
-{
-  struct Words {
-    Words(std::vector<std::string> &fields) :
-     fields_(fields) {
-      fields_.clear();
-    }
-
-   ~Words() {
-      flush();
-    }
-
-    void addChar(char c) {
-      word_ += c;
-    }
-
-    void addWord(const std::string &word) {
-      force_ = true;
-      word_  = word;
-
-      flush();
-    }
-
-    void flush() {
-      if (force_ || word_ != "") {
-        fields_.push_back(word_);
-
-        force_ = false;
-        word_  = "";
-      }
-    }
-
-    std::vector<std::string> &fields_;
-    std::string               word_;
-    bool                      force_ { false };
-  };
-
-  //---
-
-  Words words(fields);
-
-  char sep = (getSeparator().type != SeparatorType::WHITESPACE ? getSeparator().c : '\0');
-
-  CParseLine line(str);
-
-  while (line.isValid()) {
-    if (line.isChar('\"')) {
-      line.skipChar();
-
-      std::string word;
-
-      while (line.isValid() && ! line.isChar('"')) {
-        char c = line.getChar();
-
-        if (c == '\\') {
-          if (line.isValid()) {
-            c = line.getChar();
-
-            switch (c) {
-              case 't' : word += '\t'; break;
-              case 'n' : word += '\n'; break;
-              default  : word += '?' ; break;
-            }
-          }
-          else
-            word += c;
-        }
-        else
-          word += c;
-      }
-
-      if (line.isChar('"'))
-        line.skipChar();
-
-      words.addWord(word);
-    }
-    else if (sep == '\0' && line.isSpace()) {
-      words.flush();
-
-      line.skipSpace();
-    }
-    else if (line.isChar(sep)) {
-      words.flush();
-
-      while (line.isValid() && line.isChar(sep))
-        line.skipChar();
-    }
-    else {
-      words.addChar(line.getChar());
-    }
-  }
-}
-
 CExprValueP
 CGnuPlot::
-decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum, bool &skip)
+decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum,
+               bool &skip, bool &ignore)
 {
   CExprValueP value;
 
-  skip = false;
+  skip   = false;
+  ignore = false;
 
   if (col.isInt)
     value = getFieldValue(i, col.ival, setNum, pointNum, skip);
@@ -6028,7 +5879,9 @@ decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum, b
 
       (void) CStrUtil::toInteger(numStr, &icol);
 
-      CExprValueP value1 = getFieldValue(i, icol, setNum, pointNum, skip);
+      bool skip1 = false;
+
+      CExprValueP value1 = getFieldValue(i, icol, setNum, pointNum, skip1);
 
       double x1;
 
@@ -6054,7 +5907,7 @@ decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum, b
         if (p1 != std::string::npos)
           name1 = name1.substr(0, p1);
 
-        CExprValueP value = evaluateExpression(name1);
+        CExprValueP value = evaluateExpression(name1, true);
 
         long icol;
 
@@ -6071,7 +5924,8 @@ decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum, b
           }
         }
 
-        expr = "";
+        ignore = true;
+        expr   = "";
       }
     }
 
@@ -6081,7 +5935,7 @@ decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum, b
       if (isDebug())
         std::cerr << "expr " << expr << std::endl;
 
-      value = evaluateExpression(expr);
+      value = evaluateExpression(expr, true);
     }
   }
 
@@ -6090,11 +5944,11 @@ decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum, int pointNum, b
 
 CExprValueP
 CGnuPlot::
-evaluateExpression(const std::string &expr) const
+evaluateExpression(const std::string &expr, bool quiet) const
 {
   CExprValueP value = CExprInst->evaluateExpression(expr);
 
-  if (! value.isValid())
+  if (! value.isValid() && ! quiet)
     std::cerr << "Eval failed: " << expr << std::endl;
 
   return value;
@@ -6186,7 +6040,7 @@ getLineStyleInd(int ind)
     lineStyle->setInd(ind);
 
     if (ind > 0)
-      lineStyle->setColor(CGnuPlotStyle::instance()->indexColor(ind));
+      lineStyle->setColor(CGnuPlotStyleInst->indexColor(ind));
 
     lineStyles_[ind] = lineStyle;
   }
@@ -6230,7 +6084,7 @@ incLineStyle()
 #if 0
   CGnuPlotLineStyleP ls = lineStyle();
 
-  ls->setColor(CGnuPlotStyle::instance()->indexColor(styleIncrement_.colorInd));
+  ls->setColor(CGnuPlotStyleInst->indexColor(styleIncrement_.colorInd));
 
   if (fillStyle().style() == CGnuPlotTypes::FillType::PATTERN)
     fillStyle_.setPattern(static_cast<CGnuPlotTypes::FillPattern>(
@@ -6445,20 +6299,24 @@ bool
 CGnuPlot::
 parseInteger(CParseLine &line, int &i)
 {
+  int pos = line.pos();
+
   line.skipSpace();
 
   if (line.isAlpha()) {
     std::string id;
 
-    if (! readIdentifier(line, id))
+    if (! readIdentifier(line, id)) {
+      line.setPos(pos);
       return false;
+    }
 
-    if (! getIntegerVariable(id, i))
+    if (! getIntegerVariable(id, i)) {
+      line.setPos(pos);
       return false;
+    }
   }
   else {
-    int pos = line.pos();
-
     std::string str;
 
     if (line.isOneOf("+-"))
@@ -6608,63 +6466,52 @@ parseString(CParseLine &line, std::string &str, const std::string &msg)
   return true;
 }
 
+// <system> <x>, <system> <y>
 bool
 CGnuPlot::
 parsePosition(CParseLine &line, CGnuPlotPosition &pos)
 {
-  line.skipSpace();
+  CGnuPlotTypes::CoordSys system;
 
-  if (line.isString("first") || line.isString("second") || line.isString("graph") ||
-      line.isString("screen") || line.isString("character")) {
-    std::string name = readNonSpace(line);
+  if (parseOptionValue(line, system, "coord system"))
+    pos.setSystemX(system);
+  else
+    pos.setSystemX(CGnuPlotTypes::CoordSys::FIRST);
 
-    CGnuPlotTypes::CoordSys system;
+  double x;
 
-    if (! CStrUniqueMatch::stringToValueWithErr(name, system, "coord system"))
-      return false;
-
-    pos.setSystem(system);
-  }
-
-  double r;
-
-  if (! parseReal(line, r))
+  if (! parseReal(line, x))
     return false;
-
-  double x = r;
 
   if (! line.skipSpaceAndChar(','))
     return false;
 
-  if (! parseReal(line, r))
-    return false;
+  if (parseOptionValue(line, system, "coord system"))
+    pos.setSystemY(system);
+  else
+    pos.setSystemY(pos.systemX());
 
-  double y = r;
+  double y;
+
+  if (! parseReal(line, y))
+    return false;
 
   pos.setPoint(CPoint2D(x, y));
 
   return true;
 }
 
+// <system> <r>
 bool
 CGnuPlot::
-parseCoordReal(CParseLine &line, CGnuPlotCoordValue &v)
+parseCoordValue(CParseLine &line, CGnuPlotCoordValue &v)
 {
-  line.skipSpace();
+  CGnuPlotTypes::CoordSys system;
 
-  if (line.isString("first") || line.isString("second") || line.isString("graph") ||
-      line.isString("screen") || line.isString("character")) {
-    std::string name = readNonSpace(line);
-
-    CGnuPlotTypes::CoordSys system;
-
-    if (! CStrUniqueMatch::stringToValueWithErr(name, system, "coord system"))
-      return false;
-
+  if (parseOptionValue(line, system, "coord system"))
     v.setSystem(system);
-
-    line.skipSpace();
-  }
+  else
+    v.setSystem(CGnuPlotTypes::CoordSys::FIRST);
 
   double r;
 
@@ -6678,26 +6525,48 @@ parseCoordReal(CParseLine &line, CGnuPlotCoordValue &v)
 
 bool
 CGnuPlot::
+parsePoint(CParseLine &line, CPoint2D &p)
+{
+  int pos = line.pos();
+
+  double x = 0.0;
+
+  if (parseReal(line, x)) {
+    if (line.skipSpaceAndChar(',')) {
+      double y = 0.0;
+
+      if (parseReal(line, y)) {
+        p = CPoint2D(x, y);
+        return true;
+      }
+    }
+  }
+
+  line.setPos(pos);
+
+  return false;
+}
+
+bool
+CGnuPlot::
 parseSize(CParseLine &line, CSize2D &size)
 {
-  line.skipSpace();
+  int pos = line.pos();
 
-  double w = 1.0, h = 1.0;
+  double w = 1.0;
 
-  std::string arg = readNonSpaceNonComma(line);
+  if (parseReal(line, w)) {
+    if (line.skipSpaceAndChar(',')) {
+      double h = 1.0;
 
-  if (! CStrUtil::toReal(arg, &w))
-    return false;
+      if (parseReal(line, h)) {
+        size = CSize2D(w, h);
+        return true;
+      }
+    }
+  }
 
-  if (! line.skipSpaceAndChar(','))
-    return false;
-
-  arg = readNonSpace(line);
-
-  if (! CStrUtil::toReal(arg, &h))
-    return false;
-
-  size = CSize2D(w, h);
+  line.setPos(pos);
 
   return true;
 }

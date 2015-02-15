@@ -3,8 +3,8 @@
 
 #include <CQGnuPlot.h>
 #include <CGnuPlotPlot.h>
+#include <CQGnuPlotObject.h>
 
-#include <QObject>
 #include <QColor>
 #include <QRect>
 
@@ -13,7 +13,7 @@ class CQGnuPlotGroup;
 class CQGnuPlotCanvas;
 class CQGnuPlotRenderer;
 
-class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
+class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_OBJECT
 
   Q_PROPERTY(bool displayed READ isDisplayed WRITE setDisplayed)
@@ -38,6 +38,21 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
   Q_PROPERTY(int trianglePattern3D READ trianglePattern3D WRITE setTrianglePattern3D)
 
   Q_PROPERTY(double imageAngle READ imageAngle WRITE setImageAngle)
+
+ public:
+  struct Bar {
+    Bar(double x1, double y1, const CBBox2D &bbox1) :
+     x(x1), y(y1), bbox(bbox1) {
+    }
+
+    bool inside(const CPoint2D &p) const { return bbox.inside(p); }
+
+    double  x;
+    double  y;
+    CBBox2D bbox;
+  };
+
+  typedef std::vector<Bar> Bars;
 
  public:
   CQGnuPlotPlot(CQGnuPlotGroup *group);
@@ -69,29 +84,13 @@ class CQGnuPlotPlot : public QObject, public CGnuPlotPlot {
 
   void draw();
 
-  void drawBar(double x, double y, const CBBox2D &bbox, FillType fillType,
-               FillPattern fillPattern, const CRGBA &fillColor, const CRGBA &lineColor);
+  void mousePress(const CPoint2D &p);
+  void mouseMove (const CPoint2D &p);
+  bool mouseTip  (const CPoint2D &p, CQGnuPlot::TipRect &tip);
 
-  void mouseMove(const CPoint2D &p);
-
-  bool mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip);
-
- private:
-  struct Bar {
-    Bar(double x1, double y1, const CBBox2D &bbox1) :
-     x(x1), y(y1), bbox(bbox1) {
-    }
-
-    double  x;
-    double  y;
-    CBBox2D bbox;
-  };
-
-  typedef std::vector<Bar> Bars;
-
+ public:
   CQGnuPlotGroup*    group_;
   COptValT<CPoint2D> selectedPos_;
-  Bars               bars_;
 };
 
 #endif

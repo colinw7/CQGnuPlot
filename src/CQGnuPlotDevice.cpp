@@ -4,8 +4,12 @@
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotLineStyle.h>
-#include <CQGnuPlotObject.h>
+#include <CQGnuPlotAnnotation.h>
 #include <CQGnuPlotAxis.h>
+#include <CQGnuPlotKey.h>
+#include <CQGnuPlotBar.h>
+#include <CQGnuPlotPie.h>
+#include <CQGnuPlotBubble.h>
 
 #include <QApplication>
 
@@ -46,6 +50,8 @@ createGroup(CGnuPlotWindow *window)
 
   CQGnuPlotGroup *group = new CQGnuPlotGroup(qwindow);
 
+  objects_.push_back(group);
+
   return group;
 }
 
@@ -56,6 +62,10 @@ createPlot(CGnuPlotGroup *group)
   CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotPlot *plot = new CQGnuPlotPlot(qgroup);
+
+  objects_.push_back(plot);
+
+  qgroup->qwindow()->updateProperties();
 
   return plot;
 }
@@ -69,47 +79,67 @@ createLineStyle()
 
 CGnuPlotArrow *
 CQGnuPlotDevice::
-createArrow()
+createArrow(CGnuPlotGroup *group)
 {
-  CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-  return new CQGnuPlotArrow(qapp);
+  CQGnuPlotArrow *arrow = new CQGnuPlotArrow(qgroup);
+
+  objects_.push_back(arrow);
+
+  return arrow;
 }
 
 CGnuPlotLabel *
 CQGnuPlotDevice::
-createLabel()
+createLabel(CGnuPlotGroup *group)
 {
-  CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-  return new CQGnuPlotLabel(qapp);
+  CQGnuPlotLabel *label = new CQGnuPlotLabel(qgroup);
+
+  objects_.push_back(label);
+
+  return label;
 }
 
 CGnuPlotEllipse *
 CQGnuPlotDevice::
-createEllipse()
+createEllipse(CGnuPlotGroup *group)
 {
-  CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-  return new CQGnuPlotEllipse(qapp);
+  CQGnuPlotEllipse *ellipse = new CQGnuPlotEllipse(qgroup);
+
+  objects_.push_back(ellipse);
+
+  return ellipse;
 }
 
 CGnuPlotPolygon *
 CQGnuPlotDevice::
-createPolygon()
+createPolygon(CGnuPlotGroup *group)
 {
-  CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-  return new CQGnuPlotPolygon(qapp);
+  CQGnuPlotPolygon *poly = new CQGnuPlotPolygon(qgroup);
+
+  objects_.push_back(poly);
+
+  return poly;
 }
 
 CGnuPlotRectangle *
 CQGnuPlotDevice::
-createRectangle()
+createRectangle(CGnuPlotGroup *group)
 {
-  CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-  return new CQGnuPlotRectangle(qapp);
+  CQGnuPlotRectangle *rect = new CQGnuPlotRectangle(qgroup);
+
+  objects_.push_back(rect);
+
+  return rect;
 }
 
 CGnuPlotAxis *
@@ -118,7 +148,69 @@ createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir)
 {
   CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-  return new CQGnuPlotAxis(qgroup, id, dir);
+  CQGnuPlotAxis *axis = new CQGnuPlotAxis(qgroup, id, dir);
+
+  objects_.push_back(axis);
+
+  return axis;
+}
+
+CGnuPlotKey *
+CQGnuPlotDevice::
+createKey(CGnuPlotGroup *group)
+{
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+
+  CQGnuPlotKey *key = new CQGnuPlotKey(qgroup);
+
+  objects_.push_back(key);
+
+  return key;
+}
+
+CGnuPlotBar *
+CQGnuPlotDevice::
+createBar(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotBar *bar = new CQGnuPlotBar(qplot);
+
+  objects_.push_back(bar);
+
+  qplot->qwindow()->updateProperties();
+
+  return bar;
+}
+
+CGnuPlotPie *
+CQGnuPlotDevice::
+createPie(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotPie *pie = new CQGnuPlotPie(qplot);
+
+  objects_.push_back(pie);
+
+  qplot->qwindow()->updateProperties();
+
+  return pie;
+}
+
+CGnuPlotBubble *
+CQGnuPlotDevice::
+createBubble(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotBubble *bubble = new CQGnuPlotBubble(qplot);
+
+  objects_.push_back(bubble);
+
+  qplot->qwindow()->updateProperties();
+
+  return bubble;
 }
 
 void
@@ -134,7 +226,6 @@ stateChanged(CGnuPlotWindow *window, CGnuPlotTypes::ChangeState)
 {
   CQGnuPlotWindow *qwindow = static_cast<CQGnuPlotWindow *>(window);
 
-  qwindow->addProperties();
   qwindow->redraw();
 }
 

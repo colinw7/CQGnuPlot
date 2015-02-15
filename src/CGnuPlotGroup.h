@@ -3,24 +3,25 @@
 
 #include <CGnuPlot.h>
 #include <CGnuPlotAxis.h>
+#include <CGnuPlotKey.h>
 
 class CGnuPlotGroup {
  public:
-  typedef CGnuPlot::HistogramStyle              HistogramStyle;
-  typedef std::vector<CGnuPlotPlot *>           Plots;
-  typedef std::vector<CGnuPlotArrowP>           Arrows;
-  typedef std::vector<CGnuPlotLabelP>           Labels;
-  typedef std::vector<CGnuPlotEllipseP>         Ellipses;
-  typedef std::vector<CGnuPlotPolygonP>         Polygons;
-  typedef std::vector<CGnuPlotRectangleP>       Rectangles;
-  typedef std::vector<CGnuPlotAnnotation *>     Annotations;
-  typedef CGnuPlot::AxesData                    AxesData;
-  typedef CGnuPlot::AxisData                    AxisData;
-  typedef CGnuPlot::PlotSize                    PlotSize;
-  typedef CGnuPlot::PlotStyle                   PlotStyle;
-  typedef CGnuPlot::LogScaleMap                 LogScaleMap;
-  typedef CGnuPlot::LogScale                    LogScale;
-  typedef std::map<std::string, CGnuPlotAxis *> Axes;
+  typedef CGnuPlot::HistogramStyle               HistogramStyle;
+  typedef std::vector<CGnuPlotPlot *>            Plots;
+  typedef std::vector<CGnuPlotArrowP>            Arrows;
+  typedef std::vector<CGnuPlotLabelP>            Labels;
+  typedef std::vector<CGnuPlotEllipseP>          Ellipses;
+  typedef std::vector<CGnuPlotPolygonP>          Polygons;
+  typedef std::vector<CGnuPlotRectangleP>        Rectangles;
+  typedef std::vector<CGnuPlotGroupAnnotation *> Annotations;
+  typedef CGnuPlot::AxesData                     AxesData;
+  typedef CGnuPlot::AxisData                     AxisData;
+  typedef CGnuPlot::PlotSize                     PlotSize;
+  typedef CGnuPlot::PlotStyle                    PlotStyle;
+  typedef CGnuPlot::LogScaleMap                  LogScaleMap;
+  typedef CGnuPlot::LogScale                     LogScale;
+  typedef std::map<std::string, CGnuPlotAxis *>  Axes;
 
  public:
   CGnuPlotGroup(CGnuPlotWindow *window);
@@ -136,23 +137,7 @@ class CGnuPlotGroup {
 
   //---
 
-  const CGnuPlotKeyData &keyData() const { return keyData_; }
-  void setKeyData(const CGnuPlotKeyData &k) { keyData_ = k; }
-
-  bool getKeyDisplayed() const { return keyData().displayed(); }
-  void setKeyDisplayed(bool b) { keyData_.setDisplayed(b); }
-
-  bool getKeyReverse() const { return keyData().reverse(); }
-  void setKeyReverse(bool b) { keyData_.setReverse(b); }
-
-  bool getKeyBox() const { return keyData().box(); }
-  void setKeyBox(bool b) { keyData_.setBox(b); }
-
-  CHAlignType getKeyHAlign() const { return keyData().halign(); }
-  void setKeyHAlign(CHAlignType a) { keyData_.setHAlign(a); }
-
-  CVAlignType getKeyVAlign() const { return keyData().valign(); }
-  void setKeyVAlign(CVAlignType a) { keyData_.setVAlign(a); }
+  const CGnuPlotKeyP &key() const { return key_; }
 
   //---
 
@@ -221,7 +206,7 @@ class CGnuPlotGroup {
 
   void reset3D();
 
-  void draw();
+  virtual void draw();
 
   void drawTitle();
 
@@ -260,6 +245,8 @@ class CGnuPlotGroup {
 
   CBBox2D getRegionBBox() const;
 
+  const CBBox2D &getBBox() const { return bbox_; }
+
   //-----
 
   void mapLogPoint  (CPoint2D &p) const;
@@ -268,36 +255,37 @@ class CGnuPlotGroup {
 
   //-----
 
-  void windowToPixel(double wx, double wy, double *px, double *py) const;
-  void pixelToWindow(double px, double py, double *wx, double *wy) const;
+  //void windowToPixel(double wx, double wy, double *px, double *py) const;
+  //void pixelToWindow(double px, double py, double *wx, double *wy) const;
 
-  CPoint2D windowToPixel(const CPoint2D &p) const;
-  CPoint2D pixelToWindow(const CPoint2D &p) const;
+  //CPoint2D windowToPixel(const CPoint2D &p) const;
+  //CPoint2D pixelToWindow(const CPoint2D &p) const;
 
-  double pixelWidthToWindowWidth  (double w) const;
-  double pixelHeightToWindowHeight(double h) const;
+  //double pixelWidthToWindowWidth  (double w) const;
+  //double pixelHeightToWindowHeight(double h) const;
 
  private:
   static int nextId_;
 
   CGnuPlotWindow* window_;                                 // parent window
-  int             id_;                                     // unique id
-  int             ind_            {0};                     // group index in window
+  int             id_ { 0 };                               // unique id
+  int             ind_  {0};                               // group index in window
   CGnuPlot::Title title_;
   Plots           plots_;                                  // plots
-  CBBox2D         region_         {0,0,1,1};               // region of window
-  CRange2D        margin_         {10,10,10,10};           // margin around plots
+  CBBox2D         region_ {0,0,1,1};                       // region of window
+  CRange2D        margin_ {10,10,10,10};                   // margin around plots
+  CBBox2D         bbox_ { 0, 0, 1, 1 };                    // bounding box
   PlotSize        plotSize_;
   HistogramStyle  histogramStyle_ { HistogramStyle::NONE}; // histogram style
+  CGnuPlotKeyP    key_;                                    // key
   AxesData        axesData_;                               // axes data
   LogScaleMap     logScale_;                               // log axis data
-  CGnuPlotKeyData keyData_;                                // key data
   Arrows          arrows_;                                 // arrow annotations
   Labels          labels_;                                 // label annotations
   Rectangles      rects_;                                  // rectangle annotations
   Ellipses        ellipses_;                               // ellipse annotations
-  Polygons        polygons_;                               // ploygon annotations
-  Axes            axes_;
+  Polygons        polygons_;                               // polygon annotations
+  Axes            axes_;                                   // axes
 };
 
 #endif

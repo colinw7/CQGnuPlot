@@ -215,6 +215,9 @@ namespace CMathGeom2D {
   bool ThreePointCircle1(double x1, double y1, double x2, double y2,
                          double x3, double y3, double *xc, double *yc, double *r);
 
+  bool CircleCircleIntersect(double x1, double y1, double r1, double x2, double y2, double r2,
+                             double *xi1, double *yi1, double *xi2, double *yi2);
+
   void PointsRange(const std::vector<CPoint2D> &points, CPoint2D &min_point,
                    CPoint2D &max_point);
   void PointsRange(const std::vector<CIPoint2D> &points, CIPoint2D &min_point,

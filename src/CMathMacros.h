@@ -18,8 +18,10 @@
 #define PI3_DIV_2_F 4.712388980f
 #define PI_INV_F    0.318309886f
 
+#ifndef DEG_TO_RAD
 #define DEG_TO_RAD(a) (((a)*M_PI)/180.0)
 #define RAD_TO_DEG(a) ((a)*(180.0/M_PI))
+#endif
 
 #define ROUND(r) ((int)((r) + 0.5))
 

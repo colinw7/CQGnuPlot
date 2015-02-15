@@ -29,6 +29,8 @@ class CGnuPlotWindow {
   const Groups &groups() const { return groups_; }
   uint numGroups() const { return groups_.size(); }
 
+  void fitGroups();
+
   bool hidden3D() const { return hidden3D_; }
   void setHidden3D(bool b) { hidden3D_ = b; }
 

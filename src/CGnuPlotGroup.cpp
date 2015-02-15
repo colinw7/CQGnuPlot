@@ -1,6 +1,7 @@
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotPlot.h>
+#include <CGnuPlotDevice.h>
 #include <CGnuPlotRenderer.h>
 
 namespace {
@@ -22,6 +23,7 @@ CGnuPlotGroup::
 CGnuPlotGroup(CGnuPlotWindow *window) :
  window_(window), id_(nextId_++)
 {
+  key_ = CGnuPlotKeyP(app()->createKey(this));
 }
 
 CGnuPlot *
@@ -43,6 +45,10 @@ init()
   setHistogramStyle(plot->histogramStyle());
 
   setLogScaleMap(plot->logScaleMap());
+
+  key_->setKeyData(plot->keyData());
+
+  setAxesData(plot->axesData());
 }
 
 void
@@ -66,11 +72,22 @@ addObjects()
 {
   CGnuPlot *plot = this->app();
 
-  setArrows    (plot->arrows    ());
-  setLabels    (plot->labels    ());
-  setRectangles(plot->rectangles());
-  setEllipses  (plot->ellipses  ());
-  setPolygons  (plot->polygons  ());
+  CGnuPlotDevice *device = plot->device();
+
+  for (auto arrow : plot->arrows())
+    arrows_.push_back(CGnuPlotArrowP(device->createArrow(this)->setData(arrow.get())));
+
+  for (auto label : plot->labels())
+    labels_.push_back(CGnuPlotLabelP(device->createLabel(this)->setData(label.get())));
+
+  for (auto rect : plot->rectangles())
+    rects_.push_back(CGnuPlotRectangleP(device->createRectangle(this)->setData(rect.get())));
+
+  for (auto ellipse : plot->ellipses())
+    ellipses_.push_back(CGnuPlotEllipseP(device->createEllipse(this)->setData(ellipse.get())));
+
+  for (auto poly : plot->polygons())
+    polygons_.push_back(CGnuPlotPolygonP(device->createPolygon(this)->setData(poly.get())));
 }
 
 void
@@ -137,6 +154,8 @@ void
 CGnuPlotGroup::
 draw()
 {
+  bbox_ = getDisplayRange(1, 1);
+
   CGnuPlotRenderer *renderer = app()->renderer();
 
   renderer->setRegion(region());
@@ -302,7 +321,6 @@ drawHistogram(const Plots &plots)
 
   //---
 
-  double xb = pixelWidthToWindowWidth(1);
   double xf = 1.0;
 
   if      (getHistogramStyle() == HistogramStyle::CLUSTERED) {
@@ -310,39 +328,19 @@ drawHistogram(const Plots &plots)
 
     renderer->setRange(bbox);
 
-  //double y1 = std::min(0.0, ymin);
     double y2 = std::max(0.0, bbox.getBottom());
 
-  //yaxis(1).max.setValue(y1);
-  //yaxis(1).max.setValue(ymax);
-
-    double w = xf*(xmax - xmin)/(numPoints*numPlots) - 2*xb;
+    double w = xf*(xmax - xmin + 1)/(numPoints*numPlots);
 
     for (auto plot : plots) {
-      const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-
-      CGnuPlotPlot::FillType    fillType    = plot->fillType();
-      CGnuPlotPlot::FillPattern fillPattern = plot->fillPattern();
-
-      CRGBA c = (fillType == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
-
-      //---
-
       double d = (plot->ind() - 1 - numPlots/2.0)*w;
 
-      for (const auto &point : plot->getPoints2D()) {
-        CPoint2D p;
-
-        if (point.getPoint(p)) {
-          CBBox2D bbox(p.x + d, y2, p.x + d + w, p.y);
-
-          plot->drawBar(p.x, p.y, bbox, fillType, fillPattern, lineStyle.color(c),
-                        lineStyle.color(CRGBA(0,0,0)));
-        }
-      }
+      plot->drawClusteredHistogram(y2, d, w);
     }
   }
   else if (getHistogramStyle() == HistogramStyle::ROWSTACKED) {
+    double xb = renderer->pixelWidthToWindowWidth(2);
+
     ymin = 0;
     ymax = 0;
 
@@ -359,6 +357,11 @@ drawHistogram(const Plots &plots)
 
     //---
 
+    for (auto plot : plots)
+      plot->setNumBars(numPoints);
+
+    //---
+
     double w = (xmax - xmin)/(numPoints - 1);
     double x = xmin - w/2.0;
 
@@ -366,26 +369,16 @@ drawHistogram(const Plots &plots)
       double h = 0;
 
       for (auto plot : plots) {
-        const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-
-        CGnuPlotPlot::FillPattern fillPattern = plot->fillPattern();
-        CGnuPlotPlot::FillType    fillType    = plot->fillType();
-
-        //---
-
         const CGnuPlotPoint &point = plot->getPoint2D(i);
 
         double y;
 
         if (! point.getY(y))
-          continue;
+          y = 0.0;
 
-        CBBox2D bbox(x, h, x + w, h + y);
+        CBBox2D bbox(x + xb, h, x + w - xb, h + y);
 
-        CRGBA c = (fillType == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
-
-        plot->drawBar(x, y, bbox, fillType, fillPattern, lineStyle.color(c),
-                      lineStyle.color(CRGBA(0,0,0)));
+        plot->drawStackedHistogram(i, bbox);
 
         h += y;
       }
@@ -399,6 +392,9 @@ void
 CGnuPlotGroup::
 drawAxes()
 {
+  if (hasPlotStyle(PlotStyle::BUBBLECHART))
+    return;
+
   drawBorder();
 
   if (! hasPlotStyle(PlotStyle::PARALLELAXES)) {
@@ -461,6 +457,9 @@ drawXAxes(int xind, bool drawOther)
 
   CGnuPlotAxis *plotXAxis = getPlotAxis('x', xind);
   CGnuPlotAxis *plotYAxis = getPlotAxis('y', 1);
+
+  if (! plotXAxis->isDisplayed())
+    return;
 
   double xmin1 = plotXAxis->getStart();
   double xmax1 = plotXAxis->getEnd  ();
@@ -535,6 +534,9 @@ drawYAxes(int yind, bool drawOther)
   CGnuPlotAxis *plotXAxis = getPlotAxis('x', 1);
   CGnuPlotAxis *plotYAxis = getPlotAxis('y', yind);
 
+  if (! plotYAxis->isDisplayed())
+    return;
+
   double xmin1 = plotXAxis->getStart();
   double xmax1 = plotXAxis->getEnd  ();
 //double ymin1 = plotYAxis->getStart();
@@ -596,7 +598,8 @@ void
 CGnuPlotGroup::
 drawKey()
 {
-  if (! getKeyDisplayed()) return;
+  if (hasPlotStyle(PlotStyle::BUBBLECHART))
+    return;
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
@@ -604,198 +607,32 @@ drawKey()
 
   renderer->setRange(bbox);
 
-  //---
-
-  CBBox2D rbbox = (keyData().outside() ? getRegionBBox() : bbox);
-
-  //---
-
-  CFontPtr font = renderer->getFont();
-
-  double font_size = font->getCharAscent() + font->getCharDescent();
-
-  double pw = pixelWidthToWindowWidth  (1);
-  double ph = pixelHeightToWindowHeight(1);
-
-  double bx = 8*pw;
-  double by = 8*ph;
-  double ll = 64*pw;
-
-  CSize2D size;
-
-  double textWidth = 0.0, textHeight = 0.0;
-
-  std::string header;
-
-  if (keyData().title().isValid()) {
-    header = keyData().title().getValue();
-
-    if (header != "")
-      textHeight += font_size*ph;
-  }
-
-  for (auto plot : plots_) {
-    std::string label = plot->keyTitle();
-
-    textWidth = std::max(textWidth, font->getStringWidth(label)*pw);
-
-    textHeight += font_size*ph;
-  }
-
-  size = CSize2D(textWidth + ll + 3*bx, textHeight + 2*by);
-
-  CHAlignType halign = getKeyHAlign();
-  CVAlignType valign = getKeyVAlign();
-
-  double x1 = 0, y1 = 0;
-
-  if      (halign == CHALIGN_TYPE_LEFT)
-    x1 = rbbox.getLeft () + bx;
-  else if (halign == CHALIGN_TYPE_RIGHT)
-    x1 = rbbox.getRight() - bx - size.width;
-  else if (halign == CHALIGN_TYPE_CENTER)
-    x1 = rbbox.getXMid() - size.width/2;
-
-  if      (valign == CVALIGN_TYPE_TOP)
-    y1 = rbbox.getTop   () - by - size.height;
-  else if (valign == CVALIGN_TYPE_BOTTOM)
-    y1 = rbbox.getBottom() + by;
-  else if (valign == CVALIGN_TYPE_CENTER)
-    y1 = rbbox.getYMid() - size.height/2;
-
-  double x2 = x1 + size.width;
-  double y2 = y1 + size.height;
-
-  if (keyData().box()) {
-    CBBox2D bbox1(x1, y1, x2, y2);
-
-    renderer->drawRect(bbox1);
-  }
-
-  double y = y2 - by;
-
-  if (header != "") {
-    renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), CHALIGN_TYPE_CENTER, 0,
-                               CVALIGN_TYPE_TOP, 0, header, CRGBA(0,0,0));
-
-    y -= font_size*ph;
-  }
-
-  for (auto plot : plots_) {
-    PlotStyle                style     = plot->getStyle();
-    const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-
-    double xx = (keyData().reverse() ? x1 + bx : x2 - ll - bx);
-    double yy = y - font_size*ph/2;
-
-    if (hasPlotStyle(PlotStyle::HISTOGRAMS) ||
-        style == PlotStyle::BOXES || style == PlotStyle::CANDLESTICKS) {
-      double h = (font_size - 4)*ph;
-
-      CBBox2D hbbox(xx, yy - h/2, xx + ll, yy + h/2);
-
-      if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
-        renderer->patternRect(hbbox, plot->fillStyle().pattern(), lineStyle.color(CRGBA(0,0,0)));
-      else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
-        renderer->fillRect(hbbox, lineStyle.color(CRGBA(1,1,1)));
-
-      renderer->drawRect(hbbox, lineStyle.color(CRGBA(0,0,0)));
-    }
-    else if (style == PlotStyle::VECTORS) {
-      CGnuPlotArrow arrow(app());
-
-      arrow.setStyle(plot->arrowStyle());
-
-      arrow.setFrom(CPoint2D(xx, yy));
-      arrow.setTo  (CPoint2D(xx + ll, yy));
-
-      arrow.draw(renderer);
-    }
-    else {
-      if      (style == PlotStyle::LINES || style == PlotStyle::LINES_POINTS ||
-               style == PlotStyle::IMPULSES || style == PlotStyle::XYERRORBARS) {
-        CPoint2D p1(xx, yy), p2(xx + ll, yy), pm(xx + ll/2, yy);
-
-        renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)));
-
-        if      (style == PlotStyle::LINES_POINTS)
-          renderer->drawSymbol(pm, plot->pointType(), plot->pointSize(),
-                               lineStyle.color(CRGBA(1,0,0)));
-        else if (style == PlotStyle::XYERRORBARS) {
-          CPoint2D dy(0, 3*ph);
-
-          renderer->drawLine(p1 - dy, p1 + dy, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)));
-          renderer->drawLine(p2 - dy, p2 + dy, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)));
-        }
-      }
-      else if (style == PlotStyle::POINTS || style == PlotStyle::LINES_POINTS) {
-        CPoint2D pm(xx + ll/2, yy);
-
-        renderer->drawSymbol(pm, plot->pointType(), plot->pointSize(),
-                             lineStyle.color(CRGBA(1,0,0)));
-      }
-      else if (style == PlotStyle::FILLEDCURVES) {
-        double h = 4*ph;
-
-        CBBox2D cbbox(xx, yy - h, xx + ll, yy + h);
-        renderer->fillRect(cbbox, lineStyle.color(CRGBA(1,1,1)));
-      }
-      else {
-        CPoint2D p1(xx, yy), p2(xx + ll, yy);
-
-        renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)));
-      }
-    }
-
-    std::string label = plot->keyTitle();
-
-    //double lw = font->getStringWidth(label);
-
-    CRGBA tc = CRGBA(0,0,0);
-
-    if      (keyData().textColor().isVariable())
-      tc = lineStyle.color(tc);
-    else if (keyData().textColor().isIndex())
-      tc = CGnuPlotStyle::instance()->indexColor(keyData().textColor().index());
-    else if (keyData().textColor().isRGB())
-      tc = keyData().textColor().color();
-
-    if (keyData().reverse())
-      renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), CHALIGN_TYPE_LEFT, 0,
-                                 CVALIGN_TYPE_TOP, 0, label, tc);
-    else
-      renderer->drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
-                                 CVALIGN_TYPE_TOP, 0, label, tc);
-
-    y -= font_size*ph;
-  }
+  key_->draw();
 }
 
 void
 CGnuPlotGroup::
 drawAnnotations(CGnuPlotLayer layer)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   for (auto arrow : arrows_)
     if (arrow->getLayer() == layer)
-      arrow->draw(renderer);
+      arrow->draw();
 
   for (auto label : labels_)
     if (label->getLayer() == layer)
-      label->draw(renderer);
+      label->draw();
 
   for (auto rect : rects_)
     if (rect->getLayer() == layer)
-      rect->draw(renderer);
+      rect->draw();
 
   for (auto ellipse : ellipses_)
     if (ellipse->getLayer() == layer)
-      ellipse->draw(renderer);
+      ellipse->draw();
 
   for (auto poly : polygons_)
     if (poly->getLayer() == layer)
-      poly->draw(renderer);
+      poly->draw();
 }
 
 std::string
@@ -931,6 +768,10 @@ CBBox2D
 CGnuPlotGroup::
 getRegionBBox() const
 {
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setRegion(region());
+
   const CISize2D &s = window()->size();
 
   double x1 = region().getXMin()*(s.width  - 1);
@@ -938,12 +779,15 @@ getRegionBBox() const
   double x2 = region().getXMax()*(s.width  - 1);
   double y2 = region().getXMax()*(s.height - 1);
 
-  CPoint2D p1 = pixelToWindow(CPoint2D(x1, y1));
-  CPoint2D p2 = pixelToWindow(CPoint2D(x2, y2));
+  CPoint2D p1, p2;
+
+  renderer->pixelToWindow(CPoint2D(x1, y1), p1);
+  renderer->pixelToWindow(CPoint2D(x2, y2), p2);
 
   return CBBox2D(p1, p2);
 }
 
+#if 0
 CPoint2D
 CGnuPlotGroup::
 windowToPixel(const CPoint2D &p) const
@@ -1007,6 +851,7 @@ pixelHeightToWindowHeight(double h) const
 
   return w1.y - w2.y;
 }
+#endif
 
 void
 CGnuPlotGroup::

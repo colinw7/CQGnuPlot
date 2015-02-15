@@ -2709,6 +2709,51 @@ ThreePointCircle1(double x1, double y1, double x2, double y2,
   return true;
 }
 
+bool
+CMathGeom2D::
+CircleCircleIntersect(double x1, double y1, double r1, double x2, double y2, double r2,
+                      double *xi1, double *yi1, double *xi2, double *yi2)
+{
+  // distance between circle centers
+  double dx = x2 - x1;
+  double dy = y2 - y1;
+
+  double d = sqrt(dx*dx + dy*dy);
+
+  double sr12 = r1 + r2;
+  double dr12 = fabs(r1 - r2);
+
+  if (d > sr12) return false; // separate
+  if (d < dr12) return false; // contained
+
+  if (d == 0.0 && r1 == r2) return false; // coincident
+
+  // (x3,y3) is the point where the line through the circle intersection points
+  // crosses the line between the circle centers.
+
+  // calc distance from point 1 to point 3.
+  double a = (r1*r1 - r2*r2 + d*d)/(2.0*d);
+
+  // calc distance from point 3 to either intersection points
+  double h = sqrt(r1*r1 - a*a);
+
+  // calc the coordinates of point 3
+  double x3 = x1 + a*dx/d;
+  double y3 = y1 + a*dy/d;
+
+  // calc the offsets of the intersection points from point 3
+  double rx = -h*dy/d;
+  double ry =  h*dx/d;
+
+  // calc the absolute intersection points
+  *xi1 = x3 + rx;
+  *xi2 = x3 - rx;
+  *yi1 = y3 + ry;
+  *yi2 = y3 - ry;
+
+  return 1;
+}
+
 //-----------------
 
 //! convert arc to array of beziers

@@ -54,15 +54,13 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2,
                     const CRGBA &c) override;
 
-  CFontPtr getFont() const override { return font_; }
-  void setFont(CFontPtr font) override;
+  void setFont(CFontPtr font);
 
   void setLineDash(const CLineDash &line_dash) override;
 
  private:
   CQGnuPlotCanvas *canvas_;
   QPainter        *painter_ { 0 };
-  CFontPtr         font_;
 };
 
 #endif

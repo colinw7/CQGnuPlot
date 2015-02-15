@@ -1,6 +1,7 @@
 #include <CGnuPlotObject.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotGroup.h>
 #include <CGnuPlotUtil.h>
 #include <CGnuPlotStyle.h>
 #include <CMathGeom2D.h>
@@ -11,15 +12,24 @@ getLineColor() const
 {
   int ls = getLineStyle();
 
-  CGnuPlotLineStyleP lsp = plot_->getLineStyleInd(ls);
+  CGnuPlotLineStyleP lsp = group_->app()->getLineStyleInd(ls);
 
   return lsp->color(CRGBA(0,0,0));
 }
 
+double
+CGnuPlotArrow::
+getLineWidth() const
+{
+  return style_.lineWidth(group_->app());
+}
+
 void
 CGnuPlotArrow::
-draw(CGnuPlotRenderer *renderer) const
+draw() const
 {
+  CGnuPlotRenderer *renderer = group_->app()->renderer();
+
   const CGnuPlotArrow *arrow = this;
 
   CPoint2D from = arrow->getFrom();
@@ -84,7 +94,7 @@ draw(CGnuPlotRenderer *renderer) const
   CRGBA lc = arrow->getLineColor();
 
   if (arrow->getVariable() && arrow->getVarValue().isValid())
-    lc = CGnuPlotStyle::instance()->indexColor(arrow->getVarValue().getValue());
+    lc = CGnuPlotStyleInst->indexColor(arrow->getVarValue().getValue());
 
   if (arrow->getFHead()) {
     double a1 = a + aa;
@@ -180,9 +190,22 @@ draw(CGnuPlotRenderer *renderer) const
 }
 
 void
-CGnuPlotLabel::
-draw(CGnuPlotRenderer *renderer) const
+CGnuPlotArrow::
+print(std::ostream &os) const
 {
+  style_.print(group_->app(), os);
+
+  os << " from " << from_ << (relative_ ? " rto " : " to ") << to_;
+}
+
+//------
+
+void
+CGnuPlotLabel::
+draw() const
+{
+  CGnuPlotRenderer *renderer = group_->app()->renderer();
+
   const CGnuPlotLabel *label = this;
 
   CVAlignType valign = (label->getFront() ? CVALIGN_TYPE_TOP : CVALIGN_TYPE_CENTER);
@@ -191,10 +214,14 @@ draw(CGnuPlotRenderer *renderer) const
                              label->getStrokeColor());
 }
 
+//------
+
 void
 CGnuPlotRectangle::
-draw(CGnuPlotRenderer *renderer) const
+draw() const
 {
+  CGnuPlotRenderer *renderer = group_->app()->renderer();
+
   bbox_ = CBBox2D(0,0,1,1);
 
   if      (from_.isValid()) {
@@ -227,20 +254,28 @@ draw(CGnuPlotRenderer *renderer) const
   renderer->drawRect(bbox_, rect->getStrokeColor(), rect->getLineWidth());
 }
 
+//------
+
 void
 CGnuPlotEllipse::
-draw(CGnuPlotRenderer *renderer) const
+draw() const
 {
+  CGnuPlotRenderer *renderer = group_->app()->renderer();
+
   const CGnuPlotEllipse *e = this;
 
   renderer->fillEllipse(e->getCenter(), e->getRX(), e->getRY(), 0, e->getFillColor().color());
   renderer->drawEllipse(e->getCenter(), e->getRX(), e->getRY(), 0, e->getStrokeColor());
 }
 
+//------
+
 void
 CGnuPlotPolygon::
-draw(CGnuPlotRenderer *renderer) const
+draw() const
 {
+  CGnuPlotRenderer *renderer = group_->app()->renderer();
+
   const CGnuPlotPolygon *poly = this;
 
   renderer->fillPolygon(poly->getPoints(), poly->getFillColor().color());

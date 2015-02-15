@@ -2,16 +2,39 @@
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotUtil.h>
 
+#include <CFontMgr.h>
 #include <CMathGeom2D.h>
 
 CGnuPlotRenderer::
 CGnuPlotRenderer()
 {
+  font_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
 }
 
 CGnuPlotRenderer::
 ~CGnuPlotRenderer()
 {
+}
+
+void
+CGnuPlotRenderer::
+setFont(CFontPtr font)
+{
+  font_ = font;
+}
+
+double
+CGnuPlotRenderer::
+fontSize() const
+{
+  return font_->getSize();
+}
+
+void
+CGnuPlotRenderer::
+setFontSize(double s)
+{
+  font_ = font_->dup(font_->getFamily(), font_->getStyle(), s, 0, 0, 100, 100);
 }
 
 bool

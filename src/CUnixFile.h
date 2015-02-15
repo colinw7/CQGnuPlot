@@ -6,6 +6,8 @@
 #include <iostream>
 #include <string>
 
+typedef unsigned char uchar;
+
 class CUnixFile {
  public:
   explicit CUnixFile(const char *filename="") :

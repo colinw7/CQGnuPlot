@@ -5,8 +5,13 @@
 #include <CQGnuPlotCanvas.h>
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotLineStyle.h>
-#include <CQGnuPlotObject.h>
+#include <CQGnuPlotAnnotation.h>
 #include <CQGnuPlotAxis.h>
+#include <CQGnuPlotKey.h>
+#include <CQGnuPlotBar.h>
+#include <CQGnuPlotPie.h>
+#include <CQGnuPlotBubble.h>
+#include <CQGnuPlotDevice.h>
 
 #include <CQZoomMouseMode.h>
 #include <CQPanMouseMode.h>
@@ -21,6 +26,7 @@
 #include <QStatusBar>
 #include <QLabel>
 #include <QFrame>
+#include <QTimer>
 
 static const int TreeWidth = 250;
 
@@ -52,8 +58,8 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
 
   connect(tree_, SIGNAL(valueChanged(QObject *, const QString &)), canvas_, SLOT(update()));
 
-  connect(tree_, SIGNAL(itemClicked(QObject *, const QString &)),
-          this, SLOT(itemClickedSlot(QObject *, const QString &)));
+  connect(tree_, SIGNAL(itemSelected(QObject *, const QString &)),
+          this, SLOT(itemSelectedSlot(QObject *, const QString &)));
 
   rlayout->addWidget(tree_);
 
@@ -137,6 +143,20 @@ setSize(const CISize2D &s)
 
 void
 CQGnuPlotWindow::
+updateProperties()
+{
+  if (! propTimer_) {
+    propTimer_ = new QTimer(this);
+
+    connect(propTimer_, SIGNAL(timeout()), this, SLOT(addProperties()));
+  }
+
+  propTimer_->setSingleShot(true);
+  propTimer_->start(250);
+}
+
+void
+CQGnuPlotWindow::
 addProperties()
 {
   tree_->clear();
@@ -198,7 +218,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
   QString name = QString("Group%1").arg(group->id());
 
-  tree_->addProperty(name, this, "title");
+  tree_->addProperty(name, qgroup, "title");
 
   QString regionName = name + "/region";
 
@@ -216,34 +236,48 @@ addGroupProperties(CGnuPlotGroup *group)
 
   tree_->addProperty(name, qgroup, "ratio")->setEditorFactory(redit_[1]);
 
-  QString axesName = name + "/axes";
+  tree_->addProperty(name, qgroup, "histogramStyle");
 
+  //---
+
+  for (const auto &axis : qgroup->axes()) {
+    CQGnuPlotAxis *qaxis = static_cast<CQGnuPlotAxis *>(axis.second);
+
+    QString axesName = QString("%1/axes%2").arg(name).arg(qaxis->id().c_str());
+
+    tree_->addProperty(axesName, qaxis, "displayed");
+    tree_->addProperty(axesName, qaxis, "label");
+  }
+
+#if 0
   tree_->addProperty(axesName, qgroup, "xmin")->setEditorFactory(redit_[1]);
   tree_->addProperty(axesName, qgroup, "xmax")->setEditorFactory(redit_[1]);
   tree_->addProperty(axesName, qgroup, "ymin")->setEditorFactory(redit_[1]);
   tree_->addProperty(axesName, qgroup, "ymax")->setEditorFactory(redit_[1]);
 
-  tree_->addProperty(axesName, qgroup, "xlabel");
-  tree_->addProperty(axesName, qgroup, "ylabel");
   tree_->addProperty(axesName, qgroup, "xtics");
   tree_->addProperty(axesName, qgroup, "ytics");
   tree_->addProperty(axesName, qgroup, "xticsMirror");
   tree_->addProperty(axesName, qgroup, "yticsMirror");
   tree_->addProperty(axesName, qgroup, "xgrid");
   tree_->addProperty(axesName, qgroup, "ygrid");
+#endif
 
   tree_->addProperty(name, qgroup, "borders");
   tree_->addProperty(name, qgroup, "borderWidth");
 
+  //---
+
+  CQGnuPlotKey *qkey = dynamic_cast<CQGnuPlotKey *>(qgroup->key().get());
+
   QString keyName = name + "/key";
 
-  tree_->addProperty(keyName, qgroup, "keyDisplayed");
-  tree_->addProperty(keyName, qgroup, "keyHAlign");
-  tree_->addProperty(keyName, qgroup, "keyVAlign");
-  tree_->addProperty(keyName, qgroup, "keyBox");
-  tree_->addProperty(keyName, qgroup, "keyReverse");
-
-  tree_->addProperty(name, qgroup, "histogramStyle");
+  tree_->addProperty(keyName, qkey, "displayed");
+  tree_->addProperty(keyName, qkey, "drawBox");
+  tree_->addProperty(keyName, qkey, "reverse");
+  tree_->addProperty(keyName, qkey, "outside");
+  tree_->addProperty(keyName, qkey, "halign");
+  tree_->addProperty(keyName, qkey, "valign");
 
   //---
 
@@ -371,7 +405,9 @@ addPlotProperties(CGnuPlotPlot *plot)
 {
   CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-  QString name = QString("Plot%1").arg(plot->id());
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(plot->group());
+
+  QString name = QString("Group%1/Plot%2").arg(qgroup->id()).arg(plot->id());
 
   QString rangeName = name + "/range";
 
@@ -402,6 +438,52 @@ addPlotProperties(CGnuPlotPlot *plot)
   tree_->addProperty(name, qplot, "pointSize"    );
   tree_->addProperty(name, qplot, "boxWidthValue")->setEditorFactory(redit_[3]);
   tree_->addProperty(name, qplot, "boxWidthType" );
+
+  int i = 0;
+
+  for (const auto &bar : plot->bars()) {
+    QString name1 = QString("%1/Bar%2").arg(name).arg(i + 1);
+
+    CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+
+    tree_->addProperty(name1, qbar, "lineColor");
+    tree_->addProperty(name1, qbar, "fillColor");
+
+    ++i;
+  }
+
+  i = 0;
+
+  for (const auto &pie : plot->pies()) {
+    QString name1 = QString("%1/Pie%2").arg(name).arg(i + 1);
+
+    CQGnuPlotPie *qpie = static_cast<CQGnuPlotPie *>(pie);
+
+    tree_->addProperty(name1, qpie, "name" );
+    tree_->addProperty(name1, qpie, "color");
+
+    ++i;
+  }
+
+  i = 0;
+
+  for (const auto &bubble : plot->bubbles()) {
+    QString name1 = QString("%1/Bubble%2").arg(name).arg(i + 1);
+
+    CQGnuPlotBubble *qbubble = static_cast<CQGnuPlotBubble *>(bubble);
+
+    tree_->addProperty(name1, qbubble, "name" );
+    tree_->addProperty(name1, qbubble, "color");
+
+    ++i;
+  }
+}
+
+void
+CQGnuPlotWindow::
+selectObject(const QObject *obj)
+{
+  tree_->selectObject(obj);
 }
 
 void
@@ -506,13 +588,6 @@ CQGnuPlotWindow::
 redrawOverlay()
 {
   redraw();
-}
-
-QPointF
-CQGnuPlotWindow::
-pixelToWindow(const QPoint &p)
-{
-  return QPointF(p.x(), p.y());
 }
 
 void
@@ -620,8 +695,6 @@ setCurrentGroup(CQGnuPlotGroup *group)
 {
   if (group != currentGroup_) {
     currentGroup_ = group;
-
-    addProperties();
   }
 }
 
@@ -647,16 +720,23 @@ getGroupAt(const QPoint &pos)
 
 void
 CQGnuPlotWindow::
+mousePress(const QPoint &qp)
+{
+  for (auto group : groups()) {
+    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+
+    qgroup->mousePress(qp);
+  }
+}
+
+void
+CQGnuPlotWindow::
 mouseMove(const QPoint &qp)
 {
   for (auto group : groups()) {
     CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-    CPoint2D p = group->pixelToWindow(CPoint2D(qp.x(), qp.y()));
-
-    group->unmapLogPoint(&p.x, &p.y);
-
-    qgroup->mouseMove(p);
+    qgroup->mouseMove(qp);
   }
 }
 
@@ -667,11 +747,7 @@ mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
   for (auto group : groups()) {
     CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-    CPoint2D p = group->pixelToWindow(CPoint2D(qp.x(), qp.y()));
-
-    group->unmapLogPoint(&p.x, &p.y);
-
-    if (qgroup->mouseTip(p, tip))
+    if (qgroup->mouseTip(qp, tip))
       return true;
   }
 
@@ -728,6 +804,14 @@ showPos(double wx, double wy)
   posLabel_->setText(QString("%1 %2").arg(xstr.c_str()).arg(ystr.c_str()));
 }
 
+// mouse mode (unused ?)
+QPointF
+CQGnuPlotWindow::
+pixelToWindow(const QPoint &p)
+{
+  return QPointF(p.x(), p.y());
+}
+
 void
 CQGnuPlotWindow::
 pixelToWindow(double px, double py, double *wx, double *wy)
@@ -738,21 +822,19 @@ pixelToWindow(double px, double py, double *wx, double *wy)
 
 void
 CQGnuPlotWindow::
-itemClickedSlot(QObject *obj, const QString &path)
+itemSelectedSlot(QObject *obj, const QString & /*path*/)
 {
-  for (auto group : groups()) {
-    CGnuPlotGroup::Annotations annotations;
+  CQGnuPlotObject *qobject = dynamic_cast<CQGnuPlotObject *>(obj);
+  if (! qobject) return;
 
-    group->getAnnotations(annotations);
+  CQGnuPlotDevice *qdevice = qapp()->qdevice();
 
-    for (auto &a : annotations)
-      dynamic_cast<CQGnuPlotAnnotation *>(a)->setSelected(false);
-  }
+  for (auto qobject1 : qdevice->objects())
+    qobject1->setSelected(false);
 
-  CQGnuPlotAnnotation *ann = dynamic_cast<CQGnuPlotAnnotation *>(obj);
+  //std::cerr << "Object \'" << qobject->objectName().toStdString() << "\'" << std::endl;
 
-  if (ann)
-    ann->setSelected(true);
+  qobject->setSelected(true);
 
   canvas_->update();
 }

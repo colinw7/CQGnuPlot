@@ -46,9 +46,11 @@ class CGnuPlotRenderer {
 
   //---
 
-  virtual CFontPtr getFont() const = 0;
+  virtual CFontPtr getFont() const { return font_; }
+  virtual void setFont(CFontPtr font);
 
-  virtual void setFont(CFontPtr font) = 0;
+  virtual double fontSize() const;
+  virtual void setFontSize(double s);
 
   virtual void setLineDash(const CLineDash &line_dash) = 0;
 
@@ -123,6 +125,7 @@ class CGnuPlotRenderer {
   CBBox2D         range_;            // data range
   COptReal        ratio_;            // aspect ratio
   CBBox2D         clip_;             // clip area
+  CFontPtr        font_;             // font
 };
 
 #endif

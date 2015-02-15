@@ -3,6 +3,7 @@
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
+#include <CGnuPlotPie.h>
 
 CGnuPlotSVGDevice::
 CGnuPlotSVGDevice() :
@@ -14,76 +15,6 @@ CGnuPlotSVGDevice() :
 CGnuPlotSVGDevice::
 ~CGnuPlotSVGDevice()
 {
-}
-
-CGnuPlotWindow *
-CGnuPlotSVGDevice::
-createWindow()
-{
-  return new CGnuPlotWindow(plot_);
-}
-
-CGnuPlotGroup *
-CGnuPlotSVGDevice::
-createGroup(CGnuPlotWindow *window)
-{
-  return new CGnuPlotGroup(window);
-}
-
-CGnuPlotPlot *
-CGnuPlotSVGDevice::
-createPlot(CGnuPlotGroup *group)
-{
-  return new CGnuPlotPlot(group);
-}
-
-CGnuPlotLineStyle *
-CGnuPlotSVGDevice::
-createLineStyle()
-{
-  return new CGnuPlotLineStyle;
-}
-
-CGnuPlotArrow *
-CGnuPlotSVGDevice::
-createArrow()
-{
-  return new CGnuPlotArrow(plot_);
-}
-
-CGnuPlotLabel *
-CGnuPlotSVGDevice::
-createLabel()
-{
-  return new CGnuPlotLabel(plot_);
-}
-
-CGnuPlotEllipse *
-CGnuPlotSVGDevice::
-createEllipse()
-{
-  return new CGnuPlotEllipse(plot_);
-}
-
-CGnuPlotPolygon *
-CGnuPlotSVGDevice::
-createPolygon()
-{
-  return new CGnuPlotPolygon(plot_);
-}
-
-CGnuPlotRectangle *
-CGnuPlotSVGDevice::
-createRectangle()
-{
-  return new CGnuPlotRectangle(plot_);
-}
-
-CGnuPlotAxis *
-CGnuPlotSVGDevice::
-createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir)
-{
-  return new CGnuPlotAxis(group, id, dir);
 }
 
 void

@@ -9,10 +9,14 @@
 class CGnuPlot;
 class CGnuPlotArrow;
 class CGnuPlotAxis;
+class CGnuPlotBar;
+class CGnuPlotBubble;
 class CGnuPlotEllipse;
 class CGnuPlotGroup;
+class CGnuPlotKey;
 class CGnuPlotLabel;
 class CGnuPlotLineStyle;
+class CGnuPlotPie;
 class CGnuPlotPlot;
 class CGnuPlotPolygon;
 class CGnuPlotRectangle;
@@ -32,22 +36,29 @@ class CGnuPlotDevice {
 
   const std::string &name() const { return name_; }
 
-  virtual CGnuPlotWindow *createWindow() = 0;
+  virtual CGnuPlotWindow *createWindow();
 
-  virtual CGnuPlotGroup *createGroup(CGnuPlotWindow *window) = 0;
+  virtual CGnuPlotGroup *createGroup(CGnuPlotWindow *window);
 
-  virtual CGnuPlotPlot *createPlot(CGnuPlotGroup *group) = 0;
+  virtual CGnuPlotPlot *createPlot(CGnuPlotGroup *group);
 
-  virtual CGnuPlotLineStyle *createLineStyle() = 0;
+  virtual CGnuPlotLineStyle *createLineStyle();
 
-  virtual CGnuPlotArrow     *createArrow() = 0;
-  virtual CGnuPlotLabel     *createLabel() = 0;
-  virtual CGnuPlotEllipse   *createEllipse() = 0;
-  virtual CGnuPlotPolygon   *createPolygon() = 0;
-  virtual CGnuPlotRectangle *createRectangle() = 0;
+  virtual CGnuPlotArrow     *createArrow(CGnuPlotGroup *group);
+  virtual CGnuPlotLabel     *createLabel(CGnuPlotGroup *group);
+  virtual CGnuPlotEllipse   *createEllipse(CGnuPlotGroup *group);
+  virtual CGnuPlotPolygon   *createPolygon(CGnuPlotGroup *group);
+  virtual CGnuPlotRectangle *createRectangle(CGnuPlotGroup *group);
 
-  virtual CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
-                                   COrientation dir) = 0;
+  virtual CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir);
+
+  virtual CGnuPlotKey *createKey(CGnuPlotGroup *group);
+
+  virtual CGnuPlotBar *createBar(CGnuPlotPlot *plot);
+
+  virtual CGnuPlotPie *createPie(CGnuPlotPlot *plot);
+
+  virtual CGnuPlotBubble *createBubble(CGnuPlotPlot *plot);
 
   virtual void timeout() { }
 

@@ -1,10 +1,11 @@
 #include <CQGnuPlotAxis.h>
 #include <CQGnuPlotGroup.h>
+#include <CGnuPlotRenderer.h>
 
 CQGnuPlotAxis::
 CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, COrientation dir,
               double start, double end) :
- CGnuPlotAxis(group, id, dir, start, end), displayed_(true)
+ CGnuPlotAxis(group, id, dir, start, end)
 {
 }
 
@@ -13,16 +14,29 @@ CQGnuPlotAxis::
 {
 }
 
-bool
+QString
 CQGnuPlotAxis::
-isDisplayed() const
+getLabel() const
 {
-  return displayed_;
+  return QString(CGnuPlotAxis::getLabel().c_str());
 }
 
 void
 CQGnuPlotAxis::
-setDisplayed(bool b)
+setLabel(const QString &label)
 {
-  displayed_ = b;
+  CGnuPlotAxis::setLabel(label.toStdString());
+}
+
+void
+CQGnuPlotAxis::
+drawAxis(double pos)
+{
+  CGnuPlotAxis::drawAxis(pos);
+
+  if (isSelected()) {
+    CGnuPlotRenderer *renderer = app()->renderer();
+
+    renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);
+  }
 }

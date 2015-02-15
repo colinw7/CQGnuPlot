@@ -27,6 +27,8 @@ CQPropertyTree(QWidget *parent) :
   connect(this, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
           this, SLOT(itemClickedSlot(QTreeWidgetItem *, int)));
 
+  connect(this, SIGNAL(itemSelectionChanged()),
+          this, SLOT(itemSelectionSlot()));
 }
 
 void
@@ -92,10 +94,79 @@ addProperty(const QString &path, QObject *object, const QString &name)
 
 void
 CQPropertyTree::
+selectObject(const QObject *obj)
+{
+  clearSelection();
+
+  for (int i = 0; i < topLevelItemCount(); ++i) {
+    QTreeWidgetItem *item = topLevelItem(i);
+
+    if (selectObject(item, obj))
+      return;
+  }
+}
+
+bool
+CQPropertyTree::
+selectObject(QTreeWidgetItem *item, const QObject *obj)
+{
+  CQPropertyItem *item1 = static_cast<CQPropertyItem *>(item);
+
+  QObject *obj1;
+  QString  path;
+
+  getItemData(item1, obj1, path);
+
+  if (obj1 == obj) {
+    item->setSelected(true);
+    return true;
+  }
+
+  for (int i = 0; i < item->childCount(); ++i) {
+    QTreeWidgetItem *item1 = item->child(i);
+
+    if (selectObject(item1, obj))
+      return true;
+  }
+
+  return false;
+}
+
+void
+CQPropertyTree::
 itemClickedSlot(QTreeWidgetItem *item, int /*column*/)
 {
-  QString path;
+  CQPropertyItem *item1 = static_cast<CQPropertyItem *>(item);
 
+  QObject *obj;
+  QString  path;
+
+  getItemData(item1, obj, path);
+
+  emit itemClicked(obj, path);
+}
+
+void
+CQPropertyTree::
+itemSelectionSlot()
+{
+  QList<QTreeWidgetItem *> items = selectedItems();
+  if (items.empty()) return;
+
+  CQPropertyItem *item1 = static_cast<CQPropertyItem *>(items[0]);
+
+  QObject *obj;
+  QString  path;
+
+  getItemData(item1, obj, path);
+
+  emit itemSelected(obj, path);
+}
+
+void
+CQPropertyTree::
+getItemData(CQPropertyItem *item, QObject* &obj, QString &path)
+{
   QTreeWidgetItem *item1 = item;
 
   while (item1) {
@@ -117,13 +188,11 @@ itemClickedSlot(QTreeWidgetItem *item, int /*column*/)
     n = item1->childCount();
   }
 
-  QObject *obj = 0;
+  obj = 0;
 
   if (CQPropertyItem::isType(item1->type())) {
     CQPropertyItem *item2 = static_cast<CQPropertyItem *>(item1);
 
     obj = item2->getObject();
   }
-
-  emit itemClicked(obj, path);
 }

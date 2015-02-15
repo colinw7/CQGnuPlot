@@ -4,7 +4,7 @@
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotLineStyle.h>
-#include <CQGnuPlotObject.h>
+#include <CQGnuPlotAnnotation.h>
 
 #include <CQApp.h>
 #include <CQUtil.h>
@@ -22,6 +22,7 @@ main(int argc, char **argv)
   std::string ofile = "";
 
   std::vector<std::string> files;
+  std::vector<std::string> execs;
 
   for (int i = 1; i < argc; i++) {
     if (argv[i][0] == '-') {
@@ -32,6 +33,12 @@ main(int argc, char **argv)
       else if (arg == "D") {
         debug  = true;
         edebug = true;
+      }
+      else if (arg == "e") {
+        ++i;
+
+        if (i < argc)
+          execs.push_back(argv[i]);
       }
       else if (arg == "o") {
         ++i;
@@ -62,6 +69,9 @@ main(int argc, char **argv)
       plot.setOutputFile(ofile);
   }
 
+  for (const auto &exec : execs)
+    plot.exec(exec);
+
   for (const auto &file : files)
     plot.load(file);
 
@@ -74,6 +84,8 @@ main(int argc, char **argv)
 CQGnuPlot::
 CQGnuPlot()
 {
+  qRegisterMetaType<std::string>("std::string");
+
   device_ = new CQGnuPlotDevice;
 
   addDevice("Qt", device_);

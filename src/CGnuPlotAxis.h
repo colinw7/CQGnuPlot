@@ -5,6 +5,7 @@
 #include <CAlignType.h>
 #include <CDirectionType.h>
 #include <CPoint2D.h>
+#include <CBBox2D.h>
 #include <CFont.h>
 #include <string>
 #include <vector>
@@ -92,9 +93,11 @@ class CGnuPlotAxis {
 
   std::string getValueStr(int i, double pos) const;
 
-  void drawAxis(double pos);
+  virtual void drawAxis(double pos);
 
-  void drawGrid(double start, double end);
+  virtual void drawGrid(double start, double end);
+
+  const CBBox2D &getBBox() const { return bbox_; }
 
  private:
   bool calc();
@@ -145,6 +148,7 @@ class CGnuPlotAxis {
   bool           drawTickLabel_     { true };
   bool           drawLabel_         { true };
   bool           clip_              { false };
+  CBBox2D        bbox_              { 0, 0, 1, 1 };
 };
 
 #endif

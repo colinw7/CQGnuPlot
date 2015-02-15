@@ -1,6 +1,9 @@
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotWindow.h>
 #include <CQGnuPlotGroup.h>
+#include <CQGnuPlotBar.h>
+#include <CQGnuPlotPie.h>
+#include <CQGnuPlotBubble.h>
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
@@ -9,6 +12,7 @@ CQGnuPlotPlot::
 CQGnuPlotPlot(CQGnuPlotGroup *group) :
  CGnuPlotPlot(group), group_(group)
 {
+  setObjectName("plot");
 }
 
 CQGnuPlotPlot::
@@ -118,41 +122,57 @@ void
 CQGnuPlotPlot::
 draw()
 {
-  bars_.clear();
-
   CGnuPlotPlot::draw();
+
+  if (isSelected()) {
+    CGnuPlotRenderer *renderer = app()->renderer();
+
+    renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);
+  }
 }
 
 void
 CQGnuPlotPlot::
-drawBar(double x, double y, const CBBox2D &bbox, FillType fillType,
-        FillPattern fillPattern, const CRGBA &fillColor, const CRGBA &lineColor)
+mousePress(const CPoint2D &p)
 {
-  if (selectedPos_.isValid() && bbox.inside(selectedPos_.getValue()))
-    CGnuPlotPlot::drawBar(x, y, bbox, CGnuPlotTypes::FillType::SOLID,
-                          fillPattern, CRGBA(0.5,0.5,0.5), CRGBA(1,1,1));
-  else
-    CGnuPlotPlot::drawBar(x, y, bbox, fillType, fillPattern, fillColor, lineColor);
-
-  bars_.push_back(Bar(x, y, bbox));
-}
-
-void
-CQGnuPlotPlot::
-mouseMove(const CPoint2D &p)
-{
-  selectedPos_.setInvalid();
-
-  for (auto &bar : bars_) {
-    if (! bar.bbox.inside(p))
+  for (auto &bar : bars()) {
+    if (! bar->inside(p))
       continue;
 
-    selectedPos_ = p;
+    CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
 
-    qwindow()->redraw();
+    qwindow()->selectObject(qbar);
 
     return;
   }
+
+  for (auto &pie : pies()) {
+    if (! pie->inside(p))
+      continue;
+
+    CQGnuPlotPie *qpie = static_cast<CQGnuPlotPie *>(pie);
+
+    qwindow()->selectObject(qpie);
+
+    return;
+  }
+
+  for (auto &bubble : bubbles()) {
+    if (! bubble->inside(p))
+      continue;
+
+    CQGnuPlotBubble *qbubble = static_cast<CQGnuPlotBubble *>(bubble);
+
+    qwindow()->selectObject(qbubble);
+
+    return;
+  }
+}
+
+void
+CQGnuPlotPlot::
+mouseMove(const CPoint2D &)
+{
 }
 
 bool
@@ -161,12 +181,43 @@ mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
 {
   selectedPos_.setInvalid();
 
-  for (auto &bar : bars_) {
-    if (! bar.bbox.inside(p))
+  for (auto &bar : bars()) {
+    if (! bar->inside(p))
       continue;
 
-    tip.str  = QString("%1,%2").arg(bar.x).arg(bar.y);
-    tip.rect = CQUtil::toQRect(bar.bbox);
+    tip.str  = QString("%1").arg(bar->value());
+    tip.rect = CQUtil::toQRect(bar->bbox());
+
+    return true;
+  }
+
+  for (auto &pie : pies()) {
+    if (! pie->inside(p))
+      continue;
+
+    const CPoint2D &c = pie->center();
+    double          r = pie->radius();
+
+    CBBox2D bbox(c - CPoint2D(r, r), c + CPoint2D(r, r));
+
+    tip.str  = QString("%1").arg(pie->name().c_str());
+    tip.rect = CQUtil::toQRect(bbox);
+
+    return true;
+  }
+
+  for (auto &bubble : bubbles()) {
+    if (! bubble->inside(p))
+      continue;
+
+    const CPoint2D &c  = bubble->center();
+    double          xr = bubble->xRadius();
+    double          yr = bubble->yRadius();
+
+    CBBox2D bbox(c - CPoint2D(xr, yr), c + CPoint2D(xr, yr));
+
+    tip.str  = QString("%1").arg(bubble->name().c_str());
+    tip.rect = CQUtil::toQRect(bbox);
 
     return true;
   }

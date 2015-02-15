@@ -14,23 +14,6 @@ class CGnuPlotSVGDevice : public CGnuPlotDevice {
 
   CGnuPlotSVGRenderer *svgRenderer() const { return renderer_; }
 
-  CGnuPlotWindow *createWindow() override;
-
-  CGnuPlotGroup *createGroup(CGnuPlotWindow *window) override;
-
-  CGnuPlotPlot *createPlot(CGnuPlotGroup *group) override;
-
-  CGnuPlotLineStyle *createLineStyle() override;
-
-  CGnuPlotArrow     *createArrow() override;
-  CGnuPlotLabel     *createLabel() override;
-  CGnuPlotEllipse   *createEllipse() override;
-  CGnuPlotPolygon   *createPolygon() override;
-  CGnuPlotRectangle *createRectangle() override;
-
-  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
-                           COrientation dir) override;
-
   void stateChanged(CGnuPlotWindow *window, CGnuPlotTypes::ChangeState state) override;
 
   void timeout() override;

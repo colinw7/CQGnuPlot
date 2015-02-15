@@ -32,6 +32,7 @@ void S(const T &t) { V = t; }
 class CGnuPlotAxis;
 class CGnuPlotDevice;
 class CGnuPlotGroup;
+class CGnuPlotKey;
 class CGnuPlotPlot;
 class CGnuPlotReadLine;
 class CGnuPlotSVGDevice;
@@ -52,6 +53,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotKeyData.h>
 #include <CGnuPlotPosition.h>
 #include <CGnuPlotObject.h>
+#include <CGnuPlotFile.h>
 
 //------
 
@@ -306,6 +308,7 @@ class CGnuPlot {
     BOXES,
     BOXPLOT,
     BOXXYERRORBARS,
+    BUBBLECHART,
     CANDLESTICKS,
     CIRCLES,
     DOTS,
@@ -339,11 +342,6 @@ class CGnuPlot {
     YERRORLINES,
     TEST_TERMINAL,
     TEST_PALETTE
-  };
-
-  enum class SeparatorType {
-    WHITESPACE,
-    CHAR
   };
 
   enum class HistogramStyle {
@@ -386,17 +384,6 @@ class CGnuPlot {
 
   //---
 
-  struct Separator {
-    Separator() { }
-
-    Separator(char c) : type(SeparatorType::CHAR), c(c) { }
-
-    SeparatorType type { SeparatorType::WHITESPACE };
-    char          c    { '\0' };
-  };
-
-  //---
-
   struct UsingCol {
     UsingCol(int i) :
      str(""), isInt(true), ival(i) {
@@ -417,35 +404,15 @@ class CGnuPlot {
   //---
 
   struct ImageStyle {
-    int         w      { 1 };
-    int         h      { 1 };
-    COptReal    xo, yo;
-    COptReal    cx, cy;
-    COptReal    dx, dy;
-    COptReal    a;
-    bool        flipy  { false };
-    std::string format { "" };
-    UsingCols   usingCols;
-  };
-
-  //---
-
-  struct Index {
-    Index() { }
-
-    int start { 1 };
-    int end   { 1 };
-    int step  { 1 };
-  };
-
-  //---
-
-  struct Every {
-    Every() { }
-
-    int start { 0 };
-    int end   { INT_MAX };
-    int step  { 1 };
+    int                w { 1 };
+    int                h { 1 };
+    COptValT<CPoint2D> o;
+    COptValT<CPoint2D> c;
+    COptReal           dx, dy;
+    COptReal           a;
+    bool               flipy { false };
+    std::string        format { "" };
+    UsingCols          usingCols;
   };
 
   //---
@@ -591,9 +558,24 @@ class CGnuPlot {
   struct Multiplot {
     Multiplot() { }
 
+    double dx() const { return (cols > 0 ? 1.0/cols : 1.0); }
+    double dy() const { return (rows > 0 ? 1.0/rows : 1.0); }
+
+    CIPoint2D pos(int n) {
+      int x = 0, y = 0;
+
+      if (cols > 0 && rows > 0) {
+        x = n % cols;
+        y = n / cols;
+      }
+
+      return CIPoint2D(x, y);
+    }
+
     bool        enabled { false };
-    int         rows    { 1 };
-    int         cols    { 1 };
+    bool        autoFit { true };
+    int         rows    { 0 };
+    int         cols    { 0 };
     std::string title;
   };
 
@@ -811,7 +793,6 @@ class CGnuPlot {
   int yind() const { return yind_; }
 
   const PlotSize &plotSize() const { return plotSize_; }
-  PlotSize &plotSize() { return plotSize_; }
   void setPlotSize(const PlotSize &s) { plotSize_ = s; }
 
   //---
@@ -903,6 +884,8 @@ class CGnuPlot {
 
   bool load(const std::string &filename);
 
+  bool exec(const std::string &cmd);
+
   void initReadLine();
 
   void loop();
@@ -917,13 +900,8 @@ class CGnuPlot {
 
   CGnuPlotLineStyle *createLineStyle();
 
-  CGnuPlotArrow     *createArrow();
-  CGnuPlotLabel     *createLabel();
-  CGnuPlotEllipse   *createEllipse();
-  CGnuPlotPolygon   *createPolygon();
-  CGnuPlotRectangle *createRectangle();
-
   CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir);
+  CGnuPlotKey  *createKey (CGnuPlotGroup *group);
 
   CGnuPlotRenderer *renderer();
 
@@ -973,11 +951,11 @@ class CGnuPlot {
   bool parseFor(CParseLine &line, std::string &var, std::string &start, std::string &end,
                 std::string &inc, std::string &lcmd, std::string &rcmd);
 
-  void setCmd  (const std::string &args);
-  void showCmd (const std::string &args);
+  bool setCmd  (const std::string &args);
+  bool showCmd (const std::string &args);
   void resetCmd(const std::string &args);
   void undefCmd(const std::string &args);
-  void unsetCmd(const std::string &args);
+  bool unsetCmd(const std::string &args);
 
   void shellCmd (const std::string &args);
   void systemCmd(const std::string &args);
@@ -1012,15 +990,12 @@ class CGnuPlot {
   CGnuPlotPlot *addFunction3D(CGnuPlotWindowP window, const std::string &str, PlotStyle style);
 
   Plots addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-                  const UsingCols &usingCols, const Index &index=Index(),
-                  const Every &every=Every());
+                  const UsingCols &usingCols);
 
   CGnuPlotPlot *addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
                            const UsingCols &usingCols);
 
   CGnuPlotPlot *addFile3D(CGnuPlotWindowP window, const std::string &filename);
-
-  void parseFileLine(const std::string &str, std::vector<std::string> &fields);
 
   bool parseAxisRange(CParseLine &line, AxisData &axis, bool hasArgs=true);
 
@@ -1028,20 +1003,14 @@ class CGnuPlot {
 
   void decodeRange(const std::vector<std::string> &xfields, AxisData &axis);
 
-  CExprValueP decodeUsingCol(int i, const CGnuPlot::UsingCol &col,
-                             int setNum, int pointNum, bool &skip);
+  CExprValueP decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum,
+                             int pointNum, bool &skip, bool &ignore);
 
-  CExprValueP evaluateExpression(const std::string &expr) const;
+  CExprValueP evaluateExpression(const std::string &expr, bool quiet=false) const;
 
   CExprCTokenStack compileExpression(const std::string &expr) const;
 
   CExprValueP getFieldValue(int i, int ival, int setNum, int pointNum, bool &skip);
-
-  void setSeparator(Separator sep) { separator_ = sep; }
-  const Separator &getSeparator() const { return separator_; }
-
-  void setCommentChars(const std::string &chars) { commentChars_ = chars; }
-  const std::string &getCommentChars() const { return commentChars_; }
 
   void setMissingStr(const std::string &chars) { missingStr_ = chars; }
   const std::string &getMissingStr() const { return missingStr_; }
@@ -1103,7 +1072,8 @@ class CGnuPlot {
   bool getIntegerVariable(const std::string &name, int &value);
 
   bool parsePosition(CParseLine &line, CGnuPlotPosition &pos);
-  bool parseCoordReal(CParseLine &line, CGnuPlotCoordValue &v);
+  bool parseCoordValue(CParseLine &line, CGnuPlotCoordValue &v);
+  bool parsePoint(CParseLine &line, CPoint2D &point);
   bool parseSize(CParseLine &line, CSize2D &size);
 
   const Multiplot &multiplot() const { return multiplot_; }
@@ -1151,10 +1121,8 @@ class CGnuPlot {
   CUnixFile*          file_ { 0 };
   int                 fileLineNum_ { 0 };
   BufferLines         bufferLines_;
-  FileLines           fileLines_;
   Windows             windows_;
-  Separator           separator_;
-  std::string         commentChars_ { "#" };
+  CGnuPlotFile        dataFile_;
   std::string         missingStr_;
   BoxWidth            boxWidth_;
   BarSize             barSize_;

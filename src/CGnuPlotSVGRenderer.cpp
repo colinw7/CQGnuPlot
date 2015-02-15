@@ -3,8 +3,6 @@
 #include <CGnuPlotUtil.h>
 #include <CSymbol2D.h>
 
-#include <CFontMgr.h>
-
 namespace {
   std::string toSVGColor(const CRGBA &c) {
     return c.getRGB().stringEncode();
@@ -145,7 +143,6 @@ CGnuPlotSVGRenderer::
 CGnuPlotSVGRenderer(CGnuPlotSVGDevice *device) :
  device_(device)
 {
-  font_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
 }
 
 CGnuPlotSVGRenderer::
@@ -434,7 +431,7 @@ void
 CGnuPlotSVGRenderer::
 drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 {
-  double a = font_->getAngle();
+  double a = getFont()->getAngle();
 
   CPoint2D p;
 
@@ -442,7 +439,8 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 
   os() << "<g transform=\"translate(" << p.x << "," << p.y << ") rotate(" << -a << ")\" "
            "style=\"stroke:none; " << fillColor(c) << " " <<
-           "font-family:" << font_->getFamily() << "; font-size:" << font_->getSize() << "; " <<
+           "font-family:" << getFont()->getFamily() << "; " <<
+           "font-size:" << getFont()->getSize() << "; " <<
            "text-anchor:start\">\n";
   os() << "<text>" << text << "</text>\n";
   os() << "</g>\n";
@@ -465,13 +463,6 @@ drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2, const C
   os() << " L " << x2 << " " << y2;
 
   os() << "z\" style=\"" << fillColor(c) << " " << strokeNone() << "\"/>\n";
-}
-
-void
-CGnuPlotSVGRenderer::
-setFont(CFontPtr font)
-{
-  font_ = font;
 }
 
 void
