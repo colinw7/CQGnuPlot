@@ -36,6 +36,8 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
 
   CGnuPlotKey  *createKey(CGnuPlotGroup *group) override;
 
+  CGnuPlotTitle *createTitle(CGnuPlotGroup *group) override;
+
   CGnuPlotBar    *createBar   (CGnuPlotPlot *plot) override;
   CGnuPlotPie    *createPie   (CGnuPlotPlot *plot) override;
   CGnuPlotBubble *createBubble(CGnuPlotPlot *plot) override;

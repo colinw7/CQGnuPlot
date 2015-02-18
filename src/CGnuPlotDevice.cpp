@@ -83,6 +83,13 @@ createKey(CGnuPlotGroup *group)
   return new CGnuPlotKey(group);
 }
 
+CGnuPlotTitle *
+CGnuPlotDevice::
+createTitle(CGnuPlotGroup *group)
+{
+  return new CGnuPlotTitle(group);
+}
+
 CGnuPlotBar *
 CGnuPlotDevice::
 createBar(CGnuPlotPlot *plot)

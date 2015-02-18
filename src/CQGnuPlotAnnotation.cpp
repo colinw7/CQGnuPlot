@@ -1,6 +1,7 @@
 #include <CQGnuPlotAnnotation.h>
 #include <CQGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
+#include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
 
 CQGnuPlotAnnotation::
@@ -41,171 +42,16 @@ setFillColor(const QColor &c)
   obj_->setFillColor(spec);
 }
 
-//---
-
-CQGnuPlotArrow::
-CQGnuPlotArrow(CQGnuPlotGroup *group) :
- CQGnuPlotAnnotation(this), CGnuPlotArrow(group)
+CQGnuPlot::CQDrawLayerType
+CQGnuPlotAnnotation::
+getDrawLayer() const
 {
-  setObjectName("arrow");
-}
-
-QPointF
-CQGnuPlotArrow::
-getFrom() const
-{
-  return CQUtil::toQPoint(CGnuPlotArrow::getFrom());
+  return CQGnuPlotUtil::drawLayerTypeConv(obj_->getLayer());
 }
 
 void
-CQGnuPlotArrow::
-setFrom(const QPointF &p)
+CQGnuPlotAnnotation::
+setDrawLayer(const CQGnuPlot::CQDrawLayerType &layer)
 {
-  CGnuPlotArrow::setFrom(CQUtil::fromQPoint(p));
-}
-
-QPointF
-CQGnuPlotArrow::
-getTo() const
-{
-  return CQUtil::toQPoint(CGnuPlotArrow::getTo());
-}
-
-void
-CQGnuPlotArrow::
-setTo(const QPointF &p)
-{
-  CGnuPlotArrow::setTo(CQUtil::fromQPoint(p));
-}
-
-//---
-
-CQGnuPlotLabel::
-CQGnuPlotLabel(CQGnuPlotGroup *group) :
- CQGnuPlotAnnotation(this), CGnuPlotLabel(group)
-{
-  setObjectName("label");
-}
-
-QString
-CQGnuPlotLabel::
-getText() const
-{
-  return CGnuPlotLabel::getText().c_str();
-}
-
-void
-CQGnuPlotLabel::
-setText(const QString &s)
-{
-  CGnuPlotLabel::setText(s.toStdString());
-}
-
-QPointF
-CQGnuPlotLabel::
-getPos() const
-{
-  return CQUtil::toQPoint(CGnuPlotLabel::getPos());
-}
-
-void
-CQGnuPlotLabel::
-setPos(const QPointF &p)
-{
-  CGnuPlotLabel::setPos(CQUtil::fromQPoint(p));
-}
-
-QString
-CQGnuPlotLabel::
-getFont() const
-{
-  return CGnuPlotLabel::getFont().c_str();
-}
-
-void
-CQGnuPlotLabel::
-setFont(const QString &s)
-{
-  CGnuPlotLabel::setFont(s.toStdString());
-}
-
-//---
-
-CQGnuPlotEllipse::
-CQGnuPlotEllipse(CQGnuPlotGroup *group) :
- CQGnuPlotAnnotation(this), CGnuPlotEllipse(group)
-{
-  setObjectName("ellipse");
-}
-
-QPointF
-CQGnuPlotEllipse::
-getCenter() const
-{
-  return CQUtil::toQPoint(CGnuPlotEllipse::getCenter());
-}
-
-void
-CQGnuPlotEllipse::
-setCenter(const QPointF &p)
-{
-  CGnuPlotEllipse::setCenter(CQUtil::fromQPoint(p));
-}
-
-//---
-
-CQGnuPlotPolygon::
-CQGnuPlotPolygon(CQGnuPlotGroup *group) :
- CQGnuPlotAnnotation(this), CGnuPlotPolygon(group)
-{
-  setObjectName("polygon");
-}
-
-//---
-
-CQGnuPlotRectangle::
-CQGnuPlotRectangle(CQGnuPlotGroup *group) :
- CQGnuPlotAnnotation(this), CGnuPlotRectangle(group)
-{
-  setObjectName("rectangle");
-}
-
-QPointF
-CQGnuPlotRectangle::
-getFrom() const
-{
-  return CQUtil::toQPoint(CGnuPlotRectangle::getFrom().point());
-}
-
-void
-CQGnuPlotRectangle::
-setFrom(const QPointF &p)
-{
-  CGnuPlotRectangle::setFrom(CQUtil::fromQPoint(p));
-}
-
-QPointF
-CQGnuPlotRectangle::
-getTo() const
-{
-  return CQUtil::toQPoint(CGnuPlotRectangle::getTo().point());
-}
-
-void
-CQGnuPlotRectangle::
-setTo(const QPointF &p)
-{
-  CGnuPlotRectangle::setTo(CQUtil::fromQPoint(p));
-}
-
-void
-CQGnuPlotRectangle::
-draw() const
-{
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
-
-  CGnuPlotRectangle::draw();
-
-  if (isSelected())
-    renderer->drawRect(bbox_, CRGBA(1,0,0), 2);
+  obj_->setLayer(CQGnuPlotUtil::drawLayerTypeConv(layer));
 }

@@ -2,6 +2,7 @@
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotUtil.h>
 #include <CGnuPlotRenderer.h>
+#include <CQUtil.h>
 
 CQGnuPlotKey::
 CQGnuPlotKey(CQGnuPlotGroup *group) :
@@ -40,6 +41,20 @@ CQGnuPlotKey::
 setVAlign(const CQGnuPlot::CQVAlignType &a)
 {
   CGnuPlotKey::setVAlign(CQGnuPlotUtil::alignConv(a));
+}
+
+QFont
+CQGnuPlotKey::
+getFont() const
+{
+  return CQUtil::toQFont(CGnuPlotKey::getFont());
+}
+
+void
+CQGnuPlotKey::
+setFont(const QFont &f)
+{
+  CGnuPlotKey::setFont(CQUtil::fromQFont(f));
 }
 
 void

@@ -21,6 +21,7 @@ class CGnuPlotPlot;
 class CGnuPlotPolygon;
 class CGnuPlotRectangle;
 class CGnuPlotRenderer;
+class CGnuPlotTitle;
 class CGnuPlotWindow;
 
 class CGnuPlotDevice {
@@ -53,6 +54,8 @@ class CGnuPlotDevice {
   virtual CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir);
 
   virtual CGnuPlotKey *createKey(CGnuPlotGroup *group);
+
+  virtual CGnuPlotTitle *createTitle(CGnuPlotGroup *group);
 
   virtual CGnuPlotBar *createBar(CGnuPlotPlot *plot);
 

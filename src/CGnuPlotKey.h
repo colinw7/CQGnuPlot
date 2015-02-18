@@ -39,6 +39,9 @@ class CGnuPlotKey {
 
   std::string getTitle() const { return keyData().title().getValue(""); }
 
+  bool getFillBox() const { return keyData().opaque(); }
+  void setFillBox(bool b) { keyData_.setOpaque(b); }
+
   bool getDrawBox() const { return keyData().box(); }
   void setDrawBox(bool b) { keyData_.setBox(b); }
 
@@ -62,6 +65,9 @@ class CGnuPlotKey {
   void setVAlign(CVAlignType a) { keyData_.setVAlign(a); }
 
   const CBBox2D &getBBox() const { return bbox_; }
+
+  const CFontPtr &getFont() const { return keyData().font(); }
+  void setFont(const CFontPtr &f) { keyData_.setFont(f); }
 
   virtual void draw();
 

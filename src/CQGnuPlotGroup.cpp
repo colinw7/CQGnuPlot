@@ -3,7 +3,9 @@
 #include <CQGnuPlotDevice.h>
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
+#include <CQGnuPlotLabel.h>
 #include <CQGnuPlotRenderer.h>
+#include <CGnuPlotObject.h>
 
 CQGnuPlotGroup::
 CQGnuPlotGroup(CQGnuPlotWindow *window) :
@@ -24,26 +26,6 @@ setPainter(QPainter *p)
   CQGnuPlotRenderer *renderer = qwindow()->qapp()->qdevice()->qrenderer();
 
   renderer->setPainter(p);
-}
-
-QString
-CQGnuPlotGroup::
-title() const
-{
-  CGnuPlot::Title title = CGnuPlotGroup::title();
-
-  return title.str.c_str();
-}
-
-void
-CQGnuPlotGroup::
-setTitle(const QString &s)
-{
-  CGnuPlot::Title title = CGnuPlotGroup::title();
-
-  title.str = s.toStdString();
-
-  CGnuPlotGroup::setTitle(title);
 }
 
 CQGnuPlot::CQHistogramStyle
@@ -82,7 +64,7 @@ mousePress(const QPoint &qp)
   renderer->setRegion(region());
 
   for (auto &plot : plots()) {
-    renderer->setRange(getDisplayRange(plot->xind(), plot->yind()));
+    plot->initRenderer();
 
     CPoint2D p;
 
@@ -93,6 +75,24 @@ mousePress(const QPoint &qp)
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
     qplot->mousePress(p);
+  }
+
+  renderer->setRange(getDisplayRange(1, 1));
+
+  for (auto &annotation : annotations()) {
+    CPoint2D p;
+
+    renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
+
+    unmapLogPoint(&p.x, &p.y);
+
+    if (annotation->inside(p)) {
+      CQGnuPlotLabel *qann = static_cast<CQGnuPlotLabel *>(annotation.get());
+
+      qwindow()->selectObject(qann);
+
+      return;
+    }
   }
 }
 
@@ -105,7 +105,7 @@ mouseMove(const QPoint &qp)
   renderer->setRegion(region());
 
   for (auto &plot : plots()) {
-    renderer->setRange(getDisplayRange(plot->xind(), plot->yind()));
+    plot->initRenderer();
 
     CPoint2D p;
 
@@ -128,7 +128,7 @@ mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
   renderer->setRegion(region());
 
   for (auto &plot : plots()) {
-    renderer->setRange(getDisplayRange(plot->xind(), plot->yind()));
+    plot->initRenderer();
 
     CPoint2D p;
 

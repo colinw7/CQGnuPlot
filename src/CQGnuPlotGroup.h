@@ -11,8 +11,6 @@ class QPainter;
 class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   Q_OBJECT
 
-  Q_PROPERTY(QString title READ title WRITE setTitle)
-
   Q_PROPERTY(double regionLeft   READ getRegionLeft   WRITE setRegionLeft  )
   Q_PROPERTY(double regionRight  READ getRegionRight  WRITE setRegionRight )
   Q_PROPERTY(double regionTop    READ getRegionTop    WRITE setRegionTop   )
@@ -50,9 +48,6 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   CQGnuPlotWindow *qwindow() const { return window_; }
 
   void setPainter(QPainter *p);
-
-  QString title() const;
-  void setTitle(const QString &s);
 
   QString getXLabel() const { return CGnuPlotGroup::getXLabel().c_str(); }
   void setXLabel(const QString &s) { CGnuPlotGroup::setXLabel(s.toStdString()); }

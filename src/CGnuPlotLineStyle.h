@@ -1,9 +1,12 @@
 #ifndef CGnuPlotLineStyle_H
 #define CGnuPlotLineStyle_H
 
+#include <CGnuPlotTypes.h>
+
 #include <CRGBA.h>
 #include <COptVal.h>
-#include <CGnuPlotTypes.h>
+#include <CLineDash.h>
+
 #include <sstream>
 
 class CGnuPlotLineStyle {

@@ -1,20 +1,23 @@
-#include <CGnuPlotObject.h>
-#include <CGnuPlotWindow.h>
-#include <CGnuPlotRenderer.h>
+#include <CGnuPlotArrow.h>
 #include <CGnuPlotGroup.h>
+#include <CGnuPlotRenderer.h>
+#include <CGnuPlotLineStyle.h>
 #include <CGnuPlotUtil.h>
-#include <CGnuPlotStyle.h>
 #include <CMathGeom2D.h>
 
 CRGBA
 CGnuPlotArrow::
 getLineColor() const
 {
-  int ls = getLineStyle();
+  if (! lineColor_.isValid()) {
+    int ls = getLineStyle();
 
-  CGnuPlotLineStyleP lsp = group_->app()->getLineStyleInd(ls);
+    CGnuPlotLineStyleP lsp = group_->app()->getLineStyleInd(ls);
 
-  return lsp->color(CRGBA(0,0,0));
+    return lsp->color(CRGBA(0,0,0));
+  }
+  else
+    return lineColor_.getValue();
 }
 
 double
@@ -189,6 +192,13 @@ draw() const
   renderer->setMapping(true);
 }
 
+bool
+CGnuPlotArrow::
+inside(const CPoint2D &) const
+{
+  return false;
+}
+
 void
 CGnuPlotArrow::
 print(std::ostream &os) const
@@ -196,90 +206,6 @@ print(std::ostream &os) const
   style_.print(group_->app(), os);
 
   os << " from " << from_ << (relative_ ? " rto " : " to ") << to_;
-}
-
-//------
-
-void
-CGnuPlotLabel::
-draw() const
-{
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
-
-  const CGnuPlotLabel *label = this;
-
-  CVAlignType valign = (label->getFront() ? CVALIGN_TYPE_TOP : CVALIGN_TYPE_CENTER);
-
-  renderer->drawHAlignedText(label->getPos(), label->getAlign(), 0, valign, 0, label->getText(),
-                             label->getStrokeColor());
-}
-
-//------
-
-void
-CGnuPlotRectangle::
-draw() const
-{
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
-
-  bbox_ = CBBox2D(0,0,1,1);
-
-  if      (from_.isValid()) {
-    if      (to_.isValid()) {
-      CPoint2D from = from_.getValue().getPoint(renderer);
-      CPoint2D to   = to_  .getValue().getPoint(renderer);
-
-      bbox_ = CBBox2D(from, to);
-    }
-    else if (rto_.isValid())
-      bbox_ = CBBox2D(from_.getValue().point(), from_.getValue().point() + rto_.getValue().point());
-    else if (size_.isValid()) {
-      CPoint2D s(size_.getValue().width, size_.getValue().height);
-
-      bbox_ = CBBox2D(from_.getValue().point(), from_.getValue().point() + s);
-    }
-  }
-  else if (center_.isValid()) {
-    if (size_.isValid()) {
-      CPoint2D s(size_.getValue().width, size_.getValue().height);
-
-      bbox_ = CBBox2D(center_.getValue().point() - s/2, center_.getValue().point() + s/2);
-    }
-  }
-
-  const CGnuPlotRectangle *rect = this;
-
-  renderer->fillRect(bbox_, rect->getFillColor().color());
-
-  renderer->drawRect(bbox_, rect->getStrokeColor(), rect->getLineWidth());
-}
-
-//------
-
-void
-CGnuPlotEllipse::
-draw() const
-{
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
-
-  const CGnuPlotEllipse *e = this;
-
-  renderer->fillEllipse(e->getCenter(), e->getRX(), e->getRY(), 0, e->getFillColor().color());
-  renderer->drawEllipse(e->getCenter(), e->getRX(), e->getRY(), 0, e->getStrokeColor());
-}
-
-//------
-
-void
-CGnuPlotPolygon::
-draw() const
-{
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
-
-  const CGnuPlotPolygon *poly = this;
-
-  renderer->fillPolygon(poly->getPoints(), poly->getFillColor().color());
-  renderer->drawPolygon(poly->getPoints(), 1.0, poly->getStrokeColor());
 }
 
 //------

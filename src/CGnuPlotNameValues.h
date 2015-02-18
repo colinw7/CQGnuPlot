@@ -272,7 +272,7 @@ namespace CStrUniqueMatch {
                           {"yerrorlines"   , CGnuPlot::PlotStyle::YERRORLINES}});
   }
 
-  CStrUniqueMatchInitT(CGnuPlot::Smooth) {
+  CStrUniqueMatchInitT(CGnuPlotTypes::Smooth) {
     nameValues.addValues({{"unique"   , CGnuPlot::Smooth::UNIQUE},
                           {"frequency", CGnuPlot::Smooth::FREQUENCY},
                           {"bezier"   , CGnuPlot::Smooth::BEZIER},
@@ -287,7 +287,7 @@ namespace CStrUniqueMatch {
                           {"pattern", CGnuPlotTypes::FillType::PATTERN}});
   }
 
-  CStrUniqueMatchInitT(CGnuPlot::HistogramStyle) {
+  CStrUniqueMatchInitT(CGnuPlotTypes::HistogramStyle) {
     nameValues.addValues({{"clustered"    , CGnuPlot::HistogramStyle::CLUSTERED},
                           {"errorbars"    , CGnuPlot::HistogramStyle::ERRORBARS},
                           {"rowstacked"   , CGnuPlot::HistogramStyle::ROWSTACKED},
@@ -300,11 +300,11 @@ namespace CStrUniqueMatch {
   }
 
   CStrUniqueMatchInitT(CGnuPlotTypes::CoordSys) {
-    nameValues.addValues({{"first"  , CGnuPlotTypes::CoordSys::FIRST    },
-                          {"second" , CGnuPlotTypes::CoordSys::SECOND   },
-                          {"graph"  , CGnuPlotTypes::CoordSys::GRAPH    },
-                          {"screen" , CGnuPlotTypes::CoordSys::SCREEN   },
-                          {"degrees", CGnuPlotTypes::CoordSys::CHARACTER}});
+    nameValues.addValues({{"first"    , CGnuPlotTypes::CoordSys::FIRST    },
+                          {"second"   , CGnuPlotTypes::CoordSys::SECOND   },
+                          {"graph"    , CGnuPlotTypes::CoordSys::GRAPH    },
+                          {"screen"   , CGnuPlotTypes::CoordSys::SCREEN   },
+                          {"character", CGnuPlotTypes::CoordSys::CHARACTER}});
   }
 
   CStrUniqueMatchInitT(CGnuPlotTypes::ObjectType) {

@@ -6,7 +6,6 @@
 #include <CDirectionType.h>
 #include <CPoint2D.h>
 #include <CBBox2D.h>
-#include <CFont.h>
 #include <string>
 #include <vector>
 

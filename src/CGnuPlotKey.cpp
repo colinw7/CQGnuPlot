@@ -29,6 +29,9 @@ draw()
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
+  if (getFont().isValid())
+    renderer->setFont(getFont());
+
   //---
 
   CBBox2D rbbox = (isOutside() ? group_->getRegionBBox() : renderer->range());
@@ -92,6 +95,10 @@ draw()
   double y2 = y1 + size.height;
 
   bbox_ = CBBox2D(x1, y1, x2, y2);
+
+  if (getFillBox()) {
+    renderer->fillRect(bbox_, CRGBA(1,1,1));
+  }
 
   if (getDrawBox()) {
     CRGBA c(0, 0, 0);

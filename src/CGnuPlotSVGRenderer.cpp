@@ -395,7 +395,7 @@ fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
 
 void
 CGnuPlotSVGRenderer::
-drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c)
+drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c, double width)
 {
   double px1, py1, px2, py2;
 
@@ -407,7 +407,8 @@ drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA 
   os() << "<ellipse cx=\"" << rect1.getCenter().x << "\" cy=\"" << rect1.getCenter().y << "\" " <<
           "rx=\"" << rect1.getWidth()/2 << "\" ry=\"" << rect1.getHeight()/2 << "\" " <<
           "transform=\"rotate(" << a << ")\" " <<
-          "style=\"" << strokeColor(c) << " " << fillNone() << "\"/>\n";
+          "style=\"" << strokeColor(c) << " " << strokeWidth(width) <<
+          " " << fillNone() << "\"/>\n";
 }
 
 void

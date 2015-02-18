@@ -46,7 +46,8 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c) override;
   void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c) override;
 
-  void drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c) override;
+  void drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c,
+                   double width) override;
   void fillEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c) override;
 
   void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) override;

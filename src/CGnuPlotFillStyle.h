@@ -27,19 +27,19 @@ class CGnuPlotFillStyle {
   bool border() const { return border_; }
   void setBorder(bool b) { border_ = b; }
 
-  int borderLine() const { return borderLine_; }
-  void setBorderLine(int i) { borderLine_ = i; }
+  int borderLineType() const { return borderLineType_; }
+  void setBorderLineType(int i) { borderLineType_ = i; }
 
   const CRGBA &borderColor() const { return borderColor_; }
   void setBorderColor(const CRGBA &c) { borderColor_ = c; }
 
  private:
-  FillType    style_       { FillType::EMPTY };
-  double      density_     { 1.0 };               // density 0.0 empty, 1.0 is line color
-  FillPattern pattern_     { FillPattern::NONE };
-  bool        transparent_ { true };
-  bool        border_      { true };
-  int         borderLine_  { -1 };
+  FillType    style_          { FillType::EMPTY };
+  double      density_        { 1.0 };               // density 0.0 empty, 1.0 is line color
+  FillPattern pattern_        { FillPattern::NONE };
+  bool        transparent_    { false };
+  bool        border_         { true };
+  int         borderLineType_ { -1 };
   CRGBA       borderColor_;
 };
 

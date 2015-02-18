@@ -54,10 +54,46 @@ namespace CGnuPlotTypes {
   };
 
   enum class ObjectType {
+    NONE,
+    ARROW,
     CIRCLE,
     ELLIPSE,
+    LABEL,
     POLYGON,
     RECTANGLE
+  };
+
+  enum class BoxWidthType {
+    AUTO,
+    ABSOLUTE,
+    RELATIVE
+  };
+
+  enum class Smooth {
+    NONE,
+    UNIQUE,
+    FREQUENCY,
+    BEZIER,
+    SBEZIER,
+    CSPLINES,
+    ACSPLINES
+  };
+
+  enum class HistogramStyle {
+    NONE,
+    CLUSTERED,
+    ERRORBARS,
+    ROWSTACKED,
+    COLUMNSTACKED
+  };
+
+  enum class LogScale {
+    X,
+    Y,
+    Z,
+    X2,
+    Y2,
+    CB
   };
 }
 

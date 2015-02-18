@@ -21,6 +21,7 @@ class CQGnuPlot : public QObject, public CGnuPlot {
   Q_ENUMS(CQFillType)
   Q_ENUMS(CQFillPattern)
   Q_ENUMS(CQBoxWidthType)
+  Q_ENUMS(CQDrawLayerType)
 
  public:
   enum CQHAlignType {
@@ -54,19 +55,44 @@ class CQGnuPlot : public QObject, public CGnuPlot {
 
   enum CQPlotStyle {
     PlotNone,
-    PlotLines,
-    PlotPoints,
-    PlotLinesPoints,
+    PlotBoxErrorBars,
+    PlotBoxes,
+    PlotBoxPlot,
+    PlotBoxXYErrorBars,
+    PlotBubbleChart,
+    PlotCandlesticks,
+    PlotCircles,
     PlotDots,
+    PlotEllipses,
+    PlotErrorBars,
+    PlotErrorLines,
+    PlotFilledCurves,
+    PlotFillSteps,
+    PlotFinanceBars,
+    PlotFSteps,
+    PlotHiSteps,
+    PlotHistograms,
+    PlotImage,
     PlotImpulses,
     PlotLabels,
-    PlotHiSteps,
+    PlotLines,
+    PlotLinesPoints,
+    PlotParallelAxes,
+    PlotPieChart,
+    PlotPm3d,
+    PlotPoints,
+    PlotRgbAlpha,
+    PlotRgbImage,
     PlotSteps,
-    PlotFSteps,
-    PlotHistograms,
-    PlotBoxes,
-    PlotCandelSticks,
-    PlotFilledCurves,
+    PlotVectors,
+    PlotXErrorBars,
+    PlotXErrorLines,
+    PlotXYErrorBars,
+    PlotXYErrorLines,
+    PlotYErrorBars,
+    PlotYErrorLines,
+    PlotTestTerminal,
+    PlotTestPalette,
   };
 
   enum CQHistogramStyle {
@@ -99,6 +125,12 @@ class CQGnuPlot : public QObject, public CGnuPlot {
     BoxWidthAuto,
     BoxWidthAbsolute,
     BoxWidthRelative,
+  };
+
+  enum CQDrawLayerType {
+    LayerFront,
+    LayerBack,
+    LayerBehind
   };
 
  public:

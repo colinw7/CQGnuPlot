@@ -6,8 +6,14 @@
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotLineStyle.h>
 #include <CQGnuPlotAnnotation.h>
+#include <CQGnuPlotArrow.h>
+#include <CQGnuPlotEllipse.h>
+#include <CQGnuPlotPolygon.h>
+#include <CQGnuPlotRectangle.h>
 #include <CQGnuPlotAxis.h>
 #include <CQGnuPlotKey.h>
+#include <CQGnuPlotTitle.h>
+#include <CQGnuPlotLabel.h>
 #include <CQGnuPlotBar.h>
 #include <CQGnuPlotPie.h>
 #include <CQGnuPlotBubble.h>
@@ -218,8 +224,6 @@ addGroupProperties(CGnuPlotGroup *group)
 
   QString name = QString("Group%1").arg(group->id());
 
-  tree_->addProperty(name, qgroup, "title");
-
   QString regionName = name + "/region";
 
   tree_->addProperty(regionName, qgroup, "regionLeft"  )->setEditorFactory(redit_[1]);
@@ -240,10 +244,21 @@ addGroupProperties(CGnuPlotGroup *group)
 
   //---
 
+  CQGnuPlotTitle *qtitle = static_cast<CQGnuPlotTitle *>(group->title());
+
+  QString titleName = QString("%1/title").arg(name);
+
+  tree_->addProperty(titleName, qtitle, "text"  );
+  tree_->addProperty(titleName, qtitle, "offset");
+  tree_->addProperty(titleName, qtitle, "color" );
+  tree_->addProperty(titleName, qtitle, "font"  );
+
+  //---
+
   for (const auto &axis : qgroup->axes()) {
     CQGnuPlotAxis *qaxis = static_cast<CQGnuPlotAxis *>(axis.second);
 
-    QString axesName = QString("%1/axes%2").arg(name).arg(qaxis->id().c_str());
+    QString axesName = QString("%1/axes_%2").arg(name).arg(qaxis->id().c_str());
 
     tree_->addProperty(axesName, qaxis, "displayed");
     tree_->addProperty(axesName, qaxis, "label");
@@ -274,128 +289,99 @@ addGroupProperties(CGnuPlotGroup *group)
 
   tree_->addProperty(keyName, qkey, "displayed");
   tree_->addProperty(keyName, qkey, "drawBox");
+  tree_->addProperty(keyName, qkey, "fillBox");
   tree_->addProperty(keyName, qkey, "reverse");
   tree_->addProperty(keyName, qkey, "outside");
   tree_->addProperty(keyName, qkey, "halign");
   tree_->addProperty(keyName, qkey, "valign");
+  tree_->addProperty(keyName, qkey, "font");
 
   //---
 
-  for (const auto &axis : qgroup->axes()) {
-    CQGnuPlotAxis *qaxis = dynamic_cast<CQGnuPlotAxis *>(axis.second);
+  for (auto &ann : group->annotations()) {
+    CGnuPlotArrow     *arrow   = 0;
+    CGnuPlotEllipse   *ellipse = 0;
+    CGnuPlotLabel     *label   = 0;
+    CGnuPlotPolygon   *poly    = 0;
+    CGnuPlotRectangle *rect    = 0;
 
-    QString axisName = name + "/axes_" + QString(qaxis->id().c_str());
+    //CQGnuPlotArrow *qann = static_cast<CQGnuPlotArrow *>(ann.get());
 
-    tree_->addProperty(axisName, qaxis, "displayed");
-  }
+    if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann.get()))) {
+      QString name1 = QString("%1/%2_%3").arg(name).arg(arrow->getName()).arg(ann->getInd());
 
-  //---
+      CQGnuPlotArrow *qarrow = static_cast<CQGnuPlotArrow *>(arrow);
 
-  int ia = 0;
+      tree_->addProperty(name1, qarrow, "strokeColor");
+      tree_->addProperty(name1, qarrow, "fillColor");
+      tree_->addProperty(name1, qarrow, "drawLayer");
 
-  const auto &arrows = group->arrows();
+      tree_->addProperty(name1, qarrow, "from");
+      tree_->addProperty(name1, qarrow, "to");
+      tree_->addProperty(name1, qarrow, "relative");
+      tree_->addProperty(name1, qarrow, "length");
+      tree_->addProperty(name1, qarrow, "angle");
+      tree_->addProperty(name1, qarrow, "backAngle");
+      tree_->addProperty(name1, qarrow, "fhead");
+      tree_->addProperty(name1, qarrow, "thead");
+      tree_->addProperty(name1, qarrow, "filled");
+      tree_->addProperty(name1, qarrow, "empty");
+      tree_->addProperty(name1, qarrow, "front");
+      tree_->addProperty(name1, qarrow, "lineType");
+      tree_->addProperty(name1, qarrow, "lineWidth");
+    }
+    else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
+      QString name1 = QString("%1/%2_%3").arg(name).arg(ellipse->getName()).arg(ann->getInd());
 
-  for (const auto &a : arrows) {
-    QString name1 = QString("%1/arrow%2").arg(name).arg(ia + 1);
+      CQGnuPlotEllipse *qellipse = static_cast<CQGnuPlotEllipse *>(ellipse);
 
-    CQGnuPlotArrow *a1 = static_cast<CQGnuPlotArrow *>(a.get());
+      tree_->addProperty(name1, qellipse, "strokeColor");
+      tree_->addProperty(name1, qellipse, "fillColor");
+      tree_->addProperty(name1, qellipse, "drawLayer");
 
-    tree_->addProperty(name1, a1, "from");
-    tree_->addProperty(name1, a1, "to");
-    tree_->addProperty(name1, a1, "relative");
-    tree_->addProperty(name1, a1, "length");
-    tree_->addProperty(name1, a1, "angle");
-    tree_->addProperty(name1, a1, "backAngle");
-    tree_->addProperty(name1, a1, "fhead");
-    tree_->addProperty(name1, a1, "thead");
-    tree_->addProperty(name1, a1, "filled");
-    tree_->addProperty(name1, a1, "empty");
-    tree_->addProperty(name1, a1, "front");
-    tree_->addProperty(name1, a1, "lineType");
-    tree_->addProperty(name1, a1, "lineWidth");
-    tree_->addProperty(name1, a1, "strokeColor");
+      tree_->addProperty(name1, qellipse, "center");
+      tree_->addProperty(name1, qellipse, "rx");
+      tree_->addProperty(name1, qellipse, "ry");
+    }
+    else if ((label = dynamic_cast<CGnuPlotLabel *>(ann.get()))) {
+      QString name1 = QString("%1/%2_%3").arg(name).arg(label->getName()).arg(ann->getInd());
 
-    ++ia;
-  }
+      CQGnuPlotLabel *qlabel = static_cast<CQGnuPlotLabel *>(label);
 
-  //---
+      tree_->addProperty(name1, qlabel, "strokeColor");
+      //tree_->addProperty(name1, qlabel, "fillColor");
+      tree_->addProperty(name1, qlabel, "drawLayer");
 
-  int il = 0;
+      tree_->addProperty(name1, qlabel, "text");
+      tree_->addProperty(name1, qlabel, "pos");
+      tree_->addProperty(name1, qlabel, "font");
+      tree_->addProperty(name1, qlabel, "angle");
+      tree_->addProperty(name1, qlabel, "front");
+      tree_->addProperty(name1, qlabel, "offset");
+    }
+    else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann.get()))) {
+      QString name1 = QString("%1/%2_%3").arg(name).arg(poly->getName()).arg(ann->getInd());
 
-  const auto &labels = group->labels();
+      CQGnuPlotPolygon *qpoly = static_cast<CQGnuPlotPolygon *>(poly);
 
-  for (const auto &l : labels) {
-    QString name1 = QString("%1/label%2").arg(name).arg(il + 1);
+      tree_->addProperty(name1, qpoly, "strokeColor");
+      tree_->addProperty(name1, qpoly, "fillColor");
+      tree_->addProperty(name1, qpoly, "drawLayer");
+    }
+    else if ((rect = dynamic_cast<CGnuPlotRectangle *>(ann.get()))) {
+      QString name1 = QString("%1/%2_%3").arg(name).arg(rect->getName()).arg(ann->getInd());
 
-    CQGnuPlotLabel *l1 = static_cast<CQGnuPlotLabel *>(l.get());
+      CQGnuPlotRectangle *qrect = static_cast<CQGnuPlotRectangle *>(rect);
 
-    tree_->addProperty(name1, l1, "text");
-    tree_->addProperty(name1, l1, "pos");
-    tree_->addProperty(name1, l1, "font");
-    tree_->addProperty(name1, l1, "angle");
-    tree_->addProperty(name1, l1, "front");
-    tree_->addProperty(name1, l1, "offset");
-    tree_->addProperty(name1, l1, "strokeColor");
+      tree_->addProperty(name1, qrect, "strokeColor");
+      tree_->addProperty(name1, qrect, "fillColor");
+      tree_->addProperty(name1, qrect, "drawLayer");
 
-    ++il;
-  }
-
-  //---
-
-  int ir = 0;
-
-  const auto &rectangles = group->rectangles();
-
-  for (const auto &r : rectangles) {
-    QString name1 = QString("%1/rectangle%2").arg(name).arg(ir + 1);
-
-    CQGnuPlotRectangle *r1 = static_cast<CQGnuPlotRectangle *>(r.get());
-
-    tree_->addProperty(name1, r1, "from");
-    tree_->addProperty(name1, r1, "to");
-    tree_->addProperty(name1, r1, "fillStyle");
-    tree_->addProperty(name1, r1, "lineWidth");
-    tree_->addProperty(name1, r1, "strokeColor");
-    tree_->addProperty(name1, r1, "fillColor");
-
-    ++ir;
-  }
-
-  //---
-
-  int ie = 0;
-
-  const auto &ellipses = group->ellipses();
-
-  for (const auto &e : ellipses) {
-    QString name1 = QString("%1/ellipse%2").arg(name).arg(ie + 1);
-
-    CQGnuPlotEllipse *e1 = static_cast<CQGnuPlotEllipse *>(e.get());
-
-    tree_->addProperty(name1, e1, "center");
-    tree_->addProperty(name1, e1, "rx");
-    tree_->addProperty(name1, e1, "ry");
-    tree_->addProperty(name1, e1, "strokeColor");
-    tree_->addProperty(name1, e1, "fillColor");
-
-    ++ie;
-  }
-
-  //---
-
-  int ip = 0;
-
-  const auto &polygons = group->polygons();
-
-  for (const auto &p : polygons) {
-    QString name1 = QString("%1/polygon%2").arg(name).arg(ip + 1);
-
-    CQGnuPlotPolygon *p1 = static_cast<CQGnuPlotPolygon *>(p.get());
-
-    tree_->addProperty(name1, p1, "strokeColor");
-    tree_->addProperty(name1, p1, "fillColor");
-
-    ++ip;
+      tree_->addProperty(name1, qrect, "from");
+      tree_->addProperty(name1, qrect, "to");
+      tree_->addProperty(name1, qrect, "fillType");
+      tree_->addProperty(name1, qrect, "lineWidth");
+    }
   }
 }
 

@@ -5,8 +5,14 @@
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotLineStyle.h>
 #include <CQGnuPlotAnnotation.h>
+#include <CQGnuPlotArrow.h>
+#include <CQGnuPlotEllipse.h>
+#include <CQGnuPlotLabel.h>
+#include <CQGnuPlotPolygon.h>
+#include <CQGnuPlotRectangle.h>
 #include <CQGnuPlotAxis.h>
 #include <CQGnuPlotKey.h>
+#include <CQGnuPlotTitle.h>
 #include <CQGnuPlotBar.h>
 #include <CQGnuPlotPie.h>
 #include <CQGnuPlotBubble.h>
@@ -166,6 +172,19 @@ createKey(CGnuPlotGroup *group)
   objects_.push_back(key);
 
   return key;
+}
+
+CGnuPlotTitle *
+CQGnuPlotDevice::
+createTitle(CGnuPlotGroup *group)
+{
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+
+  CQGnuPlotTitle *title = new CQGnuPlotTitle(qgroup);
+
+  objects_.push_back(title);
+
+  return title;
 }
 
 CGnuPlotBar *

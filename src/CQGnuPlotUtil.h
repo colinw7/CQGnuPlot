@@ -32,6 +32,9 @@ namespace CQGnuPlotUtil {
 
   CQGnuPlot::CQBoxWidthType boxWidthTypeConv(const CGnuPlot::BoxWidthType    &type);
   CGnuPlot::BoxWidthType    boxWidthTypeConv(const CQGnuPlot::CQBoxWidthType &type);
+
+  CQGnuPlot::CQDrawLayerType drawLayerTypeConv(const CGnuPlotLayer              &layer);
+  CGnuPlotLayer              drawLayerTypeConv(const CQGnuPlot::CQDrawLayerType &layer);
 }
 
 #endif

@@ -392,7 +392,7 @@ fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
 
 void
 CQGnuPlotRenderer::
-drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c)
+drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c, double width)
 {
   double px1, py1, px2, py2;
 
@@ -418,7 +418,11 @@ drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA 
 
   painter_->setWorldTransform(t3*t2*t1);
 
-  painter_->strokePath(path, QPen(toQColor(c)));
+  QPen pen(toQColor(c));
+
+  pen.setWidthF(width);
+
+  painter_->strokePath(path, pen);
 
   painter_->setWorldMatrix(m);
 }

@@ -13,7 +13,7 @@ namespace {
 
   void decodeAxisId(const std::string &id, char &c, int &ind) {
     c   = id[0];
-    ind = id[0] - '0';
+    ind = id[1] - '0';
   }
 }
 
@@ -23,7 +23,8 @@ CGnuPlotGroup::
 CGnuPlotGroup(CGnuPlotWindow *window) :
  window_(window), id_(nextId_++)
 {
-  key_ = CGnuPlotKeyP(app()->createKey(this));
+  key_   = CGnuPlotKeyP(app()->createKey(this));
+  title_ = app()->createTitle(this);
 }
 
 CGnuPlot *
@@ -53,6 +54,15 @@ init()
 
 void
 CGnuPlotGroup::
+setTitleData(const CGnuPlotTitle &t)
+{
+  *title_ = t;
+
+  title_->setGroup(this);
+}
+
+void
+CGnuPlotGroup::
 addSubPlots(const Plots &plots)
 {
   plots_.clear();
@@ -74,54 +84,69 @@ addObjects()
 
   CGnuPlotDevice *device = plot->device();
 
-  for (auto arrow : plot->arrows())
-    arrows_.push_back(CGnuPlotArrowP(device->createArrow(this)->setData(arrow.get())));
+  for (auto ann : plot->annotations()) {
+    CGnuPlotArrow     *arrow   = 0;
+    CGnuPlotEllipse   *ellipse = 0;
+    CGnuPlotLabel     *label   = 0;
+    CGnuPlotPolygon   *poly    = 0;
+    CGnuPlotRectangle *rect    = 0;
 
-  for (auto label : plot->labels())
-    labels_.push_back(CGnuPlotLabelP(device->createLabel(this)->setData(label.get())));
-
-  for (auto rect : plot->rectangles())
-    rects_.push_back(CGnuPlotRectangleP(device->createRectangle(this)->setData(rect.get())));
-
-  for (auto ellipse : plot->ellipses())
-    ellipses_.push_back(CGnuPlotEllipseP(device->createEllipse(this)->setData(ellipse.get())));
-
-  for (auto poly : plot->polygons())
-    polygons_.push_back(CGnuPlotPolygonP(device->createPolygon(this)->setData(poly.get())));
-}
-
-void
-CGnuPlotGroup::
-getAnnotations(Annotations &annotations) const
-{
-  for (const auto &a : arrows    ()) annotations.push_back(a.get());
-  for (const auto &l : labels    ()) annotations.push_back(l.get());
-  for (const auto &r : rectangles()) annotations.push_back(r.get());
-  for (const auto &e : ellipses  ()) annotations.push_back(e.get());
-  for (const auto &p : polygons  ()) annotations.push_back(p.get());
+    if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann.get()))) {
+      annotations_.push_back(
+        CGnuPlotGroupAnnotationP(device->createArrow(this)->setData(arrow)));
+    }
+    else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
+      annotations_.push_back(
+        CGnuPlotGroupAnnotationP(device->createEllipse(this)->setData(ellipse)));
+    }
+    else if ((label = dynamic_cast<CGnuPlotLabel *>(ann.get()))) {
+      annotations_.push_back(
+        CGnuPlotGroupAnnotationP(device->createLabel(this)->setData(label)));
+    }
+    else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann.get()))) {
+      annotations_.push_back(
+        CGnuPlotGroupAnnotationP(device->createPolygon(this)->setData(poly)));
+    }
+    else if ((rect = dynamic_cast<CGnuPlotRectangle *>(ann.get()))) {
+      annotations_.push_back(
+        CGnuPlotGroupAnnotationP(device->createRectangle(this)->setData(rect)));
+    }
+  }
 }
 
 void
 CGnuPlotGroup::
 fit()
 {
-  COptReal xmin, ymin, xmax, ymax, xmin2, ymin2, xmax2, ymax2;
+  COptReal xmin1, ymin1, xmax1, ymax1, xmin2, ymin2, xmax2, ymax2;
 
   for (auto plot : plots_) {
-    xmin .updateMin(plot->xaxis(1).min); xmax .updateMax(plot->xaxis(1).max);
-    ymin .updateMin(plot->yaxis(1).min); ymax .updateMax(plot->yaxis(1).max);
+    xmin1.updateMin(plot->xaxis(1).min); xmax1.updateMax(plot->xaxis(1).max);
+    ymin1.updateMin(plot->yaxis(1).min); ymax1.updateMax(plot->yaxis(1).max);
 
     xmin2.updateMin(plot->xaxis(2).min); xmax2.updateMax(plot->xaxis(2).max);
     ymin2.updateMin(plot->yaxis(2).min); ymax2.updateMax(plot->yaxis(2).max);
   }
 
-  xaxis(1).min = xmin ; xaxis(1).max = xmax ;
-  yaxis(1).min = ymin ; yaxis(1).max = ymax ;
+  xaxis(1).min = xmin1; xaxis(1).max = xmax1;
+  yaxis(1).min = ymin1; yaxis(1).max = ymax1;
   xaxis(2).min = xmin2; xaxis(2).max = xmax2;
   yaxis(2).min = ymin2; yaxis(2).max = ymax2;
 
   for (auto plot : plots_)
     plot->setAxesData(axesData_);
+}
+
+CBBox2D
+CGnuPlotGroup::
+getClip(int xind, int yind) const
+{
+  double xmin = xaxis(xind).min.getValue(0.0);
+  double ymin = yaxis(yind).min.getValue(0.0);
+  double xmax = xaxis(xind).max.getValue(1.0);
+  double ymax = yaxis(yind).max.getValue(1.0);
+
+  return CBBox2D(xmin, ymin, xmax, ymax);
 }
 
 void
@@ -159,8 +184,7 @@ draw()
   CGnuPlotRenderer *renderer = app()->renderer();
 
   renderer->setRegion(region());
-  renderer->setMargin(margin());
-  renderer->setRange(getDisplayRange(1, 1));
+  renderer->setMargin(margin().range());
 
   if (plotSize().ratio.isValid())
     renderer->setRatio(plotSize().ratio.getValue());
@@ -188,7 +212,7 @@ draw()
   }
   else {
     for (auto plot : plots_) {
-      renderer->setRange(getDisplayRange(plot->xind(), plot->yind()));
+      plot->initRenderer();
 
       plot->draw();
     }
@@ -273,16 +297,9 @@ drawTitle()
   CGnuPlotRenderer *renderer = app()->renderer();
 
   renderer->setRange(region());
+  renderer->setReverse(false, false);
 
-  double xmin = region().getXMin();
-  double xmax = region().getXMax();
-//double ymin = region().getYMin();
-  double ymax = region().getYMax();
-
-  if (! title().str.empty()) {
-    renderer->drawHAlignedText(CPoint2D((xmin + xmax)/2, ymax), CHALIGN_TYPE_CENTER, 0,
-                               CVALIGN_TYPE_BOTTOM, -8, title().str);
-  }
+  title_->draw();
 }
 
 void
@@ -327,6 +344,7 @@ drawHistogram(const Plots &plots)
     CBBox2D bbox = getDisplayRange(1, 1);
 
     renderer->setRange(bbox);
+    renderer->setReverse(xaxis(1).reverse, yaxis(1).reverse);
 
     double y2 = std::max(0.0, bbox.getBottom());
 
@@ -428,6 +446,7 @@ drawBorder()
   CBBox2D bbox = getDisplayRange(1, 1);
 
   renderer->setRange(bbox);
+  renderer->setReverse(xaxis(1).reverse, yaxis(1).reverse);
 
   double xmin1 = bbox.getLeft  (), ymin1 = bbox.getBottom();
   double xmax1 = bbox.getRight (), ymax1 = bbox.getTop   ();
@@ -485,6 +504,7 @@ drawXAxes(int xind, bool drawOther)
   }
 
   renderer->setRange(getDisplayRange(xind, 1));
+  renderer->setReverse(xaxis.reverse, false);
 
   if (xaxis.displayed) {
     plotXAxis->setLabel(xaxis.str);
@@ -556,6 +576,7 @@ drawYAxes(int yind, bool drawOther)
   }
 
   renderer->setRange(getDisplayRange(1, yind));
+  renderer->setReverse(false, yaxis.reverse);
 
   if (yaxis.displayed) {
     plotYAxis->setLabel(yaxis.str);
@@ -603,9 +624,11 @@ drawKey()
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
+  // TODO: key drawn in own coord system
   CBBox2D bbox = getDisplayRange(1, 1);
 
   renderer->setRange(bbox);
+  renderer->setReverse(false, false);
 
   key_->draw();
 }
@@ -614,25 +637,15 @@ void
 CGnuPlotGroup::
 drawAnnotations(CGnuPlotLayer layer)
 {
-  for (auto arrow : arrows_)
-    if (arrow->getLayer() == layer)
-      arrow->draw();
+  // draw labels last
+  CGnuPlotRenderer *renderer = app()->renderer();
 
-  for (auto label : labels_)
-    if (label->getLayer() == layer)
-      label->draw();
+  renderer->setRange(getDisplayRange(1, 1));
+  renderer->setReverse(xaxis(1).reverse, yaxis(1).reverse);
 
-  for (auto rect : rects_)
-    if (rect->getLayer() == layer)
-      rect->draw();
-
-  for (auto ellipse : ellipses_)
-    if (ellipse->getLayer() == layer)
-      ellipse->draw();
-
-  for (auto poly : polygons_)
-    if (poly->getLayer() == layer)
-      poly->draw();
+  for (const auto &ann : annotations_)
+    if (ann->getLayer() == layer)
+      ann->draw();
 }
 
 std::string

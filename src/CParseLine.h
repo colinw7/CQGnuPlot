@@ -57,6 +57,8 @@ class CParseLine {
 
   void skipChar() { ++pos_; }
 
+  void skipChars(int n) { pos_ += n; }
+
   bool isValid() const { return pos_ < len_; }
 
   void skipSpace() {

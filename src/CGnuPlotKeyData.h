@@ -4,13 +4,14 @@
 #include <CGnuPlotColorSpec.h>
 #include <CAlignType.h>
 #include <COptVal.h>
+#include <CFont.h>
 
 class CGnuPlotKeyData {
  public:
   typedef std::vector<std::string> Columns;
 
  public:
-  CGnuPlotKeyData() { }
+  CGnuPlotKeyData();
 
   bool displayed() const { return displayed_; }
   void setDisplayed (bool b) { displayed_ = b; }
@@ -42,6 +43,9 @@ class CGnuPlotKeyData {
   bool opaque() const { return opaque_; }
   void setOpaque(bool b) { opaque_ = b; }
 
+  bool enhanced() const { return enhanced_; }
+  void setEnhanced(bool b) { enhanced_ = b; }
+
   const COptReal &sampLen() const { return sampLen_; }
   void setSampLen(double r) { sampLen_ = r; }
 
@@ -51,11 +55,14 @@ class CGnuPlotKeyData {
   const COptString &title() const { return title_; }
   void setTitle(const std::string &s) { title_ = s; }
 
+  const CFontPtr &font() const { return font_; }
+  void setFont(const CFontPtr &f) { font_ = f; }
+
   bool box() const { return box_; }
   void setBox(bool b) { box_ = b; }
 
-  bool columnhead() const { return columnhead_; }
-  void setColumnhead(bool b) { columnhead_ = b; }
+  bool columnHead() const { return columnhead_; }
+  void setColumnHead(bool b) { columnhead_ = b; }
 
   const COptInt &columnNum() const { return columnNum_; }
   void setColumnNum(int i) { columnNum_ = i; }
@@ -80,9 +87,11 @@ class CGnuPlotKeyData {
   bool              invert_     { false };              // invert plot order
   bool              autotitle_  { true };
   bool              opaque_     { false };              // draw opaque
+  bool              enhanced_   { false };              // enhanced text
   COptReal          sampLen_;
   COptReal          spacing_;
   COptString        title_;
+  CFontPtr          font_;
   bool              box_ { false };
   bool              columnhead_ { false };
   COptInt           columnNum_;

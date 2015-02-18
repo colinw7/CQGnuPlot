@@ -41,20 +41,45 @@ VAlignConv valignConv({
 typedef CEnumConv<CGnuPlot::PlotStyle, CQGnuPlot::CQPlotStyle> PlotStyleConv;
 
 PlotStyleConv plotStyleConv({
-  { CGnuPlot::PlotStyle::NONE        , CQGnuPlot::PlotNone        },
-  { CGnuPlot::PlotStyle::LINES       , CQGnuPlot::PlotLines       },
-  { CGnuPlot::PlotStyle::POINTS      , CQGnuPlot::PlotPoints      },
-  { CGnuPlot::PlotStyle::LINES_POINTS, CQGnuPlot::PlotLinesPoints },
-  { CGnuPlot::PlotStyle::DOTS        , CQGnuPlot::PlotDots        },
-  { CGnuPlot::PlotStyle::IMPULSES    , CQGnuPlot::PlotImpulses    },
-  { CGnuPlot::PlotStyle::LABELS      , CQGnuPlot::PlotLabels      },
-  { CGnuPlot::PlotStyle::STEPS       , CQGnuPlot::PlotSteps       },
-  { CGnuPlot::PlotStyle::FSTEPS      , CQGnuPlot::PlotFSteps      },
-  { CGnuPlot::PlotStyle::HISTEPS     , CQGnuPlot::PlotHiSteps     },
-  { CGnuPlot::PlotStyle::HISTOGRAMS  , CQGnuPlot::PlotHistograms  },
-  { CGnuPlot::PlotStyle::BOXES       , CQGnuPlot::PlotBoxes       },
-  { CGnuPlot::PlotStyle::CANDLESTICKS, CQGnuPlot::PlotCandelSticks},
-  { CGnuPlot::PlotStyle::FILLEDCURVES, CQGnuPlot::PlotFilledCurves},
+  { CGnuPlot::PlotStyle::NONE          , CQGnuPlot::PlotNone           },
+  { CGnuPlot::PlotStyle::BOXERRORBARS  , CQGnuPlot::PlotBoxErrorBars   },
+  { CGnuPlot::PlotStyle::BOXES         , CQGnuPlot::PlotBoxes          },
+  { CGnuPlot::PlotStyle::BOXPLOT       , CQGnuPlot::PlotBoxPlot        },
+  { CGnuPlot::PlotStyle::BOXXYERRORBARS, CQGnuPlot::PlotBoxXYErrorBars },
+  { CGnuPlot::PlotStyle::BUBBLECHART   , CQGnuPlot::PlotBubbleChart    },
+  { CGnuPlot::PlotStyle::CANDLESTICKS  , CQGnuPlot::PlotCandlesticks   },
+  { CGnuPlot::PlotStyle::CIRCLES       , CQGnuPlot::PlotCircles        },
+  { CGnuPlot::PlotStyle::DOTS          , CQGnuPlot::PlotDots           },
+  { CGnuPlot::PlotStyle::ELLIPSES      , CQGnuPlot::PlotEllipses       },
+  { CGnuPlot::PlotStyle::ERRORBARS     , CQGnuPlot::PlotErrorBars      },
+  { CGnuPlot::PlotStyle::ERRORLINES    , CQGnuPlot::PlotErrorLines     },
+  { CGnuPlot::PlotStyle::FILLEDCURVES  , CQGnuPlot::PlotFilledCurves   },
+  { CGnuPlot::PlotStyle::FILLSTEPS     , CQGnuPlot::PlotFillSteps      },
+  { CGnuPlot::PlotStyle::FINANCEBARS   , CQGnuPlot::PlotFinanceBars    },
+  { CGnuPlot::PlotStyle::FSTEPS        , CQGnuPlot::PlotFSteps         },
+  { CGnuPlot::PlotStyle::HISTEPS       , CQGnuPlot::PlotHiSteps        },
+  { CGnuPlot::PlotStyle::HISTOGRAMS    , CQGnuPlot::PlotHistograms     },
+  { CGnuPlot::PlotStyle::IMAGE         , CQGnuPlot::PlotImage          },
+  { CGnuPlot::PlotStyle::IMPULSES      , CQGnuPlot::PlotImpulses       },
+  { CGnuPlot::PlotStyle::LABELS        , CQGnuPlot::PlotLabels         },
+  { CGnuPlot::PlotStyle::LINES         , CQGnuPlot::PlotLines          },
+  { CGnuPlot::PlotStyle::LINES_POINTS  , CQGnuPlot::PlotLinesPoints    },
+  { CGnuPlot::PlotStyle::PARALLELAXES  , CQGnuPlot::PlotParallelAxes   },
+  { CGnuPlot::PlotStyle::PIECHART      , CQGnuPlot::PlotPieChart       },
+  { CGnuPlot::PlotStyle::PM3D          , CQGnuPlot::PlotPm3d           },
+  { CGnuPlot::PlotStyle::POINTS        , CQGnuPlot::PlotPoints         },
+  { CGnuPlot::PlotStyle::RGBALPHA      , CQGnuPlot::PlotRgbAlpha       },
+  { CGnuPlot::PlotStyle::RGBIMAGE      , CQGnuPlot::PlotRgbImage       },
+  { CGnuPlot::PlotStyle::STEPS         , CQGnuPlot::PlotSteps          },
+  { CGnuPlot::PlotStyle::VECTORS       , CQGnuPlot::PlotVectors        },
+  { CGnuPlot::PlotStyle::XERRORBARS    , CQGnuPlot::PlotXErrorBars     },
+  { CGnuPlot::PlotStyle::XERRORLINES   , CQGnuPlot::PlotXErrorLines    },
+  { CGnuPlot::PlotStyle::XYERRORBARS   , CQGnuPlot::PlotXYErrorBars    },
+  { CGnuPlot::PlotStyle::XYERRORLINES  , CQGnuPlot::PlotXYErrorLines   },
+  { CGnuPlot::PlotStyle::YERRORBARS    , CQGnuPlot::PlotYErrorBars     },
+  { CGnuPlot::PlotStyle::YERRORLINES   , CQGnuPlot::PlotYErrorLines    },
+  { CGnuPlot::PlotStyle::TEST_TERMINAL , CQGnuPlot::PlotTestTerminal   },
+  { CGnuPlot::PlotStyle::TEST_PALETTE  , CQGnuPlot::PlotTestPalette    },
 });
 
 typedef CEnumConv<CGnuPlot::HistogramStyle, CQGnuPlot::CQHistogramStyle> HistogramStyleConv;
@@ -109,6 +134,14 @@ BoxWidthTypeConv boxWidthTypeConv({
   { CGnuPlot::BoxWidthType::AUTO    , CQGnuPlot::BoxWidthAuto     },
   { CGnuPlot::BoxWidthType::ABSOLUTE, CQGnuPlot::BoxWidthAbsolute },
   { CGnuPlot::BoxWidthType::RELATIVE, CQGnuPlot::BoxWidthRelative },
+});
+
+typedef CEnumConv<CGnuPlotLayer, CQGnuPlot::CQDrawLayerType> DrawLayerTypeConv;
+
+DrawLayerTypeConv drawLayerTypeConv({
+  { CGnuPlotLayer::FRONT , CQGnuPlot::LayerFront  },
+  { CGnuPlotLayer::BACK  , CQGnuPlot::LayerBack   },
+  { CGnuPlotLayer::BEHIND, CQGnuPlot::LayerBehind },
 });
 
 }
@@ -255,4 +288,20 @@ CQGnuPlotUtil::
 boxWidthTypeConv(const CQGnuPlot::CQBoxWidthType &type)
 {
   return Conv::boxWidthTypeConv.conv(type);
+}
+
+//---
+
+CQGnuPlot::CQDrawLayerType
+CQGnuPlotUtil::
+drawLayerTypeConv(const CGnuPlotLayer &layer)
+{
+  return Conv::drawLayerTypeConv.conv(layer);
+}
+
+CGnuPlotLayer
+CQGnuPlotUtil::
+drawLayerTypeConv(const CQGnuPlot::CQDrawLayerType &layer)
+{
+  return Conv::drawLayerTypeConv.conv(layer);
 }

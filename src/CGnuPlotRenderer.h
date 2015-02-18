@@ -44,6 +44,8 @@ class CGnuPlotRenderer {
   const CBBox2D &clip() { return clip_; }
   void setClip(const CBBox2D &r) { clip_ = r; }
 
+  void setReverse(bool reverseX, bool reverseY) { reverseX_ = reverseX; reverseY_ = reverseY; }
+
   //---
 
   virtual CFontPtr getFont() const { return font_; }
@@ -75,7 +77,7 @@ class CGnuPlotRenderer {
                            const CPoint2D &p3, const CPoint2D &p4, double width=1.0,
                            const CRGBA &c=CRGBA(0,0,0)) = 0;
   virtual void drawEllipse(const CPoint2D &p, double dx, double ry, double a=0,
-                           const CRGBA &c=CRGBA(0,0,0)) = 0;
+                           const CRGBA &c=CRGBA(0,0,0), double w=1.0) = 0;
   virtual void fillEllipse(const CPoint2D &p, double dx, double ry, double a=0,
                            const CRGBA &c=CRGBA(1,1,1)) = 0;
 
@@ -94,6 +96,12 @@ class CGnuPlotRenderer {
   void pixelToWindow(double px, double py, double *wx, double *wy);
 
   //---
+
+  void drawClippedRect(const CBBox2D &rect, const CRGBA &c=CRGBA(0,0,0), double w=1.0);
+  void fillClippedRect(const CBBox2D &rect, const CRGBA &c);
+
+  void drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width=1.0,
+                    const CRGBA &c=CRGBA(0,0,0), const CLineDash &dash=CLineDash());
 
   bool clipLine(CPoint2D &p1, CPoint2D &p2);
 
@@ -126,6 +134,8 @@ class CGnuPlotRenderer {
   COptReal        ratio_;            // aspect ratio
   CBBox2D         clip_;             // clip area
   CFontPtr        font_;             // font
+  bool            reverseX_ { false };
+  bool            reverseY_ { false };
 };
 
 #endif

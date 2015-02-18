@@ -37,6 +37,44 @@ setFontSize(double s)
   font_ = font_->dup(font_->getFamily(), font_->getStyle(), s, 0, 0, 100, 100);
 }
 
+void
+CGnuPlotRenderer::
+drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w)
+{
+  if      (clip_.inside(rect))
+    drawRect(rect, c, w);
+  else if (clip_.intersect(rect)) {
+    drawClipLine(rect.getLL(), rect.getLR(), w, c);
+    drawClipLine(rect.getLR(), rect.getUR(), w, c);
+    drawClipLine(rect.getUR(), rect.getUL(), w, c);
+    drawClipLine(rect.getUL(), rect.getLL(), w, c);
+  }
+}
+
+void
+CGnuPlotRenderer::
+fillClippedRect(const CBBox2D &rect, const CRGBA &c)
+{
+  CBBox2D crect;
+
+  if      (clip_.inside(rect))
+    fillRect(rect, c);
+  else if (clip_.intersect(rect, crect))
+    fillRect(crect, c);
+}
+
+void
+CGnuPlotRenderer::
+drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,
+             const CLineDash &dash)
+{
+  CPoint2D p11 = p1;
+  CPoint2D p21 = p2;
+
+  if (clipLine(p11, p21))
+    drawLine(p11, p21, width, c, dash);
+}
+
 bool
 CGnuPlotRenderer::
 clipLine(CPoint2D &p1, CPoint2D &p2)
@@ -369,8 +407,15 @@ windowToPixel(double wx, double wy, double *px, double *py)
   }
 
   // map
-  *px = CGnuPlotUtil::map(wx, range_.getXMin(), range_.getXMax(), pxmin, pxmax);
-  *py = CGnuPlotUtil::map(wy, range_.getYMin(), range_.getYMax(), pymax, pymin);
+  if (reverseX_)
+    *px = CGnuPlotUtil::map(wx, range_.getXMin(), range_.getXMax(), pxmax, pxmin);
+  else
+    *px = CGnuPlotUtil::map(wx, range_.getXMin(), range_.getXMax(), pxmin, pxmax);
+
+  if (reverseY_)
+    *py = CGnuPlotUtil::map(wy, range_.getYMin(), range_.getYMax(), pymin, pymax);
+  else
+    *py = CGnuPlotUtil::map(wy, range_.getYMin(), range_.getYMax(), pymax, pymin);
 }
 
 void
@@ -430,6 +475,13 @@ pixelToWindow(double px, double py, double *wx, double *wy)
   }
 
   // map
-  *wx = CGnuPlotUtil::map(px, pxmin, pxmax, range_.getXMin(), range_.getXMax());
-  *wy = CGnuPlotUtil::map(py, pymax, pymin, range_.getYMin(), range_.getYMax());
+  if (reverseX_)
+    *wx = CGnuPlotUtil::map(px, pxmax, pxmin, range_.getXMin(), range_.getXMax());
+  else
+    *wx = CGnuPlotUtil::map(px, pxmin, pxmax, range_.getXMin(), range_.getXMax());
+
+  if (reverseY_)
+    *wy = CGnuPlotUtil::map(py, pymin, pymax, range_.getYMin(), range_.getYMax());
+  else
+    *wy = CGnuPlotUtil::map(py, pymax, pymin, range_.getYMin(), range_.getYMax());
 }

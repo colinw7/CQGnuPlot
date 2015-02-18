@@ -52,7 +52,14 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotCoordValue.h>
 #include <CGnuPlotKeyData.h>
 #include <CGnuPlotPosition.h>
+#include <CGnuPlotSize.h>
+#include <CGnuPlotTitle.h>
 #include <CGnuPlotObject.h>
+#include <CGnuPlotArrow.h>
+#include <CGnuPlotEllipse.h>
+#include <CGnuPlotLabel.h>
+#include <CGnuPlotPolygon.h>
+#include <CGnuPlotRectangle.h>
 #include <CGnuPlotFile.h>
 
 //------
@@ -133,9 +140,12 @@ class CGnuPlot {
     ORIGIN,
     SIZE,
 
-    ARROW,
     KEY,
+    ARROW,
+    ELLIPSE,
     LABEL,
+    POLYGON,
+    RECTANGLE,
     OBJECT,
     TIMESTAMP,
     TITLE,
@@ -248,22 +258,6 @@ class CGnuPlot {
     DEFAULT
   };
 
-  enum class BoxWidthType {
-    AUTO,
-    ABSOLUTE,
-    RELATIVE
-  };
-
-  enum class Smooth {
-    NONE,
-    UNIQUE,
-    FREQUENCY,
-    BEZIER,
-    SBEZIER,
-    CSPLINES,
-    ACSPLINES
-  };
-
   enum class PlotVar {
     ARRAY,
     ARROWSTYLE,
@@ -344,29 +338,10 @@ class CGnuPlot {
     TEST_PALETTE
   };
 
-  enum class HistogramStyle {
-    NONE,
-    CLUSTERED,
-    ERRORBARS,
-    ROWSTACKED,
-    COLUMNSTACKED
-  };
-
   enum class AngleType {
     RADIANS,
     DEGREES
   };
-
-  enum class LogScale {
-    X,
-    Y,
-    Z,
-    X2,
-    Y2,
-    CB
-  };
-
-  typedef std::map<LogScale,int> LogScaleMap;
 
   enum class TestType {
     NONE,
@@ -381,6 +356,12 @@ class CGnuPlot {
     YIQ,
     XYZ,
   };
+
+  typedef CGnuPlotTypes::BoxWidthType   BoxWidthType;
+  typedef CGnuPlotTypes::Smooth         Smooth;
+  typedef CGnuPlotTypes::HistogramStyle HistogramStyle;
+  typedef CGnuPlotTypes::LogScale       LogScale;
+  typedef std::map<LogScale,int>        LogScaleMap;
 
   //---
 
@@ -472,18 +453,6 @@ class CGnuPlot {
 
   //---
 
-  struct Title {
-    Title() { }
-
-    std::string str;
-    CPoint2D    offset { 0, 0 };
-    std::string font;
-    CRGBA       color;
-    bool        enhanced { false };
-  };
-
-  //---
-
   struct AxisData {
     typedef std::map<int,std::string> TicLabelMap;
 
@@ -502,7 +471,7 @@ class CGnuPlot {
     TicLabelMap ticlabel;
     double      offset    { 0 };
     std::string format;
-    std::string font;
+    CFontPtr    font;
     bool        showTics  { true };
   };
 
@@ -581,14 +550,34 @@ class CGnuPlot {
 
   //---
 
-  typedef std::map<int,CGnuPlotArrowStyle> ArrowStyles;
-  typedef std::map<int,CLineDash>          LineDashes;
+  typedef std::map<int,CGnuPlotArrowStyle>      ArrowStyles;
+  typedef std::map<int,CLineDash>               LineDashes;
+  typedef std::vector<CGnuPlotGroupAnnotationP> Annotations;
 
-  typedef std::vector<CGnuPlotArrowP>     Arrows;
-  typedef std::vector<CGnuPlotLabelP>     Labels;
-  typedef std::vector<CGnuPlotEllipseP>   Ellipses;
-  typedef std::vector<CGnuPlotPolygonP>   Polygons;
-  typedef std::vector<CGnuPlotRectangleP> Rectangles;
+  //---
+
+  struct Margin {
+    Margin(double l, double b, double r, double t) :
+     lmargin(l), bmargin(b), rmargin(r), tmargin(t) {
+    }
+
+    double left  () const { return lmargin; }
+    double bottom() const { return bmargin; }
+    double right () const { return rmargin; }
+    double top   () const { return tmargin; }
+
+    void setLeft  (double l, bool s=false) { lmargin = l; lscreen = s; }
+    void setBottom(double b, bool s=false) { bmargin = b; bscreen = s; }
+    void setRight (double r, bool s=false) { rmargin = r; rscreen = s; }
+    void setTop   (double t, bool s=false) { tmargin = t; tscreen = s; }
+
+    double lmargin { 0 }; bool lscreen { false };
+    double bmargin { 0 }; bool bscreen { false };
+    double rmargin { 0 }; bool rscreen { false };
+    double tmargin { 0 }; bool tscreen { false };
+
+    CRange2D range() const { return CRange2D(lmargin, bmargin, rmargin, tmargin); }
+  };
 
   //---
 
@@ -783,8 +772,8 @@ class CGnuPlot {
   const CBBox2D &region() const { return region_; }
   void setRegion(const CBBox2D &r) { region_ = r; }
 
-  const CRange2D &margin() const { return margin_; }
-  void setMargin(const CRange2D &b) { margin_ = b; }
+  const Margin &margin() const { return margin_; }
+  void setMargin(const Margin &b) { margin_ = b; }
 
   const CRGBA &backgroundColor() const { return backgroundColor_; }
   void setBackgroundColor(const CRGBA &c) { backgroundColor_ = c; }
@@ -862,20 +851,8 @@ class CGnuPlot {
 
   //------
 
-  const Arrows &arrows() const { return arrows_; }
-  void setArrows(const Arrows &arrows) { arrows_ = arrows; }
-
-  const Labels &labels() const { return labels_; }
-  void setLabels(const Labels &labels) { labels_ = labels; }
-
-  const Rectangles &rectangles() const { return rects_; }
-  void setRectangles(const Rectangles &rects) { rects_ = rects; }
-
-  const Ellipses &ellipses() const { return ellipses_; }
-  void setEllipses(const Ellipses &ellipses) { ellipses_ = ellipses; }
-
-  const Polygons &polygons() const { return polygons_; }
-  void setPolygons(const Polygons &polygons) { polygons_ = polygons; }
+  const Annotations &annotations() const { return annotations_; }
+  void setAnnotations(const Annotations &annotations) { annotations_ = annotations; }
 
   //------
 
@@ -903,7 +880,67 @@ class CGnuPlot {
   CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir);
   CGnuPlotKey  *createKey (CGnuPlotGroup *group);
 
+  CGnuPlotTitle *createTitle(CGnuPlotGroup *group);
+
   CGnuPlotRenderer *renderer();
+
+  //----
+
+  template<typename T>
+  T *getAnnotation(int ind) const {
+    for (auto &ann : annotations_)
+      if (ann->getInd() == ind && (dynamic_cast<T *>(ann.get()) != 0))
+        return dynamic_cast<T *>(ann.get());
+
+    return 0;
+  }
+
+  template<typename T>
+  T *lookupAnnotation(int ind) {
+    T *annotation = getAnnotation<T>(ind);
+
+    if (! annotation) {
+      // TODO: unique ind ?
+      if (ind <= 0)
+        ind = annotations_.size() + 1;
+
+      annotation = new T(0);
+
+      annotation->setInd(ind);
+
+      annotations_.push_back(CGnuPlotGroupAnnotationP(annotation));
+    }
+
+    return annotation;
+  }
+
+  template<typename T>
+  void showAnnotations() {
+    for (const auto &ann : annotations_) {
+      const T *obj = dynamic_cast<const T *>(ann.get());
+      if (! obj) continue;
+
+       std::cerr << T::getName() << " " << obj->getInd() << ",";
+       obj->print(std::cerr);
+       std::cerr << std::endl;
+    }
+  }
+
+  template<typename T>
+  void clearAnnotations() {
+    Annotations annotations;
+
+    for (auto &ann : annotations_) {
+      T *obj = dynamic_cast<T *>(ann.get());
+
+      if (! obj)
+        annotations.push_back(ann);
+    }
+
+    annotations_ = annotations;
+  }
+
+  //----
 
   void timeout();
 
@@ -913,6 +950,11 @@ class CGnuPlot {
     if (i < 1 || i > int(fields_.size())) return "";
     return fields_[i - 1];
   }
+
+  void setPointNum(int n) { pointNum_ = n; }
+  int pointNum() const { return pointNum_; }
+
+  CExprValueP getFieldValue(int i, int ival, int setNum, int pointNum, bool &skip);
 
   void resetLineStyle();
 
@@ -979,6 +1021,13 @@ class CGnuPlot {
 
   void readBlockLines(Statements &lines, std::string &eline, int depth);
 
+  void parseUsing(CParseLine &line, UsingCols &usingCols);
+
+  void parseIndex(CParseLine &line, int &indexStart, int &indexEnd, int &indexStep);
+  void parseEvery(CParseLine &line, int &everyStart, int &everyEnd, int &everyStep);
+
+  bool parseFont(CParseLine &line, CFontPtr &font);
+
   bool parseBoolExpression(CParseLine &line, bool &res);
 
   bool parseExpression(CParseLine &line, std::string &expr);
@@ -1010,8 +1059,6 @@ class CGnuPlot {
 
   CExprCTokenStack compileExpression(const std::string &expr) const;
 
-  CExprValueP getFieldValue(int i, int ival, int setNum, int pointNum, bool &skip);
-
   void setMissingStr(const std::string &chars) { missingStr_ = chars; }
   const std::string &getMissingStr() const { return missingStr_; }
 
@@ -1030,8 +1077,8 @@ class CGnuPlot {
   void setStyleIncrementType(StyleIncrementType s) { styleIncrement_.type = s; }
   StyleIncrementType getStyleIncrementType() { return styleIncrement_.type; }
 
-  const Title &title() const { return title_; }
-  void setTitle(const Title &t) { title_ = t; }
+  const CGnuPlotTitle &title() const { return title_; }
+  void setTitle(const CGnuPlotTitle &t) { title_ = t; }
 
   void setLogScale(LogScale scale, int base) {
     logScale_[scale] = base;
@@ -1069,11 +1116,16 @@ class CGnuPlot {
   bool parseReal(CParseLine &line, double &r);
   bool parseString(CParseLine &line, std::string &str, const std::string &msg="");
 
+  bool parseBracketedString(CParseLine &line, std::string &str);
+
   bool getIntegerVariable(const std::string &name, int &value);
+  bool getRealVariable   (const std::string &name, double &value);
+  bool getStringVariable (const std::string &name, std::string &value);
 
   bool parsePosition(CParseLine &line, CGnuPlotPosition &pos);
   bool parseCoordValue(CParseLine &line, CGnuPlotCoordValue &v);
   bool parsePoint(CParseLine &line, CPoint2D &point);
+  bool parseSize(CParseLine &line, CGnuPlotSize &size);
   bool parseSize(CParseLine &line, CSize2D &size);
 
   const Multiplot &multiplot() const { return multiplot_; }
@@ -1132,6 +1184,7 @@ class CGnuPlot {
   std::string         lastPlotCmd_;
   bool                printAppend_ { false };
   std::string         tableFile_;
+  int                 pointNum_ { 0 };
   CISize2D            terminalSize_   { 600, 600 };                  // terminal size
   PlotStyle           dataStyle_      { PlotStyle::POINTS };
   PlotStyle           functionStyle_  { PlotStyle::LINES };
@@ -1143,16 +1196,15 @@ class CGnuPlot {
   PointStyle          pointStyle_;
   LineStyles          lineStyles_;
   StyleIncrement      styleIncrement_;
-  Title               title_;
+  CGnuPlotTitle       title_;
   VarPrefs            varPrefs_;
   AxesData            axesData_;
   CGnuPlotKeyData     keyData_;
   CBBox2D             region_ { 0, 0, 1, 1 };
-  CRange2D            margin_ { 10, 10, 10, 10 };
+  Margin              margin_ { 10, 10, 10, 10 };
   CRGBA               backgroundColor_ { 1, 1, 1};
   int                 xind_ { 1 };
   int                 yind_ { 1 };
-  Arrows              arrows_;
   ArrowStyles         arrowStyles_;
   CGnuPlotArrowStyle  arrowStyle_;
   LineDashes          lineDashes_;
@@ -1162,10 +1214,7 @@ class CGnuPlot {
   bool                parametric_ { false };
   bool                polar_ { false };
   ImageStyle          imageStyle_;
-  Labels              labels_;
-  Rectangles          rects_;
-  Ellipses            ellipses_;
-  Polygons            polygons_;
+  Annotations         annotations_;
   Palette             palette_;
   Camera              camera_;
   FilledCurve         filledCurve_;

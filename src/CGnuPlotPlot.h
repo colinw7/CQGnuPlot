@@ -68,26 +68,26 @@ class CGnuPlotCacheFactory<CGnuPlotBubble> {
 
 class CGnuPlotPlot {
  public:
-  typedef std::vector<CExprValueP>      Values;
-  typedef CGnuPlot::BoxWidth            BoxWidth;
-  typedef CGnuPlot::BoxWidthType        BoxWidthType;
-  typedef CGnuPlot::AxesData            AxesData;
-  typedef CGnuPlot::AxisData            AxisData;
   typedef CGnuPlot::PlotStyle           PlotStyle;
+  typedef CGnuPlotTypes::BoxWidthType   BoxWidthType;
   typedef CGnuPlotTypes::FillType       FillType;
   typedef CGnuPlotTypes::FillPattern    FillPattern;
+  typedef CGnuPlotTypes::Smooth         Smooth;
+  typedef CGnuPlotTypes::SymbolType     SymbolType;
+  typedef CGnuPlot::BoxWidth            BoxWidth;
+  typedef CGnuPlot::AxesData            AxesData;
+  typedef CGnuPlot::AxisData            AxisData;
   typedef CGnuPlot::Palette             Palette;
   typedef CGnuPlot::FilledCurve         FilledCurve;
   typedef CGnuPlot::PointStyle          PointStyle;
-  typedef CGnuPlot::Smooth              Smooth;
-  typedef CGnuPlotTypes::SymbolType     SymbolType;
-  typedef std::vector<CGnuPlotPoint>    Points2D;
-  typedef std::map<int,Points2D>        Points3D;
-  typedef std::vector<uchar>            ImageData;
   typedef CGnuPlot::ImageStyle          ImageStyle;
   typedef CGnuPlotCache<CGnuPlotBar>    BarCache;
   typedef CGnuPlotCache<CGnuPlotPie>    PieCache;
   typedef CGnuPlotCache<CGnuPlotBubble> BubbleCache;
+  typedef std::vector<CExprValueP>      Values;
+  typedef std::vector<CGnuPlotPoint>    Points2D;
+  typedef std::map<int,Points2D>        Points3D;
+  typedef std::vector<uchar>            ImageData;
   typedef std::vector<CGnuPlotBar *>    Bars;
   typedef std::vector<CGnuPlotPie *>    Pies;
   typedef std::vector<CGnuPlotBubble *> Bubbles;
@@ -259,6 +259,7 @@ class CGnuPlotPlot {
 
   //---
 
+  // TODO: use group axis data
   const AxisData &xaxis(int ind) const {
     return const_cast<CGnuPlotPlot *>(this)->axesData_.xaxis[ind];
   }
@@ -336,6 +337,8 @@ class CGnuPlotPlot {
 
   //---
 
+  void initRenderer();
+
   virtual void draw();
 
   void draw2D();
@@ -364,6 +367,7 @@ class CGnuPlotPlot {
   void drawPieChart          ();
   void drawPoints            ();
   void drawVectors           ();
+  void drawErrorBars         ();
   void drawXYErrorBars       ();
 
   void setNumBars(int n);
