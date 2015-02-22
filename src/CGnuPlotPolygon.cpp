@@ -13,7 +13,7 @@ draw() const
   if (poly->getFillColor().isRGB())
     renderer->fillPolygon(poly->getPoints(), poly->getFillColor().color());
 
-  renderer->drawPolygon(poly->getPoints(), 1.0, poly->getStrokeColor());
+  renderer->drawPolygon(poly->getPoints(), getLineWidth().getValue(0), poly->getStrokeColor());
 }
 
 bool

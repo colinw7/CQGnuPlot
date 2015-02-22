@@ -1,6 +1,7 @@
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
+#include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
 
 CQGnuPlotLabel::
@@ -14,7 +15,7 @@ QString
 CQGnuPlotLabel::
 getText() const
 {
-  return CGnuPlotLabel::getText().c_str();
+  return CGnuPlotLabel::getText().text().c_str();
 }
 
 void
@@ -22,6 +23,20 @@ CQGnuPlotLabel::
 setText(const QString &s)
 {
   CGnuPlotLabel::setText(s.toStdString());
+}
+
+CQGnuPlot::CQHAlignType
+CQGnuPlotLabel::
+getAlign() const
+{
+  return CQGnuPlotUtil::alignConv(CGnuPlotLabel::getAlign());
+}
+
+void
+CQGnuPlotLabel::
+setAlign(const CQGnuPlot::CQHAlignType &a)
+{
+  CGnuPlotLabel::setAlign(CQGnuPlotUtil::alignConv(a));
 }
 
 QPointF
@@ -52,19 +67,41 @@ setFont(const QFont &f)
   CGnuPlotLabel::setFont(CQUtil::fromQFont(f));
 }
 
+QPointF
+CQGnuPlotLabel::
+getOffset() const
+{
+  return CQUtil::toQPoint(CGnuPlotLabel::getOffset());
+}
+
+void
+CQGnuPlotLabel::
+setOffset(const QPointF &p)
+{
+  CGnuPlotLabel::setOffset(CQUtil::fromQPoint(p));
+}
+
 void
 CQGnuPlotLabel::
 draw() const
 {
-  CGnuPlotLabel::draw();
-
   if (isSelected()) {
+    CQGnuPlotLabel *th = const_cast<CQGnuPlotLabel *>(this);
+
+    CRGBA c = CGnuPlotLabel::getStrokeColor();
+
+    th->CGnuPlotLabel::setStrokeColor(CRGBA(1,0,0));
+
+    CGnuPlotLabel::draw();
+
+    th->CGnuPlotLabel::setStrokeColor(c);
+
+    CBBox2D bbox = getBBox();
+
     CGnuPlotRenderer *renderer = group_->app()->renderer();
 
-    //CVAlignType valign = (getFront() ? CVALIGN_TYPE_TOP : CVALIGN_TYPE_CENTER);
-    CVAlignType valign = CVALIGN_TYPE_CENTER;
-
-    renderer->drawHAlignedText(CGnuPlotLabel::getPos(), getAlign(), 0, valign, 0,
-                               CGnuPlotLabel::getText(), CRGBA(1,0,0));
+    renderer->drawRect(bbox, CRGBA(1,0,0), 2);
   }
+  else
+    CGnuPlotLabel::draw();
 }

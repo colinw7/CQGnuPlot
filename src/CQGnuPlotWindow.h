@@ -22,6 +22,8 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
                         public CQMouseModeIFace, public CQPanZoomIFace {
   Q_OBJECT
 
+  Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor)
+
   Q_PROPERTY(bool   enable3D READ enable3D WRITE setEnable3D)
   Q_PROPERTY(double rotateX  READ rotateX  WRITE setRotateX)
   Q_PROPERTY(double rotateY  READ rotateY  WRITE setRotateY)
@@ -57,6 +59,9 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
 
   uint getZoomModeId() const { return ZOOM_MOUSE_MODE_ID + 1000*id_; }
   uint getPanModeId () const { return PAN_MOUSE_MODE_ID  + 1000*id_; }
+
+  QColor backgroundColor() const;
+  void setBackgroundColor(const QColor &c);
 
   bool enable3D() { return camera().enabled; }
   void setEnable3D(bool b);

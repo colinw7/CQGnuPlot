@@ -1,4 +1,5 @@
 #include <CExprI.h>
+#include <CPrintF.h>
 
 CExpr *
 CExpr::
@@ -115,6 +116,33 @@ executeCTokenStack(const CExprCTokenStack &stack)
   return value;
 }
 
+void
+CExpr::
+saveCompileState()
+{
+  CExprCompile *compile = compile_.release();
+  CExprExecute *execute = execute_.release();
+
+  compiles_.push_back(compile);
+  executes_.push_back(execute);
+
+  compile_ = new CExprCompile;
+  execute_ = new CExprExecute;
+}
+
+void
+CExpr::
+restoreCompileState()
+{
+  assert(! compiles_.empty() && ! executes_.empty());
+
+  compile_ = compiles_.back();
+  execute_ = executes_.back();
+
+  compiles_.pop_back();
+  executes_.pop_back();
+}
+
 CExprVariablePtr
 CExpr::
 getVariable(const std::string &name) const
@@ -226,4 +254,66 @@ CExpr::
 createStringValue(const std::string &str)
 {
   return CExprValuePtr(new CExprValue(CExprStringValue(str)));
+}
+
+//------
+
+class CExprPrintF : public CPrintF {
+ public:
+  CExprPrintF(const std::string &fmt) :
+   fmt_(fmt) {
+  }
+
+  std::string exec(const std::vector<CExprValuePtr> &values) {
+    setFormatString(fmt_);
+
+    values_ = values;
+    iv_     = 0;
+
+    return format();
+  }
+
+  int  getInt     () const { return getLong(); }
+  long getLongLong() const { return getLong(); }
+
+  long getLong() const {
+    long l = 0;
+    if (iv_ < values_.size()) {
+      values_[iv_]->getIntegerValue(l);
+      ++iv_;
+    }
+    return l;
+  }
+
+  double getDouble() const {
+    double r = 0.0;
+    if (iv_ < values_.size()) {
+      values_[iv_]->getRealValue(r);
+      ++iv_;
+    }
+    return r;
+  }
+
+  std::string getString() const {
+    std::string s;
+    if (iv_ < values_.size()) {
+      values_[iv_]->getStringValue(s);
+      ++iv_;
+    }
+    return s;
+  }
+
+ private:
+  std::string           fmt_;
+  CExprFunction::Values values_;
+  mutable uint          iv_;
+};
+
+std::string
+CExpr::
+printf(const std::string &fmt, const std::vector<CExprValuePtr> &values) const
+{
+  CExprPrintF printf(fmt);
+
+  return printf.exec(values);
 }

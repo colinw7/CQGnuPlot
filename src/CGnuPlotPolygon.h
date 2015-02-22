@@ -20,6 +20,7 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
     (void) CGnuPlotGroupAnnotation::setData(poly);
 
     points_ = poly->points_;
+    lw_     = poly->lw_;
 
     return this;
   }
@@ -32,6 +33,9 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
 
   const Points &getPoints() const { return points_; }
 
+  const COptReal &getLineWidth() const { return lw_; }
+  void setLineWidth(double w) { lw_ = w; }
+
   void draw() const override;
 
   bool inside(const CPoint2D &p) const;
@@ -39,7 +43,8 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
   void print(std::ostream &) const;
 
  protected:
-  Points points_;
+  Points   points_;
+  COptReal lw_;
 };
 
 typedef std::shared_ptr<CGnuPlotPolygon> CGnuPlotPolygonP;

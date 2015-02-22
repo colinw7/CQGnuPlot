@@ -593,7 +593,7 @@ draw2D()
     double xmax = (p2.x - p1.x)*clearRect.getRight () + p1.x;
     double ymax = (p2.y - p1.y)*clearRect.getTop   () + p1.y;
 
-    renderer->fillRect(CBBox2D(xmin, ymin, xmax, ymax), CRGBA(1,1,1));
+    renderer->fillRect(CBBox2D(xmin, ymin, xmax, ymax), window()->backgroundColor());
   }
 
   //---

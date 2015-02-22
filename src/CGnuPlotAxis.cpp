@@ -292,7 +292,7 @@ testAxisGaps(double start, double end, double testIncrement, uint testNumGapTick
     double delta2 = fabs(*start1 - start) + fabs(*end1 - end);
 
     if (((fabs(delta1 - delta2) < 1E-6) &&
-         (abs(testNumGaps - OPTIMUM_TICKS) < abs(*numGaps - OPTIMUM_TICKS))) ||
+         (abs(int(testNumGaps) - OPTIMUM_TICKS) < abs(int(*numGaps) - OPTIMUM_TICKS))) ||
         delta1 < delta2) {
       *start1 = newStart;
       *end1   = newEnd;
@@ -326,7 +326,7 @@ testAxisGaps(double start, double end, double testIncrement, uint testNumGapTick
     double delta2 = fabs(*start1 - start) + fabs(*end1 - end);
 
     if (((fabs(delta1 - delta2) < 1E-6) &&
-         (abs(testNumGaps - OPTIMUM_TICKS) < abs(*numGaps - OPTIMUM_TICKS))) ||
+         (abs(int(testNumGaps) - OPTIMUM_TICKS) < abs(int(*numGaps) - OPTIMUM_TICKS))) ||
         delta1 < delta2) {
       *start1 = newStart;
       *end1   = newEnd;

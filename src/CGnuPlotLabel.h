@@ -2,6 +2,7 @@
 #define CGnuPlotLabel_H
 
 #include <CGnuPlotObject.h>
+#include <CGnuPlotText.h>
 #include <CFont.h>
 
 class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
@@ -27,8 +28,8 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
   CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::LABEL; }
 
-  const std::string &getText() const { return text_; }
-  void setText(const std::string &t) { text_ = t; }
+  const CGnuPlotText &getText() const { return text_; }
+  void setText(const CGnuPlotText &text) { text_ = text; }
 
   const CHAlignType &getAlign() const { return align_; }
   void setAlign(const CHAlignType &a) { align_ = a; }
@@ -48,22 +49,29 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   void setEnhanced(bool b) { enhanced_ = b; }
   bool enhanced() const { return enhanced_; }
 
+  const CBBox2D &getBBox() const { return bbox_; }
+
   void draw() const override;
 
   bool inside(const CPoint2D &p) const;
 
   void print(std::ostream &os) const {
-    os << " \"" << text_ << "\"" << " at " << pos_;
+    os << " \"";
+
+    text_.print(os);
+
+    os << "\"" << " at " << pos_;
   }
 
  protected:
-  std::string text_;
-  CHAlignType align_    { CHALIGN_TYPE_LEFT };
-  CPoint2D    pos_      { 0, 0 };
-  CFontPtr    font_;
-  double      angle_    { -1 };
-  CPoint2D    offset_   { 0, 0 };
-  bool        enhanced_ { false };
+  CGnuPlotText    text_;
+  CHAlignType     align_    { CHALIGN_TYPE_LEFT };
+  CPoint2D        pos_      { 0, 0 };
+  CFontPtr        font_;
+  double          angle_    { -1 };
+  CPoint2D        offset_   { 0, 0 };
+  bool            enhanced_ { true };
+  mutable CBBox2D bbox_;
 };
 
 typedef std::shared_ptr<CGnuPlotLabel> CGnuPlotLabelP;

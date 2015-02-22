@@ -232,6 +232,9 @@ class CGnuPlotGroup {
 
   const CBBox2D &getBBox() const { return bbox_; }
 
+  const CRGBA &backgroundColor() const { return backgroundColor_; }
+  void setBackgroundColor(const CRGBA &r) { backgroundColor_ = r; }
+
   //-----
 
   void mapLogPoint  (CPoint2D &p) const;
@@ -267,6 +270,7 @@ class CGnuPlotGroup {
   LogScaleMap     logScale_;                               // log axis data
   Annotations     annotations_;                            // annotations
   Axes            axes_;                                   // axes
+  CRGBA           backgroundColor_;                        // background color
 };
 
 #endif

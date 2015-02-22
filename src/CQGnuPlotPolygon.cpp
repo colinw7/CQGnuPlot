@@ -9,6 +9,13 @@ CQGnuPlotPolygon(CQGnuPlotGroup *group) :
   setObjectName("polygon");
 }
 
+double
+CQGnuPlotPolygon::
+getLineWidth() const
+{
+  return CGnuPlotPolygon::getLineWidth().getValue(0);
+}
+
 void
 CQGnuPlotPolygon::
 draw() const

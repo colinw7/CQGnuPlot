@@ -166,6 +166,9 @@ class CExpr {
   bool executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values);
   CExprValuePtr executeCTokenStack(const CExprCTokenStack &stack);
 
+  void saveCompileState();
+  void restoreCompileState();
+
   CExprVariablePtr getVariable(const std::string &name) const;
   CExprVariablePtr createVariable(const std::string &name, CExprValuePtr value);
   void removeVariable(const std::string &name);
@@ -189,10 +192,15 @@ class CExpr {
   CExprValuePtr createRealValue(double r);
   CExprValuePtr createStringValue(const std::string &s);
 
+  std::string printf(const std::string &fmt, const std::vector<CExprValuePtr> &values) const;
+
  private:
   CExpr();
 
  private:
+  typedef std::vector<CExprCompile *> Compiles;
+  typedef std::vector<CExprExecute *> Executes;
+
   bool                       debug_;
   bool                       trace_;
   bool                       degrees_;
@@ -200,6 +208,8 @@ class CExpr {
   CAutoPtr<CExprInterp>      interp_;
   CAutoPtr<CExprCompile>     compile_;
   CAutoPtr<CExprExecute>     execute_;
+  Compiles                   compiles_;
+  Executes                   executes_;
   CAutoPtr<CExprOperatorMgr> operatorMgr_;
   CAutoPtr<CExprVariableMgr> variableMgr_;
   CAutoPtr<CExprFunctionMgr> functionMgr_;

@@ -1,5 +1,4 @@
 #include <CExprI.h>
-#include <CPrintF.h>
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
@@ -180,6 +179,26 @@ class CExprFunctionSign : public CExprFunctionObj {
   }
 };
 
+class CExprFunctionExpr : public CExprFunctionObj {
+ public:
+  CExprValuePtr operator()(const CExprFunction::Values &values) {
+    assert(values.size() == 1);
+
+    std::string expr;
+
+    if (! values[0]->getStringValue(expr))
+      return CExprValuePtr();
+
+    CExprInst->saveCompileState();
+
+    CExprValuePtr value = CExprInst->evaluateExpression(expr);
+
+    CExprInst->restoreCompileState();
+
+    return value;
+  }
+};
+
 #ifdef GNUPLOT_EXPR
 class CExprFunctionRand : public CExprFunctionObj {
  public:
@@ -228,54 +247,25 @@ CEXPR_REAL_TO_REAL_FOBJ(Int  , static_cast<int>)
 CEXPR_REAL_TO_REAL_FOBJ(Real , static_cast<double>)
 
 #ifdef GNUPLOT_EXPR
-class CExprFunctionSPrintF : public CExprFunctionObj, public CPrintF {
+class CExprFunctionSPrintF : public CExprFunctionObj {
  public:
   CExprValuePtr operator()(const CExprFunction::Values &values) {
     assert(values.size() >= 1);
-    std::string s;
-    if (! values[0]->getStringValue(s))
+
+    std::string fmt;
+
+    if (! values[0]->getStringValue(fmt))
       return CExprValuePtr();
-    setFormatString(s);
 
-    values_ = values;
-    iv_     = 1;
+    CExprFunction::Values values1;
 
-    return CExprInst->createStringValue(format());
+    for (uint i = 1; i < values.size(); ++i)
+      values1.push_back(values[i]);
+
+    std::string res = CExprInst->printf(fmt, values1);
+
+    return CExprInst->createStringValue(res);
   }
-
-  int         getInt     () const { return getLong(); }
-  long        getLongLong() const { return getLong(); }
-
-  long getLong() const {
-    long l = 0;
-    if (iv_ < values_.size()) {
-      values_[iv_]->getIntegerValue(l);
-      ++iv_;
-    }
-    return l;
-  }
-
-  double getDouble() const {
-    double r = 0.0;
-    if (iv_ < values_.size()) {
-      values_[iv_]->getRealValue(r);
-      ++iv_;
-    }
-    return r;
-  }
-
-  std::string getString() const {
-    std::string s;
-    if (iv_ < values_.size()) {
-      values_[iv_]->getStringValue(s);
-      ++iv_;
-    }
-    return s;
-  }
-
- private:
-  CExprFunction::Values values_;
-  mutable uint          iv_;
 };
 #endif
 
@@ -452,6 +442,8 @@ addFunctions()
   // gprintf ?
   addObjFunction("sprintf", "s,...", new CExprFunctionSPrintF);
 #endif
+
+  addObjFunction("expr", "s", new CExprFunctionExpr);
 }
 
 CExprFunctionPtr

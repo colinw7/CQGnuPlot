@@ -37,6 +37,8 @@ class CExprParseImpl {
   CExprPTokenPtr createRealToken(double);
   CExprPTokenPtr createStringToken(const std::string &str);
 
+  std::string replaceEscapeCodes(const std::string &str);
+
  private:
   CExprPTokenStack ptoken_stack_;
 };
@@ -310,6 +312,8 @@ readString(const std::string &str, uint *i)
 
     uint j = *i;
 
+    str1 += str[*i];
+
     while (*i < str.size()) {
       if      (str[*i] == '\\' && *i < str.size() - 1)
         (*i)++;
@@ -325,11 +329,153 @@ readString(const std::string &str, uint *i)
     str1 = str.substr(j, *i - j);
 
     (*i)++;
+
+    str1 = replaceEscapeCodes(str1);
   }
 
-  str1 = CStrUtil::replaceEscapeCodes(str1);
-
   return createStringToken(str1);
+}
+
+std::string
+CExprParseImpl::
+replaceEscapeCodes(const std::string &str)
+{
+  int len = str.size();
+
+  bool has_escape = false;
+
+  for (int i = 0; i < len - 1; ++i)
+    if (str[i] == '\\') {
+      has_escape = true;
+      break;
+    }
+
+  if (! has_escape)
+    return str;
+
+  std::string str1;
+
+  int i = 0;
+
+  while (i < len - 1) {
+    if (str[i] != '\\') {
+      str1 += str[i++];
+      continue;
+    }
+
+    ++i;
+
+    switch (str[i]) {
+      case 'a':
+        str1 += '\a';
+        break;
+      case 'b':
+        str1 += '\b';
+        break;
+      case 'e':
+        str1 += '\033';
+        break;
+      case 'f':
+        str1 += '\f';
+        break;
+      case 'n':
+        str1 += '\n';
+        break;
+      case 'r':
+        str1 += '\r';
+        break;
+      case 't':
+        str1 += '\t';
+        break;
+      case 'v':
+        str1 += '\v';
+        break;
+      case 'x':
+        if (i < len - 1 && ::isxdigit(str[i + 1])) {
+          int hex_value = 0;
+
+          ++i;
+
+          if      (::isdigit(str[i]))
+            hex_value += (str[i] - '0');
+          else if (::islower(str[i]))
+            hex_value += (str[i] - 'a' + 10);
+          else
+            hex_value += (str[i] - 'A' + 10);
+
+          if (i < len - 1 && ::isxdigit(str[i + 1])) {
+            hex_value *= 16;
+
+            ++i;
+
+            if      (::isdigit(str[i]))
+              hex_value += (str[i] - '0');
+            else if (::islower(str[i]))
+              hex_value += (str[i] - 'a' + 10);
+            else
+              hex_value += (str[i] - 'A' + 10);
+          }
+
+          str1 += hex_value;
+        }
+        else {
+          str1 += '\\';
+          str1 += str[i++];
+        }
+
+        break;
+      case '\\':
+        str1 += '\\';
+        break;
+      case '0':
+        if (i < len - 1 && CStrUtil::isodigit(str[i + 1])) {
+          int oct_value = 0;
+
+          ++i;
+
+          oct_value += (str[i] - '0');
+
+          if (i < len - 1 && CStrUtil::isodigit(str[i + 1])) {
+            oct_value *= 8;
+
+            ++i;
+
+            oct_value += (str[i] - '0');
+          }
+
+          if (i < len - 1 && CStrUtil::isodigit(str[i + 1])) {
+            oct_value *= 8;
+
+            ++i;
+
+            oct_value += (str[i] - '0');
+          }
+
+          str1 += oct_value;
+        }
+        else {
+          str1 += '\\';
+          str1 += str[i];
+        }
+
+        break;
+      case '\'':
+      case '\"':
+        str1 += str[i];
+        break;
+      default:
+        str1 += '\\';
+        str1 += str[i];
+        break;
+    }
+
+    ++i;
+  }
+
+  if (i < len)
+    str1 += str[i++];
+
+  return str1;
 }
 
 CExprPTokenPtr

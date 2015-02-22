@@ -60,6 +60,7 @@ CGnuPlotRenderer.cpp \
 CGnuPlotSize.cpp \
 CGnuPlotSVGDevice.cpp \
 CGnuPlotSVGRenderer.cpp \
+CGnuPlotText.cpp \
 CGnuPlotTitle.cpp \
 CGnuPlotWindow.cpp \
 \
@@ -113,6 +114,7 @@ CQGnuPlotPlot.h \
 CQGnuPlotPolygon.h \
 CQGnuPlotRectangle.h \
 CQGnuPlotRenderer.h \
+CGnuPlotText.h \
 CQGnuPlotTitle.h \
 CQGnuPlotUtil.h \
 CQGnuPlotWindow.h \

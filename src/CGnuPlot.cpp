@@ -43,9 +43,33 @@ class CGnuPlotReadLine : public CReadLine {
 
 //------
 
-class CGnuPlotColumnFn : public CExprFunctionObj {
+class CGnuPlotFn : public CExprFunctionObj {
  public:
-  CGnuPlotColumnFn(CGnuPlot *plot) : plot_(plot) { }
+  CGnuPlotFn(CGnuPlot *plot) : plot_(plot) { }
+
+ protected:
+  CGnuPlot *plot_;
+};
+
+class CGnuPlotAssertFn : public CGnuPlotFn {
+ public:
+  CGnuPlotAssertFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
+
+  CExprValueP operator()(const std::vector<CExprValueP> &values) {
+    long value = 0;
+
+    if (! values[0]->getIntegerValue(value))
+      assert(false);
+
+    assert(value);
+
+    return CExprValueP();
+  }
+};
+
+class CGnuPlotColumnFn : public CGnuPlotFn {
+ public:
+  CGnuPlotColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
   CExprValueP operator()(const std::vector<CExprValueP> &values) {
     long col = 0;
@@ -57,14 +81,27 @@ class CGnuPlotColumnFn : public CExprFunctionObj {
 
     return plot_->getFieldValue(plot_->pointNum(), col, 0, plot_->pointNum(), skip);
   }
-
- private:
-  CGnuPlot *plot_;
 };
 
-class CGnuPlotStringColumnFn : public CExprFunctionObj {
+class CGnuPlotExistsFn : public CGnuPlotFn {
  public:
-  CGnuPlotStringColumnFn(CGnuPlot *plot) : plot_(plot) { }
+  CGnuPlotExistsFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
+
+  CExprValueP operator()(const std::vector<CExprValueP> &values) {
+    std::string name;
+
+    if (! values[0]->getStringValue(name))
+      return CExprInst->createIntegerValue(0);
+
+    CExprVariablePtr var = CExprInst->getVariable(name);
+
+    return CExprInst->createIntegerValue(var.isValid() ? 1 : 0);
+  }
+};
+
+class CGnuPlotStringColumnFn : public CGnuPlotFn {
+ public:
+  CGnuPlotStringColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
   CExprValueP operator()(const std::vector<CExprValueP> &values) {
     assert(values.size() == 1);
@@ -78,21 +115,37 @@ class CGnuPlotStringColumnFn : public CExprFunctionObj {
 
     return CExprInst->createStringValue(str);
   }
-
- private:
-  CGnuPlot *plot_;
 };
 
-class CGnuPlotStringValidFn : public CExprFunctionObj {
+class CGnuPlotStringValidFn : public CGnuPlotFn {
  public:
-  CGnuPlotStringValidFn(CGnuPlot *plot) : plot_(plot) { }
+  CGnuPlotStringValidFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
   CExprValueP operator()(const std::vector<CExprValueP> &) {
+    // TODO
+    assert(plot_);
+
     return CExprInst->createRealValue(0.0);
   }
+};
 
- private:
-  CGnuPlot *plot_;
+class CGnuPlotValueFn : public CGnuPlotFn {
+ public:
+  CGnuPlotValueFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
+
+  CExprValueP operator()(const std::vector<CExprValueP> &values) {
+    std::string name;
+
+    if (! values[0]->getStringValue(name))
+      return CExprValueP();
+
+    CExprVariablePtr var = CExprInst->getVariable(name);
+
+    if (! var.isValid())
+      return CExprValueP();
+
+    return var->getValue();
+  }
 };
 
 //------
@@ -165,10 +218,13 @@ CGnuPlot()
 
   CExprInst->createRealVariable("pi", M_PI);
 
-  // exists
+  CExprInst->addFunction("assert", "i", new CGnuPlotAssertFn(this));
+
   CExprInst->addFunction("column"      , "i", new CGnuPlotColumnFn(this));
+  CExprInst->addFunction("exists"      , "s", new CGnuPlotExistsFn(this));
   CExprInst->addFunction("stringcolumn", "i", new CGnuPlotStringColumnFn(this));
   CExprInst->addFunction("valid"       , "i", new CGnuPlotStringValidFn(this));
+  CExprInst->addFunction("value"       , "s", new CGnuPlotValueFn(this));
   // timecolumn
 
   svgDevice_ = new CGnuPlotSVGDevice();
@@ -479,6 +535,7 @@ parseStatement(int &i, const Statements &statements)
     case CommandName::HELP    : helpCmd   (args); break;
     case CommandName::HISTORY : historyCmd(args); break;
     case CommandName::PRINT   : printCmd  (args); break;
+    case CommandName::PRINTF  : printfCmd (args); break;
     case CommandName::QUIT    : quitCmd   (args); break;
     case CommandName::CD      : cdCmd     (args); break;
     case CommandName::PWD     : pwdCmd    (args); break;
@@ -565,15 +622,48 @@ printCmd(const std::string &args)
 {
   std::vector<CExprValueP> values;
 
-  if (CExprInst->evaluateExpression(args, values)) {
-    for (uint i = 0; i < values.size(); ++i) {
-      if (i > 0) std::cerr << " ";
-      std::cerr << values[i];
-    }
-    std::cerr << std::endl;
-  }
-  else
+  if (! CExprInst->evaluateExpression(args, values)) {
     std::cerr << "Invalid expression" << std::endl;
+    return;
+  }
+
+  for (uint i = 0; i < values.size(); ++i) {
+    if (i > 0) std::cerr << " ";
+
+    std::cerr << values[i];
+  }
+
+  std::cerr << std::endl;
+}
+
+// printf <format> {expression} [, {expression} ]
+void
+CGnuPlot::
+printfCmd(const std::string &args)
+{
+  CParseLine line(args);
+
+  std::string fmt;
+
+  if (! parseString(line, fmt)) {
+    std::cerr << "Invalid format" << std::endl;
+    return;
+  }
+
+  std::vector<CExprValueP> values;
+
+  if (line.skipSpaceAndChar(',')) {
+    std::string expr = line.substr();
+
+    if (! CExprInst->evaluateExpression(expr, values)) {
+      std::cerr << "Invalid expression" << std::endl;
+      return;
+    }
+  }
+
+  std::string str = CExprInst->printf(fmt, values);
+
+  std::cout << str;
 }
 
 // quit
@@ -2547,7 +2637,7 @@ setCmd(const std::string &args)
       ind = -1;
 
     auto arrow = lookupAnnotation<CGnuPlotArrow>(ind);
-    if (arrow) return false;
+    if (! arrow) return false;
 
     std::string arg = readNonSpace(line);
 
@@ -2791,6 +2881,7 @@ setCmd(const std::string &args)
 
     //---
 
+    // if no tag then use lowest available value
     auto label = lookupAnnotation<CGnuPlotLabel>(ind);
     if (! label) return false;
 
@@ -2804,6 +2895,7 @@ setCmd(const std::string &args)
 
     if (line.isChar('"') || line.isChar('\'')) {
       isStr = true;
+
       (void) parseString(line, arg);
     }
     else {
@@ -2930,6 +3022,7 @@ setCmd(const std::string &args)
     //            {<other-object-properties>}
     if      (type == CGnuPlotTypes::ObjectType::CIRCLE) {
       auto ellipse = lookupAnnotation<CGnuPlotEllipse>(ind);
+      if (! ellipse) return false;
 
       //---
 
@@ -2974,6 +3067,7 @@ setCmd(const std::string &args)
     //            {<other-object-properties>}
     else if (type == CGnuPlotTypes::ObjectType::ELLIPSE) {
       auto ellipse = lookupAnnotation<CGnuPlotEllipse>(ind);
+      if (! ellipse) return false;
 
       //---
 
@@ -3024,6 +3118,7 @@ setCmd(const std::string &args)
     //            from <position> rto <position> ... {rto <position>}
     else if (type == CGnuPlotTypes::ObjectType::POLYGON) {
       auto poly = lookupAnnotation<CGnuPlotPolygon>(ind);
+      if (! poly) return false;
 
       //---
 
@@ -3050,6 +3145,12 @@ setCmd(const std::string &args)
           if (parseColorSpec(line, c))
             poly->setFillColor(c);
         }
+        else if (arg == "linewidth" || arg == "lw") {
+          double lw = 1.0;
+
+          if (parseReal(line, lw))
+            poly->setLineWidth(lw);
+        }
         else
           std::cerr << "Invalid arg " << arg << std::endl;
 
@@ -3061,6 +3162,7 @@ setCmd(const std::string &args)
     //            center|at <position> size <w>,<h>}
     else if (type == CGnuPlotTypes::ObjectType::RECTANGLE) {
       auto rect = lookupAnnotation<CGnuPlotRectangle>(ind);
+      if (! rect) return false;
 
       //---
 
@@ -3498,6 +3600,9 @@ setCmd(const std::string &args)
       }
     }
     // set style textbox
+    else if (var1 == StyleVar::TEXTBOX) {
+      // TODO:
+    }
 
     // set style boxplot {range <r> | fraction <f>}
     //                   {{no}outliers} {pointtype <p>}
@@ -4077,6 +4182,9 @@ setCmd(const std::string &args)
         if (parseColorSpec(line, c))
           setBackgroundColor(c.color());
       }
+      else if (arg == "enhanced" || arg == "noenhanced") {
+        setEnhanced(arg == "enhanced");
+      }
       else
         std::cerr << "Invalid arg " << arg << std::endl;
 
@@ -4086,6 +4194,11 @@ setCmd(const std::string &args)
   // set termoption [no]enhanced
   // set termoption font "<name> [, <size:i> ]"
   else if (var == VariableName::TERMOPTION) {
+    std::string arg = readNonSpace(line);
+
+    if (arg == "enhanced" || arg == "noenhanced") {
+      setEnhanced(arg == "enhanced");
+    }
   }
   else if (var == VariableName::DEBUG) {
     setDebug(true);
@@ -4959,7 +5072,7 @@ parseFont(CParseLine &line, CFontPtr &font)
     if (! font.isValid())
       font = CFontMgrInst->lookupFont(family, CFONT_STYLE_NORMAL, 12);
     else
-      font = font->dup(family, font->getStyle(), font->getSize(), 0, 0, 100, 100);
+      font = font->dup(family, font->getStyle(), font->getSize());
   }
 
   if (line1.skipSpaceAndChar(',')) {
@@ -4971,7 +5084,7 @@ parseFont(CParseLine &line, CFontPtr &font)
     if (! font.isValid())
       font = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, size);
     else
-      font = font->dup(font->getFamily(), font->getStyle(), size, 0, 0, 100, 100);
+      font = font->dup(font->getFamily(), font->getStyle(), size);
   }
 
   return true;

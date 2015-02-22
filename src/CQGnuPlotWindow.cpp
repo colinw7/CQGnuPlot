@@ -174,6 +174,8 @@ addProperties()
     redit_[3] = new CQPropertyRealEditor(0, 1, 0.05);
   }
 
+  tree_->addProperty("", this, "backgroundColor");
+
   if (is3D()) {
     tree_->addProperty("", this, "enable3D");
     tree_->addProperty("", this, "rotateX" )->setEditorFactory(redit_[0]);
@@ -326,7 +328,6 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(name1, qarrow, "thead");
       tree_->addProperty(name1, qarrow, "filled");
       tree_->addProperty(name1, qarrow, "empty");
-      tree_->addProperty(name1, qarrow, "front");
       tree_->addProperty(name1, qarrow, "lineType");
       tree_->addProperty(name1, qarrow, "lineWidth");
     }
@@ -353,10 +354,12 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(name1, qlabel, "drawLayer");
 
       tree_->addProperty(name1, qlabel, "text");
+      tree_->addProperty(name1, qlabel, "align");
       tree_->addProperty(name1, qlabel, "pos");
       tree_->addProperty(name1, qlabel, "font");
       tree_->addProperty(name1, qlabel, "angle");
-      tree_->addProperty(name1, qlabel, "front");
+      tree_->addProperty(name1, qlabel, "offset");
+      tree_->addProperty(name1, qlabel, "enhanced");
       tree_->addProperty(name1, qlabel, "offset");
     }
     else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann.get()))) {
@@ -367,6 +370,7 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(name1, qpoly, "strokeColor");
       tree_->addProperty(name1, qpoly, "fillColor");
       tree_->addProperty(name1, qpoly, "drawLayer");
+      tree_->addProperty(name1, qpoly, "lineWidth");
     }
     else if ((rect = dynamic_cast<CGnuPlotRectangle *>(ann.get()))) {
       QString name1 = QString("%1/%2_%3").arg(name).arg(rect->getName()).arg(ann->getInd());
@@ -470,6 +474,20 @@ CQGnuPlotWindow::
 selectObject(const QObject *obj)
 {
   tree_->selectObject(obj);
+}
+
+QColor
+CQGnuPlotWindow::
+backgroundColor() const
+{
+  return toQColor(CGnuPlotWindow::backgroundColor());
+}
+
+void
+CQGnuPlotWindow::
+setBackgroundColor(const QColor &c)
+{
+  CGnuPlotWindow::setBackgroundColor(fromQColor(c));
 }
 
 void

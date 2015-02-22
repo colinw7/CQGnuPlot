@@ -84,6 +84,7 @@ class CGnuPlot {
     PAUSE,
     PLOT,
     PRINT,
+    PRINTF,
     PWD,
     QUIT,
     RAISE,
@@ -246,6 +247,7 @@ class CGnuPlot {
     LINE,
     FILL,
     BOXPLOT,
+    TEXTBOX,
     HISTOGRAM,
     RECTANGLE,
     CIRCLE,
@@ -970,6 +972,7 @@ class CGnuPlot {
   void helpCmd   (const std::string &args);
   void historyCmd(const std::string &args);
   void printCmd  (const std::string &args);
+  void printfCmd (const std::string &args);
   void quitCmd   (const std::string &args);
   void cdCmd     (const std::string &args);
   void pwdCmd    (const std::string &args);
@@ -1144,6 +1147,9 @@ class CGnuPlot {
   bool pm3D() const { return pm3D_; }
   void setPm3D(bool b) { pm3D_ = b; }
 
+  bool enhanced() const { return enhanced_; }
+  void setEnhanced(bool b) { enhanced_ = b; }
+
   bool parseFunction(CParseLine &line, std::string &function);
 
   bool readIdentifier(CParseLine &line, std::string &identifier);
@@ -1213,6 +1219,7 @@ class CGnuPlot {
   bool                clip_ { false };
   bool                parametric_ { false };
   bool                polar_ { false };
+  bool                enhanced_ { true };
   ImageStyle          imageStyle_;
   Annotations         annotations_;
   Palette             palette_;

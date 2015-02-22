@@ -112,8 +112,13 @@ class CGnuPlotRenderer {
                         CVAlignType valign, double y_offset, const std::string &str,
                         const CRGBA &c=CRGBA(0,0,0));
 
+  void drawHTextInBox(const CBBox2D &bbox, const std::string &str,
+                      CHAlignType halign, const CRGBA &c);
+
   void drawRotatedText(const CPoint2D &p, const std::string &text,
                        const CRGBA &c=CRGBA(0,0,0), double a=90);
+
+  CBBox2D getHAlignedTextBBox(const std::string &str);
 
   //---
 

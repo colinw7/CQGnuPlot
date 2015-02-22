@@ -34,7 +34,7 @@ void
 CGnuPlotRenderer::
 setFontSize(double s)
 {
-  font_ = font_->dup(font_->getFamily(), font_->getStyle(), s, 0, 0, 100, 100);
+  font_ = font_->dup(font_->getFamily(), font_->getStyle(), s);
 }
 
 void
@@ -97,51 +97,34 @@ CGnuPlotRenderer::
 drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
                  CVAlignType valign, double y_offset, const std::string &str, const CRGBA &c)
 {
+  /* Calculate width and height of string (max width and sum of heights of all lines) */
+  CBBox2D bbox = getHAlignedTextBBox(str);
+
+//double width1  = bbox.getWidth();
+  double height1 = bbox.getHeight();
+
+  //------
+
   CFontPtr font = getFont();
 
-  /* Calculate width and height of string (max width and sum of heights of all lines) */
   double font_size = font->getCharAscent() + font->getCharDescent();
 
-  double width1  = 0;
-  double height1 = 0;
+  //------
+
+  // Draw each line using X and Y alignment
 
   std::string str1 = str;
 
   auto pstr1 = str1.find('\n');
-
-  while (pstr1 != std::string::npos) {
-    std::string str2 = str1.substr(0, pstr1);
-
-    double width2 = font->getStringWidth(str2);
-
-    width1   = std::max(width1, width2);
-    height1 += font_size;
-
-    str1  = str1.substr(pstr1 + 1);
-    pstr1 = str1.find('\n');
-  }
-
-  double width2 = font->getStringWidth(str1);
-
-  width1   = std::max(width1, width2);
-  height1 += font_size;
-
-  /*-------*/
-
-  /* Draw each line using X and Y alignment */
-
-  str1 = str;
-
-  pstr1 = str1.find('\n');
 
   double x1 = 0, y1 = 0;
 
   if      (valign == CVALIGN_TYPE_TOP)
     y1 = pos.y;
   else if (valign == CVALIGN_TYPE_CENTER)
-    y1 = pos.y + pixelHeightToWindowHeight(height1/2);
+    y1 = pos.y + height1/2;
   else if (valign == CVALIGN_TYPE_BOTTOM)
-    y1 = pos.y + pixelHeightToWindowHeight(height1);
+    y1 = pos.y + height1;
 
   y1 -= pixelHeightToWindowHeight(font->getCharAscent());
 
@@ -157,10 +140,10 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
     else if (halign == CHALIGN_TYPE_RIGHT)
       x1 = pos.x - pixelWidthToWindowWidth(width2);
 
-    CPoint2D w(x1 + pixelWidthToWindowWidth  (x_offset),
-               y1 - pixelHeightToWindowHeight(y_offset));
+    CPoint2D p1(x1 + pixelWidthToWindowWidth  (x_offset),
+                y1 - pixelHeightToWindowHeight(y_offset));
 
-    drawText(w, str2, c);
+    drawText(p1, str2, c);
 
     y1 -= pixelHeightToWindowHeight(font_size);
 
@@ -168,7 +151,7 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
     pstr1 = str1.find('\n');
   }
 
-  width2 = font->getStringWidth(str1);
+  double width2 = font->getStringWidth(str1);
 
   if      (halign == CHALIGN_TYPE_LEFT)
     x1 = pos.x;
@@ -177,12 +160,66 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
   else if (halign == CHALIGN_TYPE_RIGHT)
     x1 = pos.x - pixelWidthToWindowWidth(width2);
 
-  CPoint2D w(x1 + pixelWidthToWindowWidth  (x_offset),
-             y1 - pixelHeightToWindowHeight(y_offset));
+  CPoint2D p1(x1 + pixelWidthToWindowWidth  (x_offset),
+              y1 - pixelHeightToWindowHeight(y_offset));
 
-  drawText(w, str1, c);
+  drawText(p1, str1, c);
 }
 
+void
+CGnuPlotRenderer::
+drawHTextInBox(const CBBox2D &bbox, const std::string &str, CHAlignType halign, const CRGBA &c)
+{
+  CFontPtr font = getFont();
+
+  double fa = pixelHeightToWindowHeight(font->getCharAscent());
+  double fd = pixelHeightToWindowHeight(font->getCharDescent());
+
+  //------
+
+  // Draw each line using X and Y alignment
+
+  std::string str1 = str;
+
+  auto p1 = str1.find('\n');
+
+  double y = bbox.getTop() - fa;
+
+  while (p1 != std::string::npos) {
+    std::string str2 = str1.substr(0, p1);
+
+    double w = pixelWidthToWindowWidth(font->getStringWidth(str2));
+
+    double x = bbox.getLeft();
+
+    if      (halign == CHALIGN_TYPE_LEFT)
+      ;
+    else if (halign == CHALIGN_TYPE_CENTER)
+      x = bbox.getCenter().x - w/2;
+    else if (halign == CHALIGN_TYPE_RIGHT)
+      x = bbox.getRight() - w;
+
+    drawText(CPoint2D(x, y), str2, c);
+
+    y -= fa + fd;
+
+    str1 = str1.substr(p1 + 1);
+    p1   = str1.find('\n');
+  }
+
+  double w = pixelWidthToWindowWidth(font->getStringWidth(str1));
+
+  double x = bbox.getLeft();
+
+  if      (halign == CHALIGN_TYPE_LEFT)
+    ;
+  else if (halign == CHALIGN_TYPE_CENTER)
+    x = bbox.getCenter().x - w/2;
+  else if (halign == CHALIGN_TYPE_RIGHT)
+    x = bbox.getRight() - w;
+
+  drawText(CPoint2D(x, y), str1, c);
+}
 void
 CGnuPlotRenderer::
 drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
@@ -272,6 +309,44 @@ drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
              y1 - pixelHeightToWindowHeight(y_offset));
 
   drawRotatedText(w, str1, c, 90);
+}
+
+CBBox2D
+CGnuPlotRenderer::
+getHAlignedTextBBox(const std::string &str)
+{
+  CPoint2D pos(0, 0);
+  CBBox2D  bbox(0, 0, 0, 0);
+
+  CFontPtr font = getFont();
+
+  double fa = pixelHeightToWindowHeight(font->getCharAscent());
+  double fd = pixelHeightToWindowHeight(font->getCharDescent());
+
+  std::string str1 = str;
+
+  auto pstr1 = str1.find('\n');
+
+  while (pstr1 != std::string::npos) {
+    std::string str2 = str1.substr(0, pstr1);
+
+    double w = pixelWidthToWindowWidth(font->getStringWidth(str2));
+
+    bbox.add(CPoint2D(pos.x + w, pos.y - fd));
+    bbox.add(CPoint2D(pos.x + w, pos.y + fa));
+
+    pos.y -= fa + fd;
+
+    str1  = str1.substr(pstr1 + 1);
+    pstr1 = str1.find('\n');
+  }
+
+  double w = pixelWidthToWindowWidth(font->getStringWidth(str1));
+
+  bbox.add(CPoint2D(pos.x + w, pos.y - fd));
+  bbox.add(CPoint2D(pos.x + w, pos.y + fa));
+
+  return bbox;
 }
 
 void

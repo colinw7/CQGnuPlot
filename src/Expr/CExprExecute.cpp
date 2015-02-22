@@ -567,7 +567,16 @@ executeFunction(const CExprFunctionPtr &function)
   while (etoken->getType() != CEXPR_ETOKEN_OPERATOR) {
     CExprValuePtr value1 = etokenToValue(etoken);
 
-    CExprValueType argType = function->argType(values.size());
+    values.push_front(value1);
+
+    etoken = unstackEToken();
+    assert(etoken.isValid());
+  }
+
+  for (uint i = 0; i < values.size(); ++i) {
+    CExprValuePtr value1 = values[i];
+
+    CExprValueType argType = function->argType(i);
 
     if (! value1.isValid()) {
       if (! (argType & CEXPR_VALUE_NULL))
@@ -579,11 +588,6 @@ executeFunction(const CExprFunctionPtr &function)
         return CExprValuePtr();
       }
     }
-
-    values.push_front(value1);
-
-    etoken = unstackEToken();
-    assert(etoken.isValid());
   }
 
   assert(etoken->getType() == CEXPR_ETOKEN_OPERATOR);

@@ -40,6 +40,8 @@ init()
 {
   CGnuPlot *plot = this->app();
 
+  setBackgroundColor(plot->backgroundColor());
+
   setRegion(plot->region());
   setMargin(plot->margin());
 
@@ -182,6 +184,8 @@ draw()
   bbox_ = getDisplayRange(1, 1);
 
   CGnuPlotRenderer *renderer = app()->renderer();
+
+  //renderer->clear(backgroundColor());
 
   renderer->setRegion(region());
   renderer->setMargin(margin().range());
