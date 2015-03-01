@@ -157,14 +157,14 @@ class CExpr {
   void setDegrees(bool b) { degrees_ = b; }
 
   bool evaluateExpression(const std::string &str, std::vector<CExprValuePtr> &values);
-  CExprValuePtr evaluateExpression(const std::string &str);
+  bool evaluateExpression(const std::string &str, CExprValuePtr &value);
 
   CExprPTokenStack parseLine(const std::string &line);
   CExprITokenPtr   interpPTokenStack(const CExprPTokenStack &stack);
   CExprCTokenStack compileIToken(CExprITokenPtr itoken);
 
   bool executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values);
-  CExprValuePtr executeCTokenStack(const CExprCTokenStack &stack);
+  bool executeCTokenStack(const CExprCTokenStack &stack, CExprValuePtr &value);
 
   void saveCompileState();
   void restoreCompileState();

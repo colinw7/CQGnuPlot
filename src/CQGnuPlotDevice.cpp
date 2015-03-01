@@ -12,6 +12,8 @@
 #include <CQGnuPlotRectangle.h>
 #include <CQGnuPlotAxis.h>
 #include <CQGnuPlotKey.h>
+#include <CQGnuPlotColorBox.h>
+#include <CQGnuPlotPalette.h>
 #include <CQGnuPlotTitle.h>
 #include <CQGnuPlotBar.h>
 #include <CQGnuPlotPie.h>
@@ -172,6 +174,32 @@ createKey(CGnuPlotGroup *group)
   objects_.push_back(key);
 
   return key;
+}
+
+CGnuPlotColorBox *
+CQGnuPlotDevice::
+createColorBox(CGnuPlotGroup *group)
+{
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+
+  CQGnuPlotColorBox *colorBox = new CQGnuPlotColorBox(qgroup);
+
+  objects_.push_back(colorBox);
+
+  return colorBox;
+}
+
+CGnuPlotPalette *
+CQGnuPlotDevice::
+createPalette(CGnuPlotGroup *group)
+{
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+
+  CQGnuPlotPalette *palette = new CQGnuPlotPalette(qgroup);
+
+  objects_.push_back(palette);
+
+  return palette;
 }
 
 CGnuPlotTitle *

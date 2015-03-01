@@ -1,6 +1,7 @@
 #include <CGnuPlotKey.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
+#include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
 
 CGnuPlotKey::
@@ -97,7 +98,9 @@ draw()
   bbox_ = CBBox2D(x1, y1, x2, y2);
 
   if (getFillBox()) {
-    renderer->fillRect(bbox_, CRGBA(1,1,1));
+    CRGBA bg = group_->window()->backgroundColor();
+
+    renderer->fillRect(bbox_, bg);
   }
 
   if (getDrawBox()) {

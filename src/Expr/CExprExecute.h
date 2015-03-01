@@ -177,8 +177,7 @@ class CExprExecute {
  ~CExprExecute();
 
   bool executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values);
-
-  CExprValuePtr executeCTokenStack(const CExprCTokenStack &);
+  bool executeCTokenStack(const CExprCTokenStack &stack, CExprValuePtr &value);
 
  private:
   friend class CExpr;

@@ -4,6 +4,7 @@
 #include <CRGBA.h>
 #include <CRGBName.h>
 #include <CGnuPlotTypes.h>
+#include <CGnuPlotPalette.h>
 
 #include <vector>
 
@@ -22,6 +23,17 @@ class CGnuPlotStyle {
     return inst;
   }
 
+  uint getNumColors(const std::string &name) {
+    initColors();
+
+    auto p = namedColors_.find(name);
+
+    if (p == namedColors_.end())
+      return 0;
+
+    return (*p).second.size();
+  }
+
   CRGBA indexColor(int i) {
     return indexColor("basic", i);
   }
@@ -31,7 +43,7 @@ class CGnuPlotStyle {
 
     if (i < 1) return CRGBA(0,0,0);
 
-    NamedColors::const_iterator p = namedColors_.find(name);
+    auto p = namedColors_.find(name);
 
     if (p != namedColors_.end()) {
       const Colors &colors = (*p).second;
@@ -40,6 +52,17 @@ class CGnuPlotStyle {
     }
     else
       return CRGBA(0,0,0);
+  }
+
+  CRGBA getRangeColor(const std::string &name, double x) const {
+    initColors();
+
+    auto p = namedPalette_.find(name);
+
+    if (p == namedPalette_.end())
+      return CRGBA(0, 0, 0);
+
+    return (*p).second.getColor(x);
   }
 
   SymbolType indexSymbol(int i) {
@@ -63,7 +86,9 @@ class CGnuPlotStyle {
   }
 
  private:
-  void initColors() {
+  void initColors() const {
+    CGnuPlotStyle *th = const_cast<CGnuPlotStyle *>(this);
+
     if (namedColors_.empty()) {
       Colors basicColors = {{
         CRGBName::toRGBA("#FF0000"), // red
@@ -77,7 +102,7 @@ class CGnuPlotStyle {
     //  CRGBName::toRGBA("#000000") // black
       }};
 
-      namedColors_["basic"] = basicColors;
+      th->namedColors_["basic"] = basicColors;
 
       Colors subtleColors = {{
         // blue
@@ -111,15 +136,33 @@ class CGnuPlotStyle {
         CRGBName::toRGBA("#D9D9D9")
       }};
 
-      namedColors_["subtle"] = subtleColors;
+      th->namedColors_["subtle"] = subtleColors;
+
+      th->initPalette("basic" );
+      th->initPalette("subtle");
     };
   }
 
- private:
-  typedef std::vector<CRGBA>           Colors;
-  typedef std::map<std::string,Colors> NamedColors;
+  void initPalette(const std::string &name) {
+    auto p = namedColors_.find(name);
 
-  NamedColors namedColors_;
+    CGnuPlotPalette palette;
+
+    palette.setColorType(CGnuPlotPalette::ColorType::DEFINED);
+
+    for (uint i = 0; i < (*p).second.size(); ++i)
+      palette.addDefinedColor(i, (*p).second[i]);
+
+    namedPalette_[name] = palette;
+  }
+
+ private:
+  typedef std::vector<CRGBA>                    Colors;
+  typedef std::map<std::string,Colors>          NamedColors;
+  typedef std::map<std::string,CGnuPlotPalette> NamedPalette;
+
+  NamedColors  namedColors_;
+  NamedPalette namedPalette_;
 };
 
 #endif

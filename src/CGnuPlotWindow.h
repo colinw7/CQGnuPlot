@@ -43,8 +43,8 @@ class CGnuPlotWindow {
   bool pm3D() const { return pm3D_; }
   void setPm3D(bool b) { pm3D_ = b; }
 
-  const CGnuPlot::Camera &camera() const { return camera_; }
-  void setCamera(const CGnuPlot::Camera &c) { camera_ = c; }
+  const CGnuPlotCamera &camera() const { return camera_; }
+  void setCamera(const CGnuPlotCamera &c) { camera_ = c; }
 
   void setCameraEnabled(bool b);
 
@@ -67,16 +67,16 @@ class CGnuPlotWindow {
   void draw();
 
  private:
-  CGnuPlot*        plot_      { 0 };
-  CISize2D         size_      { 100, 100 };
-  bool             is3D_      { false };
-  Groups           groups_;
-  CGnuPlot::Camera camera_;
-  bool             hidden3D_  { false };
-  bool             surface3D_ { true  };
-  bool             contour3D_ { false };
-  bool             pm3D_      { false };
-  CRGBA            backgroundColor_ { 1, 1, 1};
+  CGnuPlot*      plot_      { 0 };
+  CISize2D       size_      { 100, 100 };
+  bool           is3D_      { false };
+  Groups         groups_;
+  CGnuPlotCamera camera_;
+  bool           hidden3D_  { false };
+  bool           surface3D_ { true  };
+  bool           contour3D_ { false };
+  bool           pm3D_      { false };
+  CRGBA          backgroundColor_ { 1, 1, 1};
 };
 
 #endif

@@ -21,10 +21,10 @@ class CGnuPlotFillStyle {
   const FillPattern &pattern() const { return pattern_; }
   void setPattern(FillPattern p) { pattern_ = p; }
 
-  bool transparent() const { return transparent_; }
+  bool isTransparent() const { return transparent_; }
   void setTransparent(bool b) { transparent_ = b; }
 
-  bool border() const { return border_; }
+  bool hasBorder() const { return border_; }
   void setBorder(bool b) { border_ = b; }
 
   int borderLineType() const { return borderLineType_; }

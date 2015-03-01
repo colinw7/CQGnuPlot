@@ -76,10 +76,7 @@ class CGnuPlotPlot {
   typedef CGnuPlotTypes::SymbolType     SymbolType;
   typedef CGnuPlot::BoxWidth            BoxWidth;
   typedef CGnuPlot::AxesData            AxesData;
-  typedef CGnuPlot::AxisData            AxisData;
-  typedef CGnuPlot::Palette             Palette;
   typedef CGnuPlot::FilledCurve         FilledCurve;
-  typedef CGnuPlot::PointStyle          PointStyle;
   typedef CGnuPlot::ImageStyle          ImageStyle;
   typedef CGnuPlotCache<CGnuPlotBar>    BarCache;
   typedef CGnuPlotCache<CGnuPlotPie>    PieCache;
@@ -248,8 +245,8 @@ class CGnuPlotPlot {
   double pointSize() const { return lineStyle().pointSize(); }
   void setPointSize(double s) { lineStyle_.setPointSize(s); }
 
-  const PointStyle &pointStyle() const { return pointStyle_; }
-  void setPointStyle(const PointStyle &s) { pointStyle_ = s; }
+  const CGnuPlotPointStyle &pointStyle() const { return pointStyle_; }
+  void setPointStyle(const CGnuPlotPointStyle &s) { pointStyle_ = s; }
 
   const CGnuPlotArrowStyle &arrowStyle() const { return arrowStyle_; }
   void setArrowStyle(const CGnuPlotArrowStyle &as) { arrowStyle_ = as; }
@@ -260,39 +257,47 @@ class CGnuPlotPlot {
   //---
 
   // TODO: use group axis data
-  const AxisData &xaxis(int ind) const {
+  const CGnuPlotAxisData &xaxis(int ind) const {
     return const_cast<CGnuPlotPlot *>(this)->axesData_.xaxis[ind];
   }
-  const AxisData &yaxis(int ind) const {
+  const CGnuPlotAxisData &yaxis(int ind) const {
     return const_cast<CGnuPlotPlot *>(this)->axesData_.yaxis[ind];
   }
-  const AxisData &zaxis(int ind) const {
+  const CGnuPlotAxisData &zaxis(int ind) const {
     return const_cast<CGnuPlotPlot *>(this)->axesData_.zaxis[ind];
   }
-  const AxisData &paxis(int ind) const {
+  const CGnuPlotAxisData &paxis(int ind) const {
     return const_cast<CGnuPlotPlot *>(this)->axesData_.paxis[ind];
   }
 
-  AxisData &xaxis(int ind) { return const_cast<CGnuPlotPlot *>(this)->axesData_.xaxis[ind]; }
-  AxisData &yaxis(int ind) { return const_cast<CGnuPlotPlot *>(this)->axesData_.yaxis[ind]; }
-  AxisData &zaxis(int ind) { return const_cast<CGnuPlotPlot *>(this)->axesData_.zaxis[ind]; }
-  AxisData &paxis(int ind) { return const_cast<CGnuPlotPlot *>(this)->axesData_.paxis[ind]; }
+  CGnuPlotAxisData &xaxis(int ind) {
+    return const_cast<CGnuPlotPlot *>(this)->axesData_.xaxis[ind];
+  }
+  CGnuPlotAxisData &yaxis(int ind) {
+    return const_cast<CGnuPlotPlot *>(this)->axesData_.yaxis[ind];
+  }
+  CGnuPlotAxisData &zaxis(int ind) {
+    return const_cast<CGnuPlotPlot *>(this)->axesData_.zaxis[ind];
+  }
+  CGnuPlotAxisData &paxis(int ind) {
+    return const_cast<CGnuPlotPlot *>(this)->axesData_.paxis[ind];
+  }
 
   //---
 
-  double getXMin() const { return xaxis(1).min.getValue(-10); }
-  double getXMax() const { return xaxis(1).max.getValue( 10); }
-  double getYMin() const { return yaxis(1).min.getValue(-1); }
-  double getYMax() const { return yaxis(1).max.getValue( 1); }
-  double getZMin() const { return zaxis(1).min.getValue(-1); }
-  double getZMax() const { return zaxis(1).max.getValue( 1); }
+  double getXMin() const { return xaxis(1).min().getValue(-10); }
+  double getXMax() const { return xaxis(1).max().getValue( 10); }
+  double getYMin() const { return yaxis(1).min().getValue(-1); }
+  double getYMax() const { return yaxis(1).max().getValue( 1); }
+  double getZMin() const { return zaxis(1).min().getValue(-1); }
+  double getZMax() const { return zaxis(1).max().getValue( 1); }
 
-  void setXMin(double x) { xaxis(1).min.setValue(x); updateGroupRange(); }
-  void setXMax(double x) { xaxis(1).max.setValue(x); updateGroupRange(); }
-  void setYMin(double y) { yaxis(1).min.setValue(y); updateGroupRange(); }
-  void setYMax(double y) { yaxis(1).max.setValue(y); updateGroupRange(); }
-  void setZMin(double z) { zaxis(1).min.setValue(z); updateGroupRange(); }
-  void setZMax(double z) { zaxis(1).max.setValue(z); updateGroupRange(); }
+  void setXMin(double x) { xaxis(1).setMin(x); updateGroupRange(); }
+  void setXMax(double x) { xaxis(1).setMax(x); updateGroupRange(); }
+  void setYMin(double y) { yaxis(1).setMin(y); updateGroupRange(); }
+  void setYMax(double y) { yaxis(1).setMax(y); updateGroupRange(); }
+  void setZMin(double z) { zaxis(1).setMin(z); updateGroupRange(); }
+  void setZMax(double z) { zaxis(1).setMax(z); updateGroupRange(); }
 
   void setRange(const CBBox2D &b) {
     setXMin(b.getXMin()); setYMin(b.getYMin());
@@ -318,9 +323,6 @@ class CGnuPlotPlot {
   int yind() const { return yind_; }
 
   //---
-
-  const Palette &palette() const { return palette_; }
-  void setPalette(const Palette &p) { palette_ = p; }
 
   const FilledCurve &filledCurve() const { return filledCurve_; }
   void setFilledCurve(const FilledCurve &c) { filledCurve_ = c; }
@@ -412,12 +414,11 @@ class CGnuPlotPlot {
   bool               matrix_ { false };
   ImageStyle         imageStyle_;
   BoxWidth           boxWidth_;                         // box widths
-  Palette            palette_;
   FilledCurve        filledCurve_;                      // filled curve data
   PlotStyle          style_ { PlotStyle::POINTS};       // plot style
   CGnuPlotFillStyle  fillStyle_;                        // fill style
   CGnuPlotLineStyle  lineStyle_;                        // line style
-  PointStyle         pointStyle_;                       // point style
+  CGnuPlotPointStyle pointStyle_;                       // point style
   CGnuPlotArrowStyle arrowStyle_;                       // arrow style
   AxesData           axesData_;
   std::string        keyTitle_;                         // title on key

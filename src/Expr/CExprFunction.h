@@ -79,6 +79,8 @@ class CExprFunction {
 
   virtual CExprValueType argType(uint) const { return CEXPR_VALUE_ANY; }
 
+  virtual bool checkValues(const Values &) const { return true; }
+
   virtual CExprValuePtr exec(const Values &values) = 0;
 
   friend std::ostream &operator<<(std::ostream &os, const CExprFunction &fn) {
@@ -105,13 +107,15 @@ class CExprProcFunction : public CExprFunction {
   CExprProcFunction(const std::string &name, const Args &args, CExprFunctionProc proc);
   CExprProcFunction(const std::string &name, const std::string &argsStr, CExprFunctionProc proc);
 
-  uint numArgs() const { return args_.size(); }
+  uint numArgs() const override { return args_.size(); }
 
-  CExprValueType argType(uint i) const {
+  CExprValueType argType(uint i) const override {
     return (i < args_.size() ? args_[i].type : CEXPR_VALUE_NULL);
   }
 
-  CExprValuePtr exec(const Values &values);
+  bool checkValues(const Values &) const override;
+
+  CExprValuePtr exec(const Values &values) override;
 
  private:
   Args              args_;
@@ -125,13 +129,15 @@ class CExprObjFunction : public CExprFunction {
  public:
   CExprObjFunction(const std::string &name, const Args &args, CExprFunctionObj *proc);
 
-  uint numArgs() const { return args_.size(); }
+  uint numArgs() const override { return args_.size(); }
 
-  CExprValueType argType(uint i) const {
+  CExprValueType argType(uint i) const override {
     return (i < args_.size() ? args_[i].type : CEXPR_VALUE_NULL);
   }
 
-  CExprValuePtr exec(const Values &values);
+  bool checkValues(const Values &values) const override;
+
+  CExprValuePtr exec(const Values &values) override;
 
  private:
   Args              args_;
@@ -145,11 +151,13 @@ class CExprUserFunction : public CExprFunction {
  public:
   CExprUserFunction(const std::string &name, const Args &args, const std::string &proc);
 
-  uint numArgs() const { return args_.size(); }
+  uint numArgs() const override { return args_.size(); }
 
-  CExprValuePtr exec(const Values &values);
+  bool checkValues(const Values &) const override;
 
-  void print(std::ostream &os) const {
+  CExprValuePtr exec(const Values &values) override;
+
+  void print(std::ostream &os) const override {
     os << name_ << "(";
 
     for (uint i = 0; i < args_.size(); ++i) {

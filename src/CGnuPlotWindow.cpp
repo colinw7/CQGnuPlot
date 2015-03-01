@@ -23,7 +23,7 @@ clear()
 
   groups_.clear();
 
-  camera_ = CGnuPlot::Camera();
+  camera_ = CGnuPlotCamera();
 
   hidden3D_  = false;
   surface3D_ = false;
@@ -42,7 +42,7 @@ void
 CGnuPlotWindow::
 setCameraEnabled(bool b)
 {
-  camera_.enabled = b;
+  camera_.setEnabled(b);
 
   reset3D();
 }
@@ -51,9 +51,7 @@ void
 CGnuPlotWindow::
 setCameraRotateX(double a)
 {
-  camera_.rotateX = a;
-
-  camera_.init();
+  camera_.setRotateX(a);
 
   reset3D();
 }
@@ -62,9 +60,7 @@ void
 CGnuPlotWindow::
 setCameraRotateY(double a)
 {
-  camera_.rotateY = a;
-
-  camera_.init();
+  camera_.setRotateY(a);
 
   reset3D();
 }
@@ -73,9 +69,7 @@ void
 CGnuPlotWindow::
 setCameraRotateZ(double a)
 {
-  camera_.rotateZ = a;
-
-  camera_.init();
+  camera_.setRotateZ(a);
 
   reset3D();
 }
@@ -84,9 +78,7 @@ void
 CGnuPlotWindow::
 setCameraXMin(double x)
 {
-  camera_.xmin = x;
-
-  camera_.init();
+  camera_.setXMin(x);
 
   reset3D();
 }
@@ -95,9 +87,7 @@ void
 CGnuPlotWindow::
 setCameraXMax(double x)
 {
-  camera_.xmax = x;
-
-  camera_.init();
+  camera_.setXMax(x);
 
   reset3D();
 }
@@ -106,9 +96,7 @@ void
 CGnuPlotWindow::
 setCameraYMin(double y)
 {
-  camera_.ymin = y;
-
-  camera_.init();
+  camera_.setYMin(y);
 
   reset3D();
 }
@@ -117,9 +105,7 @@ void
 CGnuPlotWindow::
 setCameraYMax(double y)
 {
-  camera_.ymax = y;
-
-  camera_.init();
+  camera_.setYMax(y);
 
   reset3D();
 }
@@ -128,9 +114,7 @@ void
 CGnuPlotWindow::
 setCameraNear(double z)
 {
-  camera_.near = z;
-
-  camera_.init();
+  camera_.setNear(z);
 
   reset3D();
 }
@@ -139,9 +123,7 @@ void
 CGnuPlotWindow::
 setCameraFar(double z)
 {
-  camera_.far = z;
-
-  camera_.init();
+  camera_.setFar(z);
 
   reset3D();
 }

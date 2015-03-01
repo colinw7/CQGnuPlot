@@ -29,7 +29,7 @@ class CQPropertyEditorFactory {
 
 class CQPropertyIntegerEditor : public CQPropertyEditorFactory {
  public:
-  CQPropertyIntegerEditor();
+  CQPropertyIntegerEditor(int min=0, int max=INT_MAX, int step=1);
 
   QWidget *createEdit(QWidget *parent);
 
@@ -38,6 +38,10 @@ class CQPropertyIntegerEditor : public CQPropertyEditorFactory {
   QVariant getValue(QWidget *w);
 
   void setValue(QWidget *w, const QString &str);
+
+ private:
+  int min_, max_;
+  int step_;
 };
 
 //------

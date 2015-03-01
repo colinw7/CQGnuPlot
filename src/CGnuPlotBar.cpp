@@ -27,5 +27,6 @@ draw() const
   else if (fillType_ == FillType::SOLID)
     renderer->fillRect(bbox_, fillColor_.getValue(CRGBA(1,0,0)));
 
-  renderer->drawRect(bbox_, lineColor_.getValue(CRGBA(0,0,0)));
+  if (border_)
+    renderer->drawRect(bbox_, lineColor_.getValue(CRGBA(0,0,0)));
 }

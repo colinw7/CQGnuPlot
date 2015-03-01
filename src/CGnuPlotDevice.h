@@ -11,11 +11,13 @@ class CGnuPlotArrow;
 class CGnuPlotAxis;
 class CGnuPlotBar;
 class CGnuPlotBubble;
+class CGnuPlotColorBox;
 class CGnuPlotEllipse;
 class CGnuPlotGroup;
 class CGnuPlotKey;
 class CGnuPlotLabel;
 class CGnuPlotLineStyle;
+class CGnuPlotPalette;
 class CGnuPlotPie;
 class CGnuPlotPlot;
 class CGnuPlotPolygon;
@@ -54,6 +56,10 @@ class CGnuPlotDevice {
   virtual CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir);
 
   virtual CGnuPlotKey *createKey(CGnuPlotGroup *group);
+
+  virtual CGnuPlotColorBox *createColorBox(CGnuPlotGroup *group);
+
+  virtual CGnuPlotPalette *createPalette(CGnuPlotGroup *group);
 
   virtual CGnuPlotTitle *createTitle(CGnuPlotGroup *group);
 

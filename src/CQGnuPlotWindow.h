@@ -15,6 +15,7 @@ class CQGnuPlotCanvas;
 class CQGnuPlotRenderer;
 class CQPropertyTree;
 class CQPropertyRealEditor;
+class CQPropertyIntegerEditor;
 class QLabel;
 class QTimer;
 
@@ -63,23 +64,23 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   QColor backgroundColor() const;
   void setBackgroundColor(const QColor &c);
 
-  bool enable3D() { return camera().enabled; }
+  bool enable3D() { return camera().isEnabled(); }
   void setEnable3D(bool b);
 
-  double rotateX() { return camera().rotateX; }
-  double rotateY() { return camera().rotateY; }
-  double rotateZ() { return camera().rotateZ; }
+  double rotateX() { return camera().rotateX(); }
+  double rotateY() { return camera().rotateY(); }
+  double rotateZ() { return camera().rotateZ(); }
 
   void setRotateX(double a);
   void setRotateY(double a);
   void setRotateZ(double a);
 
-  double xmin3D() { return camera().xmin; }
-  double xmax3D() { return camera().xmax; }
-  double ymin3D() { return camera().ymin; }
-  double ymax3D() { return camera().ymax; }
-  double near3D() { return camera().near; }
-  double far3D () { return camera().far ; }
+  double xmin3D() { return camera().xmin(); }
+  double xmax3D() { return camera().xmax(); }
+  double ymin3D() { return camera().ymin(); }
+  double ymax3D() { return camera().ymax(); }
+  double near3D() { return camera().near(); }
+  double far3D () { return camera().far (); }
 
   void setXMin3D(double x);
   void setXMax3D(double x);
@@ -145,18 +146,19 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
  private:
   static uint lastId;
 
-  uint                  id_           { 0 };
-  CQGnuPlot            *plot_         { 0 };
-  CQGnuPlotRenderer    *renderer_     { 0 };
-  CQGnuPlotCanvas      *canvas_       { 0 };
-  CQMouseMode          *zoomMode_     { 0 };
-  CQMouseMode          *panMode_      { 0 };
-  CQPropertyTree       *tree_         { 0 };
-  CQPropertyRealEditor *redit_[4]     { 0, 0, 0, 0 };
-  QTimer               *propTimer_    { 0 };
-  QLabel               *plotLabel_    { 0 };
-  QLabel               *posLabel_     { 0 };
-  CQGnuPlotGroup       *currentGroup_ { 0 };
+  uint                     id_           { 0 };
+  CQGnuPlot               *plot_         { 0 };
+  CQGnuPlotRenderer       *renderer_     { 0 };
+  CQGnuPlotCanvas         *canvas_       { 0 };
+  CQMouseMode             *zoomMode_     { 0 };
+  CQMouseMode             *panMode_      { 0 };
+  CQPropertyTree          *tree_         { 0 };
+  CQPropertyRealEditor    *redit_[4]     { 0, 0, 0, 0 }; // TODO: lookup in cache
+  CQPropertyIntegerEditor *iedit_[4]     { 0, 0, 0, 0 }; // TODO: lookup in cache
+  QTimer                  *propTimer_    { 0 };
+  QLabel                  *plotLabel_    { 0 };
+  QLabel                  *posLabel_     { 0 };
+  CQGnuPlotGroup          *currentGroup_ { 0 };
 };
 
 #endif

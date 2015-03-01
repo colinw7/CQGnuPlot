@@ -3,6 +3,7 @@
 
 #include <CExpr.h>
 #include <CPoint2D.h>
+#include <CMathGen.h>
 
 class CGnuPlotPoint {
  public:
@@ -41,8 +42,10 @@ class CGnuPlotPoint {
     for (uint i = 0; i < values_.size(); ++i) {
       if (getValue(i + 1, r))
         reals.push_back(r);
-      else
+      else {
+        reals.push_back(CMathGen::getNaN());
         b = false;
+      }
     }
 
     return b;

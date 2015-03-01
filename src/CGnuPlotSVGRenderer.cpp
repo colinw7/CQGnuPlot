@@ -465,9 +465,3 @@ drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2, const C
 
   os() << "z\" style=\"" << fillColor(c) << " " << strokeNone() << "\"/>\n";
 }
-
-void
-CGnuPlotSVGRenderer::
-setLineDash(const CLineDash &)
-{
-}

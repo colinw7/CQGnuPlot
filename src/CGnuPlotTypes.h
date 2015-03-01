@@ -95,6 +95,14 @@ namespace CGnuPlotTypes {
     Y2,
     CB
   };
+
+  enum class ColorModel {
+    RGB,
+    HSV,
+    CMY,
+    YIQ,
+    XYZ,
+  };
 }
 
 #endif

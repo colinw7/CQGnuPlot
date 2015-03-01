@@ -35,6 +35,9 @@ namespace CQGnuPlotUtil {
 
   CQGnuPlot::CQDrawLayerType drawLayerTypeConv(const CGnuPlotLayer              &layer);
   CGnuPlotLayer              drawLayerTypeConv(const CQGnuPlot::CQDrawLayerType &layer);
+
+  CQGnuPlot::PaletteColorType paletteColorTypeConv(const CGnuPlotPalette::ColorType    &layer);
+  CGnuPlotPalette::ColorType  paletteColorTypeConv(const CQGnuPlot::PaletteColorType &layer);
 }
 
 #endif

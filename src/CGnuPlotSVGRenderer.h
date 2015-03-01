@@ -40,8 +40,6 @@ class CGnuPlotSVGRenderer : public CGnuPlotRenderer {
   void drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2,
                     const CRGBA &c=CRGBA(1,1,1)) override;
 
-  void setLineDash(const CLineDash &line_dash) override;
-
  private:
   CGnuPlotSVGDevice *device_;
 };

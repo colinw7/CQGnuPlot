@@ -191,7 +191,10 @@ class CExprFunctionExpr : public CExprFunctionObj {
 
     CExprInst->saveCompileState();
 
-    CExprValuePtr value = CExprInst->evaluateExpression(expr);
+    CExprValuePtr value;
+
+    if (! CExprInst->evaluateExpression(expr, value))
+      value = CExprValuePtr();
 
     CExprInst->restoreCompileState();
 
@@ -574,11 +577,18 @@ CExprProcFunction(const std::string &name, const Args &args, CExprFunctionProc p
 {
 }
 
+bool
+CExprProcFunction::
+checkValues(const Values &values) const
+{
+  return (values.size() == numArgs());
+}
+
 CExprValuePtr
 CExprProcFunction::
 exec(const Values &values)
 {
-  assert(values.size() == numArgs());
+  assert(checkValues(values));
 
   return (*proc_)(values);
 }
@@ -591,14 +601,21 @@ CExprObjFunction(const std::string &name, const Args &args, CExprFunctionObj *pr
 {
 }
 
+bool
+CExprObjFunction::
+checkValues(const Values &values) const
+{
+  if (isVariableArgs())
+    return (values.size() >= numArgs());
+  else
+    return (values.size() == numArgs());
+}
+
 CExprValuePtr
 CExprObjFunction::
 exec(const Values &values)
 {
-  if (isVariableArgs())
-    assert(values.size() >= numArgs());
-  else
-    assert(values.size() == numArgs());
+  assert(checkValues(values));
 
   return (*proc_)(values);
 }
@@ -611,16 +628,22 @@ CExprUserFunction(const std::string &name, const Args &args, const std::string &
 {
 }
 
+bool
+CExprUserFunction::
+checkValues(const Values &values) const
+{
+  return (values.size() >= numArgs());
+}
 
 CExprValuePtr
 CExprUserFunction::
 exec(const Values &values)
 {
+  assert(checkValues(values));
+
   typedef std::map<std::string,CExprValuePtr> VarValues;
 
   VarValues varValues;
-
-  assert(values.size() == numArgs());
 
   // set arg values (save previous values)
   for (uint i = 0; i < numArgs(); ++i) {
@@ -641,7 +664,10 @@ exec(const Values &values)
   }
 
   // run proc
-  CExprValuePtr value = CExprInst->evaluateExpression(proc_);
+  CExprValuePtr value;
+
+  if (! CExprInst->evaluateExpression(proc_, value))
+    value = CExprValuePtr();
 
   // restore variables
   for (const auto &v : varValues) {

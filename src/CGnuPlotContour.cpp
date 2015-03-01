@@ -116,7 +116,7 @@ drawContourLines()
 {
   CGnuPlotRenderer *renderer = app()->renderer();
 
-  const CGnuPlot::Camera &camera = plot_->window()->camera();
+  const CGnuPlotCamera &camera = plot_->window()->camera();
 
   // draw contour points
   for (auto y : y_) {
@@ -300,7 +300,7 @@ fillContourBox(double x1, double y1, double x2, double y2,
 {
   CGnuPlotRenderer *renderer = app()->renderer();
 
-  const CGnuPlot::Camera &camera = plot_->window()->camera();
+  const CGnuPlotCamera &camera = plot_->window()->camera();
 
   // get box corner values
   if      (fabs(x2 - x1) <= min_x_ && fabs(y2 - y1) <= min_y_) {

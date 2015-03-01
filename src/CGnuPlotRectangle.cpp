@@ -1,18 +1,20 @@
 #include <CGnuPlotRectangle.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotWindow.h>
 
 CGnuPlotRectangle::
 CGnuPlotRectangle(CGnuPlotGroup *group) :
  CGnuPlotGroupAnnotation(group)
 {
   // default solid fill with background color and black border
-  // TODO: how get background color
   fs_.setStyle(CGnuPlotTypes::FillType::SOLID);
   fs_.setBorder(true);
 
-  fs_.setBorderColor(CRGBA(1,1,1)); // which do we use ?
-  fillColor_.setRGB(CRGBA(1,1,1));
+  CRGBA bg = (group_ ? group_->window()->backgroundColor() : CRGBA(1,1,1));
+
+  fs_.setBorderColor(bg); // which do we use ?
+  fillColor_.setRGB(bg);
 }
 
 CBBox2D

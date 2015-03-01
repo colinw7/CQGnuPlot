@@ -429,8 +429,6 @@ void
 CGnuPlotRenderer::
 windowToPixel(double wx, double wy, double *px, double *py)
 {
-  const CISize2D &s = window()->size();
-
   if (! mapping_) {
     *px = wx;
     *py = wy;
@@ -438,10 +436,10 @@ windowToPixel(double wx, double wy, double *px, double *py)
   }
 
   // place on screen
-  double pxmin = region_.getLeft  ()*s.width;
-  double pymin = region_.getBottom()*s.height;
-  double pxmax = region_.getRight ()*s.width;
-  double pymax = region_.getTop   ()*s.height;
+  double pxmin = region_.getLeft  ()*width ();
+  double pymin = region_.getBottom()*height();
+  double pxmax = region_.getRight ()*width ();
+  double pymax = region_.getTop   ()*height();
 
   double pw = pxmax - pxmin;
   double ph = pymax - pymin;
@@ -497,8 +495,6 @@ void
 CGnuPlotRenderer::
 pixelToWindow(double px, double py, double *wx, double *wy)
 {
-  const CISize2D &s = window()->size();
-
   if (! mapping_) {
     *wx = px;
     *wy = py;
@@ -506,10 +502,10 @@ pixelToWindow(double px, double py, double *wx, double *wy)
   }
 
   // place on screen
-  double pxmin = region_.getLeft  ()*s.width;
-  double pymin = region_.getBottom()*s.height;
-  double pxmax = region_.getRight ()*s.width;
-  double pymax = region_.getTop   ()*s.height;
+  double pxmin = region_.getLeft  ()*width ();
+  double pymin = region_.getBottom()*height();
+  double pxmax = region_.getRight ()*width ();
+  double pymax = region_.getTop   ()*height();
 
   double pw = pxmax - pxmin;
   double ph = pymax - pymin;

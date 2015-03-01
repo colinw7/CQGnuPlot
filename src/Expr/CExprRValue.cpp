@@ -31,8 +31,13 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 
       double real = realPower(real_, rrhs, &error_code);
 
-      if (error_code != 0)
+      if (error_code != 0) {
+#ifdef GNUPLOT_EXPR
+        real = CMathGen::getNaN();
+#else
         return CExprValuePtr();
+#endif
+      }
 
       return CExprInst->createRealValue(real);
     }
@@ -45,8 +50,13 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 
       double real = realModulus(real_, rrhs, &error_code);
 
-      if (error_code != 0)
+      if (error_code != 0) {
+#ifdef GNUPLOT_EXPR
+        real = CMathGen::getNaN();
+#else
         return CExprValuePtr();
+#endif
+      }
 
       return CExprInst->createRealValue(real);
     }

@@ -46,8 +46,11 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   const CPoint2D &getOffset() const { return offset_; }
   void setOffset(const CPoint2D &o) { offset_ = o; }
 
+  bool isEnhanced() const { return enhanced_; }
   void setEnhanced(bool b) { enhanced_ = b; }
-  bool enhanced() const { return enhanced_; }
+
+  int pointStyle() const { return pointStyle_; }
+  void setPointStyle(int i) { pointStyle_ = i; }
 
   const CBBox2D &getBBox() const { return bbox_; }
 
@@ -65,12 +68,13 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
  protected:
   CGnuPlotText    text_;
-  CHAlignType     align_    { CHALIGN_TYPE_LEFT };
-  CPoint2D        pos_      { 0, 0 };
+  CHAlignType     align_      { CHALIGN_TYPE_LEFT };
+  CPoint2D        pos_        { 0, 0 };
   CFontPtr        font_;
-  double          angle_    { -1 };
-  CPoint2D        offset_   { 0, 0 };
-  bool            enhanced_ { true };
+  double          angle_      { -1 };
+  CPoint2D        offset_     { 0, 0 };
+  bool            enhanced_   { true };
+  int             pointStyle_ { -1 };
   mutable CBBox2D bbox_;
 };
 

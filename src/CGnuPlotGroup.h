@@ -4,6 +4,8 @@
 #include <CGnuPlot.h>
 #include <CGnuPlotAxis.h>
 #include <CGnuPlotKey.h>
+#include <CGnuPlotColorBox.h>
+#include <CGnuPlotPalette.h>
 
 class CGnuPlotGroup {
  public:
@@ -11,7 +13,6 @@ class CGnuPlotGroup {
   typedef CGnuPlotTypes::LogScale                LogScale;
   typedef CGnuPlot::Annotations                  Annotations;
   typedef CGnuPlot::AxesData                     AxesData;
-  typedef CGnuPlot::AxisData                     AxisData;
   typedef CGnuPlot::PlotSize                     PlotSize;
   typedef CGnuPlot::PlotStyle                    PlotStyle;
   typedef CGnuPlot::LogScaleMap                  LogScaleMap;
@@ -54,63 +55,71 @@ class CGnuPlotGroup {
   const AxesData &axesData() const { return axesData_; }
   void setAxesData(const AxesData &a) { axesData_ = a; }
 
-  const AxisData &xaxis(int ind) const {
+  const CGnuPlotAxisData &xaxis(int ind) const {
     return const_cast<CGnuPlotGroup *>(this)->axesData_.xaxis[ind];
   }
-  const AxisData &yaxis(int ind) const {
+  const CGnuPlotAxisData &yaxis(int ind) const {
     return const_cast<CGnuPlotGroup *>(this)->axesData_.yaxis[ind];
   }
-  const AxisData &zaxis(int ind) const {
+  const CGnuPlotAxisData &zaxis(int ind) const {
     return const_cast<CGnuPlotGroup *>(this)->axesData_.zaxis[ind];
   }
-  const AxisData &paxis(int ind) const {
+  const CGnuPlotAxisData &paxis(int ind) const {
     return const_cast<CGnuPlotGroup *>(this)->axesData_.paxis[ind];
   }
 
-  AxisData &xaxis(int ind) { return const_cast<CGnuPlotGroup *>(this)->axesData_.xaxis[ind]; }
-  AxisData &yaxis(int ind) { return const_cast<CGnuPlotGroup *>(this)->axesData_.yaxis[ind]; }
-  AxisData &zaxis(int ind) { return const_cast<CGnuPlotGroup *>(this)->axesData_.zaxis[ind]; }
-  AxisData &paxis(int ind) { return const_cast<CGnuPlotGroup *>(this)->axesData_.paxis[ind]; }
+  CGnuPlotAxisData &xaxis(int ind) {
+    return const_cast<CGnuPlotGroup *>(this)->axesData_.xaxis[ind];
+  }
+  CGnuPlotAxisData &yaxis(int ind) {
+    return const_cast<CGnuPlotGroup *>(this)->axesData_.yaxis[ind];
+  }
+  CGnuPlotAxisData &zaxis(int ind) {
+    return const_cast<CGnuPlotGroup *>(this)->axesData_.zaxis[ind];
+  }
+  CGnuPlotAxisData &paxis(int ind) {
+    return const_cast<CGnuPlotGroup *>(this)->axesData_.paxis[ind];
+  }
 
   //---
 
-  double getXMin() const { return xaxis(1).min.getValue(-10); }
-  double getXMax() const { return xaxis(1).max.getValue( 10); }
-  double getYMin() const { return yaxis(1).min.getValue(-1); }
-  double getYMax() const { return yaxis(1).max.getValue( 1); }
-  double getZMin() const { return zaxis(1).min.getValue(-1); }
-  double getZMax() const { return zaxis(1).max.getValue( 1); }
+  double getXMin() const { return xaxis(1).min().getValue(-10); }
+  double getXMax() const { return xaxis(1).max().getValue( 10); }
+  double getYMin() const { return yaxis(1).min().getValue(-1); }
+  double getYMax() const { return yaxis(1).max().getValue( 1); }
+  double getZMin() const { return zaxis(1).min().getValue(-1); }
+  double getZMax() const { return zaxis(1).max().getValue( 1); }
 
-  void setXMin(double x) { xaxis(1).min.setValue(x); }
-  void setXMax(double x) { xaxis(1).max.setValue(x); }
-  void setYMin(double y) { yaxis(1).min.setValue(y); }
-  void setYMax(double y) { yaxis(1).max.setValue(y); }
-  void setZMin(double z) { zaxis(1).min.setValue(z); }
-  void setZMax(double z) { zaxis(1).max.setValue(z); }
+  void setXMin(double x) { xaxis(1).setMin(x); }
+  void setXMax(double x) { xaxis(1).setMax(x); }
+  void setYMin(double y) { yaxis(1).setMin(y); }
+  void setYMax(double y) { yaxis(1).setMax(y); }
+  void setZMin(double z) { zaxis(1).setMin(z); }
+  void setZMax(double z) { zaxis(1).setMax(z); }
 
-  const std::string &getXLabel() const { return xaxis(1).str; }
-  void setXLabel(const std::string &s) { xaxis(1).str = s; }
+  const std::string &getXLabel() const { return xaxis(1).text(); }
+  void setXLabel(const std::string &s) { xaxis(1).setText(s); }
 
-  const std::string &getYLabel() const { return yaxis(1).str; }
-  void setYLabel(const std::string &s) { yaxis(1).str = s; }
+  const std::string &getYLabel() const { return yaxis(1).text(); }
+  void setYLabel(const std::string &s) { yaxis(1).setText(s); }
 
-  bool getXTics() const { return xaxis(1).showTics; }
-  void setXTics(bool b) { xaxis(1).showTics = b; }
+  bool getXTics() const { return xaxis(1).showTics(); }
+  void setXTics(bool b) { xaxis(1).setShowTics(b); }
 
-  bool getXTicsMirror() const { return xaxis(1).mirror; }
-  void setXTicsMirror(bool b) { xaxis(1).mirror = b; }
+  bool getXTicsMirror() const { return xaxis(1).isMirror(); }
+  void setXTicsMirror(bool b) { xaxis(1).setMirror(b); }
 
-  bool getYTics() const { return yaxis(1).showTics; }
-  void setYTics(bool b) { yaxis(1).showTics = b; }
+  bool getYTics() const { return yaxis(1).showTics(); }
+  void setYTics(bool b) { yaxis(1).setShowTics(b); }
 
-  bool getYTicsMirror() const { return yaxis(1).mirror; }
-  void setYTicsMirror(bool b) { yaxis(1).mirror = b; }
+  bool getYTicsMirror() const { return yaxis(1).isMirror(); }
+  void setYTicsMirror(bool b) { yaxis(1).setMirror(b); }
 
-  bool getXGrid() const { return xaxis(1).grid; }
-  void setXGrid(bool b) { xaxis(1).grid = b; }
+  bool getXGrid() const { return xaxis(1).hasGrid(); }
+  void setXGrid(bool b) { xaxis(1).setGrid(b); }
 
-  bool getYGrid() const { return yaxis(1).grid; }
-  void setYGrid(bool b) { yaxis(1).grid = b; }
+  bool getYGrid() const { return yaxis(1).hasGrid(); }
+  void setYGrid(bool b) { yaxis(1).setGrid(b); }
 
   int getBorders() const { return axesData_.borders; }
   void setBorders(int b) { axesData_.borders = b; }
@@ -123,6 +132,10 @@ class CGnuPlotGroup {
   //---
 
   const CGnuPlotKeyP &key() const { return key_; }
+
+  const CGnuPlotColorBoxP &colorBox() const { return colorBox_; }
+
+  const CGnuPlotPaletteP &palette() const { return palette_; }
 
   //---
 
@@ -203,6 +216,7 @@ class CGnuPlotGroup {
   void drawYAxes(int yind, bool other);
 
   void drawKey();
+  void drawColorBox();
 
   void drawAnnotations(CGnuPlotLayer layer);
 
@@ -210,9 +224,12 @@ class CGnuPlotGroup {
 
   //-----
 
+  const CGnuPlotAxisData *getAxisDataFromId(const std::string &id) const;
+  CGnuPlotAxisData       *getAxisDataFromId(const std::string &id);
+
   std::string getAxisValueStr(const std::string &id, int i, double r) const;
 
-  std::string formatAxisValue(const AxisData &axis, double r) const;
+  std::string formatAxisValue(const CGnuPlotAxisData &axis, double r) const;
 
   //-----
 
@@ -255,22 +272,24 @@ class CGnuPlotGroup {
  private:
   static int nextId_;
 
-  CGnuPlotWindow* window_;                                 // parent window
-  int             id_ { 0 };                               // unique id
-  int             ind_  {0};                               // group index in window
-  CGnuPlotTitle*  title_;                                  // plot title
-  Plots           plots_;                                  // plots
-  CBBox2D         region_ {0,0,1,1};                       // region of window
-  Margin          margin_ {10,10,10,10};                   // margin around plots
-  CBBox2D         bbox_ { 0, 0, 1, 1 };                    // bounding box
-  PlotSize        plotSize_;
-  HistogramStyle  histogramStyle_ { HistogramStyle::NONE}; // histogram style
-  CGnuPlotKeyP    key_;                                    // key
-  AxesData        axesData_;                               // axes data
-  LogScaleMap     logScale_;                               // log axis data
-  Annotations     annotations_;                            // annotations
-  Axes            axes_;                                   // axes
-  CRGBA           backgroundColor_;                        // background color
+  CGnuPlotWindow*   window_;                                 // parent window
+  int               id_ { 0 };                               // unique id
+  int               ind_  {0};                               // group index in window
+  CGnuPlotTitle*    title_;                                  // plot title
+  Plots             plots_;                                  // plots
+  CBBox2D           region_ {0,0,1,1};                       // region of window
+  Margin            margin_ {10,10,10,10};                   // margin around plots
+  CBBox2D           bbox_ { 0, 0, 1, 1 };                    // bounding box
+  PlotSize          plotSize_;
+  HistogramStyle    histogramStyle_ { HistogramStyle::NONE}; // histogram style
+  CGnuPlotKeyP      key_;                                    // key
+  CGnuPlotColorBoxP colorBox_;                               // color box
+  CGnuPlotPaletteP  palette_;                                // palette
+  AxesData          axesData_;                               // axes data
+  LogScaleMap       logScale_;                               // log axis data
+  Annotations       annotations_;                            // annotations
+  Axes              axes_;                                   // axes
+  CRGBA             backgroundColor_;                        // background color
 };
 
 #endif

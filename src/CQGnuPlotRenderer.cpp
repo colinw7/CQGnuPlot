@@ -524,36 +524,3 @@ setFont(CFontPtr font)
 
   painter_->setFont(CQUtil::toQFont(getFont()));
 }
-
-void
-CQGnuPlotRenderer::
-setLineDash(const CLineDash &dash)
-{
-  QPen pen = painter_->pen();
-
-  double width = pen.widthF();
-
-  if (width <= 0) width = 1.0;
-
-  int num = dash.getNumLengths();
-
-  if (num > 0) {
-    pen.setStyle(Qt::CustomDashLine);
-
-    pen.setDashOffset(dash.getOffset());
-
-    QVector<qreal> dashes;
-
-    for (int i = 0; i < num; ++i)
-      dashes << dash.getLength(i)/width;
-
-    if (num & 1)
-      dashes << dash.getLength(0)/width;
-
-    pen.setDashPattern(dashes);
-  }
-  else
-    pen.setStyle(Qt::SolidLine);
-
-  painter_->setPen(pen);
-}

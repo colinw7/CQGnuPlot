@@ -144,6 +144,13 @@ DrawLayerTypeConv drawLayerTypeConv({
   { CGnuPlotLayer::BEHIND, CQGnuPlot::LayerBehind },
 });
 
+typedef CEnumConv<CGnuPlotPalette::ColorType, CQGnuPlot::PaletteColorType> PaletteColorTypeConv;
+
+PaletteColorTypeConv paletteColorTypeConv({
+  { CGnuPlotPalette::ColorType::MODEL  , CQGnuPlot::PaletteColorModel   },
+  { CGnuPlotPalette::ColorType::DEFINED, CQGnuPlot::PaletteColorDefined },
+});
+
 }
 
 //---
@@ -304,4 +311,20 @@ CQGnuPlotUtil::
 drawLayerTypeConv(const CQGnuPlot::CQDrawLayerType &layer)
 {
   return Conv::drawLayerTypeConv.conv(layer);
+}
+
+//---
+
+CQGnuPlot::PaletteColorType
+CQGnuPlotUtil::
+paletteColorTypeConv(const CGnuPlotPalette::ColorType &layer)
+{
+  return Conv::paletteColorTypeConv.conv(layer);
+}
+
+CGnuPlotPalette::ColorType
+CQGnuPlotUtil::
+paletteColorTypeConv(const CQGnuPlot::PaletteColorType &layer)
+{
+  return Conv::paletteColorTypeConv.conv(layer);
 }

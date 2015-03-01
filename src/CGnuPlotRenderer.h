@@ -54,8 +54,6 @@ class CGnuPlotRenderer {
   virtual double fontSize() const;
   virtual void setFontSize(double s);
 
-  virtual void setLineDash(const CLineDash &line_dash) = 0;
-
   virtual void clear(const CRGBA &c) = 0;
 
   virtual void drawPoint  (const CPoint2D &p, const CRGBA &c=CRGBA(0,0,0)) = 0;

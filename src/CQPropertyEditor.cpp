@@ -55,7 +55,8 @@ getEditor(const QString &typeName) const
 //------
 
 CQPropertyIntegerEditor::
-CQPropertyIntegerEditor()
+CQPropertyIntegerEditor(int min, int max, int step) :
+ min_(min), max_(max), step_(step)
 {
 }
 
@@ -65,6 +66,9 @@ createEdit(QWidget *parent)
 {
   QSpinBox *spin = new QSpinBox(parent);
   assert(spin);
+
+  spin->setRange(min_, max_);
+  spin->setSingleStep(step_);
 
   return spin;
 }

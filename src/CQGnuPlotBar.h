@@ -14,6 +14,7 @@ class CQGnuPlotBar : public CQGnuPlotObject, public CGnuPlotBar {
 
   Q_PROPERTY(QColor lineColor READ getLineColor WRITE setLineColor)
   Q_PROPERTY(QColor fillColor READ getFillColor WRITE setFillColor)
+  Q_PROPERTY(bool   border    READ hasBorder    WRITE setBorder   )
 
  public:
   CQGnuPlotBar(CQGnuPlotPlot *plot);

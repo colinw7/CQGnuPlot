@@ -33,6 +33,7 @@ class CGnuPlotAxis;
 class CGnuPlotDevice;
 class CGnuPlotGroup;
 class CGnuPlotKey;
+class CGnuPlotColorBox;
 class CGnuPlotPlot;
 class CGnuPlotReadLine;
 class CGnuPlotSVGDevice;
@@ -49,10 +50,12 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotColorSpec.h>
 #include <CGnuPlotLineStyle.h>
 #include <CGnuPlotFillStyle.h>
+#include <CGnuPlotPointStyle.h>
 #include <CGnuPlotCoordValue.h>
 #include <CGnuPlotKeyData.h>
 #include <CGnuPlotPosition.h>
 #include <CGnuPlotSize.h>
+#include <CGnuPlotAxisData.h>
 #include <CGnuPlotTitle.h>
 #include <CGnuPlotObject.h>
 #include <CGnuPlotArrow.h>
@@ -61,6 +64,9 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotPolygon.h>
 #include <CGnuPlotRectangle.h>
 #include <CGnuPlotFile.h>
+#include <CGnuPlotCamera.h>
+#include <CGnuPlotPalette.h>
+#include <CGnuPlotColorBox.h>
 
 //------
 
@@ -351,14 +357,6 @@ class CGnuPlot {
     PALETTE
   };
 
-  enum class ColorModel {
-    RGB,
-    HSV,
-    CMY,
-    YIQ,
-    XYZ,
-  };
-
   typedef CGnuPlotTypes::BoxWidthType   BoxWidthType;
   typedef CGnuPlotTypes::Smooth         Smooth;
   typedef CGnuPlotTypes::HistogramStyle HistogramStyle;
@@ -404,19 +402,6 @@ class CGnuPlot {
 
   //---
 
-  class PointStyle {
-   public:
-    PointStyle() { }
-
-    bool varSize() const { return varSize_; }
-    void setVarSize(bool b) { varSize_ = b; }
-
-  private:
-    bool varSize_ { false };
-  };
-
-  //---
-
   struct BoxWidth {
     BoxWidth(double w=1, BoxWidthType t=BoxWidthType::AUTO) :
      width(w), type(t) {
@@ -455,42 +440,21 @@ class CGnuPlot {
 
   //---
 
-  struct AxisData {
-    typedef std::map<int,std::string> TicLabelMap;
-
-    AxisData(int i=1) : ind(i) { }
-
-    int         ind;
-    bool        displayed { true  };
-    bool        grid      { false };
-    bool        mirror    { true  };
-    bool        reverse   { false };
-    bool        writeback { false };
-    bool        isTime    { false };
-    COptReal    min;
-    COptReal    max;
-    std::string str;
-    TicLabelMap ticlabel;
-    double      offset    { 0 };
-    std::string format;
-    CFontPtr    font;
-    bool        showTics  { true };
-  };
-
-  typedef std::map<int,AxisData> IAxisMap;
+  typedef std::map<int,CGnuPlotAxisData> IAxisMap;
 
   struct AxesData {
     AxesData() { }
 
-    IAxisMap xaxis;
-    IAxisMap yaxis;
-    IAxisMap zaxis;
-    IAxisMap paxis;
-    IAxisMap taxis;
-    int      borders     { 0xFF };
-    double   borderWidth { 1.0 };
-    COptInt  borderStyle;
-    COptInt  borderType;
+    IAxisMap         xaxis;
+    IAxisMap         yaxis;
+    IAxisMap         zaxis;
+    IAxisMap         paxis;
+    IAxisMap         taxis;
+    CGnuPlotAxisData cbaxis;
+    int              borders     { 0xFF };
+    double           borderWidth { 1.0 };
+    COptInt          borderStyle;
+    COptInt          borderType;
   };
 
   struct StyleIncrement {
@@ -583,126 +547,6 @@ class CGnuPlot {
 
   //---
 
-  struct Palette {
-    typedef std::map<double,CRGBA> ColorMap;
-
-    ColorModel colorModel;
-    ColorMap   colors;
-
-    void addColor(double v, const CRGBA &c) {
-      colors[v] = c;
-    }
-
-    CRGBA getColor(double x) const {
-      if (colors.empty()) {
-        Palette *th = const_cast<Palette *>(this);
-
-        th->addColor(0.0, CRGBA(0,0,0));
-        th->addColor(1.0, CRGBA(1,1,1));
-      }
-
-      double min = colors. begin()->first;
-      double max = colors.rbegin()->first;
-
-      auto p = colors.begin();
-
-      double x1    = ((*p).first - min)/(max - min);
-      CRGBA  rgba1 = (*p).second;
-
-      if (x <= x1) return rgba1;
-
-      for (++p; p != colors.end(); ++p) {
-        double x2    = ((*p).first - min)/(max - min);
-        CRGBA  rgba2 = (*p).second;
-
-        if (x <= x2) {
-          double m = (x - x1)/(x2 - x1);
-
-          return (1.0 - m)*rgba1 + m*rgba2;
-        }
-
-        x1    = x2;
-        rgba1 = rgba2;
-      }
-
-      return rgba1;
-    }
-  };
-
-  struct Camera {
-    bool          enabled    { true };
-    CCoordFrame3D coordFrame;
-    CVector3D     direction  { 0, 0, 1 };
-    double        fov        { 90 };
-    double        xmin       { -1 };
-    double        xmax       {  1 };
-    double        ymin       { -1 };
-    double        ymax       {  1 };
-    double        near       { 0.1 };
-    double        far        { 100 };
-    CMatrix3DH    projMatrix;
-    double        rotateX    { 60.0 };
-    double        rotateY    {  0.0 };
-    double        rotateZ    { 45.0 };
-
-    Camera() { init(); }
-
-    void init() {
-      coordFrame.init();
-
-      setDirection(CVector3D(0,0,1));
-
-      //projMatrix.buildPerspective(fov, 1.0, near, far);
-      projMatrix.buildOrtho(xmin, xmax, ymin, ymax, near, far);
-      //projMatrix.buildFrustrum(-2, 2, -2, 2, near, far);
-
-      rotateDX(M_PI*rotateX/180.0);
-      rotateDY(M_PI*rotateY/180.0);
-      rotateDZ(M_PI*rotateZ/180.0);
-    }
-
-    void setPosition(const CPoint3D &position) {
-      coordFrame.setOrigin(position);
-    }
-
-    void setDirection(const CVector3D &dir) {
-      CVector3D right, up, dir1;
-
-      coordFrame.getBasis(right, up, dir1);
-
-      dir1 = dir.unit();
-
-      right = dir1 .crossProduct(up );
-      up    = right.crossProduct(dir1);
-
-      if (COrthonormalBasis3DT<double>::validate(right, up, dir1)) {
-        coordFrame.setBasis(right, up, dir1);
-
-        direction = dir;
-      }
-    }
-
-    void moveDX(double dx) { coordFrame.moveX(dx); }
-    void moveDY(double dy) { coordFrame.moveY(dy); }
-    void moveDZ(double dz) { coordFrame.moveZ(dz); }
-
-    void rotateDX(double dx) { coordFrame.rotateAboutX(dx); }
-    void rotateDY(double dy) { coordFrame.rotateAboutY(dy); }
-    void rotateDZ(double dz) { coordFrame.rotateAboutZ(dz); }
-
-    CPoint3D transform(const CPoint3D &p) const {
-      if (! enabled) return p;
-
-      CPoint3D p1 = coordFrame.transformTo(p);
-
-      CPoint3D p2;
-
-      projMatrix.multiplyPoint(p1, p2);
-
-      return p2;
-    }
-  };
-
   typedef std::vector<CGnuPlotPlot *> Plots;
   typedef std::vector<std::string>    Statements;
 
@@ -755,9 +599,8 @@ class CGnuPlot {
   CGnuPlotLineStyleP getLineStyleInd(int ind);
   void setLineStyleInd(int ind);
 
-  const PointStyle &pointStyle() const { return pointStyle_; }
-  PointStyle &pointStyle() { return pointStyle_; }
-  void setPointStyle(const PointStyle &s) { pointStyle_ = s; }
+  const CGnuPlotPointStyle &pointStyle() const { return pointStyle_; }
+  void setPointStyle(const CGnuPlotPointStyle &s) { pointStyle_ = s; }
 
   const LineStyles &lineStyles() const { return lineStyles_; }
   CGnuPlotLineStyleP lineStyle(int i) const;
@@ -792,20 +635,20 @@ class CGnuPlot {
   void setAxesData(const AxesData &a) { axesData_ = a; }
 
   void getXRange(double *xmin, double *xmax) {
-    *xmin = axesData_.xaxis[1].min.getValue(-10);
-    *xmax = axesData_.xaxis[1].max.getValue(10);
+    *xmin = axesData_.xaxis[1].min().getValue(-10);
+    *xmax = axesData_.xaxis[1].max().getValue(10);
   }
   void getYRange(double *ymin, double *ymax) {
-    *ymin = axesData_.yaxis[1].min.getValue(-1);
-    *ymax = axesData_.yaxis[1].max.getValue(1);
+    *ymin = axesData_.yaxis[1].min().getValue(-1);
+    *ymax = axesData_.yaxis[1].max().getValue(1);
   }
   void getZRange(double *zmin, double *zmax) {
-    *zmin = axesData_.zaxis[1].min.getValue(-1);
-    *zmax = axesData_.zaxis[1].max.getValue(1);
+    *zmin = axesData_.zaxis[1].min().getValue(-1);
+    *zmax = axesData_.zaxis[1].max().getValue(1);
   }
   void getTRange(double *tmin, double *tmax) {
-    *tmin = axesData_.taxis[1].min.getValue(0);
-    *tmax = axesData_.taxis[1].max.getValue(M_PI);
+    *tmin = axesData_.taxis[1].min().getValue(0);
+    *tmax = axesData_.taxis[1].max().getValue(M_PI);
   }
 
   //---
@@ -822,8 +665,11 @@ class CGnuPlot {
   void setSmooth(Smooth s) { smooth_ = s; }
   Smooth getSmooth() const { return smooth_; }
 
-  const Palette &palette() const { return palette_; }
-  void setPalette(const Palette &p) { palette_ = p; }
+  const CGnuPlotPalette &palette() const { return palette_; }
+  void setPalette(const CGnuPlotPalette &p) { palette_ = p; }
+
+  const CGnuPlotColorBox &colorBox() const { return colorBox_; }
+  void setColorBox(const CGnuPlotColorBox &c) { colorBox_ = c; }
 
   const FilledCurve &filledCurve() const { return filledCurve_; }
   void setFilledCurve(const FilledCurve &c) { filledCurve_ = c; }
@@ -836,9 +682,8 @@ class CGnuPlot {
   double whiskerBars() const { return whiskerBars_; }
   void setWhiskerBars(double w) { whiskerBars_ = w; }
 
-  const Camera &camera() const { return camera_; }
-  Camera &camera() { return camera_; }
-  void setCamera(const Camera &c) { camera_ = c; }
+  const CGnuPlotCamera &camera() const { return camera_; }
+  void setCamera(const CGnuPlotCamera &c) { camera_ = c; }
 
   //------
 
@@ -881,6 +726,10 @@ class CGnuPlot {
 
   CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir);
   CGnuPlotKey  *createKey (CGnuPlotGroup *group);
+
+  CGnuPlotColorBox *createColorBox(CGnuPlotGroup *group);
+
+  CGnuPlotPalette *createPalette(CGnuPlotGroup *group);
 
   CGnuPlotTitle *createTitle(CGnuPlotGroup *group);
 
@@ -1049,16 +898,16 @@ class CGnuPlot {
 
   CGnuPlotPlot *addFile3D(CGnuPlotWindowP window, const std::string &filename);
 
-  bool parseAxisRange(CParseLine &line, AxisData &axis, bool hasArgs=true);
+  bool parseAxisRange(CParseLine &line, CGnuPlotAxisData &axis, bool hasArgs=true);
 
   bool parseRange(CParseLine &line, std::vector<std::string> &fields);
 
-  void decodeRange(const std::vector<std::string> &xfields, AxisData &axis);
+  void decodeRange(const std::vector<std::string> &xfields, CGnuPlotAxisData &axis);
 
   CExprValueP decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum,
                              int pointNum, bool &skip, bool &ignore);
 
-  CExprValueP evaluateExpression(const std::string &expr, bool quiet=false) const;
+  bool evaluateExpression(const std::string &expr, CExprValueP &value, bool quiet=false) const;
 
   CExprCTokenStack compileExpression(const std::string &expr) const;
 
@@ -1110,7 +959,7 @@ class CGnuPlot {
     isamples2 = isoSamples2_;
   }
 
-  bool parseAxesTics(CParseLine &line, AxisData& axis);
+  bool parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis);
 
   bool parseColor(CParseLine &line, CRGBA &c);
   bool parseColorSpec(CParseLine &line, CGnuPlotColorSpec &c);
@@ -1199,7 +1048,7 @@ class CGnuPlot {
 //AngleType           angleType_      { AngleType::RADIANS };
   CGnuPlotFillStyle   fillStyle_;
   CGnuPlotLineStyleP  lineStyle_;
-  PointStyle          pointStyle_;
+  CGnuPlotPointStyle  pointStyle_;
   LineStyles          lineStyles_;
   StyleIncrement      styleIncrement_;
   CGnuPlotTitle       title_;
@@ -1222,8 +1071,9 @@ class CGnuPlot {
   bool                enhanced_ { true };
   ImageStyle          imageStyle_;
   Annotations         annotations_;
-  Palette             palette_;
-  Camera              camera_;
+  CGnuPlotCamera      camera_;
+  CGnuPlotPalette     palette_;
+  CGnuPlotColorBox    colorBox_;
   FilledCurve         filledCurve_;
   std::string         timeFmt_;
   LogScaleMap         logScale_;

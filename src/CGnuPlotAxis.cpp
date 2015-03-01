@@ -43,13 +43,13 @@ axesIncrementTests[MAX_GAP_TESTS] = {
 CGnuPlotAxis::
 CGnuPlotAxis(CGnuPlotGroup *group, const std::string &id, COrientation direction,
              double start, double end) :
- group_     (group),
- id_        (id),
- direction_ (direction),
- start_     (start),
- end_       (end),
- start1_    (start),
- end1_      (end)
+ group_    (group),
+ id_       (id),
+ direction_(direction),
+ start_    (start),
+ end_      (end),
+ start1_   (start),
+ end1_     (end)
 {
   calc();
 }
@@ -366,6 +366,26 @@ getMinorIncrement() const
     return 0.0;
 }
 
+bool
+CGnuPlotAxis::
+hasGrid() const
+{
+  const CGnuPlotAxisData *axis = group_->getAxisDataFromId(id_);
+  if (! axis) return false;
+
+  return axis->hasGrid();
+}
+
+void
+CGnuPlotAxis::
+setGrid(bool b)
+{
+  CGnuPlotAxisData *axis = group_->getAxisDataFromId(id_);
+  if (! axis) return;
+
+  axis->setGrid(b);
+}
+
 std::string
 CGnuPlotAxis::
 getValueStr(int i, double pos) const
@@ -669,9 +689,7 @@ drawGrid(double start, double end)
   static double gridDashes[] = {1, 3};
   static uint   numGridDashes = 2;
 
-  CGnuPlotRenderer *renderer = app()->renderer();
-
-  renderer->setLineDash(CLineDash(gridDashes, numGridDashes));
+  lineDash_ = CLineDash(gridDashes, numGridDashes);
 
   //------*/
 
@@ -696,9 +714,7 @@ drawGrid(double start, double end)
     }
   }
 
-  //------*/
-
-  renderer->setLineDash(CLineDash());
+  lineDash_ = CLineDash();
 }
 
 void
@@ -726,7 +742,8 @@ drawLine(const CPoint2D &p1, const CPoint2D &p2)
   group_->mapLogPoint(&x1, &y1);
   group_->mapLogPoint(&x2, &y2);
 
-  renderer->drawLine(CPoint2D(x1, y1), CPoint2D(x2, y2));
+  // TODO: custom width and color
+  renderer->drawLine(CPoint2D(x1, y1), CPoint2D(x2, y2), 1, CRGBA(0,0,0), lineDash_);
 }
 
 void

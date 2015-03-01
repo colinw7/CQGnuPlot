@@ -39,6 +39,9 @@ class CGnuPlotBar : CGnuPlotPlotObject {
   CRGBA fillColor() const { return fillColor_.getValue(CRGBA(1,0,0)); }
   void setFillColor(const CRGBA &c) { fillColor_ = c; }
 
+  bool hasBorder() const { return border_; }
+  void setBorder(bool b) { border_ = b; }
+
   bool hasLineColor() const { return lineColor_.isValid(); }
   void resetLineColor() { lineColor_.setInvalid(); }
 
@@ -55,7 +58,8 @@ class CGnuPlotBar : CGnuPlotPlotObject {
   FillPattern     fillPattern_ { FillPattern::NONE };
   COptValT<CRGBA> fillColor_;
   COptValT<CRGBA> lineColor_;
-  double          value_ { 0.0} ;
+  bool            border_ { true }; // border displayed
+  double          value_ { 0.0};    // associated value
 };
 
 #endif

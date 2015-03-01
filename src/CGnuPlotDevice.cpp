@@ -83,6 +83,20 @@ createKey(CGnuPlotGroup *group)
   return new CGnuPlotKey(group);
 }
 
+CGnuPlotColorBox *
+CGnuPlotDevice::
+createColorBox(CGnuPlotGroup *group)
+{
+  return new CGnuPlotColorBox(group);
+}
+
+CGnuPlotPalette *
+CGnuPlotDevice::
+createPalette(CGnuPlotGroup *group)
+{
+  return new CGnuPlotPalette(group);
+}
+
 CGnuPlotTitle *
 CGnuPlotDevice::
 createTitle(CGnuPlotGroup *group)

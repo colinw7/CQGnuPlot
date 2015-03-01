@@ -57,8 +57,6 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
 
   void setFont(CFontPtr font);
 
-  void setLineDash(const CLineDash &line_dash) override;
-
  private:
   CQGnuPlotCanvas *canvas_;
   QPainter        *painter_ { 0 };

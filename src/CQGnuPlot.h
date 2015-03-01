@@ -22,6 +22,7 @@ class CQGnuPlot : public QObject, public CGnuPlot {
   Q_ENUMS(CQFillPattern)
   Q_ENUMS(CQBoxWidthType)
   Q_ENUMS(CQDrawLayerType)
+  Q_ENUMS(PaletteColorType)
 
  public:
   enum CQHAlignType {
@@ -131,6 +132,11 @@ class CQGnuPlot : public QObject, public CGnuPlot {
     LayerFront,
     LayerBack,
     LayerBehind
+  };
+
+  enum PaletteColorType {
+    PaletteColorModel,
+    PaletteColorDefined
   };
 
  public:

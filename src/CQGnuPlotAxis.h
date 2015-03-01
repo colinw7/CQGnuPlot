@@ -13,6 +13,7 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   Q_PROPERTY(double  start     READ getStart)
   Q_PROPERTY(double  end       READ getEnd)
   Q_PROPERTY(QString label     READ getLabel    WRITE setLabel)
+  Q_PROPERTY(bool    grid      READ hasGrid     WRITE setGrid)
 
  public:
   CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, COrientation dir,

@@ -12,6 +12,8 @@
 #include <CQGnuPlotRectangle.h>
 #include <CQGnuPlotAxis.h>
 #include <CQGnuPlotKey.h>
+#include <CQGnuPlotColorBox.h>
+#include <CQGnuPlotPalette.h>
 #include <CQGnuPlotTitle.h>
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotBar.h>
@@ -172,6 +174,8 @@ addProperties()
     redit_[1] = new CQPropertyRealEditor(-1000, 1000, 0.1);
     redit_[2] = new CQPropertyRealEditor(0, 50, 1);
     redit_[3] = new CQPropertyRealEditor(0, 1, 0.05);
+
+    iedit_[0] = new CQPropertyIntegerEditor(0, 33);
   }
 
   tree_->addProperty("", this, "backgroundColor");
@@ -264,6 +268,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
     tree_->addProperty(axesName, qaxis, "displayed");
     tree_->addProperty(axesName, qaxis, "label");
+    tree_->addProperty(axesName, qaxis, "grid");
   }
 
 #if 0
@@ -297,6 +302,35 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(keyName, qkey, "halign");
   tree_->addProperty(keyName, qkey, "valign");
   tree_->addProperty(keyName, qkey, "font");
+
+  //---
+
+  CQGnuPlotColorBox *qcolorBox = dynamic_cast<CQGnuPlotColorBox *>(qgroup->colorBox().get());
+
+  QString colorBoxName = name + "/colorBox";
+
+  tree_->addProperty(colorBoxName, qcolorBox, "vertical");
+  tree_->addProperty(colorBoxName, qcolorBox, "user");
+  tree_->addProperty(colorBoxName, qcolorBox, "front");
+  tree_->addProperty(colorBoxName, qcolorBox, "border");
+  tree_->addProperty(colorBoxName, qcolorBox, "borderStyle");
+  tree_->addProperty(colorBoxName, qcolorBox, "origin");
+  tree_->addProperty(colorBoxName, qcolorBox, "size");
+
+  //---
+
+  CQGnuPlotPalette *qpalette = dynamic_cast<CQGnuPlotPalette *>(qgroup->palette().get());
+
+  QString paletteName = name + "/palette";
+
+  tree_->addProperty(paletteName, qpalette, "colorType");
+  tree_->addProperty(paletteName, qpalette, "gamma");
+  tree_->addProperty(paletteName, qpalette, "gray");
+  tree_->addProperty(paletteName, qpalette, "negative");
+
+  tree_->addProperty(paletteName, qpalette, "redModel"  )->setEditorFactory(iedit_[0]);
+  tree_->addProperty(paletteName, qpalette, "greenModel")->setEditorFactory(iedit_[0]);
+  tree_->addProperty(paletteName, qpalette, "blueModel" )->setEditorFactory(iedit_[0]);
 
   //---
 
@@ -438,6 +472,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
     tree_->addProperty(name1, qbar, "lineColor");
     tree_->addProperty(name1, qbar, "fillColor");
+    tree_->addProperty(name1, qbar, "border");
 
     ++i;
   }
@@ -764,8 +799,8 @@ paint(QPainter *p)
 {
   CQGnuPlotRenderer *qrenderer = qapp()->qrenderer();
 
-  qrenderer->setWidth (width ());
-  qrenderer->setHeight(height());
+  qrenderer->setWidth (canvas_->width ());
+  qrenderer->setHeight(canvas_->height());
 
   qrenderer->setWindow(this);
   qrenderer->setCanvas(canvas());
@@ -794,8 +829,8 @@ showPos(double wx, double wy)
   std::string xstr, ystr;
 
   if (currentGroup_) {
-    const CGnuPlot::AxisData &xaxis = currentGroup_->xaxis(1);
-    const CGnuPlot::AxisData &yaxis = currentGroup_->yaxis(1);
+    const CGnuPlotAxisData &xaxis = currentGroup_->xaxis(1);
+    const CGnuPlotAxisData &yaxis = currentGroup_->yaxis(1);
 
     xstr = currentGroup_->formatAxisValue(xaxis, wx);
     ystr = currentGroup_->formatAxisValue(yaxis, wy);

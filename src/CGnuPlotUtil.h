@@ -24,6 +24,12 @@ namespace CGnuPlotUtil {
   inline double map(double value, double low1, double high1, double low2, double high2) {
     return lerp(low2, high2, norm(value, low1, high1));
   }
+
+  inline double clamp(double val, double low, double high) {
+    if (val < low ) return low;
+    if (val > high) return high;
+    return val;
+  }
 }
 
 #endif

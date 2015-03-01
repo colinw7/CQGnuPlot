@@ -40,15 +40,15 @@ evaluateExpression(const std::string &str, std::vector<CExprValuePtr> &values)
   return executeCTokenStack(cstack, values);
 }
 
-CExprValuePtr
+bool
 CExpr::
-evaluateExpression(const std::string &str)
+evaluateExpression(const std::string &str, CExprValuePtr &value)
 {
   CExprPTokenStack pstack = parseLine(str);
   CExprITokenPtr   itoken = interpPTokenStack(pstack);
   CExprCTokenStack cstack = compileIToken(itoken);
 
-  return executeCTokenStack(cstack);
+  return executeCTokenStack(cstack, value);
 }
 
 CExprPTokenStack
@@ -104,16 +104,17 @@ executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &va
   return true;
 }
 
-CExprValuePtr
+bool
 CExpr::
-executeCTokenStack(const CExprCTokenStack &stack)
+executeCTokenStack(const CExprCTokenStack &stack, CExprValuePtr &value)
 {
-  CExprValuePtr value = execute_->executeCTokenStack(stack);
+  if (! execute_->executeCTokenStack(stack, value))
+    return false;
 
   if (getDebug())
     std::cerr << "Value: " << value << std::endl;
 
-  return value;
+  return true;
 }
 
 void

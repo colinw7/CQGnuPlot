@@ -10,13 +10,13 @@
 class CQGnuPlotLabel : public CQGnuPlotAnnotation, public CGnuPlotLabel {
   Q_OBJECT
 
-  Q_PROPERTY(QString                 text     READ getText   WRITE setText    )
-  Q_PROPERTY(CQGnuPlot::CQHAlignType align    READ getAlign  WRITE setAlign   )
-  Q_PROPERTY(QPointF                 pos      READ getPos    WRITE setPos     )
-  Q_PROPERTY(QFont                   font     READ getFont   WRITE setFont    )
-  Q_PROPERTY(double                  angle    READ getAngle  WRITE setAngle   )
-  Q_PROPERTY(QPointF                 offset   READ getOffset WRITE setOffset  )
-  Q_PROPERTY(bool                    enhanced READ enhanced  WRITE setEnhanced)
+  Q_PROPERTY(QString                 text     READ getText    WRITE setText    )
+  Q_PROPERTY(CQGnuPlot::CQHAlignType align    READ getAlign   WRITE setAlign   )
+  Q_PROPERTY(QPointF                 pos      READ getPos     WRITE setPos     )
+  Q_PROPERTY(QFont                   font     READ getFont    WRITE setFont    )
+  Q_PROPERTY(double                  angle    READ getAngle   WRITE setAngle   )
+  Q_PROPERTY(QPointF                 offset   READ getOffset  WRITE setOffset  )
+  Q_PROPERTY(bool                    enhanced READ isEnhanced WRITE setEnhanced)
 
  public:
   CQGnuPlotLabel(CQGnuPlotGroup *group);

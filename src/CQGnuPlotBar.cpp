@@ -48,21 +48,26 @@ draw() const
 {
   CQGnuPlotBar *th = const_cast<CQGnuPlotBar *>(this);
 
-  bool lcSet = hasLineColor();
-  bool fcSet = hasFillColor();
+  //bool lcSet = hasLineColor();
+  bool fcSet  = CGnuPlotBar::hasFillColor();
+  bool border = CGnuPlotBar::hasBorder();
 
-  CRGBA lc = (lcSet ? lineColor() : CRGBA(0,0,0));
+//CRGBA lc = (lcSet ? lineColor() : CRGBA(0,0,0));
   CRGBA fc = (fcSet ? fillColor() : CRGBA(1,0,0));
 
   if (isSelected()) {
-    th->CGnuPlotBar::setLineColor(CRGBA(1,0,0));
-    th->CGnuPlotBar::setFillColor(CRGBA(0.1,0));
+  //th->CGnuPlotBar::setLineColor(CRGBA(1,0,0));
+    th->CGnuPlotBar::setFillColor(CRGBA(1,0,0));
+
+    th->CGnuPlotBar::setBorder(true);
   }
 
   CGnuPlotBar::draw();
 
   if (isSelected()) {
-    if (lcSet) th->CGnuPlotBar::setLineColor(lc); else th->CGnuPlotBar::resetLineColor();
+  //if (lcSet) th->CGnuPlotBar::setLineColor(lc); else th->CGnuPlotBar::resetLineColor();
     if (fcSet) th->CGnuPlotBar::setFillColor(fc); else th->CGnuPlotBar::resetFillColor();
+
+    th->CGnuPlotBar::setBorder(border);
   }
 }

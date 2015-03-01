@@ -7,8 +7,7 @@ class CExprExecuteImpl {
  ~CExprExecuteImpl() { }
 
   bool executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values);
-
-  CExprValuePtr executeCTokenStack(const CExprCTokenStack &stack);
+  bool executeCTokenStack(const CExprCTokenStack &stack, CExprValuePtr &value);
 
  private:
   bool           executeToken(const CExprCTokenPtr &ctoken);
@@ -26,7 +25,7 @@ class CExprExecuteImpl {
   void           executeSubscriptOperator();
 #endif
   void           executeEqualsOperator();
-  CExprValuePtr  executeFunction(const CExprFunctionPtr &function);
+  bool           executeFunction(const CExprFunctionPtr &function, CExprValuePtr &value);
   CExprValuePtr  etokenToValue(const CExprETokenPtr &etoken);
 #if 0
   CExprValueType etokenToValueType(CExprETokenPtr);
@@ -62,11 +61,11 @@ executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &va
   return impl_->executeCTokenStack(stack, values);
 }
 
-CExprValuePtr
+bool
 CExprExecute::
-executeCTokenStack(const CExprCTokenStack &stack)
+executeCTokenStack(const CExprCTokenStack &stack, CExprValuePtr &value)
 {
-  return impl_->executeCTokenStack(stack);
+  return impl_->executeCTokenStack(stack, value);
 }
 
 //------------
@@ -115,18 +114,21 @@ executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &va
   return rc;
 }
 
-CExprValuePtr
+bool
 CExprExecuteImpl::
-executeCTokenStack(const CExprCTokenStack &stack)
+executeCTokenStack(const CExprCTokenStack &stack, CExprValuePtr &value)
 {
   std::vector<CExprValuePtr> values;
 
-  (void) executeCTokenStack(stack, values);
+  if (! executeCTokenStack(stack, values))
+    return false;
 
   if (values.empty())
-    return CExprValuePtr();
+    value = CExprValuePtr();
+  else
+    value = values.back();
 
-  return values.back();
+  return true;
 }
 
 bool
@@ -165,7 +167,10 @@ executeToken(const CExprCTokenPtr &ctoken)
       break;
     }
     case CEXPR_CTOKEN_FUNCTION: {
-      CExprValuePtr value = executeFunction(ctoken->getFunction());
+      CExprValuePtr value;
+
+      if (! executeFunction(ctoken->getFunction(), value))
+        return false;
 
       stackValue(value);
 
@@ -553,9 +558,9 @@ executeEqualsOperator()
   stackValue(value);
 }
 
-CExprValuePtr
+bool
 CExprExecuteImpl::
-executeFunction(const CExprFunctionPtr &function)
+executeFunction(const CExprFunctionPtr &function, CExprValuePtr &value)
 {
   //uint num_args = function->numArgs();
 
@@ -579,13 +584,15 @@ executeFunction(const CExprFunctionPtr &function)
     CExprValueType argType = function->argType(i);
 
     if (! value1.isValid()) {
-      if (! (argType & CEXPR_VALUE_NULL))
-        return CExprValuePtr();
+      if (! (argType & CEXPR_VALUE_NULL)) {
+        std::cerr << "Invalid type for function argument" << std::endl;
+        return false;
+      }
     }
     else {
       if (! (argType & CEXPR_VALUE_NULL) && ! value1->convToType(argType)) {
         std::cerr << "Invalid type for function argument" << std::endl;
-        return CExprValuePtr();
+        return false;
       }
     }
   }
@@ -596,7 +603,16 @@ executeFunction(const CExprFunctionPtr &function)
 
   std::copy(values.begin(), values.end(), std::back_inserter(values1));
 
-  return function->exec(values1);
+  if (! function->checkValues(values1)) {
+    std::cerr << "Invalid function values : ";
+    function->print(std::cerr);
+    std::cerr << std::endl;
+    return false;
+  }
+
+  value = function->exec(values1);
+
+  return true;
 }
 
 CExprValuePtr

@@ -4,6 +4,7 @@
 #include <COrientation.h>
 #include <CAlignType.h>
 #include <CDirectionType.h>
+#include <CLineDash.h>
 #include <CPoint2D.h>
 #include <CBBox2D.h>
 #include <string>
@@ -73,6 +74,9 @@ class CGnuPlotAxis {
   bool isDrawLine() const { return drawLine_; }
   void setDrawLine(bool b) { drawLine_ = b; }
 
+  bool hasGrid() const;
+  void setGrid(bool b);
+
   bool drawTickMark() const { return drawTickMark_; }
   void setDrawTickMark(bool b) { drawTickMark_ = b; }
 
@@ -122,32 +126,33 @@ class CGnuPlotAxis {
  private:
   typedef std::vector<double> TickSpaces;
 
-  CGnuPlotGroup* group_             { 0 };
-  std::string    id_                { "" };
-  COrientation   direction_         { CORIENTATION_HORIZONTAL };
-  double         start_             { 0 };
-  double         end_               { 1 };
-  double         start1_            { 0 };
-  double         end1_              { 1 };
-  bool           reverse_           { false };
-  int            logarithmic_       { 0 };
-  uint           numTicks1_         { 1 };
-  uint           numTicks2_         { 0 };
-  uint           tickIncrement_     { 0 };
-  double         majorIncrement_    { 0 };
-  TickSpaces     tickSpaces_;
-  bool           tickInside_        { false };
-  bool           labelInside_       { false };
-  std::string    label_;
-  std::string    timeFmt_;
-  bool           displayed_         { true };
-  bool           drawLine_          { true };
-  bool           drawTickMark_      { true };
-  bool           drawMinorTickMark_ { true };
-  bool           drawTickLabel_     { true };
-  bool           drawLabel_         { true };
-  bool           clip_              { false };
-  CBBox2D        bbox_              { 0, 0, 1, 1 };
+  CGnuPlotGroup*    group_             { 0 };
+  std::string       id_                { "" };
+  COrientation      direction_         { CORIENTATION_HORIZONTAL };
+  double            start_             { 0 };
+  double            end_               { 1 };
+  double            start1_            { 0 };
+  double            end1_              { 1 };
+  bool              reverse_           { false };
+  int               logarithmic_       { 0 };
+  uint              numTicks1_         { 1 };
+  uint              numTicks2_         { 0 };
+  uint              tickIncrement_     { 0 };
+  double            majorIncrement_    { 0 };
+  TickSpaces        tickSpaces_;
+  bool              tickInside_        { false };
+  bool              labelInside_       { false };
+  std::string       label_;
+  std::string       timeFmt_;
+  bool              displayed_         { true };
+  bool              drawLine_          { true };
+  bool              drawTickMark_      { true };
+  bool              drawMinorTickMark_ { true };
+  bool              drawTickLabel_     { true };
+  bool              drawLabel_         { true };
+  bool              clip_              { false };
+  mutable CBBox2D   bbox_              { 0, 0, 1, 1 };
+  mutable CLineDash lineDash_;
 };
 
 #endif
