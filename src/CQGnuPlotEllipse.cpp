@@ -26,11 +26,9 @@ setCenter(const QPointF &p)
 
 void
 CQGnuPlotEllipse::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
-
-  CGnuPlotEllipse::draw();
+  CGnuPlotEllipse::draw(renderer);
 
   if (isSelected())
     renderer->drawEllipse(CGnuPlotEllipse::getCenter(), getRX(), getRY(), 0, CRGBA(1,0,0), 2);

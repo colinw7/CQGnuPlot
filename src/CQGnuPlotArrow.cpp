@@ -39,7 +39,7 @@ setTo(const QPointF &p)
 
 void
 CQGnuPlotArrow::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
   CQGnuPlotArrow *th = const_cast<CQGnuPlotArrow *>(this);
 
@@ -48,7 +48,7 @@ draw() const
   if (isSelected())
     th->setLineColor(CRGBA(1,0,0), true);
 
-  CGnuPlotArrow::draw();
+  CGnuPlotArrow::draw(renderer);
 
   if (isSelected())
     th->setLineColor(CRGBA(1,0,0), false);

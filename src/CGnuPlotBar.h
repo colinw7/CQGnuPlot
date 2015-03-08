@@ -27,39 +27,39 @@ class CGnuPlotBar : CGnuPlotPlotObject {
   double value() const { return value_; }
   void setValue(double r) { value_ = r; }
 
+  bool isInitialized() const { return initialized_; }
+  void setInitialized(bool b) { initialized_ = b; }
+
   FillType fillType() const { return fillType_; }
   void setFillType(FillType t) { fillType_ = t; }
 
   FillPattern fillPattern() const { return fillPattern_; }
   void setFillPattern(FillPattern t) { fillPattern_ = t; }
 
-  bool hasFillColor() const { return fillColor_.isValid(); }
-  void resetFillColor() { fillColor_.setInvalid(); }
-
-  CRGBA fillColor() const { return fillColor_.getValue(CRGBA(1,0,0)); }
+  const COptValT<CRGBA> &fillColor() const { return fillColor_; }
+  void setFillColor(const COptValT<CRGBA> &c) { fillColor_ = c; }
   void setFillColor(const CRGBA &c) { fillColor_ = c; }
 
   bool hasBorder() const { return border_; }
   void setBorder(bool b) { border_ = b; }
 
-  bool hasLineColor() const { return lineColor_.isValid(); }
-  void resetLineColor() { lineColor_.setInvalid(); }
-
-  CRGBA lineColor() const { return lineColor_.getValue(CRGBA(0,0,0)); }
+  const COptValT<CRGBA> &lineColor() const { return lineColor_; }
+  void setLineColor(const COptValT<CRGBA> &c) { lineColor_ = c; }
   void setLineColor(const CRGBA &c) { lineColor_ = c; }
 
   bool inside(const CPoint2D &p) const;
 
-  void draw() const override;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
  private:
   CBBox2D         bbox_ { 0, 0, 1, 1 };
+  double          value_ { 0.0};    // associated value
+  bool            initialized_ { false };
   FillType        fillType_ { FillType::EMPTY };
   FillPattern     fillPattern_ { FillPattern::NONE };
   COptValT<CRGBA> fillColor_;
-  COptValT<CRGBA> lineColor_;
   bool            border_ { true }; // border displayed
-  double          value_ { 0.0};    // associated value
+  COptValT<CRGBA> lineColor_;
 };
 
 #endif

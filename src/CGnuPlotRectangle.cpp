@@ -57,12 +57,10 @@ calcBBox() const
 
 void
 CGnuPlotRectangle::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
   // clip if enabled and does not use screen coordinates
   CBBox2D bbox = calcBBox();
-
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
 
   renderer->setClip(group_->getClip());
 

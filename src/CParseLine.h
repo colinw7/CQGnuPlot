@@ -48,6 +48,15 @@ class CParseLine {
 
   char getChar() { return str_[pos_++]; }
 
+  std::string getChars(int n) {
+    std::string s;
+
+    for (int i = 0; i < n; ++i)
+      s += str_[pos_++];
+
+    return s;
+  }
+
   char lookNextChar(int offset=1) {
     if (pos_ + offset <= len_)
       return str_[pos_ + offset];

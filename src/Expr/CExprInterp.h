@@ -9,6 +9,7 @@ enum CExprITokenType {
   CEXPR_ITOKEN_INTEGER    = 4,
   CEXPR_ITOKEN_REAL       = 5,
   CEXPR_ITOKEN_STRING     = 6,
+  CEXPR_ITOKEN_COMPLEX    = 7,
 
   CEXPR_EXPRESSION                = 100,
   CEXPR_ASSIGNMENT_EXPRESSION     = 101,
@@ -139,6 +140,26 @@ class CExprITokenString : public CExprITokenBase {
   std::string str_;
 };
 
+class CExprITokenComplex : public CExprITokenBase {
+ public:
+  CExprITokenComplex(const std::complex<double> &c) :
+   c_(c) {
+  }
+
+  const std::complex<double> &getComplex() const { return c_; }
+
+  CExprITokenComplex *dup() const {
+    return new CExprITokenComplex(c_);
+  }
+
+  void print(std::ostream &os) const {
+    os << "{" << c_.real() << ", " << c_.imag() << "}";
+  }
+
+ private:
+  std::complex<double> c_;
+};
+
 class CExprIToken {
  public:
   static CExprITokenPtr createIToken(CExprITokenType type=CEXPR_ITOKEN_NONE) {
@@ -186,6 +207,12 @@ class CExprIToken {
     assert(type_ == CEXPR_ITOKEN_STRING);
 
     return base_.cast<CExprITokenString>()->getString();
+  }
+
+  const std::complex<double> &getComplex() const {
+    assert(type_ == CEXPR_ITOKEN_COMPLEX);
+
+    return base_.cast<CExprITokenComplex>()->getComplex();
   }
 
   uint getNumChildren() const {

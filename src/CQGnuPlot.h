@@ -13,31 +13,31 @@ class CQGnuPlotRenderer;
 class CQGnuPlot : public QObject, public CGnuPlot {
   Q_OBJECT
 
-  Q_ENUMS(CQSymbolType)
-  Q_ENUMS(CQHAlignType)
-  Q_ENUMS(CQVAlignType)
-  Q_ENUMS(CQPlotStyle)
-  Q_ENUMS(CQHistogramStyle)
-  Q_ENUMS(CQFillType)
-  Q_ENUMS(CQFillPattern)
-  Q_ENUMS(CQBoxWidthType)
-  Q_ENUMS(CQDrawLayerType)
+  Q_ENUMS(SymbolType)
+  Q_ENUMS(HAlignType)
+  Q_ENUMS(VAlignType)
+  Q_ENUMS(PlotStyle)
+  Q_ENUMS(HistogramStyle)
+  Q_ENUMS(FillType)
+  Q_ENUMS(FillPattern)
+  Q_ENUMS(BoxWidthType)
+  Q_ENUMS(DrawLayerType)
   Q_ENUMS(PaletteColorType)
 
  public:
-  enum CQHAlignType {
+  enum HAlignType {
     AlignLeft,
     AlignRight,
     AlignHCenter
   };
 
-  enum CQVAlignType {
+  enum VAlignType {
     AlignTop,
     AlignBottom,
     AlignVCenter
   };
 
-  enum CQSymbolType {
+  enum SymbolType {
     SymbolPoint,
     SymbolPlus,
     SymbolCross,
@@ -54,7 +54,7 @@ class CQGnuPlot : public QObject, public CGnuPlot {
     SymbolFilledDiamond
   };
 
-  enum CQPlotStyle {
+  enum PlotStyle {
     PlotNone,
     PlotBoxErrorBars,
     PlotBoxes,
@@ -96,7 +96,7 @@ class CQGnuPlot : public QObject, public CGnuPlot {
     PlotTestPalette,
   };
 
-  enum CQHistogramStyle {
+  enum HistogramStyle {
     HistogramNone,
     HistogramClustered,
     HistogramErrorBars,
@@ -104,13 +104,13 @@ class CQGnuPlot : public QObject, public CGnuPlot {
     HistogramColumnStacked,
   };
 
-  enum CQFillType {
+  enum FillType {
     FillNone,
     FillSolid,
     FillPatterned
   };
 
-  enum CQFillPattern {
+  enum FillPattern {
     PatternNone,
     PatternHatch,
     PatternDense,
@@ -122,13 +122,13 @@ class CQGnuPlot : public QObject, public CGnuPlot {
     PatternBg
   };
 
-  enum CQBoxWidthType {
+  enum BoxWidthType {
     BoxWidthAuto,
     BoxWidthAbsolute,
     BoxWidthRelative,
   };
 
-  enum CQDrawLayerType {
+  enum DrawLayerType {
     LayerFront,
     LayerBack,
     LayerBehind

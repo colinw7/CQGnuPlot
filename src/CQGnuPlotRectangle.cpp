@@ -50,7 +50,7 @@ getLineWidth() const
   return CGnuPlotRectangle::getLineWidth().getValue(0);
 }
 
-CQGnuPlot::CQFillType
+CQGnuPlot::FillType
 CQGnuPlotRectangle::
 fillType() const
 {
@@ -59,7 +59,7 @@ fillType() const
 
 void
 CQGnuPlotRectangle::
-setFillType(const CQGnuPlot::CQFillType &type)
+setFillType(const CQGnuPlot::FillType &type)
 {
   CGnuPlotFillStyle fs = CGnuPlotRectangle::getFillStyle();
 
@@ -70,11 +70,9 @@ setFillType(const CQGnuPlot::CQFillType &type)
 
 void
 CQGnuPlotRectangle::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
-
-  CGnuPlotRectangle::draw();
+  CGnuPlotRectangle::draw(renderer);
 
   if (isSelected())
     renderer->drawRect(bbox_, CRGBA(1,0,0), 2);

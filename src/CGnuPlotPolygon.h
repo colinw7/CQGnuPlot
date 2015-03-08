@@ -36,7 +36,7 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
   const COptReal &getLineWidth() const { return lw_; }
   void setLineWidth(double w) { lw_ = w; }
 
-  void draw() const override;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
   bool inside(const CPoint2D &p) const;
 

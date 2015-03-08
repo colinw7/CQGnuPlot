@@ -58,10 +58,11 @@ enum CExprValueType {
   CEXPR_VALUE_INTEGER = (1<<1),
   CEXPR_VALUE_REAL    = (1<<2),
   CEXPR_VALUE_STRING  = (1<<3),
-  CEXPR_VALUE_NULL    = (1<<4),
+  CEXPR_VALUE_COMPLEX = (1<<4),
+  CEXPR_VALUE_NULL    = (1<<5),
 
   CEXPR_VALUE_ANY = (CEXPR_VALUE_BOOLEAN | CEXPR_VALUE_INTEGER |
-                     CEXPR_VALUE_REAL | CEXPR_VALUE_STRING)
+                     CEXPR_VALUE_REAL | CEXPR_VALUE_STRING | CEXPR_VALUE_COMPLEX)
 };
 
 class CExprValue;
@@ -76,6 +77,7 @@ class CExprOperator;
 #include <CRefPtr.h>
 #include <CAutoPtr.h>
 #include <CStrUtil.h>
+#include <complex>
 
 typedef CRefPtr<CExprValue>    CExprValuePtr;
 typedef CRefPtr<CExprPToken>   CExprPTokenPtr;
@@ -94,15 +96,17 @@ class CExprValueBase {
 
   virtual CExprValueBase *dup() const { return 0; }
 
-  virtual bool getBooleanValue(bool        &) const { return false; }
-  virtual bool getIntegerValue(long        &) const { return false; }
-  virtual bool getRealValue   (double      &) const { return false; }
-  virtual bool getStringValue (std::string &) const { return false; }
+  virtual bool getBooleanValue(bool                 &) const { return false; }
+  virtual bool getIntegerValue(long                 &) const { return false; }
+  virtual bool getRealValue   (double               &) const { return false; }
+  virtual bool getStringValue (std::string          &) const { return false; }
+  virtual bool getComplexValue(std::complex<double> &) const { return false; }
 
-  virtual void setBooleanValue(bool               ) { assert(false); }
-  virtual void setIntegerValue(long               ) { assert(false); }
-  virtual void setRealValue   (double             ) { assert(false); }
-  virtual void setStringValue (const std::string &) { assert(false); }
+  virtual void setBooleanValue(bool                        ) { assert(false); }
+  virtual void setIntegerValue(long                        ) { assert(false); }
+  virtual void setRealValue   (double                      ) { assert(false); }
+  virtual void setStringValue (const std::string          &) { assert(false); }
+  virtual void setComplexValue(const std::complex<double> &) { assert(false); }
 
   virtual CExprValuePtr execUnaryOp(CExprOpType) const {
     return CExprValuePtr();
@@ -127,6 +131,7 @@ class CExprValueBase {
 #include <CExprIValue.h>
 #include <CExprRValue.h>
 #include <CExprSValue.h>
+#include <CExprCValue.h>
 #include <CExprValue.h>
 #include <CExprVariable.h>
 #include <CExprFunction.h>
@@ -174,9 +179,10 @@ class CExpr {
   void removeVariable(const std::string &name);
   void getVariableNames(std::vector<std::string> &names) const;
 
-  CExprVariablePtr createRealVariable(const std::string &name, double x);
+  CExprVariablePtr createRealVariable   (const std::string &name, double x);
   CExprVariablePtr createIntegerVariable(const std::string &name, long l);
-  CExprVariablePtr createStringVariable(const std::string &name, const std::string &str);
+  CExprVariablePtr createStringVariable (const std::string &name, const std::string &str);
+  CExprVariablePtr createComplexVariable(const std::string &name, const std::complex<double> &c);
 
   CExprFunctionPtr getFunction(const std::string &name);
   CExprFunctionPtr addFunction(const std::string &name, const std::vector<std::string> &args,
@@ -189,8 +195,9 @@ class CExpr {
 
   CExprValuePtr createBooleanValue(bool b);
   CExprValuePtr createIntegerValue(long i);
-  CExprValuePtr createRealValue(double r);
-  CExprValuePtr createStringValue(const std::string &s);
+  CExprValuePtr createRealValue   (double r);
+  CExprValuePtr createStringValue (const std::string &s);
+  CExprValuePtr createComplexValue(const std::complex<double> &c);
 
   std::string printf(const std::string &fmt, const std::vector<CExprValuePtr> &values) const;
 
@@ -265,6 +272,20 @@ class CExprUtil<std::string> {
   static CExprValuePtr createValue(const std::string &s) { return CExprInst->createStringValue(s); }
 
   static std::string argTypeStr() { return "s"; }
+};
+
+template<>
+class CExprUtil< std::complex<double> > {
+ public:
+  static bool getTypeValue(CExprValuePtr value, std::complex<double> &c) {
+    return value->getComplexValue(c);
+  }
+
+  static CExprValuePtr createValue(const std::complex<double> &c) {
+    return CExprInst->createComplexValue(c);
+  }
+
+  static std::string argTypeStr() { return "c"; }
 };
 
 #endif

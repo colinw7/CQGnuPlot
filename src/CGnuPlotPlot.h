@@ -77,7 +77,6 @@ class CGnuPlotPlot {
   typedef CGnuPlot::BoxWidth            BoxWidth;
   typedef CGnuPlot::AxesData            AxesData;
   typedef CGnuPlot::FilledCurve         FilledCurve;
-  typedef CGnuPlot::ImageStyle          ImageStyle;
   typedef CGnuPlotCache<CGnuPlotBar>    BarCache;
   typedef CGnuPlotCache<CGnuPlotPie>    PieCache;
   typedef CGnuPlotCache<CGnuPlotBubble> BubbleCache;
@@ -94,6 +93,8 @@ class CGnuPlotPlot {
 
   virtual ~CGnuPlotPlot();
 
+  //---
+
   CGnuPlot *app() const;
 
   CGnuPlotWindow *window() const;
@@ -101,51 +102,27 @@ class CGnuPlotPlot {
   CGnuPlotGroup *group() const { return group_; }
   void setGroup(CGnuPlotGroup *g) { group_ = g; }
 
+  //---
+
   int id() const { return id_; }
 
-  void set3D(bool b) { is3D_ = b; }
-  bool is3D() const { return is3D_; }
+  int xind() const { return xind_; }
+  int yind() const { return yind_; }
+
+  //---
 
   void setDisplayed(bool b) { displayed_ = b; }
   bool isDisplayed() const { return displayed_; }
 
-  void init();
+  //---
+
+  PlotStyle getStyle() const { return style_; }
+  void setStyle(PlotStyle style);
 
   //---
 
   const CBBox2D &clearRect() const { return clearRect_.getValue(); }
   void setClearRect(const CBBox2D &r) { clearRect_ = r; }
-
-  //---
-
-  const Points2D &getPoints2D() const { assert(! is3D_); return points2D_; }
-
-  uint numPoints2D() const { assert(! is3D_); return points2D_.size(); }
-
-  const CGnuPlotPoint &getPoint2D(int i) const { assert(! is3D_); return points2D_[i]; }
-
-  //---
-
-  const Points3D &getPoints3D() const { assert(! is3D_); return points3D_; }
-
-  std::pair<int,int> numPoints3D() const {
-    assert(is3D_);
-
-    if (points3D_.empty()) return std::pair<int,int>(0,0);
-
-    return std::pair<int,int>(points3D_.begin()->second.size(), points3D_.size());
-  }
-
-  const CGnuPlotPoint &getPoint3D(int ix, int iy) const {
-    assert(is3D_);
-
-    auto p = points3D_.find(iy);
-
-    if (p != points3D_.end())
-      return (*p).second[ix];
-    else
-      assert(false);
-  }
 
   //---
 
@@ -155,17 +132,136 @@ class CGnuPlotPlot {
   bool isMatrix() const { return matrix_; }
   void setMatrix(bool m) { matrix_ = m; }
 
+  bool is3D() const;
+
+  //---
+
+  int ind() const { return ind_; }
+  void setInd(int ind) { ind_ = ind; }
+
   //---
 
   const ImageData &imageData() const { return imageData_; }
-
   void setImageData(const ImageData &imageData) { imageData_ = imageData; }
 
-  const ImageStyle &imageStyle() const { return imageStyle_; }
-  void setImageStyle(const ImageStyle &imageStyle) { imageStyle_ = imageStyle; }
+  const CGnuPlotImageStyle &imageStyle() const { return imageStyle_; }
+  void setImageStyle(const CGnuPlotImageStyle &imageStyle) { imageStyle_ = imageStyle; }
+
+  bool isImageStyle() const {
+    return (style_ == PlotStyle::IMAGE || style_ == PlotStyle::RGBIMAGE ||
+            style_ == PlotStyle::RGBALPHA);
+  }
 
   double imageAngle() const { return imageStyle_.a.getValue(0.0); }
   void setImageAngle(double a) { imageStyle_.a = a; }
+
+  //---
+
+  void setBoxWidth(const BoxWidth &w) { boxWidth_ = w; }
+  const BoxWidth &getBoxWidth() const { return boxWidth_; }
+
+  const BoxWidthType &getBoxWidthType() const { return boxWidth_.type; }
+  void setBoxWidthType(const BoxWidthType &t) { boxWidth_.type = t; }
+
+  double getBoxWidthValue() const { return boxWidth_.width; }
+  void setBoxWidthValue(double s) { boxWidth_.width = s; }
+
+  //---
+
+  void setSmooth(Smooth s) { smooth_ = s; }
+  Smooth getSmooth() const { return smooth_; }
+
+  //---
+
+  const CGnuPlotFillStyle &fillStyle() const { return fillStyle_; }
+  void setFillStyle(const CGnuPlotFillStyle &f) { fillStyle_ = f; }
+
+  const FillType &fillType() const { return fillStyle_.style(); }
+  void setFillType(const FillType &f) { fillStyle_.setStyle(f); }
+
+  const FillPattern &fillPattern() const { return fillStyle_.pattern(); }
+  void setFillPattern(const FillPattern &f) { fillStyle_.setPattern(f); }
+
+  //---
+
+  const CGnuPlotLineStyle &lineStyle() const { return  lineStyle_; }
+  void setLineStyle(const CGnuPlotLineStyle &ls) { lineStyle_ = ls; }
+
+  int lineStyleId() const { return lineStyle().ind(); }
+  void setLineStyleId(int ind);
+
+  const CRGBA &lineColor(const CRGBA &c) const { return lineStyle().color(c); }
+  void setLineColor(const CRGBA &c) { lineStyle_.setColor(c); }
+
+  double lineWidth() const { return lineStyle().width(); }
+  void setLineWidth(double w) { lineStyle_.setWidth(w); }
+
+  //---
+
+  SymbolType pointType() const { return lineStyle().pointType(); }
+  void setPointType(SymbolType type) { lineStyle_.setPointType(type); }
+
+  double pointSize() const { return lineStyle().pointSize(); }
+  void setPointSize(double s) { lineStyle_.setPointSize(s); }
+
+  const CGnuPlotPointStyle &pointStyle() const { return pointStyle_; }
+  void setPointStyle(const CGnuPlotPointStyle &s) { pointStyle_ = s; }
+
+  //---
+
+  const CGnuPlotArrowStyle &arrowStyle() const { return arrowStyle_; }
+  void setArrowStyle(const CGnuPlotArrowStyle &as) { arrowStyle_ = as; }
+
+  //---
+
+  const std::string &keyTitle() const { return keyTitle_; }
+  void setKeyTitle(const std::string &s) { keyTitle_ = s; }
+
+  //---
+
+  const FilledCurve &filledCurve() const { return filledCurve_; }
+  void setFilledCurve(const FilledCurve &c) { filledCurve_ = c; }
+
+  int trianglePattern3D() const { return trianglePattern3D_; }
+  void setTrianglePattern3D(int n) { trianglePattern3D_ = n; }
+
+  double whiskerBars() const { return whiskerBars_; }
+  void setWhiskerBars(double w) { whiskerBars_ = w; }
+
+  //---
+
+  void init();
+
+  //---
+
+  const Points2D &getPoints2D() const { assert(! is3D()); return points2D_; }
+
+  uint numPoints2D() const { assert(! is3D()); return points2D_.size(); }
+
+  const CGnuPlotPoint &getPoint2D(int i) const { assert(! is3D()); return points2D_[i]; }
+
+  //---
+
+  const Points3D &getPoints3D() const { assert(! is3D()); return points3D_; }
+
+  std::pair<int,int> numPoints3D() const {
+    assert(is3D());
+
+    if (points3D_.empty()) return std::pair<int,int>(0,0);
+
+    return std::pair<int,int>(points3D_.begin()->second.size(), points3D_.size());
+  }
+
+  const CGnuPlotPoint &getPoint3D(int ix, int iy) const {
+    assert(is3D());
+
+    auto p = points3D_.find(iy);
+
+    if (p != points3D_.end())
+      return (*p).second[ix];
+    else
+      assert(false);
+  }
 
   //---
 
@@ -183,126 +279,21 @@ class CGnuPlotPlot {
 
   void reset3D();
 
-  void fit();
   void smooth();
 
   void calcXRange(double *xmin, double *xmax) const;
   void calcYRange(double *ymin, double *ymax) const;
 
-  void calcBoxPlotRange();
+  void calcBoundedYRange  (double *ymin, double *ymax) const;
+  void recalcBoundedYRange(double *ymin, double *ymax) const;
+
+  void getGroupXRange(double *xmin, double *xmax) const;
+
+  bool renderBBox(CBBox2D &bbox) const;
+
+  void getPointsRange(CBBox2D &bbox) const;
 
   //---
-
-  int ind() const { return ind_; }
-  void setInd(int ind) { ind_ = ind; }
-
-  //---
-
-  void setBoxWidth(const BoxWidth &w) { boxWidth_ = w; }
-  const BoxWidth &getBoxWidth() const { return boxWidth_; }
-
-  const BoxWidthType &getBoxWidthType() const { return boxWidth_.type; }
-  void setBoxWidthType(const BoxWidthType &t) { boxWidth_.type = t; }
-
-  double getBoxWidthValue() const { return boxWidth_.width; }
-  void setBoxWidthValue(double s) { boxWidth_.width = s; }
-
-  PlotStyle getStyle() const { return style_; }
-  void setStyle(PlotStyle style) { style_ = style; }
-
-  bool isImageStyle() const {
-    return (style_ == PlotStyle::IMAGE || style_ == PlotStyle::RGBIMAGE ||
-            style_ == PlotStyle::RGBALPHA);
-  }
-
-  void setSmooth(Smooth s) { smooth_ = s; }
-  Smooth getSmooth() const { return smooth_; }
-
-  const CGnuPlotFillStyle &fillStyle() const { return fillStyle_; }
-  void setFillStyle(const CGnuPlotFillStyle &f) { fillStyle_ = f; }
-
-  const FillType &fillType() const { return fillStyle_.style(); }
-  void setFillType(const FillType &f) { fillStyle_.setStyle(f); }
-
-  const FillPattern &fillPattern() const { return fillStyle_.pattern(); }
-  void setFillPattern(const FillPattern &f) { fillStyle_.setPattern(f); }
-
-  const CGnuPlotLineStyle &lineStyle() const { return  lineStyle_; }
-  void setLineStyle(const CGnuPlotLineStyle &ls) { lineStyle_ = ls; }
-
-  int lineStyleId() const { return lineStyle().ind(); }
-  void setLineStyleId(int ind);
-
-  const CRGBA &lineColor(const CRGBA &c) const { return lineStyle().color(c); }
-  void setLineColor(const CRGBA &c) { lineStyle_.setColor(c); }
-
-  double lineWidth() const { return lineStyle().width(); }
-  void setLineWidth(double w) { lineStyle_.setWidth(w); }
-
-  SymbolType pointType() const { return lineStyle().pointType(); }
-  void setPointType(SymbolType type) { lineStyle_.setPointType(type); }
-
-  double pointSize() const { return lineStyle().pointSize(); }
-  void setPointSize(double s) { lineStyle_.setPointSize(s); }
-
-  const CGnuPlotPointStyle &pointStyle() const { return pointStyle_; }
-  void setPointStyle(const CGnuPlotPointStyle &s) { pointStyle_ = s; }
-
-  const CGnuPlotArrowStyle &arrowStyle() const { return arrowStyle_; }
-  void setArrowStyle(const CGnuPlotArrowStyle &as) { arrowStyle_ = as; }
-
-  const std::string &keyTitle() const { return keyTitle_; }
-  void setKeyTitle(const std::string &s) { keyTitle_ = s; }
-
-  //---
-
-  // TODO: use group axis data
-  const CGnuPlotAxisData &xaxis(int ind) const {
-    return const_cast<CGnuPlotPlot *>(this)->axesData_.xaxis[ind];
-  }
-  const CGnuPlotAxisData &yaxis(int ind) const {
-    return const_cast<CGnuPlotPlot *>(this)->axesData_.yaxis[ind];
-  }
-  const CGnuPlotAxisData &zaxis(int ind) const {
-    return const_cast<CGnuPlotPlot *>(this)->axesData_.zaxis[ind];
-  }
-  const CGnuPlotAxisData &paxis(int ind) const {
-    return const_cast<CGnuPlotPlot *>(this)->axesData_.paxis[ind];
-  }
-
-  CGnuPlotAxisData &xaxis(int ind) {
-    return const_cast<CGnuPlotPlot *>(this)->axesData_.xaxis[ind];
-  }
-  CGnuPlotAxisData &yaxis(int ind) {
-    return const_cast<CGnuPlotPlot *>(this)->axesData_.yaxis[ind];
-  }
-  CGnuPlotAxisData &zaxis(int ind) {
-    return const_cast<CGnuPlotPlot *>(this)->axesData_.zaxis[ind];
-  }
-  CGnuPlotAxisData &paxis(int ind) {
-    return const_cast<CGnuPlotPlot *>(this)->axesData_.paxis[ind];
-  }
-
-  //---
-
-  double getXMin() const { return xaxis(1).min().getValue(-10); }
-  double getXMax() const { return xaxis(1).max().getValue( 10); }
-  double getYMin() const { return yaxis(1).min().getValue(-1); }
-  double getYMax() const { return yaxis(1).max().getValue( 1); }
-  double getZMin() const { return zaxis(1).min().getValue(-1); }
-  double getZMax() const { return zaxis(1).max().getValue( 1); }
-
-  void setXMin(double x) { xaxis(1).setMin(x); updateGroupRange(); }
-  void setXMax(double x) { xaxis(1).setMax(x); updateGroupRange(); }
-  void setYMin(double y) { yaxis(1).setMin(y); updateGroupRange(); }
-  void setYMax(double y) { yaxis(1).setMax(y); updateGroupRange(); }
-  void setZMin(double z) { zaxis(1).setMin(z); updateGroupRange(); }
-  void setZMax(double z) { zaxis(1).setMax(z); updateGroupRange(); }
-
-  void setRange(const CBBox2D &b) {
-    setXMin(b.getXMin()); setYMin(b.getYMin());
-    setXMax(b.getXMax()); setYMax(b.getYMax());
-  }
 
   void updateGroupRange();
 
@@ -310,34 +301,30 @@ class CGnuPlotPlot {
 
   //---
 
-  const AxesData &axesData() const { return axesData_; }
-  void setAxesData(const AxesData &a) { axesData_ = a; }
+  double getXMin() const { return xmin_.getValue(-1); }
+  double getYMin() const { return ymin_.getValue(-10); }
+  double getXMax() const { return xmax_.getValue( 1); }
+  double getYMax() const { return ymax_.getValue( 10); }
 
-  void getXRange(double *xmin, double *xmax) const { *xmin = getXMin(); *xmax = getXMax(); }
-  void getYRange(double *ymin, double *ymax) const { *ymin = getYMin(); *ymax = getYMax(); }
-  void getZRange(double *zmin, double *zmax) const { *zmin = getZMin(); *zmax = getZMax(); }
-
-  //---
-
-  int xind() const { return xind_; }
-  int yind() const { return yind_; }
+  //void setXMin(double x) { xmin_ = x; }
+  //void setYMin(double y) { ymin_ = y; }
+  //void setXMax(double x) { xmax_ = x; }
+  //void setYMax(double y) { ymax_ = y; }
 
   //---
-
-  const FilledCurve &filledCurve() const { return filledCurve_; }
-  void setFilledCurve(const FilledCurve &c) { filledCurve_ = c; }
-
-  int trianglePattern3D() const { return trianglePattern3D_; }
-  void setTrianglePattern3D(int n) { trianglePattern3D_ = n; }
-
-  double whiskerBars() const { return whiskerBars_; }
-  void setWhiskerBars(double w) { whiskerBars_ = w; }
 
   const Bars    &bars   () const { return barCache_   .objects(); }
   const Pies    &pies   () const { return pieCache_   .objects(); }
   const Bubbles &bubbles() const { return bubbleCache_.objects(); }
 
   //---
+
+  struct DrawHistogramData {
+    double x2 { 0.5 };
+    double y2 { 0.0 };
+    double d  { 1.0 };
+    double w  { 1.0 };
+  };
 
   void initRenderer();
 
@@ -346,33 +333,40 @@ class CGnuPlotPlot {
   void draw2D();
   void draw3D();
 
-  void drawBoxErrorBars      ();
-  void drawBoxes             ();
-  void drawBoxPlot           ();
-  void drawBoxXYErrorBars    ();
-  void drawBubbleChart       ();
-  void drawCandleSticks      ();
-  void drawCircles           ();
-  void drawEllipses          ();
-  void drawDots              ();
-  void drawFilledCurves      ();
-  void drawFinanceBars       ();
-  void drawClusteredHistogram(double y2, double d, double w);
-  void drawStackedHistogram  (int i, const CBBox2D &bbox);
-  void drawSteps             ();
-  void drawBinaryImage       ();
-  void drawImage             ();
-  void drawImpulses          ();
-  void drawLabels            ();
-  void drawLines             ();
-  void drawParallelAxes      ();
-  void drawPieChart          ();
-  void drawPoints            ();
-  void drawVectors           ();
-  void drawErrorBars         ();
-  void drawXYErrorBars       ();
+  void drawBoxErrorBars      (CGnuPlotRenderer *renderer);
+  void drawBoxes             (CGnuPlotRenderer *renderer);
+  void drawBoxPlot           (CGnuPlotRenderer *renderer);
+  void drawBoxXYErrorBars    (CGnuPlotRenderer *renderer);
+  void drawBubbleChart       (CGnuPlotRenderer *renderer);
+  void drawCandleSticks      (CGnuPlotRenderer *renderer);
+  void drawCircles           (CGnuPlotRenderer *renderer);
+  void drawEllipses          (CGnuPlotRenderer *renderer);
+  void drawDots              (CGnuPlotRenderer *renderer);
+  void drawFilledCurves      (CGnuPlotRenderer *renderer);
+  void drawFinanceBars       (CGnuPlotRenderer *renderer);
+  void drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
+  void drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
+  void drawStackedHistogram  (CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox);
+  void drawSteps             (CGnuPlotRenderer *renderer);
+  void drawBinaryImage       (CGnuPlotRenderer *renderer);
+  void drawImage             (CGnuPlotRenderer *renderer);
+  void drawImpulses          (CGnuPlotRenderer *renderer);
+  void drawLabels            (CGnuPlotRenderer *renderer);
+  void drawLines             (CGnuPlotRenderer *renderer);
+  void drawParallelAxes      (CGnuPlotRenderer *renderer);
+  void drawPieChart          (CGnuPlotRenderer *renderer);
+  void drawPoints            (CGnuPlotRenderer *renderer);
+  void drawVectors           (CGnuPlotRenderer *renderer);
+  void drawErrorBars         (CGnuPlotRenderer *renderer);
+  void drawXErrorBars        (CGnuPlotRenderer *renderer);
+  void drawXYErrorBars       (CGnuPlotRenderer *renderer);
+  void drawYErrorBars        (CGnuPlotRenderer *renderer);
+  void drawXErrorLines       (CGnuPlotRenderer *renderer);
+  void drawXYErrorLines      (CGnuPlotRenderer *renderer);
+  void drawYErrorLines       (CGnuPlotRenderer *renderer);
 
   void setNumBars(int n);
+  void drawBars  (CGnuPlotRenderer *renderer);
 
   double decodeImageUsingColor(int col, const CRGBA &c) const;
   double indexImageColor(int i, const CRGBA &c) const;
@@ -381,13 +375,6 @@ class CGnuPlotPlot {
   void drawPalette();
 
   double getXSpacing() const;
-
-  void drawPath(const std::vector<CPoint2D> &points, double w=1.0, const CRGBA &c=CRGBA(0,0,0),
-                const CLineDash &dash=CLineDash());
-  void drawLine(const CPoint2D &p1, const CPoint2D &p2, double w=1.0, const CRGBA &c=CRGBA(0,0,0),
-                const CLineDash &dash=CLineDash());
-
-  void fillPolygon(const std::vector<CPoint2D> &polygons, const CRGBA &c);
 
   CGnuPlotBar    *createBar   () const;
   CGnuPlotPie    *createPie   () const;
@@ -403,16 +390,15 @@ class CGnuPlotPlot {
 
   CGnuPlotGroup*     group_;                            // parent group
   int                id_;                               // unique id
-  int                ind_       { 0 };                  // index in group
+  int                ind_       { 0 };                  // axis index
   bool               displayed_ { true };               // is displayed
-  bool               is3D_      { false };              // is 3D
   COptValT<CBBox2D>  clearRect_;
   Points2D           points2D_;                         // 2D points
   Points3D           points3D_;                         // 3D points
   ImageData          imageData_;                        // image data
   bool               binary_ { false };
   bool               matrix_ { false };
-  ImageStyle         imageStyle_;
+  CGnuPlotImageStyle imageStyle_;
   BoxWidth           boxWidth_;                         // box widths
   FilledCurve        filledCurve_;                      // filled curve data
   PlotStyle          style_ { PlotStyle::POINTS};       // plot style
@@ -420,10 +406,12 @@ class CGnuPlotPlot {
   CGnuPlotLineStyle  lineStyle_;                        // line style
   CGnuPlotPointStyle pointStyle_;                       // point style
   CGnuPlotArrowStyle arrowStyle_;                       // arrow style
-  AxesData           axesData_;
   std::string        keyTitle_;                         // title on key
   int                xind_ { 1 };                       // xaxis index
   int                yind_ { 1 };                       // yaxis index
+  COptReal           xmin_, xmax_;                      // calculated points x range
+  COptReal           ymin_, ymax_;                      // calculated points y range
+  COptReal           bymin_, bymax_;                    // calculated points bounded y range
   CBBox2D            bbox_ { 0, 0, 1, 1 };              // bounding box
   Smooth             smooth_ { Smooth::NONE };          // smooth data
   CGnuPlotContour    contour_;                          // contour data

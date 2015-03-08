@@ -52,6 +52,9 @@ class CGnuPlotArrowStyle {
   int lineStyle() const { return lineStyle_.getValue(-1); }
   void setLineStyle(int t) { lineStyle_ = t; }
 
+  int dashType() const { return dashType_.getValue(-1); }
+  void setDashType(int dt) { dashType_ = dt; }
+
   bool variable() const { return variable_; }
   void setVariable(bool b) { variable_ = b; }
 
@@ -90,6 +93,7 @@ class CGnuPlotArrowStyle {
   COptReal           lineWidth_;
   COptInt            lineStyle_;
   COptValT<CRGBA>    lineColor_;
+  COptInt            dashType_;
   bool               variable_  { false };
   COptReal           varValue_;
 };

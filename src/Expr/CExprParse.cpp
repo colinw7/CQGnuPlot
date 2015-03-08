@@ -19,6 +19,7 @@ class CExprParseImpl {
   bool           isNumber(const std::string &str, uint i);
   CExprPTokenPtr readNumber(const std::string &str, uint *i);
   CExprPTokenPtr readString(const std::string &str, uint *i);
+  CExprPTokenPtr readComplex(const std::string &str, uint *i);
   CExprPTokenPtr readOperator(const std::string &str, uint *i);
 #ifdef GNUPLOT_EXPR
   CExprPTokenPtr readOperatorStr(const std::string &str, uint *i);
@@ -36,6 +37,7 @@ class CExprParseImpl {
   CExprPTokenPtr createIntegerToken(long);
   CExprPTokenPtr createRealToken(double);
   CExprPTokenPtr createStringToken(const std::string &str);
+  CExprPTokenPtr createComplexToken(const std::complex<double> &c);
 
   std::string replaceEscapeCodes(const std::string &str);
 
@@ -201,6 +203,8 @@ parseLine(CExprPTokenStack &stack, const std::string &line, uint &i)
       ptoken = readIdentifier(line, &i);
     else if (line[i] == '\'' || line[i] == '\"')
       ptoken = readString(line, &i);
+    else if (line[i] == '{')
+      ptoken = readComplex(line, &i);
     else {
       parseError("Invalid Character", line, i);
       return false;
@@ -476,6 +480,50 @@ replaceEscapeCodes(const std::string &str)
     str1 += str[i++];
 
   return str1;
+}
+
+CExprPTokenPtr
+CExprParseImpl::
+readComplex(const std::string &str, uint *i)
+{
+  if (*i >= str.size() || str[*i] != '{')
+    return CExprPTokenPtr();
+
+  (*i)++;
+
+  CStrUtil::skipSpace(str, i);
+
+  long   integer1 = 0;
+  double real1    = 0.0;
+  bool   is_int1  = false;
+
+  if (! CExprParseUtil::stringToNumber(str, i, integer1, real1, is_int1))
+    return CExprPTokenPtr();
+
+  CStrUtil::skipSpace(str, i);
+
+  if (*i >= str.size() || str[*i] != ',')
+    return CExprPTokenPtr();
+
+  (*i)++;
+
+  CStrUtil::skipSpace(str, i);
+
+  long   integer2 = 0;
+  double real2    = 0.0;
+  bool   is_int2  = false;
+
+  if (! CExprParseUtil::stringToNumber(str, i, integer2, real2, is_int2))
+    return CExprPTokenPtr();
+
+  CStrUtil::skipSpace(str, i);
+
+  if (*i >= str.size() || str[*i] != '}')
+    return CExprPTokenPtr();
+
+  (*i)++;
+
+  return createComplexToken(std::complex<double>(real1, real2));
 }
 
 CExprPTokenPtr
@@ -824,6 +872,13 @@ createStringToken(const std::string &str)
   return CExprPToken::createStringToken(str);
 }
 
+CExprPTokenPtr
+CExprParseImpl::
+createComplexToken(const std::complex<double> &c)
+{
+  return CExprPToken::createComplexToken(c);
+}
+
 //------
 
 void
@@ -845,6 +900,9 @@ printQualified(std::ostream &os) const
       break;
     case CEXPR_PTOKEN_STRING:
       os << "<string>";
+      break;
+    case CEXPR_PTOKEN_COMPLEX:
+      os << "<complex>";
       break;
     default:
       os << "<-?->";

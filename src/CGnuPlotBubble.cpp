@@ -23,10 +23,8 @@ inside(const CPoint2D &p) const
 
 void
 CGnuPlotBubble::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
-  CGnuPlotRenderer *renderer = plot_->app()->renderer();
-
   renderer->fillEllipse(c_, xr_, yr_, 0, color_.getValue(CRGBA(1,0,0)));
 
   double s = renderer->fontSize();

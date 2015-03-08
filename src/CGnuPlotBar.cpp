@@ -18,9 +18,9 @@ inside(const CPoint2D &p) const
 
 void
 CGnuPlotBar::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
-  CGnuPlotRenderer *renderer = plot_->app()->renderer();
+  if (! isInitialized()) return;
 
   if      (fillType_ == FillType::PATTERN)
     renderer->patternRect(bbox_, fillPattern_, fillColor_.getValue(CRGBA(1,0,0)));

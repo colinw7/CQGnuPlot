@@ -8,8 +8,9 @@ enum CExprCTokenType {
   CEXPR_CTOKEN_INTEGER    = 4,
   CEXPR_CTOKEN_REAL       = 5,
   CEXPR_CTOKEN_STRING     = 6,
-  CEXPR_CTOKEN_FUNCTION   = 7,
-  CEXPR_CTOKEN_VALUE      = 8
+  CEXPR_CTOKEN_COMPLEX    = 7,
+  CEXPR_CTOKEN_FUNCTION   = 8,
+  CEXPR_CTOKEN_VALUE      = 9
 };
 
 class CExprValue;
@@ -123,6 +124,26 @@ class CExprCTokenString : public CExprCTokenBase {
   std::string str_;
 };
 
+class CExprCTokenComplex : public CExprCTokenBase {
+ public:
+  CExprCTokenComplex(const std::complex<double> &c) :
+   c_(c) {
+  }
+
+  const std::complex<double> &getComplex() const { return c_; }
+
+  CExprCTokenComplex *dup() const {
+    return new CExprCTokenComplex(c_);
+  }
+
+  void print(std::ostream &os) const {
+    os << "{" << c_.real() << ", " << c_.imag() << "}";
+  }
+
+ private:
+  std::complex<double> c_;
+};
+
 class CExprCTokenFunction : public CExprCTokenBase {
  public:
   CExprCTokenFunction(CExprFunctionPtr function) :
@@ -210,6 +231,15 @@ class CExprCToken {
     return ctoken;
   }
 
+  static CExprCTokenPtr createComplexToken(const std::complex<double> &c) {
+    CExprCTokenPtr ctoken(new CExprCToken);
+
+    ctoken->type_ = CEXPR_CTOKEN_COMPLEX;
+    ctoken->base_ = new CExprCTokenComplex(c);
+
+    return ctoken;
+  }
+
   static CExprCTokenPtr createFunctionToken(CExprFunctionPtr function) {
     CExprCTokenPtr ctoken(new CExprCToken);
 
@@ -262,6 +292,12 @@ class CExprCToken {
     assert(type_ == CEXPR_CTOKEN_STRING);
 
     return base_.cast<CExprCTokenString>()->getString();
+  }
+
+  const std::complex<double> &getComplex() const {
+    assert(type_ == CEXPR_CTOKEN_COMPLEX);
+
+    return base_.cast<CExprCTokenComplex>()->getComplex();
   }
 
   CExprFunctionPtr getFunction() const {

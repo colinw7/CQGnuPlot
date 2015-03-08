@@ -28,18 +28,24 @@ setPainter(QPainter *p)
   renderer->setPainter(p);
 }
 
-CQGnuPlot::CQHistogramStyle
+CQGnuPlot::HistogramStyle
 CQGnuPlotGroup::
 histogramStyle() const
 {
-  return CQGnuPlotUtil::histogramStyleConv(CGnuPlotGroup::getHistogramStyle());
+  const CGnuPlotHistogramData &data = CGnuPlotGroup::getHistogramData();
+
+  return CQGnuPlotUtil::histogramStyleConv(data.style());
 }
 
 void
 CQGnuPlotGroup::
-setHistogramStyle(const CQGnuPlot::CQHistogramStyle &s)
+setHistogramStyle(const CQGnuPlot::HistogramStyle &s)
 {
-  CGnuPlotGroup::setHistogramStyle(CQGnuPlotUtil::histogramStyleConv(s));
+  CGnuPlotHistogramData data = CGnuPlotGroup::getHistogramData();
+
+  data.setStyle(CQGnuPlotUtil::histogramStyleConv(s));
+
+  CGnuPlotGroup::setHistogramData(data);
 }
 
 void

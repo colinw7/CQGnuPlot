@@ -149,7 +149,7 @@ draw()
       arrow.setFrom(CPoint2D(xx, yy));
       arrow.setTo  (CPoint2D(xx + ll, yy));
 
-      arrow.draw();
+      arrow.draw(renderer);
     }
     else {
       if      (style == CGnuPlot::PlotStyle::LINES ||

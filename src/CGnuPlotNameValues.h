@@ -88,18 +88,25 @@ namespace CStrUniqueMatch {
 
                           {"style"      , CGnuPlot::VariableName::STYLE},
                           {"dashtype"   , CGnuPlot::VariableName::DASHTYPE},
+                          {"dt"         , CGnuPlot::VariableName::DASHTYPE},
 
-                          {"bars"       , CGnuPlot::VariableName::BARS},
-                          {"boxwidth"   , CGnuPlot::VariableName::BOXWIDTH},
-                          {"pointsize"  , CGnuPlot::VariableName::POINTSIZE},
+                          {"bars"            , CGnuPlot::VariableName::BARS},
+                          {"boxwidth"        , CGnuPlot::VariableName::BOXWIDTH},
+                          {"pointsize"       , CGnuPlot::VariableName::POINTSIZE},
+                          {"linetype"        , CGnuPlot::VariableName::LINETYPE},
+                          {"pointintervalbox", CGnuPlot::VariableName::POINTINTERVALBOX},
 
                           {"autoscale"  , CGnuPlot::VariableName::AUTOSCALE},
                           {"format"     , CGnuPlot::VariableName::FORMAT},
                           {"grid"       , CGnuPlot::VariableName::GRID},
-                          {"xlabel"     , CGnuPlot::VariableName::XLABEL}, // z, cb
-                          {"ylabel"     , CGnuPlot::VariableName::YLABEL},
+
+                          {"xlabel"     , CGnuPlot::VariableName::XLABEL},
                           {"x2label"    , CGnuPlot::VariableName::X2LABEL},
+                          {"ylabel"     , CGnuPlot::VariableName::YLABEL},
                           {"y2label"    , CGnuPlot::VariableName::Y2LABEL},
+                          {"zlabel"     , CGnuPlot::VariableName::ZLABEL},
+                          {"cblabel"    , CGnuPlot::VariableName::CBLABEL},
+
                           {"xrange"     , CGnuPlot::VariableName::XRANGE},
                           {"x2range"    , CGnuPlot::VariableName::X2RANGE},
                           {"yrange"     , CGnuPlot::VariableName::YRANGE},
@@ -108,6 +115,7 @@ namespace CStrUniqueMatch {
                           {"cbrange"    , CGnuPlot::VariableName::CBRANGE},
                           {"rrange"     , CGnuPlot::VariableName::RRANGE},
                           {"trange"     , CGnuPlot::VariableName::TRANGE},
+
                           {"tics"       , CGnuPlot::VariableName::TICS},
                           {"xtics"      , CGnuPlot::VariableName::XTICS},
                           {"ytics"      , CGnuPlot::VariableName::YTICS},
@@ -121,6 +129,7 @@ namespace CStrUniqueMatch {
                           {"mztics"     , CGnuPlot::VariableName::MZTICS},
                           {"mx2tics"    , CGnuPlot::VariableName::MX2TICS},
                           {"my2tics"    , CGnuPlot::VariableName::MY2TICS},
+
                           {"ticscale"   , CGnuPlot::VariableName::TICSCALE},
                           {"zeroaxis"   , CGnuPlot::VariableName::ZEROAXIS},
                           {"raxis"      , CGnuPlot::VariableName::RAXIS},

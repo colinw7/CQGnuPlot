@@ -12,10 +12,10 @@ class CQGnuPlotGroup;
 class CQGnuPlotAnnotation : public CQGnuPlotObject {
   Q_OBJECT
 
-  Q_PROPERTY(QColor                     strokeColor READ getStrokeColor WRITE setStrokeColor)
-  Q_PROPERTY(QColor                     fillColor   READ getFillColor   WRITE setFillColor  )
-  Q_PROPERTY(QColor                     fillColor   READ getFillColor   WRITE setFillColor  )
-  Q_PROPERTY(CQGnuPlot::CQDrawLayerType drawLayer   READ getDrawLayer   WRITE setDrawLayer  )
+  Q_PROPERTY(QColor                   strokeColor READ getStrokeColor WRITE setStrokeColor)
+  Q_PROPERTY(QColor                   fillColor   READ getFillColor   WRITE setFillColor  )
+  Q_PROPERTY(QColor                   fillColor   READ getFillColor   WRITE setFillColor  )
+  Q_PROPERTY(CQGnuPlot::DrawLayerType drawLayer   READ getDrawLayer   WRITE setDrawLayer  )
 
  public:
   CQGnuPlotAnnotation(CGnuPlotGroupAnnotation *obj);
@@ -26,8 +26,8 @@ class CQGnuPlotAnnotation : public CQGnuPlotObject {
   QColor getFillColor() const;
   void setFillColor(const QColor &c);
 
-  CQGnuPlot::CQDrawLayerType getDrawLayer() const;
-  void setDrawLayer(const CQGnuPlot::CQDrawLayerType &layer);
+  CQGnuPlot::DrawLayerType getDrawLayer() const;
+  void setDrawLayer(const CQGnuPlot::DrawLayerType &layer);
 
  private:
   CGnuPlotGroupAnnotation *obj_;

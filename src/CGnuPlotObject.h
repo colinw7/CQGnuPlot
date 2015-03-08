@@ -37,7 +37,7 @@ class CGnuPlotObject {
 
   virtual ~CGnuPlotObject() { }
 
-  virtual void draw() const = 0;
+  virtual void draw(CGnuPlotRenderer *renderer) const = 0;
 
  protected:
   CGnuPlot *plot_ { 0 };
@@ -53,7 +53,7 @@ class CGnuPlotPlotObject {
 
   virtual ~CGnuPlotPlotObject() { }
 
-  virtual void draw() const = 0;
+  virtual void draw(CGnuPlotRenderer *renderer) const = 0;
 
  protected:
   CGnuPlotPlot *plot_ { 0 };
@@ -69,7 +69,7 @@ class CGnuPlotGroupObject {
 
   virtual ~CGnuPlotGroupObject() { }
 
-  virtual void draw() const = 0;
+  virtual void draw(CGnuPlotRenderer *renderer) const = 0;
 
  protected:
   CGnuPlotGroup *group_ { 0 };

@@ -39,28 +39,50 @@ setFontSize(double s)
 
 void
 CGnuPlotRenderer::
+fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
+{
+  if (! isPseudo()) {
+    std::vector<CPoint2D> ipoints;
+
+    if (CMathGeom2D::IntersectPolygon(points, clip(), ipoints))
+      fillPolygon(ipoints, c);
+  }
+  else
+    fillPolygon(points, c);
+}
+
+void
+CGnuPlotRenderer::
 drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w)
 {
-  if      (clip_.inside(rect))
-    drawRect(rect, c, w);
-  else if (clip_.intersect(rect)) {
-    drawClipLine(rect.getLL(), rect.getLR(), w, c);
-    drawClipLine(rect.getLR(), rect.getUR(), w, c);
-    drawClipLine(rect.getUR(), rect.getUL(), w, c);
-    drawClipLine(rect.getUL(), rect.getLL(), w, c);
+  if (! isPseudo()) {
+    if      (clip_.inside(rect))
+      drawRect(rect, c, w);
+    else if (clip_.intersect(rect)) {
+      drawClipLine(rect.getLL(), rect.getLR(), w, c);
+      drawClipLine(rect.getLR(), rect.getUR(), w, c);
+      drawClipLine(rect.getUR(), rect.getUL(), w, c);
+      drawClipLine(rect.getUL(), rect.getLL(), w, c);
+    }
   }
+  else
+    drawRect(rect, c, w);
 }
 
 void
 CGnuPlotRenderer::
 fillClippedRect(const CBBox2D &rect, const CRGBA &c)
 {
-  CBBox2D crect;
+  if (! isPseudo()) {
+    CBBox2D crect;
 
-  if      (clip_.inside(rect))
+    if      (clip_.inside(rect))
+      fillRect(rect, c);
+    else if (clip_.intersect(rect, crect))
+      fillRect(crect, c);
+  }
+  else
     fillRect(rect, c);
-  else if (clip_.intersect(rect, crect))
-    fillRect(crect, c);
 }
 
 void
@@ -68,11 +90,15 @@ CGnuPlotRenderer::
 drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,
              const CLineDash &dash)
 {
-  CPoint2D p11 = p1;
-  CPoint2D p21 = p2;
+  if (! isPseudo()) {
+    CPoint2D p11 = p1;
+    CPoint2D p21 = p2;
 
-  if (clipLine(p11, p21))
-    drawLine(p11, p21, width, c, dash);
+    if (clipLine(p11, p21))
+      drawLine(p11, p21, width, c, dash);
+  }
+  else
+    drawLine(p1, p2, width, c, dash);
 }
 
 bool

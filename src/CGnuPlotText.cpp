@@ -426,7 +426,7 @@ void
 CGnuPlotText::
 placePartChars(CGnuPlotTextState &state, int i, CGnuPlotCharType type) const
 {
-  PosParts::const_iterator p = parts_.find(i);
+  auto p = parts_.find(i);
   if (p == parts_.end()) return;
 
   for (const auto &part : (*p).second) {
@@ -508,7 +508,7 @@ void
 CGnuPlotText::
 printParts(std::ostream &os, int i) const
 {
-  PosParts::const_iterator p = parts_.find(i);
+  auto p = parts_.find(i);
   if (p == parts_.end()) return;
 
   for (const auto &part : (*p).second)

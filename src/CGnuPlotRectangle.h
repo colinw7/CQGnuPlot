@@ -58,7 +58,7 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
 
   CBBox2D calcBBox() const;
 
-  void draw() const override;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
   bool inside(const CPoint2D &p) const;
 

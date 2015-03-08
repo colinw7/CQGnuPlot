@@ -11,6 +11,8 @@ CQGnuPlotCanvas::
 CQGnuPlotCanvas(CQGnuPlotWindow *window) :
  QWidget(0), window_(window)
 {
+  setObjectName("canvas");
+
   setFocusPolicy(Qt::StrongFocus);
 
   setMouseTracking(true);

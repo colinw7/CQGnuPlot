@@ -54,7 +54,7 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
   const CBBox2D &getBBox() const { return bbox_; }
 
-  void draw() const override;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
   bool inside(const CPoint2D &p) const;
 

@@ -31,6 +31,12 @@ CExprValue(const CExprStringValue &str) :
 }
 
 CExprValue::
+CExprValue(const CExprComplexValue &str) :
+ type_(CEXPR_VALUE_COMPLEX), base_(str.dup())
+{
+}
+
+CExprValue::
 ~CExprValue()
 {
 }
@@ -79,6 +85,13 @@ isStringValue() const
 
 bool
 CExprValue::
+isComplexValue() const
+{
+  return (type_ == CEXPR_VALUE_COMPLEX);
+}
+
+bool
+CExprValue::
 getBooleanValue(bool &b) const
 {
   return base_->getBooleanValue(b);
@@ -103,6 +116,13 @@ CExprValue::
 getStringValue(std::string &s) const
 {
   return base_->getStringValue(s);
+}
+
+bool
+CExprValue::
+getComplexValue(std::complex<double> &c) const
+{
+  return base_->getComplexValue(c);
 }
 
 void
@@ -141,6 +161,15 @@ setStringValue(const std::string &s)
   base_->setStringValue(s);
 }
 
+void
+CExprValue::
+setComplexValue(const std::complex<double> &c)
+{
+  assert(isComplexValue());
+
+  base_->setComplexValue(c);
+}
+
 bool
 CExprValue::
 convToType(CExprValueType type)
@@ -156,6 +185,8 @@ convToType(CExprValueType type)
     return convToReal();
   else if (type & CEXPR_VALUE_STRING)
     return convToString();
+  else if (type & CEXPR_VALUE_COMPLEX)
+    return convToComplex();
   else
     return false;
 }
@@ -224,6 +255,23 @@ convToString()
 
   type_ = CEXPR_VALUE_STRING;
   base_ = new CExprStringValue(str);
+
+  return true;
+}
+
+bool
+CExprValue::
+convToComplex()
+{
+  if (type_ == CEXPR_VALUE_COMPLEX) return true;
+
+  std::complex<double> c;
+
+  if (! getComplexValue(c))
+    return false;
+
+  type_ = CEXPR_VALUE_COMPLEX;
+  base_ = new CExprComplexValue(c);
 
   return true;
 }

@@ -44,18 +44,23 @@ CQGnuPlotWindow::
 CQGnuPlotWindow(CQGnuPlot *plot) :
  QMainWindow(), CGnuPlotWindow(plot), id_(++lastId), plot_(plot)
 {
+  setObjectName("window");
+
   QWidget *frame = new QWidget;
+  frame->setObjectName("frame");
 
   QHBoxLayout *layout = new QHBoxLayout(frame);
   layout->setMargin(2); layout->setSpacing(2);
 
   QSplitter *splitter = new QSplitter;
+  splitter->setObjectName("splitter");
 
   canvas_ = new CQGnuPlotCanvas(this);
 
   splitter->addWidget(canvas_);
 
   QFrame *rframe = new QFrame;
+  rframe->setObjectName("rframe");
 
   rframe->setMinimumWidth(TreeWidth);
 
@@ -72,6 +77,7 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
   rlayout->addWidget(tree_);
 
   QFrame *buttonFrame = new QFrame;
+  buttonFrame->setObjectName("buttonFrame");
 
   QHBoxLayout *buttonLayout = new QHBoxLayout(buttonFrame);
   buttonLayout->setMargin(2); buttonLayout->setSpacing(2);
@@ -128,8 +134,11 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
 
   //---
 
-  posLabel_  = new QLabel;
+  posLabel_ = new QLabel;
+  posLabel_->setObjectName("posLabel");
+
   plotLabel_ = new QLabel;
+  plotLabel_->setObjectName("plotLabel");
 
   statusBar()->addPermanentWidget(posLabel_ );
   statusBar()->addPermanentWidget(plotLabel_);
@@ -204,12 +213,12 @@ addProperties()
   for (const auto &ls : lineStyles) {
     CQGnuPlotLineStyle *ls1 = static_cast<CQGnuPlotLineStyle *>(ls.second.get());
 
-    QString name = QString("LineStyles/lineStyle%1").arg(ls1->ind());
+    QString lineStyleName = QString("LineStyles/lineStyle%1").arg(ls1->ind());
 
-    tree_->addProperty(name, ls1, "width"    );
-    tree_->addProperty(name, ls1, "color"    );
-    tree_->addProperty(name, ls1, "pointType");
-    tree_->addProperty(name, ls1, "pointSize");
+    tree_->addProperty(lineStyleName, ls1, "width"    );
+    tree_->addProperty(lineStyleName, ls1, "color"    );
+    tree_->addProperty(lineStyleName, ls1, "pointType");
+    tree_->addProperty(lineStyleName, ls1, "pointSize");
   }
 
   for (auto group : groups()) {
@@ -228,31 +237,35 @@ addGroupProperties(CGnuPlotGroup *group)
 {
   CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-  QString name = QString("Group%1").arg(group->id());
+  QString groupName = QString("Group%1").arg(group->id());
 
-  QString regionName = name + "/region";
+  tree_->addProperty(groupName, qgroup, "id"  );
+  tree_->addProperty(groupName, qgroup, "ind" );
+  tree_->addProperty(groupName, qgroup, "is3D");
+
+  QString regionName = groupName + "/region";
 
   tree_->addProperty(regionName, qgroup, "regionLeft"  )->setEditorFactory(redit_[1]);
   tree_->addProperty(regionName, qgroup, "regionBottom")->setEditorFactory(redit_[1]);
   tree_->addProperty(regionName, qgroup, "regionRight" )->setEditorFactory(redit_[1]);
   tree_->addProperty(regionName, qgroup, "regionTop"   )->setEditorFactory(redit_[1]);
 
-  QString marginName = name + "/margin";
+  QString marginName = groupName + "/margin";
 
   tree_->addProperty(marginName, qgroup, "marginLeft"  )->setEditorFactory(redit_[2]);
   tree_->addProperty(marginName, qgroup, "marginRight" )->setEditorFactory(redit_[2]);
   tree_->addProperty(marginName, qgroup, "marginTop"   )->setEditorFactory(redit_[2]);
   tree_->addProperty(marginName, qgroup, "marginBottom")->setEditorFactory(redit_[2]);
 
-  tree_->addProperty(name, qgroup, "ratio")->setEditorFactory(redit_[1]);
+  tree_->addProperty(groupName, qgroup, "ratio")->setEditorFactory(redit_[1]);
 
-  tree_->addProperty(name, qgroup, "histogramStyle");
+  tree_->addProperty(groupName, qgroup, "histogramStyle");
 
   //---
 
   CQGnuPlotTitle *qtitle = static_cast<CQGnuPlotTitle *>(group->title());
 
-  QString titleName = QString("%1/title").arg(name);
+  QString titleName = QString("%1/title").arg(groupName);
 
   tree_->addProperty(titleName, qtitle, "text"  );
   tree_->addProperty(titleName, qtitle, "offset");
@@ -264,11 +277,20 @@ addGroupProperties(CGnuPlotGroup *group)
   for (const auto &axis : qgroup->axes()) {
     CQGnuPlotAxis *qaxis = static_cast<CQGnuPlotAxis *>(axis.second);
 
-    QString axesName = QString("%1/axes_%2").arg(name).arg(qaxis->id().c_str());
+    QString axesName = QString("%1/axes_%2").arg(groupName).arg(qaxis->id().c_str());
 
     tree_->addProperty(axesName, qaxis, "displayed");
+    tree_->addProperty(axesName, qaxis, "start");
+    tree_->addProperty(axesName, qaxis, "end");
+    tree_->addProperty(axesName, qaxis, "logarithmic");
+    tree_->addProperty(axesName, qaxis, "majorIncrement");
+    tree_->addProperty(axesName, qaxis, "majorTics");
+    tree_->addProperty(axesName, qaxis, "minorIncrement");
+    tree_->addProperty(axesName, qaxis, "minorTics");
+    tree_->addProperty(axesName, qaxis, "tickIncrement");
     tree_->addProperty(axesName, qaxis, "label");
     tree_->addProperty(axesName, qaxis, "grid");
+    tree_->addProperty(axesName, qaxis, "tickInside");
   }
 
 #if 0
@@ -285,14 +307,14 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(axesName, qgroup, "ygrid");
 #endif
 
-  tree_->addProperty(name, qgroup, "borders");
-  tree_->addProperty(name, qgroup, "borderWidth");
+  tree_->addProperty(groupName, qgroup, "borders");
+  tree_->addProperty(groupName, qgroup, "borderWidth");
 
   //---
 
   CQGnuPlotKey *qkey = dynamic_cast<CQGnuPlotKey *>(qgroup->key().get());
 
-  QString keyName = name + "/key";
+  QString keyName = groupName + "/key";
 
   tree_->addProperty(keyName, qkey, "displayed");
   tree_->addProperty(keyName, qkey, "drawBox");
@@ -307,7 +329,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
   CQGnuPlotColorBox *qcolorBox = dynamic_cast<CQGnuPlotColorBox *>(qgroup->colorBox().get());
 
-  QString colorBoxName = name + "/colorBox";
+  QString colorBoxName = groupName + "/colorBox";
 
   tree_->addProperty(colorBoxName, qcolorBox, "vertical");
   tree_->addProperty(colorBoxName, qcolorBox, "user");
@@ -321,7 +343,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
   CQGnuPlotPalette *qpalette = dynamic_cast<CQGnuPlotPalette *>(qgroup->palette().get());
 
-  QString paletteName = name + "/palette";
+  QString paletteName = groupName + "/palette";
 
   tree_->addProperty(paletteName, qpalette, "colorType");
   tree_->addProperty(paletteName, qpalette, "gamma");
@@ -344,7 +366,7 @@ addGroupProperties(CGnuPlotGroup *group)
     //CQGnuPlotArrow *qann = static_cast<CQGnuPlotArrow *>(ann.get());
 
     if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann.get()))) {
-      QString name1 = QString("%1/%2_%3").arg(name).arg(arrow->getName()).arg(ann->getInd());
+      QString name1 = QString("%1/%2_%3").arg(groupName).arg(arrow->getName()).arg(ann->getInd());
 
       CQGnuPlotArrow *qarrow = static_cast<CQGnuPlotArrow *>(arrow);
 
@@ -366,7 +388,7 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(name1, qarrow, "lineWidth");
     }
     else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
-      QString name1 = QString("%1/%2_%3").arg(name).arg(ellipse->getName()).arg(ann->getInd());
+      QString name1 = QString("%1/%2_%3").arg(groupName).arg(ellipse->getName()).arg(ann->getInd());
 
       CQGnuPlotEllipse *qellipse = static_cast<CQGnuPlotEllipse *>(ellipse);
 
@@ -379,7 +401,7 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(name1, qellipse, "ry");
     }
     else if ((label = dynamic_cast<CGnuPlotLabel *>(ann.get()))) {
-      QString name1 = QString("%1/%2_%3").arg(name).arg(label->getName()).arg(ann->getInd());
+      QString name1 = QString("%1/%2_%3").arg(groupName).arg(label->getName()).arg(ann->getInd());
 
       CQGnuPlotLabel *qlabel = static_cast<CQGnuPlotLabel *>(label);
 
@@ -397,7 +419,7 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(name1, qlabel, "offset");
     }
     else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann.get()))) {
-      QString name1 = QString("%1/%2_%3").arg(name).arg(poly->getName()).arg(ann->getInd());
+      QString name1 = QString("%1/%2_%3").arg(groupName).arg(poly->getName()).arg(ann->getInd());
 
       CQGnuPlotPolygon *qpoly = static_cast<CQGnuPlotPolygon *>(poly);
 
@@ -407,7 +429,7 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(name1, qpoly, "lineWidth");
     }
     else if ((rect = dynamic_cast<CGnuPlotRectangle *>(ann.get()))) {
-      QString name1 = QString("%1/%2_%3").arg(name).arg(rect->getName()).arg(ann->getInd());
+      QString name1 = QString("%1/%2_%3").arg(groupName).arg(rect->getName()).arg(ann->getInd());
 
       CQGnuPlotRectangle *qrect = static_cast<CQGnuPlotRectangle *>(rect);
 
@@ -431,9 +453,19 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(plot->group());
 
-  QString name = QString("Group%1/Plot%2").arg(qgroup->id()).arg(plot->id());
+  QString plotName = QString("Group%1/Plot%2").arg(qgroup->id()).arg(plot->id());
 
-  QString rangeName = name + "/range";
+  tree_->addProperty(plotName, qplot, "id");
+  tree_->addProperty(plotName, qplot, "is3D");
+  tree_->addProperty(plotName, qplot, "xind");
+  tree_->addProperty(plotName, qplot, "yind");
+
+  tree_->addProperty(plotName, qplot, "displayed");
+
+  tree_->addProperty(plotName, qplot, "binary");
+  tree_->addProperty(plotName, qplot, "matrix");
+
+  QString rangeName = plotName + "/range";
 
   tree_->addProperty(rangeName, qplot, "xmin")->setEditorFactory(redit_[1]);
   tree_->addProperty(rangeName, qplot, "ymin")->setEditorFactory(redit_[1]);
@@ -441,38 +473,39 @@ addPlotProperties(CGnuPlotPlot *plot)
   tree_->addProperty(rangeName, qplot, "ymax")->setEditorFactory(redit_[1]);
 
   if (plot->window()->is3D())
-    tree_->addProperty(name, qplot, "trianglePattern3D");
+    tree_->addProperty(plotName, qplot, "trianglePattern3D");
 
   if (plot->isImageStyle()) {
-    QString imageName = name + "/image";
+    QString imageName = plotName + "/image";
 
     tree_->addProperty(imageName, qplot, "imageAngle")->setEditorFactory(redit_[0]);
   }
 
-  tree_->addProperty(name, qplot, "displayed");
+  tree_->addProperty(plotName, qplot, "plotStyle");
+  tree_->addProperty(plotName, qplot, "lineStyleId");
 
-  tree_->addProperty(name, qplot, "plotStyle");
-  tree_->addProperty(name, qplot, "lineStyleId");
-
-  tree_->addProperty(name, qplot, "fillType"     );
-  tree_->addProperty(name, qplot, "fillPattern"  );
-  tree_->addProperty(name, qplot, "lineColor"    );
-  tree_->addProperty(name, qplot, "lineWidth"    );
-  tree_->addProperty(name, qplot, "pointType"    );
-  tree_->addProperty(name, qplot, "pointSize"    );
-  tree_->addProperty(name, qplot, "boxWidthValue")->setEditorFactory(redit_[3]);
-  tree_->addProperty(name, qplot, "boxWidthType" );
+  tree_->addProperty(plotName, qplot, "fillType"     );
+  tree_->addProperty(plotName, qplot, "fillPattern"  );
+  tree_->addProperty(plotName, qplot, "lineColor"    );
+  tree_->addProperty(plotName, qplot, "lineWidth"    );
+  tree_->addProperty(plotName, qplot, "pointType"    );
+  tree_->addProperty(plotName, qplot, "pointSize"    );
+  tree_->addProperty(plotName, qplot, "boxWidthValue")->setEditorFactory(redit_[3]);
+  tree_->addProperty(plotName, qplot, "boxWidthType" );
 
   int i = 0;
 
   for (const auto &bar : plot->bars()) {
-    QString name1 = QString("%1/Bar%2").arg(name).arg(i + 1);
+    QString barName = QString("%1/Bar%2").arg(plotName).arg(i + 1);
 
     CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
 
-    tree_->addProperty(name1, qbar, "lineColor");
-    tree_->addProperty(name1, qbar, "fillColor");
-    tree_->addProperty(name1, qbar, "border");
+    tree_->addProperty(barName, qbar, "value");
+    tree_->addProperty(barName, qbar, "fillType");
+    tree_->addProperty(barName, qbar, "fillPattern");
+    tree_->addProperty(barName, qbar, "fillColor");
+    tree_->addProperty(barName, qbar, "border");
+    tree_->addProperty(barName, qbar, "lineColor");
 
     ++i;
   }
@@ -480,12 +513,12 @@ addPlotProperties(CGnuPlotPlot *plot)
   i = 0;
 
   for (const auto &pie : plot->pies()) {
-    QString name1 = QString("%1/Pie%2").arg(name).arg(i + 1);
+    QString pieName = QString("%1/Pie%2").arg(plotName).arg(i + 1);
 
     CQGnuPlotPie *qpie = static_cast<CQGnuPlotPie *>(pie);
 
-    tree_->addProperty(name1, qpie, "name" );
-    tree_->addProperty(name1, qpie, "color");
+    tree_->addProperty(pieName, qpie, "name" );
+    tree_->addProperty(pieName, qpie, "color");
 
     ++i;
   }
@@ -493,12 +526,12 @@ addPlotProperties(CGnuPlotPlot *plot)
   i = 0;
 
   for (const auto &bubble : plot->bubbles()) {
-    QString name1 = QString("%1/Bubble%2").arg(name).arg(i + 1);
+    QString bubbleName = QString("%1/Bubble%2").arg(plotName).arg(i + 1);
 
     CQGnuPlotBubble *qbubble = static_cast<CQGnuPlotBubble *>(bubble);
 
-    tree_->addProperty(name1, qbubble, "name" );
-    tree_->addProperty(name1, qbubble, "color");
+    tree_->addProperty(bubbleName, qbubble, "name" );
+    tree_->addProperty(bubbleName, qbubble, "color");
 
     ++i;
   }

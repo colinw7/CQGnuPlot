@@ -136,6 +136,8 @@ drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c)
   QPen   pen  (toQColor(c));
   QBrush brush(toQColor(c));
 
+  pen.setStyle(Qt::SolidLine);
+
   switch (type) {
     case SymbolType::POINT: { // point
       r.setPen(pen); r.drawSymbolType(type);
@@ -259,6 +261,7 @@ drawRect(const CBBox2D &rect, const CRGBA &c, double width)
 
   p.setWidthF(width);
   p.setColor(toQColor(c));
+  p.setStyle(Qt::SolidLine);
 
   painter_->setPen(p);
 

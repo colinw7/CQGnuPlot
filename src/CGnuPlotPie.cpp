@@ -42,10 +42,8 @@ inside(const CPoint2D &p) const
 
 void
 CGnuPlotPie::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
-  CGnuPlotRenderer *renderer = plot_->app()->renderer();
-
   renderer->drawPieSlice(c_, r_, angle1_, angle2_, color_.getValue(CRGBA(1,0,0)));
 
   double tangle = Deg2Rad((angle1_ + angle2_)/2.0);

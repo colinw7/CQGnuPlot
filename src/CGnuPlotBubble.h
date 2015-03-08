@@ -36,7 +36,7 @@ class CGnuPlotBubble : CGnuPlotPlotObject {
 
   bool inside(const CPoint2D &p) const;
 
-  void draw() const override;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
  private:
   CPoint2D        c_    { 0, 0 };

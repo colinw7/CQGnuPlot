@@ -59,6 +59,7 @@ class CExprInterpImpl {
   bool           isIntegerIToken(CExprITokenPtr);
   bool           isRealIToken(CExprITokenPtr);
   bool           isStringIToken(CExprITokenPtr);
+  bool           isComplexIToken(CExprITokenPtr);
   void           stackIToken(CExprITokenPtr);
   CExprITokenPtr unstackIToken();
   void           printTrackBack(std::ostream &os);
@@ -107,6 +108,7 @@ namespace CExprInterpUtil {
       case CEXPR_ITOKEN_INTEGER           : return "integer";
       case CEXPR_ITOKEN_REAL              : return "real";
       case CEXPR_ITOKEN_STRING            : return "string";
+      case CEXPR_ITOKEN_COMPLEX           : return "complex";
       default                             : return "<-?->";
     }
   }
@@ -1223,6 +1225,7 @@ readPostfixExpression()
  * <primary_expression>:= <integer>
  * <primary_expression>:= <real>
  * <primary_expression>:= <string>
+ * <primary_expression>:= <complex>
  * <primary_expression>:= <identifier>
  * <primary_expression>:= ( <expression> )
  */
@@ -1238,7 +1241,8 @@ readPrimaryExpression()
   if (! itoken.isValid()) {
     CExprITokenPtr itoken1 = unstackIToken();
 
-    if      (isIntegerIToken(itoken1) || isStringIToken(itoken1) || isRealIToken(itoken1)) {
+    if      (isIntegerIToken(itoken1) || isStringIToken(itoken1) ||
+             isRealIToken(itoken1)    || isComplexIToken(itoken1)) {
       itoken = CExprIToken::createIToken(CEXPR_PRIMARY_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
@@ -1460,6 +1464,16 @@ isStringIToken(CExprITokenPtr itoken)
     return false;
 
   return (itoken->getType() == CEXPR_ITOKEN_STRING);
+}
+
+bool
+CExprInterpImpl::
+isComplexIToken(CExprITokenPtr itoken)
+{
+  if (! itoken.isValid())
+    return false;
+
+  return (itoken->getType() == CEXPR_ITOKEN_COMPLEX);
 }
 
 void
@@ -1724,6 +1738,11 @@ CExprIToken(CExprPTokenPtr ptoken) :
     case CEXPR_PTOKEN_STRING:
       type_ = CEXPR_ITOKEN_STRING;
       base_ = new CExprITokenString(ptoken->getString());
+
+      break;
+    case CEXPR_PTOKEN_COMPLEX:
+      type_ = CEXPR_ITOKEN_COMPLEX;
+      base_ = new CExprITokenComplex(ptoken->getComplex());
 
       break;
     default:

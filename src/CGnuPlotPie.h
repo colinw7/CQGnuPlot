@@ -42,7 +42,7 @@ class CGnuPlotPie : CGnuPlotPlotObject {
 
   bool inside(const CPoint2D &p) const;
 
-  void draw() const override;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
  private:
   bool            used_   { false };

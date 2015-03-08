@@ -43,8 +43,11 @@ class CGnuPlotKeyData {
   bool opaque() const { return opaque_; }
   void setOpaque(bool b) { opaque_ = b; }
 
-  bool enhanced() const { return enhanced_; }
+  bool isEnhanced() const { return enhanced_; }
   void setEnhanced(bool b) { enhanced_ = b; }
+
+  bool below() const { return below_; }
+  void setBelow(bool b) { below_ = b; }
 
   const COptReal &sampLen() const { return sampLen_; }
   void setSampLen(double r) { sampLen_ = r; }
@@ -88,6 +91,7 @@ class CGnuPlotKeyData {
   bool              autotitle_  { true };
   bool              opaque_     { false };              // draw opaque
   bool              enhanced_   { false };              // enhanced text
+  bool              below_      { false };              // draw below plot
   COptReal          sampLen_;
   COptReal          spacing_;
   COptString        title_;

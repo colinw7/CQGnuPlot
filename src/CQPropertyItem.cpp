@@ -21,7 +21,10 @@ CQPropertyItem(QTreeWidgetItem *parent, const QString &name, const QString &info
   setData(1, Qt::EditRole, getEditorData());
   //setText(2, type_);
 
-  setFlags(flags() | Qt::ItemIsEditable);
+  CQUtil::PropInfo propInfo;
+
+  if (CQUtil::getPropInfo(object_, name_, &propInfo) && propInfo.isWritable())
+    setFlags(flags() | Qt::ItemIsEditable);
 }
 
 /*! duplicate custom tree widget item for properties
@@ -35,7 +38,10 @@ CQPropertyItem(const CQPropertyItem &item) :
   setData(1, Qt::EditRole, getEditorData());
   //setText(1, type_);
 
-  setFlags(flags() | Qt::ItemIsEditable);
+  CQUtil::PropInfo propInfo;
+
+  if (CQUtil::getPropInfo(object_, name_, &propInfo) && propInfo.isWritable())
+    setFlags(flags() | Qt::ItemIsEditable);
 }
 
 /*! get property value

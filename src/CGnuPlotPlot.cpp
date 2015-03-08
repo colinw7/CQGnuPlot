@@ -8,6 +8,7 @@
 #include <CGnuPlotPie.h>
 #include <CGnuPlotBubble.h>
 #include <CGnuPlotDevice.h>
+#include <CGnuPlotBBoxRenderer.h>
 #include <CGnuPlotUtil.h>
 
 #include <CExpr.h>
@@ -45,6 +46,13 @@ window() const
   return group()->window();
 }
 
+bool
+CGnuPlotPlot::
+is3D() const
+{
+  return group_->is3D();
+}
+
 void
 CGnuPlotPlot::
 init()
@@ -57,8 +65,6 @@ init()
   setPointStyle(plot->pointStyle());
   setArrowStyle(plot->arrowStyle());
 
-  setAxesData(plot->axesData());
-
   xind_ = plot->xind();
   yind_ = plot->yind();
 
@@ -68,6 +74,24 @@ init()
 
   setBinary(plot->isBinary());
   setMatrix(plot->isMatrix());
+
+  //CGnuPlotAxisData &xaxis = group_->xaxis(xind_);
+  //CGnuPlotAxisData &yaxis = group_->yaxis(yind_);
+
+  //if (xaxis.min().isValid()) xmin_ = xaxis.min().getValue();
+  //if (yaxis.min().isValid()) ymin_ = yaxis.min().getValue();
+  //if (xaxis.max().isValid()) xmax_ = xaxis.max().getValue();
+  //if (yaxis.max().isValid()) ymax_ = yaxis.max().getValue();
+}
+
+void
+CGnuPlotPlot::
+setStyle(PlotStyle style)
+{
+  style_ = style;
+
+  bymin_.setInvalid();
+  bymax_.setInvalid();
 }
 
 void
@@ -87,7 +111,7 @@ void
 CGnuPlotPlot::
 addPoint2D(double x, double y)
 {
-  assert(! is3D_);
+  assert(! is3D());
 
   std::vector<CExprValueP> values;
 
@@ -101,7 +125,7 @@ void
 CGnuPlotPlot::
 addPoint2D(double x, CExprValueP y)
 {
-  assert(! is3D_);
+  assert(! is3D());
 
   std::vector<CExprValueP> values;
 
@@ -115,7 +139,7 @@ void
 CGnuPlotPlot::
 addPoint2D(const Values &values, bool discontinuity)
 {
-  assert(! is3D_);
+  assert(! is3D());
 
   if (app()->isDebug()) {
     std::cerr << "Add Point [" << points2D_.size() << "] " << "(";
@@ -136,7 +160,7 @@ void
 CGnuPlotPlot::
 addPoint3D(int iy, double x, double y, double z)
 {
-  assert(is3D_);
+  assert(is3D());
 
   std::vector<CExprValueP> values;
 
@@ -171,122 +195,6 @@ reset3D()
 
 void
 CGnuPlotPlot::
-fit()
-{
-  CGnuPlotAxisData &xaxis = this->xaxis(xind_);
-  CGnuPlotAxisData &yaxis = this->yaxis(yind_);
-
-  bool fitX = (! xaxis.min().isValid() || ! xaxis.max().isValid());
-  bool fitY = (! yaxis.min().isValid() || ! yaxis.max().isValid());
-
-  if (! fitX && ! fitY) return;
-
-  if (! is3D_) {
-    if      (style_ == PlotStyle::PARALLELAXES) {
-      int nc = 0;
-
-      for (const auto &p : getPoints2D())
-        nc = std::max(nc, p.getNumValues());
-
-      if (lineStyle().colorSpec().isCalc())
-        --nc;
-
-      xaxis.setMin(1); xaxis.setMax(nc);
-      yaxis.setMin(0); yaxis.setMax(1);
-    }
-    else if (style_ == PlotStyle::PIECHART) {
-      xaxis.setMin(-1); xaxis.setMax(1);
-      yaxis.setMin(-1); yaxis.setMax(1);
-    }
-    else if (style_ == PlotStyle::BUBBLECHART) {
-      xaxis.setMin(-1); xaxis.setMax(1);
-      yaxis.setMin(-1); yaxis.setMax(1);
-    }
-
-    if (! xaxis.min().isValid() || ! xaxis.max().isValid()) {
-      if      (style_ == PlotStyle::BOXPLOT)
-        calcBoxPlotRange();
-      else if (isImageStyle()) {
-        xaxis.setMin(0); xaxis.setMax(imageStyle_.w - 1);
-      }
-      else {
-        double dx = 0;
-
-        if (style_ == PlotStyle::BOXES)
-          dx = 1;
-
-        COptReal xmin, xmax;
-
-        for (const auto &p : getPoints2D()) {
-          double x;
-
-          if (p.getX(x)) {
-            xmin.updateMin(x - dx);
-            xmax.updateMax(x + dx);
-          }
-        }
-
-        if (! xaxis.min().isValid()) xaxis.setMin(xmin);
-        if (! xaxis.max().isValid()) xaxis.setMax(xmax);
-      }
-    }
-
-    COptReal ymin, ymax;
-
-    if (! yaxis.min().isValid() || ! yaxis.max().isValid()) {
-      if (isImageStyle()) {
-        yaxis.setMin(0); yaxis.setMax(imageStyle_.h - 1);
-      }
-      else {
-        for (const auto &p : getPoints2D()) {
-          double x, y;
-
-          if (p.getXY(x, y)) {
-            if (x >= xaxis.min().getValue() && x <= xaxis.max().getValue()) {
-              ymin.updateMin(y);
-              ymax.updateMax(y);
-            }
-          }
-        }
-
-        if (! yaxis.min().isValid() && ymin.isValid()) yaxis.setMin(ymin);
-        if (! yaxis.max().isValid() && ymax.isValid()) yaxis.setMax(ymax);
-      }
-    }
-  }
-  else {
-    COptReal xmin, ymin, zmin, xmax, ymax, zmax;
-
-    std::pair<int,int> np = numPoints3D();
-
-    for (int iy = 0; iy < np.second; ++iy) {
-      for (int ix = 0; ix < np.first; ++ix) {
-        const CGnuPlotPoint &point = getPoint3D(ix, iy);
-
-        double x = point.getX();
-        double y = point.getY();
-        double z = point.getZ();
-
-        xmin.updateMin(x); xmax.updateMax(x);
-        ymin.updateMin(y); ymax.updateMax(y);
-        zmin.updateMin(z); zmax.updateMax(z);
-      }
-    }
-
-    if (fitX) {
-      if (! xaxis.min().isValid() && xmin.isValid()) xaxis.setMin(xmin);
-      if (! xaxis.max().isValid() && xmax.isValid()) xaxis.setMax(xmax);
-    }
-
-    if (fitY) {
-      if (! yaxis.min().isValid() && ymin.isValid()) yaxis.setMin(ymin);
-      if (! yaxis.max().isValid() && ymax.isValid()) yaxis.setMax(ymax);
-    }
-  }
-}
-
-void
-CGnuPlotPlot::
 updateGroupRange()
 {
   group_->fit();
@@ -294,58 +202,9 @@ updateGroupRange()
 
 void
 CGnuPlotPlot::
-calcBoxPlotRange()
-{
-  CGnuPlotAxisData &xaxis = this->xaxis(xind_);
-
-  double x;
-  bool   discrete = false;
-
-  for (const auto &point : getPoints2D()) {
-    if (point.getNumValues() >= 2) {
-      double x1;
-
-      if (point.getValue(1, x1))
-        x = x1;
-
-      if (point.getNumValues() >= 4)
-        discrete = true;
-
-      break;
-    }
-  }
-
-  if (discrete) {
-    typedef std::set<int>         IVals;
-    typedef std::set<std::string> SVals;
-
-    IVals  iyv;
-    SVals  syv;
-
-    for (const auto &point : getPoints2D()) {
-      if (point.getNumValues() >= 4) {
-        int         i;
-        std::string s;
-
-        if      (point.getValue(4, i))
-          iyv.insert(i);
-        else if (point.getValue(4, s))
-          syv.insert(s);
-      }
-    }
-
-    xaxis.setMin(0); xaxis.setMax(iyv.size() + syv.size() + 1);
-  }
-  else {
-    xaxis.setMin(x - 1); xaxis.setMax(x + 1);
-  }
-}
-
-void
-CGnuPlotPlot::
 smooth()
 {
-  if (! is3D_) {
+  if (! is3D()) {
     if (smooth_ == Smooth::UNIQUE) {
       typedef std::vector<double>     Values;
       typedef std::map<double,Values> Points;
@@ -386,8 +245,8 @@ draw()
 
   //---
 
-  const CGnuPlotAxisData &xaxis = this->xaxis(xind_);
-  const CGnuPlotAxisData &yaxis = this->yaxis(yind_);
+  const CGnuPlotAxisData &xaxis = group_->xaxis(xind_);
+  const CGnuPlotAxisData &yaxis = group_->yaxis(yind_);
 
   double xmin = xaxis.min().getValue(0.0);
   double ymin = yaxis.min().getValue(0.0);
@@ -404,7 +263,7 @@ draw()
   else if (getStyle() == PlotStyle::TEST_PALETTE)
     drawPalette();
   else {
-    if (is3D_)
+    if (is3D())
       draw3D();
     else
       draw2D();
@@ -425,7 +284,7 @@ void
 CGnuPlotPlot::
 draw3D()
 {
-  assert(is3D_);
+  assert(is3D());
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
@@ -560,7 +419,7 @@ void
 CGnuPlotPlot::
 draw2D()
 {
-  assert(! is3D_);
+  assert(! is3D());
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
@@ -613,96 +472,75 @@ draw2D()
                            lineStyle.width(), c);
     }
   }
-  else if (style_ == PlotStyle::BOXERRORBARS) {
-    drawBoxErrorBars();
-  }
-  else if (style_ == PlotStyle::BOXES) {
-    drawBoxes();
-  }
-  else if (style_ == PlotStyle::BOXPLOT) {
-    drawBoxPlot();
-  }
-  else if (style_ == PlotStyle::BOXXYERRORBARS) {
-    drawBoxXYErrorBars();
-  }
-  else if (style_ == PlotStyle::BUBBLECHART) {
-    drawBubbleChart();
-  }
-  else if (style_ == PlotStyle::CANDLESTICKS) {
-    drawCandleSticks();
-  }
-  else if (style_ == PlotStyle::CIRCLES) {
-    drawCircles();
-  }
-  else if (style_ == PlotStyle::ELLIPSES) {
-    drawEllipses();
-  }
-  else if (style_ == PlotStyle::DOTS) {
-    drawDots();
-  }
-  else if (style_ == PlotStyle::FILLEDCURVES) {
-    drawFilledCurves();
-  }
-  else if (style_ == PlotStyle::FINANCEBARS) {
-    drawFinanceBars();
-  }
+  else if (style_ == PlotStyle::BOXERRORBARS)
+    drawBoxErrorBars(renderer);
+  else if (style_ == PlotStyle::BOXES)
+    drawBoxes(renderer);
+  else if (style_ == PlotStyle::BOXPLOT)
+    drawBoxPlot(renderer);
+  else if (style_ == PlotStyle::BOXXYERRORBARS)
+    drawBoxXYErrorBars(renderer);
+  else if (style_ == PlotStyle::BUBBLECHART)
+    drawBubbleChart(renderer);
+  else if (style_ == PlotStyle::CANDLESTICKS)
+    drawCandleSticks(renderer);
+  else if (style_ == PlotStyle::CIRCLES)
+    drawCircles(renderer);
+  else if (style_ == PlotStyle::ELLIPSES)
+    drawEllipses(renderer);
+  else if (style_ == PlotStyle::ERRORBARS)
+    drawErrorBars(renderer);
+  else if (style_ == PlotStyle::DOTS)
+    drawDots(renderer);
+  else if (style_ == PlotStyle::FILLEDCURVES)
+    drawFilledCurves(renderer);
+  else if (style_ == PlotStyle::FINANCEBARS)
+    drawFinanceBars(renderer);
   else if (style_ == PlotStyle::HISTEPS || style_ == PlotStyle::STEPS ||
-           style_ == PlotStyle::FSTEPS  || style_ == PlotStyle::FILLSTEPS) {
-    drawSteps();
-  }
+           style_ == PlotStyle::FSTEPS  || style_ == PlotStyle::FILLSTEPS)
+    drawSteps(renderer);
   else if (isImageStyle()) {
     if (isBinary())
-      drawBinaryImage();
+      drawBinaryImage(renderer);
     else
-      drawImage();
+      drawImage(renderer);
   }
-  else if (style_ == PlotStyle::IMPULSES) {
-    drawImpulses();
-  }
-  else if (style_ == PlotStyle::LABELS) {
-    drawLabels();
-  }
-  else if (style_ == PlotStyle::LINES) {
-    drawLines();
-  }
+  else if (style_ == PlotStyle::IMPULSES)
+    drawImpulses(renderer);
+  else if (style_ == PlotStyle::LABELS)
+    drawLabels(renderer);
+  else if (style_ == PlotStyle::LINES)
+    drawLines(renderer);
   else if (style_ == PlotStyle::LINES_POINTS) {
-    drawLines();
+    drawLines(renderer);
 
-    drawPoints();
+    drawPoints(renderer);
   }
-  else if (style_ == PlotStyle::PARALLELAXES) {
-    drawParallelAxes();
-  }
-  else if (style_ == PlotStyle::PIECHART) {
-    drawPieChart();
-  }
-  else if (style_ == PlotStyle::POINTS) {
-    drawPoints();
-  }
-  else if (style_ == PlotStyle::VECTORS) {
-    drawVectors();
-  }
-  else if (style_ == PlotStyle::ERRORBARS) {
-    drawErrorBars();
-  }
-  else if (style_ == PlotStyle::XERRORBARS) {
-  }
-  else if (style_ == PlotStyle::XYERRORBARS) {
-    drawXYErrorBars();
-  }
-  else if (style_ == PlotStyle::YERRORBARS) {
-  }
-  else if (style_ == PlotStyle::XERRORLINES) {
-  }
-  else if (style_ == PlotStyle::XYERRORLINES) {
-  }
-  else if (style_ == PlotStyle::YERRORLINES) {
-  }
+  else if (style_ == PlotStyle::PARALLELAXES)
+    drawParallelAxes(renderer);
+  else if (style_ == PlotStyle::PIECHART)
+    drawPieChart(renderer);
+  else if (style_ == PlotStyle::POINTS)
+    drawPoints(renderer);
+  else if (style_ == PlotStyle::VECTORS)
+    drawVectors(renderer);
+  else if (style_ == PlotStyle::XERRORBARS)
+    drawXErrorBars(renderer);
+  else if (style_ == PlotStyle::XYERRORBARS)
+    drawXYErrorBars(renderer);
+  else if (style_ == PlotStyle::YERRORBARS)
+    drawYErrorBars(renderer);
+  else if (style_ == PlotStyle::XERRORLINES)
+    drawXErrorLines(renderer);
+  else if (style_ == PlotStyle::XYERRORLINES)
+    drawXYErrorLines(renderer);
+  else if (style_ == PlotStyle::YERRORLINES)
+    drawYErrorLines(renderer);
 }
 
 void
 CGnuPlotPlot::
-drawBoxErrorBars()
+drawBoxErrorBars(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
   const CGnuPlotFillStyle &fillStyle = this->fillStyle();
@@ -716,7 +554,8 @@ drawBoxErrorBars()
   //CRGBA lc = CRGBA(0,0,0);
   CRGBA fc = (fillStyle.style() == FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  setNumBars(getPoints2D().size());
+  if (! renderer->isPseudo())
+    setNumBars(getPoints2D().size());
 
   int i = 0;
 
@@ -784,40 +623,43 @@ drawBoxErrorBars()
 
     fc2.setAlpha(0.5); // ???
 
-    CGnuPlotBar *bar = bars()[i];
+    if (! renderer->isPseudo()) {
+      CGnuPlotBar *bar = bars()[i];
 
-    bar->setBBox(bbox);
+      bar->setBBox (bbox);
+      bar->setValue(y);
 
-    bar->setValue(y);
+      if (! bar->isInitialized()) {
+        bar->setFillType   (fillStyle.style());
+        bar->setFillPattern(fillStyle.pattern());
+        bar->setFillColor  (fc2);
 
-    bar->setFillType(fillStyle.style());
-    bar->setFillPattern(fillStyle.pattern());
+        bar->setBorder   (fillStyle.hasBorder());
+        bar->setLineColor(fc1);
 
-    if (! bar->hasFillColor())
-      bar->setFillColor(fc2);
+        bar->setInitialized(true);
+      }
+    }
+    else
+      renderer->drawRect(bbox, fc1);
 
-    //if (! bar->hasLineColor())
-    //  bar->setLineColor(fc1);
-
-    bar->setBorder(fillStyle.hasBorder());
-
-    drawLine(CPoint2D(x, yl), CPoint2D(x, yh), lineStyle.width(), fc1);
+    renderer->drawClipLine(CPoint2D(x, yl), CPoint2D(x, yh), lineStyle.width(), fc1);
 
     double w = dx/2;
 
-    drawLine(CPoint2D(x - w/2, yl), CPoint2D(x + w/2, yl), lineStyle.width(), fc1);
-    drawLine(CPoint2D(x - w/2, yh), CPoint2D(x + w/2, yh), lineStyle.width(), fc1);
+    renderer->drawClipLine(CPoint2D(x - w/2, yl), CPoint2D(x + w/2, yl), lineStyle.width(), fc1);
+    renderer->drawClipLine(CPoint2D(x - w/2, yh), CPoint2D(x + w/2, yh), lineStyle.width(), fc1);
 
     ++i;
   }
 
-  for (const auto &bar : bars())
-    bar->draw();
+  if (! renderer->isPseudo())
+    drawBars(renderer);
 }
 
 void
 CGnuPlotPlot::
-drawBoxes()
+drawBoxes(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
@@ -834,7 +676,30 @@ drawBoxes()
   const CRGBA &lc = lineStyle.color(ftc);
   const CRGBA &fc = lineStyle.color(CRGBA(0,0,0));
 
-  setNumBars(getPoints2D().size());
+  //---
+
+  int n = 0;
+
+  for (const auto &point : getPoints2D()) {
+    std::vector<double> reals;
+
+    (void) point.getReals(reals);
+
+    if (reals.size() < 2)
+      continue;
+
+    double y = reals[1];
+
+    if (IsNaN(y))
+      continue;
+
+    ++n;
+  }
+
+  if (! renderer->isPseudo())
+    setNumBars(n);
+
+  //---
 
   int i = 0;
 
@@ -848,6 +713,9 @@ drawBoxes()
 
     double x = reals[0];
     double y = reals[1];
+
+    if (IsNaN(y))
+      continue;
 
     uint ind = 2;
 
@@ -866,40 +734,38 @@ drawBoxes()
 
     CBBox2D bbox(x - bw1/2, y2, x + bw1/2, y);
 
-    CGnuPlotBar *bar = bars()[i];
+    if (! renderer->isPseudo()) {
+      CGnuPlotBar *bar = bars()[i];
 
-    bar->setBBox(bbox);
+      bar->setBBox (bbox);
+      bar->setValue(y);
 
-    bar->setValue(y);
+      if (! bar->isInitialized()) {
+        bar->setFillType   (fillType());
+        bar->setFillPattern(fillPattern());
+        bar->setFillColor  (fc);
 
-    bar->setFillType(fillType());
-    bar->setFillPattern(fillPattern());
+        bar->setBorder   (true);
+        bar->setLineColor(lc1);
 
-    if (! bar->hasFillColor())
-      bar->setFillColor(fc);
-
-    if (! bar->hasLineColor())
-      bar->setLineColor(lc1);
+        bar->setInitialized(true);
+      }
+    }
+    else
+      renderer->drawRect(bbox, lc1);
 
     ++i;
   }
 
-  for (const auto &bar : bars())
-    bar->draw();
+  if (! renderer->isPseudo())
+    drawBars(renderer);
 }
 
 void
 CGnuPlotPlot::
-drawBoxPlot()
+drawBoxPlot(CGnuPlotRenderer *renderer)
 {
-//double xmin = bbox_.getXMin();
-//double ymin = bbox_.getYMin();
-//double xmax = bbox_.getYMax();
-//double ymax = bbox_.getYMax();
-
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
-
-  CGnuPlotRenderer *renderer = app()->renderer();
 
   CRGBA fc = lineStyle.color(CRGBA(1,0,0));
   CRGBA lc = CRGBA(0,0,0);
@@ -964,20 +830,24 @@ drawBoxPlot()
     double x1 = ix - bw/2;
     double x2 = ix + bw/2;
 
-    drawLine(CPoint2D(ix, whisker.min()), CPoint2D(ix, whisker.max()), 1, lc);
+    renderer->drawClipLine(CPoint2D(ix, whisker.min()), CPoint2D(ix, whisker.max()), 1, lc);
 
-    drawLine(CPoint2D(x1, whisker.min()), CPoint2D(x2, whisker.min()), 1, lc);
-    drawLine(CPoint2D(x1, whisker.max()), CPoint2D(x2, whisker.max()), 1, lc);
+    renderer->drawClipLine(CPoint2D(x1, whisker.min()), CPoint2D(x2, whisker.min()), 1, lc);
+    renderer->drawClipLine(CPoint2D(x1, whisker.max()), CPoint2D(x2, whisker.max()), 1, lc);
 
     CBBox2D bbox(x1, whisker.lower(), x2, whisker.upper());
 
     renderer->fillRect(bbox, fc);
     renderer->drawRect(bbox, lc);
 
-    drawLine(CPoint2D(x1, whisker.median()), CPoint2D(x2, whisker.median()), 1, lc);
+    renderer->drawClipLine(CPoint2D(x1, whisker.median()), CPoint2D(x2, whisker.median()), 1, lc);
 
-    double opw = renderer->pixelWidthToWindowWidth  (4);
-    double oph = renderer->pixelHeightToWindowHeight(4);
+    double opw = 0, oph = 0;
+
+    if (! renderer->isPseudo()) {
+      opw = renderer->pixelWidthToWindowWidth  (4);
+      oph = renderer->pixelHeightToWindowHeight(4);
+    }
 
     for (const auto &o : whisker.outliers())
       renderer->drawEllipse(CPoint2D(ix, whisker.value(o)), opw, oph, 0, lc);
@@ -993,20 +863,24 @@ drawBoxPlot()
     double x1 = ix - bw/2;
     double x2 = ix + bw/2;
 
-    drawLine(CPoint2D(ix, whisker.min()), CPoint2D(ix, whisker.max()), 1, lc);
+    renderer->drawClipLine(CPoint2D(ix, whisker.min()), CPoint2D(ix, whisker.max()), 1, lc);
 
-    drawLine(CPoint2D(x1, whisker.min()), CPoint2D(x2, whisker.min()), 1, lc);
-    drawLine(CPoint2D(x1, whisker.max()), CPoint2D(x2, whisker.max()), 1, lc);
+    renderer->drawClipLine(CPoint2D(x1, whisker.min()), CPoint2D(x2, whisker.min()), 1, lc);
+    renderer->drawClipLine(CPoint2D(x1, whisker.max()), CPoint2D(x2, whisker.max()), 1, lc);
 
     CBBox2D bbox(x1, whisker.lower(), x2, whisker.upper());
 
     renderer->fillRect(bbox, fc);
     renderer->drawRect(bbox, lc);
 
-    drawLine(CPoint2D(x1, whisker.median()), CPoint2D(x2, whisker.median()), 1, lc);
+    renderer->drawClipLine(CPoint2D(x1, whisker.median()), CPoint2D(x2, whisker.median()), 1, lc);
 
-    double opw = renderer->pixelWidthToWindowWidth  (4);
-    double oph = renderer->pixelHeightToWindowHeight(4);
+    double opw = 0, oph = 0;
+
+    if (! renderer->isPseudo()) {
+      opw = renderer->pixelWidthToWindowWidth  (4);
+      oph = renderer->pixelHeightToWindowHeight(4);
+    }
 
     for (const auto &o : whisker.outliers())
       renderer->drawEllipse(CPoint2D(ix, whisker.value(o)), opw, oph, 0, lc);
@@ -1017,7 +891,7 @@ drawBoxPlot()
 
 void
 CGnuPlotPlot::
-drawBoxXYErrorBars()
+drawBoxXYErrorBars(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
@@ -1026,7 +900,8 @@ drawBoxXYErrorBars()
   CRGBA lc = lineStyle.color(CRGBA(0,0,0));
   CRGBA fc = (fillType() == FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  setNumBars(getPoints2D().size());
+  if (! renderer->isPseudo())
+    setNumBars(getPoints2D().size());
 
   int i = 0;
 
@@ -1081,26 +956,31 @@ drawBoxXYErrorBars()
 
     fc1.setAlpha(0.5);
 
-    CGnuPlotBar *bar = bars()[i];
+    if (! renderer->isPseudo()) {
+      CGnuPlotBar *bar = bars()[i];
 
-    bar->setBBox(bbox);
+      bar->setBBox (bbox);
+      bar->setValue(y);
 
-    bar->setValue(y);
+      if (! bar->isInitialized()) {
+        bar->setFillType   (fillType());
+        bar->setFillPattern(fillPattern());
+        bar->setFillColor  (fc1);
 
-    bar->setFillType(fillType());
-    bar->setFillPattern(fillPattern());
+        bar->setBorder   (true);
+        bar->setLineColor(lc);
 
-    if (! bar->hasFillColor())
-      bar->setFillColor(fc1);
-
-    if (! bar->hasLineColor())
-      bar->setLineColor(lc);
+        bar->setInitialized(true);
+      }
+    }
+    else
+      renderer->drawRect(bbox, lc);
 
     ++i;
   }
 
-  for (const auto &bar : bars())
-    bar->draw();
+  if (! renderer->isPseudo())
+    drawBars(renderer);
 }
 
 class BubbleNode : public CircleNode {
@@ -1120,7 +1000,7 @@ class BubbleNode : public CircleNode {
 
 void
 CGnuPlotPlot::
-drawBubbleChart()
+drawBubbleChart(CGnuPlotRenderer *renderer)
 {
   typedef std::map<std::string, int> Ids;
 
@@ -1142,7 +1022,7 @@ drawBubbleChart()
     std::string idName;
 
     if (point.getValue(3, idName)) {
-      Ids::iterator p = ids.find(idName);
+      auto p = ids.find(idName);
 
       if (p == ids.end()) {
         id = ids.size() + 1;
@@ -1178,7 +1058,8 @@ drawBubbleChart()
   xmax = xc + s/2;
   ymax = yc + s/2;
 
-  bubbleCache_.updateSize(pack.nodes().size());
+  if (! renderer->isPseudo())
+    bubbleCache_.updateSize(pack.nodes().size());
 
   int i = 0;
 
@@ -1190,17 +1071,21 @@ drawBubbleChart()
 
     CPoint2D pc((x1 + x2)/2, (y1 + y2)/2);
 
-    CGnuPlotBubble *bubble = bubbles()[i];
+    if (! renderer->isPseudo()) {
+      CGnuPlotBubble *bubble = bubbles()[i];
 
-    bubble->setCenter(pc);
-    bubble->setXRadius((x2 - x1)/2);
-    bubble->setYRadius((y2 - y1)/2);
-    bubble->setName(n->name());
+      bubble->setCenter(pc);
+      bubble->setXRadius((x2 - x1)/2);
+      bubble->setYRadius((y2 - y1)/2);
+      bubble->setName(n->name());
 
-    CRGBA c1 = (n->id() > 0 ? CGnuPlotStyleInst->indexColor("subtle", n->id()) : c);
+      CRGBA c1 = (n->id() > 0 ? CGnuPlotStyleInst->indexColor("subtle", n->id()) : c);
 
-    if (! bubble->hasColor())
-      bubble->setColor(c1);
+      if (! bubble->hasColor())
+        bubble->setColor(c1);
+    }
+    else
+      renderer->drawEllipse(pc, (x2 - x1)/2, (y2 - y1)/2, 0, c);
 
     ++i;
   }
@@ -1208,17 +1093,17 @@ drawBubbleChart()
   for (auto &n : pack.nodes())
     delete n;
 
-  for (const auto &bubble : bubbles())
-    bubble->draw();
+  if (! renderer->isPseudo()) {
+    for (const auto &bubble : bubbles())
+      bubble->draw(renderer);
+  }
 }
 
 void
 CGnuPlotPlot::
-drawCandleSticks()
+drawCandleSticks(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
-
-  CGnuPlotRenderer *renderer = app()->renderer();
 
   bool isCalcColor = lineStyle.colorSpec().isCalc();
 
@@ -1259,15 +1144,15 @@ drawCandleSticks()
       lc1 = lineStyle.colorSpec().calcColor(this, x);
     }
 
-    drawLine(CPoint2D(x, wmin), CPoint2D(x, bmin), lw, lc1);
-    drawLine(CPoint2D(x, bmax), CPoint2D(x, wmax), lw, lc1);
+    renderer->drawClipLine(CPoint2D(x, wmin), CPoint2D(x, bmin), lw, lc1);
+    renderer->drawClipLine(CPoint2D(x, bmax), CPoint2D(x, wmax), lw, lc1);
 
     double x1 = x - bw1/2;
     double x2 = x + bw1/2;
 
     if (whiskerBars() > 0) {
-      drawLine(CPoint2D(x1, wmin), CPoint2D(x2, wmin), lw, lc1);
-      drawLine(CPoint2D(x1, wmax), CPoint2D(x2, wmax), lw, lc1);
+      renderer->drawClipLine(CPoint2D(x1, wmin), CPoint2D(x2, wmin), lw, lc1);
+      renderer->drawClipLine(CPoint2D(x1, wmax), CPoint2D(x2, wmax), lw, lc1);
     }
 
     CBBox2D bbox(x1, bmin, x2, bmax);
@@ -1285,11 +1170,9 @@ drawCandleSticks()
 
 void
 CGnuPlotPlot::
-drawCircles()
+drawCircles(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
-
-  CGnuPlotRenderer *renderer = app()->renderer();
 
   bool isCalcColor = lineStyle.colorSpec().isCalc();
 
@@ -1302,16 +1185,21 @@ drawCircles()
   for (const auto &point : getPoints2D()) {
     std::vector<double> reals;
 
-    (void) point.getReals(reals);
+    if (! point.getReals(reals) || reals.size() < 2)
+      continue;
+
+    double x = reals[0];
+    double y = reals[1];
+
+    double r  = 1.0;
+    double a1 = 0.0;
+    double a2 = 360.0;
 
     CRGBA lc1 = lc;
 
-    double x = 0.0, y = 0.0, r = 1.0, a1 = 0, a2 = 360;
-    bool   is_angle = false;
+    bool is_angle = false;
 
-    if     ((! isCalcColor && reals.size() == 2) || (isCalcColor && reals.size() == 3)) {
-      x = reals[0];
-      y = reals[1];
+    if      ((! isCalcColor && reals.size() == 2) || (isCalcColor && reals.size() == 3)) {
       r = 1; // TODO: get from set circle
 
       if (isCalcColor) {
@@ -1321,8 +1209,6 @@ drawCircles()
       }
     }
     else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
-      x = reals[0];
-      y = reals[1];
       r = reals[2];
 
       if (isCalcColor) {
@@ -1332,8 +1218,6 @@ drawCircles()
       }
     }
     else if ((! isCalcColor && reals.size() == 5) || (isCalcColor && reals.size() == 6)) {
-      x  = reals[0];
-      y  = reals[1];
       r  = reals[2];
       a1 = reals[3];
       a2 = reals[4];
@@ -1350,7 +1234,10 @@ drawCircles()
       continue;
 
     double w = r;
-    double h = renderer->pixelHeightToWindowHeight(renderer->windowWidthToPixelWidth(w));
+    double h = w;
+
+    if (! renderer->isPseudo())
+      h = renderer->pixelHeightToWindowHeight(renderer->windowWidthToPixelWidth(w));
 
     CPoint2D c(x, y);
 
@@ -1369,11 +1256,11 @@ drawCircles()
 
 void
 CGnuPlotPlot::
-drawEllipses()
+drawEllipses(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  CGnuPlotRenderer *renderer = app()->renderer();
+  bool isCalcColor = lineStyle.colorSpec().isCalc();
 
   CRGBA lc = lineStyle.color(CRGBA(1,0,0));
   CRGBA fc = lc;
@@ -1394,42 +1281,57 @@ drawEllipses()
     double h = 0.3;
     double a = 0;
 
-    if      (reals.size() == 3) {
+    CRGBA lc1 = lc;
+
+    if      ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
       w = reals[2];
       h = w;
+
+      if (isCalcColor) {
+        double x = reals[3];
+
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
+      }
     }
-    else if (reals.size() == 4) {
+    else if ((! isCalcColor && reals.size() == 4) || (isCalcColor && reals.size() == 5)) {
       w = reals[2];
       h = reals[3];
+
+      if (isCalcColor) {
+        double x = reals[3];
+
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
+      }
     }
-    else if (reals.size() >= 5) {
+    else if ((! isCalcColor && reals.size() == 5) || (isCalcColor && reals.size() == 6)) {
       w = reals[2];
       h = reals[3];
       a = reals[4];
 
-      if (reals.size() >= 6) {
-        double x;
+      if (isCalcColor) {
+        double x = reals[5];
 
-        if (point.getValue(6, x))
-          lc = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
       }
     }
+    else
+      continue;
+
+    CPoint2D c(x, y);
 
     if (fillStyle().style() == FillType::SOLID)
-      renderer->fillEllipse(CPoint2D(x, y), w/2, h/2, a, fc);
+      renderer->fillEllipse(c, w/2, h/2, a, fc);
 
     if (fillStyle().hasBorder())
-      renderer->drawEllipse(CPoint2D(x, y), w/2, h/2, a, lc);
+      renderer->drawEllipse(c, w/2, h/2, a, lc1);
   }
 }
 
 void
 CGnuPlotPlot::
-drawDots()
+drawDots(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
-
-  CGnuPlotRenderer *renderer = app()->renderer();
 
   const CRGBA &c = lineStyle.color(CRGBA(1,0,0));
 
@@ -1443,7 +1345,7 @@ drawDots()
 
 void
 CGnuPlotPlot::
-drawFilledCurves()
+drawFilledCurves(CGnuPlotRenderer *renderer)
 {
   double xmin = bbox_.getXMin();
   double ymin = bbox_.getYMin();
@@ -1550,9 +1452,9 @@ drawFilledCurves()
       }
     }
 
-    fillPolygon(points1, lineStyle.color(CRGBA(1,1,1)));
+    renderer->fillClippedPolygon(points1, lineStyle.color(CRGBA(1,1,1)));
 
-    drawLines();
+    drawLines(renderer);
   }
   else {
     std::vector<CPoint2D> points1, points2;
@@ -1586,7 +1488,7 @@ drawFilledCurves()
               for (auto p1 = points2.rbegin(), p2 = points2.rend(); p1 != p2; ++p1)
                 points1.push_back(*p1);
 
-              fillPolygon(points1, lineStyle.color(CRGBA(1,1,1)));
+              renderer->fillClippedPolygon(points1, lineStyle.color(CRGBA(1,1,1)));
             }
 
             points1.clear();
@@ -1605,17 +1507,15 @@ drawFilledCurves()
       for (auto p1 = points2.rbegin(), p2 = points2.rend(); p1 != p2; ++p1)
         points1.push_back(*p1);
 
-      fillPolygon(points1, lineStyle.color(CRGBA(1,1,1)));
+      renderer->fillClippedPolygon(points1, lineStyle.color(CRGBA(1,1,1)));
     }
   }
 }
 
 void
 CGnuPlotPlot::
-drawFinanceBars()
+drawFinanceBars(CGnuPlotRenderer *renderer)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
   bool isCalcColor = lineStyle.colorSpec().isCalc();
@@ -1623,7 +1523,10 @@ drawFinanceBars()
   CRGBA  lc = lineStyle.color(CRGBA(0,0,0));
   double lw = lineStyle.width();
 
-  double sl = renderer->pixelWidthToWindowWidth(4);
+  double sl = 0;
+
+  if (! renderer->isPseudo())
+    sl = renderer->pixelWidthToWindowWidth(4);
 
   for (const auto &point : getPoints2D()) {
     std::vector<double> reals;
@@ -1647,20 +1550,21 @@ drawFinanceBars()
       lc1 = lineStyle.colorSpec().calcColor(this, x);
     }
 
-    drawLine(CPoint2D(date, low), CPoint2D(date, high), lw, lc1);
+    renderer->drawClipLine(CPoint2D(date, low), CPoint2D(date, high), lw, lc1);
 
-    drawLine(CPoint2D(date, open ), CPoint2D(date - sl, open ), lw, lc1);
-    drawLine(CPoint2D(date, close), CPoint2D(date + sl, close), lw, lc1);
+    renderer->drawClipLine(CPoint2D(date, open ), CPoint2D(date - sl, open ), lw, lc1);
+    renderer->drawClipLine(CPoint2D(date, close), CPoint2D(date + sl, close), lw, lc1);
   }
 }
 
 void
 CGnuPlotPlot::
-drawClusteredHistogram(double y2, double d, double w)
+drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &drawData)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
+  double xb = 0;
 
-  double xb = renderer->pixelWidthToWindowWidth(2);
+  if (! renderer->isPseudo())
+    xb = renderer->pixelWidthToWindowWidth(2);
 
   CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
@@ -1669,43 +1573,132 @@ drawClusteredHistogram(double y2, double d, double w)
 
   //---
 
-  setNumBars(getPoints2D().size());
+  if (! renderer->isPseudo())
+    setNumBars(getPoints2D().size());
 
   int i = 0;
 
   for (const auto &point : getPoints2D()) {
-    CPoint2D p;
+    double y;
 
-    if (! point.getPoint(p))
-      p = CPoint2D(0, 0);
+    if (! point.getY(y))
+      y = 0.0;
 
-    CBBox2D bbox(p.x + d + xb, y2, p.x + d + w - xb, p.y);
+    double x = drawData.x2 + i*drawData.d;
 
-    CGnuPlotBar *bar = bars()[i];
+    CBBox2D bbox(x + xb, drawData.y2, x + drawData.w - xb, y);
 
-    bar->setBBox(bbox);
+    if (! renderer->isPseudo()) {
+      CGnuPlotBar *bar = bars()[i];
 
-    bar->setValue(p.y);
+      bar->setBBox (bbox);
+      bar->setValue(y);
 
-    bar->setFillType(fillType());
-    bar->setFillPattern(fillPattern());
+      if (! bar->isInitialized()) {
+        bar->setFillType   (fillType());
+        bar->setFillPattern(fillPattern());
+        bar->setFillColor  (fc);
 
-    if (! bar->hasFillColor())
-      bar->setFillColor(fc);
+        bar->setBorder   (true);
+        bar->setLineColor(lc);
 
-    if (! bar->hasLineColor())
-      bar->setLineColor(lc);
+        bar->setInitialized(true);
+      }
+    }
+    else
+      renderer->drawRect(bbox, lc);
 
     ++i;
   }
 
-  for (const auto &bar : bars())
-    bar->draw();
+  if (! renderer->isPseudo())
+    drawBars(renderer);
 }
 
 void
 CGnuPlotPlot::
-drawStackedHistogram(int i, const CBBox2D &bbox)
+drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &drawData)
+{
+  double xb = 0;
+
+  if (! renderer->isPseudo())
+    xb = renderer->pixelWidthToWindowWidth(2);
+
+  CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
+
+  CRGBA lc = lineStyle().color(c);
+  CRGBA fc = lineStyle().color(CRGBA(0,0,0));
+
+  //---
+
+  if (! renderer->isPseudo())
+    setNumBars(getPoints2D().size());
+
+  int i = 0;
+
+  for (const auto &point : getPoints2D()) {
+    std::vector<double> reals;
+
+    (void) point.getReals(reals);
+
+    if (reals.size() < 2)
+      continue;
+
+    double y = reals[0];
+    double yl, yh;
+
+    if (reals.size() == 2) {
+      yl = y - reals[1];
+      yh = y - reals[1];
+    }
+    else {
+      yl = reals[1];
+      yh = reals[2];
+    }
+
+    double x = drawData.x2 + i*drawData.d;
+
+    double xl = x + xb;
+    double xh = x + drawData.w - xb;
+
+    CBBox2D bbox(xl, drawData.y2, xh, y);
+
+    if (! renderer->isPseudo()) {
+      CGnuPlotBar *bar = bars()[i];
+
+      bar->setBBox (bbox);
+      bar->setValue(y);
+
+      if (! bar->isInitialized()) {
+        bar->setFillType   (fillType());
+        bar->setFillPattern(fillPattern());
+        bar->setFillColor  (fc);
+
+        bar->setBorder   (true);
+        bar->setLineColor(lc);
+
+        bar->setInitialized(true);
+      }
+    }
+    else
+      renderer->drawRect(bbox, lc);
+
+    double xm = x + drawData.w/2;
+
+    renderer->drawClipLine(CPoint2D(xm, yl), CPoint2D(xm, yh), 1.0, lc);
+    renderer->drawClipLine(CPoint2D(xl, yl), CPoint2D(xh, yl), 1.0, lc);
+    renderer->drawClipLine(CPoint2D(xl, yh), CPoint2D(xh, yh), 1.0, lc);
+
+    ++i;
+  }
+
+  if (! renderer->isPseudo())
+    drawBars(renderer);
+}
+
+void
+CGnuPlotPlot::
+drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox)
 {
   const CGnuPlotPoint &point = getPoint2D(i);
 
@@ -1721,31 +1714,42 @@ drawStackedHistogram(int i, const CBBox2D &bbox)
 
   //---
 
-  CGnuPlotBar *bar = bars()[i];
+  if (! renderer->isPseudo()) {
+    CGnuPlotBar *bar = bars()[i];
 
-  bar->setBBox(bbox);
+    bar->setBBox (bbox);
+    bar->setValue(y);
 
-  bar->setValue(y);
+    if (! bar->isInitialized()) {
+      bar->setFillType   (fillType());
+      bar->setFillPattern(fillPattern());
+      bar->setFillColor  (fc);
 
-  bar->setFillType(fillType());
-  bar->setFillPattern(fillPattern());
+      bar->setBorder   (true);
+      bar->setLineColor(lc);
 
-  if (! bar->hasFillColor())
-    bar->setFillColor(fc);
-
-  if (! bar->hasLineColor())
-    bar->setLineColor(lc);
+      bar->setInitialized(true);
+    }
+  }
+  else
+    renderer->drawRect(bbox, lc);
 }
 
 void
 CGnuPlotPlot::
-drawSteps()
+drawBars(CGnuPlotRenderer *renderer)
+{
+  for (const auto &bar : bars())
+    bar->draw(renderer);
+}
+
+void
+CGnuPlotPlot::
+drawSteps(CGnuPlotRenderer *renderer)
 {
   double ymin = bbox_.getYMin();
 
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
-
-  CGnuPlotRenderer *renderer = app()->renderer();
 
   const CRGBA &c = lineStyle.color(CRGBA(1,0,0));
 
@@ -1764,21 +1768,21 @@ drawSteps()
         CPoint2D p3(xm, p1.y);
         CPoint2D p4(xm, p2.y);
 
-        drawLine(p1, p3, lineStyle.width(), c);
-        drawLine(p3, p4, lineStyle.width(), c);
-        drawLine(p4, p2, lineStyle.width(), c);
+        renderer->drawClipLine(p1, p3, lineStyle.width(), c);
+        renderer->drawClipLine(p3, p4, lineStyle.width(), c);
+        renderer->drawClipLine(p4, p2, lineStyle.width(), c);
       }
       else if (style_ == PlotStyle::STEPS) {
         CPoint2D p3(p2.x, p1.y);
 
-        drawLine(p1, p3, lineStyle.width(), c);
-        drawLine(p3, p2, lineStyle.width(), c);
+        renderer->drawClipLine(p1, p3, lineStyle.width(), c);
+        renderer->drawClipLine(p3, p2, lineStyle.width(), c);
       }
       else if (style_ == PlotStyle::FSTEPS) {
         CPoint2D p3(p1.x, p2.y);
 
-        drawLine(p1, p3, lineStyle.width(), c);
-        drawLine(p3, p2, lineStyle.width(), c);
+        renderer->drawClipLine(p1, p3, lineStyle.width(), c);
+        renderer->drawClipLine(p3, p2, lineStyle.width(), c);
       }
       else if (style_ == PlotStyle::FILLSTEPS) {
         CBBox2D bbox(p1.x, ymin, p2.x, p1.y);
@@ -1800,10 +1804,8 @@ drawSteps()
 
 void
 CGnuPlotPlot::
-drawBinaryImage()
+drawBinaryImage(CGnuPlotRenderer *renderer)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   double pw = renderer->pixelWidthToWindowWidth  (1);
   double ph = renderer->pixelHeightToWindowHeight(1);
 
@@ -1905,10 +1907,8 @@ drawBinaryImage()
 
 void
 CGnuPlotPlot::
-drawImage()
+drawImage(CGnuPlotRenderer *renderer)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   double pw = renderer->pixelWidthToWindowWidth  (1);
   double ph = renderer->pixelHeightToWindowHeight(1);
 
@@ -2077,7 +2077,7 @@ indexImageColor(int i, const CRGBA &c) const
 
 void
 CGnuPlotPlot::
-drawImpulses()
+drawImpulses(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
@@ -2108,21 +2108,21 @@ drawImpulses()
       lc1 = lineStyle.colorSpec().calcColor(this, x);
     }
 
-    drawLine(p1, p2, lineStyle.width(), lc1);
+    renderer->drawClipLine(p1, p2, lineStyle.width(), lc1);
   }
 }
 
 void
 CGnuPlotPlot::
-drawLabels()
+drawLabels(CGnuPlotRenderer *renderer)
 {
+  bool enhanced = app()->isEnhanced();
+
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
   bool isCalcColor = lineStyle.colorSpec().isCalc();
 
   CRGBA lc = lineStyle.color(CRGBA(1,0,0));
-
-  CGnuPlotRenderer *renderer = app()->renderer();
 
   for (const auto &point : getPoints2D()) {
     std::vector<double> reals;
@@ -2147,13 +2147,25 @@ drawLabels()
       lc1 = lineStyle.colorSpec().calcColor(this, x);
     }
 
-    renderer->drawText(p, str, lc1);
+    //----
+
+    if (enhanced) {
+      CGnuPlotText text(str);
+
+      CBBox2D bbox = text.calcBBox(renderer).moveBy(p);
+
+      bbox.setYMax(p.y);
+
+      text.draw(renderer, bbox, CHALIGN_TYPE_LEFT, lc1);
+    }
+    else
+      renderer->drawText(p, str, lc1);
   }
 }
 
 void
 CGnuPlotPlot::
-drawVectors()
+drawVectors(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
@@ -2204,26 +2216,28 @@ drawVectors()
     arrow.setFrom(from);
     arrow.setTo  (to);
 
-    arrow.draw();
+    arrow.draw(renderer);
   }
 }
 
 void
 CGnuPlotPlot::
-drawErrorBars()
+drawErrorBars(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
   CRGBA c = lineStyle.color(CRGBA(1,0,0));
 
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   typedef std::map<std::string,int> IndexMap;
 
   IndexMap indexMap;
 
-  double pw = renderer->pixelWidthToWindowWidth  (4);
-  double ph = renderer->pixelHeightToWindowHeight(4);
+  double pw = 0, ph = 0;
+
+  if (! renderer->isPseudo()) {
+    pw = renderer->pixelWidthToWindowWidth  (4);
+    ph = renderer->pixelHeightToWindowHeight(4);
+  }
 
   for (const auto &point : getPoints2D()) {
     double x = 0;
@@ -2306,31 +2320,33 @@ drawErrorBars()
       yh = y + dy;
     }
 
-    drawLine(CPoint2D(x, yl), CPoint2D(x, yh), 1.0, c);
-    drawLine(CPoint2D(xl, y), CPoint2D(xh, y), 1.0, c);
+    renderer->drawClipLine(CPoint2D(x, yl), CPoint2D(x, yh), 1.0, c);
+    renderer->drawClipLine(CPoint2D(xl, y), CPoint2D(xh, y), 1.0, c);
 
-    drawLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, c);
-    drawLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, c);
+    renderer->drawClipLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, c);
+    renderer->drawClipLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, c);
 
-    drawLine(CPoint2D(x - pw, yl), CPoint2D(x + pw, yl), 1.0, c);
-    drawLine(CPoint2D(x - pw, yh), CPoint2D(x + pw, yh), 1.0, c);
+    renderer->drawClipLine(CPoint2D(x - pw, yl), CPoint2D(x + pw, yl), 1.0, c);
+    renderer->drawClipLine(CPoint2D(x - pw, yh), CPoint2D(x + pw, yh), 1.0, c);
   }
 }
 
 void
 CGnuPlotPlot::
-drawXYErrorBars()
+drawXYErrorBars(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
-
-  CGnuPlotRenderer *renderer = app()->renderer();
 
   bool isCalcColor = lineStyle.colorSpec().isCalc();
 
   CRGBA lc = lineStyle.color(CRGBA(1,0,0));
 
-  double pw = renderer->pixelWidthToWindowWidth  (4);
-  double ph = renderer->pixelHeightToWindowHeight(4);
+  double pw = 0, ph = 0;
+
+  if (! renderer->isPseudo()) {
+    pw = renderer->pixelWidthToWindowWidth  (4);
+    ph = renderer->pixelHeightToWindowHeight(4);
+  }
 
   for (const auto &point : getPoints2D()) {
     std::vector<double> reals;
@@ -2379,26 +2395,383 @@ drawXYErrorBars()
       }
     }
 
-    drawLine(CPoint2D(x, yl), CPoint2D(x, yh), 1.0, lc1);
-    drawLine(CPoint2D(xl, y), CPoint2D(xh, y), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(x, yl), CPoint2D(x, yh), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(xl, y), CPoint2D(xh, y), 1.0, lc1);
 
-    drawLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, lc1);
-    drawLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, lc1);
 
-    drawLine(CPoint2D(x - pw, yl), CPoint2D(x + pw, yl), 1.0, lc1);
-    drawLine(CPoint2D(x - pw, yh), CPoint2D(x + pw, yh), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(x - pw, yl), CPoint2D(x + pw, yl), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(x - pw, yh), CPoint2D(x + pw, yh), 1.0, lc1);
   }
 }
 
 void
 CGnuPlotPlot::
-drawParallelAxes()
+drawXErrorBars(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
   bool isCalcColor = lineStyle.colorSpec().isCalc();
 
-  CGnuPlotRenderer *renderer = app()->renderer();
+  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+
+  double ph = 0;
+
+  if (! renderer->isPseudo())
+    ph = renderer->pixelHeightToWindowHeight(4);
+
+  for (const auto &point : getPoints2D()) {
+    std::vector<double> reals;
+
+    (void) point.getReals(reals);
+
+    if (reals.size() < 2)
+      continue;
+
+    double x  = reals[0];
+    double y  = reals[1];
+    double xl = x;
+    double xh = x;
+
+    CRGBA lc1 = lc;
+
+    // x y xlow xhigh
+    if      ((! isCalcColor && reals.size() == 4) || (isCalcColor && reals.size() == 5)) {
+      xl = reals[2];
+      xh = reals[3];
+
+      if (isCalcColor) {
+        double x = reals[4];
+
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
+      }
+    }
+    // x y xdelta
+    else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
+      double dx = reals[2];
+
+      xl = x - dx;
+      xh = x + dx;
+
+      if (isCalcColor) {
+        double x = reals[3];
+
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
+      }
+    }
+
+    renderer->drawClipLine(CPoint2D(xl, y), CPoint2D(xh, y), 1.0, lc1);
+
+    renderer->drawClipLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(xh, y - ph), CPoint2D(xh, y + ph), 1.0, lc1);
+  }
+}
+
+void
+CGnuPlotPlot::
+drawYErrorBars(CGnuPlotRenderer *renderer)
+{
+  const CGnuPlotLineStyle &lineStyle = this->lineStyle();
+
+  bool isCalcColor = lineStyle.colorSpec().isCalc();
+
+  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+
+  double pw = 0;
+
+  if (! renderer->isPseudo())
+    pw = renderer->pixelWidthToWindowWidth(4);
+
+  for (const auto &point : getPoints2D()) {
+    std::vector<double> reals;
+
+    (void) point.getReals(reals);
+
+    if (reals.size() < 2)
+      continue;
+
+    double x  = reals[0];
+    double y  = reals[1];
+    double yl = y;
+    double yh = y;
+
+    CRGBA lc1 = lc;
+
+    // x y ylow yhigh
+    if      ((! isCalcColor && reals.size() == 4) || (isCalcColor && reals.size() == 5)) {
+      yl = reals[2];
+      yh = reals[3];
+
+      if (isCalcColor) {
+        double x = reals[4];
+
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
+      }
+    }
+    // x y xdelta
+    else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
+      double dy = reals[2];
+
+      yl = y - dy;
+      yh = y + dy;
+
+      if (isCalcColor) {
+        double x = reals[3];
+
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
+      }
+    }
+
+    renderer->drawClipLine(CPoint2D(x, yl), CPoint2D(x, yh), 1.0, lc1);
+
+    renderer->drawClipLine(CPoint2D(x - pw, yl), CPoint2D(x + pw, yl), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(x - pw, yh), CPoint2D(x + pw, yh), 1.0, lc1);
+  }
+}
+
+void
+CGnuPlotPlot::
+drawXYErrorLines(CGnuPlotRenderer *renderer)
+{
+  const CGnuPlotLineStyle &lineStyle = this->lineStyle();
+
+  bool isCalcColor = lineStyle.colorSpec().isCalc();
+
+  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+
+  double pw = 0, ph = 0;
+
+  if (! renderer->isPseudo()) {
+    pw = renderer->pixelWidthToWindowWidth  (4);
+    ph = renderer->pixelHeightToWindowHeight(4);
+  }
+
+  int      i = 0;
+  CPoint2D p1(0,0);
+
+  for (const auto &point : getPoints2D()) {
+    std::vector<double> reals;
+
+    (void) point.getReals(reals);
+
+    if (reals.size() < 2)
+      continue;
+
+    double x  = reals[0];
+    double y  = reals[1];
+    double xl = x;
+    double xh = x;
+    double yl = y;
+    double yh = y;
+
+    CRGBA lc1 = lc;
+
+    // x y xlow xhigh ylow yhigh
+    if      ((! isCalcColor && reals.size() == 6) || (isCalcColor && reals.size() == 7)) {
+      xl = reals[2];
+      xh = reals[3];
+      yl = reals[4];
+      yh = reals[5];
+
+      if (isCalcColor) {
+        double x = reals[6];
+
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
+      }
+    }
+    // x y xdelta ydelta
+    else if ((! isCalcColor && reals.size() == 4) || (isCalcColor && reals.size() == 5)) {
+      double dx = reals[2];
+      double dy = reals[3];
+
+      xl = x - dx;
+      xh = x + dx;
+      yl = y - dy;
+      yh = y + dy;
+
+      if (isCalcColor) {
+        double x = reals[4];
+
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
+      }
+    }
+
+    CPoint2D p2 = CPoint2D(x, y);
+
+    renderer->drawClipLine(CPoint2D(x, yl), CPoint2D(x, yh), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(xl, y), CPoint2D(xh, y), 1.0, lc1);
+
+    renderer->drawClipLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, lc1);
+
+    renderer->drawClipLine(CPoint2D(x - pw, yl), CPoint2D(x + pw, yl), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(x - pw, yh), CPoint2D(x + pw, yh), 1.0, lc1);
+
+    if (i > 0)
+      renderer->drawLine(p1, p2, 1, lc1);
+
+    p1 = p2;
+
+    ++i;
+  }
+}
+
+void
+CGnuPlotPlot::
+drawXErrorLines(CGnuPlotRenderer *renderer)
+{
+  const CGnuPlotLineStyle &lineStyle = this->lineStyle();
+
+  bool isCalcColor = lineStyle.colorSpec().isCalc();
+
+  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+
+  double ph = 0;
+
+  if (! renderer->isPseudo())
+    ph = renderer->pixelHeightToWindowHeight(4);
+
+  int      i = 0;
+  CPoint2D p1(0,0);
+
+  for (const auto &point : getPoints2D()) {
+    std::vector<double> reals;
+
+    (void) point.getReals(reals);
+
+    if (reals.size() < 2)
+      continue;
+
+    double x  = reals[0];
+    double y  = reals[1];
+    double xl = x;
+    double xh = x;
+
+    CRGBA lc1 = lc;
+
+    // x y xlow xhigh
+    if      ((! isCalcColor && reals.size() == 4) || (isCalcColor && reals.size() == 5)) {
+      xl = reals[2];
+      xh = reals[3];
+
+      if (isCalcColor) {
+        double x = reals[4];
+
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
+      }
+    }
+    // x y xdelta
+    else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
+      double dx = reals[2];
+
+      xl = x - dx;
+      xh = x + dx;
+
+      if (isCalcColor) {
+        double x = reals[3];
+
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
+      }
+    }
+
+    CPoint2D p2 = CPoint2D(x, y);
+
+    renderer->drawClipLine(CPoint2D(xl, y), CPoint2D(xh, y), 1.0, lc1);
+
+    renderer->drawClipLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(xh, y - ph), CPoint2D(xh, y + ph), 1.0, lc1);
+
+    if (i > 0)
+      renderer->drawLine(p1, p2, 1, lc1);
+
+    p1 = p2;
+
+    ++i;
+  }
+}
+
+void
+CGnuPlotPlot::
+drawYErrorLines(CGnuPlotRenderer *renderer)
+{
+  const CGnuPlotLineStyle &lineStyle = this->lineStyle();
+
+  bool isCalcColor = lineStyle.colorSpec().isCalc();
+
+  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+
+  double pw = 0;
+
+  if (! renderer->isPseudo())
+    pw = renderer->pixelWidthToWindowWidth(4);
+
+  int      i = 0;
+  CPoint2D p1(0,0);
+
+  for (const auto &point : getPoints2D()) {
+    std::vector<double> reals;
+
+    (void) point.getReals(reals);
+
+    if (reals.size() < 2)
+      continue;
+
+    double x  = reals[0];
+    double y  = reals[1];
+    double yl = y;
+    double yh = y;
+
+    CRGBA lc1 = lc;
+
+    // x y ylow yhigh
+    if      ((! isCalcColor && reals.size() == 4) || (isCalcColor && reals.size() == 5)) {
+      yl = reals[2];
+      yh = reals[3];
+
+      if (isCalcColor) {
+        double x = reals[4];
+
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
+      }
+    }
+    // x y xdelta
+    else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
+      double dy = reals[2];
+
+      yl = y - dy;
+      yh = y + dy;
+
+      if (isCalcColor) {
+        double x = reals[3];
+
+        lc1 = lineStyle.colorSpec().calcColor(this, x);
+      }
+    }
+
+    CPoint2D p2 = CPoint2D(x, y);
+
+    renderer->drawClipLine(CPoint2D(x, yl), CPoint2D(x, yh), 1.0, lc1);
+
+    renderer->drawClipLine(CPoint2D(x - pw, yl), CPoint2D(x + pw, yl), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(x - pw, yh), CPoint2D(x + pw, yh), 1.0, lc1);
+
+    if (i > 0)
+      renderer->drawLine(p1, p2, 1, lc1);
+
+    p1 = p2;
+
+    ++i;
+  }
+}
+
+void
+CGnuPlotPlot::
+drawParallelAxes(CGnuPlotRenderer *renderer)
+{
+  const CGnuPlotLineStyle &lineStyle = this->lineStyle();
+
+  bool isCalcColor = lineStyle.colorSpec().isCalc();
 
   typedef std::vector<double>       Reals;
   typedef std::map<int, Reals>      IReals;
@@ -2460,7 +2833,7 @@ drawParallelAxes()
       double ymin = mm.first;
       double ymax = mm.second;
 
-      const CGnuPlotAxisData &paxis = axesData_.paxis[j + 1];
+      const CGnuPlotAxisData &paxis = group_->paxis(j + 1);
 
       if (paxis.min().isValid()) ymin = paxis.min().getValue();
       if (paxis.max().isValid()) ymax = paxis.max().getValue();
@@ -2483,7 +2856,7 @@ drawParallelAxes()
       c = lineStyle.colorSpec().calcColor(this, i);
 
     for (uint j = 1; j < ireals.size(); ++j)
-      drawLine(CPoint2D(j, ireals[j - 1]), CPoint2D(j + 1, ireals[j]), 1.0, c);
+      renderer->drawClipLine(CPoint2D(j, ireals[j - 1]), CPoint2D(j + 1, ireals[j]), 1.0, c);
   }
 
   //------
@@ -2499,7 +2872,7 @@ drawParallelAxes()
     double ymin = mm.first;
     double ymax = mm.second;
 
-    const CGnuPlotAxisData &paxis = axesData_.paxis[i + 1];
+    const CGnuPlotAxisData &paxis = group_->paxis(i + 1);
 
     if (paxis.min().isValid()) ymin = paxis.min().getValue();
     if (paxis.max().isValid()) ymax = paxis.max().getValue();
@@ -2532,7 +2905,7 @@ drawParallelAxes()
 
 void
 CGnuPlotPlot::
-drawPieChart()
+drawPieChart(CGnuPlotRenderer *renderer)
 {
   CPoint2D pc = bbox_.getCenter();
   double   r  = bbox_.getWidth()/2;
@@ -2556,7 +2929,8 @@ drawPieChart()
     }
   }
 
-  pieCache_.updateSize(values.size());
+  if (renderer->isPseudo())
+    pieCache_.updateSize(values.size());
 
   int    i      = 0;
   double angle1 = 90.0;
@@ -2568,31 +2942,37 @@ drawPieChart()
     double dangle = 360.0*value/sum;
     double angle2 = angle1 - dangle;
 
-    CGnuPlotPie *pie = pies()[i];
+    if (! renderer->isPseudo()) {
+      CGnuPlotPie *pie = pies()[i];
 
-    pie->setCenter(pc);
-    pie->setRadius(r);
-    pie->setAngle1(angle1);
-    pie->setAngle2(angle2);
-    pie->setName(name);
+      pie->setCenter(pc);
+      pie->setRadius(r);
+      pie->setAngle1(angle1);
+      pie->setAngle2(angle2);
+      pie->setName(name);
 
-    const CRGBA &c = CGnuPlotStyleInst->indexColor("subtle", i + 1);
+      const CRGBA &c = CGnuPlotStyleInst->indexColor("subtle", i + 1);
 
-    if (! pie->hasColor())
-      pie->setColor(c);
+      if (! pie->hasColor())
+        pie->setColor(c);
+    }
+    else
+      renderer->drawEllipse(pc, r, r, 0, CRGBA(0,0,0));
 
     angle1 = angle2;
 
     ++i;
   }
 
-  for (const auto &pie : pies())
-    pie->draw();
+  if (renderer->isPseudo()) {
+    for (const auto &pie : pies())
+      pie->draw(renderer);
+  }
 }
 
 void
 CGnuPlotPlot::
-drawLines()
+drawLines(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
@@ -2631,7 +3011,8 @@ drawLines()
       p1 = p2;
     }
 
-    drawPath(points, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)), lineStyle.dash());
+    // TODO: clip
+    renderer->drawPath(points, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)), lineStyle.dash());
   }
 
 #if 0
@@ -2642,18 +3023,17 @@ drawLines()
     CPoint2D p1, p2;
 
     if (! point1.isDiscontinuity() && point1.getPoint(p1) && point2.getPoint(p2))
-      drawLine(p1, p2, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)), lineStyle.dash());
+      renderer->drawClipLine(p1, p2, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)),
+                             lineStyle.dash());
   }
 #endif
 }
 
 void
 CGnuPlotPlot::
-drawPoints()
+drawPoints(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
-
-  CGnuPlotRenderer *renderer = app()->renderer();
 
   bool isCalcColor = lineStyle.colorSpec().isCalc();
 
@@ -2940,7 +3320,7 @@ drawTerminal()
 
     arrow.setStrokeColor(CRGBA(1,0,0));
 
-    arrow.draw();
+    arrow.draw(renderer);
   }
   }
 
@@ -3080,40 +3460,6 @@ drawPalette()
 #endif
 }
 
-void
-CGnuPlotPlot::
-drawPath(const std::vector<CPoint2D> &points, double w, const CRGBA &c, const CLineDash &dash)
-{
-  // TODO: clip
-  CGnuPlotRenderer *renderer = app()->renderer();
-
-  renderer->drawPath(points, w, c, dash);
-}
-
-void
-CGnuPlotPlot::
-drawLine(const CPoint2D &p1, const CPoint2D &p2, double w, const CRGBA &c, const CLineDash &dash)
-{
-  CGnuPlotRenderer *renderer = app()->renderer();
-
-  CPoint2D p11 = p1, p21 = p2;
-
-  if (renderer->clipLine(p11, p21))
-    renderer->drawLine(p11, p21, w, c, dash);
-}
-
-void
-CGnuPlotPlot::
-fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
-{
-  CGnuPlotRenderer *renderer = app()->renderer();
-
-  std::vector<CPoint2D> ipoints;
-
-  if (CMathGeom2D::IntersectPolygon(points, renderer->clip(), ipoints))
-    renderer->fillPolygon(ipoints, c);
-}
-
 CGnuPlotBar *
 CGnuPlotPlot::
 createBar() const
@@ -3139,63 +3485,204 @@ void
 CGnuPlotPlot::
 calcXRange(double *xmin, double *xmax) const
 {
-  const CGnuPlotAxisData &xaxis = this->xaxis(xind_);
-
-  if (! xaxis.min().isValid() || ! xaxis.max().isValid()) {
-std::cerr << "CGnuPlotPlot::calcXRange" << std::endl;
-    double xmin1, xmax1;
-
-    getXRange(&xmin1, &xmax1);
-
+  // calc range for all x values
+  if (! xmin_.isValid() || ! xmax_.isValid()) {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
-    CGnuPlotAxisData &xaxis = th->xaxis(xind_);
+    CBBox2D bbox;
 
-    xaxis.setMin(xmin1); xaxis.setMax(xmax1);
+    if (renderBBox(bbox)) {
+      th->xmin_.updateMin(bbox.getLeft ());
+      th->xmax_.updateMax(bbox.getRight());
+    }
+    else {
+      COptReal xmin, ymin, xmax, ymax;
+
+      for (const auto &p : getPoints2D()) {
+        double x;
+
+        if (! p.getX(x))
+          continue;
+
+        th->xmin_.updateMin(x);
+        th->xmax_.updateMax(x);
+      }
+    }
   }
 
-  *xmin = xaxis.min().getValue(-10);
-  *xmax = xaxis.max().getValue( 10);
+  *xmin = xmin_.getValue(-10);
+  *xmax = xmax_.getValue( 10);
 }
 
 void
 CGnuPlotPlot::
 calcYRange(double *ymin, double *ymax) const
 {
-  const CGnuPlotAxisData &xaxis = this->xaxis(xind_);
-  const CGnuPlotAxisData &yaxis = this->yaxis(yind_);
-
-  if (! yaxis.min().isValid() || ! yaxis.max().isValid()) {
-std::cerr << "CGnuPlotPlot::calcYRange" << std::endl;
+  if (! ymin_.isValid() || ! ymax_.isValid()) {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
-    CGnuPlotAxisData &yaxis = th->yaxis(yind_);
+    CBBox2D bbox;
 
-    double ymin1, ymax1;
-
-    if (xaxis.min().isValid() && xaxis.max().isValid() && ! is3D()) {
-      double xmin1 = xaxis.min().getValue();
-      double xmax1 = xaxis.max().getValue();
-
-      for (const auto &point : getPoints2D()) {
-        double x, y;
-
-        if (point.getXY(x, y)) {
-          if (x < xmin1 || x > xmax1)
-            continue;
-
-          yaxis.updateMin(y);
-          yaxis.updateMax(y);
-        }
-      }
+    if (renderBBox(bbox)) {
+      th->ymin_.updateMin(bbox.getBottom());
+      th->ymax_.updateMax(bbox.getTop   ());
     }
     else {
-      getYRange(&ymin1, &ymax1);
+      for (const auto &p : getPoints2D()) {
+        double y;
 
-      yaxis.setMin(ymin1); yaxis.setMax(ymax1);
+        if (! p.getY(y))
+          continue;
+
+        th->ymin_.updateMin(y);
+        th->ymax_.updateMax(y);
+      }
     }
   }
 
-  *ymin = yaxis.min().getValue(-1);
-  *ymax = yaxis.max().getValue( 1);
+  *ymin = ymin_.getValue(-1);
+  *ymax = ymax_.getValue( 1);
+}
+
+void
+CGnuPlotPlot::
+calcBoundedYRange(double *ymin, double *ymax) const
+{
+  // TODO: use dumy renderer which updates bbox
+
+  // get y range constrained by parent group x range
+  if (! bymin_.isValid() || ! bymax_.isValid()) {
+    double xmin, xmax;
+
+    getGroupXRange(&xmin, &xmax);
+
+    CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
+
+    CBBox2D bbox;
+
+    if (renderBBox(bbox)) {
+      th->bymin_.updateMin(bbox.getBottom());
+      th->bymax_.updateMax(bbox.getTop   ());
+    }
+    else {
+      for (const auto &p : getPoints2D()) {
+        double x, y;
+
+        if (! p.getXY(x, y))
+          continue;
+
+        if (x < xmin || x > xmax)
+          continue;
+
+        th->bymin_.updateMin(y);
+        th->bymax_.updateMax(y);
+      }
+    }
+  }
+
+  *ymin = bymin_.getValue(-1);
+  *ymax = bymax_.getValue( 1);
+}
+
+bool
+CGnuPlotPlot::
+renderBBox(CBBox2D &bbox) const
+{
+  CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
+
+  CGnuPlotBBoxRenderer brenderer(app()->renderer());
+
+  if      (style_ == PlotStyle::BOXERRORBARS)
+    th->drawBoxErrorBars(&brenderer);
+  else if (style_ == PlotStyle::BOXES)
+    th->drawBoxes(&brenderer);
+  else if (style_ == PlotStyle::BOXPLOT)
+    th->drawBoxPlot(&brenderer);
+  else if (style_ == PlotStyle::BOXXYERRORBARS)
+    th->drawBoxXYErrorBars(&brenderer);
+  else if (style_ == PlotStyle::CANDLESTICKS)
+    th->drawCandleSticks(&brenderer);
+  else if (style_ == PlotStyle::CIRCLES)
+    th->drawCircles(&brenderer);
+  else if (style_ == PlotStyle::ELLIPSES)
+    th->drawEllipses(&brenderer);
+  else if (style_ == PlotStyle::ERRORBARS)
+    th->drawErrorBars(&brenderer);
+  else if (style_ == PlotStyle::FINANCEBARS)
+    th->drawFinanceBars(&brenderer);
+  else if (style_ == PlotStyle::IMPULSES)
+    th->drawImpulses(&brenderer);
+  else if (style_ == PlotStyle::LABELS)
+    th->drawLabels(&brenderer);
+  else if (style_ == PlotStyle::VECTORS)
+    th->drawVectors(&brenderer);
+  else if (style_ == PlotStyle::XERRORBARS)
+    th->drawXErrorBars(&brenderer);
+  else if (style_ == PlotStyle::XYERRORBARS)
+    th->drawXYErrorBars(&brenderer);
+  else if (style_ == PlotStyle::YERRORBARS)
+    th->drawYErrorBars(&brenderer);
+  else if (style_ == PlotStyle::XERRORLINES)
+    th->drawXErrorLines(&brenderer);
+  else if (style_ == PlotStyle::XYERRORLINES)
+    th->drawXYErrorLines(&brenderer);
+  else if (style_ == PlotStyle::YERRORLINES)
+    th->drawYErrorLines(&brenderer);
+  else
+    return false;
+
+  bbox = brenderer.bbox();
+
+  return true;
+}
+
+void
+CGnuPlotPlot::
+recalcBoundedYRange(double *ymin, double *ymax) const
+{
+  CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
+
+  th->bymin_.setInvalid();
+  th->bymax_.setInvalid();
+
+  calcBoundedYRange(ymin, ymax);
+}
+
+void
+CGnuPlotPlot::
+getGroupXRange(double *xmin, double *xmax) const
+{
+  calcXRange(xmin, xmax);
+
+  CGnuPlotAxisData &xaxis = group_->xaxis(xind_);
+
+  if (xaxis.min().isValid())
+    *xmin = xaxis.min().getValue();
+  if (xaxis.max().isValid())
+    *xmax = xaxis.max().getValue();
+
+  //CGnuPlotAxisData &yaxis = group_->yaxis(yind_);
+
+  //if (yaxis.min().isValid()) ymin_ = yaxis.min().getValue();
+  //if (yaxis.max().isValid()) ymax_ = yaxis.max().getValue();
+}
+
+void
+CGnuPlotPlot::
+getPointsRange(CBBox2D &bbox) const
+{
+  COptReal xmin, ymin, xmax, ymax;
+
+  for (const auto &p : getPoints2D()) {
+    double x, y;
+
+    if (! p.getXY(x, y))
+      continue;
+
+    xmin.updateMin(x); ymin.updateMin(y);
+    xmax.updateMax(x); ymax.updateMax(y);
+  }
+
+  bbox = CBBox2D(xmin.getValue(-10), ymin.getValue(-1),
+                 xmax.getValue( 10), ymax.getValue( 1));
 }

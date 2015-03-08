@@ -29,6 +29,7 @@ class CExprCompileImpl {
   void        compileInteger(CExprITokenPtr itoken);
   void        compileReal(CExprITokenPtr itoken);
   void        compileString(CExprITokenPtr itoken);
+  void        compileComplex(CExprITokenPtr itoken);
 #if 0
   void        compileITokenChildren(CExprITokenPtr itoken);
 #endif
@@ -37,6 +38,7 @@ class CExprCompileImpl {
   void        stackInteger(long);
   void        stackReal(double);
   void        stackString(const std::string &str);
+  void        stackComplex(const std::complex<double> &c);
   void        stackFunction(CExprFunctionPtr function);
   void        stackValue(CExprValuePtr);
   void        setLastError(const std::string &msg);
@@ -187,6 +189,10 @@ compileIToken1(CExprITokenPtr itoken)
       break;
     case CEXPR_ITOKEN_STRING:
       compileString(itoken);
+
+      break;
+    case CEXPR_ITOKEN_COMPLEX:
+      compileComplex(itoken);
 
       break;
     default:
@@ -880,6 +886,7 @@ compilePostfixExpression(CExprITokenPtr itoken)
  * <primary_expression>:= <integer>
  * <primary_expression>:= <real>
  * <primary_expression>:= <string>
+ * <primary_expression>:= <complex>
  * <primary_expression>:= <identifier>
  * <primary_expression>:= ( <expression> )
  */
@@ -905,6 +912,10 @@ compilePrimaryExpression(CExprITokenPtr itoken)
         break;
       case CEXPR_ITOKEN_STRING:
         compileString(itoken->getChild(0));
+
+        break;
+      case CEXPR_ITOKEN_COMPLEX:
+        compileComplex(itoken->getChild(0));
 
         break;
       case CEXPR_ITOKEN_IDENTIFIER:
@@ -972,6 +983,13 @@ compileString(CExprITokenPtr itoken)
   stackString(itoken->getString());
 }
 
+void
+CExprCompileImpl::
+compileComplex(CExprITokenPtr itoken)
+{
+  stackComplex(itoken->getComplex());
+}
+
 #if 0
 void
 CExprCompileImpl::
@@ -1025,6 +1043,15 @@ CExprCompileImpl::
 stackString(const std::string &str)
 {
   CExprCTokenPtr ctoken = CExprCToken::createStringToken(str);
+
+  ctoken_stack_.addToken(ctoken);
+}
+
+void
+CExprCompileImpl::
+stackComplex(const std::complex<double> &c)
+{
+  CExprCTokenPtr ctoken = CExprCToken::createComplexToken(c);
 
   ctoken_stack_.addToken(ctoken);
 }
@@ -1102,6 +1129,9 @@ print(std::ostream &os) const
       break;
     case CEXPR_CTOKEN_STRING:
       os << "<string>";
+      break;
+    case CEXPR_CTOKEN_COMPLEX:
+      os << "<complex>";
       break;
     case CEXPR_CTOKEN_FUNCTION:
       os << "<function>";

@@ -41,6 +41,7 @@ CQGnuPlotWindow.cpp \
 CGnuPlot.cpp \
 CGnuPlotArrow.cpp \
 CGnuPlotAxis.cpp \
+CGnuPlotBBoxRenderer.cpp \
 CGnuPlotBar.cpp \
 CGnuPlotBubble.cpp \
 CGnuPlotColorBox.cpp \
@@ -80,9 +81,10 @@ CMathGeom2D.cpp \
 CArcToBezier.cpp \
 CSymbol2D.cpp \
 \
-Expr/CExprBValue.cpp \
-Expr/CExprCompile.cpp \
 Expr/CExpr.cpp \
+Expr/CExprBValue.cpp \
+Expr/CExprCValue.cpp \
+Expr/CExprCompile.cpp \
 Expr/CExprExecute.cpp \
 Expr/CExprFunction.cpp \
 Expr/CExprInterp.cpp \
@@ -130,6 +132,7 @@ CGnuPlotArrow.h \
 CGnuPlotArrowStyle.h \
 CGnuPlotAxis.h \
 CGnuPlotAxisData.h \
+CGnuPlotBBoxRenderer.h \
 CGnuPlotBar.h \
 CGnuPlotBubble.h \
 CGnuPlotCache.h \
@@ -181,12 +184,13 @@ CArcToBezier.h \
 CSymbol2D.h \
 CStrUniqueMatch.h \
 \
+Expr/CExpr.h \
 Expr/CExprBValue.h \
+Expr/CExprCValue.h \
 Expr/CExprCompile.h \
 Expr/CExprError.h \
 Expr/CExprExecute.h \
 Expr/CExprFunction.h \
-Expr/CExpr.h \
 Expr/CExprI.h \
 Expr/CExprInterp.h \
 Expr/CExprIValue.h \

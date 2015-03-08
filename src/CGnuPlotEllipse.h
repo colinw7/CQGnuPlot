@@ -38,7 +38,7 @@ class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {
   const CGnuPlotFillStyle &getFillStyle() const { return fs_; }
   void setFillStyle(const CGnuPlotFillStyle &fs) { fs_ = fs; }
 
-  void draw() const override;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
   bool inside(const CPoint2D &p) const;
 

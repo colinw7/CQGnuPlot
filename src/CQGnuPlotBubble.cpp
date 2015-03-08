@@ -44,7 +44,7 @@ setColor(const QColor &color)
 
 void
 CQGnuPlotBubble::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
   CQGnuPlotBubble *th = const_cast<CQGnuPlotBubble *>(this);
 
@@ -53,7 +53,7 @@ draw() const
   if (isSelected())
     th->CGnuPlotBubble::setColor(CRGBA(1,0,0));
 
-  CGnuPlotBubble::draw();
+  CGnuPlotBubble::draw(renderer);
 
   if (isSelected())
     th->CGnuPlotBubble::setColor(c);

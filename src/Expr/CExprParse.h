@@ -9,7 +9,8 @@ enum CExprPTokenType {
   CEXPR_PTOKEN_OPERATOR   = 2,
   CEXPR_PTOKEN_INTEGER    = 3,
   CEXPR_PTOKEN_REAL       = 4,
-  CEXPR_PTOKEN_STRING     = 5
+  CEXPR_PTOKEN_STRING     = 5,
+  CEXPR_PTOKEN_COMPLEX    = 6
 };
 
 class CExprPTokenBase {
@@ -99,6 +100,22 @@ class CExprPTokenString : public CExprPTokenBase {
   std::string str_;
 };
 
+class CExprPTokenComplex : public CExprPTokenBase {
+ public:
+  CExprPTokenComplex(const std::complex<double> &c) :
+   c_(c) {
+  }
+
+  const std::complex<double> &getComplex() const { return c_; }
+
+  void print(std::ostream &os) const {
+    os << "{" << c_.real() << ", " << c_.imag() << "}";
+  }
+
+ private:
+  std::complex<double> c_;
+};
+
 class CExprPToken {
  public:
   static CExprPTokenPtr createIdentifierToken(const std::string &identifier) {
@@ -146,6 +163,15 @@ class CExprPToken {
     return ptoken;
   }
 
+  static CExprPTokenPtr createComplexToken(const std::complex<double> &c) {
+    CExprPTokenPtr ptoken(new CExprPToken);
+
+    ptoken->type_ = CEXPR_PTOKEN_COMPLEX;
+    ptoken->base_ = new CExprPTokenComplex(c);
+
+    return ptoken;
+  }
+
   static CExprPTokenPtr createUnknownToken() {
     return CExprPTokenPtr(new CExprPToken);
   }
@@ -186,6 +212,12 @@ class CExprPToken {
     assert(type_ == CEXPR_PTOKEN_STRING);
 
     return base_.cast<CExprPTokenString>()->getString();
+  }
+
+  const std::complex<double> &getComplex() const {
+    assert(type_ == CEXPR_PTOKEN_COMPLEX);
+
+    return base_.cast<CExprPTokenComplex>()->getComplex();
   }
 
   void printQualified(std::ostream &os) const;

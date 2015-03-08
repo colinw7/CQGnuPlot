@@ -21,7 +21,7 @@ setColor(const QColor &c)
   CGnuPlotLineStyle::setColor(CQUtil::colorToRGBA(c));
 }
 
-CQGnuPlot::CQSymbolType
+CQGnuPlot::SymbolType
 CQGnuPlotLineStyle::
 pointType() const
 {
@@ -30,7 +30,7 @@ pointType() const
 
 void
 CQGnuPlotLineStyle::
-setPointType(const CQGnuPlot::CQSymbolType &type)
+setPointType(const CQGnuPlot::SymbolType &type)
 {
   CGnuPlotLineStyle::setPointType(CQGnuPlotUtil::symbolConv(type));
 }

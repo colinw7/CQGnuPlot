@@ -16,6 +16,10 @@ class CExprRealValue : public CExprValueBase {
   bool getRealValue   (double      &r) const { r = real_       ; return true; }
   bool getStringValue (std::string &s) const { s = CStrUtil::toString(real_); return true; }
 
+  bool getComplexValue(std::complex<double> &c) const {
+    c = std::complex<double>(real_, 0.0); return true;
+  }
+
   void setRealValue(double r) { real_ = r; }
 
   CExprValuePtr execUnaryOp(CExprOpType op) const;

@@ -166,6 +166,13 @@ executeToken(const CExprCTokenPtr &ctoken)
 
       break;
     }
+    case CEXPR_CTOKEN_COMPLEX: {
+      CExprValuePtr value = CExprInst->createComplexValue(ctoken->getComplex());
+
+      stackValue(value);
+
+      break;
+    }
     case CEXPR_CTOKEN_FUNCTION: {
       CExprValuePtr value;
 
@@ -403,6 +410,11 @@ executeBinaryOperator(CExprOpType type)
 
   if (! value1.isValid() || ! value2.isValid())
     return false;
+
+  if (value1->isComplexValue() || value2->isComplexValue()) {
+    if (! value1->convToComplex()) return false;
+    if (! value2->convToComplex()) return false;
+  }
 
   if (value1->isRealValue() || value2->isRealValue()) {
     if (! value1->convToReal()) return false;

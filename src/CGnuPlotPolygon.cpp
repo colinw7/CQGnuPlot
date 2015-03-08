@@ -4,10 +4,8 @@
 
 void
 CGnuPlotPolygon::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
-
   const CGnuPlotPolygon *poly = this;
 
   if (poly->getFillColor().isRGB())

@@ -30,6 +30,20 @@ setLabel(const QString &label)
 
 void
 CQGnuPlotAxis::
+setStart(double r)
+{
+  group_->setAxisStart(id_, r);
+}
+
+void
+CQGnuPlotAxis::
+setEnd(double r)
+{
+  group_->setAxisEnd(id_, r);
+}
+
+void
+CQGnuPlotAxis::
 drawAxis(double pos)
 {
   CGnuPlotAxis::drawAxis(pos);

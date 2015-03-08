@@ -19,7 +19,7 @@ class CQGnuPlotEllipse : public CQGnuPlotAnnotation, public CGnuPlotEllipse {
   QPointF getCenter() const;
   void setCenter(const QPointF &p);
 
-  virtual void draw() const override;
+  virtual void draw(CGnuPlotRenderer *renderer) const override;
 };
 
 #endif

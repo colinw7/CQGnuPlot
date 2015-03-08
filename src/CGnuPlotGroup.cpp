@@ -2,7 +2,7 @@
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotDevice.h>
-#include <CGnuPlotRenderer.h>
+#include <CGnuPlotBBoxRenderer.h>
 
 namespace {
   std::string encodeAxisId(char c, int ind) {
@@ -47,7 +47,7 @@ init()
   setRegion(plot->region());
   setMargin(plot->margin());
 
-  setHistogramStyle(plot->histogramStyle());
+  setHistogramData(plot->histogramData());
 
   setLogScaleMap(plot->logScaleMap());
 
@@ -57,6 +57,21 @@ init()
   palette_ ->init(plot->palette ());
 
   setAxesData(plot->axesData());
+
+  for (int ind = 1; ind <= 2; ++ind) {
+    double xmin = xaxis(ind).min().getValue(0.0);
+    double xmax = xaxis(ind).max().getValue(1.0);
+    double ymin = yaxis(ind).min().getValue(0.0);
+    double ymax = yaxis(ind).max().getValue(1.0);
+
+    normalizeXRange(xmin, xmax);
+    normalizeYRange(ymin, ymax);
+
+    if (xaxis(ind).min().isValid()) xaxis(ind).setMin(xmin);
+    if (xaxis(ind).max().isValid()) xaxis(ind).setMax(xmax);
+    if (yaxis(ind).min().isValid()) yaxis(ind).setMin(ymin);
+    if (yaxis(ind).max().isValid()) yaxis(ind).setMax(ymax);
+  }
 }
 
 void
@@ -127,21 +142,181 @@ fit()
 {
   COptReal xmin1, ymin1, xmax1, ymax1, xmin2, ymin2, xmax2, ymax2;
 
-  for (auto plot : plots_) {
-    xmin1.updateMin(plot->xaxis(1).min()); xmax1.updateMax(plot->xaxis(1).max());
-    ymin1.updateMin(plot->yaxis(1).min()); ymax1.updateMax(plot->yaxis(1).max());
+  if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
+    Plots plots;
 
-    xmin2.updateMin(plot->xaxis(2).min()); xmax2.updateMax(plot->xaxis(2).max());
-    ymin2.updateMin(plot->yaxis(2).min()); ymax2.updateMax(plot->yaxis(2).max());
+    getPlotsOfStyle(plots, PlotStyle::HISTOGRAMS);
+
+    CGnuPlotBBoxRenderer brenderer(app()->renderer());
+
+    HistogramStyle hstyle = getHistogramData().style();
+
+    CGnuPlotPlot::DrawHistogramData drawData;
+
+    drawData.d = plots.size();
+
+    if      (hstyle == HistogramStyle::CLUSTERED) {
+      for (auto plot : plots) {
+        plot->drawClusteredHistogram(&brenderer, drawData);
+
+        drawData.x2 += 1.0;
+      }
+    }
+    else if (hstyle == HistogramStyle::ERRORBARS) {
+      for (auto plot : plots) {
+        plot->drawErrorBarsHistogram(&brenderer, drawData);
+
+        drawData.x2 += 1.0;
+      }
+    }
+    else if (hstyle == HistogramStyle::ROWSTACKED) {
+      drawRowStackedHistograms(&brenderer, plots);
+    }
+    else if (hstyle == HistogramStyle::COLUMNSTACKED) {
+      drawColumnStackedHistograms(&brenderer, plots);
+    }
+
+    xmin1.updateMin(brenderer.bbox().getLeft  ());
+    ymin1.updateMin(brenderer.bbox().getBottom());
+    xmax1.updateMax(brenderer.bbox().getRight ());
+    ymax1.updateMax(brenderer.bbox().getTop   ());
+  }
+  else if (hasPlotStyle(PlotStyle::BUBBLECHART)) {
+    xmin1 = -1; ymin1 = -1;
+    xmax1 =  1; ymax1 =  1;
+  }
+  else if (hasPlotStyle(PlotStyle::PIECHART)) {
+    xmin1 = -1; ymin1 = -1;
+    xmax1 =  1; ymax1 =  1;
+  }
+  else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
+    int nc = 0;
+
+    for (auto plot : plots_) {
+      int nc1 = 0;
+
+      for (const auto &p : plot->getPoints2D())
+        nc1 = std::max(nc, p.getNumValues());
+
+      if (plot->lineStyle().colorSpec().isCalc())
+        --nc1;
+
+      nc = std::max(nc, nc1);
+    }
+
+    xmin1 = 1; xmax1 = nc;
+    ymin1 = 0; ymax1 = 1;
+  }
+  else if (hasImageStyle()) {
+    for (auto plot : plots_) {
+      const CGnuPlotImageStyle imageStyle = plot->imageStyle();
+
+      double xmin = 0, xmax = imageStyle.w - 1;
+      double ymin = 0, ymax = imageStyle.h - 1;
+
+      xmin1.updateMin(xmin); xmax1.updateMax(xmax);
+      ymin1.updateMin(ymin); ymax1.updateMax(ymax);
+    }
+  }
+  else {
+    for (auto plot : plots_) {
+      double xmin, xmax;
+
+      plot->calcXRange(&xmin, &xmax);
+
+      if (plot->xind() == 1) {
+        xmin1.updateMin(xmin); xmax1.updateMax(xmax);
+      }
+      else {
+        xmin2.updateMin(xmin); xmax2.updateMax(xmax);
+      }
+    }
+
+    for (auto plot : plots_) {
+      double ymin, ymax;
+
+      plot->calcBoundedYRange(&ymin, &ymax);
+
+      if (plot->yind() == 1) {
+        ymin1.updateMin(ymin); ymax1.updateMax(ymax);
+      }
+      else {
+        ymin2.updateMin(ymin); ymax2.updateMax(ymax);
+      }
+    }
   }
 
-  xaxis(1).setMin(xmin1); xaxis(1).setMax(xmax1);
-  yaxis(1).setMin(ymin1); yaxis(1).setMax(ymax1);
-  xaxis(2).setMin(xmin2); xaxis(2).setMax(xmax2);
-  yaxis(2).setMin(ymin2); yaxis(2).setMax(ymax2);
+  //---
 
-  for (auto plot : plots_)
-    plot->setAxesData(axesData_);
+  if ((! xaxis(1).min().isValid() || ! xaxis(1).max().isValid()) &&
+      (xmin1.isValid() && xmax1.isValid())) {
+    double xmin = xmin1.getValue();
+    double xmax = xmax1.getValue();
+
+    normalizeXRange(xmin, xmax);
+
+    xaxis(1).setMin(xmin);
+    xaxis(1).setMax(xmax);
+  }
+
+  if ((! yaxis(1).min().isValid() || ! yaxis(1).max().isValid()) &&
+      (ymin1.isValid() && ymax1.isValid())) {
+    double ymin = ymin1.getValue();
+    double ymax = ymax1.getValue();
+
+    normalizeXRange(ymin, ymax);
+
+    yaxis(1).setMin(ymin);
+    yaxis(1).setMax(ymax);
+  }
+
+  //---
+
+  if ((! xaxis(2).min().isValid() || ! xaxis(2).max().isValid()) &&
+      (xmin2.isValid() && xmax2.isValid())) {
+    double xmin = xmin2.getValue();
+    double xmax = xmax2.getValue();
+
+    normalizeXRange(xmin, xmax);
+
+    xaxis(2).setMin(xmin);
+    xaxis(2).setMax(xmax);
+  }
+
+  if ((! yaxis(2).min().isValid() || ! yaxis(2).max().isValid()) &&
+      (ymin2.isValid() && ymax2.isValid())) {
+    double ymin = ymin2.getValue();
+    double ymax = ymax2.getValue();
+
+    normalizeXRange(ymin, ymax);
+
+    yaxis(2).setMin(ymin);
+    yaxis(2).setMax(ymax);
+  }
+}
+
+void
+CGnuPlotGroup::
+normalizeXRange(double &xmin, double &xmax) const
+{
+  CGnuPlotAxis plotXAxis(const_cast<CGnuPlotGroup *>(this), "x1", CORIENTATION_HORIZONTAL);
+
+  plotXAxis.setRange(xmin, xmax);
+
+  xmin = plotXAxis.getStart();
+  xmax = plotXAxis.getEnd  ();
+}
+
+void
+CGnuPlotGroup::
+normalizeYRange(double &ymin, double &ymax) const
+{
+  CGnuPlotAxis plotYAxis(const_cast<CGnuPlotGroup *>(this), "y1", CORIENTATION_VERTICAL);
+
+  plotYAxis.setRange(ymin, ymax);
+
+  ymin = plotYAxis.getStart();
+  ymax = plotYAxis.getEnd  ();
 }
 
 CBBox2D
@@ -162,6 +337,25 @@ reset3D()
 {
   for (auto plot : plots_)
     plot->reset3D();
+}
+
+void
+CGnuPlotGroup::
+setHistogramData(const CGnuPlotHistogramData &data)
+{
+  histogramData_ = data;
+
+  if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
+    xaxis(1).resetMin();
+    xaxis(1).resetMax();
+    yaxis(1).resetMin();
+    yaxis(1).resetMax();
+
+    fit();
+
+    updatePlotAxisRange('x', 1);
+    updatePlotAxisRange('y', 1);
+  }
 }
 
 void
@@ -256,56 +450,133 @@ getPlotAxis(char c, int ind)
 {
   std::string id = encodeAxisId(c, ind);
 
-  Axes::iterator p = axes_.find(id);
+  auto p = axes_.find(id);
 
   if (p == axes_.end()) {
-    CGnuPlotAxis *axis;
+    COrientation dir;
 
-    if      (c == 'x' || c == 'y') {
-      COrientation dir = (c == 'x' ? CORIENTATION_HORIZONTAL : CORIENTATION_VERTICAL);
-
-      axis = app()->createAxis(this, id, dir);
-
-      double start = 0, end = 1;
-
-      if      (ind == 1 && dir == CORIENTATION_HORIZONTAL) {
-        start = xaxis(1).min().getValue(0.0);
-        end   = xaxis(1).max().getValue(1.0);
-      }
-      else if (ind == 1 && dir == CORIENTATION_VERTICAL) {
-        start = yaxis(1).min().getValue(0.0);
-        end   = yaxis(1).max().getValue(1.0);
-      }
-      else if (ind == 2 && dir == CORIENTATION_HORIZONTAL) {
-        start = xaxis(2).min().getValue(0.0);
-        end   = xaxis(2).max().getValue(1.0);
-      }
-      else if (ind == 2 && dir == CORIENTATION_VERTICAL) {
-        start = yaxis(2).min().getValue(0.0);
-        end   = yaxis(2).max().getValue(1.0);
-      }
-      else
-        assert(false);
-
-      axis->setRange(start, end);
-    }
-    else if (c == 'p') {
-      COrientation dir = CORIENTATION_VERTICAL;
-
-      axis = app()->createAxis(this, id, dir);
-
-      double start = axesData_.paxis[ind].min().getValue(0.0);
-      double end   = axesData_.paxis[ind].max().getValue(1.0);
-
-      axis->setRange(start, end);
-    }
+    if      (c == 'x')
+      dir = CORIENTATION_HORIZONTAL;
+    else if (c == 'y')
+      dir = CORIENTATION_VERTICAL;
+    else if (c == 'p')
+      dir = CORIENTATION_VERTICAL;
     else
       assert(false);
 
+    CGnuPlotAxis *axis = app()->createAxis(this, id, dir);
+
     p = axes_.insert(p, Axes::value_type(id, axis));
+
+    updatePlotAxisRange(c, ind);
   }
 
   return (*p).second;
+}
+
+void
+CGnuPlotGroup::
+setAxisStart(const std::string &id, double r)
+{
+  auto p = axes_.find(id);
+  if (p == axes_.end()) return;
+
+  CGnuPlotAxis *axis = (*p).second;
+
+  double start = r;
+  double end   = axis->getEnd();
+
+  axis->setRange(start, end);
+
+  char c;
+  int  ind;
+
+  decodeAxisId(id, c, ind);
+
+  if      (c == 'x') {
+    xaxis(ind).setMin(axis->getStart());
+    xaxis(ind).setMax(axis->getEnd  ());
+  }
+  else if (c == 'y') {
+    yaxis(ind).setMin(axis->getStart());
+    yaxis(ind).setMax(axis->getEnd  ());
+  }
+}
+
+void
+CGnuPlotGroup::
+setAxisEnd(const std::string &id, double r)
+{
+  auto p = axes_.find(id);
+  if (p == axes_.end()) return;
+
+  CGnuPlotAxis *axis = (*p).second;
+
+  double start = axis->getStart();
+  double end   = r;
+
+  axis->setRange(start, end);
+
+  char c;
+  int  ind;
+
+  decodeAxisId(id, c, ind);
+
+  if      (c == 'x') {
+    xaxis(ind).setMin(axis->getStart());
+    xaxis(ind).setMax(axis->getEnd  ());
+  }
+  else if (c == 'y') {
+    yaxis(ind).setMin(axis->getStart());
+    yaxis(ind).setMax(axis->getEnd  ());
+  }
+}
+
+void
+CGnuPlotGroup::
+updatePlotAxisRange(const std::string &id)
+{
+  char c;
+  int  ind;
+
+  decodeAxisId(id, c, ind);
+
+  updatePlotAxisRange(c, ind);
+}
+
+void
+CGnuPlotGroup::
+updatePlotAxisRange(char c, int ind)
+{
+  std::string id = encodeAxisId(c, ind);
+
+  auto p = axes_.find(id);
+  if (p == axes_.end()) return;
+
+  CGnuPlotAxis *axis = (*p).second;
+
+  double start = 0, end = 1;
+
+  if      (c == 'x' || c == 'y') {
+    if      (c == 'x') {
+      start = xaxis(ind).min().getValue(0.0);
+      end   = xaxis(ind).max().getValue(1.0);
+    }
+    else if (c == 'y') {
+      start = yaxis(ind).min().getValue(0.0);
+      end   = yaxis(ind).max().getValue(1.0);
+    }
+    else
+      assert(false);
+  }
+  else if (c == 'p') {
+    start = axesData_.paxis[ind].min().getValue(0.0);
+    end   = axesData_.paxis[ind].max().getValue(1.0);
+  }
+  else
+    assert(false);
+
+  axis->setRange(start, end);
 }
 
 void
@@ -326,85 +597,239 @@ drawHistogram(const Plots &plots)
 {
   CGnuPlotRenderer *renderer = app()->renderer();
 
-  COptReal xmin1, ymin1, xmax1, ymax1;
+  CBBox2D bbox = getDisplayRange(1, 1);
 
-  for (auto plot : plots) {
-    double xmin2, ymin2, xmax2, ymax2;
-
-    plot->calcXRange(&xmin2, &xmax2);
-    plot->calcYRange(&ymin2, &ymax2);
-
-    xmin1.updateMin(xmin2); xmax1.updateMax(xmax2);
-    ymin1.updateMin(ymin2); ymax1.updateMax(ymax2);
-  }
-
-  double xmin = xmin1.getValue(0);
-  double ymin = ymin1.getValue(0);
-  double xmax = xmax1.getValue(1);
-  double ymax = ymax1.getValue(1);
+  renderer->setRange(bbox);
+  renderer->setClip(bbox);
 
   //---
 
-  uint numPlots = plots.size();
+  HistogramStyle hstyle = getHistogramData().style();
 
+  CGnuPlotPlot::DrawHistogramData drawData;
+
+  drawData.y2 = std::max(0.0, bbox.getBottom());
+  drawData.w  = 1.0; // TODO: bbox width
+  drawData.d  = plots.size();
+
+  if      (hstyle == HistogramStyle::CLUSTERED) {
+    renderer->setReverse(xaxis(1).isReverse(), yaxis(1).isReverse());
+
+    for (auto plot : plots) {
+      plot->drawClusteredHistogram(renderer, drawData);
+
+      drawData.x2 += 1.0;
+    }
+  }
+  else if (hstyle == HistogramStyle::ERRORBARS) {
+    renderer->setReverse(xaxis(1).isReverse(), yaxis(1).isReverse());
+
+    for (auto plot : plots) {
+      plot->drawErrorBarsHistogram(renderer, drawData);
+
+      drawData.x2 += 1.0;
+    }
+  }
+  else if (hstyle == HistogramStyle::ROWSTACKED) {
+    drawRowStackedHistograms(renderer, plots);
+  }
+  else if (hstyle == HistogramStyle::COLUMNSTACKED) {
+    drawColumnStackedHistograms(renderer, plots);
+  }
+  else {
+    app()->errorMsg("Unsupported histogram style");
+  }
+}
+
+void
+CGnuPlotGroup::
+drawRowStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
+{
   uint numPoints = 0;
 
   for (auto plot : plots)
     numPoints = std::max(numPoints, plot->numPoints2D());
 
-  if (numPoints == 0) return;
+  if (numPoints == 0)
+    return;
+
+  if (! renderer->isPseudo()) {
+    for (auto plot : plots)
+      plot->setNumBars(numPoints);
+  }
 
   //---
 
-  double xf = 1.0;
+  double xb = 0;
 
-  if      (getHistogramStyle() == HistogramStyle::CLUSTERED) {
-    CBBox2D bbox = getDisplayRange(1, 1);
+  if (! renderer->isPseudo())
+    xb = renderer->pixelWidthToWindowWidth(2);
 
-    renderer->setRange(bbox);
-    renderer->setReverse(xaxis(1).isReverse(), yaxis(1).isReverse());
+  double w = 1.0 - 2*xb;
+  double x = 0.5 + xb;
 
-    double y2 = std::max(0.0, bbox.getBottom());
-
-    double w = xf*(xmax - xmin + 1)/(numPoints*numPlots);
+  for (uint i = 0; i < numPoints; ++i) {
+    double h = 0;
 
     for (auto plot : plots) {
-      double d = (plot->ind() - 1 - numPlots/2.0)*w;
+      const CGnuPlotPoint &point = plot->getPoint2D(i);
 
-      plot->drawClusteredHistogram(y2, d, w);
+      double y;
+
+      if (! point.getY(y))
+        y = 0.0;
+
+      CBBox2D bbox1(x, h, x + w, h + y);
+
+      plot->drawStackedHistogram(renderer, i, bbox1);
+
+      h += y;
     }
+
+    x += 1.0;
   }
-  else if (getHistogramStyle() == HistogramStyle::ROWSTACKED) {
-    double xb = renderer->pixelWidthToWindowWidth(2);
+
+  for (auto plot : plots)
+    plot->drawBars(renderer);
+}
+
+void
+CGnuPlotGroup::
+drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
+{
+  if (! renderer->isPseudo()) {
+    for (auto plot : plots)
+      plot->setNumBars(plot->numPoints2D());
+  }
+
+  //---
+
+  double xb = 0;
+
+  if (! renderer->isPseudo())
+    xb = renderer->pixelWidthToWindowWidth(2);
+
+  double w = 1.0 - 2*xb;
+  double x = 0.5 + xb;
+
+  //---
+
+  for (auto plot : plots) {
+    double h1 = 0, h2 = 0;
+
+    for (uint i = 0; i < plot->numPoints2D(); ++i) {
+      const CGnuPlotPoint &point = plot->getPoint2D(i);
+
+      double y;
+
+      if (! point.getY(y))
+        y = 0.0;
+
+      if (y >= 0) {
+        CBBox2D bbox1(x, h1, x + w, h1 + y);
+
+        plot->drawStackedHistogram(renderer, i, bbox1);
+
+        h1 += y;
+      }
+      else {
+        CBBox2D bbox1(x, h2, x + w, h2 + y);
+
+        plot->drawStackedHistogram(renderer, i, bbox1);
+
+        h2 += y;
+      }
+    }
+
+    x += 1.0;
+  }
+
+  for (auto plot : plots)
+    plot->drawBars(renderer);
+}
+
+void
+CGnuPlotGroup::
+calcHistogramRange(const Plots &plots, CBBox2D &bbox) const
+{
+  uint numPoints = 0;
+
+  for (auto plot : plots)
+    numPoints = std::max(numPoints, plot->numPoints2D());
+
+  //---
+
+  double xmin = 0, xmax = 1;
+  double ymin = 0, ymax = 1;
+
+  HistogramStyle hstyle = getHistogramData().style();
+
+  if      (hstyle == HistogramStyle::CLUSTERED) {
+    xmin = 0;
+    xmax = plots.size()*numPoints + 1;
+
+    COptReal ymin1, ymax1;
+
+    for (auto plot : plots) {
+      CBBox2D bbox;
+
+      plot->getPointsRange(bbox);
+
+      ymin1.updateMin(bbox.getYMin());
+      ymax1.updateMax(bbox.getYMax());
+    }
+
+    ymin = ymin1.getValue(0);
+    ymax = ymax1.getValue(1);
+  }
+  else if (hstyle == HistogramStyle::ERRORBARS) {
+    xmin = 0;
+    xmax = plots.size()*numPoints + 1;
+
+    COptReal ymin1, ymax1;
+
+    for (auto plot : plots) {
+      CBBox2D bbox;
+
+      plot->getPointsRange(bbox);
+
+      ymin1.updateMin(bbox.getYMin());
+      ymax1.updateMax(bbox.getYMax());
+    }
+
+    ymin = ymin1.getValue(0);
+    ymax = ymax1.getValue(1);
+  }
+  else if (hstyle == HistogramStyle::ROWSTACKED) {
+    xmin = 0;
+    xmax = numPoints + 1;
 
     ymin = 0;
     ymax = 0;
 
     for (auto plot : plots) {
-      double ymin1, ymax1;
+      CBBox2D bbox;
 
-      plot->getYRange(&ymin1, &ymax1);
+      plot->getPointsRange(bbox);
 
-      ymax += ymax1;
+      if (bbox.getYMin() < 0)
+        ymin += bbox.getYMin();
+
+      if (bbox.getYMax() > 0)
+        ymax += bbox.getYMax();
     }
+  }
+  else if (hstyle == HistogramStyle::COLUMNSTACKED) {
+    xmin = 0;
+    xmax = plots.size() + 1;
 
-    yaxis(1).setMin(ymin);
-    yaxis(1).setMax(ymax);
+    ymin = 0;
+    ymax = 0;
 
-    //---
+    for (auto plot : plots) {
+      double ymin1 = 0, ymax1 = 0;
 
-    for (auto plot : plots)
-      plot->setNumBars(numPoints);
-
-    //---
-
-    double w = (xmax - xmin)/(numPoints - 1);
-    double x = xmin - w/2.0;
-
-    for (uint i = 0; i < numPoints; ++i) {
-      double h = 0;
-
-      for (auto plot : plots) {
+      for (uint i = 0; i < plot->numPoints2D(); ++i) {
         const CGnuPlotPoint &point = plot->getPoint2D(i);
 
         double y;
@@ -412,23 +837,25 @@ drawHistogram(const Plots &plots)
         if (! point.getY(y))
           y = 0.0;
 
-        CBBox2D bbox(x + xb, h, x + w - xb, h + y);
-
-        plot->drawStackedHistogram(i, bbox);
-
-        h += y;
+        if (y >= 0)
+          ymax1 += y;
+        else
+          ymin1 += y;
       }
 
-      x += w;
+      ymin = std::min(ymin, ymin1);
+      ymax = std::max(ymax, ymax1);
     }
   }
+
+  bbox = CBBox2D(xmin, ymin, xmax, ymax);
 }
 
 void
 CGnuPlotGroup::
 drawAxes()
 {
-  if (hasPlotStyle(PlotStyle::BUBBLECHART))
+  if (hasPlotStyle(PlotStyle::BUBBLECHART) || hasPlotStyle(PlotStyle::PIECHART))
     return;
 
   drawBorder();
@@ -498,23 +925,13 @@ drawXAxes(int xind, bool drawOther)
   if (! plotXAxis->isDisplayed())
     return;
 
-  double xmin1 = plotXAxis->getStart();
-  double xmax1 = plotXAxis->getEnd  ();
+//double xmin1 = plotXAxis->getStart();
+//double xmax1 = plotXAxis->getEnd  ();
   double ymin1 = plotYAxis->getStart();
   double ymax1 = plotYAxis->getEnd  ();
 
   if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
     plotXAxis->setMajorIncrement(1);
-
-    if (getHistogramStyle() == HistogramStyle::CLUSTERED ||
-        getHistogramStyle() == HistogramStyle::ROWSTACKED) {
-      xmin1 -= 1;
-      xmax1 += 1;
-    }
-
-    if (getHistogramStyle() == HistogramStyle::ROWSTACKED)
-      ymin1 = 0;
-
     plotXAxis->setDrawMinorTickMark(false);
   }
   else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
@@ -527,10 +944,12 @@ drawXAxes(int xind, bool drawOther)
   if (xaxis.isDisplayed()) {
     plotXAxis->setLabel(xaxis.text());
 
-    if (getLogScale(LogScale::X))
-      plotXAxis->setLogarithmic(getLogScale(LogScale::X));
+    if (getLogScale(LogScale::X)) {
+      plotXAxis->setLogarithmic(true);
+      plotXAxis->setLogarithmicBase(getLogScale(LogScale::X));
+    }
     else
-      plotXAxis->resetLogarithmic();
+      plotXAxis->setLogarithmic(false);
 
     plotXAxis->setDrawLine(false);
     plotXAxis->setDrawTickMark(xaxis.showTics());
@@ -583,15 +1002,6 @@ drawYAxes(int yind, bool drawOther)
 //double ymax1 = plotYAxis->getEnd  ();
 
   if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
-    if (getHistogramStyle() == HistogramStyle::CLUSTERED ||
-        getHistogramStyle() == HistogramStyle::ROWSTACKED) {
-      xmin1 -= 1;
-      xmax1 += 1;
-    }
-
-    //if (getHistogramStyle() == HistogramStyle::ROWSTACKED)
-    //  ymin1 = 0;
-
     plotYAxis->setDrawMinorTickMark(false);
   }
 
@@ -601,10 +1011,12 @@ drawYAxes(int yind, bool drawOther)
   if (yaxis.isDisplayed()) {
     plotYAxis->setLabel(yaxis.text());
 
-    if (getLogScale(LogScale::Y))
-      plotYAxis->setLogarithmic(getLogScale(LogScale::Y));
+    if (getLogScale(LogScale::Y)) {
+      plotYAxis->setLogarithmic(true);
+      plotYAxis->setLogarithmicBase(getLogScale(LogScale::Y));
+    }
     else
-      plotYAxis->resetLogarithmic();
+      plotYAxis->setLogarithmic(false);
 
     plotYAxis->setDrawLine(false);
     plotYAxis->setDrawTickMark(yaxis.showTics());
@@ -674,7 +1086,7 @@ drawAnnotations(CGnuPlotLayer layer)
 
   for (const auto &ann : annotations_)
     if (ann->getLayer() == layer)
-      ann->draw();
+      ann->draw(renderer);
 }
 
 CGnuPlotAxisData *
@@ -750,21 +1162,38 @@ void
 CGnuPlotGroup::
 calcRange(int xind, int yind, double &xmin, double &ymin, double &xmax, double &ymax) const
 {
-  COptReal xmin1, ymin1, xmax1, ymax1;
+  COptReal xmin1, xmax1;
 
   for (auto plot : plots_) {
-    double xmin2, ymin2, xmax2, ymax2;
+    if (plot->xind() != xind) continue;
+
+    double xmin2, xmax2;
 
     plot->calcXRange(&xmin2, &xmax2);
-    plot->calcYRange(&ymin2, &ymax2);
 
-    if (plot->xind() == xind) { xmin1.updateMin(xmin2); xmax1.updateMax(xmax2); }
-    if (plot->yind() == yind) { ymin1.updateMin(ymin2); ymax1.updateMax(ymax2); }
+    xmin1.updateMin(xmin2);
+    xmax1.updateMax(xmax2);
   }
 
   xmin = xmin1.getValue(0);
-  ymin = ymin1.getValue(0);
   xmax = xmax1.getValue(1);
+
+  //---
+
+  COptReal ymin1, ymax1;
+
+  for (auto plot : plots_) {
+    if (plot->yind() != yind) continue;
+
+    double ymin2, ymax2;
+
+    plot->calcBoundedYRange(&ymin2, &ymax2);
+
+    ymin1.updateMin(ymin2);
+    ymax1.updateMax(ymax2);
+  }
+
+  ymin = ymin1.getValue(0);
   ymax = ymax1.getValue(1);
 }
 
@@ -772,35 +1201,53 @@ CBBox2D
 CGnuPlotGroup::
 getDisplayRange(int xind, int yind) const
 {
-  double xmin, ymin, xmax, ymax;
+  if (! xaxis(xind).min().isValid() || ! yaxis(yind).min().isValid() ||
+      ! xaxis(xind).max().isValid() || ! yaxis(yind).max().isValid()) {
+    CGnuPlotGroup *th = const_cast<CGnuPlotGroup *>(this);
 
-  calcRange(xind, yind, xmin, ymin, xmax, ymax);
-
-  CGnuPlotAxis plotXAxis(const_cast<CGnuPlotGroup *>(this), "x1", CORIENTATION_HORIZONTAL);
-  CGnuPlotAxis plotYAxis(const_cast<CGnuPlotGroup *>(this), "y1", CORIENTATION_VERTICAL  );
-
-  plotXAxis.setRange(xmin, xmax);
-  plotYAxis.setRange(ymin, ymax);
-
-  double xmin1 = plotXAxis.getStart();
-  double xmax1 = plotXAxis.getEnd  ();
-  double ymin1 = plotYAxis.getStart();
-  double ymax1 = plotYAxis.getEnd  ();
-
-  if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
-    CGnuPlot::HistogramStyle hstyle = getHistogramStyle();
-
-    if (hstyle == CGnuPlot::HistogramStyle::CLUSTERED ||
-        hstyle == CGnuPlot::HistogramStyle::ROWSTACKED) {
-      xmin1 -= 1;
-      xmax1 += 1;
-    }
-
-    if (hstyle == CGnuPlot::HistogramStyle::ROWSTACKED)
-      ymin1 = std::min(0.0, ymin1);
+    th->fit();
   }
 
-  return CBBox2D(xmin1, ymin1, xmax1, ymax1);
+  double xmin = xaxis(xind).min().getValue(- 1);
+  double ymin = yaxis(yind).min().getValue(-10);
+  double xmax = xaxis(xind).max().getValue(  1);
+  double ymax = yaxis(yind).max().getValue( 10);
+
+  return CBBox2D(xmin, ymin, xmax, ymax);
+}
+
+CBBox2D
+CGnuPlotGroup::
+calcDisplayRange(int xind, int yind) const
+{
+  CBBox2D bbox;
+
+  if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
+    Plots hplots;
+
+    getPlotsOfStyle(hplots, PlotStyle::HISTOGRAMS);
+
+    calcHistogramRange(hplots, bbox);
+
+    CGnuPlotAxis plotYAxis(const_cast<CGnuPlotGroup *>(this), "y1", CORIENTATION_VERTICAL  );
+
+    plotYAxis.setRange(bbox.getYMin(), bbox.getYMax());
+
+    bbox.setYMin(plotYAxis.getStart());
+    bbox.setYMax(plotYAxis.getEnd  ());
+  }
+  else {
+    double xmin, ymin, xmax, ymax;
+
+    calcRange(xind, yind, xmin, ymin, xmax, ymax);
+
+    normalizeXRange(xmin, xmax);
+    normalizeYRange(xmin, xmax);
+
+    bbox = CBBox2D(xmin, ymin, xmax, ymax);
+  }
+
+  return bbox;
 }
 
 bool
@@ -809,6 +1256,18 @@ hasPlotStyle(PlotStyle style) const
 {
   for (auto plot : plots_) {
     if (plot->getStyle() == style)
+      return true;
+  }
+
+  return false;
+}
+
+bool
+CGnuPlotGroup::
+hasImageStyle() const
+{
+  for (auto plot : plots_) {
+    if (plot->isImageStyle())
       return true;
   }
 

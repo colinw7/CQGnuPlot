@@ -14,25 +14,39 @@ CQGnuPlotBar::
 {
 }
 
-QColor
+CQGnuPlot::FillType
 CQGnuPlotBar::
-getLineColor() const
+getFillType() const
 {
-  return toQColor(CGnuPlotBar::lineColor());
+  return CQGnuPlotUtil::fillTypeConv(CGnuPlotBar::fillType());
 }
 
 void
 CQGnuPlotBar::
-setLineColor(const QColor &color)
+setFillType(const CQGnuPlot::FillType &t)
 {
-  CGnuPlotBar::setLineColor(fromQColor(color));
+  CGnuPlotBar::setFillType(CQGnuPlotUtil::fillTypeConv(t));
+}
+
+CQGnuPlot::FillPattern
+CQGnuPlotBar::
+getFillPattern() const
+{
+  return CQGnuPlotUtil::fillPatternConv(CGnuPlotBar::fillPattern());
+}
+
+void
+CQGnuPlotBar::
+setFillPattern(const CQGnuPlot::FillPattern &t)
+{
+  CGnuPlotBar::setFillPattern(CQGnuPlotUtil::fillPatternConv(t));
 }
 
 QColor
 CQGnuPlotBar::
 getFillColor() const
 {
-  return toQColor(CGnuPlotBar::fillColor());
+  return toQColor(CGnuPlotBar::fillColor().getValue(CRGBA(1,1,1)));
 }
 
 void
@@ -42,32 +56,48 @@ setFillColor(const QColor &color)
   CGnuPlotBar::setFillColor(fromQColor(color));
 }
 
+QColor
+CQGnuPlotBar::
+getLineColor() const
+{
+  return toQColor(CGnuPlotBar::lineColor().getValue(CRGBA(0,0,0)));
+}
+
 void
 CQGnuPlotBar::
-draw() const
+setLineColor(const QColor &color)
 {
-  CQGnuPlotBar *th = const_cast<CQGnuPlotBar *>(this);
+  CGnuPlotBar::setLineColor(fromQColor(color));
+}
 
-  //bool lcSet = hasLineColor();
-  bool fcSet  = CGnuPlotBar::hasFillColor();
-  bool border = CGnuPlotBar::hasBorder();
-
-//CRGBA lc = (lcSet ? lineColor() : CRGBA(0,0,0));
-  CRGBA fc = (fcSet ? fillColor() : CRGBA(1,0,0));
-
-  if (isSelected()) {
-  //th->CGnuPlotBar::setLineColor(CRGBA(1,0,0));
-    th->CGnuPlotBar::setFillColor(CRGBA(1,0,0));
-
-    th->CGnuPlotBar::setBorder(true);
-  }
-
-  CGnuPlotBar::draw();
+void
+CQGnuPlotBar::
+draw(CGnuPlotRenderer *renderer) const
+{
+  CGnuPlotBar::draw(renderer);
 
   if (isSelected()) {
-  //if (lcSet) th->CGnuPlotBar::setLineColor(lc); else th->CGnuPlotBar::resetLineColor();
-    if (fcSet) th->CGnuPlotBar::setFillColor(fc); else th->CGnuPlotBar::resetFillColor();
+    CGnuPlotBar bar1(*this);
 
-    th->CGnuPlotBar::setBorder(border);
+    bar1.setFillType   (CGnuPlotTypes::FillType   ::PATTERN);
+    bar1.setFillPattern(CGnuPlotTypes::FillPattern::HATCH);
+
+    CRGBA fc(0,0,0);
+
+    if (fillType() == CGnuPlotTypes::FillType::SOLID ||
+        (fillType() == CGnuPlotTypes::FillType::PATTERN &&
+         fillPattern() != CGnuPlotTypes::FillPattern::NONE)) {
+      double g = fillColor().getValue(CRGBA(1,1,1)).getGray();
+
+      if (g < 0.5)
+        fc = CRGBA(1, 1, 1);
+    }
+
+    bar1.setFillColor(fc);
+
+    bar1.setBorder   (true);
+    bar1.setLineColor(CRGBA(1,0,0));
+
+    bar1.draw(renderer);
   }
 }

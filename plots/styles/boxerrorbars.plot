@@ -10,7 +10,7 @@ unset key #below
 
 set title "variable color boxerror, xyerrorbars, impulses, vectors, and labels"
 
-plot 'candlesticks.dat' using 1:5:2:6:(.2):1 with boxerror lc var fs solid 0.5 border -1
+plot 'data/candlesticks.dat' using 1:5:2:6:(.2):1 with boxerror lc var fs solid 0.5 border -1
 
 #plot 'candlesticks.dat' \
         using 1:5:2:6:(.2):1 with boxerror lc var fs solid 0.5 border -1 , \

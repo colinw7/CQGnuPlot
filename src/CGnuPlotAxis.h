@@ -32,32 +32,34 @@ class CGnuPlotAxis {
   double getStart() const { return start1_; }
   double getEnd  () const { return end1_  ; }
 
-  bool logarithmic() const { return logarithmic_ > 1; }
-  void setLogarithmic(int base) { assert(base > 1); logarithmic_ = base; }
-  void resetLogarithmic() { logarithmic_ = 0; }
+  bool isLogarithmic() const { return logarithmic_; }
+  void setLogarithmic(bool b) { logarithmic_ = b; }
 
-  uint getNumMajorTicks() const { return numTicks1_; }
-  void setNumMajorTicks(uint n) { numTicks1_ = n; }
+  int logarithmicBase() const { return logarithmicBase_; }
+  void setLogarithmicBase(int b) { logarithmicBase_ = b; }
 
-  uint getNumMinorTicks() const { return numTicks2_; }
-  void setNumMinorTicks(uint n) { numTicks2_ = n; }
+  int getNumMajorTicks() const { return numTicks1_; }
+  void setNumMajorTicks(int n) { numTicks1_ = n; }
+
+  int getNumMinorTicks() const { return numTicks2_; }
+  void setNumMinorTicks(int n) { numTicks2_ = n; }
 
   double getMajorIncrement() const;
   void setMajorIncrement(double i);
 
   double getMinorIncrement() const;
 
-  uint getTickIncrement() const { return tickIncrement_; }
-  void setTickIncrement(uint tickIncrement);
+  int getTickIncrement() const { return tickIncrement_; }
+  void setTickIncrement(int tickIncrement);
 
   const double *getTickSpaces   () const { return &tickSpaces_[0]; }
-  uint          getNumTickSpaces() const { return tickSpaces_.size(); }
+  int           getNumTickSpaces() const { return tickSpaces_.size(); }
 
   bool isTickInside() const { return tickInside_; }
   void setTickInside(bool b) { tickInside_ = b; }
 
   double getTickSpace(int i) const { return tickSpaces_[i]; }
-  void setTickSpaces(double *tickSpaces, uint numTickSpaces);
+  void setTickSpaces(double *tickSpaces, int numTickSpaces);
 
   bool isLabelInside() const { return labelInside_; }
   void setLabelInside(bool b) { labelInside_ = b; }
@@ -106,8 +108,8 @@ class CGnuPlotAxis {
   bool calc();
 
   bool testAxisGaps(double start, double end, double testIncrement,
-                    uint testNumGapTicks, double *start1, double *end1,
-                    double *increment, uint *numGaps, uint *numGapTicks);
+                    int testNumGapTicks, double *start1, double *end1,
+                    double *increment, int *numGaps, int *numGapTicks);
 
   void drawAxisTick(const CPoint2D &p, CDirectionType type, bool large);
 
@@ -123,7 +125,7 @@ class CGnuPlotAxis {
   void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
                         CVAlignType valign, double yOffset, const std::string &str);
 
- private:
+ protected:
   typedef std::vector<double> TickSpaces;
 
   CGnuPlotGroup*    group_             { 0 };
@@ -134,10 +136,11 @@ class CGnuPlotAxis {
   double            start1_            { 0 };
   double            end1_              { 1 };
   bool              reverse_           { false };
-  int               logarithmic_       { 0 };
-  uint              numTicks1_         { 1 };
-  uint              numTicks2_         { 0 };
-  uint              tickIncrement_     { 0 };
+  bool              logarithmic_       { false };
+  int               logarithmicBase_   { 10 };
+  int               numTicks1_         { 1 };
+  int               numTicks2_         { 0 };
+  int               tickIncrement_     { 0 };
   double            majorIncrement_    { 0 };
   TickSpaces        tickSpaces_;
   bool              tickInside_        { false };

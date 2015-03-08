@@ -25,7 +25,7 @@ class CQGnuPlotBubble : public CQGnuPlotObject, public CGnuPlotBubble {
   QColor getColor() const;
   void setColor(const QColor &c);
 
-  void draw() const override;
+  void draw(CGnuPlotRenderer *renderer) const override;
 };
 
 #endif

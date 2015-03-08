@@ -67,6 +67,9 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotCamera.h>
 #include <CGnuPlotPalette.h>
 #include <CGnuPlotColorBox.h>
+#include <CGnuPlotUsingCol.h>
+#include <CGnuPlotImageStyle.h>
+#include <CGnuPlotHistogramData.h>
 
 //------
 
@@ -160,6 +163,7 @@ class CGnuPlot {
     STYLE,
     DASHTYPE,
     LINETYPE,
+    POINTINTERVALBOX,
 
     BARS,
     BOXWIDTH,
@@ -168,10 +172,14 @@ class CGnuPlot {
     AUTOSCALE,
     FORMAT,
     GRID,
+
     XLABEL,
-    YLABEL,
     X2LABEL,
+    YLABEL,
     Y2LABEL,
+    ZLABEL,
+    CBLABEL,
+
     XRANGE,
     X2RANGE,
     YRANGE,
@@ -180,6 +188,7 @@ class CGnuPlot {
     CBRANGE,
     TRANGE,
     RRANGE,
+
     TICS,
     XTICS,
     YTICS,
@@ -193,6 +202,7 @@ class CGnuPlot {
     MZTICS,
     MX2TICS,
     MY2TICS,
+
     TICSCALE,
     ZEROAXIS,
     RAXIS,
@@ -365,39 +375,6 @@ class CGnuPlot {
 
   //---
 
-  struct UsingCol {
-    UsingCol(int i) :
-     str(""), isInt(true), ival(i) {
-    }
-
-    UsingCol(const std::string &str1) :
-     str(str1), isInt(false), ival(-1) {
-      isInt = CStrUtil::toInteger(str1, &ival);
-    }
-
-    std::string str;
-    bool        isInt { true };
-    int         ival  { 0 };
-  };
-
-  typedef std::vector<UsingCol> UsingCols;
-
-  //---
-
-  struct ImageStyle {
-    int                w { 1 };
-    int                h { 1 };
-    COptValT<CPoint2D> o;
-    COptValT<CPoint2D> c;
-    COptReal           dx, dy;
-    COptReal           a;
-    bool               flipy { false };
-    std::string        format { "" };
-    UsingCols          usingCols;
-  };
-
-  //---
-
   typedef std::map<int,CGnuPlotLineStyleP> LineStyles;
 
   //---
@@ -547,6 +524,22 @@ class CGnuPlot {
 
   //---
 
+  typedef std::deque<std::string> BufferLines;
+
+  struct FileData {
+    CUnixFile*  file { 0 };
+    int         lineNum { 0 };
+    BufferLines bufferLines;
+  };
+
+  struct FunctionData {
+    std::string function;
+    bool        isAssign = false;
+    std::string assign;
+  };
+
+  //---
+
   typedef std::vector<CGnuPlotPlot *> Plots;
   typedef std::vector<std::string>    Statements;
 
@@ -605,8 +598,8 @@ class CGnuPlot {
   const LineStyles &lineStyles() const { return lineStyles_; }
   CGnuPlotLineStyleP lineStyle(int i) const;
 
-  HistogramStyle histogramStyle() { return histogramStyle_; }
-  void setHistogramStyle(HistogramStyle style) { histogramStyle_ = style; }
+  const CGnuPlotHistogramData &histogramData() { return histogramData_; }
+  void setHistogramData(const CGnuPlotHistogramData &data) { histogramData_ = data; }
 
   const CGnuPlotArrowStyle &arrowStyle() const { return arrowStyle_; }
   void setArrowStyle(const CGnuPlotArrowStyle &as) { arrowStyle_ = as; }
@@ -625,6 +618,7 @@ class CGnuPlot {
 
   int xind() const { return xind_; }
   int yind() const { return yind_; }
+  int zind() const { return zind_; }
 
   const PlotSize &plotSize() const { return plotSize_; }
   void setPlotSize(const PlotSize &s) { plotSize_ = s; }
@@ -693,8 +687,13 @@ class CGnuPlot {
   bool isMatrix() const { return matrix_; }
   void setMatrix(bool m) { matrix_ = m; }
 
-  const ImageStyle &imageStyle() const { return imageStyle_; }
-  void setImageStyle(const ImageStyle &imageStyle) { imageStyle_ = imageStyle; }
+  const CGnuPlotImageStyle &imageStyle() const { return imageStyle_; }
+  void setImageStyle(const CGnuPlotImageStyle &imageStyle) { imageStyle_ = imageStyle; }
+
+  //------
+
+  bool isEnhanced() const { return enhanced_; }
+  void setEnhanced(bool b) { enhanced_ = b; }
 
   //------
 
@@ -813,6 +812,8 @@ class CGnuPlot {
 
   void drawWindows();
 
+  void errorMsg(const std::string &msg) const;
+
  private:
   bool parseLine(const std::string &str);
   bool parseStatement(int &i, const Statements &statements);
@@ -841,6 +842,10 @@ class CGnuPlot {
                    const std::string &inc, const std::string &args);
   void unsetForCmd(const std::string &var, const std::string &start, const std::string &end,
                    const std::string &inc, const std::string &args);
+
+  bool parseModifiers2D(CParseLine &line, CGnuPlotLineStyle &lineStyle,
+                        CGnuPlotFillStyle &fillStyle);
+  bool parseModifiers3D(CParseLine &line);
 
   bool parseFor(CParseLine &line, std::string &var, std::string &start, std::string &end,
                 std::string &inc, std::string &lcmd, std::string &rcmd);
@@ -873,7 +878,7 @@ class CGnuPlot {
 
   void readBlockLines(Statements &lines, std::string &eline, int depth);
 
-  void parseUsing(CParseLine &line, UsingCols &usingCols);
+  void parseUsing(CParseLine &line, CGnuPlotUsingCols &usingCols);
 
   void parseIndex(CParseLine &line, int &indexStart, int &indexEnd, int &indexStep);
   void parseEvery(CParseLine &line, int &everyStart, int &everyEnd, int &everyStep);
@@ -891,10 +896,10 @@ class CGnuPlot {
   CGnuPlotPlot *addFunction3D(CGnuPlotWindowP window, const std::string &str, PlotStyle style);
 
   Plots addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-                  const UsingCols &usingCols);
+                  const CGnuPlotUsingCols &usingCols);
 
   CGnuPlotPlot *addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-                           const UsingCols &usingCols);
+                           const CGnuPlotUsingCols &usingCols);
 
   CGnuPlotPlot *addFile3D(CGnuPlotWindowP window, const std::string &filename);
 
@@ -902,9 +907,9 @@ class CGnuPlot {
 
   bool parseRange(CParseLine &line, std::vector<std::string> &fields);
 
-  void decodeRange(const std::vector<std::string> &xfields, CGnuPlotAxisData &axis);
+  bool decodeRange(const std::vector<std::string> &xfields, CGnuPlotAxisData &axis);
 
-  CExprValueP decodeUsingCol(int i, const CGnuPlot::UsingCol &col, int setNum,
+  CExprValueP decodeUsingCol(int i, const CGnuPlotUsingCol &col, int setNum,
                              int pointNum, bool &skip, bool &ignore);
 
   bool evaluateExpression(const std::string &expr, CExprValueP &value, bool quiet=false) const;
@@ -996,10 +1001,9 @@ class CGnuPlot {
   bool pm3D() const { return pm3D_; }
   void setPm3D(bool b) { pm3D_ = b; }
 
-  bool enhanced() const { return enhanced_; }
-  void setEnhanced(bool b) { enhanced_ = b; }
+  bool parseFunction(CParseLine &line, FunctionData &functionData);
 
-  bool parseFunction(CParseLine &line, std::string &function);
+  bool processAssignFunction(const std::string &lhs, const std::string &rhs);
 
   bool readIdentifier(CParseLine &line, std::string &identifier);
 
@@ -1011,89 +1015,91 @@ class CGnuPlot {
 
   bool fileReadLine(std::string &line);
 
+  bool fieldToReal(const std::string &field, double &r) const;
+
  private:
   typedef std::map<std::string,CGnuPlotDevice*> Devices;
   typedef std::vector<CGnuPlotWindowP>          Windows;
   typedef std::vector<std::string>              Fields;
   typedef std::vector<std::string>              FileLines;
-  typedef std::deque<std::string>               BufferLines;
+  typedef std::vector<FileData>                 FileDataArray;
   typedef CAutoPtr<CGnuPlotReadLine>            ReadLineP;
   typedef std::map<std::string,std::string>     DummyVarMap;
 
-  bool                debug_  { false };
-  bool                edebug_ { false };
-  CGnuPlotSVGDevice*  svgDevice_ { 0 };
-  CGnuPlotDevice*     device_ { 0 };
-  Devices             devices_;
-  CUnixFile*          file_ { 0 };
-  int                 fileLineNum_ { 0 };
-  BufferLines         bufferLines_;
-  Windows             windows_;
-  CGnuPlotFile        dataFile_;
-  std::string         missingStr_;
-  BoxWidth            boxWidth_;
-  BarSize             barSize_;
-  BoxPlot             boxPlot_;
-  std::string         outputFile_;
-  std::string         printFile_;
-  std::string         lastPlotCmd_;
-  bool                printAppend_ { false };
-  std::string         tableFile_;
-  int                 pointNum_ { 0 };
-  CISize2D            terminalSize_   { 600, 600 };                  // terminal size
-  PlotStyle           dataStyle_      { PlotStyle::POINTS };
-  PlotStyle           functionStyle_  { PlotStyle::LINES };
-  Smooth              smooth_         { Smooth::NONE };
-  HistogramStyle      histogramStyle_ { HistogramStyle::CLUSTERED };
-//AngleType           angleType_      { AngleType::RADIANS };
-  CGnuPlotFillStyle   fillStyle_;
-  CGnuPlotLineStyleP  lineStyle_;
-  CGnuPlotPointStyle  pointStyle_;
-  LineStyles          lineStyles_;
-  StyleIncrement      styleIncrement_;
-  CGnuPlotTitle       title_;
-  VarPrefs            varPrefs_;
-  AxesData            axesData_;
-  CGnuPlotKeyData     keyData_;
-  CBBox2D             region_ { 0, 0, 1, 1 };
-  Margin              margin_ { 10, 10, 10, 10 };
-  CRGBA               backgroundColor_ { 1, 1, 1};
-  int                 xind_ { 1 };
-  int                 yind_ { 1 };
-  ArrowStyles         arrowStyles_;
-  CGnuPlotArrowStyle  arrowStyle_;
-  LineDashes          lineDashes_;
-  bool                binary_ { false };
-  bool                matrix_ { false };
-  bool                clip_ { false };
-  bool                parametric_ { false };
-  bool                polar_ { false };
-  bool                enhanced_ { true };
-  ImageStyle          imageStyle_;
-  Annotations         annotations_;
-  CGnuPlotCamera      camera_;
-  CGnuPlotPalette     palette_;
-  CGnuPlotColorBox    colorBox_;
-  FilledCurve         filledCurve_;
-  std::string         timeFmt_;
-  LogScaleMap         logScale_;
-  DummyVarMap         dummyVars_;
-  int                 isamples1_   { 100 };
-  int                 isamples2_   { 100 };
-  int                 isoSamples1_ {  10 };
-  int                 isoSamples2_ {  10 };
-  PlotSize            plotSize_;
-  Multiplot           multiplot_;
-  CGnuPlotWindowP     multiWindow_;
-  COptValT<CBBox2D>   clearRect_;
-  bool                hidden3D_  { false };
-  bool                surface3D_ {  true };
-  bool                contour3D_ { false };
-  bool                pm3D_      { false };
-  int                 trianglePattern3D_ { 3 };
-  double              whiskerBars_ { 0 };
-  ReadLineP           readLine_;
-  mutable Fields      fields_;
+  bool                  debug_  { false };
+  bool                  edebug_ { false };
+  CGnuPlotSVGDevice*    svgDevice_ { 0 };
+  CGnuPlotDevice*       device_ { 0 };
+  Devices               devices_;
+  FileData              fileData_;
+  FileDataArray         fileDataArray_;
+  Windows               windows_;
+  CGnuPlotFile          dataFile_;
+  std::string           missingStr_;
+  BoxWidth              boxWidth_;
+  BarSize               barSize_;
+  BoxPlot               boxPlot_;
+  std::string           outputFile_;
+  std::string           printFile_;
+  std::string           lastPlotCmd_;
+  bool                  printAppend_ { false };
+  std::string           tableFile_;
+  int                   pointNum_ { 0 };
+  CISize2D              terminalSize_   { 600, 600 };                  // terminal size
+  PlotStyle             dataStyle_      { PlotStyle::POINTS };
+  PlotStyle             functionStyle_  { PlotStyle::LINES };
+  Smooth                smooth_         { Smooth::NONE };
+  CGnuPlotHistogramData histogramData_;
+//AngleType             angleType_      { AngleType::RADIANS };
+  CGnuPlotFillStyle     fillStyle_;
+  CGnuPlotLineStyleP    lineStyle_;
+  CGnuPlotPointStyle    pointStyle_;
+  LineStyles            lineStyles_;
+  StyleIncrement        styleIncrement_;
+  CGnuPlotTitle         title_;
+  VarPrefs              varPrefs_;
+  AxesData              axesData_;
+  CGnuPlotKeyData       keyData_;
+  CBBox2D               region_ { 0, 0, 1, 1 };
+  Margin                margin_ { 10, 10, 10, 10 };
+  CRGBA                 backgroundColor_ { 1, 1, 1};
+  int                   xind_ { 1 };
+  int                   yind_ { 1 };
+  int                   zind_ { 1 };
+  ArrowStyles           arrowStyles_;
+  CGnuPlotArrowStyle    arrowStyle_;
+  LineDashes            lineDashes_;
+  bool                  binary_ { false };
+  bool                  matrix_ { false };
+  bool                  clip_ { false };
+  bool                  parametric_ { false };
+  bool                  polar_ { false };
+  bool                  enhanced_ { true };
+  CGnuPlotImageStyle    imageStyle_;
+  Annotations           annotations_;
+  CGnuPlotCamera        camera_;
+  CGnuPlotPalette       palette_;
+  CGnuPlotColorBox      colorBox_;
+  FilledCurve           filledCurve_;
+  std::string           timeFmt_;
+  LogScaleMap           logScale_;
+  DummyVarMap           dummyVars_;
+  int                   isamples1_   { 100 };
+  int                   isamples2_   { 100 };
+  int                   isoSamples1_ {  10 };
+  int                   isoSamples2_ {  10 };
+  PlotSize              plotSize_;
+  Multiplot             multiplot_;
+  CGnuPlotWindowP       multiWindow_;
+  COptValT<CBBox2D>     clearRect_;
+  bool                  hidden3D_  { false };
+  bool                  surface3D_ {  true };
+  bool                  contour3D_ { false };
+  bool                  pm3D_      { false };
+  int                   trianglePattern3D_ { 3 };
+  double                whiskerBars_ { 0 };
+  ReadLineP             readLine_;
+  mutable Fields        fields_;
 };
 
 #endif

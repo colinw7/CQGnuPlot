@@ -12,10 +12,8 @@ CGnuPlotLabel(CGnuPlotGroup *group) :
 
 void
 CGnuPlotLabel::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
-
   CHAlignType halign = getAlign();
 //CVAlignType valign = (getFront() ? CVALIGN_TYPE_TOP : CVALIGN_TYPE_CENTER);
   CVAlignType valign = CVALIGN_TYPE_CENTER;

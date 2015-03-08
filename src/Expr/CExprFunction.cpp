@@ -3,11 +3,17 @@
 #include <cstdlib>
 #include <cstring>
 
+// NOTE: types are only needed if normal conversion rules don't handle the type correctly
+
 #ifdef GNUPLOT_EXPR
 namespace {
 
 double invnorm(double x) {
   return sqrt(2)/erf(2*x - 1);
+}
+
+double RadToDeg(double x) {
+  return 180.0*x/M_PI;
 }
 
 }
@@ -86,16 +92,76 @@ struct CExprBuiltinFunction {
   CExprFunctionProc  proc;
 };
 
+static CExprValuePtr
+CExprFunctionSqrt(const CExprFunction::Values &values)
+{
+  assert(values.size() == 1);
+
+  double real;
+
+  if (! values[0]->getRealValue(real))
+    return CExprValuePtr();
+
+  if (real >= 0.0) {
+    double real1 = ::sqrt(real);
+
+    return CExprInst->createRealValue(real1);
+  }
+  else {
+    double real1 = ::sqrt(-real);
+
+    return CExprInst->createComplexValue(std::complex<double>(0, real1));
+  }
+}
+
 #define CEXPR_REAL_TO_REAL_FUNC(NAME, F) \
 static CExprValuePtr \
 CExprFunction##NAME(const CExprFunction::Values &values) { \
   assert(values.size() == 1); \
-  double real; \
-  if (values[0]->getRealValue(real)) { \
-    double real1 = F(real); \
-    return CExprInst->createRealValue(real1); \
+  double r = 0.0; \
+  if (values[0]->getRealValue(r)) { \
   } \
-  return CExprValuePtr(); \
+  else \
+    return CExprValuePtr(); \
+  double r1 = F(r); \
+  return CExprInst->createRealValue(r1); \
+}
+
+#define CEXPR_REALC_TO_REAL_FUNC(NAME, F) \
+static CExprValuePtr \
+CExprFunction##NAME(const CExprFunction::Values &values) { \
+  assert(values.size() == 1); \
+  double r = 0.0; \
+  std::complex<double> c; \
+  if (values[0]->getRealValue(r)) { \
+  } \
+  else if (values[0]->getComplexValue(c)) { \
+    r = c.real(); \
+  } \
+  else \
+    return CExprValuePtr(); \
+  double r1 = F(r); \
+  return CExprInst->createRealValue(r1); \
+}
+
+#define CEXPR_REALC_TO_REALC_FUNC(NAME, F) \
+static CExprValuePtr \
+CExprFunction##NAME(const CExprFunction::Values &values) { \
+  assert(values.size() == 1); \
+  double r; \
+  std::complex<double> c; \
+  if (values[0]->getRealValue(r)) { \
+    double r1 = F(r); \
+    return CExprInst->createRealValue(r1); \
+  } \
+  else if (values[0]->getComplexValue(c)) { \
+    errno = 0; \
+    std::complex<double> c1 = F(c); \
+    if (errno != 0) return CExprValuePtr(); \
+    return CExprInst->createComplexValue(c1); \
+  } \
+  else \
+    return CExprValuePtr(); \
 }
 
 #define CEXPR_ANGLE_TO_REAL_FUNC(NAME, F) \
@@ -105,28 +171,37 @@ CExprFunction##NAME(const CExprFunction::Values &values) { \
   double real; \
   if (values[0]->getRealValue(real)) { \
     if (CExprInst->getDegrees()) \
-      real = M_PI*real/180.0; \
+      real = RadToDeg(real); \
     double real1 = F(real); \
     return CExprInst->createRealValue(real1); \
   } \
   return CExprValuePtr(); \
 }
 
-#define CEXPR_REAL_TO_ANGLE_FUNC(NAME, F) \
+#define CEXPR_REALC_TO_ANGLE_FUNC(NAME, F) \
 static CExprValuePtr \
 CExprFunction##NAME(const CExprFunction::Values &values) { \
   assert(values.size() == 1); \
-  double real; \
-  if (values[0]->getRealValue(real)) { \
+  double r; \
+  std::complex<double> c; \
+  if (values[0]->getRealValue(r)) { \
     errno = 0; \
-    double real1 = F(real); \
-    if (errno != 0) \
-      return CExprValuePtr(); \
+    double r1 = F(r); \
+    if (errno != 0) return CExprValuePtr(); \
     if (CExprInst->getDegrees()) \
-      real = 180.0*real1/M_PI; \
-    return CExprInst->createRealValue(real1); \
+      r1 = RadToDeg(r1); \
+    return CExprInst->createRealValue(r1); \
   } \
-  return CExprValuePtr(); \
+  else if (values[0]->getComplexValue(c)) { \
+    errno = 0; \
+    std::complex<double> c1 = F(c); \
+    if (errno != 0) return CExprValuePtr(); \
+    if (CExprInst->getDegrees()) \
+      c1 = std::complex<double>(RadToDeg(c1.real()), RadToDeg(c1.imag())); \
+    return CExprInst->createComplexValue(c1); \
+  } \
+  else \
+    return CExprValuePtr(); \
 }
 
 #define CEXPR_REAL2_TO_ANGLE_FUNC(NAME, F) \
@@ -137,7 +212,7 @@ CExprFunction##NAME(const CExprFunction::Values &values) { \
   if (values[0]->getRealValue(real1) && values[1]->getRealValue(real2)) { \
     double real = F(real1, real2); \
     if (CExprInst->getDegrees()) \
-      real = 180.0*real/M_PI; \
+      real = RadToDeg(real); \
     return CExprInst->createRealValue(real); \
   } \
   return CExprValuePtr(); \
@@ -150,12 +225,47 @@ class CExprFunctionAbs : public CExprFunctionObj {
     if      (values[0]->isRealValue()) {
       double real;
       if (values[0]->getRealValue(real))
-        return CExprInst->createRealValue(::fabs(real));
+        return CExprInst->createRealValue(std::abs(real));
     }
     else if (values[0]->isIntegerValue()) {
       long integer;
       if (values[0]->getIntegerValue(integer))
-        return CExprInst->createIntegerValue(::abs(integer));
+        return CExprInst->createIntegerValue(std::abs(integer));
+    }
+    else if (values[0]->isComplexValue()) {
+      std::complex<double> c;
+      if (values[0]->getComplexValue(c))
+        return CExprInst->createRealValue(std::abs(c));
+    }
+    return CExprValuePtr();
+  }
+};
+
+class CExprFunctionCArg : public CExprFunctionObj {
+ public:
+  CExprValuePtr operator()(const CExprFunction::Values &values) {
+    assert(values.size() == 1);
+    if (values[0]->isComplexValue()) {
+      std::complex<double> c;
+      if (values[0]->getComplexValue(c)) {
+        double r = std::arg(c);
+        if (CExprInst->getDegrees())
+          r = RadToDeg(r);
+        return CExprInst->createRealValue(r);
+      }
+    }
+    return CExprValuePtr();
+  }
+};
+
+class CExprFunctionImag : public CExprFunctionObj {
+ public:
+  CExprValuePtr operator()(const CExprFunction::Values &values) {
+    assert(values.size() == 1);
+    if (values[0]->isComplexValue()) {
+      std::complex<double> c;
+      if (values[0]->getComplexValue(c))
+        return CExprInst->createRealValue(c.imag());
     }
     return CExprValuePtr();
   }
@@ -174,6 +284,11 @@ class CExprFunctionSign : public CExprFunctionObj {
       long integer;
       if (values[0]->getIntegerValue(integer))
         return CExprInst->createIntegerValue(integer >= 0 ? (integer == 0 ? 0 : 1) : -1);
+    }
+    else if (values[0]->isComplexValue()) {
+      std::complex<double> c;
+      if (values[0]->getComplexValue(c))
+        return CExprInst->createIntegerValue(c.real() >= 0 ? (c.real() == 0 ? 0 : 1) : -1);
     }
     return CExprValuePtr();
   }
@@ -222,32 +337,37 @@ class CExprFunctionRand : public CExprFunctionObj {
 };
 #endif
 
-#define CEXPR_REAL_TO_REAL_FOBJ(NAME, F) \
+#define CEXPR_REALC_TO_REAL_FOBJ(NAME, F) \
 class CExprFunction##NAME : public CExprFunctionObj { \
  public: \
   CExprValuePtr operator()(const CExprFunction::Values &values) { \
     assert(values.size() == 1); \
-    double real; \
+    double r = 0.0; \
     if (values[0]->isRealValue()) { \
-      if (! values[0]->getRealValue(real)) return CExprValuePtr(); \
+      if (! values[0]->getRealValue(r)) return CExprValuePtr(); \
     } \
     else if (values[0]->isIntegerValue()) { \
-      long integer = 0; \
-      if (! values[0]->getIntegerValue(integer)) return CExprValuePtr(); \
-      real = integer; \
+      long i = 0; \
+      if (! values[0]->getIntegerValue(i)) return CExprValuePtr(); \
+      r = i; \
+    } \
+    else if (values[0]->isComplexValue()) { \
+      std::complex<double> c; \
+      if (! values[0]->getComplexValue(c)) return CExprValuePtr(); \
+      r = c.real(); \
     } \
     else { \
       return CExprValuePtr(); \
     } \
-    double real1 = F(real); \
-    return CExprInst->createRealValue(real1); \
+    double r1 = F(r); \
+    return CExprInst->createRealValue(r1); \
   } \
 };
 
-CEXPR_REAL_TO_REAL_FOBJ(Ceil , ::ceil)
-CEXPR_REAL_TO_REAL_FOBJ(Floor, ::floor)
-CEXPR_REAL_TO_REAL_FOBJ(Int  , static_cast<int>)
-CEXPR_REAL_TO_REAL_FOBJ(Real , static_cast<double>)
+CEXPR_REALC_TO_REAL_FOBJ(Ceil , std::ceil)
+CEXPR_REALC_TO_REAL_FOBJ(Floor, std::floor)
+CEXPR_REALC_TO_REAL_FOBJ(Int  , static_cast<int>)
+CEXPR_REALC_TO_REAL_FOBJ(Real , static_cast<double>)
 
 #ifdef GNUPLOT_EXPR
 class CExprFunctionSPrintF : public CExprFunctionObj {
@@ -339,66 +459,68 @@ class CExprFunctionObjT3 : public CExprFunctionObj {
   FUNC f_;
 };
 
-CEXPR_REAL_TO_REAL_FUNC(Sqrt , ::sqrt)
-CEXPR_REAL_TO_REAL_FUNC(Exp  , ::exp)
-CEXPR_REAL_TO_REAL_FUNC(Log  , ::log)
-CEXPR_REAL_TO_REAL_FUNC(Log10, ::log10)
+CEXPR_REALC_TO_REALC_FUNC(Exp  , std::exp)
+CEXPR_REALC_TO_REALC_FUNC(Log  , std::log)
+CEXPR_REALC_TO_REALC_FUNC(Log10, std::log10)
 
 CEXPR_ANGLE_TO_REAL_FUNC(Sin, ::sin)
 CEXPR_ANGLE_TO_REAL_FUNC(Cos, ::cos)
 CEXPR_ANGLE_TO_REAL_FUNC(Tan, ::tan)
 
-CEXPR_REAL_TO_ANGLE_FUNC (ASin , ::asin )
-CEXPR_REAL_TO_ANGLE_FUNC (ACos , ::acos )
-CEXPR_REAL_TO_ANGLE_FUNC (ATan , ::atan )
+CEXPR_REALC_TO_ANGLE_FUNC(ACos, std::acos)
+CEXPR_REALC_TO_ANGLE_FUNC(ASin, std::asin)
+CEXPR_REALC_TO_ANGLE_FUNC(ATan, std::atan)
+
 CEXPR_REAL2_TO_ANGLE_FUNC(ATan2, ::atan2)
 
-CEXPR_REAL_TO_REAL_FUNC(SinH , ::sinh)
-CEXPR_REAL_TO_REAL_FUNC(CosH , ::cosh)
-CEXPR_REAL_TO_REAL_FUNC(TanH , ::tanh)
-CEXPR_REAL_TO_REAL_FUNC(ASinH, ::asinh)
-CEXPR_REAL_TO_REAL_FUNC(ACosH, ::acosh)
-CEXPR_REAL_TO_REAL_FUNC(ATanH, ::atanh)
+CEXPR_REALC_TO_REALC_FUNC(SinH , std::sinh)
+CEXPR_REALC_TO_REALC_FUNC(CosH , std::cosh)
+CEXPR_REALC_TO_REALC_FUNC(TanH , std::tanh)
+CEXPR_REALC_TO_REALC_FUNC(ASinH, std::asinh)
+CEXPR_REALC_TO_REALC_FUNC(ACosH, std::acosh)
+CEXPR_REALC_TO_REALC_FUNC(ATanH, std::atanh)
 
 #ifdef GNUPLOT_EXPR
 // TODO: besy0, besy1
 CEXPR_REAL_TO_REAL_FUNC(BesJ0  , ::j0)
 CEXPR_REAL_TO_REAL_FUNC(BesJ1  , ::j1)
-CEXPR_REAL_TO_REAL_FUNC(Erf    , ::erf)
-CEXPR_REAL_TO_REAL_FUNC(ErfC   , ::erfc)
+
+CEXPR_REALC_TO_REAL_FUNC(Erf    , ::erf)
+CEXPR_REALC_TO_REAL_FUNC(ErfC   , ::erfc)
 // TODO: inverf, invnorm, norm
-CEXPR_REAL_TO_REAL_FUNC(Gamma  , ::gamma)
+CEXPR_REALC_TO_REAL_FUNC(Gamma  , ::gamma)
 // TODO: igamma
-CEXPR_REAL_TO_REAL_FUNC(LGamma , ::lgamma)
-CEXPR_REAL_TO_REAL_FUNC(InvNorm, ::invnorm)
+CEXPR_REALC_TO_REAL_FUNC(LGamma , ::lgamma)
+CEXPR_REALC_TO_REAL_FUNC(InvNorm, ::invnorm)
 // TODO: lambertw
-// TODO: abs (complex), arg(complex), imag(complex), real(complex)
 #endif
 
 static CExprBuiltinFunction
 builtinFns[] = {
   { "sqrt"   , "r"  , CExprFunctionSqrt    },
-  { "exp"    , "r"  , CExprFunctionExp     },
-  { "log"    , "r"  , CExprFunctionLog     },
-  { "log10"  , "r"  , CExprFunctionLog10   },
-  { "sin"    , "r"  , CExprFunctionSin     },
-  { "cos"    , "r"  , CExprFunctionCos     },
-  { "tan"    , "r"  , CExprFunctionTan     },
-  { "asin"   , "r"  , CExprFunctionASin    },
-  { "acos"   , "r"  , CExprFunctionACos    },
-  { "atan"   , "r"  , CExprFunctionATan    },
+  { "exp"    , "rc" , CExprFunctionExp     },
+  { "log"    , "rc" , CExprFunctionLog     },
+  { "log10"  , "rc" , CExprFunctionLog10   },
+  { "sin"    , "rc" , CExprFunctionSin     },
+  { "cos"    , "rc" , CExprFunctionCos     },
+  { "tan"    , "rc" , CExprFunctionTan     },
+  { "asin"   , "rc" , CExprFunctionASin    },
+  { "acos"   , "rc" , CExprFunctionACos    },
+  { "atan"   , "rc" , CExprFunctionATan    },
   { "atan2"  , "r,r", CExprFunctionATan2   },
   { "sinh"   , "r"  , CExprFunctionSinH    },
   { "cosh"   , "r"  , CExprFunctionCosH    },
   { "tanh"   , "r"  , CExprFunctionTanH    },
-  { "asinh"  , "r"  , CExprFunctionASinH   },
-  { "acosh"  , "r"  , CExprFunctionACosH   },
-  { "atanh"  , "r"  , CExprFunctionATanH   },
+  { "asinh"  , "rc" , CExprFunctionASinH   },
+  { "acosh"  , "rc" , CExprFunctionACosH   },
+  { "atanh"  , "rc" , CExprFunctionATanH   },
 #ifdef GNUPLOT_EXPR
+  // EllipticK, EllipticE, EllipticPi
   { "besj0"  , "r"  , CExprFunctionBesJ0   },
   { "besj1"  , "r"  , CExprFunctionBesJ1   },
-  { "erf"    , "r"  , CExprFunctionErf     },
-  { "erfc"   , "r"  , CExprFunctionErfC    },
+  // besy0, besy1
+  { "erf"    , "rc" , CExprFunctionErf     },
+  { "erfc"   , "rc" , CExprFunctionErfC    },
   { "gamma"  , "r"  , CExprFunctionGamma   },
   { "lgamma" , "r"  , CExprFunctionLGamma  },
   { "invnorm", "r"  , CExprFunctionInvNorm },
@@ -425,12 +547,14 @@ addFunctions()
     function->setBuiltin(true);
   }
 
-  addObjFunction("abs"  , "ri", new CExprFunctionAbs);
-  addObjFunction("ceil" , "r" , new CExprFunctionCeil);
-  addObjFunction("floor", "r" , new CExprFunctionFloor);
-  addObjFunction("int"  , "ri", new CExprFunctionInt);
-  addObjFunction("real" , "ri", new CExprFunctionReal);
-  addObjFunction("sgn"  , "ri", new CExprFunctionSign);
+  addObjFunction("abs"  , "ric", new CExprFunctionAbs);
+  addObjFunction("arg"  , "c"  , new CExprFunctionCArg);
+  addObjFunction("ceil" , "rc" , new CExprFunctionCeil);
+  addObjFunction("floor", "rc" , new CExprFunctionFloor);
+  addObjFunction("int"  , "ric", new CExprFunctionInt); // TODO: use conversion rules
+  addObjFunction("real" , "ric", new CExprFunctionReal); // TODO: use conversion rules
+  addObjFunction("imag" , "c"  , new CExprFunctionImag);
+  addObjFunction("sgn"  , "ric", new CExprFunctionSign);
 
 #ifdef GNUPLOT_EXPR
   addObjFunction("rand", "i", new CExprFunctionRand);
@@ -556,6 +680,7 @@ parseArgs(const std::string &argsStr, Args &args, bool &variableArgs)
       else if (c == 'i') types |= CEXPR_VALUE_INTEGER;
       else if (c == 'r') types |= CEXPR_VALUE_REAL;
       else if (c == 's') types |= CEXPR_VALUE_STRING;
+      else if (c == 'c') types |= CEXPR_VALUE_COMPLEX;
       else if (c == 'n') types |= CEXPR_VALUE_NULL;
       else {
         std::cerr << "Invalid argument type char '" << c << "'" << std::endl;
@@ -664,10 +789,14 @@ exec(const Values &values)
   }
 
   // run proc
+  CExprInst->saveCompileState();
+
   CExprValuePtr value;
 
   if (! CExprInst->evaluateExpression(proc_, value))
     value = CExprValuePtr();
+
+  CExprInst->restoreCompileState();
 
   // restore variables
   for (const auto &v : varValues) {

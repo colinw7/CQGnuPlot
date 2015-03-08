@@ -18,11 +18,9 @@ getLineWidth() const
 
 void
 CQGnuPlotPolygon::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
-
-  CGnuPlotPolygon::draw();
+  CGnuPlotPolygon::draw(renderer);
 
   if (isSelected())
     renderer->drawPolygon(getPoints(), 2.0, CRGBA(1,0,0));

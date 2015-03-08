@@ -25,7 +25,7 @@ setText(const QString &s)
   CGnuPlotLabel::setText(s.toStdString());
 }
 
-CQGnuPlot::CQHAlignType
+CQGnuPlot::HAlignType
 CQGnuPlotLabel::
 getAlign() const
 {
@@ -34,7 +34,7 @@ getAlign() const
 
 void
 CQGnuPlotLabel::
-setAlign(const CQGnuPlot::CQHAlignType &a)
+setAlign(const CQGnuPlot::HAlignType &a)
 {
   CGnuPlotLabel::setAlign(CQGnuPlotUtil::alignConv(a));
 }
@@ -83,7 +83,7 @@ setOffset(const QPointF &p)
 
 void
 CQGnuPlotLabel::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
   if (isSelected()) {
     CQGnuPlotLabel *th = const_cast<CQGnuPlotLabel *>(this);
@@ -92,16 +92,14 @@ draw() const
 
     th->CGnuPlotLabel::setStrokeColor(CRGBA(1,0,0));
 
-    CGnuPlotLabel::draw();
+    CGnuPlotLabel::draw(renderer);
 
     th->CGnuPlotLabel::setStrokeColor(c);
 
     CBBox2D bbox = getBBox();
 
-    CGnuPlotRenderer *renderer = group_->app()->renderer();
-
     renderer->drawRect(bbox, CRGBA(1,0,0), 2);
   }
   else
-    CGnuPlotLabel::draw();
+    CGnuPlotLabel::draw(renderer);
 }

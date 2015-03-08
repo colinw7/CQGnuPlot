@@ -9,8 +9,8 @@
 
 class CGnuPlotGroup {
  public:
-  typedef CGnuPlotTypes::HistogramStyle          HistogramStyle;
   typedef CGnuPlotTypes::LogScale                LogScale;
+  typedef CGnuPlotTypes::HistogramStyle          HistogramStyle;
   typedef CGnuPlot::Annotations                  Annotations;
   typedef CGnuPlot::AxesData                     AxesData;
   typedef CGnuPlot::PlotSize                     PlotSize;
@@ -31,6 +31,9 @@ class CGnuPlotGroup {
 
   int ind() const { return ind_; }
   void setInd(int ind) { ind_ = ind; }
+
+  void set3D(bool b) { is3D_ = b; }
+  bool is3D() const { return is3D_; }
 
   CGnuPlotTitle *title() const { return title_; }
 
@@ -97,6 +100,11 @@ class CGnuPlotGroup {
   void setZMin(double z) { zaxis(1).setMin(z); }
   void setZMax(double z) { zaxis(1).setMax(z); }
 
+  void setRange(const CBBox2D &b) {
+    setXMin(b.getXMin()); setYMin(b.getYMin());
+    setXMax(b.getXMax()); setYMax(b.getYMax());
+  }
+
   const std::string &getXLabel() const { return xaxis(1).text(); }
   void setXLabel(const std::string &s) { xaxis(1).setText(s); }
 
@@ -126,6 +134,9 @@ class CGnuPlotGroup {
 
   int getBorderWidth() const { return axesData_.borderWidth; }
   void setBorderWidth(double w) { axesData_.borderWidth = w; }
+
+  void normalizeXRange(double &xmin, double &xmax) const;
+  void normalizeYRange(double &ymin, double &ymax) const;
 
   CBBox2D getClip(int xind=1, int yind=1) const;
 
@@ -178,8 +189,8 @@ class CGnuPlotGroup {
 
   //-----
 
-  HistogramStyle getHistogramStyle() const { return histogramStyle_; }
-  void setHistogramStyle(HistogramStyle style) { histogramStyle_ = style; }
+  const CGnuPlotHistogramData &getHistogramData() const { return histogramData_; }
+  void setHistogramData(const CGnuPlotHistogramData &data);
 
   //-----
 
@@ -200,6 +211,12 @@ class CGnuPlotGroup {
   void showXAxis(bool show);
   void showYAxis(bool show);
 
+  void setAxisStart(const std::string &id, double r);
+  void setAxisEnd  (const std::string &id, double r);
+
+  void updatePlotAxisRange(const std::string &id);
+  void updatePlotAxisRange(char c, int ind);
+
   //-----
 
   void reset3D();
@@ -209,6 +226,11 @@ class CGnuPlotGroup {
   void drawTitle();
 
   void drawHistogram(const Plots &plots);
+
+  void drawRowStackedHistograms   (CGnuPlotRenderer *renderer, const Plots &plots);
+  void drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots);
+
+  void calcHistogramRange(const Plots &plots, CBBox2D &bbox) const;
 
   void drawAxes();
   void drawBorder();
@@ -235,11 +257,13 @@ class CGnuPlotGroup {
 
   void calcRange(int xind, int yind, double &xmin, double &ymin, double &xmax, double &ymax) const;
 
-  CBBox2D getDisplayRange(int xind, int yind) const;
+  CBBox2D getDisplayRange (int xind, int yind) const;
+  CBBox2D calcDisplayRange(int xind, int yind) const;
 
   //-----
 
   bool hasPlotStyle(PlotStyle plotStyle) const;
+  bool hasImageStyle() const;
 
   void getPlotsOfStyle(Plots &plots, PlotStyle plotStyle) const;
 
@@ -272,24 +296,25 @@ class CGnuPlotGroup {
  private:
   static int nextId_;
 
-  CGnuPlotWindow*   window_;                                 // parent window
-  int               id_ { 0 };                               // unique id
-  int               ind_  {0};                               // group index in window
-  CGnuPlotTitle*    title_;                                  // plot title
-  Plots             plots_;                                  // plots
-  CBBox2D           region_ {0,0,1,1};                       // region of window
-  Margin            margin_ {10,10,10,10};                   // margin around plots
-  CBBox2D           bbox_ { 0, 0, 1, 1 };                    // bounding box
-  PlotSize          plotSize_;
-  HistogramStyle    histogramStyle_ { HistogramStyle::NONE}; // histogram style
-  CGnuPlotKeyP      key_;                                    // key
-  CGnuPlotColorBoxP colorBox_;                               // color box
-  CGnuPlotPaletteP  palette_;                                // palette
-  AxesData          axesData_;                               // axes data
-  LogScaleMap       logScale_;                               // log axis data
-  Annotations       annotations_;                            // annotations
-  Axes              axes_;                                   // axes
-  CRGBA             backgroundColor_;                        // background color
+  CGnuPlotWindow*       window_;               // parent window
+  int                   id_   { 0 };           // unique id
+  int                   ind_  { 0 };           // group index in window
+  bool                  is3D_ { false };       // plots are 3D
+  CGnuPlotTitle*        title_;                // plot title
+  Plots                 plots_;                // plots
+  CBBox2D               region_ {0,0,1,1};     // region of window
+  Margin                margin_ {10,10,10,10}; // margin around plots
+  CBBox2D               bbox_ { 0, 0, 1, 1 };  // bounding box
+  PlotSize              plotSize_;
+  CGnuPlotHistogramData histogramData_;        // histogram style
+  CGnuPlotKeyP          key_;                  // key
+  CGnuPlotColorBoxP     colorBox_;             // color box
+  CGnuPlotPaletteP      palette_;              // palette
+  AxesData              axesData_;             // axes data
+  LogScaleMap           logScale_;             // log axis data
+  Annotations           annotations_;          // annotations
+  Axes                  axes_;                 // axes
+  CRGBA                 backgroundColor_;      // background color
 };
 
 #endif

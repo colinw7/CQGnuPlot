@@ -3,7 +3,7 @@
 
 namespace Conv {
 
-typedef CEnumConv<CGnuPlotTypes::SymbolType, CQGnuPlot::CQSymbolType> SymbolConv;
+typedef CEnumConv<CGnuPlotTypes::SymbolType, CQGnuPlot::SymbolType> SymbolConv;
 
 SymbolConv symbolConv({
   { CGnuPlotTypes::SymbolType::POINT              , CQGnuPlot::SymbolPoint           },
@@ -22,7 +22,7 @@ SymbolConv symbolConv({
   { CGnuPlotTypes::SymbolType::FILLED_DIAMOND     , CQGnuPlot::SymbolFilledDiamond   }
 });
 
-typedef CEnumConv<CHAlignType, CQGnuPlot::CQHAlignType> HAlignConv;
+typedef CEnumConv<CHAlignType, CQGnuPlot::HAlignType> HAlignConv;
 
 HAlignConv halignConv({
  { CHALIGN_TYPE_LEFT  , CQGnuPlot::AlignLeft    },
@@ -30,7 +30,7 @@ HAlignConv halignConv({
  { CHALIGN_TYPE_CENTER, CQGnuPlot::AlignHCenter }
 });
 
-typedef CEnumConv<CVAlignType, CQGnuPlot::CQVAlignType> VAlignConv;
+typedef CEnumConv<CVAlignType, CQGnuPlot::VAlignType> VAlignConv;
 
 VAlignConv valignConv({
  { CVALIGN_TYPE_BOTTOM, CQGnuPlot::AlignBottom  },
@@ -38,7 +38,7 @@ VAlignConv valignConv({
  { CVALIGN_TYPE_CENTER, CQGnuPlot::AlignVCenter }
 });
 
-typedef CEnumConv<CGnuPlot::PlotStyle, CQGnuPlot::CQPlotStyle> PlotStyleConv;
+typedef CEnumConv<CGnuPlot::PlotStyle, CQGnuPlot::PlotStyle> PlotStyleConv;
 
 PlotStyleConv plotStyleConv({
   { CGnuPlot::PlotStyle::NONE          , CQGnuPlot::PlotNone           },
@@ -82,7 +82,7 @@ PlotStyleConv plotStyleConv({
   { CGnuPlot::PlotStyle::TEST_PALETTE  , CQGnuPlot::PlotTestPalette    },
 });
 
-typedef CEnumConv<CGnuPlot::HistogramStyle, CQGnuPlot::CQHistogramStyle> HistogramStyleConv;
+typedef CEnumConv<CGnuPlot::HistogramStyle, CQGnuPlot::HistogramStyle> HistogramStyleConv;
 
 HistogramStyleConv histogramStyleConv({
  { CGnuPlot::HistogramStyle::NONE         , CQGnuPlot::HistogramNone          },
@@ -92,7 +92,7 @@ HistogramStyleConv histogramStyleConv({
  { CGnuPlot::HistogramStyle::COLUMNSTACKED, CQGnuPlot::HistogramColumnStacked },
 });
 
-typedef CEnumConv<CGnuPlotTypes::FillType, CQGnuPlot::CQFillType> FillTypeConv;
+typedef CEnumConv<CGnuPlotTypes::FillType, CQGnuPlot::FillType> FillTypeConv;
 
 FillTypeConv fillTypeConv({
   { CGnuPlotTypes::FillType::EMPTY  , CQGnuPlot::FillNone      },
@@ -100,7 +100,7 @@ FillTypeConv fillTypeConv({
   { CGnuPlotTypes::FillType::PATTERN, CQGnuPlot::FillPatterned },
 });
 
-typedef CEnumConv<CGnuPlotTypes::FillPattern, CQGnuPlot::CQFillPattern> FillPatternConv;
+typedef CEnumConv<CGnuPlotTypes::FillPattern, CQGnuPlot::FillPattern> FillPatternConv;
 
 FillPatternConv fillPatternConv({
   { CGnuPlotTypes::FillPattern::NONE  , CQGnuPlot::PatternNone  },
@@ -128,7 +128,7 @@ FillPatternQtConv fillPatternQtConv({
   { CGnuPlotTypes::FillPattern::BG    , Qt::SolidPattern     },
 });
 
-typedef CEnumConv<CGnuPlot::BoxWidthType, CQGnuPlot::CQBoxWidthType> BoxWidthTypeConv;
+typedef CEnumConv<CGnuPlot::BoxWidthType, CQGnuPlot::BoxWidthType> BoxWidthTypeConv;
 
 BoxWidthTypeConv boxWidthTypeConv({
   { CGnuPlot::BoxWidthType::AUTO    , CQGnuPlot::BoxWidthAuto     },
@@ -136,7 +136,7 @@ BoxWidthTypeConv boxWidthTypeConv({
   { CGnuPlot::BoxWidthType::RELATIVE, CQGnuPlot::BoxWidthRelative },
 });
 
-typedef CEnumConv<CGnuPlotLayer, CQGnuPlot::CQDrawLayerType> DrawLayerTypeConv;
+typedef CEnumConv<CGnuPlotLayer, CQGnuPlot::DrawLayerType> DrawLayerTypeConv;
 
 DrawLayerTypeConv drawLayerTypeConv({
   { CGnuPlotLayer::FRONT , CQGnuPlot::LayerFront  },
@@ -155,7 +155,7 @@ PaletteColorTypeConv paletteColorTypeConv({
 
 //---
 
-CQGnuPlot::CQSymbolType
+CQGnuPlot::SymbolType
 CQGnuPlotUtil::
 symbolConv(const CGnuPlotTypes::SymbolType &type)
 {
@@ -164,14 +164,14 @@ symbolConv(const CGnuPlotTypes::SymbolType &type)
 
 CGnuPlotTypes::SymbolType
 CQGnuPlotUtil::
-symbolConv(const CQGnuPlot::CQSymbolType &type)
+symbolConv(const CQGnuPlot::SymbolType &type)
 {
   return Conv::symbolConv.conv(type);
 }
 
 //---
 
-CQGnuPlot::CQHAlignType
+CQGnuPlot::HAlignType
 CQGnuPlotUtil::
 alignConv(const CHAlignType &type)
 {
@@ -180,14 +180,14 @@ alignConv(const CHAlignType &type)
 
 CHAlignType
 CQGnuPlotUtil::
-alignConv(const CQGnuPlot::CQHAlignType &type)
+alignConv(const CQGnuPlot::HAlignType &type)
 {
   return Conv::halignConv.conv(type);
 }
 
 //---
 
-CQGnuPlot::CQVAlignType
+CQGnuPlot::VAlignType
 CQGnuPlotUtil::
 alignConv(const CVAlignType &type)
 {
@@ -196,14 +196,14 @@ alignConv(const CVAlignType &type)
 
 CVAlignType
 CQGnuPlotUtil::
-alignConv(const CQGnuPlot::CQVAlignType &type)
+alignConv(const CQGnuPlot::VAlignType &type)
 {
   return Conv::valignConv.conv(type);
 }
 
 //---
 
-CQGnuPlot::CQPlotStyle
+CQGnuPlot::PlotStyle
 CQGnuPlotUtil::
 plotStyleConv(const CGnuPlot::PlotStyle &type)
 {
@@ -212,14 +212,14 @@ plotStyleConv(const CGnuPlot::PlotStyle &type)
 
 CGnuPlot::PlotStyle
 CQGnuPlotUtil::
-plotStyleConv(const CQGnuPlot::CQPlotStyle &type)
+plotStyleConv(const CQGnuPlot::PlotStyle &type)
 {
   return Conv::plotStyleConv.conv(type);
 }
 
 //---
 
-CQGnuPlot::CQHistogramStyle
+CQGnuPlot::HistogramStyle
 CQGnuPlotUtil::
 histogramStyleConv(const CGnuPlot::HistogramStyle &type)
 {
@@ -228,14 +228,14 @@ histogramStyleConv(const CGnuPlot::HistogramStyle &type)
 
 CGnuPlot::HistogramStyle
 CQGnuPlotUtil::
-histogramStyleConv(const CQGnuPlot::CQHistogramStyle &type)
+histogramStyleConv(const CQGnuPlot::HistogramStyle &type)
 {
   return Conv::histogramStyleConv.conv(type);
 }
 
 //---
 
-CQGnuPlot::CQFillType
+CQGnuPlot::FillType
 CQGnuPlotUtil::
 fillTypeConv(const CGnuPlotTypes::FillType &type)
 {
@@ -244,14 +244,14 @@ fillTypeConv(const CGnuPlotTypes::FillType &type)
 
 CGnuPlotTypes::FillType
 CQGnuPlotUtil::
-fillTypeConv(const CQGnuPlot::CQFillType &type)
+fillTypeConv(const CQGnuPlot::FillType &type)
 {
   return Conv::fillTypeConv.conv(type);
 }
 
 //---
 
-CQGnuPlot::CQFillPattern
+CQGnuPlot::FillPattern
 CQGnuPlotUtil::
 fillPatternConv(const CGnuPlotTypes::FillPattern &type)
 {
@@ -260,7 +260,7 @@ fillPatternConv(const CGnuPlotTypes::FillPattern &type)
 
 CGnuPlotTypes::FillPattern
 CQGnuPlotUtil::
-fillPatternConv(const CQGnuPlot::CQFillPattern &type)
+fillPatternConv(const CQGnuPlot::FillPattern &type)
 {
   return Conv::fillPatternConv.conv(type);
 }
@@ -283,7 +283,7 @@ fillPatternQtConv(const Qt::BrushStyle &type)
 
 //---
 
-CQGnuPlot::CQBoxWidthType
+CQGnuPlot::BoxWidthType
 CQGnuPlotUtil::
 boxWidthTypeConv(const CGnuPlot::BoxWidthType &type)
 {
@@ -292,14 +292,14 @@ boxWidthTypeConv(const CGnuPlot::BoxWidthType &type)
 
 CGnuPlot::BoxWidthType
 CQGnuPlotUtil::
-boxWidthTypeConv(const CQGnuPlot::CQBoxWidthType &type)
+boxWidthTypeConv(const CQGnuPlot::BoxWidthType &type)
 {
   return Conv::boxWidthTypeConv.conv(type);
 }
 
 //---
 
-CQGnuPlot::CQDrawLayerType
+CQGnuPlot::DrawLayerType
 CQGnuPlotUtil::
 drawLayerTypeConv(const CGnuPlotLayer &layer)
 {
@@ -308,7 +308,7 @@ drawLayerTypeConv(const CGnuPlotLayer &layer)
 
 CGnuPlotLayer
 CQGnuPlotUtil::
-drawLayerTypeConv(const CQGnuPlot::CQDrawLayerType &layer)
+drawLayerTypeConv(const CQGnuPlot::DrawLayerType &layer)
 {
   return Conv::drawLayerTypeConv.conv(layer);
 }

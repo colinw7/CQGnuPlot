@@ -46,6 +46,8 @@ class CGnuPlotRenderer {
 
   void setReverse(bool reverseX, bool reverseY) { reverseX_ = reverseX; reverseY_ = reverseY; }
 
+  virtual bool isPseudo() const { return false; }
+
   //---
 
   virtual CFontPtr getFont() const { return font_; }
@@ -94,6 +96,8 @@ class CGnuPlotRenderer {
   void pixelToWindow(double px, double py, double *wx, double *wy);
 
   //---
+
+  void fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c);
 
   void drawClippedRect(const CBBox2D &rect, const CRGBA &c=CRGBA(0,0,0), double w=1.0);
   void fillClippedRect(const CBBox2D &rect, const CRGBA &c);

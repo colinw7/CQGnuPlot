@@ -257,6 +257,13 @@ createStringValue(const std::string &str)
   return CExprValuePtr(new CExprValue(CExprStringValue(str)));
 }
 
+CExprValuePtr
+CExpr::
+createComplexValue(const std::complex<double> &c)
+{
+  return CExprValuePtr(new CExprValue(CExprComplexValue(c)));
+}
+
 //------
 
 class CExprPrintF : public CPrintF {

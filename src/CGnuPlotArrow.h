@@ -69,6 +69,9 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
   int getLineStyle() const { return style_.lineStyle(); }
   void setLineStyle(int t) { style_.setLineStyle(t); }
 
+  int getDashType() const { return style_.dashType(); }
+  void setDashType(int dt) { style_.setDashType(dt); }
+
   bool getVariable() const { return style_.variable(); }
   void setVariable(bool b) { style_.setVariable(b); }
 
@@ -84,7 +87,7 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
       lineColor_.setInvalid();
   }
 
-  void draw() const override;
+  void draw(CGnuPlotRenderer *renderer) const override;
 
   bool inside(const CPoint2D &p) const;
 

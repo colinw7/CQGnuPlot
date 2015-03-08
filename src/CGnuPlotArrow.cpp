@@ -29,10 +29,8 @@ getLineWidth() const
 
 void
 CGnuPlotArrow::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
-
   const CGnuPlotArrow *arrow = this;
 
   CPoint2D from = arrow->getFrom();

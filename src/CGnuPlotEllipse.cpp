@@ -4,10 +4,8 @@
 
 void
 CGnuPlotEllipse::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
-
   const CGnuPlotEllipse *e = this;
 
   if (e->getFillColor().isRGB())

@@ -44,7 +44,7 @@ setColor(const QColor &color)
 
 void
 CQGnuPlotPie::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
   CQGnuPlotPie *th = const_cast<CQGnuPlotPie *>(this);
 
@@ -53,7 +53,7 @@ draw() const
   if (isSelected())
     th->CGnuPlotPie::setColor(CRGBA(1,0,0));
 
-  CGnuPlotPie::draw();
+  CGnuPlotPie::draw(renderer);
 
   if (isSelected())
     th->CGnuPlotPie::setColor(c);

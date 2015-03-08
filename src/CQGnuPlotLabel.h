@@ -10,13 +10,13 @@
 class CQGnuPlotLabel : public CQGnuPlotAnnotation, public CGnuPlotLabel {
   Q_OBJECT
 
-  Q_PROPERTY(QString                 text     READ getText    WRITE setText    )
-  Q_PROPERTY(CQGnuPlot::CQHAlignType align    READ getAlign   WRITE setAlign   )
-  Q_PROPERTY(QPointF                 pos      READ getPos     WRITE setPos     )
-  Q_PROPERTY(QFont                   font     READ getFont    WRITE setFont    )
-  Q_PROPERTY(double                  angle    READ getAngle   WRITE setAngle   )
-  Q_PROPERTY(QPointF                 offset   READ getOffset  WRITE setOffset  )
-  Q_PROPERTY(bool                    enhanced READ isEnhanced WRITE setEnhanced)
+  Q_PROPERTY(QString               text     READ getText    WRITE setText    )
+  Q_PROPERTY(CQGnuPlot::HAlignType align    READ getAlign   WRITE setAlign   )
+  Q_PROPERTY(QPointF               pos      READ getPos     WRITE setPos     )
+  Q_PROPERTY(QFont                 font     READ getFont    WRITE setFont    )
+  Q_PROPERTY(double                angle    READ getAngle   WRITE setAngle   )
+  Q_PROPERTY(QPointF               offset   READ getOffset  WRITE setOffset  )
+  Q_PROPERTY(bool                  enhanced READ isEnhanced WRITE setEnhanced)
 
  public:
   CQGnuPlotLabel(CQGnuPlotGroup *group);
@@ -24,8 +24,8 @@ class CQGnuPlotLabel : public CQGnuPlotAnnotation, public CGnuPlotLabel {
   QString getText() const;
   void setText(const QString &s);
 
-  CQGnuPlot::CQHAlignType getAlign() const;
-  void setAlign(const CQGnuPlot::CQHAlignType &a);
+  CQGnuPlot::HAlignType getAlign() const;
+  void setAlign(const CQGnuPlot::HAlignType &a);
 
   QPointF getPos() const;
   void setPos(const QPointF &p);
@@ -36,7 +36,7 @@ class CQGnuPlotLabel : public CQGnuPlotAnnotation, public CGnuPlotLabel {
   QPointF getOffset() const;
   void setOffset(const QPointF &p);
 
-  void draw() const override;
+  void draw(CGnuPlotRenderer *renderer) const override;
 };
 
 #endif

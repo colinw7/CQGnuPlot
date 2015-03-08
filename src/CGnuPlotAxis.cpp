@@ -18,7 +18,7 @@
 
 struct CGnuPlotAxisIncrementTest {
   double factor;
-  uint   numTicks;
+  int    numTicks;
   double incFactor;
 };
 
@@ -87,7 +87,7 @@ setMajorIncrement(double i)
 
 void
 CGnuPlotAxis::
-setTickIncrement(uint tickIncrement)
+setTickIncrement(int tickIncrement)
 {
   tickIncrement_ = tickIncrement;
 
@@ -96,7 +96,7 @@ setTickIncrement(uint tickIncrement)
 
 void
 CGnuPlotAxis::
-setTickSpaces(double *tickSpaces, uint numTickSpaces)
+setTickSpaces(double *tickSpaces, int numTickSpaces)
 {
   tickSpaces_.resize(numTickSpaces);
 
@@ -180,7 +180,7 @@ calc()
 
     // Test each Increment in turn
 
-    uint numGaps, numGapTicks;
+    int numGaps, numGapTicks;
 
     for (int i = 0; i < MAX_GAP_TESTS; i++) {
       if (tickIncrement_ > 0) {
@@ -214,16 +214,16 @@ calc()
     numTicks2_ = 5;
   }
 
-  numTicks1_ = std::min(numTicks1_, 256U);
-  numTicks2_ = std::min(numTicks1_, 10U);
+  numTicks1_ = std::min(numTicks1_, 256);
+  numTicks2_ = std::min(numTicks1_, 10);
 
   return true;
 }
 
 bool
 CGnuPlotAxis::
-testAxisGaps(double start, double end, double testIncrement, uint testNumGapTicks,
-             double *start1, double *end1, double *increment, uint *numGaps, uint *numGapTicks)
+testAxisGaps(double start, double end, double testIncrement, int testNumGapTicks,
+             double *start1, double *end1, double *increment, int *numGaps, int *numGapTicks)
 {
   // Calculate New Start and End implied by the Test Increment
 
@@ -236,7 +236,7 @@ testAxisGaps(double start, double end, double testIncrement, uint testNumGapTick
   while (newEnd < end)
     newEnd += testIncrement;
 
-  uint testNumGaps = CMathGen::RoundUp((newEnd - newStart)/testIncrement);
+  int testNumGaps = CMathGen::RoundUp((newEnd - newStart)/testIncrement);
 
   //------
 
@@ -442,7 +442,7 @@ drawAxis(double pos)
   double pos1 = getStart();
   double pos2 = pos1;
 
-  for (uint i = 0; i < getNumMajorTicks(); i++) {
+  for (int i = 0; i < getNumMajorTicks(); i++) {
     // Calculate Next Tick Point
 
     pos2 = (i + 1)*increment + getStart();
@@ -488,7 +488,7 @@ drawAxis(double pos)
     // Draw Minor Ticks (use user defined distribution if defined)
 
     if (getTickSpaces() == 0) {
-      for (uint j = 1; j < getNumMinorTicks(); j++) {
+      for (int j = 1; j < getNumMinorTicks(); j++) {
         double pos3 = j*(pos2 - pos1)/getNumMinorTicks() + pos1;
 
         if (drawTickMark() && isDrawMinorTickMark()) {
@@ -504,7 +504,7 @@ drawAxis(double pos)
       }
     }
     else {
-      for (uint j = 1; j <= getNumTickSpaces() - 2; j++) {
+      for (int j = 1; j <= getNumTickSpaces() - 2; j++) {
         double pos3 = getTickSpace(j)*(pos2 - pos1) + pos1;
 
         if (drawTickMark() && isDrawMinorTickMark()) {
@@ -687,7 +687,7 @@ CGnuPlotAxis::
 drawGrid(double start, double end)
 {
   static double gridDashes[] = {1, 3};
-  static uint   numGridDashes = 2;
+  static int    numGridDashes = 2;
 
   lineDash_ = CLineDash(gridDashes, numGridDashes);
 
@@ -696,7 +696,7 @@ drawGrid(double start, double end)
   if (direction_ == CORIENTATION_HORIZONTAL) { // x-axis
     double xincrement = getMajorIncrement();
 
-    for (uint i = 0; i <= getNumMajorTicks(); i++) {
+    for (int i = 0; i <= getNumMajorTicks(); i++) {
       double x = i*xincrement + getStart();
 
       if (x >= getStart() && x <= getEnd())
@@ -706,7 +706,7 @@ drawGrid(double start, double end)
   else {
     double yincrement = getMajorIncrement();
 
-    for (uint i = 0; i <= getNumMajorTicks(); i++) {
+    for (int i = 0; i <= getNumMajorTicks(); i++) {
       double y = i*yincrement + getStart();
 
       if (y >= getStart() && y <= getEnd())

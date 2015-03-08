@@ -14,7 +14,7 @@ class CQGnuPlotPolygon : public CQGnuPlotAnnotation, public CGnuPlotPolygon {
 
   double getLineWidth() const;
 
-  void draw() const override;
+  void draw(CGnuPlotRenderer *renderer) const override;
 };
 
 #endif

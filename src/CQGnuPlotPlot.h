@@ -16,24 +16,31 @@ class CQGnuPlotRenderer;
 class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_OBJECT
 
+  Q_PROPERTY(int  id   READ id)
+  Q_PROPERTY(int  xind READ xind)
+  Q_PROPERTY(int  yind READ yind)
+
   Q_PROPERTY(bool displayed READ isDisplayed WRITE setDisplayed)
 
-  Q_PROPERTY(double xmin READ getXMin WRITE setXMin)
-  Q_PROPERTY(double ymin READ getYMin WRITE setYMin)
-  Q_PROPERTY(double xmax READ getXMax WRITE setXMax)
-  Q_PROPERTY(double ymax READ getYMax WRITE setYMax)
+  Q_PROPERTY(bool binary READ isBinary)
+  Q_PROPERTY(bool matrix READ isMatrix)
 
-  Q_PROPERTY(CQGnuPlot::CQPlotStyle plotStyle READ plotStyle WRITE setPlotStyle)
+  Q_PROPERTY(double xmin READ getXMin)
+  Q_PROPERTY(double ymin READ getYMin)
+  Q_PROPERTY(double xmax READ getXMax)
+  Q_PROPERTY(double ymax READ getYMax)
 
-  Q_PROPERTY(int                       lineStyleId    READ lineStyleId      WRITE setLineStyleId  )
-  Q_PROPERTY(CQGnuPlot::CQFillType     fillType       READ fillType         WRITE setFillType     )
-  Q_PROPERTY(CQGnuPlot::CQFillPattern  fillPattern    READ fillPattern      WRITE setFillPattern  )
-  Q_PROPERTY(QColor                    lineColor      READ lineColor        WRITE setLineColor    )
-  Q_PROPERTY(double                    lineWidth      READ lineWidth        WRITE setLineWidth    )
-  Q_PROPERTY(CQGnuPlot::CQSymbolType   pointType      READ pointType        WRITE setPointType    )
-  Q_PROPERTY(double                    pointSize      READ pointSize        WRITE setPointSize    )
-  Q_PROPERTY(double                    boxWidthValue  READ getBoxWidthValue WRITE setBoxWidthValue)
-  Q_PROPERTY(CQGnuPlot::CQBoxWidthType boxWidthType   READ getBoxWidthType  WRITE setBoxWidthType )
+  Q_PROPERTY(CQGnuPlot::PlotStyle plotStyle READ plotStyle WRITE setPlotStyle)
+
+  Q_PROPERTY(int                     lineStyleId    READ lineStyleId      WRITE setLineStyleId  )
+  Q_PROPERTY(CQGnuPlot::FillType     fillType       READ fillType         WRITE setFillType     )
+  Q_PROPERTY(CQGnuPlot::FillPattern  fillPattern    READ fillPattern      WRITE setFillPattern  )
+  Q_PROPERTY(QColor                  lineColor      READ lineColor        WRITE setLineColor    )
+  Q_PROPERTY(double                  lineWidth      READ lineWidth        WRITE setLineWidth    )
+  Q_PROPERTY(CQGnuPlot::SymbolType   pointType      READ pointType        WRITE setPointType    )
+  Q_PROPERTY(double                  pointSize      READ pointSize        WRITE setPointSize    )
+  Q_PROPERTY(double                  boxWidthValue  READ getBoxWidthValue WRITE setBoxWidthValue)
+  Q_PROPERTY(CQGnuPlot::BoxWidthType boxWidthType   READ getBoxWidthType  WRITE setBoxWidthType )
 
   Q_PROPERTY(int trianglePattern3D READ trianglePattern3D WRITE setTrianglePattern3D)
 
@@ -67,20 +74,20 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   QColor lineColor() const;
   void setLineColor(const QColor &c);
 
-  CQGnuPlot::CQPlotStyle plotStyle() const;
-  void setPlotStyle(const CQGnuPlot::CQPlotStyle &s);
+  CQGnuPlot::PlotStyle plotStyle() const;
+  void setPlotStyle(const CQGnuPlot::PlotStyle &s);
 
-  CQGnuPlot::CQFillType fillType() const;
-  void setFillType(const CQGnuPlot::CQFillType &type);
+  CQGnuPlot::FillType fillType() const;
+  void setFillType(const CQGnuPlot::FillType &type);
 
-  CQGnuPlot::CQFillPattern fillPattern() const;
-  void setFillPattern(const CQGnuPlot::CQFillPattern &f);
+  CQGnuPlot::FillPattern fillPattern() const;
+  void setFillPattern(const CQGnuPlot::FillPattern &f);
 
-  CQGnuPlot::CQSymbolType pointType() const;
-  void setPointType(const CQGnuPlot::CQSymbolType &type);
+  CQGnuPlot::SymbolType pointType() const;
+  void setPointType(const CQGnuPlot::SymbolType &type);
 
-  CQGnuPlot::CQBoxWidthType getBoxWidthType() const;
-  void setBoxWidthType(const CQGnuPlot::CQBoxWidthType &type);
+  CQGnuPlot::BoxWidthType getBoxWidthType() const;
+  void setBoxWidthType(const CQGnuPlot::BoxWidthType &type);
 
   void draw();
 

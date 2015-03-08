@@ -33,7 +33,7 @@ class CQGnuPlotArrow : public CQGnuPlotAnnotation, public CGnuPlotArrow {
   QPointF getTo() const;
   void setTo(const QPointF &p);
 
-  void draw() const override;
+  void draw(CGnuPlotRenderer *renderer) const override;
 };
 
 #endif
