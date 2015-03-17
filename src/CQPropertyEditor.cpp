@@ -2,6 +2,10 @@
 #include <CQColorChooser.h>
 #include <CQFontChooser.h>
 #include <CQPaletteChooser.h>
+#include <CQPoint2DEdit.h>
+#include <CQLineDash.h>
+#include <CQAngleSpinBox.h>
+#include <CQUtil.h>
 #include <QSpinBox>
 #include <cassert>
 
@@ -20,9 +24,12 @@ instance()
 CQPropertyEditorMgr::
 CQPropertyEditorMgr()
 {
-  setEditor("QColor"  , new CQPropertyColorEditor  );
-  setEditor("QFont"   , new CQPropertyFontEditor   );
-  setEditor("QPalette", new CQPropertyPaletteEditor);
+  setEditor("QPointF"  , new CQPropertyPointEditor   );
+  setEditor("QColor"   , new CQPropertyColorEditor   );
+  setEditor("QFont"    , new CQPropertyFontEditor    );
+  setEditor("QPalette" , new CQPropertyPaletteEditor );
+  setEditor("CLineDash", new CQPropertyLineDashEditor);
+  setEditor("CAngle"   , new CQPropertyAngleEditor);
 }
 
 void
@@ -65,7 +72,6 @@ CQPropertyIntegerEditor::
 createEdit(QWidget *parent)
 {
   QSpinBox *spin = new QSpinBox(parent);
-  assert(spin);
 
   spin->setRange(min_, max_);
   spin->setSingleStep(step_);
@@ -95,12 +101,12 @@ getValue(QWidget *w)
 
 void
 CQPropertyIntegerEditor::
-setValue(QWidget *w, const QString &str)
+setValue(QWidget *w, const QVariant &var)
 {
   QSpinBox *spin = qobject_cast<QSpinBox *>(w);
   assert(spin);
 
-  int i = str.toInt();
+  int i = var.toInt();
 
   spin->setValue(i);
 }
@@ -118,7 +124,6 @@ CQPropertyRealEditor::
 createEdit(QWidget *parent)
 {
   QDoubleSpinBox *spin = new QDoubleSpinBox(parent);
-  assert(spin);
 
   spin->setRange(min_, max_);
   spin->setSingleStep(step_);
@@ -149,14 +154,64 @@ getValue(QWidget *w)
 
 void
 CQPropertyRealEditor::
-setValue(QWidget *w, const QString &str)
+setValue(QWidget *w, const QVariant &var)
 {
   QDoubleSpinBox *spin = qobject_cast<QDoubleSpinBox *>(w);
   assert(spin);
 
-  double r = str.toDouble();
+  double r = var.toDouble();
 
   spin->setValue(r);
+}
+
+//------
+
+CQPropertyPointEditor::
+CQPropertyPointEditor()
+{
+}
+
+QWidget *
+CQPropertyPointEditor::
+createEdit(QWidget *parent)
+{
+  CQPoint2DEdit *edit = new CQPoint2DEdit(parent);
+
+  edit->setSpin(true);
+
+  return edit;
+}
+
+void
+CQPropertyPointEditor::
+connect(QWidget *w, QObject *obj, const char *method)
+{
+  CQPoint2DEdit *edit = qobject_cast<CQPoint2DEdit *>(w);
+  assert(edit);
+
+  QObject::connect(edit, SIGNAL(valueChanged()), obj, method);
+}
+
+QVariant
+CQPropertyPointEditor::
+getValue(QWidget *w)
+{
+  CQPoint2DEdit *edit = qobject_cast<CQPoint2DEdit *>(w);
+  assert(edit);
+
+  return edit->getQValue();
+}
+
+void
+CQPropertyPointEditor::
+setValue(QWidget *w, const QVariant &var)
+{
+  CQPoint2DEdit *edit = qobject_cast<CQPoint2DEdit *>(w);
+  assert(edit);
+
+  QPointF p = var.toPointF();
+
+  edit->setValue(p);
 }
 
 //------
@@ -171,7 +226,6 @@ CQPropertyColorEditor::
 createEdit(QWidget *parent)
 {
   CQColorChooser *chooser = new CQColorChooser(parent);
-  assert(chooser);
 
   chooser->setStyles(CQColorChooser::Text | CQColorChooser::ColorButton);
 
@@ -200,10 +254,12 @@ getValue(QWidget *w)
 
 void
 CQPropertyColorEditor::
-setValue(QWidget *w, const QString &str)
+setValue(QWidget *w, const QVariant &var)
 {
   CQColorChooser *chooser = qobject_cast<CQColorChooser *>(w);
   assert(chooser);
+
+  QString str = var.toString();
 
   chooser->setColorName(str);
 }
@@ -220,7 +276,6 @@ CQPropertyFontEditor::
 createEdit(QWidget *parent)
 {
   CQFontChooser *chooser = new CQFontChooser(parent);
-  assert(chooser);
 
   return chooser;
 }
@@ -247,10 +302,12 @@ getValue(QWidget *w)
 
 void
 CQPropertyFontEditor::
-setValue(QWidget *w, const QString &str)
+setValue(QWidget *w, const QVariant &var)
 {
   CQFontChooser *chooser = qobject_cast<CQFontChooser *>(w);
   assert(chooser);
+
+  QString str = var.toString();
 
   chooser->setFontName(str);
 }
@@ -267,7 +324,6 @@ CQPropertyPaletteEditor::
 createEdit(QWidget *parent)
 {
   CQPaletteChooser *chooser = new CQPaletteChooser(parent);
-  assert(chooser);
 
   return chooser;
 }
@@ -294,10 +350,108 @@ getValue(QWidget *w)
 
 void
 CQPropertyPaletteEditor::
-setValue(QWidget *w, const QString &str)
+setValue(QWidget *w, const QVariant &var)
 {
   CQPaletteChooser *chooser = qobject_cast<CQPaletteChooser *>(w);
   assert(chooser);
 
+  QString str = var.toString();
+
   chooser->setPaletteDef(str);
+}
+
+//------
+
+CQPropertyLineDashEditor::
+CQPropertyLineDashEditor()
+{
+}
+
+QWidget *
+CQPropertyLineDashEditor::
+createEdit(QWidget *parent)
+{
+  CQLineDash *edit = new CQLineDash(parent);
+
+  return edit;
+}
+
+void
+CQPropertyLineDashEditor::
+connect(QWidget *w, QObject *obj, const char *method)
+{
+  CQLineDash *edit = qobject_cast<CQLineDash *>(w);
+  assert(edit);
+
+  QObject::connect(edit, SIGNAL(valueChanged(const CLineDash &)), obj, method);
+}
+
+QVariant
+CQPropertyLineDashEditor::
+getValue(QWidget *w)
+{
+  CQLineDash *edit = qobject_cast<CQLineDash *>(w);
+  assert(edit);
+
+  return QVariant::fromValue(edit->getLineDash());
+}
+
+void
+CQPropertyLineDashEditor::
+setValue(QWidget *w, const QVariant &var)
+{
+  CQLineDash *edit = qobject_cast<CQLineDash *>(w);
+  assert(edit);
+
+  CLineDash dash = var.value<CLineDash>();
+
+  edit->setLineDash(dash);
+}
+
+//------
+
+CQPropertyAngleEditor::
+CQPropertyAngleEditor()
+{
+}
+
+QWidget *
+CQPropertyAngleEditor::
+createEdit(QWidget *parent)
+{
+  CQAngleSpinBox *edit = new CQAngleSpinBox(parent);
+
+  return edit;
+}
+
+void
+CQPropertyAngleEditor::
+connect(QWidget *w, QObject *obj, const char *method)
+{
+  CQAngleSpinBox *edit = qobject_cast<CQAngleSpinBox *>(w);
+  assert(edit);
+
+  QObject::connect(edit, SIGNAL(angleChanged(const CAngle &)), obj, method);
+}
+
+QVariant
+CQPropertyAngleEditor::
+getValue(QWidget *w)
+{
+  CQAngleSpinBox *edit = qobject_cast<CQAngleSpinBox *>(w);
+  assert(edit);
+
+  return QVariant::fromValue(edit->getAngle());
+}
+
+void
+CQPropertyAngleEditor::
+setValue(QWidget *w, const QVariant &var)
+{
+  CQAngleSpinBox *edit = qobject_cast<CQAngleSpinBox *>(w);
+  assert(edit);
+
+  CAngle angle = var.value<CAngle>();
+
+  edit->setAngle(angle);
 }

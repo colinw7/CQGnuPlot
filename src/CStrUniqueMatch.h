@@ -104,6 +104,11 @@ namespace CStrUniqueMatch {
   }
 
   template<typename T>
+  inline void values(std::vector<std::string> &strs) {
+    getNameValues<T>().values(strs);
+  }
+
+  template<typename T>
   inline std::string valueStrings() {
     std::vector<std::string> strs;
 

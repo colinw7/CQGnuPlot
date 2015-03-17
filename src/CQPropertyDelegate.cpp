@@ -4,6 +4,8 @@
 #include <QApplication>
 #include <QTreeWidget>
 #include <QLineEdit>
+#include <QPainter>
+#include <QLayout>
 
 #include <cassert>
 
@@ -38,8 +40,16 @@ createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &i
   else
     assert(false);
 
-  if (w)
+  if (w) {
+    w->updateGeometry();
+
+    if (w->layout())
+      w->layout()->invalidate();
+
+    //w->setFixedSize(sizeHint(option, index));
+
     w->installEventFilter(th);
+  }
 
   return w;
 }
@@ -105,7 +115,19 @@ paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &
   QTreeWidgetItem *item = getModelItem(index);
   assert(item);
 
-  QItemDelegate::paint(painter, option, index);
+  if (CQPropertyItem::isType(item->type())) {
+    CQPropertyItem *item1 = dynamic_cast<CQPropertyItem *>(item);
+    assert(item1);
+
+    if (index.column() == 1) {
+      if (! item1->paint(this, painter, option, index))
+        QItemDelegate::paint(painter, option, index);
+    }
+    else
+      QItemDelegate::paint(painter, option, index);
+  }
+  else
+    QItemDelegate::paint(painter, option, index);
 }
 
 /*! size hint
@@ -165,4 +187,118 @@ createEdit(QWidget *parent, const QString &text) const
   edit->setStyleSheet(styleStr);
 
   return edit;
+}
+
+void
+CQPropertyDelegate::
+drawCheck(QPainter *painter, const QStyleOptionViewItem &option,
+          bool checked, const QModelIndex &index) const
+{
+  QItemDelegate::drawBackground(painter, option, index);
+
+  Qt::CheckState checkState = (checked ? Qt::Checked : Qt::Unchecked);
+
+  QRect rect = option.rect;
+
+  rect.setWidth(option.rect.height());
+
+  rect.adjust(0, 1, -3, -2);
+
+  QItemDelegate::drawCheck(painter, option, rect, checkState);
+
+  QFontMetrics fm(painter->font());
+
+  int x = rect.right() + 4;
+//int y = rect.top() + fm.ascent();
+
+  QRect rect1;
+
+  rect1.setCoords(x, option.rect.top(), option.rect.right(), option.rect.bottom());
+
+  //painter->drawText(x, y, (checked ? "true" : "false"));
+  QItemDelegate::drawDisplay(painter, option, rect1, checked ? "true" : "false");
+}
+
+void
+CQPropertyDelegate::
+drawColor(QPainter *painter, const QStyleOptionViewItem &option,
+          const QColor &c, const QModelIndex &index) const
+{
+  QItemDelegate::drawBackground(painter, option, index);
+
+  QRect rect = option.rect;
+
+  rect.setWidth(option.rect.height());
+
+  rect.adjust(0, 1, -3, -2);
+
+  painter->fillRect(rect, QBrush(c));
+
+  painter->setPen(QColor(0,0,0));
+  painter->drawRect(rect);
+
+  QFontMetrics fm(painter->font());
+
+  int x = rect.right();
+//int y = rect.top() + fm.ascent();
+
+  QRect rect1;
+
+  rect1.setCoords(x, option.rect.top(), option.rect.right(), option.rect.bottom());
+
+//painter->drawText(x, y, c.name());
+  QItemDelegate::drawDisplay(painter, option, rect1, c.name());
+}
+
+void
+CQPropertyDelegate::
+drawFont(QPainter *painter, const QStyleOptionViewItem &option,
+         const QFont &f, const QModelIndex &index) const
+{
+  QItemDelegate::drawBackground(painter, option, index);
+
+  QRect rect = option.rect;
+
+  rect.setWidth(option.rect.height());
+
+  rect.adjust(0, 1, -3, -2);
+
+  QFont f1 = f;
+  QFont f2 = painter->font();
+
+  QFontMetrics fm1(f1);
+  QFontMetrics fm2(f2);
+
+  int fw = fm1.width("Abc");
+  int fh = fm1.height();
+
+  if (fh > rect.height()) {
+    f1.setPixelSize(rect.height());
+
+    fm1 = QFontMetrics(f1);
+
+    fw = fm1.width("Abc");
+  }
+
+  int x1 = rect.left();
+  int y1 = rect.top() + fm1.ascent();
+
+  painter->save();
+
+  painter->setFont(f1);
+  painter->setPen(QColor(0,0,0));
+
+  painter->drawText(x1, y1, "Abc");
+
+  painter->restore();
+
+  int x2 = x1 + fw + 4;
+//int y2 = rect.top() + fm2.ascent();
+
+  QRect rect1;
+
+  rect1.setCoords(x2, option.rect.top(), option.rect.right(), option.rect.bottom());
+
+//painter->drawText(x2, y2, f.toString());
+  QItemDelegate::drawDisplay(painter, option, rect1, f.toString());
 }

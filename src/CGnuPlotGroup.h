@@ -88,10 +88,10 @@ class CGnuPlotGroup {
 
   double getXMin() const { return xaxis(1).min().getValue(-10); }
   double getXMax() const { return xaxis(1).max().getValue( 10); }
-  double getYMin() const { return yaxis(1).min().getValue(-1); }
-  double getYMax() const { return yaxis(1).max().getValue( 1); }
-  double getZMin() const { return zaxis(1).min().getValue(-1); }
-  double getZMax() const { return zaxis(1).max().getValue( 1); }
+  double getYMin() const { return yaxis(1).min().getValue(-10); }
+  double getYMax() const { return yaxis(1).max().getValue( 10); }
+  double getZMin() const { return zaxis(1).min().getValue(-10); }
+  double getZMax() const { return zaxis(1).max().getValue( 10); }
 
   void setXMin(double x) { xaxis(1).setMin(x); }
   void setXMax(double x) { xaxis(1).setMax(x); }
@@ -139,6 +139,11 @@ class CGnuPlotGroup {
   void normalizeYRange(double &ymin, double &ymax) const;
 
   CBBox2D getClip(int xind=1, int yind=1) const;
+
+  //---
+
+  const COptValT<CBBox2D> &clearRect() const { return clearRect_; }
+  void setClearRect(const COptValT<CBBox2D> &r) { clearRect_ = r; }
 
   //---
 
@@ -223,6 +228,8 @@ class CGnuPlotGroup {
 
   virtual void draw();
 
+  void drawClearRect(CGnuPlotRenderer *renderer);
+
   void drawTitle();
 
   void drawHistogram(const Plots &plots);
@@ -305,6 +312,7 @@ class CGnuPlotGroup {
   CBBox2D               region_ {0,0,1,1};     // region of window
   Margin                margin_ {10,10,10,10}; // margin around plots
   CBBox2D               bbox_ { 0, 0, 1, 1 };  // bounding box
+  COptValT<CBBox2D>     clearRect_;            // optional clear rectangle
   PlotSize              plotSize_;
   CGnuPlotHistogramData histogramData_;        // histogram style
   CGnuPlotKeyP          key_;                  // key

@@ -1,6 +1,8 @@
 #ifndef CGnuPlotFile_H
 #define CGnuPlotFile_H
 
+#include <COptVal.h>
+
 #include <string>
 #include <vector>
 #include <map>
@@ -59,7 +61,8 @@ class CGnuPlotFile {
  public:
   CGnuPlotFile();
 
-  const std::string &commentChars() const { return commentChars_; }
+  bool hasCommentChars() const { return commentChars_.isValid(); }
+  std::string commentChars() const { return commentChars_.getValue("#"); }
   void setCommentChars(const std::string &chars) { commentChars_ = chars; }
 
   char getSeparator() const { return separator_; }
@@ -140,7 +143,7 @@ class CGnuPlotFile {
   typedef std::map<int,SubFieldsArray> SetSubFieldsArray;
 
   std::string filename_     { "" };
-  std::string commentChars_ { "#" };
+  COptString  commentChars_;
   char        separator_    { '\0' };
   bool        parseStrings_ { true };
   Indices     indices_;

@@ -23,6 +23,7 @@ class CQGnuPlot : public QObject, public CGnuPlot {
   Q_ENUMS(BoxWidthType)
   Q_ENUMS(DrawLayerType)
   Q_ENUMS(PaletteColorType)
+  Q_ENUMS(ArrowCoordType)
 
  public:
   enum HAlignType {
@@ -137,6 +138,12 @@ class CQGnuPlot : public QObject, public CGnuPlot {
   enum PaletteColorType {
     PaletteColorModel,
     PaletteColorDefined
+  };
+
+  enum ArrowCoordType {
+    ArrowCoordFromTo,
+    ArrowCoordFromRTo,
+    ArrowCoordFromAngle
   };
 
  public:

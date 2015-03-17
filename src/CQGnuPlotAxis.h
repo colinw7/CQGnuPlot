@@ -22,6 +22,15 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   Q_PROPERTY(QString label           READ getLabel          WRITE setLabel)
   Q_PROPERTY(bool    grid            READ hasGrid           WRITE setGrid)
   Q_PROPERTY(bool    tickInside      READ isTickInside      WRITE setTickInside)
+  Q_PROPERTY(bool    tickInside1     READ isTickInside1     WRITE setTickInside1)
+  Q_PROPERTY(bool    drawTickMark    READ isDrawTickMark    WRITE setDrawTickMark)
+  Q_PROPERTY(bool    drawTickMark1   READ isDrawTickMark1   WRITE setDrawTickMark1)
+  Q_PROPERTY(bool    drawTickLabel   READ isDrawTickLabel   WRITE setDrawTickLabel)
+  Q_PROPERTY(bool    drawTickLabel1  READ isDrawTickLabel1  WRITE setDrawTickLabel1)
+  Q_PROPERTY(bool    labelInside     READ isLabelInside     WRITE setLabelInside)
+  Q_PROPERTY(bool    labelInside1    READ isLabelInside1    WRITE setLabelInside1)
+  Q_PROPERTY(bool    drawLabel       READ isDrawLabel       WRITE setDrawLabel)
+  Q_PROPERTY(bool    drawLabel1      READ isDrawLabel1      WRITE setDrawLabel1)
 
  public:
   CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, COrientation dir,
@@ -34,7 +43,7 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   void setStart(double r);
   void setEnd(double r);
 
-  void drawAxis(double pos) override;
+  void drawAxis(double pos, bool first) override;
 };
 
 #endif

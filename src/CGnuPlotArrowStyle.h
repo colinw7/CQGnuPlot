@@ -4,6 +4,7 @@
 #include <CGnuPlotCoordValue.h>
 #include <COptVal.h>
 #include <CRGBA.h>
+#include <CLineDash.h>
 
 #include <memory>
 #include <iostream>
@@ -24,9 +25,7 @@ class CGnuPlotArrowStyle {
 
   const CGnuPlotCoordValue &length() const { return length_; }
   void setLength(const CGnuPlotCoordValue &l) { length_ = l; }
-
-  double lengthValue() const { return length_.value(); }
-  void setLengthValue(double l) { length_.setValue(l); }
+  void setLength(double l) { length_ = l; }
 
   double angle() const { return angle_; }
   void setAngle(double a) { angle_ = a; }
@@ -46,16 +45,16 @@ class CGnuPlotArrowStyle {
   double lineWidth(CGnuPlot *plot) const;
   void setLineWidth(double w) { lineWidth_ = w; }
 
-  CRGBA lineColor() const { return lineColor_.getValue(CRGBA(0,0,0)); }
+  const COptValT<CRGBA> &lineColor() const { return lineColor_; }
   void setLineColor(const CRGBA &c) { lineColor_ = c; }
 
-  int lineStyle() const { return lineStyle_.getValue(-1); }
+  const COptInt &lineStyle() const { return lineStyle_; }
   void setLineStyle(int t) { lineStyle_ = t; }
 
-  int dashType() const { return dashType_.getValue(-1); }
-  void setDashType(int dt) { dashType_ = dt; }
+  const CLineDash &dash() const { return dash_; }
+  void setDash(const CLineDash &dash) { dash_ = dash; }
 
-  bool variable() const { return variable_; }
+  bool isVariable() const { return variable_; }
   void setVariable(bool b) { variable_ = b; }
 
   const COptReal &varValue() const { return varValue_; }
@@ -93,7 +92,7 @@ class CGnuPlotArrowStyle {
   COptReal           lineWidth_;
   COptInt            lineStyle_;
   COptValT<CRGBA>    lineColor_;
-  COptInt            dashType_;
+  CLineDash          dash_;
   bool               variable_  { false };
   COptReal           varValue_;
 };

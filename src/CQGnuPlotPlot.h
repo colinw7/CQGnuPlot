@@ -39,6 +39,10 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_PROPERTY(double                  lineWidth      READ lineWidth        WRITE setLineWidth    )
   Q_PROPERTY(CQGnuPlot::SymbolType   pointType      READ pointType        WRITE setPointType    )
   Q_PROPERTY(double                  pointSize      READ pointSize        WRITE setPointSize    )
+
+  Q_PROPERTY(double barsSize  READ barsSize  WRITE setBarsSize )
+  Q_PROPERTY(bool   barsFront READ barsFront WRITE setBarsFront)
+
   Q_PROPERTY(double                  boxWidthValue  READ getBoxWidthValue WRITE setBoxWidthValue)
   Q_PROPERTY(CQGnuPlot::BoxWidthType boxWidthType   READ getBoxWidthType  WRITE setBoxWidthType )
 

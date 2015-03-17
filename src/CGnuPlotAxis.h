@@ -29,6 +29,9 @@ class CGnuPlotAxis {
   const std::string &id() const { return id_; }
   void setId(const std::string &id) { id_ = id; }
 
+  bool isInitialized() const { return initialized_; }
+  void setInitialized(bool b) { initialized_ = b; }
+
   double getStart() const { return start1_; }
   double getEnd  () const { return end1_  ; }
 
@@ -55,14 +58,32 @@ class CGnuPlotAxis {
   const double *getTickSpaces   () const { return &tickSpaces_[0]; }
   int           getNumTickSpaces() const { return tickSpaces_.size(); }
 
+  //---
+
+  bool isTickInside(bool first) const { return (first ? tickInside_ : tickInside1_); }
+
   bool isTickInside() const { return tickInside_; }
   void setTickInside(bool b) { tickInside_ = b; }
+
+  bool isTickInside1() const { return tickInside1_; }
+  void setTickInside1(bool b) { tickInside1_ = b; }
+
+  //---
 
   double getTickSpace(int i) const { return tickSpaces_[i]; }
   void setTickSpaces(double *tickSpaces, int numTickSpaces);
 
+  //---
+
+  bool isLabelInside(bool first) const { return (first ? labelInside_ : labelInside1_); }
+
   bool isLabelInside() const { return labelInside_; }
   void setLabelInside(bool b) { labelInside_ = b; }
+
+  bool isLabelInside1() const { return labelInside1_; }
+  void setLabelInside1(bool b) { labelInside1_ = b; }
+
+  //---
 
   const std::string &getLabel() const { return label_; }
   void setLabel(const std::string &str);
@@ -79,8 +100,17 @@ class CGnuPlotAxis {
   bool hasGrid() const;
   void setGrid(bool b);
 
-  bool drawTickMark() const { return drawTickMark_; }
+  //---
+
+  bool isDrawTickMark(bool first) const { return (first ? drawTickMark_ : drawTickMark1_); }
+
+  bool isDrawTickMark() const { return drawTickMark_; }
   void setDrawTickMark(bool b) { drawTickMark_ = b; }
+
+  bool isDrawTickMark1() const { return drawTickMark1_; }
+  void setDrawTickMark1(bool b) { drawTickMark1_ = b; }
+
+  //---
 
   bool isDrawMinorTickMark() const { return drawMinorTickMark_; }
   void setDrawMinorTickMark(bool b) { drawMinorTickMark_ = b; }
@@ -88,17 +118,33 @@ class CGnuPlotAxis {
   bool clip() const { return clip_; }
   void setClip(bool b) { clip_ = b; }
 
-  bool drawTickLabel() const { return drawTickLabel_; }
+  //---
+
+  bool isDrawTickLabel(bool first) const { return (first ? drawTickLabel_ : drawTickLabel1_); }
+
+  bool isDrawTickLabel() const { return drawTickLabel_; }
   void setDrawTickLabel(bool b) { drawTickLabel_ = b; }
 
-  bool drawLabel() const { return drawLabel_; }
+  bool isDrawTickLabel1() const { return drawTickLabel1_; }
+  void setDrawTickLabel1(bool b) { drawTickLabel1_ = b; }
+
+  //---
+
+  bool isDrawLabel(bool first) const { return (first ? drawLabel_ : drawLabel1_); }
+
+  bool isDrawLabel() const { return drawLabel_; }
   void setDrawLabel(bool b) { drawLabel_ = b; }
+
+  bool isDrawLabel1() const { return drawLabel1_; }
+  void setDrawLabel1(bool b) { drawLabel1_ = b; }
+
+  //---
 
   void setRange(double start, double end);
 
   std::string getValueStr(int i, double pos) const;
 
-  virtual void drawAxis(double pos);
+  virtual void drawAxis(double pos, bool first=true);
 
   virtual void drawGrid(double start, double end);
 
@@ -113,9 +159,9 @@ class CGnuPlotAxis {
 
   void drawAxisTick(const CPoint2D &p, CDirectionType type, bool large);
 
-  void drawTickLabel(const CPoint2D &p, const std::string &str);
+  void drawTickLabel(const CPoint2D &p, const std::string &str, bool first);
 
-  void drawAxisLabel(const CPoint2D &p, const std::string &str, int maxSize);
+  void drawAxisLabel(const CPoint2D &p, const std::string &str, int maxSize, bool first);
 
   void drawClipLine(const CPoint2D &p1, const CPoint2D &p2);
   void drawLine(const CPoint2D &p1, const CPoint2D &p2);
@@ -130,6 +176,7 @@ class CGnuPlotAxis {
 
   CGnuPlotGroup*    group_             { 0 };
   std::string       id_                { "" };
+  bool              initialized_       { false };
   COrientation      direction_         { CORIENTATION_HORIZONTAL };
   double            start_             { 0 };
   double            end_               { 1 };
@@ -144,15 +191,20 @@ class CGnuPlotAxis {
   double            majorIncrement_    { 0 };
   TickSpaces        tickSpaces_;
   bool              tickInside_        { false };
+  bool              tickInside1_       { true  };
   bool              labelInside_       { false };
+  bool              labelInside1_      { false };
   std::string       label_;
   std::string       timeFmt_;
   bool              displayed_         { true };
   bool              drawLine_          { true };
   bool              drawTickMark_      { true };
+  bool              drawTickMark1_     { true };
   bool              drawMinorTickMark_ { true };
   bool              drawTickLabel_     { true };
+  bool              drawTickLabel1_    { false };
   bool              drawLabel_         { true };
+  bool              drawLabel1_        { false };
   bool              clip_              { false };
   mutable CBBox2D   bbox_              { 0, 0, 1, 1 };
   mutable CLineDash lineDash_;

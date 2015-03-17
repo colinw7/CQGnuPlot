@@ -462,10 +462,13 @@ windowToPixel(double wx, double wy, double *px, double *py)
   }
 
   // place on screen
-  double pxmin = region_.getLeft  ()*width ();
-  double pymin = region_.getBottom()*height();
-  double pxmax = region_.getRight ()*width ();
-  double pymax = region_.getTop   ()*height();
+  CPoint2D p1, p2;
+
+  regionToPixel(region_.getLL(), p1);
+  regionToPixel(region_.getUR(), p2);
+
+  double pxmin = p1.x, pymin = p2.y;
+  double pxmax = p2.x, pymax = p1.y;
 
   double pw = pxmax - pxmin;
   double ph = pymax - pymin;
@@ -528,10 +531,13 @@ pixelToWindow(double px, double py, double *wx, double *wy)
   }
 
   // place on screen
-  double pxmin = region_.getLeft  ()*width ();
-  double pymin = region_.getBottom()*height();
-  double pxmax = region_.getRight ()*width ();
-  double pymax = region_.getTop   ()*height();
+  CPoint2D p1, p2;
+
+  regionToPixel(region_.getLL(), p1);
+  regionToPixel(region_.getUR(), p2);
+
+  double pxmin = p1.x, pymin = p2.y;
+  double pxmax = p2.x, pymax = p1.y;
 
   double pw = pxmax - pxmin;
   double ph = pymax - pymin;
@@ -581,4 +587,11 @@ pixelToWindow(double px, double py, double *wx, double *wy)
     *wy = CGnuPlotUtil::map(py, pymin, pymax, range_.getYMin(), range_.getYMax());
   else
     *wy = CGnuPlotUtil::map(py, pymax, pymin, range_.getYMin(), range_.getYMax());
+}
+
+void
+CGnuPlotRenderer::
+regionToPixel(const CPoint2D &r, CPoint2D &p)
+{
+  p = CPoint2D(r.x*width() - 1, (1 - r.y)*height());
 }

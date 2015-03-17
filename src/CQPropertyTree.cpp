@@ -110,12 +110,10 @@ bool
 CQPropertyTree::
 selectObject(QTreeWidgetItem *item, const QObject *obj)
 {
-  CQPropertyItem *item1 = static_cast<CQPropertyItem *>(item);
-
   QObject *obj1;
   QString  path;
 
-  getItemData(item1, obj1, path);
+  getItemData(item, obj1, path);
 
   if (obj1 == obj) {
     item->setSelected(true);
@@ -134,14 +132,27 @@ selectObject(QTreeWidgetItem *item, const QObject *obj)
 
 void
 CQPropertyTree::
-itemClickedSlot(QTreeWidgetItem *item, int /*column*/)
+itemClickedSlot(QTreeWidgetItem *item, int column)
 {
-  CQPropertyItem *item1 = static_cast<CQPropertyItem *>(item);
+  CQPropertyItem *item1 = 0;
+
+  if (CQPropertyItem::isType(item->type()))
+    item1 = static_cast<CQPropertyItem *>(item);
+
+  if (item1 && column == 1) {
+    if (item1->click()) {
+      QModelIndex ind = indexFromItem(item1, column);
+
+      update(ind);
+    }
+  }
+
+  //---
 
   QObject *obj;
   QString  path;
 
-  getItemData(item1, obj, path);
+  getItemData(item, obj, path);
 
   emit itemClicked(obj, path);
 }
@@ -153,19 +164,17 @@ itemSelectionSlot()
   QList<QTreeWidgetItem *> items = selectedItems();
   if (items.empty()) return;
 
-  CQPropertyItem *item1 = static_cast<CQPropertyItem *>(items[0]);
-
   QObject *obj;
   QString  path;
 
-  getItemData(item1, obj, path);
+  getItemData(items[0], obj, path);
 
   emit itemSelected(obj, path);
 }
 
 void
 CQPropertyTree::
-getItemData(CQPropertyItem *item, QObject* &obj, QString &path)
+getItemData(QTreeWidgetItem *item, QObject* &obj, QString &path)
 {
   QTreeWidgetItem *item1 = item;
 

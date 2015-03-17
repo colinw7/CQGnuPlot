@@ -38,6 +38,9 @@ namespace CQGnuPlotUtil {
 
   CQGnuPlot::PaletteColorType paletteColorTypeConv(const CGnuPlotPalette::ColorType    &layer);
   CGnuPlotPalette::ColorType  paletteColorTypeConv(const CQGnuPlot::PaletteColorType &layer);
+
+  CQGnuPlot::ArrowCoordType arrowCoordTypeConv(const CGnuPlotArrow::CoordType  &type);
+  CGnuPlotArrow::CoordType  arrowCoordTypeConv(const CQGnuPlot::ArrowCoordType &type);
 }
 
 #endif

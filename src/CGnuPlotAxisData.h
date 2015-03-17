@@ -30,6 +30,16 @@ class CGnuPlotAxisData {
   bool isTime() const { return isTime_; }
   void setIsTime(bool b) { isTime_ = b; }
 
+  bool isAutoScaleMin() const { return autoScaleMin_; }
+  void setAutoScaleMin(bool b) { autoScaleMin_ = b; }
+  bool isAutoScaleMax() const { return autoScaleMax_; }
+  void setAutoScaleMax(bool b) { autoScaleMax_ = b; }
+
+  bool isAutoScaleFixMin() const { return autoScaleFixMin_; }
+  void setAutoScaleFixMin(bool b) { autoScaleFixMin_ = b; }
+  bool isAutoScaleFixMax() const { return autoScaleFixMax_; }
+  void setAutoScaleFixMax(bool b) { autoScaleFixMax_ = b; }
+
   const COptReal &min() const { return min_; }
   void setMin(double r) { min_ = r; }
   void setMin(const COptReal &r) { min_ = r; }
@@ -42,8 +52,8 @@ class CGnuPlotAxisData {
   void updateMax(double r) { max_.updateMax(r); }
   void resetMax() { max_.setInvalid(); }
 
-  const std::string &text() const { return str_; }
-  void setText(const std::string &s) { str_ = s; }
+  const std::string &text() const { return text_; }
+  void setText(const std::string &s) { text_ = s; }
 
   bool hasTiclLabel(int i) const { return (ticlabel_.find(i) != ticlabel_.end()); }
 
@@ -66,25 +76,38 @@ class CGnuPlotAxisData {
   bool showTics() const { return showTics_; }
   void setShowTics(bool b) { showTics_ = b; }
 
+  void showFormat(std::ostream &os, const std::string &prefix) const {
+    os << "set format " << prefix << " \"" << format_ << "\"" << std::endl;
+  }
+
+  void printLabel(std::ostream &os, const std::string &prefix) const {
+    os << prefix << "label is \"" << text_ << "\", " <<
+          "offset at ((character units) 0, 0, 0)" << std::endl;
+  }
+
  private:
   typedef std::map<int,std::string> TicLabelMap;
 
   int         ind_;
-  bool        displayed_ { true  };
-  bool        grid_      { false };
-  bool        mirror_    { true  };
-  bool        reverse_   { false };
-  bool        writeback_ { false };
-  bool        extend_    { false };
-  bool        isTime_    { false };
+  bool        displayed_       { true  };
+  bool        grid_            { false };
+  bool        mirror_          { true  };
+  bool        reverse_         { false };
+  bool        writeback_       { false };
+  bool        extend_          { false };
+  bool        isTime_          { false };
+  bool        autoScaleMin_    { true };
+  bool        autoScaleMax_    { true };
+  bool        autoScaleFixMin_ { false };
+  bool        autoScaleFixMax_ { false };
   COptReal    min_;
   COptReal    max_;
-  std::string str_;
+  std::string text_;
   TicLabelMap ticlabel_;
-  double      offset_    { 0 };
-  std::string format_;
+  double      offset_      { 0 };
+  std::string format_      { "%g" };
   CFontPtr    font_;
-  bool        showTics_  { true };
+  bool        showTics_    { true };
 };
 
 #endif

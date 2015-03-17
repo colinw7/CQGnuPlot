@@ -40,6 +40,7 @@ CQGnuPlotWindow.cpp \
 \
 CGnuPlot.cpp \
 CGnuPlotArrow.cpp \
+CGnuPlotArrowStyle.cpp \
 CGnuPlotAxis.cpp \
 CGnuPlotBBoxRenderer.cpp \
 CGnuPlotBar.cpp \
@@ -100,6 +101,11 @@ Expr/CExprVariable.cpp \
 MouseMode/CQMouseMode.cpp \
 MouseMode/CQPanMouseMode.cpp \
 MouseMode/CQZoomMouseMode.cpp \
+\
+CQAngleSpinBox.cpp \
+CQLineDash.cpp \
+CQPoint2DEdit.cpp \
+CQIconCombo.cpp \
 
 HEADERS += \
 CQGnuPlot.h \
@@ -205,6 +211,11 @@ MouseMode/CQMouseMode.h \
 MouseMode/CQPanMouseMode.h \
 MouseMode/CQPanZoomIFace.h \
 MouseMode/CQZoomMouseMode.h \
+\
+CQAngleSpinBox.h \
+CQLineDash.h \
+CQPoint2DEdit.h \
+CQIconCombo.h \
 
 DESTDIR     = ../bin
 OBJECTS_DIR = ../obj

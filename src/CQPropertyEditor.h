@@ -22,7 +22,7 @@ class CQPropertyEditorFactory {
 
   virtual QVariant getValue(QWidget *w) = 0;
 
-  virtual void setValue(QWidget *w, const QString &str) = 0;
+  virtual void setValue(QWidget *w, const QVariant &var) = 0;
 };
 
 //------
@@ -37,7 +37,7 @@ class CQPropertyIntegerEditor : public CQPropertyEditorFactory {
 
   QVariant getValue(QWidget *w);
 
-  void setValue(QWidget *w, const QString &str);
+  void setValue(QWidget *w, const QVariant &var);
 
  private:
   int min_, max_;
@@ -56,11 +56,26 @@ class CQPropertyRealEditor : public CQPropertyEditorFactory {
 
   QVariant getValue(QWidget *w);
 
-  void setValue(QWidget *w, const QString &str);
+  void setValue(QWidget *w, const QVariant &var);
 
  private:
   double min_, max_;
   double step_;
+};
+
+//------
+
+class CQPropertyPointEditor : public CQPropertyEditorFactory {
+ public:
+  CQPropertyPointEditor();
+
+  QWidget *createEdit(QWidget *parent);
+
+  void connect(QWidget *w, QObject *obj, const char *method);
+
+  QVariant getValue(QWidget *w);
+
+  void setValue(QWidget *w, const QVariant &var);
 };
 
 //------
@@ -75,7 +90,7 @@ class CQPropertyColorEditor : public CQPropertyEditorFactory {
 
   QVariant getValue(QWidget *w);
 
-  void setValue(QWidget *w, const QString &str);
+  void setValue(QWidget *w, const QVariant &var);
 };
 
 //------
@@ -90,7 +105,7 @@ class CQPropertyFontEditor : public CQPropertyEditorFactory {
 
   QVariant getValue(QWidget *w);
 
-  void setValue(QWidget *w, const QString &str);
+  void setValue(QWidget *w, const QVariant &var);
 };
 
 //------
@@ -105,7 +120,37 @@ class CQPropertyPaletteEditor : public CQPropertyEditorFactory {
 
   QVariant getValue(QWidget *w);
 
-  void setValue(QWidget *w, const QString &str);
+  void setValue(QWidget *w, const QVariant &var);
+};
+
+//------
+
+class CQPropertyLineDashEditor : public CQPropertyEditorFactory {
+ public:
+  CQPropertyLineDashEditor();
+
+  QWidget *createEdit(QWidget *parent);
+
+  void connect(QWidget *w, QObject *obj, const char *method);
+
+  QVariant getValue(QWidget *w);
+
+  void setValue(QWidget *w, const QVariant &var);
+};
+
+//------
+
+class CQPropertyAngleEditor : public CQPropertyEditorFactory {
+ public:
+  CQPropertyAngleEditor();
+
+  QWidget *createEdit(QWidget *parent);
+
+  void connect(QWidget *w, QObject *obj, const char *method);
+
+  QVariant getValue(QWidget *w);
+
+  void setValue(QWidget *w, const QVariant &var);
 };
 
 //------

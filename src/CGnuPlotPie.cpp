@@ -19,7 +19,7 @@ inside(const CPoint2D &p) const
     return false;
 
   // check angle
-  double a = Rad2Deg(atan2(p.y - c_.y, p.x - c_.x)); while (a < 0) a += 360.0;
+  double a = CAngle::Rad2Deg(atan2(p.y - c_.y, p.x - c_.x)); while (a < 0) a += 360.0;
 
   double angle1 = angle1_; while (angle1 < 0) angle1 += 360.0;
   double angle2 = angle2_; while (angle2 < 0) angle2 += 360.0;
@@ -46,7 +46,7 @@ draw(CGnuPlotRenderer *renderer) const
 {
   renderer->drawPieSlice(c_, r_, angle1_, angle2_, color_.getValue(CRGBA(1,0,0)));
 
-  double tangle = Deg2Rad((angle1_ + angle2_)/2.0);
+  double tangle = CAngle::Deg2Rad((angle1_ + angle2_)/2.0);
 
   double x = c_.x + 0.5*r_*cos(tangle);
   double y = c_.y + 0.5*r_*sin(tangle);

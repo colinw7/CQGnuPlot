@@ -26,6 +26,12 @@ class CGnuPlotPosition {
 
   CPoint2D getPoint(CGnuPlotRenderer *renderer) const;
 
+  friend std::ostream &operator<<(std::ostream &os, const CGnuPlotPosition &pos) {
+    os << pos.p_;
+
+    return os;
+  }
+
  private:
   CPoint2D p_       { 0, 0 };
   CoordSys systemX_ { CoordSys::FIRST };

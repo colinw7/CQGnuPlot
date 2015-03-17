@@ -193,7 +193,7 @@ processLines()
 
     std::string line1 = line;
 
-    auto pos1 = line1.find(commentChars_);
+    auto pos1 = line1.find(commentChars_.getValue("#"));
 
     if (pos1 != std::string::npos) {
       line1 = CStrUtil::stripSpaces(line1.substr(0, pos1));

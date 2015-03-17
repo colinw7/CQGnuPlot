@@ -1,6 +1,11 @@
 #ifndef CGnuPlotTypes_H
 #define CGnuPlotTypes_H
 
+#include <string>
+#include <vector>
+
+typedef std::vector<std::string> StringArray;
+
 namespace CGnuPlotTypes {
   enum class SymbolType {
     NONE,

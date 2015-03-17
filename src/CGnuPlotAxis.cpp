@@ -395,7 +395,7 @@ getValueStr(int i, double pos) const
 
 void
 CGnuPlotAxis::
-drawAxis(double pos)
+drawAxis(double pos, bool first)
 {
   CGnuPlotRenderer *renderer = app()->renderer();
 
@@ -454,13 +454,13 @@ drawAxis(double pos)
     if (pos1 >= getStart() && pos1 <= getEnd()) {
       // Draw Tick Mark
 
-      if (drawTickMark()) {
+      if (isDrawTickMark(first)) {
         if (direction_ == CORIENTATION_HORIZONTAL)
           drawAxisTick(CPoint2D(pos1, pos),
-           (tickInside_ ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), true);
+           (isTickInside(first) ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), true);
         else
           drawAxisTick(CPoint2D(pos, pos1),
-           (tickInside_ ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), true);
+           (isTickInside(first) ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), true);
       }
 
       //------*/
@@ -475,11 +475,11 @@ drawAxis(double pos)
 
       // Draw Tick Label
 
-      if (drawTickLabel()) {
+      if (isDrawTickLabel(first)) {
         if (direction_ == CORIENTATION_HORIZONTAL)
-          drawTickLabel(CPoint2D(pos1, pos), str);
+          drawTickLabel(CPoint2D(pos1, pos), str, first);
         else
-          drawTickLabel(CPoint2D(pos, pos1), str);
+          drawTickLabel(CPoint2D(pos, pos1), str, first);
       }
     }
 
@@ -491,14 +491,14 @@ drawAxis(double pos)
       for (int j = 1; j < getNumMinorTicks(); j++) {
         double pos3 = j*(pos2 - pos1)/getNumMinorTicks() + pos1;
 
-        if (drawTickMark() && isDrawMinorTickMark()) {
+        if (isDrawTickMark(first) && isDrawMinorTickMark()) {
           if (pos3 >= getStart() && pos3 <= getEnd()) {
             if (direction_ == CORIENTATION_HORIZONTAL)
               drawAxisTick(CPoint2D(pos3, pos),
-                (tickInside_ ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), false);
+                (isTickInside(first) ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), false);
             else
               drawAxisTick(CPoint2D(pos, pos3),
-                (tickInside_ ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), false);
+                (isTickInside(first) ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), false);
           }
         }
       }
@@ -507,14 +507,14 @@ drawAxis(double pos)
       for (int j = 1; j <= getNumTickSpaces() - 2; j++) {
         double pos3 = getTickSpace(j)*(pos2 - pos1) + pos1;
 
-        if (drawTickMark() && isDrawMinorTickMark()) {
+        if (isDrawTickMark(first) && isDrawMinorTickMark()) {
           if (pos3 >= getStart() && pos3 <= getEnd()) {
             if (direction_ == CORIENTATION_HORIZONTAL)
               drawAxisTick(CPoint2D(pos3, pos),
-                (tickInside_ ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), false);
+                (isTickInside(first) ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), false);
             else
               drawAxisTick(CPoint2D(pos, pos3),
-                (tickInside_ ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), false);
+                (isTickInside(first) ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), false);
           }
         }
       }
@@ -532,13 +532,13 @@ drawAxis(double pos)
   if (pos1 >= getStart() && pos1 <= getEnd()) {
     // Draw Tick Mark
 
-    if (drawTickMark()) {
+    if (isDrawTickMark(first)) {
       if (direction_ == CORIENTATION_HORIZONTAL)
         drawAxisTick(CPoint2D(pos1, pos),
-          (tickInside_ ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), true);
+          (isTickInside(first) ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), true);
       else
         drawAxisTick(CPoint2D(pos, pos1),
-          (tickInside_ ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), true);
+          (isTickInside(first) ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), true);
     }
 
     //------*/
@@ -551,11 +551,11 @@ drawAxis(double pos)
 
     // Draw Tick Label
 
-    if (drawTickLabel()) {
+    if (isDrawTickLabel(first)) {
       if (direction_ == CORIENTATION_HORIZONTAL)
-        drawTickLabel(CPoint2D(pos1, pos), str);
+        drawTickLabel(CPoint2D(pos1, pos), str, first);
       else
-        drawTickLabel(CPoint2D(pos, pos1), str);
+        drawTickLabel(CPoint2D(pos, pos1), str, first);
     }
   }
 
@@ -563,7 +563,7 @@ drawAxis(double pos)
 
   // Draw Axis Label
 
-  if (drawLabel()) {
+  if (isDrawLabel(first)) {
     double x1 = getStart(), y1 = pos;
     double x2 = getEnd  (), y2 = pos;
 
@@ -577,9 +577,9 @@ drawAxis(double pos)
     const std::string &astr = getLabel();
 
     if (direction_ == CORIENTATION_HORIZONTAL)
-      drawAxisLabel(CPoint2D(mid, pos), astr, maxH);
+      drawAxisLabel(CPoint2D(mid, pos), astr, maxH, first);
     else
-      drawAxisLabel(CPoint2D(pos, mid), astr, maxW);
+      drawAxisLabel(CPoint2D(pos, mid), astr, maxW, first);
   }
 }
 
@@ -624,7 +624,7 @@ drawAxisTick(const CPoint2D &p, CDirectionType type, bool large)
 
 void
 CGnuPlotAxis::
-drawTickLabel(const CPoint2D &p, const std::string &str)
+drawTickLabel(const CPoint2D &p, const std::string &str, bool first)
 {
   CPoint2D p1 = p;
 
@@ -644,20 +644,20 @@ drawTickLabel(const CPoint2D &p, const std::string &str)
   bool rotatedText = false;
 
   if (direction_ == CORIENTATION_HORIZONTAL) {
-    if (isLabelInside())
+    if (isLabelInside(first))
       drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, -8, str);
     else
       drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP   ,  8, str);
   }
   else {
     if (rotatedText) {
-      if (isLabelInside())
+      if (isLabelInside(first))
         drawVAlignedText(p1, CHALIGN_TYPE_LEFT , 0, CVALIGN_TYPE_CENTER,  8, str);
       else
         drawVAlignedText(p1, CHALIGN_TYPE_RIGHT, 0, CVALIGN_TYPE_CENTER, -8, str);
     }
     else
-      if (isLabelInside())
+      if (isLabelInside(first))
         drawHAlignedText(p1, CHALIGN_TYPE_LEFT ,  8, CVALIGN_TYPE_CENTER, 0, str);
       else
         drawHAlignedText(p1, CHALIGN_TYPE_RIGHT, -8, CVALIGN_TYPE_CENTER, 0, str);
@@ -666,16 +666,16 @@ drawTickLabel(const CPoint2D &p, const std::string &str)
 
 void
 CGnuPlotAxis::
-drawAxisLabel(const CPoint2D &p, const std::string &str, int maxSize)
+drawAxisLabel(const CPoint2D &p, const std::string &str, int maxSize, bool first)
 {
   if (direction_ == CORIENTATION_HORIZONTAL) {
-    if (isLabelInside())
+    if (isLabelInside(first))
       drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, -(maxSize + 12), str);
     else
       drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP   ,   maxSize + 12 , str);
   }
   else {
-    if (isLabelInside())
+    if (isLabelInside(first))
       drawVAlignedText(p, CHALIGN_TYPE_LEFT ,    maxSize + 12 , CVALIGN_TYPE_CENTER, 0, str);
     else
       drawVAlignedText(p, CHALIGN_TYPE_RIGHT , -(maxSize + 12), CVALIGN_TYPE_CENTER, 0, str);

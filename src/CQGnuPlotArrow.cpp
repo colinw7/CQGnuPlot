@@ -1,5 +1,6 @@
 #include <CQGnuPlotArrow.h>
 #include <CQGnuPlotGroup.h>
+#include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
 
 CQGnuPlotArrow::
@@ -9,11 +10,18 @@ CQGnuPlotArrow(CQGnuPlotGroup *group) :
   setObjectName("arrow");
 }
 
-QPointF
+CQGnuPlot::ArrowCoordType
 CQGnuPlotArrow::
-getFrom() const
+getCoordType() const
 {
-  return CQUtil::toQPoint(CGnuPlotArrow::getFrom());
+  return CQGnuPlotUtil::arrowCoordTypeConv(CGnuPlotArrow::coordType());
+}
+
+void
+CQGnuPlotArrow::
+setCoordType(CQGnuPlot::ArrowCoordType type)
+{
+  CGnuPlotArrow::setCoordType(CQGnuPlotUtil::arrowCoordTypeConv(type));
 }
 
 void
@@ -23,13 +31,6 @@ setFrom(const QPointF &p)
   CGnuPlotArrow::setFrom(CQUtil::fromQPoint(p));
 }
 
-QPointF
-CQGnuPlotArrow::
-getTo() const
-{
-  return CQUtil::toQPoint(CGnuPlotArrow::getTo());
-}
-
 void
 CQGnuPlotArrow::
 setTo(const QPointF &p)
@@ -37,11 +38,42 @@ setTo(const QPointF &p)
   CGnuPlotArrow::setTo(CQUtil::fromQPoint(p));
 }
 
+double
+CQGnuPlotArrow::
+getLength() const
+{
+  return CGnuPlotArrow::getLength().value();
+}
+
+void
+CQGnuPlotArrow::
+setLength(double l)
+{
+  CGnuPlotArrow::setLength(l);
+}
+
+double
+CQGnuPlotArrow::
+getHeadLength() const
+{
+  return CGnuPlotArrow::getHeadLength().value();
+}
+
+void
+CQGnuPlotArrow::
+setHeadLength(double l)
+{
+  CGnuPlotArrow::setHeadLength(l);
+}
+
 void
 CQGnuPlotArrow::
 draw(CGnuPlotRenderer *renderer) const
 {
   CQGnuPlotArrow *th = const_cast<CQGnuPlotArrow *>(this);
+
+  th->qfrom_ = CQUtil::toQPoint(CGnuPlotArrow::getFrom().getPoint(renderer));
+  th->qto_   = CQUtil::toQPoint(CGnuPlotArrow::getTo  ().getPoint(renderer));
 
   CRGBA c = getLineColor();
 

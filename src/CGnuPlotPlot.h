@@ -74,6 +74,7 @@ class CGnuPlotPlot {
   typedef CGnuPlotTypes::FillPattern    FillPattern;
   typedef CGnuPlotTypes::Smooth         Smooth;
   typedef CGnuPlotTypes::SymbolType     SymbolType;
+  typedef CGnuPlot::Bars                Bars;
   typedef CGnuPlot::BoxWidth            BoxWidth;
   typedef CGnuPlot::AxesData            AxesData;
   typedef CGnuPlot::FilledCurve         FilledCurve;
@@ -84,9 +85,9 @@ class CGnuPlotPlot {
   typedef std::vector<CGnuPlotPoint>    Points2D;
   typedef std::map<int,Points2D>        Points3D;
   typedef std::vector<uchar>            ImageData;
-  typedef std::vector<CGnuPlotBar *>    Bars;
-  typedef std::vector<CGnuPlotPie *>    Pies;
-  typedef std::vector<CGnuPlotBubble *> Bubbles;
+  typedef std::vector<CGnuPlotBar *>    BarObjects;
+  typedef std::vector<CGnuPlotPie *>    PieObjects;
+  typedef std::vector<CGnuPlotBubble *> BubbleObjects;
 
  public:
   CGnuPlotPlot(CGnuPlotGroup *group);
@@ -121,11 +122,6 @@ class CGnuPlotPlot {
 
   //---
 
-  const CBBox2D &clearRect() const { return clearRect_.getValue(); }
-  void setClearRect(const CBBox2D &r) { clearRect_ = r; }
-
-  //---
-
   bool isBinary() const { return binary_; }
   void setBinary(bool b) { binary_ = b; }
 
@@ -157,8 +153,19 @@ class CGnuPlotPlot {
 
   //---
 
+  const Bars &bars() const { return bars_; }
+  void setBars(const Bars &s) { bars_ = s; }
+
+  double barsSize() const { return bars_.size; }
+  void setBarsSize(double s) { bars_.size = s; }
+
+  bool barsFront() const { return bars_.front; }
+  void setBarsFront(bool b) { bars_.front = b; }
+
+  //---
+
+  const BoxWidth &boxWidth() const { return boxWidth_; }
   void setBoxWidth(const BoxWidth &w) { boxWidth_ = w; }
-  const BoxWidth &getBoxWidth() const { return boxWidth_; }
 
   const BoxWidthType &getBoxWidthType() const { return boxWidth_.type; }
   void setBoxWidthType(const BoxWidthType &t) { boxWidth_.type = t; }
@@ -301,21 +308,21 @@ class CGnuPlotPlot {
 
   //---
 
-  double getXMin() const { return xmin_.getValue(-1); }
+  double getXMin() const { return xmin_.getValue(-10); }
+  double getXMax() const { return xmax_.getValue( 10); }
   double getYMin() const { return ymin_.getValue(-10); }
-  double getXMax() const { return xmax_.getValue( 1); }
   double getYMax() const { return ymax_.getValue( 10); }
 
   //void setXMin(double x) { xmin_ = x; }
-  //void setYMin(double y) { ymin_ = y; }
   //void setXMax(double x) { xmax_ = x; }
+  //void setYMin(double y) { ymin_ = y; }
   //void setYMax(double y) { ymax_ = y; }
 
   //---
 
-  const Bars    &bars   () const { return barCache_   .objects(); }
-  const Pies    &pies   () const { return pieCache_   .objects(); }
-  const Bubbles &bubbles() const { return bubbleCache_.objects(); }
+  const BarObjects    &barObjects   () const { return barCache_   .objects(); }
+  const PieObjects    &pieObjects   () const { return pieCache_   .objects(); }
+  const BubbleObjects &bubbleObjects() const { return bubbleCache_.objects(); }
 
   //---
 
@@ -392,13 +399,13 @@ class CGnuPlotPlot {
   int                id_;                               // unique id
   int                ind_       { 0 };                  // axis index
   bool               displayed_ { true };               // is displayed
-  COptValT<CBBox2D>  clearRect_;
   Points2D           points2D_;                         // 2D points
   Points3D           points3D_;                         // 3D points
   ImageData          imageData_;                        // image data
   bool               binary_ { false };
   bool               matrix_ { false };
   CGnuPlotImageStyle imageStyle_;
+  Bars               bars_;
   BoxWidth           boxWidth_;                         // box widths
   FilledCurve        filledCurve_;                      // filled curve data
   PlotStyle          style_ { PlotStyle::POINTS};       // plot style

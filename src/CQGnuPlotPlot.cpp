@@ -135,7 +135,7 @@ void
 CQGnuPlotPlot::
 mousePress(const CPoint2D &p)
 {
-  for (auto &bar : bars()) {
+  for (auto &bar : barObjects()) {
     if (! bar->inside(p))
       continue;
 
@@ -146,7 +146,7 @@ mousePress(const CPoint2D &p)
     return;
   }
 
-  for (auto &pie : pies()) {
+  for (auto &pie : pieObjects()) {
     if (! pie->inside(p))
       continue;
 
@@ -157,7 +157,7 @@ mousePress(const CPoint2D &p)
     return;
   }
 
-  for (auto &bubble : bubbles()) {
+  for (auto &bubble : bubbleObjects()) {
     if (! bubble->inside(p))
       continue;
 
@@ -181,7 +181,7 @@ mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
 {
   selectedPos_.setInvalid();
 
-  for (auto &bar : bars()) {
+  for (auto &bar : barObjects()) {
     if (! bar->inside(p))
       continue;
 
@@ -191,7 +191,7 @@ mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
     return true;
   }
 
-  for (auto &pie : pies()) {
+  for (auto &pie : pieObjects()) {
     if (! pie->inside(p))
       continue;
 
@@ -206,7 +206,7 @@ mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
     return true;
   }
 
-  for (auto &bubble : bubbles()) {
+  for (auto &bubble : bubbleObjects()) {
     if (! bubble->inside(p))
       continue;
 

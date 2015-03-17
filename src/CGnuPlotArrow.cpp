@@ -20,11 +20,18 @@ getLineColor() const
     return lineColor_.getValue();
 }
 
+CGnuPlot *
+CGnuPlotArrow::
+app() const
+{
+  return (group_ ? group_->app() : 0);
+}
+
 double
 CGnuPlotArrow::
 getLineWidth() const
 {
-  return style_.lineWidth(group_->app());
+  return style_.lineWidth(app());
 }
 
 void
@@ -33,8 +40,20 @@ draw(CGnuPlotRenderer *renderer) const
 {
   const CGnuPlotArrow *arrow = this;
 
-  CPoint2D from = arrow->getFrom();
-  CPoint2D to   = (arrow->getRelative() ? (from + arrow->getTo()) : arrow->getTo());
+  CPoint2D from = arrow->from_.getPoint(renderer);
+
+  CPoint2D to;
+
+  if      (coordType_ == CoordType::FROM_TO)
+    to = arrow->to_.getPoint(renderer);
+  else if (coordType_ == CoordType::FROM_RTO)
+    to = from + arrow->to_.getPoint(renderer);
+  else if (coordType_ == CoordType::FROM_ANGLE) {
+    double dx = arrow->length_.getXValue(renderer)*cos(arrow->angle_.radians());
+    double dy = arrow->length_.getXValue(renderer)*sin(arrow->angle_.radians());
+
+    to = from + CPoint2D(dx, dy);
+  }
 
   double fx, fy, tx, ty;
 
@@ -45,9 +64,9 @@ draw(CGnuPlotRenderer *renderer) const
 
   double a = atan2(ty - fy, tx - fx);
 
-  double aa = Deg2Rad(arrow->getAngle() > 0 ? arrow->getAngle() : 30);
+  double aa = CAngle::Deg2Rad(arrow->getHeadAngle() > 0 ? arrow->getHeadAngle() : 30);
 
-  const CGnuPlotCoordValue &al = arrow->getLength();
+  const CGnuPlotCoordValue &al = arrow->getHeadLength();
 
   double l = (al.value() > 0 ? al.pixelXValue(renderer) : 16);
 
@@ -67,7 +86,7 @@ draw(CGnuPlotRenderer *renderer) const
   double x41 = x4, y41 = y4;
 
   if (arrow->getFHead()) {
-    if (arrow->getFilled() || arrow->getEmpty()) {
+    if (arrow->getHeadFilled() || arrow->getHeadEmpty()) {
       x11 = x2;
       y11 = y2;
     }
@@ -78,7 +97,7 @@ draw(CGnuPlotRenderer *renderer) const
   }
 
   if (arrow->getTHead()) {
-    if (arrow->getFilled() || arrow->getEmpty()) {
+    if (arrow->getHeadFilled() || arrow->getHeadEmpty()) {
       x41 = x3;
       y41 = y3;
     }
@@ -88,14 +107,14 @@ draw(CGnuPlotRenderer *renderer) const
     }
   }
 
-  double ba = Deg2Rad(arrow->getBackAngle() > 0 ? arrow->getBackAngle() : 90);
+  double ba = CAngle::Deg2Rad(arrow->getHeadBackAngle() > 0 ? arrow->getHeadBackAngle() : 90);
 
   renderer->setMapping(false);
 
   CRGBA lc = arrow->getLineColor();
 
-  if (arrow->getVariable() && arrow->getVarValue().isValid())
-    lc = CGnuPlotStyleInst->indexColor(arrow->getVarValue().getValue());
+  if (arrow->isVariable() && arrow->style().varValue().isValid())
+    lc = CGnuPlotStyleInst->indexColor(arrow->getVarValue());
 
   if (arrow->getFHead()) {
     double a1 = a + aa;
@@ -111,9 +130,9 @@ draw(CGnuPlotRenderer *renderer) const
 
     double xf3 = x2, yf3 = y2;
 
-    if (! arrow->getFilled() && ! arrow->getEmpty()) {
-      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf1, yf1), w, lc);
-      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf2, yf2), w, lc);
+    if (! arrow->getHeadFilled() && ! arrow->getHeadEmpty()) {
+      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf1, yf1), w, lc, getDash());
+      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf2, yf2), w, lc, getDash());
     }
     else {
       if (ba > aa && ba < M_PI) {
@@ -134,7 +153,7 @@ draw(CGnuPlotRenderer *renderer) const
       points.push_back(CPoint2D(xf3, yf3));
       points.push_back(CPoint2D(xf2, yf2));
 
-      if (arrow->getEmpty())
+      if (arrow->getHeadEmpty())
         renderer->drawPolygon(points, w, lc);
       else
         renderer->fillPolygon(points, lc);
@@ -155,9 +174,9 @@ draw(CGnuPlotRenderer *renderer) const
 
     double xt3 = x3, yt3 = y3;
 
-    if (! arrow->getFilled() && ! arrow->getEmpty()) {
-      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt1, yt1), w, lc);
-      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt2, yt2), w, lc);
+    if (! arrow->getHeadFilled() && ! arrow->getHeadEmpty()) {
+      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt1, yt1), w, lc, getDash());
+      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt2, yt2), w, lc, getDash());
     }
     else {
       if (ba > aa && ba < M_PI) {
@@ -178,14 +197,14 @@ draw(CGnuPlotRenderer *renderer) const
       points.push_back(CPoint2D(xt3, yt3));
       points.push_back(CPoint2D(xt2, yt2));
 
-      if (arrow->getEmpty())
+      if (arrow->getHeadEmpty())
         renderer->drawPolygon(points, w, lc);
       else
         renderer->fillPolygon(points, lc);
     }
   }
 
-  renderer->drawLine(CPoint2D(x11, y11), CPoint2D(x41, y41), w, lc);
+  renderer->drawLine(CPoint2D(x11, y11), CPoint2D(x41, y41), w, lc, getDash());
 
   renderer->setMapping(true);
 }
@@ -201,39 +220,14 @@ void
 CGnuPlotArrow::
 print(std::ostream &os) const
 {
-  style_.print(group_->app(), os);
+  style_.print(app(), os);
 
-  os << " from " << from_ << (relative_ ? " rto " : " to ") << to_;
-}
+  os << " from " << from_;
 
-//------
-
-double
-CGnuPlotArrowStyle::
-lineWidth(CGnuPlot *plot) const
-{
-  if (lineWidth_.isValid())
-   return lineWidth_.getValue();
-
-  if (lineStyle_.isValid()) {
-    CGnuPlotLineStyleP ls = plot->lineStyle(lineStyle_.getValue());
-
-    return (ls ? ls->width() : 1);
-  }
-  else
-    return 1;
-}
-
-void
-CGnuPlotArrowStyle::
-print(CGnuPlot *plot, std::ostream &os) const
-{
-  os << headStr() << " " << filledStr() << " " << frontStr() <<
-        " linetype " << lineStyle_ << " linewidth " << lineWidth(plot);
-
-  if (length_.value() > 0.0 || angle_ >= 0.0 || backAngle_ >= 0.0) {
-    os << " arrow head" << (fhead_ && thead_ ? "s" : "") << ": " << filledStr();
-    os << ", length "; length_.print(os);
-    os << ", angle " << angle_ << ", backangle " << backAngle_;
-  }
+  if      (coordType_ == CoordType::FROM_RTO)
+    os << " rto " << to_;
+  else if (coordType_ == CoordType::FROM_TO)
+    os << " to " << to_;
+  else if (coordType_ == CoordType::FROM_ANGLE)
+    os << " length " << length_ << " angle " << angle_;;
 }

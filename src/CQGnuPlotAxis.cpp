@@ -44,9 +44,9 @@ setEnd(double r)
 
 void
 CQGnuPlotAxis::
-drawAxis(double pos)
+drawAxis(double pos, bool first)
 {
-  CGnuPlotAxis::drawAxis(pos);
+  CGnuPlotAxis::drawAxis(pos, first);
 
   if (isSelected()) {
     CGnuPlotRenderer *renderer = app()->renderer();

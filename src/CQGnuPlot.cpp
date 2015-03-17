@@ -84,7 +84,7 @@ main(int argc, char **argv)
 CQGnuPlot::
 CQGnuPlot()
 {
-  qRegisterMetaType<std::string>("std::string");
+  CQUtil::initProperties();
 
   device_ = new CQGnuPlotDevice;
 

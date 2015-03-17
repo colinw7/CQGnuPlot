@@ -28,5 +28,5 @@ class CQPropertyTree : public QTreeWidget {
  private:
   bool selectObject(QTreeWidgetItem *item, const QObject *obj);
 
-  void getItemData(CQPropertyItem *item, QObject* &obj, QString &path);
+  void getItemData(QTreeWidgetItem *item, QObject* &obj, QString &path);
 };

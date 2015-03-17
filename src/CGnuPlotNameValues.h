@@ -17,6 +17,7 @@ namespace CStrUniqueMatch {
                           {"evaluate", CGnuPlot::CommandName::EVALUATE},
                           {"exit"    , CGnuPlot::CommandName::EXIT},
                           {"fit"     , CGnuPlot::CommandName::FIT},
+                          {"get"     , CGnuPlot::CommandName::GET},
                           {"help"    , CGnuPlot::CommandName::HELP},
                           {"history" , CGnuPlot::CommandName::HISTORY},
                           {"if"      , CGnuPlot::CommandName::IF},
@@ -41,6 +42,7 @@ namespace CStrUniqueMatch {
                           {"stats"   , CGnuPlot::CommandName::STATS},
                           {"system"  , CGnuPlot::CommandName::SYSTEM},
                           {"test"    , CGnuPlot::CommandName::TEST},
+                          {"undefine", CGnuPlot::CommandName::UNDEFINE},
                           {"unset"   , CGnuPlot::CommandName::UNSET},
                           {"update"  , CGnuPlot::CommandName::UPDATE},
                           {"while"   , CGnuPlot::CommandName::WHILE}});

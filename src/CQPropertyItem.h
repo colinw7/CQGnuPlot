@@ -4,6 +4,7 @@
 #include <QTreeWidgetItem>
 
 class CQPropertyEditorFactory;
+class CQPropertyDelegate;
 
 /*!
   \class CQPropertyItem
@@ -37,6 +38,9 @@ class CQPropertyItem : public QObject, public QTreeWidgetItem {
   //! clone (required by QTreeWidgetItem interface)
   QTreeWidgetItem *clone() const { return new CQPropertyItem(*this); }
 
+  //! handle click
+  bool click();
+
   //! create editor widget (required by QTreeWidgetItem interface)
   QWidget *createEditor(QWidget *parent);
 
@@ -48,6 +52,10 @@ class CQPropertyItem : public QObject, public QTreeWidgetItem {
 
   //! get editor widget text
   QString getEditorData() const;
+
+  //! paint item
+  bool paint(const CQPropertyDelegate *delegate, QPainter *painter,
+             const QStyleOptionViewItem &option, const QModelIndex &index);
 
  signals:
   void valueChanged(QObject *obj, const QString &name);

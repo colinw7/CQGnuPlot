@@ -33,6 +33,20 @@ class CGnuPlotTitle {
 
   virtual void draw() const;
 
+  void show(std::ostream &os) const {
+    os << "set title \"" << text_ << "\"" << std::endl;
+
+    if (font_.isValid())
+      os << "set title font \"\" norotate" << std::endl;
+    else
+      os << "set title font \" norotate" << font_->getFamily() << "\"" << std::endl;
+  }
+
+  void print(std::ostream &os) const {
+    os << "title is \"" << text_ << "\", " <<
+          "offset at ((character units) 0, 0, 0)" << std::endl;
+  }
+
  private:
   CGnuPlotGroup*    group_ { 0 };
   std::string       text_;

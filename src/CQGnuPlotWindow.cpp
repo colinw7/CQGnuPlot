@@ -239,7 +239,6 @@ addGroupProperties(CGnuPlotGroup *group)
 
   QString groupName = QString("Group%1").arg(group->id());
 
-  tree_->addProperty(groupName, qgroup, "id"  );
   tree_->addProperty(groupName, qgroup, "ind" );
   tree_->addProperty(groupName, qgroup, "is3D");
 
@@ -291,6 +290,15 @@ addGroupProperties(CGnuPlotGroup *group)
     tree_->addProperty(axesName, qaxis, "label");
     tree_->addProperty(axesName, qaxis, "grid");
     tree_->addProperty(axesName, qaxis, "tickInside");
+    tree_->addProperty(axesName, qaxis, "tickInside1");
+    tree_->addProperty(axesName, qaxis, "drawTickMark");
+    tree_->addProperty(axesName, qaxis, "drawTickMark1");
+    tree_->addProperty(axesName, qaxis, "drawTickLabel");
+    tree_->addProperty(axesName, qaxis, "drawTickLabel1");
+    tree_->addProperty(axesName, qaxis, "labelInside");
+    tree_->addProperty(axesName, qaxis, "labelInside1");
+    tree_->addProperty(axesName, qaxis, "drawLabel");
+    tree_->addProperty(axesName, qaxis, "drawLabel1");
   }
 
 #if 0
@@ -374,18 +382,21 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(name1, qarrow, "fillColor");
       tree_->addProperty(name1, qarrow, "drawLayer");
 
+      tree_->addProperty(name1, qarrow, "coordType");
       tree_->addProperty(name1, qarrow, "from");
       tree_->addProperty(name1, qarrow, "to");
-      tree_->addProperty(name1, qarrow, "relative");
       tree_->addProperty(name1, qarrow, "length");
       tree_->addProperty(name1, qarrow, "angle");
-      tree_->addProperty(name1, qarrow, "backAngle");
+      tree_->addProperty(name1, qarrow, "headLength");
+      tree_->addProperty(name1, qarrow, "headAngle");
+      tree_->addProperty(name1, qarrow, "headBackAngle");
       tree_->addProperty(name1, qarrow, "fhead");
       tree_->addProperty(name1, qarrow, "thead");
-      tree_->addProperty(name1, qarrow, "filled");
-      tree_->addProperty(name1, qarrow, "empty");
+      tree_->addProperty(name1, qarrow, "headFilled");
+      tree_->addProperty(name1, qarrow, "headEmpty");
       tree_->addProperty(name1, qarrow, "lineType");
-      tree_->addProperty(name1, qarrow, "lineWidth");
+      tree_->addProperty(name1, qarrow, "lineWidth")->setEditorFactory(redit_[2]);
+      tree_->addProperty(name1, qarrow, "lineDash");
     }
     else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
       QString name1 = QString("%1/%2_%3").arg(groupName).arg(ellipse->getName()).arg(ann->getInd());
@@ -455,7 +466,6 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   QString plotName = QString("Group%1/Plot%2").arg(qgroup->id()).arg(plot->id());
 
-  tree_->addProperty(plotName, qplot, "id");
   tree_->addProperty(plotName, qplot, "is3D");
   tree_->addProperty(plotName, qplot, "xind");
   tree_->addProperty(plotName, qplot, "yind");
@@ -490,12 +500,14 @@ addPlotProperties(CGnuPlotPlot *plot)
   tree_->addProperty(plotName, qplot, "lineWidth"    );
   tree_->addProperty(plotName, qplot, "pointType"    );
   tree_->addProperty(plotName, qplot, "pointSize"    );
-  tree_->addProperty(plotName, qplot, "boxWidthValue")->setEditorFactory(redit_[3]);
+  tree_->addProperty(plotName, qplot, "barsSize"     )->setEditorFactory(redit_[1]);
+  tree_->addProperty(plotName, qplot, "barsFront"    );
+  tree_->addProperty(plotName, qplot, "boxWidthValue")->setEditorFactory(redit_[1]);
   tree_->addProperty(plotName, qplot, "boxWidthType" );
 
   int i = 0;
 
-  for (const auto &bar : plot->bars()) {
+  for (const auto &bar : plot->barObjects()) {
     QString barName = QString("%1/Bar%2").arg(plotName).arg(i + 1);
 
     CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
@@ -512,7 +524,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   i = 0;
 
-  for (const auto &pie : plot->pies()) {
+  for (const auto &pie : plot->pieObjects()) {
     QString pieName = QString("%1/Pie%2").arg(plotName).arg(i + 1);
 
     CQGnuPlotPie *qpie = static_cast<CQGnuPlotPie *>(pie);
@@ -525,7 +537,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   i = 0;
 
-  for (const auto &bubble : plot->bubbles()) {
+  for (const auto &bubble : plot->bubbleObjects()) {
     QString bubbleName = QString("%1/Bubble%2").arg(plotName).arg(i + 1);
 
     CQGnuPlotBubble *qbubble = static_cast<CQGnuPlotBubble *>(bubble);

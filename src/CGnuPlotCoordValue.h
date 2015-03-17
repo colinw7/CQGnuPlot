@@ -22,7 +22,11 @@ class CGnuPlotCoordValue {
   CoordSys system() const { return system_; }
   void setSystem(CoordSys s) { system_ = s; }
 
+  double getXValue(CGnuPlotRenderer *renderer) const;
+  double getYValue(CGnuPlotRenderer *renderer) const;
+
   double pixelXValue(CGnuPlotRenderer *renderer) const;
+  double pixelYValue(CGnuPlotRenderer *renderer) const;
 
   void print(std::ostream &os, const std::string &axis="x") const {
     if      (system_ == CGnuPlotTypes::CoordSys::SECOND)
@@ -35,6 +39,12 @@ class CGnuPlotCoordValue {
       os << "(character units) ";
 
     os << value_;
+  }
+
+  friend std::ostream &operator<<(std::ostream &os, const CGnuPlotCoordValue &v) {
+    v.print(os);
+
+    return os;
   }
 
  private:

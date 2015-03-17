@@ -8,7 +8,6 @@
 #include <CGnuPlotSVGDevice.h>
 #include <CGnuPlotUtil.h>
 #include <CGnuPlotNameValues.h>
-#include <CGnuPlotPrefValue.h>
 
 #include <CUnixFile.h>
 #include <CParseLine.h>
@@ -183,6 +182,8 @@ namespace {
     std::string option;
 
     if (! readOptionString(line, option)) {
+      if (msg != "")
+        plot->errorMsg("Missing " + msg + " '" + line.substr() + "'");
       line.setPos(pos);
       return false;
     }
@@ -208,7 +209,7 @@ CGnuPlot::
 CGnuPlot()
 {
   varPrefs_[VariableName::ANGLES] =
-    new CGnuPlotPrefValue<AngleType>("Angle Type", AngleType::RADIANS);
+    new CGnuPlotPrefValue<AngleType>("Angle Type", "angles", AngleType::RADIANS);
 
   CExprInst->createRealVariable("pi", M_PI);
 
@@ -221,7 +222,19 @@ CGnuPlot()
   CExprInst->addFunction("value"       , "s", new CGnuPlotValueFn(this));
   // timecolumn
 
-  CExprInst->createStringVariable("GPVAL_ENCODING", "default");
+  CExprInst->createIntegerVariable("ARGC", 0);
+  CExprInst->createStringVariable ("ARG0", "");
+
+  CExprInst->createStringVariable("GNUTERM", "qt");
+
+  CExprInst->createStringVariable("GPVAL_ENCODING" , "default");
+  CExprInst->createStringVariable("GPVAL_ERRMSG"   , "");
+  CExprInst->createStringVariable("GPVAL_OUTPUT"   , "");
+  CExprInst->createStringVariable("GPVAL_PWD"      , CDir::getCurrent());
+  CExprInst->createStringVariable("GPVAL_TERM"     , "qt");
+  CExprInst->createStringVariable("GPVAL_TERMINALS", "qt svg");
+  CExprInst->createRealVariable  ("GPVAL_pi"       , M_PI);
+  CExprInst->createRealVariable  ("GPVAL_NaN"      , CMathGen::getNaN());
 
   svgDevice_ = new CGnuPlotSVGDevice();
 
@@ -257,18 +270,20 @@ setDevice(const std::string &name)
 {
   auto name1 = CStrUtil::toLower(name);
 
+  if (device_ && CStrUtil::toLower(device_->name()) == name1)
+    return true;
+
   for (const auto &d : devices_) {
     auto name2 = CStrUtil::toLower(d.second->name());
 
     if (name1 == name2) {
-      if (device_ && CStrUtil::toLower(device_->name()) == name1)
-        return true;
-
       windows_.clear();
 
       multiWindow_ = 0;
 
       device_ = d.second;
+
+      CExprInst->createStringVariable("GPVAL_TERM", device_->name());
 
       return true;
     }
@@ -277,10 +292,45 @@ setDevice(const std::string &name)
   return false;
 }
 
+void
+CGnuPlot::
+setOutputFile(const std::string &file)
+{
+  outputFile_ = file;
+
+  CExprInst->createStringVariable("GPVAL_OUTPUT", outputFile_);
+}
+
 bool
 CGnuPlot::
-load(const std::string &filename)
+load(const std::string &filename, const StringArray &args)
 {
+  CExprInst->createStringVariable ("ARG0", filename);
+
+  if (! args.empty()) {
+    CExprInst->createIntegerVariable("ARGC", args.size());
+
+    for (uint i = 0; i < 9; ++i) {
+      std::string argName = CStrUtil::strprintf("ARG%d", i + 1);
+
+      if (i < args.size())
+        CExprInst->createStringVariable(argName, args[i]);
+      else
+        CExprInst->createStringVariable(argName, "");
+    }
+  }
+  else {
+    CExprInst->createIntegerVariable("ARGC", 0);
+
+    for (uint i = 1; i <= 9; ++i) {
+      std::string argName = CStrUtil::strprintf("ARG%d", i);
+
+      CExprInst->removeVariable(argName);
+    }
+  }
+
+  //---
+
   // open file
   CUnixFile *file = new CUnixFile(filename);
 
@@ -321,6 +371,8 @@ load(const std::string &filename)
   fileData_ = fileDataArray_.back();
 
   fileDataArray_.pop_back();
+
+  CExprInst->createIntegerVariable("GPVAL_LINENO", fileData_.lineNum);
 
   return true;
 }
@@ -385,35 +437,26 @@ bool
 CGnuPlot::
 parseLine(const std::string &str)
 {
-  CParseLine line(str);
+  std::string str1 = replaceEmbedded(str);
+
+  //----
+
+  CParseLine line(str1);
 
   line.skipSpace();
 
   if      (line.isChar('!')) {
     line.skipChar();
 
-    auto cmd = line.substr();
+    StringArray lines;
 
-    FILE *fp = popen(cmd.c_str(), "r");
+    if (! execCmd(line.substr(), lines))
+      return false;
 
-    std::string line;
-
-    int c;
-
-    while ((c = fgetc(fp)) != EOF) {
-      if (c == '\n') {
-        std::cout << line << std::endl;
-
-        line = "";
-      }
-      else
-        line += char(c);
-    }
-
-    if (line != "")
+    for (const auto &line : lines)
       std::cout << line << std::endl;
 
-    pclose(fp);
+    return true;
   }
   else if (line.isChar('#')) { // comments char ?
     return true;
@@ -423,21 +466,21 @@ parseLine(const std::string &str)
 
   Statements statements;
 
-  auto str1 = str;
+  auto str2 = str1;
 
-  auto p = str1.find(';');
+  auto p = str2.find(';');
 
   while (p != std::string::npos) {
-    auto str2 = str1.substr(0, p);
+    auto str3 = str2.substr(0, p);
 
-    statements.push_back(str2);
+    statements.push_back(str3);
 
-    str1 = str1.substr(p + 1);
+    str2 = str2.substr(p + 1);
 
-    p = str1.find(';');
+    p = str2.find(';');
   }
 
-  statements.push_back(str1);
+  statements.push_back(str2);
 
   for (int i = 0; i < int(statements.size()); ++i) {
     if (! parseStatement(i, statements))
@@ -446,6 +489,109 @@ parseLine(const std::string &str)
 
   return true;
 }
+
+std::string
+CGnuPlot::
+replaceEmbedded(const std::string &str) const
+{
+  CParseLine line(str);
+
+  std::string str1;
+
+  while (line.isValid()) {
+    char c = line.getChar();
+
+    if      (c == '`') {
+      std::string str2;
+
+      while (line.isValid()) {
+        char c1 = line.getChar();
+
+        if (c1 == '`')
+          break;
+
+        str2 += c1;
+      }
+
+      StringArray lines;
+
+      (void) execCmd(str2, lines);
+
+      for (const auto &line : lines)
+        str1 += line;
+    }
+    else if (c == '\'') {
+      line.ungetChar();
+
+      std::string str2;
+
+      (void) parseString(line, str2);
+
+      str1 += "'" + str2 + "'";
+    }
+    else if (c == '\"') {
+      line.ungetChar();
+
+      std::string str2;
+
+      (void) parseString(line, str2);
+
+      CParseLine line1(str2);
+
+      str1 += "\"" + str2 + "\"";
+    }
+    else if (c == '@') {
+      std::string str2;
+
+      while (line.isValid() && ! line.isSpace()) {
+        char c1 = line.getChar();
+
+        str2 += c1;
+      }
+
+      std::string str3;
+
+      if (isMacros() && getStringVariable(str2, str3))
+        str1 += str3;
+      else
+        str1 = "@" + str2;
+    }
+    else
+      str1 += c;
+  }
+
+  return str1;
+}
+
+bool
+CGnuPlot::
+execCmd(const std::string &cmd, StringArray &lines) const
+{
+  FILE *fp = popen(cmd.c_str(), "r");
+  if (! fp) return false;
+
+  std::string line;
+
+  int c;
+
+  while ((c = fgetc(fp)) != EOF) {
+    if (c == '\n') {
+      lines.push_back(line);
+
+      line = "";
+    }
+    else
+      line += char(c);
+  }
+
+  if (line != "")
+    lines.push_back(line);
+
+  pclose(fp);
+
+  return true;
+}
+
 
 bool
 CGnuPlot::
@@ -463,8 +609,10 @@ parseStatement(int &i, const Statements &statements)
   (void) readIdentifier(line, identifier);
 
   // empty line is ok
-  if (identifier.empty())
-    return true;
+  if (identifier.empty()) {
+    if (line.substr() == "")
+      return true;
+  }
 
   bool keyword = (identifier == "if" || identifier == "while");
 
@@ -473,7 +621,7 @@ parseStatement(int &i, const Statements &statements)
   if (! keyword) {
     // function definition
     if      (line.skipSpaceAndChar('(')) {
-      std::vector<std::string> args;
+      StringArray args;
 
       std::string arg;
 
@@ -555,11 +703,12 @@ parseStatement(int &i, const Statements &statements)
     case CommandName::REFRESH : refreshCmd(args); break;
     case CommandName::SPLOT   : splotCmd  (args); break;
 
-    case CommandName::SET     : setCmd   (args); break;
-    case CommandName::SHOW    : showCmd  (args); break;
-    case CommandName::RESET   : resetCmd (args); break;
-    case CommandName::UNDEFINE: undefCmd (args); break;
-    case CommandName::UNSET   : unsetCmd (args); break;
+    case CommandName::SET     : setCmd     (args); break;
+    case CommandName::GET     : getCmd     (args); break;
+    case CommandName::SHOW    : showCmd    (args); break;
+    case CommandName::RESET   : resetCmd   (args); break;
+    case CommandName::UNDEFINE: undefineCmd(args); break;
+    case CommandName::UNSET   : unsetCmd   (args); break;
 
     case CommandName::SHELL   : shellCmd (args); break;
     case CommandName::SYSTEM  : systemCmd(args); break;
@@ -589,16 +738,57 @@ parseStatement(int &i, const Statements &statements)
 // exit
 void
 CGnuPlot::
-exitCmd(const std::string &)
+exitCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "exit " << args << std::endl;
+
   exit(0);
 }
 
 // help [{topic}]
 void
 CGnuPlot::
-helpCmd(const std::string &)
+helpCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "help " << args << std::endl;
+
+  CParseLine line(args);
+
+  line.skipSpace();
+
+  std::string arg = readNonSpace(line);
+
+  if (arg == "commands") {
+    StringArray names;
+
+    CStrUniqueMatch::values<CGnuPlot::CommandName>(names);
+
+    COptInt len;
+
+    for (const auto &name : names)
+      len.updateMax(name.size());
+
+    int cols = 100/(len.getValue(0) + 1);
+
+    int col = 0;
+
+    for (const auto &name : names) {
+      std::string fmt = CStrUtil::strprintf("%%%ds", len.getValue(0));
+
+      std::cout << CStrUtil::strprintf(fmt.c_str(), name.c_str()) << " ";
+
+      ++col;
+
+      if (col >= cols) {
+        std::cout << std::endl;
+
+        col = 0;
+      }
+    }
+
+    if (col > 0)
+      std::cout << std::endl;
+  }
 }
 
 // history [quiet] [{max:i}] ["<filename>" [append]]
@@ -606,8 +796,10 @@ helpCmd(const std::string &)
 // history !"<cmd>"
 void
 CGnuPlot::
-historyCmd(const std::string &)
+historyCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "history " << args << std::endl;
+
   // TODO: process args
   if (! readLine_.isValid())
     return;
@@ -626,6 +818,8 @@ void
 CGnuPlot::
 printCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "print " << args << std::endl;
+
   std::vector<CExprValueP> values;
 
   if (! CExprInst->evaluateExpression(args, values)) {
@@ -633,10 +827,17 @@ printCmd(const std::string &args)
     return;
   }
 
-  for (uint i = 0; i < values.size(); ++i) {
-    if (i > 0) std::cerr << " ";
+  CExprValueType lastType = CEXPR_VALUE_STRING;
 
-    std::cerr << values[i];
+  for (const auto &value : values) {
+    CExprValueType thisType = value->getType();
+
+    if (lastType != CEXPR_VALUE_STRING && thisType != CEXPR_VALUE_STRING)
+      std::cerr << " ";
+
+    std::cerr << value;
+
+    lastType = thisType;
   }
 
   std::cerr << std::endl;
@@ -647,6 +848,8 @@ void
 CGnuPlot::
 printfCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "printf " << args << std::endl;
+
   CParseLine line(args);
 
   std::string fmt;
@@ -675,8 +878,10 @@ printfCmd(const std::string &args)
 // quit
 void
 CGnuPlot::
-quitCmd(const std::string &)
+quitCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "quit " << args << std::endl;
+
   exit(0);
 }
 
@@ -685,6 +890,8 @@ void
 CGnuPlot::
 cdCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "cd " << args << std::endl;
+
   CParseLine line(args);
 
   std::string str;
@@ -705,13 +912,17 @@ cdCmd(const std::string &args)
     CDir::changeDir(CDir::getCurrent() + "/" + str);
   else
     CDir::changeDir(str);
+
+  CExprInst->createStringVariable("GPVAL_PWD", CDir::getCurrent());
 }
 
 // pwd
 void
 CGnuPlot::
-pwdCmd(const std::string &)
+pwdCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "pwd " << args << std::endl;
+
   std::cout << CDir::getCurrent() << std::endl;
 }
 
@@ -720,6 +931,8 @@ void
 CGnuPlot::
 callCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "call " << args << std::endl;
+
   CParseLine line(args);
 
   std::string filename;
@@ -727,23 +940,49 @@ callCmd(const std::string &args)
   if (! parseString(line, filename))
     return;
 
-  CExprInst->createStringVariable("ARG0", filename);
-
-  std::vector<std::string> args1;
+  StringArray args1;
 
   while (line.isValid()) {
-    auto arg = readNonSpace(line);
+    line.skipSpace();
+
+    std::string arg;
+
+    if (line.isChar('"')) {
+      if (! parseString(line, arg))
+        arg = "";
+    }
+    else {
+      arg = readNonSpace(line);
+
+      if (arg.size() > 2 && arg[0] == '(' && arg[arg.size() - 1] == ')') {
+        CExprValuePtr value;
+        std::string   str;
+
+        if (evaluateExpression(arg.substr(1, arg.size() - 2), value) &&
+            value.isValid() && value->getStringValue(str))
+          arg = str;
+      }
+      else {
+        CExprVariablePtr var = CExprInst->getVariable(arg);
+
+        CExprValuePtr value = (var.isValid() ? var->getValue() : CExprValuePtr());
+        std::string   str;
+
+        if (value.isValid() && value->isStringValue() && value->getStringValue(str))
+          arg = str;
+      }
+    }
 
     args1.push_back(arg);
   }
 
-  for (uint i = 0; i < args1.size(); ++i) {
-    std::string argName = CStrUtil::strprintf("ARG%d", i + 1);
+  bool macros = isMacros();
 
-    CExprInst->createStringVariable(argName, args1[i]);
-  }
+  setMacros(true);
 
-  load(filename);
+  load(filename, args1);
+
+  setMacros(macros);
 }
 
 // load "<filename>"
@@ -751,6 +990,8 @@ void
 CGnuPlot::
 loadCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "load " << args << std::endl;
+
   CParseLine line(args);
 
   std::string filename;
@@ -765,8 +1006,214 @@ loadCmd(const std::string &args)
 // save [ functions | variables | set | terminal ] "<filename>"
 void
 CGnuPlot::
-saveCmd(const std::string &)
+saveCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "save " << args << std::endl;
+
+  CParseLine line(args);
+
+  std::string filename;
+
+  if (! parseString(line, filename))
+    return;
+
+  std::ofstream os(filename.c_str());
+
+  os << "# CGnuPlot Version 0.1" << std::endl;
+
+  /*
+  unset clip points
+  set clip one
+  unset clip two
+
+  set bar 1.000000 front
+  set border 31 front lt black linewidth 1.000 dashtype solid
+  set zdata
+  set ydata
+  set xdata
+  set y2data
+  set x2data
+  set boxwidth
+
+  set style fill  empty border
+  set style rectangle back fc  bgnd fillstyle   solid 1.00 border lt -1
+  set style circle radius graph 0.02, first 0.00000, 0.00000
+  set style ellipse size graph 0.05, 0.03, first 0.00000 angle 0 units xy
+
+  set dummy x, y
+  */
+
+  axesData_.xaxis[1].showFormat(os, "x");
+  axesData_.yaxis[1].showFormat(os, "y");
+  axesData_.xaxis[2].showFormat(os, "x2");
+  axesData_.yaxis[2].showFormat(os, "y2");
+  axesData_.zaxis[1].showFormat(os, "z");
+  axesData_.cbaxis  .showFormat(os, "cb");
+  axesData_.raxis   .showFormat(os, "r");
+
+  os << "set timefmt \"" << timeFmt() << "\"" << std::endl;
+
+  showAngleType(os);
+
+  /*
+  unset grid
+  set raxis
+  set style parallel front  lt black linewidth 2.000 dashtype solid
+  set key title ""
+  set key inside right top vertical Right noreverse enhanced autotitle nobox
+  set key noinvert samplen 4 spacing 1 width 0 height 0
+  set key maxcolumns 0 maxrows 0
+  set key noopaque
+  unset label
+  unset arrow
+  set style increment default
+  unset style line
+  unset style arrow
+  set style histogram clustered gap 2 title textcolor lt -1
+  unset object
+  set style textbox transparent margins  1.0,  1.0 border
+  unset logscale
+  set offsets 0, 0, 0, 0
+  set pointsize 1
+  set pointintervalbox 1
+  set encoding default
+  unset polar
+  unset parametric
+  unset decimalsign
+  set view 60, 30, 1, 1
+  */
+
+  samples_   .show(os);
+  isoSamples_.show(os);
+
+  /*
+  set surface
+  unset contour
+  set cntrlabel  format '%8.3g' font '' start 5 interval 20
+  set mapping cartesian
+  set datafile separator whitespace
+  unset hidden3d
+  set cntrparam order 4
+  set cntrparam linear
+  set cntrparam levels auto 5
+  set cntrparam points 5
+  set size ratio 0 1,1
+  set origin 0,0
+  set style data points
+  set style function lines
+
+  unset xzeroaxis
+  unset yzeroaxis
+  unset zzeroaxis
+  unset x2zeroaxis
+  unset y2zeroaxis
+
+  set ticslevel 0.5
+  set tics scale  1, 0.5, 1, 1, 1
+
+  set mxtics default
+  set mytics default
+  set mztics default
+  set mx2tics default
+  set my2tics default
+  set mcbtics default
+  set mrtics default
+
+  set xtics border in scale 1,0.5 mirror norotate  autojustify
+  set xtics autofreq  norangelimit
+  set ytics border in scale 1,0.5 mirror norotate  autojustify
+  set ytics autofreq  norangelimit
+  set ztics border in scale 1,0.5 nomirror norotate  autojustify
+  set ztics autofreq  norangelimit
+
+  unset x2tics
+  unset y2tics
+
+  set cbtics border in scale 1,0.5 mirror norotate  autojustify
+  set cbtics autofreq  norangelimit
+  set rtics axis in scale 1,0.5 nomirror norotate  autojustify
+  set rtics autofreq  norangelimit
+
+  unset paxis 1 tics
+  unset paxis 2 tics
+  unset paxis 3 tics
+  unset paxis 4 tics
+  unset paxis 5 tics
+  unset paxis 6 tics
+  unset paxis 7 tics
+  */
+
+  title_.print(os);
+
+  /*
+  set timestamp bottom
+  set timestamp ""
+  set timestamp  font "" norotate
+
+  set rrange [ * : * ] noreverse nowriteback
+  set trange [ * : * ] noreverse nowriteback
+  set urange [ * : * ] noreverse nowriteback
+  set vrange [ * : * ] noreverse nowriteback
+
+  set xlabel ""
+  set xlabel  font "" textcolor lt -1 norotate
+  set x2label ""
+  set x2label  font "" textcolor lt -1 norotate
+
+  set xrange [ * : * ] noreverse nowriteback
+  set x2range [ * : * ] noreverse nowriteback
+
+  set ylabel ""
+  set ylabel  font "" textcolor lt -1 rotate by -270
+  set y2label ""
+  set y2label  font "" textcolor lt -1 rotate by -270
+
+  set yrange [ * : * ] noreverse nowriteback
+  set y2range [ * : * ] noreverse nowriteback
+
+  set zlabel ""
+  set zlabel  font "" textcolor lt -1 norotate
+  set zrange [ * : * ] noreverse nowriteback
+
+  set cblabel ""
+  set cblabel  font "" textcolor lt -1 rotate by -270
+  set cbrange [ * : * ] noreverse nowriteback
+
+  set paxis 1 range [ * : * ] noreverse nowriteback
+  set paxis 2 range [ * : * ] noreverse nowriteback
+  set paxis 3 range [ * : * ] noreverse nowriteback
+  set paxis 4 range [ * : * ] noreverse nowriteback
+  set paxis 5 range [ * : * ] noreverse nowriteback
+  set paxis 6 range [ * : * ] noreverse nowriteback
+  set paxis 7 range [ * : * ] noreverse nowriteback
+
+  set zero 1e-08
+
+  set lmargin  -1
+  set bmargin  -1
+  set rmargin  -1
+  set tmargin  -1
+
+  set locale "en_US.UTF-8"
+
+  set pm3d explicit at s
+  set pm3d scansautomatic
+  set pm3d interpolate 1,1 flush begin noftriangles noborder corners2color mean
+
+  set palette positive nops_allcF maxcolors 0 gamma 1.5 color model RGB
+  set palette rgbformulae 7, 5, 15
+
+  set colorbox default
+  set colorbox vertical origin screen 0.9, 0.2, 0 size screen 0.05, 0.6, 0 front bdefault
+
+  set style boxplot candles range  1.50 outliers pt 7 separation 1 labels auto unsorted
+
+  set loadpath
+  set fontpath
+  set psdir
+  set fit brief errorvariables nocovariancevariables errorscaling prescale nowrap v5
+  */
+  showVariables(os);
 }
 
 // plot [ {ranges} ]
@@ -790,11 +1237,19 @@ plotCmd(const std::string &args)
 {
   if (isDebug()) std::cerr << "plot " << args << std::endl;
 
+  //---
+
   resetLineStyle();
 
   CGnuPlotGroup *group = 0;
 
   lastPlotCmd_ = args;
+
+  COptValT<CBBox2D> clearRect = clearRect_;
+
+  clearRect_.setInvalid();
+
+  //---
 
   // TODO: update local line style copy
 
@@ -804,7 +1259,7 @@ plotCmd(const std::string &args)
 
   CGnuPlotWindowP window;
 
-  if (multiplot().enabled) {
+  if (multiplot_.isEnabled()) {
     if (! multiWindow_) {
       multiWindow_ = CGnuPlotWindowP(createWindow());
 
@@ -818,10 +1273,10 @@ plotCmd(const std::string &args)
 
     int n = window->numGroups();
 
-    double dx = multiplot().dx();
-    double dy = multiplot().dy();
+    double dx = multiplot_.dx();
+    double dy = multiplot_.dy();
 
-    CIPoint2D pos = multiplot().pos(n);
+    CIPoint2D pos = multiplot_.pos(n);
 
     double x1 = plotSize_.x.getValue(pos.x*dx);
     double y1 = plotSize_.y.getValue(pos.y*dy);
@@ -928,7 +1383,7 @@ plotCmd(const std::string &args)
 
     std::string filename;
 
-    std::vector<std::string> functions;
+    StringArray functions;
 
     line.skipSpace();
 
@@ -1231,7 +1686,7 @@ plotCmd(const std::string &args)
         int as;
 
         if (parseInteger(line, as))
-          arrowStyle_ = arrowStyles_[as];
+          arrowStyle_ = arrowStyle(as);
       }
       // heads
       else if (plotVar == PlotVar::HEADS) {
@@ -1332,9 +1787,9 @@ plotCmd(const std::string &args)
             if      (arg == "deg" || arg == "d")
               imageStyle_.a = a;
             else if (arg == "pi")
-              imageStyle_.a = Rad2Deg(a*M_PI);
+              imageStyle_.a = CAngle::Rad2Deg(a*M_PI);
             else
-              imageStyle_.a = Rad2Deg(a);
+              imageStyle_.a = CAngle::Rad2Deg(a);
           }
         }
       }
@@ -1408,6 +1863,9 @@ plotCmd(const std::string &args)
   group->addObjects();
 
   group->init();
+  group->set3D(false);
+
+  group->setClearRect(clearRect);
 
   group->setTitleData(title_);
 
@@ -1515,7 +1973,7 @@ parseModifiers2D(CParseLine &line, CGnuPlotLineStyle &lineStyle, CGnuPlotFillSty
       if      (style == "variable" || style == "var")
         arrowStyle_.setVariable(true);
       else if (CStrUtil::toInteger(style, &as))
-        arrowStyle_ = arrowStyles_[as];
+        arrowStyle_ = arrowStyle(as);
     }
     else if (line.isString("nohidden3d")) {
       line.skipNonSpace();
@@ -1769,7 +2227,7 @@ parseAxisRange(CParseLine &line, CGnuPlotAxisData &axis, bool hasArgs)
   line.skipSpace();
 
   if (line.isChar('[')) {
-    std::vector<std::string> fields;
+    StringArray fields;
 
     if (! parseRange(line, fields))
       return false;
@@ -1806,7 +2264,7 @@ parseAxisRange(CParseLine &line, CGnuPlotAxisData &axis, bool hasArgs)
 // [{<dummary-var>=}{min}:{max}]
 bool
 CGnuPlot::
-parseRange(CParseLine &line, std::vector<std::string> &fields)
+parseRange(CParseLine &line, StringArray &fields)
 {
   if (! line.skipSpaceAndChar('['))
     return false;
@@ -1826,7 +2284,7 @@ parseRange(CParseLine &line, std::vector<std::string> &fields)
 
 bool
 CGnuPlot::
-decodeRange(const std::vector<std::string> &fields, CGnuPlotAxisData &axis)
+decodeRange(const StringArray &fields, CGnuPlotAxisData &axis)
 {
   std::vector<COptReal> values;
 
@@ -1839,7 +2297,7 @@ decodeRange(const std::vector<std::string> &fields, CGnuPlotAxisData &axis)
       int len = field.size();
 
       if (len > 0 && field[0] == '"' && field[len - 1] == '"') {
-        strptime(field.substr(1, len - 2).c_str(), timeFmt_.c_str(), &tm1);
+        strptime(field.substr(1, len - 2).c_str(), timeFmt().c_str(), &tm1);
 
         value = mktime(&tm1);
       }
@@ -1904,8 +2362,10 @@ decodeRange(const std::vector<std::string> &fields, CGnuPlotAxisData &axis)
 // replot
 void
 CGnuPlot::
-replotCmd(const std::string &)
+replotCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "replot " << args << std::endl;
+
   if (lastPlotCmd_ != "")
     plotCmd(lastPlotCmd_);
 }
@@ -1913,8 +2373,9 @@ replotCmd(const std::string &)
 // refresh
 void
 CGnuPlot::
-refreshCmd(const std::string &)
+refreshCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "refresh " << args << std::endl;
 }
 
 // splot [ {ranges} ]
@@ -1929,11 +2390,19 @@ void
 CGnuPlot::
 splotCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "splot " << args << std::endl;
+
   resetLineStyle();
+
+  //COptValT<CBBox2D> clearRect = clearRect_;
+
+  clearRect_.setInvalid();
+
+  //----
 
   CGnuPlotWindowP window;
 
-  if (multiplot().enabled && ! windows_.empty())
+  if (multiplot_.isEnabled() && ! windows_.empty())
     window = windows_.back();
   else {
     window = CGnuPlotWindowP(createWindow());
@@ -1957,7 +2426,7 @@ splotCmd(const std::string &args)
     // Get Range
     //  [XMIN:XMAX][YMIN:YMAX][ZMIN:ZMAX]
 
-    std::vector<std::string> xfields, yfields, zfields;
+    StringArray xfields, yfields, zfields;
 
     parseAxisRange(line, axesData_.xaxis[xind_], false);
     parseAxisRange(line, axesData_.yaxis[yind_], false);
@@ -2361,6 +2830,7 @@ setCmd(const std::string &args)
   }
   // set macros
   else if (var == VariableName::MACROS) {
+    setMacros(true);
   }
   // set mouse
   else if (var == VariableName::MOUSE) {
@@ -2373,9 +2843,9 @@ setCmd(const std::string &args)
     std::string arg = readNonSpace(line);
 
     if (arg != "")
-      varPrefs_[VariableName::ANGLES]->set(arg);
+      setPrefValue(VariableName::ANGLES, arg);
     else
-      varPrefs_[VariableName::ANGLES]->reset();
+      resetAngleType();
   }
   // set dummy <var1> [, <var2>]
   else if (var == VariableName::DUMMY) {
@@ -2410,7 +2880,7 @@ setCmd(const std::string &args)
   else if (var == VariableName::SAMPLES) {
     int isamples1, isamples2;
 
-    getSamples(isamples1, isamples2);
+    samples_.getValues(isamples1, isamples2);
 
     int i;
 
@@ -2422,7 +2892,7 @@ setCmd(const std::string &args)
         isamples2 = i;
     }
 
-    setSamples(isamples1, isamples2);
+    samples_.setValues(isamples1, isamples2);
   }
   // set zero {expression}
   else if (var == VariableName::ZERO) {
@@ -2574,8 +3044,8 @@ setCmd(const std::string &args)
   //               { layout <rows>,<cols> {rowsfirst|columnsfirst} {downwards|upwards}
   //                 {scale <xscale>{,<yscale>}} {offset <xoff>{,<yoff>}} }
   else if (var == VariableName::MULTIPLOT) {
-    multiplot().enabled = true;
-    multiplot().autoFit = true;
+    multiplot_.setEnabled(true);
+    multiplot_.setAutoFit(true);
 
     std::string arg = readNonSpace(line);
 
@@ -2596,14 +3066,14 @@ setCmd(const std::string &args)
         int i;
 
         if (parseInteger(line, i))
-          multiplot().rows = i;
+          multiplot_.setRows(i);
 
         if (line.skipSpaceAndChar(',')) {
           if (parseInteger(line, i))
-            multiplot().cols = i;
+            multiplot_.setCols(i);
         }
 
-        multiplot().autoFit = false;
+        multiplot_.setAutoFit(false);
       }
       else if (arg == "rowsfirst") {
       }
@@ -2694,6 +3164,9 @@ setCmd(const std::string &args)
         }
         else
           plotSize_.ysize = r;
+
+        if (multiplot_.isEnabled())
+          multiplot_.setAutoFit(false);
       }
       else {
         std::cerr << "Bad arg \'" << arg << "\'" << std::endl;
@@ -2704,7 +3177,9 @@ setCmd(const std::string &args)
     }
   }
 
-  // set arrow {<tag>} {from <position>} {to|rto <position>}
+  // set arrow {<tag>} {from <position> to  <position>}
+  //                   {from <position> rto <position>}
+  //                   {from <position> length <coord> angle <angle>}
   //                   { {arrowstyle | as <arrow_style>} |
   //                     { {nohead | head | backhead | heads}
   //                       {size <length>,<angle>{,<backangle>}}
@@ -2721,28 +3196,56 @@ setCmd(const std::string &args)
     auto arrow = lookupAnnotation<CGnuPlotArrow>(ind);
     if (! arrow) return false;
 
+    //---
+
+    // parse from->to
     std::string arg = readNonSpace(line);
 
     if (arg == "from") {
-      CGnuPlotPosition p;
+      CGnuPlotPosition from, to;
 
-      if (parsePosition(line, p))
-        arrow->setFrom(p.point());
+      if (! parsePosition(line, from))
+        return false;
 
       arg = readNonSpace(line);
 
       if (arg == "to" || arg == "rto") {
-        if (arg == "rto")
-          arrow->setRelative(true);
+        if (! parsePosition(line, to))
+          return false;
 
-        if (parsePosition(line, p))
-          arrow->setTo(p.point());
+        if (arg == "to")
+          arrow->setFromTo(from, to);
+        else
+          arrow->setFromRTo(from, to);
 
         arg = readNonSpace(line);
       }
+      else if (arg == "length") {
+        CGnuPlotCoordValue l;
+
+        if (! parseCoordValue(line, l))
+          return false;
+
+        arg = readNonSpace(line);
+
+        double r = 0.0;
+
+        if (arg == "angle") {
+          if (! parseReal(line, r))
+            r = 0.0;
+
+          arg = readNonSpace(line);
+        }
+
+        arrow->setFromAngle(from, l, CAngle::makeDegrees(r));
+      }
+      else
+        arrow->setFromTo(from, to);
     }
 
     line.skipSpace();
+
+    //---
 
     while (arg != "") {
       if       (arg == "arrowstyle" || arg == "as") {
@@ -2760,32 +3263,41 @@ setCmd(const std::string &args)
         else if (arg == "backhead") { arrow->setFHead(true ); arrow->setTHead(false); }
         else if (arg == "heads"   ) { arrow->setFHead(true ); arrow->setTHead(true ); }
       }
+      // soze <headlength>,<headangke>{,<backangle>}
       else if (arg == "size") {
-        CGnuPlotCoordValue v;
+        CGnuPlotCoordValue headlength;
 
-        if (parseCoordValue(line, v))
-          arrow->setLength(v);
+        if (parseCoordValue(line, headlength))
+          arrow->setHeadLength(headlength);
 
         if (line.skipSpaceAndChar(',')) {
-          double r;
+          double headangke;
 
-          if (parseReal(line, r))
-            arrow->setAngle(r);
+          if (parseReal(line, headangke))
+            arrow->setHeadAngle(headangke);
 
           if (line.skipSpaceAndChar(',')) {
-            if (parseReal(line, r))
-              arrow->setBackAngle(r);
+            double backangle;
+
+            if (parseReal(line, backangle))
+              arrow->setHeadBackAngle(backangle);
           }
         }
       }
       else if (arg == "filled" || arg == "empty" || arg == "nofilled") {
-        arrow->setFilled(arg == "filled" || arg == "empty");
-        arrow->setEmpty (arg == "empty" );
+        arrow->setHeadFilled(arg == "filled" || arg == "empty");
+        arrow->setHeadEmpty (arg == "empty" );
       }
       else if (arg == "front" || arg == "back" || arg == "behind") {
         if      (arg == "front" ) arrow->setLayer(CGnuPlotLayer::FRONT);
         else if (arg == "back"  ) arrow->setLayer(CGnuPlotLayer::BACK);
         else if (arg == "behind") arrow->setLayer(CGnuPlotLayer::BEHIND);
+      }
+      else if (arg == "linestyle" || arg == "ls") {
+        int ls = -1;
+
+        if (! parseInteger(line, ls))
+          arrow->setLineStyle(ls);
       }
       else if (arg == "linetype" || arg == "lt") {
         int lt = -1;
@@ -2799,17 +3311,11 @@ setCmd(const std::string &args)
         if (parseReal(line, lw))
           arrow->setLineWidth(lw);
       }
-      else if (arg == "linestyle" || arg == "ls") {
-        int ls = -1;
-
-        if (! parseInteger(line, ls))
-          arrow->setLineStyle(ls);
-      }
       else if (arg == "dashtype" || arg == "dt") {
         int dt = -1;
 
         if (! parseInteger(line, dt))
-          arrow->setDashType(dt);
+          arrow->setDash(lineDashes_[dt]);
       }
       else {
         errorMsg("Invalid arg '" + arg + "'");
@@ -2981,7 +3487,7 @@ setCmd(const std::string &args)
 
     std::string              arg;
     bool                     isStr = false;
-    std::vector<std::string> extraArgs;
+    StringArray extraArgs;
 
     line.skipSpace();
 
@@ -3719,11 +4225,15 @@ setCmd(const std::string &args)
       while (arg != "") {
         if      (arg == "range") {
           double r;
-          (void) parseReal(line, r);
+
+          if (parseReal(line, r))
+            boxPlot_.range = r;
         }
         else if (arg == "fraction") {
           double r;
-          (void) parseReal(line, r);
+
+          if (parseReal(line, r))
+            boxPlot_.fraction = r;
         }
         else if (arg == "outliers" || arg == "nooutliers") {
           boxPlot_.outliers = (arg == "outliers");
@@ -3735,24 +4245,24 @@ setCmd(const std::string &args)
             boxPlot_.pointtype = i;
         }
         else if (arg == "candlesticks") {
+          boxPlot_.type = BoxPlot::Type::CandleSticks;
         }
         else if (arg == "financebars") {
+          boxPlot_.type = BoxPlot::Type::FinanceBars;
         }
         else if (arg == "separation") {
           double r;
-          (void) parseReal(line, r);
+
+          if (parseReal(line, r))
+            boxPlot_.separation = r;
         }
         else if (arg == "labels") {
           arg = readNonSpace(line);
 
-          if      (arg == "off") {
-          }
-          else if (arg == "auto") {
-          }
-          else if (arg == "x") {
-          }
-          else if (arg == "x2") {
-          }
+          if      (arg == "off" ) boxPlot_.labels = BoxPlot::Labels::Off;
+          else if (arg == "auto") boxPlot_.labels = BoxPlot::Labels::Auto;
+          else if (arg == "x"   ) boxPlot_.labels = BoxPlot::Labels::X;
+          else if (arg == "x2"  ) boxPlot_.labels = BoxPlot::Labels::X2;
         }
         else if (arg == "sorted" || arg == "unsorted") {
           boxPlot_.sorted = (arg == "sorted");
@@ -3807,16 +4317,18 @@ setCmd(const std::string &args)
     line.skipSpace();
 
     double size  = 1.0;
-    bool   front = true;
 
-    if      (line.isString("small") || line.isString("large") || line.isString("fullwidth")) {
+    if (line.isString("small") || line.isString("large") || line.isString("fullwidth")) {
       std::string str = readNonSpace(line);
 
       if      (str == "small"    ) size = 0.0;
       else if (str == "large"    ) size = 1.0;
       else if (str == "fullwidth") size = -2.0;
+
+      setBarsSize(size);
     }
     else if (parseReal(line, size)) {
+      setBarsSize(size);
     }
 
     line.skipSpace();
@@ -3824,16 +4336,14 @@ setCmd(const std::string &args)
     if      (line.isString("front") || line.isString("back")) {
       std::string str = readNonSpace(line);
 
-      if      (str == "front") front = true;
-      else if (str == "back" ) front = false;
+      setBarsFront(str == "front" ? true : false);
     }
 
-    setBarSize(BarSize(size, front));
   }
   // set boxwidth [ {size:r} ] [ absolute | relative ]
   else if (var == VariableName::BOXWIDTH) {
     BoxWidthType boxWidthType = BoxWidthType::AUTO;
-    double       boxWidth     = getBoxWidth().width;
+    double       boxWidth     = boxWidth_.width;
 
     if (line.isValid()) {
       std::string sizeStr = readNonSpace(line);
@@ -3870,17 +4380,77 @@ setCmd(const std::string &args)
       lineStyle()->setPointSize(r > 0 ? r : 1.0);
   }
   // set autoscale {<axes>{|min|max|fixmin|fixmax|fix} | fix | keepfix}
+  // set autoscale {noextend}
   else if (var == VariableName::AUTOSCALE) {
     std::string arg = readNonSpace(line);
 
-    if      (arg == "x") {
-      axesData_.xaxis[1].resetMin();
-      axesData_.xaxis[1].resetMax();
+    if      (arg == "") {
+      for (int i = 1; i <= 2; ++i) {
+        axesData_.xaxis[i].setAutoScaleMin(true);
+        axesData_.xaxis[i].setAutoScaleMax(true);
+        axesData_.yaxis[i].setAutoScaleMin(true);
+        axesData_.yaxis[i].setAutoScaleMax(true);
+
+        axesData_.xaxis[i].setAutoScaleFixMin(false);
+        axesData_.xaxis[i].setAutoScaleFixMax(false);
+        axesData_.yaxis[i].setAutoScaleFixMin(false);
+        axesData_.yaxis[i].setAutoScaleFixMax(false);
+      }
+    }
+    else if (arg == "noextend") {
+      for (int i = 1; i <= 2; ++i) {
+        axesData_.xaxis[i].setAutoScaleFixMin(true);
+        axesData_.xaxis[i].setAutoScaleFixMax(true);
+        axesData_.yaxis[i].setAutoScaleFixMin(true);
+        axesData_.yaxis[i].setAutoScaleFixMax(true);
+      }
+    }
+    else if (arg == "x") {
+      axesData_.xaxis[1].setAutoScaleMin(true);
+      axesData_.xaxis[1].setAutoScaleMax(true);
     }
     else if (arg == "y") {
-      axesData_.yaxis[1].resetMin();
-      axesData_.yaxis[1].resetMax();
+      axesData_.yaxis[1].setAutoScaleMin(true);
+      axesData_.yaxis[1].setAutoScaleMax(true);
     }
+    else if (arg == "xy") {
+      axesData_.xaxis[1].setAutoScaleMin(true);
+      axesData_.xaxis[1].setAutoScaleMin(true);
+      axesData_.yaxis[1].setAutoScaleMin(true);
+      axesData_.yaxis[1].setAutoScaleMin(true);
+    }
+    else if (arg == "xmin")
+      axesData_.xaxis[1].setAutoScaleMin(true);
+    else if (arg == "ymin")
+      axesData_.yaxis[1].setAutoScaleMin(true);
+    else if (arg == "xmax")
+      axesData_.xaxis[1].setAutoScaleMax(true);
+    else if (arg == "ymax")
+      axesData_.yaxis[1].setAutoScaleMax(true);
+    else if (arg == "fix") {
+      axesData_.xaxis[1].setAutoScaleFixMin(true);
+      axesData_.xaxis[1].setAutoScaleFixMax(true);
+      axesData_.yaxis[1].setAutoScaleFixMin(true);
+      axesData_.yaxis[1].setAutoScaleFixMax(true);
+    }
+    else if (arg == "xfix") {
+      axesData_.xaxis[1].setAutoScaleFixMin(true);
+      axesData_.xaxis[1].setAutoScaleFixMax(true);
+    }
+    else if (arg == "yfix") {
+      axesData_.yaxis[1].setAutoScaleFixMin(true);
+      axesData_.yaxis[1].setAutoScaleFixMax(true);
+    }
+    else if (arg == "xfixmin")
+      axesData_.xaxis[1].setAutoScaleFixMin(true);
+    else if (arg == "yfixmin")
+      axesData_.yaxis[1].setAutoScaleFixMin(true);
+    else if (arg == "xfixmax")
+      axesData_.xaxis[1].setAutoScaleFixMax(true);
+    else if (arg == "yfixmax")
+      axesData_.yaxis[1].setAutoScaleFixMax(true);
+    else
+      errorMsg("Unhandled autoscale " + arg);
   }
 
   // set format {<axes>} {"<format-string>"}
@@ -4064,7 +4634,7 @@ setCmd(const std::string &args)
     std::string fmt;
 
     if (parseString(line, fmt, "Invalid time format"))
-      timeFmt_ = fmt;
+      setTimeFmt(fmt);
   }
   // set xdata {time}
   else if (var == VariableName::XDATA) {
@@ -4107,7 +4677,7 @@ setCmd(const std::string &args)
   else if (var == VariableName::ISOSAMPLES) {
     int isamples1, isamples2;
 
-    getIsoSamples(isamples1, isamples2);
+    isoSamples_.getValues(isamples1, isamples2);
 
     if (line.isValid()) {
       int i;
@@ -4123,7 +4693,7 @@ setCmd(const std::string &args)
       }
     }
 
-    setIsoSamples(isamples1, isamples2);
+    isoSamples_.setValues(isamples1, isamples2);
   }
   // set surface
   else if (var == VariableName::SURFACE) {
@@ -4460,6 +5030,35 @@ setForCmd(const std::string &var, const std::string &start, const std::string &e
   }
 }
 
+// get ...
+bool
+CGnuPlot::
+getCmd(const std::string &args)
+{
+  if (isDebug()) std::cerr << "get " << args << std::endl;
+
+  CParseLine line(args);
+
+  VariableName var;
+
+  if (! parseOptionValue(this, line, var, "option name"))
+    return false;
+
+  std::string identifier;
+
+  if (! readIdentifier(line, identifier))
+    identifier = "_" + CStrUniqueMatch::valueToString(var);
+
+  std::stringstream ss;
+
+  // get angles
+  if      (var == VariableName::ANGLES) {
+    CExprInst->createStringVariable(identifier, getAngleTypeString());
+  }
+
+  return true;
+}
+
 // show ...
 // show plot
 // show [ variables [all] | functions ]
@@ -4468,6 +5067,8 @@ bool
 CGnuPlot::
 showCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "show " << args << std::endl;
+
   CParseLine line(args);
 
   VariableName var;
@@ -4479,7 +5080,9 @@ showCmd(const std::string &args)
 
   //---
 
-  std::vector<std::string> args1;
+  int pos = line.pos();
+
+  StringArray args1;
 
   while (line.isValid()) {
     std::string arg = readNonSpace(line);
@@ -4492,68 +5095,42 @@ showCmd(const std::string &args)
 
   //---
 
+  // show variables
   if      (var == VariableName::VARIABLES) {
-    std::vector<std::string> names;
-
-    CExprInst->getVariableNames(names);
-
-    for (uint i = 0; i < names.size(); ++i) {
-      CExprVariablePtr var = CExprInst->getVariable(names[i]);
-
-      std::cout << var->name() << " = " << var->value() << std::endl;
-    }
+    showVariables(std::cout, args1);
   }
+  // show functions
   else if (var == VariableName::FUNCTIONS) {
-    std::vector<std::string> names;
-
-    CExprInst->getFunctionNames(names);
-
-    for (uint i = 0; i < names.size(); ++i) {
-      CExprFunctionPtr function = CExprInst->getFunction(names[i]);
-
-      if (! function->isBuiltin())
-        std::cout << function << std::endl;
-    }
+    showFunctions(std::cout);
   }
+  // show version
   else if (var == VariableName::VERSION) {
     // TODO: long
     std::cout << "CGnuPlot Version 0.1" << std::endl;
   }
+  // show datafile
   else if (var == VariableName::DATAFILE) {
     std::map<std::string,bool> show;
 
     if (args1.size() > 0)
       show[args1[0]] = true;
 
-    if (show.empty() || show.find("missing") != show.end()) {
-      if (getMissingStr().empty())
-        std::cerr << "No missing data string set for datafile" << std::endl;
-      else
-        std::cerr << "\"" << getMissingStr() <<
-                     "\" in datafile is interpreted as missing value" << std::endl;
-    }
-    if (show.empty() || show.find("separator") != show.end()) {
-      std::cerr << "datafile fields separated by ";
-
-      if (! dataFile_.getSeparator())
-        std::cerr << "whitespace";
-     else
-        std::cerr << "\"" << dataFile_.getSeparator() << "\"";
-
-      std::cerr << std::endl;
-    }
-    if (show.empty() || show.find("commentschar") != show.end()) {
-      std::cerr << "Comments chars are \"" << dataFile_.commentChars() << "\"" << std::endl;
-    }
+    showDataFile(std::cout, show, true);
   }
   // show title
   else if (var == VariableName::TITLE) {
-    std::cerr << "title is \"" << title_.text() << "\", " <<
-                 "offset at ((character units) 0, 0, 0)" << std::endl;
+    title_.print(std::cout);
   }
-  // show arrow
+  // show arrow {<tag>}
   else if (var == VariableName::ARROW) {
-    showAnnotations<CGnuPlotArrow>();
+    line.setPos(pos);
+
+    int ind = -1;
+
+    if (! parseInteger(line, ind))
+      ind = -1;
+
+    showAnnotations<CGnuPlotArrow>(ind);
   }
   // show ellipse
   else if (var == VariableName::ELLIPSE) {
@@ -4576,6 +5153,7 @@ showCmd(const std::string &args)
     showAnnotations<CGnuPlotGroupAnnotation>();
   }
 
+  // show style
   else if (var == VariableName::STYLE) {
     std::map<std::string,bool> show;
 
@@ -4583,7 +5161,7 @@ showCmd(const std::string &args)
       show[args1[0]] = true;
 
     if      (show.empty() || show.find("data") != show.end()) {
-      std::cerr << "Data are plotted with " <<
+      std::cout << "Data are plotted with " <<
         CStrUniqueMatch::valueToString<PlotStyle>(getDataStyle()) << std::endl;
     }
     else if (show.find("arrow") != show.end()) {
@@ -4602,56 +5180,241 @@ showCmd(const std::string &args)
     }
   }
 
+  // show xlabel
   else if (var == VariableName::XLABEL) {
-    std::cerr << "xlabel is \"" << axesData_.xaxis[1].text() << "\", " <<
-                 "offset at ((character units) 0, 0, 0)" << std::endl;
+    axesData_.xaxis[1].printLabel(std::cout, "x");
   }
+  // show x2label
+  else if (var == VariableName::X2LABEL) {
+    axesData_.xaxis[2].printLabel(std::cout, "x2");
+  }
+  // show ylabel
   else if (var == VariableName::YLABEL) {
-    std::cerr << "ylabel is \"" << axesData_.yaxis[1].text() << "\", " <<
-                 "offset at ((character units) 0, 0, 0)" << std::endl;
+    axesData_.yaxis[1].printLabel(std::cout, "y");
+  }
+  // show y2label
+  else if (var == VariableName::Y2LABEL) {
+    axesData_.xaxis[2].printLabel(std::cout, "y2");
+  }
+  // show zlabel
+  else if (var == VariableName::ZLABEL) {
+    axesData_.zaxis[1].printLabel(std::cout, "z");
+  }
+  // show cblabel
+  else if (var == VariableName::ZLABEL) {
+    axesData_.cbaxis.printLabel(std::cout, "cb");
   }
 
+  // show samples
   else if (var == VariableName::SAMPLES) {
-    int isamples1, isamples2;
-
-    getSamples(isamples1, isamples2);
-
-    std::cerr << "sampling rate is " << isamples1 << ", " << isamples2 << std::endl;
+    samples_.print(std::cout);
   }
+  // show border
   else if (var == VariableName::BORDER) {
   }
+  // show angles
   else if (var == VariableName::ANGLES) {
-    varPrefs_[VariableName::ANGLES]->print(std::cerr);
+    printAngleType(std::cout);
   }
+  // show pointsize
   else if (var == VariableName::POINTSIZE) {
-    std::cerr << "pointsize is " << lineStyle()->pointSize() << std::endl;
+    std::cout << "pointsize is " << lineStyle()->pointSize() << std::endl;
   }
+  // show autoscale
+  else if (var == VariableName::AUTOSCALE) {
+    std::cout << "autoscaling is ";
+
+    std::cout << "x: ";
+
+    std::ostringstream ostr;
+
+    if      (axesData_.xaxis[1].isAutoScaleMin() && axesData_.xaxis[1].isAutoScaleMax())
+      ostr << "ON, ";
+    else if (axesData_.xaxis[1].isAutoScaleMin())
+      ostr << "ON (min), ";
+    else if (axesData_.xaxis[1].isAutoScaleMax())
+      ostr << "ON (max), ";
+    else
+      ostr << "OFF, ";
+
+    if (axesData_.xaxis[1].isAutoScaleFixMin()) ostr << "(fixmin), ";
+    if (axesData_.xaxis[1].isAutoScaleFixMax()) ostr << "(fixmax), ";
+
+    std::cout << ostr.str();
+
+    for (int i = ostr.str().size(); i < 24; ++i)
+      std::cout << " ";
+
+    std::cout << "y: ";
+
+    if      (axesData_.yaxis[1].isAutoScaleMin() && axesData_.yaxis[1].isAutoScaleMax())
+      std::cout << "ON, ";
+    else if (axesData_.yaxis[1].isAutoScaleMin())
+      std::cout << "ON (min), ";
+    else if (axesData_.yaxis[1].isAutoScaleMax())
+      std::cout << "ON (max), ";
+    else
+      std::cout << "OFF, ";
+
+    if (axesData_.yaxis[1].isAutoScaleFixMin()) std::cout << "(fixmin), ";
+    if (axesData_.yaxis[1].isAutoScaleFixMax()) std::cout << "(fixmax), ";
+
+    std::cout << std::endl;
+  }
+  // show bars
+  else if (var == VariableName::BARS) {
+    if (barsSize() <= 0.0)
+      std::cout << "errors are plotted without bars" << std::endl;
+    else
+      std::cout << "errorbars are plotted in " << (barsFront() ? "front" : "back") <<
+                   " with bars of size " << barsSize() << std::endl;
+  }
+  // show output
   else if (var == VariableName::OUTPUT) {
-    std::cerr << "output is sent to " <<
+    std::cout << "output is sent to " <<
       (! getOutputFile().empty() ? ("'" + getOutputFile() + "'"): "STDOUT") << std::endl;
   }
+  // show print
   else if (var == VariableName::PRINT) {
-    std::cerr << "print output is set to '" <<
+    std::cout << "print output is set to '" <<
       (! getPrintFile().empty() ? getPrintFile() : "<stderr>") << "'" << std::endl;
   }
 
   return true;
 }
 
+void
+CGnuPlot::
+showVariables(std::ostream &os, const StringArray &args)
+{
+  StringArray names;
+
+  CExprInst->getVariableNames(names);
+
+  for (const auto &name : names) {
+    bool match = (args.empty() ? true : false);
+
+    for (const auto &arg1 : args) {
+      if (name.size() > arg1.size() && arg1 == name.substr(0, arg1.size())) {
+        match = true;
+        break;
+      }
+    }
+
+    if (match) {
+      CExprVariablePtr var = CExprInst->getVariable(name);
+
+      os << var->name() << " = ";
+
+      CExprValueP value = var->value();
+
+      CExprValueType type = (value.isValid() ? value->getType() : CEXPR_VALUE_NONE);
+
+      if (type == CEXPR_VALUE_STRING)
+        os << "\"" << value << "\"";
+      else
+        os << value;
+
+      os << std::endl;
+    }
+  }
+}
+
+void
+CGnuPlot::
+showFunctions(std::ostream &os)
+{
+  StringArray names;
+
+  CExprInst->getFunctionNames(names);
+
+  for (uint i = 0; i < names.size(); ++i) {
+    CExprFunctionPtr function = CExprInst->getFunction(names[i]);
+
+    if (! function->isBuiltin())
+      os << function << std::endl;
+  }
+}
+
+void
+CGnuPlot::
+showDataFile(std::ostream &os, std::map<std::string,bool> &show, bool verbose)
+{
+  if (show.empty() || show.find("missing") != show.end()) {
+    if (verbose) {
+      if (getMissingStr().empty())
+        os << "No missing data string set for datafile";
+      else
+        os << "\"" << getMissingStr() << "\" in datafile is interpreted as missing value";
+
+      os << std::endl;
+    }
+    else {
+      if ( ! getMissingStr().empty())
+        os << "set datafile missing \"" << getMissingStr() << "\"" << std::endl;
+    }
+  }
+
+  if (show.empty() || show.find("separator") != show.end()) {
+    if (verbose)
+      os << "datafile fields separated by ";
+    else
+      os << "set datafile separator ";
+
+    if (! dataFile_.getSeparator())
+      os << "whitespace";
+    else
+      os << "\"" << dataFile_.getSeparator() << "\"";
+
+    os << std::endl;
+  }
+
+  if (show.empty() || show.find("commentschar") != show.end()) {
+    if (verbose) {
+      os << "Comments chars are \"" << dataFile_.commentChars() << "\"" << std::endl;
+    }
+    else {
+      if (dataFile_.hasCommentChars()) {
+        os << "set datafile commentschar \"" << dataFile_.commentChars() << "\"" << std::endl;
+      }
+    }
+  }
+}
+
 // reset
 void
 CGnuPlot::
-resetCmd(const std::string &)
+resetCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "reset " << args << std::endl;
+
   // TODO: do not reset terminal and output
+  resetAngleType();
 }
 
 // undefine ...
 void
 CGnuPlot::
-undefCmd(const std::string &)
+undefineCmd(const std::string &args)
 {
-  // TODO
+  if (isDebug()) std::cerr << "undefine " << args << std::endl;
+
+  CParseLine line(args);
+
+  StringArray args1;
+
+  while (line.isValid()) {
+    std::string arg = readNonSpace(line);
+
+    if (! arg.empty())
+      args1.push_back(arg);
+
+    line.skipSpace();
+  }
+
+  for (const auto &arg : args1) {
+    CExprInst->removeVariable(arg);
+  }
 }
 
 // unset ...
@@ -4688,7 +5451,9 @@ unsetCmd(const std::string &args)
 
   //----
 
-  std::vector<std::string> args1;
+  int pos = line.pos();
+
+  StringArray args1;
 
   while (line.isValid()) {
     std::string arg = readNonSpace(line);
@@ -4702,17 +5467,25 @@ unsetCmd(const std::string &args)
   //---
 
   if      (var == VariableName::MULTIPLOT) {
-    if (multiWindow_ && multiplot().autoFit)
+    if (multiWindow_ && multiplot_.isAutoFit())
       multiWindow_->fitGroups();
 
-    multiplot().enabled = false;
+    multiplot_.setEnabled(false);
 
     multiWindow_ = 0;
   }
   else if (var == VariableName::BORDER)
     axesData_.borders = 0;
+  // unset arrow
   else if (var == VariableName::ARROW) {
-    clearAnnotations<CGnuPlotArrow>();
+    line.setPos(pos);
+
+    int ind = -1;
+
+    if (! parseInteger(line, ind))
+      ind = -1;
+
+    clearAnnotations<CGnuPlotArrow>(ind);
   }
   else if (var == VariableName::ELLIPSE) {
     clearAnnotations<CGnuPlotEllipse>();
@@ -4763,19 +5536,80 @@ unsetCmd(const std::string &args)
   else if (var == VariableName::CBTICS) {
     axesData_.cbaxis.setShowTics(false);
   }
+  // unset autoscale {axes}
+  else if (var == VariableName::AUTOSCALE) {
+    line.setPos(pos);
+
+    std::string arg = readNonSpace(line);
+
+    if      (arg == "") {
+      for (int i = 1; i <= 2; ++i) {
+        axesData_.xaxis[i].setAutoScaleMin(false);
+        axesData_.xaxis[i].setAutoScaleMax(false);
+        axesData_.yaxis[i].setAutoScaleMin(false);
+        axesData_.yaxis[i].setAutoScaleMax(false);
+      }
+    }
+    else if (arg == "x") {
+      axesData_.xaxis[1].setAutoScaleMin(false);
+      axesData_.xaxis[1].setAutoScaleMax(false);
+    }
+    else if (arg == "xmin")
+      axesData_.xaxis[1].setAutoScaleMin(false);
+    else if (arg == "xmax")
+      axesData_.xaxis[1].setAutoScaleMax(false);
+    else if (arg == "xfixmin")
+      axesData_.xaxis[1].setAutoScaleFixMin(false);
+    else if (arg == "xfixmax")
+      axesData_.xaxis[1].setAutoScaleFixMax(false);
+    else if (arg == "y") {
+      axesData_.yaxis[1].setAutoScaleMin(false);
+      axesData_.yaxis[1].setAutoScaleMax(false);
+    }
+    else if (arg == "ymin")
+      axesData_.yaxis[1].setAutoScaleMin(false);
+    else if (arg == "ymax")
+      axesData_.yaxis[1].setAutoScaleMax(false);
+    else if (arg == "yfixmin")
+      axesData_.yaxis[1].setAutoScaleFixMin(true);
+    else if (arg == "yfixmax")
+      axesData_.yaxis[1].setAutoScaleFixMax(true);
+    else if (arg == "xy") {
+      axesData_.xaxis[1].setAutoScaleMin(false);
+      axesData_.xaxis[1].setAutoScaleMin(false);
+      axesData_.yaxis[1].setAutoScaleMin(false);
+      axesData_.yaxis[1].setAutoScaleMin(false);
+    }
+    else
+      errorMsg("Unhandled autoscale " + arg);
+  }
+  // unset bars
+  else if (var == VariableName::BARS) {
+    setBarsSize (0.0);
+    setBarsFront(true);
+  }
+  // unset hidden3d
   else if (var == VariableName::HIDDEN3D)
     setHidden3D(false);
+  // unset surface
   else if (var == VariableName::SURFACE)
     setSurface3D(false);
+  // unset contour
   else if (var == VariableName::CONTOUR)
     setContour3D(false);
-  else if (var == VariableName::COLORBOX) {
+  // unset colorbox
+  else if (var == VariableName::COLORBOX)
     colorBox_.setEnabled(false);
-  }
+  // unset macros
+  else if (var == VariableName::MACROS)
+    setMacros(true);
+  // unset pm3d
   else if (var == VariableName::PM3D)
     setPm3D(false);
+  // unset table
   else if (var == VariableName::TABLE)
     setTableFile("");
+  // unset angles
   else if (var == VariableName::ANGLES) {
     varPrefs_[VariableName::ANGLES]->reset();
   }
@@ -4785,10 +5619,13 @@ unsetCmd(const std::string &args)
   // unset polar
   else if (var == VariableName::POLAR)
     polar_ = false;
+  // unset zeroaxis
   else if (var == VariableName::ZEROAXIS) {
   }
+  // unset debug
   else if (var == VariableName::DEBUG)
     setDebug(false);
+  // unset edebug
   else if (var == VariableName::EDEBUG)
     CExprInst->setDebug(false);
 
@@ -4837,8 +5674,10 @@ unsetForCmd(const std::string &var, const std::string &start, const std::string 
 // shell
 void
 CGnuPlot::
-shellCmd(const std::string &)
+shellCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "shell " << args << std::endl;
+
   const char *shell = getenv("SHELL");
 
   if (! shell)
@@ -4852,6 +5691,8 @@ void
 CGnuPlot::
 systemCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "system " << args << std::endl;
+
   CParseLine line(args);
 
   std::string str;
@@ -4863,16 +5704,20 @@ systemCmd(const std::string &args)
 // stats
 void
 CGnuPlot::
-statsCmd(const std::string &)
+statsCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "stats " << args << std::endl;
+
   // TODO
 }
 
 // clear
 void
 CGnuPlot::
-clearCmd(const std::string &)
+clearCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "clear " << args << std::endl;
+
   double x = plotSize_.x    .getValue(0.0);
   double y = plotSize_.y    .getValue(0.0);
   double w = plotSize_.xsize.getValue(1.0);
@@ -4884,15 +5729,17 @@ clearCmd(const std::string &)
 // lower {winid:i}
 void
 CGnuPlot::
-lowerCmd(const std::string &)
+lowerCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "lower " << args << std::endl;
 }
 
 // raise {winid:i}
 void
 CGnuPlot::
-raiseCmd(const std::string &)
+raiseCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "upper " << args << std::endl;
 }
 
 // test
@@ -4901,6 +5748,8 @@ void
 CGnuPlot::
 testCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "test " << args << std::endl;
+
   CParseLine line(args);
 
   std::string arg = readNonSpace(line);
@@ -4947,22 +5796,25 @@ testCmd(const std::string &args)
 //                via [ {var1}, {var2}, ... | "<parameterfile>" ]
 void
 CGnuPlot::
-fitCmd(const std::string &)
+fitCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "fit " << args << std::endl;
 }
 
 // update "<filename>"
 void
 CGnuPlot::
-updateCmd(const std::string &)
+updateCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "update " << args << std::endl;
 }
 
 // bind
 void
 CGnuPlot::
-bindCmd(const std::string &)
+bindCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "bind " << args << std::endl;
 }
 
 // if ({condition}) {command}
@@ -4972,6 +5824,8 @@ void
 CGnuPlot::
 ifCmd(int &i, const Statements &statements)
 {
+  if (isDebug()) std::cerr << "if" << std::endl;
+
   CParseLine line(statements[i]);
 
   std::string identifier;
@@ -5098,6 +5952,18 @@ ifCmd(int &i, const Statements &statements)
     fileData_.bufferLines.push_back(line);
 }
 
+CGnuPlotArrowStyle
+CGnuPlot::
+arrowStyle(int id) const
+{
+  auto p = arrowStyles_.find(id);
+
+  if (p == arrowStyles_.end())
+    return arrowStyle_;
+
+  return (*p).second;
+}
+
 void
 CGnuPlot::
 readBlockLines(Statements &lines, std::string &eline, int depth)
@@ -5172,7 +6038,7 @@ CGnuPlot::
 parseUsing(CParseLine &line, CGnuPlotUsingCols &usingCols)
 {
   std::string              usingStr;
-  std::vector<std::string> usingStrs;
+  StringArray usingStrs;
   bool                     isExpr = false;
 
   int rbrackets = 0;
@@ -5262,7 +6128,7 @@ parseIndex(CParseLine &line, int &indexStart, int &indexEnd, int &indexStep)
 
   line.skipSpace();
 
-  std::vector<std::string> inds;
+  StringArray inds;
 
   CStrUtil::addFields(indexStr, inds, ":", /*skipEmpty*/true);
 
@@ -5291,7 +6157,7 @@ parseEvery(CParseLine &line, int &everyStart, int &everyEnd, int &everyStep)
 
   line.skipSpace();
 
-  std::vector<std::string> inds;
+  StringArray inds;
 
   CStrUtil::addFields(everyStr, inds, ":", /*skipEmpty*/true);
 
@@ -5415,6 +6281,8 @@ void
 CGnuPlot::
 doCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "do " << args << std::endl;
+
   CParseLine line(args);
 
   line.skipSpace();
@@ -5433,7 +6301,7 @@ doCmd(const std::string &args)
     return;
 
   std::string              arg1, arg2, arg3;
-  std::vector<std::string> fields;
+  StringArray fields;
 
   if      (line.skipSpaceAndChar('=')) {
     arg1 = readNonSpaceNonChar(line, ":]");
@@ -5447,6 +6315,8 @@ doCmd(const std::string &args)
     }
   }
   else if (line.isString("in")) {
+    line.skipNonSpace();
+
     std::string str;
 
     if (! parseString(line, str))
@@ -5461,7 +6331,7 @@ doCmd(const std::string &args)
   if (! line.skipSpaceAndChar('{'))
     return;
 
-  std::vector<std::string> lines;
+  StringArray lines;
 
   std::string line1;
 
@@ -5525,6 +6395,8 @@ void
 CGnuPlot::
 whileCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "while " << args << std::endl;
+
   CParseLine line(args);
 
   line.skipSpace();
@@ -5573,6 +6445,8 @@ void
 CGnuPlot::
 evaluateCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "evaluate " << args << std::endl;
+
   CExprValuePtr value;
 
   if (! evaluateExpression(args, value))
@@ -5592,6 +6466,8 @@ void
 CGnuPlot::
 pauseCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "pause " << args << std::endl;
+
   CParseLine line(args);
 
   int secs;
@@ -5610,8 +6486,15 @@ pauseCmd(const std::string &args)
 // reread
 void
 CGnuPlot::
-rereadCmd(const std::string &)
+rereadCmd(const std::string &args)
 {
+  if (isDebug()) std::cerr << "reread " << args << std::endl;
+
+  fileData_.file->rewind();
+
+  fileData_.lineNum = 0;
+
+  fileData_.bufferLines.clear();
 }
 
 CGnuPlotWindow *
@@ -5719,7 +6602,7 @@ processAssignFunction(const std::string &lhs, const std::string &rhs)
 
   // function definition
   if      (line.skipSpaceAndChar('(')) {
-    std::vector<std::string> args;
+    StringArray args;
 
     std::string arg;
 
@@ -5760,7 +6643,7 @@ processAssignFunction(const std::string &lhs, const std::string &rhs)
 
 CGnuPlotPlot *
 CGnuPlot::
-addFunction2D(CGnuPlotGroup *group, const std::vector<std::string> &functions, PlotStyle style)
+addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style)
 {
   const std::string &tableFile = getTableFile();
 
@@ -5768,12 +6651,6 @@ addFunction2D(CGnuPlotGroup *group, const std::vector<std::string> &functions, P
 
   if (tableFile.empty()) {
     plot = createPlot(group);
-
-    if (clearRect_.isValid()) {
-      plot->setClearRect(clearRect_.getValue());
-
-      clearRect_.setInvalid();
-    }
 
     if (plot->keyTitle() == "")
       plot->setKeyTitle(functions[0]);
@@ -5787,7 +6664,7 @@ addFunction2D(CGnuPlotGroup *group, const std::vector<std::string> &functions, P
 
   int nx, ny;
 
-  getSamples(nx, ny);
+  samples_.getValues(nx, ny);
 
   if (! polar_ && ! parametric_) {
     double xmin, ymin, xmax, ymax;
@@ -6034,7 +6911,7 @@ addFunction3D(CGnuPlotWindowP window, const std::string &function, PlotStyle sty
 
   int nx, ny;
 
-  getIsoSamples(nx, ny);
+  isoSamples_.getValues(nx, ny);
 
   std::string varName1("x"), varName2("y");
 
@@ -6116,12 +6993,6 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
   for (int setNum = 0; setNum < dataFile_.numSets(); ++setNum) {
     // create plot
     CGnuPlotPlot *plot = createPlot(group);
-
-    if (clearRect_.isValid()) {
-      plot->setClearRect(clearRect_.getValue());
-
-      clearRect_.setInvalid();
-    }
 
     if (plot->keyTitle() == "") {
       std::string title;
@@ -6328,7 +7199,7 @@ addFile3D(CGnuPlotWindowP window, const std::string &filename)
     //---
 
     // get values from fields on line
-    std::vector<std::string> fields;
+    StringArray fields;
 
     fields.clear();
 
@@ -6565,7 +7436,7 @@ getFieldValue(int i, int ival, int setNum, int pointNum, bool &skip)
              (i == 1 && axesData_.yaxis[1].isTime())) {
       struct tm tm1; memset(&tm1, 0, sizeof(tm));
 
-      strptime(field.c_str(), timeFmt_.c_str(), &tm1);
+      strptime(field.c_str(), timeFmt().c_str(), &tm1);
 
       value = CExprInst->createRealValue(mktime(&tm1));
     }
@@ -6702,19 +7573,11 @@ drawWindows()
     window->draw();
 }
 
-CGnuPlot::AngleType
-CGnuPlot::
-getAngleType() const
-{
-  return static_cast<CGnuPlotPrefValue<AngleType> *>
-   (const_cast<CGnuPlot *>(this)->varPrefs_[VariableName::ANGLES])->get();
-}
-
 void
 CGnuPlot::
 setAngleType(AngleType type)
 {
-  static_cast<CGnuPlotPrefValue<AngleType> *>(varPrefs_[VariableName::ANGLES])->set(type);
+  setPrefValue<AngleType>(VariableName::ANGLES, type);
 
   CExprInst->setDegrees(type == AngleType::DEGREES);
 }
@@ -7029,7 +7892,7 @@ parseColor(CParseLine &line, CRGBA &c)
 
 bool
 CGnuPlot::
-parseInteger(CParseLine &line, int &i)
+parseInteger(CParseLine &line, int &i) const
 {
   int pos = line.pos();
 
@@ -7075,7 +7938,7 @@ parseInteger(CParseLine &line, int &i)
 
 bool
 CGnuPlot::
-getIntegerVariable(const std::string &name, int &value)
+getIntegerVariable(const std::string &name, int &value) const
 {
   CExprVariablePtr var = CExprInst->getVariable(name);
 
@@ -7096,7 +7959,7 @@ getIntegerVariable(const std::string &name, int &value)
 
 bool
 CGnuPlot::
-getRealVariable(const std::string &name, double &value)
+getRealVariable(const std::string &name, double &value) const
 {
   CExprVariablePtr var = CExprInst->getVariable(name);
 
@@ -7117,7 +7980,7 @@ getRealVariable(const std::string &name, double &value)
 
 bool
 CGnuPlot::
-parseReal(CParseLine &line, double &r)
+parseReal(CParseLine &line, double &r) const
 {
   line.skipSpace();
 
@@ -7212,7 +8075,7 @@ parseReal(CParseLine &line, double &r)
 
 bool
 CGnuPlot::
-parseString(CParseLine &line, std::string &str, const std::string &msg)
+parseString(CParseLine &line, std::string &str, const std::string &msg) const
 {
   str = "";
 
@@ -7269,7 +8132,7 @@ parseString(CParseLine &line, std::string &str, const std::string &msg)
 
 bool
 CGnuPlot::
-getStringVariable(const std::string &name, std::string &value)
+getStringVariable(const std::string &name, std::string &value) const
 {
   CExprVariablePtr var = CExprInst->getVariable(name);
 
@@ -7291,7 +8154,7 @@ parsePosition(CParseLine &line, CGnuPlotPosition &pos)
 {
   CGnuPlotTypes::CoordSys system;
 
-  if (parseOptionValue(this, line, system, "coord system"))
+  if (parseOptionValue(this, line, system))
     pos.setSystemX(system);
   else
     pos.setSystemX(CGnuPlotTypes::CoordSys::FIRST);
@@ -7304,7 +8167,7 @@ parsePosition(CParseLine &line, CGnuPlotPosition &pos)
   if (! line.skipSpaceAndChar(','))
     return false;
 
-  if (parseOptionValue(this, line, system, "coord system"))
+  if (parseOptionValue(this, line, system))
     pos.setSystemY(system);
   else
     pos.setSystemY(pos.systemX());
@@ -7326,7 +8189,7 @@ parseCoordValue(CParseLine &line, CGnuPlotCoordValue &v)
 {
   CGnuPlotTypes::CoordSys system;
 
-  if (parseOptionValue(this, line, system, "coord system"))
+  if (parseOptionValue(this, line, system))
     v.setSystem(system);
   else
     v.setSystem(CGnuPlotTypes::CoordSys::FIRST);
@@ -7371,7 +8234,7 @@ parseSize(CParseLine &line, CGnuPlotSize &size)
 {
   CGnuPlotTypes::CoordSys system;
 
-  if (parseOptionValue(this, line, system, "coord system"))
+  if (parseOptionValue(this, line, system))
     size.setSystemX(system);
   else
     size.setSystemX(CGnuPlotTypes::CoordSys::FIRST);
@@ -7384,7 +8247,7 @@ parseSize(CParseLine &line, CGnuPlotSize &size)
   if (! line.skipSpaceAndChar(','))
     return false;
 
-  if (parseOptionValue(this, line, system, "coord system"))
+  if (parseOptionValue(this, line, system))
     size.setSystemY(system);
   else
     size.setSystemY(size.systemX());
@@ -7484,7 +8347,7 @@ parseFunction(CParseLine &line, FunctionData &functionData)
 
 bool
 CGnuPlot::
-parseBracketedString(CParseLine &line, std::string &str)
+parseBracketedString(CParseLine &line, std::string &str) const
 {
   if (! line.isChar('('))
     return false;
@@ -7510,7 +8373,7 @@ parseBracketedString(CParseLine &line, std::string &str)
 
 bool
 CGnuPlot::
-readIdentifier(CParseLine &line, std::string &id)
+readIdentifier(CParseLine &line, std::string &id) const
 {
   line.skipSpace();
 
@@ -7610,6 +8473,8 @@ fileReadLine(std::string &line)
 
     ++fileData_.lineNum;
 //std::cerr << fileData_.lineNum << ":" << line << std::endl;
+
+    CExprInst->createIntegerVariable("GPVAL_LINENO", fileData_.lineNum);
   }
 
   return true;
@@ -7620,4 +8485,6 @@ CGnuPlot::
 errorMsg(const std::string &msg) const
 {
   std::cerr << msg << std::endl;
+
+  CExprInst->createStringVariable("GPVAL_ERRMSG" , msg);
 }

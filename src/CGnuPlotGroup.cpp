@@ -33,7 +33,10 @@ CGnuPlot *
 CGnuPlotGroup::
 app() const
 {
-  return window()->app();
+  if (window_)
+    return window_->app();
+  else
+    return 0;
 }
 
 void
@@ -225,10 +228,16 @@ fit()
       plot->calcXRange(&xmin, &xmax);
 
       if (plot->xind() == 1) {
-        xmin1.updateMin(xmin); xmax1.updateMax(xmax);
+        if (xaxis(1).isAutoScaleMin())
+          xmin1.updateMin(xmin);
+        if (xaxis(1).isAutoScaleMax())
+          xmax1.updateMax(xmax);
       }
       else {
-        xmin2.updateMin(xmin); xmax2.updateMax(xmax);
+        if (xaxis(2).isAutoScaleMin())
+          xmin2.updateMin(xmin);
+        if (xaxis(2).isAutoScaleMax())
+          xmax2.updateMax(xmax);
       }
     }
 
@@ -238,33 +247,46 @@ fit()
       plot->calcBoundedYRange(&ymin, &ymax);
 
       if (plot->yind() == 1) {
-        ymin1.updateMin(ymin); ymax1.updateMax(ymax);
+        if (yaxis(1).isAutoScaleMin())
+          ymin1.updateMin(ymin);
+        if (yaxis(1).isAutoScaleMax())
+          ymax1.updateMax(ymax);
       }
       else {
-        ymin2.updateMin(ymin); ymax2.updateMax(ymax);
+        if (yaxis(2).isAutoScaleMin())
+          ymin2.updateMin(ymin);
+        if (yaxis(2).isAutoScaleMax())
+          ymax2.updateMax(ymax);
       }
     }
   }
 
   //---
 
-  if ((! xaxis(1).min().isValid() || ! xaxis(1).max().isValid()) &&
-      (xmin1.isValid() && xmax1.isValid())) {
+  if (! xmin1.isValid()) xmin1 = -10; if (! xmax1.isValid()) xmax1 = 10;
+  if (! ymin1.isValid()) ymin1 = -10; if (! ymax1.isValid()) ymax1 = 10;
+  if (! xmin2.isValid()) xmin2 = -10; if (! xmax2.isValid()) xmax2 = 10;
+  if (! ymin2.isValid()) ymin2 = -10; if (! ymax2.isValid()) ymax2 = 10;
+
+  //---
+
+  if (! xaxis(1).min().isValid() || ! xaxis(1).max().isValid()) {
     double xmin = xmin1.getValue();
     double xmax = xmax1.getValue();
 
-    normalizeXRange(xmin, xmax);
+    if (xaxis(1).isAutoScaleFixMin())
+      normalizeXRange(xmin, xmax);
 
     xaxis(1).setMin(xmin);
     xaxis(1).setMax(xmax);
   }
 
-  if ((! yaxis(1).min().isValid() || ! yaxis(1).max().isValid()) &&
-      (ymin1.isValid() && ymax1.isValid())) {
+  if (! yaxis(1).min().isValid() || ! yaxis(1).max().isValid()) {
     double ymin = ymin1.getValue();
     double ymax = ymax1.getValue();
 
-    normalizeXRange(ymin, ymax);
+    if (yaxis(1).isAutoScaleFixMin())
+      normalizeXRange(ymin, ymax);
 
     yaxis(1).setMin(ymin);
     yaxis(1).setMax(ymax);
@@ -272,23 +294,23 @@ fit()
 
   //---
 
-  if ((! xaxis(2).min().isValid() || ! xaxis(2).max().isValid()) &&
-      (xmin2.isValid() && xmax2.isValid())) {
+  if (! xaxis(2).min().isValid() || ! xaxis(2).max().isValid()) {
     double xmin = xmin2.getValue();
     double xmax = xmax2.getValue();
 
-    normalizeXRange(xmin, xmax);
+    if (xaxis(2).isAutoScaleFixMin())
+      normalizeXRange(xmin, xmax);
 
     xaxis(2).setMin(xmin);
     xaxis(2).setMax(xmax);
   }
 
-  if ((! yaxis(2).min().isValid() || ! yaxis(2).max().isValid()) &&
-      (ymin2.isValid() && ymax2.isValid())) {
+  if (! yaxis(2).min().isValid() || ! yaxis(2).max().isValid()) {
     double ymin = ymin2.getValue();
     double ymax = ymax2.getValue();
 
-    normalizeXRange(ymin, ymax);
+    if (yaxis(2).isAutoScaleFixMin())
+      normalizeXRange(ymin, ymax);
 
     yaxis(2).setMin(ymin);
     yaxis(2).setMax(ymax);
@@ -384,6 +406,8 @@ draw()
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
+  drawClearRect(renderer);
+
   //renderer->clear(backgroundColor());
 
   renderer->setRegion(region());
@@ -442,6 +466,27 @@ draw()
 
   // draw front
   drawAnnotations(CGnuPlotLayer::FRONT);
+}
+
+void
+CGnuPlotGroup::
+drawClearRect(CGnuPlotRenderer *renderer)
+{
+  if (! clearRect_.isValid()) return;
+
+  const CBBox2D &clearRect = clearRect_.getValue();
+
+  CPoint2D p1, p2;
+
+  renderer->regionToPixel(clearRect.getLL(), p1);
+  renderer->regionToPixel(clearRect.getUR(), p2);
+
+  CPoint2D p3, p4;
+
+  renderer->pixelToWindow(p1, p3);
+  renderer->pixelToWindow(p2, p4);
+
+  renderer->fillRect(CBBox2D(p3, p4), window()->backgroundColor());
 }
 
 CGnuPlotAxis *
@@ -930,53 +975,63 @@ drawXAxes(int xind, bool drawOther)
   double ymin1 = plotYAxis->getStart();
   double ymax1 = plotYAxis->getEnd  ();
 
-  if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
-    plotXAxis->setMajorIncrement(1);
-    plotXAxis->setDrawMinorTickMark(false);
+  if (! plotXAxis->isInitialized()) {
+    if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
+      plotXAxis->setMajorIncrement(1);
+      plotXAxis->setDrawMinorTickMark(false);
+    }
+    else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
+      plotXAxis->setMajorIncrement(1);
+    }
+
+    if (xaxis.isDisplayed()) {
+      plotXAxis->setLabel(xaxis.text());
+
+      if (getLogScale(LogScale::X)) {
+        plotXAxis->setLogarithmic(true);
+        plotXAxis->setLogarithmicBase(getLogScale(LogScale::X));
+      }
+      else
+        plotXAxis->setLogarithmic(false);
+
+      plotXAxis->setDrawLine(false);
+      plotXAxis->setDrawTickMark(xaxis.showTics());
+
+      plotXAxis->setTickInside(xind == 1);
+      plotXAxis->setDrawTickLabel(true);
+      plotXAxis->setLabelInside(xind == 2);
+      plotXAxis->setDrawLabel(true);
+
+      if (xaxis.isTime())
+        plotXAxis->setTimeFormat(xaxis.format());
+
+      //---
+
+      plotXAxis->setTickInside1(false);
+      plotXAxis->setDrawTickLabel1(false);
+      plotXAxis->setLabelInside1(false);
+      plotXAxis->setDrawLabel1(false);
+      plotXAxis->setDrawTickMark1(xaxis.isMirror());
+
+      //---
+
+      plotXAxis->setGrid(xaxis.hasGrid());
+    }
+
+    plotXAxis->setInitialized(true);
   }
-  else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
-    plotXAxis->setMajorIncrement(1);
-  }
+
+  //---
 
   renderer->setRange(getDisplayRange(xind, 1));
   renderer->setReverse(xaxis.isReverse(), false);
 
-  if (xaxis.isDisplayed()) {
-    plotXAxis->setLabel(xaxis.text());
+  // draw major (bottom)
+  plotXAxis->drawAxis(xind == 2 ? ymax1 : ymin1, true);
 
-    if (getLogScale(LogScale::X)) {
-      plotXAxis->setLogarithmic(true);
-      plotXAxis->setLogarithmicBase(getLogScale(LogScale::X));
-    }
-    else
-      plotXAxis->setLogarithmic(false);
-
-    plotXAxis->setDrawLine(false);
-    plotXAxis->setDrawTickMark(xaxis.showTics());
-
-    // draw major (bottom)
-    plotXAxis->setTickInside(xind == 1);
-    plotXAxis->setDrawTickLabel(true);
-    plotXAxis->setLabelInside(xind == 2);
-    plotXAxis->setDrawLabel(true);
-
-    if (xaxis.isTime())
-      plotXAxis->setTimeFormat(xaxis.format());
-
-    plotXAxis->drawAxis(xind == 2 ? ymax1 : ymin1);
-
-    // draw minor (top)
-    if (drawOther) {
-      plotXAxis->setTickInside(false);
-      plotXAxis->setDrawTickLabel(false);
-      plotXAxis->setDrawLabel(false);
-      plotXAxis->setDrawTickMark(xaxis.isMirror());
-
-      plotXAxis->drawAxis(ymax1);
-    }
-
-    plotXAxis->setGrid(xaxis.hasGrid());
-  }
+  // draw minor (top)
+  if (drawOther)
+    plotXAxis->drawAxis(ymax1, false);
 
   if (plotXAxis->hasGrid())
     plotXAxis->drawGrid(ymin1, ymax1);
@@ -1001,49 +1056,57 @@ drawYAxes(int yind, bool drawOther)
 //double ymin1 = plotYAxis->getStart();
 //double ymax1 = plotYAxis->getEnd  ();
 
-  if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
-    plotYAxis->setDrawMinorTickMark(false);
+  if (! plotYAxis->isInitialized()) {
+    if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
+      plotYAxis->setDrawMinorTickMark(false);
+    }
+
+    if (yaxis.isDisplayed()) {
+      plotYAxis->setLabel(yaxis.text());
+
+      if (getLogScale(LogScale::Y)) {
+        plotYAxis->setLogarithmic(true);
+        plotYAxis->setLogarithmicBase(getLogScale(LogScale::Y));
+      }
+      else
+        plotYAxis->setLogarithmic(false);
+
+      plotYAxis->setDrawLine(false);
+      plotYAxis->setDrawTickMark(yaxis.showTics());
+
+      plotYAxis->setTickInside(yind == 1);
+      plotYAxis->setDrawTickLabel(true);
+      plotYAxis->setLabelInside(yind == 2);
+      plotYAxis->setDrawLabel(true);
+
+      if (yaxis.isTime())
+        plotYAxis->setTimeFormat(yaxis.format());
+
+      //---
+
+      plotYAxis->setTickInside1(false);
+      plotYAxis->setDrawTickLabel1(false);
+      plotYAxis->setLabelInside1(false);
+      plotYAxis->setDrawLabel1(false);
+      plotYAxis->setDrawTickMark1(yaxis.isMirror());
+
+      //---
+
+      plotYAxis->setGrid(yaxis.hasGrid());
+    }
+
+    plotYAxis->setInitialized(true);
   }
 
   renderer->setRange(getDisplayRange(1, yind));
   renderer->setReverse(false, yaxis.isReverse());
 
-  if (yaxis.isDisplayed()) {
-    plotYAxis->setLabel(yaxis.text());
+  // draw major (left)
+  plotYAxis->drawAxis(yind == 2 ? xmax1 : xmin1, true);
 
-    if (getLogScale(LogScale::Y)) {
-      plotYAxis->setLogarithmic(true);
-      plotYAxis->setLogarithmicBase(getLogScale(LogScale::Y));
-    }
-    else
-      plotYAxis->setLogarithmic(false);
-
-    plotYAxis->setDrawLine(false);
-    plotYAxis->setDrawTickMark(yaxis.showTics());
-
-    // draw major (left)
-    plotYAxis->setTickInside(yind == 1);
-    plotYAxis->setDrawTickLabel(true);
-    plotYAxis->setLabelInside(yind == 2);
-    plotYAxis->setDrawLabel(true);
-
-    if (yaxis.isTime())
-      plotYAxis->setTimeFormat(yaxis.format());
-
-    plotYAxis->drawAxis(yind == 2 ? xmax1 : xmin1);
-
-    // draw right
-    if (drawOther) {
-      plotYAxis->setTickInside(false);
-      plotYAxis->setDrawTickLabel(false);
-      plotYAxis->setDrawLabel(false);
-      plotYAxis->setDrawTickMark(yaxis.isMirror());
-
-      plotYAxis->drawAxis(xmax1);
-    }
-
-    plotYAxis->setGrid(yaxis.hasGrid());
-  }
+  // draw minor (right)
+  if (drawOther)
+    plotYAxis->drawAxis(xmax1, false);
 
   if (plotYAxis->hasGrid())
     plotYAxis->drawGrid(xmin1, xmax1);
@@ -1208,9 +1271,9 @@ getDisplayRange(int xind, int yind) const
     th->fit();
   }
 
-  double xmin = xaxis(xind).min().getValue(- 1);
+  double xmin = xaxis(xind).min().getValue(-10);
+  double xmax = xaxis(xind).max().getValue( 10);
   double ymin = yaxis(yind).min().getValue(-10);
-  double xmax = xaxis(xind).max().getValue(  1);
   double ymax = yaxis(yind).max().getValue( 10);
 
   return CBBox2D(xmin, ymin, xmax, ymax);

@@ -1,5 +1,6 @@
 #include <CGnuPlotPalette.h>
 #include <CGnuPlotUtil.h>
+#include <CAngle.h>
 
 CRGBA
 CGnuPlotPalette::
@@ -62,18 +63,18 @@ interp(int ind, double x) const
     case  6: return pow(x, 4);
     case  7: return sqrt(x);
     case  8: return sqrt(sqrt(x));
-    case  9: return sin(Deg2Rad(90*x));
-    case 10: return cos(Deg2Rad(90*x));
+    case  9: return sin(CAngle::Deg2Rad(90*x));
+    case 10: return cos(CAngle::Deg2Rad(90*x));
     case 11: return fabs(x - 0.5);
     case 12: return pow(2*x - 1, 2);
-    case 13: return sin(Deg2Rad(180*x));
-    case 14: return fabs(cos(Deg2Rad(180*x)));
-    case 15: return sin(Deg2Rad(360*x));
-    case 16: return cos(Deg2Rad(360*x));
-    case 17: return fabs(sin(Deg2Rad(360*x)));
-    case 18: return fabs(cos(Deg2Rad(360*x)));
-    case 19: return fabs(sin(Deg2Rad(720*x)));
-    case 20: return fabs(cos(Deg2Rad(720*x)));
+    case 13: return sin(CAngle::Deg2Rad(180*x));
+    case 14: return fabs(cos(CAngle::Deg2Rad(180*x)));
+    case 15: return sin(CAngle::Deg2Rad(360*x));
+    case 16: return cos(CAngle::Deg2Rad(360*x));
+    case 17: return fabs(sin(CAngle::Deg2Rad(360*x)));
+    case 18: return fabs(cos(CAngle::Deg2Rad(360*x)));
+    case 19: return fabs(sin(CAngle::Deg2Rad(720*x)));
+    case 20: return fabs(cos(CAngle::Deg2Rad(720*x)));
     case 21: return 3*x;
     case 22: return 3*x - 1;
     case 23: return 3*x - 2;

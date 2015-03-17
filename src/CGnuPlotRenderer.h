@@ -130,6 +130,8 @@ class CGnuPlotRenderer {
   double windowWidthToPixelWidth  (double w);
   double windowHeightToPixelHeight(double w);
 
+  void regionToPixel(const CPoint2D &r, CPoint2D &p);
+
  protected:
   CGnuPlotWindow *window_ { 0 };     // current window
   int             width_ { 100 };    // pixel width

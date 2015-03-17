@@ -151,6 +151,14 @@ PaletteColorTypeConv paletteColorTypeConv({
   { CGnuPlotPalette::ColorType::DEFINED, CQGnuPlot::PaletteColorDefined },
 });
 
+typedef CEnumConv<CGnuPlotArrow::CoordType, CQGnuPlot::ArrowCoordType> ArrorColorTypeConv;
+
+ArrorColorTypeConv arrowCoordTypeConv({
+  { CGnuPlotArrow::CoordType::FROM_TO   , CQGnuPlot::ArrowCoordFromTo    },
+  { CGnuPlotArrow::CoordType::FROM_RTO  , CQGnuPlot::ArrowCoordFromRTo   },
+  { CGnuPlotArrow::CoordType::FROM_ANGLE, CQGnuPlot::ArrowCoordFromAngle },
+});
+
 }
 
 //---
@@ -327,4 +335,20 @@ CQGnuPlotUtil::
 paletteColorTypeConv(const CQGnuPlot::PaletteColorType &layer)
 {
   return Conv::paletteColorTypeConv.conv(layer);
+}
+
+//---
+
+CQGnuPlot::ArrowCoordType
+CQGnuPlotUtil::
+arrowCoordTypeConv(const CGnuPlotArrow::CoordType  &type)
+{
+  return Conv::arrowCoordTypeConv.conv(type);
+}
+
+CGnuPlotArrow::CoordType
+CQGnuPlotUtil::
+arrowCoordTypeConv(const CQGnuPlot::ArrowCoordType &type)
+{
+  return Conv::arrowCoordTypeConv.conv(type);
 }

@@ -76,6 +76,12 @@ class CUnixFile {
     return true;
   }
 
+  void rewind() {
+    if (! fp_) return;
+
+    (void) fseek(fp_, 0L, SEEK_SET);
+  }
+
  private:
   std::string  filename_;
   FILE        *fp_;

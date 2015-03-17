@@ -1,5 +1,6 @@
 #include <CQPropertyItem.h>
 #include <CQPropertyEditor.h>
+#include <CQPropertyDelegate.h>
 #include <CQUtil.h>
 
 #include <QVariant>
@@ -44,6 +45,37 @@ CQPropertyItem(const CQPropertyItem &item) :
     setFlags(flags() | Qt::ItemIsEditable);
 }
 
+// handle click
+bool
+CQPropertyItem::
+click()
+{
+  CQUtil::PropInfo propInfo;
+  QString          typeName;
+
+  if (CQUtil::getPropInfo(object_, name_, &propInfo))
+    typeName = propInfo.typeName();
+
+  QVariant var;
+
+  if (! CQUtil::getProperty(object_, name_, var))
+    var = QVariant("");
+
+  if (propInfo.isEnumType())
+    return false;
+
+  if (typeName == "bool") {
+    if (! CQUtil::setProperty(object_, name_, ! var.toBool()))
+      std::cerr << "Failed to set property " << name_.toStdString() << std::endl;
+
+    emit valueChanged(object_, name_);
+
+    return true;
+  }
+
+  return false;
+}
+
 /*! get property value
 */
 QString
@@ -56,14 +88,14 @@ getEditorData() const
   if (CQUtil::getPropInfo(object_, name_, &propInfo))
     typeName = propInfo.typeName();
 
-  QVariant value;
+  QVariant var;
   QString  valueStr;
 
-  if (CQUtil::getProperty(object_, name_, value))
-    valueStr = CQUtil::variantToString(value);
+  if (CQUtil::getProperty(object_, name_, var))
+    valueStr = CQUtil::variantToString(var);
 
   if (propInfo.isEnumType()) {
-    int ind = value.toInt();
+    int ind = var.toInt();
 
     const QStringList &names = propInfo.enumNames();
 
@@ -86,19 +118,18 @@ createEditor(QWidget *parent)
   if (CQUtil::getPropInfo(object_, name_, &propInfo))
     typeName = propInfo.typeName();
 
-  QVariant value;
-  QString  valueStr;
+  QVariant var;
 
-  if (CQUtil::getProperty(object_, name_, value))
-    valueStr = CQUtil::variantToString(value);
+  if (! CQUtil::getProperty(object_, name_, var))
+    var = QVariant("");
 
   if (propInfo.isEnumType()) {
-    int ind = value.toInt();
+    int ind = var.toInt();
 
     const QStringList &names = propInfo.enumNames();
 
     if (ind >= 0 && ind < names.count())
-      valueStr = names[ind];
+      var = QVariant(names[ind]);
   }
 
   CQPropertyEditorFactory *editor = editor_;
@@ -109,12 +140,14 @@ createEditor(QWidget *parent)
   if      (editor) {
     widget_ = editor->createEdit(parent);
 
-    editor->setValue(widget_, valueStr);
+    editor->setValue(widget_, var);
 
     editor->connect(widget_, this, SLOT(updateValue()));
   }
   // enum - create combobox
   else if (propInfo.isEnumType()) {
+    QString valueStr = var.toString();
+
     const QStringList &names = propInfo.enumNames();
 
     QComboBox *combo = new QComboBox(parent);
@@ -128,14 +161,11 @@ createEditor(QWidget *parent)
     widget_ = combo;
   }
   // bool - create toggle
+  // TODO: use button press (no need to editor) see CQCheckTree.cpp
   else if (typeName == "bool") {
     QCheckBox *check = new QCheckBox(parent);
 
-    QVariant vBool(valueStr);
-
-    vBool.convert(QVariant::Bool);
-
-    check->setChecked(vBool.toBool());
+    check->setChecked(var.toBool());
 
     check->setText(check->isChecked() ? "true" : "false");
 
@@ -149,6 +179,8 @@ createEditor(QWidget *parent)
   // anything else - create line edit
   else {
     QLineEdit *edit = new QLineEdit(parent);
+
+    QString valueStr = var.toString();
 
     edit->setText(valueStr);
 
@@ -194,12 +226,12 @@ setEditorData(const QString &value)
 */
 void
 CQPropertyItem::
-setEditorData(const QVariant &value)
+setEditorData(const QVariant &var)
 {
   CQUtil::PropInfo propInfo;
 
   if (CQUtil::getPropInfo(object_, name_, &propInfo) && propInfo.isWritable()) {
-    if (! CQUtil::setProperty(object_, name_, value))
+    if (! CQUtil::setProperty(object_, name_, var))
       std::cerr << "Failed to set property " << name_.toStdString() << std::endl;
 
     emit valueChanged(object_, name_);
@@ -225,9 +257,9 @@ updateValue()
     editor = CQPropertyEditorMgr::instance()->getEditor(typeName);
 
   if      (editor) {
-    QVariant value = editor->getValue(widget_);
+    QVariant var = editor->getValue(widget_);
 
-    setEditorData(value);
+    setEditorData(var);
   }
   else if (propInfo.isEnumType()) {
     QComboBox *combo = qobject_cast<QComboBox *>(widget_);
@@ -255,4 +287,39 @@ updateValue()
 
     setEditorData(text);
   }
+}
+
+bool
+CQPropertyItem::
+paint(const CQPropertyDelegate *delegate, QPainter *painter,
+      const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+  CQUtil::PropInfo propInfo;
+  QString          typeName;
+
+  if (CQUtil::getPropInfo(object_, name_, &propInfo))
+    typeName = propInfo.typeName();
+
+  QVariant var;
+
+  if (! CQUtil::getProperty(object_, name_, var))
+    var = QVariant("");
+
+  if (propInfo.isEnumType())
+    return false;
+
+  if      (typeName == "bool") {
+    delegate->drawCheck(painter, option, var.toBool(), index);
+    return true;
+  }
+  else if (typeName == "QColor") {
+    delegate->drawColor(painter, option, var.value<QColor>(), index);
+    return true;
+  }
+  else if (typeName == "QFont") {
+    delegate->drawFont(painter, option, var.value<QFont>(), index);
+    return true;
+  }
+
+  return false;
 }

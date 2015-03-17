@@ -32,6 +32,13 @@ class CQPropertyDelegate : public QItemDelegate {
 
   QWidget *createEdit(QWidget *parent, const QString &text) const;
 
+  void drawCheck(QPainter *painter, const QStyleOptionViewItem &option,
+                 bool checked, const QModelIndex &index) const;
+  void drawColor(QPainter *painter, const QStyleOptionViewItem &option,
+                 const QColor &c, const QModelIndex &index) const;
+  void drawFont (QPainter *painter, const QStyleOptionViewItem &option,
+                 const QFont &f, const QModelIndex &index) const;
+
  private:
   QTreeWidget *tree_;
 };

@@ -48,6 +48,8 @@ class CParseLine {
 
   char getChar() { return str_[pos_++]; }
 
+  void ungetChar(int n=1) { if (n <= pos_) pos_ -= n; }
+
   std::string getChars(int n) {
     std::string s;
 
@@ -82,8 +84,6 @@ class CParseLine {
       return false;
 
     skipChar();
-
-    skipSpace();
 
     return true;
   }
