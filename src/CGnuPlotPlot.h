@@ -75,9 +75,9 @@ class CGnuPlotPlot {
   typedef CGnuPlotTypes::Smooth         Smooth;
   typedef CGnuPlotTypes::SymbolType     SymbolType;
   typedef CGnuPlot::Bars                Bars;
-  typedef CGnuPlot::BoxWidth            BoxWidth;
   typedef CGnuPlot::AxesData            AxesData;
   typedef CGnuPlot::FilledCurve         FilledCurve;
+  typedef CGnuPlot::Hidden3DData        Hidden3DData;
   typedef CGnuPlotCache<CGnuPlotBar>    BarCache;
   typedef CGnuPlotCache<CGnuPlotPie>    PieCache;
   typedef CGnuPlotCache<CGnuPlotBubble> BubbleCache;
@@ -164,14 +164,17 @@ class CGnuPlotPlot {
 
   //---
 
-  const BoxWidth &boxWidth() const { return boxWidth_; }
-  void setBoxWidth(const BoxWidth &w) { boxWidth_ = w; }
+  const CGnuPlotBoxWidth &boxWidth() const { return boxWidth_; }
+  void setBoxWidth(const CGnuPlotBoxWidth &w) { boxWidth_ = w; }
 
-  const BoxWidthType &getBoxWidthType() const { return boxWidth_.type; }
-  void setBoxWidthType(const BoxWidthType &t) { boxWidth_.type = t; }
+  CGnuPlotTypes::BoxWidthType getBoxWidthType() const { return boxWidth_.type(); }
+  void setBoxWidthType(const CGnuPlotTypes::BoxWidthType &t) { boxWidth_.setType(t); }
 
-  double getBoxWidthValue() const { return boxWidth_.width; }
-  void setBoxWidthValue(double s) { boxWidth_.width = s; }
+  double getBoxWidthValue() const { return boxWidth_.width(); }
+  void setBoxWidthValue(double w) { boxWidth_.setWidth(w); }
+
+  bool getBoxWidthCalc() const { return boxWidth_.isCalc(); }
+  void setBoxWidthCalc(bool b) { boxWidth_.setCalc(b); }
 
   //---
 
@@ -229,11 +232,16 @@ class CGnuPlotPlot {
   const FilledCurve &filledCurve() const { return filledCurve_; }
   void setFilledCurve(const FilledCurve &c) { filledCurve_ = c; }
 
-  int trianglePattern3D() const { return trianglePattern3D_; }
-  void setTrianglePattern3D(int n) { trianglePattern3D_ = n; }
-
   double whiskerBars() const { return whiskerBars_; }
   void setWhiskerBars(double w) { whiskerBars_ = w; }
+
+  //---
+
+  const Hidden3DData &hidden3D() const { return hidden3D_; }
+  void setHidden3D(const Hidden3DData &h) { hidden3D_ = h; }
+
+  int trianglePattern3D() const { return hidden3D_.trianglePattern; }
+  void setTrianglePattern3D(int i) { hidden3D_.trianglePattern = i; }
 
   //---
 
@@ -406,7 +414,7 @@ class CGnuPlotPlot {
   bool               matrix_ { false };
   CGnuPlotImageStyle imageStyle_;
   Bars               bars_;
-  BoxWidth           boxWidth_;                         // box widths
+  CGnuPlotBoxWidth   boxWidth_;                         // box widths
   FilledCurve        filledCurve_;                      // filled curve data
   PlotStyle          style_ { PlotStyle::POINTS};       // plot style
   CGnuPlotFillStyle  fillStyle_;                        // fill style
@@ -426,7 +434,7 @@ class CGnuPlotPlot {
   ZPolygons          surface_;                          // surface data
   bool               surfaceSet_ { false };
   COptReal           surfaceZMin_, surfaceZMax_;
-  int                trianglePattern3D_ { 3 };          // 3d surface pattern
+  Hidden3DData       hidden3D_;
   double             whiskerBars_ { 0 };                // whisker bar data
   BarCache           barCache_;
   PieCache           pieCache_;

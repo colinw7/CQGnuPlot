@@ -16,7 +16,7 @@ CQPropertyItem::
 CQPropertyItem(QTreeWidgetItem *parent, const QString &name, const QString &info,
                const QString &type, QObject *object) :
  QObject(), QTreeWidgetItem(parent, PROPERTY_ITEM_ID), name_(name), info_(info),
- type_(type), object_(object), widget_(0), editor_(0)
+ type_(type), object_(object), widget_(0), label_(), editor_(0)
 {
   setText(0, name_ + info_);
   setData(1, Qt::EditRole, getEditorData());
@@ -33,7 +33,7 @@ CQPropertyItem(QTreeWidgetItem *parent, const QString &name, const QString &info
 CQPropertyItem::
 CQPropertyItem(const CQPropertyItem &item) :
  QObject(), QTreeWidgetItem(item), name_(item.name_), info_(item.info_),
- type_(item.type_), object_(item.object_), widget_(0), editor_(0)
+ type_(item.type_), object_(item.object_), widget_(0), label_(), editor_(0)
 {
   setText(0, name_ + info_);
   setData(1, Qt::EditRole, getEditorData());
@@ -43,6 +43,32 @@ CQPropertyItem(const CQPropertyItem &item) :
 
   if (CQUtil::getPropInfo(object_, name_, &propInfo) && propInfo.isWritable())
     setFlags(flags() | Qt::ItemIsEditable);
+}
+
+//! set label
+CQPropertyItem *
+CQPropertyItem::
+setLabel(const QString &label)
+{
+  label_ = label;
+
+  if (label_.length())
+    setText(0, label_);
+  else
+    setText(0, name_ + info_);
+
+  return this;
+}
+
+//! get label
+QString
+CQPropertyItem::
+getLabel() const
+{
+  if (label_.length())
+    return label_;
+
+  return name_;
 }
 
 // handle click
@@ -78,7 +104,7 @@ click()
 
 /*! get property value
 */
-QString
+QVariant
 CQPropertyItem::
 getEditorData() const
 {
@@ -89,10 +115,9 @@ getEditorData() const
     typeName = propInfo.typeName();
 
   QVariant var;
-  QString  valueStr;
 
-  if (CQUtil::getProperty(object_, name_, var))
-    valueStr = CQUtil::variantToString(var);
+  if (! CQUtil::getProperty(object_, name_, var))
+    var = QVariant("");
 
   if (propInfo.isEnumType()) {
     int ind = var.toInt();
@@ -100,10 +125,10 @@ getEditorData() const
     const QStringList &names = propInfo.enumNames();
 
     if (ind >= 0 && ind < names.count())
-      valueStr = names[ind];
+      var = QString(names[ind]);
   }
 
-  return valueStr;
+  return var;
 }
 
 /*! create editor widget for property
@@ -231,8 +256,24 @@ setEditorData(const QVariant &var)
   CQUtil::PropInfo propInfo;
 
   if (CQUtil::getPropInfo(object_, name_, &propInfo) && propInfo.isWritable()) {
-    if (! CQUtil::setProperty(object_, name_, var))
-      std::cerr << "Failed to set property " << name_.toStdString() << std::endl;
+    if (propInfo.isEnumType()) {
+      QString varStr = var.toString();
+
+      const QStringList &names = propInfo.enumNames();
+
+      for (int i = 0; i < names.size(); ++i) {
+        if (varStr == names[i]) {
+          QVariant v(i);
+
+          if (! CQUtil::setProperty(object_, name_, v))
+            std::cerr << "Failed to set property " << name_.toStdString() << std::endl;
+        }
+      }
+    }
+    else {
+      if (! CQUtil::setProperty(object_, name_, var))
+        std::cerr << "Failed to set property " << name_.toStdString() << std::endl;
+    }
 
     emit valueChanged(object_, name_);
   }

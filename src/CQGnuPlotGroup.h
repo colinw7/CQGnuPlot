@@ -39,10 +39,16 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   Q_PROPERTY(bool   xgrid        READ getXGrid        WRITE setXGrid)
   Q_PROPERTY(bool   ygrid        READ getYGrid        WRITE setYGrid)
 
-  Q_PROPERTY(int    borders      READ getBorders      WRITE setBorders    )
-  Q_PROPERTY(double borderWidth  READ getBorderWidth  WRITE setBorderWidth)
+  Q_PROPERTY(int                      borderSides  READ getBorderSides  WRITE setBorderSides)
+  Q_PROPERTY(CQGnuPlot::DrawLayerType borderLayer  READ getBorderLayer  WRITE setBorderLayer)
+  Q_PROPERTY(double                   borderWidth  READ getBorderWidth  WRITE setBorderWidth)
+  Q_PROPERTY(double                   borderStyle  READ getBorderStyle  WRITE setBorderStyle)
+  Q_PROPERTY(double                   borderType   READ getBorderType   WRITE setBorderType )
 
   Q_PROPERTY(CQGnuPlot::HistogramStyle histogramStyle READ histogramStyle WRITE setHistogramStyle)
+
+ public:
+  typedef CQGnuPlot::DrawLayerType DrawLayerType;
 
  public:
   CQGnuPlotGroup(CQGnuPlotWindow *window);
@@ -60,6 +66,9 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
 
   CQGnuPlot::HistogramStyle histogramStyle() const;
   void setHistogramStyle(const CQGnuPlot::HistogramStyle &s);
+
+  DrawLayerType getBorderLayer() const;
+  void setBorderLayer(const DrawLayerType &layer);
 
   void draw() override;
 

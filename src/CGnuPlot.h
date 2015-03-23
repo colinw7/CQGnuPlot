@@ -73,7 +73,9 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotHistogramData.h>
 #include <CGnuPlotMultiplot.h>
 #include <CGnuPlotPrefValue.h>
+#include <CGnuPlotBoxWidth.h>
 #include <CGnuPlotTypes.h>
+#include <CGnuPlotBoxPlot.h>
 
 //------
 
@@ -123,141 +125,130 @@ class CGnuPlot {
   enum class VariableName {
     NONE,
 
+    ANGLES,
+    ARROW,
+    AUTOSCALE,
+    BARS,
+    BIND,
+    BMARGIN,
+    BORDER,
+    BOXWIDTH,
+    CBLABEL,
+    CBRANGE,
+    CBTICS,
+    CLIP,
+    CNTRLABEL,
+    CNTRPARAM,
+    COLORBOX,
+    COLORNAMES,
+    COLORSEQUENCE,
+    CONTOUR,
+    CPLANE,
+    DASHTYPE,
     DATAFILE,
+    DEBUG,
     DECIMALSIGN,
+    DGRID3D,
+    DUMMY,
+    EDEBUG,
+    ELLIPSE,
     ENCODING,
     FIT,
     FONTPATH,
+    FORMAT,
+    FUNCTIONS,
+    GRID,
+    HIDDEN3D,
     HISTORY,
     HISTORYSIZE,
-    LOADPATH,
-    MACROS,
-    MOUSE,
-
-    ANGLES,
-    DUMMY,
-    MAPPING,
-    PARAMETRIC,
-    POLAR,
-    SAMPLES,
-    ZERO,
-
-    BORDER,
-    CLIP,
-    LOGSCALE,
-    BMARGIN,
-    LMARGIN,
-    RMARGIN,
-    TMARGIN,
-    MARGINS,
-    MULTIPLOT,
-    OFFSETS,
-    ORIGIN,
-    SIZE,
-
+    ISOSAMPLES,
     KEY,
-    ARROW,
-    ELLIPSE,
     LABEL,
-    POLYGON,
-    RECTANGLE,
-    OBJECT,
-    TIMESTAMP,
-    TITLE,
-
-    STYLE,
-    DASHTYPE,
     LINETYPE,
-    POINTINTERVALBOX,
-
-    BARS,
-    BOXWIDTH,
-    POINTSIZE,
-
-    AUTOSCALE,
-    FORMAT,
-    GRID,
-
-    XLABEL,
-    X2LABEL,
-    YLABEL,
-    Y2LABEL,
-    ZLABEL,
-    CBLABEL,
-
-    XRANGE,
-    X2RANGE,
-    YRANGE,
-    Y2RANGE,
-    ZRANGE,
-    CBRANGE,
-    TRANGE,
-    RRANGE,
-
-    TICS,
-    XTICS,
-    YTICS,
-    X2TICS,
-    Y2TICS,
-    ZTICS,
-    CBTICS,
-    RTICS,
+    LINK,
+    LMARGIN,
+    LOADPATH,
+    LOCALE,
+    LOGSCALE,
+    MACROS,
+    MAPPING,
+    MARGINS,
+    MOUSE,
+    MULTIPLOT,
+    MX2TICS,
     MXTICS,
+    MY2TICS,
     MYTICS,
     MZTICS,
-    MX2TICS,
-    MY2TICS,
-
-    TICSCALE,
-    ZEROAXIS,
-    RAXIS,
-    PAXIS,
-    LINK,
-
-    LOCALE,
-    TIMEFMT,
-    XDATA,
-    YDATA,
-    X2DATA,
-    Y2DATA,
-    XDTICS,
-    XMTICS,
-
-    DGRID3D,
-    HIDDEN3D,
-    ISOSAMPLES,
-    SURFACE,
-    VIEW,
-    XYPLANE,
-
-    CPLANE,
-    CNTRPARAM,
-    CONTOUR,
-
-    COLORBOX,
-    COLORSEQUENCE,
-    PALETTE,
-    PM3D,
-
+    OBJECT,
+    OFFSETS,
+    ORIGIN,
     OUTPUT,
+    PALETTE,
+    PARAMETRIC,
+    PAXIS,
+    PM3D,
+    POINTINTERVALBOX,
+    POINTSIZE,
+    POLAR,
+    POLYGON,
     PRINT,
+    RAXIS,
+    RECTANGLE,
+    RMARGIN,
+    RRANGE,
+    RTICS,
+    SAMPLES,
+    SIZE,
+    STYLE,
+    SURFACE,
     TABLE,
     TERMINAL,
     TERMOPTION,
-
+    TICS,
+    TICSCALE,
+    TIMEFMT,
+    TIMESTAMP,
+    TITLE,
+    TMARGIN,
+    TRANGE,
     VARIABLES,
-    FUNCTIONS,
     VERSION,
-
-    DEBUG,
-    EDEBUG
+    VIEW,
+    X2DATA,
+    X2LABEL,
+    X2RANGE,
+    X2TICS,
+    XDATA,
+    XDTICS,
+    XLABEL,
+    XMTICS,
+    XRANGE,
+    XTICS,
+    XYPLANE,
+    Y2DATA,
+    Y2LABEL,
+    Y2RANGE,
+    Y2TICS,
+    YDATA,
+    YLABEL,
+    YRANGE,
+    YTICS,
+    ZERO,
+    ZEROAXIS,
+    ZLABEL,
+    ZRANGE,
+    ZTICS,
   };
 
   enum class DataFileVar {
     NONE,
+    FORTRAN,
+    NOFPE_TRAP,
+    MISSING,
     SEPARATOR,
-    COMMENTS_CHAR,
-    MISSING
+    COMMENTS_CHARS,
+    BINARY,
   };
 
   enum class StyleVar {
@@ -361,43 +352,22 @@ class CGnuPlot {
     TEST_PALETTE
   };
 
-  enum class AngleType {
-    RADIANS,
-    DEGREES
-  };
-
   enum class TestType {
     NONE,
     TERMINAL,
     PALETTE
   };
 
-  typedef CGnuPlotTypes::BoxWidthType   BoxWidthType;
   typedef CGnuPlotTypes::Smooth         Smooth;
   typedef CGnuPlotTypes::HistogramStyle HistogramStyle;
   typedef CGnuPlotTypes::LogScale       LogScale;
   typedef std::map<LogScale,int>        LogScaleMap;
+  typedef CGnuPlotTypes::AngleType      AngleType;
+  typedef CGnuPlotTypes::DrawLayer      DrawLayer;
 
   //---
 
   typedef std::map<int,CGnuPlotLineStyleP> LineStyles;
-
-  //---
-
-  struct BoxWidth {
-    BoxWidth(double w=1, BoxWidthType t=BoxWidthType::AUTO) :
-     width(w), type(t) {
-    }
-
-    double       width { 1 };
-    BoxWidthType type  { BoxWidthType::AUTO };
-
-    double getSpacing(double s) const {
-      if      (type == BoxWidthType::ABSOLUTE) return width;
-      else if (type == BoxWidthType::RELATIVE) return width*s;
-      else                                     return s;
-    }
-  };
 
   //---
 
@@ -408,42 +378,71 @@ class CGnuPlot {
 
     double size { 1 };
     bool   front { true };
-  };
 
-  //---
+    void show(std::ostream &os) const {
+      if (size <= 0.0)
+        os << "errors are plotted without bars" << std::endl;
+      else
+        os << "errorbars are plotted in " << (front ? "front" : "back") <<
+              " with bars of size " << size << std::endl;
+    }
 
-  struct BoxPlot {
-    enum class Type {
-      CandleSticks,
-      FinanceBars
-    };
-
-    enum class Labels {
-      Off,
-      Auto,
-      X,
-      X2
-    };
-
-    BoxPlot() { }
-
-    double range        { 0.0 };
-    double fraction     { 0.0 };
-    bool   outliers     { true };
-    int    pointtype    { -1 };
-    Type   type         { Type::CandleSticks };
-    double separation   { 0.0 };
-    Labels labels       { Labels::Off };
-    bool   sorted       { false };
+    void save(std::ostream &os) const {
+      os << "set bar " << size << " " << (front ? "front" : "back") << std::endl;
+    }
   };
 
   //---
 
   typedef std::map<int,CGnuPlotAxisData> IAxisMap;
 
+  struct BorderData {
+    int       sides     { 0xFF };
+    DrawLayer layer     { DrawLayer::FRONT };
+    double    lineWidth { 1.0 };
+    COptInt   lineStyle;
+    COptInt   lineType;
+
+    void unset() {
+      sides = 0;
+    }
+
+    void show(std::ostream &os) const {
+      if (! sides)
+        os << "border is not drawn" << std::endl;
+      else
+        os << "border " << sides << " is drawn in" <<
+              CStrUniqueMatch::valueToString<DrawLayer>(layer) << " layer with" <<
+              " linecolor " << lineStyle <<
+              " linewidth " << lineWidth <<
+              " lineType " << lineType << std::endl;
+    }
+
+    void save(std::ostream &os) const {
+      os << "set border " << sides << " " <<
+            CStrUniqueMatch::valueToString<DrawLayer>(layer) <<
+            " lt " << lineType <<
+            " linewidth " << lineWidth <<
+            " dashtype solid" << std::endl;
+    }
+  };
+
+  struct GridData {
+    bool      enabled        { false };
+    DrawLayer layer          { DrawLayer::DEFAULT };
+    double    polarAngle     { 0 };
+    int       majorLineStyle { -1 };
+    int       minorLineStyle { -1 };
+    int       majorLineType  { -1 };
+    int       minorLineType  { -1 };
+    double    majorLineWidth { 1.0 };
+    double    minorLineWidth { 1.0 };
+  };
+
   struct AxesData {
     AxesData() { }
 
+    GridData         grid;
     IAxisMap         xaxis;
     IAxisMap         yaxis;
     IAxisMap         zaxis;
@@ -451,10 +450,7 @@ class CGnuPlot {
     IAxisMap         taxis;
     CGnuPlotAxisData cbaxis;
     CGnuPlotAxisData raxis;
-    int              borders     { 0xFF };
-    double           borderWidth { 1.0 };
-    COptInt          borderStyle;
-    COptInt          borderType;
+    BorderData       border;
   };
 
   struct StyleIncrement {
@@ -537,6 +533,12 @@ class CGnuPlot {
     std::string assign;
   };
 
+  struct HistoryData {
+    int  size    { 500 };
+    bool numbers { true };
+    bool trim    { true };
+  };
+
   struct Samples {
     int samples1 { 100 };
     int samples2 { 100 };
@@ -553,20 +555,87 @@ class CGnuPlot {
     }
   };
 
-  struct ISOSamples {
-    int samples1 { 10 };
-    int samples2 { 10 };
+  class ISOSamples {
+   public:
+    ISOSamples() { }
 
-    void getValues(int &s1, int &s2) const { s1 = samples1; s2 = samples2; }
-    void setValues(int s1, int s2) { samples1 = s1; samples2 = s2; }
+    void getValues(int &s1, int &s2) const { s1 = samples1_; s2 = samples2_; }
+    void setValues(int s1, int s2) { samples1_ = s1; samples2_ = s2; }
+
+    void unset() { setValues(10, 10); }
+
+    void save(std::ostream &os) const {
+      os << "set isosamples " << samples1_ << ", " << samples2_ << std::endl;
+    }
 
     void show(std::ostream &os) const {
-      os << "set isosamples " << samples1 << ", " << samples2 << std::endl;
+      os << "iso sampling rate is " << samples1_ << ", " << samples2_ << std::endl;
     }
 
-    void print(std::ostream &os) const {
-      os << "iso sampling rate is " << samples1 << ", " << samples2 << std::endl;
-    }
+   private:
+    int samples1_ { 10 };
+    int samples2_ { 10 };
+  };
+
+  struct Clip {
+    bool points { false };
+    bool one    { true  };
+    bool two    { false };
+
+    bool isOn() const { return (points || one || two); }
+  };
+
+  struct DecimalSign {
+    void setChar(char c1) { c = c1; }
+
+    void setLocale(const std::string &str) { locale = str; }
+
+    char        c { '\0' };
+    std::string locale;
+  };
+
+  struct FitData {
+    std::string logfile { false };
+    bool        quiet { false };
+    bool        results { false };
+    bool        brief { false };
+    bool        verbose { false };
+    bool        errorvariables { false };
+    bool        covariancevariables { false };
+    bool        errorscaling { false };
+    bool        prescale { false };
+    int         maxiter { -1 };
+    double      limit { 0 };
+    double      limit_abs { 0 };
+    double      start_lambda { 0 };
+    double      lambda_factor { 0 };
+    std::string script;
+    int         version { 5 };
+  };
+
+  struct Hidden3DData {
+    bool      enabled         { false };
+    DrawLayer layer           { DrawLayer::FRONT };
+    COptReal  offset;
+    int       trianglePattern { 3 };
+    COptInt   undefined;
+    bool      altdiagonal     { false };
+    bool      bentover        { false };
+  };
+
+  struct Surface3DData {
+    bool enabled { false };
+  };
+
+  struct Contour3DData {
+    enum class DrawPos {
+      DRAW_BASE,
+      DRAW_SURFACE,
+      DRAW_BOTH
+    };
+
+    bool    enabled { false };
+    DrawPos pos     { DrawPos::DRAW_BASE };
   };
 
   //---
@@ -683,13 +752,13 @@ class CGnuPlot {
 
   //---
 
-  const BoxWidth &boxWidth() const { return boxWidth_; }
-  void setBoxWidth(const BoxWidth &w) { boxWidth_ = w; }
+  const CGnuPlotBoxWidth &boxWidth() const { return boxWidth_; }
+  void setBoxWidth(const CGnuPlotBoxWidth &w) { boxWidth_ = w; }
 
   //---
 
-  void setBoxPlot(const BoxPlot &b) { boxPlot_ = b; }
-  const BoxPlot &getBoxPlot() const { return boxPlot_; }
+  void setBoxPlot(const CGnuPlotBoxPlot &b) { boxPlot_ = b; }
+  const CGnuPlotBoxPlot &getBoxPlot() const { return boxPlot_; }
 
   void setSmooth(Smooth s) { smooth_ = s; }
   Smooth getSmooth() const { return smooth_; }
@@ -705,14 +774,31 @@ class CGnuPlot {
 
   const LogScaleMap &logScaleMap() const { return logScale_; }
 
-  int trianglePattern3D() const { return trianglePattern3D_; }
-  void setTrianglePattern3D(int n) { trianglePattern3D_ = n; }
-
   double whiskerBars() const { return whiskerBars_; }
   void setWhiskerBars(double w) { whiskerBars_ = w; }
 
   const CGnuPlotCamera &camera() const { return camera_; }
   void setCamera(const CGnuPlotCamera &c) { camera_ = c; }
+
+  //---
+
+  const Hidden3DData &hidden3D() const { return hidden3D_; }
+  void setHidden3D(const Hidden3DData &h) { hidden3D_ = h; }
+
+  //---
+
+  bool surface3D() const { return surface3D_.enabled; }
+  void setSurface3D(bool b) { surface3D_.enabled = b; }
+
+  //---
+
+  bool contour3D() const { return contour3D_.enabled; }
+  void setContour3D(bool b) { contour3D_.enabled = b; }
+
+  //---
+
+  bool pm3D() const { return pm3D_; }
+  void setPm3D(bool b) { pm3D_ = b; }
 
   //------
 
@@ -928,9 +1014,9 @@ class CGnuPlot {
   void pauseCmd   (const std::string &args);
   void rereadCmd  (const std::string &args);
 
+  void showColorNames();
   void showVariables(std::ostream &os, const StringArray &args=StringArray());
   void showFunctions(std::ostream &os);
-  void showDataFile(std::ostream &os, std::map<std::string,bool> &show, bool verbose);
 
   void readBlockLines(Statements &lines, std::string &eline, int depth);
 
@@ -971,9 +1057,6 @@ class CGnuPlot {
 
   CExprCTokenStack compileExpression(const std::string &expr) const;
 
-  void setMissingStr(const std::string &chars) { missingStr_ = chars; }
-  const std::string &getMissingStr() const { return missingStr_; }
-
   void setPrintFile(const std::string &file) { printFile_ = file; }
   const std::string &getPrintFile() const { return printFile_; }
 
@@ -983,6 +1066,8 @@ class CGnuPlot {
   void setTableFile(const std::string &file) { tableFile_ = file; }
   const std::string &getTableFile() const { return tableFile_; }
 
+  //---
+
   void setAngleType(AngleType type);
   AngleType getAngleType() const { return getPrefValue<AngleType>(VariableName::ANGLES); }
   void resetAngleType() { resetPrefValue(VariableName::ANGLES); }
@@ -991,6 +1076,8 @@ class CGnuPlot {
   std::string getAngleTypeString() const {
     return getPrefValueString<AngleType>(VariableName::ANGLES);
   }
+
+  //---
 
   void setStyleIncrementType(StyleIncrementType s) { styleIncrement_.type = s; }
   StyleIncrementType getStyleIncrementType() { return styleIncrement_.type; }
@@ -1004,6 +1091,7 @@ class CGnuPlot {
 
   void setDummyVars(const std::string &dummyVar1, const std::string &dummyVar2);
   void getDummyVars(std::string &dummyVar1, std::string &dummyVar2) const;
+  void resetDummyVars();
 
   const Samples    &samples   () const { return samples_; }
   const ISOSamples &isoSamples() const { return isoSamples_; }
@@ -1032,17 +1120,7 @@ class CGnuPlot {
   const CGnuPlotMultiplot &multiplot() const { return multiplot_; }
   void setMultiplot(const CGnuPlotMultiplot &m) { multiplot_ = m; }
 
-  bool hidden3D() const { return hidden3D_; }
-  void setHidden3D(bool b) { hidden3D_ = b; }
-
-  bool surface3D() const { return surface3D_; }
-  void setSurface3D(bool b) { surface3D_ = b; }
-
-  bool contour3D() const { return contour3D_; }
-  void setContour3D(bool b) { contour3D_ = b; }
-
-  bool pm3D() const { return pm3D_; }
-  void setPm3D(bool b) { pm3D_ = b; }
+  //---
 
   bool parseFunction(CParseLine &line, FunctionData &functionData);
 
@@ -1101,6 +1179,7 @@ class CGnuPlot {
   typedef std::vector<FileData>                 FileDataArray;
   typedef CAutoPtr<CGnuPlotReadLine>            ReadLineP;
   typedef std::map<std::string,std::string>     DummyVarMap;
+  typedef std::vector<std::string>              PathList;
 
   bool                  debug_  { false };
   bool                  edebug_ { false };
@@ -1111,10 +1190,9 @@ class CGnuPlot {
   FileDataArray         fileDataArray_;
   Windows               windows_;
   CGnuPlotFile          dataFile_;
-  std::string           missingStr_;
-  BoxWidth              boxWidth_;
+  CGnuPlotBoxWidth      boxWidth_;
   Bars                  bars_;
-  BoxPlot               boxPlot_;
+  CGnuPlotBoxPlot       boxPlot_;
   std::string           outputFile_;
   std::string           printFile_;
   std::string           lastPlotCmd_;
@@ -1138,6 +1216,7 @@ class CGnuPlot {
   CBBox2D               region_ { 0, 0, 1, 1 };
   Margin                margin_ { 10, 10, 10, 10 };
   CRGBA                 backgroundColor_ { 1, 1, 1};
+  std::string           colorSequence_ { "default" };
   int                   xind_ { 1 };
   int                   yind_ { 1 };
   int                   zind_ { 1 };
@@ -1146,11 +1225,12 @@ class CGnuPlot {
   LineDashes            lineDashes_;
   bool                  binary_ { false };
   bool                  matrix_ { false };
-  bool                  clip_ { false };
+  Clip                  clip_;
   bool                  parametric_ { false };
   bool                  polar_ { false };
   bool                  enhanced_ { true };
   bool                  macros_ { false };
+  HistoryData           historyData_;
   CGnuPlotImageStyle    imageStyle_;
   Annotations           annotations_;
   CGnuPlotCamera        camera_;
@@ -1163,14 +1243,17 @@ class CGnuPlot {
   Samples               samples_;
   ISOSamples            isoSamples_;
   PlotSize              plotSize_;
+  DecimalSign           decimalSign_;
+  FitData               fitData_;
+  PathList              fontPath_;
+  std::string           encoding_;
   CGnuPlotMultiplot     multiplot_;
   CGnuPlotWindowP       multiWindow_;
   COptValT<CBBox2D>     clearRect_;
-  bool                  hidden3D_  { false };
-  bool                  surface3D_ {  true };
-  bool                  contour3D_ { false };
+  Hidden3DData          hidden3D_;
+  Surface3DData         surface3D_;
+  Contour3DData         contour3D_;
   bool                  pm3D_      { false };
-  int                   trianglePattern3D_ { 3 };
   double                whiskerBars_ { 0 };
   ReadLineP             readLine_;
   mutable Fields        fields_;

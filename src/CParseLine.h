@@ -133,7 +133,15 @@ class CParseLine {
 
     if (pos_ + n > len_) return false;
 
-    return (strncmp(&str_[pos_], &str[0], n) == 0);
+    if (strncmp(&str_[pos_], &str[0], n) != 0)
+      return false;
+
+    // check next character is end of string or space
+    if (pos_ + n  + 1 > len_) return true;
+
+    char c = str_[pos_ + n + 1];
+
+    return isspace(c);
   }
 
   void insert(const std::string &str) {

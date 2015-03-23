@@ -45,25 +45,13 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   Q_PROPERTY(double                  boxWidthValue  READ getBoxWidthValue WRITE setBoxWidthValue)
   Q_PROPERTY(CQGnuPlot::BoxWidthType boxWidthType   READ getBoxWidthType  WRITE setBoxWidthType )
+  Q_PROPERTY(bool                    boxWidthCalc   READ getBoxWidthCalc  WRITE setBoxWidthCalc )
 
   Q_PROPERTY(int trianglePattern3D READ trianglePattern3D WRITE setTrianglePattern3D)
 
   Q_PROPERTY(double imageAngle READ imageAngle WRITE setImageAngle)
 
- public:
-  struct Bar {
-    Bar(double x1, double y1, const CBBox2D &bbox1) :
-     x(x1), y(y1), bbox(bbox1) {
-    }
-
-    bool inside(const CPoint2D &p) const { return bbox.inside(p); }
-
-    double  x;
-    double  y;
-    CBBox2D bbox;
-  };
-
-  typedef std::vector<Bar> Bars;
+  Q_PROPERTY(bool syncBars READ syncBars WRITE setSyncBars)
 
  public:
   CQGnuPlotPlot(CQGnuPlotGroup *group);
@@ -93,6 +81,9 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   CQGnuPlot::BoxWidthType getBoxWidthType() const;
   void setBoxWidthType(const CQGnuPlot::BoxWidthType &type);
 
+  bool syncBars() const { return syncBars_; }
+  void setSyncBars(bool b) { syncBars_ = b; }
+
   void draw();
 
   void mousePress(const CPoint2D &p);
@@ -102,6 +93,7 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
  public:
   CQGnuPlotGroup*    group_;
   COptValT<CPoint2D> selectedPos_;
+  bool               syncBars_;
 };
 
 #endif

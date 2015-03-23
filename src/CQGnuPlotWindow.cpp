@@ -178,28 +178,23 @@ addProperties()
 {
   tree_->clear();
 
-  if (! redit_[0]) {
-    redit_[0] = new CQPropertyRealEditor(0, 360, 1);
-    redit_[1] = new CQPropertyRealEditor(-1000, 1000, 0.1);
-    redit_[2] = new CQPropertyRealEditor(0, 50, 1);
-    redit_[3] = new CQPropertyRealEditor(0, 1, 0.05);
-
-    iedit_[0] = new CQPropertyIntegerEditor(0, 33);
+  if (iedits_.empty()) {
+    iedits_.push_back(new CQPropertyIntegerEditor(0, 33));
   }
 
   tree_->addProperty("", this, "backgroundColor");
 
   if (is3D()) {
     tree_->addProperty("", this, "enable3D");
-    tree_->addProperty("", this, "rotateX" )->setEditorFactory(redit_[0]);
-    tree_->addProperty("", this, "rotateY" )->setEditorFactory(redit_[0]);
-    tree_->addProperty("", this, "rotateZ" )->setEditorFactory(redit_[0]);
-    tree_->addProperty("", this, "xmin3D"  )->setEditorFactory(redit_[1]);
-    tree_->addProperty("", this, "xmax3D"  )->setEditorFactory(redit_[1]);
-    tree_->addProperty("", this, "ymin3D"  )->setEditorFactory(redit_[1]);
-    tree_->addProperty("", this, "ymax3D"  )->setEditorFactory(redit_[1]);
-    tree_->addProperty("", this, "near3D"  )->setEditorFactory(redit_[1]);
-    tree_->addProperty("", this, "far3D"   )->setEditorFactory(redit_[1]);
+    tree_->addProperty("", this, "rotateX" )->setEditorFactory(realEdit("0:360:1"));
+    tree_->addProperty("", this, "rotateY" )->setEditorFactory(realEdit("0:360:1"));
+    tree_->addProperty("", this, "rotateZ" )->setEditorFactory(realEdit("0:360:1"));
+    tree_->addProperty("", this, "xmin3D"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
+    tree_->addProperty("", this, "xmax3D"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
+    tree_->addProperty("", this, "ymin3D"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
+    tree_->addProperty("", this, "ymax3D"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
+    tree_->addProperty("", this, "near3D"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
+    tree_->addProperty("", this, "far3D"   )->setEditorFactory(realEdit("-1000:1000:0.1"));
   }
 
   if (is3D()) {
@@ -244,19 +239,27 @@ addGroupProperties(CGnuPlotGroup *group)
 
   QString regionName = groupName + "/region";
 
-  tree_->addProperty(regionName, qgroup, "regionLeft"  )->setEditorFactory(redit_[1]);
-  tree_->addProperty(regionName, qgroup, "regionBottom")->setEditorFactory(redit_[1]);
-  tree_->addProperty(regionName, qgroup, "regionRight" )->setEditorFactory(redit_[1]);
-  tree_->addProperty(regionName, qgroup, "regionTop"   )->setEditorFactory(redit_[1]);
+  tree_->addProperty(regionName, qgroup, "regionLeft"  )->
+   setLabel("left")->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(regionName, qgroup, "regionBottom")->
+   setLabel("bottom")->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(regionName, qgroup, "regionRight" )->
+   setLabel("right")->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(regionName, qgroup, "regionTop"   )->
+   setLabel("top")->setEditorFactory(realEdit("-1000:1000:0.1"));
 
   QString marginName = groupName + "/margin";
 
-  tree_->addProperty(marginName, qgroup, "marginLeft"  )->setEditorFactory(redit_[2]);
-  tree_->addProperty(marginName, qgroup, "marginRight" )->setEditorFactory(redit_[2]);
-  tree_->addProperty(marginName, qgroup, "marginTop"   )->setEditorFactory(redit_[2]);
-  tree_->addProperty(marginName, qgroup, "marginBottom")->setEditorFactory(redit_[2]);
+  tree_->addProperty(marginName, qgroup, "marginLeft"  )->
+   setLabel("left")->setEditorFactory(realEdit("0:50:1"));
+  tree_->addProperty(marginName, qgroup, "marginRight" )->
+   setLabel("right")->setEditorFactory(realEdit("0:50:1"));
+  tree_->addProperty(marginName, qgroup, "marginTop"   )->
+   setLabel("top")->setEditorFactory(realEdit("0:50:1"));
+  tree_->addProperty(marginName, qgroup, "marginBottom")->
+   setLabel("bottom")->setEditorFactory(realEdit("0:50:1"));
 
-  tree_->addProperty(groupName, qgroup, "ratio")->setEditorFactory(redit_[1]);
+  tree_->addProperty(groupName, qgroup, "ratio")->setEditorFactory(realEdit("-1000:1000:0.1"));
 
   tree_->addProperty(groupName, qgroup, "histogramStyle");
 
@@ -288,7 +291,6 @@ addGroupProperties(CGnuPlotGroup *group)
     tree_->addProperty(axesName, qaxis, "minorTics");
     tree_->addProperty(axesName, qaxis, "tickIncrement");
     tree_->addProperty(axesName, qaxis, "label");
-    tree_->addProperty(axesName, qaxis, "grid");
     tree_->addProperty(axesName, qaxis, "tickInside");
     tree_->addProperty(axesName, qaxis, "tickInside1");
     tree_->addProperty(axesName, qaxis, "drawTickMark");
@@ -299,24 +301,22 @@ addGroupProperties(CGnuPlotGroup *group)
     tree_->addProperty(axesName, qaxis, "labelInside1");
     tree_->addProperty(axesName, qaxis, "drawLabel");
     tree_->addProperty(axesName, qaxis, "drawLabel1");
+
+    QString gridName = QString("%1/grid").arg(axesName);
+
+    tree_->addProperty(gridName, qaxis, "grid"     )->setLabel("displayed");
+    tree_->addProperty(gridName, qaxis, "gridMajor")->setLabel("majorTics");
+    tree_->addProperty(gridName, qaxis, "gridMinor")->setLabel("minorTics");
+    tree_->addProperty(gridName, qaxis, "gridLayer")->setLabel("layer");
   }
 
-#if 0
-  tree_->addProperty(axesName, qgroup, "xmin")->setEditorFactory(redit_[1]);
-  tree_->addProperty(axesName, qgroup, "xmax")->setEditorFactory(redit_[1]);
-  tree_->addProperty(axesName, qgroup, "ymin")->setEditorFactory(redit_[1]);
-  tree_->addProperty(axesName, qgroup, "ymax")->setEditorFactory(redit_[1]);
+  QString borderName = groupName + "/border";
 
-  tree_->addProperty(axesName, qgroup, "xtics");
-  tree_->addProperty(axesName, qgroup, "ytics");
-  tree_->addProperty(axesName, qgroup, "xticsMirror");
-  tree_->addProperty(axesName, qgroup, "yticsMirror");
-  tree_->addProperty(axesName, qgroup, "xgrid");
-  tree_->addProperty(axesName, qgroup, "ygrid");
-#endif
-
-  tree_->addProperty(groupName, qgroup, "borders");
-  tree_->addProperty(groupName, qgroup, "borderWidth");
+  tree_->addProperty(borderName, qgroup, "borderSides")->setLabel("sides");
+  tree_->addProperty(borderName, qgroup, "borderLayer")->setLabel("layer");
+  tree_->addProperty(borderName, qgroup, "borderWidth")->setLabel("width");
+  tree_->addProperty(borderName, qgroup, "borderStyle")->setLabel("style");
+  tree_->addProperty(borderName, qgroup, "borderType" )->setLabel("type");
 
   //---
 
@@ -358,9 +358,9 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(paletteName, qpalette, "gray");
   tree_->addProperty(paletteName, qpalette, "negative");
 
-  tree_->addProperty(paletteName, qpalette, "redModel"  )->setEditorFactory(iedit_[0]);
-  tree_->addProperty(paletteName, qpalette, "greenModel")->setEditorFactory(iedit_[0]);
-  tree_->addProperty(paletteName, qpalette, "blueModel" )->setEditorFactory(iedit_[0]);
+  tree_->addProperty(paletteName, qpalette, "redModel"  )->setEditorFactory(iedits_[0]);
+  tree_->addProperty(paletteName, qpalette, "greenModel")->setEditorFactory(iedits_[0]);
+  tree_->addProperty(paletteName, qpalette, "blueModel" )->setEditorFactory(iedits_[0]);
 
   //---
 
@@ -395,7 +395,7 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(name1, qarrow, "headFilled");
       tree_->addProperty(name1, qarrow, "headEmpty");
       tree_->addProperty(name1, qarrow, "lineType");
-      tree_->addProperty(name1, qarrow, "lineWidth")->setEditorFactory(redit_[2]);
+      tree_->addProperty(name1, qarrow, "lineWidth")->setEditorFactory(realEdit("0:50:1"));
       tree_->addProperty(name1, qarrow, "lineDash");
     }
     else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
@@ -477,10 +477,10 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   QString rangeName = plotName + "/range";
 
-  tree_->addProperty(rangeName, qplot, "xmin")->setEditorFactory(redit_[1]);
-  tree_->addProperty(rangeName, qplot, "ymin")->setEditorFactory(redit_[1]);
-  tree_->addProperty(rangeName, qplot, "xmax")->setEditorFactory(redit_[1]);
-  tree_->addProperty(rangeName, qplot, "ymax")->setEditorFactory(redit_[1]);
+  tree_->addProperty(rangeName, qplot, "xmin")->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(rangeName, qplot, "ymin")->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(rangeName, qplot, "xmax")->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(rangeName, qplot, "ymax")->setEditorFactory(realEdit("-1000:1000:0.1"));
 
   if (plot->window()->is3D())
     tree_->addProperty(plotName, qplot, "trianglePattern3D");
@@ -488,64 +488,82 @@ addPlotProperties(CGnuPlotPlot *plot)
   if (plot->isImageStyle()) {
     QString imageName = plotName + "/image";
 
-    tree_->addProperty(imageName, qplot, "imageAngle")->setEditorFactory(redit_[0]);
+    tree_->addProperty(imageName, qplot, "imageAngle")->
+      setLabel("angle")->setEditorFactory(realEdit("0:360:1"));
   }
 
   tree_->addProperty(plotName, qplot, "plotStyle");
   tree_->addProperty(plotName, qplot, "lineStyleId");
 
-  tree_->addProperty(plotName, qplot, "fillType"     );
-  tree_->addProperty(plotName, qplot, "fillPattern"  );
-  tree_->addProperty(plotName, qplot, "lineColor"    );
-  tree_->addProperty(plotName, qplot, "lineWidth"    );
-  tree_->addProperty(plotName, qplot, "pointType"    );
-  tree_->addProperty(plotName, qplot, "pointSize"    );
-  tree_->addProperty(plotName, qplot, "barsSize"     )->setEditorFactory(redit_[1]);
-  tree_->addProperty(plotName, qplot, "barsFront"    );
-  tree_->addProperty(plotName, qplot, "boxWidthValue")->setEditorFactory(redit_[1]);
-  tree_->addProperty(plotName, qplot, "boxWidthType" );
+  tree_->addProperty(plotName, qplot, "fillType"   );
+  tree_->addProperty(plotName, qplot, "fillPattern");
+  tree_->addProperty(plotName, qplot, "lineColor"  );
+  tree_->addProperty(plotName, qplot, "lineWidth"  );
+  tree_->addProperty(plotName, qplot, "pointType"  );
+  tree_->addProperty(plotName, qplot, "pointSize"  );
+  tree_->addProperty(plotName, qplot, "barsSize"   )->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(plotName, qplot, "barsFront"  );
 
-  int i = 0;
+  QString boxWidthName = plotName + "/boxWidth";
 
-  for (const auto &bar : plot->barObjects()) {
-    QString barName = QString("%1/Bar%2").arg(plotName).arg(i + 1);
+  tree_->addProperty(boxWidthName, qplot, "boxWidthValue")->
+    setLabel("value")->setEditorFactory(realEdit("-2:2:0.01"));
+  tree_->addProperty(boxWidthName, qplot, "boxWidthType")->
+    setLabel("type");
+  tree_->addProperty(boxWidthName, qplot, "boxWidthCalc")->
+    setLabel("calc");
 
-    CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+  if (! plot->barObjects().empty()) {
+    int i = 0;
 
-    tree_->addProperty(barName, qbar, "value");
-    tree_->addProperty(barName, qbar, "fillType");
-    tree_->addProperty(barName, qbar, "fillPattern");
-    tree_->addProperty(barName, qbar, "fillColor");
-    tree_->addProperty(barName, qbar, "border");
-    tree_->addProperty(barName, qbar, "lineColor");
+    QString barsName = QString("%1/Bars").arg(plotName);
 
-    ++i;
+    tree_->addProperty(barsName, qplot, "syncBars")->setLabel("sync");
+
+    for (const auto &bar : plot->barObjects()) {
+      QString barName = QString("%1/Bar%2").arg(barsName).arg(i + 1);
+
+      CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+
+      tree_->addProperty(barName, qbar, "value");
+      tree_->addProperty(barName, qbar, "fillType");
+      tree_->addProperty(barName, qbar, "fillPattern");
+      tree_->addProperty(barName, qbar, "fillColor");
+      tree_->addProperty(barName, qbar, "border");
+      tree_->addProperty(barName, qbar, "lineColor");
+
+      ++i;
+    }
   }
 
-  i = 0;
+  if (! plot->pieObjects().empty()) {
+    int i = 0;
 
-  for (const auto &pie : plot->pieObjects()) {
-    QString pieName = QString("%1/Pie%2").arg(plotName).arg(i + 1);
+    for (const auto &pie : plot->pieObjects()) {
+      QString pieName = QString("%1/Pies/Pie%2").arg(plotName).arg(i + 1);
 
-    CQGnuPlotPie *qpie = static_cast<CQGnuPlotPie *>(pie);
+      CQGnuPlotPie *qpie = static_cast<CQGnuPlotPie *>(pie);
 
-    tree_->addProperty(pieName, qpie, "name" );
-    tree_->addProperty(pieName, qpie, "color");
+      tree_->addProperty(pieName, qpie, "name" );
+      tree_->addProperty(pieName, qpie, "color");
 
-    ++i;
+      ++i;
+    }
   }
 
-  i = 0;
+  if (! plot->bubbleObjects().empty()) {
+    int i = 0;
 
-  for (const auto &bubble : plot->bubbleObjects()) {
-    QString bubbleName = QString("%1/Bubble%2").arg(plotName).arg(i + 1);
+    for (const auto &bubble : plot->bubbleObjects()) {
+      QString bubbleName = QString("%1/Bubbles/Bubble%2").arg(plotName).arg(i + 1);
 
-    CQGnuPlotBubble *qbubble = static_cast<CQGnuPlotBubble *>(bubble);
+      CQGnuPlotBubble *qbubble = static_cast<CQGnuPlotBubble *>(bubble);
 
-    tree_->addProperty(bubbleName, qbubble, "name" );
-    tree_->addProperty(bubbleName, qbubble, "color");
+      tree_->addProperty(bubbleName, qbubble, "name" );
+      tree_->addProperty(bubbleName, qbubble, "color");
 
-    ++i;
+      ++i;
+    }
   }
 }
 
@@ -921,4 +939,29 @@ itemSelectedSlot(QObject *obj, const QString & /*path*/)
   qobject->setSelected(true);
 
   canvas_->update();
+}
+
+CQPropertyRealEditor *
+CQGnuPlotWindow::
+realEdit(const std::string &str)
+{
+  auto p = redits_.find(str);
+
+  if (p == redits_.end()) {
+    double start = 0.0, end = 1.0, delta = 0.1;
+
+    std::vector<std::string> fields;
+
+    CStrUtil::addFields(str, fields, ":");
+
+    if (fields.size() > 0) start = CStrUtil::toReal(fields[0]);
+    if (fields.size() > 1) end   = CStrUtil::toReal(fields[1]);
+    if (fields.size() > 2) delta = CStrUtil::toReal(fields[2]);
+
+    CQPropertyRealEditor *redit = new CQPropertyRealEditor(start, end, delta);
+
+    p = redits_.insert(p, RealEdits::value_type(str, redit));
+  }
+
+  return (*p).second;
 }

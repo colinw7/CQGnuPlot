@@ -30,7 +30,7 @@ class CQGnuPlotColorBox : public CQGnuPlotObject, public CGnuPlotColorBox {
   QSizeF size() const;
   void setSize(const QSizeF &s);
 
-  void draw() override;
+  void draw(CGnuPlotRenderer *renderer) override;
 };
 
 #endif

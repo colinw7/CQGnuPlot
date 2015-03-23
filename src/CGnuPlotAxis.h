@@ -1,6 +1,7 @@
 #ifndef CGnuPlotAxis_H
 #define CGnuPlotAxis_H
 
+#include <CGnuPlotTypes.h>
 #include <COrientation.h>
 #include <CAlignType.h>
 #include <CDirectionType.h>
@@ -16,6 +17,9 @@ class CGnuPlot;
 class CGnuPlotGroup;
 
 class CGnuPlotAxis {
+ public:
+  typedef CGnuPlotTypes::DrawLayer DrawLayer;
+
  public:
   CGnuPlotAxis(CGnuPlotGroup *group=0, const std::string &id="",
                COrientation dir=CORIENTATION_HORIZONTAL, double start=0.0, double end=1.0);
@@ -97,8 +101,21 @@ class CGnuPlotAxis {
   bool isDrawLine() const { return drawLine_; }
   void setDrawLine(bool b) { drawLine_ = b; }
 
-  bool hasGrid() const;
-  void setGrid(bool b);
+  bool hasGrid() const { return grid_; }
+  void setGrid(bool b) { grid_ = b; }
+
+  bool hasGridMajor() const { return gridMajor_; }
+  void setGridMajor(bool b) { gridMajor_ = b; }
+
+  bool hasGridMinor() const { return gridMinor_; }
+  void setGridMinor(bool b) { gridMinor_ = b; }
+
+  bool isGridBackLayer() const {
+    return (gridLayer_ == DrawLayer::BACK || gridLayer_ == DrawLayer::DEFAULT);
+  }
+
+  DrawLayer getGridLayer() const { return gridLayer_; }
+  void setGridLayer(const DrawLayer &layer) { gridLayer_ = layer; }
 
   //---
 
@@ -172,7 +189,7 @@ class CGnuPlotAxis {
                         CVAlignType valign, double yOffset, const std::string &str);
 
  protected:
-  typedef std::vector<double> TickSpaces;
+  typedef std::vector<double>      TickSpaces;
 
   CGnuPlotGroup*    group_             { 0 };
   std::string       id_                { "" };
@@ -206,6 +223,10 @@ class CGnuPlotAxis {
   bool              drawLabel_         { true };
   bool              drawLabel1_        { false };
   bool              clip_              { false };
+  bool              grid_              { false };
+  bool              gridMajor_         { true };
+  bool              gridMinor_         { false };
+  DrawLayer         gridLayer_         { DrawLayer::BACK };
   mutable CBBox2D   bbox_              { 0, 0, 1, 1 };
   mutable CLineDash lineDash_;
 };

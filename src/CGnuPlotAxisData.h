@@ -15,6 +15,12 @@ class CGnuPlotAxisData {
   bool hasGrid() const { return grid_; }
   void setGrid(bool b) { grid_ = b; }
 
+  bool hasGridTics() const { return gridTics_; }
+  void setGridTics(bool b) { gridTics_ = b; }
+
+  bool hasGridMinorTics() const { return gridMinorTics_; }
+  void setGridMinorTics(bool b) { gridMinorTics_ = b; }
+
   bool isMirror() const { return mirror_; }
   void setMirror(bool b) { mirror_ = b; }
 
@@ -91,6 +97,8 @@ class CGnuPlotAxisData {
   int         ind_;
   bool        displayed_       { true  };
   bool        grid_            { false };
+  bool        gridTics_        { true };
+  bool        gridMinorTics_   { false };
   bool        mirror_          { true  };
   bool        reverse_         { false };
   bool        writeback_       { false };

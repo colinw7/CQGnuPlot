@@ -65,6 +65,9 @@ class CGnuPlotFile {
   std::string commentChars() const { return commentChars_.getValue("#"); }
   void setCommentChars(const std::string &chars) { commentChars_ = chars; }
 
+  void setMissingStr(const std::string &chars) { missingStr_ = chars; }
+  const std::string &getMissingStr() const { return missingStr_; }
+
   char getSeparator() const { return separator_; }
   void setSeparator(char c) { separator_ = c; }
   void resetSeparator() { separator_ = '\0'; }
@@ -132,6 +135,21 @@ class CGnuPlotFile {
 
   int maxNumFields() const { return maxNumFields_; }
 
+  bool isFortran() const { return fortran_; }
+  void setFortran(bool b) { fortran_ = b; }
+
+  bool isFpeTrap() const { return fpeTrap_; }
+  void setFpeTrap(bool b) { fpeTrap_ = b; }
+
+  bool isBinary() const { return binary_; }
+  void setBinary(bool b) { binary_ = b; }
+
+  void unset();
+
+  void show(std::ostream &os, std::map<std::string,bool> &show, bool verbose);
+
+  void save(std::ostream &os);
+
  private:
   bool addFileLines();
 
@@ -144,6 +162,7 @@ class CGnuPlotFile {
 
   std::string filename_     { "" };
   COptString  commentChars_;
+  std::string missingStr_;
   char        separator_    { '\0' };
   bool        parseStrings_ { true };
   Indices     indices_;
@@ -151,6 +170,9 @@ class CGnuPlotFile {
   Lines       lines_;
   Sets        sets_;
   int         maxNumFields_ { 0 };
+  bool        fortran_      { false };
+  bool        fpeTrap_      { true };
+  bool        binary_       { false };
 };
 
 #endif

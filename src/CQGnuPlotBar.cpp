@@ -25,7 +25,19 @@ void
 CQGnuPlotBar::
 setFillType(const CQGnuPlot::FillType &t)
 {
-  CGnuPlotBar::setFillType(CQGnuPlotUtil::fillTypeConv(t));
+  CGnuPlotTypes::FillType fillType = CQGnuPlotUtil::fillTypeConv(t);
+
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot_);
+
+  if (qplot->syncBars()) {
+    for (const auto &bar : qplot->barObjects()) {
+      CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+
+      qbar->CGnuPlotBar::setFillType(fillType);
+    }
+  }
+  else
+    CGnuPlotBar::setFillType(fillType);
 }
 
 CQGnuPlot::FillPattern
@@ -37,9 +49,21 @@ getFillPattern() const
 
 void
 CQGnuPlotBar::
-setFillPattern(const CQGnuPlot::FillPattern &t)
+setFillPattern(const CQGnuPlot::FillPattern &p)
 {
-  CGnuPlotBar::setFillPattern(CQGnuPlotUtil::fillPatternConv(t));
+  CGnuPlotTypes::FillPattern pattern = CQGnuPlotUtil::fillPatternConv(p);
+
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot_);
+
+  if (qplot->syncBars()) {
+    for (const auto &bar : qplot->barObjects()) {
+      CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+
+      qbar->CGnuPlotBar::setFillPattern(pattern);
+    }
+  }
+  else
+    CGnuPlotBar::setFillPattern(pattern);
 }
 
 QColor
@@ -53,7 +77,19 @@ void
 CQGnuPlotBar::
 setFillColor(const QColor &color)
 {
-  CGnuPlotBar::setFillColor(fromQColor(color));
+  CRGBA c = fromQColor(color);
+
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot_);
+
+  if (qplot->syncBars()) {
+    for (const auto &bar : qplot->barObjects()) {
+      CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+
+      qbar->CGnuPlotBar::setFillColor(c);
+    }
+  }
+  else
+    CGnuPlotBar::setFillColor(c);
 }
 
 QColor
@@ -67,7 +103,19 @@ void
 CQGnuPlotBar::
 setLineColor(const QColor &color)
 {
-  CGnuPlotBar::setLineColor(fromQColor(color));
+  CRGBA c = fromQColor(color);
+
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot_);
+
+  if (qplot->syncBars()) {
+    for (const auto &bar : qplot->barObjects()) {
+      CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+
+      qbar->CGnuPlotBar::setLineColor(c);
+    }
+  }
+  else
+    CGnuPlotBar::setLineColor(c);
 }
 
 void

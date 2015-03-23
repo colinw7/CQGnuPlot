@@ -19,7 +19,7 @@ QPointF
 CQGnuPlotColorBox::
 origin() const
 {
-  return CQUtil::toQPoint(CGnuPlotColorBox::origin());
+  return CQUtil::toQPoint(CGnuPlotColorBox::origin().point());
 }
 
 void
@@ -45,16 +45,13 @@ setSize(const QSizeF &s)
 
 void
 CQGnuPlotColorBox::
-draw()
+draw(CGnuPlotRenderer *renderer)
 {
   if (! isEnabled())
     return;
 
-  CGnuPlotColorBox::draw();
+  CGnuPlotColorBox::draw(renderer);
 
-  if (isSelected()) {
-    CGnuPlotRenderer *renderer = app()->renderer();
-
+  if (isSelected())
     renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);
-  }
 }

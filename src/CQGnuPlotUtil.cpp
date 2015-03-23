@@ -128,20 +128,21 @@ FillPatternQtConv fillPatternQtConv({
   { CGnuPlotTypes::FillPattern::BG    , Qt::SolidPattern     },
 });
 
-typedef CEnumConv<CGnuPlot::BoxWidthType, CQGnuPlot::BoxWidthType> BoxWidthTypeConv;
+typedef CEnumConv<CGnuPlotTypes::BoxWidthType, CQGnuPlot::BoxWidthType> BoxWidthTypeConv;
 
 BoxWidthTypeConv boxWidthTypeConv({
-  { CGnuPlot::BoxWidthType::AUTO    , CQGnuPlot::BoxWidthAuto     },
-  { CGnuPlot::BoxWidthType::ABSOLUTE, CQGnuPlot::BoxWidthAbsolute },
-  { CGnuPlot::BoxWidthType::RELATIVE, CQGnuPlot::BoxWidthRelative },
+  { CGnuPlotTypes::BoxWidthType::AUTO    , CQGnuPlot::BoxWidthAuto     },
+  { CGnuPlotTypes::BoxWidthType::ABSOLUTE, CQGnuPlot::BoxWidthAbsolute },
+  { CGnuPlotTypes::BoxWidthType::RELATIVE, CQGnuPlot::BoxWidthRelative },
 });
 
-typedef CEnumConv<CGnuPlotLayer, CQGnuPlot::DrawLayerType> DrawLayerTypeConv;
+typedef CEnumConv<CGnuPlotTypes::DrawLayer, CQGnuPlot::DrawLayerType> DrawLayerTypeConv;
 
 DrawLayerTypeConv drawLayerTypeConv({
-  { CGnuPlotLayer::FRONT , CQGnuPlot::LayerFront  },
-  { CGnuPlotLayer::BACK  , CQGnuPlot::LayerBack   },
-  { CGnuPlotLayer::BEHIND, CQGnuPlot::LayerBehind },
+  { CGnuPlotTypes::DrawLayer::DEFAULT, CQGnuPlot::LayerDefault},
+  { CGnuPlotTypes::DrawLayer::FRONT  , CQGnuPlot::LayerFront  },
+  { CGnuPlotTypes::DrawLayer::BACK   , CQGnuPlot::LayerBack   },
+  { CGnuPlotTypes::DrawLayer::BEHIND , CQGnuPlot::LayerBehind },
 });
 
 typedef CEnumConv<CGnuPlotPalette::ColorType, CQGnuPlot::PaletteColorType> PaletteColorTypeConv;
@@ -293,12 +294,12 @@ fillPatternQtConv(const Qt::BrushStyle &type)
 
 CQGnuPlot::BoxWidthType
 CQGnuPlotUtil::
-boxWidthTypeConv(const CGnuPlot::BoxWidthType &type)
+boxWidthTypeConv(const CGnuPlotTypes::BoxWidthType &type)
 {
   return Conv::boxWidthTypeConv.conv(type);
 }
 
-CGnuPlot::BoxWidthType
+CGnuPlotTypes::BoxWidthType
 CQGnuPlotUtil::
 boxWidthTypeConv(const CQGnuPlot::BoxWidthType &type)
 {
@@ -309,12 +310,12 @@ boxWidthTypeConv(const CQGnuPlot::BoxWidthType &type)
 
 CQGnuPlot::DrawLayerType
 CQGnuPlotUtil::
-drawLayerTypeConv(const CGnuPlotLayer &layer)
+drawLayerTypeConv(const CGnuPlotTypes::DrawLayer &layer)
 {
   return Conv::drawLayerTypeConv.conv(layer);
 }
 
-CGnuPlotLayer
+CGnuPlotTypes::DrawLayer
 CQGnuPlotUtil::
 drawLayerTypeConv(const CQGnuPlot::DrawLayerType &layer)
 {

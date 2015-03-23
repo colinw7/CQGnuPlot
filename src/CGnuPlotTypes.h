@@ -101,12 +101,24 @@ namespace CGnuPlotTypes {
     CB
   };
 
+  enum class AngleType {
+    RADIANS,
+    DEGREES
+  };
+
   enum class ColorModel {
     RGB,
     HSV,
     CMY,
     YIQ,
     XYZ,
+  };
+
+  enum class DrawLayer {
+    DEFAULT,
+    FRONT,
+    BACK,
+    BEHIND
   };
 }
 

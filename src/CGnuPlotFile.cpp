@@ -292,3 +292,74 @@ parseFileLine(const std::string &str, Fields &fields)
     }
   }
 }
+
+void
+CGnuPlotFile::
+unset()
+{
+  commentChars_ = COptString();
+  missingStr_   = "";
+  separator_    = '\0';
+  fortran_      = false;
+  fpeTrap_      = true;
+  binary_       = false;
+}
+
+void
+CGnuPlotFile::
+show(std::ostream &os, std::map<std::string,bool> &show, bool verbose)
+{
+  if (show.empty() || show.find("missing") != show.end()) {
+    if (verbose) {
+      if (getMissingStr().empty())
+        os << "No missing data string set for datafile";
+      else
+        os << "\"" << getMissingStr() << "\" in datafile is interpreted as missing value";
+
+      os << std::endl;
+    }
+    else {
+      if ( ! getMissingStr().empty())
+        os << "set datafile missing \"" << getMissingStr() << "\"" << std::endl;
+    }
+  }
+
+  if (show.empty() || show.find("separator") != show.end()) {
+    if (verbose)
+      os << "datafile fields separated by ";
+    else
+      os << "set datafile separator ";
+
+    if (! getSeparator())
+      os << "whitespace";
+    else
+      os << "\"" << getSeparator() << "\"";
+
+    os << std::endl;
+  }
+
+  if (show.empty() || show.find("commentschar") != show.end()) {
+    if (verbose) {
+      os << "Comments chars are \"" << commentChars() << "\"" << std::endl;
+    }
+    else {
+      if (hasCommentChars()) {
+        os << "set datafile commentschar \"" << commentChars() << "\"" << std::endl;
+      }
+    }
+  }
+}
+
+void
+CGnuPlotFile::
+save(std::ostream &os)
+{
+  os << "set datafile ";
+
+  if (separator_ == '\0')
+    os << "separator whitespace";
+  else
+    os << "separator \"" << getSeparator() << "\"";
+
+  os << std::endl;
+}

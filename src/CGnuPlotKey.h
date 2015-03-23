@@ -42,11 +42,11 @@ class CGnuPlotKey {
   bool getFillBox() const { return keyData().opaque(); }
   void setFillBox(bool b) { keyData_.setOpaque(b); }
 
-  bool getDrawBox() const { return keyData().box(); }
+  bool getDrawBox() const { return keyData().hasBox(); }
   void setDrawBox(bool b) { keyData_.setBox(b); }
 
-  bool hasLineType() const { return keyData().lineType().isValid(); }
-  int getLineType() const { return keyData().lineType().getValue(-1); }
+  bool hasLineType() const { return keyData().boxLineType().isValid(); }
+  int getLineType() const { return keyData().boxLineType().getValue(-1); }
 
   bool isReverse() const { return keyData().reverse(); }
   void setReverse(bool b) { keyData_.setReverse(b); }

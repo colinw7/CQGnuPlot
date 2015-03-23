@@ -130,6 +130,7 @@ class CQGnuPlot : public QObject, public CGnuPlot {
   };
 
   enum DrawLayerType {
+    LayerDefault,
     LayerFront,
     LayerBack,
     LayerBehind

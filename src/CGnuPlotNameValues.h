@@ -96,6 +96,7 @@ namespace CStrUniqueMatch {
                           {"boxwidth"        , CGnuPlot::VariableName::BOXWIDTH},
                           {"pointsize"       , CGnuPlot::VariableName::POINTSIZE},
                           {"linetype"        , CGnuPlot::VariableName::LINETYPE},
+                          {"colorsequence"   , CGnuPlot::VariableName::COLORSEQUENCE},
                           {"pointintervalbox", CGnuPlot::VariableName::POINTINTERVALBOX},
 
                           {"autoscale"  , CGnuPlot::VariableName::AUTOSCALE},
@@ -155,10 +156,12 @@ namespace CStrUniqueMatch {
                           {"xyplane"    , CGnuPlot::VariableName::XYPLANE},
 
                           {"cplane"     , CGnuPlot::VariableName::CPLANE},
+                          {"cntrlabel"  , CGnuPlot::VariableName::CNTRLABEL},
                           {"cntrparam"  , CGnuPlot::VariableName::CNTRPARAM},
                           {"contour"    , CGnuPlot::VariableName::CONTOUR},
 
                           {"colorbox"   , CGnuPlot::VariableName::COLORBOX},
+                          {"colornames" , CGnuPlot::VariableName::COLORNAMES},
                           {"palette"    , CGnuPlot::VariableName::PALETTE},
                           {"pm3d"       , CGnuPlot::VariableName::PM3D},
 
@@ -177,9 +180,12 @@ namespace CStrUniqueMatch {
   }
 
   CStrUniqueMatchInitT(CGnuPlot::DataFileVar) {
-    nameValues.addValues({{"separator"   , CGnuPlot::DataFileVar::SEPARATOR},
-                          {"commentschar", CGnuPlot::DataFileVar::COMMENTS_CHAR},
-                          {"missing"     , CGnuPlot::DataFileVar::MISSING}});
+    nameValues.addValues({{"fortran"      , CGnuPlot::DataFileVar::FORTRAN},
+                          {"nofpe_trap"   , CGnuPlot::DataFileVar::NOFPE_TRAP},
+                          {"missing"      , CGnuPlot::DataFileVar::MISSING},
+                          {"separator"    , CGnuPlot::DataFileVar::SEPARATOR},
+                          {"commentschars", CGnuPlot::DataFileVar::COMMENTS_CHARS},
+                          {"binary"       , CGnuPlot::DataFileVar::BINARY}});
   }
 
   CStrUniqueMatchInitT(CGnuPlot::StyleVar) {
@@ -325,6 +331,20 @@ namespace CStrUniqueMatch {
                           {"ellipse"  , CGnuPlotTypes::ObjectType::ELLIPSE  },
                           {"polygon"  , CGnuPlotTypes::ObjectType::POLYGON  },
                           {"rectangle", CGnuPlotTypes::ObjectType::RECTANGLE}});
+  }
+
+  CStrUniqueMatchInitT(CGnuPlotTypes::ColorModel) {
+    nameValues.addValues({{"RGB", CGnuPlotTypes::ColorModel::RGB},
+                          {"HSV", CGnuPlotTypes::ColorModel::HSV},
+                          {"CMY", CGnuPlotTypes::ColorModel::CMY},
+                          {"YIQ", CGnuPlotTypes::ColorModel::YIQ},
+                          {"XYZ", CGnuPlotTypes::ColorModel::XYZ}});
+  }
+
+  CStrUniqueMatchInitT(CGnuPlotTypes::DrawLayer) {
+    nameValues.addValues({{"front" , CGnuPlotTypes::DrawLayer::FRONT },
+                          {"back"  , CGnuPlotTypes::DrawLayer::BACK  },
+                          {"behind", CGnuPlotTypes::DrawLayer::BEHIND}});
   }
 }
 

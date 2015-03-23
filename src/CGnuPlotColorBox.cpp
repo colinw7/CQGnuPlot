@@ -22,12 +22,10 @@ app() const
 
 void
 CGnuPlotColorBox::
-draw()
+draw(CGnuPlotRenderer *renderer)
 {
   if (! isEnabled())
     return;
-
-  CGnuPlotRenderer *renderer = app()->renderer();
 
   CBBox2D irbbox = renderer->range();
   CBBox2D orbbox = group_->getRegionBBox();
@@ -45,8 +43,10 @@ draw()
   double x1, y1, x2, y2, tx, ty;
 
   if (user_) {
-    x1 = origin_.x;
-    y1 = origin_.y;
+    CPoint2D origin = origin_.getPoint(renderer);
+
+    x1 = origin.x;
+    y1 = origin.y;
     x2 = x1 + size_.width ;
     y2 = y1 + size_.height;
 
@@ -195,4 +195,66 @@ draw()
 
     renderer->drawRect(bbox_, c, w);
   }
+}
+
+void
+CGnuPlotColorBox::
+show(std::ostream &os) const
+{
+  os << "color box " <<
+        (border_ ? "with border" : "without border") << ", ";
+
+  if (enabled_) {
+    os << (borderStyle_ < 0 ? std::string("DEFAULT line type") :
+                              "line type " + CStrUtil::toString(borderStyle_)) << " " <<
+          (front_ ? "is drawn front" : "is drawn back") << std::endl;
+
+    if (! user_)
+      os << "at DEFAULT position" << std::endl;
+    else
+      os << "at USER origin: " << origin_ << " size: " << size_ << std::endl;
+  }
+  else {
+    os << "DEFAULT line type is NOT drawn" << std::endl;
+  }
+
+  if (vertical_)
+    os << "color gradient is VERTICAL in the color box" << std::endl;
+  else
+    os << "color gradient is HORIZONTAL in the color box" << std::endl;
+}
+
+void
+CGnuPlotColorBox::
+save(std::ostream &os) const
+{
+  os << "set colorbox ";
+
+  if (vertical_)
+    os << "vertical ";
+  else
+    os << "horizontal ";
+
+  if (user_) {
+    os << "origin " << origin_ << " ";
+    os << "size "   << size_   << " ";
+  }
+  else
+    os << "default ";
+
+  if (front_)
+    os << "front ";
+  else
+    os << "back ";
+
+  if (border_) {
+    if (borderStyle_ < 0)
+      os << "bdefault";
+    else
+      os << "border " << borderStyle_;
+  }
+  else
+    os << "noborder";
+
+  os << std::endl;
 }

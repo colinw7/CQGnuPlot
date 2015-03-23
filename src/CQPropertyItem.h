@@ -35,6 +35,11 @@ class CQPropertyItem : public QObject, public QTreeWidgetItem {
   //! set editor
   void setEditorFactory(CQPropertyEditorFactory *editor) { editor_ = editor; }
 
+  //! set label
+  CQPropertyItem *setLabel(const QString &label);
+  //! get label
+  QString getLabel() const;
+
   //! clone (required by QTreeWidgetItem interface)
   QTreeWidgetItem *clone() const { return new CQPropertyItem(*this); }
 
@@ -46,12 +51,11 @@ class CQPropertyItem : public QObject, public QTreeWidgetItem {
 
   //! set widget property from string
   void setEditorData(const QString &value);
-
   //! set widget property from variant
   void setEditorData(const QVariant &value);
 
   //! get editor widget text
-  QString getEditorData() const;
+  QVariant getEditorData() const;
 
   //! paint item
   bool paint(const CQPropertyDelegate *delegate, QPainter *painter,
@@ -71,6 +75,7 @@ class CQPropertyItem : public QObject, public QTreeWidgetItem {
   QString                  type_;   //! property type name
   QObject                 *object_; //! property object
   QWidget                 *widget_; //! editor widget
+  QString                  label_;  //! property label
   CQPropertyEditorFactory *editor_; //! editor interface
 };
 

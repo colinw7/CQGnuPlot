@@ -51,7 +51,7 @@ getDrawLayer() const
 
 void
 CQGnuPlotAnnotation::
-setDrawLayer(const CQGnuPlot::DrawLayerType &layer)
+setDrawLayer(const DrawLayerType &layer)
 {
   obj_->setLayer(CQGnuPlotUtil::drawLayerTypeConv(layer));
 }

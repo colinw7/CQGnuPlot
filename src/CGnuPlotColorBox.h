@@ -1,7 +1,7 @@
 #ifndef CGnuPlotColorBox_H
 #define CGnuPlotColorBox_H
 
-#include <CPoint2D.h>
+#include <CGnuPlotPosition.h>
 #include <CSize2D.h>
 #include <CBBox2D.h>
 #include <memory>
@@ -47,27 +47,31 @@ class CGnuPlotColorBox {
   int borderStyle() const { return borderStyle_; }
   void setBorderStyle(int i) { borderStyle_ = i; }
 
-  const CPoint2D &origin() const { return origin_; }
-  void setOrigin(const CPoint2D &p) { origin_ = p; }
+  const CGnuPlotPosition &origin() const { return origin_; }
+  void setOrigin(const CGnuPlotPosition &p) { origin_ = p; }
 
   const CSize2D &size() const { return size_; }
   void setSize(const CSize2D &s) { size_ = s; }
 
   const CBBox2D &getBBox() const { return bbox_; }
 
-  virtual void draw();
+  void show(std::ostream &os) const;
+
+  void save(std::ostream &os) const;
+
+  virtual void draw(CGnuPlotRenderer *renderer);
 
  private:
-  CGnuPlotGroup*  group_       { 0 };
-  bool            enabled_     { false };
-  bool            vertical_    { true };
-  bool            user_        { false };
-  bool            front_       { true };
-  bool            border_      { true };
-  int             borderStyle_ { -1 };
-  CPoint2D        origin_      { 0, 0 };
-  CSize2D         size_        { 20, 100 };
-  mutable CBBox2D bbox_;
+  CGnuPlotGroup*   group_       { 0 };
+  bool             enabled_     { false };
+  bool             vertical_    { true };
+  bool             user_        { false };
+  bool             front_       { true };
+  bool             border_      { true };
+  int              borderStyle_ { -1 };
+  CGnuPlotPosition origin_;
+  CSize2D          size_        { 20, 100 };
+  mutable CBBox2D  bbox_;
 };
 
 typedef std::unique_ptr<CGnuPlotColorBox> CGnuPlotColorBoxP;

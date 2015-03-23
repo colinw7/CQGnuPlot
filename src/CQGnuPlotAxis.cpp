@@ -1,5 +1,6 @@
 #include <CQGnuPlotAxis.h>
 #include <CQGnuPlotGroup.h>
+#include <CQGnuPlotUtil.h>
 #include <CGnuPlotRenderer.h>
 
 CQGnuPlotAxis::
@@ -40,6 +41,20 @@ CQGnuPlotAxis::
 setEnd(double r)
 {
   group_->setAxisEnd(id_, r);
+}
+
+CQGnuPlot::DrawLayerType
+CQGnuPlotAxis::
+getGridLayer() const
+{
+  return CQGnuPlotUtil::drawLayerTypeConv(CGnuPlotAxis::getGridLayer());
+}
+
+void
+CQGnuPlotAxis::
+setGridLayer(const DrawLayerType &layer)
+{
+  CGnuPlotAxis::setGridLayer(CQGnuPlotUtil::drawLayerTypeConv(layer));
 }
 
 void

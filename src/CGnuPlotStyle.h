@@ -5,6 +5,7 @@
 #include <CRGBName.h>
 #include <CGnuPlotTypes.h>
 #include <CGnuPlotPalette.h>
+#include <CLineDash.h>
 
 #include <vector>
 
@@ -23,6 +24,20 @@ class CGnuPlotStyle {
     return inst;
   }
 
+  const std::string &defName() const { return defName_; }
+
+  void setDefName(const std::string &name) {
+    if (! isNamedColor(name)) return;
+
+    defName_ = name;
+  }
+
+  bool isNamedColor(const std::string &name) const {
+    auto p = namedColors_.find(name);
+
+    return (p != namedColors_.end());
+  }
+
   uint getNumColors(const std::string &name) {
     initColors();
 
@@ -35,7 +50,7 @@ class CGnuPlotStyle {
   }
 
   CRGBA indexColor(int i) {
-    return indexColor("basic", i);
+    return indexColor(defName_, i);
   }
 
   CRGBA indexColor(const std::string &name, int i) {
@@ -48,10 +63,30 @@ class CGnuPlotStyle {
     if (p != namedColors_.end()) {
       const Colors &colors = (*p).second;
 
-      return colors[(i - 1) % colors.size()];
+      return colors[(i - 1) % colors.size()].second;
     }
     else
       return CRGBA(0,0,0);
+  }
+
+  std::string indexColorName(int i) {
+    return indexColorName(defName_, i);
+  }
+
+  std::string indexColorName(const std::string &name, int i) {
+    initColors();
+
+    if (i < 1) return "black";
+
+    auto p = namedColors_.find(name);
+
+    if (p != namedColors_.end()) {
+      const Colors &colors = (*p).second;
+
+      return colors[(i - 1) % colors.size()].first;
+    }
+    else
+      return "black";
   }
 
   CRGBA getRangeColor(const std::string &name, double x) const {
@@ -63,6 +98,14 @@ class CGnuPlotStyle {
       return CRGBA(0, 0, 0);
 
     return (*p).second.getColor(x);
+  }
+
+  double indexWidth(int i) const {
+    return i;
+  }
+
+  CLineDash indexDash(int) {
+    return CLineDash();
   }
 
   SymbolType indexSymbol(int i) {
@@ -85,62 +128,123 @@ class CGnuPlotStyle {
             (i1 % ii) + static_cast<int>(CGnuPlotTypes::FillPattern::HATCH));
   }
 
+  double indexPointSize(int) {
+    return -1;
+  }
+
+  double indexPointInterval(int) {
+    return 0.0;
+  }
+
  private:
   void initColors() const {
     CGnuPlotStyle *th = const_cast<CGnuPlotStyle *>(this);
 
     if (namedColors_.empty()) {
+#define NAME_COLOR_DEF(a) { a, CRGBName::toRGBA(a) }
       Colors basicColors = {{
-        CRGBName::toRGBA("#FF0000"), // red
-        CRGBName::toRGBA("#00FF00"), // green
-        CRGBName::toRGBA("#0000FF"), // blue
-        CRGBName::toRGBA("#FF00FF"), // magenta
-        CRGBName::toRGBA("#00FFFF"), // cyan
-        CRGBName::toRGBA("#FFFF00"), // yellow
-        CRGBName::toRGBA("#FF8000"), // orange
-        CRGBName::toRGBA("#888888"), // gray
-    //  CRGBName::toRGBA("#000000") // black
+        NAME_COLOR_DEF("#FF0000"), // red
+        NAME_COLOR_DEF("#00FF00"), // green
+        NAME_COLOR_DEF("#0000FF"), // blue
+        NAME_COLOR_DEF("#FF00FF"), // magenta
+        NAME_COLOR_DEF("#00FFFF"), // cyan
+        NAME_COLOR_DEF("#FFFF00"), // yellow
+        NAME_COLOR_DEF("#FF8000"), // orange
+        NAME_COLOR_DEF("#888888"), // gray
       }};
 
       th->namedColors_["basic"] = basicColors;
 
+      //---
+
+      Colors classicColors = {{
+        NAME_COLOR_DEF("#FF0000"), // red
+        NAME_COLOR_DEF("#00FF00"), // green
+        NAME_COLOR_DEF("#0000FF"), // blue
+        NAME_COLOR_DEF("#FF00FF"), // magenta
+        NAME_COLOR_DEF("#00FFFF"), // cyan
+        NAME_COLOR_DEF("#FFFF00"), // yellow
+        NAME_COLOR_DEF("#FF8000"), // orange
+        NAME_COLOR_DEF("#888888"), // gray
+      }};
+
+      th->namedColors_["classic"] = classicColors;
+
+      //---
+
+      Colors defaultColors = {{
+        NAME_COLOR_DEF("dark-violet"),
+        NAME_COLOR_DEF("#009e73"),
+        NAME_COLOR_DEF("#56b4e9"),
+        NAME_COLOR_DEF("#e69f00"),
+        NAME_COLOR_DEF("#f0e442"),
+        NAME_COLOR_DEF("#0072b2"),
+        NAME_COLOR_DEF("#e51e10"),
+        NAME_COLOR_DEF("black"),
+      }};
+
+      th->namedColors_["default"] = defaultColors;
+
+      //---
+
+      Colors podoColors = {{
+        NAME_COLOR_DEF("black"),
+        NAME_COLOR_DEF("#e69f00"),
+        NAME_COLOR_DEF("#56b4e9"),
+        NAME_COLOR_DEF("#009e73"),
+        NAME_COLOR_DEF("#f0e442"),
+        NAME_COLOR_DEF("#0072b2"),
+        NAME_COLOR_DEF("#d55e00"),
+        NAME_COLOR_DEF("#cc79a7"),
+      }};
+
+      th->namedColors_["podo"] = podoColors;
+
+      //---
+
       Colors subtleColors = {{
         // blue
-        CRGBName::toRGBA("#3182BD"),
-        CRGBName::toRGBA("#6BAED6"),
-        CRGBName::toRGBA("#9ECAE1"),
-        CRGBName::toRGBA("#C6DBEF"),
+        NAME_COLOR_DEF("#3182BD"),
+        NAME_COLOR_DEF("#6BAED6"),
+        NAME_COLOR_DEF("#9ECAE1"),
+        NAME_COLOR_DEF("#C6DBEF"),
 
         // orange
-        CRGBName::toRGBA("#E6550D"),
-        CRGBName::toRGBA("#FD8D3C"),
-        CRGBName::toRGBA("#FDAE6B"),
-        CRGBName::toRGBA("#FDD0A2"),
+        NAME_COLOR_DEF("#E6550D"),
+        NAME_COLOR_DEF("#FD8D3C"),
+        NAME_COLOR_DEF("#FDAE6B"),
+        NAME_COLOR_DEF("#FDD0A2"),
 
         // green
-        CRGBName::toRGBA("#31A354"),
-        CRGBName::toRGBA("#74C476"),
-        CRGBName::toRGBA("#A1D99B"),
-        CRGBName::toRGBA("#C7E9C0"),
+        NAME_COLOR_DEF("#31A354"),
+        NAME_COLOR_DEF("#74C476"),
+        NAME_COLOR_DEF("#A1D99B"),
+        NAME_COLOR_DEF("#C7E9C0"),
 
         // purple
-        CRGBName::toRGBA("#756BB1"),
-        CRGBName::toRGBA("#9E9AC8"),
-        CRGBName::toRGBA("#BCBDDC"),
-        CRGBName::toRGBA("#DADAEB"),
+        NAME_COLOR_DEF("#756BB1"),
+        NAME_COLOR_DEF("#9E9AC8"),
+        NAME_COLOR_DEF("#BCBDDC"),
+        NAME_COLOR_DEF("#DADAEB"),
 
         // gray
-        CRGBName::toRGBA("#636363"),
-        CRGBName::toRGBA("#969696"),
-        CRGBName::toRGBA("#BDBDBD"),
-        CRGBName::toRGBA("#D9D9D9")
+        NAME_COLOR_DEF("#636363"),
+        NAME_COLOR_DEF("#969696"),
+        NAME_COLOR_DEF("#BDBDBD"),
+        NAME_COLOR_DEF("#D9D9D9")
       }};
 
       th->namedColors_["subtle"] = subtleColors;
 
+      //---
+
       th->initPalette("basic" );
+      th->initPalette("classic" );
+      th->initPalette("default");
+      th->initPalette("podo");
       th->initPalette("subtle");
     };
+#undef NAME_COLOR_DEF
   }
 
   void initPalette(const std::string &name) {
@@ -151,18 +255,20 @@ class CGnuPlotStyle {
     palette.setColorType(CGnuPlotPalette::ColorType::DEFINED);
 
     for (uint i = 0; i < (*p).second.size(); ++i)
-      palette.addDefinedColor(i, (*p).second[i]);
+      palette.addDefinedColor(i, (*p).second[i].second);
 
     namedPalette_[name] = palette;
   }
 
  private:
-  typedef std::vector<CRGBA>                    Colors;
+  typedef std::pair<std::string,CRGBA>          NameColor;
+  typedef std::vector<NameColor>                Colors;
   typedef std::map<std::string,Colors>          NamedColors;
   typedef std::map<std::string,CGnuPlotPalette> NamedPalette;
 
   NamedColors  namedColors_;
   NamedPalette namedPalette_;
+  std::string  defName_ { "default" };
 };
 
 #endif

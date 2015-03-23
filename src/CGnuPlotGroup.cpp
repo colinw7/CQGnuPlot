@@ -274,7 +274,7 @@ fit()
     double xmin = xmin1.getValue();
     double xmax = xmax1.getValue();
 
-    if (xaxis(1).isAutoScaleFixMin())
+    if (! xaxis(1).isAutoScaleFixMin())
       normalizeXRange(xmin, xmax);
 
     xaxis(1).setMin(xmin);
@@ -285,8 +285,8 @@ fit()
     double ymin = ymin1.getValue();
     double ymax = ymax1.getValue();
 
-    if (yaxis(1).isAutoScaleFixMin())
-      normalizeXRange(ymin, ymax);
+    if (! yaxis(1).isAutoScaleFixMin())
+      normalizeYRange(ymin, ymax);
 
     yaxis(1).setMin(ymin);
     yaxis(1).setMax(ymax);
@@ -298,7 +298,7 @@ fit()
     double xmin = xmin2.getValue();
     double xmax = xmax2.getValue();
 
-    if (xaxis(2).isAutoScaleFixMin())
+    if (! xaxis(2).isAutoScaleFixMin())
       normalizeXRange(xmin, xmax);
 
     xaxis(2).setMin(xmin);
@@ -309,8 +309,8 @@ fit()
     double ymin = ymin2.getValue();
     double ymax = ymax2.getValue();
 
-    if (yaxis(2).isAutoScaleFixMin())
-      normalizeXRange(ymin, ymax);
+    if (! yaxis(2).isAutoScaleFixMin())
+      normalizeYRange(ymin, ymax);
 
     yaxis(2).setMin(ymin);
     yaxis(2).setMax(ymax);
@@ -418,13 +418,13 @@ draw()
   else
     renderer->unsetRatio();
 
-  drawAnnotations(CGnuPlotLayer::BEHIND);
-  drawAnnotations(CGnuPlotLayer::BACK);
+  drawAnnotations(DrawLayer::BEHIND);
+  drawAnnotations(DrawLayer::BACK);
 
   //---
 
   if (! colorBox_->isFront())
-    drawColorBox();
+    drawColorBox(renderer);
 
   //---
 
@@ -435,6 +435,11 @@ draw()
 
   // draw axes (underneath plot)
   drawAxes();
+
+  //---
+
+  // draw grid
+  drawGrid(CGnuPlot::DrawLayer::BACK);
 
   //---
 
@@ -457,15 +462,20 @@ draw()
 
   //---
 
+  // draw grid
+  drawGrid(CGnuPlot::DrawLayer::FRONT);
+
+  //---
+
   drawKey();
 
   if (colorBox_->isFront())
-    drawColorBox();
+    drawColorBox(renderer);
 
   //---
 
   // draw front
-  drawAnnotations(CGnuPlotLayer::FRONT);
+  drawAnnotations(DrawLayer::FRONT);
 }
 
 void
@@ -928,7 +938,7 @@ void
 CGnuPlotGroup::
 drawBorder()
 {
-  if (! axesData().borders)
+  if (! axesData().border.sides)
     return;
 
   CGnuPlotRenderer *renderer = app()->renderer();
@@ -941,18 +951,18 @@ drawBorder()
   double xmin1 = bbox.getLeft  (), ymin1 = bbox.getBottom();
   double xmax1 = bbox.getRight (), ymax1 = bbox.getTop   ();
 
-  double bw = axesData().borderWidth;
+  double bw = axesData().border.lineWidth;
 
-  if (axesData().borders & (1<<0))
+  if (axesData().border.sides & (1<<0))
     renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmax1, ymin1), bw);
 
-  if (axesData().borders & (1<<1))
+  if (axesData().border.sides & (1<<1))
     renderer->drawLine(CPoint2D(xmin1, ymax1), CPoint2D(xmax1, ymax1), bw);
 
-  if (axesData().borders & (1<<2))
+  if (axesData().border.sides & (1<<2))
     renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmin1, ymax1), bw);
 
-  if (axesData().borders & (1<<3))
+  if (axesData().border.sides & (1<<3))
     renderer->drawLine(CPoint2D(xmax1, ymin1), CPoint2D(xmax1, ymax1), bw);
 }
 
@@ -984,39 +994,44 @@ drawXAxes(int xind, bool drawOther)
       plotXAxis->setMajorIncrement(1);
     }
 
-    if (xaxis.isDisplayed()) {
-      plotXAxis->setLabel(xaxis.text());
+    //---
 
-      if (getLogScale(LogScale::X)) {
-        plotXAxis->setLogarithmic(true);
-        plotXAxis->setLogarithmicBase(getLogScale(LogScale::X));
-      }
-      else
-        plotXAxis->setLogarithmic(false);
+    plotXAxis->setLabel(xaxis.text());
 
-      plotXAxis->setDrawLine(false);
-      plotXAxis->setDrawTickMark(xaxis.showTics());
-
-      plotXAxis->setTickInside(xind == 1);
-      plotXAxis->setDrawTickLabel(true);
-      plotXAxis->setLabelInside(xind == 2);
-      plotXAxis->setDrawLabel(true);
-
-      if (xaxis.isTime())
-        plotXAxis->setTimeFormat(xaxis.format());
-
-      //---
-
-      plotXAxis->setTickInside1(false);
-      plotXAxis->setDrawTickLabel1(false);
-      plotXAxis->setLabelInside1(false);
-      plotXAxis->setDrawLabel1(false);
-      plotXAxis->setDrawTickMark1(xaxis.isMirror());
-
-      //---
-
-      plotXAxis->setGrid(xaxis.hasGrid());
+    if (getLogScale(LogScale::X)) {
+      plotXAxis->setLogarithmic(true);
+      plotXAxis->setLogarithmicBase(getLogScale(LogScale::X));
     }
+    else
+      plotXAxis->setLogarithmic(false);
+
+    plotXAxis->setDrawLine(false);
+    plotXAxis->setDrawTickMark(xaxis.showTics());
+
+    plotXAxis->setTickInside(xind == 1);
+    plotXAxis->setDrawTickLabel(true);
+    plotXAxis->setLabelInside(xind == 2);
+    plotXAxis->setDrawLabel(true);
+
+    if (xaxis.isTime())
+      plotXAxis->setTimeFormat(xaxis.format());
+
+    //---
+
+    plotXAxis->setTickInside1(false);
+    plotXAxis->setDrawTickLabel1(false);
+    plotXAxis->setLabelInside1(false);
+    plotXAxis->setDrawLabel1(false);
+    plotXAxis->setDrawTickMark1(xaxis.isMirror());
+
+    //---
+
+    plotXAxis->setGrid(xaxis.hasGrid());
+    plotXAxis->setGridMajor(xaxis.hasGridTics());
+    plotXAxis->setGridMinor(xaxis.hasGridMinorTics());
+    plotXAxis->setGridLayer(axesData_.grid.layer);
+
+    //---
 
     plotXAxis->setInitialized(true);
   }
@@ -1032,9 +1047,6 @@ drawXAxes(int xind, bool drawOther)
   // draw minor (top)
   if (drawOther)
     plotXAxis->drawAxis(ymax1, false);
-
-  if (plotXAxis->hasGrid())
-    plotXAxis->drawGrid(ymin1, ymax1);
 }
 
 void
@@ -1061,42 +1073,49 @@ drawYAxes(int yind, bool drawOther)
       plotYAxis->setDrawMinorTickMark(false);
     }
 
-    if (yaxis.isDisplayed()) {
-      plotYAxis->setLabel(yaxis.text());
+    //---
 
-      if (getLogScale(LogScale::Y)) {
-        plotYAxis->setLogarithmic(true);
-        plotYAxis->setLogarithmicBase(getLogScale(LogScale::Y));
-      }
-      else
-        plotYAxis->setLogarithmic(false);
+    plotYAxis->setLabel(yaxis.text());
 
-      plotYAxis->setDrawLine(false);
-      plotYAxis->setDrawTickMark(yaxis.showTics());
-
-      plotYAxis->setTickInside(yind == 1);
-      plotYAxis->setDrawTickLabel(true);
-      plotYAxis->setLabelInside(yind == 2);
-      plotYAxis->setDrawLabel(true);
-
-      if (yaxis.isTime())
-        plotYAxis->setTimeFormat(yaxis.format());
-
-      //---
-
-      plotYAxis->setTickInside1(false);
-      plotYAxis->setDrawTickLabel1(false);
-      plotYAxis->setLabelInside1(false);
-      plotYAxis->setDrawLabel1(false);
-      plotYAxis->setDrawTickMark1(yaxis.isMirror());
-
-      //---
-
-      plotYAxis->setGrid(yaxis.hasGrid());
+    if (getLogScale(LogScale::Y)) {
+      plotYAxis->setLogarithmic(true);
+      plotYAxis->setLogarithmicBase(getLogScale(LogScale::Y));
     }
+    else
+      plotYAxis->setLogarithmic(false);
+
+    plotYAxis->setDrawLine(false);
+    plotYAxis->setDrawTickMark(yaxis.showTics());
+
+    plotYAxis->setTickInside(yind == 1);
+    plotYAxis->setDrawTickLabel(true);
+    plotYAxis->setLabelInside(yind == 2);
+    plotYAxis->setDrawLabel(true);
+
+    if (yaxis.isTime())
+      plotYAxis->setTimeFormat(yaxis.format());
+
+    //---
+
+    plotYAxis->setTickInside1(false);
+    plotYAxis->setDrawTickLabel1(false);
+    plotYAxis->setLabelInside1(false);
+    plotYAxis->setDrawLabel1(false);
+    plotYAxis->setDrawTickMark1(yaxis.isMirror());
+
+    //---
+
+    plotYAxis->setGrid(yaxis.hasGrid());
+    plotYAxis->setGridMajor(yaxis.hasGridTics());
+    plotYAxis->setGridMinor(yaxis.hasGridMinorTics());
+    plotYAxis->setGridLayer(axesData_.grid.layer);
+
+    //---
 
     plotYAxis->setInitialized(true);
   }
+
+  //---
 
   renderer->setRange(getDisplayRange(1, yind));
   renderer->setReverse(false, yaxis.isReverse());
@@ -1107,9 +1126,30 @@ drawYAxes(int yind, bool drawOther)
   // draw minor (right)
   if (drawOther)
     plotYAxis->drawAxis(xmax1, false);
+}
 
-  if (plotYAxis->hasGrid())
+void
+CGnuPlotGroup::
+drawGrid(const CGnuPlot::DrawLayer &layer)
+{
+  bool isBack = (layer == CGnuPlot::DrawLayer::BACK);
+
+  CGnuPlotAxis *plotXAxis = getPlotAxis('x', 1);
+  CGnuPlotAxis *plotYAxis = getPlotAxis('y', 1);
+
+  if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer() == isBack) {
+    double ymin1 = plotYAxis->getStart();
+    double ymax1 = plotYAxis->getEnd  ();
+
+    plotXAxis->drawGrid(ymin1, ymax1);
+  }
+
+  if (plotYAxis->hasGrid() && plotYAxis->isGridBackLayer() == isBack) {
+    double xmin1 = plotXAxis->getStart();
+    double xmax1 = plotXAxis->getEnd  ();
+
     plotYAxis->drawGrid(xmin1, xmax1);
+  }
 }
 
 void
@@ -1132,14 +1172,14 @@ drawKey()
 
 void
 CGnuPlotGroup::
-drawColorBox()
+drawColorBox(CGnuPlotRenderer *renderer)
 {
-  colorBox_->draw();
+  colorBox_->draw(renderer);
 }
 
 void
 CGnuPlotGroup::
-drawAnnotations(CGnuPlotLayer layer)
+drawAnnotations(DrawLayer layer)
 {
   // draw labels last
   CGnuPlotRenderer *renderer = app()->renderer();

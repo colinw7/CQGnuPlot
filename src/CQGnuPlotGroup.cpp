@@ -48,6 +48,20 @@ setHistogramStyle(const CQGnuPlot::HistogramStyle &s)
   CGnuPlotGroup::setHistogramData(data);
 }
 
+CQGnuPlot::DrawLayerType
+CQGnuPlotGroup::
+getBorderLayer() const
+{
+  return CQGnuPlotUtil::drawLayerTypeConv(CGnuPlotGroup::getBorderLayer());
+}
+
+void
+CQGnuPlotGroup::
+setBorderLayer(const DrawLayerType &layer)
+{
+  CGnuPlotGroup::setBorderLayer(CQGnuPlotUtil::drawLayerTypeConv(layer));
+}
+
 void
 CQGnuPlotGroup::
 draw()

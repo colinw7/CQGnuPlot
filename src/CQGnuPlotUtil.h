@@ -30,11 +30,11 @@ namespace CQGnuPlotUtil {
   Qt::BrushStyle             fillPatternQtConv(const CGnuPlotTypes::FillPattern &type);
   CGnuPlotTypes::FillPattern fillPatternQtConv(const Qt::BrushStyle             &type);
 
-  CQGnuPlot::BoxWidthType boxWidthTypeConv(const CGnuPlot::BoxWidthType  &type);
-  CGnuPlot::BoxWidthType  boxWidthTypeConv(const CQGnuPlot::BoxWidthType &type);
+  CQGnuPlot::BoxWidthType     boxWidthTypeConv(const CGnuPlotTypes::BoxWidthType  &type);
+  CGnuPlotTypes::BoxWidthType boxWidthTypeConv(const CQGnuPlot::BoxWidthType &type);
 
-  CQGnuPlot::DrawLayerType drawLayerTypeConv(const CGnuPlotLayer            &layer);
-  CGnuPlotLayer            drawLayerTypeConv(const CQGnuPlot::DrawLayerType &layer);
+  CQGnuPlot::DrawLayerType drawLayerTypeConv(const CGnuPlotTypes::DrawLayer &layer);
+  CGnuPlotTypes::DrawLayer drawLayerTypeConv(const CQGnuPlot::DrawLayerType &layer);
 
   CQGnuPlot::PaletteColorType paletteColorTypeConv(const CGnuPlotPalette::ColorType    &layer);
   CGnuPlotPalette::ColorType  paletteColorTypeConv(const CQGnuPlot::PaletteColorType &layer);

@@ -154,11 +154,11 @@ calc()
     double increment = 0.1;
 
     if      (power < 0) {
-      for (int i = 0; i < -power; i++)
+      for (int i = 0; i < -power; ++i)
         increment /= 10.0;
     }
     else if (power > 0) {
-      for (int i = 0; i <  power; i++)
+      for (int i = 0; i <  power; ++i)
         increment *= 10.0;
     }
 
@@ -166,7 +166,7 @@ calc()
 
     // Calculate other test Increments
 
-    for (int i = 0; i < MAX_GAP_TESTS; i++)
+    for (int i = 0; i < MAX_GAP_TESTS; ++i)
       axesIncrementTests[i].incFactor = increment*axesIncrementTests[i].factor;
 
     //------
@@ -182,7 +182,7 @@ calc()
 
     int numGaps, numGapTicks;
 
-    for (int i = 0; i < MAX_GAP_TESTS; i++) {
+    for (int i = 0; i < MAX_GAP_TESTS; ++i) {
       if (tickIncrement_ > 0) {
         int incFactor1 = (int) axesIncrementTests[i].incFactor;
 
@@ -366,26 +366,6 @@ getMinorIncrement() const
     return 0.0;
 }
 
-bool
-CGnuPlotAxis::
-hasGrid() const
-{
-  const CGnuPlotAxisData *axis = group_->getAxisDataFromId(id_);
-  if (! axis) return false;
-
-  return axis->hasGrid();
-}
-
-void
-CGnuPlotAxis::
-setGrid(bool b)
-{
-  CGnuPlotAxisData *axis = group_->getAxisDataFromId(id_);
-  if (! axis) return;
-
-  axis->setGrid(b);
-}
-
 std::string
 CGnuPlotAxis::
 getValueStr(int i, double pos) const
@@ -442,7 +422,7 @@ drawAxis(double pos, bool first)
   double pos1 = getStart();
   double pos2 = pos1;
 
-  for (int i = 0; i < getNumMajorTicks(); i++) {
+  for (int i = 0; i < getNumMajorTicks(); ++i) {
     // Calculate Next Tick Point
 
     pos2 = (i + 1)*increment + getStart();
@@ -693,24 +673,52 @@ drawGrid(double start, double end)
 
   //------*/
 
-  if (direction_ == CORIENTATION_HORIZONTAL) { // x-axis
-    double xincrement = getMajorIncrement();
+  if (gridMajor_ || gridMinor_) {
+    if (direction_ == CORIENTATION_HORIZONTAL) { // x-axis
+      double xincrement = getMajorIncrement();
 
-    for (int i = 0; i <= getNumMajorTicks(); i++) {
-      double x = i*xincrement + getStart();
+      for (int i = 0; i <= getNumMajorTicks(); ++i) {
+        double x = i*xincrement + getStart();
 
-      if (x >= getStart() && x <= getEnd())
-        drawClipLine(CPoint2D(x, start), CPoint2D(x, end));
+        if (gridMajor_) {
+          if (x >= getStart() && x <= getEnd())
+            drawClipLine(CPoint2D(x, start), CPoint2D(x, end));
+        }
+
+        if (gridMinor_) {
+          double xincrement1 = getMinorIncrement();
+
+          for (int j = 0; j < getNumMinorTicks(); ++j) {
+            double x1 = x + j*xincrement1;
+
+            if (x1 >= getStart() && x1 <= getEnd())
+              drawClipLine(CPoint2D(x1, start), CPoint2D(x1, end));
+          }
+        }
+      }
     }
-  }
-  else {
-    double yincrement = getMajorIncrement();
+    else {
+      double yincrement = getMajorIncrement();
 
-    for (int i = 0; i <= getNumMajorTicks(); i++) {
-      double y = i*yincrement + getStart();
+      for (int i = 0; i <= getNumMajorTicks(); ++i) {
+        double y = i*yincrement + getStart();
 
-      if (y >= getStart() && y <= getEnd())
-        drawClipLine(CPoint2D(start, y), CPoint2D(end, y));
+        if (gridMajor_) {
+          if (y >= getStart() && y <= getEnd())
+            drawClipLine(CPoint2D(start, y), CPoint2D(end, y));
+        }
+
+        if (gridMinor_) {
+          double yincrement1 = getMinorIncrement();
+
+          for (int j = 0; j <= getNumMinorTicks(); ++j) {
+            double y1 = y + j*yincrement1;
+
+            if (y1 >= getStart() && y1 <= getEnd())
+              drawClipLine(CPoint2D(start, y1), CPoint2D(end, y1));
+          }
+        }
+      }
     }
   }
 

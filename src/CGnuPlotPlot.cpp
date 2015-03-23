@@ -70,7 +70,7 @@ init()
   yind_ = plot->yind();
 
   setFilledCurve(plot->filledCurve());
-  setTrianglePattern3D(plot->trianglePattern3D());
+  setHidden3D(plot->hidden3D());
   setWhiskerBars(plot->whiskerBars());
 
   setBinary(plot->isBinary());
@@ -380,7 +380,7 @@ draw3D()
       }
     }
     else {
-      int pattern = trianglePattern3D();
+      int pattern = hidden3D_.trianglePattern;
 
       for (auto polys : surface_) {
         for (auto poly : polys.second) {
@@ -566,7 +566,7 @@ drawBoxErrorBars(CGnuPlotRenderer *renderer)
     }
     else if (reals.size() == 4) {
       // x y ydelta xdelta
-      if (boxWidth().width != -2) {
+      if (! boxWidth().isAutoWidth()) {
         dx = reals[2];
         dy = reals[3];
 
@@ -696,8 +696,10 @@ drawBoxes(CGnuPlotRenderer *renderer)
 
     double bw1 = bw;
 
-    if ((isCalcColor && reals.size() == 4) || (! isCalcColor && reals.size() == 3))
-      bw1 = reals[ind++];
+    if (boxWidth().isCalc()) {
+      if ((isCalcColor && reals.size() == 4) || (! isCalcColor && reals.size() == 3))
+        bw1 = reals[ind++];
+    }
 
     CRGBA lc1 = lc;
 
@@ -712,10 +714,12 @@ drawBoxes(CGnuPlotRenderer *renderer)
     if (! renderer->isPseudo()) {
       CGnuPlotBar *bar = barObjects()[i];
 
-      bar->setBBox (bbox);
-      bar->setValue(y);
+      bar->setBBox(bbox);
 
       if (! bar->isInitialized()) {
+        bar->setValue(y);
+
+        bar->setWidth      (bw1);
         bar->setFillType   (fillType());
         bar->setFillPattern(fillPattern());
         bar->setFillColor  (fc);

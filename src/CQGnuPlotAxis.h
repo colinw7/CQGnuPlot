@@ -2,6 +2,7 @@
 #define CQGnuPlotAxis_H
 
 #include <CQGnuPlotObject.h>
+#include <CQGnuPlot.h>
 #include <CGnuPlotAxis.h>
 
 class CQGnuPlotGroup;
@@ -20,7 +21,6 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   Q_PROPERTY(int     minorTics       READ getNumMinorTicks  WRITE setNumMinorTicks)
   Q_PROPERTY(int     tickIncrement   READ getTickIncrement  WRITE setTickIncrement)
   Q_PROPERTY(QString label           READ getLabel          WRITE setLabel)
-  Q_PROPERTY(bool    grid            READ hasGrid           WRITE setGrid)
   Q_PROPERTY(bool    tickInside      READ isTickInside      WRITE setTickInside)
   Q_PROPERTY(bool    tickInside1     READ isTickInside1     WRITE setTickInside1)
   Q_PROPERTY(bool    drawTickMark    READ isDrawTickMark    WRITE setDrawTickMark)
@@ -32,7 +32,14 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   Q_PROPERTY(bool    drawLabel       READ isDrawLabel       WRITE setDrawLabel)
   Q_PROPERTY(bool    drawLabel1      READ isDrawLabel1      WRITE setDrawLabel1)
 
+  Q_PROPERTY(bool                     grid      READ hasGrid      WRITE setGrid)
+  Q_PROPERTY(bool                     gridMajor READ hasGridMajor WRITE setGridMajor)
+  Q_PROPERTY(bool                     gridMinor READ hasGridMinor WRITE setGridMinor)
+  Q_PROPERTY(CQGnuPlot::DrawLayerType gridLayer READ getGridLayer WRITE setGridLayer)
+
  public:
+  typedef CQGnuPlot::DrawLayerType DrawLayerType;
+
   CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, COrientation dir,
                 double start=0.0, double end=1.0);
  ~CQGnuPlotAxis();
@@ -42,6 +49,9 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
 
   void setStart(double r);
   void setEnd(double r);
+
+  DrawLayerType getGridLayer() const;
+  void setGridLayer(const DrawLayerType &layer);
 
   void drawAxis(double pos, bool first) override;
 };

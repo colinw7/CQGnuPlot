@@ -137,6 +137,8 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
 
   void pixelToWindow(double px, double py, double *wx, double *wy);
 
+  CQPropertyRealEditor *realEdit(const std::string &str);
+
  private slots:
   void xAxisSlot(bool show);
   void yAxisSlot(bool show);
@@ -144,6 +146,9 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   void itemSelectedSlot(QObject *obj, const QString &path);
 
  private:
+  typedef std::map<std::string,CQPropertyRealEditor *> RealEdits;
+  typedef std::vector<CQPropertyIntegerEditor *>       IntegerEdits;
+
   static uint lastId;
 
   uint                     id_           { 0 };
@@ -153,8 +158,8 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   CQMouseMode             *zoomMode_     { 0 };
   CQMouseMode             *panMode_      { 0 };
   CQPropertyTree          *tree_         { 0 };
-  CQPropertyRealEditor    *redit_[4]     { 0, 0, 0, 0 }; // TODO: lookup in cache
-  CQPropertyIntegerEditor *iedit_[4]     { 0, 0, 0, 0 }; // TODO: lookup in cache
+  RealEdits                redits_;      // TODO: lookup in cache
+  IntegerEdits             iedits_;      // TODO: lookup in cache
   QTimer                  *propTimer_    { 0 };
   QLabel                  *plotLabel_    { 0 };
   QLabel                  *posLabel_     { 0 };

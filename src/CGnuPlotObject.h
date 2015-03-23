@@ -21,14 +21,6 @@ class CGnuPlotRenderer;
 
 //---
 
-enum class CGnuPlotLayer {
-  FRONT,
-  BACK,
-  BEHIND
-};
-
-//---
-
 class CGnuPlotObject {
  public:
   CGnuPlotObject(CGnuPlot *plot) :
@@ -62,6 +54,9 @@ class CGnuPlotPlotObject {
 //---
 
 class CGnuPlotGroupObject {
+ public:
+  typedef CGnuPlotTypes::DrawLayer DrawLayer;
+
  public:
   CGnuPlotGroupObject(CGnuPlotGroup *group) :
    group_(group) {
@@ -107,8 +102,8 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
   const CGnuPlotColorSpec &getFillColor() const { return fillColor_; }
   void setFillColor(const CGnuPlotColorSpec &c) { fillColor_ = c; }
 
-  const CGnuPlotLayer &getLayer() const { return layer_; }
-  void setLayer(const CGnuPlotLayer &l) { layer_ = l; }
+  const DrawLayer &getLayer() const { return layer_; }
+  void setLayer(const DrawLayer &l) { layer_ = l; }
 
   virtual bool inside(const CPoint2D &p) const = 0;
 
@@ -118,7 +113,7 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
   int               ind_         { -1 };
   CRGBA             strokeColor_ { 0, 0, 0 };
   CGnuPlotColorSpec fillColor_;
-  CGnuPlotLayer     layer_       { CGnuPlotLayer::BACK };
+  DrawLayer         layer_       { CGnuPlotTypes::DrawLayer::BACK };
 };
 
 typedef std::shared_ptr<CGnuPlotGroupAnnotation> CGnuPlotGroupAnnotationP;

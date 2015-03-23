@@ -88,9 +88,9 @@ setModelData(QWidget *, QAbstractItemModel *model, const QModelIndex &index) con
     CQPropertyItem *item1 = dynamic_cast<CQPropertyItem *>(item);
     assert(item1);
 
-    QString value = item1->getEditorData();
+    QVariant var = item1->getEditorData();
 
-    model->setData(index, value);
+    model->setData(index, var);
   }
   else
     assert(false);

@@ -11,7 +11,7 @@
 
 class CGnuPlotPlot;
 
-class CGnuPlotBar : CGnuPlotPlotObject {
+class CGnuPlotBar : public CGnuPlotPlotObject {
  public:
   typedef CGnuPlotTypes::FillType    FillType;
   typedef CGnuPlotTypes::FillPattern FillPattern;
@@ -47,19 +47,23 @@ class CGnuPlotBar : CGnuPlotPlotObject {
   void setLineColor(const COptValT<CRGBA> &c) { lineColor_ = c; }
   void setLineColor(const CRGBA &c) { lineColor_ = c; }
 
+  double width() const { return width_; }
+  void setWidth(double r) { width_ = r; }
+
   bool inside(const CPoint2D &p) const;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
- private:
-  CBBox2D         bbox_ { 0, 0, 1, 1 };
-  double          value_ { 0.0};    // associated value
+ protected:
+  CBBox2D         bbox_        { 0, 0, 1, 1 };
+  double          value_       { 0.0 }; // associated value
   bool            initialized_ { false };
-  FillType        fillType_ { FillType::EMPTY };
+  FillType        fillType_    { FillType::EMPTY };
   FillPattern     fillPattern_ { FillPattern::NONE };
   COptValT<CRGBA> fillColor_;
-  bool            border_ { true }; // border displayed
+  bool            border_      { true }; // border displayed
   COptValT<CRGBA> lineColor_;
+  double          width_       { 0.0 }; // associated value
 };
 
 #endif

@@ -11,6 +11,7 @@ class CGnuPlotGroup {
  public:
   typedef CGnuPlotTypes::LogScale                LogScale;
   typedef CGnuPlotTypes::HistogramStyle          HistogramStyle;
+  typedef CGnuPlotTypes::DrawLayer               DrawLayer;
   typedef CGnuPlot::Annotations                  Annotations;
   typedef CGnuPlot::AxesData                     AxesData;
   typedef CGnuPlot::PlotSize                     PlotSize;
@@ -129,11 +130,24 @@ class CGnuPlotGroup {
   bool getYGrid() const { return yaxis(1).hasGrid(); }
   void setYGrid(bool b) { yaxis(1).setGrid(b); }
 
-  int getBorders() const { return axesData_.borders; }
-  void setBorders(int b) { axesData_.borders = b; }
+  //---
 
-  int getBorderWidth() const { return axesData_.borderWidth; }
-  void setBorderWidth(double w) { axesData_.borderWidth = w; }
+  int getBorderSides() const { return axesData_.border.sides; }
+  void setBorderSides(int b) { axesData_.border.sides = b; }
+
+  const DrawLayer &getBorderLayer() const { return axesData_.border.layer; }
+  void setBorderLayer(const DrawLayer &l) { axesData_.border.layer = l; }
+
+  int getBorderWidth() const { return axesData_.border.lineWidth; }
+  void setBorderWidth(double w) { axesData_.border.lineWidth = w; }
+
+  int getBorderStyle() const { return axesData_.border.lineStyle.getValue(-1); }
+  void setBorderStyle(int ls) { axesData_.border.lineStyle = ls; }
+
+  int getBorderType() const { return axesData_.border.lineType.getValue(-1); }
+  void setBorderType(int lt) { axesData_.border.lineType = lt; }
+
+  //---
 
   void normalizeXRange(double &xmin, double &xmax) const;
   void normalizeYRange(double &ymin, double &ymax) const;
@@ -240,14 +254,16 @@ class CGnuPlotGroup {
   void calcHistogramRange(const Plots &plots, CBBox2D &bbox) const;
 
   void drawAxes();
+
   void drawBorder();
   void drawXAxes(int xind, bool other);
   void drawYAxes(int yind, bool other);
+  void drawGrid(const CGnuPlot::DrawLayer &layer);
 
   void drawKey();
-  void drawColorBox();
+  void drawColorBox(CGnuPlotRenderer *renderer);
 
-  void drawAnnotations(CGnuPlotLayer layer);
+  void drawAnnotations(DrawLayer layer);
 
   CGnuPlotAxis *getPlotAxis(char c, int ind);
 
