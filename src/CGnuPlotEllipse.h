@@ -1,7 +1,7 @@
 #ifndef CGnuPlotEllipse_H
 #define CGnuPlotEllipse_H
 
-#include <CGnuPlotObject.h>
+#include <CGnuPlotAnnotation.h>
 #include <CGnuPlotFillStyle.h>
 
 class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {

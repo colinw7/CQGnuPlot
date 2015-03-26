@@ -20,6 +20,8 @@ class CGnuPlotColorSpec {
 
   CGnuPlotColorSpec() { }
 
+  bool isValid() const { return (type_ != Type::NONE); }
+
   Type type() const { return type_; }
 
   void setRGB(const CRGBA &c) {
@@ -78,6 +80,16 @@ class CGnuPlotColorSpec {
   }
 
   CRGBA calcColor(CGnuPlotPlot *plot, double x) const;
+
+  void print(std::ostream &os) const {
+    os << "rgb \"" << c_.getRGB().stringEncode() << "\"";
+  }
+
+  friend std::ostream &operator<<(std::ostream &os, const CGnuPlotColorSpec &c) {
+    c.print(os);
+
+    return os;
+  }
 
  private:
   Type   type_ { Type::NONE };

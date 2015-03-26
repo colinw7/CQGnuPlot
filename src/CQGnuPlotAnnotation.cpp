@@ -14,7 +14,7 @@ QColor
 CQGnuPlotAnnotation::
 getStrokeColor() const
 {
-  return CQUtil::rgbaToColor(obj_->getStrokeColor());
+  return CQUtil::rgbaToColor(obj_->getStrokeColor().getValue(CRGBA(0,0,0)));
 }
 
 void

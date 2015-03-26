@@ -71,7 +71,7 @@ QPointF
 CQGnuPlotLabel::
 getOffset() const
 {
-  return CQUtil::toQPoint(CGnuPlotLabel::getOffset());
+  return CQUtil::toQPoint(CGnuPlotLabel::getOffset().getValue(CPoint2D(0, 0)));
 }
 
 void
@@ -88,7 +88,7 @@ draw(CGnuPlotRenderer *renderer) const
   if (isSelected()) {
     CQGnuPlotLabel *th = const_cast<CQGnuPlotLabel *>(this);
 
-    CRGBA c = CGnuPlotLabel::getStrokeColor();
+    CRGBA c = CGnuPlotLabel::getStrokeColor().getValue(CRGBA(0,0,0));
 
     th->CGnuPlotLabel::setStrokeColor(CRGBA(1,0,0));
 

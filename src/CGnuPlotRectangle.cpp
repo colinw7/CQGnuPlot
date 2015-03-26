@@ -64,6 +64,8 @@ draw(CGnuPlotRenderer *renderer) const
 
   renderer->setClip(group_->getClip());
 
+  CRGBA lc = getStrokeColor().getValue(CRGBA(0,0,0));
+
   if      (getFillStyle().style() == CGnuPlotTypes::FillType::SOLID) {
     CRGBA fc = getFillColor().color();
 
@@ -74,11 +76,10 @@ draw(CGnuPlotRenderer *renderer) const
   }
   else if (getFillStyle().style() == CGnuPlotTypes::FillType::PATTERN) {
     if (getFillColor().isRGB())
-      renderer->patternRect(bbox, getFillStyle().pattern(),
-                            getFillColor().color(), getStrokeColor());
+      renderer->patternRect(bbox, getFillStyle().pattern(), getFillColor().color(), lc);
   }
 
-  renderer->drawClippedRect(bbox, getStrokeColor(), getLineWidth().getValue(0));
+  renderer->drawClippedRect(bbox, lc, getLineWidth().getValue(0));
 }
 
 bool

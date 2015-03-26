@@ -1908,18 +1908,18 @@ parseModifiers2D(CParseLine &line, CGnuPlotLineStyle &lineStyle, CGnuPlotFillSty
     if      (line.isString("linestyle") || line.isString("ls")) {
       line.skipNonSpace();
 
-      int i;
+      int ls;
 
-      if (parseInteger(line, i))
-        setLineStyleInd(i);
+      if (parseInteger(line, ls))
+        setLineStyleInd(ls);
     }
     else if (line.isString("linetype") || line.isString("lt")) {
       line.skipNonSpace();
 
-      int i;
+      int lt;
 
-      if (parseInteger(line, i))
-        lineStyle.setType(i);
+      if (parseInteger(line, lt))
+        lineStyle.setType(lt);
     }
     else if (line.isString("linewidth") || line.isString("lw")) {
       line.skipNonSpace();
@@ -1950,10 +1950,10 @@ parseModifiers2D(CParseLine &line, CGnuPlotLineStyle &lineStyle, CGnuPlotFillSty
 
       std::string typeStr = readNonSpaceNonComma(line);
 
-      int i;
+      int pt;
 
-      if (parseInteger(line, i))
-        lineStyle.setPointType(static_cast<CGnuPlotTypes::SymbolType>(i));
+      if (parseInteger(line, pt))
+        lineStyle.setPointType(static_cast<CGnuPlotTypes::SymbolType>(pt));
     }
     else if (line.isString("pointsize") || line.isString("ps")) {
       line.skipNonSpace();
@@ -2651,18 +2651,18 @@ parseModifiers3D(CParseLine &line)
     if      (line.isString("linestyle") || line.isString("ls")) {
       line.skipNonSpace();
 
-      int i;
+      int ls;
 
-      if (parseInteger(line, i))
-        setLineStyleInd(i);
+      if (parseInteger(line, ls))
+        setLineStyleInd(ls);
     }
     else if (line.isString("linetype") || line.isString("lt")) {
       line.skipNonSpace();
 
-      int i;
+      int lt;
 
-      if (parseInteger(line, i))
-        lineStyle()->setType(i);
+      if (parseInteger(line, lt))
+        lineStyle()->setType(lt);
     }
     else if (line.isString("linewidth") || line.isString("lw")) {
       line.skipNonSpace();
@@ -2683,10 +2683,10 @@ parseModifiers3D(CParseLine &line)
     else if (line.isString("pointtype") || line.isString("pt")) {
       line.skipNonSpace();
 
-      int i;
+      int pt;
 
-      if (parseInteger(line, i))
-        lineStyle()->setPointType(static_cast<CGnuPlotTypes::SymbolType>(i));
+      if (parseInteger(line, pt))
+        lineStyle()->setPointType(static_cast<CGnuPlotTypes::SymbolType>(pt));
     }
     else if (line.isString("pointsize") || line.isString("ps")) {
       line.skipNonSpace();
@@ -3023,7 +3023,7 @@ setCmd(const std::string &args)
 
     bool screen = false;
 
-    if (line.isString("at screen")) {
+    if (line.isChars("at screen")) {
       line.skipChars(9);
 
       line.skipSpace();
@@ -3860,6 +3860,7 @@ setCmd(const std::string &args)
   //           {textcolor <colorspec>}
   //           {point <pointstyle> | nopoint}
   //           {offset <offset>}
+  //           {boxed}
   //           {hypertext}
   else if (var == VariableName::LABEL) {
     line.skipSpace();
@@ -3944,22 +3945,51 @@ setCmd(const std::string &args)
         CGnuPlotColorSpec c;
 
         if (parseColorSpec(line, c))
-          label->setStrokeColor(c.color());
+          label->setTextColor(c);
       }
       else if (arg == "point") {
-        int ind;
+        label->setShowPoint(true);
 
-        if (parseInteger(line, ind))
-          label->setPointStyle(ind);
+        int pos = line.pos();
+
+        std::string arg1 = readNonSpace(line);
+
+        if      (arg1 == "linetype" || arg1 == "lt") {
+          int lt = 0;
+
+          if (parseInteger(line, lt))
+            label->setLineType(lt);
+        }
+        else if (arg1 == "pointtype" || arg1 == "pt") {
+          int pt = 0;
+
+          if (parseInteger(line, pt))
+            label->setPointType(pt);
+        }
+        else if (arg1 == "pointsize" || arg1 == "ps") {
+          double ps = 0;
+
+          if (parseReal(line, ps))
+            label->setPointSize(ps);
+        }
+        else {
+          line.setPos(pos);
+        }
       }
       else if (arg == "nopoint") {
-        label->setPointStyle(-1);
+        label->setShowPoint(false);
       }
       else if (arg == "offset") {
         CPoint2D o(0, 0);
 
         if (parsePoint(line, o))
           label->setOffset(o);
+      }
+      else if (arg == "boxed") {
+        label->setBox(true);
+      }
+      else if (arg == "hypertext") {
+        label->setHypertext(true);
       }
       else
         extraArgs.push_back(arg);
@@ -3985,8 +4015,140 @@ setCmd(const std::string &args)
         label->setText(str);
     }
   }
+  // set linetype {index} {{linetype  | lt ] <linetype> | <colorspec>}
+  //                      {{linecolor | lc } <colorspace>}
+  //                      {{linewidth | lw } <linewidth>}
+  //                      {{pointtype | pt } <pointtype>}
+  //                      {{pointsize | ps } <pointsize>}
+  //                      {{pointinterval | pi } <interval>}
+  // set linetype cycle <n>
+  else if (var == VariableName::LINETYPE) {
+    line.skipSpace();
+
+    if (line.isString("cycle")) {
+      line.skipNonSpace();
+
+      int n = 0;
+
+      if (parseInteger(line, n))
+        styleIncrement_.increment = n;
+    }
+    else {
+      int ind = 0;
+
+      if (! parseInteger(line, ind))
+        ind = 0;
+
+      CGnuPlotLineStyleP lineStyle = getLineStyleInd(ind);
+
+      line.skipSpace();
+
+      while (line.isValid()) {
+        std::string arg = readNonSpace(line);
+
+        if      (arg == "linetype" || arg == "lt") {
+          int lt;
+
+          if (parseInteger(line, lt))
+            lineStyle->setType(lt);
+        }
+        else if (arg == "linecolor" || arg == "lc") {
+          CGnuPlotColorSpec c;
+
+          if (parseColorSpec(line, c))
+            lineStyle->setColorSpec(c);
+        }
+        else if (arg == "linewidth" || arg == "lw") {
+          double lw;
+
+          if (parseReal(line, lw))
+            lineStyle->setWidth(lw);
+        }
+        else if (arg == "pointtype" || arg == "pt") {
+          int pt;
+
+          if (parseInteger(line, pt))
+            lineStyle->setPointType(static_cast<CGnuPlotTypes::SymbolType>(pt));
+        }
+        else if (arg == "pointsize" || arg == "ps") {
+          double ps;
+
+          if (parseReal(line, ps))
+            lineStyle->setPointSize(ps);
+        }
+        else if (arg == "pointinterval" || arg == "pi") {
+          int pi;
+
+          if (parseInteger(line, pi))
+            lineStyle->setPointInterval(pi);
+        }
+        else {
+          std::cerr << "Invalid line modifier '" << arg << "'" << std::endl;
+          break;
+        }
+
+        line.skipSpace();
+      }
+
+      line.skipSpace();
+    }
+  }
+  // set link {x2 | y2} {via <expression1> inverse <expression2>}
+  else if (var == VariableName::LINK) {
+    std::string arg = readNonSpace(line);
+
+    if (arg == "x2" || arg == "y2") {
+      std::string expr, iexpr;
+
+      std::string arg1 = readNonSpace(line);
+
+      if (arg1 == "via") {
+        expr = readNonSpace(line);
+
+        std::string arg2 = readNonSpace(line);
+
+        if (arg2 == "inverse") {
+          iexpr = readNonSpace(line);
+        }
+      }
+
+      if (arg == "x2") {
+        linkData_.linkX2.enabled = true;
+        linkData_.linkX2.expr    = expr;
+        linkData_.linkX2.iexpr   = iexpr;
+      }
+      else {
+        linkData_.linkY2.enabled = true;
+        linkData_.linkY2.expr    = expr;
+        linkData_.linkY2.iexpr   = iexpr;
+      }
+    }
+  }
+  // set lmargin {at screen} <val>
+  else if (var == VariableName::LMARGIN) {
+    line.skipSpace();
+
+    bool screen = false;
+
+    if (line.isChars("at screen")) {
+      line.skipChars(9);
+
+      line.skipSpace();
+
+      screen = true;
+    }
+
+    double r = -1;
+
+    if (parseReal(line, r))
+      margin_.setLeft(r, screen);
+  }
   // set loadpath [ "<path>" ]
   else if (var == VariableName::LOADPATH) {
+    std::string path;
+
+    while (parseString(line, path))
+      loadPaths_.push_back(path);
   }
   // set macros
   else if (var == VariableName::MACROS) {
@@ -4028,32 +4190,13 @@ setCmd(const std::string &args)
   // set zero {expression}
   else if (var == VariableName::ZERO) {
   }
-  // set lmargin {at screen} <val>
-  else if (var == VariableName::LMARGIN) {
-    line.skipSpace();
-
-    bool screen = false;
-
-    if (line.isString("at screen")) {
-      line.skipChars(9);
-
-      line.skipSpace();
-
-      screen = true;
-    }
-
-    double r = -1;
-
-    if (parseReal(line, r))
-      margin_.setLeft(r, screen);
-  }
   // set rmargin {at screen} <val>
   else if (var == VariableName::RMARGIN) {
     line.skipSpace();
 
     bool screen = false;
 
-    if (line.isString("at screen")) {
+    if (line.isChars("at screen")) {
       line.skipChars(9);
 
       line.skipSpace();
@@ -4072,7 +4215,7 @@ setCmd(const std::string &args)
 
     double r = -1;
 
-    if (line.isString("at screen")) {
+    if (line.isChars("at screen")) {
       line.skipChars(9);
 
       line.skipSpace();
@@ -4755,56 +4898,62 @@ setCmd(const std::string &args)
         arg = readNonSpace(line);
       }
     }
-    // set style line {index:i} [ [ linetype  | lt ] {linetype:i} ]
-    //                            [ linewidth | lw ] {linewidth:f} ]
-    //                            [ pointtype | pt ] {pointtype:i} ]
-    //                            [ pointsize | ps ] {pointsize:f} ]
-    //                            [ linecolor | lc ] {colorspace:c} ]
+    // set style line {index} default
+    // set style line {index} {{linetype  | lt ] <linetype> | <colorspec>}
+    //                        {{linecolor | lc } <colorspace>}
+    //                        {{linewidth | lw } <linewidth>}
+    //                        {{pointtype | pt } <pointtype>}
+    //                        {{pointsize | ps } <pointsize>}
+    //                        {{pointinterval | pi } <interval>}
+    //                        {palette}
     else if (var1 == StyleVar::LINE) {
-      std::string indStr = readNonSpace(line);
-
-      int i;
-
       int ind = 0;
 
-      if (parseInteger(line, i))
-        ind = i;
+      if (! parseInteger(line, ind))
+        ind = 0;
 
       CGnuPlotLineStyleP lineStyle = getLineStyleInd(ind);
 
       line.skipSpace();
 
-      CGnuPlotPointStyle pointStyle;
-      double             r;
-
       while (line.isValid()) {
         std::string arg = readNonSpace(line);
 
         if      (arg == "linetype" || arg == "lt") {
-          int i;
+          int lt;
 
-          if (parseInteger(line, i))
-            lineStyle->setType(i);
-        }
-        else if (arg == "linewidth" || arg == "lw") {
-          if (parseReal(line, r))
-            lineStyle->setWidth(r);
-        }
-        else if (arg == "pointtype" || arg == "pt") {
-          int i;
-
-          if (parseInteger(line, i))
-            lineStyle->setPointType(static_cast<CGnuPlotTypes::SymbolType>(i));
-        }
-        else if (arg == "pointsize" || arg == "ps") {
-          if (parseReal(line, r))
-            lineStyle->setPointSize(r);
+          if (parseInteger(line, lt))
+            lineStyle->setType(lt);
         }
         else if (arg == "linecolor" || arg == "lc") {
           CGnuPlotColorSpec c;
 
           if (parseColorSpec(line, c))
             lineStyle->setColorSpec(c);
+        }
+        else if (arg == "linewidth" || arg == "lw") {
+          double lw;
+
+          if (parseReal(line, lw))
+            lineStyle->setWidth(lw);
+        }
+        else if (arg == "pointtype" || arg == "pt") {
+          int pt;
+
+          if (parseInteger(line, pt))
+            lineStyle->setPointType(static_cast<CGnuPlotTypes::SymbolType>(pt));
+        }
+        else if (arg == "pointsize" || arg == "ps") {
+          double ps;
+
+          if (parseReal(line, ps))
+            lineStyle->setPointSize(ps);
+        }
+        else if (arg == "pointinterval" || arg == "pi") {
+          int pi;
+
+          if (parseInteger(line, pi))
+            lineStyle->setPointInterval(pi);
         }
         else {
           std::cerr << "Invalid line modifier '" << arg << "'" << std::endl;
@@ -4892,10 +5041,10 @@ setCmd(const std::string &args)
           boxPlot_.setOutliers(arg == "outliers");
         }
         else if (arg == "pointtype") {
-          int i;
+          int pt;
 
-          if (parseInteger(line, i))
-            boxPlot_.setPointType(i);
+          if (parseInteger(line, pt))
+            boxPlot_.setPointType(pt);
         }
         else if (arg == "candlesticks") {
           boxPlot_.setType(CGnuPlotBoxPlot::Type::CandleSticks);
@@ -4928,9 +5077,6 @@ setCmd(const std::string &args)
         arg = readNonSpace(line);
       }
     }
-  }
-  // set linetype <n> <styles...>
-  else if (var == VariableName::LINETYPE) {
   }
   // set pointintervalbox
   else if (var == VariableName::POINTINTERVALBOX) {
@@ -5076,9 +5222,6 @@ setCmd(const std::string &args)
       parseAxisRange(line, axesData_.paxis[i]);
     else if (arg == "tics")
       parseAxesTics(line, axesData_.paxis[i]);
-  }
-  // set link
-  else if (var == VariableName::LINK) {
   }
 
   // set timefmt "<format string>"
@@ -5514,7 +5657,18 @@ showCmd(const std::string &args)
   }
   // show bmargin
   else if (var == VariableName::BMARGIN) {
-    // TODO
+    std::cout << "bmargin is ";
+
+    if (! margin_.bottom().isValid())
+      std::cout << "computed automatically" << std::endl;
+    else {
+      std::cout << "set to";
+
+      if (margin_.bscreen)
+        std::cout << " screen";
+
+      std::cout << " " << margin_.bottom().getValue() << std::endl;
+    }
   }
   // show border
   else if (var == VariableName::BORDER) {
@@ -5730,19 +5884,80 @@ showCmd(const std::string &args)
   else if (var == VariableName::LABEL) {
     showAnnotations<CGnuPlotLabel>();
   }
-  // show linetype
+  // show linetype <ind>
   else if (var == VariableName::LINETYPE) {
-    for (int i = 1; i <= 8; ++i) {
-      double ps = CGnuPlotStyleInst->indexPointSize(i);
+    int ind;
 
-      std::cout << "linetype " << i << "," <<
-        " rgb \"" << CGnuPlotStyleInst->indexColorName(i) << "\"" <<
-        " linewidth " << CGnuPlotStyleInst->indexWidth(i) <<
-        " dashtype " << CGnuPlotStyleInst->indexDash(i) <<
-        " pointtype " << int(CGnuPlotStyleInst->indexSymbol(i)) <<
-        " pointsize " << (ps < 0.0 ? std::string("default") : CStrUtil::toString(ps)) <<
-        " pointinterval " << CGnuPlotStyleInst->indexPointInterval(i) << std::endl;
+    if (parseInteger(line, ind)) {
+      CGnuPlotLineStyleP lineStyle = getLineStyleInd(ind);
+
+      lineStyle->show(std::cout);
     }
+    else {
+      for (int i = 1; i <= 8; ++i) {
+        CGnuPlotLineStyleP lineStyle = getLineStyleInd(i);
+
+        lineStyle->show(std::cout);
+      }
+
+      if (styleIncrement_.increment > 0)
+        std::cout << "Linetypes repeat every " << styleIncrement_.increment <<
+                     " unless explicitly defined" << std::endl;
+    }
+  }
+  // show link
+  else if (var == VariableName::LINK) {
+    if (linkData_.linkX2.enabled) {
+      std::cout << "set link x2";
+
+      if (linkData_.linkX2.expr != "")
+        std::cout << " via " << linkData_.linkX2.expr;
+
+      if (linkData_.linkX2.iexpr != "")
+        std::cout << " inverse " << linkData_.linkX2.iexpr;
+
+      std::cout << std::endl;
+    }
+
+    if (linkData_.linkY2.enabled) {
+      std::cout << "set link y2";
+
+      if (linkData_.linkY2.expr != "")
+        std::cout << " via " << linkData_.linkY2.expr;
+
+      if (linkData_.linkY2.iexpr != "")
+        std::cout << " inverse " << linkData_.linkY2.iexpr;
+
+      std::cout << std::endl;
+    }
+  }
+  // show lmargin
+  else if (var == VariableName::LMARGIN) {
+    std::cout << "lmargin is ";
+
+    if (! margin_.left().isValid())
+      std::cout << "computed automatically" << std::endl;
+    else {
+      std::cout << "set to";
+
+      if (margin_.lscreen)
+        std::cout << " screen";
+
+      std::cout << " " << margin_.left().getValue() << std::endl;
+    }
+  }
+  // show loadpath
+  else if (var == VariableName::LOADPATH) {
+    std::cout << "loadpath is";
+
+    if (loadPaths_.empty())
+      std::cout << " empty";
+    else {
+      for (const auto &p : loadPaths_)
+        std::cout << " \"" << p << "\"";
+    }
+
+    std::cout << std::endl;
   }
   // show variables
   else if (var == VariableName::VARIABLES) {
@@ -6144,6 +6359,8 @@ unsetCmd(const std::string &args)
   }
   // unset bmargin
   else if (var == VariableName::BMARGIN) {
+    margin_.bmargin.setInvalid();
+    margin_.bscreen = false;
   }
   // unset border
   else if (var == VariableName::BORDER) {
@@ -6263,6 +6480,39 @@ unsetCmd(const std::string &args)
   // unset label
   else if (var == VariableName::LABEL) {
     clearAnnotations<CGnuPlotLabel>();
+  }
+  // unset linetype <ind>
+  else if (var == VariableName::LINETYPE) {
+    int ind;
+
+    if (parseInteger(line, ind)) {
+      CGnuPlotLineStyleP lineStyle = getLineStyleInd(ind);
+
+      lineStyle->unset();
+    }
+    else {
+      for (int i = 1; i <= 8; ++i) {
+        CGnuPlotLineStyleP lineStyle = getLineStyleInd(i);
+
+        lineStyle->unset();
+      }
+
+      styleIncrement_.increment = -1;
+    }
+  }
+  // unset link
+  else if (var == VariableName::LINK) {
+    linkData_.linkX2.enabled = false;
+    linkData_.linkY2.enabled = false;
+  }
+  // unset lmargin
+  else if (var == VariableName::LMARGIN) {
+    margin_.lmargin.setInvalid();
+    margin_.lscreen = false;
+  }
+  // unset loadpath
+  else if (var == VariableName::LOADPATH) {
+    loadPaths_.clear();
   }
   // unset multiplot
   else if (var == VariableName::MULTIPLOT) {
@@ -8223,7 +8473,7 @@ getLineStyleInd(int ind)
     lineStyle->setInd(ind);
 
     if (ind > 0)
-      lineStyle->setColor(CGnuPlotStyleInst->indexColor(ind));
+      lineStyle->unset();
 
     lineStyles_[ind] = lineStyle;
   }

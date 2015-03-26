@@ -456,8 +456,9 @@ class CGnuPlot {
   struct StyleIncrement {
     StyleIncrement() { }
 
-    StyleIncrementType type     { StyleIncrementType::USER };
-    int                styleInd { 0 };
+    StyleIncrementType type      { StyleIncrementType::USER };
+    int                styleInd  { 0 };
+    int                increment { 8 };
   };
 
   //---
@@ -499,22 +500,25 @@ class CGnuPlot {
      lmargin(l), bmargin(b), rmargin(r), tmargin(t) {
     }
 
-    double left  () const { return lmargin; }
-    double bottom() const { return bmargin; }
-    double right () const { return rmargin; }
-    double top   () const { return tmargin; }
+    const COptReal &left  () const { return lmargin; }
+    const COptReal &bottom() const { return bmargin; }
+    const COptReal &right () const { return rmargin; }
+    const COptReal &top   () const { return tmargin; }
 
     void setLeft  (double l, bool s=false) { lmargin = l; lscreen = s; }
     void setBottom(double b, bool s=false) { bmargin = b; bscreen = s; }
     void setRight (double r, bool s=false) { rmargin = r; rscreen = s; }
     void setTop   (double t, bool s=false) { tmargin = t; tscreen = s; }
 
-    double lmargin { 0 }; bool lscreen { false };
-    double bmargin { 0 }; bool bscreen { false };
-    double rmargin { 0 }; bool rscreen { false };
-    double tmargin { 0 }; bool tscreen { false };
+    CRange2D range() const {
+      return CRange2D(left ().getValue(), bottom().getValue(),
+                      right().getValue(), top   ().getValue());
+    }
 
-    CRange2D range() const { return CRange2D(lmargin, bmargin, rmargin, tmargin); }
+    COptReal lmargin; bool lscreen { false };
+    COptReal bmargin; bool bscreen { false };
+    COptReal rmargin; bool rscreen { false };
+    COptReal tmargin; bool tscreen { false };
   };
 
   //---
@@ -553,6 +557,17 @@ class CGnuPlot {
     void print(std::ostream &os) {
       os << "sampling rate is " << samples1 << ", " << samples2 << std::endl;
     }
+  };
+
+  struct LinkAxisData {
+    bool        enabled { false };
+    std::string expr;
+    std::string iexpr;
+  };
+
+  struct LinkData {
+    LinkAxisData linkX2;
+    LinkAxisData linkY2;
   };
 
   class ISOSamples {
@@ -896,7 +911,7 @@ class CGnuPlot {
 
       if (ind != -1 && obj->getInd() != ind) continue;
 
-      std::cerr << T::getName() << " " << obj->getInd() << ", ";
+      std::cerr << T::getName() << " " << obj->getInd();
       obj->print(std::cerr);
       std::cerr << std::endl;
     }
@@ -1241,10 +1256,12 @@ class CGnuPlot {
   LogScaleMap           logScale_;
   DummyVarMap           dummyVars_;
   Samples               samples_;
+  LinkData              linkData_;
   ISOSamples            isoSamples_;
   PlotSize              plotSize_;
   DecimalSign           decimalSign_;
   FitData               fitData_;
+  PathList              loadPaths_;
   PathList              fontPath_;
   std::string           encoding_;
   CGnuPlotMultiplot     multiplot_;

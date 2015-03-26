@@ -1,11 +1,15 @@
 #ifndef CGnuPlotLabel_H
 #define CGnuPlotLabel_H
 
-#include <CGnuPlotObject.h>
+#include <CGnuPlotAnnotation.h>
 #include <CGnuPlotText.h>
+#include <CGnuPlotColorSpec.h>
 #include <CFont.h>
 
 class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
+ public:
+  typedef COptValT<CPoint2D> OptPoint;
+
  public:
   static const char *getName() { return "label"; }
 
@@ -43,14 +47,32 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   double getAngle() const { return angle_; }
   void setAngle(double a) { angle_ = a; }
 
-  const CPoint2D &getOffset() const { return offset_; }
+  const OptPoint &getOffset() const { return offset_; }
   void setOffset(const CPoint2D &o) { offset_ = o; }
 
   bool isEnhanced() const { return enhanced_; }
   void setEnhanced(bool b) { enhanced_ = b; }
 
-  int pointStyle() const { return pointStyle_; }
-  void setPointStyle(int i) { pointStyle_ = i; }
+  bool showPoint() const { return showPoint_; }
+  void setShowPoint(bool b) { showPoint_ = b; }
+
+  const CGnuPlotColorSpec &textColor() const { return textColor_; }
+  void setTextColor(const CGnuPlotColorSpec &c) { textColor_ = c; }
+
+  int lineType() const { return lineType_; }
+  void setLineType(int i) { lineType_ = i; }
+
+  int pointType() const { return pointType_; }
+  void setPointType(int i) { pointType_ = i; }
+
+  double pointSize() const { return pointSize_; }
+  void setPointSize(double s) { pointSize_ = s; }
+
+  bool hasBox() const { return box_; }
+  void setBox(bool b) { box_ = b; }
+
+  bool hasHypertext() const { return hypertext_; }
+  void setHypertext(bool b) { hypertext_ = b; }
 
   const CBBox2D &getBBox() const { return bbox_; }
 
@@ -58,24 +80,26 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
   bool inside(const CPoint2D &p) const;
 
-  void print(std::ostream &os) const {
-    os << " \"";
-
-    text_.print(os);
-
-    os << "\"" << " at " << pos_;
-  }
+  void print(std::ostream &os) const;
 
  protected:
-  CGnuPlotText    text_;
-  CHAlignType     align_      { CHALIGN_TYPE_LEFT };
-  CPoint2D        pos_        { 0, 0 };
-  CFontPtr        font_;
-  double          angle_      { -1 };
-  CPoint2D        offset_     { 0, 0 };
-  bool            enhanced_   { true };
-  int             pointStyle_ { -1 };
-  mutable CBBox2D bbox_;
+  static CFontPtr defFont_;
+
+  CGnuPlotText      text_;
+  CHAlignType       align_      { CHALIGN_TYPE_LEFT };
+  CPoint2D          pos_        { 0, 0 };
+  CFontPtr          font_;
+  double            angle_      { -1 };
+  OptPoint          offset_;
+  bool              enhanced_   { true };
+  bool              showPoint_  { false };
+  CGnuPlotColorSpec textColor_;
+  int               lineType_   { -1 };
+  int               pointType_  { -1 };
+  double            pointSize_  { -1 };
+  bool              box_        { false };
+  bool              hypertext_  { false };
+  mutable CBBox2D   bbox_;
 };
 
 typedef std::shared_ptr<CGnuPlotLabel> CGnuPlotLabelP;

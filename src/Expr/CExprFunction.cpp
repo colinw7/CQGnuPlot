@@ -536,6 +536,11 @@ CExprFunctionMgr(CExpr *expr) :
 {
 }
 
+CExprFunctionMgr::
+~CExprFunctionMgr()
+{
+}
+
 void
 CExprFunctionMgr::
 addFunctions()
@@ -724,6 +729,12 @@ CExprObjFunction::
 CExprObjFunction(const std::string &name, const Args &args, CExprFunctionObj *proc) :
  CExprFunction(name), args_(args), proc_(proc)
 {
+}
+
+CExprObjFunction::
+~CExprObjFunction()
+{
+  delete proc_;
 }
 
 bool

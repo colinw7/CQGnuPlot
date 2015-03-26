@@ -11,7 +11,9 @@ draw(CGnuPlotRenderer *renderer) const
   if (poly->getFillColor().isRGB())
     renderer->fillPolygon(poly->getPoints(), poly->getFillColor().color());
 
-  renderer->drawPolygon(poly->getPoints(), getLineWidth().getValue(0), poly->getStrokeColor());
+  CRGBA lc = poly->getStrokeColor().getValue(CRGBA(0,0,0));
+
+  renderer->drawPolygon(poly->getPoints(), getLineWidth().getValue(0), lc);
 }
 
 bool

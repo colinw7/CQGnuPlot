@@ -6,6 +6,7 @@
 #include <CRGBA.h>
 #include <COptVal.h>
 #include <CLineDash.h>
+#include <CStrUtil.h>
 
 #include <sstream>
 
@@ -46,10 +47,33 @@ class CGnuPlotLineStyle {
 
   double pointSize() const { return pointSize_.getValue(1); }
   void setPointSize(double s) { pointSize_ = s; }
+  void resetPointSize() { pointSize_ = COptReal(); }
+
+  int pointInterval() const { return pointInterval_; }
+  void setPointInterval(int pi) { pointInterval_ = pi; }
+
+  void unset()  {
+    width_         = 1;
+    dash_          = CLineDash();
+    pointType_     = static_cast<CGnuPlotTypes::SymbolType>(ind_);
+    pointSize_     = COptReal();
+    pointInterval_ = 0;
+
+    color_.setRGB(CGnuPlotStyleInst->indexColor(ind_));
+  }
 
   void print(std::ostream &os) const {
     os << "linetype " << type_ << " linewidth " << width_ << " pointtype " << int(pointType_) <<
           " pointsize " << pointSizeStr() << " pointinterval " << pointInterval_;
+  }
+
+  void show(std::ostream &os) const {
+    os << "linetype " << ind_ << "," << " " << color_ <<
+          " linewidth " << width_ << " dashtype " << dash_ <<
+          " pointtype " << int(pointType_) <<
+          " pointsize " << (! pointSize_.isValid() ? std::string("default") :
+                            CStrUtil::toString(pointSize_.getValue(1))) <<
+          " pointinterval " << pointInterval_ << std::endl;
   }
 
  private:

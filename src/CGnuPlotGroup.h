@@ -185,10 +185,10 @@ class CGnuPlotGroup {
 
   //-----
 
-  double marginLeft  () const { return margin().left  (); }
-  double marginRight () const { return margin().right (); }
-  double marginTop   () const { return margin().top   (); }
-  double marginBottom() const { return margin().bottom(); }
+  double marginLeft  () const { return margin_.left  ().getValue(10); }
+  double marginRight () const { return margin_.right ().getValue(10); }
+  double marginTop   () const { return margin_.top   ().getValue(10); }
+  double marginBottom() const { return margin_.bottom().getValue(10); }
 
   void setMarginLeft  (double v) { margin_.setLeft  (v); }
   void setMarginRight (double v) { margin_.setRight (v); }

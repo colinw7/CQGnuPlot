@@ -1,7 +1,7 @@
 #ifndef CGnuPlotArrow_H
 #define CGnuPlotArrow_H
 
-#include <CGnuPlotObject.h>
+#include <CGnuPlotAnnotation.h>
 #include <CGnuPlotArrowStyle.h>
 #include <CAngle.h>
 

@@ -27,7 +27,7 @@ class CExprFunctionMgr {
   typedef std::vector<CExprFunctionArg> Args;
 
  public:
- ~CExprFunctionMgr() { }
+ ~CExprFunctionMgr();
 
   void addFunctions();
 
@@ -128,6 +128,7 @@ class CExprObjFunction : public CExprFunction {
 
  public:
   CExprObjFunction(const std::string &name, const Args &args, CExprFunctionObj *proc);
+ ~CExprObjFunction();
 
   uint numArgs() const override { return args_.size(); }
 

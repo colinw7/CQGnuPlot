@@ -1,7 +1,7 @@
 #ifndef CGnuPlotPolygon_H
 #define CGnuPlotPolygon_H
 
-#include <CGnuPlotObject.h>
+#include <CGnuPlotAnnotation.h>
 
 class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
  public:

@@ -44,16 +44,26 @@ class CParseLine {
     ++len_;
   }
 
-  char lookChar() const { return str_[pos_]; }
+  char lookChar() const {
+    if (pos_ < len_)
+      return str_[pos_];
+    else
+      return '\0';
+  }
 
-  char getChar() { return str_[pos_++]; }
+  char getChar() {
+    if (pos_ < len_)
+      return str_[pos_++];
+    else
+      return '\0';
+  }
 
   void ungetChar(int n=1) { if (n <= pos_) pos_ -= n; }
 
   std::string getChars(int n) {
     std::string s;
 
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < n && pos_ < len_; ++i)
       s += str_[pos_++];
 
     return s;
@@ -103,29 +113,40 @@ class CParseLine {
   }
 
   bool isSpace() const {
-    return isspace(str_[pos_]);
+    return (pos_ < len_ && isspace(str_[pos_]));
   }
 
   bool isDigit() const {
-    return isdigit(str_[pos_]);
+    return (pos_ < len_ && isdigit(str_[pos_]));
   }
 
   bool isAlpha() const {
-    return isalpha(str_[pos_]);
+    return (pos_ < len_ && isalpha(str_[pos_]));
   }
 
   bool isAlNum() const {
-    return isalnum(str_[pos_]);
+    return (pos_ < len_ && isalnum(str_[pos_]));
   }
 
   bool isChar(char c) const {
-    return str_[pos_] == c;
+    return (pos_ < len_ && str_[pos_] == c);
   }
 
   bool isOneOf(const std::string &chars) const {
     if (pos_ >= len_) return false;
 
     return std::strchr(chars.c_str(), str_[pos_]) != 0;
+  }
+
+  bool isChars(const std::string &str) const {
+    int n = str.size();
+
+    if (pos_ + n > len_) return false;
+
+    if (strncmp(&str_[pos_], &str[0], n) != 0)
+      return false;
+
+    return true;
   }
 
   bool isString(const std::string &str) const {
@@ -139,7 +160,7 @@ class CParseLine {
     // check next character is end of string or space
     if (pos_ + n  + 1 > len_) return true;
 
-    char c = str_[pos_ + n + 1];
+    char c = str_[pos_ + n];
 
     return isspace(c);
   }

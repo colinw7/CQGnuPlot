@@ -1,7 +1,7 @@
 #ifndef CGnuPlotRectangle_H
 #define CGnuPlotRectangle_H
 
-#include <CGnuPlotObject.h>
+#include <CGnuPlotAnnotation.h>
 #include <CGnuPlotFillStyle.h>
 
 class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {

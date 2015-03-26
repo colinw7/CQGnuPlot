@@ -11,7 +11,9 @@ draw(CGnuPlotRenderer *renderer) const
   if (e->getFillColor().isRGB())
     renderer->fillEllipse(e->getCenter(), e->getRX(), e->getRY(), 0, e->getFillColor().color());
 
-  renderer->drawEllipse(e->getCenter(), e->getRX(), e->getRY(), 0, e->getStrokeColor());
+  CRGBA lc = e->getStrokeColor().getValue(CRGBA(0,0,0));
+
+  renderer->drawEllipse(e->getCenter(), e->getRX(), e->getRY(), 0, lc);
 }
 
 bool
