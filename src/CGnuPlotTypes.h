@@ -120,6 +120,12 @@ namespace CGnuPlotTypes {
     BACK,
     BEHIND
   };
+
+  enum class Mapping {
+    CARTESIAN_MAPPING,
+    CYLINDRICAL_MAPPING,
+    SPHERICAL_MAPPING
+  };
 }
 
 #endif

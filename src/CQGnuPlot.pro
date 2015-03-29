@@ -21,6 +21,7 @@ CQGnuPlotAxis.cpp \
 CQGnuPlotBar.cpp \
 CQGnuPlotBubble.cpp \
 CQGnuPlotCanvas.cpp \
+CQGnuPlotCircle.cpp \
 CQGnuPlotColorBox.cpp \
 CQGnuPlotDevice.cpp \
 CQGnuPlotEllipse.cpp \
@@ -45,6 +46,7 @@ CGnuPlotAxis.cpp \
 CGnuPlotBBoxRenderer.cpp \
 CGnuPlotBar.cpp \
 CGnuPlotBubble.cpp \
+CGnuPlotCircle.cpp \
 CGnuPlotColorBox.cpp \
 CGnuPlotColorSpec.cpp \
 CGnuPlotContour.cpp \
@@ -52,6 +54,7 @@ CGnuPlotCoordValue.cpp \
 CGnuPlotDevice.cpp \
 CGnuPlotEllipse.cpp \
 CGnuPlotFile.cpp \
+CGnuPlotFillStyle.cpp \
 CGnuPlotGroup.cpp \
 CGnuPlotKey.cpp \
 CGnuPlotKeyData.cpp \
@@ -115,6 +118,7 @@ CQGnuPlotAxis.h \
 CQGnuPlotBar.h \
 CQGnuPlotBubble.h \
 CQGnuPlotCanvas.h \
+CQGnuPlotCircle.h \
 CQGnuPlotColorBox.h \
 CQGnuPlotDevice.h \
 CQGnuPlotEllipse.h \
@@ -143,6 +147,7 @@ CGnuPlotBar.h \
 CGnuPlotBubble.h \
 CGnuPlotCache.h \
 CGnuPlotCamera.h \
+CGnuPlotCircle.h \
 CGnuPlotColorBox.h \
 CGnuPlotColorSpec.h \
 CGnuPlotContour.h \

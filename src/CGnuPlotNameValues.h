@@ -2,6 +2,7 @@
 #define CGnuPlotNameValues_H
 
 #include <CStrUniqueMatch.h>
+#include <CGnuPlot.h>
 
 #define CStrUniqueMatchInitT(T) \
 template<> inline void \
@@ -306,6 +307,18 @@ namespace CStrUniqueMatch {
                           {"pattern", CGnuPlotTypes::FillType::PATTERN}});
   }
 
+  CStrUniqueMatchInitT(CGnuPlotTypes::FillPattern) {
+    nameValues.addValues({{"none"  , CGnuPlotTypes::FillPattern::NONE},
+                          {"hatch" , CGnuPlotTypes::FillPattern::HATCH},
+                          {"dense" , CGnuPlotTypes::FillPattern::DENSE},
+                          {"fg"    , CGnuPlotTypes::FillPattern::FG},
+                          {"fdiag" , CGnuPlotTypes::FillPattern::FDIAG},
+                          {"bdiag" , CGnuPlotTypes::FillPattern::BDIAG},
+                          {"fdiag1", CGnuPlotTypes::FillPattern::FDIAG1},
+                          {"bdiag1", CGnuPlotTypes::FillPattern::BDIAG1},
+                          {"bg"    , CGnuPlotTypes::FillPattern::BG}});
+  }
+
   CStrUniqueMatchInitT(CGnuPlotTypes::HistogramStyle) {
     nameValues.addValues({{"clustered"    , CGnuPlot::HistogramStyle::CLUSTERED},
                           {"errorbars"    , CGnuPlot::HistogramStyle::ERRORBARS},
@@ -342,9 +355,10 @@ namespace CStrUniqueMatch {
   }
 
   CStrUniqueMatchInitT(CGnuPlotTypes::DrawLayer) {
-    nameValues.addValues({{"front" , CGnuPlotTypes::DrawLayer::FRONT },
-                          {"back"  , CGnuPlotTypes::DrawLayer::BACK  },
-                          {"behind", CGnuPlotTypes::DrawLayer::BEHIND}});
+    nameValues.addValues({{"front"  , CGnuPlotTypes::DrawLayer::FRONT  },
+                          {"back"   , CGnuPlotTypes::DrawLayer::BACK   },
+                          {"behind" , CGnuPlotTypes::DrawLayer::BEHIND },
+                          {"default", CGnuPlotTypes::DrawLayer::DEFAULT}});
   }
 }
 

@@ -11,6 +11,7 @@ class CGnuPlotArrow;
 class CGnuPlotAxis;
 class CGnuPlotBar;
 class CGnuPlotBubble;
+class CGnuPlotCircle;
 class CGnuPlotColorBox;
 class CGnuPlotEllipse;
 class CGnuPlotGroup;
@@ -48,8 +49,9 @@ class CGnuPlotDevice {
   virtual CGnuPlotLineStyle *createLineStyle();
 
   virtual CGnuPlotArrow     *createArrow(CGnuPlotGroup *group);
-  virtual CGnuPlotLabel     *createLabel(CGnuPlotGroup *group);
+  virtual CGnuPlotCircle    *createCircle(CGnuPlotGroup *group);
   virtual CGnuPlotEllipse   *createEllipse(CGnuPlotGroup *group);
+  virtual CGnuPlotLabel     *createLabel(CGnuPlotGroup *group);
   virtual CGnuPlotPolygon   *createPolygon(CGnuPlotGroup *group);
   virtual CGnuPlotRectangle *createRectangle(CGnuPlotGroup *group);
 

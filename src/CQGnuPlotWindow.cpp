@@ -7,6 +7,7 @@
 #include <CQGnuPlotLineStyle.h>
 #include <CQGnuPlotAnnotation.h>
 #include <CQGnuPlotArrow.h>
+#include <CQGnuPlotCircle.h>
 #include <CQGnuPlotEllipse.h>
 #include <CQGnuPlotPolygon.h>
 #include <CQGnuPlotRectangle.h>
@@ -366,6 +367,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
   for (auto &ann : group->annotations()) {
     CGnuPlotArrow     *arrow   = 0;
+    CGnuPlotCircle    *circle  = 0;
     CGnuPlotEllipse   *ellipse = 0;
     CGnuPlotLabel     *label   = 0;
     CGnuPlotPolygon   *poly    = 0;
@@ -397,6 +399,18 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(name1, qarrow, "lineType");
       tree_->addProperty(name1, qarrow, "lineWidth")->setEditorFactory(realEdit("0:50:1"));
       tree_->addProperty(name1, qarrow, "lineDash");
+    }
+    else if ((circle = dynamic_cast<CGnuPlotCircle *>(ann.get()))) {
+      QString name1 = QString("%1/%2_%3").arg(groupName).arg(circle->getName()).arg(ann->getInd());
+
+      CQGnuPlotCircle *qcircle = static_cast<CQGnuPlotCircle *>(circle);
+
+      tree_->addProperty(name1, qcircle, "strokeColor");
+      tree_->addProperty(name1, qcircle, "fillColor");
+      tree_->addProperty(name1, qcircle, "drawLayer");
+
+      tree_->addProperty(name1, qcircle, "center");
+      tree_->addProperty(name1, qcircle, "radius");
     }
     else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
       QString name1 = QString("%1/%2_%3").arg(groupName).arg(ellipse->getName()).arg(ann->getInd());

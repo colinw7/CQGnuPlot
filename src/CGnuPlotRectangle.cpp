@@ -91,7 +91,36 @@ inside(const CPoint2D &p) const
 
 void
 CGnuPlotRectangle::
-print(std::ostream &) const
+print(std::ostream &os) const
 {
-  // TODO
+  os << " rect";
+
+  if      (from_.isValid()) {
+    if (to_.isValid()) {
+      os << " from " << from_.getValue() << " to " << to_.getValue();
+    }
+    else if (rto_.isValid()) {
+      os << " from " << from_.getValue() << " rto " << rto_.getValue();
+    }
+    else if (size_.isValid()) {
+      os << " from " << from_.getValue() << " size " << size_.getValue();
+    }
+  }
+  else if (center_.isValid()) {
+    if (size_.isValid()) {
+      os << " center " << center_.getValue() << " size " << size_.getValue();
+    }
+  }
+
+  os << " " << CStrUniqueMatch::valueToString<CGnuPlotTypes::DrawLayer>(layer_);
+
+  // clip
+
+  os << " lw " << lw_.getValue(1.0);
+
+  // dashtype solid fc bgnd "
+
+  os << " fillstyle " << fs_;
+
+  os << " lt " << lt_.getValue(-1);
 }

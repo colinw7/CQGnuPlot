@@ -111,6 +111,7 @@ addObjects()
 
   for (auto ann : plot->annotations()) {
     CGnuPlotArrow     *arrow   = 0;
+    CGnuPlotCircle    *circle  = 0;
     CGnuPlotEllipse   *ellipse = 0;
     CGnuPlotLabel     *label   = 0;
     CGnuPlotPolygon   *poly    = 0;
@@ -119,6 +120,10 @@ addObjects()
     if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann.get()))) {
       annotations_.push_back(
         CGnuPlotGroupAnnotationP(device->createArrow(this)->setData(arrow)));
+    }
+    else if ((circle = dynamic_cast<CGnuPlotCircle *>(ann.get()))) {
+      annotations_.push_back(
+        CGnuPlotGroupAnnotationP(device->createCircle(this)->setData(circle)));
     }
     else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
       annotations_.push_back(

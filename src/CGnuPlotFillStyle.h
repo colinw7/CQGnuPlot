@@ -33,6 +33,14 @@ class CGnuPlotFillStyle {
   const CRGBA &borderColor() const { return borderColor_; }
   void setBorderColor(const CRGBA &c) { borderColor_ = c; }
 
+  void print(std::ostream &os) const;
+
+  friend std::ostream &operator<<(std::ostream &os, const CGnuPlotFillStyle &fs) {
+    fs.print(os);
+
+    return os;
+  }
+
  private:
   FillType    style_          { FillType::EMPTY };
   double      density_        { 1.0 };               // density 0.0 empty, 1.0 is line color

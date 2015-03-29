@@ -26,14 +26,17 @@ class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {
 
   CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::ELLIPSE; }
 
-  const CPoint2D &getCenter() const { return p_; }
-  void setCenter(const CPoint2D &p) { p_ = p; }
+  const CGnuPlotPosition &getCenter() const { return p_; }
+  void setCenter(const CGnuPlotPosition &p) { p_ = p; }
 
   double getRX() const { return rx_; }
   void setRX(double x) { rx_ = x; }
 
   double getRY() const { return ry_; }
   void setRY(double y) { ry_ = y; }
+
+  double getAngle() const { return angle_; }
+  void setAngle(double a) { angle_ = a; }
 
   const CGnuPlotFillStyle &getFillStyle() const { return fs_; }
   void setFillStyle(const CGnuPlotFillStyle &fs) { fs_ = fs; }
@@ -45,9 +48,10 @@ class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {
   void print(std::ostream &os) const;
 
  protected:
-  CPoint2D          p_   { 0, 0 };
-  double            rx_  { 1 };
-  double            ry_  { 1 };
+  CGnuPlotPosition  p_;
+  double            rx_    { 1 };
+  double            ry_    { 1 };
+  double            angle_ { 0 };
   CGnuPlotFillStyle fs_;
 };
 

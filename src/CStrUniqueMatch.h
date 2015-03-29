@@ -1,6 +1,9 @@
 #ifndef CStrUniqueMatch_H
 #define CStrUniqueMatch_H
 
+#include <set>
+#include <map>
+
 template<typename T>
 class CStrUniqueMatchValues {
  public:
@@ -53,7 +56,15 @@ class CStrUniqueMatchValues {
   }
 
   const std::string &lookup(const T &value) {
-    return *valueStrs_[value].begin();
+    auto p = valueStrs_.find(value);
+
+    if (p != valueStrs_.end())
+      return *(*p).second.begin();
+    else {
+      static std::string no_name("<no_value>");
+
+      return no_name;
+    }
   }
 
   void values(std::vector<std::string> &values) {

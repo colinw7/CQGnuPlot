@@ -41,11 +41,11 @@ createArrow(CGnuPlotGroup *group)
   return new CGnuPlotArrow(group);
 }
 
-CGnuPlotLabel *
+CGnuPlotCircle *
 CGnuPlotDevice::
-createLabel(CGnuPlotGroup *group)
+createCircle(CGnuPlotGroup *group)
 {
-  return new CGnuPlotLabel(group);
+  return new CGnuPlotCircle(group);
 }
 
 CGnuPlotEllipse *
@@ -53,6 +53,12 @@ CGnuPlotDevice::
 createEllipse(CGnuPlotGroup *group)
 {
   return new CGnuPlotEllipse(group);
+}
+CGnuPlotLabel *
+CGnuPlotDevice::
+createLabel(CGnuPlotGroup *group)
+{
+  return new CGnuPlotLabel(group);
 }
 
 CGnuPlotPolygon *

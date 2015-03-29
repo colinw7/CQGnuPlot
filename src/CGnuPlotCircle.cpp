@@ -1,39 +1,40 @@
-#include <CGnuPlotEllipse.h>
+#include <CGnuPlotCircle.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotGroup.h>
 
 void
-CGnuPlotEllipse::
+CGnuPlotCircle::
 draw(CGnuPlotRenderer *renderer) const
 {
-  const CGnuPlotEllipse *e = this;
+  const CGnuPlotCircle *e = this;
 
   CPoint2D center = e->getCenter().getPoint(renderer);
 
+  double r = e->getRadius();
+
   if (e->getFillColor().isRGB())
-    renderer->fillEllipse(center, e->getRX(), e->getRY(), 0, e->getFillColor().color());
+    renderer->fillEllipse(center, r, r, 0, e->getFillColor().color());
 
   CRGBA lc = e->getStrokeColor().getValue(CRGBA(0,0,0));
 
-  renderer->drawEllipse(center, e->getRX(), e->getRY(), 0, lc);
+  renderer->drawEllipse(center, r, r, 0, lc);
 }
 
 bool
-CGnuPlotEllipse::
+CGnuPlotCircle::
 inside(const CPoint2D &) const
 {
   return false;
 }
 
 void
-CGnuPlotEllipse::
+CGnuPlotCircle::
 print(std::ostream &os) const
 {
-  os << " ellipse";
+  os << " circle";
 
   os << " center " << p_;
-  os << " size " << 2*rx_ << ", " << 2*ry_;
-  os << " angle " << angle_;
+  os << " size " << r_;
 
   os << " " << CStrUniqueMatch::valueToString<CGnuPlotTypes::DrawLayer>(layer_);
 

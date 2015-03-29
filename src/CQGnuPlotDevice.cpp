@@ -6,6 +6,7 @@
 #include <CQGnuPlotLineStyle.h>
 #include <CQGnuPlotAnnotation.h>
 #include <CQGnuPlotArrow.h>
+#include <CQGnuPlotCircle.h>
 #include <CQGnuPlotEllipse.h>
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotPolygon.h>
@@ -98,17 +99,17 @@ createArrow(CGnuPlotGroup *group)
   return arrow;
 }
 
-CGnuPlotLabel *
+CGnuPlotCircle *
 CQGnuPlotDevice::
-createLabel(CGnuPlotGroup *group)
+createCircle(CGnuPlotGroup *group)
 {
   CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-  CQGnuPlotLabel *label = new CQGnuPlotLabel(qgroup);
+  CQGnuPlotCircle *circle = new CQGnuPlotCircle(qgroup);
 
-  objects_.push_back(label);
+  objects_.push_back(circle);
 
-  return label;
+  return circle;
 }
 
 CGnuPlotEllipse *
@@ -122,6 +123,19 @@ createEllipse(CGnuPlotGroup *group)
   objects_.push_back(ellipse);
 
   return ellipse;
+}
+
+CGnuPlotLabel *
+CQGnuPlotDevice::
+createLabel(CGnuPlotGroup *group)
+{
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+
+  CQGnuPlotLabel *label = new CQGnuPlotLabel(qgroup);
+
+  objects_.push_back(label);
+
+  return label;
 }
 
 CGnuPlotPolygon *

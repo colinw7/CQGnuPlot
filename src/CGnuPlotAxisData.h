@@ -58,6 +58,13 @@ class CGnuPlotAxisData {
   void updateMax(double r) { max_.updateMax(r); }
   void resetMax() { max_.setInvalid(); }
 
+  bool isMinorTicsDisplayed() const { return minorTics_; }
+  void setMinorTicsDisplayed(bool b) { minorTics_ = b; }
+
+  const COptReal &getMinorTicsFreq() const { return minorTicsFreq_; }
+  void setMinorTicsFreq(double r) { minorTicsFreq_ = r; }
+  void resetMinorTicsFreq() { minorTicsFreq_.setInvalid(); }
+
   const std::string &text() const { return text_; }
   void setText(const std::string &s) { text_ = s; }
 
@@ -86,6 +93,18 @@ class CGnuPlotAxisData {
     os << "set format " << prefix << " \"" << format_ << "\"" << std::endl;
   }
 
+  void showMinorTics(std::ostream &os, const std::string &str, const std::string &str1) const {
+    if (isMinorTicsDisplayed()) {
+      if (getMinorTicsFreq().isValid())
+        os << "minor " << str << " are drawn with " << getMinorTicsFreq().getValue() <<
+              " subintervals between major " << str1 << " marks" << std::endl;
+      else
+        os << "minor " << str << " are computed automatically" << std::endl;
+    }
+    else
+      os << "minor " << str << " are off" << std::endl;
+  }
+
   void printLabel(std::ostream &os, const std::string &prefix) const {
     os << prefix << "label is \"" << text_ << "\", " <<
           "offset at ((character units) 0, 0, 0)" << std::endl;
@@ -110,6 +129,8 @@ class CGnuPlotAxisData {
   bool        autoScaleFixMax_ { false };
   COptReal    min_;
   COptReal    max_;
+  bool        minorTics_       { true };
+  COptReal    minorTicsFreq_;
   std::string text_;
   TicLabelMap ticlabel_;
   double      offset_      { 0 };

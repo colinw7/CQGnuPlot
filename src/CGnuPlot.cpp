@@ -4143,27 +4143,615 @@ setCmd(const std::string &args)
     if (parseReal(line, r))
       margin_.setLeft(r, screen);
   }
-  // set loadpath [ "<path>" ]
+  // set loadpath {"<path>"}
   else if (var == VariableName::LOADPATH) {
     std::string path;
 
     while (parseString(line, path))
       loadPaths_.push_back(path);
   }
+  // set locale {"<locale>"}
+  else if (var == VariableName::LOCALE) {
+    std::string str;
+
+    if (parseString(line, str))
+      locale_ = str;
+  }
+  // set logscale <axes> {<base>}
+  else if (var == VariableName::LOGSCALE) {
+    std::string axesStr;
+    int         base = 10;
+
+    if (line.isValid()) {
+      axesStr = readNonSpace(line);
+
+      if (! parseInteger(line, base))
+        base = 10;
+    }
+
+    if (axesStr == "" || axesStr == "x" ) setLogScale(LogScale::X , base);
+    if (axesStr == "" || axesStr == "y" ) setLogScale(LogScale::Y , base);
+    if (axesStr == "" || axesStr == "z" ) setLogScale(LogScale::Z , base);
+    if (axesStr == "" || axesStr == "x2") setLogScale(LogScale::X2, base);
+    if (axesStr == "" || axesStr == "y2") setLogScale(LogScale::Y2, base);
+    if (axesStr == "" || axesStr == "cb") setLogScale(LogScale::CB, base);
+  }
   // set macros
   else if (var == VariableName::MACROS) {
     setMacros(true);
   }
-  // set mouse
-  else if (var == VariableName::MOUSE) {
-  }
-
   // set mapping [ cartesian | cylindrical | spherical ]
   else if (var == VariableName::MAPPING) {
+    std::string arg = readNonSpace(line);
+
+    if      (arg == "cartesian")
+      mapping_ = CGnuPlotTypes::Mapping::CARTESIAN_MAPPING;
+    else if (arg == "cylindrical")
+      mapping_ = CGnuPlotTypes::Mapping::CYLINDRICAL_MAPPING;
+    else if (arg == "spherical")
+      mapping_ = CGnuPlotTypes::Mapping::SPHERICAL_MAPPING;
+  }
+  // set margins <left>, <right>, <top>, <bottom>
+  else if (var == VariableName::MARGINS) {
+    double l = -1, r = -1, t = -1, b = -1;
+
+    (void) parseReal(line, l);
+
+    margin_.setLeft(l);
+
+    if (line.skipSpaceAndChar(',')) {
+      (void) parseReal(line, r);
+
+      margin_.setRight(r);
+
+      if (line.skipSpaceAndChar(',')) {
+        (void) parseReal(line, t);
+
+        margin_.setTop(t);
+
+        if (line.skipSpaceAndChar(',')) {
+          (void) parseReal(line, b);
+
+          margin_.setBottom(b);
+        }
+      }
+    }
+  }
+  // set mouse {doubleclick <ms>} {nodoubleclick}
+  //           {{no}zoomcoordinates}
+  //           {zoomfactors <xmultiplier>, <ymultiplier>}
+  //           {noruler | ruler {at x,y}}
+  //           {polardistance{deg|tan} | nopolardistance}
+  //           {format <string>}
+  //           {mouseformat <int>/<string>}
+  //           {{no}labels {"labeloptions"}}
+  //           {{no}zoomjump} {{no}verbose}
+  else if (var == VariableName::MOUSE) {
+    std::string arg = readNonSpace(line);
+
+    while (arg != "") {
+      if      (arg == "doubleclick") {
+        int ms;
+
+        if (parseInteger(line, ms))
+          mouseData_.setDoubleClick(ms);
+      }
+      else if (arg == "nodoubleclick") {
+        mouseData_.resetDoubleClick();
+      }
+      else if (arg == "zoomcoordinates" || arg == "nozoomcoordinates") {
+        mouseData_.setZoomCoordinates(arg == "zoomcoordinates");
+      }
+      else if (arg == "zoomfactors") {
+        double x, y;
+
+        if (parseReal(line, x)) {
+          if (line.skipSpaceAndChar(',')) {
+            if (parseReal(line, y))
+              mouseData_.setZoomFactors(x, y);
+          }
+        }
+      }
+      else if (arg == "ruler") {
+        int pos = line.pos();
+
+        arg = readNonSpace(line);
+
+        if (arg == "at") {
+          double x, y;
+
+          if (parseReal(line, x) && parseReal(line, y))
+            mouseData_.setRulerPos(CPoint2D(x, y));
+        }
+        else
+          line.setPos(pos);
+      }
+      else if (arg == "noruler") {
+        mouseData_.resetRulerPos();
+      }
+      else if (arg == "polardistancedeg") {
+        mouseData_.setPolarDisance(MouseData::PolarDistanceType::DEG);
+      }
+      else if (arg == "polardistancetan") {
+        mouseData_.setPolarDisance(MouseData::PolarDistanceType::TAN);
+      }
+      else if (arg == "nopolardistance") {
+        mouseData_.setPolarDisance(MouseData::PolarDistanceType::NONE);
+      }
+      else if (arg == "format") {
+        std::string str;
+
+        if (parseString(line, str))
+          mouseData_.setFormat(str);
+      }
+      else if (arg == "mouseformat") {
+        line.skipSpace();
+
+        if (line.isChar('"')) {
+          std::string str;
+
+          if (parseString(line, str))
+            mouseData_.setMouseFormat(str);
+        }
+        else {
+          int i;
+
+          if (parseInteger(line, i))
+            mouseData_.setMouseFormat(i);
+        }
+      }
+      else if (arg == "labels") {
+        std::string str;
+
+        if (parseString(line, str))
+          mouseData_.setLabels(str);
+      }
+      else if (arg == "nolabels") {
+        mouseData_.resetLabels();
+      }
+      else if (arg == "zoomjump" || arg == "nozoomjump") {
+        mouseData_.setZoomJump(arg == "zoomjump");
+      }
+      else if (arg == "verbose" || arg == "noverbose") {
+        mouseData_.setVerbose(arg == "verbose");
+      }
+
+      arg = readNonSpace(line);
+    }
+  }
+  // set multiplot { title <page title> {font <fontspec>} {enhanced|noenhanced} }
+  //               { layout <rows>,<cols> {rowsfirst|columnsfirst} {downwards|upwards}
+  //                 {scale <xscale>{,<yscale>}} {offset <xoff>{,<yoff>}} }
+  else if (var == VariableName::MULTIPLOT) {
+    multiplot_.setEnabled(true);
+    multiplot_.setAutoFit(true);
+
+    std::string arg = readNonSpace(line);
+
+    while (arg != "") {
+      if      (arg == "title") {
+        std::string titleStr;
+
+        parseString(line, titleStr);
+      }
+      else if (arg == "font") {
+        CFontPtr font;
+
+        (void) parseFont(line, font);
+      }
+      else if (arg == "enhanced" || arg == "noenhanced") {
+      }
+      else if (arg == "layout") {
+        int i;
+
+        if (parseInteger(line, i))
+          multiplot_.setRows(i);
+
+        if (line.skipSpaceAndChar(',')) {
+          if (parseInteger(line, i))
+            multiplot_.setCols(i);
+        }
+
+        multiplot_.setAutoFit(false);
+      }
+      else if (arg == "rowsfirst") {
+      }
+      else if (arg == "columnsfirst") {
+      }
+      else if (arg == "downwards") {
+      }
+      else if (arg == "upwards") {
+      }
+      else if (arg == "scale") {
+        std::string xStr = readNonSpaceNonComma(line);
+        std::string yStr = readNonSpace(line);
+      }
+      else if (arg == "offset") {
+        std::string xStr = readNonSpaceNonComma(line);
+        std::string yStr = readNonSpace(line);
+      }
+      else {
+        errorMsg("Invalid arg '" + arg + "'");
+        break;
+      }
+
+      arg = readNonSpace(line);
+    }
+  }
+  // set mx2tics {<freq> | default}
+  else if (var == VariableName::MX2TICS) {
+    axesData_.xaxis[2].setMinorTicsDisplayed(true);
+
+    line.skipSpace();
+
+    if (line.isString("default"))
+      axesData_.xaxis[2].resetMinorTicsFreq();
+    else {
+      double r;
+
+      if (parseReal(line, r))
+        axesData_.xaxis[2].setMinorTicsFreq(r);
+    }
+  }
+  // set mxtics {<freq> | default}
+  else if (var == VariableName::MXTICS) {
+    axesData_.xaxis[1].setMinorTicsDisplayed(true);
+
+    line.skipSpace();
+
+    if (line.isString("default"))
+      axesData_.xaxis[1].resetMinorTicsFreq();
+    else {
+      double r;
+
+      if (parseReal(line, r))
+        axesData_.xaxis[1].setMinorTicsFreq(r);
+    }
+  }
+  // set my2tics {<freq> | default}
+  else if (var == VariableName::MY2TICS) {
+    axesData_.yaxis[2].setMinorTicsDisplayed(true);
+
+    line.skipSpace();
+
+    if (line.isString("default"))
+      axesData_.yaxis[2].resetMinorTicsFreq();
+    else {
+      double r;
+
+      if (parseReal(line, r))
+        axesData_.yaxis[2].setMinorTicsFreq(r);
+    }
+  }
+  // set mytics {<freq> | default}
+  else if (var == VariableName::MYTICS) {
+    axesData_.yaxis[1].setMinorTicsDisplayed(true);
+
+    line.skipSpace();
+
+    if (line.isString("default"))
+      axesData_.yaxis[1].resetMinorTicsFreq();
+    else {
+      double r;
+
+      if (parseReal(line, r))
+        axesData_.yaxis[1].setMinorTicsFreq(r);
+    }
+  }
+  // set mztics {<freq> | default}
+  else if (var == VariableName::MZTICS) {
+    axesData_.zaxis[1].setMinorTicsDisplayed(true);
+
+    line.skipSpace();
+
+    if (line.isString("default"))
+      axesData_.zaxis[1].resetMinorTicsFreq();
+    else {
+      double r;
+
+      if (parseReal(line, r))
+        axesData_.zaxis[1].setMinorTicsFreq(r);
+    }
+  }
+  // set object <index> <object-type> <object-properties>
+  //            {front|back|behind} {fc|fillcolor <colorspec>} {fs <fillstyle>}
+  //            {default} {lw|linewidth <width>}
+  else if (var == VariableName::OBJECT) {
+    int ind = -1;
+
+    if (! parseInteger(line, ind))
+      ind = -1;
+
+    CGnuPlotTypes::ObjectType type = CGnuPlotTypes::ObjectType::NONE;
+
+    if (! parseOptionValue(this, line, type)) {
+      auto annotation = getAnnotation<CGnuPlotGroupAnnotation>(ind);
+
+      if (annotation)
+        type = annotation->type();
+    }
+
+    // set object <index> circle {at|center} <position> size <radius>
+    //            {arc [<begin>:<end>]}
+    //            {<other-object-properties>}
+    if      (type == CGnuPlotTypes::ObjectType::CIRCLE) {
+      auto circle = lookupAnnotation<CGnuPlotCircle>(ind);
+      if (! circle) return false;
+
+      //---
+
+      std::string arg = readNonSpace(line);
+
+      while (arg != "") {
+        if      (arg == "at" || arg == "circle") {
+          CGnuPlotPosition p;
+
+          if (parsePosition(line, p))
+            circle->setCenter(p.point());
+        }
+        else if (arg == "size") {
+          arg = readNonSpace(line);
+
+          double r;
+
+          if (CStrUtil::toReal(arg, &r))
+            circle->setRadius(r);
+        }
+        else if (arg == "fillcolor" || arg == "fc") {
+          CGnuPlotColorSpec c;
+
+          if (parseColorSpec(line, c))
+            circle->setFillColor(c);
+        }
+        else {
+          errorMsg("Invalid arg '" + arg + "'");
+          break;
+        }
+
+        arg = readNonSpace(line);
+      }
+    }
+    // set object <index> ellipse {at|center} <position> size <w>,<h>
+    //            {angle <orientation>} {units xy|xx|yy}
+    //            {<other-object-properties>}
+    else if (type == CGnuPlotTypes::ObjectType::ELLIPSE) {
+      auto ellipse = lookupAnnotation<CGnuPlotEllipse>(ind);
+      if (! ellipse) return false;
+
+      //---
+
+      std::string arg = readNonSpace(line);
+
+      while (arg != "") {
+        if      (arg == "at" || arg == "center") {
+          CGnuPlotPosition p;
+
+          if (parsePosition(line, p))
+            ellipse->setCenter(p);
+        }
+        else if (arg == "size") {
+          CSize2D size(1,1);
+
+          if (! parseSize(line, size))
+            continue;
+
+          ellipse->setRX(size.width /2.0);
+          ellipse->setRY(size.height/2.0);
+        }
+        else if (arg == "angle") {
+          double a;
+
+          if (parseReal(line, a))
+            ellipse->setAngle(a);
+        }
+        else if (arg == "units") {
+          arg = readNonSpace(line);
+        }
+        else if (arg == "fillcolor" || arg == "fc") {
+          CGnuPlotColorSpec c;
+
+          if (parseColorSpec(line, c))
+            ellipse->setFillColor(c);
+        }
+        else if (arg == "fillstyle" || arg == "fs") {
+          CGnuPlotFillStyle fs;
+
+          if (parseFillStyle(line, fs))
+            ellipse->setFillStyle(fs);
+        }
+        else {
+          errorMsg("Invalid arg '" + arg + "'");
+          break;
+        }
+
+        arg = readNonSpace(line);
+      }
+    }
+    // set object <index> polygon
+    //            from <position> to <position> ... {to <position>} |
+    //            from <position> rto <position> ... {rto <position>}
+    else if (type == CGnuPlotTypes::ObjectType::POLYGON) {
+      auto poly = lookupAnnotation<CGnuPlotPolygon>(ind);
+      if (! poly) return false;
+
+      //---
+
+      CGnuPlotPosition from, to;
+
+      std::string arg = readNonSpace(line);
+
+      while (arg != "") {
+        if      (arg == "from") {
+          if (parsePosition(line, from))
+            poly->addPoint(from.point());
+        }
+        else if (arg == "to") {
+          if (parsePosition(line, to))
+            poly->addPoint(to.point());
+        }
+        else if (arg == "fillcolor" || arg == "fc") {
+          CGnuPlotColorSpec c;
+
+          if (parseColorSpec(line, c))
+            poly->setFillColor(c);
+        }
+        else if (arg == "fillstyle" || arg == "fs") {
+          CGnuPlotFillStyle fs;
+
+          if (parseFillStyle(line, fs))
+            poly->setFillStyle(fs);
+        }
+        else if (arg == "linetype" || arg == "lt") {
+          int lt = 0;
+
+          if (parseInteger(line, lt))
+            poly->setLineType(lt);
+        }
+        else if (arg == "linewidth" || arg == "lw") {
+          double lw = 1.0;
+
+          if (parseReal(line, lw))
+            poly->setLineWidth(lw);
+        }
+        else if (arg == "front" || arg == "back" || arg == "behind") {
+          if      (arg == "front" ) poly->setLayer(DrawLayer::FRONT);
+          else if (arg == "back"  ) poly->setLayer(DrawLayer::BACK);
+          else if (arg == "behind") poly->setLayer(DrawLayer::BEHIND);
+        }
+        else {
+          errorMsg("Invalid arg '" + arg + "'");
+          break;
+        }
+
+        arg = readNonSpace(line);
+      }
+    }
+    // set object <index> rectangle
+    //            {from <position> {to|rto} <position> |
+    //            center|at <position> size <w>,<h>}
+    else if (type == CGnuPlotTypes::ObjectType::RECTANGLE) {
+      auto rect = lookupAnnotation<CGnuPlotRectangle>(ind);
+      if (! rect) return false;
+
+      //---
+
+      CGnuPlotPosition pos;
+
+      std::string arg = readNonSpace(line);
+
+      while (arg != "") {
+        if      (arg == "from") {
+          if (parsePosition(line, pos))
+            rect->setFrom(pos);
+        }
+        else if (arg == "to") {
+          if (parsePosition(line, pos))
+            rect->setTo(pos);
+        }
+        else if (arg == "rto") {
+          if (parsePosition(line, pos))
+            rect->setRTo(pos);
+        }
+        else if (arg == "center" || arg == "at") {
+          if (parsePosition(line, pos))
+            rect->setCenter(pos);
+        }
+        else if (arg == "size") {
+          CGnuPlotSize size;
+
+          if (parseSize(line, size))
+            rect->setSize(size);
+        }
+        else if (arg == "fillcolor" || arg == "fc") {
+          CGnuPlotColorSpec c;
+
+          if (parseColorSpec(line, c))
+            rect->setFillColor(c);
+        }
+        else if (arg == "fillstyle" || arg == "fs") {
+          CGnuPlotFillStyle fs;
+
+          if (parseFillStyle(line, fs))
+            rect->setFillStyle(fs);
+        }
+        else if (arg == "linetype" || arg == "lt") {
+          int lt = 0;
+
+          if (parseInteger(line, lt))
+            rect->setLineType(lt);
+        }
+        else if (arg == "linewidth" || arg == "lw") {
+          double lw = 1.0;
+
+          if (parseReal(line, lw))
+            rect->setLineWidth(lw);
+        }
+        else if (arg == "front" || arg == "back" || arg == "behind") {
+          if      (arg == "front" ) rect->setLayer(DrawLayer::FRONT);
+          else if (arg == "back"  ) rect->setLayer(DrawLayer::BACK);
+          else if (arg == "behind") rect->setLayer(DrawLayer::BEHIND);
+        }
+        else {
+          errorMsg("Invalid arg '" + arg + "'");
+          break;
+        }
+
+        arg = readNonSpace(line);
+      }
+    }
+    else
+      std::cerr << "Invalid object type" << std::endl;
+  }
+  // set offsets <left>, <right>, <top>, <bottom>
+  else if (var == VariableName::OFFSETS) {
+    CGnuPlotCoordValue l, r, t, b;
+
+    if (parseCoordValue(line, l)) {
+      if (line.skipSpaceAndChar(',') && parseCoordValue(line, r)) {
+        if (line.skipSpaceAndChar(',') && parseCoordValue(line, t)) {
+          if (line.skipSpaceAndChar(',') && parseCoordValue(line, b)) {
+            offsets_.setValues(l, r, t, b);
+          }
+        }
+      }
+    }
+  }
+  // set origin <x-origin>,<y-origin>
+  else if (var == VariableName::ORIGIN) {
+    double r;
+
+    if (parseReal(line, r))
+      plotSize_.x = r;
+
+    if (line.skipSpaceAndChar(',')) {
+      if (parseReal(line, r))
+        plotSize_.y = r;
+    }
+  }
+  // set output ["<filename>"]
+  else if (var == VariableName::OUTPUT) {
+    std::string filename;
+
+    if (parseString(line, filename, "Invalid filename"))
+      setOutputFile(filename);
   }
   // set parametric
   else if (var == VariableName::PARAMETRIC) {
     parametric_ = true;
+  }
+  // set paxis <no> {range <range-options> | {tics <tic-options>}}
+  else if (var == VariableName::PAXIS) {
+    int i;
+
+    if (! parseInteger(line, i))
+      return false;
+
+    std::string arg = readNonSpace(line);
+
+    if      (arg == "range")
+      parseAxisRange(line, axesData_.paxis[i]);
+    else if (arg == "tics")
+      parseAxesTics(line, axesData_.paxis[i]);
   }
   // set polar
   else if (var == VariableName::POLAR) {
@@ -4226,127 +4814,6 @@ setCmd(const std::string &args)
     if (parseReal(line, r))
       margin_.setTop(r, screen);
   }
-  // set margins <left>, <right>, <top>, <bottom>
-  else if (var == VariableName::MARGINS) {
-    double l = -1, r = -1, t = -1, b = -1;
-
-    (void) parseReal(line, l);
-
-    margin_.setLeft(l);
-
-    if (line.skipSpaceAndChar(',')) {
-      (void) parseReal(line, r);
-
-      margin_.setRight(r);
-
-      if (line.skipSpaceAndChar(',')) {
-        (void) parseReal(line, t);
-
-        margin_.setTop(t);
-
-        if (line.skipSpaceAndChar(',')) {
-          (void) parseReal(line, b);
-
-          margin_.setBottom(b);
-        }
-      }
-    }
-  }
-  // set multiplot { title <page title> {font <fontspec>} {enhanced|noenhanced} }
-  //               { layout <rows>,<cols> {rowsfirst|columnsfirst} {downwards|upwards}
-  //                 {scale <xscale>{,<yscale>}} {offset <xoff>{,<yoff>}} }
-  else if (var == VariableName::MULTIPLOT) {
-    multiplot_.setEnabled(true);
-    multiplot_.setAutoFit(true);
-
-    std::string arg = readNonSpace(line);
-
-    while (arg != "") {
-      if      (arg == "title") {
-        std::string titleStr;
-
-        parseString(line, titleStr);
-      }
-      else if (arg == "font") {
-        CFontPtr font;
-
-        (void) parseFont(line, font);
-      }
-      else if (arg == "enhanced" || arg == "noenhanced") {
-      }
-      else if (arg == "layout") {
-        int i;
-
-        if (parseInteger(line, i))
-          multiplot_.setRows(i);
-
-        if (line.skipSpaceAndChar(',')) {
-          if (parseInteger(line, i))
-            multiplot_.setCols(i);
-        }
-
-        multiplot_.setAutoFit(false);
-      }
-      else if (arg == "rowsfirst") {
-      }
-      else if (arg == "columnsfirst") {
-      }
-      else if (arg == "downwards") {
-      }
-      else if (arg == "upwards") {
-      }
-      else if (arg == "scale") {
-        std::string xStr = readNonSpaceNonComma(line);
-        std::string yStr = readNonSpace(line);
-      }
-      else if (arg == "offset") {
-        std::string xStr = readNonSpaceNonComma(line);
-        std::string yStr = readNonSpace(line);
-      }
-      else {
-        errorMsg("Invalid arg '" + arg + "'");
-        break;
-      }
-
-      arg = readNonSpace(line);
-    }
-  }
-  // set offsets <left>, <right>, <top>, <bottom>
-  else if (var == VariableName::OFFSETS) {
-  }
-
-  // set logscale <axes> {<base>}
-  else if (var == VariableName::LOGSCALE) {
-    std::string axesStr;
-    int         base = 10;
-
-    if (line.isValid()) {
-      axesStr = readNonSpace(line);
-
-      if (! parseInteger(line, base))
-        base = 10;
-    }
-
-    if (axesStr == "" || axesStr == "x" ) setLogScale(LogScale::X , base);
-    if (axesStr == "" || axesStr == "y" ) setLogScale(LogScale::Y , base);
-    if (axesStr == "" || axesStr == "z" ) setLogScale(LogScale::Z , base);
-    if (axesStr == "" || axesStr == "x2") setLogScale(LogScale::X2, base);
-    if (axesStr == "" || axesStr == "y2") setLogScale(LogScale::Y2, base);
-    if (axesStr == "" || axesStr == "cb") setLogScale(LogScale::CB, base);
-  }
-
-  // set origin <x-origin>,<y-origin>
-  else if (var == VariableName::ORIGIN) {
-    double r;
-
-    if (parseReal(line, r))
-      plotSize_.x = r;
-
-    if (line.skipSpaceAndChar(',')) {
-      if (parseReal(line, r))
-        plotSize_.y = r;
-    }
-  }
   // set size {{no}square | ratio <r> | noratio} {<xscale>,<yscale>}
   else if (var == VariableName::SIZE) {
     std::string arg = readNonSpaceNonComma(line);
@@ -4389,245 +4856,6 @@ setCmd(const std::string &args)
     }
   }
 
-  // set object <index> <object-type> <object-properties>
-  //            {front|back|behind} {fc|fillcolor <colorspec>} {fs <fillstyle>}
-  //            {default} {lw|linewidth <width>}
-  else if (var == VariableName::OBJECT) {
-    int ind = -1;
-
-    if (! parseInteger(line, ind))
-      ind = -1;
-
-    CGnuPlotTypes::ObjectType type = CGnuPlotTypes::ObjectType::NONE;
-
-    if (! parseOptionValue(this, line, type)) {
-      auto annotation = getAnnotation<CGnuPlotGroupAnnotation>(ind);
-
-      if (annotation)
-        type = annotation->type();
-    }
-
-    // set object <index> circle {at|center} <position> size <radius>
-    //            {arc [<begin>:<end>]}
-    //            {<other-object-properties>}
-    if      (type == CGnuPlotTypes::ObjectType::CIRCLE) {
-      auto ellipse = lookupAnnotation<CGnuPlotEllipse>(ind);
-      if (! ellipse) return false;
-
-      //---
-
-      CSize2D size(1,1);
-
-      std::string arg = readNonSpace(line);
-
-      while (arg != "") {
-        if      (arg == "at" || arg == "circle") {
-          CGnuPlotPosition p;
-
-          if (parsePosition(line, p))
-            ellipse->setCenter(p.point());
-        }
-        else if (arg == "size") {
-          arg = readNonSpace(line);
-
-          double s;
-
-          if (CStrUtil::toReal(arg, &s)) {
-            ellipse->setRX(s);
-            ellipse->setRY(s);
-          }
-        }
-        else if (arg == "arc") {
-          arg = readNonSpace(line);
-        }
-        else if (arg == "fillcolor" || arg == "fc") {
-          CGnuPlotColorSpec c;
-
-          if (parseColorSpec(line, c))
-            ellipse->setFillColor(c);
-        }
-        else {
-          errorMsg("Invalid arg '" + arg + "'");
-          break;
-        }
-
-        arg = readNonSpace(line);
-      }
-    }
-    // set object <index> ellipse {at|center} <position> size <w>,<h>
-    //            {angle <orientation>} {units xy|xx|yy}
-    //            {<other-object-properties>}
-    else if (type == CGnuPlotTypes::ObjectType::ELLIPSE) {
-      auto ellipse = lookupAnnotation<CGnuPlotEllipse>(ind);
-      if (! ellipse) return false;
-
-      //---
-
-      CSize2D size(1,1);
-
-      std::string arg = readNonSpace(line);
-
-      while (arg != "") {
-        if      (arg == "at" || arg == "center") {
-          CGnuPlotPosition p;
-
-          if (parsePosition(line, p))
-            ellipse->setCenter(p.point());
-        }
-        else if (arg == "size") {
-          if (! parseSize(line, size))
-            continue;
-
-          ellipse->setRX(size.width /2.0);
-          ellipse->setRY(size.height/2.0);
-        }
-        else if (arg == "angle") {
-          arg = readNonSpace(line);
-        }
-        else if (arg == "units") {
-          arg = readNonSpace(line);
-        }
-        else if (arg == "fillcolor" || arg == "fc") {
-          CGnuPlotColorSpec c;
-
-          if (parseColorSpec(line, c))
-            ellipse->setFillColor(c);
-        }
-        else if (arg == "fillstyle" || arg == "fs") {
-          CGnuPlotFillStyle fs;
-
-          if (parseFillStyle(line, fs))
-            ellipse->setFillStyle(fs);
-        }
-        else {
-          errorMsg("Invalid arg '" + arg + "'");
-          break;
-        }
-
-        arg = readNonSpace(line);
-      }
-    }
-    // set object <index> polygon
-    //            from <position> to <position> ... {to <position>} |
-    //            from <position> rto <position> ... {rto <position>}
-    else if (type == CGnuPlotTypes::ObjectType::POLYGON) {
-      auto poly = lookupAnnotation<CGnuPlotPolygon>(ind);
-      if (! poly) return false;
-
-      //---
-
-      CGnuPlotPosition from, to;
-
-      std::string arg = readNonSpace(line);
-
-      while (arg != "") {
-        if      (arg == "from") {
-          if (! parsePosition(line, from))
-            return false;
-
-          poly->addPoint(from.point());
-        }
-        else if (arg == "to") {
-          if (! parsePosition(line, to))
-            return false;
-
-          poly->addPoint(to.point());
-        }
-        else if (arg == "fillcolor" || arg == "fc") {
-          CGnuPlotColorSpec c;
-
-          if (parseColorSpec(line, c))
-            poly->setFillColor(c);
-        }
-        else if (arg == "linewidth" || arg == "lw") {
-          double lw = 1.0;
-
-          if (parseReal(line, lw))
-            poly->setLineWidth(lw);
-        }
-        else {
-          errorMsg("Invalid arg '" + arg + "'");
-          break;
-        }
-
-        arg = readNonSpace(line);
-      }
-    }
-    // set object <index> rectangle
-    //            {from <position> {to|rto} <position> |
-    //            center|at <position> size <w>,<h>}
-    else if (type == CGnuPlotTypes::ObjectType::RECTANGLE) {
-      auto rect = lookupAnnotation<CGnuPlotRectangle>(ind);
-      if (! rect) return false;
-
-      //---
-
-      CGnuPlotPosition pos;
-      CGnuPlotSize     size;
-
-      std::string arg = readNonSpace(line);
-
-      while (arg != "") {
-        if      (arg == "from") {
-          if (parsePosition(line, pos))
-            rect->setFrom(pos);
-        }
-        else if (arg == "to") {
-          if (parsePosition(line, pos))
-            rect->setTo(pos);
-        }
-        else if (arg == "rto") {
-          if (parsePosition(line, pos))
-            rect->setRTo(pos);
-        }
-        else if (arg == "center" || arg == "at") {
-          if (parsePosition(line, pos))
-            rect->setCenter(pos);
-        }
-        else if (arg == "size") {
-          if (parseSize(line, size))
-            rect->setSize(size);
-        }
-        else if (arg == "fillcolor" || arg == "fc") {
-          CGnuPlotColorSpec c;
-
-          if (parseColorSpec(line, c))
-            rect->setFillColor(c);
-        }
-        else if (arg == "fillstyle" || arg == "fs") {
-          CGnuPlotFillStyle fs;
-
-          if (parseFillStyle(line, fs))
-            rect->setFillStyle(fs);
-        }
-        else if (arg == "linetype" || arg == "lt") {
-          int lt = 0;
-
-          if (parseInteger(line, lt))
-            rect->setLineType(lt);
-        }
-        else if (arg == "linewidth" || arg == "lw") {
-          double lw = 1.0;
-
-          if (parseReal(line, lw))
-            rect->setLineWidth(lw);
-        }
-        else if (arg == "front" || arg == "back" || arg == "behind") {
-          if      (arg == "front" ) rect->setLayer(DrawLayer::FRONT);
-          else if (arg == "back"  ) rect->setLayer(DrawLayer::BACK);
-          else if (arg == "behind") rect->setLayer(DrawLayer::BEHIND);
-        }
-        else {
-          errorMsg("Invalid arg '" + arg + "'");
-          break;
-        }
-
-        arg = readNonSpace(line);
-      }
-    }
-    else
-      std::cerr << "Invalid object type" << std::endl;
-  }
   // set title {"<text>"} {offset <offset>} {font "<font>{,<size>}"}
   //           {{textcolor | tc} {<colorspec> | default}} {{no}enhanced}
   else if (var == VariableName::TITLE) {
@@ -5209,20 +5437,6 @@ setCmd(const std::string &args)
   // set zeroaxis
   else if (var == VariableName::ZEROAXIS) {
   }
-  // set paxis <no> {range <range-options> | {tics <tic-options>}}
-  else if (var == VariableName::PAXIS) {
-    int i;
-
-    if (! parseInteger(line, i))
-      return false;
-
-    std::string arg = readNonSpace(line);
-
-    if      (arg == "range")
-      parseAxisRange(line, axesData_.paxis[i]);
-    else if (arg == "tics")
-      parseAxesTics(line, axesData_.paxis[i]);
-  }
 
   // set timefmt "<format string>"
   //
@@ -5403,13 +5617,6 @@ setCmd(const std::string &args)
     setPm3D(true);
   }
 
-  // set output ["<filename>"]
-  else if (var == VariableName::OUTPUT) {
-    std::string filename;
-
-    if (parseString(line, filename, "Invalid filename"))
-      setOutputFile(filename);
-  }
   // set print ["<filename>"] [append]
   else if (var == VariableName::PRINT) {
     std::string filename;
@@ -5604,7 +5811,7 @@ showCmd(const std::string &args)
     if (! parseInteger(line, ind))
       ind = -1;
 
-    showAnnotations<CGnuPlotArrow>(ind);
+    showAnnotations<CGnuPlotArrow>(std::cout, ind);
   }
   // show autoscale
   else if (var == VariableName::AUTOSCALE) {
@@ -5657,18 +5864,7 @@ showCmd(const std::string &args)
   }
   // show bmargin
   else if (var == VariableName::BMARGIN) {
-    std::cout << "bmargin is ";
-
-    if (! margin_.bottom().isValid())
-      std::cout << "computed automatically" << std::endl;
-    else {
-      std::cout << "set to";
-
-      if (margin_.bscreen)
-        std::cout << " screen";
-
-      std::cout << " " << margin_.bottom().getValue() << std::endl;
-    }
+    margin_.showBottom(std::cout);
   }
   // show border
   else if (var == VariableName::BORDER) {
@@ -5816,14 +6012,10 @@ showCmd(const std::string &args)
 
       std::cout << "Grid drawn at ";
 
-      if      (axesData_.grid.layer == DrawLayer::DEFAULT)
-        std::cout << "default";
-      else if (axesData_.grid.layer == DrawLayer::FRONT)
-        std::cout << "front";
-      else if (axesData_.grid.layer == DrawLayer::BACK)
-        std::cout << "back";
+      std::cout << CStrUniqueMatch::
+        valueToString<CGnuPlotTypes::DrawLayer>(axesData_.grid.layer) << " layer";
 
-      std::cout << " layer" << std::endl;
+      std::cout << std::endl;
     }
   }
   // show hidden3d
@@ -5882,7 +6074,7 @@ showCmd(const std::string &args)
   }
   // show label
   else if (var == VariableName::LABEL) {
-    showAnnotations<CGnuPlotLabel>();
+    showAnnotations<CGnuPlotLabel>(std::cout);
   }
   // show linetype <ind>
   else if (var == VariableName::LINETYPE) {
@@ -5933,31 +6125,151 @@ showCmd(const std::string &args)
   }
   // show lmargin
   else if (var == VariableName::LMARGIN) {
-    std::cout << "lmargin is ";
-
-    if (! margin_.left().isValid())
-      std::cout << "computed automatically" << std::endl;
-    else {
-      std::cout << "set to";
-
-      if (margin_.lscreen)
-        std::cout << " screen";
-
-      std::cout << " " << margin_.left().getValue() << std::endl;
-    }
+    margin_.showLeft(std::cout);
   }
   // show loadpath
   else if (var == VariableName::LOADPATH) {
     std::cout << "loadpath is";
 
     if (loadPaths_.empty())
-      std::cout << " empty";
+      std::cout << " empty" << std::endl;
     else {
       for (const auto &p : loadPaths_)
         std::cout << " \"" << p << "\"";
+
+      std::cout << std::endl;
+
+      std::cout << "loadpath from GNUPLOT_LIB is ";
+
+      if (getenv("GNUPLOT_LIB"))
+        std::cout << getenv("GNUPLOT_LIB");
+
+      std::cout << std::endl;
     }
+  }
+  // show locale
+  else if (var == VariableName::LOCALE) {
+    std::cout << "locale_ \"" << locale_ << "\"" << std::endl;
+  }
+  // show logscale
+  else if (var == VariableName::LOGSCALE) {
+    if (isLogScale(LogScale::X ) || isLogScale(LogScale::Y ) || isLogScale(LogScale::Z ) ||
+        isLogScale(LogScale::X2) || isLogScale(LogScale::Y2) || isLogScale(LogScale::CB)) {
+      std::cout << "logscaling";
+
+      auto print = [&](const std::string &id, LogScale s, bool &output) {
+        if (! isLogScale(s)) return;
+        if (output) std::cout << " and";
+        std::cout << " " << id << " (base " << getLogScale(s) << ")";
+        output = true;
+      };
+
+      bool output = false;
+
+      print("x" , LogScale::X , output);
+      print("y" , LogScale::Y , output);
+      print("z" , LogScale::Z , output);
+      print("x2", LogScale::X2, output);
+      print("y2", LogScale::Y2, output);
+      print("cb", LogScale::CB, output);
+
+      std::cout << std::endl;
+    }
+    else {
+      std::cout << "no logscaling" << std::endl;
+    }
+  }
+  // show macros
+  else if (var == VariableName::MACROS) {
+  }
+  // show mapping
+  else if (var == VariableName::MAPPING) {
+    std::cout << "mapping for 3-d data is ";
+
+    if      (mapping_ == CGnuPlotTypes::Mapping::CARTESIAN_MAPPING  ) std::cout << "cartesian";
+    else if (mapping_ == CGnuPlotTypes::Mapping::CYLINDRICAL_MAPPING) std::cout << "cylindrical";
+    else if (mapping_ == CGnuPlotTypes::Mapping::SPHERICAL_MAPPING  ) std::cout << "spherical";
 
     std::cout << std::endl;
+  }
+  // show margins
+  else if (var == VariableName::MARGINS) {
+    margin_.showLeft  (std::cout);
+    margin_.showRight (std::cout);
+    margin_.showTop   (std::cout);
+    margin_.showBottom(std::cout);
+  }
+  // show mouse
+  else if (var == VariableName::MOUSE) {
+    mouseData_.show(std::cout);
+  }
+  // show multiplot
+  else if (var == VariableName::MULTIPLOT) {
+    if (multiplot_.isEnabled())
+      std::cout << "multiplot mode is on" << std::endl;
+    else
+      std::cout << "multiplot mode is off" << std::endl;
+  }
+  // show mx2tics
+  else if (var == VariableName::MX2TICS) {
+    axesData_.xaxis[2].showMinorTics(std::cout, "x2tics", "xtic");
+  }
+  // show mxtics
+  else if (var == VariableName::MXTICS) {
+    axesData_.xaxis[1].showMinorTics(std::cout, "xtics", "xtic");
+  }
+  // show my2tics
+  else if (var == VariableName::MY2TICS) {
+    axesData_.yaxis[2].showMinorTics(std::cout, "y2tics", "ytic");
+  }
+  // show mytics
+  else if (var == VariableName::MYTICS) {
+    axesData_.yaxis[1].showMinorTics(std::cout, "ytics", "ytic");
+  }
+  // show mztics
+  else if (var == VariableName::MZTICS) {
+    axesData_.zaxis[1].showMinorTics(std::cout, "ztics", "ztic");
+  }
+  // show object
+  else if (var == VariableName::OBJECT) {
+    std::string arg = readNonSpace(line);
+
+    CGnuPlotTypes::ObjectType type = CGnuPlotTypes::ObjectType::NONE;
+
+    if (parseOptionValue(this, line, type)) {
+      if      (type == CGnuPlotTypes::ObjectType::RECTANGLE)
+        showAnnotations<CGnuPlotRectangle>(std::cout);
+      else if (type == CGnuPlotTypes::ObjectType::ELLIPSE)
+        showAnnotations<CGnuPlotEllipse>(std::cout);
+      else if (type == CGnuPlotTypes::ObjectType::CIRCLE)
+        showAnnotations<CGnuPlotCircle>(std::cout);
+      else if (type == CGnuPlotTypes::ObjectType::POLYGON)
+        showAnnotations<CGnuPlotPolygon>(std::cout);
+    }
+    else
+      showAnnotations<CGnuPlotGroupAnnotation>(std::cout);
+  }
+  // show offsets
+  else if (var == VariableName::OFFSETS) {
+    offsets_.show(std::cout);
+  }
+  // show origin
+  else if (var == VariableName::ORIGIN) {
+    std::cout << "origin is set to " << plotSize_.x.getValue(0) <<
+                 ", " << plotSize_.y.getValue(0) << std::endl;
+  }
+  // show output
+  else if (var == VariableName::OUTPUT) {
+    std::cout << "output is sent to " <<
+      (! getOutputFile().empty() ? ("'" + getOutputFile() + "'"): "STDOUT") << std::endl;
+  }
+  // show parametric
+  else if (var == VariableName::PARAMETRIC) {
+    // TODO
+  }
+  // show paxis
+  else if (var == VariableName::PAXIS) {
+    // TODO
   }
   // show variables
   else if (var == VariableName::VARIABLES) {
@@ -5974,21 +6286,20 @@ showCmd(const std::string &args)
   }
   // show ellipse
   else if (var == VariableName::ELLIPSE) {
-    showAnnotations<CGnuPlotEllipse>();
+    showAnnotations<CGnuPlotEllipse>(std::cout);
+  }
+  // show circle
+  else if (var == VariableName::CIRCLE) {
+    showAnnotations<CGnuPlotCircle>(std::cout);
   }
   // show polygon
   else if (var == VariableName::POLYGON) {
-    showAnnotations<CGnuPlotPolygon>();
+    showAnnotations<CGnuPlotPolygon>(std::cout);
   }
   // show rectangle
   else if (var == VariableName::RECTANGLE) {
-    showAnnotations<CGnuPlotRectangle>();
+    showAnnotations<CGnuPlotRectangle>(std::cout);
   }
-  // show object
-  else if (var == VariableName::OBJECT) {
-    showAnnotations<CGnuPlotGroupAnnotation>();
-  }
-
   // show style
   else if (var == VariableName::STYLE) {
     std::map<std::string,bool> show;
@@ -6048,11 +6359,6 @@ showCmd(const std::string &args)
   // show pointsize
   else if (var == VariableName::POINTSIZE) {
     std::cout << "pointsize is " << lineStyle()->pointSize() << std::endl;
-  }
-  // show output
-  else if (var == VariableName::OUTPUT) {
-    std::cout << "output is sent to " <<
-      (! getOutputFile().empty() ? ("'" + getOutputFile() + "'"): "STDOUT") << std::endl;
   }
   // show print
   else if (var == VariableName::PRINT) {
@@ -6359,8 +6665,7 @@ unsetCmd(const std::string &args)
   }
   // unset bmargin
   else if (var == VariableName::BMARGIN) {
-    margin_.bmargin.setInvalid();
-    margin_.bscreen = false;
+    margin_.resetBottom();
   }
   // unset border
   else if (var == VariableName::BORDER) {
@@ -6507,12 +6812,38 @@ unsetCmd(const std::string &args)
   }
   // unset lmargin
   else if (var == VariableName::LMARGIN) {
-    margin_.lmargin.setInvalid();
-    margin_.lscreen = false;
+    margin_.resetLeft();
   }
   // unset loadpath
   else if (var == VariableName::LOADPATH) {
     loadPaths_.clear();
+  }
+  // unset locale
+  else if (var == VariableName::LOCALE) {
+    locale_ = "";
+  }
+  // unset logscale
+  else if (var == VariableName::LOGSCALE) {
+    resetLogScale();
+  }
+  // unset macros
+  else if (var == VariableName::MACROS) {
+    setMacros(false);
+  }
+  // unset mapping
+  else if (var == VariableName::MAPPING) {
+    mapping_ = CGnuPlotTypes::Mapping::CARTESIAN_MAPPING;
+  }
+  // unset margins
+  else if (var == VariableName::MARGINS) {
+    margin_.resetLeft  ();
+    margin_.resetRight ();
+    margin_.resetTop   ();
+    margin_.resetBottom();
+  }
+  // unset mouse
+  else if (var == VariableName::MOUSE) {
+    mouseData_.setEnabled(false);
   }
   // unset multiplot
   else if (var == VariableName::MULTIPLOT) {
@@ -6523,8 +6854,61 @@ unsetCmd(const std::string &args)
 
     multiWindow_ = 0;
   }
+  // unset mx2tics
+  else if (var == VariableName::MX2TICS) {
+    axesData_.xaxis[2].setMinorTicsDisplayed(false);
+    axesData_.xaxis[2].resetMinorTicsFreq();
+  }
+  // unset mxtics
+  else if (var == VariableName::MXTICS) {
+    axesData_.xaxis[1].setMinorTicsDisplayed(false);
+    axesData_.xaxis[1].resetMinorTicsFreq();
+  }
+  // unset my2tics
+  else if (var == VariableName::MY2TICS) {
+    axesData_.yaxis[2].setMinorTicsDisplayed(false);
+    axesData_.yaxis[2].resetMinorTicsFreq();
+  }
+  // unset mytics
+  else if (var == VariableName::MYTICS) {
+    axesData_.yaxis[1].setMinorTicsDisplayed(false);
+    axesData_.yaxis[1].resetMinorTicsFreq();
+  }
+  // unset mztics
+  else if (var == VariableName::MZTICS) {
+    axesData_.zaxis[1].setMinorTicsDisplayed(false);
+    axesData_.zaxis[1].resetMinorTicsFreq();
+  }
+  // unset object <index>
+  else if (var == VariableName::OBJECT) {
+    // TODO
+  }
+  // unset offsets
+  else if (var == VariableName::OFFSETS) {
+    offsets_.unset();
+  }
+  // unset origin
+  else if (var == VariableName::ORIGIN) {
+    plotSize_.x = 0;
+    plotSize_.y = 0;
+  }
+  // unset output
+  else if (var == VariableName::OUTPUT) {
+    // TODO
+  }
+  // unset parametric
+  else if (var == VariableName::PARAMETRIC) {
+    parametric_ = false;
+  }
+  // unset paxis
+  else if (var == VariableName::PAXIS) {
+    // TODO
+  }
   else if (var == VariableName::ELLIPSE) {
     clearAnnotations<CGnuPlotEllipse>();
+  }
+  else if (var == VariableName::CIRCLE) {
+    clearAnnotations<CGnuPlotCircle>();
   }
   else if (var == VariableName::POLYGON) {
     clearAnnotations<CGnuPlotPolygon>();
@@ -6566,18 +6950,12 @@ unsetCmd(const std::string &args)
   // unset surface
   else if (var == VariableName::SURFACE)
     setSurface3D(false);
-  // unset macros
-  else if (var == VariableName::MACROS)
-    setMacros(true);
   // unset pm3d
   else if (var == VariableName::PM3D)
     setPm3D(false);
   // unset table
   else if (var == VariableName::TABLE)
     setTableFile("");
-  // unset parametric
-  else if (var == VariableName::PARAMETRIC)
-    parametric_ = false;
   // unset polar
   else if (var == VariableName::POLAR)
     polar_ = false;
@@ -9456,4 +9834,31 @@ errorMsg(const std::string &msg) const
   std::cerr << msg << std::endl;
 
   CExprInst->createStringVariable("GPVAL_ERRMSG" , msg);
+}
+
+//-----
+
+void
+CGnuPlot::BorderData::
+show(std::ostream &os) const
+{
+  if (! sides)
+    os << "border is not drawn" << std::endl;
+  else
+    os << "border " << sides << " is drawn in" <<
+          CStrUniqueMatch::valueToString<DrawLayer>(layer) << " layer with" <<
+          " linecolor " << lineStyle <<
+          " linewidth " << lineWidth <<
+          " lineType " << lineType << std::endl;
+}
+
+void
+CGnuPlot::BorderData::
+save(std::ostream &os) const
+{
+  os << "set border " << sides << " " <<
+        CStrUniqueMatch::valueToString<DrawLayer>(layer) <<
+        " lt " << lineType <<
+        " linewidth " << lineWidth <<
+        " dashtype solid" << std::endl;
 }

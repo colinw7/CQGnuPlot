@@ -27,8 +27,9 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
   CGnuPlotLineStyle *createLineStyle() override;
 
   CGnuPlotArrow     *createArrow    (CGnuPlotGroup *group) override;
-  CGnuPlotLabel     *createLabel    (CGnuPlotGroup *group) override;
+  CGnuPlotCircle    *createCircle   (CGnuPlotGroup *group) override;
   CGnuPlotEllipse   *createEllipse  (CGnuPlotGroup *group) override;
+  CGnuPlotLabel     *createLabel    (CGnuPlotGroup *group) override;
   CGnuPlotPolygon   *createPolygon  (CGnuPlotGroup *group) override;
   CGnuPlotRectangle *createRectangle(CGnuPlotGroup *group) override;
 

@@ -60,6 +60,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotTitle.h>
 #include <CGnuPlotObject.h>
 #include <CGnuPlotArrow.h>
+#include <CGnuPlotCircle.h>
 #include <CGnuPlotEllipse.h>
 #include <CGnuPlotLabel.h>
 #include <CGnuPlotPolygon.h>
@@ -136,6 +137,7 @@ class CGnuPlot {
     CBLABEL,
     CBRANGE,
     CBTICS,
+    CIRCLE,
     CLIP,
     CNTRLABEL,
     CNTRPARAM,
@@ -253,18 +255,18 @@ class CGnuPlot {
 
   enum class StyleVar {
     NONE,
+    ARROW,
+    BOXPLOT,
+    CIRCLE,
     DATA,
+    ELLIPSE,
+    FILL,
     FUNCTION,
+    HISTOGRAM,
     INCREMENT,
     LINE,
-    FILL,
-    BOXPLOT,
-    TEXTBOX,
-    HISTOGRAM,
     RECTANGLE,
-    CIRCLE,
-    ELLIPSE,
-    ARROW
+    TEXTBOX
   };
 
   enum class StyleIncrementType {
@@ -407,24 +409,8 @@ class CGnuPlot {
       sides = 0;
     }
 
-    void show(std::ostream &os) const {
-      if (! sides)
-        os << "border is not drawn" << std::endl;
-      else
-        os << "border " << sides << " is drawn in" <<
-              CStrUniqueMatch::valueToString<DrawLayer>(layer) << " layer with" <<
-              " linecolor " << lineStyle <<
-              " linewidth " << lineWidth <<
-              " lineType " << lineType << std::endl;
-    }
-
-    void save(std::ostream &os) const {
-      os << "set border " << sides << " " <<
-            CStrUniqueMatch::valueToString<DrawLayer>(layer) <<
-            " lt " << lineType <<
-            " linewidth " << lineWidth <<
-            " dashtype solid" << std::endl;
-    }
+    void show(std::ostream &os) const;
+    void save(std::ostream &os) const;
   };
 
   struct GridData {
@@ -495,30 +481,70 @@ class CGnuPlot {
 
   //---
 
+  struct MarginValue {
+    COptReal value;
+    bool     screen { false };
+
+    MarginValue() { }
+
+    MarginValue(double v, bool s=false) { value = v; screen = s; }
+
+    void setValue(double v, bool b) { value = v; screen = b; }
+
+    void resetValue() { value.setInvalid(); screen = false; }
+
+    void show(std::ostream &os, const std::string &id) {
+      os << id << " is ";
+
+      if (! value.isValid())
+        os << "computed automatically" << std::endl;
+      else {
+        os << "set to";
+
+        if (screen)
+          os << " screen";
+
+        os << " " << value.getValue() << std::endl;
+      }
+    }
+  };
+
   struct Margin {
+    Margin() { }
+
     Margin(double l, double b, double r, double t) :
      lmargin(l), bmargin(b), rmargin(r), tmargin(t) {
     }
 
-    const COptReal &left  () const { return lmargin; }
-    const COptReal &bottom() const { return bmargin; }
-    const COptReal &right () const { return rmargin; }
-    const COptReal &top   () const { return tmargin; }
+    const COptReal &left  () const { return lmargin.value; }
+    const COptReal &bottom() const { return bmargin.value; }
+    const COptReal &right () const { return rmargin.value; }
+    const COptReal &top   () const { return tmargin.value; }
 
-    void setLeft  (double l, bool s=false) { lmargin = l; lscreen = s; }
-    void setBottom(double b, bool s=false) { bmargin = b; bscreen = s; }
-    void setRight (double r, bool s=false) { rmargin = r; rscreen = s; }
-    void setTop   (double t, bool s=false) { tmargin = t; tscreen = s; }
+    void setLeft  (double l, bool s=false) { lmargin.setValue(l, s); }
+    void setBottom(double b, bool s=false) { bmargin.setValue(b, s); }
+    void setRight (double r, bool s=false) { rmargin.setValue(r, s); }
+    void setTop   (double t, bool s=false) { tmargin.setValue(t, s); }
+
+    void resetLeft  () { lmargin.resetValue(); }
+    void resetBottom() { bmargin.resetValue(); }
+    void resetRight () { rmargin.resetValue(); }
+    void resetTop   () { tmargin.resetValue(); }
 
     CRange2D range() const {
-      return CRange2D(left ().getValue(), bottom().getValue(),
-                      right().getValue(), top   ().getValue());
+      return CRange2D(left ().getValue(10), bottom().getValue(10),
+                      right().getValue(10), top   ().getValue(10));
     }
 
-    COptReal lmargin; bool lscreen { false };
-    COptReal bmargin; bool bscreen { false };
-    COptReal rmargin; bool rscreen { false };
-    COptReal tmargin; bool tscreen { false };
+    void showLeft  (std::ostream &os) { lmargin.show(os, "lmargin"); }
+    void showBottom(std::ostream &os) { bmargin.show(os, "bmargin"); }
+    void showRight (std::ostream &os) { rmargin.show(os, "rmargin"); }
+    void showTop   (std::ostream &os) { tmargin.show(os, "tmargin"); }
+
+    MarginValue lmargin;
+    MarginValue bmargin;
+    MarginValue rmargin;
+    MarginValue tmargin;
   };
 
   //---
@@ -609,6 +635,29 @@ class CGnuPlot {
     std::string locale;
   };
 
+  class Offsets {
+   public:
+    void setValues(const CGnuPlotCoordValue &l, const CGnuPlotCoordValue &r,
+                   const CGnuPlotCoordValue &t, const CGnuPlotCoordValue &b) {
+      l_ = l; r_ = r;
+      t_ = t; b_ = b;
+    }
+
+    void show(std::ostream &os) {
+      os << "offsets are " << l_ << ", " << r_ << ", " << t_ << ", " << b_ << std::endl;
+    }
+
+    void unset() {
+      l_ = CGnuPlotCoordValue();
+      r_ = CGnuPlotCoordValue();
+      t_ = CGnuPlotCoordValue();
+      b_ = CGnuPlotCoordValue();
+    }
+
+   private:
+    CGnuPlotCoordValue l_, r_, t_, b_;
+  };
+
   struct FitData {
     std::string logfile { false };
     bool        quiet { false };
@@ -626,6 +675,113 @@ class CGnuPlot {
     double      lambda_factor { 0 };
     std::string script;
     int         version { 5 };
+  };
+
+  class MouseData {
+   public:
+    enum class PolarDistanceType {
+      NONE,
+      DEG,
+      TAN
+    };
+
+   public:
+    bool enabled() const { return enabled_; }
+    void setEnabled(bool b) { enabled_ = b; }
+
+    void setDoubleClick(double ms) { dclick_ = ms; }
+    void resetDoubleClick() { dclick_.setInvalid(); }
+
+    void setZoomCoordinates(bool b) { zoomCoords_ = b; }
+
+    void setZoomFactors(double x, double y) { zoomX_ = x; zoomY_ = y; }
+
+    void setRulerPos(const CPoint2D &p) { rulerPos_ = p; }
+    void resetRulerPos() { rulerPos_.setInvalid(); }
+
+    void setPolarDisance(PolarDistanceType type) { polarDistType_ = type; }
+
+    void setFormat(const std::string &fmt) { format_ = fmt; }
+
+    void setMouseFormat(const std::string &fmt) { mouseFormatStr_ = fmt; }
+    void setMouseFormat(int i) { mouseFormatInt_ = i; }
+
+    void setLabels(const std::string &str) { labels_ = str; }
+    void resetLabels() { labels_ = ""; }
+
+    bool zoomJump() const { return zoomJump_; }
+    void setZoomJump(bool b) { zoomJump_ = b; }
+
+    bool verbose() const { return verbose_; }
+    void setVerbose(bool b) { verbose_ = b; }
+
+    void show(std::ostream &os) {
+      if (enabled_) {
+        os << "mouse is on" << std::endl;
+
+        if (zoomCoords_)
+          os << "zoom coordinates will be drawn" << std::endl;
+        else
+          os << "no zoom coordinates will be drawn" << std::endl;
+
+        if (polarDistType_ == PolarDistanceType::NONE)
+          os << "no polar distance to ruler will be shown" << std::endl;
+        else
+          os << "distance to ruler will be show in polar coordinates" << std::endl;
+
+        if (dclick_.isValid())
+          os << "double click resolution is " << dclick_.getValue() << " ms" << std::endl;
+        else
+          os << "double click resolution is 300 ms" << std::endl;
+
+        if (format_.isValid())
+          os << "formatting numbers with \"" << format_.getValue() << "\"" << std::endl;
+        else
+          os << "formatting numbers with \"%g\"" << std::endl;
+
+        if (mouseFormatInt_.isValid())
+          os << "format for Button 2 is " << mouseFormatInt_.getValue() << std::endl;
+        else
+          os << "format for Button 2 is 0" << std::endl;
+
+        if (mouseFormatStr_ != "")
+          os << "Button 2 draws persistent labels with options \"" <<
+                mouseFormatStr_ << "\"" << std::endl;
+
+        if (! zoomX_.isValid() || ! zoomY_.isValid())
+          os << "zoom factors are x: 1   y: 1" << std::endl;
+        else
+          os << "zoom factors are x: " << zoomX_.getValue() <<
+                "   y: " << zoomY_.getValue() << std::endl;
+
+        if (zoomJump_)
+          os << "zoomjump is on" << std::endl;
+        else
+          os << "zoomjump is off" << std::endl;
+
+        if (verbose_)
+          os << "communication commands will be shown" << std::endl;
+        else
+          os << "communication commands will not be shown" << std::endl;
+      }
+      else
+        os << "mouse is off" << std::endl;
+    }
+
+   private:
+    bool               enabled_        { true };
+    COptReal           dclick_;
+    bool               zoomCoords_     { true };
+    COptReal           zoomX_;
+    COptReal           zoomY_;
+    COptValT<CPoint2D> rulerPos_;
+    PolarDistanceType  polarDistType_  { PolarDistanceType::NONE };
+    COptString         format_;
+    std::string        mouseFormatStr_;
+    COptInt            mouseFormatInt_;
+    std::string        labels_;
+    bool               zoomJump_       { false };
+    bool               verbose_        { false };
   };
 
   struct Hidden3DData {
@@ -788,6 +944,10 @@ class CGnuPlot {
   void setFilledCurve(const FilledCurve &c) { filledCurve_ = c; }
 
   const LogScaleMap &logScaleMap() const { return logScale_; }
+  void setLogScale(LogScale scale, int base) { logScale_[scale] = base; }
+  bool isLogScale(LogScale scale) const { return logScale_.find(scale) != logScale_.end(); }
+  int getLogScale(LogScale scale) const { auto p = logScale_.find(scale); return (*p).second; }
+  void resetLogScale() { logScale_.clear(); }
 
   double whiskerBars() const { return whiskerBars_; }
   void setWhiskerBars(double w) { whiskerBars_ = w; }
@@ -904,16 +1064,16 @@ class CGnuPlot {
   }
 
   template<typename T>
-  void showAnnotations(int ind=-1) {
+  void showAnnotations(std::ostream &os=std::cout, int ind=-1) {
     for (const auto &ann : annotations_) {
       const T *obj = dynamic_cast<const T *>(ann.get());
       if (! obj) continue;
 
       if (ind != -1 && obj->getInd() != ind) continue;
 
-      std::cerr << T::getName() << " " << obj->getInd();
-      obj->print(std::cerr);
-      std::cerr << std::endl;
+      os << T::getName() << " " << obj->getInd();
+      obj->print(os);
+      os << std::endl;
     }
   }
 
@@ -1100,10 +1260,6 @@ class CGnuPlot {
   const CGnuPlotTitle &title() const { return title_; }
   void setTitle(const CGnuPlotTitle &t) { title_ = t; }
 
-  void setLogScale(LogScale scale, int base) {
-    logScale_[scale] = base;
-  }
-
   void setDummyVars(const std::string &dummyVar1, const std::string &dummyVar2);
   void getDummyVars(std::string &dummyVar1, std::string &dummyVar2) const;
   void resetDummyVars();
@@ -1196,84 +1352,88 @@ class CGnuPlot {
   typedef std::map<std::string,std::string>     DummyVarMap;
   typedef std::vector<std::string>              PathList;
 
-  bool                  debug_  { false };
-  bool                  edebug_ { false };
-  CGnuPlotSVGDevice*    svgDevice_ { 0 };
-  CGnuPlotDevice*       device_ { 0 };
-  Devices               devices_;
-  FileData              fileData_;
-  FileDataArray         fileDataArray_;
-  Windows               windows_;
-  CGnuPlotFile          dataFile_;
-  CGnuPlotBoxWidth      boxWidth_;
-  Bars                  bars_;
-  CGnuPlotBoxPlot       boxPlot_;
-  std::string           outputFile_;
-  std::string           printFile_;
-  std::string           lastPlotCmd_;
-  bool                  printAppend_ { false };
-  std::string           tableFile_;
-  int                   pointNum_ { 0 };
-  CISize2D              terminalSize_   { 800, 800 };                  // terminal size
-  PlotStyle             dataStyle_      { PlotStyle::POINTS };
-  PlotStyle             functionStyle_  { PlotStyle::LINES };
-  Smooth                smooth_         { Smooth::NONE };
-  CGnuPlotHistogramData histogramData_;
-  CGnuPlotFillStyle     fillStyle_;
-  CGnuPlotLineStyleP    lineStyle_;
-  CGnuPlotPointStyle    pointStyle_;
-  LineStyles            lineStyles_;
-  StyleIncrement        styleIncrement_;
-  CGnuPlotTitle         title_;
-  VarPrefs              varPrefs_;
-  AxesData              axesData_;
-  CGnuPlotKeyData       keyData_;
-  CBBox2D               region_ { 0, 0, 1, 1 };
-  Margin                margin_ { 10, 10, 10, 10 };
-  CRGBA                 backgroundColor_ { 1, 1, 1};
-  std::string           colorSequence_ { "default" };
-  int                   xind_ { 1 };
-  int                   yind_ { 1 };
-  int                   zind_ { 1 };
-  ArrowStyles           arrowStyles_;
-  CGnuPlotArrowStyle    arrowStyle_;
-  LineDashes            lineDashes_;
-  bool                  binary_ { false };
-  bool                  matrix_ { false };
-  Clip                  clip_;
-  bool                  parametric_ { false };
-  bool                  polar_ { false };
-  bool                  enhanced_ { true };
-  bool                  macros_ { false };
-  HistoryData           historyData_;
-  CGnuPlotImageStyle    imageStyle_;
-  Annotations           annotations_;
-  CGnuPlotCamera        camera_;
-  CGnuPlotPalette       palette_;
-  CGnuPlotColorBox      colorBox_;
-  FilledCurve           filledCurve_;
-  std::string           timeFmt_ { "%d/%m/%y,%H:%M" };
-  LogScaleMap           logScale_;
-  DummyVarMap           dummyVars_;
-  Samples               samples_;
-  LinkData              linkData_;
-  ISOSamples            isoSamples_;
-  PlotSize              plotSize_;
-  DecimalSign           decimalSign_;
-  FitData               fitData_;
-  PathList              loadPaths_;
-  PathList              fontPath_;
-  std::string           encoding_;
-  CGnuPlotMultiplot     multiplot_;
-  CGnuPlotWindowP       multiWindow_;
-  COptValT<CBBox2D>     clearRect_;
-  Hidden3DData          hidden3D_;
-  Surface3DData         surface3D_;
-  Contour3DData         contour3D_;
-  bool                  pm3D_      { false };
-  double                whiskerBars_ { 0 };
-  ReadLineP             readLine_;
-  mutable Fields        fields_;
+  bool                   debug_  { false };
+  bool                   edebug_ { false };
+  CGnuPlotSVGDevice*     svgDevice_ { 0 };
+  CGnuPlotDevice*        device_ { 0 };
+  Devices                devices_;
+  FileData               fileData_;
+  FileDataArray          fileDataArray_;
+  Windows                windows_;
+  CGnuPlotFile           dataFile_;
+  CGnuPlotBoxWidth       boxWidth_;
+  Bars                   bars_;
+  CGnuPlotBoxPlot        boxPlot_;
+  std::string            outputFile_;
+  std::string            printFile_;
+  std::string            lastPlotCmd_;
+  bool                   printAppend_ { false };
+  std::string            tableFile_;
+  int                    pointNum_ { 0 };
+  CISize2D               terminalSize_   { 800, 800 };                  // terminal size
+  PlotStyle              dataStyle_      { PlotStyle::POINTS };
+  PlotStyle              functionStyle_  { PlotStyle::LINES };
+  Smooth                 smooth_         { Smooth::NONE };
+  CGnuPlotHistogramData  histogramData_;
+  CGnuPlotFillStyle      fillStyle_;
+  CGnuPlotLineStyleP     lineStyle_;
+  CGnuPlotPointStyle     pointStyle_;
+  LineStyles             lineStyles_;
+  StyleIncrement         styleIncrement_;
+  CGnuPlotTitle          title_;
+  VarPrefs               varPrefs_;
+  AxesData               axesData_;
+  CGnuPlotKeyData        keyData_;
+  CBBox2D                region_ { 0, 0, 1, 1 };
+  Margin                 margin_;
+  CRGBA                  backgroundColor_ { 1, 1, 1};
+  std::string            colorSequence_ { "default" };
+  int                    xind_ { 1 };
+  int                    yind_ { 1 };
+  int                    zind_ { 1 };
+  ArrowStyles            arrowStyles_;
+  CGnuPlotArrowStyle     arrowStyle_;
+  LineDashes             lineDashes_;
+  bool                   binary_ { false };
+  bool                   matrix_ { false };
+  Clip                   clip_;
+  bool                   parametric_ { false };
+  bool                   polar_ { false };
+  bool                   enhanced_ { true };
+  bool                   macros_ { false };
+  HistoryData            historyData_;
+  CGnuPlotImageStyle     imageStyle_;
+  Annotations            annotations_;
+  CGnuPlotCamera         camera_;
+  CGnuPlotPalette        palette_;
+  CGnuPlotColorBox       colorBox_;
+  FilledCurve            filledCurve_;
+  std::string            timeFmt_ { "%d/%m/%y,%H:%M" };
+  LogScaleMap            logScale_;
+  DummyVarMap            dummyVars_;
+  Samples                samples_;
+  LinkData               linkData_;
+  ISOSamples             isoSamples_;
+  CGnuPlotTypes::Mapping mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
+  PlotSize               plotSize_;
+  DecimalSign            decimalSign_;
+  Offsets                offsets_;
+  FitData                fitData_;
+  PathList               loadPaths_;
+  PathList               fontPath_;
+  std::string            encoding_;
+  std::string            locale_;
+  MouseData              mouseData_;
+  CGnuPlotMultiplot      multiplot_;
+  CGnuPlotWindowP        multiWindow_;
+  COptValT<CBBox2D>      clearRect_;
+  Hidden3DData           hidden3D_;
+  Surface3DData          surface3D_;
+  Contour3DData          contour3D_;
+  bool                   pm3D_      { false };
+  double                 whiskerBars_ { 0 };
+  ReadLineP              readLine_;
+  mutable Fields         fields_;
 };
 
 #endif

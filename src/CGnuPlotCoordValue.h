@@ -32,11 +32,11 @@ class CGnuPlotCoordValue {
     if      (system_ == CGnuPlotTypes::CoordSys::SECOND)
       os << "(second " << axis << " axis) ";
     else if (system_ == CGnuPlotTypes::CoordSys::GRAPH)
-      os << "(graph units) ";
+      os << "graph ";
     else if (system_ == CGnuPlotTypes::CoordSys::SCREEN)
-      os << "(screen units) ";
+      os << "screen ";
     else if (system_ == CGnuPlotTypes::CoordSys::CHARACTER)
-      os << "(character units) ";
+      os << "character  ";
 
     os << value_;
   }

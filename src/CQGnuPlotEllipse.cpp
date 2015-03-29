@@ -14,7 +14,9 @@ QPointF
 CQGnuPlotEllipse::
 getCenter() const
 {
-  return CQUtil::toQPoint(CGnuPlotEllipse::getCenter());
+  CPoint2D center = CGnuPlotEllipse::getCenter().point();
+
+  return CQUtil::toQPoint(center);
 }
 
 void
@@ -30,6 +32,9 @@ draw(CGnuPlotRenderer *renderer) const
 {
   CGnuPlotEllipse::draw(renderer);
 
-  if (isSelected())
-    renderer->drawEllipse(CGnuPlotEllipse::getCenter(), getRX(), getRY(), 0, CRGBA(1,0,0), 2);
+  if (isSelected()) {
+    CPoint2D center = CGnuPlotEllipse::getCenter().getPoint(renderer);
+
+    renderer->drawEllipse(center, getRX(), getRY(), 0, CRGBA(1,0,0), 2);
+  }
 }

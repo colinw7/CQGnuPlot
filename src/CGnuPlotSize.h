@@ -26,6 +26,16 @@ class CGnuPlotSize {
 
   CSize2D getSize(CGnuPlotRenderer *renderer) const;
 
+  void print (std::ostream &os) const {
+    os << s_;
+  }
+
+  friend std::ostream &operator<<(std::ostream &os, const CGnuPlotSize &s) {
+    s.print(os);
+
+    return os;
+  }
+
  private:
   CSize2D  s_       { 0, 0 };
   CoordSys systemX_ { CoordSys::FIRST };
