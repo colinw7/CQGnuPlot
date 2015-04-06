@@ -206,7 +206,7 @@ fit()
       for (const auto &p : plot->getPoints2D())
         nc1 = std::max(nc, p.getNumValues());
 
-      if (plot->lineStyle().colorSpec().isCalc())
+      if (plot->lineStyle().color().isCalc())
         --nc1;
 
       nc = std::max(nc, nc1);
@@ -418,8 +418,8 @@ draw()
   renderer->setRegion(region());
   renderer->setMargin(margin().range());
 
-  if (plotSize().ratio.isValid())
-    renderer->setRatio(plotSize().ratio.getValue());
+  if (plotSize().xratio.isValid())
+    renderer->setRatio(plotSize().xratio.getValue());
   else
     renderer->unsetRatio();
 

@@ -135,11 +135,12 @@ draw()
       CBBox2D hbbox(xx, yy - h/2, xx + ll, yy + h/2);
 
       if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
-        renderer->patternRect(hbbox, plot->fillStyle().pattern(), lineStyle.color(CRGBA(0,0,0)));
+        renderer->patternRect(hbbox, plot->fillStyle().pattern(),
+                              lineStyle.calcColor(CRGBA(0,0,0)));
       else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
-        renderer->fillRect(hbbox, lineStyle.color(CRGBA(1,1,1)));
+        renderer->fillRect(hbbox, lineStyle.calcColor(CRGBA(1,1,1)));
 
-      renderer->drawRect(hbbox, lineStyle.color(CRGBA(0,0,0)));
+      renderer->drawRect(hbbox, lineStyle.calcColor(CRGBA(0,0,0)));
     }
     else if (style == CGnuPlot::PlotStyle::VECTORS) {
       CGnuPlotArrow arrow(group_);
@@ -158,16 +159,18 @@ draw()
                style == CGnuPlot::PlotStyle::XYERRORBARS) {
         CPoint2D p1(xx, yy), p2(xx + ll, yy), pm(xx + ll/2, yy);
 
-        renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)));
+        renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)));
 
         if      (style == CGnuPlot::PlotStyle::LINES_POINTS)
           renderer->drawSymbol(pm, plot->pointType(), plot->pointSize(),
-                               lineStyle.color(CRGBA(1,0,0)));
+                               lineStyle.calcColor(CRGBA(1,0,0)));
         else if (style == CGnuPlot::PlotStyle::XYERRORBARS) {
           CPoint2D dy(0, 3*ph);
 
-          renderer->drawLine(p1 - dy, p1 + dy, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)));
-          renderer->drawLine(p2 - dy, p2 + dy, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)));
+          renderer->drawLine(p1 - dy, p1 + dy, lineStyle.width(),
+                             lineStyle.calcColor(CRGBA(1,0,0)));
+          renderer->drawLine(p2 - dy, p2 + dy, lineStyle.width(),
+                             lineStyle.calcColor(CRGBA(1,0,0)));
         }
       }
       else if (style == CGnuPlot::PlotStyle::POINTS ||
@@ -175,18 +178,18 @@ draw()
         CPoint2D pm(xx + ll/2, yy);
 
         renderer->drawSymbol(pm, plot->pointType(), plot->pointSize(),
-                             lineStyle.color(CRGBA(1,0,0)));
+                             lineStyle.calcColor(CRGBA(1,0,0)));
       }
       else if (style == CGnuPlot::PlotStyle::FILLEDCURVES) {
         double h = 4*ph;
 
         CBBox2D cbbox(xx, yy - h, xx + ll, yy + h);
-        renderer->fillRect(cbbox, lineStyle.color(CRGBA(1,1,1)));
+        renderer->fillRect(cbbox, lineStyle.calcColor(CRGBA(1,1,1)));
       }
       else {
         CPoint2D p1(xx, yy), p2(xx + ll, yy);
 
-        renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)));
+        renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)));
       }
     }
 
@@ -197,7 +200,7 @@ draw()
     CRGBA tc = CRGBA(0,0,0);
 
     if      (isVariableTextColor())
-      tc = lineStyle.color(tc);
+      tc = lineStyle.calcColor(tc);
     else if (isIndexTextColor())
       tc = CGnuPlotStyleInst->indexColor(textColorIndex());
     else if (isRGBTextColor())

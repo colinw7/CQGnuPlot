@@ -9,6 +9,7 @@ class CGnuPlotColorSpec {
  public:
   enum class Type {
     NONE,
+    BACKGROUND,
     RGB,
     VARIABLE,
     RGB_VARIABLE,
@@ -24,11 +25,7 @@ class CGnuPlotColorSpec {
 
   Type type() const { return type_; }
 
-  void setRGB(const CRGBA &c) {
-    type_ = Type::RGB;
-    c_    = c;
-  }
-
+  bool isBackground () const { return type_ == Type::BACKGROUND  ; }
   bool isRGB        () const { return type_ == Type::RGB         ; }
   bool isVariable   () const { return type_ == Type::VARIABLE    ; }
   bool isRGBVariable() const { return type_ == Type::RGB_VARIABLE; }
@@ -36,6 +33,16 @@ class CGnuPlotColorSpec {
   bool isPaletteCB  () const { return type_ == Type::PALETTE_CB  ; }
   bool isPaletteZ   () const { return type_ == Type::PALETTE_Z   ; }
   bool isIndex      () const { return type_ == Type::INDEX       ; }
+
+  void setBackground() {
+    type_ = Type::BACKGROUND;
+    c_    = CRGBA(1,1,1);
+  }
+
+  void setRGB(const CRGBA &c) {
+    type_ = Type::RGB;
+    c_    = c;
+  }
 
   void setVariable() {
     type_ = Type::VARIABLE;
@@ -81,9 +88,9 @@ class CGnuPlotColorSpec {
 
   CRGBA calcColor(CGnuPlotPlot *plot, double x) const;
 
-  void print(std::ostream &os) const {
-    os << "rgb \"" << c_.getRGB().stringEncode() << "\"";
-  }
+  void reset();
+
+  void print(std::ostream &os) const;
 
   friend std::ostream &operator<<(std::ostream &os, const CGnuPlotColorSpec &c) {
     c.print(os);

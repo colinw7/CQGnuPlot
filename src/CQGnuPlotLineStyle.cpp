@@ -7,18 +7,27 @@ CQGnuPlotLineStyle()
 {
 }
 
+CQGnuPlotLineStyle::
+~CQGnuPlotLineStyle()
+{
+}
+
 QColor
 CQGnuPlotLineStyle::
 color() const
 {
-  return CQUtil::rgbaToColor(CGnuPlotLineStyle::color(CRGBA(0,0,0)));
+  return CQUtil::rgbaToColor(CGnuPlotLineStyle::calcColor(CRGBA(0,0,0)));
 }
 
 void
 CQGnuPlotLineStyle::
 setColor(const QColor &c)
 {
-  CGnuPlotLineStyle::setColor(CQUtil::colorToRGBA(c));
+  CGnuPlotColorSpec cs;
+
+  cs.setRGB(CQUtil::colorToRGBA(c));
+
+  CGnuPlotLineStyle::setColor(cs);
 }
 
 CQGnuPlot::SymbolType

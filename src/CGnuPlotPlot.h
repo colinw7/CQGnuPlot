@@ -200,8 +200,8 @@ class CGnuPlotPlot {
   int lineStyleId() const { return lineStyle().ind(); }
   void setLineStyleId(int ind);
 
-  const CRGBA &lineColor(const CRGBA &c) const { return lineStyle().color(c); }
-  void setLineColor(const CRGBA &c) { lineStyle_.setColor(c); }
+  const CRGBA &lineColor(const CRGBA &c) const { return lineStyle().calcColor(c); }
+  void setLineColor(const CGnuPlotColorSpec &c) { lineStyle_.setColor(c); }
 
   double lineWidth() const { return lineStyle().width(); }
   void setLineWidth(double w) { lineStyle_.setWidth(w); }

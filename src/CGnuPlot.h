@@ -189,12 +189,14 @@ class CGnuPlot {
     PALETTE,
     PARAMETRIC,
     PAXIS,
+    PLOT,
     PM3D,
     POINTINTERVALBOX,
     POINTSIZE,
     POLAR,
     POLYGON,
     PRINT,
+    PSDIR,
     RAXIS,
     RECTANGLE,
     RMARGIN,
@@ -214,9 +216,11 @@ class CGnuPlot {
     TITLE,
     TMARGIN,
     TRANGE,
+    URANGE,
     VARIABLES,
     VERSION,
     VIEW,
+    VRANGE,
     X2DATA,
     X2LABEL,
     X2RANGE,
@@ -442,9 +446,161 @@ class CGnuPlot {
   struct StyleIncrement {
     StyleIncrement() { }
 
-    StyleIncrementType type      { StyleIncrementType::USER };
+    StyleIncrementType type      { StyleIncrementType::DEFAULT };
     int                styleInd  { 0 };
     int                increment { 8 };
+  };
+
+  class CircleStyle {
+   public:
+    CircleStyle() {
+      radius_[0] = CGnuPlotCoordValue(0.02);
+    }
+
+    const CGnuPlotCoordValue &radius(int i) const { return radius_[i]; }
+    void setRadius(int i, const CGnuPlotCoordValue &r) { radius_[i] = r; }
+
+    bool wedge() const { return wedge_; }
+    void setWedge(bool b) { wedge_ = b; }
+
+    bool clip() const { return clip_; }
+    void setClip (bool b) { clip_ = b; }
+
+    void unset() {
+      radius_[0] = CGnuPlotCoordValue(0.02);
+      wedge_     = true;
+      clip_      = false;
+    }
+
+    void show(std::ostream &os) const {
+      os << "Circle style has default radius (";
+
+      for (int i = 0; i < 3; ++i) {
+        if (i > 0) os << ", ";
+
+        os << radius_[i];
+      }
+
+      os << ")";
+
+      os << (wedge_ ? " wedge" : " nowedge");
+      os << (clip_  ? " clip"  : " noclip" );
+
+      os << std::endl;
+    }
+
+   private:
+    CGnuPlotCoordValue radius_[3];
+    bool               wedge_    { true };
+    bool               clip_     { false };
+  };
+
+  class EllipseStyle {
+   public:
+    enum class Units {
+      XX,
+      XY,
+      YY
+    };
+
+    EllipseStyle() {
+      size_[0] = CGnuPlotCoordValue(0.05);
+      size_[1] = CGnuPlotCoordValue(0.03);
+      size_[2] = CGnuPlotCoordValue();
+    }
+
+    const Units &units() const { return units_; }
+    void setUnits(const Units &v) { units_ = v; }
+
+    const CGnuPlotCoordValue &size(int i) const { return size_[i]; }
+    void setSize(int i, const CGnuPlotCoordValue &r) { size_[i] = r; }
+
+    double angle() const { return angle_; }
+    void setAngle(double r) { angle_ = r; }
+
+    bool clip() const { return clip_; }
+    void setClip (bool b) { clip_ = b; }
+
+    void unset() {
+      units_   = Units::XX;
+      size_[0] = CGnuPlotCoordValue(0.05);
+      size_[1] = CGnuPlotCoordValue(0.03);
+      size_[2] = CGnuPlotCoordValue();
+      angle_   = 0;
+      clip_    = false;
+    }
+
+    void show(std::ostream &os) const {
+      os << "Ellipse style has default size (";
+
+      for (int i = 0; i < 3; ++i) {
+        if (i > 0) os << ", ";
+
+        os << size_[i];
+      }
+
+      os << ")";
+
+      os << ", default angle is " << angle_ << " degrees";
+
+      if      (units_ == Units::XX)
+        os << ", both diameters are in the same units as the x axis";
+      else if (units_ == Units::XY)
+        os << ", diameters are in different units (major: x axis, minor: y axis)";
+      else if (units_ == Units::YY)
+        os << ", both diameters are in the same units as the y axis";
+
+      os << (clip_ ? " clip" : " noclip" );
+
+      os << std::endl;
+    }
+
+   private:
+    Units              units_ { Units::XY };
+    CGnuPlotCoordValue size_[3];
+    double             angle_ { 0 };
+    bool               clip_ { false };
+  };
+
+  class RectStyle {
+   public:
+    RectStyle() {
+      unset();
+    }
+
+    bool isFront() const { return front_; }
+    void setFront(bool b) { front_ = b; }
+
+    double lineWidth() const { return lineWidth_; }
+    void setLineWidth(double r) { lineWidth_ = r; }
+
+    const CGnuPlotColorSpec &fillColor() const { return fc_; }
+    void setFillColor(const CGnuPlotColorSpec &v) { fc_ = v; }
+
+    const CGnuPlotFillStyle &fillStyle() const { return fs_; }
+    void setFillStyle(const CGnuPlotFillStyle &v) { fs_ = v; }
+
+    void unset() {
+      front_     = true;
+      lineWidth_ = 1;
+      fc_        = CGnuPlotColorSpec(); fc_.setBackground();
+      fs_        = CGnuPlotFillStyle(); fs_.setStyle(CGnuPlotTypes::FillType::SOLID);
+    }
+
+    void show(std::ostream &os) const {
+      os << "Rectangle style is ";
+      os << (front_ ? "front" : "back");
+      os << ", fill color " << fc_;
+      os << ", lw " << lineWidth_;
+      os << ", fillstyle " << fs_;
+      os << std::endl;
+    }
+
+   private:
+    bool              front_ { true };
+    double            lineWidth_ { 1 };
+    CGnuPlotColorSpec fc_;
+    CGnuPlotFillStyle fs_;
   };
 
   //---
@@ -465,12 +621,45 @@ class CGnuPlot {
   struct PlotSize {
     PlotSize() { }
 
+    void unsetSize() {
+      square = false;
+
+      xsize.setInvalid();
+      ysize.setInvalid();
+
+      xratio.setInvalid();
+      yratio.setInvalid();
+    }
+
+    void unsetOrigin() {
+      xo.setInvalid();
+      yo.setInvalid();
+    }
+
+    void showSize(std::ostream &os) {
+      if (square)
+        os << "size is scaled by 1,1" << std::endl;
+      else
+        os << "size is scaled by " << xsize.getValue(1) << "," << ysize.getValue(1) << std::endl;
+
+      if (! xratio.isValid() && ! yratio.isValid())
+        os << "No attempt to control aspect ratio" << std::endl;
+      else
+        os << "Try to set aspect ratio to " <<
+              xratio.getValue(1) << ":" << yratio.getValue(1) << std::endl;
+    }
+
+    void showOrigin(std::ostream &os) {
+      os << "origin is set to " << xo.getValue(0) << ", " << yo.getValue(0) << std::endl;
+    }
+
     bool     square { false };
-    COptReal ratio;
-    COptReal x;
-    COptReal y;
+    COptReal xo;
+    COptReal yo;
     COptReal xsize;
     COptReal ysize;
+    COptReal xratio;
+    COptReal yratio;
   };
 
   //---
@@ -569,20 +758,24 @@ class CGnuPlot {
     bool trim    { true };
   };
 
-  struct Samples {
-    int samples1 { 100 };
-    int samples2 { 100 };
+  class Samples {
+   public:
+    void get(int &s1, int &s2) const { s1 = samples1_; s2 = samples2_; }
+    void set(int s1, int s2) { samples1_ = s1; samples2_ = s2; }
 
-    void getValues(int &s1, int &s2) const { s1 = samples1; s2 = samples2; }
-    void setValues(int s1, int s2) { samples1 = s1; samples2 = s2; }
+    void unset() { set(100, 100); }
 
-    void show(std::ostream &os) const {
-      os << "set samples " << samples1 << ", " << samples2 << std::endl;
+    void save(std::ostream &os) const {
+      os << "set samples " << samples1_ << ", " << samples2_ << std::endl;
     }
 
-    void print(std::ostream &os) {
-      os << "sampling rate is " << samples1 << ", " << samples2 << std::endl;
+    void show(std::ostream &os) {
+      os << "sampling rate is " << samples1_ << ", " << samples2_ << std::endl;
     }
+
+   private:
+    int samples1_ { 100 };
+    int samples2_ { 100 };
   };
 
   struct LinkAxisData {
@@ -600,10 +793,10 @@ class CGnuPlot {
    public:
     ISOSamples() { }
 
-    void getValues(int &s1, int &s2) const { s1 = samples1_; s2 = samples2_; }
-    void setValues(int s1, int s2) { samples1_ = s1; samples2_ = s2; }
+    void get(int &s1, int &s2) const { s1 = samples1_; s2 = samples2_; }
+    void set(int s1, int s2) { samples1_ = s1; samples2_ = s2; }
 
-    void unset() { setValues(10, 10); }
+    void unset() { set(10, 10); }
 
     void save(std::ostream &os) const {
       os << "set isosamples " << samples1_ << ", " << samples2_ << std::endl;
@@ -637,14 +830,10 @@ class CGnuPlot {
 
   class Offsets {
    public:
-    void setValues(const CGnuPlotCoordValue &l, const CGnuPlotCoordValue &r,
-                   const CGnuPlotCoordValue &t, const CGnuPlotCoordValue &b) {
+    void set(const CGnuPlotCoordValue &l, const CGnuPlotCoordValue &r,
+             const CGnuPlotCoordValue &t, const CGnuPlotCoordValue &b) {
       l_ = l; r_ = r;
       t_ = t; b_ = b;
-    }
-
-    void show(std::ostream &os) {
-      os << "offsets are " << l_ << ", " << r_ << ", " << t_ << ", " << b_ << std::endl;
     }
 
     void unset() {
@@ -652,6 +841,10 @@ class CGnuPlot {
       r_ = CGnuPlotCoordValue();
       t_ = CGnuPlotCoordValue();
       b_ = CGnuPlotCoordValue();
+    }
+
+    void show(std::ostream &os) {
+      os << "offsets are " << l_ << ", " << r_ << ", " << t_ << ", " << b_ << std::endl;
     }
 
    private:
@@ -784,6 +977,38 @@ class CGnuPlot {
     bool               verbose_        { false };
   };
 
+  struct PrintFile {
+    std::string filename;
+    bool        isError { true };
+    bool        isBlock { false };
+    bool        append  { false };
+
+    void unset() {
+      filename = "";
+      isError  = true;
+      isBlock  = false;
+      append   = false;
+    };
+
+    void show(std::ostream &os) const {
+      if (isBlock) {
+        os << "print output is saved to datablock $" << filename << std::endl;
+      }
+      else {
+        os << "print output is sent to ";
+
+        if (filename != "")
+          os << "'" << filename << "'";
+        else if (isError)
+          os << "<stderr>";
+        else
+          os << "<stdout>";
+
+        os << std::endl;
+      }
+    }
+  };
+
   struct Hidden3DData {
     bool      enabled         { false };
     DrawLayer layer           { DrawLayer::FRONT };
@@ -807,6 +1032,142 @@ class CGnuPlot {
 
     bool    enabled { false };
     DrawPos pos     { DrawPos::DRAW_BASE };
+  };
+
+  struct Pm3DData {
+    enum class PosType {
+      SURFACE,
+      TOP,
+      BOTTOM
+    };
+
+    enum class ScanType {
+      AUTOMATIC,
+      FORWARD,
+      BACKWARD,
+      DEPTH_ORDER
+    };
+
+    enum class FlushType {
+      BEGIN,
+      CENTER,
+      END
+    };
+
+    enum class CornerType {
+      MEAN,
+      GEOMEAN,
+      HARMEAN,
+      RMS,
+      MEDIAN,
+      MIN,
+      MAX,
+      C1,
+      C2,
+      C3,
+      C4
+    };
+
+    bool isEnabled() const { return enabled; }
+    void setEnabled(bool b) { enabled = b; }
+
+    static std::string posTypeToStr(const PosType &p) {
+      if      (p == PosType::SURFACE) return "SURFACE";
+      else if (p == PosType::TOP    ) return "TOP";
+      else if (p == PosType::BOTTOM ) return "BOTTOM";
+      else                            return "???";
+    }
+
+    void show(std::ostream &os) const {
+      os << "pm3d style is " << (implicit ? "implicit" : "explicit");
+      os << " (draw pm3d surface according to style)" << std::endl;
+
+      os << "pm3d plotted at";
+      if (pos.empty())
+        os << " SURFACE";
+      else {
+        for (uint i = 0; i < pos.size(); ++i) {
+          if (i > 0) os << ", then";
+
+          os << " " << posTypeToStr(pos[i]);
+        }
+      }
+      os << std::endl;
+
+      if      (scanType == ScanType::AUTOMATIC)
+        os << "taking scans direction automatically" << std::endl;
+      else if (scanType == ScanType::FORWARD)
+        os << "taking scans in FORWARD direction" << std::endl;
+      else if (scanType == ScanType::BACKWARD)
+        os << "taking scans in BACKWARD direction" << std::endl;
+      else if (scanType == ScanType::DEPTH_ORDER)
+        os << "true depth ordering" << std::endl;
+
+      os << "subsequent scans with different nb of pts are flushed from";
+      if      (flushType == FlushType::BEGIN ) os << "BEGIN"  << std::endl;
+      else if (flushType == FlushType::CENTER) os << "CENTER" << std::endl;
+      else if (flushType == FlushType::END   ) os << "END"    << std::endl;
+
+      if (ftriangles)
+        os << "flushing triangles are drawn" << std::endl;
+      else
+        os << "flushing triangles are not drawn" << std::endl;
+
+      if (clipin == 4)
+        os << "clipping: all 4 points of the quadrangle in x,y ranges" << std::endl;
+      else
+        os << "clipping: at least 1 point of the quadrangle in x,y ranges" << std::endl;
+
+      if (linetype != -1)
+        os << "pm3d quadrangle borders will default to linetype " << linetype << std::endl;
+      else
+        os << "pm3d quadrangles will have no border" << std::endl;
+
+      os << "steps for bilinear interpolation: " << isteps1 << "," << isteps2 << std::endl;
+
+      if      (cornerType == CornerType::MEAN)
+        os << "quadrangle color according to averaged 4 corners" << std::endl;
+      else if (cornerType == CornerType::GEOMEAN)
+        os << "quadrangle color according to geometrical mean of 4 corners" << std::endl;
+      else if (cornerType == CornerType::HARMEAN)
+        os << "quadrangle color according to harmonic mean of 4 corners" << std::endl;
+      else if (cornerType == CornerType::RMS)
+        os << "quadrangle color according to root mean square of 4 corners" << std::endl;
+      else if (cornerType == CornerType::MEDIAN)
+        os << "quadrangle color according to median of 4 corners" << std::endl;
+      else if (cornerType == CornerType::MIN)
+        os << "quadrangle color according to min of 4 corners" << std::endl;
+      else if (cornerType == CornerType::MAX)
+        os << "quadrangle color according to max of 4 corners" << std::endl;
+      else if (cornerType == CornerType::C1)
+        os << "quadrangle color according to corner 1" << std::endl;
+      else if (cornerType == CornerType::C2)
+        os << "quadrangle color according to corner 2" << std::endl;
+      else if (cornerType == CornerType::C3)
+        os << "quadrangle color according to corner 3" << std::endl;
+      else if (cornerType == CornerType::C4)
+        os << "quadrangle color according to corner 4" << std::endl;
+    }
+
+    void unset() {
+      enabled  = false;
+      implicit = false;
+      linetype = -1;
+    }
+
+    typedef std::vector<PosType> PosTypeList;
+
+    bool             enabled    { false };
+    PosTypeList      pos;
+    int              isteps1    { -1 };
+    int              isteps2    { -1 };
+    ScanType         scanType   { ScanType::AUTOMATIC };
+    FlushType        flushType  { FlushType::BEGIN };
+    bool             ftriangles { false };
+    int              clipin     { 4 };
+    CornerType       cornerType { CornerType::MEAN };
+    int              linetype   { -1 };
+    bool             implicit   { false };
   };
 
   //---
@@ -849,6 +1210,7 @@ class CGnuPlot {
 
   CGnuPlotLineStyleP getLineStyleInd(int ind);
   void setLineStyleInd(int ind);
+  void resetLineStyleInd(int ind);
 
   const CGnuPlotPointStyle &pointStyle() const { return pointStyle_; }
   void setPointStyle(const CGnuPlotPointStyle &s) { pointStyle_ = s; }
@@ -972,8 +1334,8 @@ class CGnuPlot {
 
   //---
 
-  bool pm3D() const { return pm3D_; }
-  void setPm3D(bool b) { pm3D_ = b; }
+  const Pm3DData &pm3D() const { return pm3D_; }
+  void setPm3D(const Pm3DData &p) { pm3D_ = p; }
 
   //------
 
@@ -1192,6 +1554,7 @@ class CGnuPlot {
   void showColorNames();
   void showVariables(std::ostream &os, const StringArray &args=StringArray());
   void showFunctions(std::ostream &os);
+  void showRGBFormulae(std::ostream &os);
 
   void readBlockLines(Statements &lines, std::string &eline, int depth);
 
@@ -1232,11 +1595,22 @@ class CGnuPlot {
 
   CExprCTokenStack compileExpression(const std::string &expr) const;
 
-  void setPrintFile(const std::string &file) { printFile_ = file; }
-  const std::string &getPrintFile() const { return printFile_; }
+  //---
 
-  void setPrintAppend(bool b) { printAppend_ = b; }
-  bool getPrintAppend() { return printAppend_; }
+  void setPrintStdOut() {
+    printFile_.filename = ""; printFile_.isError = false; printFile_.isBlock = false;
+  }
+  void setPrintFile(const std::string &file) {
+    printFile_.filename = file; printFile_.isError = false; printFile_.isBlock = false;
+  }
+  void setPrintDataBlock(const std::string &name) {
+    printFile_.filename = name; printFile_.isError = false; printFile_.isBlock = true;
+  }
+
+  void setPrintAppend(bool b) { printFile_.append = b; }
+  bool getPrintAppend() { return printFile_.append; }
+
+  //---
 
   void setTableFile(const std::string &file) { tableFile_ = file; }
   const std::string &getTableFile() const { return tableFile_; }
@@ -1363,23 +1737,17 @@ class CGnuPlot {
   CGnuPlotFile           dataFile_;
   CGnuPlotBoxWidth       boxWidth_;
   Bars                   bars_;
-  CGnuPlotBoxPlot        boxPlot_;
   std::string            outputFile_;
-  std::string            printFile_;
+  PrintFile              printFile_;
   std::string            lastPlotCmd_;
-  bool                   printAppend_ { false };
+  std::string            lastSPlotCmd_;
   std::string            tableFile_;
   int                    pointNum_ { 0 };
   CISize2D               terminalSize_   { 800, 800 };                  // terminal size
-  PlotStyle              dataStyle_      { PlotStyle::POINTS };
-  PlotStyle              functionStyle_  { PlotStyle::LINES };
   Smooth                 smooth_         { Smooth::NONE };
   CGnuPlotHistogramData  histogramData_;
-  CGnuPlotFillStyle      fillStyle_;
   CGnuPlotLineStyleP     lineStyle_;
   CGnuPlotPointStyle     pointStyle_;
-  LineStyles             lineStyles_;
-  StyleIncrement         styleIncrement_;
   CGnuPlotTitle          title_;
   VarPrefs               varPrefs_;
   AxesData               axesData_;
@@ -1391,8 +1759,20 @@ class CGnuPlot {
   int                    xind_ { 1 };
   int                    yind_ { 1 };
   int                    zind_ { 1 };
+
+  // styles
   ArrowStyles            arrowStyles_;
   CGnuPlotArrowStyle     arrowStyle_;
+  CGnuPlotBoxPlot        boxPlot_;
+  PlotStyle              dataStyle_      { PlotStyle::POINTS };
+  CGnuPlotFillStyle      fillStyle_;
+  PlotStyle              functionStyle_  { PlotStyle::LINES };
+  StyleIncrement         styleIncrement_;
+  LineStyles             lineStyles_;
+  CircleStyle            circleStyle_;
+  RectStyle              rectStyle_;
+  EllipseStyle           ellipseStyle_;
+
   LineDashes             lineDashes_;
   bool                   binary_ { false };
   bool                   matrix_ { false };
@@ -1421,6 +1801,7 @@ class CGnuPlot {
   FitData                fitData_;
   PathList               loadPaths_;
   PathList               fontPath_;
+  std::string            psDir_;
   std::string            encoding_;
   std::string            locale_;
   MouseData              mouseData_;
@@ -1430,7 +1811,8 @@ class CGnuPlot {
   Hidden3DData           hidden3D_;
   Surface3DData          surface3D_;
   Contour3DData          contour3D_;
-  bool                   pm3D_      { false };
+  Pm3DData               pm3D_;
+  double                 pointIntervalBox_ { 1 };
   double                 whiskerBars_ { 0 };
   ReadLineP              readLine_;
   mutable Fields         fields_;

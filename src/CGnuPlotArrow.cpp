@@ -14,7 +14,7 @@ getLineColor() const
 
     CGnuPlotLineStyleP lsp = group_->app()->getLineStyleInd(ls);
 
-    return lsp->color(CRGBA(0,0,0));
+    return lsp->calcColor(CRGBA(0,0,0));
   }
   else
     return lineColor_.getValue();

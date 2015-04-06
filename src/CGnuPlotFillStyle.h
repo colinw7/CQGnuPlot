@@ -1,13 +1,15 @@
 #ifndef CGnuPlotFillStyle_H
 #define CGnuPlotFillStyle_H
 
-#include <CRGBA.h>
 #include <CGnuPlotTypes.h>
+#include <CGnuPlotColorSpec.h>
+#include <COptVal.h>
 
 class CGnuPlotFillStyle {
  public:
-  typedef CGnuPlotTypes::FillType    FillType;
-  typedef CGnuPlotTypes::FillPattern FillPattern;
+  typedef CGnuPlotTypes::FillType     FillType;
+  typedef CGnuPlotTypes::FillPattern  FillPattern;
+  typedef COptValT<CGnuPlotColorSpec> OptColor;
 
  public:
   CGnuPlotFillStyle() { }
@@ -27,11 +29,25 @@ class CGnuPlotFillStyle {
   bool hasBorder() const { return border_; }
   void setBorder(bool b) { border_ = b; }
 
-  int borderLineType() const { return borderLineType_; }
+  const COptInt &borderLineType() const { return borderLineType_; }
   void setBorderLineType(int i) { borderLineType_ = i; }
+  void unsetBorderLineType() { borderLineType_ = COptInt(); }
 
-  const CRGBA &borderColor() const { return borderColor_; }
-  void setBorderColor(const CRGBA &c) { borderColor_ = c; }
+  const OptColor &borderColor() const { return borderColor_; }
+  void setBorderColor(const CGnuPlotColorSpec &c) { borderColor_ = c; }
+  void unsetBorderColor() { borderColor_ = OptColor(); }
+
+  void unset() {
+    style_          = FillType::EMPTY;
+    density_        = 1.0;
+    pattern_        = FillPattern::NONE;
+    transparent_    = false;
+    border_         = true;
+    borderLineType_ = COptInt();
+    borderColor_    = OptColor();
+  }
+
+  void show(std::ostream &os) const;
 
   void print(std::ostream &os) const;
 
@@ -42,13 +58,13 @@ class CGnuPlotFillStyle {
   }
 
  private:
-  FillType    style_          { FillType::EMPTY };
-  double      density_        { 1.0 };               // density 0.0 empty, 1.0 is line color
-  FillPattern pattern_        { FillPattern::NONE };
-  bool        transparent_    { false };
-  bool        border_         { true };
-  int         borderLineType_ { -1 };
-  CRGBA       borderColor_;
+  FillType    style_       { FillType::EMPTY };
+  double      density_     { 1.0 };               // density 0.0 empty, 1.0 is line color
+  FillPattern pattern_     { FillPattern::NONE };
+  bool        transparent_ { false };
+  bool        border_      { true };
+  COptInt     borderLineType_;
+  OptColor    borderColor_;
 };
 
 #endif

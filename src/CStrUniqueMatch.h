@@ -55,21 +55,37 @@ class CStrUniqueMatchValues {
     return true;
   }
 
-  const std::string &lookup(const T &value) {
+  const std::string &lookup(const T &value, const std::string &no_str="<no_value>") {
     auto p = valueStrs_.find(value);
 
-    if (p != valueStrs_.end())
-      return *(*p).second.begin();
-    else {
-      static std::string no_name("<no_value>");
+    if (p != valueStrs_.end()) {
+      auto &strs = (*p).second;
 
-      return no_name;
+      return longestString(strs);
     }
+    else
+      return no_str;
   }
 
   void values(std::vector<std::string> &values) {
     for (auto &v : strValues_)
       values.push_back(v.first);
+  }
+
+  static const std::string &longestString(const std::vector<std::string> &strs) {
+    static std::string str;
+    size_t             len = 0;
+
+    str = "";
+
+    for (const auto &s : strs) {
+      if (s.size() > len) {
+        len = s.size();
+        str = s;
+      }
+    }
+
+    return str;
   }
 
  private:

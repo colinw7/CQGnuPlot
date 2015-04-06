@@ -320,7 +320,7 @@ draw3D()
 
   //---
 
-  if (window()->surface3D() || window()->pm3D()) {
+  if (window()->surface3D() || window()->pm3D().isEnabled()) {
     if (! surfaceSet_) {
       surface_.clear();
 
@@ -392,7 +392,7 @@ draw3D()
     }
   }
 
-  if (window()->pm3D()) {
+  if (window()->pm3D().isEnabled()) {
     for (auto polys : surface_) {
       for (auto poly : polys.second) {
         double z = poly.first;
@@ -425,7 +425,7 @@ draw2D()
   if      (getSmooth() == Smooth::BEZIER) {
     const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-    const CRGBA &c = lineStyle.color(CRGBA(1,0,0));
+    const CRGBA &c = lineStyle.calcColor(CRGBA(1,0,0));
 
     uint np = numPoints2D();
 
@@ -520,7 +520,7 @@ drawBoxErrorBars(CGnuPlotRenderer *renderer)
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
   const CGnuPlotFillStyle &fillStyle = this->fillStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
   double ymin = bbox_.getYMin();
 
@@ -589,7 +589,7 @@ drawBoxErrorBars(CGnuPlotRenderer *renderer)
     CRGBA fc1 = fc;
 
     if (colorVal.isValid()) {
-      fc1 = lineStyle.colorSpec().calcColor(this, colorVal.getValue());
+      fc1 = lineStyle.color().calcColor(this, colorVal.getValue());
     }
 
     CBBox2D bbox(x - dx/2, y2, x + dx/2, y);
@@ -638,7 +638,7 @@ drawBoxes(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
   double ymin = bbox_.getYMin();
 
@@ -648,8 +648,8 @@ drawBoxes(CGnuPlotRenderer *renderer)
 
   CRGBA ftc = (fillType() == FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  const CRGBA &lc = lineStyle.color(ftc);
-  const CRGBA &fc = lineStyle.color(CRGBA(0,0,0));
+  const CRGBA &lc = lineStyle.calcColor(ftc);
+  const CRGBA &fc = lineStyle.calcColor(CRGBA(0,0,0));
 
   //---
 
@@ -706,7 +706,7 @@ drawBoxes(CGnuPlotRenderer *renderer)
     if (isCalcColor && ind < reals.size()) {
       double x = reals[ind];
 
-      lc1 = lineStyle.colorSpec().calcColor(this, x);
+      lc1 = lineStyle.color().calcColor(this, x);
     }
 
     CBBox2D bbox(x - bw1/2, y2, x + bw1/2, y);
@@ -746,7 +746,7 @@ drawBoxPlot(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  CRGBA fc = lineStyle.color(CRGBA(1,0,0));
+  CRGBA fc = lineStyle.calcColor(CRGBA(1,0,0));
   CRGBA lc = CRGBA(0,0,0);
 
   fc.setAlpha(0.5);
@@ -889,9 +889,9 @@ drawBoxXYErrorBars(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA lc = lineStyle.color(CRGBA(0,0,0));
+  CRGBA lc = lineStyle.calcColor(CRGBA(0,0,0));
   CRGBA fc = (fillType() == FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
   if (! renderer->isPseudo())
@@ -926,7 +926,7 @@ drawBoxXYErrorBars(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[6];
 
-        fc1 = lineStyle.colorSpec().calcColor(this, x);
+        fc1 = lineStyle.color().calcColor(this, x);
       }
     }
     // x y xdelta ydelta
@@ -942,7 +942,7 @@ drawBoxXYErrorBars(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[4];
 
-        fc1 = lineStyle.colorSpec().calcColor(this, x);
+        fc1 = lineStyle.color().calcColor(this, x);
       }
     }
 
@@ -1099,11 +1099,11 @@ drawCandleSticks(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
   CRGBA c1 = (fillType() == FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  CRGBA  lc = lineStyle.color(c1);
+  CRGBA  lc = lineStyle.calcColor(c1);
   double lw = lineStyle.width();
 
   double bw = boxWidth().getSpacing(0.1);
@@ -1135,7 +1135,7 @@ drawCandleSticks(CGnuPlotRenderer *renderer)
     if (isCalcColor) {
       double x = reals[ind];
 
-      lc1 = lineStyle.colorSpec().calcColor(this, x);
+      lc1 = lineStyle.color().calcColor(this, x);
     }
 
     renderer->drawClipLine(CPoint2D(x, wmin), CPoint2D(x, bmin), lw, lc1);
@@ -1168,9 +1168,9 @@ drawCircles(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
   CRGBA fc = lc;
 
   if (fillStyle().isTransparent())
@@ -1199,7 +1199,7 @@ drawCircles(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[2];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
     else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
@@ -1208,7 +1208,7 @@ drawCircles(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[3];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
     else if ((! isCalcColor && reals.size() == 5) || (isCalcColor && reals.size() == 6)) {
@@ -1221,7 +1221,7 @@ drawCircles(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[5];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
     else
@@ -1254,9 +1254,9 @@ drawEllipses(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
   CRGBA fc = lc;
 
   if (fillStyle().isTransparent())
@@ -1284,7 +1284,7 @@ drawEllipses(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[3];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
     else if ((! isCalcColor && reals.size() == 4) || (isCalcColor && reals.size() == 5)) {
@@ -1294,7 +1294,7 @@ drawEllipses(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[3];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
     else if ((! isCalcColor && reals.size() == 5) || (isCalcColor && reals.size() == 6)) {
@@ -1305,7 +1305,7 @@ drawEllipses(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[5];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
     else
@@ -1327,7 +1327,7 @@ drawDots(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  const CRGBA &c = lineStyle.color(CRGBA(1,0,0));
+  const CRGBA &c = lineStyle.calcColor(CRGBA(1,0,0));
 
   for (const auto &point : getPoints2D()) {
     CPoint2D p;
@@ -1446,7 +1446,7 @@ drawFilledCurves(CGnuPlotRenderer *renderer)
       }
     }
 
-    renderer->fillClippedPolygon(points1, lineStyle.color(CRGBA(1,1,1)));
+    renderer->fillClippedPolygon(points1, lineStyle.calcColor(CRGBA(1,1,1)));
 
     drawLines(renderer);
   }
@@ -1482,7 +1482,7 @@ drawFilledCurves(CGnuPlotRenderer *renderer)
               for (auto p1 = points2.rbegin(), p2 = points2.rend(); p1 != p2; ++p1)
                 points1.push_back(*p1);
 
-              renderer->fillClippedPolygon(points1, lineStyle.color(CRGBA(1,1,1)));
+              renderer->fillClippedPolygon(points1, lineStyle.calcColor(CRGBA(1,1,1)));
             }
 
             points1.clear();
@@ -1501,7 +1501,7 @@ drawFilledCurves(CGnuPlotRenderer *renderer)
       for (auto p1 = points2.rbegin(), p2 = points2.rend(); p1 != p2; ++p1)
         points1.push_back(*p1);
 
-      renderer->fillClippedPolygon(points1, lineStyle.color(CRGBA(1,1,1)));
+      renderer->fillClippedPolygon(points1, lineStyle.calcColor(CRGBA(1,1,1)));
     }
   }
 }
@@ -1512,9 +1512,9 @@ drawFinanceBars(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA  lc = lineStyle.color(CRGBA(0,0,0));
+  CRGBA  lc = lineStyle.calcColor(CRGBA(0,0,0));
   double lw = lineStyle.width();
 
   double sl = 0;
@@ -1541,7 +1541,7 @@ drawFinanceBars(CGnuPlotRenderer *renderer)
     if (isCalcColor) {
       double x = reals[5];
 
-      lc1 = lineStyle.colorSpec().calcColor(this, x);
+      lc1 = lineStyle.color().calcColor(this, x);
     }
 
     renderer->drawClipLine(CPoint2D(date, low), CPoint2D(date, high), lw, lc1);
@@ -1562,8 +1562,8 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
 
   CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  CRGBA lc = lineStyle().color(c);
-  CRGBA fc = lineStyle().color(CRGBA(0,0,0));
+  CRGBA lc = lineStyle().calcColor(c);
+  CRGBA fc = lineStyle().calcColor(CRGBA(0,0,0));
 
   //---
 
@@ -1620,8 +1620,8 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
 
   CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  CRGBA lc = lineStyle().color(c);
-  CRGBA fc = lineStyle().color(CRGBA(0,0,0));
+  CRGBA lc = lineStyle().calcColor(c);
+  CRGBA fc = lineStyle().calcColor(CRGBA(0,0,0));
 
   //---
 
@@ -1703,8 +1703,8 @@ drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox)
 
   CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  CRGBA lc = lineStyle().color(c);
-  CRGBA fc = lineStyle().color(CRGBA(0,0,0));
+  CRGBA lc = lineStyle().calcColor(c);
+  CRGBA fc = lineStyle().calcColor(CRGBA(0,0,0));
 
   //---
 
@@ -1745,7 +1745,7 @@ drawSteps(CGnuPlotRenderer *renderer)
 
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  const CRGBA &c = lineStyle.color(CRGBA(1,0,0));
+  const CRGBA &c = lineStyle.calcColor(CRGBA(1,0,0));
 
   uint np = numPoints2D();
 
@@ -2075,9 +2075,9 @@ drawImpulses(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
 
   double ymin = bbox_.getYMin();
 
@@ -2099,7 +2099,7 @@ drawImpulses(CGnuPlotRenderer *renderer)
     if (reals.size() >= 3 && isCalcColor) {
       double x = reals[2];
 
-      lc1 = lineStyle.colorSpec().calcColor(this, x);
+      lc1 = lineStyle.color().calcColor(this, x);
     }
 
     renderer->drawClipLine(p1, p2, lineStyle.width(), lc1);
@@ -2114,9 +2114,9 @@ drawLabels(CGnuPlotRenderer *renderer)
 
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
 
   for (const auto &point : getPoints2D()) {
     std::vector<double> reals;
@@ -2138,7 +2138,7 @@ drawLabels(CGnuPlotRenderer *renderer)
     if (isCalcColor && reals.size() > 3) {
       double x = reals[3];
 
-      lc1 = lineStyle.colorSpec().calcColor(this, x);
+      lc1 = lineStyle.color().calcColor(this, x);
     }
 
     //----
@@ -2163,7 +2163,7 @@ drawVectors(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
   bool isVarArrow  = arrowStyle_.isVariable();
 
   uint numExtra = 0;
@@ -2171,7 +2171,7 @@ drawVectors(CGnuPlotRenderer *renderer)
   if (isCalcColor) ++numExtra;
   if (isVarArrow ) ++numExtra;
 
-  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
 
   for (const auto &point : getPoints2D()) {
     std::vector<double> reals;
@@ -2202,7 +2202,7 @@ drawVectors(CGnuPlotRenderer *renderer)
     if (isCalcColor) {
       double x = reals[pos++];
 
-      lc1 = lineStyle.colorSpec().calcColor(this, x);
+      lc1 = lineStyle.color().calcColor(this, x);
     }
 
     CGnuPlotArrowStyle as = arrowStyle_;
@@ -2243,7 +2243,7 @@ drawErrorBars(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  CRGBA c = lineStyle.color(CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
 
   typedef std::map<std::string,int> IndexMap;
 
@@ -2300,7 +2300,7 @@ drawErrorBars(CGnuPlotRenderer *renderer)
         double x;
 
         if (point.getValue(7, x))
-          c = lineStyle.colorSpec().calcColor(this, x);
+          c = lineStyle.color().calcColor(this, x);
       }
     }
     // x y xdelta ydelta
@@ -2320,7 +2320,7 @@ drawErrorBars(CGnuPlotRenderer *renderer)
         double x;
 
         if (point.getValue(5, x))
-          c = lineStyle.colorSpec().calcColor(this, x);
+          c = lineStyle.color().calcColor(this, x);
       }
     }
     // x y delta
@@ -2354,9 +2354,9 @@ drawXYErrorBars(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
 
   double pw = 0, ph = 0;
 
@@ -2392,7 +2392,7 @@ drawXYErrorBars(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[6];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
     // x y xdelta ydelta
@@ -2408,7 +2408,7 @@ drawXYErrorBars(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[4];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
 
@@ -2429,9 +2429,9 @@ drawXErrorBars(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
 
   double ph = 0;
 
@@ -2461,7 +2461,7 @@ drawXErrorBars(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[4];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
     // x y xdelta
@@ -2474,7 +2474,7 @@ drawXErrorBars(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[3];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
 
@@ -2491,9 +2491,9 @@ drawYErrorBars(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
 
   double pw = 0;
 
@@ -2523,7 +2523,7 @@ drawYErrorBars(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[4];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
     // x y xdelta
@@ -2536,7 +2536,7 @@ drawYErrorBars(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[3];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
 
@@ -2553,9 +2553,9 @@ drawXYErrorLines(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
 
   double pw = 0, ph = 0;
 
@@ -2594,7 +2594,7 @@ drawXYErrorLines(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[6];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
     // x y xdelta ydelta
@@ -2610,7 +2610,7 @@ drawXYErrorLines(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[4];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
 
@@ -2640,9 +2640,9 @@ drawXErrorLines(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
 
   double ph = 0;
 
@@ -2675,7 +2675,7 @@ drawXErrorLines(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[4];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
     // x y xdelta
@@ -2688,7 +2688,7 @@ drawXErrorLines(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[3];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
 
@@ -2714,9 +2714,9 @@ drawYErrorLines(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA lc = lineStyle.color(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
 
   double pw = 0;
 
@@ -2749,7 +2749,7 @@ drawYErrorLines(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[4];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
     // x y xdelta
@@ -2762,7 +2762,7 @@ drawYErrorLines(CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[3];
 
-        lc1 = lineStyle.colorSpec().calcColor(this, x);
+        lc1 = lineStyle.color().calcColor(this, x);
       }
     }
 
@@ -2788,7 +2788,7 @@ drawParallelAxes(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
   typedef std::vector<double>       Reals;
   typedef std::map<int, Reals>      IReals;
@@ -2868,9 +2868,9 @@ drawParallelAxes(CGnuPlotRenderer *renderer)
     CRGBA c;
 
     if (isCalcColor)
-      c = lineStyle.colorSpec().calcColor(this, reals[nr]);
+      c = lineStyle.color().calcColor(this, reals[nr]);
     else
-      c = lineStyle.colorSpec().calcColor(this, i);
+      c = lineStyle.color().calcColor(this, i);
 
     for (uint j = 1; j < ireals.size(); ++j)
       renderer->drawClipLine(CPoint2D(j, ireals[j - 1]), CPoint2D(j + 1, ireals[j]), 1.0, c);
@@ -3029,7 +3029,8 @@ drawLines(CGnuPlotRenderer *renderer)
     }
 
     // TODO: clip
-    renderer->drawPath(points, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)), lineStyle.dash());
+    renderer->drawPath(points, lineStyle.width(),
+                       lineStyle.calcColor(CRGBA(1,0,0)), lineStyle.dash());
   }
 
 #if 0
@@ -3040,7 +3041,7 @@ drawLines(CGnuPlotRenderer *renderer)
     CPoint2D p1, p2;
 
     if (! point1.isDiscontinuity() && point1.getPoint(p1) && point2.getPoint(p2))
-      renderer->drawClipLine(p1, p2, lineStyle.width(), lineStyle.color(CRGBA(1,0,0)),
+      renderer->drawClipLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)),
                              lineStyle.dash());
   }
 #endif
@@ -3052,9 +3053,9 @@ drawPoints(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  bool isCalcColor = lineStyle.colorSpec().isCalc();
+  bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA c = lineStyle.color(CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
 
   double size = pointSize();
 
@@ -3091,7 +3092,7 @@ drawPoints(CGnuPlotRenderer *renderer)
     if (isCalcColor && valueNum < reals.size()) {
       double x = reals[valueNum++];
 
-      c1 = lineStyle.colorSpec().calcColor(this, x);
+      c1 = lineStyle.color().calcColor(this, x);
     }
 
     renderer->drawSymbol(p, pointType(), size1, c1);

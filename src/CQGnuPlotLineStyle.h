@@ -17,6 +17,7 @@ class CQGnuPlotLineStyle : public QObject, public CGnuPlotLineStyle {
 
  public:
   CQGnuPlotLineStyle();
+ ~CQGnuPlotLineStyle();
 
   QColor color() const;
   void setColor(const QColor &c);

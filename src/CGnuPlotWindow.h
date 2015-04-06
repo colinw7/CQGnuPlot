@@ -8,6 +8,7 @@
 class CGnuPlotWindow {
  public:
   typedef std::vector<CGnuPlotGroup *> Groups;
+  typedef CGnuPlot::Pm3DData           Pm3DData;
 
  public:
   CGnuPlotWindow(CGnuPlot *plot);
@@ -40,8 +41,8 @@ class CGnuPlotWindow {
   bool contour3D() const { return contour3D_; }
   void setContour3D(bool b) { contour3D_ = b; }
 
-  bool pm3D() const { return pm3D_; }
-  void setPm3D(bool b) { pm3D_ = b; }
+  const Pm3DData &pm3D() const { return pm3D_; }
+  void setPm3D(const Pm3DData &p) { pm3D_ = p; }
 
   const CGnuPlotCamera &camera() const { return camera_; }
   void setCamera(const CGnuPlotCamera &c) { camera_ = c; }
@@ -75,7 +76,7 @@ class CGnuPlotWindow {
   bool           hidden3D_  { false };
   bool           surface3D_ { true  };
   bool           contour3D_ { false };
-  bool           pm3D_      { false };
+  Pm3DData       pm3D_;
   CRGBA          backgroundColor_ { 1, 1, 1};
 };
 

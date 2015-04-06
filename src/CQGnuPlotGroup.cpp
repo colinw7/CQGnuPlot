@@ -28,6 +28,20 @@ setPainter(QPainter *p)
   renderer->setPainter(p);
 }
 
+double
+CQGnuPlotGroup::
+getRatio() const
+{
+  return plotSize_.xratio.getValue(1);
+}
+
+void
+CQGnuPlotGroup::
+setRatio(double r)
+{
+  plotSize_.xratio = r;
+}
+
 CQGnuPlot::HistogramStyle
 CQGnuPlotGroup::
 histogramStyle() const

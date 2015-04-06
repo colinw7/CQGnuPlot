@@ -59,6 +59,7 @@ CGnuPlotGroup.cpp \
 CGnuPlotKey.cpp \
 CGnuPlotKeyData.cpp \
 CGnuPlotLabel.cpp \
+CGnuPlotLineStyle.cpp \
 CGnuPlotPalette.cpp \
 CGnuPlotPie.cpp \
 CGnuPlotPlot.cpp \

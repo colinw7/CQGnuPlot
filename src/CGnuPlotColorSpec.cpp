@@ -3,6 +3,26 @@
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotUtil.h>
 
+void
+CGnuPlotColorSpec::
+reset()
+{
+  type_ = Type::NONE;
+  c_    = CRGBA(0,0,0);
+  i_    = 0;
+  r_    = 0.0;
+}
+
+void
+CGnuPlotColorSpec::
+print(std::ostream &os) const
+{
+  if (isBackground())
+    os << "bgnd";
+  else
+    os << "rgb \"" << c_.getRGB().stringEncode() << "\"";
+}
+
 CRGBA
 CGnuPlotColorSpec::
 calcColor(CGnuPlotPlot *plot, double x) const

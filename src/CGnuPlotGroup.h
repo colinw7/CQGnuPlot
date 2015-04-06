@@ -203,9 +203,6 @@ class CGnuPlotGroup {
   const PlotSize &plotSize() const { return plotSize_; }
   void setPlotSize(const PlotSize &s) { plotSize_ = s; }
 
-  double getRatio() const { return plotSize().ratio.getValue(1.0); }
-  void setRatio(double r) { PlotSize s = plotSize(); s.ratio = r; setPlotSize(s); }
-
   //-----
 
   const CGnuPlotHistogramData &getHistogramData() const { return histogramData_; }
@@ -316,7 +313,7 @@ class CGnuPlotGroup {
   //double pixelWidthToWindowWidth  (double w) const;
   //double pixelHeightToWindowHeight(double h) const;
 
- private:
+ protected:
   static int nextId_;
 
   CGnuPlotWindow*       window_;               // parent window

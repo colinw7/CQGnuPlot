@@ -59,6 +59,9 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
 
   void setPainter(QPainter *p);
 
+  double getRatio() const;
+  void setRatio(double r);
+
   QString getXLabel() const { return CGnuPlotGroup::getXLabel().c_str(); }
   void setXLabel(const QString &s) { CGnuPlotGroup::setXLabel(s.toStdString()); }
   QString getYLabel() const { return CGnuPlotGroup::getYLabel().c_str(); }

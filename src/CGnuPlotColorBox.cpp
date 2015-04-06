@@ -189,7 +189,7 @@ draw(CGnuPlotRenderer *renderer)
     if (borderStyle_ >= 0) {
       CGnuPlotLineStyleP lineStyle = group_->app()->getLineStyleInd(borderStyle_);
 
-      c = lineStyle->color(c);
+      c = lineStyle->calcColor(c);
       w = lineStyle->width();
     }
 

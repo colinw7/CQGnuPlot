@@ -13,7 +13,12 @@ CGnuPlotPolygon(CGnuPlotGroup *group) :
 
   CRGBA bg = (group_ ? group_->window()->backgroundColor() : CRGBA(1,1,1));
 
-  fs_.setBorderColor(bg); // which do we use ?
+  CGnuPlotColorSpec cs;
+
+  cs.setRGB(bg);
+
+  fs_.setBorderColor(cs); // which do we use ?
+
   fillColor_.setRGB(bg);
 }
 

@@ -89,6 +89,70 @@ class CGnuPlotAxisData {
   bool showTics() const { return showTics_; }
   void setShowTics(bool b) { showTics_ = b; }
 
+  void unset() {
+    displayed_ = false;
+
+    unsetRange();
+
+    text_ = "";
+    offset_ = 0;
+  }
+
+  void unsetRange() {
+    min_ = COptReal();
+    max_ = COptReal();
+
+    reverse_   = false;
+    writeback_ = false;
+  }
+
+  void show(std::ostream &os, const std::string &prefix, int n) const {
+    os << "set " << prefix << "axis " << n;
+    os << " range [" << min_.getValue(0) << " : " << max_.getValue(10) << " ] ";
+    os << " " << (reverse_   ? "reverse"   : "noreverse" );
+    os << " " << (writeback_ ? "writeback" : "nowriteback");
+
+    // paxis 1 -axis tics are IN, major ticscale is 1 and minor ticscale is 0.5
+    // paxis 1 -axis tics: on axis tics are limited to data range
+
+    os << " ";
+    printLabel(os, prefix);
+
+    // intervals computed automatically
+  }
+
+  void showRange(std::ostream &os, const std::string &prefix) const {
+    os << "set " << prefix;
+    os << " [ "; min_.print(os, "*"); os << " : "; max_.print(os, "*"); os << " ]";
+
+    os << " " << (reverse_   ? "reverse"   : "noreverse" );
+    os << " " << (writeback_ ? "writeback" : "nowriteback");
+
+    if (! min_.isValid() || ! max_.isValid()) {
+      os << " # (currently [";
+      if (! min_.isValid()) os << min_.getValue(-10);
+      os << ":";
+      if (! max_.isValid()) os << max_.getValue( 10);
+      os << "] )";
+    }
+
+    os << std::endl;
+  }
+
+  void showTics(std::ostream &os, const std::string &prefix) const {
+    os << prefix << " tics are IN, major ticscale is 1 and minor ticscale is 0.5" << std::endl;
+
+    if (showTics_) {
+      os << prefix << " tics: on axis" << std::endl;
+      os << "  labels are justified automatically, format \"" <<
+            format_ << "\" and are not rotated," << std::endl;
+      os << "  offset (character " << offset_ << ", 0, 0)" << std::endl;
+      os << "  intervals computed automatically" << std::endl;
+    }
+    else
+      os << prefix << " tics: OFF" << std::endl;
+  }
+
   void showFormat(std::ostream &os, const std::string &prefix) const {
     os << "set format " << prefix << " \"" << format_ << "\"" << std::endl;
   }
@@ -107,7 +171,7 @@ class CGnuPlotAxisData {
 
   void printLabel(std::ostream &os, const std::string &prefix) const {
     os << prefix << "label is \"" << text_ << "\", " <<
-          "offset at ((character units) 0, 0, 0)" << std::endl;
+          "offset at ((character units) " << offset_ << ", 0, 0)" << std::endl;
   }
 
  private:

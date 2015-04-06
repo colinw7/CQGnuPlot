@@ -28,7 +28,8 @@ clear()
   hidden3D_  = false;
   surface3D_ = false;
   contour3D_ = false;
-  pm3D_      = false;
+
+  pm3D_.unset();
 }
 
 void

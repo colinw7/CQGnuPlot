@@ -13,7 +13,7 @@ lineWidth(CGnuPlot *plot) const
   if (lineStyle_.isValid()) {
     CGnuPlotLineStyleP ls = plot->lineStyle(lineStyle_.getValue());
 
-    return (ls ? ls->width() : 1);
+    return (ls.isValid() ? ls->width() : 1);
   }
   else
     return 1;
@@ -23,14 +23,29 @@ void
 CGnuPlotArrowStyle::
 print(CGnuPlot *plot, std::ostream &os) const
 {
-  os << headStr() << " " << filledStr() << " " << frontStr() <<
-        " linetype " << lineStyle_ << " linewidth " << lineWidth(plot);
+  os << headStr();
+  os << " " << filledStr();
+  if (! border_) os << " noborder";
+  os << " " << frontStr();
+
+  if (lineStyle_.isValid())
+    os <<" lt " << lineStyle_;
+  else
+    os <<" lt black";
+
+  os << " linewidth " << lineWidth(plot);
 
   os << " dashtype " << dash_;
 
   if (length_.value() > 0.0 || angle_ >= 0.0 || backAngle_ >= 0.0) {
     os << " arrow head" << (fhead_ && thead_ ? "s" : "") << ": " << filledStr();
     os << ", length "; length_.print(os);
-    os << ", angle " << angle_ << ", backangle " << backAngle_;
+    os << ", angle " << (angle_ > 0 ? angle_ : 0.0);
+
+    if (backAngle_ >= 0)
+      os << ", backangle " << backAngle_;
+
+    if (fixed_)
+      os << " fixed";
   }
 }

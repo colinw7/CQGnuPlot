@@ -45,7 +45,11 @@ void
 CQGnuPlotPlot::
 setLineColor(const QColor &c)
 {
-  CGnuPlotPlot::setLineColor(fromQColor(c));
+  CGnuPlotColorSpec cs;
+
+  cs.setRGB(fromQColor(c));
+
+  CGnuPlotPlot::setLineColor(cs);
 }
 
 CQGnuPlot::PlotStyle

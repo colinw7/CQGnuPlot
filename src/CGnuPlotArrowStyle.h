@@ -36,8 +36,14 @@ class CGnuPlotArrowStyle {
   bool filled() const { return filled_; }
   void setFilled(bool b) { filled_ = b; }
 
+  bool fixed() const { return fixed_; }
+  void setFixed(bool b) { fixed_ = b; }
+
   bool empty() const { return empty_; }
   void setEmpty(bool b) { empty_ = b; }
+
+  bool border() const { return border_; }
+  void setBorder(bool b) { border_ = b; }
 
   bool front() const { return front_; }
   void setFront(bool b) { front_ = b; }
@@ -88,7 +94,9 @@ class CGnuPlotArrowStyle {
   double             backAngle_ { -1 };
   bool               filled_    { false };
   bool               empty_     { false };
+  bool               border_    { true  };
   bool               front_     { false };
+  bool               fixed_     { false }; // no auto size reduce for show arrows
   COptReal           lineWidth_;
   COptInt            lineStyle_;
   COptValT<CRGBA>    lineColor_;
