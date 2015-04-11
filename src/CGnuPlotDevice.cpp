@@ -5,6 +5,16 @@
 #include <CGnuPlotBar.h>
 #include <CGnuPlotPie.h>
 #include <CGnuPlotBubble.h>
+#include <CFontMgr.h>
+
+CGnuPlotDevice::
+CGnuPlotDevice(const std::string &name) :
+ plot_(0)
+{
+  name_ = CStrUtil::toLower(name);
+  size_ = CISize2D(600, 480);
+  font_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
+}
 
 CGnuPlotWindow *
 CGnuPlotDevice::
@@ -131,3 +141,15 @@ createBubble(CGnuPlotPlot *plot)
   return new CGnuPlotBubble(plot);
 }
 
+bool
+CGnuPlotDevice::
+parseArgs(CParseLine &)
+{
+  return false;
+}
+
+void
+CGnuPlotDevice::
+show(std::ostream &) const
+{
+}

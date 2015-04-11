@@ -134,7 +134,10 @@ class CGnuPlot {
     BMARGIN,
     BORDER,
     BOXWIDTH,
+    CBDATA,
+    CBDTICS,
     CBLABEL,
+    CBMTICS,
     CBRANGE,
     CBTICS,
     CIRCLE,
@@ -222,9 +225,12 @@ class CGnuPlot {
     VIEW,
     VRANGE,
     X2DATA,
+    X2DTICS,
     X2LABEL,
+    X2MTICS,
     X2RANGE,
     X2TICS,
+    X2ZEROAXIS,
     XDATA,
     XDTICS,
     XLABEL,
@@ -232,19 +238,30 @@ class CGnuPlot {
     XRANGE,
     XTICS,
     XYPLANE,
+    XZEROAXIS,
     Y2DATA,
+    Y2DTICS,
     Y2LABEL,
+    Y2MTICS,
     Y2RANGE,
     Y2TICS,
+    Y2ZEROAXIS,
     YDATA,
+    YDTICS,
     YLABEL,
+    YMTICS,
     YRANGE,
     YTICS,
+    YZEROAXIS,
+    ZDATA,
+    ZDTICS,
     ZERO,
     ZEROAXIS,
     ZLABEL,
+    ZMTICS,
     ZRANGE,
     ZTICS,
+    ZZEROAXIS,
   };
 
   enum class DataFileVar {
@@ -440,6 +457,8 @@ class CGnuPlot {
     IAxisMap         taxis;
     CGnuPlotAxisData cbaxis;
     CGnuPlotAxisData raxis;
+    CGnuPlotAxisData uaxis;
+    CGnuPlotAxisData vaxis;
     BorderData       border;
   };
 
@@ -601,6 +620,90 @@ class CGnuPlot {
     double            lineWidth_ { 1 };
     CGnuPlotColorSpec fc_;
     CGnuPlotFillStyle fs_;
+  };
+
+  class TextBoxStyle {
+   public:
+    TextBoxStyle() {
+      unset();
+    }
+
+    bool isTransparent() const { return transparent_; }
+    void setTransparent(bool b) { transparent_ = b; }
+
+    bool isBorder() const { return border_; }
+    void setBorder(bool b) { border_ = b; }
+
+    void unset() {
+      transparent_ = false;
+      border_      = true;
+    }
+
+    void show(std::ostream &os) const {
+      os << "textboxes are ";
+      os << (transparent_ ? "transparent" : "opaque");
+      //os << "with margins ";
+      os << " and " << (border_  ? "border": "no border");
+      os << std::endl;
+    }
+
+   private:
+    bool transparent_ { false };
+    bool border_      { true };
+  };
+
+  //---
+
+  class TimeStampData {
+   public:
+    TimeStampData() { }
+
+    const std::string &format() const { return format_; }
+    void setFormat(const std::string &v) { format_ = v; }
+
+    bool isTop() const { return top_; }
+    void setTop(bool b) { top_ = b; }
+
+    bool isRotated() const { return rotated_; }
+    void setRotated(bool b) { rotated_ = b; }
+
+    const CPoint2D &offset() const { return offset_; }
+    void setOffset(const CPoint2D &v) { offset_ = v; }
+
+    const CFontPtr &font() const { return font_; }
+    void setFont(const CFontPtr &v) { font_ = v; }
+
+    const CGnuPlotColorSpec &textColor() const { return textColor_; }
+    void setTextColor(const CGnuPlotColorSpec &v) { textColor_ = v; }
+
+    void unset() {
+      format_    = "";
+      top_       = false;
+      rotated_   = false;
+      offset_    = CPoint2D(0, 0);
+      font_      = CFontPtr();
+      textColor_ = CGnuPlotColorSpec();
+    }
+
+    void show(std::ostream &os) {
+      os << "time is \"" << format_ << "\", offset at (" << offset_ << ")";
+
+      if (font_.isValid())
+        os << ", using font " << font_;
+
+      os << std::endl;
+
+      os << "written in " << (top_ ? "top" : "bottom") << " corner" << std::endl;
+      os << (rotated_ ? "rotated" : "not rotated") << std::endl;
+    }
+
+   private:
+    std::string       format_;
+    bool              top_     { false };
+    bool              rotated_ { false };
+    CPoint2D          offset_  { 0, 0 };
+    CFontPtr          font_;
+    CGnuPlotColorSpec textColor_;
   };
 
   //---
@@ -1020,7 +1123,7 @@ class CGnuPlot {
   };
 
   struct Surface3DData {
-    bool enabled { false };
+    bool enabled { true };
   };
 
   struct Contour3DData {
@@ -1172,6 +1275,26 @@ class CGnuPlot {
 
   //---
 
+  class XYPlane {
+   public:
+    XYPlane() { }
+
+    double z() const { return z_; }
+
+    bool isRelative() const { return relative_; }
+
+    void setZ(double z, bool rel=false) {
+      z_        = z;
+      relative_ = rel;
+    }
+
+   private:
+    double z_        { 0.0   };
+    bool   relative_ { false };
+  };
+
+  //---
+
   typedef std::vector<CGnuPlotPlot *> Plots;
   typedef StringArray                 Statements;
 
@@ -1182,19 +1305,25 @@ class CGnuPlot {
 
   virtual ~CGnuPlot();
 
+  //----
+
   void setDebug(bool b) { debug_ = b; }
   bool isDebug() const { return debug_; }
 
   void setExprDebug(bool b);
   bool isExprDebug() const { return edebug_; }
 
+  //----
+
   CGnuPlotDevice *device() const { return device_; }
 
   void addDevice(const std::string &name, CGnuPlotDevice *device);
   bool setDevice(const std::string &name);
 
-  const CISize2D &getTerminalSize() const { return terminalSize_; }
-  void setTerminalSize(const CISize2D &s) { terminalSize_ = s; }
+  void pushDevice();
+  void popDevice();
+
+  //----
 
   PlotStyle getDataStyle() const { return dataStyle_; }
   void setDataStyle(PlotStyle style) { dataStyle_ = style; }
@@ -1324,12 +1453,12 @@ class CGnuPlot {
 
   //---
 
-  bool surface3D() const { return surface3D_.enabled; }
+  bool isSurface3D() const { return surface3D_.enabled; }
   void setSurface3D(bool b) { surface3D_.enabled = b; }
 
   //---
 
-  bool contour3D() const { return contour3D_.enabled; }
+  bool isContour3D() const { return contour3D_.enabled; }
   void setContour3D(bool b) { contour3D_.enabled = b; }
 
   //---
@@ -1350,11 +1479,6 @@ class CGnuPlot {
 
   void setTimeFmt(const std::string &f) { timeFmt_ = f; }
   const std::string &timeFmt() { return timeFmt_; }
-
-  //------
-
-  bool isEnhanced() const { return enhanced_; }
-  void setEnhanced(bool b) { enhanced_ = b; }
 
   //------
 
@@ -1517,8 +1641,7 @@ class CGnuPlot {
   void unsetForCmd(const std::string &var, const std::string &start, const std::string &end,
                    const std::string &inc, const std::string &args);
 
-  bool parseModifiers2D(CParseLine &line, CGnuPlotLineStyle &lineStyle,
-                        CGnuPlotFillStyle &fillStyle);
+  bool parseModifiers2D(CParseLine &line, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs);
   bool parseModifiers3D(CParseLine &line);
 
   bool parseFor(CParseLine &line, std::string &var, std::string &start, std::string &end,
@@ -1582,7 +1705,10 @@ class CGnuPlot {
 
   CGnuPlotPlot *addFile3D(CGnuPlotWindowP window, const std::string &filename);
 
-  bool parseAxisRange(CParseLine &line, CGnuPlotAxisData &axis, bool hasArgs=true);
+  bool parseAxisRange   (CParseLine &line, CGnuPlotAxisData &axis, bool hasArgs=true);
+  bool parseAxisLabel   (CParseLine &line, CGnuPlotAxisData &axis);
+  bool parseAxesTics    (CParseLine &line, CGnuPlotAxisData &axis);
+  void parseAxisZeroAxis(CParseLine &line, CGnuPlotAxisData &axis);
 
   bool parseRange(CParseLine &line, StringArray &fields);
 
@@ -1640,8 +1766,6 @@ class CGnuPlot {
 
   const Samples    &samples   () const { return samples_; }
   const ISOSamples &isoSamples() const { return isoSamples_; }
-
-  bool parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis);
 
   bool parseColor(CParseLine &line, CRGBA &c);
   bool parseColorSpec(CParseLine &line, CGnuPlotColorSpec &c);
@@ -1718,6 +1842,7 @@ class CGnuPlot {
 
  private:
   typedef std::map<std::string,CGnuPlotDevice*> Devices;
+  typedef std::vector<CGnuPlotDevice*>          DeviceStack;
   typedef std::vector<CGnuPlotWindowP>          Windows;
   typedef StringArray                           Fields;
   typedef StringArray                           FileLines;
@@ -1731,6 +1856,7 @@ class CGnuPlot {
   CGnuPlotSVGDevice*     svgDevice_ { 0 };
   CGnuPlotDevice*        device_ { 0 };
   Devices                devices_;
+  DeviceStack            deviceStack_;
   FileData               fileData_;
   FileDataArray          fileDataArray_;
   Windows                windows_;
@@ -1743,8 +1869,7 @@ class CGnuPlot {
   std::string            lastSPlotCmd_;
   std::string            tableFile_;
   int                    pointNum_ { 0 };
-  CISize2D               terminalSize_   { 800, 800 };                  // terminal size
-  Smooth                 smooth_         { Smooth::NONE };
+  Smooth                 smooth_ { Smooth::NONE };
   CGnuPlotHistogramData  histogramData_;
   CGnuPlotLineStyleP     lineStyle_;
   CGnuPlotPointStyle     pointStyle_;
@@ -1772,6 +1897,7 @@ class CGnuPlot {
   CircleStyle            circleStyle_;
   RectStyle              rectStyle_;
   EllipseStyle           ellipseStyle_;
+  TextBoxStyle           textBoxStyle_;
 
   LineDashes             lineDashes_;
   bool                   binary_ { false };
@@ -1781,6 +1907,7 @@ class CGnuPlot {
   bool                   polar_ { false };
   bool                   enhanced_ { true };
   bool                   macros_ { false };
+  double                 zero_ { 1E-8 };
   HistoryData            historyData_;
   CGnuPlotImageStyle     imageStyle_;
   Annotations            annotations_;
@@ -1807,10 +1934,12 @@ class CGnuPlot {
   MouseData              mouseData_;
   CGnuPlotMultiplot      multiplot_;
   CGnuPlotWindowP        multiWindow_;
+  TimeStampData          timeStamp_;
   COptValT<CBBox2D>      clearRect_;
   Hidden3DData           hidden3D_;
   Surface3DData          surface3D_;
   Contour3DData          contour3D_;
+  XYPlane                xyPlane_;
   Pm3DData               pm3D_;
   double                 pointIntervalBox_ { 1 };
   double                 whiskerBars_ { 0 };

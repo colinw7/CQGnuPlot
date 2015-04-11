@@ -25,6 +25,10 @@ class CGnuPlotSVGDevice : public CGnuPlotDevice {
 
   CGnuPlotRenderer *renderer() override;
 
+  bool parseArgs(CParseLine &line) override;
+
+  void show(std::ostream &os) const override;
+
  private:
   CGnuPlotSVGRenderer *renderer_;
   std::ostream        *os_;

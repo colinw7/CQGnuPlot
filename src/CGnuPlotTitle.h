@@ -6,6 +6,7 @@
 #include <CFont.h>
 
 class CGnuPlotGroup;
+class CGnuPlotRenderer;
 
 class CGnuPlotTitle {
  public:
@@ -31,9 +32,13 @@ class CGnuPlotTitle {
   bool isEnhanced() const { return enhanced_; }
   void setEnhanced(bool b) { enhanced_ = b; }
 
-  virtual void draw() const;
+  virtual void draw(CGnuPlotRenderer *renderer) const;
 
-  void show(std::ostream &os) const {
+  void unset() {
+    text_ = "";
+  }
+
+  void save(std::ostream &os) const {
     os << "set title \"" << text_ << "\"" << std::endl;
 
     if (font_.isValid())
@@ -42,9 +47,17 @@ class CGnuPlotTitle {
       os << "set title font \" norotate" << font_->getFamily() << "\"" << std::endl;
   }
 
-  void print(std::ostream &os) const {
-    os << "title is \"" << text_ << "\", " <<
-          "offset at ((character units) 0, 0, 0)" << std::endl;
+  void show(std::ostream &os) const {
+    os << "title is \"" << text_ << "\"";
+    os << ", " << "offset at ((character units) " << offset_.x << ", " << offset_.y << ", 0)";
+
+    if (font_.isValid())
+      os << ", using font \"" << font_ << "\"";
+
+    if (color_.isValid())
+      os << " textcolor " << color_;
+
+    os << std::endl;
   }
 
  private:

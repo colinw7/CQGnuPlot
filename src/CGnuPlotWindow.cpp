@@ -6,8 +6,10 @@
 
 CGnuPlotWindow::
 CGnuPlotWindow(CGnuPlot *plot) :
- plot_(plot), size_(plot->getTerminalSize())
+ plot_(plot), size_(640, 480)
 {
+  if (plot->device())
+    size_ = plot_->device()->size();
 }
 
 CGnuPlotWindow::

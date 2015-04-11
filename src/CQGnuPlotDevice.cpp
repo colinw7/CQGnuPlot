@@ -27,6 +27,8 @@ CQGnuPlotDevice() :
  CGnuPlotDevice("Qt")
 {
   renderer_ = new CQGnuPlotRenderer;
+
+  setSize(CISize2D(800, 800));
 }
 
 CQGnuPlotDevice::
@@ -42,7 +44,7 @@ createWindow()
 
   CQGnuPlotWindow *window = new CQGnuPlotWindow(qapp);
 
-  const CISize2D &s = qapp->getTerminalSize();
+  const CISize2D &s = size();
 
   window->setSize(s);
 
@@ -295,4 +297,21 @@ CQGnuPlotDevice::
 renderer()
 {
   return renderer_;
+}
+
+bool
+CQGnuPlotDevice::
+parseArgs(CParseLine &)
+{
+  return false;
+}
+
+void
+CQGnuPlotDevice::
+show(std::ostream &os) const
+{
+  os << "size " << size_.width << "," << size_.height;
+  os << " fixed";
+  os << " " << (enhanced_ ? "enhanced" : "noenhanced");
+  os << " " << font_;
 }

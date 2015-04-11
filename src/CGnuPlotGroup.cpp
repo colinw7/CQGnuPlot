@@ -648,7 +648,7 @@ drawTitle()
   renderer->setRange(region());
   renderer->setReverse(false, false);
 
-  title_->draw();
+  title_->draw(renderer);
 }
 
 void

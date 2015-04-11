@@ -79,7 +79,7 @@ setFont(const QFont &f)
 
 void
 CQGnuPlotTitle::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
   CQGnuPlotTitle *th = const_cast<CQGnuPlotTitle *>(this);
 
@@ -93,7 +93,7 @@ draw() const
     th->CGnuPlotTitle::setColor(cs1);
   }
 
-  CGnuPlotTitle::draw();
+  CGnuPlotTitle::draw(renderer);
 
   if (isSelected())
     th->CGnuPlotTitle::setColor(cs);

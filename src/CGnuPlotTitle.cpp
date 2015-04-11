@@ -12,11 +12,9 @@ CGnuPlotTitle(CGnuPlotGroup *group) :
 
 void
 CGnuPlotTitle::
-draw() const
+draw(CGnuPlotRenderer *renderer) const
 {
   if (text_.empty()) return;
-
-  CGnuPlotRenderer *renderer = group_->app()->renderer();
 
   const CBBox2D &region = group_->region();
 

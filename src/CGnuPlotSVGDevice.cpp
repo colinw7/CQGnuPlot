@@ -33,7 +33,7 @@ timeout()
 
 void
 CGnuPlotSVGDevice::
-drawInit(CGnuPlotWindow *window)
+drawInit(CGnuPlotWindow *)
 {
   const std::string &name = app()->getOutputFile();
 
@@ -45,10 +45,8 @@ drawInit(CGnuPlotWindow *window)
   else
     os_ = &std::cout;
 
-  const CISize2D &s = window->size();
-
-  os() << "<svg width=\"" << s.width << "\" height=\"" << s.height << "\"" <<
-          " viewBox=\"0 0 " << s.width << " " << s.height << "\">\n";
+  os() << "<svg width=\"" << size_.width << "\" height=\"" << size_.height << "\"" <<
+          " viewBox=\"0 0 " << size_.width << " " << size_.height << "\">\n";
 }
 
 void
@@ -65,4 +63,19 @@ CGnuPlotSVGDevice::
 renderer()
 {
   return renderer_;
+}
+
+bool
+CGnuPlotSVGDevice::
+parseArgs(CParseLine &)
+{
+  return false;
+}
+
+void
+CGnuPlotSVGDevice::
+show(std::ostream &os) const
+{
+  os << "size " << size_.width << "," << size_.height;
+  os << " " << (enhanced_ ? "enhanced" : "noenhanced");
 }

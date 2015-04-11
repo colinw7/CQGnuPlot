@@ -2110,7 +2110,7 @@ void
 CGnuPlotPlot::
 drawLabels(CGnuPlotRenderer *renderer)
 {
-  bool enhanced = app()->isEnhanced();
+  bool enhanced = app()->device()->isEnhanced();
 
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 

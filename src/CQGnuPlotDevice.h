@@ -55,6 +55,10 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
 
   CGnuPlotRenderer *renderer() override;
 
+  bool parseArgs(CParseLine &line) override;
+
+  void show(std::ostream &os) const override;
+
  private:
   CQGnuPlotRenderer *renderer_;
   Objects            objects_;

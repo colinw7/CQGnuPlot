@@ -238,7 +238,7 @@ CGnuPlot()
 
   svgDevice_ = new CGnuPlotSVGDevice();
 
-  addDevice("SVG", svgDevice_);
+  addDevice("svg", svgDevice_);
 
   for (int i = 0; i < 8; ++i)
     axesData_.paxis[i].unset();
@@ -262,9 +262,11 @@ void
 CGnuPlot::
 addDevice(const std::string &name, CGnuPlotDevice *device)
 {
+  auto name1 = CStrUtil::toLower(name);
+
   device->setApp(this);
 
-  devices_[name] = device;
+  devices_[name1] = device;
 }
 
 bool
@@ -293,6 +295,26 @@ setDevice(const std::string &name)
   }
 
   return false;
+}
+
+void
+CGnuPlot::
+pushDevice()
+{
+  if (! device_) return;
+
+  deviceStack_.push_back(device_);
+}
+
+void
+CGnuPlot::
+popDevice()
+{
+  if (deviceStack_.empty()) return;
+
+  device_ = deviceStack_.back();
+
+  deviceStack_.pop_back();
 }
 
 void
@@ -1157,7 +1179,7 @@ saveCmd(const std::string &args)
   unset paxis 7 tics
   */
 
-  title_.print(os);
+  title_.save(os);
 
   /*
   set timestamp bottom
@@ -1896,7 +1918,7 @@ plotCmd(const std::string &args)
 
   //---
 
-  if (device_)
+  if (device())
     stateChanged(window.get(), CGnuPlotTypes::ChangeState::PLOT_ADDED);
 }
 
@@ -2277,6 +2299,66 @@ parseAxisRange(CParseLine &line, CGnuPlotAxisData &axis, bool hasArgs)
   return true;
 }
 
+// set xlabel {"<label>"} {offset <offset>} {font "<font>{,<size>}"}
+//            {textcolor <colorspec>} {{no}enhanced}
+//            {rotate by <degrees> | rotate parallel | norotate}
+bool
+CGnuPlot::
+parseAxisLabel(CParseLine &line, CGnuPlotAxisData &axis)
+{
+  int pos = line.pos();
+
+  std::string arg = readNonSpace(line);
+
+  if      (arg == "offset") {
+    double o;
+
+    if (parseReal(line, o))
+      axis.setOffset(o);
+  }
+  else if (arg == "font") {
+    CFontPtr font;
+
+    if (parseFont(line, font))
+      axis.setFont(font);
+  }
+  else if (arg == "textcolor") {
+    CGnuPlotColorSpec c;
+
+    if (parseColorSpec(line, c))
+      axis.setTextColor(c);
+  }
+  else if (arg == "enhanced" || arg == "noenhanced") {
+    axis.setEnhanced(arg == "enhanced");
+  }
+  else if (arg == "rotate") {
+    std::string arg1 = readNonSpace(line);
+
+    if      (arg1 == "by") {
+      double a;
+
+      if (parseReal(line, a))
+        axis.setRotate(a);
+    }
+    else if (arg1 == "parallel") {
+      axis.setRotate(-1);
+    }
+  }
+  else if (arg == "norotate") {
+    axis.setRotate(0);
+  }
+  else {
+    line.setPos(pos);
+
+    std::string labelStr;
+
+    if (parseString(line, labelStr, "Invalid label string"))
+      axis.setText(labelStr);
+  }
+
+  return true;
+}
+
 // [{<dummary-var>=}{min}:{max}]
 bool
 CGnuPlot::
@@ -2640,13 +2722,13 @@ splotCmd(const std::string &args)
   window->setCamera(camera());
 
   window->setHidden3D(hidden3D_.enabled);
-  window->setSurface3D(surface3D());
-  window->setContour3D(contour3D());
+  window->setSurface3D(isSurface3D());
+  window->setContour3D(isContour3D());
   window->setPm3D(pm3D());
 
   //---
 
-  if (device_)
+  if (device())
     stateChanged(window.get(), CGnuPlotTypes::ChangeState::PLOT_ADDED);
 }
 
@@ -4351,6 +4433,7 @@ setCmd(const std::string &args)
         (void) parseFont(line, font);
       }
       else if (arg == "enhanced" || arg == "noenhanced") {
+        multiplot_.setEnhanced(arg == "enhanced");
       }
       else if (arg == "layout") {
         int i;
@@ -5662,9 +5745,20 @@ setCmd(const std::string &args)
         arg = readNonSpace(line);
       }
     }
-    // set style textbox
+    // set style textbox {opaque|transparent}{{no}border}
     else if (var1 == StyleVar::TEXTBOX) {
-      // TODO:
+      std::string arg = readNonSpace(line);
+
+      while (arg != "") {
+        if      (arg == "opaque" || arg == "transparent") {
+          textBoxStyle_.setTransparent(arg == "transparent");
+        }
+        else if (arg == "border" || arg == "noborder") {
+          textBoxStyle_.setBorder(arg == "border");
+        }
+
+        arg = readNonSpace(line);
+      }
     }
     // set style histogram [ clustered [ gap {gap} ] |
     //                       errorbars [ gap {gap} ] [ linewidth|lw {width} ] |
@@ -5729,46 +5823,86 @@ setCmd(const std::string &args)
   else if (var == VariableName::TERMINAL) {
     std::string arg = readNonSpace(line);
 
-    if (! setDevice(arg))
-      std::cerr << "No device " << arg << std::endl;
+    if      (arg == "push")
+      pushDevice();
+    else if (arg == "pop")
+      popDevice();
+    else {
+      if (! setDevice(arg))
+        std::cerr << "No device " << arg << std::endl;
 
-    arg = readNonSpace(line);
+      if (! device())
+        return false;
 
-    while (arg != "") {
-      if      (arg == "size") {
-        int w, h;
-
-        if (parseInteger(line, w)) {
-          if (line.skipSpaceAndChar(',')) {
-            if (parseInteger(line, h))
-              setTerminalSize(CISize2D(w, h));
-          }
-        }
-      }
-      else if (arg == "background") {
-        CGnuPlotColorSpec c;
-
-        if (parseColorSpec(line, c))
-          setBackgroundColor(c.color());
-      }
-      else if (arg == "enhanced" || arg == "noenhanced") {
-        setEnhanced(arg == "enhanced");
-      }
-      else {
-        errorMsg("Invalid arg '" + arg + "'");
-        break;
-      }
+      int pos = line.pos();
 
       arg = readNonSpace(line);
+
+      while (arg != "") {
+        if      (arg == "size") {
+          int w, h;
+
+          if (parseInteger(line, w)) {
+            if (line.skipSpaceAndChar(',')) {
+              if (parseInteger(line, h))
+                device()->setSize(CISize2D(w, h));
+            }
+          }
+        }
+        else if (arg == "background") {
+          CGnuPlotColorSpec c;
+
+          if (parseColorSpec(line, c))
+            setBackgroundColor(c.color());
+        }
+        else if (arg == "enhanced" || arg == "noenhanced") {
+          device()->setEnhanced(arg == "enhanced");
+        }
+        else {
+          line.setPos(pos);
+
+          if (! device()->parseArgs(line))
+            errorMsg("Invalid arg '" + arg + "'");
+        }
+
+        arg = readNonSpace(line);
+      }
     }
   }
   // set termoption [no]enhanced
   // set termoption font "<name> [, <size:i> ]"
+  // set termoption fontscale <scale>
+  // set termoption {solid|dashed}
+  // set termoption {linewidth <lw>}{lw <lw>}
   else if (var == VariableName::TERMOPTION) {
+    if (! device())
+      return false;
+
     std::string arg = readNonSpace(line);
 
-    if (arg == "enhanced" || arg == "noenhanced") {
-      setEnhanced(arg == "enhanced");
+    if      (arg == "enhanced" || arg == "noenhanced") {
+      device()->setEnhanced(arg == "enhanced");
+    }
+    else if (arg == "font") {
+      CFontPtr font;
+
+      if (parseFont(line, font))
+        device()->setFont(font);
+    }
+    else if (arg == "fontscale") {
+      double s = 1.0;
+
+      if (parseReal(line, s))
+        device()->setFontScale(s);
+    }
+    else if (arg == "solid" || arg == "dashed") {
+      device()->setDashed(arg == "dashed");
+    }
+    else if (arg == "linewidth" || arg == "lw") {
+      double lw = 1.0;
+
+      if (parseReal(line, lw))
+        device()->setLineWidth(lw);
     }
   }
   // set tics {axis | border} {{no}mirror}
@@ -5781,7 +5915,61 @@ setCmd(const std::string &args)
     int pos = line.pos();
 
     parseAxesTics(line, axesData_.xaxis[1]); line.setPos(pos);
+    parseAxesTics(line, axesData_.xaxis[2]); line.setPos(pos);
     parseAxesTics(line, axesData_.yaxis[1]); line.setPos(pos);
+    parseAxesTics(line, axesData_.yaxis[2]); line.setPos(pos);
+    parseAxesTics(line, axesData_.zaxis[1]); line.setPos(pos);
+    parseAxesTics(line, axesData_.cbaxis  ); line.setPos(pos);
+  }
+  // set timestamp {"<format>"} {top|bottom} {{no}rotate}
+  //               {offset <xoff>{,<yoff>}} {font "<fontspec>"}
+  //               {textcolor <colorspec>}
+  else if (var == VariableName::TIMESTAMP) {
+    line.skipSpace();
+
+    if (line.isChar('"')) {
+      std::string fmt;
+
+      if (parseString(line, fmt))
+        timeStamp_.setFormat(fmt);
+    }
+
+    std::string arg = readNonSpace(line);
+
+    while (arg != "") {
+      if      (arg == "top" || arg == "bottom") {
+        timeStamp_.setTop(arg == "top");
+      }
+      else if (arg == "norotate" || arg == "rotate") {
+        timeStamp_.setRotated(arg == "rotate");
+      }
+      else if (arg == "offset") {
+        double xo = 0.0, yo = 0.0;
+
+        if (parseReal(line, xo)) {
+          if (line.skipSpaceAndChar(',')) {
+            if (! parseReal(line, yo))
+              yo = 0.0;
+          }
+
+          timeStamp_.setOffset(CPoint2D(xo, yo));
+        }
+      }
+      else if (arg == "font") {
+        CFontPtr font;
+
+        if (parseFont(line, font))
+          timeStamp_.setFont(font);
+      }
+      else if (arg == "textcolor") {
+        CGnuPlotColorSpec c;
+
+        if (parseColorSpec(line, c))
+          timeStamp_.setTextColor(c);
+      }
+
+      arg = readNonSpace(line);
+    }
   }
   // set timefmt "<format string>"
   //
@@ -5869,32 +6057,94 @@ setCmd(const std::string &args)
   }
   // set urange
   else if (var == VariableName::URANGE) {
-    // TODO
+    parseAxisRange(line, axesData_.uaxis);
   }
   // set view <rot_x>{,{<rot_z>}{,{<scale>}{,<scale_z>}}}
-  // set view map
+  // set view map {scale <scale>}
   // set view {no}equal {xy|xyz}
   else if (var == VariableName::VIEW) {
+    int pos = line.pos();
+
     std::string arg = readNonSpaceNonComma(line);
 
-    if (arg == "map") {
+    if      (arg == "map") {
       camera_.setMap();
+    }
+    else if (arg == "noequal") {
+      camera_.setAxesScale(CGnuPlotCamera::AxesScale::NONE);
+    }
+    else if (arg == "equal") {
+      arg = readNonSpaceNonComma(line);
+
+      if      (arg == "xy")
+        camera_.setAxesScale(CGnuPlotCamera::AxesScale::XY);
+      else if (arg == "xyz")
+        camera_.setAxesScale(CGnuPlotCamera::AxesScale::XYZ);
+      else
+        camera_.setAxesScale(CGnuPlotCamera::AxesScale::XY);
+    }
+    else {
+      line.setPos(pos);
+
+      double rx = 0.0;
+
+      if (parseReal(line, rx)) {
+        camera_.setRotateX(rx);
+
+        double rz = 0.0;
+
+        if (line.skipSpaceAndChar(',') && parseReal(line, rz)) {
+          camera_.setRotateZ(rz);
+
+          double scale = 0.0;
+
+          if (line.skipSpaceAndChar(',') && parseReal(line, scale)) {
+            camera_.setScaleX(scale);
+            camera_.setScaleY(scale);
+
+            double scaleZ = 0.0;
+
+            if (line.skipSpaceAndChar(',') && parseReal(line, scaleZ))
+              camera_.setScaleZ(scaleZ);
+          }
+        }
+      }
     }
   }
   // set vrange
+  else if (var == VariableName::VRANGE) {
+    parseAxisRange(line, axesData_.vaxis);
+  }
+  // set x2data {time}
+  else if (var == VariableName::X2DATA) {
+    std::string arg = readNonSpace(line);
+
+    if (arg == "time")
+      axesData_.xaxis[2].setIsTime(true);
+  }
+  // set x2dtics
+  else if (var == VariableName::X2DTICS) {
+    axesData_.xaxis[2].setIsDays(true);
+  }
   // set x2label "<label>"
   else if (var == VariableName::X2LABEL) {
-    std::string labelStr;
-
-    if (parseString(line, labelStr, "Invalid x2label string"))
-      axesData_.xaxis[2].setText(labelStr);
+    parseAxisLabel(line, axesData_.xaxis[2]);
+  }
+  // set x2mtics
+  else if (var == VariableName::X2MTICS) {
+    axesData_.xaxis[2].setIsMonths(true);
   }
   // set x2range { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} {{no}extend} } | restore
   else if (var == VariableName::X2RANGE) {
     parseAxisRange(line, axesData_.xaxis[2]);
   }
+  // set x2tics
   else if (var == VariableName::X2TICS) {
     parseAxesTics(line, axesData_.xaxis[2]);
+  }
+  // set x2zeroaxis
+  else if (var == VariableName::X2ZEROAXIS) {
+    parseAxisZeroAxis(line, axesData_.xaxis[2]);
   }
   // set xdata {time}
   else if (var == VariableName::XDATA) {
@@ -5903,19 +6153,58 @@ setCmd(const std::string &args)
     if (arg == "time")
       axesData_.xaxis[1].setIsTime(true);
   }
+  // set xdtics
+  else if (var == VariableName::XDTICS) {
+    axesData_.xaxis[1].setIsDays(true);
+  }
   // set xlabel "<label>"
   else if (var == VariableName::XLABEL) {
-    std::string labelStr;
-
-    if (parseString(line, labelStr, "Invalid xlabel string"))
-      axesData_.xaxis[1].setText(labelStr);
+    parseAxisLabel(line, axesData_.xaxis[1]);
   }
-  // set ylabel "<label>"
-  else if (var == VariableName::YLABEL) {
-    std::string labelStr;
+  // set xmtics
+  else if (var == VariableName::XMTICS) {
+    axesData_.xaxis[1].setIsMonths(true);
+  }
+  // set xrange ...
+  else if (var == VariableName::XRANGE) {
+    parseAxisRange(line, axesData_.xaxis[1]);
+  }
+  // set xtics ...
+  else if (var == VariableName::XTICS) {
+    parseAxesTics(line, axesData_.xaxis[1]);
+  }
+  // set xyplane at <zvalue>
+  // set xyplane relative <frac>
+  else if (var == VariableName::XYPLANE) {
+    std::string arg = readNonSpace(line);
 
-    if (parseString(line, labelStr, "Invalid ylabel string"))
-      axesData_.yaxis[1].setText(labelStr);
+    if      (arg == "at") {
+      double z;
+
+      if (parseReal(line, z))
+        xyPlane_.setZ(z, false);
+    }
+    else if (arg == "relative") {
+      double z;
+
+      if (parseReal(line, z))
+        xyPlane_.setZ(z, true);
+    }
+  }
+  // set xzeroaxis
+  else if (var == VariableName::XZEROAXIS) {
+    parseAxisZeroAxis(line, axesData_.xaxis[1]);
+  }
+  // set y2data {time}
+  else if (var == VariableName::Y2DATA) {
+    std::string arg = readNonSpace(line);
+
+    if (arg == "time")
+      axesData_.yaxis[2].setIsTime(true);
+  }
+  // set y2dtics
+  else if (var == VariableName::Y2DTICS) {
+    axesData_.yaxis[2].setIsDays(true);
   }
   // set y2label "<label>"
   else if (var == VariableName::Y2LABEL) {
@@ -5924,33 +6213,21 @@ setCmd(const std::string &args)
     if (parseString(line, labelStr, "Invalid ylabel string"))
       axesData_.yaxis[2].setText(labelStr);
   }
-  // set xrange { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} {{no}extend} } | restore
-  else if (var == VariableName::XRANGE) {
-    parseAxisRange(line, axesData_.xaxis[1]);
-  }
-  // set xtics {axis | border} {{no}mirror}
-  //           {in | out} {scale {default | <major> {,<minor>}}}
-  //           {{no}rotate {by <ang>}} {offset <offset> | nooffset}
-  //           {left | right | center | autojustify}
-  //           {add}
-  //           { autofreq | <incr> | <start>, <incr> {,<end>} |
-  //             ({"<label>"} <pos> {<level>} {,{"<label>"}...) }}
-  //           { format "formatstring" } { font "name{,<size>}" }
-  //           { rangelimited }
-  //           { textcolor <colorspec> }
-  else if (var == VariableName::XTICS) {
-    parseAxesTics(line, axesData_.xaxis[1]);
-  }
-  // set xyplane at <zvalue>
-  // set xyplane relative <frac>
-  else if (var == VariableName::XYPLANE) {
+  // set y2mtics
+  else if (var == VariableName::Y2MTICS) {
+    axesData_.yaxis[2].setIsMonths(true);
   }
   // set y2range { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} {{no}extend} } | restore
   else if (var == VariableName::Y2RANGE) {
     parseAxisRange(line, axesData_.yaxis[2]);
   }
+  // set y2tics
   else if (var == VariableName::Y2TICS) {
     parseAxesTics(line, axesData_.yaxis[2]);
+  }
+  // set y2zeroaxis
+  else if (var == VariableName::Y2ZEROAXIS) {
+    parseAxisZeroAxis(line, axesData_.yaxis[2]);
   }
   // set ydata {time}
   else if (var == VariableName::YDATA) {
@@ -5959,23 +6236,93 @@ setCmd(const std::string &args)
     if (arg == "time")
       axesData_.yaxis[1].setIsTime(true);
   }
+  // set ydtics
+  else if (var == VariableName::YDTICS) {
+    axesData_.yaxis[1].setIsDays(true);
+  }
+  // set ylabel "<label>"
+  else if (var == VariableName::YLABEL) {
+    std::string labelStr;
+
+    if (parseString(line, labelStr, "Invalid ylabel string"))
+      axesData_.yaxis[1].setText(labelStr);
+  }
+  // set ymtics
+  else if (var == VariableName::YMTICS) {
+    axesData_.yaxis[1].setIsMonths(true);
+  }
   // set yrange { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} {{no}extend} } | restore
   else if (var == VariableName::YRANGE) {
     parseAxisRange(line, axesData_.yaxis[1]);
   }
+  // set ytics
   else if (var == VariableName::YTICS) {
     parseAxesTics(line, axesData_.yaxis[1]);
   }
+  // set yzeroaxis
+  else if (var == VariableName::YZEROAXIS) {
+    parseAxisZeroAxis(line, axesData_.yaxis[1]);
+  }
+  // set zdata {time}
+  else if (var == VariableName::ZDATA) {
+    std::string arg = readNonSpace(line);
+
+    if (arg == "time")
+      axesData_.zaxis[1].setIsTime(true);
+  }
+  // set zdtics
+  else if (var == VariableName::ZDTICS) {
+    axesData_.zaxis[1].setIsDays(true);
+  }
+  // set zzeroaxis
+  else if (var == VariableName::ZZEROAXIS) {
+    parseAxisZeroAxis(line, axesData_.zaxis[1]);
+  }
+  // set cbdata {time}
+  else if (var == VariableName::CBDATA) {
+    std::string arg = readNonSpace(line);
+
+    if (arg == "time")
+      axesData_.cbaxis.setIsTime(true);
+  }
+  // set cbdtics
+  else if (var == VariableName::CBDTICS) {
+    axesData_.cbaxis.setIsDays(true);
+  }
   // set zero {expression}
   else if (var == VariableName::ZERO) {
+    double r;
+
+    if (parseReal(line, r))
+      zero_ = r;
   }
   // set zeroaxis
   else if (var == VariableName::ZEROAXIS) {
+    int pos = line.pos();
+
+    parseAxisZeroAxis(line, axesData_.xaxis[1]); line.setPos(pos);
+    parseAxisZeroAxis(line, axesData_.xaxis[2]); line.setPos(pos);
+    parseAxisZeroAxis(line, axesData_.yaxis[1]); line.setPos(pos);
+    parseAxisZeroAxis(line, axesData_.yaxis[2]); line.setPos(pos);
+    parseAxisZeroAxis(line, axesData_.zaxis[1]); line.setPos(pos);
+    parseAxisZeroAxis(line, axesData_.zaxis[2]); line.setPos(pos);
+  }
+  // set zlabel "<label>"
+  else if (var == VariableName::ZLABEL) {
+    std::string labelStr;
+
+    if (parseString(line, labelStr, "Invalid zlabel string"))
+      axesData_.zaxis[1].setText(labelStr);
+  }
+  // set zmtics
+  else if (var == VariableName::ZMTICS) {
+    axesData_.zaxis[1].setIsMonths(true);
   }
   // set zrange { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} {{no}extend} } | restore
   else if (var == VariableName::ZRANGE) {
     parseAxisRange(line, axesData_.zaxis[1]);
   }
+  // set ztics
   else if (var == VariableName::ZTICS) {
     parseAxesTics(line, axesData_.zaxis[1]);
   }
@@ -5986,16 +6333,23 @@ setCmd(const std::string &args)
     if (parseString(line, labelStr, "Invalid ylabel string"))
       axesData_.cbaxis.setText(labelStr);
   }
+  // set cbmtics
+  else if (var == VariableName::CBMTICS) {
+    axesData_.cbaxis.setIsMonths(true);
+  }
   // set cbrange { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} {{no}extend} } | restore
   else if (var == VariableName::CBRANGE) {
     parseAxisRange(line, axesData_.cbaxis);
   }
+  // set cbtics
   else if (var == VariableName::CBTICS) {
     parseAxesTics(line, axesData_.cbaxis);
   }
+  // set debug
   else if (var == VariableName::DEBUG) {
     setDebug(true);
   }
+  // set edebug
   else if (var == VariableName::EDEBUG) {
     setExprDebug(true);
   }
@@ -6679,10 +7033,6 @@ showCmd(const std::string &args)
   else if (var == VariableName::SIZE) {
     plotSize_.showSize(std::cout);
   }
-  // show tmargin
-  else if (var == VariableName::TMARGIN) {
-    margin_.showTop(std::cout);
-  }
   // show style
   else if (var == VariableName::STYLE) {
     std::map<std::string,bool> show;
@@ -6743,6 +7093,57 @@ showCmd(const std::string &args)
     else if (show.empty() || show.find("ellipse") != show.end()) {
       ellipseStyle_.show(std::cout);
     }
+    // show style textbox
+    else if (show.empty() || show.find("textbox") != show.end()) {
+      textBoxStyle_.show(std::cout);
+    }
+  }
+  // show surface
+  else if (var == VariableName::SURFACE) {
+    std::cout << "surface is " << (isSurface3D() ? "drawn" : "not drawn") << std::endl;
+  }
+  // show table
+  else if (var == VariableName::TABLE) {
+    // needed ?
+    std::cout << "table file \"" << getTableFile() << "\"" << std::endl;
+  }
+  // show terminal
+  else if (var == VariableName::TERMINAL) {
+    std::cout << "terminal type is " << device()->name() << " ";
+
+    if (device())
+      device()->show(std::cout);
+
+    std::cout <<  std::endl;
+  }
+  // show tics
+  else if (var == VariableName::TICS) {
+    axesData_.xaxis[1].showMinorTics(std::cout, "xtics", "xtic");
+    axesData_.xaxis[2].showMinorTics(std::cout, "x2tics", "xtic");
+    axesData_.yaxis[1].showMinorTics(std::cout, "ytics", "ytic");
+    axesData_.yaxis[2].showMinorTics(std::cout, "y2tics", "ytic");
+    axesData_.zaxis[1].showMinorTics(std::cout, "ztics", "ztic");
+    axesData_.cbaxis  .showMinorTics(std::cout, "cbtics", "cbtic");
+  }
+  // show timestamp
+  else if (var == VariableName::TIMESTAMP) {
+    timeStamp_.show(std::cout);
+  }
+  // show title
+  else if (var == VariableName::TITLE) {
+    title_.show(std::cout);
+  }
+  // show tmargin
+  else if (var == VariableName::TMARGIN) {
+    margin_.showTop(std::cout);
+  }
+  // show trange
+  else if (var == VariableName::TRANGE) {
+    axesData_.taxis[1].showRange(std::cout, "trange");
+  }
+  // show urange
+  else if (var == VariableName::URANGE) {
+    axesData_.uaxis.showRange(std::cout, "urange");
   }
   // show variables
   else if (var == VariableName::VARIABLES) {
@@ -6753,9 +7154,201 @@ showCmd(const std::string &args)
     // TODO: long
     std::cout << "CGnuPlot Version 0.1" << std::endl;
   }
-  // show title
-  else if (var == VariableName::TITLE) {
-    title_.print(std::cout);
+  // show view
+  else if (var == VariableName::VIEW) {
+    camera_.showView(std::cout);
+  }
+  // show vrange
+  else if (var == VariableName::VRANGE) {
+    axesData_.vaxis.showRange(std::cout, "vrange");
+  }
+  // show x2data
+  else if (var == VariableName::X2DATA) {
+    std::cout << "x2 is set to " <<
+      (axesData_.xaxis[2].isTime() ? "time" : "numerical") << std::endl;
+  }
+  // show x2dtics
+  else if (var == VariableName::X2DTICS) {
+    std::cout << "x2 is " << (axesData_.xaxis[2].isDays() ? "days" : "not days") << std::endl;
+  }
+  // show x2label
+  else if (var == VariableName::X2LABEL) {
+    axesData_.xaxis[2].printLabel(std::cout, "x2");
+  }
+  // show x2mtics
+  else if (var == VariableName::X2MTICS) {
+    std::cout << "x2 is " << (axesData_.xaxis[2].isMonths() ? "months" : "not months") << std::endl;
+  }
+  // show x2range
+  else if (var == VariableName::X2RANGE) {
+    axesData_.xaxis[2].showRange(std::cout, "x2range");
+  }
+  // show x2tics
+  else if (var == VariableName::X2TICS) {
+    axesData_.xaxis[2].showMinorTics(std::cout, "x2tics", "xtic");
+  }
+  // show x2zeroaxis
+  else if (var == VariableName::X2ZEROAXIS) {
+    axesData_.xaxis[2].showZeroAxis(std::cout, "x2");
+  }
+  // show xdata
+  else if (var == VariableName::XDATA) {
+    std::cout << "x is set to " <<
+      (axesData_.xaxis[1].isTime() ? "time" : "numerical") << std::endl;
+  }
+  // show xdtics
+  else if (var == VariableName::XDTICS) {
+    std::cout << "x is " << (axesData_.xaxis[1].isDays() ? "days" : "not days") << std::endl;
+  }
+  // show xlabel
+  else if (var == VariableName::XLABEL) {
+    axesData_.xaxis[1].printLabel(std::cout, "x");
+  }
+  // show xmtics
+  else if (var == VariableName::XMTICS) {
+    std::cout << "x is " << (axesData_.xaxis[1].isMonths() ? "months" : "not months") << std::endl;
+  }
+  // show xrange
+  else if (var == VariableName::XRANGE) {
+    axesData_.xaxis[1].showRange(std::cout, "xrange");
+  }
+  // show xtics
+  else if (var == VariableName::XTICS) {
+    axesData_.xaxis[1].showMinorTics(std::cout, "xtics", "xtic");
+  }
+  // show xyplane
+  else if (var == VariableName::XYPLANE) {
+    std::cout << "xyplane at " << xyPlane_.z() <<
+      (xyPlane_.isRelative() ? " relative" : "") << std::endl;
+  }
+  // show xzeroaxis
+  else if (var == VariableName::XZEROAXIS) {
+    axesData_.xaxis[1].showZeroAxis(std::cout, "x");
+  }
+  // show y2data
+  else if (var == VariableName::Y2DATA) {
+    std::cout << "y2 is set to " <<
+      (axesData_.yaxis[2].isTime() ? "time" : "numerical") << std::endl;
+  }
+  // show y2dtics
+  else if (var == VariableName::Y2DTICS) {
+    std::cout << "y2 is " << (axesData_.yaxis[2].isDays() ? "days" : "not days") << std::endl;
+  }
+  // show y2label
+  else if (var == VariableName::Y2LABEL) {
+    axesData_.yaxis[2].printLabel(std::cout, "y2");
+  }
+  // show y2mtics
+  else if (var == VariableName::Y2MTICS) {
+    std::cout << "y2 is " << (axesData_.yaxis[2].isMonths() ? "months" : "not months") << std::endl;
+  }
+  // show y2range
+  else if (var == VariableName::Y2RANGE) {
+    axesData_.yaxis[2].showRange(std::cout, "y2range");
+  }
+  // show y2tics
+  else if (var == VariableName::Y2TICS) {
+    axesData_.yaxis[2].showMinorTics(std::cout, "y2tics", "ytic");
+  }
+  // show y2zeroaxis
+  else if (var == VariableName::Y2ZEROAXIS) {
+    axesData_.yaxis[2].showZeroAxis(std::cout, "y2");
+  }
+  // show ydata
+  else if (var == VariableName::YDATA) {
+    std::cout << "y is set to " <<
+      (axesData_.yaxis[1].isTime() ? "time" : "numerical") << std::endl;
+  }
+  // show ydtics
+  else if (var == VariableName::YDTICS) {
+    std::cout << "y is " << (axesData_.yaxis[1].isDays() ? "days" : "not days") << std::endl;
+  }
+  // show ylabel
+  else if (var == VariableName::YLABEL) {
+    axesData_.yaxis[1].printLabel(std::cout, "y");
+  }
+  // show ymtics
+  else if (var == VariableName::YMTICS) {
+    std::cout << "y is " << (axesData_.yaxis[1].isMonths() ? "months" : "not months") << std::endl;
+  }
+  // show yrange
+  else if (var == VariableName::YRANGE) {
+    axesData_.yaxis[1].showRange(std::cout, "yrange");
+  }
+  // show ytics
+  else if (var == VariableName::YTICS) {
+    axesData_.yaxis[1].showMinorTics(std::cout, "ytics", "ytic");
+  }
+  // show yzeroaxis
+  else if (var == VariableName::YZEROAXIS) {
+    axesData_.yaxis[1].showZeroAxis(std::cout, "y");
+  }
+  // show zdata
+  else if (var == VariableName::ZDATA) {
+    std::cout << "z is set to " <<
+      (axesData_.zaxis[1].isTime() ? "time" : "numerical") << std::endl;
+  }
+  // show zdtics
+  else if (var == VariableName::ZDTICS) {
+    std::cout << "z is " << (axesData_.zaxis[1].isDays() ? "days" : "not days") << std::endl;
+  }
+  // show zzeroaxis
+  else if (var == VariableName::ZZEROAXIS) {
+    axesData_.zaxis[1].showZeroAxis(std::cout, "z");
+  }
+  // show cbdata
+  else if (var == VariableName::CBDATA) {
+    std::cout << "cb is set to " <<
+      (axesData_.cbaxis.isTime() ? "time" : "numerical") << std::endl;
+  }
+  // show cbdtics
+  else if (var == VariableName::CBDTICS) {
+    std::cout << "cb is " << (axesData_.cbaxis.isDays() ? "days" : "not days") << std::endl;
+  }
+  // show zero
+  else if (var == VariableName::ZERO) {
+    std::cout << "zero is " << zero_ << std::endl;
+  }
+  // show zeroaxis
+  else if (var == VariableName::ZEROAXIS) {
+    axesData_.xaxis[1].showZeroAxis(std::cout, "x");
+    axesData_.xaxis[2].showZeroAxis(std::cout, "x2");
+    axesData_.yaxis[1].showZeroAxis(std::cout, "y");
+    axesData_.yaxis[2].showZeroAxis(std::cout, "y2");
+    axesData_.zaxis[1].showZeroAxis(std::cout, "z");
+    axesData_.zaxis[2].showZeroAxis(std::cout, "z2");
+  }
+  // show zlabel
+  else if (var == VariableName::ZLABEL) {
+    axesData_.zaxis[1].printLabel(std::cout, "z");
+  }
+  // show zmtics
+  else if (var == VariableName::ZMTICS) {
+    std::cout << "z is " << (axesData_.zaxis[1].isMonths() ? "months" : "not months") << std::endl;
+  }
+  // show zrange
+  else if (var == VariableName::ZRANGE) {
+    axesData_.zaxis[1].showRange(std::cout, "zrange");
+  }
+  // show ztics
+  else if (var == VariableName::ZTICS) {
+    axesData_.zaxis[1].showMinorTics(std::cout, "ztics", "ztic");
+  }
+  // show cblabel
+  else if (var == VariableName::CBLABEL) {
+    axesData_.cbaxis.printLabel(std::cout, "cb");
+  }
+  // show cbmtics
+  else if (var == VariableName::CBMTICS) {
+    std::cout << "cb is " << (axesData_.cbaxis.isMonths() ? "months" : "not months") << std::endl;
+  }
+  // show cbrange
+  else if (var == VariableName::CBRANGE) {
+    axesData_.cbaxis.showRange(std::cout, "cbrange");
+  }
+  // show cbtics
+  else if (var == VariableName::CBTICS) {
+    axesData_.cbaxis.showMinorTics(std::cout, "cbtics", "cbtic");
   }
   // show ellipse
   else if (var == VariableName::ELLIPSE) {
@@ -6772,30 +7365,6 @@ showCmd(const std::string &args)
   // show rectangle
   else if (var == VariableName::RECTANGLE) {
     showAnnotations<CGnuPlotRectangle>(std::cout);
-  }
-  // show xlabel
-  else if (var == VariableName::XLABEL) {
-    axesData_.xaxis[1].printLabel(std::cout, "x");
-  }
-  // show x2label
-  else if (var == VariableName::X2LABEL) {
-    axesData_.xaxis[2].printLabel(std::cout, "x2");
-  }
-  // show ylabel
-  else if (var == VariableName::YLABEL) {
-    axesData_.yaxis[1].printLabel(std::cout, "y");
-  }
-  // show y2label
-  else if (var == VariableName::Y2LABEL) {
-    axesData_.xaxis[2].printLabel(std::cout, "y2");
-  }
-  // show zlabel
-  else if (var == VariableName::ZLABEL) {
-    axesData_.zaxis[1].printLabel(std::cout, "z");
-  }
-  // show cblabel
-  else if (var == VariableName::ZLABEL) {
-    axesData_.cbaxis.printLabel(std::cout, "cb");
   }
 
   return true;
@@ -7418,10 +7987,6 @@ unsetCmd(const std::string &args)
     // TODO: don't reset ratio ?
     plotSize_.unsetSize();
   }
-  // unset tmargin
-  else if (var == VariableName::TMARGIN) {
-    margin_.resetTop();
-  }
   // unset style
   else if (var == VariableName::STYLE) {
     std::map<std::string,bool> unset;
@@ -7469,6 +8034,240 @@ unsetCmd(const std::string &args)
     else if (unset.empty() || unset.find("ellipse") != unset.end()) {
       ellipseStyle_.unset();
     }
+    // unset style textbox
+    else if (unset.empty() || unset.find("textbox") != unset.end()) {
+      textBoxStyle_.unset();
+    }
+  }
+  // unset surface
+  else if (var == VariableName::SURFACE) {
+    setSurface3D(false);
+  }
+  // unset table
+  else if (var == VariableName::TABLE) {
+    setTableFile("");
+  }
+  // unset terminal
+  else if (var == VariableName::TERMINAL) {
+    setDevice("qt");
+  }
+  // unset tics
+  else if (var == VariableName::TICS) {
+    axesData_.xaxis[1].setShowTics(false);
+    axesData_.xaxis[2].setShowTics(false);
+    axesData_.yaxis[1].setShowTics(false);
+    axesData_.yaxis[2].setShowTics(false);
+    axesData_.zaxis[1].setShowTics(false);
+    axesData_.cbaxis  .setShowTics(false);
+  }
+  // unset timestamp
+  else if (var == VariableName::TIMESTAMP) {
+    timeStamp_.unset();
+  }
+  // unset title
+  else if (var == VariableName::TITLE) {
+    title_.unset();
+  }
+  // unset tmargin
+  else if (var == VariableName::TMARGIN) {
+    margin_.resetTop();
+  }
+  // unset trange
+  else if (var == VariableName::TRANGE) {
+    axesData_.taxis[1].unset();
+  }
+  // unset urange
+  else if (var == VariableName::URANGE) {
+    axesData_.uaxis.unset();
+  }
+  // unset view
+  else if (var == VariableName::VIEW) {
+    camera_.unsetView();
+  }
+  // unset vrange
+  else if (var == VariableName::VRANGE) {
+    axesData_.vaxis.unset();
+  }
+  // unset x2data
+  else if (var == VariableName::X2DATA) {
+    axesData_.xaxis[2].setIsTime(false);
+  }
+  // unset x2dtics
+  else if (var == VariableName::X2DTICS) {
+    axesData_.xaxis[2].setIsDays(false);
+  }
+  // unset x2label
+  else if (var == VariableName::X2LABEL) {
+    axesData_.xaxis[2].setText("");
+  }
+  // unset x2mtics
+  else if (var == VariableName::X2MTICS) {
+    axesData_.xaxis[2].setIsMonths(false);
+  }
+  // unset x2range
+  else if (var == VariableName::X2RANGE) {
+    axesData_.xaxis[2].unsetRange();
+  }
+  // unset x2tics
+  else if (var == VariableName::X2TICS) {
+    axesData_.xaxis[2].setShowTics(false);
+  }
+  // unset x2zeroaxis
+  else if (var == VariableName::X2ZEROAXIS) {
+    axesData_.xaxis[2].unsetZeroAxis();
+  }
+  // unset xdata
+  else if (var == VariableName::XDATA) {
+    axesData_.xaxis[1].setIsTime(false);
+  }
+  // unset xdtics
+  else if (var == VariableName::XDTICS) {
+    axesData_.xaxis[1].setIsDays(false);
+  }
+  // unset xlabel
+  else if (var == VariableName::XLABEL) {
+    axesData_.xaxis[1].setText("");
+  }
+  // unset xmtics
+  else if (var == VariableName::XMTICS) {
+    axesData_.xaxis[1].setIsMonths(false);
+  }
+  // unset xrange
+  else if (var == VariableName::XRANGE) {
+    axesData_.xaxis[1].unsetRange();
+  }
+  // unset xtics
+  else if (var == VariableName::XTICS) {
+    axesData_.xaxis[1].setShowTics(false);
+  }
+  // unset xyplane
+  else if (var == VariableName::XYPLANE) {
+    xyPlane_.setZ(0, false);
+  }
+  // unset xzeroaxis
+  else if (var == VariableName::XZEROAXIS) {
+    axesData_.xaxis[1].unsetZeroAxis();
+  }
+  // unset y2data
+  else if (var == VariableName::Y2DATA) {
+    axesData_.yaxis[2].setIsTime(false);
+  }
+  // unset y2dtics
+  else if (var == VariableName::Y2DTICS) {
+    axesData_.yaxis[2].setIsDays(false);
+  }
+  // unset y2label
+  else if (var == VariableName::Y2LABEL) {
+    axesData_.yaxis[2].setText("");
+  }
+  // unset y2mtics
+  else if (var == VariableName::Y2MTICS) {
+    axesData_.yaxis[2].setIsMonths(false);
+  }
+  // unset y2range
+  else if (var == VariableName::Y2RANGE) {
+    axesData_.yaxis[2].unsetRange();
+  }
+  // unset y2tics
+  else if (var == VariableName::Y2TICS) {
+    axesData_.yaxis[2].setShowTics(false);
+  }
+  // unset y2zeroaxis
+  else if (var == VariableName::Y2ZEROAXIS) {
+    axesData_.yaxis[2].unsetZeroAxis();
+  }
+  // unset ydata
+  else if (var == VariableName::YDATA) {
+    axesData_.yaxis[1].setIsTime(false);
+  }
+  // unset ydtics
+  else if (var == VariableName::YDTICS) {
+    axesData_.yaxis[1].setIsDays(false);
+  }
+  // unset ylabel
+  else if (var == VariableName::YLABEL) {
+    axesData_.yaxis[1].setText("");
+  }
+  // unset ymtics
+  else if (var == VariableName::YMTICS) {
+    axesData_.yaxis[1].setIsMonths(false);
+  }
+  // unset yrange
+  else if (var == VariableName::YRANGE) {
+    axesData_.yaxis[1].unsetRange();
+  }
+  // unset ytics
+  else if (var == VariableName::YTICS) {
+    axesData_.yaxis[1].setShowTics(false);
+  }
+  // unset yzeroaxis
+  else if (var == VariableName::YZEROAXIS) {
+    axesData_.yaxis[1].unsetZeroAxis();
+  }
+  // unset zdata
+  else if (var == VariableName::ZDATA) {
+    axesData_.zaxis[1].setIsTime(false);
+  }
+  // unset zdtics
+  else if (var == VariableName::ZDTICS) {
+    axesData_.zaxis[1].setIsDays(false);
+  }
+  // unset zzeroaxis
+  else if (var == VariableName::ZZEROAXIS) {
+    axesData_.zaxis[1].unsetZeroAxis();
+  }
+  // unset cbdata
+  else if (var == VariableName::CBDATA) {
+    axesData_.cbaxis.setIsTime(false);
+  }
+  // unset cbdtics
+  else if (var == VariableName::CBDTICS) {
+    axesData_.cbaxis.setIsDays(false);
+  }
+  // unset zero
+  else if (var == VariableName::ZERO) {
+    zero_ = 1E-8;
+  }
+  // unset zeroaxis
+  else if (var == VariableName::ZEROAXIS) {
+    axesData_.xaxis[1].unsetZeroAxis();
+    axesData_.xaxis[2].unsetZeroAxis();
+    axesData_.yaxis[1].unsetZeroAxis();
+    axesData_.yaxis[2].unsetZeroAxis();
+    axesData_.zaxis[1].unsetZeroAxis();
+    axesData_.zaxis[2].unsetZeroAxis();
+  }
+  // unset zlabel
+  else if (var == VariableName::ZLABEL) {
+    axesData_.zaxis[1].setText("");
+  }
+  // unset zmtics
+  else if (var == VariableName::ZMTICS) {
+    axesData_.zaxis[1].setIsMonths(false);
+  }
+  // unset zrange
+  else if (var == VariableName::ZRANGE) {
+    axesData_.zaxis[1].unsetRange();
+  }
+  // unset ztics
+  else if (var == VariableName::ZTICS) {
+    axesData_.zaxis[1].setShowTics(false);
+  }
+  // unset cblabel
+  else if (var == VariableName::CBLABEL) {
+    axesData_.cbaxis.setText("");
+  }
+  // unset cbmtics
+  else if (var == VariableName::CBMTICS) {
+    axesData_.cbaxis.setIsMonths(false);
+  }
+  // unset cbrange
+  else if (var == VariableName::CBRANGE) {
+    axesData_.cbaxis.unsetRange();
+  }
+  // unset cbtics
+  else if (var == VariableName::CBTICS) {
+    axesData_.cbaxis.setShowTics(false);
   }
   else if (var == VariableName::ELLIPSE) {
     clearAnnotations<CGnuPlotEllipse>();
@@ -7481,42 +8280,6 @@ unsetCmd(const std::string &args)
   }
   else if (var == VariableName::RECTANGLE) {
     clearAnnotations<CGnuPlotRectangle>();
-  }
-  else if (var == VariableName::TITLE)
-    title_.setText("");
-  else if (var == VariableName::XLABEL)
-    axesData_.xaxis[1].setText("");
-  else if (var == VariableName::YLABEL)
-    axesData_.yaxis[1].setText("");
-  else if (var == VariableName::TICS) {
-  }
-  // unset xtics
-  else if (var == VariableName::XTICS) {
-    axesData_.xaxis[1].setShowTics(false);
-  }
-  else if (var == VariableName::YTICS) {
-    axesData_.yaxis[1].setShowTics(false);
-  }
-  else if (var == VariableName::X2TICS) {
-    axesData_.xaxis[2].setShowTics(false);
-  }
-  else if (var == VariableName::Y2TICS) {
-    axesData_.yaxis[2].setShowTics(false);
-  }
-  else if (var == VariableName::ZTICS) {
-    axesData_.zaxis[1].setShowTics(false);
-  }
-  else if (var == VariableName::CBTICS) {
-    axesData_.cbaxis.setShowTics(false);
-  }
-  // unset surface
-  else if (var == VariableName::SURFACE)
-    setSurface3D(false);
-  // unset table
-  else if (var == VariableName::TABLE)
-    setTableFile("");
-  // unset zeroaxis
-  else if (var == VariableName::ZEROAXIS) {
   }
   // unset debug
   else if (var == VariableName::DEBUG)
@@ -7680,7 +8443,7 @@ testCmd(const std::string &args)
 
   window->addGroup(group);
 
-  if (device_)
+  if (device())
     stateChanged(window.get(), CGnuPlotTypes::ChangeState::PLOT_ADDED);
 }
 
@@ -7695,6 +8458,8 @@ CGnuPlot::
 fitCmd(const std::string &args)
 {
   if (isDebug()) std::cerr << "fit " << args << std::endl;
+
+  // TODO
 }
 
 // update "<filename>"
@@ -7703,6 +8468,8 @@ CGnuPlot::
 updateCmd(const std::string &args)
 {
   if (isDebug()) std::cerr << "update " << args << std::endl;
+
+  // TODO
 }
 
 // bind
@@ -8397,63 +9164,63 @@ CGnuPlotWindow *
 CGnuPlot::
 createWindow()
 {
-  return (device_ ? device_->createWindow() : new CGnuPlotWindow(this));
+  return (device() ? device()->createWindow() : new CGnuPlotWindow(this));
 }
 
 CGnuPlotGroup *
 CGnuPlot::
 createGroup(CGnuPlotWindow *window)
 {
-  return (device_ ? device_->createGroup(window) : new CGnuPlotGroup(window));
+  return (device() ? device()->createGroup(window) : new CGnuPlotGroup(window));
 }
 
 CGnuPlotPlot *
 CGnuPlot::
 createPlot(CGnuPlotGroup *group)
 {
-  return (device_ ? device_->createPlot(group) : new CGnuPlotPlot(group));
+  return (device() ? device()->createPlot(group) : new CGnuPlotPlot(group));
 }
 
 CGnuPlotLineStyle *
 CGnuPlot::
 createLineStyle()
 {
-  return (device_ ? device_->createLineStyle() : new CGnuPlotLineStyle);
+  return (device() ? device()->createLineStyle() : new CGnuPlotLineStyle);
 }
 
 CGnuPlotAxis *
 CGnuPlot::
 createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir)
 {
-  return (device_ ? device_->createAxis(group, id, dir) : new CGnuPlotAxis(group, id, dir));
+  return (device() ? device()->createAxis(group, id, dir) : new CGnuPlotAxis(group, id, dir));
 }
 
 CGnuPlotKey *
 CGnuPlot::
 createKey(CGnuPlotGroup *group)
 {
-  return (device_ ? device_->createKey(group) : new CGnuPlotKey(group));
+  return (device() ? device()->createKey(group) : new CGnuPlotKey(group));
 }
 
 CGnuPlotColorBox *
 CGnuPlot::
 createColorBox(CGnuPlotGroup *group)
 {
-  return (device_ ? device_->createColorBox(group) : new CGnuPlotColorBox(group));
+  return (device() ? device()->createColorBox(group) : new CGnuPlotColorBox(group));
 }
 
 CGnuPlotPalette *
 CGnuPlot::
 createPalette(CGnuPlotGroup *group)
 {
-  return (device_ ? device_->createPalette(group) : new CGnuPlotPalette(group));
+  return (device() ? device()->createPalette(group) : new CGnuPlotPalette(group));
 }
 
 CGnuPlotTitle *
 CGnuPlot::
 createTitle(CGnuPlotGroup *group)
 {
-  return (device_ ? device_->createTitle(group) : new CGnuPlotTitle(group));
+  return (device() ? device()->createTitle(group) : new CGnuPlotTitle(group));
 }
 
 
@@ -8461,23 +9228,21 @@ CGnuPlotRenderer *
 CGnuPlot::
 renderer()
 {
-  return (device_ ? device_->renderer() : 0);
+  return (device() ? device()->renderer() : 0);
 }
 
 void
 CGnuPlot::
 timeout()
 {
-  if (device_)
-    device_->timeout();
+  if (device()) device()->timeout();
 }
 
 void
 CGnuPlot::
 stateChanged(CGnuPlotWindow *window, CGnuPlotTypes::ChangeState state)
 {
-  if (device_)
-    device_->stateChanged(window, state);
+  if (device()) device()->stateChanged(window, state);
 }
 
 bool
@@ -9530,19 +10295,19 @@ resetDummyVars()
   dummyVars_.clear();
 }
 
-// set xtics {axis | border} {{no}mirror}
-//           {in | out} {scale {default | <major> {,<minor>}}}
-//           {{no}rotate {by <ang>}} {offset <offset> | nooffset}
-//           {left | right | center | autojustify}
-//           {add}
-//           {autofreq |
-//            <incr> | <start>, <incr> {,<end>} |
-//            ({"<label>"} <pos> {<level>} {,{"<label>"}...)}}
-//           {format "formatstring"}
-//           {font "name{,<size>}"}
-//           {numeric | timedate | geographic}
-//           {rangelimited}
-//           {textcolor <colorspec>}
+// set tics {axis | border} {{no}mirror}
+//          {in | out} {front | back}
+//          {scale {default | <major> {,<minor>}}}
+//          {{no}rotate {by <ang>}} {offset <offset> | nooffset}
+//          {left | right | center | autojustify}
+//          {add}
+//          {autofreq | <incr> | <start>, <incr> {,<end>} |
+//           ({"<label>"} <pos> {<level>} {,{"<label>"}...)}}
+//          {format "formatstring"}
+//          {font "name{,<size>}"} {{no}enhanced}
+//          {numeric | timedate | geographic}
+//          {rangelimited}
+//          {textcolor <colorspec>}
 bool
 CGnuPlot::
 parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
@@ -9567,6 +10332,9 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
     }
     else if (arg == "in" || arg == "out") {
       //axis.setTicsIn(arg == "in");
+    }
+    else if (arg == "front" || arg == "back") {
+      axis.setFront(arg == "front");
     }
     else if (arg == "scale") {
       std::string arg1 = readNonSpaceNonComma(line);
@@ -9608,16 +10376,24 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
       if (parseFont(line, font))
         axis.setFont(font);
     }
+    else if (arg == "enhanced" || arg == "noenhanced") {
+      axis.setEnhanced(arg == "enhanced");
+    }
     else if (arg == "rangelimited") {
     }
     else if (arg == "textcolor" || arg == "tc") {
-      //std::string arg1 = readNonSpaceNonComma(line);
+      line.skipNonSpace();
+
+      CGnuPlotColorSpec c;
+
+      if (parseColorSpec(line, c))
+        axis.setTextColor(c);
     }
     else if (arg == "linetype" || arg == "lt") {
       int lt;
 
       if (parseInteger(line, lt)) {
-        //axis.setLineType(lt);
+        axis.setLineType(lt);
       }
     }
     // ({"<label>"} <pos> {<level>} {,{"<label>"}...)}
@@ -9685,6 +10461,36 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
   }
 
   return true;
+}
+
+// set {x|x2|y|y2|z}zeroaxis { {linestyle | ls <line_style>} |
+//                             {linetype | lt <line_type>} { linewidth | lw <line_width>}}
+void
+CGnuPlot::
+parseAxisZeroAxis(CParseLine &line, CGnuPlotAxisData &axis)
+{
+  axis.setZeroAxisDisplayed(true);
+
+  std::string arg = readNonSpace(line);
+
+  if      (arg == "linestyle" || arg == "ls") {
+    int ls = -1;
+
+    if (parseInteger(line, ls))
+      axis.setZeroAxisLineStyle(ls);
+  }
+  else if (arg == "linetype" || arg == "lt") {
+    int lt;
+
+    if (parseInteger(line, lt))
+      axis.setZeroAxisLineType(lt);
+  }
+  else if (arg == "linewidth" || arg == "lw") {
+    double lw;
+
+    if (parseReal(line, lw))
+      axis.setZeroAxisLineWidth(lw);
+  }
 }
 
 bool

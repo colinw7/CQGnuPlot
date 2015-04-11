@@ -2,9 +2,13 @@
 #define CGnuPlotDevice_H
 
 #include <COrientation.h>
+#include <CISize2D.h>
+#include <CFont.h>
 #include <CGnuPlotTypes.h>
 
 #include <string>
+
+class CParseLine;
 
 class CGnuPlot;
 class CGnuPlotArrow;
@@ -29,9 +33,7 @@ class CGnuPlotWindow;
 
 class CGnuPlotDevice {
  public:
-  CGnuPlotDevice(const std::string &name) :
-   name_(name) {
-  }
+  CGnuPlotDevice(const std::string &name);
 
   virtual ~CGnuPlotDevice() { }
 
@@ -39,6 +41,24 @@ class CGnuPlotDevice {
   void setApp(CGnuPlot *plot) { plot_ = plot; }
 
   const std::string &name() const { return name_; }
+
+  const CISize2D &size() const { return size_; }
+  void setSize(const CISize2D &s) { size_ = s; }
+
+  bool isEnhanced() const { return enhanced_; }
+  void setEnhanced(bool b) { enhanced_ = b; }
+
+  const CFontPtr &font() const { return font_; }
+  void setFont(const CFontPtr &v) { font_ = v; }
+
+  double fontScale() const { return fontScale_; }
+  void setFontScale(double r) { fontScale_ = r; }
+
+  bool isDashed() const { return dashed_; }
+  void setDashed(bool b) { dashed_ = b; }
+
+  double lineWidth() const { return lineWidth_; }
+  void setLineWidth(double r) { lineWidth_ = r; }
 
   virtual CGnuPlotWindow *createWindow();
 
@@ -80,9 +100,19 @@ class CGnuPlotDevice {
 
   virtual CGnuPlotRenderer *renderer() = 0;
 
+  virtual bool parseArgs(CParseLine &);
+
+  virtual void show(std::ostream &os) const;
+
  protected:
-  CGnuPlot    *plot_ { 0 };
+  CGnuPlot    *plot_      { 0 };
   std::string  name_;
+  CISize2D     size_      { 600, 480 };
+  bool         enhanced_  { true };
+  CFontPtr     font_;
+  double       fontScale_ { 1 };
+  bool         dashed_    { false };
+  bool         lineWidth_ { 0 };
 };
 
 #endif

@@ -33,8 +33,32 @@ class CGnuPlotAxisData {
   bool isExtend() const { return extend_; }
   void setExtend(bool b) { extend_ = b; }
 
+  //---
+
   bool isTime() const { return isTime_; }
   void setIsTime(bool b) { isTime_ = b; }
+
+  bool isDays() const { return isDay_; }
+  void setIsDays(bool b) { isDay_ = b; }
+
+  bool isMonths() const { return isMonth_; }
+  void setIsMonths(bool b) { isMonth_ = b; }
+
+  //---
+
+  bool isZeroAxisDisplayed() const { return zeroAxis_.displayed; }
+  void setZeroAxisDisplayed(bool b) { zeroAxis_.displayed = b; }
+
+  int  zeroAxisLineStyle() const { return zeroAxis_.lineStyle; }
+  void setZeroAxisLineStyle(int lt) { zeroAxis_.lineStyle = lt; }
+
+  int  zeroAxisLineType() const { return zeroAxis_.lineType; }
+  void setZeroAxisLineType(int lt) { zeroAxis_.lineType = lt; }
+
+  double zeroAxisLineWidth() const { return zeroAxis_.lineWidth; }
+  void setZeroAxisLineWidth(double lw) { zeroAxis_.lineWidth = lw; }
+
+  //---
 
   bool isAutoScaleMin() const { return autoScaleMin_; }
   void setAutoScaleMin(bool b) { autoScaleMin_ = b; }
@@ -80,6 +104,12 @@ class CGnuPlotAxisData {
     ticlabel_[i] = s;
   }
 
+  double offset() const { return offset_; }
+  void setOffset(double r) { offset_ = r; }
+
+  double rotate() const { return rotate_; }
+  void setRotate(double r) { rotate_ = r; }
+
   const std::string &format() const { return format_; }
   void setFormat(const std::string &s) { format_ = s; }
 
@@ -88,6 +118,18 @@ class CGnuPlotAxisData {
 
   bool showTics() const { return showTics_; }
   void setShowTics(bool b) { showTics_ = b; }
+
+  bool isFront() const { return front_; }
+  void setFront(bool b) { front_ = b; }
+
+  bool isEnhanced() const { return enhanced_; }
+  void setEnhanced(bool b) { enhanced_ = b; }
+
+  int lineType() const { return lineType_; }
+  void setLineType(int i) { lineType_ = i; }
+
+  const CGnuPlotColorSpec &textColor() const { return textColor_; }
+  void setTextColor(const CGnuPlotColorSpec &v) { textColor_ = v; }
 
   void unset() {
     displayed_ = false;
@@ -104,6 +146,13 @@ class CGnuPlotAxisData {
 
     reverse_   = false;
     writeback_ = false;
+  }
+
+  void unsetZeroAxis() {
+    zeroAxis_.displayed = false;
+    zeroAxis_.lineStyle = -1;
+    zeroAxis_.lineType  = -1;
+    zeroAxis_.lineWidth = 0;
   }
 
   void show(std::ostream &os, const std::string &prefix, int n) const {
@@ -169,6 +218,20 @@ class CGnuPlotAxisData {
       os << "minor " << str << " are off" << std::endl;
   }
 
+  void showZeroAxis(std::ostream &os, const std::string &str) {
+    os << str << "zeroaxis is ";
+
+    if (zeroAxis_.displayed) {
+      os << "drawn with";
+      os << " lt " << zeroAxis_.lineType;
+      os << " linewidth " << zeroAxis_.lineWidth;
+    }
+    else
+      os << "OFF";
+
+    os << std::endl;
+  }
+
   void printLabel(std::ostream &os, const std::string &prefix) const {
     os << prefix << "label is \"" << text_ << "\", " <<
           "offset at ((character units) " << offset_ << ", 0, 0)" << std::endl;
@@ -177,30 +240,45 @@ class CGnuPlotAxisData {
  private:
   typedef std::map<int,std::string> TicLabelMap;
 
-  int         ind_;
-  bool        displayed_       { true  };
-  bool        grid_            { false };
-  bool        gridTics_        { true };
-  bool        gridMinorTics_   { false };
-  bool        mirror_          { true  };
-  bool        reverse_         { false };
-  bool        writeback_       { false };
-  bool        extend_          { false };
-  bool        isTime_          { false };
-  bool        autoScaleMin_    { true };
-  bool        autoScaleMax_    { true };
-  bool        autoScaleFixMin_ { false };
-  bool        autoScaleFixMax_ { false };
-  COptReal    min_;
-  COptReal    max_;
-  bool        minorTics_       { true };
-  COptReal    minorTicsFreq_;
-  std::string text_;
-  TicLabelMap ticlabel_;
-  double      offset_      { 0 };
-  std::string format_      { "%g" };
-  CFontPtr    font_;
-  bool        showTics_    { true };
+  struct ZeroAxis {
+    bool   displayed { false };
+    int    lineStyle { -1 };
+    int    lineType  { -1 };
+    double lineWidth { 0 };
+  };
+
+  int               ind_;
+  bool              displayed_       { true  };
+  bool              grid_            { false };
+  bool              gridTics_        { true };
+  bool              gridMinorTics_   { false };
+  bool              mirror_          { true  };
+  bool              reverse_         { false };
+  bool              writeback_       { false };
+  bool              extend_          { false };
+  bool              isTime_          { false };
+  bool              isDay_           { false };
+  bool              isMonth_         { false };
+  bool              autoScaleMin_    { true };
+  bool              autoScaleMax_    { true };
+  bool              autoScaleFixMin_ { false };
+  bool              autoScaleFixMax_ { false };
+  COptReal          min_;
+  COptReal          max_;
+  bool              minorTics_       { true };
+  COptReal          minorTicsFreq_;
+  std::string       text_;
+  TicLabelMap       ticlabel_;
+  double            offset_          { 0 };
+  double            rotate_          { 0 };
+  std::string       format_          { "%g" };
+  CFontPtr          font_;
+  bool              showTics_        { true };
+  bool              front_           { true };
+  bool              enhanced_        { true };
+  int               lineType_        { -1 };
+  CGnuPlotColorSpec textColor_;
+  ZeroAxis          zeroAxis_;
 };
 
 #endif
