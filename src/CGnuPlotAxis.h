@@ -15,6 +15,7 @@
 
 class CGnuPlot;
 class CGnuPlotGroup;
+class CGnuPlotRenderer;
 
 class CGnuPlotAxis {
  public:
@@ -161,9 +162,9 @@ class CGnuPlotAxis {
 
   std::string getValueStr(int i, double pos) const;
 
-  virtual void drawAxis(double pos, bool first=true);
+  virtual void drawAxis(CGnuPlotRenderer *renderer, double pos, bool first=true);
 
-  virtual void drawGrid(double start, double end);
+  virtual void drawGrid(CGnuPlotRenderer *renderer, double start, double end);
 
   const CBBox2D &getBBox() const { return bbox_; }
 
@@ -189,8 +190,9 @@ class CGnuPlotAxis {
                         CVAlignType valign, double yOffset, const std::string &str);
 
  protected:
-  typedef std::vector<double>      TickSpaces;
+  typedef std::vector<double> TickSpaces;
 
+  CGnuPlotRenderer *renderer_          { 0 };
   CGnuPlotGroup*    group_             { 0 };
   std::string       id_                { "" };
   bool              initialized_       { false };

@@ -2,9 +2,16 @@
 
 CExprValuePtr
 CExprComplexValue::
-execUnaryOp(CExprOpType) const
+execUnaryOp(CExprOpType op) const
 {
-  return CExprValuePtr();
+  switch (op) {
+    case CEXPR_OP_UNARY_PLUS:
+      return CExprInst->createComplexValue(c_);
+    case CEXPR_OP_UNARY_MINUS:
+      return CExprInst->createComplexValue(-c_);
+    default:
+      return CExprValuePtr();
+  }
 }
 
 CExprValuePtr

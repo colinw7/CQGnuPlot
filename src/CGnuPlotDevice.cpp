@@ -120,6 +120,13 @@ createTitle(CGnuPlotGroup *group)
   return new CGnuPlotTitle(group);
 }
 
+CGnuPlotCamera *
+CGnuPlotDevice::
+createCamera(CGnuPlotGroup *group)
+{
+  return new CGnuPlotCamera(group);
+}
+
 CGnuPlotBar *
 CGnuPlotDevice::
 createBar(CGnuPlotPlot *plot)

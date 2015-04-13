@@ -1,5 +1,6 @@
 #include <CGnuPlotContour.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotUtil.h>
@@ -116,12 +117,12 @@ drawContourLines()
 {
   CGnuPlotRenderer *renderer = app()->renderer();
 
-  const CGnuPlotCamera &camera = plot_->window()->camera();
+  CGnuPlotCamera *camera = plot_->group()->camera();
 
   // draw contour points
   for (auto y : y_) {
     for (auto x : x_) {
-      CPoint3D p = camera.transform(CPoint3D(x, y, min_z_));
+      CPoint3D p = camera->transform(CPoint3D(x, y, min_z_));
 
       renderer->drawPoint(CPoint2D(p.x, p.y));
     }
@@ -225,8 +226,8 @@ drawContourLines()
           int f2 = contour_flags[2*k + 1];
 
           if (flag[f1] && flag[f2]) {
-            CPoint3D p1 = camera.transform(CPoint3D(xc[f1], yc[f1], min_z_));
-            CPoint3D p2 = camera.transform(CPoint3D(xc[f2], yc[f2], min_z_));
+            CPoint3D p1 = camera->transform(CPoint3D(xc[f1], yc[f1], min_z_));
+            CPoint3D p2 = camera->transform(CPoint3D(xc[f2], yc[f2], min_z_));
 
             renderer->drawLine(CPoint2D(p1.x, p1.y), CPoint2D(p2.x, p2.y), 0.0, c);
           }
@@ -300,7 +301,7 @@ fillContourBox(double x1, double y1, double x2, double y2,
 {
   CGnuPlotRenderer *renderer = app()->renderer();
 
-  const CGnuPlotCamera &camera = plot_->window()->camera();
+  CGnuPlotCamera *camera = plot_->group()->camera();
 
   // get box corner values
   if      (fabs(x2 - x1) <= min_x_ && fabs(y2 - y1) <= min_y_) {
@@ -356,10 +357,10 @@ fillContourBox(double x1, double y1, double x2, double y2,
 
     std::vector<CPoint2D> points;
 
-    CPoint3D p1 = camera.transform(CPoint3D(x1, y1, min_z_));
-    CPoint3D p2 = camera.transform(CPoint3D(x2, y1, min_z_));
-    CPoint3D p3 = camera.transform(CPoint3D(x2, y2, min_z_));
-    CPoint3D p4 = camera.transform(CPoint3D(x1, y2, min_z_));
+    CPoint3D p1 = camera->transform(CPoint3D(x1, y1, min_z_));
+    CPoint3D p2 = camera->transform(CPoint3D(x2, y1, min_z_));
+    CPoint3D p3 = camera->transform(CPoint3D(x2, y2, min_z_));
+    CPoint3D p4 = camera->transform(CPoint3D(x1, y2, min_z_));
 
     points.push_back(CPoint2D(p1.x, p1.y));
     points.push_back(CPoint2D(p2.x, p2.y));

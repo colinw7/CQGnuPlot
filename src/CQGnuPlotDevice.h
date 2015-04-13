@@ -41,7 +41,8 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
 
   CGnuPlotPalette *createPalette(CGnuPlotGroup *group) override;
 
-  CGnuPlotTitle *createTitle(CGnuPlotGroup *group) override;
+  CGnuPlotTitle  *createTitle (CGnuPlotGroup *group) override;
+  CGnuPlotCamera *createCamera(CGnuPlotGroup *group) override;
 
   CGnuPlotBar    *createBar   (CGnuPlotPlot *plot) override;
   CGnuPlotPie    *createPie   (CGnuPlotPlot *plot) override;

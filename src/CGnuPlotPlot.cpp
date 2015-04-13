@@ -161,8 +161,32 @@ addPoint3D(int iy, double x, double y, double z)
   values.push_back(CExprInst->createRealValue(y));
   values.push_back(CExprInst->createRealValue(z));
 
+  addPoint3D(iy, values, false);
+}
+
+void
+CGnuPlotPlot::
+addPoint3D(int iy, double x, double y, CExprValueP z)
+{
+  assert(is3D());
+
+  std::vector<CExprValueP> values;
+
+  values.push_back(CExprInst->createRealValue(x));
+  values.push_back(CExprInst->createRealValue(y));
+  values.push_back(z);
+
+  addPoint3D(iy, values, false);
+}
+
+void
+CGnuPlotPlot::
+addPoint3D(int iy, const Values &values, bool discontinuity)
+{
+  assert(is3D());
+
   if (app()->isDebug()) {
-    std::cerr << "Add Point [" << points3D_[iy].size() << "," << iy << "] " << "(";
+    std::cerr << "Add Point [" << points3D_.size() << "] " << "(";
 
     for (uint i = 0; i < values.size(); ++i) {
       if (i > 0) std::cerr << ",";
@@ -173,7 +197,7 @@ addPoint3D(int iy, double x, double y, double z)
     std::cerr << ")" << std::endl;
   }
 
-  points3D_[iy].push_back(CGnuPlotPoint(values, false));
+  points3D_[iy].push_back(CGnuPlotPoint(values, discontinuity));
 
   reset3D();
 }
@@ -281,7 +305,19 @@ draw3D()
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
-  const CGnuPlotCamera &camera = window()->camera();
+  if      (style_ == PlotStyle::POINTS)
+    drawPoints(renderer);
+  else if (style_ == PlotStyle::LINES)
+    drawLines(renderer);
+  else
+    drawSurface(renderer);
+}
+
+void
+CGnuPlotPlot::
+drawSurface(CGnuPlotRenderer *renderer)
+{
+  CGnuPlotCamera *camera = group()->camera();
 
   std::pair<int,int> np = numPoints3D();
 
@@ -345,13 +381,13 @@ draw3D()
           double x, y, z;
 
           if (point1.getX(x) && point1.getY(y) && point1.getZ(z))
-            p1 = camera.transform(CPoint3D(x, y, z));
+            p1 = camera->transform(CPoint3D(x, y, z));
           if (point2.getX(x) && point2.getY(y) && point2.getZ(z))
-            p2 = camera.transform(CPoint3D(x, y, z));
+            p2 = camera->transform(CPoint3D(x, y, z));
           if (point3.getX(x) && point3.getY(y) && point3.getZ(z))
-            p3 = camera.transform(CPoint3D(x, y, z));
+            p3 = camera->transform(CPoint3D(x, y, z));
           if (point4.getX(x) && point4.getY(y) && point4.getZ(z))
-            p4 = camera.transform(CPoint3D(x, y, z));
+            p4 = camera->transform(CPoint3D(x, y, z));
 
           double zm = CGnuPlotUtil::avg({p1.z, p2.z, p3.z, p4.z});
 
@@ -1103,8 +1139,9 @@ drawCandleSticks(CGnuPlotRenderer *renderer)
 
   CRGBA c1 = (fillType() == FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  CRGBA  lc = lineStyle.calcColor(c1);
+  CRGBA  lc = lineStyle.calcColor(CRGBA(0,0,0));
   double lw = lineStyle.width();
+  CRGBA  fc = lineStyle.calcColor(c1);
 
   double bw = boxWidth().getSpacing(0.1);
 
@@ -1131,11 +1168,13 @@ drawCandleSticks(CGnuPlotRenderer *renderer)
       bw1 = reals[++ind];
 
     CRGBA lc1 = lc;
+    CRGBA fc1 = lc;
 
     if (isCalcColor) {
       double x = reals[ind];
 
       lc1 = lineStyle.color().calcColor(this, x);
+      fc1 = lineStyle.color().calcColor(this, x);
     }
 
     renderer->drawClipLine(CPoint2D(x, wmin), CPoint2D(x, bmin), lw, lc1);
@@ -1152,11 +1191,11 @@ drawCandleSticks(CGnuPlotRenderer *renderer)
     CBBox2D bbox(x1, bmin, x2, bmax);
 
     if      (fillType() == FillType::PATTERN)
-      renderer->patternRect(bbox, fillPattern(), lc1);
+      renderer->patternRect(bbox, fillPattern(), fc1);
     else if (fillType() == FillType::SOLID)
-      renderer->fillRect(bbox, lc1);
+      renderer->fillRect(bbox, fc1);
     else if (bmin > bmax)
-      renderer->fillRect(bbox, lc1);
+      renderer->fillRect(bbox, fc1);
 
     renderer->drawRect(bbox, lc1);
   }
@@ -2913,7 +2952,7 @@ drawParallelAxes(CGnuPlotRenderer *renderer)
     renderer->setClip(CBBox2D(clip.getXMin(), std::max(ymin, mm.first),
                               clip.getXMax(), std::min(ymax, mm.second)));
 
-    yaxis->drawAxis(i + 1);
+    yaxis->drawAxis(renderer, i + 1);
   }
 
   renderer->setRange(range);
@@ -2993,58 +3032,105 @@ drawLines(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  uint np = numPoints2D();
+  if (is3D()) {
+    for (const auto &ip : getPoints3D()) {
+      uint np = ip.second.size();
 
-  CPoint2D p1;
+      CPoint3D p1;
 
-  uint i = 0;
+      uint i = 0;
 
-  typedef std::vector<CPoint2D> Points;
+      typedef std::vector<CPoint3D> Points;
 
-  while (i < np) {
-    for ( ; i < np; ++i) {
-      const CGnuPlotPoint &point1 = getPoint2D(i);
+      while (i < np) {
+        // find first point
+        for ( ; i < np; ++i) {
+          const CGnuPlotPoint &point1 = ip.second[i];
 
-      if (point1.getPoint(p1))
-        break;
+          if (mapPoint3D(point1, p1))
+            break;
+        }
+
+        ++i;
+
+        Points points;
+
+        points.push_back(p1);
+
+        // get next continuous points
+        for ( ; i < np; ++i) {
+          CPoint3D p2;
+
+          const CGnuPlotPoint &point2 = ip.second[i];
+
+          if (! mapPoint3D(point2, p2) || point2.isDiscontinuity())
+            break;
+
+          points.push_back(p2);
+
+          p1 = p2;
+        }
+
+        // TODO: clip
+        renderer->drawPath(points, lineStyle.width(),
+                           lineStyle.calcColor(CRGBA(1,0,0)), lineStyle.dash());
+      }
     }
-
-    ++i;
-
-    Points points;
-
-    points.push_back(p1);
-
-    for ( ; i < np; ++i) {
-      CPoint2D p2;
-
-      const CGnuPlotPoint &point2 = getPoint2D(i);
-
-      if (! point2.getPoint(p2) || point2.isDiscontinuity())
-        break;
-
-      points.push_back(p2);
-
-      p1 = p2;
-    }
-
-    // TODO: clip
-    renderer->drawPath(points, lineStyle.width(),
-                       lineStyle.calcColor(CRGBA(1,0,0)), lineStyle.dash());
   }
+  else {
+    uint np = numPoints2D();
+
+    CPoint2D p1;
+
+    uint i = 0;
+
+    typedef std::vector<CPoint2D> Points;
+
+    while (i < np) {
+      for ( ; i < np; ++i) {
+        const CGnuPlotPoint &point1 = getPoint2D(i);
+
+        if (point1.getPoint(p1))
+          break;
+      }
+
+      ++i;
+
+      Points points;
+
+      points.push_back(p1);
+
+      for ( ; i < np; ++i) {
+        CPoint2D p2;
+
+        const CGnuPlotPoint &point2 = getPoint2D(i);
+
+        if (! point2.getPoint(p2) || point2.isDiscontinuity())
+          break;
+
+        points.push_back(p2);
+
+        p1 = p2;
+      }
+
+      // TODO: clip
+      renderer->drawPath(points, lineStyle.width(),
+                         lineStyle.calcColor(CRGBA(1,0,0)), lineStyle.dash());
+    }
 
 #if 0
-  for (uint i1 = 0, i2 = 1; i2 < np; i1 = i2++) {
-    const CGnuPlotPoint &point1 = getPoint2D(i1);
-    const CGnuPlotPoint &point2 = getPoint2D(i2);
+    for (uint i1 = 0, i2 = 1; i2 < np; i1 = i2++) {
+      const CGnuPlotPoint &point1 = getPoint2D(i1);
+      const CGnuPlotPoint &point2 = getPoint2D(i2);
 
-    CPoint2D p1, p2;
+      CPoint2D p1, p2;
 
-    if (! point1.isDiscontinuity() && point1.getPoint(p1) && point2.getPoint(p2))
-      renderer->drawClipLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)),
-                             lineStyle.dash());
-  }
+      if (! point1.isDiscontinuity() && point1.getPoint(p1) && point2.getPoint(p2))
+        renderer->drawClipLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)),
+                               lineStyle.dash());
+    }
 #endif
+  }
 }
 
 void
@@ -3061,41 +3147,69 @@ drawPoints(CGnuPlotRenderer *renderer)
 
   uint pointNum = 0;
 
-  for (const auto &point : getPoints2D()) {
-    std::vector<double> reals;
+  if (is3D()) {
+    for (const auto &ip : getPoints3D()) {
+      for (const auto &point : ip.second) {
+        std::vector<double> reals;
 
-    (void) point.getReals(reals);
+        (void) point.getReals(reals);
 
-    CPoint2D p(0, 0);
+        CPoint3D p(0, 0, 0);
 
-    uint valueNum = 0;
+        uint valueNum = 0;
 
-    if      (reals.size() == 1) {
-      p.x = pointNum;
-      p.y = reals[valueNum++];
+        if      (reals.size() == 2) {
+          p.x = reals[valueNum++];
+          p.y = reals[valueNum++];
+          p.z = pointNum;
+        }
+        else if (reals.size() >= 3) {
+          p.x = reals[valueNum++];
+          p.y = reals[valueNum++];
+          p.z = reals[valueNum++];
+        }
+
+        renderer->drawSymbol(p, pointType(), size, c);
+      }
     }
-    else if (reals.size() >= 2) {
-      p.x = reals[valueNum++];
-      p.y = reals[valueNum++];
+  }
+  else {
+    for (const auto &point : getPoints2D()) {
+      std::vector<double> reals;
+
+      (void) point.getReals(reals);
+
+      CPoint2D p(0, 0);
+
+      uint valueNum = 0;
+
+      if      (reals.size() == 1) {
+        p.x = pointNum;
+        p.y = reals[valueNum++];
+      }
+      else if (reals.size() >= 2) {
+        p.x = reals[valueNum++];
+        p.y = reals[valueNum++];
+      }
+
+      group()->mapLogPoint(p);
+
+      double size1 = size;
+
+      if ((! isCalcColor && valueNum < reals.size()) ||
+          (  isCalcColor && valueNum < reals.size() - 1))
+        size1 = reals[valueNum++];
+
+      CRGBA c1 = c;
+
+      if (isCalcColor && valueNum < reals.size()) {
+        double x = reals[valueNum++];
+
+        c1 = lineStyle.color().calcColor(this, x);
+      }
+
+      renderer->drawSymbol(p, pointType(), size1, c1);
     }
-
-    group()->mapLogPoint(p);
-
-    double size1 = size;
-
-    if ((! isCalcColor && valueNum < reals.size()) ||
-        (  isCalcColor && valueNum < reals.size() - 1))
-      size1 = reals[valueNum++];
-
-    CRGBA c1 = c;
-
-    if (isCalcColor && valueNum < reals.size()) {
-      double x = reals[valueNum++];
-
-      c1 = lineStyle.color().calcColor(this, x);
-    }
-
-    renderer->drawSymbol(p, pointType(), size1, c1);
   }
 }
 
@@ -3507,23 +3621,36 @@ calcXRange(double *xmin, double *xmax) const
   if (! xmin_.isValid() || ! xmax_.isValid()) {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
-    CBBox2D bbox;
+    if (is3D()) {
+      for (const auto &ip : getPoints3D()) {
+        for (const auto &p : ip.second) {
+          CPoint3D p1;
 
-    if (renderBBox(bbox)) {
-      th->xmin_.updateMin(bbox.getLeft ());
-      th->xmax_.updateMax(bbox.getRight());
+          if (! mapPoint3D(p, p1))
+            continue;
+
+          th->xmin_.updateMin(p1.x);
+          th->xmax_.updateMax(p1.x);
+        }
+      }
     }
     else {
-      COptReal xmin, ymin, xmax, ymax;
+      CBBox2D bbox;
 
-      for (const auto &p : getPoints2D()) {
-        double x;
+      if (renderBBox(bbox)) {
+        th->xmin_.updateMin(bbox.getLeft ());
+        th->xmax_.updateMax(bbox.getRight());
+      }
+      else {
+        for (const auto &p : getPoints2D()) {
+          double x;
 
-        if (! p.getX(x))
-          continue;
+          if (! p.getX(x))
+            continue;
 
-        th->xmin_.updateMin(x);
-        th->xmax_.updateMax(x);
+          th->xmin_.updateMin(x);
+          th->xmax_.updateMax(x);
+        }
       }
     }
   }
@@ -3536,30 +3663,73 @@ void
 CGnuPlotPlot::
 calcYRange(double *ymin, double *ymax) const
 {
+  // calc range for all y values
   if (! ymin_.isValid() || ! ymax_.isValid()) {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
-    CBBox2D bbox;
+    if (is3D()) {
+      for (const auto &ip : getPoints3D()) {
+        for (const auto &p : ip.second) {
+          CPoint3D p1;
 
-    if (renderBBox(bbox)) {
-      th->ymin_.updateMin(bbox.getBottom());
-      th->ymax_.updateMax(bbox.getTop   ());
+          if (! mapPoint3D(p, p1))
+            continue;
+
+          th->ymin_.updateMin(p1.y);
+          th->ymax_.updateMax(p1.y);
+        }
+      }
     }
     else {
-      for (const auto &p : getPoints2D()) {
-        double y;
+      CBBox2D bbox;
 
-        if (! p.getY(y))
-          continue;
+      if (renderBBox(bbox)) {
+        th->ymin_.updateMin(bbox.getBottom());
+        th->ymax_.updateMax(bbox.getTop   ());
+      }
+      else {
+        for (const auto &p : getPoints2D()) {
+          double y;
 
-        th->ymin_.updateMin(y);
-        th->ymax_.updateMax(y);
+          if (! p.getY(y))
+            continue;
+
+          th->ymin_.updateMin(y);
+          th->ymax_.updateMax(y);
+        }
       }
     }
   }
 
   *ymin = ymin_.getValue(-10);
   *ymax = ymax_.getValue( 10);
+}
+
+void
+CGnuPlotPlot::
+calcZRange(double *zmin, double *zmax) const
+{
+  assert(is3D());
+
+  // calc range for all z values
+  if (! zmin_.isValid() || ! zmax_.isValid()) {
+    CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
+
+    for (const auto &ip : getPoints3D()) {
+      for (const auto &p : ip.second) {
+        CPoint3D p1;
+
+        if (! mapPoint3D(p, p1))
+          continue;
+
+        th->zmin_.updateMin(p1.z);
+        th->zmax_.updateMax(p1.z);
+      }
+    }
+  }
+
+  *zmin = zmin_.getValue(-10);
+  *zmax = zmax_.getValue( 10);
 }
 
 void
@@ -3578,22 +3748,40 @@ calcBoundedYRange(double *ymin, double *ymax) const
 
     CBBox2D bbox;
 
-    if (renderBBox(bbox)) {
-      th->bymin_.updateMin(bbox.getBottom());
-      th->bymax_.updateMax(bbox.getTop   ());
+    if (is3D()) {
+      for (const auto &ip : getPoints3D()) {
+        for (const auto &p : ip.second) {
+          CPoint3D p1;
+
+          if (! mapPoint3D(p, p1))
+            continue;
+
+          if (p1.x < xmin || p1.x > xmax)
+            continue;
+
+          th->bymin_.updateMin(p1.y);
+          th->bymax_.updateMax(p1.y);
+        }
+      }
     }
     else {
-      for (const auto &p : getPoints2D()) {
-        double x, y;
+      if (renderBBox(bbox)) {
+        th->bymin_.updateMin(bbox.getBottom());
+        th->bymax_.updateMax(bbox.getTop   ());
+      }
+      else {
+        for (const auto &p : getPoints2D()) {
+          double x, y;
 
-        if (! p.getXY(x, y))
-          continue;
+          if (! p.getXY(x, y))
+            continue;
 
-        if (x < xmin || x > xmax)
-          continue;
+          if (x < xmin || x > xmax)
+            continue;
 
-        th->bymin_.updateMin(y);
-        th->bymax_.updateMax(y);
+          th->bymin_.updateMin(y);
+          th->bymax_.updateMax(y);
+        }
       }
     }
   }
@@ -3691,16 +3879,51 @@ getPointsRange(CBBox2D &bbox) const
 {
   COptReal xmin, ymin, xmax, ymax;
 
-  for (const auto &p : getPoints2D()) {
-    double x, y;
+  if (is3D()) {
+    for (const auto &ip : getPoints3D()) {
+      for (const auto &p : ip.second) {
+        CPoint3D p1;
 
-    if (! p.getXY(x, y))
-      continue;
+        if (! mapPoint3D(p, p1))
+          continue;
 
-    xmin.updateMin(x); ymin.updateMin(y);
-    xmax.updateMax(x); ymax.updateMax(y);
+        xmin.updateMin(p1.x); ymin.updateMin(p1.y);
+        xmax.updateMax(p1.x); ymax.updateMax(p1.y);
+      }
+    }
+  }
+  else {
+    for (const auto &p : getPoints2D()) {
+      double x, y;
+
+      if (! p.getXY(x, y))
+        continue;
+
+      xmin.updateMin(x); ymin.updateMin(y);
+      xmax.updateMax(x); ymax.updateMax(y);
+    }
   }
 
   bbox = CBBox2D(xmin.getValue(-10), ymin.getValue(-10),
                  xmax.getValue( 10), ymax.getValue( 10));
+}
+
+bool
+CGnuPlotPlot::
+mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1) const
+{
+  if (app()->mapping() == CGnuPlotTypes::Mapping::SPHERICAL_MAPPING) {
+    CPoint2D p2;
+
+    if (! p.getPoint(p2))
+      return false;
+
+    p1 = app()->sphericalMap(p2);
+  }
+  else {
+    if (! p.getPoint(p1))
+      return false;
+  }
+
+  return true;
 }

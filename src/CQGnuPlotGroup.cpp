@@ -28,6 +28,13 @@ setPainter(QPainter *p)
   renderer->setPainter(p);
 }
 
+void
+CQGnuPlotGroup::
+redraw()
+{
+  window_->redraw();
+}
+
 double
 CQGnuPlotGroup::
 getRatio() const

@@ -133,7 +133,7 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
   void print(std::ostream &os) const;
 
  protected:
-  CoordType          coordType_;
+  CoordType          coordType_ { CoordType::FROM_TO };
   CGnuPlotPosition   from_;
   CGnuPlotPosition   to_;
   CGnuPlotCoordValue length_;

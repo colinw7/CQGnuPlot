@@ -53,7 +53,7 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   DrawLayerType getGridLayer() const;
   void setGridLayer(const DrawLayerType &layer);
 
-  void drawAxis(double pos, bool first) override;
+  void drawAxis(CGnuPlotRenderer *renderer, double pos, bool first) override;
 };
 
 #endif

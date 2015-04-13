@@ -132,6 +132,24 @@ class CGnuPlotGroup {
 
   //---
 
+  CGnuPlotCamera *camera() const { return camera_; }
+  void setCamera(CGnuPlotCamera *c);
+
+  void setCameraEnabled(bool b);
+
+  void setCameraRotateX(double a);
+  void setCameraRotateY(double a);
+  void setCameraRotateZ(double a);
+
+  void setCameraXMin(double x);
+  void setCameraXMax(double x);
+  void setCameraYMin(double y);
+  void setCameraYMax(double y);
+  void setCameraNear(double z);
+  void setCameraFar (double z);
+
+  //---
+
   int getBorderSides() const { return axesData_.border.sides; }
   void setBorderSides(int b) { axesData_.border.sides = b; }
 
@@ -151,6 +169,7 @@ class CGnuPlotGroup {
 
   void normalizeXRange(double &xmin, double &xmax) const;
   void normalizeYRange(double &ymin, double &ymax) const;
+  void normalizeZRange(double &zmin, double &zmax) const;
 
   CBBox2D getClip(int xind=1, int yind=1) const;
 
@@ -253,8 +272,11 @@ class CGnuPlotGroup {
   void drawAxes();
 
   void drawBorder();
+
   void drawXAxes(int xind, bool other);
   void drawYAxes(int yind, bool other);
+  void drawZAxes(int yind, bool other);
+
   void drawGrid(const CGnuPlot::DrawLayer &layer);
 
   void drawKey();
@@ -335,6 +357,7 @@ class CGnuPlotGroup {
   LogScaleMap           logScale_;             // log axis data
   Annotations           annotations_;          // annotations
   Axes                  axes_;                 // axes
+  CGnuPlotCamera*       camera_;               // view camera
   CRGBA                 backgroundColor_;      // background color
 };
 

@@ -16,6 +16,7 @@
 #include <CQGnuPlotColorBox.h>
 #include <CQGnuPlotPalette.h>
 #include <CQGnuPlotTitle.h>
+#include <CQGnuPlotCamera.h>
 #include <CQGnuPlotBar.h>
 #include <CQGnuPlotPie.h>
 #include <CQGnuPlotBubble.h>
@@ -229,6 +230,17 @@ createTitle(CGnuPlotGroup *group)
   objects_.push_back(title);
 
   return title;
+}
+
+CGnuPlotCamera *
+CQGnuPlotDevice::
+createCamera(CGnuPlotGroup *group)
+{
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+
+  CQGnuPlotCamera *camera = new CQGnuPlotCamera(qgroup);
+
+  return camera;
 }
 
 CGnuPlotBar *

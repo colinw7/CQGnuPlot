@@ -16,6 +16,7 @@
 #include <CQGnuPlotColorBox.h>
 #include <CQGnuPlotPalette.h>
 #include <CQGnuPlotTitle.h>
+#include <CQGnuPlotCamera.h>
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotBar.h>
 #include <CQGnuPlotPie.h>
@@ -186,19 +187,6 @@ addProperties()
   tree_->addProperty("", this, "backgroundColor");
 
   if (is3D()) {
-    tree_->addProperty("", this, "enable3D");
-    tree_->addProperty("", this, "rotateX" )->setEditorFactory(realEdit("0:360:1"));
-    tree_->addProperty("", this, "rotateY" )->setEditorFactory(realEdit("0:360:1"));
-    tree_->addProperty("", this, "rotateZ" )->setEditorFactory(realEdit("0:360:1"));
-    tree_->addProperty("", this, "xmin3D"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
-    tree_->addProperty("", this, "xmax3D"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
-    tree_->addProperty("", this, "ymin3D"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
-    tree_->addProperty("", this, "ymax3D"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
-    tree_->addProperty("", this, "near3D"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
-    tree_->addProperty("", this, "far3D"   )->setEditorFactory(realEdit("-1000:1000:0.1"));
-  }
-
-  if (is3D()) {
     tree_->addProperty("", this, "hidden3D");
     tree_->addProperty("", this, "surface3D");
     tree_->addProperty("", this, "contour3D");
@@ -237,6 +225,25 @@ addGroupProperties(CGnuPlotGroup *group)
 
   tree_->addProperty(groupName, qgroup, "ind" );
   tree_->addProperty(groupName, qgroup, "is3D");
+
+  if (is3D()) {
+    CQGnuPlotCamera *qcamera = static_cast<CQGnuPlotCamera *>(group->camera());
+
+    QString cameraName = groupName + "/camera";
+
+    tree_->addProperty(cameraName, qcamera, "enabled");
+
+    tree_->addProperty(cameraName, qcamera, "rotateX")->setEditorFactory(realEdit("0:360:1"));
+    tree_->addProperty(cameraName, qcamera, "rotateY")->setEditorFactory(realEdit("0:360:1"));
+    tree_->addProperty(cameraName, qcamera, "rotateZ")->setEditorFactory(realEdit("0:360:1"));
+
+    tree_->addProperty(cameraName, qcamera, "xmin")->setEditorFactory(realEdit("-1000:1000:0.1"));
+    tree_->addProperty(cameraName, qcamera, "xmax")->setEditorFactory(realEdit("-1000:1000:0.1"));
+    tree_->addProperty(cameraName, qcamera, "ymin")->setEditorFactory(realEdit("-1000:1000:0.1"));
+    tree_->addProperty(cameraName, qcamera, "ymax")->setEditorFactory(realEdit("-1000:1000:0.1"));
+    tree_->addProperty(cameraName, qcamera, "near")->setEditorFactory(realEdit("-1000:1000:0.1"));
+    tree_->addProperty(cameraName, qcamera, "far" )->setEditorFactory(realEdit("-1000:1000:0.1"));
+  }
 
   QString regionName = groupName + "/region";
 
@@ -600,96 +607,6 @@ CQGnuPlotWindow::
 setBackgroundColor(const QColor &c)
 {
   CGnuPlotWindow::setBackgroundColor(fromQColor(c));
-}
-
-void
-CQGnuPlotWindow::
-setEnable3D(bool b)
-{
-  setCameraEnabled(b);
-
-  redraw();
-}
-
-void
-CQGnuPlotWindow::
-setRotateX(double a)
-{
-  setCameraRotateX(a);
-
-  redraw();
-}
-
-void
-CQGnuPlotWindow::
-setRotateY(double a)
-{
-  setCameraRotateY(a);
-
-  redraw();
-}
-
-void
-CQGnuPlotWindow::
-setRotateZ(double a)
-{
-  setCameraRotateZ(a);
-
-  redraw();
-}
-
-void
-CQGnuPlotWindow::
-setXMin3D(double x)
-{
-  setCameraXMin(x);
-
-  redraw();
-}
-
-void
-CQGnuPlotWindow::
-setXMax3D(double x)
-{
-  setCameraXMax(x);
-
-  redraw();
-}
-
-void
-CQGnuPlotWindow::
-setYMin3D(double y)
-{
-  setCameraYMin(y);
-
-  redraw();
-}
-
-void
-CQGnuPlotWindow::
-setYMax3D(double y)
-{
-  setCameraYMax(y);
-
-  redraw();
-}
-
-void
-CQGnuPlotWindow::
-setNear3D(double z)
-{
-  setCameraNear(z);
-
-  redraw();
-}
-
-void
-CQGnuPlotWindow::
-setFar3D(double z)
-{
-  setCameraFar(z);
-
-  redraw();
 }
 
 void

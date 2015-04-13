@@ -257,7 +257,7 @@ class CGnuPlotPlot {
 
   //---
 
-  const Points3D &getPoints3D() const { assert(! is3D()); return points3D_; }
+  const Points3D &getPoints3D() const { assert(is3D()); return points3D_; }
 
   std::pair<int,int> numPoints3D() const {
     assert(is3D());
@@ -286,9 +286,11 @@ class CGnuPlotPlot {
 
   void addPoint2D(double x, double y);
   void addPoint2D(double x, CExprValueP y);
-  void addPoint2D(const Values &value, bool discontinuity=false);
+  void addPoint2D(const Values &values, bool discontinuity=false);
 
   void addPoint3D(int iy, double x, double y, double z);
+  void addPoint3D(int iy, double x, double y, CExprValueP z);
+  void addPoint3D(int iy, const Values &values, bool discontinuity=false);
 
   //---
 
@@ -298,6 +300,7 @@ class CGnuPlotPlot {
 
   void calcXRange(double *xmin, double *xmax) const;
   void calcYRange(double *ymin, double *ymax) const;
+  void calcZRange(double *zmin, double *zmax) const;
 
   void calcBoundedYRange  (double *ymin, double *ymax) const;
   void recalcBoundedYRange(double *ymin, double *ymax) const;
@@ -320,6 +323,8 @@ class CGnuPlotPlot {
   double getXMax() const { return xmax_.getValue( 10); }
   double getYMin() const { return ymin_.getValue(-10); }
   double getYMax() const { return ymax_.getValue( 10); }
+  double getZMin() const { return zmin_.getValue(-10); }
+  double getZMax() const { return zmax_.getValue( 10); }
 
   //void setXMin(double x) { xmin_ = x; }
   //void setXMax(double x) { xmax_ = x; }
@@ -345,8 +350,10 @@ class CGnuPlotPlot {
 
   virtual void draw();
 
-  void draw2D();
   void draw3D();
+  void draw2D();
+
+  void drawSurface(CGnuPlotRenderer *renderer);
 
   void drawBoxErrorBars      (CGnuPlotRenderer *renderer);
   void drawBoxes             (CGnuPlotRenderer *renderer);
@@ -395,6 +402,8 @@ class CGnuPlotPlot {
   CGnuPlotPie    *createPie   () const;
   CGnuPlotBubble *createBubble() const;
 
+  bool mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1) const;
+
  protected:
   typedef std::vector<CPoint2D>         Points;
   typedef std::pair<double,Points>      ZPoints;
@@ -426,6 +435,7 @@ class CGnuPlotPlot {
   int                yind_ { 1 };                       // yaxis index
   COptReal           xmin_, xmax_;                      // calculated points x range
   COptReal           ymin_, ymax_;                      // calculated points y range
+  COptReal           zmin_, zmax_;                      // calculated points z range
   COptReal           bymin_, bymax_;                    // calculated points bounded y range
   CBBox2D            bbox_ { 0, 0, 1, 1 };              // bounding box
   Smooth             smooth_ { Smooth::NONE };          // smooth data

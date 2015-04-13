@@ -375,11 +375,13 @@ getValueStr(int i, double pos) const
 
 void
 CGnuPlotAxis::
-drawAxis(double pos, bool first)
+drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
+  renderer_ = renderer;
 
-  CFontPtr font = renderer->getFont();
+  //---
+
+  CFontPtr font = renderer_->getFont();
 
   //---
 
@@ -392,12 +394,12 @@ drawAxis(double pos, bool first)
   double maxH = font->getCharHeight();
 
   if (direction_ == CORIENTATION_HORIZONTAL) {
-    double py = renderer->pixelHeightToWindowHeight(2);
+    double py = renderer_->pixelHeightToWindowHeight(2);
 
     bbox_ = CBBox2D(getStart(), pos - py, getEnd(), pos + py);
   }
   else {
-    double px = renderer->pixelWidthToWindowWidth(2);
+    double px = renderer_->pixelWidthToWindowWidth(2);
 
     bbox_ = CBBox2D(pos - px, getStart(), pos + px, getEnd());
   }
@@ -576,9 +578,7 @@ drawAxisTick(const CPoint2D &p, CDirectionType type, bool large)
       p1.y = end_ - (p.y - start_);
   }
 
-  CGnuPlotRenderer *renderer = app()->renderer();
-
-  if (clip_ && ! renderer->clip().inside(p1))
+  if (clip_ && ! renderer_->clip().inside(p1))
     return;
 
   double psize = 6;
@@ -589,14 +589,14 @@ drawAxisTick(const CPoint2D &p, CDirectionType type, bool large)
   if (type == CDIRECTION_TYPE_LEFT || type == CDIRECTION_TYPE_RIGHT) {
     double dx = (type == CDIRECTION_TYPE_LEFT ? -1 : 1);
 
-    double x1 = p1.x + dx*renderer->pixelWidthToWindowWidth(psize);
+    double x1 = p1.x + dx*renderer_->pixelWidthToWindowWidth(psize);
 
     drawLine(p1, CPoint2D(x1, p1.y));
   }
   else {
     double dy = (type == CDIRECTION_TYPE_DOWN  ? -1 : 1);
 
-    double y1 = p1.y + dy*renderer->pixelHeightToWindowHeight(psize);
+    double y1 = p1.y + dy*renderer_->pixelHeightToWindowHeight(psize);
 
     drawLine(p1, CPoint2D(p1.x, y1));
   }
@@ -615,9 +615,7 @@ drawTickLabel(const CPoint2D &p, const std::string &str, bool first)
       p1.y = end_ - (p.y - start_);
   }
 
-  CGnuPlotRenderer *renderer = app()->renderer();
-
-  if (clip_ && ! renderer->clip().inside(p1))
+  if (clip_ && ! renderer_->clip().inside(p1))
     return;
 
   // bool rotatedText = (direction_ == CORIENTATION_VERTICAL);
@@ -664,10 +662,14 @@ drawAxisLabel(const CPoint2D &p, const std::string &str, int maxSize, bool first
 
 void
 CGnuPlotAxis::
-drawGrid(double start, double end)
+drawGrid(CGnuPlotRenderer *renderer, double start, double end)
 {
   static double gridDashes[] = {1, 3};
   static int    numGridDashes = 2;
+
+  renderer_ = renderer;
+
+  //------*/
 
   lineDash_ = CLineDash(gridDashes, numGridDashes);
 
@@ -729,12 +731,10 @@ void
 CGnuPlotAxis::
 drawClipLine(const CPoint2D &p1, const CPoint2D &p2)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   CPoint2D p11 = p1;
   CPoint2D p21 = p2;
 
-  if (! clip_ || renderer->clipLine(p11, p21))
+  if (! clip_ || renderer_->clipLine(p11, p21))
     drawLine(p11, p21);
 }
 
@@ -742,8 +742,6 @@ void
 CGnuPlotAxis::
 drawLine(const CPoint2D &p1, const CPoint2D &p2)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   double x1 = p1.x, y1 = p1.y;
   double x2 = p2.x, y2 = p2.y;
 
@@ -751,7 +749,7 @@ drawLine(const CPoint2D &p1, const CPoint2D &p2)
   group_->mapLogPoint(&x2, &y2);
 
   // TODO: custom width and color
-  renderer->drawLine(CPoint2D(x1, y1), CPoint2D(x2, y2), 1, CRGBA(0,0,0), lineDash_);
+  renderer_->drawLine(CPoint2D(x1, y1), CPoint2D(x2, y2), 1, CRGBA(0,0,0), lineDash_);
 }
 
 void
@@ -759,13 +757,11 @@ CGnuPlotAxis::
 drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
                  CVAlignType valign, double yOffset, const std::string &str)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   double x = pos.x, y = pos.y;
 
   group_->mapLogPoint(&x, &y);
 
-  renderer->drawHAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str);
+  renderer_->drawHAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str);
 }
 
 void
@@ -773,11 +769,9 @@ CGnuPlotAxis::
 drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
                  CVAlignType valign, double yOffset, const std::string &str)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   double x = pos.x, y = pos.y;
 
   group_->mapLogPoint(&x, &y);
 
-  renderer->drawVAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str);
+  renderer_->drawVAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str);
 }

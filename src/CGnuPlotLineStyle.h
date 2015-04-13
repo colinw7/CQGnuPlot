@@ -38,9 +38,11 @@ class CGnuPlotLineStyle {
   void setColor(const CGnuPlotColorSpec &c) { color_ = c; }
 
   const CRGBA &calcColor(const CRGBA &c) const {
-    if (color_.type() == CGnuPlotColorSpec::Type::RGB ||
-        color_.type() == CGnuPlotColorSpec::Type::INDEX)
+    if      (color_.type() == CGnuPlotColorSpec::Type::RGB ||
+             color_.type() == CGnuPlotColorSpec::Type::INDEX)
       return color_.color();
+    else if (type_.isValid())
+      return CGnuPlotStyleInst->indexColor(type_.getValue());
     else
       return c;
   }

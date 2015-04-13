@@ -114,6 +114,29 @@ CExprFunctionSqrt(const CExprFunction::Values &values)
   }
 }
 
+static CExprValuePtr
+CExprFunctionExp(const CExprFunction::Values &values)
+{
+  assert(values.size() == 1);
+
+  double               r;
+  std::complex<double> c;
+
+  if      (values[0]->getComplexValue(c)) {
+    double r1 = exp(c.real())*cos(c.imag());
+    double c1 = exp(c.real())*sin(c.imag());
+
+    return CExprInst->createComplexValue(std::complex<double>(r1, c1));
+  }
+  else if (values[0]->getRealValue(r)) {
+    double r1 = exp(r);
+
+    return CExprInst->createRealValue(r1);
+  }
+  else
+    return CExprValuePtr();
+}
+
 #define CEXPR_REAL_TO_REAL_FUNC(NAME, F) \
 static CExprValuePtr \
 CExprFunction##NAME(const CExprFunction::Values &values) { \
@@ -133,10 +156,10 @@ CExprFunction##NAME(const CExprFunction::Values &values) { \
   assert(values.size() == 1); \
   double r = 0.0; \
   std::complex<double> c; \
-  if (values[0]->getRealValue(r)) { \
-  } \
-  else if (values[0]->getComplexValue(c)) { \
+  if (values[0]->getComplexValue(c)) { \
     r = c.real(); \
+  } \
+  else if (values[0]->getRealValue(r)) { \
   } \
   else \
     return CExprValuePtr(); \
@@ -150,15 +173,15 @@ CExprFunction##NAME(const CExprFunction::Values &values) { \
   assert(values.size() == 1); \
   double r; \
   std::complex<double> c; \
-  if (values[0]->getRealValue(r)) { \
-    double r1 = F(r); \
-    return CExprInst->createRealValue(r1); \
-  } \
-  else if (values[0]->getComplexValue(c)) { \
+  if (values[0]->getComplexValue(c)) { \
     errno = 0; \
     std::complex<double> c1 = F(c); \
     if (errno != 0) return CExprValuePtr(); \
     return CExprInst->createComplexValue(c1); \
+  } \
+  else if (values[0]->getRealValue(r)) { \
+    double r1 = F(r); \
+    return CExprInst->createRealValue(r1); \
   } \
   else \
     return CExprValuePtr(); \
@@ -184,21 +207,21 @@ CExprFunction##NAME(const CExprFunction::Values &values) { \
   assert(values.size() == 1); \
   double r; \
   std::complex<double> c; \
-  if (values[0]->getRealValue(r)) { \
-    errno = 0; \
-    double r1 = F(r); \
-    if (errno != 0) return CExprValuePtr(); \
-    if (CExprInst->getDegrees()) \
-      r1 = RadToDeg(r1); \
-    return CExprInst->createRealValue(r1); \
-  } \
-  else if (values[0]->getComplexValue(c)) { \
+  if (values[0]->getComplexValue(c)) { \
     errno = 0; \
     std::complex<double> c1 = F(c); \
     if (errno != 0) return CExprValuePtr(); \
     if (CExprInst->getDegrees()) \
       c1 = std::complex<double>(RadToDeg(c1.real()), RadToDeg(c1.imag())); \
     return CExprInst->createComplexValue(c1); \
+  } \
+  else if (values[0]->getRealValue(r)) { \
+    errno = 0; \
+    double r1 = F(r); \
+    if (errno != 0) return CExprValuePtr(); \
+    if (CExprInst->getDegrees()) \
+      r1 = RadToDeg(r1); \
+    return CExprInst->createRealValue(r1); \
   } \
   else \
     return CExprValuePtr(); \
@@ -459,7 +482,6 @@ class CExprFunctionObjT3 : public CExprFunctionObj {
   FUNC f_;
 };
 
-CEXPR_REALC_TO_REALC_FUNC(Exp  , std::exp)
 CEXPR_REALC_TO_REALC_FUNC(Log  , std::log)
 CEXPR_REALC_TO_REALC_FUNC(Log10, std::log10)
 

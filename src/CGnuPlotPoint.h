@@ -3,6 +3,7 @@
 
 #include <CExpr.h>
 #include <CPoint2D.h>
+#include <CPoint3D.h>
 #include <CMathGen.h>
 
 class CGnuPlotPoint {
@@ -58,6 +59,17 @@ class CGnuPlotPoint {
       return false;
 
     p = CPoint2D(x, y);
+
+    return true;
+  }
+
+  bool getPoint(CPoint3D &p) const {
+    double x, y, z;
+
+    if (! getXYZ(x, y, z))
+      return false;
+
+    p = CPoint3D(x, y, z);
 
     return true;
   }

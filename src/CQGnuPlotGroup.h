@@ -79,6 +79,8 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   void mouseMove (const QPoint &qp);
   bool mouseTip  (const QPoint &qp, CQGnuPlot::TipRect &tip);
 
+  void redraw();
+
  private:
   CQGnuPlotWindow *window_;
 };

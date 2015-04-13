@@ -51,6 +51,7 @@ SOURCES       = CQGnuPlot.cpp \
 		CQGnuPlotAxis.cpp \
 		CQGnuPlotBar.cpp \
 		CQGnuPlotBubble.cpp \
+		CQGnuPlotCamera.cpp \
 		CQGnuPlotCanvas.cpp \
 		CQGnuPlotCircle.cpp \
 		CQGnuPlotColorBox.cpp \
@@ -76,6 +77,7 @@ SOURCES       = CQGnuPlot.cpp \
 		CGnuPlotBBoxRenderer.cpp \
 		CGnuPlotBar.cpp \
 		CGnuPlotBubble.cpp \
+		CGnuPlotCamera.cpp \
 		CGnuPlotCircle.cpp \
 		CGnuPlotColorBox.cpp \
 		CGnuPlotColorSpec.cpp \
@@ -104,6 +106,7 @@ SOURCES       = CQGnuPlot.cpp \
 		CGnuPlotText.cpp \
 		CGnuPlotTitle.cpp \
 		CGnuPlotWindow.cpp \
+		CGnuPlot3DRenderer.cpp \
 		CQPropertyDelegate.cpp \
 		CQPropertyEditor.cpp \
 		CQPropertyItem.cpp \
@@ -140,6 +143,7 @@ SOURCES       = CQGnuPlot.cpp \
 		moc_CQGnuPlotAxis.cpp \
 		moc_CQGnuPlotBar.cpp \
 		moc_CQGnuPlotBubble.cpp \
+		moc_CQGnuPlotCamera.cpp \
 		moc_CQGnuPlotCanvas.cpp \
 		moc_CQGnuPlotCircle.cpp \
 		moc_CQGnuPlotColorBox.cpp \
@@ -173,6 +177,7 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CQGnuPlotAxis.o \
 		../obj/CQGnuPlotBar.o \
 		../obj/CQGnuPlotBubble.o \
+		../obj/CQGnuPlotCamera.o \
 		../obj/CQGnuPlotCanvas.o \
 		../obj/CQGnuPlotCircle.o \
 		../obj/CQGnuPlotColorBox.o \
@@ -198,6 +203,7 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CGnuPlotBBoxRenderer.o \
 		../obj/CGnuPlotBar.o \
 		../obj/CGnuPlotBubble.o \
+		../obj/CGnuPlotCamera.o \
 		../obj/CGnuPlotCircle.o \
 		../obj/CGnuPlotColorBox.o \
 		../obj/CGnuPlotColorSpec.o \
@@ -226,6 +232,7 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CGnuPlotText.o \
 		../obj/CGnuPlotTitle.o \
 		../obj/CGnuPlotWindow.o \
+		../obj/CGnuPlot3DRenderer.o \
 		../obj/CQPropertyDelegate.o \
 		../obj/CQPropertyEditor.o \
 		../obj/CQPropertyItem.o \
@@ -263,6 +270,7 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/moc_CQGnuPlotAxis.o \
 		../obj/moc_CQGnuPlotBar.o \
 		../obj/moc_CQGnuPlotBubble.o \
+		../obj/moc_CQGnuPlotCamera.o \
 		../obj/moc_CQGnuPlotCanvas.o \
 		../obj/moc_CQGnuPlotCircle.o \
 		../obj/moc_CQGnuPlotColorBox.o \
@@ -549,7 +557,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d ../obj/CQGnuPlot1.0.0 || mkdir -p ../obj/CQGnuPlot1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBar.h CQGnuPlotBubble.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPie.h CQGnuPlotPlot.h CQGnuPlotPolygon.h CQGnuPlotRectangle.h CQGnuPlotRenderer.h CQGnuPlotTitle.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBar.h CGnuPlotBubble.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPie.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotRectangle.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotStyle.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h MouseMode/CQMouseMode.h MouseMode/CQPanMouseMode.h MouseMode/CQPanZoomIFace.h MouseMode/CQZoomMouseMode.h CQAngleSpinBox.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBar.cpp CQGnuPlotBubble.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPie.cpp CQGnuPlotPlot.cpp CQGnuPlotPolygon.cpp CQGnuPlotRectangle.cpp CQGnuPlotRenderer.cpp CQGnuPlotTitle.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBar.cpp CGnuPlotBubble.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotPalette.cpp CGnuPlotPie.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPosition.cpp CGnuPlotRectangle.cpp CGnuPlotRenderer.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp MouseMode/CQMouseMode.cpp MouseMode/CQPanMouseMode.cpp MouseMode/CQZoomMouseMode.cpp CQAngleSpinBox.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBar.h CQGnuPlotBubble.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPie.h CQGnuPlotPlot.h CQGnuPlotPolygon.h CQGnuPlotRectangle.h CQGnuPlotRenderer.h CQGnuPlotTitle.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot3DRenderer.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBar.h CGnuPlotBubble.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPie.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotRectangle.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotStyle.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h MouseMode/CQMouseMode.h MouseMode/CQPanMouseMode.h MouseMode/CQPanZoomIFace.h MouseMode/CQZoomMouseMode.h CQAngleSpinBox.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBar.cpp CQGnuPlotBubble.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPie.cpp CQGnuPlotPlot.cpp CQGnuPlotPolygon.cpp CQGnuPlotRectangle.cpp CQGnuPlotRenderer.cpp CQGnuPlotTitle.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBar.cpp CGnuPlotBubble.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotPalette.cpp CGnuPlotPie.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPosition.cpp CGnuPlotRectangle.cpp CGnuPlotRenderer.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlot3DRenderer.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp MouseMode/CQMouseMode.cpp MouseMode/CQPanMouseMode.cpp MouseMode/CQZoomMouseMode.cpp CQAngleSpinBox.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
 
 
 clean:compiler_clean 
@@ -572,9 +580,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBar.cpp moc_CQGnuPlotBubble.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPie.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQMouseMode.cpp moc_CQPanMouseMode.cpp moc_CQZoomMouseMode.cpp moc_CQAngleSpinBox.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
+compiler_moc_header_make_all: moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBar.cpp moc_CQGnuPlotBubble.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPie.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQMouseMode.cpp moc_CQPanMouseMode.cpp moc_CQZoomMouseMode.cpp moc_CQAngleSpinBox.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBar.cpp moc_CQGnuPlotBubble.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPie.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQMouseMode.cpp moc_CQPanMouseMode.cpp moc_CQZoomMouseMode.cpp moc_CQAngleSpinBox.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
+	-$(DEL_FILE) moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBar.cpp moc_CQGnuPlotBubble.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPie.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQMouseMode.cpp moc_CQPanMouseMode.cpp moc_CQZoomMouseMode.cpp moc_CQAngleSpinBox.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
 moc_CQGnuPlot.cpp: CGnuPlot.h \
 		Expr/CExpr.h \
 		../../CUtil/include/CRefPtr.h \
@@ -609,16 +617,7 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -650,6 +649,15 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -829,16 +837,7 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -858,6 +857,15 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -990,16 +998,7 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -1019,6 +1018,15 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -1139,16 +1147,7 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -1180,6 +1179,15 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -1306,16 +1314,7 @@ moc_CQGnuPlotBar.cpp: CQGnuPlotObject.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -1335,6 +1334,15 @@ moc_CQGnuPlotBar.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -1468,16 +1476,7 @@ moc_CQGnuPlotBubble.cpp: CQGnuPlotObject.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -1497,6 +1496,15 @@ moc_CQGnuPlotBubble.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -1522,6 +1530,79 @@ moc_CQGnuPlotBubble.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/qstringmatcher.h \
 		CQGnuPlotBubble.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBubble.h -o moc_CQGnuPlotBubble.cpp
+
+moc_CQGnuPlotCamera.cpp: CQGnuPlotObject.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CQGnuPlotCamera.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCamera.h -o moc_CQGnuPlotCamera.cpp
 
 moc_CQGnuPlotCanvas.cpp: /usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -1740,16 +1821,7 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -1769,6 +1841,15 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -1892,16 +1973,7 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -1931,6 +2003,15 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
 		CGnuPlotHistogramData.h \
@@ -2062,16 +2143,7 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -2091,6 +2163,15 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -2153,16 +2234,7 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -2194,6 +2266,15 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -2380,15 +2461,6 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -2409,6 +2481,15 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -2541,16 +2622,7 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -2570,6 +2642,15 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -2706,16 +2787,7 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -2747,6 +2819,15 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -2922,16 +3003,7 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
@@ -2958,6 +3030,15 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -3082,16 +3163,7 @@ moc_CQGnuPlotPie.cpp: CQGnuPlotObject.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -3111,6 +3183,15 @@ moc_CQGnuPlotPie.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -3172,16 +3253,7 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlot.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -3213,6 +3285,15 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlot.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -3407,16 +3488,7 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -3436,6 +3508,15 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -3568,16 +3649,7 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -3597,6 +3669,15 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -3726,16 +3807,7 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -3758,6 +3830,15 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -3827,16 +3908,7 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -3868,6 +3940,15 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -5360,16 +5441,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -5401,6 +5473,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -5704,16 +5785,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -5733,6 +5805,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -5958,16 +6039,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -5987,6 +6059,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -6199,16 +6280,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -6240,6 +6312,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -6385,16 +6466,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -6414,6 +6486,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -6554,16 +6635,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -6583,6 +6655,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -6614,6 +6695,162 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotBubble.o CQGnuPlotBubble.cpp
+
+../obj/CQGnuPlotCamera.o: CQGnuPlotCamera.cpp CQGnuPlotCamera.h \
+		CQGnuPlotObject.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CQGnuPlotGroup.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotCamera.o CQGnuPlotCamera.cpp
 
 ../obj/CQGnuPlotCanvas.o: CQGnuPlotCanvas.cpp CQGnuPlotCanvas.h \
 		/usr/include/qt5/QtWidgets/QWidget \
@@ -6760,16 +6997,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -6801,6 +7029,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -6954,16 +7191,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -6983,6 +7211,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -7193,16 +7430,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -7232,6 +7460,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
 		CGnuPlotHistogramData.h \
@@ -7353,11 +7590,15 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CQGnuPlotDevice.o: CQGnuPlotDevice.cpp CQGnuPlotDevice.h \
 		CGnuPlotDevice.h \
 		COrientation.h \
+		../../CMath/include/CISize2D.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
 		CGnuPlotTypes.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -7374,9 +7615,6 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprCompile.h \
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
-		../../CFont/include/CFont.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -7385,19 +7623,9 @@ compiler_clean: compiler_moc_header_clean
 		../../COS/include/NaN.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
-		../../CMath/include/CISize2D.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -7428,6 +7656,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -7589,6 +7826,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotColorBox.h \
 		CQGnuPlotPalette.h \
 		CQGnuPlotTitle.h \
+		CQGnuPlotCamera.h \
 		CQGnuPlotBar.h \
 		CGnuPlotBar.h \
 		CQGnuPlotPie.h \
@@ -7711,16 +7949,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -7740,6 +7969,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -7889,16 +8127,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -7930,6 +8159,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -8192,15 +8430,6 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -8221,6 +8450,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -8445,16 +8683,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -8474,6 +8703,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -8696,16 +8934,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -8737,6 +8966,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -8940,16 +9178,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
@@ -8976,6 +9205,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -9120,16 +9358,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -9149,6 +9378,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -9217,16 +9455,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -9258,6 +9487,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -9558,16 +9796,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -9587,6 +9816,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -9725,16 +9963,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -9754,6 +9983,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -9908,16 +10146,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -9949,6 +10178,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -10246,16 +10484,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -10278,6 +10507,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -10434,16 +10672,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -10475,6 +10704,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -10600,16 +10838,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -10641,6 +10870,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -10802,6 +11040,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotColorBox.h \
 		CQGnuPlotPalette.h \
 		CQGnuPlotTitle.h \
+		CQGnuPlotCamera.h \
 		CQGnuPlotLabel.h \
 		CQGnuPlotBar.h \
 		CGnuPlotBar.h \
@@ -10897,16 +11136,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -10938,6 +11168,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -11030,16 +11269,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
@@ -11054,6 +11284,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -11122,16 +11361,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotFillStyle.h \
@@ -11152,6 +11382,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -11203,15 +11442,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CFlags.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -11241,6 +11471,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -11294,16 +11533,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -11335,6 +11565,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -11405,16 +11644,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -11434,6 +11664,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -11498,16 +11737,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -11527,6 +11757,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -11541,6 +11780,20 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBubble.o CGnuPlotBubble.cpp
+
+../obj/CGnuPlotCamera.o: CGnuPlotCamera.cpp CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotCamera.o CGnuPlotCamera.cpp
 
 ../obj/CGnuPlotCircle.o: CGnuPlotCircle.cpp CGnuPlotCircle.h \
 		CGnuPlotAnnotation.h \
@@ -11592,16 +11845,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotPointStyle.h \
@@ -11618,6 +11862,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -11671,16 +11924,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -11710,6 +11954,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
 		CGnuPlotHistogramData.h \
@@ -11767,16 +12020,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -11800,6 +12044,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -11858,16 +12111,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
@@ -11896,6 +12140,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -11905,6 +12158,10 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h \
 		CGnuPlotWindow.h \
 		CGnuPlotPlot.h \
 		CGnuPlotPoint.h \
@@ -11949,16 +12206,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -11988,6 +12236,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -12003,11 +12260,15 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CGnuPlotDevice.o: CGnuPlotDevice.cpp CGnuPlotDevice.h \
 		COrientation.h \
+		../../CMath/include/CISize2D.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
 		CGnuPlotTypes.h \
 		CGnuPlotWindow.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -12024,9 +12285,6 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprCompile.h \
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
-		../../CFont/include/CFont.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -12035,19 +12293,9 @@ compiler_clean: compiler_moc_header_clean
 		../../COS/include/NaN.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
-		../../CMath/include/CISize2D.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -12078,6 +12326,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -12097,7 +12354,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCache.h \
 		CGnuPlotBar.h \
 		CGnuPlotPie.h \
-		CGnuPlotBubble.h
+		CGnuPlotBubble.h \
+		../../CFont/include/CFontMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotDevice.o CGnuPlotDevice.cpp
 
 ../obj/CGnuPlotEllipse.o: CGnuPlotEllipse.cpp CGnuPlotEllipse.h \
@@ -12150,16 +12408,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotPointStyle.h \
@@ -12176,6 +12425,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -12243,16 +12501,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -12275,6 +12524,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -12320,16 +12578,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -12361,6 +12610,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -12380,7 +12638,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCache.h \
 		CGnuPlotDevice.h \
 		CGnuPlotBBoxRenderer.h \
-		CGnuPlotRenderer.h
+		CGnuPlotRenderer.h \
+		CGnuPlot3DRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotGroup.o CGnuPlotGroup.cpp
 
 ../obj/CGnuPlotKey.o: CGnuPlotKey.cpp CGnuPlotKey.h \
@@ -12432,15 +12691,6 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -12461,6 +12711,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -12552,16 +12811,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -12578,6 +12828,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -12670,16 +12929,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -12699,6 +12949,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -12749,16 +13008,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -12790,6 +13040,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -12849,6 +13108,8 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprError.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPoint.o CGnuPlotPoint.cpp
@@ -12903,16 +13164,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotPointStyle.h \
@@ -12929,6 +13181,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -12982,16 +13243,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -13021,6 +13273,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -13083,16 +13344,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotPointStyle.h \
@@ -13109,6 +13361,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPolygon.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -13160,16 +13421,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -13201,6 +13453,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -13225,11 +13486,15 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CGnuPlotSVGDevice.o: CGnuPlotSVGDevice.cpp CGnuPlotSVGDevice.h \
 		CGnuPlotDevice.h \
 		COrientation.h \
+		../../CMath/include/CISize2D.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
 		CGnuPlotTypes.h \
 		CGnuPlotSVGRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -13246,9 +13511,6 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprCompile.h \
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
-		../../CFont/include/CFont.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -13257,19 +13519,9 @@ compiler_clean: compiler_moc_header_clean
 		../../COS/include/NaN.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
-		../../CMath/include/CISize2D.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -13300,6 +13552,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -13357,16 +13618,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -13398,6 +13650,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -13451,16 +13712,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -13490,6 +13742,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -13542,16 +13803,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
@@ -13578,6 +13830,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -13634,16 +13895,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CRange2D.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -13666,6 +13918,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -13717,16 +13978,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		CCoordFrame3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		COrientation.h \
-		../../CMath/include/CMatrix3DH.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
@@ -13758,6 +14010,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotUsingCol.h \
 		CGnuPlotImageStyle.h \
@@ -13778,6 +14039,98 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotDevice.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotWindow.o CGnuPlotWindow.cpp
+
+../obj/CGnuPlot3DRenderer.o: CGnuPlot3DRenderer.cpp CGnuPlot3DRenderer.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotRenderer.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlot3DRenderer.o CGnuPlot3DRenderer.cpp
 
 ../obj/CQPropertyDelegate.o: CQPropertyDelegate.cpp CQPropertyDelegate.h \
 		/usr/include/qt5/QtWidgets/QItemDelegate \
@@ -16329,6 +16682,9 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/moc_CQGnuPlotBubble.o: moc_CQGnuPlotBubble.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotBubble.o moc_CQGnuPlotBubble.cpp
+
+../obj/moc_CQGnuPlotCamera.o: moc_CQGnuPlotCamera.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotCamera.o moc_CQGnuPlotCamera.cpp
 
 ../obj/moc_CQGnuPlotCanvas.o: moc_CQGnuPlotCanvas.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotCanvas.o moc_CQGnuPlotCanvas.cpp

@@ -20,6 +20,7 @@ CQGnuPlotArrow.cpp \
 CQGnuPlotAxis.cpp \
 CQGnuPlotBar.cpp \
 CQGnuPlotBubble.cpp \
+CQGnuPlotCamera.cpp \
 CQGnuPlotCanvas.cpp \
 CQGnuPlotCircle.cpp \
 CQGnuPlotColorBox.cpp \
@@ -46,6 +47,7 @@ CGnuPlotAxis.cpp \
 CGnuPlotBBoxRenderer.cpp \
 CGnuPlotBar.cpp \
 CGnuPlotBubble.cpp \
+CGnuPlotCamera.cpp \
 CGnuPlotCircle.cpp \
 CGnuPlotColorBox.cpp \
 CGnuPlotColorSpec.cpp \
@@ -74,6 +76,7 @@ CGnuPlotSize.cpp \
 CGnuPlotText.cpp \
 CGnuPlotTitle.cpp \
 CGnuPlotWindow.cpp \
+CGnuPlot3DRenderer.cpp \
 \
 CQPropertyDelegate.cpp \
 CQPropertyEditor.cpp \
@@ -118,6 +121,7 @@ CQGnuPlotArrow.h \
 CQGnuPlotAxis.h \
 CQGnuPlotBar.h \
 CQGnuPlotBubble.h \
+CQGnuPlotCamera.h \
 CQGnuPlotCanvas.h \
 CQGnuPlotCircle.h \
 CQGnuPlotColorBox.h \
@@ -137,6 +141,7 @@ CQGnuPlotRenderer.h \
 CQGnuPlotTitle.h \
 CQGnuPlotUtil.h \
 CQGnuPlotWindow.h \
+CGnuPlot3DRenderer.h \
 \
 CGnuPlot.h \
 CGnuPlotArrow.h \

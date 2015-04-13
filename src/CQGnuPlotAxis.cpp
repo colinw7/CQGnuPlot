@@ -59,13 +59,11 @@ setGridLayer(const DrawLayerType &layer)
 
 void
 CQGnuPlotAxis::
-drawAxis(double pos, bool first)
+drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
 {
-  CGnuPlotAxis::drawAxis(pos, first);
+  CGnuPlotAxis::drawAxis(renderer, pos, first);
 
   if (isSelected()) {
-    CGnuPlotRenderer *renderer = app()->renderer();
-
     renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);
   }
 }

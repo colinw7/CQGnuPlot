@@ -15,6 +15,7 @@ class CGnuPlotArrow;
 class CGnuPlotAxis;
 class CGnuPlotBar;
 class CGnuPlotBubble;
+class CGnuPlotCamera;
 class CGnuPlotCircle;
 class CGnuPlotColorBox;
 class CGnuPlotEllipse;
@@ -84,6 +85,8 @@ class CGnuPlotDevice {
   virtual CGnuPlotPalette *createPalette(CGnuPlotGroup *group);
 
   virtual CGnuPlotTitle *createTitle(CGnuPlotGroup *group);
+
+  virtual CGnuPlotCamera *createCamera(CGnuPlotGroup *group);
 
   virtual CGnuPlotBar *createBar(CGnuPlotPlot *plot);
 

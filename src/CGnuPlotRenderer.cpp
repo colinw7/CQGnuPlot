@@ -389,6 +389,34 @@ drawRotatedText(const CPoint2D &p, const std::string &text, const CRGBA &c, doub
   setFont(font);
 }
 
+void
+CGnuPlotRenderer::
+drawPath(const std::vector<CPoint3D> &points, double width, const CRGBA &c,
+         const CLineDash &dash)
+{
+  std::vector<CPoint2D> points1;
+
+  for (const auto &p : points)
+    points1.push_back(transform(p));
+
+  drawPath(points1, width, c, dash);
+}
+
+void
+CGnuPlotRenderer::
+drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c)
+{
+  drawSymbol(transform(p), type, size, c);
+}
+
+void
+CGnuPlotRenderer::
+drawLine(const CPoint3D &p1, const CPoint3D &p2, double width, const CRGBA &c,
+         const CLineDash &dash)
+{
+  drawLine(transform(p1), transform(p2), width, c, dash);
+}
+
 double
 CGnuPlotRenderer::
 pixelWidthToWindowWidth(double w)
@@ -594,4 +622,13 @@ CGnuPlotRenderer::
 regionToPixel(const CPoint2D &r, CPoint2D &p)
 {
   p = CPoint2D(r.x*width() - 1, (1 - r.y)*height());
+}
+
+CPoint2D
+CGnuPlotRenderer::
+transform(const CPoint3D &p) const
+{
+  CPoint3D p1 = camera_->transform(p);
+
+  return CPoint2D(p1.x, p1.y);
 }

@@ -18,9 +18,7 @@
 #include <CBBox2D.h>
 #include <CRange2D.h>
 #include <CLineDash.h>
-#include <CCoordFrame3D.h>
 #include <COrientation.h>
-#include <CMatrix3DH.h>
 #include <CRGBA.h>
 #include <CAlignType.h>
 #include <CAngle.h>
@@ -1369,6 +1367,9 @@ class CGnuPlot {
   int yind() const { return yind_; }
   int zind() const { return zind_; }
 
+  CGnuPlotTypes::Mapping mapping() const { return mapping_; }
+  void setMapping(CGnuPlotTypes::Mapping m) { mapping_ = m; }
+
   const PlotSize &plotSize() const { return plotSize_; }
   void setPlotSize(const PlotSize &s) { plotSize_ = s; }
 
@@ -1444,7 +1445,6 @@ class CGnuPlot {
   void setWhiskerBars(double w) { whiskerBars_ = w; }
 
   const CGnuPlotCamera &camera() const { return camera_; }
-  void setCamera(const CGnuPlotCamera &c) { camera_ = c; }
 
   //---
 
@@ -1516,6 +1516,8 @@ class CGnuPlot {
   CGnuPlotPalette *createPalette(CGnuPlotGroup *group);
 
   CGnuPlotTitle *createTitle(CGnuPlotGroup *group);
+
+  CGnuPlotCamera *createCamera(CGnuPlotGroup *group);
 
   CGnuPlotRenderer *renderer();
 
@@ -1607,6 +1609,10 @@ class CGnuPlot {
 
   void errorMsg(const std::string &msg) const;
 
+  CPoint3D sphericalMap(const CPoint2D &p) const;
+
+  double angleToRad(double a) const;
+
  private:
   bool parseLine(const std::string &str);
 
@@ -1645,7 +1651,7 @@ class CGnuPlot {
   bool parseModifiers3D(CParseLine &line);
 
   bool parseFor(CParseLine &line, std::string &var, std::string &start, std::string &end,
-                std::string &inc, std::string &lcmd, std::string &rcmd);
+                std::string &inc, std::string &lcmd, std::string &rcmd, bool split);
 
   bool setCmd     (const std::string &args);
   bool getCmd     (const std::string &args);
@@ -1695,15 +1701,15 @@ class CGnuPlot {
   bool parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle);
 
   CGnuPlotPlot *addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style);
-  CGnuPlotPlot *addFunction3D(CGnuPlotWindowP window, const std::string &str, PlotStyle style);
+  CGnuPlotPlot *addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style);
 
   Plots addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
+                  const CGnuPlotUsingCols &usingCols);
+  Plots addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
                   const CGnuPlotUsingCols &usingCols);
 
   CGnuPlotPlot *addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
                            const CGnuPlotUsingCols &usingCols);
-
-  CGnuPlotPlot *addFile3D(CGnuPlotWindowP window, const std::string &filename);
 
   bool parseAxisRange   (CParseLine &line, CGnuPlotAxisData &axis, bool hasArgs=true);
   bool parseAxisLabel   (CParseLine &line, CGnuPlotAxisData &axis);

@@ -49,14 +49,16 @@ class CGnuPlotStyle {
     return (*p).second.size();
   }
 
-  CRGBA indexColor(int i) {
+  const CRGBA &indexColor(int i) const{
     return indexColor(defName_, i);
   }
 
-  CRGBA indexColor(const std::string &name, int i) {
+  const CRGBA &indexColor(const std::string &name, int i) const {
+    static CRGBA defColor(0,0,0);
+
     initColors();
 
-    if (i < 1) return CRGBA(0,0,0);
+    if (i < 1) return defColor;
 
     auto p = namedColors_.find(name);
 
@@ -66,7 +68,7 @@ class CGnuPlotStyle {
       return colors[(i - 1) % colors.size()].second;
     }
     else
-      return CRGBA(0,0,0);
+      return defColor;
   }
 
   std::string indexColorName(int i) {

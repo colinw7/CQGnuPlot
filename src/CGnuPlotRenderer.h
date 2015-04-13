@@ -20,30 +20,36 @@ class CGnuPlotRenderer {
   void setWindow(CGnuPlotWindow *w) { window_ = w; }
   CGnuPlotWindow *window() const { return window_; }
 
+  void setCamera(CGnuPlotCamera *c) { camera_ = c; }
+  CGnuPlotCamera *camera() const { return camera_; }
+
   int width() const { return width_; }
   void setWidth(int w) { width_ = w; }
 
   int height() const { return height_; }
   void setHeight(int h) { height_ = h; }
 
-  const CBBox2D &region() { return region_; }
+  const CBBox2D &region() const { return region_; }
   void setRegion(const CBBox2D &region) { region_ = region; }
 
-  const CRange2D &margin() { return margin_; }
+  const CRange2D &margin() const { return margin_; }
   void setMargin(const CRange2D &b) { margin_ = b; }
 
-  const CBBox2D &range() { return range_; }
+  const CBBox2D &range() const { return range_; }
   void setRange(const CBBox2D &r) { range_ = r; }
 
-  void setRatio(double r) { ratio_ = r; }
+  const COptReal &ratio() const { return ratio_; }
+  void setRatio(const COptReal &r) { ratio_ = r; }
   void unsetRatio() { ratio_.setInvalid(); }
 
   bool mapping() const { return mapping_; }
   void setMapping(bool b) { mapping_ = b; }
 
-  const CBBox2D &clip() { return clip_; }
+  const CBBox2D &clip() const { return clip_; }
   void setClip(const CBBox2D &r) { clip_ = r; }
 
+  bool reverseX() const { return reverseX_; }
+  bool reverseY() const { return reverseY_; }
   void setReverse(bool reverseX, bool reverseY) { reverseX_ = reverseX; reverseY_ = reverseY; }
 
   virtual bool isPseudo() const { return false; }
@@ -86,6 +92,14 @@ class CGnuPlotRenderer {
 
   virtual void drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2,
                             const CRGBA &c=CRGBA(1,1,1)) = 0;
+
+  //---
+
+  void drawPath  (const std::vector<CPoint3D> &points, double width=1.0,
+                  const CRGBA &c=CRGBA(0,0,0), const CLineDash &dash=CLineDash());
+  void drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c=CRGBA(0,0,0));
+  void drawLine  (const CPoint3D &p1, const CPoint3D &p2, double width=1.0,
+                  const CRGBA &c=CRGBA(0,0,0), const CLineDash &dash=CLineDash());
 
   //---
 
@@ -132,8 +146,12 @@ class CGnuPlotRenderer {
 
   void regionToPixel(const CPoint2D &r, CPoint2D &p);
 
+ private:
+  CPoint2D transform(const CPoint3D &p) const;
+
  protected:
   CGnuPlotWindow *window_ { 0 };     // current window
+  CGnuPlotCamera *camera_ { 0 };     // camera
   int             width_ { 100 };    // pixel width
   int             height_ { 100 };   // pixel height
   bool            mapping_ { true }; // mapping enabled
