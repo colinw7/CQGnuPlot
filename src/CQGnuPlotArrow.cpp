@@ -24,11 +24,25 @@ setCoordType(CQGnuPlot::ArrowCoordType type)
   CGnuPlotArrow::setCoordType(CQGnuPlotUtil::arrowCoordTypeConv(type));
 }
 
+QPointF
+CQGnuPlotArrow::
+getFrom() const
+{
+  return CQUtil::toQPoint(CGnuPlotArrow::getFrom().point());
+}
+
 void
 CQGnuPlotArrow::
 setFrom(const QPointF &p)
 {
   CGnuPlotArrow::setFrom(CQUtil::fromQPoint(p));
+}
+
+QPointF
+CQGnuPlotArrow::
+getTo() const
+{
+  return CQUtil::toQPoint(CGnuPlotArrow::getTo().point());
 }
 
 void

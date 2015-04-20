@@ -83,6 +83,7 @@ class CQGnuPlot : public QObject, public CGnuPlot {
     PlotPieChart,
     PlotPm3d,
     PlotPoints,
+    PlotRadar,
     PlotRgbAlpha,
     PlotRgbImage,
     PlotSteps,

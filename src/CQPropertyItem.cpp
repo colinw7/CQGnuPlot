@@ -349,8 +349,8 @@ paint(const CQPropertyDelegate *delegate, QPainter *painter,
   if (propInfo.isEnumType())
     return false;
 
-  if      (typeName == "bool") {
-    delegate->drawCheck(painter, option, var.toBool(), index);
+  if      (typeName == "CAngle") {
+    delegate->drawAngle(painter, option, var.value<CAngle>(), index);
     return true;
   }
   else if (typeName == "QColor") {
@@ -359,6 +359,14 @@ paint(const CQPropertyDelegate *delegate, QPainter *painter,
   }
   else if (typeName == "QFont") {
     delegate->drawFont(painter, option, var.value<QFont>(), index);
+    return true;
+  }
+  else if (typeName == "QPointF") {
+    delegate->drawPoint(painter, option, var.value<QPointF>(), index);
+    return true;
+  }
+  else if (typeName == "bool") {
+    delegate->drawCheck(painter, option, var.toBool(), index);
     return true;
   }
 

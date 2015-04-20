@@ -38,8 +38,8 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   const CHAlignType &getAlign() const { return align_; }
   void setAlign(const CHAlignType &a) { align_ = a; }
 
-  const CPoint2D &getPos() const { return pos_; }
-  void setPos(const CPoint2D &p) { pos_ = p; }
+  const CGnuPlotPosition &getPos() const { return pos_; }
+  void setPos(const CGnuPlotPosition &p) { pos_ = p; }
 
   const CFontPtr &getFont() const { return font_; }
   void setFont(const CFontPtr &f) { font_ = f; }
@@ -78,7 +78,11 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
-  bool inside(const CPoint2D &p) const;
+  bool inside(const CPoint2D &p) const override;
+
+  std::string tip() const override{ return ""; }
+
+  CBBox2D tipRect() const override { return CBBox2D(); }
 
   void print(std::ostream &os) const;
 
@@ -87,7 +91,7 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
   CGnuPlotText      text_;
   CHAlignType       align_      { CHALIGN_TYPE_LEFT };
-  CPoint2D          pos_        { 0, 0 };
+  CGnuPlotPosition  pos_;
   CFontPtr          font_;
   double            angle_      { -1 };
   OptPoint          offset_;

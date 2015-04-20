@@ -1,16 +1,16 @@
-#include <CGnuPlotBubble.h>
+#include <CGnuPlotBubbleObject.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotUtil.h>
 
-CGnuPlotBubble::
-CGnuPlotBubble(CGnuPlotPlot *plot) :
+CGnuPlotBubbleObject::
+CGnuPlotBubbleObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
 }
 
 bool
-CGnuPlotBubble::
+CGnuPlotBubbleObject::
 inside(const CPoint2D &p) const
 {
   double r = p.distanceTo(c_);
@@ -22,7 +22,7 @@ inside(const CPoint2D &p) const
 }
 
 void
-CGnuPlotBubble::
+CGnuPlotBubbleObject::
 draw(CGnuPlotRenderer *renderer) const
 {
   renderer->fillEllipse(c_, xr_, yr_, 0, color_.getValue(CRGBA(1,0,0)));

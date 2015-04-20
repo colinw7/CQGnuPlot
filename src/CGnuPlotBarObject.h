@@ -1,5 +1,5 @@
-#ifndef CGnuPlotBar_H
-#define CGnuPlotBar_H
+#ifndef CGnuPlotBarObject_H
+#define CGnuPlotBarObject_H
 
 #include <COptVal.h>
 #include <CPoint2D.h>
@@ -11,15 +11,15 @@
 
 class CGnuPlotPlot;
 
-class CGnuPlotBar : public CGnuPlotPlotObject {
+class CGnuPlotBarObject : public CGnuPlotPlotObject {
  public:
   typedef CGnuPlotTypes::FillType    FillType;
   typedef CGnuPlotTypes::FillPattern FillPattern;
 
  public:
-  CGnuPlotBar(CGnuPlotPlot *plot);
+  CGnuPlotBarObject(CGnuPlotPlot *plot);
 
-  virtual ~CGnuPlotBar() { }
+  virtual ~CGnuPlotBarObject() { }
 
   const CBBox2D &bbox() const { return bbox_; }
   void setBBox(const CBBox2D &b) { bbox_ = b; }
@@ -50,7 +50,11 @@ class CGnuPlotBar : public CGnuPlotPlotObject {
   double width() const { return width_; }
   void setWidth(double r) { width_ = r; }
 
-  bool inside(const CPoint2D &p) const;
+  bool inside(const CPoint2D &p) const override;
+
+  std::string tip() const override;
+
+  CBBox2D tipRect() const { return bbox_; }
 
   void draw(CGnuPlotRenderer *renderer) const override;
 

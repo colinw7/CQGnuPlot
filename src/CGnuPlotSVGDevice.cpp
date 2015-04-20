@@ -3,7 +3,6 @@
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
-#include <CGnuPlotPie.h>
 
 CGnuPlotSVGDevice::
 CGnuPlotSVGDevice() :

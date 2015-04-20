@@ -201,6 +201,8 @@ class CExpr {
 
   std::string printf(const std::string &fmt, const std::vector<CExprValuePtr> &values) const;
 
+  void errorMsg(const std::string &msg) const;
+
  private:
   CExpr();
 

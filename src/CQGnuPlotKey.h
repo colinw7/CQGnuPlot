@@ -33,7 +33,7 @@ class CQGnuPlotKey : public CQGnuPlotObject, public CGnuPlotKey {
   QFont getFont() const;
   void setFont(const QFont &f);
 
-  void draw() override;
+  void draw(CGnuPlotRenderer *renderer) override;
 };
 
 #endif

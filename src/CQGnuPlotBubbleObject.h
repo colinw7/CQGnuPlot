@@ -2,22 +2,22 @@
 #define CQGnuPlotBubble_H
 
 #include <CQGnuPlotObject.h>
-#include <CGnuPlotBubble.h>
+#include <CGnuPlotBubbleObject.h>
 #include <CQGnuPlot.h>
 
 #include <QColor>
 
 class CQGnuPlotPlot;
 
-class CQGnuPlotBubble : public CQGnuPlotObject, public CGnuPlotBubble {
+class CQGnuPlotBubbleObject : public CQGnuPlotObject, public CGnuPlotBubbleObject {
   Q_OBJECT
 
   Q_PROPERTY(QString name  READ getName  WRITE setName )
   Q_PROPERTY(QColor  color READ getColor WRITE setColor)
 
  public:
-  CQGnuPlotBubble(CQGnuPlotPlot *plot);
- ~CQGnuPlotBubble();
+  CQGnuPlotBubbleObject(CQGnuPlotPlot *plot);
+ ~CQGnuPlotBubbleObject();
 
   QString getName() const;
   void setName(const QString &str);

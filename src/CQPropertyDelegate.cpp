@@ -302,3 +302,39 @@ drawFont(QPainter *painter, const QStyleOptionViewItem &option,
 //painter->drawText(x2, y2, f.toString());
   QItemDelegate::drawDisplay(painter, option, rect1, f.toString());
 }
+
+void
+CQPropertyDelegate::
+drawPoint(QPainter *painter, const QStyleOptionViewItem &option,
+         const QPointF &p, const QModelIndex &index) const
+{
+  QItemDelegate::drawBackground(painter, option, index);
+
+  QRect rect = option.rect;
+
+  //rect.setWidth(option.rect.height());
+
+  //QFontMetrics fm(painter->font());
+
+  QString str = QString("(%1, %2)").arg(p.x()).arg(p.y());
+
+  QItemDelegate::drawDisplay(painter, option, rect, str);
+}
+
+void
+CQPropertyDelegate::
+drawAngle(QPainter *painter, const QStyleOptionViewItem &option,
+         const CAngle &a, const QModelIndex &index) const
+{
+  QItemDelegate::drawBackground(painter, option, index);
+
+  QRect rect = option.rect;
+
+  //rect.setWidth(option.rect.height());
+
+  //QFontMetrics fm(painter->font());
+
+  QString str = QString("%1").arg(a.degrees());
+
+  QItemDelegate::drawDisplay(painter, option, rect, str);
+}

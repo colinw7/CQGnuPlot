@@ -26,12 +26,12 @@ draw(CGnuPlotRenderer *renderer) const
   else
     renderer->setFont(defFont_);
 
-  if (enhanced_)
-    bbox_ = text_.calcBBox(renderer).moveBy(getPos());
-  else
-    bbox_ = renderer->getHAlignedTextBBox(getText().text()).moveBy(getPos());
+  CPoint2D pos = pos_.getPoint(renderer);
 
-  CPoint2D pos = getPos();
+  if (enhanced_)
+    bbox_ = text_.calcBBox(renderer).moveBy(pos);
+  else
+    bbox_ = renderer->getHAlignedTextBBox(getText().text()).moveBy(pos);
 
   CPoint2D d(0, 0);
 

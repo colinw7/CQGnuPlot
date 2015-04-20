@@ -155,15 +155,32 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &)
 
 void
 CGnuPlotBBoxRenderer::
-drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2, const CRGBA &)
+drawRotatedText(const CPoint2D &p, const std::string &text, double /*ta*/,
+                CHAlignType /*hlaign*/, CVAlignType /*vlaign*/, const CRGBA &c)
+{
+  renderer_->drawText(p, text, c);
+}
+
+void
+CGnuPlotBBoxRenderer::
+drawPieSlice(const CPoint2D &pc, double /*ri*/, double ro, double angle1, double angle2,
+             double /*lw*/, const CRGBA &/*c*/)
 {
   bbox_.add(pc);
 
-  double x1 = pc.x + r*cos(angle1);
-  double y1 = pc.y + r*sin(angle1);
-  double x2 = pc.x + r*cos(angle2);
-  double y2 = pc.y + r*sin(angle2);
+  double x1 = pc.x + ro*cos(angle1);
+  double y1 = pc.y + ro*sin(angle1);
+  double x2 = pc.x + ro*cos(angle2);
+  double y2 = pc.y + ro*sin(angle2);
 
   bbox_.add(CPoint2D(x1, y1));
   bbox_.add(CPoint2D(x2, y2));
+}
+
+void
+CGnuPlotBBoxRenderer::
+fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
+             const CRGBA &c)
+{
+  drawPieSlice(pc, ri, ro, angle1, angle2, 0, c);
 }

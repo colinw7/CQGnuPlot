@@ -24,10 +24,6 @@
 #include <CAngle.h>
 #include <NaN.h>
 
-#define ACCESSOR(T,V,G,S) \
-const T &G() const { return V; } \
-void S(const T &t) { V = t; }
-
 class CGnuPlotAxis;
 class CGnuPlotDevice;
 class CGnuPlotGroup;
@@ -37,6 +33,7 @@ class CGnuPlotPlot;
 class CGnuPlotReadLine;
 class CGnuPlotSVGDevice;
 class CGnuPlotWindow;
+class CGnuPlotStyleBase;
 
 class CUnixFile;
 class CParseLine;
@@ -75,320 +72,33 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotBoxWidth.h>
 #include <CGnuPlotTypes.h>
 #include <CGnuPlotBoxPlot.h>
+#include <CGnuPlotCircleStyle.h>
+#include <CGnuPlotEllipseStyle.h>
+#include <CGnuPlotRectStyle.h>
+#include <CGnuPlotTextBoxStyle.h>
+#include <CGnuPlotTimeStampData.h>
+#include <CGnuPlotMouseData.h>
 
 //------
 
 class CGnuPlot {
  public:
-  enum class CommandName {
-    NONE,
-    BIND,
-    CALL,
-    CD,
-    CLEAR,
-    DO,
-    EVALUATE,
-    EXIT,
-    FIT,
-    GET,
-    HELP,
-    HISTORY,
-    IF,
-    LOAD,
-    LOWER,
-    PAUSE,
-    PLOT,
-    PRINT,
-    PRINTF,
-    PWD,
-    QUIT,
-    RAISE,
-    REPLOT,
-    REFRESH,
-    REREAD,
-    RESET,
-    SAVE,
-    SET,
-    SHELL,
-    SHOW,
-    SPLOT,
-    STATS,
-    SYSTEM,
-    TEST,
-    UNDEFINE,
-    UNSET,
-    UPDATE,
-    WHILE
-  };
+  typedef CGnuPlotTypes::CommandName             CommandName;
+  typedef CGnuPlotTypes::VariableName            VariableName;
+  typedef CGnuPlotTypes::PlotStyle               PlotStyle;
+  typedef CGnuPlotTypes::DataFileVar             DataFileVar;
+  typedef CGnuPlotTypes::StyleVar                StyleVar;
+  typedef CGnuPlotTypes::PlotVar                 PlotVar;
+  typedef CGnuPlotTypes::StyleIncrementType      StyleIncrementType;
+  typedef CGnuPlotTypes::Smooth                  Smooth;
+  typedef CGnuPlotTypes::HistogramStyle          HistogramStyle;
+  typedef CGnuPlotTypes::LogScale                LogScale;
+  typedef CGnuPlotTypes::AngleType               AngleType;
+  typedef CGnuPlotTypes::DrawLayer               DrawLayer;
 
-  enum class VariableName {
-    NONE,
-
-    ANGLES,
-    ARROW,
-    AUTOSCALE,
-    BARS,
-    BIND,
-    BMARGIN,
-    BORDER,
-    BOXWIDTH,
-    CBDATA,
-    CBDTICS,
-    CBLABEL,
-    CBMTICS,
-    CBRANGE,
-    CBTICS,
-    CIRCLE,
-    CLIP,
-    CNTRLABEL,
-    CNTRPARAM,
-    COLORBOX,
-    COLORNAMES,
-    COLORSEQUENCE,
-    CONTOUR,
-    CPLANE,
-    DASHTYPE,
-    DATAFILE,
-    DEBUG,
-    DECIMALSIGN,
-    DGRID3D,
-    DUMMY,
-    EDEBUG,
-    ELLIPSE,
-    ENCODING,
-    FIT,
-    FONTPATH,
-    FORMAT,
-    FUNCTIONS,
-    GRID,
-    HIDDEN3D,
-    HISTORY,
-    HISTORYSIZE,
-    ISOSAMPLES,
-    KEY,
-    LABEL,
-    LINETYPE,
-    LINK,
-    LMARGIN,
-    LOADPATH,
-    LOCALE,
-    LOGSCALE,
-    MACROS,
-    MAPPING,
-    MARGINS,
-    MOUSE,
-    MULTIPLOT,
-    MX2TICS,
-    MXTICS,
-    MY2TICS,
-    MYTICS,
-    MZTICS,
-    OBJECT,
-    OFFSETS,
-    ORIGIN,
-    OUTPUT,
-    PALETTE,
-    PARAMETRIC,
-    PAXIS,
-    PLOT,
-    PM3D,
-    POINTINTERVALBOX,
-    POINTSIZE,
-    POLAR,
-    POLYGON,
-    PRINT,
-    PSDIR,
-    RAXIS,
-    RECTANGLE,
-    RMARGIN,
-    RRANGE,
-    RTICS,
-    SAMPLES,
-    SIZE,
-    STYLE,
-    SURFACE,
-    TABLE,
-    TERMINAL,
-    TERMOPTION,
-    TICS,
-    TICSCALE,
-    TIMEFMT,
-    TIMESTAMP,
-    TITLE,
-    TMARGIN,
-    TRANGE,
-    URANGE,
-    VARIABLES,
-    VERSION,
-    VIEW,
-    VRANGE,
-    X2DATA,
-    X2DTICS,
-    X2LABEL,
-    X2MTICS,
-    X2RANGE,
-    X2TICS,
-    X2ZEROAXIS,
-    XDATA,
-    XDTICS,
-    XLABEL,
-    XMTICS,
-    XRANGE,
-    XTICS,
-    XYPLANE,
-    XZEROAXIS,
-    Y2DATA,
-    Y2DTICS,
-    Y2LABEL,
-    Y2MTICS,
-    Y2RANGE,
-    Y2TICS,
-    Y2ZEROAXIS,
-    YDATA,
-    YDTICS,
-    YLABEL,
-    YMTICS,
-    YRANGE,
-    YTICS,
-    YZEROAXIS,
-    ZDATA,
-    ZDTICS,
-    ZERO,
-    ZEROAXIS,
-    ZLABEL,
-    ZMTICS,
-    ZRANGE,
-    ZTICS,
-    ZZEROAXIS,
-  };
-
-  enum class DataFileVar {
-    NONE,
-    FORTRAN,
-    NOFPE_TRAP,
-    MISSING,
-    SEPARATOR,
-    COMMENTS_CHARS,
-    BINARY,
-  };
-
-  enum class StyleVar {
-    NONE,
-    ARROW,
-    BOXPLOT,
-    CIRCLE,
-    DATA,
-    ELLIPSE,
-    FILL,
-    FUNCTION,
-    HISTOGRAM,
-    INCREMENT,
-    LINE,
-    RECTANGLE,
-    TEXTBOX
-  };
-
-  enum class StyleIncrementType {
-    USER,
-    DEFAULT
-  };
-
-  enum class PlotVar {
-    ARRAY,
-    ARROWSTYLE,
-    AXES,
-    BINARY,
-    CENTER,
-    DASHTYPE,
-    DX,
-    DY,
-    DZ,
-    ENDIAN,
-    EVERY,
-    FILETYPE,
-    FILLSTYLE,
-    FLIP,
-    FLIPX,
-    FLIPY,
-    FLIPZ,
-    FORMAT,
-    HEADS,
-    INDEX,
-    LINETYPE,
-    LINEWIDTH,
-    MATRIX,
-    NOTITLE,
-    ORIGIN,
-    POINTSIZE,
-    ROTATION,
-    SCAN,
-    SKIP,
-    SMOOTH,
-    TITLE,
-    TRANSPOSE,
-    USING,
-    WHISKERBARS,
-    WITH
-  };
-
-  enum class PlotStyle {
-    NONE,
-    BOXERRORBARS,
-    BOXES,
-    BOXPLOT,
-    BOXXYERRORBARS,
-    BUBBLECHART,
-    CANDLESTICKS,
-    CIRCLES,
-    DOTS,
-    ELLIPSES,
-    ERRORBARS,
-    ERRORLINES,
-    FILLEDCURVES,
-    FILLSTEPS,
-    FINANCEBARS,
-    FSTEPS,
-    HISTEPS,
-    HISTOGRAMS,
-    IMAGE,
-    IMPULSES,
-    LABELS,
-    LINES,
-    LINES_POINTS,
-    PARALLELAXES,
-    PIECHART,
-    PM3D,
-    POINTS,
-    RGBALPHA,
-    RGBIMAGE,
-    STEPS,
-    VECTORS,
-    XERRORBARS,
-    XERRORLINES,
-    XYERRORBARS,
-    XYERRORLINES,
-    YERRORBARS,
-    YERRORLINES,
-    TEST_TERMINAL,
-    TEST_PALETTE
-  };
-
-  enum class TestType {
-    NONE,
-    TERMINAL,
-    PALETTE
-  };
-
-  typedef CGnuPlotTypes::Smooth         Smooth;
-  typedef CGnuPlotTypes::HistogramStyle HistogramStyle;
-  typedef CGnuPlotTypes::LogScale       LogScale;
-  typedef std::map<LogScale,int>        LogScaleMap;
-  typedef CGnuPlotTypes::AngleType      AngleType;
-  typedef CGnuPlotTypes::DrawLayer      DrawLayer;
-
-  //---
-
-  typedef std::map<int,CGnuPlotLineStyleP> LineStyles;
+  typedef std::map<PlotStyle,CGnuPlotStyleBase*> PlotStyles;
+  typedef std::map<LogScale,int>                 LogScaleMap;
+  typedef std::map<int,CGnuPlotLineStyleP>       LineStyles;
 
   //---
 
@@ -466,242 +176,6 @@ class CGnuPlot {
     StyleIncrementType type      { StyleIncrementType::DEFAULT };
     int                styleInd  { 0 };
     int                increment { 8 };
-  };
-
-  class CircleStyle {
-   public:
-    CircleStyle() {
-      radius_[0] = CGnuPlotCoordValue(0.02);
-    }
-
-    const CGnuPlotCoordValue &radius(int i) const { return radius_[i]; }
-    void setRadius(int i, const CGnuPlotCoordValue &r) { radius_[i] = r; }
-
-    bool wedge() const { return wedge_; }
-    void setWedge(bool b) { wedge_ = b; }
-
-    bool clip() const { return clip_; }
-    void setClip (bool b) { clip_ = b; }
-
-    void unset() {
-      radius_[0] = CGnuPlotCoordValue(0.02);
-      wedge_     = true;
-      clip_      = false;
-    }
-
-    void show(std::ostream &os) const {
-      os << "Circle style has default radius (";
-
-      for (int i = 0; i < 3; ++i) {
-        if (i > 0) os << ", ";
-
-        os << radius_[i];
-      }
-
-      os << ")";
-
-      os << (wedge_ ? " wedge" : " nowedge");
-      os << (clip_  ? " clip"  : " noclip" );
-
-      os << std::endl;
-    }
-
-   private:
-    CGnuPlotCoordValue radius_[3];
-    bool               wedge_    { true };
-    bool               clip_     { false };
-  };
-
-  class EllipseStyle {
-   public:
-    enum class Units {
-      XX,
-      XY,
-      YY
-    };
-
-    EllipseStyle() {
-      size_[0] = CGnuPlotCoordValue(0.05);
-      size_[1] = CGnuPlotCoordValue(0.03);
-      size_[2] = CGnuPlotCoordValue();
-    }
-
-    const Units &units() const { return units_; }
-    void setUnits(const Units &v) { units_ = v; }
-
-    const CGnuPlotCoordValue &size(int i) const { return size_[i]; }
-    void setSize(int i, const CGnuPlotCoordValue &r) { size_[i] = r; }
-
-    double angle() const { return angle_; }
-    void setAngle(double r) { angle_ = r; }
-
-    bool clip() const { return clip_; }
-    void setClip (bool b) { clip_ = b; }
-
-    void unset() {
-      units_   = Units::XX;
-      size_[0] = CGnuPlotCoordValue(0.05);
-      size_[1] = CGnuPlotCoordValue(0.03);
-      size_[2] = CGnuPlotCoordValue();
-      angle_   = 0;
-      clip_    = false;
-    }
-
-    void show(std::ostream &os) const {
-      os << "Ellipse style has default size (";
-
-      for (int i = 0; i < 3; ++i) {
-        if (i > 0) os << ", ";
-
-        os << size_[i];
-      }
-
-      os << ")";
-
-      os << ", default angle is " << angle_ << " degrees";
-
-      if      (units_ == Units::XX)
-        os << ", both diameters are in the same units as the x axis";
-      else if (units_ == Units::XY)
-        os << ", diameters are in different units (major: x axis, minor: y axis)";
-      else if (units_ == Units::YY)
-        os << ", both diameters are in the same units as the y axis";
-
-      os << (clip_ ? " clip" : " noclip" );
-
-      os << std::endl;
-    }
-
-   private:
-    Units              units_ { Units::XY };
-    CGnuPlotCoordValue size_[3];
-    double             angle_ { 0 };
-    bool               clip_ { false };
-  };
-
-  class RectStyle {
-   public:
-    RectStyle() {
-      unset();
-    }
-
-    bool isFront() const { return front_; }
-    void setFront(bool b) { front_ = b; }
-
-    double lineWidth() const { return lineWidth_; }
-    void setLineWidth(double r) { lineWidth_ = r; }
-
-    const CGnuPlotColorSpec &fillColor() const { return fc_; }
-    void setFillColor(const CGnuPlotColorSpec &v) { fc_ = v; }
-
-    const CGnuPlotFillStyle &fillStyle() const { return fs_; }
-    void setFillStyle(const CGnuPlotFillStyle &v) { fs_ = v; }
-
-    void unset() {
-      front_     = true;
-      lineWidth_ = 1;
-      fc_        = CGnuPlotColorSpec(); fc_.setBackground();
-      fs_        = CGnuPlotFillStyle(); fs_.setStyle(CGnuPlotTypes::FillType::SOLID);
-    }
-
-    void show(std::ostream &os) const {
-      os << "Rectangle style is ";
-      os << (front_ ? "front" : "back");
-      os << ", fill color " << fc_;
-      os << ", lw " << lineWidth_;
-      os << ", fillstyle " << fs_;
-      os << std::endl;
-    }
-
-   private:
-    bool              front_ { true };
-    double            lineWidth_ { 1 };
-    CGnuPlotColorSpec fc_;
-    CGnuPlotFillStyle fs_;
-  };
-
-  class TextBoxStyle {
-   public:
-    TextBoxStyle() {
-      unset();
-    }
-
-    bool isTransparent() const { return transparent_; }
-    void setTransparent(bool b) { transparent_ = b; }
-
-    bool isBorder() const { return border_; }
-    void setBorder(bool b) { border_ = b; }
-
-    void unset() {
-      transparent_ = false;
-      border_      = true;
-    }
-
-    void show(std::ostream &os) const {
-      os << "textboxes are ";
-      os << (transparent_ ? "transparent" : "opaque");
-      //os << "with margins ";
-      os << " and " << (border_  ? "border": "no border");
-      os << std::endl;
-    }
-
-   private:
-    bool transparent_ { false };
-    bool border_      { true };
-  };
-
-  //---
-
-  class TimeStampData {
-   public:
-    TimeStampData() { }
-
-    const std::string &format() const { return format_; }
-    void setFormat(const std::string &v) { format_ = v; }
-
-    bool isTop() const { return top_; }
-    void setTop(bool b) { top_ = b; }
-
-    bool isRotated() const { return rotated_; }
-    void setRotated(bool b) { rotated_ = b; }
-
-    const CPoint2D &offset() const { return offset_; }
-    void setOffset(const CPoint2D &v) { offset_ = v; }
-
-    const CFontPtr &font() const { return font_; }
-    void setFont(const CFontPtr &v) { font_ = v; }
-
-    const CGnuPlotColorSpec &textColor() const { return textColor_; }
-    void setTextColor(const CGnuPlotColorSpec &v) { textColor_ = v; }
-
-    void unset() {
-      format_    = "";
-      top_       = false;
-      rotated_   = false;
-      offset_    = CPoint2D(0, 0);
-      font_      = CFontPtr();
-      textColor_ = CGnuPlotColorSpec();
-    }
-
-    void show(std::ostream &os) {
-      os << "time is \"" << format_ << "\", offset at (" << offset_ << ")";
-
-      if (font_.isValid())
-        os << ", using font " << font_;
-
-      os << std::endl;
-
-      os << "written in " << (top_ ? "top" : "bottom") << " corner" << std::endl;
-      os << (rotated_ ? "rotated" : "not rotated") << std::endl;
-    }
-
-   private:
-    std::string       format_;
-    bool              top_     { false };
-    bool              rotated_ { false };
-    CPoint2D          offset_  { 0, 0 };
-    CFontPtr          font_;
-    CGnuPlotColorSpec textColor_;
   };
 
   //---
@@ -971,113 +445,6 @@ class CGnuPlot {
     int         version { 5 };
   };
 
-  class MouseData {
-   public:
-    enum class PolarDistanceType {
-      NONE,
-      DEG,
-      TAN
-    };
-
-   public:
-    bool enabled() const { return enabled_; }
-    void setEnabled(bool b) { enabled_ = b; }
-
-    void setDoubleClick(double ms) { dclick_ = ms; }
-    void resetDoubleClick() { dclick_.setInvalid(); }
-
-    void setZoomCoordinates(bool b) { zoomCoords_ = b; }
-
-    void setZoomFactors(double x, double y) { zoomX_ = x; zoomY_ = y; }
-
-    void setRulerPos(const CPoint2D &p) { rulerPos_ = p; }
-    void resetRulerPos() { rulerPos_.setInvalid(); }
-
-    void setPolarDisance(PolarDistanceType type) { polarDistType_ = type; }
-
-    void setFormat(const std::string &fmt) { format_ = fmt; }
-
-    void setMouseFormat(const std::string &fmt) { mouseFormatStr_ = fmt; }
-    void setMouseFormat(int i) { mouseFormatInt_ = i; }
-
-    void setLabels(const std::string &str) { labels_ = str; }
-    void resetLabels() { labels_ = ""; }
-
-    bool zoomJump() const { return zoomJump_; }
-    void setZoomJump(bool b) { zoomJump_ = b; }
-
-    bool verbose() const { return verbose_; }
-    void setVerbose(bool b) { verbose_ = b; }
-
-    void show(std::ostream &os) {
-      if (enabled_) {
-        os << "mouse is on" << std::endl;
-
-        if (zoomCoords_)
-          os << "zoom coordinates will be drawn" << std::endl;
-        else
-          os << "no zoom coordinates will be drawn" << std::endl;
-
-        if (polarDistType_ == PolarDistanceType::NONE)
-          os << "no polar distance to ruler will be shown" << std::endl;
-        else
-          os << "distance to ruler will be show in polar coordinates" << std::endl;
-
-        if (dclick_.isValid())
-          os << "double click resolution is " << dclick_.getValue() << " ms" << std::endl;
-        else
-          os << "double click resolution is 300 ms" << std::endl;
-
-        if (format_.isValid())
-          os << "formatting numbers with \"" << format_.getValue() << "\"" << std::endl;
-        else
-          os << "formatting numbers with \"%g\"" << std::endl;
-
-        if (mouseFormatInt_.isValid())
-          os << "format for Button 2 is " << mouseFormatInt_.getValue() << std::endl;
-        else
-          os << "format for Button 2 is 0" << std::endl;
-
-        if (mouseFormatStr_ != "")
-          os << "Button 2 draws persistent labels with options \"" <<
-                mouseFormatStr_ << "\"" << std::endl;
-
-        if (! zoomX_.isValid() || ! zoomY_.isValid())
-          os << "zoom factors are x: 1   y: 1" << std::endl;
-        else
-          os << "zoom factors are x: " << zoomX_.getValue() <<
-                "   y: " << zoomY_.getValue() << std::endl;
-
-        if (zoomJump_)
-          os << "zoomjump is on" << std::endl;
-        else
-          os << "zoomjump is off" << std::endl;
-
-        if (verbose_)
-          os << "communication commands will be shown" << std::endl;
-        else
-          os << "communication commands will not be shown" << std::endl;
-      }
-      else
-        os << "mouse is off" << std::endl;
-    }
-
-   private:
-    bool               enabled_        { true };
-    COptReal           dclick_;
-    bool               zoomCoords_     { true };
-    COptReal           zoomX_;
-    COptReal           zoomY_;
-    COptValT<CPoint2D> rulerPos_;
-    PolarDistanceType  polarDistType_  { PolarDistanceType::NONE };
-    COptString         format_;
-    std::string        mouseFormatStr_;
-    COptInt            mouseFormatInt_;
-    std::string        labels_;
-    bool               zoomJump_       { false };
-    bool               verbose_        { false };
-  };
-
   struct PrintFile {
     std::string filename;
     bool        isError { true };
@@ -1109,6 +476,24 @@ class CGnuPlot {
       }
     }
   };
+
+  //---
+
+  struct TicLabel {
+    bool        valid;
+    char        id;
+    int         ind;
+    std::string str;
+
+    TicLabel() {
+      valid = false;
+      id    = 'x';
+      ind   = 1;
+      str   = "";
+    }
+  };
+
+  //---
 
   struct Hidden3DData {
     bool      enabled         { false };
@@ -1323,6 +708,13 @@ class CGnuPlot {
 
   //----
 
+  const PlotStyles &plotStyles() const { return plotStyles_; }
+
+  void addPlotStyle(PlotStyle plotStyle, CGnuPlotStyleBase *style);
+  CGnuPlotStyleBase *getPlotStyle(PlotStyle plotStyle) const;
+
+  //----
+
   PlotStyle getDataStyle() const { return dataStyle_; }
   void setDataStyle(PlotStyle style) { dataStyle_ = style; }
 
@@ -1504,7 +896,7 @@ class CGnuPlot {
 
   CGnuPlotGroup *createGroup(CGnuPlotWindow *window);
 
-  CGnuPlotPlot *createPlot(CGnuPlotGroup *group);
+  CGnuPlotPlot *createPlot(CGnuPlotGroup *group, PlotStyle plotStyle);
 
   CGnuPlotLineStyle *createLineStyle();
 
@@ -1614,6 +1006,8 @@ class CGnuPlot {
   double angleToRad(double a) const;
 
  private:
+  void addPlotStyles();
+
   bool parseLine(const std::string &str);
 
   std::string replaceEmbedded(const std::string &str) const;
@@ -1720,8 +1114,8 @@ class CGnuPlot {
 
   bool decodeRange(const StringArray &xfields, CGnuPlotAxisData &axis);
 
-  CExprValueP decodeUsingCol(int i, const CGnuPlotUsingCol &col, int setNum,
-                             int pointNum, bool &skip, bool &ignore);
+  CExprValueP decodeUsingCol(int i, const CGnuPlotUsingCol &col, int setNum, int pointNum,
+                             bool &skip, bool &ignore, TicLabel &ticLabel);
 
   bool evaluateExpression(const std::string &expr, CExprValueP &value, bool quiet=false) const;
 
@@ -1847,15 +1241,15 @@ class CGnuPlot {
   }
 
  private:
-  typedef std::map<std::string,CGnuPlotDevice*> Devices;
-  typedef std::vector<CGnuPlotDevice*>          DeviceStack;
-  typedef std::vector<CGnuPlotWindowP>          Windows;
-  typedef StringArray                           Fields;
-  typedef StringArray                           FileLines;
-  typedef std::vector<FileData>                 FileDataArray;
-  typedef CAutoPtr<CGnuPlotReadLine>            ReadLineP;
-  typedef std::map<std::string,std::string>     DummyVarMap;
-  typedef std::vector<std::string>              PathList;
+  typedef std::map<std::string,CGnuPlotDevice*>  Devices;
+  typedef std::vector<CGnuPlotDevice*>           DeviceStack;
+  typedef std::vector<CGnuPlotWindowP>           Windows;
+  typedef StringArray                            Fields;
+  typedef StringArray                            FileLines;
+  typedef std::vector<FileData>                  FileDataArray;
+  typedef CAutoPtr<CGnuPlotReadLine>             ReadLineP;
+  typedef std::map<std::string,std::string>      DummyVarMap;
+  typedef std::vector<std::string>               PathList;
 
   bool                   debug_  { false };
   bool                   edebug_ { false };
@@ -1863,6 +1257,7 @@ class CGnuPlot {
   CGnuPlotDevice*        device_ { 0 };
   Devices                devices_;
   DeviceStack            deviceStack_;
+  PlotStyles             plotStyles_;
   FileData               fileData_;
   FileDataArray          fileDataArray_;
   Windows                windows_;
@@ -1900,10 +1295,10 @@ class CGnuPlot {
   PlotStyle              functionStyle_  { PlotStyle::LINES };
   StyleIncrement         styleIncrement_;
   LineStyles             lineStyles_;
-  CircleStyle            circleStyle_;
-  RectStyle              rectStyle_;
-  EllipseStyle           ellipseStyle_;
-  TextBoxStyle           textBoxStyle_;
+  CGnuPlotCircleStyle    circleStyle_;
+  CGnuPlotRectStyle      rectStyle_;
+  CGnuPlotEllipseStyle   ellipseStyle_;
+  CGnuPlotTextBoxStyle   textBoxStyle_;
 
   LineDashes             lineDashes_;
   bool                   binary_ { false };
@@ -1937,10 +1332,10 @@ class CGnuPlot {
   std::string            psDir_;
   std::string            encoding_;
   std::string            locale_;
-  MouseData              mouseData_;
+  CGnuPlotMouseData      mouseData_;
   CGnuPlotMultiplot      multiplot_;
   CGnuPlotWindowP        multiWindow_;
-  TimeStampData          timeStamp_;
+  CGnuPlotTimeStampData  timeStamp_;
   COptValT<CBBox2D>      clearRect_;
   Hidden3DData           hidden3D_;
   Surface3DData          surface3D_;

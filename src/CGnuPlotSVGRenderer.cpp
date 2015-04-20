@@ -449,12 +449,21 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 
 void
 CGnuPlotSVGRenderer::
-drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2, const CRGBA &c)
+drawRotatedText(const CPoint2D &p, const std::string &text, double /*ta*/,
+                CHAlignType, CVAlignType, const CRGBA &c)
+{
+  drawText(p, text, c);
+}
+
+void
+CGnuPlotSVGRenderer::
+drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
+             double width, const CRGBA &c)
 {
   double x1, y1, x2, y2;
 
-  windowToPixel(pc.x - r, pc.y - r, &x1, &y1);
-  windowToPixel(pc.x + r, pc.y + r, &x2, &y2);
+  windowToPixel(pc.x - ro, pc.y - ro, &x1, &y1);
+  windowToPixel(pc.x + ro, pc.y + ro, &x2, &y2);
 
   double dangle = angle2 - angle1;
 
@@ -462,6 +471,41 @@ drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2, const C
   os() << "<path d=\"M " << x1 << " " << y1;
   os() << " L " << dangle << " " << dangle;
   os() << " L " << x2 << " " << y2;
+
+  if (ri > 0) {
+    windowToPixel(pc.x - ri, pc.y - ri, &x1, &y1);
+    windowToPixel(pc.x + ri, pc.y + ri, &x2, &y2);
+
+    os() << " L " << x2 << " " << y2;
+  }
+
+  os() << "z\" style=\"" << fillNone() << " " << strokeColor(c) << " " <<
+          strokeWidth(width) << "\"/>\n";
+}
+
+void
+CGnuPlotSVGRenderer::
+fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
+             const CRGBA &c)
+{
+  double x1, y1, x2, y2;
+
+  windowToPixel(pc.x - ro, pc.y - ro, &x1, &y1);
+  windowToPixel(pc.x + ro, pc.y + ro, &x2, &y2);
+
+  double dangle = angle2 - angle1;
+
+  // TODO: !!!!
+  os() << "<path d=\"M " << x1 << " " << y1;
+  os() << " L " << dangle << " " << dangle;
+  os() << " L " << x2 << " " << y2;
+
+  if (ri > 0) {
+    windowToPixel(pc.x - ri, pc.y - ri, &x1, &y1);
+    windowToPixel(pc.x + ri, pc.y + ri, &x2, &y2);
+
+    os() << " L " << x2 << " " << y2;
+  }
 
   os() << "z\" style=\"" << fillColor(c) << " " << strokeNone() << "\"/>\n";
 }

@@ -49,8 +49,8 @@ SOURCES       = CQGnuPlot.cpp \
 		CQGnuPlotAnnotation.cpp \
 		CQGnuPlotArrow.cpp \
 		CQGnuPlotAxis.cpp \
-		CQGnuPlotBar.cpp \
-		CQGnuPlotBubble.cpp \
+		CQGnuPlotBarObject.cpp \
+		CQGnuPlotBubbleObject.cpp \
 		CQGnuPlotCamera.cpp \
 		CQGnuPlotCanvas.cpp \
 		CQGnuPlotCircle.cpp \
@@ -62,10 +62,11 @@ SOURCES       = CQGnuPlot.cpp \
 		CQGnuPlotLabel.cpp \
 		CQGnuPlotLineStyle.cpp \
 		CQGnuPlotPalette.cpp \
-		CQGnuPlotPie.cpp \
+		CQGnuPlotPieObject.cpp \
 		CQGnuPlotPlot.cpp \
 		CQGnuPlotPolygon.cpp \
 		CQGnuPlotRectangle.cpp \
+		CQGnuPlotRectObject.cpp \
 		CQGnuPlotRenderer.cpp \
 		CQGnuPlotTitle.cpp \
 		CQGnuPlotUtil.cpp \
@@ -75,8 +76,8 @@ SOURCES       = CQGnuPlot.cpp \
 		CGnuPlotArrowStyle.cpp \
 		CGnuPlotAxis.cpp \
 		CGnuPlotBBoxRenderer.cpp \
-		CGnuPlotBar.cpp \
-		CGnuPlotBubble.cpp \
+		CGnuPlotBarObject.cpp \
+		CGnuPlotBubbleObject.cpp \
 		CGnuPlotCamera.cpp \
 		CGnuPlotCircle.cpp \
 		CGnuPlotColorBox.cpp \
@@ -93,13 +94,22 @@ SOURCES       = CQGnuPlot.cpp \
 		CGnuPlotLabel.cpp \
 		CGnuPlotLineStyle.cpp \
 		CGnuPlotPalette.cpp \
-		CGnuPlotPie.cpp \
+		CGnuPlotPieObject.cpp \
 		CGnuPlotPlot.cpp \
 		CGnuPlotPoint.cpp \
 		CGnuPlotPolygon.cpp \
 		CGnuPlotPosition.cpp \
 		CGnuPlotRectangle.cpp \
+		CGnuPlotRectObject.cpp \
 		CGnuPlotRenderer.cpp \
+		CGnuPlotStyleBoxErrorBars.cpp \
+		CGnuPlotStyleBoxes.cpp \
+		CGnuPlotStyleBubblePlot.cpp \
+		CGnuPlotStyleParallelAxes.cpp \
+		CGnuPlotStylePieChart.cpp \
+		CGnuPlotStyleRadar.cpp \
+		CGnuPlotStyleSunburst.cpp \
+		CGnuPlotStyleTreeMap.cpp \
 		CGnuPlotSVGDevice.cpp \
 		CGnuPlotSVGRenderer.cpp \
 		CGnuPlotSize.cpp \
@@ -113,6 +123,9 @@ SOURCES       = CQGnuPlot.cpp \
 		CQPropertyTree.cpp \
 		CQPaletteChooser.cpp \
 		CQPaletteDialog.cpp \
+		CQRotatedText.cpp \
+		CTreeMap.cpp \
+		CSunburst.cpp \
 		CMathGeom2D.cpp \
 		CArcToBezier.cpp \
 		CSymbol2D.cpp \
@@ -141,8 +154,8 @@ SOURCES       = CQGnuPlot.cpp \
 		moc_CQGnuPlotAnnotation.cpp \
 		moc_CQGnuPlotArrow.cpp \
 		moc_CQGnuPlotAxis.cpp \
-		moc_CQGnuPlotBar.cpp \
-		moc_CQGnuPlotBubble.cpp \
+		moc_CQGnuPlotBarObject.cpp \
+		moc_CQGnuPlotBubbleObject.cpp \
 		moc_CQGnuPlotCamera.cpp \
 		moc_CQGnuPlotCanvas.cpp \
 		moc_CQGnuPlotCircle.cpp \
@@ -154,10 +167,11 @@ SOURCES       = CQGnuPlot.cpp \
 		moc_CQGnuPlotLineStyle.cpp \
 		moc_CQGnuPlotObject.cpp \
 		moc_CQGnuPlotPalette.cpp \
-		moc_CQGnuPlotPie.cpp \
+		moc_CQGnuPlotPieObject.cpp \
 		moc_CQGnuPlotPlot.cpp \
 		moc_CQGnuPlotPolygon.cpp \
 		moc_CQGnuPlotRectangle.cpp \
+		moc_CQGnuPlotRectObject.cpp \
 		moc_CQGnuPlotTitle.cpp \
 		moc_CQGnuPlotWindow.cpp \
 		moc_CQPropertyItem.cpp \
@@ -175,8 +189,8 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CQGnuPlotAnnotation.o \
 		../obj/CQGnuPlotArrow.o \
 		../obj/CQGnuPlotAxis.o \
-		../obj/CQGnuPlotBar.o \
-		../obj/CQGnuPlotBubble.o \
+		../obj/CQGnuPlotBarObject.o \
+		../obj/CQGnuPlotBubbleObject.o \
 		../obj/CQGnuPlotCamera.o \
 		../obj/CQGnuPlotCanvas.o \
 		../obj/CQGnuPlotCircle.o \
@@ -188,10 +202,11 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CQGnuPlotLabel.o \
 		../obj/CQGnuPlotLineStyle.o \
 		../obj/CQGnuPlotPalette.o \
-		../obj/CQGnuPlotPie.o \
+		../obj/CQGnuPlotPieObject.o \
 		../obj/CQGnuPlotPlot.o \
 		../obj/CQGnuPlotPolygon.o \
 		../obj/CQGnuPlotRectangle.o \
+		../obj/CQGnuPlotRectObject.o \
 		../obj/CQGnuPlotRenderer.o \
 		../obj/CQGnuPlotTitle.o \
 		../obj/CQGnuPlotUtil.o \
@@ -201,8 +216,8 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CGnuPlotArrowStyle.o \
 		../obj/CGnuPlotAxis.o \
 		../obj/CGnuPlotBBoxRenderer.o \
-		../obj/CGnuPlotBar.o \
-		../obj/CGnuPlotBubble.o \
+		../obj/CGnuPlotBarObject.o \
+		../obj/CGnuPlotBubbleObject.o \
 		../obj/CGnuPlotCamera.o \
 		../obj/CGnuPlotCircle.o \
 		../obj/CGnuPlotColorBox.o \
@@ -219,13 +234,22 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CGnuPlotLabel.o \
 		../obj/CGnuPlotLineStyle.o \
 		../obj/CGnuPlotPalette.o \
-		../obj/CGnuPlotPie.o \
+		../obj/CGnuPlotPieObject.o \
 		../obj/CGnuPlotPlot.o \
 		../obj/CGnuPlotPoint.o \
 		../obj/CGnuPlotPolygon.o \
 		../obj/CGnuPlotPosition.o \
 		../obj/CGnuPlotRectangle.o \
+		../obj/CGnuPlotRectObject.o \
 		../obj/CGnuPlotRenderer.o \
+		../obj/CGnuPlotStyleBoxErrorBars.o \
+		../obj/CGnuPlotStyleBoxes.o \
+		../obj/CGnuPlotStyleBubblePlot.o \
+		../obj/CGnuPlotStyleParallelAxes.o \
+		../obj/CGnuPlotStylePieChart.o \
+		../obj/CGnuPlotStyleRadar.o \
+		../obj/CGnuPlotStyleSunburst.o \
+		../obj/CGnuPlotStyleTreeMap.o \
 		../obj/CGnuPlotSVGDevice.o \
 		../obj/CGnuPlotSVGRenderer.o \
 		../obj/CGnuPlotSize.o \
@@ -239,6 +263,9 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CQPropertyTree.o \
 		../obj/CQPaletteChooser.o \
 		../obj/CQPaletteDialog.o \
+		../obj/CQRotatedText.o \
+		../obj/CTreeMap.o \
+		../obj/CSunburst.o \
 		../obj/CMathGeom2D.o \
 		../obj/CArcToBezier.o \
 		../obj/CSymbol2D.o \
@@ -268,8 +295,8 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/moc_CQGnuPlotAnnotation.o \
 		../obj/moc_CQGnuPlotArrow.o \
 		../obj/moc_CQGnuPlotAxis.o \
-		../obj/moc_CQGnuPlotBar.o \
-		../obj/moc_CQGnuPlotBubble.o \
+		../obj/moc_CQGnuPlotBarObject.o \
+		../obj/moc_CQGnuPlotBubbleObject.o \
 		../obj/moc_CQGnuPlotCamera.o \
 		../obj/moc_CQGnuPlotCanvas.o \
 		../obj/moc_CQGnuPlotCircle.o \
@@ -281,10 +308,11 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/moc_CQGnuPlotLineStyle.o \
 		../obj/moc_CQGnuPlotObject.o \
 		../obj/moc_CQGnuPlotPalette.o \
-		../obj/moc_CQGnuPlotPie.o \
+		../obj/moc_CQGnuPlotPieObject.o \
 		../obj/moc_CQGnuPlotPlot.o \
 		../obj/moc_CQGnuPlotPolygon.o \
 		../obj/moc_CQGnuPlotRectangle.o \
+		../obj/moc_CQGnuPlotRectObject.o \
 		../obj/moc_CQGnuPlotTitle.o \
 		../obj/moc_CQGnuPlotWindow.o \
 		../obj/moc_CQPropertyItem.o \
@@ -557,7 +585,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d ../obj/CQGnuPlot1.0.0 || mkdir -p ../obj/CQGnuPlot1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBar.h CQGnuPlotBubble.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPie.h CQGnuPlotPlot.h CQGnuPlotPolygon.h CQGnuPlotRectangle.h CQGnuPlotRenderer.h CQGnuPlotTitle.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot3DRenderer.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBar.h CGnuPlotBubble.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPie.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotRectangle.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotStyle.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h MouseMode/CQMouseMode.h MouseMode/CQPanMouseMode.h MouseMode/CQPanZoomIFace.h MouseMode/CQZoomMouseMode.h CQAngleSpinBox.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBar.cpp CQGnuPlotBubble.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPie.cpp CQGnuPlotPlot.cpp CQGnuPlotPolygon.cpp CQGnuPlotRectangle.cpp CQGnuPlotRenderer.cpp CQGnuPlotTitle.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBar.cpp CGnuPlotBubble.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotPalette.cpp CGnuPlotPie.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPosition.cpp CGnuPlotRectangle.cpp CGnuPlotRenderer.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlot3DRenderer.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp MouseMode/CQMouseMode.cpp MouseMode/CQPanMouseMode.cpp MouseMode/CQZoomMouseMode.cpp CQAngleSpinBox.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBarObject.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPolygon.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotTitle.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot3DRenderer.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBarObject.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBubblePlot.h CGnuPlotStyle.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStyleRadar.h CGnuPlotStyleSunburst.h CGnuPlotStyleTreeMap.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CQRotatedText.h CTreeMap.h CSunburst.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h MouseMode/CQMouseMode.h MouseMode/CQPanMouseMode.h MouseMode/CQPanZoomIFace.h MouseMode/CQZoomMouseMode.h CQAngleSpinBox.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBarObject.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPolygon.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotTitle.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBarObject.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotPalette.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPosition.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlot3DRenderer.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CQRotatedText.cpp CTreeMap.cpp CSunburst.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp MouseMode/CQMouseMode.cpp MouseMode/CQPanMouseMode.cpp MouseMode/CQZoomMouseMode.cpp CQAngleSpinBox.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
 
 
 clean:compiler_clean 
@@ -580,9 +608,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBar.cpp moc_CQGnuPlotBubble.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPie.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQMouseMode.cpp moc_CQPanMouseMode.cpp moc_CQZoomMouseMode.cpp moc_CQAngleSpinBox.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
+compiler_moc_header_make_all: moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQMouseMode.cpp moc_CQPanMouseMode.cpp moc_CQZoomMouseMode.cpp moc_CQAngleSpinBox.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBar.cpp moc_CQGnuPlotBubble.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPie.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQMouseMode.cpp moc_CQPanMouseMode.cpp moc_CQZoomMouseMode.cpp moc_CQAngleSpinBox.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
+	-$(DEL_FILE) moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQMouseMode.cpp moc_CQPanMouseMode.cpp moc_CQZoomMouseMode.cpp moc_CQAngleSpinBox.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
 moc_CQGnuPlot.cpp: CGnuPlot.h \
 		Expr/CExpr.h \
 		../../CUtil/include/CRefPtr.h \
@@ -667,6 +695,12 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -875,6 +909,12 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -1036,6 +1076,12 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -1197,6 +1243,12 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -1207,7 +1259,7 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CQGnuPlotAxis.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotAxis.h -o moc_CQGnuPlotAxis.cpp
 
-moc_CQGnuPlotBar.cpp: CQGnuPlotObject.h \
+moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -1265,7 +1317,7 @@ moc_CQGnuPlotBar.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		CGnuPlotBar.h \
+		CGnuPlotBarObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -1352,6 +1404,12 @@ moc_CQGnuPlotBar.cpp: CQGnuPlotObject.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -1366,10 +1424,10 @@ moc_CQGnuPlotBar.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/qpair.h \
 		/usr/include/qt5/QtCore/qregexp.h \
 		/usr/include/qt5/QtCore/qstringmatcher.h \
-		CQGnuPlotBar.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBar.h -o moc_CQGnuPlotBar.cpp
+		CQGnuPlotBarObject.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBarObject.h -o moc_CQGnuPlotBarObject.cpp
 
-moc_CQGnuPlotBubble.cpp: CQGnuPlotObject.h \
+moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -1427,7 +1485,7 @@ moc_CQGnuPlotBubble.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		CGnuPlotBubble.h \
+		CGnuPlotBubbleObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -1514,6 +1572,12 @@ moc_CQGnuPlotBubble.cpp: CQGnuPlotObject.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -1528,8 +1592,8 @@ moc_CQGnuPlotBubble.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/qpair.h \
 		/usr/include/qt5/QtCore/qregexp.h \
 		/usr/include/qt5/QtCore/qstringmatcher.h \
-		CQGnuPlotBubble.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBubble.h -o moc_CQGnuPlotBubble.cpp
+		CQGnuPlotBubbleObject.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBubbleObject.h -o moc_CQGnuPlotBubbleObject.cpp
 
 moc_CQGnuPlotCamera.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -1859,6 +1923,12 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -2020,6 +2090,12 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -2181,6 +2257,12 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -2284,6 +2366,12 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -2499,6 +2587,12 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -2660,6 +2754,12 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -2837,6 +2937,12 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -3048,6 +3154,12 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -3056,7 +3168,7 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CQGnuPlotPalette.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPalette.h -o moc_CQGnuPlotPalette.cpp
 
-moc_CQGnuPlotPie.cpp: CQGnuPlotObject.h \
+moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -3114,7 +3226,7 @@ moc_CQGnuPlotPie.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		CGnuPlotPie.h \
+		CGnuPlotPieObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -3201,6 +3313,12 @@ moc_CQGnuPlotPie.cpp: CQGnuPlotObject.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -3215,8 +3333,8 @@ moc_CQGnuPlotPie.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/qpair.h \
 		/usr/include/qt5/QtCore/qregexp.h \
 		/usr/include/qt5/QtCore/qstringmatcher.h \
-		CQGnuPlotPie.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPie.h -o moc_CQGnuPlotPie.cpp
+		CQGnuPlotPieObject.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPieObject.h -o moc_CQGnuPlotPieObject.cpp
 
 moc_CQGnuPlotPlot.cpp: CQGnuPlot.h \
 		CGnuPlot.h \
@@ -3303,6 +3421,12 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlot.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -3526,6 +3650,12 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -3687,6 +3817,12 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -3704,6 +3840,174 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		/usr/include/qt5/QtCore/QPointF \
 		CQGnuPlotRectangle.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotRectangle.h -o moc_CQGnuPlotRectangle.cpp
+
+moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CGnuPlotRectObject.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		CGnuPlotCache.h \
+		CGnuPlotObject.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CUtil/include/CAlignType.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CMath/include/CRange2D.h \
+		COrientation.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		CQGnuPlotRectObject.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotRectObject.h -o moc_CQGnuPlotRectObject.cpp
 
 moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -3848,6 +4152,12 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -3958,6 +4268,12 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -5491,6 +5807,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -5823,6 +6145,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -6077,6 +6405,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -6330,6 +6664,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -6358,7 +6698,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotAxis.o CQGnuPlotAxis.cpp
 
-../obj/CQGnuPlotBar.o: CQGnuPlotBar.cpp CQGnuPlotBar.h \
+../obj/CQGnuPlotBarObject.o: CQGnuPlotBarObject.cpp CQGnuPlotBarObject.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -6417,7 +6757,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		CGnuPlotBar.h \
+		CGnuPlotBarObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -6504,6 +6844,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -6525,9 +6871,9 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotUtil.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotBar.o CQGnuPlotBar.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotBarObject.o CQGnuPlotBarObject.cpp
 
-../obj/CQGnuPlotBubble.o: CQGnuPlotBubble.cpp CQGnuPlotBubble.h \
+../obj/CQGnuPlotBubbleObject.o: CQGnuPlotBubbleObject.cpp CQGnuPlotBubbleObject.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -6586,7 +6932,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		CGnuPlotBubble.h \
+		CGnuPlotBubbleObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -6673,6 +7019,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -6694,7 +7046,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotUtil.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotBubble.o CQGnuPlotBubble.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotBubbleObject.o CQGnuPlotBubbleObject.cpp
 
 ../obj/CQGnuPlotCamera.o: CQGnuPlotCamera.cpp CQGnuPlotCamera.h \
 		CQGnuPlotObject.h \
@@ -6841,6 +7193,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -7047,6 +7405,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -7229,6 +7593,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -7477,6 +7847,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -7674,6 +8050,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -7827,12 +8209,14 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotPalette.h \
 		CQGnuPlotTitle.h \
 		CQGnuPlotCamera.h \
-		CQGnuPlotBar.h \
-		CGnuPlotBar.h \
-		CQGnuPlotPie.h \
-		CGnuPlotPie.h \
-		CQGnuPlotBubble.h \
-		CGnuPlotBubble.h \
+		CQGnuPlotBubbleObject.h \
+		CGnuPlotBubbleObject.h \
+		CQGnuPlotBarObject.h \
+		CGnuPlotBarObject.h \
+		CQGnuPlotPieObject.h \
+		CGnuPlotPieObject.h \
+		CQGnuPlotRectObject.h \
+		CGnuPlotRectObject.h \
 		/usr/include/qt5/QtWidgets/QApplication \
 		/usr/include/qt5/QtWidgets/qapplication.h \
 		/usr/include/qt5/QtCore/qcoreapplication.h \
@@ -7987,6 +8371,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -8177,6 +8567,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -8468,6 +8864,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -8721,6 +9123,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -8984,6 +9392,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -9223,6 +9637,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -9250,7 +9670,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qstringmatcher.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotPalette.o CQGnuPlotPalette.cpp
 
-../obj/CQGnuPlotPie.o: CQGnuPlotPie.cpp CQGnuPlotPie.h \
+../obj/CQGnuPlotPieObject.o: CQGnuPlotPieObject.cpp CQGnuPlotPieObject.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -9309,7 +9729,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		CGnuPlotPie.h \
+		CGnuPlotPieObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -9396,6 +9816,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -9417,7 +9843,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotUtil.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotPie.o CQGnuPlotPie.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotPieObject.o CQGnuPlotPieObject.cpp
 
 ../obj/CQGnuPlotPlot.o: CQGnuPlotPlot.cpp CQGnuPlotPlot.h \
 		CQGnuPlot.h \
@@ -9505,6 +9931,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -9639,12 +10071,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
-		CQGnuPlotBar.h \
-		CGnuPlotBar.h \
-		CQGnuPlotPie.h \
-		CGnuPlotPie.h \
-		CQGnuPlotBubble.h \
-		CGnuPlotBubble.h \
+		CQGnuPlotBarObject.h \
+		CGnuPlotBarObject.h \
+		CQGnuPlotBubbleObject.h \
+		CGnuPlotBubbleObject.h \
+		CQGnuPlotPieObject.h \
+		CGnuPlotPieObject.h \
+		CQGnuPlotRectObject.h \
+		CGnuPlotRectObject.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h \
 		CQGnuPlotUtil.h \
@@ -9834,6 +10268,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -10001,6 +10441,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -10111,6 +10557,181 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotRectangle.o CQGnuPlotRectangle.cpp
 
+../obj/CQGnuPlotRectObject.o: CQGnuPlotRectObject.cpp CQGnuPlotRectObject.h \
+		CQGnuPlotObject.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CGnuPlotRectObject.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		CGnuPlotCache.h \
+		CGnuPlotObject.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CUtil/include/CAlignType.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CMath/include/CRange2D.h \
+		COrientation.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		CQGnuPlotPlot.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CQGnuPlotUtil.h \
+		CQGnuPlotRenderer.h \
+		CGnuPlotRenderer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotRectObject.o CQGnuPlotRectObject.cpp
+
 ../obj/CQGnuPlotRenderer.o: CQGnuPlotRenderer.cpp CQGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -10196,6 +10817,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -10331,6 +10958,11 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotCanvas.h \
 		/usr/include/qt5/QtWidgets/QWidget \
 		CQGnuPlotUtil.h \
+		CQRotatedText.h \
+		/usr/include/qt5/QtGui/QPainter \
+		/usr/include/qt5/QtGui/qpainter.h \
+		/usr/include/qt5/QtGui/qtextoption.h \
+		/usr/include/qt5/QtGui/qpen.h \
 		CGnuPlotUtil.h \
 		CSymbol2D.h \
 		../../CQUtil/include/CQFont.h \
@@ -10360,7 +10992,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qtabbar.h \
 		/usr/include/qt5/QtWidgets/qrubberband.h \
 		/usr/include/qt5/QtGui/QPen \
-		/usr/include/qt5/QtGui/qpen.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CKeyType.h \
 		../../CImageLib/include/CImageLib.h \
@@ -10375,10 +11006,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CImageLib/include/CImageAnim.h \
 		../../CImageLib/include/CImageFile.h \
 		../../CMath/include/CMatrix2D.h \
-		../../CFont/include/CFontMgr.h \
-		/usr/include/qt5/QtGui/QPainter \
-		/usr/include/qt5/QtGui/qpainter.h \
-		/usr/include/qt5/QtGui/qtextoption.h
+		../../CFont/include/CFontMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotRenderer.o CQGnuPlotRenderer.cpp
 
 ../obj/CQGnuPlotTitle.o: CQGnuPlotTitle.cpp CQGnuPlotTitle.h \
@@ -10525,6 +11153,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -10722,6 +11356,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -10888,6 +11528,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -11042,14 +11688,16 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotTitle.h \
 		CQGnuPlotCamera.h \
 		CQGnuPlotLabel.h \
-		CQGnuPlotBar.h \
-		CGnuPlotBar.h \
-		CQGnuPlotPie.h \
-		CGnuPlotPie.h \
-		CQGnuPlotBubble.h \
-		CGnuPlotBubble.h \
 		CQGnuPlotDevice.h \
 		CGnuPlotDevice.h \
+		CQGnuPlotBarObject.h \
+		CGnuPlotBarObject.h \
+		CQGnuPlotBubbleObject.h \
+		CGnuPlotBubbleObject.h \
+		CQGnuPlotPieObject.h \
+		CGnuPlotPieObject.h \
+		CQGnuPlotRectObject.h \
+		CGnuPlotRectObject.h \
 		MouseMode/CQZoomMouseMode.h \
 		MouseMode/CQPanMouseMode.h \
 		CQPropertyTree.h \
@@ -11186,6 +11834,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -11199,12 +11853,30 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSVGDevice.h \
 		CGnuPlotUtil.h \
 		CGnuPlotNameValues.h \
-		CUnixFile.h \
-		CParseLine.h \
-		../../CFile/include/CDir.h \
+		CGnuPlotStyleBoxErrorBars.h \
+		CGnuPlotStyleBase.h \
+		CGnuPlotStyleBoxes.h \
+		CGnuPlotStyleBubblePlot.h \
+		CGnuPlotStyleParallelAxes.h \
+		CGnuPlotStylePieChart.h \
+		CGnuPlotStyleRadar.h \
+		CGnuPlotStyleSunburst.h \
+		CGnuPlotStyleTreeMap.h \
+		../../CImageLib/include/CImageLib.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
+		../../CImageLib/include/CImageState.h \
+		../../CImageLib/include/CImage.h \
+		../../CMath/include/CIBBox2D.h \
+		../../CMath/include/CIVector2D.h \
+		../../CImageLib/include/CImagePtr.h \
+		../../CImageLib/include/CImageMgr.h \
+		../../CImageLib/include/CImageAnim.h \
+		../../CImageLib/include/CImageFile.h \
+		CUnixFile.h \
+		CParseLine.h \
+		../../CFile/include/CDir.h \
 		../../CReadLine/include/CReadLine.h \
 		../../CReadLine/include/CHistory.h \
 		CMathGeom2D.h \
@@ -11302,6 +11974,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -11399,7 +12077,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPrefValue.h \
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
-		CGnuPlotBoxPlot.h
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotArrowStyle.o CGnuPlotArrowStyle.cpp
 
 ../obj/CGnuPlotAxis.o: CGnuPlotAxis.cpp CGnuPlotAxis.h \
@@ -11489,6 +12173,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotPlot.h \
@@ -11583,6 +12273,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotUtil.h \
 		CSymbol2D.h \
@@ -11595,7 +12291,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/C2Bezier2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBBoxRenderer.o CGnuPlotBBoxRenderer.cpp
 
-../obj/CGnuPlotBar.o: CGnuPlotBar.cpp CGnuPlotBar.h \
+../obj/CGnuPlotBarObject.o: CGnuPlotBarObject.cpp CGnuPlotBarObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -11682,13 +12378,19 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotUtil.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBar.o CGnuPlotBar.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBarObject.o CGnuPlotBarObject.cpp
 
-../obj/CGnuPlotBubble.o: CGnuPlotBubble.cpp CGnuPlotBubble.h \
+../obj/CGnuPlotBubbleObject.o: CGnuPlotBubbleObject.cpp CGnuPlotBubbleObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -11775,11 +12477,17 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotUtil.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBubble.o CGnuPlotBubble.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBubbleObject.o CGnuPlotBubbleObject.cpp
 
 ../obj/CGnuPlotCamera.o: CGnuPlotCamera.cpp CGnuPlotCamera.h \
 		../../CMath/include/CPoint3D.h \
@@ -11880,6 +12588,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -11971,6 +12685,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -12062,6 +12782,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -12158,6 +12884,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -12254,6 +12986,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotWindow.h \
 		CGnuPlotUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotCoordValue.o CGnuPlotCoordValue.cpp
@@ -12344,6 +13082,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -12352,9 +13096,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotBar.h \
-		CGnuPlotPie.h \
-		CGnuPlotBubble.h \
+		CGnuPlotBarObject.h \
+		CGnuPlotBubbleObject.h \
+		CGnuPlotPieObject.h \
+		CGnuPlotRectObject.h \
 		../../CFont/include/CFontMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotDevice.o CGnuPlotDevice.cpp
 
@@ -12443,6 +13188,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -12540,7 +13291,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMultiplot.h \
 		CGnuPlotPrefValue.h \
 		CGnuPlotBoxWidth.h \
-		CGnuPlotBoxPlot.h
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotFillStyle.o CGnuPlotFillStyle.cpp
 
 ../obj/CGnuPlotGroup.o: CGnuPlotGroup.cpp CGnuPlotGroup.h \
@@ -12628,6 +13385,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -12639,7 +13402,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotDevice.h \
 		CGnuPlotBBoxRenderer.h \
 		CGnuPlotRenderer.h \
-		CGnuPlot3DRenderer.h
+		CGnuPlot3DRenderer.h \
+		CGnuPlotStyleBase.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotGroup.o CGnuPlotGroup.cpp
 
 ../obj/CGnuPlotKey.o: CGnuPlotKey.cpp CGnuPlotKey.h \
@@ -12729,6 +13493,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotAxis.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
@@ -12846,6 +13616,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -12880,7 +13656,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPalette.o CGnuPlotPalette.cpp
 
-../obj/CGnuPlotPie.o: CGnuPlotPie.cpp CGnuPlotPie.h \
+../obj/CGnuPlotPieObject.o: CGnuPlotPieObject.cpp CGnuPlotPieObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -12967,11 +13743,17 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotUtil.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPie.o CGnuPlotPie.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPieObject.o CGnuPlotPieObject.cpp
 
 ../obj/CGnuPlotPlot.o: CGnuPlotPlot.cpp CGnuPlotPlot.h \
 		CGnuPlot.h \
@@ -13058,6 +13840,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -13067,11 +13855,13 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
-		CGnuPlotBar.h \
-		CGnuPlotPie.h \
-		CGnuPlotBubble.h \
+		CGnuPlotBarObject.h \
+		CGnuPlotBubbleObject.h \
+		CGnuPlotPieObject.h \
+		CGnuPlotRectObject.h \
 		CGnuPlotDevice.h \
 		CGnuPlotBBoxRenderer.h \
+		CGnuPlotStyleBase.h \
 		CGnuPlotUtil.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
@@ -13199,6 +13989,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -13291,6 +14087,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPosition.o CGnuPlotPosition.cpp
 
@@ -13379,12 +14181,116 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotWindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotRectangle.o CGnuPlotRectangle.cpp
+
+../obj/CGnuPlotRectObject.o: CGnuPlotRectObject.cpp CGnuPlotRectObject.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		CGnuPlotCache.h \
+		CGnuPlotObject.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CUtil/include/CAlignType.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CMath/include/CRange2D.h \
+		COrientation.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotRenderer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotRectObject.o CGnuPlotRectObject.cpp
 
 ../obj/CGnuPlotRenderer.o: CGnuPlotRenderer.cpp CGnuPlotRenderer.h \
 		CGnuPlot.h \
@@ -13471,6 +14377,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotWindow.h \
 		CGnuPlotUtil.h \
 		../../CFont/include/CFontMgr.h \
@@ -13482,6 +14394,843 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotRenderer.o CGnuPlotRenderer.cpp
+
+../obj/CGnuPlotStyleBoxErrorBars.o: CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxErrorBars.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotRenderer.h \
+		CGnuPlotBarObject.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleBoxErrorBars.o CGnuPlotStyleBoxErrorBars.cpp
+
+../obj/CGnuPlotStyleBoxes.o: CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxes.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotRenderer.h \
+		CGnuPlotBarObject.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleBoxes.o CGnuPlotStyleBoxes.cpp
+
+../obj/CGnuPlotStyleBubblePlot.o: CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleBubblePlot.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotRenderer.h \
+		CGnuPlotBubbleObject.h \
+		CGnuPlotUtil.h \
+		CirclePack.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CMathMacros.h \
+		CEnclosingCircle.h \
+		CPointsCircle.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleBubblePlot.o CGnuPlotStyleBubblePlot.cpp
+
+../obj/CGnuPlotStyleParallelAxes.o: CGnuPlotStyleParallelAxes.cpp CGnuPlotStyleParallelAxes.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h \
+		CGnuPlotWindow.h \
+		CGnuPlotRenderer.h \
+		CGnuPlotUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleParallelAxes.o CGnuPlotStyleParallelAxes.cpp
+
+../obj/CGnuPlotStylePieChart.o: CGnuPlotStylePieChart.cpp CGnuPlotStylePieChart.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h \
+		CGnuPlotWindow.h \
+		CGnuPlotRenderer.h \
+		CGnuPlotPieObject.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStylePieChart.o CGnuPlotStylePieChart.cpp
+
+../obj/CGnuPlotStyleRadar.o: CGnuPlotStyleRadar.cpp CGnuPlotStyleRadar.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h \
+		CGnuPlotWindow.h \
+		CGnuPlotRenderer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleRadar.o CGnuPlotStyleRadar.cpp
+
+../obj/CGnuPlotStyleSunburst.o: CGnuPlotStyleSunburst.cpp CGnuPlotStyleSunburst.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h \
+		CGnuPlotWindow.h \
+		CGnuPlotRenderer.h \
+		CSunburst.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleSunburst.o CGnuPlotStyleSunburst.cpp
+
+../obj/CGnuPlotStyleTreeMap.o: CGnuPlotStyleTreeMap.cpp CGnuPlotStyleTreeMap.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h \
+		CGnuPlotWindow.h \
+		CGnuPlotRenderer.h \
+		CGnuPlotRectObject.h \
+		CTreeMap.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleTreeMap.o CGnuPlotStyleTreeMap.cpp
 
 ../obj/CGnuPlotSVGDevice.o: CGnuPlotSVGDevice.cpp CGnuPlotSVGDevice.h \
 		CGnuPlotDevice.h \
@@ -13570,6 +15319,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
@@ -13579,8 +15334,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
-		CGnuPlotCache.h \
-		CGnuPlotPie.h
+		CGnuPlotCache.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotSVGDevice.o CGnuPlotSVGDevice.cpp
 
 ../obj/CGnuPlotSVGRenderer.o: CGnuPlotSVGRenderer.cpp CGnuPlotSVGRenderer.h \
@@ -13668,6 +15422,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotSVGDevice.h \
 		CGnuPlotDevice.h \
@@ -13760,6 +15520,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotSize.o CGnuPlotSize.cpp
 
@@ -13848,6 +15614,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CParseLine.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotText.o CGnuPlotText.cpp
 
@@ -13936,6 +15708,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -14028,6 +15806,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -14125,6 +15909,12 @@ compiler_clean: compiler_moc_header_clean
 		CStrUniqueMatch.h \
 		CGnuPlotBoxWidth.h \
 		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -14256,6 +16046,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qrubberband.h \
 		/usr/include/qt5/QtWidgets/qframe.h \
 		/usr/include/qt5/QtCore/qabstractitemmodel.h \
+		../../CMath/include/CAngle.h \
 		CQPropertyItem.h \
 		/usr/include/qt5/QtWidgets/QTreeWidgetItem \
 		/usr/include/qt5/QtWidgets/qtreewidget.h \
@@ -14623,6 +16414,7 @@ compiler_clean: compiler_moc_header_clean
 		CQPropertyDelegate.h \
 		/usr/include/qt5/QtWidgets/QItemDelegate \
 		/usr/include/qt5/QtWidgets/qitemdelegate.h \
+		../../CMath/include/CAngle.h \
 		../../CQUtil/include/CQUtil.h \
 		/usr/include/qt5/QtCore/Qt \
 		/usr/include/qt5/QtGui/QColor \
@@ -14640,7 +16432,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		../../CMath/include/CAngle.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CFont/include/CFont.h \
@@ -14816,6 +16607,7 @@ compiler_clean: compiler_moc_header_clean
 		CQPropertyDelegate.h \
 		/usr/include/qt5/QtWidgets/QItemDelegate \
 		/usr/include/qt5/QtWidgets/qitemdelegate.h \
+		../../CMath/include/CAngle.h \
 		/usr/include/qt5/QtWidgets/QHeaderView \
 		/usr/include/qt5/QtWidgets/qheaderview.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQPropertyTree.o CQPropertyTree.cpp
@@ -15143,6 +16935,117 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qlabel.h \
 		/usr/include/qt5/QtWidgets/qframe.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQPaletteDialog.o CQPaletteDialog.cpp
+
+../obj/CQRotatedText.o: CQRotatedText.cpp CQRotatedText.h \
+		/usr/include/qt5/QtGui/QPainter \
+		/usr/include/qt5/QtGui/qpainter.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qtextoption.h \
+		/usr/include/qt5/QtGui/qpen.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQRotatedText.o CQRotatedText.cpp
+
+../obj/CTreeMap.o: CTreeMap.cpp CTreeMap.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CTreeMap.o CTreeMap.cpp
+
+../obj/CSunburst.o: CSunburst.cpp CSunburst.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CSunburst.o CSunburst.cpp
 
 ../obj/CMathGeom2D.o: CMathGeom2D.cpp CMathGeom2D.h \
 		../../CMath/include/CPoint2D.h \
@@ -16677,11 +18580,11 @@ compiler_clean: compiler_moc_header_clean
 ../obj/moc_CQGnuPlotAxis.o: moc_CQGnuPlotAxis.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotAxis.o moc_CQGnuPlotAxis.cpp
 
-../obj/moc_CQGnuPlotBar.o: moc_CQGnuPlotBar.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotBar.o moc_CQGnuPlotBar.cpp
+../obj/moc_CQGnuPlotBarObject.o: moc_CQGnuPlotBarObject.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotBarObject.o moc_CQGnuPlotBarObject.cpp
 
-../obj/moc_CQGnuPlotBubble.o: moc_CQGnuPlotBubble.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotBubble.o moc_CQGnuPlotBubble.cpp
+../obj/moc_CQGnuPlotBubbleObject.o: moc_CQGnuPlotBubbleObject.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotBubbleObject.o moc_CQGnuPlotBubbleObject.cpp
 
 ../obj/moc_CQGnuPlotCamera.o: moc_CQGnuPlotCamera.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotCamera.o moc_CQGnuPlotCamera.cpp
@@ -16716,8 +18619,8 @@ compiler_clean: compiler_moc_header_clean
 ../obj/moc_CQGnuPlotPalette.o: moc_CQGnuPlotPalette.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotPalette.o moc_CQGnuPlotPalette.cpp
 
-../obj/moc_CQGnuPlotPie.o: moc_CQGnuPlotPie.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotPie.o moc_CQGnuPlotPie.cpp
+../obj/moc_CQGnuPlotPieObject.o: moc_CQGnuPlotPieObject.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotPieObject.o moc_CQGnuPlotPieObject.cpp
 
 ../obj/moc_CQGnuPlotPlot.o: moc_CQGnuPlotPlot.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotPlot.o moc_CQGnuPlotPlot.cpp
@@ -16727,6 +18630,9 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/moc_CQGnuPlotRectangle.o: moc_CQGnuPlotRectangle.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotRectangle.o moc_CQGnuPlotRectangle.cpp
+
+../obj/moc_CQGnuPlotRectObject.o: moc_CQGnuPlotRectObject.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotRectObject.o moc_CQGnuPlotRectObject.cpp
 
 ../obj/moc_CQGnuPlotTitle.o: moc_CQGnuPlotTitle.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotTitle.o moc_CQGnuPlotTitle.cpp

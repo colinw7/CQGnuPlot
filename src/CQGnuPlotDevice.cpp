@@ -17,9 +17,10 @@
 #include <CQGnuPlotPalette.h>
 #include <CQGnuPlotTitle.h>
 #include <CQGnuPlotCamera.h>
-#include <CQGnuPlotBar.h>
-#include <CQGnuPlotPie.h>
-#include <CQGnuPlotBubble.h>
+#include <CQGnuPlotBubbleObject.h>
+#include <CQGnuPlotBarObject.h>
+#include <CQGnuPlotPieObject.h>
+#include <CQGnuPlotRectObject.h>
 
 #include <QApplication>
 
@@ -69,11 +70,11 @@ createGroup(CGnuPlotWindow *window)
 
 CGnuPlotPlot *
 CQGnuPlotDevice::
-createPlot(CGnuPlotGroup *group)
+createPlot(CGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style)
 {
   CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-  CQGnuPlotPlot *plot = new CQGnuPlotPlot(qgroup);
+  CQGnuPlotPlot *plot = new CQGnuPlotPlot(qgroup, style);
 
   objects_.push_back(plot);
 
@@ -243,13 +244,13 @@ createCamera(CGnuPlotGroup *group)
   return camera;
 }
 
-CGnuPlotBar *
+CGnuPlotBarObject *
 CQGnuPlotDevice::
-createBar(CGnuPlotPlot *plot)
+createBarObject(CGnuPlotPlot *plot)
 {
   CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-  CQGnuPlotBar *bar = new CQGnuPlotBar(qplot);
+  CQGnuPlotBarObject *bar = new CQGnuPlotBarObject(qplot);
 
   objects_.push_back(bar);
 
@@ -258,13 +259,28 @@ createBar(CGnuPlotPlot *plot)
   return bar;
 }
 
-CGnuPlotPie *
+CGnuPlotBubbleObject *
 CQGnuPlotDevice::
-createPie(CGnuPlotPlot *plot)
+createBubbleObject(CGnuPlotPlot *plot)
 {
   CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-  CQGnuPlotPie *pie = new CQGnuPlotPie(qplot);
+  CQGnuPlotBubbleObject *bubble = new CQGnuPlotBubbleObject(qplot);
+
+  objects_.push_back(bubble);
+
+  qplot->qwindow()->updateProperties();
+
+  return bubble;
+}
+
+CGnuPlotPieObject *
+CQGnuPlotDevice::
+createPieObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotPieObject *pie = new CQGnuPlotPieObject(qplot);
 
   objects_.push_back(pie);
 
@@ -273,19 +289,19 @@ createPie(CGnuPlotPlot *plot)
   return pie;
 }
 
-CGnuPlotBubble *
+CGnuPlotRectObject *
 CQGnuPlotDevice::
-createBubble(CGnuPlotPlot *plot)
+createRectObject(CGnuPlotPlot *plot)
 {
   CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-  CQGnuPlotBubble *bubble = new CQGnuPlotBubble(qplot);
+  CQGnuPlotRectObject *rect = new CQGnuPlotRectObject(qplot);
 
-  objects_.push_back(bubble);
+  objects_.push_back(rect);
 
   qplot->qwindow()->updateProperties();
 
-  return bubble;
+  return rect;
 }
 
 void

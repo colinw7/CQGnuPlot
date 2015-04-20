@@ -22,7 +22,7 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
 
   CGnuPlotGroup *createGroup(CGnuPlotWindow *window) override;
 
-  CGnuPlotPlot *createPlot(CGnuPlotGroup *group) override;
+  CGnuPlotPlot *createPlot(CGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style) override;
 
   CGnuPlotLineStyle *createLineStyle() override;
 
@@ -44,9 +44,10 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
   CGnuPlotTitle  *createTitle (CGnuPlotGroup *group) override;
   CGnuPlotCamera *createCamera(CGnuPlotGroup *group) override;
 
-  CGnuPlotBar    *createBar   (CGnuPlotPlot *plot) override;
-  CGnuPlotPie    *createPie   (CGnuPlotPlot *plot) override;
-  CGnuPlotBubble *createBubble(CGnuPlotPlot *plot) override;
+  CGnuPlotBarObject    *createBarObject   (CGnuPlotPlot *plot) override;
+  CGnuPlotBubbleObject *createBubbleObject(CGnuPlotPlot *plot) override;
+  CGnuPlotPieObject    *createPieObject   (CGnuPlotPlot *plot) override;
+  CGnuPlotRectObject   *createRectObject  (CGnuPlotPlot *plot) override;
 
   const Objects &objects() const { return objects_; }
 

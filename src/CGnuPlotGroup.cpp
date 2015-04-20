@@ -4,6 +4,7 @@
 #include <CGnuPlotDevice.h>
 #include <CGnuPlotBBoxRenderer.h>
 #include <CGnuPlot3DRenderer.h>
+#include <CGnuPlotStyleBase.h>
 
 namespace {
   std::string encodeAxisId(char c, int ind) {
@@ -167,6 +168,8 @@ void
 CGnuPlotGroup::
 fit()
 {
+  CGnuPlotPlot *singlePlot = getSingleStylePlot();
+
   COptReal xmin1, xmax1, xmin2, xmax2;
   COptReal ymin1, ymax1, ymin2, ymax2;
   COptReal zmin1, zmax1;
@@ -210,13 +213,13 @@ fit()
     xmax1.updateMax(brenderer.bbox().getRight ());
     ymax1.updateMax(brenderer.bbox().getTop   ());
   }
-  else if (hasPlotStyle(PlotStyle::BUBBLECHART)) {
-    xmin1 = -1; ymin1 = -1;
-    xmax1 =  1; ymax1 =  1;
-  }
-  else if (hasPlotStyle(PlotStyle::PIECHART)) {
-    xmin1 = -1; ymin1 = -1;
-    xmax1 =  1; ymax1 =  1;
+  else if (singlePlot) {
+    CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->getStyle());
+
+    CBBox2D rect = singleStyle->fit(singlePlot);
+
+    xmin1 = rect.getXMin(); ymin1 = rect.getYMin();
+    xmax1 = rect.getXMax(); ymax1 = rect.getYMax();
   }
   else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
     int nc = 0;
@@ -594,12 +597,12 @@ draw()
   //---
 
   // draw axes (underneath plot)
-  drawAxes();
+  drawAxes(renderer);
 
   //---
 
   // draw grid
-  drawGrid(CGnuPlot::DrawLayer::BACK);
+  drawGrid(CGnuPlotTypes::DrawLayer::BACK);
 
   //---
 
@@ -623,7 +626,7 @@ draw()
   //---
 
   // draw grid
-  drawGrid(CGnuPlot::DrawLayer::FRONT);
+  drawGrid(CGnuPlotTypes::DrawLayer::FRONT);
 
   //---
 
@@ -871,7 +874,7 @@ drawRowStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
 
   if (! renderer->isPseudo()) {
     for (auto plot : plots)
-      plot->setNumBars(numPoints);
+      plot->updateRectCacheSize(numPoints);
   }
 
   //---
@@ -915,7 +918,7 @@ drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
 {
   if (! renderer->isPseudo()) {
     for (auto plot : plots)
-      plot->setNumBars(plot->numPoints2D());
+      plot->updateRectCacheSize(plot->numPoints2D());
   }
 
   //---
@@ -1069,20 +1072,29 @@ calcHistogramRange(const Plots &plots, CBBox2D &bbox) const
 
 void
 CGnuPlotGroup::
-drawAxes()
+drawAxes(CGnuPlotRenderer *renderer)
 {
   if (is3D()) {
-    drawBorder();
+    drawBorder(renderer);
 
-    drawXAxes(1, false);
-    drawYAxes(1, false);
-    drawZAxes(1, false);
+    drawXAxes(renderer, 1, false);
+    drawYAxes(renderer, 1, false);
+    drawZAxes(renderer, 1, false);
   }
   else {
-    if (hasPlotStyle(PlotStyle::BUBBLECHART) || hasPlotStyle(PlotStyle::PIECHART))
-      return;
+    CGnuPlotPlot *singlePlot = getSingleStylePlot();
 
-    drawBorder();
+    if (singlePlot) {
+      CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->getStyle());
+
+      singleStyle->drawAxes(singlePlot, renderer);
+
+      return;
+    }
+
+    //---
+
+    drawBorder(renderer);
 
     if (! hasPlotStyle(PlotStyle::PARALLELAXES)) {
       std::set<int> xSet, ySet;
@@ -1093,25 +1105,25 @@ drawAxes()
       }
 
       for (const auto &xi : xSet)
-        drawXAxes(xi, xi == 1 && xSet.find(2) == xSet.end());
+        drawXAxes(renderer, xi, xi == 1 && xSet.find(2) == xSet.end());
 
       for (const auto &yi : ySet)
-        drawYAxes(yi, yi == 1 && ySet.find(2) == ySet.end());
+        drawYAxes(renderer, yi, yi == 1 && ySet.find(2) == ySet.end());
     }
     else {
-      drawXAxes(1, false);
+      drawXAxes(renderer, 1, false);
     }
   }
 }
 
 void
 CGnuPlotGroup::
-drawBorder()
+drawBorder(CGnuPlotRenderer *renderer)
 {
   if (! axesData().border.sides)
     return;
 
-  CGnuPlotRenderer *renderer = app()->renderer();
+  CRGBA c(0,0,0);
 
   CBBox2D bbox = getDisplayRange(1, 1);
 
@@ -1129,74 +1141,74 @@ drawBorder()
 
     // 1 : x front, bottom
     if (axesData().border.sides & (1<<0))
-      renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmax1, ymin1, zmin1), bw);
+      renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmax1, ymin1, zmin1), bw, c);
 
     // 2 : y left, bottom
     if (axesData().border.sides & (1<<1))
-      renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmin1, ymax1, zmin1), bw);
+      renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmin1, ymax1, zmin1), bw, c);
 
     // 4 : y right, bottom
     if (axesData().border.sides & (1<<2))
-      renderer->drawLine(CPoint3D(xmax1, ymin1, zmin1), CPoint3D(xmax1, ymax1, zmin1), bw);
+      renderer->drawLine(CPoint3D(xmax1, ymin1, zmin1), CPoint3D(xmax1, ymax1, zmin1), bw, c);
 
     // 8 : x back, bottom
     if (axesData().border.sides & (1<<3))
-      renderer->drawLine(CPoint3D(xmin1, ymax1, zmin1), CPoint3D(xmax1, ymax1, zmin1), bw);
+      renderer->drawLine(CPoint3D(xmin1, ymax1, zmin1), CPoint3D(xmax1, ymax1, zmin1), bw, c);
 
     //---
 
     // 16 : vertical, left, front
     if (axesData().border.sides & (1<<4))
-      renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmin1, ymin1, zmax1), bw);
+      renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmin1, ymin1, zmax1), bw, c);
 
     // 32 : vertical, left, back
     if (axesData().border.sides & (1<<5))
-      renderer->drawLine(CPoint3D(xmin1, ymax1, zmin1), CPoint3D(xmin1, ymax1, zmax1), bw);
+      renderer->drawLine(CPoint3D(xmin1, ymax1, zmin1), CPoint3D(xmin1, ymax1, zmax1), bw, c);
 
     // 64 : vertical, right, back
     if (axesData().border.sides & (1<<6))
-      renderer->drawLine(CPoint3D(xmax1, ymax1, zmin1), CPoint3D(xmax1, ymax1, zmax1), bw);
+      renderer->drawLine(CPoint3D(xmax1, ymax1, zmin1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
 
     // 128 : vertical, right, front
     if (axesData().border.sides & (1<<7))
-      renderer->drawLine(CPoint3D(xmax1, ymin1, zmin1), CPoint3D(xmax1, ymin1, zmax1), bw);
+      renderer->drawLine(CPoint3D(xmax1, ymin1, zmin1), CPoint3D(xmax1, ymin1, zmax1), bw, c);
 
     //---
 
     // 256: y left, top
     if (axesData().border.sides & (1<<8))
-      renderer->drawLine(CPoint3D(xmin1, ymin1, zmax1), CPoint3D(xmin1, ymax1, zmax1), bw);
+      renderer->drawLine(CPoint3D(xmin1, ymin1, zmax1), CPoint3D(xmin1, ymax1, zmax1), bw, c);
 
     // 512: x back, top
     if (axesData().border.sides & (1<<9))
-      renderer->drawLine(CPoint3D(xmin1, ymax1, zmax1), CPoint3D(xmax1, ymax1, zmax1), bw);
+      renderer->drawLine(CPoint3D(xmin1, ymax1, zmax1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
 
     // 1024: x front, top
     if (axesData().border.sides & (1<<10))
-      renderer->drawLine(CPoint3D(xmin1, ymin1, zmax1), CPoint3D(xmax1, ymin1, zmax1), bw);
+      renderer->drawLine(CPoint3D(xmin1, ymin1, zmax1), CPoint3D(xmax1, ymin1, zmax1), bw, c);
 
     // 2048: y right, top
     if (axesData().border.sides & (1<<11))
-      renderer->drawLine(CPoint3D(xmax1, ymin1, zmax1), CPoint3D(xmax1, ymax1, zmax1), bw);
+      renderer->drawLine(CPoint3D(xmax1, ymin1, zmax1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
   }
   else {
     if (axesData().border.sides & (1<<0))
-      renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmax1, ymin1), bw);
+      renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmax1, ymin1), bw, c);
 
     if (axesData().border.sides & (1<<1))
-      renderer->drawLine(CPoint2D(xmin1, ymax1), CPoint2D(xmax1, ymax1), bw);
+      renderer->drawLine(CPoint2D(xmin1, ymax1), CPoint2D(xmax1, ymax1), bw, c);
 
     if (axesData().border.sides & (1<<2))
-      renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmin1, ymax1), bw);
+      renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmin1, ymax1), bw, c);
 
     if (axesData().border.sides & (1<<3))
-      renderer->drawLine(CPoint2D(xmax1, ymin1), CPoint2D(xmax1, ymax1), bw);
+      renderer->drawLine(CPoint2D(xmax1, ymin1), CPoint2D(xmax1, ymax1), bw, c);
   }
 }
 
 void
 CGnuPlotGroup::
-drawXAxes(int xind, bool drawOther)
+drawXAxes(CGnuPlotRenderer *renderer, int xind, bool drawOther)
 {
   CGnuPlotAxisData &xaxis = this->xaxis(xind);
 
@@ -1273,8 +1285,6 @@ drawXAxes(int xind, bool drawOther)
 
   //---
 
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   renderer->setRange(getDisplayRange(xind, 1));
   renderer->setReverse(xaxis.isReverse(), false);
 
@@ -1293,7 +1303,7 @@ drawXAxes(int xind, bool drawOther)
 
 void
 CGnuPlotGroup::
-drawYAxes(int yind, bool drawOther)
+drawYAxes(CGnuPlotRenderer *renderer, int yind, bool drawOther)
 {
   CGnuPlotAxisData &yaxis = this->yaxis(yind);
 
@@ -1366,8 +1376,6 @@ drawYAxes(int yind, bool drawOther)
 
   //---
 
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   renderer->setRange(getDisplayRange(1, yind));
   renderer->setReverse(false, yaxis.isReverse());
 
@@ -1386,7 +1394,7 @@ drawYAxes(int yind, bool drawOther)
 
 void
 CGnuPlotGroup::
-drawZAxes(int zind, bool drawOther)
+drawZAxes(CGnuPlotRenderer *renderer, int zind, bool drawOther)
 {
   CGnuPlotAxisData &zaxis = this->zaxis(zind);
 
@@ -1448,8 +1456,6 @@ drawZAxes(int zind, bool drawOther)
 
   //---
 
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   renderer->setRange(getDisplayRange(1, 1));
   renderer->setReverse(zaxis.isReverse(), false);
 
@@ -1467,11 +1473,11 @@ drawZAxes(int zind, bool drawOther)
 
 void
 CGnuPlotGroup::
-drawGrid(const CGnuPlot::DrawLayer &layer)
+drawGrid(const CGnuPlotTypes::DrawLayer &layer)
 {
   CGnuPlotRenderer *renderer = app()->renderer();
 
-  bool isBack = (layer == CGnuPlot::DrawLayer::BACK);
+  bool isBack = (layer == CGnuPlotTypes::DrawLayer::BACK);
 
   if (! is3D()) {
     CGnuPlotAxis *plotXAxis = getPlotAxis('x', 1);
@@ -1542,10 +1548,17 @@ void
 CGnuPlotGroup::
 drawKey()
 {
-  if (hasPlotStyle(PlotStyle::BUBBLECHART))
-    return;
-
   CGnuPlotRenderer *renderer = app()->renderer();
+
+  CGnuPlotPlot *singlePlot = getSingleStylePlot();
+
+  if (singlePlot) {
+    CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->getStyle());
+
+    singleStyle->drawKey(singlePlot, renderer);
+
+    return;
+  }
 
   // TODO: key drawn in own coord system
   CBBox2D bbox = getDisplayRange(1, 1);
@@ -1553,7 +1566,27 @@ drawKey()
   renderer->setRange(bbox);
   renderer->setReverse(false, false);
 
-  key_->draw();
+  key_->draw(renderer);
+}
+
+CGnuPlotPlot *
+CGnuPlotGroup::
+getSingleStylePlot() const
+{
+  for (const auto &p : app()->plotStyles()) {
+    CGnuPlotStyleBase *style = p.second;
+
+    if (style->isSingleType() && hasPlotStyle(style->style())) {
+      for (auto plot : plots_) {
+        if (plot->getStyle() != style->style())
+          continue;
+
+        return plot;
+      }
+    }
+  }
+
+  return 0;
 }
 
 void
@@ -1623,8 +1656,8 @@ getAxisValueStr(const std::string &id, int i, double r) const
     return CStrUtil::strprintf(axis->format().c_str(), r);
   }
   else {
-    if (axis->hasTiclLabel(i))
-      return axis->ticlLabel(i);
+    if (axis->hasTicLabel(i))
+      return axis->ticLabel(i);
 
     return formatAxisValue(*axis, r);
   }

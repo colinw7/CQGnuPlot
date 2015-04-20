@@ -1,28 +1,28 @@
-#include <CQGnuPlotBar.h>
+#include <CQGnuPlotBarObject.h>
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotUtil.h>
 #include <CQGnuPlotRenderer.h>
 
-CQGnuPlotBar::
-CQGnuPlotBar(CQGnuPlotPlot *plot) :
- CGnuPlotBar(plot)
+CQGnuPlotBarObject::
+CQGnuPlotBarObject(CQGnuPlotPlot *plot) :
+ CGnuPlotBarObject(plot)
 {
 }
 
-CQGnuPlotBar::
-~CQGnuPlotBar()
+CQGnuPlotBarObject::
+~CQGnuPlotBarObject()
 {
 }
 
 CQGnuPlot::FillType
-CQGnuPlotBar::
+CQGnuPlotBarObject::
 getFillType() const
 {
-  return CQGnuPlotUtil::fillTypeConv(CGnuPlotBar::fillType());
+  return CQGnuPlotUtil::fillTypeConv(CGnuPlotBarObject::fillType());
 }
 
 void
-CQGnuPlotBar::
+CQGnuPlotBarObject::
 setFillType(const CQGnuPlot::FillType &t)
 {
   CGnuPlotTypes::FillType fillType = CQGnuPlotUtil::fillTypeConv(t);
@@ -31,24 +31,24 @@ setFillType(const CQGnuPlot::FillType &t)
 
   if (qplot->syncBars()) {
     for (const auto &bar : qplot->barObjects()) {
-      CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+      CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
-      qbar->CGnuPlotBar::setFillType(fillType);
+      qbar->CGnuPlotBarObject::setFillType(fillType);
     }
   }
   else
-    CGnuPlotBar::setFillType(fillType);
+    CGnuPlotBarObject::setFillType(fillType);
 }
 
 CQGnuPlot::FillPattern
-CQGnuPlotBar::
+CQGnuPlotBarObject::
 getFillPattern() const
 {
-  return CQGnuPlotUtil::fillPatternConv(CGnuPlotBar::fillPattern());
+  return CQGnuPlotUtil::fillPatternConv(CGnuPlotBarObject::fillPattern());
 }
 
 void
-CQGnuPlotBar::
+CQGnuPlotBarObject::
 setFillPattern(const CQGnuPlot::FillPattern &p)
 {
   CGnuPlotTypes::FillPattern pattern = CQGnuPlotUtil::fillPatternConv(p);
@@ -57,24 +57,24 @@ setFillPattern(const CQGnuPlot::FillPattern &p)
 
   if (qplot->syncBars()) {
     for (const auto &bar : qplot->barObjects()) {
-      CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+      CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
-      qbar->CGnuPlotBar::setFillPattern(pattern);
+      qbar->CGnuPlotBarObject::setFillPattern(pattern);
     }
   }
   else
-    CGnuPlotBar::setFillPattern(pattern);
+    CGnuPlotBarObject::setFillPattern(pattern);
 }
 
 QColor
-CQGnuPlotBar::
+CQGnuPlotBarObject::
 getFillColor() const
 {
-  return toQColor(CGnuPlotBar::fillColor().getValue(CRGBA(1,1,1)));
+  return toQColor(CGnuPlotBarObject::fillColor().getValue(CRGBA(1,1,1)));
 }
 
 void
-CQGnuPlotBar::
+CQGnuPlotBarObject::
 setFillColor(const QColor &color)
 {
   CRGBA c = fromQColor(color);
@@ -83,24 +83,24 @@ setFillColor(const QColor &color)
 
   if (qplot->syncBars()) {
     for (const auto &bar : qplot->barObjects()) {
-      CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+      CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
-      qbar->CGnuPlotBar::setFillColor(c);
+      qbar->CGnuPlotBarObject::setFillColor(c);
     }
   }
   else
-    CGnuPlotBar::setFillColor(c);
+    CGnuPlotBarObject::setFillColor(c);
 }
 
 QColor
-CQGnuPlotBar::
+CQGnuPlotBarObject::
 getLineColor() const
 {
-  return toQColor(CGnuPlotBar::lineColor().getValue(CRGBA(0,0,0)));
+  return toQColor(CGnuPlotBarObject::lineColor().getValue(CRGBA(0,0,0)));
 }
 
 void
-CQGnuPlotBar::
+CQGnuPlotBarObject::
 setLineColor(const QColor &color)
 {
   CRGBA c = fromQColor(color);
@@ -109,23 +109,23 @@ setLineColor(const QColor &color)
 
   if (qplot->syncBars()) {
     for (const auto &bar : qplot->barObjects()) {
-      CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+      CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
-      qbar->CGnuPlotBar::setLineColor(c);
+      qbar->CGnuPlotBarObject::setLineColor(c);
     }
   }
   else
-    CGnuPlotBar::setLineColor(c);
+    CGnuPlotBarObject::setLineColor(c);
 }
 
 void
-CQGnuPlotBar::
+CQGnuPlotBarObject::
 draw(CGnuPlotRenderer *renderer) const
 {
-  CGnuPlotBar::draw(renderer);
+  CGnuPlotBarObject::draw(renderer);
 
   if (isSelected()) {
-    CGnuPlotBar bar1(*this);
+    CGnuPlotBarObject bar1(*this);
 
     bar1.setFillType   (CGnuPlotTypes::FillType   ::PATTERN);
     bar1.setFillPattern(CGnuPlotTypes::FillPattern::HATCH);

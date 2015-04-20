@@ -33,10 +33,10 @@ class CQGnuPlotArrow : public CQGnuPlotAnnotation, public CGnuPlotArrow {
   CQGnuPlot::ArrowCoordType getCoordType() const;
   void setCoordType(CQGnuPlot::ArrowCoordType type);
 
-  QPointF getFrom() const { return qfrom_; }
+  QPointF getFrom() const;
   void setFrom(const QPointF &p);
 
-  QPointF getTo() const { return qto_; }
+  QPointF getTo() const;
   void setTo(const QPointF &p);
 
   double getLength() const;

@@ -24,11 +24,9 @@ app() const
 
 void
 CGnuPlotKey::
-draw()
+draw(CGnuPlotRenderer *renderer)
 {
   if (! isDisplayed()) return;
-
-  CGnuPlotRenderer *renderer = app()->renderer();
 
   if (getFont().isValid())
     renderer->setFont(getFont());
@@ -109,7 +107,7 @@ draw()
     if (hasLineType())
       c = CGnuPlotStyleInst->indexColor(getLineType());
 
-    renderer->drawRect(bbox_, c);
+    renderer->drawRect(bbox_, c, 1);
   }
 
   double y = y2 - by;
@@ -122,27 +120,28 @@ draw()
   }
 
   for (auto plot : group_->plots()) {
-    CGnuPlot::PlotStyle      style     = plot->getStyle();
-    const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+    CGnuPlotTypes::PlotStyle  style     = plot->getStyle();
+    const CGnuPlotLineStyle  &lineStyle = plot->lineStyle();
 
     double xx = (isReverse() ? x1 + bx : x2 - ll - bx);
     double yy = y - font_size*ph/2;
 
-    if (group_->hasPlotStyle(CGnuPlot::PlotStyle::HISTOGRAMS) ||
-        style == CGnuPlot::PlotStyle::BOXES || style == CGnuPlot::PlotStyle::CANDLESTICKS) {
+    if (group_->hasPlotStyle(CGnuPlotTypes::PlotStyle::HISTOGRAMS) ||
+        style == CGnuPlotTypes::PlotStyle::BOXES ||
+        style == CGnuPlotTypes::PlotStyle::CANDLESTICKS) {
       double h = (font_size - 4)*ph;
 
       CBBox2D hbbox(xx, yy - h/2, xx + ll, yy + h/2);
 
       if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
         renderer->patternRect(hbbox, plot->fillStyle().pattern(),
-                              lineStyle.calcColor(CRGBA(0,0,0)));
+                              lineStyle.calcColor(CRGBA(0,0,0)), CRGBA(1,1,1));
       else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
         renderer->fillRect(hbbox, lineStyle.calcColor(CRGBA(1,1,1)));
 
-      renderer->drawRect(hbbox, lineStyle.calcColor(CRGBA(0,0,0)));
+      renderer->drawRect(hbbox, lineStyle.calcColor(CRGBA(0,0,0)), 1);
     }
-    else if (style == CGnuPlot::PlotStyle::VECTORS) {
+    else if (style == CGnuPlotTypes::PlotStyle::VECTORS) {
       CGnuPlotArrow arrow(group_);
 
       arrow.setStyle(plot->arrowStyle());
@@ -153,18 +152,18 @@ draw()
       arrow.draw(renderer);
     }
     else {
-      if      (style == CGnuPlot::PlotStyle::LINES ||
-               style == CGnuPlot::PlotStyle::LINES_POINTS ||
-               style == CGnuPlot::PlotStyle::IMPULSES ||
-               style == CGnuPlot::PlotStyle::XYERRORBARS) {
+      if      (style == CGnuPlotTypes::PlotStyle::LINES ||
+               style == CGnuPlotTypes::PlotStyle::LINES_POINTS ||
+               style == CGnuPlotTypes::PlotStyle::IMPULSES ||
+               style == CGnuPlotTypes::PlotStyle::XYERRORBARS) {
         CPoint2D p1(xx, yy), p2(xx + ll, yy), pm(xx + ll/2, yy);
 
         renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)));
 
-        if      (style == CGnuPlot::PlotStyle::LINES_POINTS)
+        if      (style == CGnuPlotTypes::PlotStyle::LINES_POINTS)
           renderer->drawSymbol(pm, plot->pointType(), plot->pointSize(),
                                lineStyle.calcColor(CRGBA(1,0,0)));
-        else if (style == CGnuPlot::PlotStyle::XYERRORBARS) {
+        else if (style == CGnuPlotTypes::PlotStyle::XYERRORBARS) {
           CPoint2D dy(0, 3*ph);
 
           renderer->drawLine(p1 - dy, p1 + dy, lineStyle.width(),
@@ -173,14 +172,14 @@ draw()
                              lineStyle.calcColor(CRGBA(1,0,0)));
         }
       }
-      else if (style == CGnuPlot::PlotStyle::POINTS ||
-               style == CGnuPlot::PlotStyle::LINES_POINTS) {
+      else if (style == CGnuPlotTypes::PlotStyle::POINTS ||
+               style == CGnuPlotTypes::PlotStyle::LINES_POINTS) {
         CPoint2D pm(xx + ll/2, yy);
 
         renderer->drawSymbol(pm, plot->pointType(), plot->pointSize(),
                              lineStyle.calcColor(CRGBA(1,0,0)));
       }
-      else if (style == CGnuPlot::PlotStyle::FILLEDCURVES) {
+      else if (style == CGnuPlotTypes::PlotStyle::FILLEDCURVES) {
         double h = 4*ph;
 
         CBBox2D cbbox(xx, yy - h, xx + ll, yy + h);

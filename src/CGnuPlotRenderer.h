@@ -64,42 +64,42 @@ class CGnuPlotRenderer {
 
   virtual void clear(const CRGBA &c) = 0;
 
-  virtual void drawPoint  (const CPoint2D &p, const CRGBA &c=CRGBA(0,0,0)) = 0;
-  virtual void drawSymbol (const CPoint2D &p, SymbolType type, double size,
-                           const CRGBA &c=CRGBA(0,0,0)) = 0;
-  virtual void drawPath   (const std::vector<CPoint2D> &points, double width=1.0,
-                           const CRGBA &c=CRGBA(0,0,0), const CLineDash &dash=CLineDash()) = 0;
-  virtual void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width=1.0,
-                           const CRGBA &c=CRGBA(0,0,0), const CLineDash &dash=CLineDash()) = 0;
-  virtual void drawRect   (const CBBox2D &rect, const CRGBA &c=CRGBA(0,0,0), double w=1.0) = 0;
-  virtual void drawPolygon(const std::vector<CPoint2D> &points, double w=1.0,
-                           const CRGBA &c=CRGBA(0,0,0)) = 0;
-  virtual void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c=CRGBA(0,0,0)) = 0;
-  virtual void patternRect(const CBBox2D &rect,
-                           CGnuPlotTypes::FillPattern pattern=CGnuPlotTypes::FillPattern::NONE,
-                           const CRGBA &fg=CRGBA(0,0,0), const CRGBA &bg=CRGBA(1,1,1)) = 0;
+  virtual void drawPoint  (const CPoint2D &p, const CRGBA &c) = 0;
+  virtual void drawSymbol (const CPoint2D &p, SymbolType type, double size, const CRGBA &c) = 0;
+  virtual void drawPath   (const std::vector<CPoint2D> &points, double width,
+                           const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
+  virtual void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width,
+                           const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
+  virtual void drawRect   (const CBBox2D &rect, const CRGBA &c, double w) = 0;
+  virtual void drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c) = 0;
+  virtual void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c) = 0;
+  virtual void patternRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
+                           const CRGBA &fg, const CRGBA &bg) = 0;
   virtual void fillRect   (const CBBox2D &rect, const CRGBA &c) = 0;
-  virtual void drawBezier (const CPoint2D &p1, const CPoint2D &p2,
-                           const CPoint2D &p3, const CPoint2D &p4, double width=1.0,
-                           const CRGBA &c=CRGBA(0,0,0)) = 0;
-  virtual void drawEllipse(const CPoint2D &p, double dx, double ry, double a=0,
-                           const CRGBA &c=CRGBA(0,0,0), double w=1.0) = 0;
-  virtual void fillEllipse(const CPoint2D &p, double dx, double ry, double a=0,
-                           const CRGBA &c=CRGBA(1,1,1)) = 0;
+  virtual void drawBezier (const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3,
+                           const CPoint2D &p4, double width, const CRGBA &c) = 0;
+  virtual void drawEllipse(const CPoint2D &p, double dx, double ry, double a,
+                           const CRGBA &c, double w) = 0;
+  virtual void fillEllipse(const CPoint2D &p, double dx, double ry, double a,
+                           const CRGBA &c) = 0;
 
-  virtual void drawText(const CPoint2D &p, const std::string &text,
-                        const CRGBA &c=CRGBA(0,0,0)) = 0;
+  virtual void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) = 0;
 
-  virtual void drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2,
-                            const CRGBA &c=CRGBA(1,1,1)) = 0;
+  virtual void drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
+                               CHAlignType halign, CVAlignType valign, const CRGBA &c) = 0;
+
+  virtual void drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
+                            double angle2, double width, const CRGBA &c) = 0;
+  virtual void fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
+                            double angle2, const CRGBA &c) = 0;
 
   //---
 
-  void drawPath  (const std::vector<CPoint3D> &points, double width=1.0,
-                  const CRGBA &c=CRGBA(0,0,0), const CLineDash &dash=CLineDash());
-  void drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c=CRGBA(0,0,0));
-  void drawLine  (const CPoint3D &p1, const CPoint3D &p2, double width=1.0,
-                  const CRGBA &c=CRGBA(0,0,0), const CLineDash &dash=CLineDash());
+  void drawPath  (const std::vector<CPoint3D> &points, double width,
+                  const CRGBA &c, const CLineDash &dash=CLineDash());
+  void drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c);
+  void drawLine  (const CPoint3D &p1, const CPoint3D &p2, double width,
+                  const CRGBA &c, const CLineDash &dash=CLineDash());
 
   //---
 
@@ -113,26 +113,23 @@ class CGnuPlotRenderer {
 
   void fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c);
 
-  void drawClippedRect(const CBBox2D &rect, const CRGBA &c=CRGBA(0,0,0), double w=1.0);
+  void drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w);
   void fillClippedRect(const CBBox2D &rect, const CRGBA &c);
 
-  void drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width=1.0,
-                    const CRGBA &c=CRGBA(0,0,0), const CLineDash &dash=CLineDash());
+  void drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width,
+                    const CRGBA &c, const CLineDash &dash=CLineDash());
 
   bool clipLine(CPoint2D &p1, CPoint2D &p2);
 
   void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
                         CVAlignType valign, double y_offset, const std::string &str,
-                        const CRGBA &c=CRGBA(0,0,0));
+                        const CRGBA &c);
   void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
                         CVAlignType valign, double y_offset, const std::string &str,
-                        const CRGBA &c=CRGBA(0,0,0));
+                        const CRGBA &c);
 
   void drawHTextInBox(const CBBox2D &bbox, const std::string &str,
                       CHAlignType halign, const CRGBA &c);
-
-  void drawRotatedText(const CPoint2D &p, const std::string &text,
-                       const CRGBA &c=CRGBA(0,0,0), double a=90);
 
   CBBox2D getHAlignedTextBBox(const std::string &str);
 

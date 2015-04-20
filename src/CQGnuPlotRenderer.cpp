@@ -3,6 +3,7 @@
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotCanvas.h>
 #include <CQGnuPlotUtil.h>
+#include <CQRotatedText.h>
 #include <CGnuPlotUtil.h>
 #include <CSymbol2D.h>
 
@@ -496,27 +497,102 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 
 void
 CQGnuPlotRenderer::
-drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2, const CRGBA &c)
+drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
+                CHAlignType halign, CVAlignType valign, const CRGBA &c)
+{
+  double px, py;
+
+  windowToPixel(p.x, p.y, &px, &py);
+
+  Qt::Alignment qalign = CQUtil::toQAlign(halign) | CQUtil::toQAlign(valign);
+
+  painter_->setPen(toQColor(c));
+
+  CQRotatedText::drawRotatedText(painter_, px, py, text.c_str(), -ta, qalign);
+}
+
+void
+CQGnuPlotRenderer::
+fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
+             const CRGBA &c)
 {
   QPainterPath path;
 
   double x1, y1, x2, y2;
 
-  windowToPixel(pc.x - r, pc.y + r, &x1, &y1);
-  windowToPixel(pc.x + r, pc.y - r, &x2, &y2);
+  windowToPixel(pc.x - ro, pc.y + ro, &x1, &y1);
+  windowToPixel(pc.x + ro, pc.y - ro, &x2, &y2);
+
+  QRectF orect(x1, y1, x2 - x1, y2 - y1);
 
   double dangle = angle2 - angle1;
 
-  path.moveTo(QPointF((x1 + x2)/2, (y1 + y2)/2));
+  if (ri <= 0) {
+    path.moveTo(QPointF((x1 + x2)/2, (y1 + y2)/2));
 
-  path.arcTo(QRectF(x1, y1, x2 - x1, y2 - y1), angle1, dangle);
+    path.arcTo(orect, angle1, dangle);
 
-  path.closeSubpath();
+    path.closeSubpath();
+  }
+  else {
+    windowToPixel(pc.x - ri, pc.y + ri, &x1, &y1);
+    windowToPixel(pc.x + ri, pc.y - ri, &x2, &y2);
 
-  painter_->setPen  (QColor(0,0,0));
-  painter_->setBrush(toQColor(c));
+    QRectF irect(x1, y1, x2 - x1, y2 - y1);
 
-  painter_->drawPath(path);
+    path.arcMoveTo(irect, angle1);
+
+    path.arcTo(irect, angle1, dangle);
+    path.arcTo(orect, angle2, -dangle);
+
+    path.closeSubpath();
+  }
+
+  painter_->fillPath(path, QBrush(toQColor(c)));
+}
+
+void
+CQGnuPlotRenderer::
+drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
+             double w, const CRGBA &c)
+{
+  QPainterPath path;
+
+  double x1, y1, x2, y2;
+
+  windowToPixel(pc.x - ro, pc.y + ro, &x1, &y1);
+  windowToPixel(pc.x + ro, pc.y - ro, &x2, &y2);
+
+  QRectF orect(x1, y1, x2 - x1, y2 - y1);
+
+  double dangle = angle2 - angle1;
+
+  if (ri <= 0) {
+    path.moveTo(QPointF((x1 + x2)/2, (y1 + y2)/2));
+
+    path.arcTo(orect, angle1, dangle);
+
+    path.closeSubpath();
+  }
+  else {
+    windowToPixel(pc.x - ri, pc.y + ri, &x1, &y1);
+    windowToPixel(pc.x + ri, pc.y - ri, &x2, &y2);
+
+    QRectF irect(x1, y1, x2 - x1, y2 - y1);
+
+    path.arcMoveTo(irect, angle1);
+
+    path.arcTo(irect, angle1, dangle);
+    path.arcTo(orect, angle2, -dangle);
+
+    path.closeSubpath();
+  }
+
+  QPen pen(toQColor(c));
+
+  pen.setWidthF(w);
+
+  painter_->strokePath(path, pen);
 }
 
 void

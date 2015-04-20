@@ -1,5 +1,5 @@
-#ifndef CGnuPlotBubble_H
-#define CGnuPlotBubble_H
+#ifndef CGnuPlotBubbleObject_H
+#define CGnuPlotBubbleObject_H
 
 #include <COptVal.h>
 #include <CPoint2D.h>
@@ -11,11 +11,11 @@
 
 class CGnuPlotPlot;
 
-class CGnuPlotBubble : CGnuPlotPlotObject {
+class CGnuPlotBubbleObject : public CGnuPlotPlotObject {
  public:
-  CGnuPlotBubble(CGnuPlotPlot *plot);
+  CGnuPlotBubbleObject(CGnuPlotPlot *plot);
 
-  virtual ~CGnuPlotBubble() { }
+  virtual ~CGnuPlotBubbleObject() { }
 
   const CPoint2D &center() const { return c_; }
   void setCenter(const CPoint2D &c) { c_ = c; }
@@ -34,7 +34,11 @@ class CGnuPlotBubble : CGnuPlotPlotObject {
   const std::string &name() const { return name_; }
   void setName(const std::string &s) { name_ = s; }
 
-  bool inside(const CPoint2D &p) const;
+  bool inside(const CPoint2D &p) const override;
+
+  std::string tip() const override { return name_; }
+
+  CBBox2D tipRect() const { CPoint2D d(xr_, yr_); return CBBox2D(c_ - d, c_ + d); }
 
   void draw(CGnuPlotRenderer *renderer) const override;
 

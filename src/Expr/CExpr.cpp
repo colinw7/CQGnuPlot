@@ -325,3 +325,10 @@ printf(const std::string &fmt, const std::vector<CExprValuePtr> &values) const
 
   return printf.exec(values);
 }
+
+void
+CExpr::
+errorMsg(const std::string &msg) const
+{
+  std::cerr << msg << std::endl;
+}

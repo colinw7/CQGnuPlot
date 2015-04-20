@@ -710,7 +710,7 @@ parseArgs(const std::string &argsStr, Args &args, bool &variableArgs)
       else if (c == 'c') types |= CEXPR_VALUE_COMPLEX;
       else if (c == 'n') types |= CEXPR_VALUE_NULL;
       else {
-        std::cerr << "Invalid argument type char '" << c << "'" << std::endl;
+        CExprInst->errorMsg("Invalid argument type char '" + std::string(&c, 1) + "'");
         rc = false;
       }
     }

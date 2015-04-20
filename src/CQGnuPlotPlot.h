@@ -54,7 +54,7 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_PROPERTY(bool syncBars READ syncBars WRITE setSyncBars)
 
  public:
-  CQGnuPlotPlot(CQGnuPlotGroup *group);
+  CQGnuPlotPlot(CQGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style);
 
  ~CQGnuPlotPlot() override;
 

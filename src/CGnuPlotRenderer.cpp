@@ -334,7 +334,13 @@ drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
   CPoint2D w(x1 + pixelWidthToWindowWidth  (x_offset),
              y1 - pixelHeightToWindowHeight(y_offset));
 
-  drawRotatedText(w, str1, c, 90);
+  CFontPtr rfont = font->rotated(90);
+
+  setFont(rfont);
+
+  drawText(w, str1, c);
+
+  setFont(font);
 }
 
 CBBox2D
@@ -373,20 +379,6 @@ getHAlignedTextBBox(const std::string &str)
   bbox.add(CPoint2D(pos.x + w, pos.y + fa));
 
   return bbox;
-}
-
-void
-CGnuPlotRenderer::
-drawRotatedText(const CPoint2D &p, const std::string &text, const CRGBA &c, double a)
-{
-  CFontPtr font  = getFont();
-  CFontPtr rfont = font->rotated(a);
-
-  setFont(rfont);
-
-  drawText(p, text, c);
-
-  setFont(font);
 }
 
 void

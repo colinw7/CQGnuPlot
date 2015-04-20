@@ -80,6 +80,9 @@ class CGnuPlotPoint {
   bool getValue(int n, int &i) const;
   bool getValue(int n, std::string &str) const;
 
+  const std::string &label() const { return label_; }
+  void setLabel(const std::string &str) { label_ = str; }
+
   bool isDiscontinuity() const { return discontinuity_; }
 
   int cmp(const CGnuPlotPoint &p) const;
@@ -96,8 +99,9 @@ class CGnuPlotPoint {
   bool operator!=(const CGnuPlotPoint &p) const { return ! (*this == p); }
 
  private:
-  Values values_;
-  bool   discontinuity_;
+  Values      values_;
+  std::string label_;
+  bool        discontinuity_;
 };
 
 #endif

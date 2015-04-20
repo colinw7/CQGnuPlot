@@ -144,6 +144,9 @@ class CGnuPlotFile {
   bool isBinary() const { return binary_; }
   void setBinary(bool b) { binary_ = b; }
 
+  bool isCsv() const { return csv_; }
+  void setCsv(bool b) { csv_ = b; }
+
   void unset();
 
   void show(std::ostream &os, std::map<std::string,bool> &show, bool verbose);
@@ -173,6 +176,7 @@ class CGnuPlotFile {
   bool        fortran_      { false };
   bool        fpeTrap_      { true };
   bool        binary_       { false };
+  bool        csv_          { false };
 };
 
 #endif

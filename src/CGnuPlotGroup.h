@@ -12,10 +12,10 @@ class CGnuPlotGroup {
   typedef CGnuPlotTypes::LogScale                LogScale;
   typedef CGnuPlotTypes::HistogramStyle          HistogramStyle;
   typedef CGnuPlotTypes::DrawLayer               DrawLayer;
+  typedef CGnuPlotTypes::PlotStyle               PlotStyle;
   typedef CGnuPlot::Annotations                  Annotations;
   typedef CGnuPlot::AxesData                     AxesData;
   typedef CGnuPlot::PlotSize                     PlotSize;
-  typedef CGnuPlot::PlotStyle                    PlotStyle;
   typedef CGnuPlot::LogScaleMap                  LogScaleMap;
   typedef CGnuPlot::Margin                       Margin;
   typedef std::vector<CGnuPlotPlot *>            Plots;
@@ -269,13 +269,13 @@ class CGnuPlotGroup {
 
   void calcHistogramRange(const Plots &plots, CBBox2D &bbox) const;
 
-  void drawAxes();
+  void drawAxes(CGnuPlotRenderer *renderer);
 
-  void drawBorder();
+  void drawBorder(CGnuPlotRenderer *renderer);
 
-  void drawXAxes(int xind, bool other);
-  void drawYAxes(int yind, bool other);
-  void drawZAxes(int yind, bool other);
+  void drawXAxes(CGnuPlotRenderer *renderer, int xind, bool other);
+  void drawYAxes(CGnuPlotRenderer *renderer, int yind, bool other);
+  void drawZAxes(CGnuPlotRenderer *renderer, int yind, bool other);
 
   void drawGrid(const CGnuPlot::DrawLayer &layer);
 
@@ -283,6 +283,8 @@ class CGnuPlotGroup {
   void drawColorBox(CGnuPlotRenderer *renderer);
 
   void drawAnnotations(DrawLayer layer);
+
+  CGnuPlotPlot *getSingleStylePlot() const;
 
   CGnuPlotAxis *getPlotAxis(char c, int ind);
 

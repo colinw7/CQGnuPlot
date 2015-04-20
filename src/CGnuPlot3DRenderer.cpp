@@ -127,9 +127,26 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 
 void
 CGnuPlot3DRenderer::
-drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2, const CRGBA &c)
+drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
+                CHAlignType halign, CVAlignType valign, const CRGBA &c)
 {
-  renderer_->drawPieSlice(pc, r, angle1, angle2, c);
+  renderer_->drawRotatedText(p, text, ta, halign, valign,c );
+}
+
+void
+CGnuPlot3DRenderer::
+drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
+             double width, const CRGBA &c)
+{
+  renderer_->drawPieSlice(pc, ri, ro, angle1, angle2, width, c);
+}
+
+void
+CGnuPlot3DRenderer::
+fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
+             const CRGBA &c)
+{
+  renderer_->fillPieSlice(pc, ri, ro, angle1, angle2, c);
 }
 
 CPoint2D

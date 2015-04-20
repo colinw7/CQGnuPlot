@@ -124,7 +124,7 @@ drawContourLines()
     for (auto x : x_) {
       CPoint3D p = camera->transform(CPoint3D(x, y, min_z_));
 
-      renderer->drawPoint(CPoint2D(p.x, p.y));
+      renderer->drawPoint(CPoint2D(p.x, p.y), CRGBA(0,0,0));
     }
   }
 

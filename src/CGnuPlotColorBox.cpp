@@ -147,7 +147,7 @@ draw(CGnuPlotRenderer *renderer)
 
       ss << i;
 
-      renderer->drawText(CPoint2D(tx, y), ss.str());
+      renderer->drawText(CPoint2D(tx, y), ss.str(), CRGBA(0,0,0));
 
       y += dy;
     }
@@ -174,7 +174,7 @@ draw(CGnuPlotRenderer *renderer)
 
       ss << i;
 
-      renderer->drawText(CPoint2D(x, ty), ss.str());
+      renderer->drawText(CPoint2D(x, ty), ss.str(), CRGBA(0,0,0));
 
       x += dx;
     }

@@ -24,12 +24,12 @@ instance()
 CQPropertyEditorMgr::
 CQPropertyEditorMgr()
 {
-  setEditor("QPointF"  , new CQPropertyPointEditor   );
+  setEditor("CAngle"   , new CQPropertyAngleEditor);
+  setEditor("CLineDash", new CQPropertyLineDashEditor);
   setEditor("QColor"   , new CQPropertyColorEditor   );
   setEditor("QFont"    , new CQPropertyFontEditor    );
   setEditor("QPalette" , new CQPropertyPaletteEditor );
-  setEditor("CLineDash", new CQPropertyLineDashEditor);
-  setEditor("CAngle"   , new CQPropertyAngleEditor);
+  setEditor("QPointF"  , new CQPropertyPointEditor   );
 }
 
 void

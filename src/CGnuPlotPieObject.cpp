@@ -1,16 +1,16 @@
-#include <CGnuPlotPie.h>
+#include <CGnuPlotPieObject.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotUtil.h>
 
-CGnuPlotPie::
-CGnuPlotPie(CGnuPlotPlot *plot) :
+CGnuPlotPieObject::
+CGnuPlotPieObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
 }
 
 bool
-CGnuPlotPie::
+CGnuPlotPieObject::
 inside(const CPoint2D &p) const
 {
   double r = p.distanceTo(c_);
@@ -41,15 +41,28 @@ inside(const CPoint2D &p) const
 }
 
 void
-CGnuPlotPie::
+CGnuPlotPieObject::
 draw(CGnuPlotRenderer *renderer) const
 {
-  renderer->drawPieSlice(c_, r_, angle1_, angle2_, color_.getValue(CRGBA(1,0,0)));
+  CPoint2D c = c_;
+
+  if (exploded_) {
+    double angle = CAngle::Deg2Rad((angle1_ + angle2_)/2.0);
+
+    double x = c_.x + 0.1*r_*cos(angle);
+    double y = c_.y + 0.1*r_*sin(angle);
+
+    c.x += x;
+    c.y += y;
+  }
+
+  renderer->fillPieSlice(c, 0, r_, angle1_, angle2_, fillColor_.getValue(CRGBA(1,0,0)));
+  renderer->drawPieSlice(c, 0, r_, angle1_, angle2_, 0, lineColor_.getValue(CRGBA(1,0,0)));
 
   double tangle = CAngle::Deg2Rad((angle1_ + angle2_)/2.0);
 
-  double x = c_.x + 0.5*r_*cos(tangle);
-  double y = c_.y + 0.5*r_*sin(tangle);
+  double x = c.x + 0.5*r_*cos(tangle);
+  double y = c.y + 0.5*r_*sin(tangle);
 
   // aligned ?
   renderer->drawHAlignedText(CPoint2D(x, y), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,

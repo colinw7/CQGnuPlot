@@ -2,6 +2,7 @@
 #define CQPropertyDelegate_H
 
 #include <QItemDelegate>
+#include <CAngle.h>
 
 class QTreeWidget;
 class QTreeWidgetItem;
@@ -38,6 +39,10 @@ class CQPropertyDelegate : public QItemDelegate {
                  const QColor &c, const QModelIndex &index) const;
   void drawFont (QPainter *painter, const QStyleOptionViewItem &option,
                  const QFont &f, const QModelIndex &index) const;
+  void drawPoint(QPainter *painter, const QStyleOptionViewItem &option,
+                 const QPointF &p, const QModelIndex &index) const;
+  void drawAngle(QPainter *painter, const QStyleOptionViewItem &option,
+                 const CAngle &a, const QModelIndex &index) const;
 
  private:
   QTreeWidget *tree_;

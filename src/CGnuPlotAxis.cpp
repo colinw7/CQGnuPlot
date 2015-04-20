@@ -470,17 +470,21 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
     // Draw Minor Ticks (use user defined distribution if defined)
 
     if (getTickSpaces() == 0) {
-      for (int j = 1; j < getNumMinorTicks(); j++) {
-        double pos3 = j*(pos2 - pos1)/getNumMinorTicks() + pos1;
+      double dt = (pos2 - pos1)/getNumMinorTicks();
 
-        if (isDrawTickMark(first) && isDrawMinorTickMark()) {
-          if (pos3 >= getStart() && pos3 <= getEnd()) {
-            if (direction_ == CORIENTATION_HORIZONTAL)
-              drawAxisTick(CPoint2D(pos3, pos),
-                (isTickInside(first) ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), false);
-            else
-              drawAxisTick(CPoint2D(pos, pos3),
-                (isTickInside(first) ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), false);
+      if (checkMinorTickSize(dt)) {
+        for (int j = 1; j < getNumMinorTicks(); j++) {
+          double pos3 = j*dt + pos1;
+
+          if (isDrawTickMark(first) && isDrawMinorTickMark()) {
+            if (pos3 >= getStart() && pos3 <= getEnd()) {
+              if (direction_ == CORIENTATION_HORIZONTAL)
+                drawAxisTick(CPoint2D(pos3, pos),
+                  (isTickInside(first) ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), false);
+              else
+                drawAxisTick(CPoint2D(pos, pos3),
+                  (isTickInside(first) ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), false);
+            }
           }
         }
       }
@@ -690,11 +694,13 @@ drawGrid(CGnuPlotRenderer *renderer, double start, double end)
         if (gridMinor_) {
           double xincrement1 = getMinorIncrement();
 
-          for (int j = 0; j < getNumMinorTicks(); ++j) {
-            double x1 = x + j*xincrement1;
+          if (checkMinorTickSize(xincrement1)) {
+            for (int j = 0; j < getNumMinorTicks(); ++j) {
+              double x1 = x + j*xincrement1;
 
-            if (x1 >= getStart() && x1 <= getEnd())
-              drawClipLine(CPoint2D(x1, start), CPoint2D(x1, end));
+              if (x1 >= getStart() && x1 <= getEnd())
+                drawClipLine(CPoint2D(x1, start), CPoint2D(x1, end));
+            }
           }
         }
       }
@@ -713,11 +719,13 @@ drawGrid(CGnuPlotRenderer *renderer, double start, double end)
         if (gridMinor_) {
           double yincrement1 = getMinorIncrement();
 
-          for (int j = 0; j <= getNumMinorTicks(); ++j) {
-            double y1 = y + j*yincrement1;
+          if (checkMinorTickSize(yincrement1)) {
+            for (int j = 0; j <= getNumMinorTicks(); ++j) {
+              double y1 = y + j*yincrement1;
 
-            if (y1 >= getStart() && y1 <= getEnd())
-              drawClipLine(CPoint2D(start, y1), CPoint2D(end, y1));
+              if (y1 >= getStart() && y1 <= getEnd())
+                drawClipLine(CPoint2D(start, y1), CPoint2D(end, y1));
+            }
           }
         }
       }
@@ -725,6 +733,20 @@ drawGrid(CGnuPlotRenderer *renderer, double start, double end)
   }
 
   lineDash_ = CLineDash();
+}
+
+bool
+CGnuPlotAxis::
+checkMinorTickSize(double d) const
+{
+  double dp = 0;
+
+  if (direction_ == CORIENTATION_HORIZONTAL)
+    dp = renderer_->windowWidthToPixelWidth(d);
+  else
+    dp = renderer_->windowHeightToPixelHeight(d);
+
+  return (dp > 2);
 }
 
 void
@@ -761,7 +783,7 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
 
   group_->mapLogPoint(&x, &y);
 
-  renderer_->drawHAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str);
+  renderer_->drawHAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str, CRGBA(0,0,0));
 }
 
 void
@@ -773,5 +795,5 @@ drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
 
   group_->mapLogPoint(&x, &y);
 
-  renderer_->drawVAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str);
+  renderer_->drawVAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str, CRGBA(0,0,0));
 }

@@ -59,16 +59,14 @@ setFont(const QFont &f)
 
 void
 CQGnuPlotKey::
-draw()
+draw(CGnuPlotRenderer *renderer)
 {
   if (! isDisplayed())
     return;
 
-  CGnuPlotKey::draw();
+  CGnuPlotKey::draw(renderer);
 
   if (isSelected()) {
-    CGnuPlotRenderer *renderer = app()->renderer();
-
     renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);
   }
 }

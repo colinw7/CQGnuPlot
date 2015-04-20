@@ -43,6 +43,8 @@ class CGnuPlotLineStyle {
       return color_.color();
     else if (type_.isValid())
       return CGnuPlotStyleInst->indexColor(type_.getValue());
+    else if (ind_ > 0)
+      return CGnuPlotStyleInst->indexColor(ind_);
     else
       return c;
   }

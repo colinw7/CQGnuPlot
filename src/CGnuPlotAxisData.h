@@ -92,9 +92,9 @@ class CGnuPlotAxisData {
   const std::string &text() const { return text_; }
   void setText(const std::string &s) { text_ = s; }
 
-  bool hasTiclLabel(int i) const { return (ticlabel_.find(i) != ticlabel_.end()); }
+  bool hasTicLabel(int i) const { return (ticlabel_.find(i) != ticlabel_.end()); }
 
-  const std::string &ticlLabel(int i) const {
+  const std::string &ticLabel(int i) const {
     auto p = ticlabel_.find(i);
 
     return (*p).second;

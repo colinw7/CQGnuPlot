@@ -87,7 +87,7 @@ compileIToken(CExprITokenPtr itoken)
   compileIToken1(itoken);
 
   if (isError()) {
-    std::cerr << getLastError() << std::endl;
+    CExprInst->errorMsg(getLastError());
     return CExprCTokenStack();
   }
 
@@ -799,7 +799,7 @@ compilePostfixExpression(CExprITokenPtr itoken)
     CExprFunctionPtr function = CExprInst->getFunction(identifier);
 
     if (! function.isValid()) {
-      setLastError("Invalid Function");
+      setLastError("Invalid Function '" + identifier + "'");
       return;
     }
 

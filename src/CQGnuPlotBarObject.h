@@ -2,14 +2,14 @@
 #define CQGnuPlotBar_H
 
 #include <CQGnuPlotObject.h>
-#include <CGnuPlotBar.h>
+#include <CGnuPlotBarObject.h>
 #include <CQGnuPlot.h>
 
 #include <QColor>
 
 class CQGnuPlotPlot;
 
-class CQGnuPlotBar : public CQGnuPlotObject, public CGnuPlotBar {
+class CQGnuPlotBarObject : public CQGnuPlotObject, public CGnuPlotBarObject {
   Q_OBJECT
 
   Q_PROPERTY(double                 value       READ value)
@@ -20,8 +20,8 @@ class CQGnuPlotBar : public CQGnuPlotObject, public CGnuPlotBar {
   Q_PROPERTY(QColor                 lineColor   READ getLineColor   WRITE setLineColor  )
 
  public:
-  CQGnuPlotBar(CQGnuPlotPlot *plot);
- ~CQGnuPlotBar();
+  CQGnuPlotBarObject(CQGnuPlotPlot *plot);
+ ~CQGnuPlotBarObject();
 
   CQGnuPlot::FillType getFillType() const;
   void setFillType(const CQGnuPlot::FillType &t);

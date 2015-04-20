@@ -43,7 +43,7 @@ QPointF
 CQGnuPlotLabel::
 getPos() const
 {
-  return CQUtil::toQPoint(CGnuPlotLabel::getPos());
+  return CQUtil::toQPoint(CGnuPlotLabel::getPos().point());
 }
 
 void

@@ -1,16 +1,17 @@
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotWindow.h>
 #include <CQGnuPlotGroup.h>
-#include <CQGnuPlotBar.h>
-#include <CQGnuPlotPie.h>
-#include <CQGnuPlotBubble.h>
+#include <CQGnuPlotBarObject.h>
+#include <CQGnuPlotBubbleObject.h>
+#include <CQGnuPlotPieObject.h>
+#include <CQGnuPlotRectObject.h>
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
 
 CQGnuPlotPlot::
-CQGnuPlotPlot(CQGnuPlotGroup *group) :
- CGnuPlotPlot(group), group_(group)
+CQGnuPlotPlot(CQGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style) :
+ CGnuPlotPlot(group, style), group_(group)
 {
   setObjectName("plot");
 }
@@ -143,20 +144,9 @@ mousePress(const CPoint2D &p)
     if (! bar->inside(p))
       continue;
 
-    CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
     qwindow()->selectObject(qbar);
-
-    return;
-  }
-
-  for (auto &pie : pieObjects()) {
-    if (! pie->inside(p))
-      continue;
-
-    CQGnuPlotPie *qpie = static_cast<CQGnuPlotPie *>(pie);
-
-    qwindow()->selectObject(qpie);
 
     return;
   }
@@ -165,9 +155,31 @@ mousePress(const CPoint2D &p)
     if (! bubble->inside(p))
       continue;
 
-    CQGnuPlotBubble *qbubble = static_cast<CQGnuPlotBubble *>(bubble);
+    CQGnuPlotBubbleObject *qbubble = static_cast<CQGnuPlotBubbleObject *>(bubble);
 
     qwindow()->selectObject(qbubble);
+
+    return;
+  }
+  for (auto &pie : pieObjects()) {
+    if (! pie->inside(p))
+      continue;
+
+    CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
+
+    qwindow()->selectObject(qpie);
+
+    return;
+  }
+
+
+  for (auto &rect : rectObjects()) {
+    if (! rect->inside(p))
+      continue;
+
+    CQGnuPlotRectObject *qrect = static_cast<CQGnuPlotRectObject *>(rect);
+
+    qwindow()->selectObject(qrect);
 
     return;
   }
@@ -189,23 +201,8 @@ mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
     if (! bar->inside(p))
       continue;
 
-    tip.str  = QString("%1").arg(bar->value());
-    tip.rect = CQUtil::toQRect(bar->bbox());
-
-    return true;
-  }
-
-  for (auto &pie : pieObjects()) {
-    if (! pie->inside(p))
-      continue;
-
-    const CPoint2D &c = pie->center();
-    double          r = pie->radius();
-
-    CBBox2D bbox(c - CPoint2D(r, r), c + CPoint2D(r, r));
-
-    tip.str  = QString("%1").arg(pie->name().c_str());
-    tip.rect = CQUtil::toQRect(bbox);
+    tip.str  = bar->tip().c_str();
+    tip.rect = CQUtil::toQRect(bar->tipRect());
 
     return true;
   }
@@ -214,14 +211,28 @@ mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
     if (! bubble->inside(p))
       continue;
 
-    const CPoint2D &c  = bubble->center();
-    double          xr = bubble->xRadius();
-    double          yr = bubble->yRadius();
+    tip.str  = bubble->tip().c_str();
+    tip.rect = CQUtil::toQRect(bubble->tipRect());
 
-    CBBox2D bbox(c - CPoint2D(xr, yr), c + CPoint2D(xr, yr));
+    return true;
+  }
 
-    tip.str  = QString("%1").arg(bubble->name().c_str());
-    tip.rect = CQUtil::toQRect(bbox);
+  for (auto &pie : pieObjects()) {
+    if (! pie->inside(p))
+      continue;
+
+    tip.str  = pie->tip().c_str();
+    tip.rect = CQUtil::toQRect(pie->tipRect());
+
+    return true;
+  }
+
+  for (auto &rect : rectObjects()) {
+    if (! rect->inside(p))
+      continue;
+
+    tip.str  = rect->tip().c_str();
+    tip.rect = CQUtil::toQRect(rect->tipRect());
 
     return true;
   }

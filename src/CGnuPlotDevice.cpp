@@ -2,9 +2,10 @@
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
-#include <CGnuPlotBar.h>
-#include <CGnuPlotPie.h>
-#include <CGnuPlotBubble.h>
+#include <CGnuPlotBarObject.h>
+#include <CGnuPlotBubbleObject.h>
+#include <CGnuPlotPieObject.h>
+#include <CGnuPlotRectObject.h>
 #include <CFontMgr.h>
 
 CGnuPlotDevice::
@@ -32,9 +33,9 @@ createGroup(CGnuPlotWindow *window)
 
 CGnuPlotPlot *
 CGnuPlotDevice::
-createPlot(CGnuPlotGroup *group)
+createPlot(CGnuPlotGroup *group, CGnuPlotTypes::PlotStyle plotStyle)
 {
-  return new CGnuPlotPlot(group);
+  return new CGnuPlotPlot(group, plotStyle);
 }
 
 CGnuPlotLineStyle *
@@ -127,25 +128,32 @@ createCamera(CGnuPlotGroup *group)
   return new CGnuPlotCamera(group);
 }
 
-CGnuPlotBar *
+CGnuPlotBarObject *
 CGnuPlotDevice::
-createBar(CGnuPlotPlot *plot)
+createBarObject(CGnuPlotPlot *plot)
 {
-  return new CGnuPlotBar(plot);
+  return new CGnuPlotBarObject(plot);
 }
 
-CGnuPlotPie *
+CGnuPlotBubbleObject *
 CGnuPlotDevice::
-createPie(CGnuPlotPlot *plot)
+createBubbleObject(CGnuPlotPlot *plot)
 {
-  return new CGnuPlotPie(plot);
+  return new CGnuPlotBubbleObject(plot);
 }
 
-CGnuPlotBubble *
+CGnuPlotPieObject *
 CGnuPlotDevice::
-createBubble(CGnuPlotPlot *plot)
+createPieObject(CGnuPlotPlot *plot)
 {
-  return new CGnuPlotBubble(plot);
+  return new CGnuPlotPieObject(plot);
+}
+
+CGnuPlotRectObject *
+CGnuPlotDevice::
+createRectObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotRectObject(plot);
 }
 
 bool

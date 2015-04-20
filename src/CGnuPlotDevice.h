@@ -13,8 +13,6 @@ class CParseLine;
 class CGnuPlot;
 class CGnuPlotArrow;
 class CGnuPlotAxis;
-class CGnuPlotBar;
-class CGnuPlotBubble;
 class CGnuPlotCamera;
 class CGnuPlotCircle;
 class CGnuPlotColorBox;
@@ -24,10 +22,13 @@ class CGnuPlotKey;
 class CGnuPlotLabel;
 class CGnuPlotLineStyle;
 class CGnuPlotPalette;
-class CGnuPlotPie;
 class CGnuPlotPlot;
 class CGnuPlotPolygon;
 class CGnuPlotRectangle;
+class CGnuPlotBarObject;
+class CGnuPlotRectObject;
+class CGnuPlotBubbleObject;
+class CGnuPlotPieObject;
 class CGnuPlotRenderer;
 class CGnuPlotTitle;
 class CGnuPlotWindow;
@@ -65,7 +66,7 @@ class CGnuPlotDevice {
 
   virtual CGnuPlotGroup *createGroup(CGnuPlotWindow *window);
 
-  virtual CGnuPlotPlot *createPlot(CGnuPlotGroup *group);
+  virtual CGnuPlotPlot *createPlot(CGnuPlotGroup *group, CGnuPlotTypes::PlotStyle plotStyle);
 
   virtual CGnuPlotLineStyle *createLineStyle();
 
@@ -88,11 +89,10 @@ class CGnuPlotDevice {
 
   virtual CGnuPlotCamera *createCamera(CGnuPlotGroup *group);
 
-  virtual CGnuPlotBar *createBar(CGnuPlotPlot *plot);
-
-  virtual CGnuPlotPie *createPie(CGnuPlotPlot *plot);
-
-  virtual CGnuPlotBubble *createBubble(CGnuPlotPlot *plot);
+  virtual CGnuPlotBarObject    *createBarObject   (CGnuPlotPlot *plot);
+  virtual CGnuPlotBubbleObject *createBubbleObject(CGnuPlotPlot *plot);
+  virtual CGnuPlotPieObject    *createPieObject   (CGnuPlotPlot *plot);
+  virtual CGnuPlotRectObject   *createRectObject  (CGnuPlotPlot *plot);
 
   virtual void timeout() { }
 

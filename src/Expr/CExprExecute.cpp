@@ -265,7 +265,7 @@ executeOperator(const CExprOperatorPtr &op)
       break;
 #endif
     default: {
-      std::cerr << "Invalid operator for 'executeOperator'" << std::endl;
+      CExprInst->errorMsg("Invalid operator for 'executeOperator'");
       return false;
     }
   }
@@ -563,7 +563,7 @@ executeEqualsOperator()
     value = variable->getValue();
   }
   else {
-    std::cerr << "Non lvalue for asssignment" << std::endl;
+    CExprInst->errorMsg("Non lvalue for asssignment");
     return;
   }
 
@@ -597,13 +597,13 @@ executeFunction(const CExprFunctionPtr &function, CExprValuePtr &value)
 
     if (! value1.isValid()) {
       if (! (argType & CEXPR_VALUE_NULL)) {
-        std::cerr << "Invalid type for function argument" << std::endl;
+        CExprInst->errorMsg("Invalid type for function argument");
         return false;
       }
     }
     else {
       if (! (argType & CEXPR_VALUE_NULL) && ! value1->convToType(argType)) {
-        std::cerr << "Invalid type for function argument" << std::endl;
+        CExprInst->errorMsg("Invalid type for function argument");
         return false;
       }
     }
@@ -616,9 +616,10 @@ executeFunction(const CExprFunctionPtr &function, CExprValuePtr &value)
   std::copy(values.begin(), values.end(), std::back_inserter(values1));
 
   if (! function->checkValues(values1)) {
-    std::cerr << "Invalid function values : ";
-    function->print(std::cerr);
-    std::cerr << std::endl;
+    std::stringstream ostr;
+    ostr << "Invalid function values : ";
+    function->print(ostr);
+    CExprInst->errorMsg(ostr.str());
     return false;
   }
 

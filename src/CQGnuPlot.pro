@@ -18,8 +18,8 @@ CQGnuPlot.cpp \
 CQGnuPlotAnnotation.cpp \
 CQGnuPlotArrow.cpp \
 CQGnuPlotAxis.cpp \
-CQGnuPlotBar.cpp \
-CQGnuPlotBubble.cpp \
+CQGnuPlotBarObject.cpp \
+CQGnuPlotBubbleObject.cpp \
 CQGnuPlotCamera.cpp \
 CQGnuPlotCanvas.cpp \
 CQGnuPlotCircle.cpp \
@@ -31,10 +31,11 @@ CQGnuPlotKey.cpp \
 CQGnuPlotLabel.cpp \
 CQGnuPlotLineStyle.cpp \
 CQGnuPlotPalette.cpp \
-CQGnuPlotPie.cpp \
+CQGnuPlotPieObject.cpp \
 CQGnuPlotPlot.cpp \
 CQGnuPlotPolygon.cpp \
 CQGnuPlotRectangle.cpp \
+CQGnuPlotRectObject.cpp \
 CQGnuPlotRenderer.cpp \
 CQGnuPlotTitle.cpp \
 CQGnuPlotUtil.cpp \
@@ -45,8 +46,8 @@ CGnuPlotArrow.cpp \
 CGnuPlotArrowStyle.cpp \
 CGnuPlotAxis.cpp \
 CGnuPlotBBoxRenderer.cpp \
-CGnuPlotBar.cpp \
-CGnuPlotBubble.cpp \
+CGnuPlotBarObject.cpp \
+CGnuPlotBubbleObject.cpp \
 CGnuPlotCamera.cpp \
 CGnuPlotCircle.cpp \
 CGnuPlotColorBox.cpp \
@@ -63,13 +64,22 @@ CGnuPlotKeyData.cpp \
 CGnuPlotLabel.cpp \
 CGnuPlotLineStyle.cpp \
 CGnuPlotPalette.cpp \
-CGnuPlotPie.cpp \
+CGnuPlotPieObject.cpp \
 CGnuPlotPlot.cpp \
 CGnuPlotPoint.cpp \
 CGnuPlotPolygon.cpp \
 CGnuPlotPosition.cpp \
 CGnuPlotRectangle.cpp \
+CGnuPlotRectObject.cpp \
 CGnuPlotRenderer.cpp \
+CGnuPlotStyleBoxErrorBars.cpp \
+CGnuPlotStyleBoxes.cpp \
+CGnuPlotStyleBubblePlot.cpp \
+CGnuPlotStyleParallelAxes.cpp \
+CGnuPlotStylePieChart.cpp \
+CGnuPlotStyleRadar.cpp \
+CGnuPlotStyleSunburst.cpp \
+CGnuPlotStyleTreeMap.cpp \
 CGnuPlotSVGDevice.cpp \
 CGnuPlotSVGRenderer.cpp \
 CGnuPlotSize.cpp \
@@ -84,6 +94,11 @@ CQPropertyItem.cpp \
 CQPropertyTree.cpp \
 CQPaletteChooser.cpp \
 CQPaletteDialog.cpp \
+\
+CQRotatedText.cpp \
+\
+CTreeMap.cpp \
+CSunburst.cpp \
 \
 CMathGeom2D.cpp \
 CArcToBezier.cpp \
@@ -119,8 +134,8 @@ CQGnuPlot.h \
 CQGnuPlotAnnotation.h \
 CQGnuPlotArrow.h \
 CQGnuPlotAxis.h \
-CQGnuPlotBar.h \
-CQGnuPlotBubble.h \
+CQGnuPlotBarObject.h \
+CQGnuPlotBubbleObject.h \
 CQGnuPlotCamera.h \
 CQGnuPlotCanvas.h \
 CQGnuPlotCircle.h \
@@ -133,10 +148,11 @@ CQGnuPlotLabel.h \
 CQGnuPlotLineStyle.h \
 CQGnuPlotObject.h \
 CQGnuPlotPalette.h \
-CQGnuPlotPie.h \
+CQGnuPlotPieObject.h \
 CQGnuPlotPlot.h \
 CQGnuPlotPolygon.h \
 CQGnuPlotRectangle.h \
+CQGnuPlotRectObject.h \
 CQGnuPlotRenderer.h \
 CQGnuPlotTitle.h \
 CQGnuPlotUtil.h \
@@ -149,8 +165,8 @@ CGnuPlotArrowStyle.h \
 CGnuPlotAxis.h \
 CGnuPlotAxisData.h \
 CGnuPlotBBoxRenderer.h \
-CGnuPlotBar.h \
-CGnuPlotBubble.h \
+CGnuPlotBarObject.h \
+CGnuPlotBubbleObject.h \
 CGnuPlotCache.h \
 CGnuPlotCamera.h \
 CGnuPlotCircle.h \
@@ -170,7 +186,7 @@ CGnuPlotLineStyle.h \
 CGnuPlotNameValues.h \
 CGnuPlotObject.h \
 CGnuPlotPalette.h \
-CGnuPlotPie.h \
+CGnuPlotPieObject.h \
 CGnuPlotPlot.h \
 CGnuPlotPoint.h \
 CGnuPlotPointStyle.h \
@@ -178,11 +194,21 @@ CGnuPlotPolygon.h \
 CGnuPlotPosition.h \
 CGnuPlotPrefValue.h \
 CGnuPlotRectangle.h \
+CGnuPlotRectObject.h \
 CGnuPlotRenderer.h \
 CGnuPlotSVGDevice.h \
 CGnuPlotSVGRenderer.h \
 CGnuPlotSize.h \
+CGnuPlotStyleBase.h \
+CGnuPlotStyleBoxErrorBars.h \
+CGnuPlotStyleBoxes.h \
+CGnuPlotStyleBubblePlot.h \
 CGnuPlotStyle.h \
+CGnuPlotStyleParallelAxes.h \
+CGnuPlotStylePieChart.h \
+CGnuPlotStyleRadar.h \
+CGnuPlotStyleSunburst.h \
+CGnuPlotStyleTreeMap.h \
 CGnuPlotText.h \
 CGnuPlotTitle.h \
 CGnuPlotTypes.h \
@@ -195,6 +221,11 @@ CQPropertyItem.h \
 CQPropertyTree.h \
 CQPaletteChooser.h \
 CQPaletteDialog.h \
+\
+CQRotatedText.h \
+\
+CTreeMap.h \
+CSunburst.h \
 \
 CMathGeom2D.h \
 CArcToBezier.h \

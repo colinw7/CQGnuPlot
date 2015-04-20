@@ -128,7 +128,11 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
-  bool inside(const CPoint2D &p) const;
+  bool inside(const CPoint2D &p) const override;
+
+  std::string tip() const override { return ""; }
+
+  CBBox2D tipRect() const override { return CBBox2D(); }
 
   void print(std::ostream &os) const;
 

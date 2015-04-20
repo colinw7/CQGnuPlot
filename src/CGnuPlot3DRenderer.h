@@ -40,8 +40,13 @@ class CGnuPlot3DRenderer : public CGnuPlotRenderer {
 
   void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) override;
 
-  void drawPieSlice(const CPoint2D &pc, double r, double angle1, double angle2,
-                    const CRGBA &c=CRGBA(1,1,1)) override;
+  void drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
+                       CHAlignType halign, CVAlignType valign, const CRGBA &c) override;
+
+  void drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
+                    double width, const CRGBA &c) override;
+  void fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
+                    const CRGBA &c) override;
 
  private:
   CPoint2D transform(const CPoint2D &p) const;

@@ -18,10 +18,11 @@
 #include <CQGnuPlotTitle.h>
 #include <CQGnuPlotCamera.h>
 #include <CQGnuPlotLabel.h>
-#include <CQGnuPlotBar.h>
-#include <CQGnuPlotPie.h>
-#include <CQGnuPlotBubble.h>
 #include <CQGnuPlotDevice.h>
+#include <CQGnuPlotBarObject.h>
+#include <CQGnuPlotBubbleObject.h>
+#include <CQGnuPlotPieObject.h>
+#include <CQGnuPlotRectObject.h>
 
 #include <CQZoomMouseMode.h>
 #include <CQPanMouseMode.h>
@@ -544,7 +545,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     for (const auto &bar : plot->barObjects()) {
       QString barName = QString("%1/Bar%2").arg(barsName).arg(i + 1);
 
-      CQGnuPlotBar *qbar = static_cast<CQGnuPlotBar *>(bar);
+      CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
       tree_->addProperty(barName, qbar, "value");
       tree_->addProperty(barName, qbar, "fillType");
@@ -557,31 +558,49 @@ addPlotProperties(CGnuPlotPlot *plot)
     }
   }
 
-  if (! plot->pieObjects().empty()) {
-    int i = 0;
-
-    for (const auto &pie : plot->pieObjects()) {
-      QString pieName = QString("%1/Pies/Pie%2").arg(plotName).arg(i + 1);
-
-      CQGnuPlotPie *qpie = static_cast<CQGnuPlotPie *>(pie);
-
-      tree_->addProperty(pieName, qpie, "name" );
-      tree_->addProperty(pieName, qpie, "color");
-
-      ++i;
-    }
-  }
-
   if (! plot->bubbleObjects().empty()) {
     int i = 0;
 
     for (const auto &bubble : plot->bubbleObjects()) {
       QString bubbleName = QString("%1/Bubbles/Bubble%2").arg(plotName).arg(i + 1);
 
-      CQGnuPlotBubble *qbubble = static_cast<CQGnuPlotBubble *>(bubble);
+      CQGnuPlotBubbleObject *qbubble = static_cast<CQGnuPlotBubbleObject *>(bubble);
 
       tree_->addProperty(bubbleName, qbubble, "name" );
       tree_->addProperty(bubbleName, qbubble, "color");
+
+      ++i;
+    }
+  }
+
+  if (! plot->pieObjects().empty()) {
+    int i = 0;
+
+    for (const auto &pie : plot->pieObjects()) {
+      QString pieName = QString("%1/Pies/Pie%2").arg(plotName).arg(i + 1);
+
+      CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
+
+      tree_->addProperty(pieName, qpie, "name"     );
+      tree_->addProperty(pieName, qpie, "lineColor");
+      tree_->addProperty(pieName, qpie, "fillColor");
+      tree_->addProperty(pieName, qpie, "exploded" );
+
+      ++i;
+    }
+  }
+
+  if (! plot->rectObjects().empty()) {
+    int i = 0;
+
+    for (const auto &rect : plot->rectObjects()) {
+      QString rectName = QString("%1/Rects/Rect%2").arg(plotName).arg(i + 1);
+
+      CQGnuPlotRectObject *qrect = static_cast<CQGnuPlotRectObject *>(rect);
+
+      tree_->addProperty(rectName, qrect, "text"     );
+      tree_->addProperty(rectName, qrect, "fillColor");
+      tree_->addProperty(rectName, qrect, "lineColor");
 
       ++i;
     }

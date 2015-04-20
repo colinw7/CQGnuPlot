@@ -175,6 +175,8 @@ class CGnuPlotAxis {
                     int testNumGapTicks, double *start1, double *end1,
                     double *increment, int *numGaps, int *numGapTicks);
 
+  bool checkMinorTickSize(double d) const;
+
   void drawAxisTick(const CPoint2D &p, CDirectionType type, bool large);
 
   void drawTickLabel(const CPoint2D &p, const std::string &str, bool first);
