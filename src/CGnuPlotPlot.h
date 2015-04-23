@@ -173,11 +173,11 @@ class CGnuPlotPlot {
   const Bars &bars() const { return bars_; }
   void setBars(const Bars &s) { bars_ = s; }
 
-  double barsSize() const { return bars_.size; }
-  void setBarsSize(double s) { bars_.size = s; }
+  double barsSize() const { return bars_.size(); }
+  void setBarsSize(double s) { bars_.setSize(s); }
 
-  bool barsFront() const { return bars_.front; }
-  void setBarsFront(bool b) { bars_.front = b; }
+  bool barsFront() const { return bars_.isFront(); }
+  void setBarsFront(bool b) { bars_.setFront(b); }
 
   //---
 
@@ -364,12 +364,22 @@ class CGnuPlotPlot {
 
   //---
 
+  struct StyleValue {
+    virtual ~StyleValue() { }
+  };
+
+  typedef std::map<std::string, StyleValue *> StyleValues;
+
+  //---
+
   struct DrawHistogramData {
     double x2 { 0.5 };
     double y2 { 0.0 };
     double d  { 1.0 };
     double w  { 1.0 };
   };
+
+  //---
 
   void initRenderer();
 
@@ -381,7 +391,6 @@ class CGnuPlotPlot {
   void drawSurface(CGnuPlotRenderer *renderer);
 
   void drawBoxErrorBars      (CGnuPlotRenderer *renderer);
-  void drawBoxPlot           (CGnuPlotRenderer *renderer);
   void drawBoxXYErrorBars    (CGnuPlotRenderer *renderer);
   void drawCandleSticks      (CGnuPlotRenderer *renderer);
   void drawCircles           (CGnuPlotRenderer *renderer);
@@ -425,6 +434,9 @@ class CGnuPlotPlot {
   CGnuPlotRectObject   *createRectObject  () const;
 
   bool mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1) const;
+
+  void setStyleValue(const std::string &name, StyleValue *value);
+  StyleValue *styleValue(const std::string &name) const;
 
  protected:
   typedef std::vector<CPoint2D>         Points;
@@ -472,6 +484,7 @@ class CGnuPlotPlot {
   BubbleCache        bubbleCache_;
   PieCache           pieCache_;
   RectCache          rectCache_;
+  StyleValues        styleValues_;
 };
 
 //------

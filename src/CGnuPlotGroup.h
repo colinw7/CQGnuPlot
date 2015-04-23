@@ -6,6 +6,7 @@
 #include <CGnuPlotKey.h>
 #include <CGnuPlotColorBox.h>
 #include <CGnuPlotPalette.h>
+#include <CGnuPlotClip.h>
 
 class CGnuPlotGroup {
  public:
@@ -219,6 +220,11 @@ class CGnuPlotGroup {
 
   //-----
 
+  const CGnuPlotClip &clip() const { return clip_; }
+  void setClip(const CGnuPlotClip &clip) { clip_ = clip; }
+
+  //-----
+
   const PlotSize &plotSize() const { return plotSize_; }
   void setPlotSize(const PlotSize &s) { plotSize_ = s; }
 
@@ -349,6 +355,7 @@ class CGnuPlotGroup {
   CBBox2D               region_ {0,0,1,1};     // region of window
   Margin                margin_ {10,10,10,10}; // margin around plots
   CBBox2D               bbox_ { 0, 0, 1, 1 };  // bounding box
+  CGnuPlotClip          clip_;                 // clip
   COptValT<CBBox2D>     clearRect_;            // optional clear rectangle
   PlotSize              plotSize_;
   CGnuPlotHistogramData histogramData_;        // histogram style

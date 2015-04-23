@@ -72,14 +72,21 @@ CGnuPlotPosition.cpp \
 CGnuPlotRectangle.cpp \
 CGnuPlotRectObject.cpp \
 CGnuPlotRenderer.cpp \
+\
 CGnuPlotStyleBoxErrorBars.cpp \
 CGnuPlotStyleBoxes.cpp \
+CGnuPlotStyleBoxPlot.cpp \
+CGnuPlotStyleBoxXYErrorBars.cpp \
 CGnuPlotStyleBubblePlot.cpp \
+CGnuPlotStyleDelaunay.cpp \
 CGnuPlotStyleParallelAxes.cpp \
 CGnuPlotStylePieChart.cpp \
+CGnuPlotStylePolygons.cpp \
 CGnuPlotStyleRadar.cpp \
 CGnuPlotStyleSunburst.cpp \
 CGnuPlotStyleTreeMap.cpp \
+CGnuPlotStyleVectors.cpp \
+\
 CGnuPlotSVGDevice.cpp \
 CGnuPlotSVGRenderer.cpp \
 CGnuPlotSize.cpp \
@@ -99,6 +106,8 @@ CQRotatedText.cpp \
 \
 CTreeMap.cpp \
 CSunburst.cpp \
+CDelaunay.cpp \
+CHull3D.cpp \
 \
 CMathGeom2D.cpp \
 CArcToBezier.cpp \
@@ -199,16 +208,23 @@ CGnuPlotRenderer.h \
 CGnuPlotSVGDevice.h \
 CGnuPlotSVGRenderer.h \
 CGnuPlotSize.h \
+\
 CGnuPlotStyleBase.h \
 CGnuPlotStyleBoxErrorBars.h \
 CGnuPlotStyleBoxes.h \
+CGnuPlotStyleBoxPlot.h \
+CGnuPlotStyleBoxXYErrorBars.h \
 CGnuPlotStyleBubblePlot.h \
+CGnuPlotStyleDelaunay.h \
 CGnuPlotStyle.h \
 CGnuPlotStyleParallelAxes.h \
 CGnuPlotStylePieChart.h \
+CGnuPlotStylePolygons.h \
 CGnuPlotStyleRadar.h \
 CGnuPlotStyleSunburst.h \
 CGnuPlotStyleTreeMap.h \
+CGnuPlotStyleVectors.h \
+\
 CGnuPlotText.h \
 CGnuPlotTitle.h \
 CGnuPlotTypes.h \
@@ -226,6 +242,8 @@ CQRotatedText.h \
 \
 CTreeMap.h \
 CSunburst.h \
+CDelaunay.h \
+CHull3D.h \
 \
 CMathGeom2D.h \
 CArcToBezier.h \

@@ -1,0 +1,865 @@
+"New England" "Connecticut" "Fairfield County" 1
+"New England" "Connecticut" "Hartford County" 2
+"New England" "Connecticut" "Tolland County" 1
+"New England" "Maine" "Somerset County" 1
+"New England" "Maine" "Washington County" 1
+"New England" "Maine" "Piscataquis County" 2
+"New England" "Massachusetts" "Norfolk County" 1
+"New England" "Massachusetts" "Franklin County" 1
+"Mid East" "Delaware" "New Castle County" 1
+"Mid East" "Maryland" "Prince George's County" 1
+"Mid East" "Maryland" "Baltimore County" 2
+"Mid East" "Maryland" "St. Mary's County" 2
+"Mid East" "Maryland" "Montgomery County" 1
+"Mid East" "Maryland" "St. Mary's County" 1
+"Mid East" "Maryland" "Prince George's County" 1
+"Mid East" "Maryland" "Harford County" 2
+"Mid East" "New Jersey" "Union County" 1
+"Mid East" "New Jersey" "Ocean County" 1
+"Mid East" "New Jersey" "Bergen County" 1
+"Mid East" "New York" "Chenango County" 1
+"Mid East" "New York" "Delaware County" 1
+"Mid East" "New York" "Montgomery County" 1
+"Mid East" "New York" "Schenectady County" 1
+"Mid East" "New York" "Schoharie County" 1
+"Mid East" "New York" "Saratoga County" 1
+"Mid East" "New York" "Monroe County" 1
+"Mid East" "New York" "Steuben County" 1
+"Mid East" "Pennsylvania" "Erie County" 2
+"Mid East" "Pennsylvania" "Warren County" 2
+"Mid East" "Pennsylvania" "Perry County" 1
+"Mid East" "Pennsylvania" "Centre County" 1
+"Mid East" "Pennsylvania" "Lawrence County" 1
+"Mid East" "Pennsylvania" "Potter County" 1
+"Mid East" "Pennsylvania" "Somerset County" 1
+"Great Lakes" "Illinois" "Franklin County" 1
+"Great Lakes" "Illinois" "Saline County" 1
+"Great Lakes" "Illinois" "Ford County" 1
+"Great Lakes" "Illinois" "Christian County" 1
+"Great Lakes" "Illinois" "Carroll County" 1
+"Great Lakes" "Illinois" "Macoupin County" 1
+"Great Lakes" "Illinois" "Grundy County" 1
+"Great Lakes" "Illinois" "Rock Island County" 1
+"Great Lakes" "Illinois" "Whiteside County" 1
+"Great Lakes" "Illinois" "Madison County" 1
+"Great Lakes" "Illinois" "Macoupin County" 1
+"Great Lakes" "Illinois" "Montgomery County" 1
+"Great Lakes" "Illinois" "Macon County" 1
+"Great Lakes" "Illinois" "Vermilion County" 1
+"Great Lakes" "Illinois" "De Kalb County" 1
+"Great Lakes" "Illinois" "Jo Daviess County" 1
+"Great Lakes" "Illinois" "Carroll County" 1
+"Great Lakes" "Illinois" "Will County" 1
+"Great Lakes" "Illinois" "Henry County" 1
+"Great Lakes" "Illinois" "Lee County" 1
+"Great Lakes" "Illinois" "Bureau County" 1
+"Great Lakes" "Illinois" "Coles County" 1
+"Great Lakes" "Illinois" "Wabash County" 1
+"Great Lakes" "Illinois" "Wayne County" 1
+"Great Lakes" "Illinois" "La Salle County" 1
+"Great Lakes" "Illinois" "Alexander County" 2
+"Great Lakes" "Illinois" "Pulaski County" 1
+"Great Lakes" "Illinois" "Williamson County" 1
+"Great Lakes" "Illinois" "Johnson County" 1
+"Great Lakes" "Illinois" "Saline County" 1
+"Great Lakes" "Illinois" "Peoria County" 1
+"Great Lakes" "Illinois" "Tazewell County" 2
+"Great Lakes" "Illinois" "Woodford County" 1
+"Great Lakes" "Illinois" "Macoupin County" 1
+"Great Lakes" "Illinois" "Montgomery County" 1
+"Great Lakes" "Illinois" "La Salle County" 1
+"Great Lakes" "Illinois" "Livingston County" 2
+"Great Lakes" "Illinois" "Clinton County" 1
+"Great Lakes" "Illinois" "Washington County" 2
+"Great Lakes" "Illinois" "Christian County" 1
+"Great Lakes" "Illinois" "Clinton County" 1
+"Great Lakes" "Illinois" "Fayette County" 1
+"Great Lakes" "Illinois" "Grundy County" 1
+"Great Lakes" "Illinois" "Jasper County" 1
+"Great Lakes" "Illinois" "Will County" 1
+"Great Lakes" "Illinois" "Effingham County" 1
+"Great Lakes" "Illinois" "Moultrie County" 1
+"Great Lakes" "Illinois" "Douglas County" 1
+"Great Lakes" "Illinois" "Will County" 1
+"Great Lakes" "Illinois" "Douglas County" 1
+"Great Lakes" "Illinois" "Champaign County" 1
+"Great Lakes" "Illinois" "Douglas County" 1
+"Great Lakes" "Illinois" "Champaign County" 1
+"Great Lakes" "Illinois" "Kankakee County" 1
+"Great Lakes" "Illinois" "Vermilion County" 1
+"Great Lakes" "Illinois" "Will County" 1
+"Great Lakes" "Illinois" "Vermilion County" 1
+"Great Lakes" "Illinois" "Jefferson County" 1
+"Great Lakes" "Illinois" "Wayne County" 1
+"Great Lakes" "Illinois" "Iroquois County" 2
+"Great Lakes" "Illinois" "Wayne County" 1
+"Great Lakes" "Illinois" "Edwards County" 2
+"Great Lakes" "Illinois" "Wabash County" 1
+"Great Lakes" "Illinois" "Massac County" 1
+"Great Lakes" "Illinois" "Pope County" 1
+"Great Lakes" "Indiana" "Orange County" 1
+"Great Lakes" "Indiana" "Harrison County" 1
+"Great Lakes" "Indiana" "Vigo County" 2
+"Great Lakes" "Indiana" "Putnam County" 1
+"Great Lakes" "Indiana" "Hendricks County" 1
+"Great Lakes" "Indiana" "Benton County" 1
+"Great Lakes" "Indiana" "Pike County" 1
+"Great Lakes" "Indiana" "Perry County" 1
+"Great Lakes" "Indiana" "Miami County" 1
+"Great Lakes" "Indiana" "Newton County" 1
+"Great Lakes" "Indiana" "Jasper County" 2
+"Great Lakes" "Indiana" "Pulaski County" 1
+"Great Lakes" "Indiana" "Vermillion County" 1
+"Great Lakes" "Indiana" "Warren County" 1
+"Great Lakes" "Indiana" "Fountain County" 1
+"Great Lakes" "Indiana" "Benton County" 1
+"Great Lakes" "Indiana" "Montgomery County" 1
+"Great Lakes" "Indiana" "White County" 1
+"Great Lakes" "Indiana" "Tippecanoe County" 1
+"Great Lakes" "Indiana" "Montgomery County" 1
+"Great Lakes" "Indiana" "Tippecanoe County" 1
+"Great Lakes" "Indiana" "White County" 1
+"Great Lakes" "Indiana" "Tippecanoe County" 1
+"Great Lakes" "Indiana" "White County" 1
+"Great Lakes" "Indiana" "Tippecanoe County" 2
+"Great Lakes" "Indiana" "Knox County" 1
+"Great Lakes" "Indiana" "Tippecanoe County" 1
+"Great Lakes" "Indiana" "Clinton County" 1
+"Great Lakes" "Indiana" "Carroll County" 1
+"Great Lakes" "Indiana" "White County" 1
+"Great Lakes" "Indiana" "Clinton County" 1
+"Great Lakes" "Indiana" "Cass County" 1
+"Great Lakes" "Indiana" "Howard County" 1
+"Great Lakes" "Indiana" "Cass County" 1
+"Great Lakes" "Indiana" "Daviess County" 1
+"Great Lakes" "Indiana" "Howard County" 1
+"Great Lakes" "Indiana" "Miami County" 1
+"Great Lakes" "Indiana" "Boone County" 1
+"Great Lakes" "Indiana" "Kosciusko County" 1
+"Great Lakes" "Indiana" "Grant County" 1
+"Great Lakes" "Indiana" "Wabash County" 1
+"Great Lakes" "Indiana" "Kosciusko County" 1
+"Great Lakes" "Indiana" "Boone County" 1
+"Great Lakes" "Indiana" "Wabash County" 1
+"Great Lakes" "Indiana" "Kosciusko County" 1
+"Great Lakes" "Indiana" "Grant County" 1
+"Great Lakes" "Indiana" "Lawrence County" 1
+"Great Lakes" "Indiana" "Hamilton County" 1
+"Great Lakes" "Indiana" "Tipton County" 1
+"Great Lakes" "Michigan" "Shiawassee County" 2
+"Great Lakes" "Michigan" "Genesee County" 1
+"Great Lakes" "Michigan" "Shiawassee County" 1
+"Great Lakes" "Michigan" "Genesee County" 3
+"Great Lakes" "Michigan" "Livingston County" 2
+"Great Lakes" "Michigan" "Muskegon County" 1
+"Great Lakes" "Michigan" "Newaygo County" 1
+"Great Lakes" "Michigan" "Mecosta County" 1
+"Great Lakes" "Michigan" "Cass County" 1
+"Great Lakes" "Michigan" "Otsego County" 1
+"Great Lakes" "Ohio" "Van Wert County" 1
+"Great Lakes" "Ohio" "Mercer County" 1
+"Great Lakes" "Ohio" "Henry County" 3
+"Great Lakes" "Ohio" "Auglaize County" 1
+"Great Lakes" "Ohio" "Henry County" 2
+"Great Lakes" "Ohio" "Wood County" 1
+"Great Lakes" "Ohio" "Delaware County" 1
+"Great Lakes" "Ohio" "Seneca County" 2
+"Great Lakes" "Ohio" "Huron County" 1
+"Great Lakes" "Ohio" "Sandusky County" 1
+"Great Lakes" "Ohio" "Ashland County" 1
+"Great Lakes" "Ohio" "Tuscarawas County" 1
+"Great Lakes" "Ohio" "Carroll County" 3
+"Great Lakes" "Ohio" "Cuyahoga County" 1
+"Great Lakes" "Ohio" "Carroll County" 1
+"Great Lakes" "Ohio" "Columbiana County" 1
+"Great Lakes" "Ohio" "Wayne County" 1
+"Great Lakes" "Ohio" "Guernsey County" 1
+"Great Lakes" "Ohio" "Montgomery County" 1
+"Great Lakes" "Ohio" "Miami County" 1
+"Great Lakes" "Ohio" "Franklin County" 1
+"Great Lakes" "Ohio" "Licking County" 1
+"Great Lakes" "Ohio" "Van Wert County" 1
+"Great Lakes" "Ohio" "Putnam County" 1
+"Great Lakes" "Ohio" "Paulding County" 1
+"Great Lakes" "Ohio" "Putnam County" 1
+"Great Lakes" "Ohio" "Wood County" 3
+"Great Lakes" "Ohio" "Lucas County" 1
+"Great Lakes" "Ohio" "Ottawa County" 1
+"Great Lakes" "Wisconsin" "Grant County" 1
+"Great Lakes" "Wisconsin" "Columbia County" 1
+"Great Lakes" "Wisconsin" "Lincoln County" 1
+"Great Lakes" "Wisconsin" "Langlade County" 1
+"Great Lakes" "Wisconsin" "Portage County" 1
+"Great Lakes" "Wisconsin" "Oconto County" 1
+"Great Lakes" "Wisconsin" "Eau Claire County" 1
+"Great Lakes" "Wisconsin" "Trempealeau County" 1
+"Great Lakes" "Wisconsin" "Waupaca County" 2
+"Great Lakes" "Wisconsin" "Outagamie County" 5
+"Great Lakes" "Wisconsin" "Brown County" 3
+"Great Lakes" "Wisconsin" "Calumet County" 1
+"Great Lakes" "Wisconsin" "Brown County" 1
+"Great Lakes" "Wisconsin" "Manitowoc County" 1
+"Great Lakes" "Wisconsin" "Kewaunee County" 1
+"Great Lakes" "Wisconsin" "Chippewa County" 1
+"Great Lakes" "Wisconsin" "Marquette County" 1
+"Plains" "Iowa" "Dallas County" 2
+"Plains" "Iowa" "Polk County" 1
+"Plains" "Iowa" "Story County" 1
+"Plains" "Iowa" "Ringgold County" 1
+"Plains" "Iowa" "Clayton County" 1
+"Plains" "Iowa" "Muscatine County" 1
+"Plains" "Iowa" "Scott County" 1
+"Plains" "Iowa" "Floyd County" 1
+"Plains" "Iowa" "Wright County" 3
+"Plains" "Iowa" "Franklin County" 4
+"Plains" "Iowa" "Muscatine County" 1
+"Plains" "Iowa" "Webster County" 1
+"Plains" "Iowa" "Monona County" 1
+"Plains" "Iowa" "Woodbury County" 3
+"Plains" "Iowa" "Plymouth County" 3
+"Plains" "Iowa" "Cherokee County" 4
+"Plains" "Iowa" "Buena Vista County" 1
+"Plains" "Iowa" "Clay County" 1
+"Plains" "Kansas" "Russell County" 1
+"Plains" "Kansas" "Ellis County" 2
+"Plains" "Kansas" "Russell County" 1
+"Plains" "Kansas" "Trego County" 1
+"Plains" "Kansas" "Ness County" 1
+"Plains" "Kansas" "Ellis County" 2
+"Plains" "Kansas" "Pawnee County" 3
+"Plains" "Kansas" "Clay County" 1
+"Plains" "Kansas" "Washington County" 2
+"Plains" "Kansas" "Sumner County" 1
+"Plains" "Kansas" "Sedgwick County" 2
+"Plains" "Kansas" "Sumner County" 3
+"Plains" "Kansas" "Cowley County" 2
+"Plains" "Kansas" "Marion County" 1
+"Plains" "Kansas" "Dickinson County" 1
+"Plains" "Kansas" "Lyon County" 1
+"Plains" "Kansas" "Cowley County" 1
+"Plains" "Kansas" "Montgomery County" 1
+"Plains" "Kansas" "Stanton County" 2
+"Plains" "Kansas" "Smith County" 3
+"Plains" "Kansas" "Jewell County" 1
+"Plains" "Kansas" "Marshall County" 1
+"Plains" "Kansas" "Nemaha County" 3
+"Plains" "Kansas" "Ottawa County" 2
+"Plains" "Kansas" "Barton County" 1
+"Plains" "Kansas" "Rush County" 1
+"Plains" "Kansas" "Logan County" 1
+"Plains" "Kansas" "Gove County" 1
+"Plains" "Kansas" "Kearny County" 3
+"Plains" "Kansas" "Phillips County" 1
+"Plains" "Kansas" "Montgomery County" 1
+"Plains" "Kansas" "Kearny County" 1
+"Plains" "Kansas" "Kiowa County" 2
+"Plains" "Kansas" "Stanton County" 1
+"Plains" "Kansas" "Hamilton County" 1
+"Plains" "Kansas" "Pratt County" 1
+"Plains" "Kansas" "Bourbon County" 1
+"Plains" "Kansas" "Sherman County" 2
+"Plains" "Kansas" "Lane County" 1
+"Plains" "Minnesota" "Cottonwood County" 1
+"Plains" "Minnesota" "Jackson County" 1
+"Plains" "Minnesota" "Dodge County" 1
+"Plains" "Minnesota" "Chisago County" 1
+"Plains" "Minnesota" "Lyon County" 1
+"Plains" "Minnesota" "Clay County" 1
+"Plains" "Minnesota" "Polk County" 1
+"Plains" "Minnesota" "Clearwater County" 1
+"Plains" "Minnesota" "Mahnomen County" 1
+"Plains" "Minnesota" "Clearwater County" 1
+"Plains" "Minnesota" "Stevens County" 2
+"Plains" "Minnesota" "Kandiyohi County" 1
+"Plains" "Minnesota" "Otter Tail County" 1
+"Plains" "Minnesota" "Cass County" 1
+"Plains" "Minnesota" "Aitkin County" 1
+"Plains" "Minnesota" "Lake Of The Woods County" 1
+"Plains" "Minnesota" "Traverse County" 1
+"Plains" "Missouri" "Cedar County" 1
+"Plains" "Missouri" "St. Clair County" 1
+"Plains" "Missouri" "Hickory County" 1
+"Plains" "Missouri" "Warren County" 1
+"Plains" "Missouri" "Lincoln County" 1
+"Plains" "Missouri" "Ripley County" 1
+"Plains" "Missouri" "Butler County" 1
+"Plains" "Missouri" "Cape Girardeau County" 2
+"Plains" "Missouri" "Franklin County" 1
+"Plains" "Missouri" "St. Louis County" 2
+"Plains" "Missouri" "Butler County" 1
+"Plains" "Missouri" "Stoddard County" 1
+"Plains" "Missouri" "Monroe County" 3
+"Plains" "Missouri" "Jasper County" 1
+"Plains" "Missouri" "Dade County" 1
+"Plains" "Missouri" "Pettis County" 1
+"Plains" "Missouri" "Cedar County" 1
+"Plains" "Missouri" "Barton County" 1
+"Plains" "Missouri" "Newton County" 1
+"Plains" "Missouri" "St. Clair County" 1
+"Plains" "Missouri" "Marion County" 1
+"Plains" "Missouri" "Barry County" 1
+"Plains" "Missouri" "Stone County" 3
+"Plains" "Missouri" "Morgan County" 1
+"Plains" "Missouri" "Howell County" 1
+"Plains" "Missouri" "Montgomery County" 3
+"Plains" "Missouri" "Franklin County" 1
+"Plains" "Missouri" "St. Charles County" 1
+"Plains" "Missouri" "Jefferson County" 1
+"Plains" "Missouri" "St. Louis County" 2
+"Plains" "Missouri" "Greene County" 1
+"Plains" "Missouri" "Lafayette County" 1
+"Plains" "Missouri" "Ripley County" 1
+"Plains" "Missouri" "Butler County" 2
+"Plains" "Missouri" "Bollinger County" 1
+"Plains" "Missouri" "Stoddard County" 1
+"Plains" "Missouri" "Cape Girardeau County" 1
+"Plains" "Missouri" "Stoddard County" 1
+"Plains" "Missouri" "New Madrid County" 1
+"Plains" "Missouri" "Mississippi County" 1
+"Plains" "Missouri" "Perry County" 1
+"Plains" "Missouri" "Scott County" 1
+"Plains" "Nebraska" "Buffalo County" 1
+"Plains" "Nebraska" "Lincoln County" 2
+"Plains" "Nebraska" "Dundy County" 1
+"Plains" "Nebraska" "Dawes County" 1
+"Plains" "Nebraska" "Morrill County" 1
+"Plains" "Nebraska" "Greeley County" 1
+"Plains" "Nebraska" "Kimball County" 2
+"Plains" "Nebraska" "Sioux County" 1
+"Plains" "Nebraska" "Box Butte County" 1
+"Plains" "Nebraska" "Clay County" 1
+"Plains" "Nebraska" "Jefferson County" 2
+"Plains" "Nebraska" "Gage County" 1
+"Plains" "Nebraska" "Sioux County" 1
+"Plains" "Nebraska" "Box Butte County" 1
+"Plains" "Nebraska" "Clay County" 2
+"Plains" "Nebraska" "York County" 1
+"Plains" "Nebraska" "Clay County" 1
+"Plains" "Nebraska" "York County" 1
+"Plains" "Nebraska" "Custer County" 1
+"Plains" "Nebraska" "York County" 1
+"Plains" "Nebraska" "Butler County" 1
+"Plains" "Nebraska" "Howard County" 1
+"Plains" "Nebraska" "Wheeler County" 1
+"Plains" "Nebraska" "Dawes County" 2
+"Plains" "Nebraska" "Cherry County" 1
+"Plains" "Nebraska" "Cheyenne County" 2
+"Plains" "Nebraska" "Sheridan County" 1
+"Plains" "Nebraska" "Banner County" 2
+"Plains" "Nebraska" "Kimball County" 1
+"Plains" "Nebraska" "Custer County" 1
+"Plains" "Nebraska" "Dawson County" 1
+"Plains" "Nebraska" "Custer County" 1
+"Plains" "Nebraska" "Sheridan County" 1
+"Plains" "Nebraska" "Lancaster County" 1
+"Plains" "Nebraska" "Otoe County" 1
+"Plains" "Nebraska" "Cass County" 1
+"Plains" "Nebraska" "Stanton County" 1
+"Plains" "Nebraska" "Antelope County" 1
+"Plains" "Nebraska" "Wayne County" 1
+"Plains" "Nebraska" "Knox County" 1
+"Plains" "Nebraska" "Dixon County" 1
+"Plains" "Nebraska" "Thurston County" 1
+"Plains" "Nebraska" "Dixon County" 1
+"Plains" "Nebraska" "Dakota County" 2
+"Plains" "North Dakota" "Walsh County" 2
+"Plains" "North Dakota" "Bowman County" 1
+"Plains" "North Dakota" "Golden Valley County" 1
+"Plains" "North Dakota" "Adams County" 1
+"Plains" "North Dakota" "Richland County" 1
+"Plains" "North Dakota" "Barnes County" 1
+"Plains" "North Dakota" "Mchenry County" 1
+"Plains" "North Dakota" "Morton County" 1
+"Plains" "North Dakota" "Sargent County" 1
+"Plains" "North Dakota" "Mchenry County" 1
+"Plains" "North Dakota" "Ramsey County" 1
+"Plains" "North Dakota" "Richland County" 2
+"Plains" "North Dakota" "Morton County" 1
+"Plains" "North Dakota" "Pembina County" 1
+"Plains" "South Dakota" "Yankton County" 1
+"Plains" "South Dakota" "Bennett County" 1
+"Plains" "South Dakota" "Hand County" 1
+"Plains" "South Dakota" "Clark County" 1
+"Plains" "South Dakota" "Kingsbury County" 1
+"Plains" "South Dakota" "Clark County" 1
+"Plains" "South Dakota" "Kingsbury County" 1
+"Plains" "South Dakota" "Hamlin County" 1
+"Plains" "South Dakota" "Campbell County" 1
+"Plains" "South Dakota" "Haakon County" 1
+"Plains" "South Dakota" "Pennington County" 1
+"Plains" "South Dakota" "Custer County" 1
+"Plains" "South Dakota" "Union County" 2
+"Southeast" "Alabama" "Lamar County" 1
+"Southeast" "Alabama" "Fayette County" 1
+"Southeast" "Alabama" "Walker County" 1
+"Southeast" "Alabama" "Winston County" 2
+"Southeast" "Alabama" "Cullman County" 1
+"Southeast" "Alabama" "Washington County" 1
+"Southeast" "Alabama" "Clarke County" 2
+"Southeast" "Alabama" "Colbert County" 1
+"Southeast" "Alabama" "Marshall County" 2
+"Southeast" "Alabama" "Dekalb County" 2
+"Southeast" "Alabama" "Etowah County" 1
+"Southeast" "Alabama" "Pickens County" 1
+"Southeast" "Alabama" "Walker County" 1
+"Southeast" "Alabama" "Winston County" 3
+"Southeast" "Alabama" "Bibb County" 1
+"Southeast" "Alabama" "Madison County" 2
+"Southeast" "Alabama" "Mobile County" 1
+"Southeast" "Alabama" "Macon County" 1
+"Southeast" "Alabama" "Lee County" 1
+"Southeast" "Alabama" "Limestone County" 2
+"Southeast" "Arkansas" "Crawford County" 1
+"Southeast" "Arkansas" "Washington County" 1
+"Southeast" "Arkansas" "Madison County" 1
+"Southeast" "Arkansas" "Pulaski County" 1
+"Southeast" "Arkansas" "Drew County" 1
+"Southeast" "Arkansas" "Miller County" 1
+"Southeast" "Arkansas" "Van Buren County" 1
+"Southeast" "Arkansas" "Izard County" 1
+"Southeast" "Arkansas" "Stone County" 1
+"Southeast" "Arkansas" "Lincoln County" 1
+"Southeast" "Arkansas" "Ashley County" 1
+"Southeast" "Arkansas" "Chicot County" 1
+"Southeast" "Arkansas" "Washington County" 1
+"Southeast" "Arkansas" "Benton County" 2
+"Southeast" "Arkansas" "Polk County" 1
+"Southeast" "Arkansas" "Montgomery County" 1
+"Southeast" "Arkansas" "Pike County" 2
+"Southeast" "Arkansas" "Clark County" 1
+"Southeast" "Arkansas" "Montgomery County" 1
+"Southeast" "Arkansas" "Hot Spring County" 1
+"Southeast" "Arkansas" "Garland County" 1
+"Southeast" "Arkansas" "Polk County" 1
+"Southeast" "Arkansas" "Garland County" 1
+"Southeast" "Arkansas" "Polk County" 1
+"Southeast" "Arkansas" "Montgomery County" 1
+"Southeast" "Arkansas" "Saline County" 1
+"Southeast" "Arkansas" "Pulaski County" 1
+"Southeast" "Arkansas" "Grant County" 1
+"Southeast" "Arkansas" "Monroe County" 2
+"Southeast" "Arkansas" "St. Francis County" 1
+"Southeast" "Arkansas" "Madison County" 1
+"Southeast" "Arkansas" "Crittenden County" 1
+"Southeast" "Arkansas" "Craighead County" 1
+"Southeast" "Arkansas" "Jefferson County" 1
+"Southeast" "Arkansas" "St. Francis County" 1
+"Southeast" "Arkansas" "Chicot County" 1
+"Southeast" "Arkansas" "Desha County" 1
+"Southeast" "Arkansas" "Chicot County" 1
+"Southeast" "Florida" "Palm Beach County" 1
+"Southeast" "Florida" "Franklin County" 1
+"Southeast" "Florida" "Hillsborough County" 1
+"Southeast" "Florida" "Monroe County" 1
+"Southeast" "Florida" "Franklin County" 1
+"Southeast" "Florida" "Brevard County" 2
+"Southeast" "Florida" "Palm Beach County" 2
+"Southeast" "Florida" "St. Johns County" 1
+"Southeast" "Florida" "Palm Beach County" 2
+"Southeast" "Florida" "Broward County" 1
+"Southeast" "Florida" "Palm Beach County" 1
+"Southeast" "Florida" "Pinellas County" 1
+"Southeast" "Florida" "Sarasota County" 1
+"Southeast" "Florida" "Lee County" 1
+"Southeast" "Florida" "Manatee County" 1
+"Southeast" "Florida" "Hillsborough County" 1
+"Southeast" "Florida" "Duval County" 1
+"Southeast" "Florida" "Suwannee County" 1
+"Southeast" "Florida" "Pinellas County" 3
+"Southeast" "Florida" "Okaloosa County" 1
+"Southeast" "Florida" "Manatee County" 2
+"Southeast" "Florida" "Broward County" 1
+"Southeast" "Florida" "St. Johns County" 1
+"Southeast" "Florida" "Escambia County" 1
+"Southeast" "Florida" "Broward County" 1
+"Southeast" "Florida" "Hamilton County" 1
+"Southeast" "Florida" "Duval County" 1
+"Southeast" "Florida" "Palm Beach County" 1
+"Southeast" "Florida" "Hillsborough County" 1
+"Southeast" "Florida" "Gulf County" 1
+"Southeast" "Florida" "Liberty County" 1
+"Southeast" "Florida" "Flagler County" 1
+"Southeast" "Georgia" "Bartow County" 1
+"Southeast" "Georgia" "Gordon County" 1
+"Southeast" "Georgia" "Gilmer County" 1
+"Southeast" "Georgia" "Fannin County" 1
+"Southeast" "Georgia" "Baker County" 1
+"Southeast" "Georgia" "Lee County" 1
+"Southeast" "Georgia" "Glascock County" 1
+"Southeast" "Georgia" "Meriwether County" 1
+"Southeast" "Georgia" "Pike County" 1
+"Southeast" "Georgia" "Burke County" 1
+"Southeast" "Georgia" "Haralson County" 1
+"Southeast" "Georgia" "Polk County" 1
+"Southeast" "Georgia" "Lumpkin County" 1
+"Southeast" "Georgia" "Hall County" 1
+"Southeast" "Georgia" "Lumpkin County" 1
+"Southeast" "Georgia" "Newton County" 1
+"Southeast" "Georgia" "Morgan County" 1
+"Southeast" "Georgia" "Coweta County" 1
+"Southeast" "Georgia" "Henry County" 1
+"Southeast" "Georgia" "Lincoln County" 1
+"Southeast" "Georgia" "Cherokee County" 2
+"Southeast" "Georgia" "Cobb County" 1
+"Southeast" "Georgia" "Fulton County" 1
+"Southeast" "Georgia" "Heard County" 1
+"Southeast" "Kentucky" "Livingston County" 1
+"Southeast" "Kentucky" "Calloway County" 1
+"Southeast" "Kentucky" "Christian County" 2
+"Southeast" "Kentucky" "Muhlenberg County" 1
+"Southeast" "Kentucky" "Warren County" 1
+"Southeast" "Kentucky" "Edmonson County" 1
+"Southeast" "Kentucky" "Barren County" 1
+"Southeast" "Kentucky" "Meade County" 1
+"Southeast" "Kentucky" "Jefferson County" 1
+"Southeast" "Kentucky" "Marion County" 1
+"Southeast" "Kentucky" "Pulaski County" 2
+"Southeast" "Kentucky" "Graves County" 3
+"Southeast" "Kentucky" "Marshall County" 1
+"Southeast" "Kentucky" "Johnson County" 1
+"Southeast" "Kentucky" "Lawrence County" 1
+"Southeast" "Kentucky" "Logan County" 1
+"Southeast" "Kentucky" "Simpson County" 1
+"Southeast" "Kentucky" "Larue County" 1
+"Southeast" "Kentucky" "Trigg County" 1
+"Southeast" "Kentucky" "Ballard County" 1
+"Southeast" "Kentucky" "Carlisle County" 1
+"Southeast" "Kentucky" "Ballard County" 1
+"Southeast" "Kentucky" "Mccracken County" 4
+"Southeast" "Kentucky" "Marshall County" 1
+"Southeast" "Kentucky" "Mccracken County" 1
+"Southeast" "Kentucky" "Livingston County" 1
+"Southeast" "Kentucky" "Union County" 1
+"Southeast" "Kentucky" "Lyon County" 1
+"Southeast" "Kentucky" "Henderson County" 1
+"Southeast" "Kentucky" "Caldwell County" 1
+"Southeast" "Kentucky" "Hopkins County" 1
+"Southeast" "Kentucky" "Muhlenberg County" 1
+"Southeast" "Kentucky" "Butler County" 1
+"Southeast" "Kentucky" "Calloway County" 1
+"Southeast" "Kentucky" "Taylor County" 1
+"Southeast" "Kentucky" "Harrison County" 1
+"Southeast" "Kentucky" "Bourbon County" 1
+"Southeast" "Louisiana" "St. Martin Parish" 1
+"Southeast" "Louisiana" "Iberia Parish" 1
+"Southeast" "Louisiana" "Iberville Parish" 1
+"Southeast" "Louisiana" "De Soto Parish" 1
+"Southeast" "Louisiana" "Red River Parish" 1
+"Southeast" "Louisiana" "Caddo Parish" 1
+"Southeast" "Louisiana" "St. Martin Parish" 1
+"Southeast" "Louisiana" "East Baton Rouge Parish" 1
+"Southeast" "Louisiana" "East Feliciana Parish" 1
+"Southeast" "Louisiana" "West Carroll Parish" 1
+"Southeast" "Louisiana" "De Soto Parish" 1
+"Southeast" "Louisiana" "Caddo Parish" 2
+"Southeast" "Louisiana" "Vernon Parish" 1
+"Southeast" "Louisiana" "Natchitoches Parish" 1
+"Southeast" "Louisiana" "Concordia Parish" 1
+"Southeast" "Louisiana" "Lafourche Parish" 1
+"Southeast" "Louisiana" "Terrebonne Parish" 1
+"Southeast" "Louisiana" "St. Tammany Parish" 1
+"Southeast" "Louisiana" "East Carroll Parish" 1
+"Southeast" "Louisiana" "Madison Parish" 1
+"Southeast" "Louisiana" "Iberville Parish" 1
+"Southeast" "Louisiana" "Jefferson Parish" 2
+"Southeast" "Louisiana" "Bienville Parish" 1
+"Southeast" "Louisiana" "Beauregard Parish" 1
+"Southeast" "Louisiana" "Cameron Parish" 1
+"Southeast" "Louisiana" "Caddo Parish" 2
+"Southeast" "Louisiana" "De Soto Parish" 1
+"Southeast" "Louisiana" "Jefferson Parish" 1
+"Southeast" "Louisiana" "Red River Parish" 1
+"Southeast" "Louisiana" "Calcasieu Parish" 1
+"Southeast" "Louisiana" "Beauregard Parish" 2
+"Southeast" "Louisiana" "Allen Parish" 1
+"Southeast" "Louisiana" "Calcasieu Parish" 1
+"Southeast" "Louisiana" "Evangeline Parish" 1
+"Southeast" "Louisiana" "Acadia Parish" 1
+"Southeast" "Louisiana" "Union Parish" 1
+"Southeast" "Mississippi" "Pearl River County" 1
+"Southeast" "Mississippi" "Wayne County" 1
+"Southeast" "Mississippi" "Bolivar County" 2
+"Southeast" "Mississippi" "Monroe County" 1
+"Southeast" "Mississippi" "Lawrence County" 1
+"Southeast" "Mississippi" "Marion County" 1
+"Southeast" "Mississippi" "Lamar County" 2
+"Southeast" "Mississippi" "Forrest County" 1
+"Southeast" "Mississippi" "Perry County" 1
+"Southeast" "Mississippi" "Wayne County" 2
+"Southeast" "Mississippi" "Jefferson Davis County" 1
+"Southeast" "Mississippi" "Covington County" 1
+"Southeast" "Mississippi" "Kemper County" 1
+"Southeast" "Mississippi" "Noxubee County" 1
+"Southeast" "Mississippi" "Issaquena County" 1
+"Southeast" "Mississippi" "Washington County" 1
+"Southeast" "Mississippi" "Sharkey County" 2
+"Southeast" "Mississippi" "Panola County" 1
+"Southeast" "Mississippi" "Sunflower County" 1
+"Southeast" "Mississippi" "Simpson County" 1
+"Southeast" "Mississippi" "Adams County" 2
+"Southeast" "Mississippi" "Rankin County" 1
+"Southeast" "Mississippi" "Smith County" 1
+"Southeast" "Mississippi" "Warren County" 1
+"Southeast" "Mississippi" "Hinds County" 1
+"Southeast" "Mississippi" "Bolivar County" 1
+"Southeast" "Mississippi" "Coahoma County" 1
+"Southeast" "Mississippi" "Tunica County" 1
+"Southeast" "Mississippi" "Panola County" 1
+"Southeast" "Mississippi" "Tate County" 2
+"Southeast" "North Carolina" "Johnston County" 1
+"Southeast" "North Carolina" "Brunswick County" 1
+"Southeast" "North Carolina" "Onslow County" 1
+"Southeast" "North Carolina" "Haywood County" 1
+"Southeast" "North Carolina" "Franklin County" 1
+"Southeast" "North Carolina" "Person County" 1
+"Southeast" "North Carolina" "Stokes County" 1
+"Southeast" "North Carolina" "Brunswick County" 1
+"Southeast" "North Carolina" "Carteret County" 2
+"Southeast" "South Carolina" "Fairfield County" 1
+"Southeast" "South Carolina" "Anderson County" 1
+"Southeast" "South Carolina" "Orangeburg County" 1
+"Southeast" "South Carolina" "Dorchester County" 2
+"Southeast" "South Carolina" "Greenville County" 1
+"Southeast" "South Carolina" "Horry County" 2
+"Southeast" "South Carolina" "Florence County" 1
+"Southeast" "South Carolina" "Beaufort County" 1
+"Southeast" "Tennessee" "Rutherford County" 1
+"Southeast" "Tennessee" "Humphreys County" 1
+"Southeast" "Tennessee" "Hickman County" 1
+"Southeast" "Tennessee" "Wayne County" 1
+"Southeast" "Tennessee" "Lewis County" 1
+"Southeast" "Tennessee" "Dickson County" 1
+"Southeast" "Tennessee" "Cheatham County" 2
+"Southeast" "Tennessee" "Robertson County" 1
+"Southeast" "Tennessee" "Davidson County" 1
+"Southeast" "Tennessee" "Williamson County" 1
+"Southeast" "Tennessee" "Robertson County" 1
+"Southeast" "Tennessee" "Davidson County" 1
+"Southeast" "Tennessee" "Robertson County" 1
+"Southeast" "Tennessee" "Davidson County" 1
+"Southeast" "Tennessee" "Sumner County" 2
+"Southeast" "Tennessee" "Williamson County" 1
+"Southeast" "Tennessee" "Sumner County" 1
+"Southeast" "Tennessee" "Wilson County" 1
+"Southeast" "Tennessee" "Sumner County" 2
+"Southeast" "Tennessee" "Wilson County" 1
+"Southeast" "Tennessee" "Williamson County" 1
+"Southeast" "Tennessee" "Rutherford County" 1
+"Southeast" "Tennessee" "Trousdale County" 2
+"Southeast" "Tennessee" "Wilson County" 1
+"Southeast" "Tennessee" "Macon County" 1
+"Southeast" "Tennessee" "Trousdale County" 1
+"Southeast" "Tennessee" "Macon County" 1
+"Southeast" "Tennessee" "Cannon County" 1
+"Southeast" "Tennessee" "Lincoln County" 1
+"Southeast" "Tennessee" "Coffee County" 1
+"Southeast" "Tennessee" "Claiborne County" 1
+"Southeast" "Tennessee" "Humphreys County" 1
+"Southeast" "Tennessee" "Houston County" 1
+"Southeast" "Tennessee" "Dickson County" 1
+"Southeast" "Tennessee" "Maury County" 1
+"Southeast" "Tennessee" "Bedford County" 1
+"Southeast" "Tennessee" "Rutherford County" 1
+"Southeast" "Tennessee" "Lincoln County" 1
+"Southeast" "Tennessee" "Moore County" 1
+"Southeast" "Tennessee" "Fayette County" 2
+"Southeast" "Tennessee" "Tipton County" 1
+"Southeast" "Tennessee" "Franklin County" 2
+"Southeast" "Tennessee" "Jefferson County" 1
+"Southeast" "Tennessee" "Sevier County" 1
+"Southeast" "Tennessee" "Obion County" 1
+"Southeast" "Tennessee" "Robertson County" 1
+"Southeast" "Tennessee" "Sumner County" 1
+"Southeast" "Tennessee" "Lincoln County" 1
+"Southeast" "Virginia" "Spotsylvania County" 1
+"Southeast" "Virginia" "Amelia County" 1
+"Southeast" "Virginia" "Spotsylvania County" 2
+"Southeast" "Virginia" "King George County" 1
+"Southwest" "Arizona" "Navajo County" 1
+"Southwest" "New Mexico" "San Juan County" 2
+"Southwest" "Oklahoma" "Logan County" 1
+"Southwest" "Oklahoma" "Sequoyah County" 1
+"Southwest" "Oklahoma" "Muskogee County" 1
+"Southwest" "Oklahoma" "Wagoner County" 1
+"Southwest" "Oklahoma" "Sequoyah County" 1
+"Southwest" "Oklahoma" "Comanche County" 1
+"Southwest" "Oklahoma" "Tillman County" 1
+"Southwest" "Oklahoma" "Tulsa County" 3
+"Southwest" "Oklahoma" "Rogers County" 3
+"Southwest" "Oklahoma" "Mayes County" 2
+"Southwest" "Oklahoma" "Delaware County" 1
+"Southwest" "Oklahoma" "Dewey County" 1
+"Southwest" "Oklahoma" "Grady County" 1
+"Southwest" "Oklahoma" "Kiowa County" 1
+"Southwest" "Oklahoma" "Jackson County" 1
+"Southwest" "Oklahoma" "Pontotoc County" 1
+"Southwest" "Oklahoma" "Oklahoma County" 3
+"Southwest" "Oklahoma" "Logan County" 1
+"Southwest" "Oklahoma" "Lincoln County" 1
+"Southwest" "Oklahoma" "Cleveland County" 1
+"Southwest" "Oklahoma" "Pottawatomie County" 2
+"Southwest" "Oklahoma" "Creek County" 1
+"Southwest" "Oklahoma" "Pottawatomie County" 1
+"Southwest" "Oklahoma" "Lincoln County" 2
+"Southwest" "Oklahoma" "Okfuskee County" 1
+"Southwest" "Oklahoma" "Creek County" 1
+"Southwest" "Oklahoma" "Mcclain County" 1
+"Southwest" "Oklahoma" "Stephens County" 1
+"Southwest" "Oklahoma" "Cleveland County" 1
+"Southwest" "Oklahoma" "Stephens County" 1
+"Southwest" "Oklahoma" "Osage County" 1
+"Southwest" "Oklahoma" "Washington County" 3
+"Southwest" "Oklahoma" "Rogers County" 1
+"Southwest" "Oklahoma" "Lincoln County" 1
+"Southwest" "Oklahoma" "Ottawa County" 1
+"Southwest" "Oklahoma" "Adair County" 1
+"Southwest" "Oklahoma" "Ottawa County" 1
+"Southwest" "Oklahoma" "Adair County" 2
+"Southwest" "Oklahoma" "Coal County" 1
+"Southwest" "Oklahoma" "Le Flore County" 2
+"Southwest" "Oklahoma" "Beaver County" 2
+"Southwest" "Oklahoma" "Canadian County" 1
+"Southwest" "Oklahoma" "Cleveland County" 1
+"Southwest" "Oklahoma" "Beckham County" 1
+"Southwest" "Oklahoma" "Payne County" 3
+"Southwest" "Oklahoma" "Mccurtain County" 1
+"Southwest" "Oklahoma" "Payne County" 1
+"Southwest" "Oklahoma" "Creek County" 1
+"Southwest" "Oklahoma" "Garvin County" 1
+"Southwest" "Oklahoma" "Mayes County" 4
+"Southwest" "Oklahoma" "Tulsa County" 1
+"Southwest" "Oklahoma" "Wagoner County" 1
+"Southwest" "Oklahoma" "Kingfisher County" 1
+"Southwest" "Oklahoma" "Canadian County" 4
+"Southwest" "Oklahoma" "Osage County" 1
+"Southwest" "Oklahoma" "Canadian County" 1
+"Southwest" "Oklahoma" "Osage County" 1
+"Southwest" "Oklahoma" "Washington County" 1
+"Southwest" "Oklahoma" "Canadian County" 1
+"Southwest" "Oklahoma" "Oklahoma County" 1
+"Southwest" "Oklahoma" "Canadian County" 1
+"Southwest" "Oklahoma" "Nowata County" 1
+"Southwest" "Oklahoma" "Oklahoma County" 1
+"Southwest" "Oklahoma" "Cleveland County" 1
+"Southwest" "Oklahoma" "Grady County" 1
+"Southwest" "Oklahoma" "Oklahoma County" 1
+"Southwest" "Oklahoma" "Rogers County" 1
+"Southwest" "Oklahoma" "Nowata County" 1
+"Southwest" "Oklahoma" "Rogers County" 1
+"Southwest" "Oklahoma" "Nowata County" 1
+"Southwest" "Oklahoma" "Delaware County" 1
+"Southwest" "Oklahoma" "Wagoner County" 1
+"Southwest" "Oklahoma" "Marshall County" 1
+"Southwest" "Oklahoma" "Beaver County" 1
+"Southwest" "Texas" "Wood County" 1
+"Southwest" "Texas" "Polk County" 1
+"Southwest" "Texas" "San Jacinto County" 1
+"Southwest" "Texas" "Rusk County" 5
+"Southwest" "Texas" "Panola County" 1
+"Southwest" "Texas" "Rusk County" 1
+"Southwest" "Texas" "Panola County" 1
+"Southwest" "Texas" "Rusk County" 1
+"Southwest" "Texas" "Panola County" 1
+"Southwest" "Texas" "Rusk County" 1
+"Southwest" "Texas" "Panola County" 1
+"Southwest" "Texas" "Shelby County" 1
+"Southwest" "Texas" "Sabine County" 1
+"Southwest" "Texas" "Briscoe County" 1
+"Southwest" "Texas" "Brewster County" 1
+"Southwest" "Texas" "Wilbarger County" 2
+"Southwest" "Texas" "San Patricio County" 2
+"Southwest" "Texas" "Refugio County" 1
+"Southwest" "Texas" "Lubbock County" 1
+"Southwest" "Texas" "Stonewall County" 1
+"Southwest" "Texas" "Montague County" 1
+"Southwest" "Texas" "Mills County" 1
+"Southwest" "Texas" "Palo Pinto County" 1
+"Southwest" "Texas" "Montague County" 2
+"Southwest" "Texas" "Parker County" 1
+"Southwest" "Texas" "Montague County" 1
+"Southwest" "Texas" "Parker County" 1
+"Southwest" "Texas" "Wise County" 1
+"Southwest" "Texas" "Parker County" 1
+"Southwest" "Texas" "Hood County" 1
+"Southwest" "Texas" "Parker County" 1
+"Southwest" "Texas" "Hood County" 1
+"Southwest" "Texas" "Johnson County" 2
+"Southwest" "Texas" "Hamilton County" 2
+"Southwest" "Texas" "Johnson County" 2
+"Southwest" "Texas" "Ellis County" 1
+"Southwest" "Texas" "Harrison County" 2
+"Southwest" "Texas" "Young County" 2
+"Southwest" "Texas" "Brown County" 1
+"Southwest" "Texas" "Montague County" 1
+"Southwest" "Texas" "Brown County" 2
+"Southwest" "Texas" "Mills County" 1
+"Southwest" "Texas" "Floyd County" 3
+"Southwest" "Texas" "Dickens County" 1
+"Southwest" "Texas" "Fisher County" 1
+"Southwest" "Texas" "Wilson County" 1
+"Southwest" "Texas" "Bexar County" 1
+"Southwest" "Texas" "Victoria County" 1
+"Southwest" "Texas" "Deaf Smith County" 2
+"Southwest" "Texas" "Briscoe County" 1
+"Southwest" "Texas" "Hall County" 1
+"Southwest" "Texas" "Nueces County" 1
+"Southwest" "Texas" "Uvalde County" 1
+"Southwest" "Texas" "Hockley County" 1
+"Southwest" "Texas" "Lubbock County" 3
+"Southwest" "Texas" "Sherman County" 1
+"Southwest" "Texas" "Hutchinson County" 1
+"Southwest" "Texas" "Hale County" 1
+"Southwest" "Texas" "Denton County" 1
+"Southwest" "Texas" "Kleberg County" 2
+"Southwest" "Texas" "Jasper County" 1
+"Southwest" "Texas" "Orange County" 1
+"Southwest" "Texas" "Tyler County" 2
+"Southwest" "Texas" "Jasper County" 1
+"Rocky Mountains" "Colorado" "Kit Carson County" 1
+"Rocky Mountains" "Colorado" "Washington County" 3
+"Rocky Mountains" "Colorado" "Prowers County" 1
+"Rocky Mountains" "Colorado" "Alamosa County" 1
+"Rocky Mountains" "Colorado" "Cheyenne County" 3
+"Rocky Mountains" "Colorado" "Rio Blanco County" 1
+"Rocky Mountains" "Colorado" "Otero County" 1
+"Rocky Mountains" "Colorado" "Lincoln County" 1
+"Rocky Mountains" "Colorado" "Washington County" 3
+"Rocky Mountains" "Colorado" "Kit Carson County" 1
+"Rocky Mountains" "Colorado" "Otero County" 1
+"Rocky Mountains" "Colorado" "Denver County" 1
+"Rocky Mountains" "Colorado" "Prowers County" 1
+"Rocky Mountains" "Colorado" "Baca County" 1
+"Rocky Mountains" "Colorado" "Morgan County" 1
+"Rocky Mountains" "Colorado" "Washington County" 1
+"Rocky Mountains" "Colorado" "Lincoln County" 1
+"Rocky Mountains" "Colorado" "Weld County" 4
+"Rocky Mountains" "Idaho" "Jefferson County" 1
+"Rocky Mountains" "Idaho" "Jerome County" 1
+"Rocky Mountains" "Idaho" "Elmore County" 1
+"Rocky Mountains" "Idaho" "Bear Lake County" 1
+"Rocky Mountains" "Idaho" "Fremont County" 1
+"Rocky Mountains" "Idaho" "Clark County" 1
+"Rocky Mountains" "Montana" "Fallon County" 1
+"Rocky Mountains" "Montana" "Musselshell County" 1
+"Rocky Mountains" "Montana" "Custer County" 1
+"Rocky Mountains" "Montana" "Roosevelt County" 1
+"Rocky Mountains" "Montana" "Powder River County" 1
+"Rocky Mountains" "Montana" "Flathead County" 1
+"Rocky Mountains" "Utah" "Utah County" 1
+"Rocky Mountains" "Wyoming" "Park County" 1
+"Rocky Mountains" "Wyoming" "Platte County" 1
+"Rocky Mountains" "Wyoming" "Natrona County" 1
+"Rocky Mountains" "Wyoming" "Goshen County" 2
+"Rocky Mountains" "Wyoming" "Laramie County" 1
+"Rocky Mountains" "Wyoming" "Natrona County" 1
+"Rocky Mountains" "Wyoming" "Sweetwater County" 1
+"Far West" "California" "Tehama County" 1
+"Far West" "California" "Colusa County" 1
+"Far West" "California" "Tehama County" 1
+"Far West" "California" "Kern County" 1
+"Far West" "California" "San Bernardino County" 1
+"Far West" "Oregon" "Wallowa County" 1
+"Far West" "Oregon" "Yamhill County" 1
+"Far West" "Oregon" "Douglas County" 1
+"Far West" "Washington" "Clark County" 1
+"Far West" "Washington" "Pierce County" 1

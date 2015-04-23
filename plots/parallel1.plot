@@ -20,4 +20,4 @@ set paxis 4 range  [-10:50]
 set paxis 5 range  [50:*] reverse
 set paxis 5 tics left offset 4
 
-plot 'silver.dat' using 2:3:1:($3/2):2:(int($0/25)) with parallel lt 1 lc variable
+plot 'data/silver.dat' using 2:3:1:($3/2):2:(int($0/25)) with parallel lt 1 lc variable

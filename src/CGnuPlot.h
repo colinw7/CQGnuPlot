@@ -78,6 +78,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotTextBoxStyle.h>
 #include <CGnuPlotTimeStampData.h>
 #include <CGnuPlotMouseData.h>
+#include <CGnuPlotClip.h>
 
 //------
 
@@ -102,25 +103,33 @@ class CGnuPlot {
 
   //---
 
-  struct Bars {
+  class Bars {
+   public:
     Bars(double s=1, bool f=true) :
-     size(s), front(f) {
+     size_(s), front_(f) {
     }
 
-    double size { 1 };
-    bool   front { true };
+    double size() const { return size_; }
+    void setSize(double r) { size_ = r; }
+
+    bool isFront() const { return front_; }
+    void setFront(bool b) { front_ = b; }
 
     void show(std::ostream &os) const {
-      if (size <= 0.0)
+      if (size_ <= 0.0)
         os << "errors are plotted without bars" << std::endl;
       else
-        os << "errorbars are plotted in " << (front ? "front" : "back") <<
-              " with bars of size " << size << std::endl;
+        os << "errorbars are plotted in " << (front_ ? "front" : "back") <<
+              " with bars of size " << size_ << std::endl;
     }
 
     void save(std::ostream &os) const {
-      os << "set bar " << size << " " << (front ? "front" : "back") << std::endl;
+      os << "set bar " << size_ << " " << (front_ ? "front" : "back") << std::endl;
     }
+
+   private:
+    double size_ { 1 };
+    bool   front_ { true };
   };
 
   //---
@@ -384,14 +393,6 @@ class CGnuPlot {
    private:
     int samples1_ { 10 };
     int samples2_ { 10 };
-  };
-
-  struct Clip {
-    bool points { false };
-    bool one    { true  };
-    bool two    { false };
-
-    bool isOn() const { return (points || one || two); }
   };
 
   struct DecimalSign {
@@ -799,11 +800,11 @@ class CGnuPlot {
   const Bars &bars() const { return bars_; }
   void setBars(const Bars &s) { bars_ = s; }
 
-  double barsSize() const { return bars_.size; }
-  void setBarsSize(double s) { bars_.size = s; }
+  double barsSize() const { return bars_.size(); }
+  void setBarsSize(double s) { bars_.setSize(s); }
 
-  bool barsFront() const { return bars_.front; }
-  void setBarsFront(bool b) { bars_.front = b; }
+  bool barsFront() const { return bars_.isFront(); }
+  void setBarsFront(bool b) { bars_.setFront(b); }
 
   //---
 
@@ -857,6 +858,11 @@ class CGnuPlot {
 
   const Pm3DData &pm3D() const { return pm3D_; }
   void setPm3D(const Pm3DData &p) { pm3D_ = p; }
+
+  //------
+
+  const CGnuPlotClip &clip() const { return clip_; }
+  void setClip(const CGnuPlotClip &clip) { clip_ = clip; }
 
   //------
 
@@ -1303,7 +1309,7 @@ class CGnuPlot {
   LineDashes             lineDashes_;
   bool                   binary_ { false };
   bool                   matrix_ { false };
-  Clip                   clip_;
+  CGnuPlotClip           clip_;
   bool                   parametric_ { false };
   bool                   polar_ { false };
   bool                   enhanced_ { true };

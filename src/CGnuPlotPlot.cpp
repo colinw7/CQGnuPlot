@@ -16,8 +16,6 @@
 #include <CExpr.h>
 #include <CRGBName.h>
 #include <CMathGeom2D.h>
-#include <CBoxWhisker.h>
-#include <CirclePack.h>
 
 int CGnuPlotPlot::nextId_ = 1;
 
@@ -528,10 +526,6 @@ draw2D()
                            lineStyle.width(), c);
     }
   }
-  else if (style_ == PlotStyle::BOXPLOT)
-    drawBoxPlot(renderer);
-  else if (style_ == PlotStyle::BOXXYERRORBARS)
-    drawBoxXYErrorBars(renderer);
   else if (style_ == PlotStyle::CANDLESTICKS)
     drawCandleSticks(renderer);
   else if (style_ == PlotStyle::CIRCLES)
@@ -582,243 +576,6 @@ draw2D()
     drawXYErrorLines(renderer);
   else if (style_ == PlotStyle::YERRORLINES)
     drawYErrorLines(renderer);
-}
-
-void
-CGnuPlotPlot::
-drawBoxPlot(CGnuPlotRenderer *renderer)
-{
-  const CGnuPlotLineStyle &lineStyle = this->lineStyle();
-
-  CRGBA fc = lineStyle.calcColor(CRGBA(1,0,0));
-  CRGBA lc = CRGBA(0,0,0);
-
-  fc.setAlpha(0.5);
-
-  double bw = boxWidth().getSpacing(0.1);
-
-  double ww = bw;
-
-  if (bars_.size < 0.0)
-    ww = bw;
-  else {
-    if (! renderer->isPseudo())
-      ww = renderer->pixelWidthToWindowWidth(12*bars_.size);
-  }
-
-  double x        = 0;
-  bool   discrete = false;
-
-  for (const auto &point : getPoints2D()) {
-    if (point.getNumValues() >= 2) {
-      double x1;
-
-      if (point.getValue(1, x1))
-        x = x1;
-
-      if (point.getNumValues() >= 4)
-        discrete = true;
-
-      break;
-    }
-  }
-
-  //----
-
-  typedef std::vector<double>         YVals;
-  typedef std::map<int,YVals>         IYVals;
-  typedef std::map<std::string,YVals> SYVals;
-
-  IYVals iyv;
-  SYVals syv;
-
-  for (const auto &point : getPoints2D()) {
-    if (point.getNumValues() >= 2) {
-      double y = 0, y1 = 0;
-
-      if (point.getValue(2, y1))
-        y = y1;
-
-      if (discrete && point.getNumValues() >= 4) {
-        int         i;
-        std::string s;
-
-        if      (point.getValue(4, i))
-          iyv[i].push_back(y);
-        else if (point.getValue(4, s))
-          syv[s].push_back(y);
-      }
-      else
-        iyv[0].push_back(y);
-    }
-  }
-
-  // always use index for x (ignore x value) ??
-  double ix = (syv.empty() && iyv.size() == 1 ? x : 1);
-
-  for (const auto &yv : iyv) {
-    CBoxWhisker whisker(yv.second);
-
-    double x11 = ix - ww/2;
-    double x21 = ix + ww/2;
-
-    renderer->drawClipLine(CPoint2D(ix, whisker.min()), CPoint2D(ix, whisker.max()), 1, lc);
-
-    renderer->drawClipLine(CPoint2D(x11, whisker.min()), CPoint2D(x21, whisker.min()), 1, lc);
-    renderer->drawClipLine(CPoint2D(x11, whisker.max()), CPoint2D(x21, whisker.max()), 1, lc);
-
-    double x12 = ix - bw/2;
-    double x22 = ix + bw/2;
-
-    CBBox2D bbox(x12, whisker.lower(), x22, whisker.upper());
-
-    renderer->fillRect(bbox, fc);
-    renderer->drawRect(bbox, lc, 1);
-
-    renderer->drawClipLine(CPoint2D(x12, whisker.median()), CPoint2D(x22, whisker.median()), 1, lc);
-
-    double opw = 0, oph = 0;
-
-    if (! renderer->isPseudo()) {
-      opw = renderer->pixelWidthToWindowWidth  (4);
-      oph = renderer->pixelHeightToWindowHeight(4);
-    }
-
-    for (const auto &o : whisker.outliers())
-      renderer->drawEllipse(CPoint2D(ix, whisker.value(o)), opw, oph, 0, lc, 1);
-
-    ++ix;
-  }
-
-  for (const auto &yv : syv) {
-    //const std::string &s = yv.first;
-
-    CBoxWhisker whisker(yv.second);
-
-    double x11 = ix - ww/2;
-    double x21 = ix + ww/2;
-
-    renderer->drawClipLine(CPoint2D(ix, whisker.min()), CPoint2D(ix, whisker.max()), 1, lc);
-
-    renderer->drawClipLine(CPoint2D(x11, whisker.min()), CPoint2D(x21, whisker.min()), 1, lc);
-    renderer->drawClipLine(CPoint2D(x11, whisker.max()), CPoint2D(x21, whisker.max()), 1, lc);
-
-    double x12 = ix - bw/2;
-    double x22 = ix + bw/2;
-
-    CBBox2D bbox(x12, whisker.lower(), x22, whisker.upper());
-
-    renderer->fillRect(bbox, fc);
-    renderer->drawRect(bbox, lc, 1);
-
-    renderer->drawClipLine(CPoint2D(x12, whisker.median()), CPoint2D(x22, whisker.median()), 1, lc);
-
-    double opw = 0, oph = 0;
-
-    if (! renderer->isPseudo()) {
-      opw = renderer->pixelWidthToWindowWidth  (4);
-      oph = renderer->pixelHeightToWindowHeight(4);
-    }
-
-    for (const auto &o : whisker.outliers())
-      renderer->drawEllipse(CPoint2D(ix, whisker.value(o)), opw, oph, 0, lc, 1);
-
-    ++ix;
-  }
-}
-
-void
-CGnuPlotPlot::
-drawBoxXYErrorBars(CGnuPlotRenderer *renderer)
-{
-  const CGnuPlotLineStyle &lineStyle = this->lineStyle();
-
-  bool isCalcColor = lineStyle.color().isCalc();
-
-  CRGBA lc = lineStyle.calcColor(CRGBA(0,0,0));
-  CRGBA fc = (fillType() == FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
-
-  if (! renderer->isPseudo())
-    updateBarCacheSize(getPoints2D().size());
-
-  int i = 0;
-
-  for (const auto &point : getPoints2D()) {
-    std::vector<double> reals;
-
-    (void) point.getReals(reals);
-
-    if (reals.size() < 2)
-      continue;
-
-    double x  = reals[0];
-    double y  = reals[1];
-    double xl = x;
-    double xh = x;
-    double yl = y;
-    double yh = y;
-
-    CRGBA fc1 = fc;
-
-    // x y xlow xhigh ylow yhigh
-    if      ((! isCalcColor && reals.size() == 6) || (isCalcColor && reals.size() == 7)) {
-      xl = reals[2];
-      xh = reals[3];
-      yl = reals[4];
-      yh = reals[5];
-
-      if (isCalcColor) {
-        double x = reals[6];
-
-        fc1 = lineStyle.color().calcColor(this, x);
-      }
-    }
-    // x y xdelta ydelta
-    else if ((! isCalcColor && reals.size() == 4) || (isCalcColor && reals.size() == 5)) {
-      double dx = reals[2];
-      double dy = reals[3];
-
-      xl = x - dx;
-      xh = x + dx;
-      yl = y - dy;
-      yh = y + dy;
-
-      if (isCalcColor) {
-        double x = reals[4];
-
-        fc1 = lineStyle.color().calcColor(this, x);
-      }
-    }
-
-    CBBox2D bbox(xl, yl, xh, yh);
-
-    fc1.setAlpha(0.5);
-
-    if (! renderer->isPseudo()) {
-      CGnuPlotBarObject *bar = barObjects()[i];
-
-      bar->setBBox (bbox);
-      bar->setValue(y);
-
-      if (! bar->isInitialized()) {
-        bar->setFillType   (fillType());
-        bar->setFillPattern(fillPattern());
-        bar->setFillColor  (fc1);
-
-        bar->setBorder   (true);
-        bar->setLineColor(lc);
-
-        bar->setInitialized(true);
-      }
-    }
-    else
-      renderer->drawRect(bbox, lc, 1);
-
-    ++i;
-  }
-
-  if (! renderer->isPseudo())
-    drawBars(renderer);
 }
 
 void
@@ -3303,11 +3060,7 @@ renderBBox(CBBox2D &bbox) const
 
   //---
 
-  if      (style_ == PlotStyle::BOXPLOT)
-    th->drawBoxPlot(&brenderer);
-  else if (style_ == PlotStyle::BOXXYERRORBARS)
-    th->drawBoxXYErrorBars(&brenderer);
-  else if (style_ == PlotStyle::CANDLESTICKS)
+  if      (style_ == PlotStyle::CANDLESTICKS)
     th->drawCandleSticks(&brenderer);
   else if (style_ == PlotStyle::CIRCLES)
     th->drawCircles(&brenderer);
@@ -3427,4 +3180,28 @@ mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1) const
   }
 
   return true;
+}
+
+void
+CGnuPlotPlot::
+setStyleValue(const std::string &name, StyleValue *value)
+{
+  auto p = styleValues_.find(name);
+
+  if (p == styleValues_.end())
+    delete (*p).second;
+
+  styleValues_[name] = value;
+}
+
+CGnuPlotPlot::StyleValue *
+CGnuPlotPlot::
+styleValue(const std::string &name) const
+{
+  auto p = styleValues_.find(name);
+
+  if (p == styleValues_.end())
+    return 0;
+
+  return (*p).second;
 }

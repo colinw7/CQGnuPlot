@@ -11,12 +11,17 @@
 
 #include <CGnuPlotStyleBoxErrorBars.h>
 #include <CGnuPlotStyleBoxes.h>
+#include <CGnuPlotStyleBoxPlot.h>
+#include <CGnuPlotStyleBoxXYErrorBars.h>
 #include <CGnuPlotStyleBubblePlot.h>
+#include <CGnuPlotStyleDelaunay.h>
 #include <CGnuPlotStyleParallelAxes.h>
 #include <CGnuPlotStylePieChart.h>
+#include <CGnuPlotStylePolygons.h>
 #include <CGnuPlotStyleRadar.h>
 #include <CGnuPlotStyleSunburst.h>
 #include <CGnuPlotStyleTreeMap.h>
+#include <CGnuPlotStyleVectors.h>
 
 #include <CImageLib.h>
 #include <CUnixFile.h>
@@ -267,14 +272,19 @@ void
 CGnuPlot::
 addPlotStyles()
 {
-  addPlotStyle(PlotStyle::BOXERRORBARS, new CGnuPlotStyleBoxErrorBars);
-  addPlotStyle(PlotStyle::BOXES       , new CGnuPlotStyleBoxes       );
-  addPlotStyle(PlotStyle::BUBBLEPLOT  , new CGnuPlotStyleBubblePlot  );
-  addPlotStyle(PlotStyle::PARALLELAXES, new CGnuPlotStyleParallelAxes);
-  addPlotStyle(PlotStyle::PIECHART    , new CGnuPlotStylePieChart    );
-  addPlotStyle(PlotStyle::RADAR       , new CGnuPlotStyleRadar       );
-  addPlotStyle(PlotStyle::SUNBURST    , new CGnuPlotStyleSunburst    );
-  addPlotStyle(PlotStyle::TREEMAP     , new CGnuPlotStyleTreeMap     );
+  addPlotStyle(PlotStyle::BOXERRORBARS  , new CGnuPlotStyleBoxErrorBars  );
+  addPlotStyle(PlotStyle::BOXES         , new CGnuPlotStyleBoxes         );
+  addPlotStyle(PlotStyle::BOXPLOT       , new CGnuPlotStyleBoxPlot       );
+  addPlotStyle(PlotStyle::BOXXYERRORBARS, new CGnuPlotStyleBoxXYErrorBars);
+  addPlotStyle(PlotStyle::BUBBLEPLOT    , new CGnuPlotStyleBubblePlot    );
+  addPlotStyle(PlotStyle::DELAUNAY      , new CGnuPlotStyleDelaunay      );
+  addPlotStyle(PlotStyle::PARALLELAXES  , new CGnuPlotStyleParallelAxes  );
+  addPlotStyle(PlotStyle::PIECHART      , new CGnuPlotStylePieChart      );
+  addPlotStyle(PlotStyle::POLYGONS      , new CGnuPlotStylePolygons      );
+  addPlotStyle(PlotStyle::RADAR         , new CGnuPlotStyleRadar         );
+  addPlotStyle(PlotStyle::SUNBURST      , new CGnuPlotStyleSunburst      );
+  addPlotStyle(PlotStyle::TREEMAP       , new CGnuPlotStyleTreeMap       );
+  addPlotStyle(PlotStyle::VECTORS       , new CGnuPlotStyleVectors       );
 }
 
 void
@@ -3602,18 +3612,15 @@ setCmd(const std::string &args)
 
     if (arg != "") {
       while (arg != "") {
-        if      (arg == "points") clip_.points = true;
-        else if (arg == "one"   ) clip_.one    = true;
-        else if (arg == "two"   ) clip_.two    = true;
+        if      (arg == "points") clip_.setPoints(true);
+        else if (arg == "one"   ) clip_.setOne   (true);
+        else if (arg == "two"   ) clip_.setTwo   (true);
 
         arg = readNonSpace(line);
       }
     }
-    else {
-      clip_.points = true;
-      clip_.one    = false;
-      clip_.two    = false;
-    }
+    else
+      clip_.reset();
   }
   // set cntrlabel {format "format"} {font "font"}
   // set cntrlabel {start <int>} {interval <int>}
@@ -6955,17 +6962,7 @@ showCmd(const std::string &args)
   }
   // show clip
   else if (var == VariableName::CLIP) {
-    std::cout << "point clip is " << (clip_.isOn() ? "ON" : "OFF") << std::endl;
-
-    if (clip_.points)
-      std::cout << "drawing and clipping lines between inrange and outrange points" << std::endl;
-    else
-      std::cout << "not drawing lines between inrange and outrange points" << std::endl;
-
-    if (clip_.one || clip_.two)
-      std::cout << "drawing and clipping lines between two outrange points" << std::endl;
-    else
-      std::cout << "not drawing lines between two outrange points" << std::endl;
+    clip_.show(std::cout);
   }
   // show colorbox
   else if (var == VariableName::COLORBOX) {
@@ -8120,18 +8117,15 @@ unsetCmd(const std::string &args)
 
     if (arg != "") {
       while (arg != "") {
-        if      (arg == "points") clip_.points = false;
-        else if (arg == "one"   ) clip_.one    = false;
-        else if (arg == "two"   ) clip_.two    = false;
+        if      (arg == "points") clip_.setPoints(false);
+        else if (arg == "one"   ) clip_.setOne   (false);
+        else if (arg == "two"   ) clip_.setTwo   (false);
 
         arg = readNonSpace(line);
       }
     }
-    else {
-      clip_.points = false;
-      clip_.one    = false;
-      clip_.two    = false;
-    }
+    else
+      clip_.unset();
   }
   // unset colorbox
   else if (var == VariableName::COLORBOX) {
@@ -10950,7 +10944,7 @@ fieldToReal(const std::string &str, double &r) const
   while (*p1 != 0 && ::isspace(*p1))
     ++p1;
 
-  //if (*p1 != '\0') return false;
+  if (*p1 != '\0') return false;
 
   return true;
 }

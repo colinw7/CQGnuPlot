@@ -1,1 +1,1 @@
-plot "piechart.data" with piechart using 1:2
+plot "data/piechart.data" with piechart using 1:2

@@ -64,6 +64,8 @@ init()
   palette_ ->init(plot->palette ());
   camera_  ->init(plot->camera  ());
 
+  setClip(plot->clip());
+
   setAxesData(plot->axesData());
 
   for (int ind = 1; ind <= 2; ++ind) {
@@ -564,6 +566,8 @@ CGnuPlotGroup::
 draw()
 {
   bbox_ = getDisplayRange(1, 1);
+
+  clip_.setRect(bbox_);
 
   CGnuPlotRenderer *renderer = app()->renderer();
 

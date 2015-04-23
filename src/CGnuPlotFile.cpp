@@ -241,54 +241,59 @@ void
 CGnuPlotFile::
 parseFileLine(const std::string &str, Fields &fields)
 {
-  Words words(fields);
+  if (csv_) {
+    (void) CStrUtil::addFields(str, fields, ",");
+  }
+  else {
+    Words words(fields);
 
-  CParseLine line(str);
+    CParseLine line(str);
 
-  while (line.isValid()) {
-    if (parseStrings_ && line.isChar('\"')) {
-      line.skipChar();
+    while (line.isValid()) {
+      if (parseStrings_ && line.isChar('\"')) {
+        line.skipChar();
 
-      std::string word;
+        std::string word;
 
-      while (line.isValid() && ! line.isChar('"')) {
-        char c = line.getChar();
+        while (line.isValid() && ! line.isChar('"')) {
+          char c = line.getChar();
 
-        if (c == '\\') {
-          if (line.isValid()) {
-            c = line.getChar();
+          if (c == '\\') {
+            if (line.isValid()) {
+              c = line.getChar();
 
-            switch (c) {
-              case 't' : word += '\t'; break;
-              case 'n' : word += '\n'; break;
-              default  : word += '?' ; break;
+              switch (c) {
+                case 't' : word += '\t'; break;
+                case 'n' : word += '\n'; break;
+                default  : word += '?' ; break;
+              }
             }
+            else
+              word += c;
           }
           else
             word += c;
         }
-        else
-          word += c;
+
+        if (line.isChar('"'))
+          line.skipChar();
+
+        words.addWord(word);
       }
+      else if (separator_ == '\0' && line.isSpace()) {
+        words.flush();
 
-      if (line.isChar('"'))
-        line.skipChar();
+        line.skipSpace();
+      }
+      else if (line.isChar(separator_)) {
+        words.flush();
 
-      words.addWord(word);
-    }
-    else if (separator_ == '\0' && line.isSpace()) {
-      words.flush();
-
-      line.skipSpace();
-    }
-    else if (line.isChar(separator_)) {
-      words.flush();
-
-      while (line.isValid() && line.isChar(separator_))
-        line.skipChar();
-    }
-    else {
-      words.addChar(line.getChar());
+        while (line.isValid() && line.isChar(separator_))
+          line.skipChar();
+      }
+      else {
+        words.addChar(line.getChar());
+      }
     }
   }
 }
