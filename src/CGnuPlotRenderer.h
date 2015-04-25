@@ -93,6 +93,14 @@ class CGnuPlotRenderer {
   virtual void fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
                             double angle2, const CRGBA &c) = 0;
 
+  virtual void drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2,
+                       const CRGBA &c) = 0;
+
+  virtual void drawChord(const CPoint2D &p, double r, double a1, double a2,
+                         const CRGBA &c) = 0;
+  virtual void drawChord(const CPoint2D &p, double r, double a11, double a12,
+                         double a21, double a22, const CRGBA &c) = 0;
+
   //---
 
   void drawPath  (const std::vector<CPoint3D> &points, double width,

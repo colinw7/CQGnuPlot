@@ -509,3 +509,42 @@ fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double ang
 
   os() << "z\" style=\"" << fillColor(c) << " " << strokeNone() << "\"/>\n";
 }
+
+void
+CGnuPlotSVGRenderer::
+drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2, const CRGBA &c)
+{
+  double x1, y1, x2, y2;
+
+  windowToPixel(p.x - r1, p.y - r1, &x1, &y1);
+  windowToPixel(p.x + r1, p.y + r1, &x2, &y2);
+
+  double da = a2 - a1;
+
+  // TODO: !!!!
+  os() << "<path d=\"M " << x1 << " " << y1;
+  os() << " L " << da << " " << da;
+  os() << " L " << x2 << " " << y2;
+
+  windowToPixel(p.x - r2, p.y - r2, &x1, &y1);
+  windowToPixel(p.x + r2, p.y + r2, &x2, &y2);
+
+  os() << " L " << x2 << " " << y2;
+
+  os() << "z\" style=\"" << fillNone() << " " << strokeColor(c) << " " <<
+          strokeWidth(1.0) << "\"/>\n";
+}
+
+void
+CGnuPlotSVGRenderer::
+drawChord(const CPoint2D &, double, double, double, const CRGBA &)
+{
+  // TODO
+}
+
+void
+CGnuPlotSVGRenderer::
+drawChord(const CPoint2D &, double, double, double, double, double, const CRGBA &)
+{
+  // TODO
+}

@@ -5,7 +5,7 @@
 
 CGnuPlotStyleBoxXYErrorBars::
 CGnuPlotStyleBoxXYErrorBars() :
- CGnuPlotStyleBase(CGnuPlot::PlotStyle::BOXES)
+ CGnuPlotStyleBase(CGnuPlot::PlotStyle::BOXXYERRORBARS)
 {
 }
 

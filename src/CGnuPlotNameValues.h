@@ -259,12 +259,14 @@ namespace CStrUniqueMatch {
   }
 
   CStrUniqueMatchInitT(CGnuPlotTypes::PlotStyle) {
-    nameValues.addValues({{"boxerrorbars"  , CGnuPlotTypes::PlotStyle::BOXERRORBARS},
+    nameValues.addValues({{"adjacency"     , CGnuPlotTypes::PlotStyle::ADJACENCY},
+                          {"boxerrorbars"  , CGnuPlotTypes::PlotStyle::BOXERRORBARS},
                           {"boxes"         , CGnuPlotTypes::PlotStyle::BOXES},
                           {"boxplot"       , CGnuPlotTypes::PlotStyle::BOXPLOT},
                           {"boxxyerrorbars", CGnuPlotTypes::PlotStyle::BOXXYERRORBARS},
                           {"bubblechart"   , CGnuPlotTypes::PlotStyle::BUBBLEPLOT},
                           {"candlesticks"  , CGnuPlotTypes::PlotStyle::CANDLESTICKS},
+                          {"chorddiagram"  , CGnuPlotTypes::PlotStyle::CHORDDIAGRAM},
                           {"circles"       , CGnuPlotTypes::PlotStyle::CIRCLES},
                           {"delaunay"      , CGnuPlotTypes::PlotStyle::DELAUNAY},
                           {"dots"          , CGnuPlotTypes::PlotStyle::DOTS},

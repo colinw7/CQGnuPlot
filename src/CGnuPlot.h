@@ -100,6 +100,8 @@ class CGnuPlot {
   typedef std::map<PlotStyle,CGnuPlotStyleBase*> PlotStyles;
   typedef std::map<LogScale,int>                 LogScaleMap;
   typedef std::map<int,CGnuPlotLineStyleP>       LineStyles;
+  typedef std::vector<CExprValueP>               Values;
+  typedef std::map<std::string,std::string>      Params;
 
   //---
 
@@ -875,6 +877,11 @@ class CGnuPlot {
   const CGnuPlotImageStyle &imageStyle() const { return imageStyle_; }
   void setImageStyle(const CGnuPlotImageStyle &imageStyle) { imageStyle_ = imageStyle; }
 
+  bool isImageStyle(PlotStyle style) const {
+    return (style == PlotStyle::IMAGE || style == PlotStyle::RGBIMAGE ||
+            style == PlotStyle::RGBALPHA);
+  }
+
   void setTimeFmt(const std::string &f) { timeFmt_ = f; }
   const std::string &timeFmt() { return timeFmt_; }
 
@@ -1121,7 +1128,7 @@ class CGnuPlot {
   bool decodeRange(const StringArray &xfields, CGnuPlotAxisData &axis);
 
   CExprValueP decodeUsingCol(int i, const CGnuPlotUsingCol &col, int setNum, int pointNum,
-                             bool &skip, bool &ignore, TicLabel &ticLabel);
+                             bool &skip, bool &ignore, TicLabel &ticLabel, Params &params);
 
   bool evaluateExpression(const std::string &expr, CExprValueP &value, bool quiet=false) const;
 

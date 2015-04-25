@@ -597,6 +597,103 @@ drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double ang
 
 void
 CQGnuPlotRenderer::
+drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2, const CRGBA &c)
+{
+  double px11, py11, px21, py21;
+  double px12, py12, px22, py22;
+
+  windowToPixel(p.x - r1, p.y - r1, &px11, &py11);
+  windowToPixel(p.x + r1, p.y + r1, &px21, &py21);
+  windowToPixel(p.x - r2, p.y - r2, &px12, &py12);
+  windowToPixel(p.x + r2, p.y + r2, &px22, &py22);
+
+  QRectF qr1(px11, py21, px21 - px11, py11 - py21);
+  QRectF qr2(px12, py22, px22 - px12, py12 - py22);
+
+  QPainterPath path;
+
+  path.arcMoveTo(qr1, a1);
+
+  double da = a2 - a1;
+
+  path.arcTo(qr1, a1,  da);
+  path.arcTo(qr2, a2, -da);
+
+  path.closeSubpath();
+
+  painter_->setPen  (QColor(0,0,0));
+  painter_->setBrush(toQColor(c));
+
+  painter_->drawPath(path);
+}
+
+void
+CQGnuPlotRenderer::
+drawChord(const CPoint2D &p, double r, double a1, double a2, const CRGBA &c)
+{
+  double px1, py1, px2, py2;
+
+  windowToPixel(p.x - r, p.y - r, &px1, &py1);
+  windowToPixel(p.x + r, p.y + r, &px2, &py2);
+
+  QRectF qr(px1, py2, px2 - px1, py1 - py2);
+
+  QPainterPath path;
+
+  path.arcMoveTo(qr, a1); QPointF p1 = path.currentPosition();
+  path.arcMoveTo(qr, a2); QPointF p2 = path.currentPosition();
+
+  QPointF p3 = qr.center();
+
+  path.moveTo(p1);
+  path.quadTo(p3, p2);
+  path.arcTo(qr, a2, a1 - a2);
+
+  path.closeSubpath();
+
+  painter_->setPen  (QColor(0,0,0));
+  painter_->setBrush(toQColor(c));
+
+  painter_->drawPath(path);
+}
+
+void
+CQGnuPlotRenderer::
+drawChord(const CPoint2D &p, double r, double a11, double a12,
+          double a21, double a22, const CRGBA &c)
+{
+  double px1, py1, px2, py2;
+
+  windowToPixel(p.x - r, p.y - r, &px1, &py1);
+  windowToPixel(p.x + r, p.y + r, &px2, &py2);
+
+  QRectF qr(px1, py2, px2 - px1, py1 - py2);
+
+  QPainterPath path;
+
+  path.arcMoveTo(qr, a11); QPointF p1 = path.currentPosition();
+  path.arcMoveTo(qr, a12); QPointF p2 = path.currentPosition();
+  path.arcMoveTo(qr, a21); //QPointF p3 = path.currentPosition();
+  path.arcMoveTo(qr, a22); QPointF p4 = path.currentPosition();
+
+  QPointF p5 = qr.center();
+
+  path.moveTo(p1);
+  path.quadTo(p5, p4);
+  path.arcTo(qr, a22, a21 - a22);
+  path.quadTo(p5, p2);
+  path.arcTo(qr, a12, a11 - a12);
+
+  path.closeSubpath();
+
+  painter_->setPen  (QColor(0,0,0,128));
+  painter_->setBrush(toQColor(c));
+
+  painter_->drawPath(path);
+}
+
+void
+CQGnuPlotRenderer::
 setFont(CFontPtr font)
 {
   CGnuPlotRenderer::setFont(font);

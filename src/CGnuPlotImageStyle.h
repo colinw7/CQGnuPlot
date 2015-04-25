@@ -7,8 +7,8 @@
 struct CGnuPlotImageStyle {
   typedef CGnuPlotTypes::ImageType ImageType;
 
-  int                w { 1 };
-  int                h { 1 };
+  COptInt            w;
+  COptInt            h;
   COptValT<CPoint2D> o;
   COptValT<CPoint2D> c;
   COptReal           dx, dy;

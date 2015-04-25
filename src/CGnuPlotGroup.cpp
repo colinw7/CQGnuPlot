@@ -245,8 +245,22 @@ fit()
     for (auto plot : plots_) {
       const CGnuPlotImageStyle imageStyle = plot->imageStyle();
 
-      double xmin = 0, xmax = imageStyle.w - 1;
-      double ymin = 0, ymax = imageStyle.h - 1;
+      double xmin = 0, xmax = 1;
+      double ymin = 0, ymax = 1;
+
+      if (! imageStyle.w.isValid() || ! imageStyle.h.isValid()) {
+        int ny = std::max(1, int(plot->getPoints2D().size()));
+        int nx = (ny > 0 ? int(plot->getPoints2D()[0].getNumValues()) : 1);
+
+        xmin = -1;
+        ymin = -1;
+        xmax = nx;
+        ymax = ny;
+      }
+      else {
+        xmax = imageStyle.w.getValue() - 1;
+        ymax = imageStyle.h.getValue() - 1;
+      }
 
       xmin1.updateMin(xmin); xmax1.updateMax(xmax);
       ymin1.updateMin(ymin); ymax1.updateMax(ymax);

@@ -4,7 +4,7 @@
 
 CGnuPlotStyleVectors::
 CGnuPlotStyleVectors() :
- CGnuPlotStyleBase(CGnuPlot::PlotStyle::BOXES)
+ CGnuPlotStyleBase(CGnuPlot::PlotStyle::VECTORS)
 {
 }
 

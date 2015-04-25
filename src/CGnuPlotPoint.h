@@ -8,10 +8,12 @@
 
 class CGnuPlotPoint {
  public:
-  typedef std::vector<CExprValuePtr> Values;
+  typedef std::vector<CExprValuePtr>        Values;
+  typedef std::map<std::string,std::string> Params;
 
  public:
-  CGnuPlotPoint(const Values &values=Values(), bool discontinuity=false);
+  CGnuPlotPoint(const Values &values=Values(), bool discontinuity=false,
+                const Params &params=Params());
  ~CGnuPlotPoint();
 
   friend std::ostream &operator<<(std::ostream &os, const CGnuPlotPoint &p) {
@@ -85,6 +87,16 @@ class CGnuPlotPoint {
 
   bool isDiscontinuity() const { return discontinuity_; }
 
+  bool hasParam(const std::string &name) const {
+    return (params_.find(name) != params_.end());
+  }
+
+  const std::string &getParam(const std::string &name) const {
+    auto p = params_.find(name);
+
+    return (*p).second;
+  }
+
   int cmp(const CGnuPlotPoint &p) const;
 
   void print(std::ostream &os) const;
@@ -102,6 +114,7 @@ class CGnuPlotPoint {
   Values      values_;
   std::string label_;
   bool        discontinuity_;
+  Params      params_;
 };
 
 #endif

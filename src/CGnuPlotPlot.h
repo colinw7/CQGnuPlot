@@ -82,20 +82,21 @@ class CGnuPlotCacheFactory<CGnuPlotRectObject> {
 
 class CGnuPlotPlot {
  public:
-  typedef CGnuPlotTypes::PlotStyle    PlotStyle;
-  typedef CGnuPlotTypes::BoxWidthType BoxWidthType;
-  typedef CGnuPlotTypes::FillType     FillType;
-  typedef CGnuPlotTypes::FillPattern  FillPattern;
-  typedef CGnuPlotTypes::Smooth       Smooth;
-  typedef CGnuPlotTypes::SymbolType   SymbolType;
-  typedef CGnuPlot::Bars              Bars;
-  typedef CGnuPlot::AxesData          AxesData;
-  typedef CGnuPlot::FilledCurve       FilledCurve;
-  typedef CGnuPlot::Hidden3DData      Hidden3DData;
-  typedef std::vector<CExprValueP>    Values;
-  typedef std::vector<CGnuPlotPoint>  Points2D;
-  typedef std::map<int,Points2D>      Points3D;
-  typedef std::vector<CRGBA>          ImageData;
+  typedef CGnuPlotTypes::PlotStyle          PlotStyle;
+  typedef CGnuPlotTypes::BoxWidthType       BoxWidthType;
+  typedef CGnuPlotTypes::FillType           FillType;
+  typedef CGnuPlotTypes::FillPattern        FillPattern;
+  typedef CGnuPlotTypes::Smooth             Smooth;
+  typedef CGnuPlotTypes::SymbolType         SymbolType;
+  typedef CGnuPlot::Bars                    Bars;
+  typedef CGnuPlot::AxesData                AxesData;
+  typedef CGnuPlot::FilledCurve             FilledCurve;
+  typedef CGnuPlot::Hidden3DData            Hidden3DData;
+  typedef std::vector<CExprValueP>          Values;
+  typedef std::map<std::string,std::string> Params;
+  typedef std::vector<CGnuPlotPoint>        Points2D;
+  typedef std::map<int,Points2D>            Points3D;
+  typedef std::vector<CRGBA>                ImageData;
 
   typedef CGnuPlotCache<CGnuPlotBarObject>    BarCache;
   typedef CGnuPlotCache<CGnuPlotPieObject>    PieCache;
@@ -305,7 +306,7 @@ class CGnuPlotPlot {
 
   int addPoint2D(double x, double y);
   int addPoint2D(double x, CExprValueP y);
-  int addPoint2D(const Values &values, bool discontinuity=false);
+  int addPoint2D(const Values &values, bool discontinuity=false, const Params &params=Params());
 
   int addPoint3D(int iy, double x, double y, double z);
   int addPoint3D(int iy, double x, double y, CExprValueP z);
@@ -390,26 +391,17 @@ class CGnuPlotPlot {
 
   void drawSurface(CGnuPlotRenderer *renderer);
 
-  void drawBoxErrorBars      (CGnuPlotRenderer *renderer);
-  void drawBoxXYErrorBars    (CGnuPlotRenderer *renderer);
-  void drawCandleSticks      (CGnuPlotRenderer *renderer);
-  void drawCircles           (CGnuPlotRenderer *renderer);
-  void drawEllipses          (CGnuPlotRenderer *renderer);
   void drawDots              (CGnuPlotRenderer *renderer);
   void drawFilledCurves      (CGnuPlotRenderer *renderer);
-  void drawFinanceBars       (CGnuPlotRenderer *renderer);
   void drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
   void drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
   void drawStackedHistogram  (CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox);
   void drawSteps             (CGnuPlotRenderer *renderer);
   void drawBinaryImage       (CGnuPlotRenderer *renderer);
   void drawImage             (CGnuPlotRenderer *renderer);
-  void drawImpulses          (CGnuPlotRenderer *renderer);
   void drawLabels            (CGnuPlotRenderer *renderer);
   void drawLines             (CGnuPlotRenderer *renderer);
   void drawPoints            (CGnuPlotRenderer *renderer);
-  void drawRadar             (CGnuPlotRenderer *renderer);
-  void drawVectors           (CGnuPlotRenderer *renderer);
   void drawErrorBars         (CGnuPlotRenderer *renderer);
   void drawXErrorBars        (CGnuPlotRenderer *renderer);
   void drawXYErrorBars       (CGnuPlotRenderer *renderer);
@@ -419,9 +411,6 @@ class CGnuPlotPlot {
   void drawYErrorLines       (CGnuPlotRenderer *renderer);
 
   void drawBars(CGnuPlotRenderer *renderer);
-
-  double decodeImageUsingColor(int col, const CRGBA &c) const;
-  double indexImageColor(int i, const CRGBA &c) const;
 
   void drawTerminal();
   void drawPalette();

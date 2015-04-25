@@ -47,6 +47,14 @@ class CGnuPlotBBoxRenderer : public CGnuPlotRenderer {
   void fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
                     const CRGBA &c=CRGBA(1,1,1)) override;
 
+  void drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2,
+               const CRGBA &c) override;
+
+  void drawChord(const CPoint2D &p, double r, double a1, double a2,
+                 const CRGBA &c) override;
+  void drawChord(const CPoint2D &p, double r, double a11, double a12,
+                 double a21, double a22, const CRGBA &c) override;
+
  private:
   CGnuPlotRenderer *renderer_;
   CBBox2D           bbox_;

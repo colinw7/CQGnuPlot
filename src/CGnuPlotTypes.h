@@ -256,12 +256,14 @@ namespace CGnuPlotTypes {
 
   enum class PlotStyle {
     NONE,
+    ADJACENCY,
     BOXERRORBARS,
     BOXES,
     BOXPLOT,
     BOXXYERRORBARS,
     BUBBLEPLOT,
     CANDLESTICKS,
+    CHORDDIAGRAM,
     CIRCLES,
     DELAUNAY,
     DOTS,

@@ -191,16 +191,45 @@ processLines()
 
     //---
 
-    std::string line1 = line;
+    auto comment      = commentChars_.getValue("#");
+    bool commentFound = false;
 
-    auto pos1 = line1.find(commentChars_.getValue("#"));
+    auto line1 = line;
 
-    if (pos1 != std::string::npos) {
-      line1 = CStrUtil::stripSpaces(line1.substr(0, pos1));
+    if (line1.find(comment) != std::string::npos) {
+      CParseLine pline(line1);
 
-      if (line1.empty()) {
-        continue;
+      while (pline.isValid()) {
+        if (parseStrings_ && pline.isChar('\"')) {
+          pline.skipChar();
+
+          while (pline.isValid() && ! pline.isChar('"')) {
+            char c = pline.getChar();
+
+            if (c == '\\') {
+              if (pline.isValid())
+                pline.skipChar();
+            }
+          }
+
+          if (pline.isChar('"'))
+            pline.skipChar();
+        }
+        else {
+          if (pline.isChars(comment)) {
+            line1 = CStrUtil::stripSpaces(pline.substr(0, pline.pos()));
+
+            commentFound = true;
+
+            break;
+          }
+          else
+            pline.skipChar();
+        }
       }
+
+      if (commentFound && line1.empty())
+        continue;
     }
 
     //---
@@ -278,7 +307,7 @@ parseFileLine(const std::string &str, Fields &fields)
         if (line.isChar('"'))
           line.skipChar();
 
-        words.addWord(word);
+        words.addWord("\"" + word + "\"");
       }
       else if (separator_ == '\0' && line.isSpace()) {
         words.flush();

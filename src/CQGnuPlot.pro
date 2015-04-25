@@ -73,12 +73,22 @@ CGnuPlotRectangle.cpp \
 CGnuPlotRectObject.cpp \
 CGnuPlotRenderer.cpp \
 \
+CGnuPlotStyleAdjacency.cpp \
 CGnuPlotStyleBoxErrorBars.cpp \
 CGnuPlotStyleBoxes.cpp \
 CGnuPlotStyleBoxPlot.cpp \
 CGnuPlotStyleBoxXYErrorBars.cpp \
 CGnuPlotStyleBubblePlot.cpp \
+CGnuPlotStyleCandlesticks.cpp \
+CGnuPlotStyleChordDiagram.cpp \
+CGnuPlotStyleCircles.cpp \
 CGnuPlotStyleDelaunay.cpp \
+CGnuPlotStyleEllipses.cpp \
+CGnuPlotStyleFilledCurves.cpp \
+CGnuPlotStyleFinanceBars.cpp \
+CGnuPlotStyleImage.cpp \
+CGnuPlotStyleImpulses.cpp \
+CGnuPlotStyleLabels.cpp \
 CGnuPlotStyleParallelAxes.cpp \
 CGnuPlotStylePieChart.cpp \
 CGnuPlotStylePolygons.cpp \
@@ -104,10 +114,12 @@ CQPaletteDialog.cpp \
 \
 CQRotatedText.cpp \
 \
-CTreeMap.cpp \
-CSunburst.cpp \
+CAdjacency.cpp \
 CDelaunay.cpp \
+ChordDiagram.cpp  \
 CHull3D.cpp \
+CSunburst.cpp \
+CTreeMap.cpp \
 \
 CMathGeom2D.cpp \
 CArcToBezier.cpp \
@@ -209,14 +221,24 @@ CGnuPlotSVGDevice.h \
 CGnuPlotSVGRenderer.h \
 CGnuPlotSize.h \
 \
+CGnuPlotStyleAdjacency.h \
 CGnuPlotStyleBase.h \
 CGnuPlotStyleBoxErrorBars.h \
 CGnuPlotStyleBoxes.h \
 CGnuPlotStyleBoxPlot.h \
 CGnuPlotStyleBoxXYErrorBars.h \
 CGnuPlotStyleBubblePlot.h \
+CGnuPlotStyleCandlesticks.h \
+CGnuPlotStyleChordDiagram.h \
+CGnuPlotStyleCircles.h \
 CGnuPlotStyleDelaunay.h \
+CGnuPlotStyleEllipses.h \
+CGnuPlotStyleFilledCurves.h \
+CGnuPlotStyleFinanceBars.h \
 CGnuPlotStyle.h \
+CGnuPlotStyleImage.h \
+CGnuPlotStyleImpulses.h \
+CGnuPlotStyleLabels.h \
 CGnuPlotStyleParallelAxes.h \
 CGnuPlotStylePieChart.h \
 CGnuPlotStylePolygons.h \
@@ -240,10 +262,12 @@ CQPaletteDialog.h \
 \
 CQRotatedText.h \
 \
-CTreeMap.h \
-CSunburst.h \
+CAdjacency.h \
 CDelaunay.h \
+ChordDiagram.h \
 CHull3D.h \
+CSunburst.h \
+CTreeMap.h \
 \
 CMathGeom2D.h \
 CArcToBezier.h \

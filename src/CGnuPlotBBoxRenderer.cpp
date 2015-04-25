@@ -158,7 +158,7 @@ CGnuPlotBBoxRenderer::
 drawRotatedText(const CPoint2D &p, const std::string &text, double /*ta*/,
                 CHAlignType /*hlaign*/, CVAlignType /*vlaign*/, const CRGBA &c)
 {
-  renderer_->drawText(p, text, c);
+  drawText(p, text, c);
 }
 
 void
@@ -183,4 +183,56 @@ fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double ang
              const CRGBA &c)
 {
   drawPieSlice(pc, ri, ro, angle1, angle2, 0, c);
+}
+
+void
+CGnuPlotBBoxRenderer::
+drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2, const CRGBA &)
+{
+  bbox_.add(p);
+
+  double x1 = p.x + r1*cos(a1);
+  double y1 = p.y + r1*sin(a1);
+  double x2 = p.x + r2*cos(a2);
+  double y2 = p.y + r2*sin(a2);
+
+  bbox_.add(CPoint2D(x1, y1));
+  bbox_.add(CPoint2D(x2, y2));
+}
+
+void
+CGnuPlotBBoxRenderer::
+drawChord(const CPoint2D &p, double r, double a1, double a2, const CRGBA &)
+{
+  bbox_.add(p);
+
+  double x1 = p.x + r*cos(a1);
+  double y1 = p.y + r*sin(a1);
+  double x2 = p.x + r*cos(a2);
+  double y2 = p.y + r*sin(a2);
+
+  bbox_.add(CPoint2D(x1, y1));
+  bbox_.add(CPoint2D(x2, y2));
+}
+
+void
+CGnuPlotBBoxRenderer::
+drawChord(const CPoint2D &p, double r, double a11, double a12,
+          double a21, double a22, const CRGBA &)
+{
+  bbox_.add(p);
+
+  double x11 = p.x + r*cos(a11);
+  double y11 = p.y + r*sin(a11);
+  double x12 = p.x + r*cos(a12);
+  double y12 = p.y + r*sin(a12);
+  double x21 = p.x + r*cos(a21);
+  double y21 = p.y + r*sin(a21);
+  double x22 = p.x + r*cos(a22);
+  double y22 = p.y + r*sin(a22);
+
+  bbox_.add(CPoint2D(x11, y11));
+  bbox_.add(CPoint2D(x12, y12));
+  bbox_.add(CPoint2D(x21, y21));
+  bbox_.add(CPoint2D(x22, y22));
 }

@@ -4,7 +4,7 @@
 
 CGnuPlotStylePolygons::
 CGnuPlotStylePolygons() :
- CGnuPlotStyleBase(CGnuPlot::PlotStyle::BOXES)
+ CGnuPlotStyleBase(CGnuPlot::PlotStyle::POLYGONS)
 {
 }
 

@@ -1,8 +1,8 @@
 #include <CGnuPlotPoint.h>
 
 CGnuPlotPoint::
-CGnuPlotPoint(const Values &values, bool discontinuity) :
- values_(values), discontinuity_(discontinuity)
+CGnuPlotPoint(const Values &values, bool discontinuity, const Params &params) :
+ values_(values), discontinuity_(discontinuity), params_(params)
 {
 }
 

@@ -102,12 +102,22 @@ SOURCES       = CQGnuPlot.cpp \
 		CGnuPlotRectangle.cpp \
 		CGnuPlotRectObject.cpp \
 		CGnuPlotRenderer.cpp \
+		CGnuPlotStyleAdjacency.cpp \
 		CGnuPlotStyleBoxErrorBars.cpp \
 		CGnuPlotStyleBoxes.cpp \
 		CGnuPlotStyleBoxPlot.cpp \
 		CGnuPlotStyleBoxXYErrorBars.cpp \
 		CGnuPlotStyleBubblePlot.cpp \
+		CGnuPlotStyleCandlesticks.cpp \
+		CGnuPlotStyleChordDiagram.cpp \
+		CGnuPlotStyleCircles.cpp \
 		CGnuPlotStyleDelaunay.cpp \
+		CGnuPlotStyleEllipses.cpp \
+		CGnuPlotStyleFilledCurves.cpp \
+		CGnuPlotStyleFinanceBars.cpp \
+		CGnuPlotStyleImage.cpp \
+		CGnuPlotStyleImpulses.cpp \
+		CGnuPlotStyleLabels.cpp \
 		CGnuPlotStyleParallelAxes.cpp \
 		CGnuPlotStylePieChart.cpp \
 		CGnuPlotStylePolygons.cpp \
@@ -129,10 +139,12 @@ SOURCES       = CQGnuPlot.cpp \
 		CQPaletteChooser.cpp \
 		CQPaletteDialog.cpp \
 		CQRotatedText.cpp \
-		CTreeMap.cpp \
-		CSunburst.cpp \
+		CAdjacency.cpp \
 		CDelaunay.cpp \
+		ChordDiagram.cpp \
 		CHull3D.cpp \
+		CSunburst.cpp \
+		CTreeMap.cpp \
 		CMathGeom2D.cpp \
 		CArcToBezier.cpp \
 		CSymbol2D.cpp \
@@ -249,12 +261,22 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CGnuPlotRectangle.o \
 		../obj/CGnuPlotRectObject.o \
 		../obj/CGnuPlotRenderer.o \
+		../obj/CGnuPlotStyleAdjacency.o \
 		../obj/CGnuPlotStyleBoxErrorBars.o \
 		../obj/CGnuPlotStyleBoxes.o \
 		../obj/CGnuPlotStyleBoxPlot.o \
 		../obj/CGnuPlotStyleBoxXYErrorBars.o \
 		../obj/CGnuPlotStyleBubblePlot.o \
+		../obj/CGnuPlotStyleCandlesticks.o \
+		../obj/CGnuPlotStyleChordDiagram.o \
+		../obj/CGnuPlotStyleCircles.o \
 		../obj/CGnuPlotStyleDelaunay.o \
+		../obj/CGnuPlotStyleEllipses.o \
+		../obj/CGnuPlotStyleFilledCurves.o \
+		../obj/CGnuPlotStyleFinanceBars.o \
+		../obj/CGnuPlotStyleImage.o \
+		../obj/CGnuPlotStyleImpulses.o \
+		../obj/CGnuPlotStyleLabels.o \
 		../obj/CGnuPlotStyleParallelAxes.o \
 		../obj/CGnuPlotStylePieChart.o \
 		../obj/CGnuPlotStylePolygons.o \
@@ -276,10 +298,12 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CQPaletteChooser.o \
 		../obj/CQPaletteDialog.o \
 		../obj/CQRotatedText.o \
-		../obj/CTreeMap.o \
-		../obj/CSunburst.o \
+		../obj/CAdjacency.o \
 		../obj/CDelaunay.o \
+		../obj/ChordDiagram.o \
 		../obj/CHull3D.o \
+		../obj/CSunburst.o \
+		../obj/CTreeMap.o \
 		../obj/CMathGeom2D.o \
 		../obj/CArcToBezier.o \
 		../obj/CSymbol2D.o \
@@ -599,7 +623,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d ../obj/CQGnuPlot1.0.0 || mkdir -p ../obj/CQGnuPlot1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBarObject.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPolygon.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotTitle.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot3DRenderer.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBarObject.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleDelaunay.h CGnuPlotStyle.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSunburst.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CQRotatedText.h CTreeMap.h CSunburst.h CDelaunay.h CHull3D.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h MouseMode/CQMouseMode.h MouseMode/CQPanMouseMode.h MouseMode/CQPanZoomIFace.h MouseMode/CQZoomMouseMode.h CQAngleSpinBox.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBarObject.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPolygon.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotTitle.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBarObject.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotPalette.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPosition.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlot3DRenderer.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CQRotatedText.cpp CTreeMap.cpp CSunburst.cpp CDelaunay.cpp CHull3D.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp MouseMode/CQMouseMode.cpp MouseMode/CQPanMouseMode.cpp MouseMode/CQZoomMouseMode.cpp CQAngleSpinBox.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBarObject.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPolygon.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotTitle.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot3DRenderer.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBarObject.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleEllipses.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSunburst.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CQRotatedText.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h MouseMode/CQMouseMode.h MouseMode/CQPanMouseMode.h MouseMode/CQPanZoomIFace.h MouseMode/CQZoomMouseMode.h CQAngleSpinBox.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBarObject.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPolygon.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotTitle.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBarObject.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotPalette.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPosition.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlot3DRenderer.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CQRotatedText.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp MouseMode/CQMouseMode.cpp MouseMode/CQPanMouseMode.cpp MouseMode/CQZoomMouseMode.cpp CQAngleSpinBox.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
 
 
 clean:compiler_clean 
@@ -11915,13 +11939,23 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSVGDevice.h \
 		CGnuPlotUtil.h \
 		CGnuPlotNameValues.h \
-		CGnuPlotStyleBoxErrorBars.h \
+		CGnuPlotStyleAdjacency.h \
 		CGnuPlotStyleBase.h \
+		CGnuPlotStyleBoxErrorBars.h \
 		CGnuPlotStyleBoxes.h \
 		CGnuPlotStyleBoxPlot.h \
 		CGnuPlotStyleBoxXYErrorBars.h \
 		CGnuPlotStyleBubblePlot.h \
+		CGnuPlotStyleCandlesticks.h \
+		CGnuPlotStyleChordDiagram.h \
+		CGnuPlotStyleCircles.h \
 		CGnuPlotStyleDelaunay.h \
+		CGnuPlotStyleEllipses.h \
+		CGnuPlotStyleFilledCurves.h \
+		CGnuPlotStyleFinanceBars.h \
+		CGnuPlotStyleImage.h \
+		CGnuPlotStyleImpulses.h \
+		CGnuPlotStyleLabels.h \
 		CGnuPlotStyleParallelAxes.h \
 		CGnuPlotStylePieChart.h \
 		CGnuPlotStylePolygons.h \
@@ -14481,6 +14515,111 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/C2Bezier2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotRenderer.o CGnuPlotRenderer.cpp
 
+../obj/CGnuPlotStyleAdjacency.o: CGnuPlotStyleAdjacency.cpp CGnuPlotStyleAdjacency.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h \
+		CGnuPlotRenderer.h \
+		CAdjacency.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleAdjacency.o CGnuPlotStyleAdjacency.cpp
+
 ../obj/CGnuPlotStyleBoxErrorBars.o: CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxErrorBars.h \
 		CGnuPlotStyleBase.h \
 		../../CMath/include/CBBox2D.h \
@@ -14998,6 +15137,312 @@ compiler_clean: compiler_moc_header_clean
 		CPointsCircle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleBubblePlot.o CGnuPlotStyleBubblePlot.cpp
 
+../obj/CGnuPlotStyleCandlesticks.o: CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleCandlesticks.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h \
+		CGnuPlotWindow.h \
+		CGnuPlotRenderer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleCandlesticks.o CGnuPlotStyleCandlesticks.cpp
+
+../obj/CGnuPlotStyleChordDiagram.o: CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleChordDiagram.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotRenderer.h \
+		ChordDiagram.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleChordDiagram.o CGnuPlotStyleChordDiagram.cpp
+
+../obj/CGnuPlotStyleCircles.o: CGnuPlotStyleCircles.cpp CGnuPlotStyleCircles.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotRenderer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleCircles.o CGnuPlotStyleCircles.cpp
+
 ../obj/CGnuPlotStyleDelaunay.o: CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDelaunay.h \
 		CGnuPlotStyleBase.h \
 		../../CMath/include/CBBox2D.h \
@@ -15108,6 +15553,622 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CGeneric.h \
 		../../CUtil/include/CTypeTraits.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleDelaunay.o CGnuPlotStyleDelaunay.cpp
+
+../obj/CGnuPlotStyleEllipses.o: CGnuPlotStyleEllipses.cpp CGnuPlotStyleEllipses.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotRenderer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleEllipses.o CGnuPlotStyleEllipses.cpp
+
+../obj/CGnuPlotStyleFilledCurves.o: CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFilledCurves.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotRenderer.h \
+		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleFilledCurves.o CGnuPlotStyleFilledCurves.cpp
+
+../obj/CGnuPlotStyleFinanceBars.o: CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleFinanceBars.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotRenderer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleFinanceBars.o CGnuPlotStyleFinanceBars.cpp
+
+../obj/CGnuPlotStyleImage.o: CGnuPlotStyleImage.cpp CGnuPlotStyleImage.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotRenderer.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleImage.o CGnuPlotStyleImage.cpp
+
+../obj/CGnuPlotStyleImpulses.o: CGnuPlotStyleImpulses.cpp CGnuPlotStyleImpulses.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotRenderer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleImpulses.o CGnuPlotStyleImpulses.cpp
+
+../obj/CGnuPlotStyleLabels.o: CGnuPlotStyleLabels.cpp CGnuPlotStyleLabels.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		CGnuPlotPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprVariable.h \
+		Expr/CExprFunction.h \
+		Expr/CExprOperator.h \
+		Expr/CExprParse.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprExecute.h \
+		Expr/CExprError.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		COrientation.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CRGBName/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotUsingCol.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotRenderer.h \
+		CGnuPlotDevice.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleLabels.o CGnuPlotStyleLabels.cpp
 
 ../obj/CGnuPlotStyleParallelAxes.o: CGnuPlotStyleParallelAxes.cpp CGnuPlotStyleParallelAxes.h \
 		CGnuPlotStyleBase.h \
@@ -17644,8 +18705,50 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qfontmetrics.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQRotatedText.o CQRotatedText.cpp
 
-../obj/CTreeMap.o: CTreeMap.cpp CTreeMap.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CTreeMap.o CTreeMap.cpp
+../obj/CAdjacency.o: CAdjacency.cpp CAdjacency.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CAdjacency.o CAdjacency.cpp
+
+../obj/CDelaunay.o: CDelaunay.cpp CDelaunay.h \
+		CHull3D.h \
+		CListLink.h \
+		CStateIterator.h \
+		../../CUtil/include/CGeneric.h \
+		../../CUtil/include/CTypeTraits.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CDelaunay.o CDelaunay.cpp
+
+../obj/ChordDiagram.o: ChordDiagram.cpp ChordDiagram.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/ChordDiagram.o ChordDiagram.cpp
+
+../obj/CHull3D.o: CHull3D.cpp CHull3D.h \
+		CListLink.h \
+		CStateIterator.h \
+		../../CUtil/include/CGeneric.h \
+		../../CUtil/include/CTypeTraits.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CHull3D.o CHull3D.cpp
 
 ../obj/CSunburst.o: CSunburst.cpp CSunburst.h \
 		../../CUtil/include/CRGBA.h \
@@ -17661,15 +18764,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CSunburst.o CSunburst.cpp
 
-../obj/CDelaunay.o: CDelaunay.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CDelaunay.o CDelaunay.cpp
-
-../obj/CHull3D.o: CHull3D.cpp CHull3D.h \
-		CListLink.h \
-		CStateIterator.h \
-		../../CUtil/include/CGeneric.h \
-		../../CUtil/include/CTypeTraits.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CHull3D.o CHull3D.cpp
+../obj/CTreeMap.o: CTreeMap.cpp CTreeMap.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CTreeMap.o CTreeMap.cpp
 
 ../obj/CMathGeom2D.o: CMathGeom2D.cpp CMathGeom2D.h \
 		../../CMath/include/CPoint2D.h \

@@ -9,12 +9,22 @@
 #include <CGnuPlotUtil.h>
 #include <CGnuPlotNameValues.h>
 
+#include <CGnuPlotStyleAdjacency.h>
 #include <CGnuPlotStyleBoxErrorBars.h>
 #include <CGnuPlotStyleBoxes.h>
 #include <CGnuPlotStyleBoxPlot.h>
 #include <CGnuPlotStyleBoxXYErrorBars.h>
 #include <CGnuPlotStyleBubblePlot.h>
+#include <CGnuPlotStyleCandlesticks.h>
+#include <CGnuPlotStyleChordDiagram.h>
+#include <CGnuPlotStyleCircles.h>
 #include <CGnuPlotStyleDelaunay.h>
+#include <CGnuPlotStyleEllipses.h>
+#include <CGnuPlotStyleFilledCurves.h>
+#include <CGnuPlotStyleFinanceBars.h>
+#include <CGnuPlotStyleImage.h>
+#include <CGnuPlotStyleImpulses.h>
+#include <CGnuPlotStyleLabels.h>
 #include <CGnuPlotStyleParallelAxes.h>
 #include <CGnuPlotStylePieChart.h>
 #include <CGnuPlotStylePolygons.h>
@@ -59,6 +69,9 @@ class CGnuPlotReadLine : public CReadLine {
 
 class CGnuPlotFn : public CExprFunctionObj {
  public:
+  typedef std::vector<CExprValuePtr> Values;
+
+ public:
   CGnuPlotFn(CGnuPlot *plot) : plot_(plot) { }
 
  protected:
@@ -69,7 +82,7 @@ class CGnuPlotAssertFn : public CGnuPlotFn {
  public:
   CGnuPlotAssertFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const std::vector<CExprValueP> &values) {
+  CExprValueP operator()(const Values &values) {
     long value = 0;
 
     if (! values[0]->getIntegerValue(value))
@@ -85,7 +98,7 @@ class CGnuPlotColumnFn : public CGnuPlotFn {
  public:
   CGnuPlotColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const std::vector<CExprValueP> &values) {
+  CExprValueP operator()(const Values &values) {
     long col = 0;
 
     if (! values[0]->getIntegerValue(col))
@@ -101,7 +114,7 @@ class CGnuPlotExistsFn : public CGnuPlotFn {
  public:
   CGnuPlotExistsFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const std::vector<CExprValueP> &values) {
+  CExprValueP operator()(const Values &values) {
     std::string name;
 
     if (! values[0]->getStringValue(name))
@@ -117,7 +130,7 @@ class CGnuPlotStringColumnFn : public CGnuPlotFn {
  public:
   CGnuPlotStringColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const std::vector<CExprValueP> &values) {
+  CExprValueP operator()(const Values &values) {
     assert(values.size() == 1);
 
     std::string str;
@@ -135,11 +148,17 @@ class CGnuPlotStringValidFn : public CGnuPlotFn {
  public:
   CGnuPlotStringValidFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const std::vector<CExprValueP> &) {
-    // TODO
-    assert(plot_);
+  CExprValueP operator()(const Values &values) {
+    assert(values.size() == 1);
 
-    return CExprInst->createRealValue(0.0);
+    std::string str;
+
+    long col = 0;
+
+    if (values[0]->getIntegerValue(col))
+      str = plot_->getField(col);
+
+    return CExprInst->createIntegerValue(str == "" ? 0 : 1);
   }
 };
 
@@ -147,7 +166,7 @@ class CGnuPlotValueFn : public CGnuPlotFn {
  public:
   CGnuPlotValueFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const std::vector<CExprValueP> &values) {
+  CExprValueP operator()(const Values &values) {
     std::string name;
 
     if (! values[0]->getStringValue(name))
@@ -272,16 +291,28 @@ void
 CGnuPlot::
 addPlotStyles()
 {
+  addPlotStyle(PlotStyle::ADJACENCY     , new CGnuPlotStyleAdjacency     );
   addPlotStyle(PlotStyle::BOXERRORBARS  , new CGnuPlotStyleBoxErrorBars  );
   addPlotStyle(PlotStyle::BOXES         , new CGnuPlotStyleBoxes         );
   addPlotStyle(PlotStyle::BOXPLOT       , new CGnuPlotStyleBoxPlot       );
   addPlotStyle(PlotStyle::BOXXYERRORBARS, new CGnuPlotStyleBoxXYErrorBars);
   addPlotStyle(PlotStyle::BUBBLEPLOT    , new CGnuPlotStyleBubblePlot    );
+  addPlotStyle(PlotStyle::CANDLESTICKS  , new CGnuPlotStyleCandlesticks  );
+  addPlotStyle(PlotStyle::CHORDDIAGRAM  , new CGnuPlotStyleChordDiagram  );
+  addPlotStyle(PlotStyle::CIRCLES       , new CGnuPlotStyleCircles       );
   addPlotStyle(PlotStyle::DELAUNAY      , new CGnuPlotStyleDelaunay      );
+  addPlotStyle(PlotStyle::ELLIPSES      , new CGnuPlotStyleEllipses      );
+  addPlotStyle(PlotStyle::FILLEDCURVES  , new CGnuPlotStyleFilledCurves  );
+  addPlotStyle(PlotStyle::FINANCEBARS   , new CGnuPlotStyleFinanceBars   );
+  addPlotStyle(PlotStyle::IMAGE         , new CGnuPlotStyleImage         );
+  addPlotStyle(PlotStyle::IMPULSES      , new CGnuPlotStyleImpulses      );
+  addPlotStyle(PlotStyle::LABELS        , new CGnuPlotStyleLabels        );
   addPlotStyle(PlotStyle::PARALLELAXES  , new CGnuPlotStyleParallelAxes  );
   addPlotStyle(PlotStyle::PIECHART      , new CGnuPlotStylePieChart      );
   addPlotStyle(PlotStyle::POLYGONS      , new CGnuPlotStylePolygons      );
   addPlotStyle(PlotStyle::RADAR         , new CGnuPlotStyleRadar         );
+  addPlotStyle(PlotStyle::RGBIMAGE      , new CGnuPlotStyleRGBImage      );
+  addPlotStyle(PlotStyle::RGBALPHA      , new CGnuPlotStyleRGBAlpha      );
   addPlotStyle(PlotStyle::SUNBURST      , new CGnuPlotStyleSunburst      );
   addPlotStyle(PlotStyle::TREEMAP       , new CGnuPlotStyleTreeMap       );
   addPlotStyle(PlotStyle::VECTORS       , new CGnuPlotStyleVectors       );
@@ -291,6 +322,8 @@ void
 CGnuPlot::
 addPlotStyle(PlotStyle plotStyle, CGnuPlotStyleBase *style)
 {
+  assert(plotStyle == style->style());
+
   plotStyles_[plotStyle] = style;
 }
 
@@ -899,7 +932,7 @@ printCmd(const std::string &args)
 {
   if (isDebug()) std::cerr << "print " << args << std::endl;
 
-  std::vector<CExprValueP> values;
+  Values values;
 
   if (! CExprInst->evaluateExpression(args, values)) {
     errorMsg("Invalid expression '" + args + "'");
@@ -938,7 +971,7 @@ printfCmd(const std::string &args)
     return;
   }
 
-  std::vector<CExprValueP> values;
+  Values values;
 
   if (line.skipSpaceAndChar(',')) {
     std::string expr = line.substr();
@@ -1799,10 +1832,17 @@ plotCmd(const std::string &args)
         // TODO () optional, : for multiple values
         if (line.skipSpaceAndChar('=')) {
           if (line.skipSpaceAndChar('(')) {
-            (void) parseInteger(line, imageStyle_.w);
+            int w;
 
-            if (line.skipSpaceAndChar(','))
-              (void) parseInteger(line, imageStyle_.h);
+            if (parseInteger(line, w))
+              imageStyle_.w = w;
+
+            if (line.skipSpaceAndChar(',')) {
+              int h;
+
+              if (parseInteger(line, h))
+                imageStyle_.h = h;
+            }
 
             (void) line.skipSpaceAndChar(')');
           }
@@ -1916,8 +1956,7 @@ plotCmd(const std::string &args)
 
     if      (! filename.empty()) {
       if (isBinary()) {
-        if (style == PlotStyle::IMAGE || style == PlotStyle::RGBIMAGE ||
-            style == PlotStyle::RGBALPHA) {
+        if (isImageStyle(style)) {
           CGnuPlotPlot *plot = addImage2D(group, filename, style, usingCols);
 
           if (plot)
@@ -2963,10 +3002,17 @@ splotCmd(const std::string &args)
         // TODO () optional, : for multiple values
         if (line.skipSpaceAndChar('=')) {
           if (line.skipSpaceAndChar('(')) {
-            (void) parseInteger(line, imageStyle_.w);
+            int w;
 
-            if (line.skipSpaceAndChar(','))
-              (void) parseInteger(line, imageStyle_.h);
+            if (parseInteger(line, w))
+              imageStyle_.w = w;
+
+            if (line.skipSpaceAndChar(',')) {
+              int h;
+
+              if (parseInteger(line, h))
+                imageStyle_.h = h;
+            }
 
             (void) line.skipSpaceAndChar(')');
           }
@@ -9111,9 +9157,33 @@ void
 CGnuPlot::
 parseUsing(CParseLine &line, CGnuPlotUsingCols &usingCols)
 {
-  std::string              usingStr;
+  // split using string into integer range
+  auto splitUsingFn = [] (const std::string &usingStr, StringArray &usingStrs) -> bool {
+    auto p = usingStr.find('-');
+
+    if (p == std::string::npos)
+      return false;
+
+    std::string lhs = usingStr.substr(0, p);
+    std::string rhs = usingStr.substr(p + 1);
+
+    int col1, col2;
+
+    if (CStrUtil::toInteger(lhs, &col1) && CStrUtil::toInteger(rhs, &col2)) {
+      for (int i = col1; i <= col2; ++i)
+        usingStrs.push_back(CStrUtil::toString(i));
+
+      return true;
+    }
+
+    return false;
+  };
+
+  //---
+
+  std::string usingStr;
   StringArray usingStrs;
-  bool                     isExpr = false;
+  bool        isExpr = false;
 
   int rbrackets = 0;
 
@@ -9130,8 +9200,13 @@ parseUsing(CParseLine &line, CGnuPlotUsingCols &usingCols)
         if (! usingStr.empty()) {
           if (isExpr)
             usingStr = "(" + usingStr + ")";
+          else {
+            if (splitUsingFn(usingStr, usingStrs))
+              usingStr = "";
+          }
 
-          usingStrs.push_back(usingStr);
+          if (! usingStr.empty())
+            usingStrs.push_back(usingStr);
         }
 
         usingStr = "";
@@ -9141,7 +9216,7 @@ parseUsing(CParseLine &line, CGnuPlotUsingCols &usingCols)
         if (line.isChar('(')) {
           ++rbrackets;
 
-          if (usingStr == "") {
+          if (usingStr.empty()) {
             line.skipChar();
 
             isExpr = true;
@@ -9169,8 +9244,13 @@ parseUsing(CParseLine &line, CGnuPlotUsingCols &usingCols)
   if (! usingStr.empty()) {
     if (isExpr)
       usingStr = "(" + usingStr + ")";
+    else {
+      if (splitUsingFn(usingStr, usingStrs))
+        usingStr = "";
+    }
 
-    usingStrs.push_back(usingStr);
+    if (! usingStr.empty())
+      usingStrs.push_back(usingStr);
   }
 
   for (auto &str : usingStrs)
@@ -10074,15 +10154,18 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
       //---
 
-      TicLabel                 ticLabel;
-      std::vector<CExprValueP> values;
+      TicLabel ticLabel;
+      Values   values;
+      Params   params;
 
       bool skip = false;
 
       for (uint i = 0; i < usingCols.size(); ++i) {
-        bool     ignore = false;
+        bool ignore = false;
 
-        CExprValueP value = decodeUsingCol(i, usingCols[i], 0, ix, skip, ignore, ticLabel);
+        const CGnuPlotUsingCol &col = usingCols[i];
+
+        CExprValueP value = decodeUsingCol(i, col, 0, ix, skip, ignore, ticLabel, params);
 
         if (! ignore) {
           //if (! value.isValid()) bad = true;
@@ -10091,7 +10174,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         }
       }
 
-      plot->addPoint2D(values, false);
+      plot->addPoint2D(values, false, params);
     }
 
     return plots;
@@ -10147,15 +10230,18 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
         //---
 
-        TicLabel                 ticLabel;
-        std::vector<CExprValueP> values;
+        TicLabel ticLabel;
+        Values   values;
+        Params   params;
 
         bool skip = false;
 
         for (uint i = 0; i < usingCols.size(); ++i) {
           bool ignore = false;
 
-          CExprValueP value = decodeUsingCol(i, usingCols[i], 0, ix, skip, ignore, ticLabel);
+          const CGnuPlotUsingCol &col = usingCols[i];
+
+          CExprValueP value = decodeUsingCol(i, col, 0, ix, skip, ignore, ticLabel, params);
 
           if (! ignore) {
             //if (! value.isValid()) bad = true;
@@ -10164,7 +10250,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
           }
         }
 
-        plot->addPoint2D(values, false);
+        plot->addPoint2D(values, false, params);
       }
     }
 
@@ -10249,8 +10335,9 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         // (TODO: save current file setNum, subSetNum and lineNum instead)
         fields_ = dataFile_.fields(setNum, subSetNum, lineNum);
 
-        TicLabel                 ticLabel;
-        std::vector<CExprValueP> values;
+        TicLabel ticLabel;
+        Values   values;
+        Params   params;
 
         if (isMatrix()) {
           double r;
@@ -10258,7 +10345,11 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
           for (const auto &field : fields_) {
             CExprValueP value;
 
-            if (CStrUtil::toReal(field, &r))
+            auto len = field.size();
+
+            if      (field[0] == '\"' && field[len - 1] == '\"')
+              value = CExprInst->createStringValue(field.substr(1, len - 2));
+            else if (CStrUtil::toReal(field, &r))
               value = CExprInst->createRealValue(r);
             else
               value = CExprInst->createStringValue(field);
@@ -10286,8 +10377,10 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
             for (uint i = 0; i < usingCols.size(); ++i) {
               bool ignore = false;
 
+              const CGnuPlotUsingCol &col = usingCols[i];
+
               CExprValueP value =
-                decodeUsingCol(i, usingCols[i], setNum, pointNum_, skip, ignore, ticLabel);
+                decodeUsingCol(i, col, setNum, pointNum_, skip, ignore, ticLabel, params);
 
               if (! ignore) {
                 if (! value.isValid())
@@ -10331,7 +10424,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         //---
 
         // add values
-        int pointNum = plot->addPoint2D(values, discontinuity);
+        int pointNum = plot->addPoint2D(values, discontinuity, params);
 
         if (ticLabel.valid)
           plot->setPoint2DLabel(pointNum, ticLabel.str);
@@ -10458,15 +10551,18 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
       //---
 
-      TicLabel                 ticLabel;
-      std::vector<CExprValueP> values;
+      TicLabel ticLabel;
+      Values   values;
+      Params   params;
 
       bool skip = false;
 
       for (uint i = 0; i < usingCols.size(); ++i) {
         bool ignore = false;
 
-        CExprValueP value = decodeUsingCol(i, usingCols[i], 0, ix, skip, ignore, ticLabel);
+        const CGnuPlotUsingCol &col = usingCols[i];
+
+        CExprValueP value = decodeUsingCol(i, col, 0, ix, skip, ignore, ticLabel, params);
 
         if (! ignore) {
           //if (! value.isValid()) bad = true;
@@ -10531,15 +10627,18 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
         //---
 
-        TicLabel                 ticLabel;
-        std::vector<CExprValueP> values;
+        TicLabel ticLabel;
+        Values   values;
+        Params   params;
 
         bool skip = false;
 
         for (uint i = 0; i < usingCols.size(); ++i) {
           bool ignore = false;
 
-          CExprValueP value = decodeUsingCol(i, usingCols[i], 0, ix, skip, ignore, ticLabel);
+          const CGnuPlotUsingCol &col = usingCols[i];
+
+          CExprValueP value = decodeUsingCol(i, col, 0, ix, skip, ignore, ticLabel, params);
 
           if (! ignore) {
             //if (! value.isValid()) bad = true;
@@ -10633,8 +10732,9 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         // (TODO: save current file setNum, subSetNum and lineNum instead)
         fields_ = dataFile_.fields(setNum, subSetNum, lineNum);
 
-        TicLabel                 ticLabel;
-        std::vector<CExprValueP> values;
+        TicLabel ticLabel;
+        Values   values;
+        Params   params;
 
         if (isMatrix()) {
           double r;
@@ -10642,7 +10742,11 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
           for (const auto &field : fields_) {
             CExprValueP value;
 
-            if (CStrUtil::toReal(field, &r))
+            auto len = field.size();
+
+            if      (field[0] == '\"' && field[len - 1] == '\"')
+              value = CExprInst->createStringValue(field.substr(1, len - 2));
+            else if (CStrUtil::toReal(field, &r))
               value = CExprInst->createRealValue(r);
             else
               value = CExprInst->createStringValue(field);
@@ -10670,8 +10774,10 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
             for (uint i = 0; i < usingCols.size(); ++i) {
               bool ignore = false;
 
+              const CGnuPlotUsingCol &col = usingCols[i];
+
               CExprValueP value =
-                decodeUsingCol(i, usingCols[i], setNum, pointNum_, skip, ignore, ticLabel);
+                decodeUsingCol(i, col, setNum, pointNum_, skip, ignore, ticLabel, params);
 
               if (! ignore) {
                 if (! value.isValid())
@@ -10730,7 +10836,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 CExprValueP
 CGnuPlot::
 decodeUsingCol(int i, const CGnuPlotUsingCol &col, int setNum, int pointNum,
-               bool &skip, bool &ignore, TicLabel &ticLabel)
+               bool &skip, bool &ignore, TicLabel &ticLabel, Params &params)
 {
   CExprValueP value;
 
@@ -10772,59 +10878,67 @@ decodeUsingCol(int i, const CGnuPlotUsingCol &col, int setNum, int pointNum,
       pos = expr.find('$');
     }
 
-    // check for axis label string
+    // check for parameter function
     pos = expr.find('(');
 
-    if (pos != std::string::npos) {
+    if (pos > 0 && pos != std::string::npos) {
+      bool valid = false;
+
       std::string name = expr.substr(0, pos);
+
+      std::string name1 = expr.substr(pos + 1);
+
+      auto p1 = name1.find(')');
+
+      if (p1 != std::string::npos)
+        name1 = name1.substr(0, p1);
+
+      CExprValueP value;
+
+      if (! evaluateExpression(name1, value, true))
+        value = CExprValueP();
+
+      long        icol;
+      std::string str1;
+
+      if (value.isValid() && value->getIntegerValue(icol)) {
+        CExprValueP value1 = getFieldValue(i, icol, setNum, pointNum, skip);
+
+        if (value1.isValid() && value1->getStringValue(str1))
+          valid = true;
+      }
 
       if (name == "xtic"  || name == "xticlabels"  || name == "ytic"  || name == "yticlabels" ||
           name == "x2tic" || name == "x2ticlabels" || name == "y2tic" || name == "y2ticlabels") {
-        std::string name1 = expr.substr(pos + 1);
+        if (valid) {
+          ticLabel.valid = true;
+          ticLabel.str   = str1;
 
-        auto p1 = name1.find(')');
-
-        if (p1 != std::string::npos)
-          name1 = name1.substr(0, p1);
-
-        CExprValueP value;
-
-        if (! evaluateExpression(name1, value, true))
-          value = CExprValueP();
-
-        long icol;
-
-        if (value.isValid() && value->getIntegerValue(icol)) {
-          CExprValueP value1 = getFieldValue(i, icol, setNum, pointNum, skip);
-
-          std::string str1;
-
-          if (value1.isValid() && value1->getStringValue(str1)) {
-            ticLabel.valid = true;
-            ticLabel.str   = str1;
-
-            if      (name == "xtic" || name == "xticlabels") {
-              ticLabel.id = 'x'; ticLabel.ind = 1;
-              axesData_.xaxis[ticLabel.ind].setTicLabel(pointNum, ticLabel.str);
-            }
-            else if (name == "x2tic"|| name == "x2ticlabels") {
-              ticLabel.id = 'x'; ticLabel.ind = 2;
-              axesData_.xaxis[ticLabel.ind].setTicLabel(pointNum, ticLabel.str);
-            }
-            else if (name == "ytic" || name == "yticlabels") {
-              ticLabel.id = 'y'; ticLabel.ind = 1;
-              axesData_.yaxis[ticLabel.ind].setTicLabel(pointNum, ticLabel.str);
-            }
-            else if (name == "y2tic"|| name == "y2ticlabels") {
-              ticLabel.id = 'y'; ticLabel.ind = 2;
-              axesData_.yaxis[ticLabel.ind].setTicLabel(pointNum, ticLabel.str);
-            }
+          if      (name == "xtic" || name == "xticlabels") {
+            ticLabel.id = 'x'; ticLabel.ind = 1;
+            axesData_.xaxis[ticLabel.ind].setTicLabel(pointNum, ticLabel.str);
+          }
+          else if (name == "x2tic"|| name == "x2ticlabels") {
+            ticLabel.id = 'x'; ticLabel.ind = 2;
+            axesData_.xaxis[ticLabel.ind].setTicLabel(pointNum, ticLabel.str);
+          }
+          else if (name == "ytic" || name == "yticlabels") {
+            ticLabel.id = 'y'; ticLabel.ind = 1;
+            axesData_.yaxis[ticLabel.ind].setTicLabel(pointNum, ticLabel.str);
+          }
+          else if (name == "y2tic"|| name == "y2ticlabels") {
+            ticLabel.id = 'y'; ticLabel.ind = 2;
+            axesData_.yaxis[ticLabel.ind].setTicLabel(pointNum, ticLabel.str);
           }
         }
-
-        ignore = true;
-        expr   = "";
       }
+      else {
+        if (valid)
+          params[name] = str1;
+      }
+
+      ignore = true;
+      expr   = "";
     }
 
     //----
@@ -10890,6 +11004,8 @@ getFieldValue(int i, int ival, int setNum, int pointNum, bool &skip)
 
     const std::string &field = fields_[ival - 1];
 
+    auto len = field.size();
+
     if (field == missing) {
       skip = true;
       return CExprValueP();
@@ -10905,6 +11021,8 @@ getFieldValue(int i, int ival, int setNum, int pointNum, bool &skip)
 
       value = CExprInst->createRealValue(mktime(&tm1));
     }
+    else if (field[0] == '\"' && field[len - 1] == '\"')
+      value = CExprInst->createStringValue(field.substr(1, len - 2));
     else if (fieldToReal(field, val))
       value = CExprInst->createRealValue(val);
     else

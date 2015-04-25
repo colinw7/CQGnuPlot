@@ -149,6 +149,28 @@ fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double ang
   renderer_->fillPieSlice(pc, ri, ro, angle1, angle2, c);
 }
 
+void
+CGnuPlot3DRenderer::
+drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2, const CRGBA &c)
+{
+  renderer_->drawArc(p, r1, r2, a1, a2, c);
+}
+
+void
+CGnuPlot3DRenderer::
+drawChord(const CPoint2D &p, double r, double a1, double a2, const CRGBA &c)
+{
+  renderer_->drawChord(p, r, a1, a2, c);
+}
+
+void
+CGnuPlot3DRenderer::
+drawChord(const CPoint2D &p, double r, double a11, double a12,
+          double a21, double a22, const CRGBA &c)
+{
+  renderer_->drawChord(p, r, a11, a12, a21, a22, c);
+}
+
 CPoint2D
 CGnuPlot3DRenderer::
 transform(const CPoint2D &p) const
