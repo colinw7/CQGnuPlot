@@ -1,13 +1,14 @@
-#ifndef CGnuPlotStyleVectors_H
-#define CGnuPlotStyleVectors_H
+#ifndef CGnuPlotStyleLinesPoints_H
+#define CGnuPlotStyleLinesPoints_H
 
 #include <CGnuPlotStyleBase.h>
 
-class CGnuPlotStyleVectors : public CGnuPlotStyleBase {
+class CGnuPlotStyleLinesPoints : public CGnuPlotStyleBase {
  public:
-  CGnuPlotStyleVectors();
+  CGnuPlotStyleLinesPoints();
 
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
+  void draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
   bool hasKeyLine() const { return true; }
 

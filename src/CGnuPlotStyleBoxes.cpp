@@ -51,7 +51,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo())
-    plot->updateRectCacheSize(n);
+    plot->updateBarCacheSize(n);
 
   //---
 
@@ -115,8 +115,35 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     ++i;
   }
 
-  if (! renderer->isPseudo())
-    plot->drawBars(renderer);
+  if (! renderer->isPseudo()) {
+    for (const auto &bar : plot->barObjects())
+      bar->draw(renderer);
+  }
+}
+
+void
+CGnuPlotStyleBoxes::
+drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
+{
+  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+
+  CFontPtr font = renderer->getFont();
+
+  double font_size = font->getCharAscent() + font->getCharDescent();
+
+  double h = renderer->pixelHeightToWindowHeight(font_size - 4);
+
+  CBBox2D hbbox(p1.x, p1.y - h/2, p2.x, p1.y + h/2);
+
+  const CRGBA &lc = lineStyle.calcColor(CRGBA(0,0,0));
+  double       lw = 1;
+
+  if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
+    renderer->patternRect(hbbox, plot->fillStyle().pattern(), lc, CRGBA(1,1,1));
+  else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
+    renderer->fillRect(hbbox, lineStyle.calcColor(CRGBA(1,1,1)));
+
+  renderer->drawRect(hbbox, lc, lw);
 }
 
 CBBox2D

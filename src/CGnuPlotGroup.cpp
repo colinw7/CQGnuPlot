@@ -249,13 +249,17 @@ fit()
       double ymin = 0, ymax = 1;
 
       if (! imageStyle.w.isValid() || ! imageStyle.h.isValid()) {
-        int ny = std::max(1, int(plot->getPoints2D().size()));
-        int nx = (ny > 0 ? int(plot->getPoints2D()[0].getNumValues()) : 1);
+        int nx = 1, ny = 1;
 
-        xmin = -1;
-        ymin = -1;
-        xmax = nx;
-        ymax = ny;
+        if (! is3D()) {
+          if (! plot->getPoints2D().empty()) {
+            ny = int(plot->getPoints2D().size());
+            nx = int(plot->getPoints2D()[0].getNumValues());
+          }
+        }
+
+        xmin = -1; xmax = nx;
+        ymin = -1; ymax = ny;
       }
       else {
         xmax = imageStyle.w.getValue() - 1;
@@ -892,7 +896,7 @@ drawRowStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
 
   if (! renderer->isPseudo()) {
     for (auto plot : plots)
-      plot->updateRectCacheSize(numPoints);
+      plot->updateBarCacheSize(numPoints);
   }
 
   //---
@@ -936,7 +940,7 @@ drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
 {
   if (! renderer->isPseudo()) {
     for (auto plot : plots)
-      plot->updateRectCacheSize(plot->numPoints2D());
+      plot->updateBarCacheSize(plot->numPoints2D());
   }
 
   //---

@@ -12,7 +12,8 @@ void
 CGnuPlotStyleVectors::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  const CGnuPlotLineStyle  &lineStyle  = plot->lineStyle();
+  const CGnuPlotArrowStyle &arrowStyle = plot->arrowStyle();
 
   bool isCalcColor = lineStyle.color().isCalc();
   bool isVarArrow  = plot->arrowStyle().isVariable();
@@ -56,7 +57,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       lc1 = lineStyle.color().calcColor(plot, x);
     }
 
-    CGnuPlotArrowStyle as = plot->arrowStyle();
+    CGnuPlotArrowStyle as = arrowStyle;
 
     if (isVarArrow) {
       double x = reals[pos++];
@@ -86,6 +87,29 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       renderer->drawPoint(to  , lc1);
     }
   }
+}
+
+void
+CGnuPlotStyleVectors::
+drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
+{
+  const CGnuPlotLineStyle  &lineStyle  = plot->lineStyle();
+  const CGnuPlotArrowStyle &arrowStyle = plot->arrowStyle();
+
+  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
+
+  //---
+
+  CGnuPlotArrow arrow(plot->group());
+
+  arrow.setStyle(arrowStyle);
+
+  arrow.setLineColor(lc);
+
+  arrow.setFrom(p1);
+  arrow.setTo  (p2);
+
+  arrow.draw(renderer);
 }
 
 CBBox2D

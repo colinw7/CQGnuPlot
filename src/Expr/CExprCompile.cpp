@@ -211,14 +211,14 @@ compileExpression(CExprITokenPtr itoken)
 {
   uint num_children = itoken->getNumChildren();
 
-  if (num_children == 3) {
+  if      (num_children == 3) {
     compileExpression(itoken->getChild(0));
 
     compileAssignmentExpression(itoken->getChild(2));
 
     stackOperator(CExprInst->getOperator(CEXPR_OP_COMMA));
   }
-  else
+  else if (num_children == 1)
     compileAssignmentExpression(itoken->getChild(0));
 }
 

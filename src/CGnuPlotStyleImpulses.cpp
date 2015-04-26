@@ -45,6 +45,15 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 }
 
+void
+CGnuPlotStyleImpulses::
+drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
+{
+  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+
+  renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)));
+}
+
 CBBox2D
 CGnuPlotStyleImpulses::
 fit(CGnuPlotPlot *)

@@ -19,19 +19,32 @@
 #include <CGnuPlotStyleChordDiagram.h>
 #include <CGnuPlotStyleCircles.h>
 #include <CGnuPlotStyleDelaunay.h>
+#include <CGnuPlotStyleDots.h>
 #include <CGnuPlotStyleEllipses.h>
 #include <CGnuPlotStyleFilledCurves.h>
 #include <CGnuPlotStyleFinanceBars.h>
 #include <CGnuPlotStyleImage.h>
 #include <CGnuPlotStyleImpulses.h>
 #include <CGnuPlotStyleLabels.h>
+#include <CGnuPlotStyleLines.h>
+#include <CGnuPlotStyleLinesPoints.h>
 #include <CGnuPlotStyleParallelAxes.h>
 #include <CGnuPlotStylePieChart.h>
 #include <CGnuPlotStylePolygons.h>
+#include <CGnuPlotStylePoints.h>
 #include <CGnuPlotStyleRadar.h>
+#include <CGnuPlotStyleSteps.h>
 #include <CGnuPlotStyleSunburst.h>
+#include <CGnuPlotStyleTestPalette.h>
+#include <CGnuPlotStyleTestTerminal.h>
 #include <CGnuPlotStyleTreeMap.h>
 #include <CGnuPlotStyleVectors.h>
+#include <CGnuPlotStyleXErrorBars.h>
+#include <CGnuPlotStyleXErrorLines.h>
+#include <CGnuPlotStyleXYErrorBars.h>
+#include <CGnuPlotStyleXYErrorLines.h>
+#include <CGnuPlotStyleYErrorBars.h>
+#include <CGnuPlotStyleYErrorLines.h>
 
 #include <CImageLib.h>
 #include <CUnixFile.h>
@@ -101,7 +114,17 @@ class CGnuPlotColumnFn : public CGnuPlotFn {
   CExprValueP operator()(const Values &values) {
     long col = 0;
 
-    if (! values[0]->getIntegerValue(col))
+    if      (values[0]->isIntegerValue()) {
+      (void) values[0]->getIntegerValue(col);
+    }
+    else if (values[0]->isStringValue()) {
+      std::string str;
+
+      (void) values[0]->getStringValue(str);
+
+      col = plot_->getColumnIndex(str);
+    }
+    else
       return CExprInst->createRealValue(0.0);
 
     bool skip;
@@ -249,11 +272,11 @@ CGnuPlot()
 
   CExprInst->addFunction("assert", "i", new CGnuPlotAssertFn(this));
 
-  CExprInst->addFunction("column"      , "i", new CGnuPlotColumnFn(this));
-  CExprInst->addFunction("exists"      , "s", new CGnuPlotExistsFn(this));
-  CExprInst->addFunction("stringcolumn", "i", new CGnuPlotStringColumnFn(this));
-  CExprInst->addFunction("valid"       , "i", new CGnuPlotStringValidFn(this));
-  CExprInst->addFunction("value"       , "s", new CGnuPlotValueFn(this));
+  CExprInst->addFunction("column"      , "is", new CGnuPlotColumnFn(this));
+  CExprInst->addFunction("exists"      , "s" , new CGnuPlotExistsFn(this));
+  CExprInst->addFunction("stringcolumn", "i" , new CGnuPlotStringColumnFn(this));
+  CExprInst->addFunction("valid"       , "i" , new CGnuPlotStringValidFn(this));
+  CExprInst->addFunction("value"       , "s" , new CGnuPlotValueFn(this));
   // timecolumn
 
   CExprInst->createIntegerVariable("ARGC", 0);
@@ -301,21 +324,37 @@ addPlotStyles()
   addPlotStyle(PlotStyle::CHORDDIAGRAM  , new CGnuPlotStyleChordDiagram  );
   addPlotStyle(PlotStyle::CIRCLES       , new CGnuPlotStyleCircles       );
   addPlotStyle(PlotStyle::DELAUNAY      , new CGnuPlotStyleDelaunay      );
+  addPlotStyle(PlotStyle::DOTS          , new CGnuPlotStyleDots          );
   addPlotStyle(PlotStyle::ELLIPSES      , new CGnuPlotStyleEllipses      );
   addPlotStyle(PlotStyle::FILLEDCURVES  , new CGnuPlotStyleFilledCurves  );
+  addPlotStyle(PlotStyle::FILLSTEPS     , new CGnuPlotStyleFillSteps     );
   addPlotStyle(PlotStyle::FINANCEBARS   , new CGnuPlotStyleFinanceBars   );
+  addPlotStyle(PlotStyle::FSTEPS        , new CGnuPlotStyleFSteps        );
+  addPlotStyle(PlotStyle::HISTEPS       , new CGnuPlotStyleHiSteps       );
   addPlotStyle(PlotStyle::IMAGE         , new CGnuPlotStyleImage         );
   addPlotStyle(PlotStyle::IMPULSES      , new CGnuPlotStyleImpulses      );
   addPlotStyle(PlotStyle::LABELS        , new CGnuPlotStyleLabels        );
+  addPlotStyle(PlotStyle::LINES         , new CGnuPlotStyleLines         );
+  addPlotStyle(PlotStyle::LINES_POINTS  , new CGnuPlotStyleLinesPoints   );
   addPlotStyle(PlotStyle::PARALLELAXES  , new CGnuPlotStyleParallelAxes  );
   addPlotStyle(PlotStyle::PIECHART      , new CGnuPlotStylePieChart      );
+  addPlotStyle(PlotStyle::POINTS        , new CGnuPlotStylePoints        );
   addPlotStyle(PlotStyle::POLYGONS      , new CGnuPlotStylePolygons      );
   addPlotStyle(PlotStyle::RADAR         , new CGnuPlotStyleRadar         );
   addPlotStyle(PlotStyle::RGBIMAGE      , new CGnuPlotStyleRGBImage      );
   addPlotStyle(PlotStyle::RGBALPHA      , new CGnuPlotStyleRGBAlpha      );
+  addPlotStyle(PlotStyle::STEPS         , new CGnuPlotStyleSteps         );
   addPlotStyle(PlotStyle::SUNBURST      , new CGnuPlotStyleSunburst      );
+  addPlotStyle(PlotStyle::TEST_PALETTE  , new CGnuPlotStyleTestPalette   );
+  addPlotStyle(PlotStyle::TEST_TERMINAL , new CGnuPlotStyleTestTerminal  );
   addPlotStyle(PlotStyle::TREEMAP       , new CGnuPlotStyleTreeMap       );
   addPlotStyle(PlotStyle::VECTORS       , new CGnuPlotStyleVectors       );
+  addPlotStyle(PlotStyle::XERRORBARS    , new CGnuPlotStyleXErrorBars    );
+  addPlotStyle(PlotStyle::XYERRORBARS   , new CGnuPlotStyleXYErrorBars   );
+  addPlotStyle(PlotStyle::YERRORBARS    , new CGnuPlotStyleYErrorBars    );
+  addPlotStyle(PlotStyle::XERRORLINES   , new CGnuPlotStyleXErrorLines   );
+  addPlotStyle(PlotStyle::XYERRORLINES  , new CGnuPlotStyleXYErrorLines  );
+  addPlotStyle(PlotStyle::YERRORLINES   , new CGnuPlotStyleYErrorLines   );
 }
 
 void
@@ -549,28 +588,35 @@ bool
 CGnuPlot::
 parseLine(const std::string &str)
 {
+  CParseLine line(str);
+
+  line.skipSpace();
+
+  if (line.isChar('#')) { // comments char ?
+    return true;
+  }
+
+  //----
+
   std::string str1 = replaceEmbedded(str);
 
   //----
 
-  CParseLine line(str1);
+  CParseLine line1(str1);
 
-  line.skipSpace();
+  line1.skipSpace();
 
-  if      (line.isChar('!')) {
-    line.skipChar();
+  if (line1.isChar('!')) {
+    line1.skipChar();
 
     StringArray lines;
 
-    if (! execCmd(line.substr(), lines))
+    if (! execCmd(line1.substr(), lines))
       return false;
 
-    for (const auto &line : lines)
-      std::cout << line << std::endl;
+    for (const auto &l : lines)
+      std::cout << l << std::endl;
 
-    return true;
-  }
-  else if (line.isChar('#')) { // comments char ?
     return true;
   }
 
@@ -1444,12 +1490,13 @@ plotCmd(const std::string &args)
   line.skipSpace();
 
   if (line.isString("for")) {
-    std::string var, start, end, inc, lcmd, rcmd;
+    ForCmd      forCmd;
+    std::string lcmd, rcmd;
 
-    if (! parseFor(line, var, start, end, inc, lcmd, rcmd, true))
+    if (! parseFor(line, forCmd, lcmd, rcmd, true))
       return;
 
-    plotForCmd(var, start, end, inc, lcmd);
+    plotForCmd(forCmd, lcmd);
 
     if (rcmd != "")
       plotCmd(rcmd);
@@ -1480,8 +1527,9 @@ plotCmd(const std::string &args)
     // get local copy of next line style
     incLineStyle();
 
-    CGnuPlotLineStyle lineStyle = *this->lineStyle();
-    CGnuPlotFillStyle fillStyle = this->fillStyle();
+    CGnuPlotLineStyle  lineStyle  = *this->lineStyle();
+    CGnuPlotFillStyle  fillStyle  = this->fillStyle();
+    CGnuPlotArrowStyle arrowStyle = this->arrowStyle();
 
     //----
 
@@ -1603,7 +1651,7 @@ plotCmd(const std::string &args)
       PlotVar plotVar;
 
       if (! parseOptionValue(this, line, plotVar)) {
-        parseModifiers2D(line, lineStyle, fillStyle);
+        parseModifiers2D(style, line, lineStyle, fillStyle, arrowStyle);
         break;
       }
 
@@ -1717,7 +1765,7 @@ plotCmd(const std::string &args)
           }
         }
 
-        parseModifiers2D(line, lineStyle, fillStyle);
+        parseModifiers2D(style, line, lineStyle, fillStyle, arrowStyle);
       }
       // title string
       else if (plotVar == PlotVar::TITLE) {
@@ -1746,6 +1794,7 @@ plotCmd(const std::string &args)
       }
       // disable title
       else if (plotVar == PlotVar::NOTITLE) {
+        // TODO
       }
       // smooth type
       else if (plotVar == PlotVar::SMOOTH) {
@@ -1813,11 +1862,11 @@ plotCmd(const std::string &args)
         int as;
 
         if (parseInteger(line, as))
-          arrowStyle_ = arrowStyle(as);
+          arrowStyle = this->arrowStyle(as);
       }
       // heads
       else if (plotVar == PlotVar::HEADS) {
-        arrowStyle_.setHeads(true, true);
+        arrowStyle.setHeads(true, true);
       }
       // binary
       else if (plotVar == PlotVar::BINARY) {
@@ -1980,8 +2029,9 @@ plotCmd(const std::string &args)
       if (keyTitle.isValid())
         plot1->setKeyTitle(keyTitle.getValue());
 
-      plot1->setLineStyle(lineStyle);
-      plot1->setFillStyle(fillStyle);
+      plot1->setLineStyle (lineStyle);
+      plot1->setFillStyle (fillStyle);
+      plot1->setArrowStyle(arrowStyle);
 
       plots.push_back(plot1);
     }
@@ -2044,7 +2094,8 @@ plotCmd(const std::string &args)
 
 bool
 CGnuPlot::
-parseModifiers2D(CParseLine &line, CGnuPlotLineStyle &lineStyle, CGnuPlotFillStyle &fillStyle)
+parseModifiers2D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineStyle,
+                 CGnuPlotFillStyle &fillStyle, CGnuPlotArrowStyle &arrowStyle)
 {
   bool modifiers = true;
 
@@ -2131,15 +2182,22 @@ parseModifiers2D(CParseLine &line, CGnuPlotLineStyle &lineStyle, CGnuPlotFillSty
       int as;
 
       if (style == "variable" || style == "var")
-        arrowStyle_.setVariable(true);
+        arrowStyle.setVariable(true);
       else {
         line.setPos(pos);
 
         if (parseInteger(line, as))
-          arrowStyle_ = arrowStyle(as);
+          arrowStyle = this->arrowStyle(as);
       }
     }
     else if (line.isString("filled")) {
+      arrowStyle.setFilled(true);
+
+      line.skipNonSpace();
+    }
+    else if (line.isString("nohead")) {
+      arrowStyle.setHeads(false, false);
+
       line.skipNonSpace();
     }
     else if (line.isString("nohidden3d")) {
@@ -2163,62 +2221,77 @@ parseModifiers2D(CParseLine &line, CGnuPlotLineStyle &lineStyle, CGnuPlotFillSty
 
 void
 CGnuPlot::
-plotForCmd(const std::string &var, const std::string &start, const std::string &end,
-           const std::string &inc, const std::string &args)
+plotForCmd(const ForCmd &forCmd, const std::string &args)
 {
-  CExprValuePtr value1;
+  if (forCmd.isIn) {
+    std::vector<std::string> words;
 
-  if (! evaluateExpression(start, value1))
-    return;
+    CStrUtil::addWords(forCmd.start, words);
 
-  CExprValuePtr value2;
+    for (const auto &w : words) {
+      CExprInst->createStringVariable(forCmd.var, w);
 
-  if (! evaluateExpression(end, value2))
-    return;
-
-  CExprValuePtr value3;
-
-  if (inc != "") {
-    if (! evaluateExpression(inc, value3))
-      return;
+      plotCmd(args);
+    }
   }
+  else {
+    CExprValuePtr value1;
 
-  long i1 = 0, i2 = 1, i3 = 1;
+    if (! evaluateExpression(forCmd.start, value1) || ! value1.isValid())
+      return;
 
-  if (! value1->getIntegerValue(i1) || ! value2->getIntegerValue(i2))
-    return;
+    CExprValuePtr value2;
 
-  if (value3.isValid() && ! value3->getIntegerValue(i3))
-    return;
+    if (! evaluateExpression(forCmd.end, value2) || ! value2.isValid())
+      return;
 
-  while (i1 <= i2) {
-    CExprInst->createIntegerVariable(var, i1);
+    CExprValuePtr value3;
 
-    plotCmd(args);
+    if (forCmd.inc != "") {
+      if (! evaluateExpression(forCmd.inc, value3) || ! value3.isValid())
+        value3 = CExprValuePtr();
+    }
 
-    i1 += i3;
+    long i1 = 0, i2 = 1, i3 = 1;
+
+    if (! value1->getIntegerValue(i1) || ! value2->getIntegerValue(i2))
+      return;
+
+    if (value3.isValid() && ! value3->getIntegerValue(i3))
+      return;
+
+    while (i1 <= i2) {
+      CExprInst->createIntegerVariable(forCmd.var, i1);
+
+      plotCmd(args);
+
+      i1 += i3;
+    }
   }
 }
 
 bool
 CGnuPlot::
-parseFor(CParseLine &line, std::string &var, std::string &start, std::string &end,
-         std::string &inc, std::string &lcmd, std::string &rcmd, bool split)
+parseFor(CParseLine &line, ForCmd &forCmd, std::string &lcmd, std::string &rcmd, bool split)
 {
   line.skipNonSpace();
 
   if (! line.skipSpaceAndChar('['))
     return false;
 
-  if (! readIdentifier(line, var))
+  if (! readIdentifier(line, forCmd.var))
     return false;
 
   // for [ivar = start:end:incr]
   if (line.skipSpaceAndChar('=')) {
+    forCmd.isIn = false;
+
     line.skipSpace();
 
+    forCmd.start = "";
+
     while (line.isValid() && ! line.isChar(':'))
-      start += line.getChar();
+      forCmd.start += line.getChar();
 
     if (! line.isChar(':'))
       return false;
@@ -2226,14 +2299,18 @@ parseFor(CParseLine &line, std::string &var, std::string &start, std::string &en
     line.skipChar();
     line.skipSpace();
 
+    forCmd.end = "";
+
     while (line.isValid() && ! line.isChar(']') && ! line.isChar(':'))
-      end += line.getChar();
+      forCmd.end += line.getChar();
 
     if (line.isChar(':')) {
       line.skipSpace();
 
+      forCmd.inc = "";
+
       while (line.isValid() && ! line.isChar(']'))
-        inc += line.getChar();
+        forCmd.inc += line.getChar();
     }
 
     if (! line.isChar(']'))
@@ -2244,9 +2321,11 @@ parseFor(CParseLine &line, std::string &var, std::string &start, std::string &en
   }
   // for [svar in "<words>"]
   else if (line.isString("in")) {
+    forCmd.isIn = true;
+
     line.skipNonSpace();
 
-    if (! parseString(line, start, "Invalid for in"))
+    if (! parseString(line, forCmd.start, "Invalid for in"))
       return false;
 
     if (! line.skipSpaceAndChar(']'))
@@ -2738,8 +2817,9 @@ splotCmd(const std::string &args)
     // get local copy of next line style
     incLineStyle();
 
-    CGnuPlotLineStyle lineStyle = *this->lineStyle();
-    CGnuPlotFillStyle fillStyle = this->fillStyle();
+    CGnuPlotLineStyle  lineStyle  = *this->lineStyle();
+    CGnuPlotFillStyle  fillStyle  = this->fillStyle();
+    CGnuPlotArrowStyle arrowStyle = this->arrowStyle();
 
     //----
 
@@ -2842,8 +2922,10 @@ splotCmd(const std::string &args)
     while (line.isValid() && ! line.isChar(',')) {
       PlotVar plotVar;
 
-      if (! parseOptionValue(this, line, plotVar, "plot var"))
+      if (! parseOptionValue(this, line, plotVar, "plot var")) {
+        parseModifiers3D(style, line, lineStyle, fillStyle, arrowStyle);
         break;
+      }
 
       line.skipSpace();
 
@@ -2887,7 +2969,7 @@ splotCmd(const std::string &args)
             std::cerr << "with " << CStrUniqueMatch::valueToString(style) << std::endl;
         }
 
-        parseModifiers3D(line);
+        parseModifiers3D(style, line, lineStyle, fillStyle, arrowStyle);
       }
       // title string
       else if (plotVar == PlotVar::TITLE) {
@@ -2983,11 +3065,11 @@ splotCmd(const std::string &args)
         int as;
 
         if (parseInteger(line, as))
-          arrowStyle_ = arrowStyle(as);
+          arrowStyle = this->arrowStyle(as);
       }
       // heads
       else if (plotVar == PlotVar::HEADS) {
-        arrowStyle_.setHeads(true, true);
+        arrowStyle.setHeads(true, true);
       }
       // binary
       else if (plotVar == PlotVar::BINARY) {
@@ -3127,8 +3209,9 @@ splotCmd(const std::string &args)
       if (keyTitle.isValid())
         plot1->setKeyTitle(keyTitle.getValue());
 
-      plot1->setLineStyle(lineStyle);
-      plot1->setFillStyle(fillStyle);
+      plot1->setLineStyle (lineStyle);
+      plot1->setFillStyle (fillStyle);
+      plot1->setArrowStyle(arrowStyle);
 
       plots.push_back(plot1);
     }
@@ -3184,7 +3267,8 @@ splotCmd(const std::string &args)
 
 bool
 CGnuPlot::
-parseModifiers3D(CParseLine &line)
+parseModifiers3D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineStyle,
+                 CGnuPlotFillStyle &fillStyle, CGnuPlotArrowStyle &arrowStyle)
 {
   bool modifiers = true;
 
@@ -3205,7 +3289,7 @@ parseModifiers3D(CParseLine &line)
       int lt;
 
       if (parseInteger(line, lt))
-        lineStyle()->setType(lt);
+        lineStyle.setType(lt);
     }
     else if (line.isString("linewidth") || line.isString("lw")) {
       line.skipNonSpace();
@@ -3213,7 +3297,7 @@ parseModifiers3D(CParseLine &line)
       double lw;
 
       if (parseReal(line, lw))
-        lineStyle()->setWidth(lw);
+        lineStyle.setWidth(lw);
     }
     else if (line.isString("linecolor") || line.isString("lc")) {
       line.skipNonSpace();
@@ -3221,7 +3305,7 @@ parseModifiers3D(CParseLine &line)
       CGnuPlotColorSpec c;
 
       if (parseColorSpec(line, c))
-        lineStyle()->setColor(c);
+        lineStyle.setColor(c);
     }
     else if (line.isString("pointtype") || line.isString("pt")) {
       line.skipNonSpace();
@@ -3229,7 +3313,7 @@ parseModifiers3D(CParseLine &line)
       int pt;
 
       if (parseInteger(line, pt))
-        lineStyle()->setPointType(static_cast<CGnuPlotTypes::SymbolType>(pt));
+        lineStyle.setPointType(static_cast<CGnuPlotTypes::SymbolType>(pt));
     }
     else if (line.isString("pointsize") || line.isString("ps")) {
       line.skipNonSpace();
@@ -3241,12 +3325,25 @@ parseModifiers3D(CParseLine &line)
       if      (style == "variable" || style == "var")
         pointStyle_.setVarSize(true);
       else if (CStrUtil::toReal(style, &s))
-        lineStyle()->setPointSize(s);
+        lineStyle.setPointSize(s);
     }
     else if (line.isString("fill") || line.isString("fs")) {
       line.skipNonSpace();
 
-      std::string style = readNonSpaceNonComma(line);
+      CGnuPlotFillStyle fillStyle1;
+
+      if (parseFillStyle(line, fillStyle1))
+        fillStyle = fillStyle1;
+    }
+    else if (line.isString("filled")) {
+      arrowStyle.setFilled(true);
+
+      line.skipNonSpace();
+    }
+    else if (line.isString("nohead")) {
+      arrowStyle.setHeads(false, false);
+
+      line.skipNonSpace();
     }
     else if (line.isString("nohidden3d")) {
       line.skipNonSpace();
@@ -3279,12 +3376,13 @@ setCmd(const std::string &args)
   line.skipSpace();
 
   if (line.isString("for")) {
-    std::string var, start, end, inc, lcmd, rcmd;
+    ForCmd      forCmd;
+    std::string lcmd, rcmd;
 
-    if (! parseFor(line, var, start, end, inc, lcmd, rcmd, false))
+    if (! parseFor(line, forCmd, lcmd, rcmd, false))
       return false;
 
-    setForCmd(var, start, end, inc, lcmd);
+    setForCmd(forCmd, lcmd);
 
     if (rcmd != "")
       setCmd(rcmd);
@@ -4210,8 +4308,9 @@ setCmd(const std::string &args)
       else if (arg == "default") {
         keyData_.reset();
       }
-      else if (arg == "inside" || arg == "outside") {
-        keyData_.setOutside(arg == "outside");
+      else if (arg == "inside"  || arg == "ins" ||
+               arg == "outside" || arg == "out") {
+        keyData_.setOutside(arg == "outside" || arg == "out");
       }
       else if (arg == "lmargin") {
         keyData_.setLMargin(true);
@@ -4231,7 +4330,7 @@ setCmd(const std::string &args)
         if (parsePosition(line, p))
           keyData_.setPosition(p);
       }
-      else if (arg == "left"  ) {
+      else if (arg == "left") {
         keyData_.setHAlign(CHALIGN_TYPE_LEFT);
         hSet = true;
       }
@@ -4239,20 +4338,21 @@ setCmd(const std::string &args)
         keyData_.setHAlign(CHALIGN_TYPE_RIGHT);
         hSet = true;
       }
-      else if (arg == "top"   ) {
+      else if (arg == "top") {
         keyData_.setVAlign(CVALIGN_TYPE_TOP);
       }
-      else if (arg == "bottom") {
+      else if (arg == "bottom" || arg == "bot") {
         keyData_.setVAlign(CVALIGN_TYPE_BOTTOM);
       }
-      else if (arg == "center") {
+      else if (arg == "center" || arg == "cent") {
         if (hSet)
           keyData_.setHAlign(CHALIGN_TYPE_CENTER);
         else
           keyData_.setVAlign(CVALIGN_TYPE_CENTER);
       }
-      else if (arg == "vertical" || arg == "horizontal") {
-        keyData_.setVertical(arg == "vertical");
+      else if (arg == "vertical"   || arg == "vert" ||
+               arg == "horizontal" || arg == "horiz") {
+        keyData_.setVertical(arg == "vertical" || arg == "vert");
       }
       else if (arg == "under") {
         keyData_.setUnder(true);
@@ -5824,7 +5924,7 @@ setCmd(const std::string &args)
         }
         // filled | nofilled
         else if (arg == "filled" || arg == "nofilled") {
-          arrowStyle1->setFilled(arg == "filled" || arg == "empty");
+          arrowStyle1->setFilled(arg == "filled");
         }
         // empty
         else if (arg == "empty") {
@@ -6828,40 +6928,52 @@ setCmd(const std::string &args)
 
 void
 CGnuPlot::
-setForCmd(const std::string &var, const std::string &start, const std::string &end,
-          const std::string &inc, const std::string &args)
+setForCmd(const ForCmd &forCmd, const std::string &args)
 {
-  CExprValuePtr value1;
+  if (forCmd.isIn) {
+    std::vector<std::string> words;
 
-  if (! evaluateExpression(start, value1))
-    return;
+    CStrUtil::addWords(forCmd.start, words);
 
-  CExprValuePtr value2;
+    for (const auto &w : words) {
+      CExprInst->createStringVariable(forCmd.var, w);
 
-  if (! evaluateExpression(end, value2))
-    return;
-
-  CExprValuePtr value3;
-
-  if (inc != "") {
-    if (! evaluateExpression(inc, value3))
-      value3 = CExprValuePtr();
+      setCmd(args);
+    }
   }
+  else {
+    CExprValuePtr value1;
 
-  long i1 = 0, i2 = 1, i3 = 1;
+    if (! evaluateExpression(forCmd.start, value1) || ! value1.isValid())
+      return;
 
-  if (! value1->getIntegerValue(i1) || ! value2->getIntegerValue(i2))
-    return;
+    CExprValuePtr value2;
 
-  if (value3.isValid() && ! value3->getIntegerValue(i3))
-    return;
+    if (! evaluateExpression(forCmd.end, value2) || ! value2.isValid())
+      return;
 
-  while (i1 <= i2) {
-    CExprInst->createIntegerVariable(var, i1);
+    CExprValuePtr value3;
 
-    setCmd(args);
+    if (forCmd.inc != "") {
+      if (! evaluateExpression(forCmd.inc, value3) || ! value3.isValid())
+        value3 = CExprValuePtr();
+    }
 
-    i1 += i3;
+    long i1 = 0, i2 = 1, i3 = 1;
+
+    if (! value1->getIntegerValue(i1) || ! value2->getIntegerValue(i2))
+      return;
+
+    if (value3.isValid() && ! value3->getIntegerValue(i3))
+      return;
+
+    while (i1 <= i2) {
+      CExprInst->createIntegerVariable(forCmd.var, i1);
+
+      setCmd(args);
+
+      i1 += i3;
+    }
   }
 }
 
@@ -8038,12 +8150,13 @@ unsetCmd(const std::string &args)
   line.skipSpace();
 
   if (line.isString("for")) {
-    std::string var, start, end, inc, lcmd, rcmd;
+    ForCmd      forCmd;
+    std::string lcmd, rcmd;
 
-    if (! parseFor(line, var, start, end, inc, lcmd, rcmd, false))
+    if (! parseFor(line, forCmd, lcmd, rcmd, false))
       return false;
 
-    unsetForCmd(var, start, end, inc, lcmd);
+    unsetForCmd(forCmd, lcmd);
 
     if (rcmd != "")
       unsetCmd(rcmd);
@@ -8749,40 +8862,52 @@ unsetCmd(const std::string &args)
 
 void
 CGnuPlot::
-unsetForCmd(const std::string &var, const std::string &start, const std::string &end,
-            const std::string &inc, const std::string &args)
+unsetForCmd(const ForCmd &forCmd, const std::string &args)
 {
-  CExprValuePtr value1;
+  if (forCmd.isIn) {
+    std::vector<std::string> words;
 
-  if (! evaluateExpression(start, value1))
-    return;
+    CStrUtil::addWords(forCmd.start, words);
 
-  CExprValuePtr value2;
+    for (const auto &w : words) {
+      CExprInst->createStringVariable(forCmd.var, w);
 
-  if (evaluateExpression(end, value2))
-    return;
-
-  CExprValuePtr value3;
-
-  if (inc != "") {
-    if (! evaluateExpression(inc, value3))
-      return;
+      unsetCmd(args);
+    }
   }
+  else {
+    CExprValuePtr value1;
 
-  long i1 = 0, i2 = 1, i3 = 1;
+    if (! evaluateExpression(forCmd.start, value1) || ! value1.isValid())
+      return;
 
-  if (! value1->getIntegerValue(i1) || ! value2->getIntegerValue(i2))
-    return;
+    CExprValuePtr value2;
 
-  if (value3.isValid() && ! value3->getIntegerValue(i3))
-    return;
+    if (! evaluateExpression(forCmd.end, value2) || ! value2.isValid())
+      return;
 
-  while (i1 <= i2) {
-    CExprInst->createIntegerVariable(var, i1);
+    CExprValuePtr value3;
 
-    unsetCmd(args);
+    if (forCmd.inc != "") {
+      if (! evaluateExpression(forCmd.inc, value3) || ! value3.isValid())
+        value3 = CExprValuePtr();
+    }
 
-    i1 += i3;
+    long i1 = 0, i2 = 1, i3 = 1;
+
+    if (! value1->getIntegerValue(i1) || ! value2->getIntegerValue(i2))
+      return;
+
+    if (value3.isValid() && ! value3->getIntegerValue(i3))
+      return;
+
+    while (i1 <= i2) {
+      CExprInst->createIntegerVariable(forCmd.var, i1);
+
+      unsetCmd(args);
+
+      i1 += i3;
+    }
   }
 }
 
@@ -10833,6 +10958,19 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
   return plots;
 }
 
+int
+CGnuPlot::
+getColumnIndex(const std::string &str) const
+{
+  const CGnuPlotKeyData::Columns &columns = keyData_.columns();
+
+  for (uint i = 0; i < columns.size(); ++i)
+    if (columns[i] == str)
+      return i;
+
+  return -1;
+}
+
 CExprValueP
 CGnuPlot::
 decodeUsingCol(int i, const CGnuPlotUsingCol &col, int setNum, int pointNum,
@@ -11059,10 +11197,12 @@ fieldToReal(const std::string &str, double &r) const
   if (p1 == p2)
     return false;
 
+  // allow for extra chars after number
+
   while (*p1 != 0 && ::isspace(*p1))
     ++p1;
 
-  if (*p1 != '\0') return false;
+  //if (*p1 != '\0') return false;
 
   return true;
 }

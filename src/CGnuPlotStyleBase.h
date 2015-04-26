@@ -21,7 +21,14 @@ class CGnuPlotStyleBase {
 
   virtual void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) = 0;
 
+  virtual void draw3D(CGnuPlotPlot *, CGnuPlotRenderer *) { }
+
   virtual void drawKey(CGnuPlotPlot *, CGnuPlotRenderer *) { }
+
+  virtual bool hasKeyLine() const { return false; }
+
+  virtual void drawKeyLine(CGnuPlotPlot *, CGnuPlotRenderer *,
+                           const CPoint2D &, const CPoint2D &) { }
 
   virtual void drawAxes(CGnuPlotPlot *, CGnuPlotRenderer *) { }
 

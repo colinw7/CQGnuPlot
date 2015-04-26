@@ -1167,6 +1167,14 @@ readPostfixExpression()
                 stackIToken(itoken1);
               }
             }
+            else {
+              setLastError("Missing expression after colon");
+
+              stackIToken(itoken4);
+              stackIToken(itoken3);
+              stackIToken(itoken2);
+              stackIToken(itoken1);
+            }
           }
           else {
             setLastError("Missing colon or close square bracket");

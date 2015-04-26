@@ -3,6 +3,7 @@
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotStyleBase.h>
 
 CGnuPlotKey::
 CGnuPlotKey(CGnuPlotGroup *group) :
@@ -120,15 +121,22 @@ draw(CGnuPlotRenderer *renderer)
   }
 
   for (auto plot : group_->plots()) {
-    CGnuPlotTypes::PlotStyle  style     = plot->getStyle();
-    const CGnuPlotLineStyle  &lineStyle = plot->lineStyle();
+    CGnuPlotTypes::PlotStyle plotStyle = plot->getStyle();
+
+    CGnuPlotStyleBase *style = app()->getPlotStyle(plotStyle);
+
+    const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
     double xx = (isReverse() ? x1 + bx : x2 - ll - bx);
     double yy = y - font_size*ph/2;
 
-    if (group_->hasPlotStyle(CGnuPlotTypes::PlotStyle::HISTOGRAMS) ||
-        style == CGnuPlotTypes::PlotStyle::BOXES ||
-        style == CGnuPlotTypes::PlotStyle::CANDLESTICKS) {
+    CPoint2D p1(xx     , yy);
+    CPoint2D p2(xx + ll, yy);
+
+    if      (style && style->hasKeyLine()) {
+      style->drawKeyLine(plot, renderer, p1, p2);
+    }
+    else if (group_->hasPlotStyle(CGnuPlotTypes::PlotStyle::HISTOGRAMS)) {
       double h = (font_size - 4)*ph;
 
       CBBox2D hbbox(xx, yy - h/2, xx + ll, yy + h/2);
@@ -141,60 +149,11 @@ draw(CGnuPlotRenderer *renderer)
 
       renderer->drawRect(hbbox, lineStyle.calcColor(CRGBA(0,0,0)), 1);
     }
-    else if (style == CGnuPlotTypes::PlotStyle::VECTORS) {
-      CGnuPlotArrow arrow(group_);
-
-      arrow.setStyle(plot->arrowStyle());
-
-      arrow.setFrom(CPoint2D(xx, yy));
-      arrow.setTo  (CPoint2D(xx + ll, yy));
-
-      arrow.draw(renderer);
-    }
     else {
-      if      (style == CGnuPlotTypes::PlotStyle::LINES ||
-               style == CGnuPlotTypes::PlotStyle::LINES_POINTS ||
-               style == CGnuPlotTypes::PlotStyle::IMPULSES ||
-               style == CGnuPlotTypes::PlotStyle::XYERRORBARS) {
-        CPoint2D p1(xx, yy), p2(xx + ll, yy), pm(xx + ll/2, yy);
-
-        renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)));
-
-        if      (style == CGnuPlotTypes::PlotStyle::LINES_POINTS)
-          renderer->drawSymbol(pm, plot->pointType(), plot->pointSize(),
-                               lineStyle.calcColor(CRGBA(1,0,0)));
-        else if (style == CGnuPlotTypes::PlotStyle::XYERRORBARS) {
-          CPoint2D dy(0, 3*ph);
-
-          renderer->drawLine(p1 - dy, p1 + dy, lineStyle.width(),
-                             lineStyle.calcColor(CRGBA(1,0,0)));
-          renderer->drawLine(p2 - dy, p2 + dy, lineStyle.width(),
-                             lineStyle.calcColor(CRGBA(1,0,0)));
-        }
-      }
-      else if (style == CGnuPlotTypes::PlotStyle::POINTS ||
-               style == CGnuPlotTypes::PlotStyle::LINES_POINTS) {
-        CPoint2D pm(xx + ll/2, yy);
-
-        renderer->drawSymbol(pm, plot->pointType(), plot->pointSize(),
-                             lineStyle.calcColor(CRGBA(1,0,0)));
-      }
-      else if (style == CGnuPlotTypes::PlotStyle::FILLEDCURVES) {
-        double h = 4*ph;
-
-        CBBox2D cbbox(xx, yy - h, xx + ll, yy + h);
-        renderer->fillRect(cbbox, lineStyle.calcColor(CRGBA(1,1,1)));
-      }
-      else {
-        CPoint2D p1(xx, yy), p2(xx + ll, yy);
-
-        renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)));
-      }
+      renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)));
     }
 
     std::string label = plot->keyTitle();
-
-    //double lw = font->getStringWidth(label);
 
     CRGBA tc = CRGBA(0,0,0);
 

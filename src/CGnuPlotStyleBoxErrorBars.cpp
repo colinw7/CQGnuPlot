@@ -28,7 +28,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   CRGBA fc = (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
   if (! renderer->isPseudo())
-    plot->updateRectCacheSize(plot->getPoints2D().size());
+    plot->updateBarCacheSize(plot->getPoints2D().size());
 
   int i = 0;
 
@@ -126,8 +126,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     ++i;
   }
 
-  if (! renderer->isPseudo())
-    plot->drawBars(renderer);
+  if (! renderer->isPseudo()) {
+    for (const auto &bar : plot->barObjects())
+      bar->draw(renderer);
+  }
 }
 
 CBBox2D

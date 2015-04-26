@@ -125,7 +125,49 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     renderer->fillClippedPolygon(points1, lineStyle.calcColor(CRGBA(1,1,1)));
 
-    plot->drawLines(renderer);
+    //-----
+
+    // draw lines
+    CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+
+    uint np = plot->numPoints2D();
+
+    CPoint2D p1;
+
+    uint i = 0;
+
+    typedef std::vector<CPoint2D> Points;
+
+    while (i < np) {
+      for ( ; i < np; ++i) {
+        const CGnuPlotPoint &point1 = plot->getPoint2D(i);
+
+        if (point1.getPoint(p1))
+          break;
+      }
+
+      ++i;
+
+      Points points;
+
+      points.push_back(p1);
+
+      for ( ; i < np; ++i) {
+        CPoint2D p2;
+
+        const CGnuPlotPoint &point2 = plot->getPoint2D(i);
+
+        if (! point2.getPoint(p2) || point2.isDiscontinuity())
+          break;
+
+        points.push_back(p2);
+
+        p1 = p2;
+      }
+
+      // TODO: clip
+      renderer->drawPath(points, lineStyle.width(), c, lineStyle.dash());
+    }
   }
   else {
     std::vector<CPoint2D> points1, points2;
@@ -181,6 +223,19 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       renderer->fillClippedPolygon(points1, lineStyle.calcColor(CRGBA(1,1,1)));
     }
   }
+}
+
+void
+CGnuPlotStyleFilledCurves::
+drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
+{
+  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+
+  double h = renderer->pixelHeightToWindowHeight(4);
+
+  CBBox2D cbbox(p1.x, p1.y - h, p2.x, p1.y + h);
+
+  renderer->fillRect(cbbox, lineStyle.calcColor(CRGBA(1,1,1)));
 }
 
 CBBox2D

@@ -99,8 +99,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     ++i;
   }
 
-  if (! renderer->isPseudo())
-    plot->drawBars(renderer);
+  if (! renderer->isPseudo()) {
+    for (const auto &bar : plot->barObjects())
+      bar->draw(renderer);
+  }
 }
 
 CBBox2D

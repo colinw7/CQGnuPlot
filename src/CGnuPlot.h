@@ -681,6 +681,16 @@ class CGnuPlot {
 
   //---
 
+  struct ForCmd {
+    bool        isIn { false };
+    std::string var;
+    std::string start;
+    std::string end;
+    std::string inc;
+  };
+
+  //---
+
   typedef std::vector<CGnuPlotPlot *> Plots;
   typedef StringArray                 Statements;
 
@@ -1002,6 +1012,8 @@ class CGnuPlot {
   void setPointNum(int n) { pointNum_ = n; }
   int pointNum() const { return pointNum_; }
 
+  int getColumnIndex(const std::string &str) const;
+
   CExprValueP getFieldValue(int i, int ival, int setNum, int pointNum, bool &skip);
 
   void resetLineStyle();
@@ -1047,18 +1059,17 @@ class CGnuPlot {
   void refreshCmd(const std::string &args);
   void splotCmd  (const std::string &args);
 
-  void plotForCmd (const std::string &var, const std::string &start, const std::string &end,
-                   const std::string &inc, const std::string &args);
-  void setForCmd  (const std::string &var, const std::string &start, const std::string &end,
-                   const std::string &inc, const std::string &args);
-  void unsetForCmd(const std::string &var, const std::string &start, const std::string &end,
-                   const std::string &inc, const std::string &args);
+  void plotForCmd (const ForCmd &forCmd, const std::string &args);
+  void setForCmd  (const ForCmd &forCmd, const std::string &args);
+  void unsetForCmd(const ForCmd &forCmd, const std::string &args);
 
-  bool parseModifiers2D(CParseLine &line, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs);
-  bool parseModifiers3D(CParseLine &line);
+  bool parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
+                        CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as);
+  bool parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
+                        CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as);
 
-  bool parseFor(CParseLine &line, std::string &var, std::string &start, std::string &end,
-                std::string &inc, std::string &lcmd, std::string &rcmd, bool split);
+  bool parseFor(CParseLine &line, ForCmd &forCmd, std::string &lcmd,
+                std::string &rcmd, bool split);
 
   bool setCmd     (const std::string &args);
   bool getCmd     (const std::string &args);

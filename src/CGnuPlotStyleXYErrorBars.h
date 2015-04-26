@@ -1,11 +1,11 @@
-#ifndef CGnuPlotStyleVectors_H
-#define CGnuPlotStyleVectors_H
+#ifndef CGnuPlotStyleXYErrorBars_H
+#define CGnuPlotStyleXYErrorBars_H
 
 #include <CGnuPlotStyleBase.h>
 
-class CGnuPlotStyleVectors : public CGnuPlotStyleBase {
+class CGnuPlotStyleXYErrorBars : public CGnuPlotStyleBase {
  public:
-  CGnuPlotStyleVectors();
+  CGnuPlotStyleXYErrorBars();
 
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 

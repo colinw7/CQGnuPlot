@@ -386,34 +386,16 @@ class CGnuPlotPlot {
 
   virtual void draw();
 
-  void draw3D();
-  void draw2D();
+  void draw2D(CGnuPlotRenderer *renderer);
+  void draw3D(CGnuPlotRenderer *renderer);
 
   void drawSurface(CGnuPlotRenderer *renderer);
 
-  void drawDots              (CGnuPlotRenderer *renderer);
-  void drawFilledCurves      (CGnuPlotRenderer *renderer);
   void drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
   void drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
   void drawStackedHistogram  (CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox);
-  void drawSteps             (CGnuPlotRenderer *renderer);
-  void drawBinaryImage       (CGnuPlotRenderer *renderer);
-  void drawImage             (CGnuPlotRenderer *renderer);
-  void drawLabels            (CGnuPlotRenderer *renderer);
-  void drawLines             (CGnuPlotRenderer *renderer);
-  void drawPoints            (CGnuPlotRenderer *renderer);
-  void drawErrorBars         (CGnuPlotRenderer *renderer);
-  void drawXErrorBars        (CGnuPlotRenderer *renderer);
-  void drawXYErrorBars       (CGnuPlotRenderer *renderer);
-  void drawYErrorBars        (CGnuPlotRenderer *renderer);
-  void drawXErrorLines       (CGnuPlotRenderer *renderer);
-  void drawXYErrorLines      (CGnuPlotRenderer *renderer);
-  void drawYErrorLines       (CGnuPlotRenderer *renderer);
 
   void drawBars(CGnuPlotRenderer *renderer);
-
-  void drawTerminal();
-  void drawPalette();
 
   double getXSpacing() const;
 

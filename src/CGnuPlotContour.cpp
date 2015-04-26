@@ -148,6 +148,8 @@ drawContourLines()
     if (! colors_.empty())
       c = colors_[l % colors_.size()];
 
+    if (x_.size() < 1) continue;
+
     for (uint i = 0; i < x_.size() - 1; ++i) {
       double xi1 = x_[i + 0], xi2 = x_[i + 1];
 
@@ -155,6 +157,8 @@ drawContourLines()
 
       int i1 =  i     *y_.size();
       int i2 = (i + 1)*y_.size();
+
+      if (y_.size() < 1) continue;
 
       for (uint j = 0; j < y_.size() - 1; ++j) {
         double yj1 = y_[j + 0], yj2 = y_[j + 1];
@@ -290,7 +294,7 @@ initLevels(std::vector<double> &levels) const
     levels.resize(no_levels);
 
     for (int i = 0; i < no_levels; ++i)
-      levels[i] = CGnuPlotUtil::map(i, 0, no_levels - 1, z1.getValue(), z2.getValue());
+      levels[i] = CGnuPlotUtil::map(i, 0, no_levels - 1, z1.getValue(0.0), z2.getValue(0.0));
   }
 }
 
