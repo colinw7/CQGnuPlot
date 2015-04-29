@@ -154,8 +154,10 @@ DrawLayerTypeConv drawLayerTypeConv({
 typedef CEnumConv<CGnuPlotPalette::ColorType, CQGnuPlot::PaletteColorType> PaletteColorTypeConv;
 
 PaletteColorTypeConv paletteColorTypeConv({
-  { CGnuPlotPalette::ColorType::MODEL  , CQGnuPlot::PaletteColorModel   },
-  { CGnuPlotPalette::ColorType::DEFINED, CQGnuPlot::PaletteColorDefined },
+  { CGnuPlotPalette::ColorType::MODEL    , CQGnuPlot::PaletteColorModel     },
+  { CGnuPlotPalette::ColorType::DEFINED  , CQGnuPlot::PaletteColorDefined   },
+  { CGnuPlotPalette::ColorType::FUNCTIONS, CQGnuPlot::PaletteColorFunctions },
+  { CGnuPlotPalette::ColorType::CUBEHELIX, CQGnuPlot::PaletteColorCubeHelix },
 });
 
 typedef CEnumConv<CGnuPlotArrow::CoordType, CQGnuPlot::ArrowCoordType> ArrorColorTypeConv;

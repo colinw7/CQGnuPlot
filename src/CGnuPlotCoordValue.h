@@ -25,6 +25,9 @@ class CGnuPlotCoordValue {
   double getXValue(CGnuPlotRenderer *renderer) const;
   double getYValue(CGnuPlotRenderer *renderer) const;
 
+  double getXDistance(CGnuPlotRenderer *renderer) const;
+  double getYDistance(CGnuPlotRenderer *renderer) const;
+
   double pixelXValue(CGnuPlotRenderer *renderer) const;
   double pixelYValue(CGnuPlotRenderer *renderer) const;
 
@@ -46,6 +49,13 @@ class CGnuPlotCoordValue {
 
     return os;
   }
+
+ private:
+  double getXValue(CGnuPlotRenderer *renderer, double x) const;
+  double getYValue(CGnuPlotRenderer *renderer, double y) const;
+
+  double pixelXValue(CGnuPlotRenderer *renderer, double x) const;
+  double pixelYValue(CGnuPlotRenderer *renderer, double y) const;
 
  private:
   double   value_  { 0.0 };

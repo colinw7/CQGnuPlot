@@ -20,6 +20,7 @@
 #include <CQGnuPlotBubbleObject.h>
 #include <CQGnuPlotBarObject.h>
 #include <CQGnuPlotPieObject.h>
+#include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
 
 #include <QApplication>
@@ -287,6 +288,21 @@ createPieObject(CGnuPlotPlot *plot)
   qplot->qwindow()->updateProperties();
 
   return pie;
+}
+
+CGnuPlotPolygonObject *
+CQGnuPlotDevice::
+createPolygonObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotPolygonObject *rect = new CQGnuPlotPolygonObject(qplot);
+
+  objects_.push_back(rect);
+
+  qplot->qwindow()->updateProperties();
+
+  return rect;
 }
 
 CGnuPlotRectObject *

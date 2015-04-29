@@ -5,6 +5,7 @@
 #include <CGnuPlotBarObject.h>
 #include <CGnuPlotBubbleObject.h>
 #include <CGnuPlotPieObject.h>
+#include <CGnuPlotPolygonObject.h>
 #include <CGnuPlotRectObject.h>
 #include <CFontMgr.h>
 
@@ -147,6 +148,13 @@ CGnuPlotDevice::
 createPieObject(CGnuPlotPlot *plot)
 {
   return new CGnuPlotPieObject(plot);
+}
+
+CGnuPlotPolygonObject *
+CGnuPlotDevice::
+createPolygonObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotPolygonObject(plot);
 }
 
 CGnuPlotRectObject *

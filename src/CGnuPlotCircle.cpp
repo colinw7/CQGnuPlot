@@ -10,14 +10,24 @@ draw(CGnuPlotRenderer *renderer) const
 
   CPoint2D center = e->getCenter().getPoint(renderer);
 
-  double r = e->getRadius();
+  double xr = e->getRadius().getXDistance(renderer);
+  double yr = e->getRadius().getYDistance(renderer);
 
-  if (e->getFillColor().isRGB())
-    renderer->fillEllipse(center, r, r, 0, e->getFillColor().color());
+  if (e->getFillColor().isRGB()) {
+    if (arcStart_.isValid() || arcEnd_.isValid())
+      renderer->fillPieSlice(center, 0, xr, arcStart_.getValue(0), arcEnd_.getValue(360),
+                             e->getFillColor().color());
+    else
+      renderer->fillEllipse(center, xr, yr, 0, e->getFillColor().color());
+  }
 
   CRGBA lc = e->getStrokeColor().getValue(CRGBA(0,0,0));
 
-  renderer->drawEllipse(center, r, r, 0, lc, 1);
+  if (arcStart_.isValid() || arcEnd_.isValid())
+    renderer->drawPieSlice(center, 0, xr, arcStart_.getValue(0), arcEnd_.getValue(360),
+                           1, lc);
+  else
+    renderer->drawEllipse(center, xr, yr, 0, lc, 1);
 }
 
 bool

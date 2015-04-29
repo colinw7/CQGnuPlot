@@ -30,11 +30,21 @@ class CGnuPlotFile {
   struct Every {
     Every() { }
 
-    int start { 0 };
-    int end   { std::numeric_limits<int>::max() };
-    int step  { 1 };
+    int pointStart { 0 };
+    int pointEnd   { std::numeric_limits<int>::max() };
+    int pointStep  { 1 };
 
-    bool validIndex(int i) const { return (i >= start && i <= end && ((i - start) % step) == 0); }
+    int blockStart { 0 };
+    int blockEnd   { std::numeric_limits<int>::max() };
+    int blockStep  { 1 };
+
+    bool validPointIndex(int i) const {
+      return (i >= pointStart && i <= pointEnd && ((i - pointStart) % pointStep) == 0);
+    }
+
+    bool validBlockIndex(int i) const {
+      return (i >= blockStart && i <= blockEnd && ((i - blockStart) % blockStep) == 0);
+    }
   };
 
   struct SubSetLine {
@@ -76,9 +86,14 @@ class CGnuPlotFile {
   void setIndices(int indexStart, int indexEnd, int indexStep);
   void resetIndices() { setIndices(0, std::numeric_limits<int>::max(), 1); }
 
-  void getEvery(int &everyStart, int &everyEnd, int &everyStep);
-  void setEvery(int everyStart, int everyEnd, int everyStep);
-  void resetEvery() { setEvery(0, std::numeric_limits<int>::max(), 1); }
+  void getEvery(int &everyPointStart, int &everyPointEnd, int &everyPointStep,
+                int &everyBlockStart, int &everyBlockEnd, int &everyBlockStep);
+
+  void setEvery(int everyPointStart, int everyPointEnd, int everyPointStep,
+                int everyBlockStart, int everyBlockEnd, int everyBlockStep);
+
+  void resetEvery() { setEvery(0, std::numeric_limits<int>::max(), 1,
+                               0, std::numeric_limits<int>::max(), 1); }
 
   const Lines &lines() const { return lines_; }
   void setLines(const Lines &line);

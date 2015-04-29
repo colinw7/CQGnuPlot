@@ -13,6 +13,7 @@ class CQGnuPlotGroup;
 class CQGnuPlotPlot;
 class CQGnuPlotCanvas;
 class CQGnuPlotRenderer;
+class CQGnuPlotObject;
 class CQPropertyTree;
 class CQPropertyRealEditor;
 class CQPropertyIntegerEditor;
@@ -63,6 +64,8 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
   bool mouseTip  (const QPoint &qp, CQGnuPlot::TipRect &tip);
 
   void selectObject(const QObject *);
+
+  void selectObjects(const std::vector<CQGnuPlotObject *> &objs);
 
   void redraw();
 

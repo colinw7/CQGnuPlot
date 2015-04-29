@@ -3,6 +3,7 @@
 
 #include <CGnuPlotAnnotation.h>
 #include <CGnuPlotFillStyle.h>
+#include <CGnuPlotCoordValue.h>
 
 class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
  public:
@@ -17,8 +18,11 @@ class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
   CGnuPlotCircle *setData(const CGnuPlotCircle *ellipse) {
     (void) CGnuPlotGroupAnnotation::setData(ellipse);
 
-    p_ = ellipse->p_;
-    r_ = ellipse->r_;
+    p_        = ellipse->p_;
+    r_        = ellipse->r_;
+    arcStart_ = ellipse->arcStart_;
+    arcEnd_   = ellipse->arcEnd_;
+    fs_       = ellipse->fs_;
 
     return this;
   }
@@ -28,8 +32,14 @@ class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
   const CGnuPlotPosition &getCenter() const { return p_; }
   void setCenter(const CGnuPlotPosition &p) { p_ = p; }
 
-  double getRadius() const { return r_; }
-  void setRadius(double r) { r_ = r; }
+  const CGnuPlotCoordValue &getRadius() const { return r_; }
+  void setRadius(const CGnuPlotCoordValue &r) { r_ = r; }
+
+  const COptReal &arcStart() const { return arcStart_; }
+  void setArcStart(double v) { arcStart_ = v; }
+
+  const COptReal &arcEnd() const { return arcEnd_; }
+  void setArcEnd(double v) { arcEnd_ = v; }
 
   const CGnuPlotFillStyle &getFillStyle() const { return fs_; }
   void setFillStyle(const CGnuPlotFillStyle &fs) { fs_ = fs; }
@@ -45,9 +55,11 @@ class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
   void print(std::ostream &os) const;
 
  protected:
-  CGnuPlotPosition  p_;
-  double            r_ { 1 };
-  CGnuPlotFillStyle fs_;
+  CGnuPlotPosition   p_;
+  CGnuPlotCoordValue r_;
+  COptReal           arcStart_;
+  COptReal           arcEnd_;
+  CGnuPlotFillStyle  fs_;
 };
 
 typedef std::shared_ptr<CGnuPlotCircle> CGnuPlotCircleP;

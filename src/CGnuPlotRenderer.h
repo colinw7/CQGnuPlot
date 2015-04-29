@@ -66,22 +66,29 @@ class CGnuPlotRenderer {
 
   virtual void drawPoint  (const CPoint2D &p, const CRGBA &c) = 0;
   virtual void drawSymbol (const CPoint2D &p, SymbolType type, double size, const CRGBA &c) = 0;
-  virtual void drawPath   (const std::vector<CPoint2D> &points, double width,
-                           const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
   virtual void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width,
                            const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
+  virtual void drawPath   (const std::vector<CPoint2D> &points, double width,
+                           const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
+
   virtual void drawRect   (const CBBox2D &rect, const CRGBA &c, double w) = 0;
-  virtual void drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c) = 0;
-  virtual void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c) = 0;
+  virtual void fillRect   (const CBBox2D &rect, const CRGBA &c) = 0;
   virtual void patternRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
                            const CRGBA &fg, const CRGBA &bg) = 0;
-  virtual void fillRect   (const CBBox2D &rect, const CRGBA &c) = 0;
-  virtual void drawBezier (const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3,
-                           const CPoint2D &p4, double width, const CRGBA &c) = 0;
+
+  virtual void drawPolygon   (const std::vector<CPoint2D> &points, double w, const CRGBA &c) = 0;
+  virtual void fillPolygon   (const std::vector<CPoint2D> &points, const CRGBA &c) = 0;
+  virtual void patternPolygon(const std::vector<CPoint2D> &points,
+                              CGnuPlotTypes::FillPattern pattern,
+                              const CRGBA &fg, const CRGBA &bg) = 0;
+
   virtual void drawEllipse(const CPoint2D &p, double dx, double ry, double a,
                            const CRGBA &c, double w) = 0;
   virtual void fillEllipse(const CPoint2D &p, double dx, double ry, double a,
                            const CRGBA &c) = 0;
+
+  virtual void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3,
+                          const CPoint2D &p4, double width, const CRGBA &c) = 0;
 
   virtual void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) = 0;
 
@@ -119,10 +126,13 @@ class CGnuPlotRenderer {
 
   //---
 
-  void fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c);
-
   void drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w);
   void fillClippedRect(const CBBox2D &rect, const CRGBA &c);
+
+  void drawClippedPolygon   (const std::vector<CPoint2D> &points, double w, const CRGBA &c);
+  void fillClippedPolygon   (const std::vector<CPoint2D> &points, const CRGBA &c);
+  void patternClippedPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern pat,
+                             const CRGBA &fg, const CRGBA &bg);
 
   void drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width,
                     const CRGBA &c, const CLineDash &dash=CLineDash());

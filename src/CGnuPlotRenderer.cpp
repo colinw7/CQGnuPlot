@@ -39,6 +39,20 @@ setFontSize(double s)
 
 void
 CGnuPlotRenderer::
+drawClippedPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c)
+{
+  if (! isPseudo()) {
+    std::vector<CPoint2D> ipoints;
+
+    if (CMathGeom2D::IntersectPolygon(points, clip(), ipoints))
+      drawPolygon(ipoints, w, c);
+  }
+  else
+    drawPolygon(points, w, c);
+}
+
+void
+CGnuPlotRenderer::
 fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
 {
   if (! isPseudo()) {
@@ -49,6 +63,21 @@ fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
   }
   else
     fillPolygon(points, c);
+}
+
+void
+CGnuPlotRenderer::
+patternClippedPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern pattern,
+                     const CRGBA &fg, const CRGBA &bg)
+{
+  if (! isPseudo()) {
+    std::vector<CPoint2D> ipoints;
+
+    if (CMathGeom2D::IntersectPolygon(points, clip(), ipoints))
+      patternPolygon(ipoints, pattern, fg, bg);
+  }
+  else
+    patternPolygon(points, pattern, fg, bg);
 }
 
 void

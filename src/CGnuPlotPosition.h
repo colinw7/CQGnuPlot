@@ -26,6 +26,8 @@ class CGnuPlotPosition {
 
   CPoint2D getPoint(CGnuPlotRenderer *renderer) const;
 
+  CPoint2D getDistance(CGnuPlotRenderer *renderer) const;
+
   void print(std::ostream &os) const {
     if (systemX_ == systemY_) {
       if (systemX_ != CoordSys::FIRST)
@@ -61,6 +63,9 @@ class CGnuPlotPosition {
       case CoordSys::CHARACTER: os << "character "; return;
     }
   }
+
+ private:
+  CPoint2D getPoint(CGnuPlotRenderer *renderer, double x, double y) const;
 
  private:
   CPoint2D p_       { 0, 0 };

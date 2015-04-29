@@ -8,6 +8,7 @@
 #include <CGnuPlotBubbleObject.h>
 #include <CGnuPlotPieObject.h>
 #include <CGnuPlotRectObject.h>
+#include <CGnuPlotPolygonObject.h>
 #include <CGnuPlotDevice.h>
 #include <CGnuPlotBBoxRenderer.h>
 #include <CGnuPlotStyleBase.h>
@@ -22,7 +23,7 @@ int CGnuPlotPlot::nextId_ = 1;
 CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
  group_(group), style_(style), id_(nextId_++), contour_(this),
- barCache_(this), bubbleCache_(this), pieCache_(this), rectCache_(this)
+ barCache_(this), bubbleCache_(this), pieCache_(this), polygonCache_(this), rectCache_(this)
 {
   setSmooth(app()->getSmooth());
 }
@@ -313,6 +314,13 @@ CGnuPlotPlot::
 updatePieCacheSize(int n)
 {
   pieCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
+updatePolygonCacheSize(int n)
+{
+  polygonCache_.updateSize(n);
 }
 
 void
@@ -775,6 +783,13 @@ CGnuPlotPlot::
 createRectObject() const
 {
   return app()->device()->createRectObject(const_cast<CGnuPlotPlot *>(this));
+}
+
+CGnuPlotPolygonObject *
+CGnuPlotPlot::
+createPolygonObject() const
+{
+  return app()->device()->createPolygonObject(const_cast<CGnuPlotPlot *>(this));
 }
 
 void

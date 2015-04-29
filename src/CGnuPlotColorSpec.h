@@ -16,6 +16,7 @@ class CGnuPlotColorSpec {
     PALETTE_FRAC,
     PALETTE_CB,
     PALETTE_Z,
+    PALETTE_VARIABLE,
     INDEX
   };
 
@@ -25,14 +26,15 @@ class CGnuPlotColorSpec {
 
   Type type() const { return type_; }
 
-  bool isBackground () const { return type_ == Type::BACKGROUND  ; }
-  bool isRGB        () const { return type_ == Type::RGB         ; }
-  bool isVariable   () const { return type_ == Type::VARIABLE    ; }
-  bool isRGBVariable() const { return type_ == Type::RGB_VARIABLE; }
-  bool isPaletteFrac() const { return type_ == Type::PALETTE_FRAC; }
-  bool isPaletteCB  () const { return type_ == Type::PALETTE_CB  ; }
-  bool isPaletteZ   () const { return type_ == Type::PALETTE_Z   ; }
-  bool isIndex      () const { return type_ == Type::INDEX       ; }
+  bool isBackground     () const { return type_ == Type::BACKGROUND      ; }
+  bool isRGB            () const { return type_ == Type::RGB             ; }
+  bool isVariable       () const { return type_ == Type::VARIABLE        ; }
+  bool isRGBVariable    () const { return type_ == Type::RGB_VARIABLE    ; }
+  bool isPaletteFrac    () const { return type_ == Type::PALETTE_FRAC    ; }
+  bool isPaletteCB      () const { return type_ == Type::PALETTE_CB      ; }
+  bool isPaletteZ       () const { return type_ == Type::PALETTE_Z       ; }
+  bool isPaletteVariable() const { return type_ == Type::PALETTE_VARIABLE; }
+  bool isIndex          () const { return type_ == Type::INDEX           ; }
 
   void setBackground() {
     type_ = Type::BACKGROUND;
@@ -72,6 +74,12 @@ class CGnuPlotColorSpec {
     c_    = CRGBA(0,0,0);
   }
 
+  void setPaletteVariable() {
+    type_ = Type::PALETTE_VARIABLE;
+    r_    = 0.0;
+    c_    = CRGBA(0,0,0);
+  }
+
   int index() const { return i_; }
 
   void setIndex(int i) {
@@ -83,10 +91,10 @@ class CGnuPlotColorSpec {
   const CRGBA &color() const { return c_; }
 
   bool isCalc() const {
-    return isVariable() || isRGBVariable() || isPaletteZ();
+    return isVariable() || isRGBVariable() || isPaletteZ() || isPaletteVariable();
   }
 
-  CRGBA calcColor(CGnuPlotPlot *plot, double x) const;
+  CRGBA calcColor(CGnuPlotPlot *plot, double x=0.0) const;
 
   void reset();
 

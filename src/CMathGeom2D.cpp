@@ -9,6 +9,10 @@ using std::vector;
 using std::list;
 using std::map;
 
+namespace {
+double EPSILON_E6 = 1E-6;
+}
+
 //! intersect polygon (points) and bbox and return the result in (ipoints) if successful
 bool
 CMathGeom2D::
@@ -184,7 +188,7 @@ IntersectPolygons(const vector<CPoint2D> &points1, const vector<CPoint2D> &point
 
     int index1 = 0;
 
-    if (absfv1 >= 1E-6)
+    if (absfv1 >= EPSILON_E6)
       index1 = CMathGen::sign(fv1)*orient2;
 
     int ni1 = 0;
@@ -197,7 +201,7 @@ IntersectPolygons(const vector<CPoint2D> &points1, const vector<CPoint2D> &point
 
       int index2 = 0;
 
-      if (absfv2 >= 1E-6)
+      if (absfv2 >= EPSILON_E6)
         index2 = CMathGen::sign(fv2)*orient2;
 
       // add start point
@@ -357,7 +361,7 @@ CutPolygons(const vector<CPoint2D> &points1, const vector<CPoint2D> &points2,
 
     int index1 = 0;
 
-    if (absfv1 >= 1E-6)
+    if (absfv1 >= EPSILON_E6)
       index1 = CMathGen::sign(fv1)*orient2;
 
     int ni1 = 0;
@@ -370,7 +374,7 @@ CutPolygons(const vector<CPoint2D> &points1, const vector<CPoint2D> &points2,
 
       int index2 = 0;
 
-      if (absfv2 >= 1E-6)
+      if (absfv2 >= EPSILON_E6)
         index2 = CMathGen::sign(fv2)*orient2;
 
       // add start point to inside
@@ -587,7 +591,7 @@ AddPolygons(const vector<CPoint2D> &points1, const vector<CPoint2D> &points2,
 
       int index1 = 0;
 
-      if (absfv1 >= 1E-6)
+      if (absfv1 >= EPSILON_E6)
         index1 = CMathGen::sign(fv1)*orient2;
 
       // calc side of line for second point
@@ -597,7 +601,7 @@ AddPolygons(const vector<CPoint2D> &points1, const vector<CPoint2D> &points2,
 
       int index2 = 0;
 
-      if (absfv2 >= 1E-6)
+      if (absfv2 >= EPSILON_E6)
         index2 = CMathGen::sign(fv2)*orient2;
 
       // add intersection point (if changed sides)
@@ -661,7 +665,7 @@ AddPolygons(const vector<CPoint2D> &points1, const vector<CPoint2D> &points2,
 
       int index1 = 0;
 
-      if (absfv1 >= 1E-6)
+      if (absfv1 >= EPSILON_E6)
         index1 = CMathGen::sign(fv1)*orient2;
 
       // calc side of line for second point
@@ -671,7 +675,7 @@ AddPolygons(const vector<CPoint2D> &points1, const vector<CPoint2D> &points2,
 
       int index2 = 0;
 
-      if (absfv2 >= 1E-6)
+      if (absfv2 >= EPSILON_E6)
         index2 = CMathGen::sign(fv2)*orient2;
 
       // add intersection point (if changed sides)
@@ -1048,7 +1052,7 @@ PointInside1(double x, double y, double *xp, double *yp, uint np)
     if (((y1 <= y) && (y < y2)) || ((y2 <= y) && (y < y1))) {
       dy = y2 - y1;
 
-      if (fabs(dy) < 1E-6)
+      if (fabs(dy) < EPSILON_E6)
         continue;
 
       dx = x2 - x1;
@@ -1419,7 +1423,7 @@ LinesAreCoincident(double x11, double y11, double x21, double y21,
 
   double delta = offset_x1*offset_y2 - offset_y1*offset_x2;
 
-  if (fabs(delta) > 1E-6) return false;
+  if (fabs(delta) > EPSILON_E6) return false;
 
   // check if one point on second line satisfies first
 
@@ -1428,14 +1432,14 @@ LinesAreCoincident(double x11, double y11, double x21, double y21,
 
     double ty12 = m*(x12 - x11) + y11;
 
-    if (fabs(ty12 - y12) > 1E-6) return false;
+    if (fabs(ty12 - y12) > EPSILON_E6) return false;
   }
   else {
     double m = offset_x1/offset_y1;
 
     double tx12 = m*(y12 - y11) + x11;
 
-    if (fabs(tx12 - x12) > 1E-6) return false;
+    if (fabs(tx12 - x12) > EPSILON_E6) return false;
   }
 
   return true;
@@ -1462,7 +1466,7 @@ IntersectLine(double x11, double y11, double x21, double y21,
 
   double delta = offset_x1*offset_y2 - offset_y1*offset_x2;
 
-  if (fabs(delta) < 1E-6) { // parallel
+  if (fabs(delta) < EPSILON_E6) { // parallel
     if (xi != NULL) *xi = 0.0;
     if (yi != NULL) *yi = 0.0;
 
@@ -1889,12 +1893,8 @@ PolygonCentroid(const double *x, const double *y, int num_xy, double *xc, double
 
   double area = 0.0;
 
-  double xy;
-
-  int i = num_xy - 1;
-
-  for (int j = 0; j < num_xy; i = j++) {
-    xy = (x[i] * y[j]) - (y[i] * x[j]);
+  for (int i = num_xy - 1, j = 0; j < num_xy; i = j++) {
+    double xy = (x[i]*y[j]) - (y[i]*x[j]);
 
     *xc += (x[i] + x[j])*xy;
     *yc += (y[i] + y[j])*xy;
@@ -1906,6 +1906,33 @@ PolygonCentroid(const double *x, const double *y, int num_xy, double *xc, double
 
   *xc /= f;
   *yc /= f;
+}
+
+//! Calc centroid of polygon
+void
+CMathGeom2D::
+PolygonCentroid(const std::vector<CPoint2D> &points, CPoint2D &p)
+{
+  p.x = 0.0;
+  p.y = 0.0;
+
+  int num_xy = points.size();
+
+  double area = 0.0;
+
+  for (int i = num_xy - 1, j = 0; j < num_xy; i = j++) {
+    double xy = (points[i].x*points[j].y) - (points[i].y*points[j].x);
+
+    p.x += (points[i].x + points[j].x)*xy;
+    p.y += (points[i].y + points[j].y)*xy;
+
+    area += xy;
+  }
+
+  double f = 3.0*area;
+
+  p.x /= f;
+  p.y /= f;
 }
 
 //-------
@@ -2107,8 +2134,8 @@ clipLine(double xmin, double ymin, double xmax, double ymax,
     *x2 = x;
   }
 
-  if (fabs(*x2 - *x1) < 1E-6 &&
-      fabs(*y2 - *y1) < 1E-6)
+  if (fabs(*x2 - *x1) < EPSILON_E6 &&
+      fabs(*y2 - *y1) < EPSILON_E6)
     return false;
 
   return true;
@@ -2148,8 +2175,8 @@ clipLine1(double xmin, double ymin, double xmax, double ymax,
   *x1 = *x1 + t1*dx;
   *y1 = *y1 + t1*dy;
 
-  if (fabs(*x2 - *x1) < 1E-6 &&
-      fabs(*y2 - *y1) < 1E-6)
+  if (fabs(*x2 - *x1) < EPSILON_E6 &&
+      fabs(*y2 - *y1) < EPSILON_E6)
     return false;
 
   return true;
@@ -2185,8 +2212,8 @@ clipBySector(double xmin, double ymin, double xmax, double ymax,
     else if (*y2 > ymax)
       *y2 = ymax;
 
-    if (fabs(*x2 - *x1) < 1E-6 &&
-        fabs(*y2 - *y1) < 1E-6) {
+    if (fabs(*x2 - *x1) < EPSILON_E6 &&
+        fabs(*y2 - *y1) < EPSILON_E6) {
       *intersect = false;
 
       return true;
@@ -2214,8 +2241,8 @@ clipBySector(double xmin, double ymin, double xmax, double ymax,
     else if (*x2 > xmax)
       *x2 = xmax;
 
-    if (fabs(*x2 - *x1) < 1E-6 &&
-        fabs(*y2 - *y1) < 1E-6) {
+    if (fabs(*x2 - *x1) < EPSILON_E6 &&
+        fabs(*y2 - *y1) < EPSILON_E6) {
       *intersect = false;
 
       return true;
@@ -2644,20 +2671,20 @@ bool
 CMathGeom2D::
 IsPerpendicular(double x21, double y21, double x32, double y32)
 {
-  if (fabs(x21) <= 1E-6 &&
-      fabs(y32) <= 1E-6)
+  if (fabs(x21) <= EPSILON_E6 &&
+      fabs(y32) <= EPSILON_E6)
     return false;
 
-  if (fabs(y21) <= 1E-6)
+  if (fabs(y21) <= EPSILON_E6)
     return true;
 
-  if (fabs(y32) <= 1E-6)
+  if (fabs(y32) <= EPSILON_E6)
     return true;
 
-  if (fabs(x21) <= 1E-6)
+  if (fabs(x21) <= EPSILON_E6)
     return true;
 
-  if (fabs(x32) <= 1E-6)
+  if (fabs(x32) <= EPSILON_E6)
     return true;
 
   return false ;
@@ -2676,8 +2703,8 @@ ThreePointCircle1(double x1, double y1, double x2, double y2,
   double xm1 = 0.5*(x1 + x2);
   double ym1 = 0.5*(y1 + y2);
 
-  if (fabs(x21) <= 1E-6 &&
-      fabs(y32) <= 1E-6) {
+  if (fabs(x21) <= EPSILON_E6 &&
+      fabs(y32) <= EPSILON_E6) {
     *xc = xm1;
     *yc = ym1;
 
@@ -2692,7 +2719,7 @@ ThreePointCircle1(double x1, double y1, double x2, double y2,
   double ma = y21/x21;
   double mb = y32/x32;
 
-  if (fabs(ma - mb) <= 1E-6)
+  if (fabs(ma - mb) <= EPSILON_E6)
     return false;
 
   double xm2 = 0.5*(x2 + x3);
@@ -2708,6 +2735,8 @@ ThreePointCircle1(double x1, double y1, double x2, double y2,
 
   return true;
 }
+
+//-----------------
 
 bool
 CMathGeom2D::
@@ -2843,9 +2872,9 @@ PointLinePosition(const CPoint2D &lpoint1, const CPoint2D &lpoint2, const CPoint
 {
   double area = TriangleArea2(lpoint1, lpoint2, point);
 
-  if      (area >  1E-6) return POINT_POSITION_LEFT;
-  else if (area < -1E-6) return POINT_POSITION_RIGHT;
-  else                   return POINT_POSITION_ON;
+  if      (area >  EPSILON_E6) return POINT_POSITION_LEFT;
+  else if (area < -EPSILON_E6) return POINT_POSITION_RIGHT;
+  else                         return POINT_POSITION_ON;
 }
 
 bool
@@ -3429,7 +3458,7 @@ AddUniquePoint(std::vector<CPoint2DParam2> &points, const CPoint2DParam2 &p)
   uint num = points.size();
 
   for (uint i = 0; i < num; ++i)
-    if (points[i].p.equal(p.p, 1E-6))
+    if (points[i].p.equal(p.p, EPSILON_E6))
       return;
 
   points.push_back(p);

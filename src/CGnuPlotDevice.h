@@ -25,10 +25,13 @@ class CGnuPlotPalette;
 class CGnuPlotPlot;
 class CGnuPlotPolygon;
 class CGnuPlotRectangle;
+
 class CGnuPlotBarObject;
-class CGnuPlotRectObject;
 class CGnuPlotBubbleObject;
 class CGnuPlotPieObject;
+class CGnuPlotPolygonObject;
+class CGnuPlotRectObject;
+
 class CGnuPlotRenderer;
 class CGnuPlotTitle;
 class CGnuPlotWindow;
@@ -89,10 +92,11 @@ class CGnuPlotDevice {
 
   virtual CGnuPlotCamera *createCamera(CGnuPlotGroup *group);
 
-  virtual CGnuPlotBarObject    *createBarObject   (CGnuPlotPlot *plot);
-  virtual CGnuPlotBubbleObject *createBubbleObject(CGnuPlotPlot *plot);
-  virtual CGnuPlotPieObject    *createPieObject   (CGnuPlotPlot *plot);
-  virtual CGnuPlotRectObject   *createRectObject  (CGnuPlotPlot *plot);
+  virtual CGnuPlotBarObject     *createBarObject   (CGnuPlotPlot *plot);
+  virtual CGnuPlotBubbleObject  *createBubbleObject(CGnuPlotPlot *plot);
+  virtual CGnuPlotPieObject     *createPieObject   (CGnuPlotPlot *plot);
+  virtual CGnuPlotPolygonObject *createPolygonObject  (CGnuPlotPlot *plot);
+  virtual CGnuPlotRectObject    *createRectObject  (CGnuPlotPlot *plot);
 
   virtual void timeout() { }
 

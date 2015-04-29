@@ -117,6 +117,15 @@ fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &)
 
 void
 CGnuPlotBBoxRenderer::
+patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern,
+               const CRGBA &, const CRGBA &)
+{
+  for (uint i = 1; i < points.size(); ++i)
+    bbox_.add(points[i]);
+}
+
+void
+CGnuPlotBBoxRenderer::
 drawEllipse(const CPoint2D &center, double rx, double ry, double a,
             const CRGBA &, double /*width*/)
 {

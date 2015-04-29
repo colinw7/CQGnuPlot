@@ -281,14 +281,14 @@ CQGnuPlotRenderer::
 patternRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
             const CRGBA &fg, const CRGBA &bg)
 {
-  CRGBA c = (pattern == CGnuPlotTypes::FillPattern::BG ? bg : fg);
-
-  Qt::BrushStyle qpattern = CQGnuPlotUtil::fillPatternQtConv(pattern);
-
   double px1, py1, px2, py2;
 
   windowToPixel(rect.getXMin(), rect.getYMin(), &px1, &py1);
   windowToPixel(rect.getXMax(), rect.getYMax(), &px2, &py2);
+
+  CRGBA c = (pattern == CGnuPlotTypes::FillPattern::BG ? bg : fg);
+
+  Qt::BrushStyle qpattern = CQGnuPlotUtil::fillPatternQtConv(pattern);
 
   QBrush b(toQColor(c), qpattern);
 
@@ -392,6 +392,38 @@ fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
   QBrush brush(toQColor(c));
 
   painter_->fillPath(path, brush);
+}
+
+void
+CQGnuPlotRenderer::
+patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern pattern,
+               const CRGBA &fg, const CRGBA &bg)
+{
+  if (points.empty()) return;
+
+  QPainterPath path;
+
+  double px, py;
+
+  windowToPixel(points[0].x, points[0].y, &px, &py);
+
+  path.moveTo(px, py);
+
+  for (uint i = 1; i < points.size(); ++i) {
+    windowToPixel(points[i].x, points[i].y, &px, &py);
+
+    path.lineTo(px, py);
+  }
+
+  path.closeSubpath();
+
+  CRGBA c = (pattern == CGnuPlotTypes::FillPattern::BG ? bg : fg);
+
+  Qt::BrushStyle qpattern = CQGnuPlotUtil::fillPatternQtConv(pattern);
+
+  QBrush b(toQColor(c), qpattern);
+
+  painter_->fillPath(path, b);
 }
 
 void

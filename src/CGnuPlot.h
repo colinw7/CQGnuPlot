@@ -1055,21 +1055,27 @@ class CGnuPlot {
   void saveCmd(const std::string &args);
 
   void plotCmd   (const std::string &args);
+  void plotCmd1  (const std::string &args, CGnuPlotGroup *group, Plots &plots);
   void replotCmd (const std::string &args);
   void refreshCmd(const std::string &args);
   void splotCmd  (const std::string &args);
+  void splotCmd1 (const std::string &args, CGnuPlotGroup *group, Plots &plots);
 
-  void plotForCmd (const ForCmd &forCmd, const std::string &args);
+  void plotForCmd (const ForCmd &forCmd, const std::string &args,
+                   CGnuPlotGroup *group, Plots &plots);
+  void splotForCmd(const ForCmd &forCmd, const std::string &args,
+                   CGnuPlotGroup *group, Plots &plots);
   void setForCmd  (const ForCmd &forCmd, const std::string &args);
   void unsetForCmd(const ForCmd &forCmd, const std::string &args);
+
+  void splitPlotCmd(const std::string &cmd, std::vector<std::string> &cmds);
 
   bool parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
                         CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as);
   bool parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
                         CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as);
 
-  bool parseFor(CParseLine &line, ForCmd &forCmd, std::string &lcmd,
-                std::string &rcmd, bool split);
+  bool parseFor(CParseLine &line, ForCmd &forCmd, std::string &cmd);
 
   bool setCmd     (const std::string &args);
   bool getCmd     (const std::string &args);
@@ -1108,7 +1114,8 @@ class CGnuPlot {
   void parseUsing(CParseLine &line, CGnuPlotUsingCols &usingCols);
 
   void parseIndex(CParseLine &line, int &indexStart, int &indexEnd, int &indexStep);
-  void parseEvery(CParseLine &line, int &everyStart, int &everyEnd, int &everyStep);
+  void parseEvery(CParseLine &line, int &everyPointStart, int &everyPointEnd, int &everyPointStep,
+                  int &everyBlockStart, int &everyBlockEnd, int &everyBlockStep);
 
   bool parseFont(CParseLine &line, CFontPtr &font);
 
@@ -1198,7 +1205,10 @@ class CGnuPlot {
   bool parseReal(CParseLine &line, double &r) const;
   bool parseString(CParseLine &line, std::string &str, const std::string &msg="") const;
 
+  void skipString(CParseLine &line);
+
   bool parseBracketedString(CParseLine &line, std::string &str) const;
+  bool skipBracketedString(CParseLine &line) const;
 
   bool getIntegerVariable(const std::string &name, int &value) const;
   bool getRealVariable   (const std::string &name, double &value) const;
@@ -1292,6 +1302,7 @@ class CGnuPlot {
   PrintFile              printFile_;
   std::string            lastPlotCmd_;
   std::string            lastSPlotCmd_;
+  std::string            lastFilename_;
   std::string            tableFile_;
   int                    pointNum_ { 0 };
   Smooth                 smooth_ { Smooth::NONE };

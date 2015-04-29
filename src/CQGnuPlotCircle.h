@@ -18,6 +18,9 @@ class CQGnuPlotCircle : public CQGnuPlotAnnotation, public CGnuPlotCircle {
   QPointF getCenter() const;
   void setCenter(const QPointF &p);
 
+  double getRadius() const;
+  void setRadius(double r);
+
   virtual void draw(CGnuPlotRenderer *renderer) const override;
 };
 

@@ -1,5 +1,5 @@
-#ifndef CQGnuPlotBubble_H
-#define CQGnuPlotBubble_H
+#ifndef CQGnuPlotBubbleObject_H
+#define CQGnuPlotBubbleObject_H
 
 #include <CQGnuPlotObject.h>
 #include <CGnuPlotBubbleObject.h>

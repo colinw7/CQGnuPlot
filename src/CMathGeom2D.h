@@ -154,6 +154,7 @@ namespace CMathGeom2D {
   double TriangleArea2(double x1, double y1, double x2, double y2, double x3, double y3);
 
   void PolygonCentroid(const double *x, const double *y, int num_xy, double *xc, double *yc);
+  void PolygonCentroid(const std::vector<CPoint2D> &points, CPoint2D &p);
 
   double IncludedAngle(double x1, double y1, double x2, double y2, double x3, double y3);
   double IncludedAngle(const CPoint2D &point1, const CPoint2D &point2, const CPoint2D &point3);

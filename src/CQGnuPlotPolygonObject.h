@@ -1,15 +1,15 @@
-#ifndef CQGnuPlotRectObject_H
-#define CQGnuPlotRectObject_H
+#ifndef CQGnuPlotPolygonObject_H
+#define CQGnuPlotPolygonObject_H
 
 #include <CQGnuPlotObject.h>
-#include <CGnuPlotRectObject.h>
+#include <CGnuPlotPolygonObject.h>
 #include <CQGnuPlot.h>
 
 #include <QColor>
 
 class CQGnuPlotPlot;
 
-class CQGnuPlotRectObject : public CQGnuPlotObject, public CGnuPlotRectObject {
+class CQGnuPlotPolygonObject : public CQGnuPlotObject, public CGnuPlotPolygonObject {
   Q_OBJECT
 
   Q_PROPERTY(QString text      READ getText      WRITE setText     )
@@ -17,8 +17,8 @@ class CQGnuPlotRectObject : public CQGnuPlotObject, public CGnuPlotRectObject {
   Q_PROPERTY(QColor  lineColor READ getLineColor WRITE setLineColor)
 
  public:
-  CQGnuPlotRectObject(CQGnuPlotPlot *plot);
- ~CQGnuPlotRectObject();
+  CQGnuPlotPolygonObject(CQGnuPlotPlot *plot);
+ ~CQGnuPlotPolygonObject();
 
   QString getText() const;
   void setText(const QString &str);

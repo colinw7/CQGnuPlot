@@ -271,24 +271,34 @@ fit()
     }
   }
   else {
+    COptReal xamin1 = xaxis(1).min(); xmin1 = xamin1;
+    COptReal xamax1 = xaxis(1).max(); xmin1 = xamax1;
+    COptReal xamin2 = xaxis(2).min(); xmin2 = xamin2;
+    COptReal xamax2 = xaxis(2).max(); xmin2 = xamax2;
+
     for (auto plot : plots_) {
       double xmin, xmax;
 
       plot->calcXRange(&xmin, &xmax);
 
       if (plot->xind() == 1) {
-        if (xaxis(1).isAutoScaleMin())
+        if (! xamin1.isValid())
           xmin1.updateMin(xmin);
-        if (xaxis(1).isAutoScaleMax())
+        if (! xamax1.isValid())
           xmax1.updateMax(xmax);
       }
       else {
-        if (xaxis(2).isAutoScaleMin())
+        if (! xamin2.isValid())
           xmin2.updateMin(xmin);
-        if (xaxis(2).isAutoScaleMax())
+        if (! xamax2.isValid())
           xmax2.updateMax(xmax);
       }
     }
+
+    COptReal yamin1 = yaxis(1).min(); ymin1 = yamin1;
+    COptReal yamax1 = yaxis(1).max(); ymax1 = yamax1;
+    COptReal yamin2 = yaxis(2).min(); ymin2 = yamin2;
+    COptReal yamax2 = yaxis(2).max(); ymax2 = yamax2;
 
     for (auto plot : plots_) {
       double ymin, ymax;
@@ -296,28 +306,31 @@ fit()
       plot->calcBoundedYRange(&ymin, &ymax);
 
       if (plot->yind() == 1) {
-        if (yaxis(1).isAutoScaleMin())
+        if (! yamin1.isValid())
           ymin1.updateMin(ymin);
-        if (yaxis(1).isAutoScaleMax())
+        if (! yamax1.isValid())
           ymax1.updateMax(ymax);
       }
       else {
-        if (yaxis(2).isAutoScaleMin())
+        if (! yamin2.isValid())
           ymin2.updateMin(ymin);
-        if (yaxis(2).isAutoScaleMax())
+        if (! yamax2.isValid())
           ymax2.updateMax(ymax);
       }
     }
 
     if (is3D()) {
+      COptReal zamin1 = zaxis(1).min(); zmin1 = zamin1;
+      COptReal zamax1 = zaxis(1).max(); zmax1 = zamax1;
+
       for (auto plot : plots_) {
         double zmin, zmax;
 
         plot->calcZRange(&zmin, &zmax);
 
-        if (zaxis(1).isAutoScaleMin())
+        if (! zamin1.isValid())
           zmin1.updateMin(zmin);
-        if (zaxis(1).isAutoScaleMax())
+        if (! zamax1.isValid())
           zmax1.updateMax(zmax);
       }
     }

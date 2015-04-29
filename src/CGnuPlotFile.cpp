@@ -69,20 +69,30 @@ setIndices(int indexStart, int indexEnd, int indexStep)
 
 void
 CGnuPlotFile::
-getEvery(int &everyStart, int &everyEnd, int &everyStep)
+getEvery(int &everyPointStart, int &everyPointEnd, int &everyPointStep,
+         int &everyBlockStart, int &everyBlockEnd, int &everyBlockStep)
 {
-  everyStart = every_.start;
-  everyEnd   = every_.end;
-  everyStep  = every_.step;
+  everyPointStart = every_.pointStart;
+  everyPointEnd   = every_.pointEnd;
+  everyPointStep  = every_.pointStep;
+
+  everyBlockStart = every_.blockStart;
+  everyBlockEnd   = every_.blockEnd;
+  everyBlockStep  = every_.blockStep;
 }
 
 void
 CGnuPlotFile::
-setEvery(int everyStart, int everyEnd, int everyStep)
+setEvery(int everyPointStart, int everyPointEnd, int everyPointStep,
+         int everyBlockStart, int everyBlockEnd, int everyBlockStep)
 {
-  every_.start = everyStart;
-  every_.end   = everyEnd;
-  every_.step  = everyStep;
+  every_.pointStart = everyPointStart;
+  every_.pointEnd   = everyPointEnd;
+  every_.pointStep  = everyPointStep;
+
+  every_.blockStart = everyBlockStart;
+  every_.blockEnd   = everyBlockEnd;
+  every_.blockStep  = everyBlockStep;
 }
 
 bool
@@ -234,12 +244,13 @@ processLines()
 
     //---
 
-    bool setActive  = indices_.validIndex(setNum);
-    bool lineActive = every_  .validIndex(lineNum);
+    bool setActive   = indices_.validIndex(setNum);
+    bool blockActive = every_  .validBlockIndex(subSetNum);
+    bool lineActive  = every_  .validPointIndex(lineNum);
 
     //---
 
-    if (setActive && lineActive) {
+    if (setActive && blockActive && lineActive) {
       // get fields from line
       parseFileLine(line1, subSetLine.fields);
 

@@ -144,7 +144,9 @@ class CQGnuPlot : public QObject, public CGnuPlot {
 
   enum PaletteColorType {
     PaletteColorModel,
-    PaletteColorDefined
+    PaletteColorDefined,
+    PaletteColorFunctions,
+    PaletteColorCubeHelix
   };
 
   enum ArrowCoordType {

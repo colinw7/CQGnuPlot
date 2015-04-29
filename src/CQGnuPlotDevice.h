@@ -44,10 +44,11 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
   CGnuPlotTitle  *createTitle (CGnuPlotGroup *group) override;
   CGnuPlotCamera *createCamera(CGnuPlotGroup *group) override;
 
-  CGnuPlotBarObject    *createBarObject   (CGnuPlotPlot *plot) override;
-  CGnuPlotBubbleObject *createBubbleObject(CGnuPlotPlot *plot) override;
-  CGnuPlotPieObject    *createPieObject   (CGnuPlotPlot *plot) override;
-  CGnuPlotRectObject   *createRectObject  (CGnuPlotPlot *plot) override;
+  CGnuPlotBarObject     *createBarObject    (CGnuPlotPlot *plot) override;
+  CGnuPlotBubbleObject  *createBubbleObject (CGnuPlotPlot *plot) override;
+  CGnuPlotPieObject     *createPieObject    (CGnuPlotPlot *plot) override;
+  CGnuPlotPolygonObject *createPolygonObject(CGnuPlotPlot *plot) override;
+  CGnuPlotRectObject    *createRectObject   (CGnuPlotPlot *plot) override;
 
   const Objects &objects() const { return objects_; }
 

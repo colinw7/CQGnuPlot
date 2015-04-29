@@ -22,6 +22,7 @@
 #include <CQGnuPlotBarObject.h>
 #include <CQGnuPlotBubbleObject.h>
 #include <CQGnuPlotPieObject.h>
+#include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
 
 #include <CQZoomMouseMode.h>
@@ -590,6 +591,22 @@ addPlotProperties(CGnuPlotPlot *plot)
     }
   }
 
+  if (! plot->polygonObjects().empty()) {
+    int i = 0;
+
+    for (const auto &polygon : plot->polygonObjects()) {
+      QString polygonName = QString("%1/Polygons/Polygon%2").arg(plotName).arg(i + 1);
+
+      CQGnuPlotPolygonObject *qpolygon = static_cast<CQGnuPlotPolygonObject *>(polygon);
+
+      tree_->addProperty(polygonName, qpolygon, "text"     );
+      tree_->addProperty(polygonName, qpolygon, "fillColor");
+      tree_->addProperty(polygonName, qpolygon, "lineColor");
+
+      ++i;
+    }
+  }
+
   if (! plot->rectObjects().empty()) {
     int i = 0;
 
@@ -611,7 +628,19 @@ void
 CQGnuPlotWindow::
 selectObject(const QObject *obj)
 {
+  tree_->clearSelection();
+
   tree_->selectObject(obj);
+}
+
+void
+CQGnuPlotWindow::
+selectObjects(const std::vector<CQGnuPlotObject *> &objs)
+{
+  tree_->clearSelection();
+
+  for (const auto &o : objs)
+    tree_->selectObject(o);
 }
 
 QColor

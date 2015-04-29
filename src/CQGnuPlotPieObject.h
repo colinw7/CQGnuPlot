@@ -1,5 +1,5 @@
-#ifndef CQGnuPlotPie_H
-#define CQGnuPlotPie_H
+#ifndef CQGnuPlotPieObject_H
+#define CQGnuPlotPieObject_H
 
 #include <CQGnuPlotObject.h>
 #include <CGnuPlotPieObject.h>

@@ -34,6 +34,7 @@ CQGnuPlotPalette.cpp \
 CQGnuPlotPieObject.cpp \
 CQGnuPlotPlot.cpp \
 CQGnuPlotPolygon.cpp \
+CQGnuPlotPolygonObject.cpp \
 CQGnuPlotRectangle.cpp \
 CQGnuPlotRectObject.cpp \
 CQGnuPlotRenderer.cpp \
@@ -68,6 +69,7 @@ CGnuPlotPieObject.cpp \
 CGnuPlotPlot.cpp \
 CGnuPlotPoint.cpp \
 CGnuPlotPolygon.cpp \
+CGnuPlotPolygonObject.cpp \
 CGnuPlotPosition.cpp \
 CGnuPlotRectangle.cpp \
 CGnuPlotRectObject.cpp \
@@ -186,6 +188,7 @@ CQGnuPlotPalette.h \
 CQGnuPlotPieObject.h \
 CQGnuPlotPlot.h \
 CQGnuPlotPolygon.h \
+CQGnuPlotPolygonObject.h \
 CQGnuPlotRectangle.h \
 CQGnuPlotRectObject.h \
 CQGnuPlotRenderer.h \
@@ -226,6 +229,7 @@ CGnuPlotPlot.h \
 CGnuPlotPoint.h \
 CGnuPlotPointStyle.h \
 CGnuPlotPolygon.h \
+CGnuPlotPolygonObject.h \
 CGnuPlotPosition.h \
 CGnuPlotPrefValue.h \
 CGnuPlotRectangle.h \

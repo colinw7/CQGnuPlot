@@ -395,6 +395,29 @@ fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
 
 void
 CGnuPlotSVGRenderer::
+patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern,
+               const CRGBA &fg, const CRGBA &)
+{
+  // TODO: fill pattern
+  if (points.empty()) return;
+
+  CPoint2D p;
+
+  windowToPixel(points[0], p);
+
+  os() << "<path d=\"M " << p.x << " " << p.y;
+
+  for (uint i = 1; i < points.size(); ++i) {
+    windowToPixel(points[i], p);
+
+    os() << " L " << p.x << " " << p.y;
+  }
+
+  os() << "z\" style=\"" << fillColor(fg) << " " << strokeNone() << "\"/>\n";
+}
+
+void
+CGnuPlotSVGRenderer::
 drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c, double width)
 {
   double px1, py1, px2, py2;

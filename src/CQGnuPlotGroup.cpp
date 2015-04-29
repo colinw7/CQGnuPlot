@@ -104,6 +104,10 @@ mousePress(const QPoint &qp)
 
   renderer->setRegion(region());
 
+  typedef std::vector<CQGnuPlotObject *> Objects;
+
+  Objects objects;
+
   for (auto &plot : plots()) {
     plot->initRenderer();
 
@@ -115,7 +119,7 @@ mousePress(const QPoint &qp)
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-    qplot->mousePress(p);
+    qplot->mousePress(p, objects);
   }
 
   renderer->setRange(getDisplayRange(1, 1));
@@ -130,11 +134,11 @@ mousePress(const QPoint &qp)
     if (annotation->inside(p)) {
       CQGnuPlotLabel *qann = static_cast<CQGnuPlotLabel *>(annotation.get());
 
-      qwindow()->selectObject(qann);
-
-      return;
+      objects.push_back(qann);
     }
   }
+
+  qwindow()->selectObjects(objects);
 }
 
 void

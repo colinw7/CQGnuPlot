@@ -106,6 +106,14 @@ fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
 
 void
 CGnuPlot3DRenderer::
+patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern pattern,
+               const CRGBA &fg, const CRGBA &bg)
+{
+  renderer_->patternPolygon(points, pattern, fg, bg);
+}
+
+void
+CGnuPlot3DRenderer::
 drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c, double width)
 {
   renderer_->drawEllipse(center, rx, ry, a, c, width);

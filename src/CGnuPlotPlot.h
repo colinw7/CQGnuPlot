@@ -20,6 +20,7 @@ class CGnuPlotGroup;
 class CGnuPlotBarObject;
 class CGnuPlotBubbleObject;
 class CGnuPlotPieObject;
+class CGnuPlotPolygonObject;
 class CGnuPlotRectObject;
 
 typedef CRefPtr<CExprValue> CExprValueP;
@@ -78,6 +79,19 @@ class CGnuPlotCacheFactory<CGnuPlotRectObject> {
   CGnuPlotPlot *plot_;
 };
 
+template<>
+class CGnuPlotCacheFactory<CGnuPlotPolygonObject> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotPolygonObject *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
 //------
 
 class CGnuPlotPlot {
@@ -98,14 +112,16 @@ class CGnuPlotPlot {
   typedef std::map<int,Points2D>            Points3D;
   typedef std::vector<CRGBA>                ImageData;
 
-  typedef CGnuPlotCache<CGnuPlotBarObject>    BarCache;
-  typedef CGnuPlotCache<CGnuPlotPieObject>    PieCache;
-  typedef CGnuPlotCache<CGnuPlotBubbleObject> BubbleCache;
-  typedef CGnuPlotCache<CGnuPlotRectObject>   RectCache;
-  typedef std::vector<CGnuPlotBarObject *>    BarObjects;
-  typedef std::vector<CGnuPlotPieObject *>    PieObjects;
-  typedef std::vector<CGnuPlotBubbleObject *> BubbleObjects;
-  typedef std::vector<CGnuPlotRectObject *>   RectObjects;
+  typedef CGnuPlotCache<CGnuPlotBarObject>     BarCache;
+  typedef CGnuPlotCache<CGnuPlotBubbleObject>  BubbleCache;
+  typedef CGnuPlotCache<CGnuPlotPieObject>     PieCache;
+  typedef CGnuPlotCache<CGnuPlotPolygonObject> PolygonCache;
+  typedef CGnuPlotCache<CGnuPlotRectObject>    RectCache;
+  typedef std::vector<CGnuPlotBarObject *>     BarObjects;
+  typedef std::vector<CGnuPlotBubbleObject *>  BubbleObjects;
+  typedef std::vector<CGnuPlotPieObject *>     PieObjects;
+  typedef std::vector<CGnuPlotPolygonObject *> PolygonObjects;
+  typedef std::vector<CGnuPlotRectObject *>    RectObjects;
 
  public:
   CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle plotStyle);
@@ -353,15 +369,20 @@ class CGnuPlotPlot {
 
   //---
 
-  void updateBarCacheSize   (int n);
-  void updateBubbleCacheSize(int n);
-  void updatePieCacheSize   (int n);
-  void updateRectCacheSize  (int n);
+  bool isCacheActive() const { return cacheActive_; }
+  void setCacheActive(bool b) { cacheActive_ = b; }
 
-  const BarObjects    &barObjects   () const { return barCache_   .objects(); }
-  const BubbleObjects &bubbleObjects() const { return bubbleCache_.objects(); }
-  const PieObjects    &pieObjects   () const { return pieCache_   .objects(); }
-  const RectObjects   &rectObjects  () const { return rectCache_  .objects(); }
+  void updateBarCacheSize    (int n);
+  void updateBubbleCacheSize (int n);
+  void updatePieCacheSize    (int n);
+  void updatePolygonCacheSize(int n);
+  void updateRectCacheSize   (int n);
+
+  const BarObjects     &barObjects    () const { return barCache_    .objects(); }
+  const BubbleObjects  &bubbleObjects () const { return bubbleCache_ .objects(); }
+  const PieObjects     &pieObjects    () const { return pieCache_    .objects(); }
+  const PolygonObjects &polygonObjects() const { return polygonCache_.objects(); }
+  const RectObjects    &rectObjects   () const { return rectCache_   .objects(); }
 
   //---
 
@@ -399,10 +420,11 @@ class CGnuPlotPlot {
 
   double getXSpacing() const;
 
-  CGnuPlotBarObject    *createBarObject   () const;
-  CGnuPlotBubbleObject *createBubbleObject() const;
-  CGnuPlotPieObject    *createPieObject   () const;
-  CGnuPlotRectObject   *createRectObject  () const;
+  CGnuPlotBarObject     *createBarObject    () const;
+  CGnuPlotBubbleObject  *createBubbleObject () const;
+  CGnuPlotPieObject     *createPieObject    () const;
+  CGnuPlotPolygonObject *createPolygonObject() const;
+  CGnuPlotRectObject    *createRectObject   () const;
 
   bool mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1) const;
 
@@ -451,9 +473,11 @@ class CGnuPlotPlot {
   COptReal           surfaceZMin_, surfaceZMax_;
   Hidden3DData       hidden3D_;
   double             whiskerBars_ { 0 };                // whisker bar data
+  bool               cacheActive_ { true };
   BarCache           barCache_;
   BubbleCache        bubbleCache_;
   PieCache           pieCache_;
+  PolygonCache       polygonCache_;
   RectCache          rectCache_;
   StyleValues        styleValues_;
 };
@@ -479,6 +503,13 @@ CGnuPlotCacheFactory<CGnuPlotPieObject>::
 make()
 {
   return plot_->createPieObject();
+}
+
+inline CGnuPlotPolygonObject *
+CGnuPlotCacheFactory<CGnuPlotPolygonObject>::
+make()
+{
+  return plot_->createPolygonObject();
 }
 
 inline CGnuPlotRectObject *

@@ -4,6 +4,7 @@
 #include <CQGnuPlotBarObject.h>
 #include <CQGnuPlotBubbleObject.h>
 #include <CQGnuPlotPieObject.h>
+#include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
@@ -138,7 +139,7 @@ draw()
 
 void
 CQGnuPlotPlot::
-mousePress(const CPoint2D &p)
+mousePress(const CPoint2D &p, std::vector<CQGnuPlotObject *> &objects)
 {
   for (auto &bar : barObjects()) {
     if (! bar->inside(p))
@@ -146,9 +147,7 @@ mousePress(const CPoint2D &p)
 
     CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
-    qwindow()->selectObject(qbar);
-
-    return;
+    objects.push_back(qbar);
   }
 
   for (auto &bubble : bubbleObjects()) {
@@ -157,21 +156,26 @@ mousePress(const CPoint2D &p)
 
     CQGnuPlotBubbleObject *qbubble = static_cast<CQGnuPlotBubbleObject *>(bubble);
 
-    qwindow()->selectObject(qbubble);
-
-    return;
+    objects.push_back(qbubble);
   }
+
   for (auto &pie : pieObjects()) {
     if (! pie->inside(p))
       continue;
 
     CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
 
-    qwindow()->selectObject(qpie);
-
-    return;
+    objects.push_back(qpie);
   }
 
+  for (auto &polygon : polygonObjects()) {
+    if (! polygon->inside(p))
+      continue;
+
+    CQGnuPlotPolygonObject *qpolygon = static_cast<CQGnuPlotPolygonObject *>(polygon);
+
+    objects.push_back(qpolygon);
+  }
 
   for (auto &rect : rectObjects()) {
     if (! rect->inside(p))
@@ -179,9 +183,7 @@ mousePress(const CPoint2D &p)
 
     CQGnuPlotRectObject *qrect = static_cast<CQGnuPlotRectObject *>(rect);
 
-    qwindow()->selectObject(qrect);
-
-    return;
+    objects.push_back(qrect);
   }
 }
 

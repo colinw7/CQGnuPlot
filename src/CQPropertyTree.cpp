@@ -96,8 +96,6 @@ void
 CQPropertyTree::
 selectObject(const QObject *obj)
 {
-  clearSelection();
-
   for (int i = 0; i < topLevelItemCount(); ++i) {
     QTreeWidgetItem *item = topLevelItem(i);
 

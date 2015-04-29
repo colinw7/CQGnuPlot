@@ -86,7 +86,7 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   void draw();
 
-  void mousePress(const CPoint2D &p);
+  void mousePress(const CPoint2D &p, std::vector<CQGnuPlotObject *> &objects);
   void mouseMove (const CPoint2D &p);
   bool mouseTip  (const CPoint2D &p, CQGnuPlot::TipRect &tip);
 

@@ -26,6 +26,20 @@ setCenter(const QPointF &p)
   CGnuPlotCircle::setCenter(CQUtil::fromQPoint(p));
 }
 
+double
+CQGnuPlotCircle::
+getRadius() const
+{
+  return r_.value();
+}
+
+void
+CQGnuPlotCircle::
+setRadius(double r)
+{
+  r_.setValue(r);
+}
+
 void
 CQGnuPlotCircle::
 draw(CGnuPlotRenderer *renderer) const
@@ -35,6 +49,9 @@ draw(CGnuPlotRenderer *renderer) const
   if (isSelected()) {
     CPoint2D center = CGnuPlotCircle::getCenter().getPoint(renderer);
 
-    renderer->drawEllipse(center, getRadius(), getRadius(), 0, CRGBA(1,0,0), 2);
+    double xr = CGnuPlotCircle::getRadius().getXValue(renderer);
+    double yr = CGnuPlotCircle::getRadius().getYValue(renderer);
+
+    renderer->drawEllipse(center, xr, yr, 0, CRGBA(1,0,0), 2);
   }
 }

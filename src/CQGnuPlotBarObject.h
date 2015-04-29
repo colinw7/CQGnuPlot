@@ -1,5 +1,5 @@
-#ifndef CQGnuPlotBar_H
-#define CQGnuPlotBar_H
+#ifndef CQGnuPlotBarObject_H
+#define CQGnuPlotBarObject_H
 
 #include <CQGnuPlotObject.h>
 #include <CGnuPlotBarObject.h>

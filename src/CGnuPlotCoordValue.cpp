@@ -7,15 +7,20 @@ double
 CGnuPlotCoordValue::
 getXValue(CGnuPlotRenderer *renderer) const
 {
-  double x = value_;
+  return getXValue(renderer, value_);
+}
 
+double
+CGnuPlotCoordValue::
+getXValue(CGnuPlotRenderer *renderer, double x) const
+{
   if      (system_ == CGnuPlotTypes::CoordSys::SECOND) {
     // TODO
   }
   else if (system_ == CGnuPlotTypes::CoordSys::GRAPH) {
     const CBBox2D &range = renderer->range();
 
-    x = CGnuPlotUtil::map(value_, 0, 1, range.getXMin(), range.getXMax());
+    x = CGnuPlotUtil::map(x, 0, 1, range.getXMin(), range.getXMax());
   }
   else if (system_ == CGnuPlotTypes::CoordSys::SCREEN) {
     double px1, py1, px2, py2;
@@ -23,7 +28,7 @@ getXValue(CGnuPlotRenderer *renderer) const
     renderer->pixelToWindow(                    0,                      0, &px1, &py1);
     renderer->pixelToWindow(renderer->width() - 1, renderer->height() - 1, &px2, &py2);
 
-    x = CGnuPlotUtil::map(value_, 0, 1, px1, px2);
+    x = CGnuPlotUtil::map(x, 0, 1, px1, px2);
   }
   else if (system_ == CGnuPlotTypes::CoordSys::CHARACTER) {
     // TODO
@@ -36,15 +41,20 @@ double
 CGnuPlotCoordValue::
 getYValue(CGnuPlotRenderer *renderer) const
 {
-  double y = value_;
+  return getXValue(renderer, value_);
+}
 
+double
+CGnuPlotCoordValue::
+getYValue(CGnuPlotRenderer *renderer, double y) const
+{
   if      (system_ == CGnuPlotTypes::CoordSys::SECOND) {
     // TODO
   }
   else if (system_ == CGnuPlotTypes::CoordSys::GRAPH) {
     const CBBox2D &range = renderer->range();
 
-    y = CGnuPlotUtil::map(value_, 0, 1, range.getYMin(), range.getYMax());
+    y = CGnuPlotUtil::map(y, 0, 1, range.getYMin(), range.getYMax());
   }
   else if (system_ == CGnuPlotTypes::CoordSys::SCREEN) {
     double px1, py1, px2, py2;
@@ -52,7 +62,7 @@ getYValue(CGnuPlotRenderer *renderer) const
     renderer->pixelToWindow(                    0,                      0, &px1, &py1);
     renderer->pixelToWindow(renderer->width() - 1, renderer->height() - 1, &px2, &py2);
 
-    y = CGnuPlotUtil::map(value_, 0, 1, py1, py2);
+    y = CGnuPlotUtil::map(y, 0, 1, py2, py1);
   }
   else if (system_ == CGnuPlotTypes::CoordSys::CHARACTER) {
     // TODO
@@ -63,38 +73,66 @@ getYValue(CGnuPlotRenderer *renderer) const
 
 double
 CGnuPlotCoordValue::
+getXDistance(CGnuPlotRenderer *renderer) const
+{
+  return getXValue(renderer, value_) - getXValue(renderer, 0);
+}
+
+double
+CGnuPlotCoordValue::
+getYDistance(CGnuPlotRenderer *renderer) const
+{
+  return getYValue(renderer, value_) - getYValue(renderer, 0);
+}
+
+double
+CGnuPlotCoordValue::
 pixelXValue(CGnuPlotRenderer *renderer) const
 {
+  return pixelXValue(renderer, value_);
+}
+
+double
+CGnuPlotCoordValue::
+pixelXValue(CGnuPlotRenderer *renderer, double x) const
+{
   if      (system_ == CGnuPlotTypes::CoordSys::SECOND)
-    return value_; // TODO
+    return x; // TODO
   else if (system_ == CGnuPlotTypes::CoordSys::GRAPH)
-    return value_; // TODO
+    return x; // TODO
   else if (system_ == CGnuPlotTypes::CoordSys::SCREEN) {
     const CISize2D &s = renderer->window()->size();
 
-    return value_*s.width;
+    return x*s.width;
   }
   else if (system_ == CGnuPlotTypes::CoordSys::CHARACTER)
-    return value_;
+    return x;
   else
-    return renderer->windowWidthToPixelWidth(value_);
+    return renderer->windowWidthToPixelWidth(x);
 }
 
 double
 CGnuPlotCoordValue::
 pixelYValue(CGnuPlotRenderer *renderer) const
 {
+  return pixelXValue(renderer, value_);
+}
+
+double
+CGnuPlotCoordValue::
+pixelYValue(CGnuPlotRenderer *renderer, double y) const
+{
   if      (system_ == CGnuPlotTypes::CoordSys::SECOND)
-    return value_; // TODO
+    return y; // TODO
   else if (system_ == CGnuPlotTypes::CoordSys::GRAPH)
-    return value_; // TODO
+    return y; // TODO
   else if (system_ == CGnuPlotTypes::CoordSys::SCREEN) {
     const CISize2D &s = renderer->window()->size();
 
-    return value_*s.height;
+    return y*s.height;
   }
   else if (system_ == CGnuPlotTypes::CoordSys::CHARACTER)
-    return value_;
+    return y;
   else
-    return renderer->windowHeightToPixelHeight(value_);
+    return renderer->windowHeightToPixelHeight(y);
 }

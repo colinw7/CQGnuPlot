@@ -36,42 +36,44 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     double a2 = 360.0;
 
     CRGBA lc1 = lc;
+    CRGBA fc1 = fc;
 
     bool is_angle = false;
 
     if      ((! isCalcColor && reals.size() == 2) || (isCalcColor && reals.size() == 3)) {
       r = 1; // TODO: get from set circle
 
-      if (isCalcColor) {
-        double x = reals[2];
-
-        lc1 = lineStyle.color().calcColor(plot, x);
-      }
+      if (isCalcColor)
+        fc1 = lineStyle.color().calcColor(plot, reals[2]);
     }
     else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
       r = reals[2];
 
-      if (isCalcColor) {
-        double x = reals[3];
-
-        lc1 = lineStyle.color().calcColor(plot, x);
-      }
+      if (isCalcColor)
+        fc1 = lineStyle.color().calcColor(plot, reals[3]);
     }
     else if ((! isCalcColor && reals.size() == 5) || (isCalcColor && reals.size() == 6)) {
+      is_angle = true;
+
       r  = reals[2];
       a1 = reals[3];
       a2 = reals[4];
 
+      if (isCalcColor)
+        fc1 = lineStyle.color().calcColor(plot, reals[5]);
+    }
+    else if (reals.size() == 6) {
       is_angle = true;
 
-      if (isCalcColor) {
-        double x = reals[5];
-
-        lc1 = lineStyle.color().calcColor(plot, x);
-      }
+      r   = reals[2];
+      a1  = reals[3];
+      a2  = reals[4];
+      fc1 = lineStyle.color().calcColor(plot, reals[5]);
     }
-    else
+    else {
+      std::cerr << "Bad circle points" << std::endl;
       continue;
+    }
 
     double w = r;
     double h = w;
@@ -82,11 +84,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CPoint2D c(x, y);
 
     if (is_angle) {
-      renderer->fillPieSlice(c, 0, r, a1, a2, fc);
+      renderer->fillPieSlice(c, 0, r, a1, a2, fc1);
     }
     else {
       if (plot->fillStyle().style() == CGnuPlotTypes::FillType::SOLID)
-        renderer->fillEllipse(c, w, h, 0, fc);
+        renderer->fillEllipse(c, w, h, 0, fc1);
 
       if (plot->fillStyle().hasBorder())
         renderer->drawEllipse(c, w, h, 0, lc1, 1);
