@@ -8,33 +8,61 @@ draw(CGnuPlotRenderer *renderer) const
 {
   const CGnuPlotCircle *e = this;
 
-  CPoint2D center = e->getCenter().getPoint(renderer);
+  c_ = e->getCenter().getPoint(renderer);
 
-  double xr = e->getRadius().getXDistance(renderer);
-  double yr = e->getRadius().getYDistance(renderer);
+  // TODO: always round
+  xr_ = e->getRadius().getXDistance(renderer);
+  yr_ = e->getRadius().getYDistance(renderer);
+
+  CRGBA fc = e->getFillColor().color();
+
+  double a1 = arcStart_.getValue(0);
+  double a2 = arcEnd_  .getValue(360);
 
   if (e->getFillColor().isRGB()) {
     if (arcStart_.isValid() || arcEnd_.isValid())
-      renderer->fillPieSlice(center, 0, xr, arcStart_.getValue(0), arcEnd_.getValue(360),
-                             e->getFillColor().color());
+      renderer->fillPieSlice(c_, 0, xr_, a1, a2, fc);
     else
-      renderer->fillEllipse(center, xr, yr, 0, e->getFillColor().color());
+      renderer->fillEllipse(c_, xr_, yr_, 0, fc);
   }
 
   CRGBA lc = e->getStrokeColor().getValue(CRGBA(0,0,0));
 
   if (arcStart_.isValid() || arcEnd_.isValid())
-    renderer->drawPieSlice(center, 0, xr, arcStart_.getValue(0), arcEnd_.getValue(360),
-                           1, lc);
+    renderer->drawPieSlice(c_, 0, xr_, a1, a2, 1, lc);
   else
-    renderer->drawEllipse(center, xr, yr, 0, lc, 1);
+    renderer->drawEllipse(c_, xr_, yr_, 0, lc, 1);
 }
 
 bool
 CGnuPlotCircle::
-inside(const CPoint2D &) const
+inside(const CPoint2D &p) const
 {
-  return false;
+  double x = p.x - c_.x;
+  double y = p.y - c_.y;
+
+  double x2 = x*x;
+  double y2 = y*y;
+
+  double xr2 = xr_*xr_;
+  double yr2 = yr_*yr_;
+
+  double f = x2/xr2 + y2/yr2 - 1;
+
+  if (f > 0)
+    return false;
+
+  if (arcStart_.isValid() || arcEnd_.isValid()) {
+    double a1 = arcStart_.getValue(0);
+    double a2 = arcEnd_  .getValue(360);
+
+    double a = CAngle::Rad2Deg(atan2(y, x));
+
+    if (a < a1 || a > a2)
+      return false;
+  }
+
+  return true;
 }
 
 void

@@ -7,7 +7,7 @@
 
 class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
  public:
-  static const char *getName() { return "ellipse"; }
+  static const char *getName() { return "circle"; }
 
   CGnuPlotCircle(CGnuPlotGroup *group) :
    CGnuPlotGroupAnnotation(group) {
@@ -60,6 +60,8 @@ class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
   COptReal           arcStart_;
   COptReal           arcEnd_;
   CGnuPlotFillStyle  fs_;
+  mutable CPoint2D   c_;
+  mutable double     xr_, yr_;
 };
 
 typedef std::shared_ptr<CGnuPlotCircle> CGnuPlotCircleP;

@@ -258,8 +258,10 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, std::vector<C
 
     polygon->setPoints(points1);
 
-    polygon->resetFillColor();
-    polygon->resetLineColor();
+    if (! polygon->isModified()) {
+      polygon->resetFillColor();
+      polygon->resetLineColor();
+    }
 
     if (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN) {
       // TODO
@@ -270,7 +272,8 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, std::vector<C
       if (fillStyle.isTransparent())
         fc.setAlpha(fillStyle.density());
 
-      polygon->setFillColor(fc);
+      if (! polygon->isModified())
+        polygon->setFillColor(fc);
     }
 
     if (fillStyle.hasBorder()) {
@@ -280,9 +283,13 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, std::vector<C
       if (fillStyle.borderColor().isValid())
         lc = fillStyle.borderColor().getValue().calcColor(plot);
 
-      polygon->setLineWidth(lineStyle.width());
-      polygon->setLineColor(lc);
+      if (! polygon->isModified()) {
+        polygon->setLineWidth(lineStyle.width());
+        polygon->setLineColor(lc);
+      }
     }
+
+    polygon->setClipped(true);
   }
   else {
     // fill polygon

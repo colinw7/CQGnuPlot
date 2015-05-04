@@ -19,6 +19,7 @@
 #include <CQGnuPlotCamera.h>
 #include <CQGnuPlotBubbleObject.h>
 #include <CQGnuPlotBarObject.h>
+#include <CQGnuPlotEllipseObject.h>
 #include <CQGnuPlotPieObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
@@ -275,6 +276,21 @@ createBubbleObject(CGnuPlotPlot *plot)
   return bubble;
 }
 
+CGnuPlotEllipseObject *
+CQGnuPlotDevice::
+createEllipseObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotEllipseObject *ellipse = new CQGnuPlotEllipseObject(qplot);
+
+  objects_.push_back(ellipse);
+
+  qplot->qwindow()->updateProperties();
+
+  return ellipse;
+}
+
 CGnuPlotPieObject *
 CQGnuPlotDevice::
 createPieObject(CGnuPlotPlot *plot)
@@ -296,13 +312,13 @@ createPolygonObject(CGnuPlotPlot *plot)
 {
   CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-  CQGnuPlotPolygonObject *rect = new CQGnuPlotPolygonObject(qplot);
+  CQGnuPlotPolygonObject *polygon = new CQGnuPlotPolygonObject(qplot);
 
-  objects_.push_back(rect);
+  objects_.push_back(polygon);
 
   qplot->qwindow()->updateProperties();
 
-  return rect;
+  return polygon;
 }
 
 CGnuPlotRectObject *

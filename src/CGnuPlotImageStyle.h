@@ -7,16 +7,16 @@
 struct CGnuPlotImageStyle {
   typedef CGnuPlotTypes::ImageType ImageType;
 
-  COptInt            w;
-  COptInt            h;
-  COptValT<CPoint2D> o;
-  COptValT<CPoint2D> c;
-  COptReal           dx, dy;
-  COptReal           a;
-  bool               flipy { false };
-  std::string        format { "" };
-  CGnuPlotUsingCols  usingCols;
-  ImageType          fileType { CGnuPlotTypes::ImageType::NONE };
+  COptInt           w;
+  COptInt           h;
+  COptPoint2D       o;
+  COptPoint2D       c;
+  COptReal          dx, dy;
+  COptReal          a;
+  bool              flipy { false };
+  std::string       format { "" };
+  CGnuPlotUsingCols usingCols;
+  ImageType         fileType { CGnuPlotTypes::ImageType::NONE };
 };
 
 

@@ -26,6 +26,8 @@ CQGnuPlotPolygonObject::
 setText(const QString &text)
 {
   CGnuPlotPolygonObject::setText(text.toStdString());
+
+  CGnuPlotPolygonObject::setModified(true);
 }
 
 QColor
@@ -40,6 +42,8 @@ CQGnuPlotPolygonObject::
 setFillColor(const QColor &color)
 {
   CGnuPlotPolygonObject::setFillColor(fromQColor(color));
+
+  CGnuPlotPolygonObject::setModified(true);
 }
 
 QColor
@@ -54,6 +58,8 @@ CQGnuPlotPolygonObject::
 setLineColor(const QColor &color)
 {
   CGnuPlotPolygonObject::setLineColor(fromQColor(color));
+
+  CGnuPlotPolygonObject::setModified(true);
 }
 
 void

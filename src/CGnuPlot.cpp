@@ -1416,7 +1416,7 @@ plotCmd(const std::string &args)
 
   resetLineStyle();
 
-  COptValT<CBBox2D> clearRect = clearRect_;
+  COptBBox2D clearRect = clearRect_;
 
   clearRect_.setInvalid();
 
@@ -2816,7 +2816,7 @@ splotCmd(const std::string &args)
 
   resetLineStyle();
 
-  COptValT<CBBox2D> clearRect = clearRect_;
+  COptBBox2D clearRect = clearRect_;
 
   clearRect_.setInvalid();
 

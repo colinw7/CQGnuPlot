@@ -95,19 +95,19 @@ class CGnuPlotMouseData {
   }
 
  private:
-  bool               enabled_        { true };
-  COptReal           dclick_;
-  bool               zoomCoords_     { true };
-  COptReal           zoomX_;
-  COptReal           zoomY_;
-  COptValT<CPoint2D> rulerPos_;
-  PolarDistanceType  polarDistType_  { PolarDistanceType::NONE };
-  COptString         format_;
-  std::string        mouseFormatStr_;
-  COptInt            mouseFormatInt_;
-  std::string        labels_;
-  bool               zoomJump_       { false };
-  bool               verbose_        { false };
+  bool              enabled_        { true };
+  COptReal          dclick_;
+  bool              zoomCoords_     { true };
+  COptReal          zoomX_;
+  COptReal          zoomY_;
+  COptPoint2D       rulerPos_;
+  PolarDistanceType polarDistType_  { PolarDistanceType::NONE };
+  COptString        format_;
+  std::string       mouseFormatStr_;
+  COptInt           mouseFormatInt_;
+  std::string       labels_;
+  bool              zoomJump_       { false };
+  bool              verbose_        { false };
 };
 
 #endif

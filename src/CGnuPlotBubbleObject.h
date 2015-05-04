@@ -46,7 +46,7 @@ class CGnuPlotBubbleObject : public CGnuPlotPlotObject {
   CPoint2D        c_    { 0, 0 };
   double          xr_   { 1 };
   double          yr_   { 1 };
-  COptValT<CRGBA> color_;
+  COptRGBA        color_;
   std::string     name_ { "" };
 };
 

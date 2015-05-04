@@ -4,6 +4,7 @@
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotBarObject.h>
 #include <CGnuPlotBubbleObject.h>
+#include <CGnuPlotEllipseObject.h>
 #include <CGnuPlotPieObject.h>
 #include <CGnuPlotPolygonObject.h>
 #include <CGnuPlotRectObject.h>
@@ -141,6 +142,13 @@ CGnuPlotDevice::
 createBubbleObject(CGnuPlotPlot *plot)
 {
   return new CGnuPlotBubbleObject(plot);
+}
+
+CGnuPlotEllipseObject *
+CGnuPlotDevice::
+createEllipseObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotEllipseObject(plot);
 }
 
 CGnuPlotPieObject *

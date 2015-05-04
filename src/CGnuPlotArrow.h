@@ -143,7 +143,7 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
   CGnuPlotCoordValue length_;
   CAngle             angle_;
   CGnuPlotArrowStyle style_;
-  COptValT<CRGBA>    lineColor_;
+  COptRGBA           lineColor_;
 };
 
 typedef std::shared_ptr<CGnuPlotArrow> CGnuPlotArrowP;

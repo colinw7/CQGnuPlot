@@ -1,5 +1,5 @@
-#ifndef CGnuPlotPolygonObject_H
-#define CGnuPlotPolygonObject_H
+#ifndef CGnuPlotEllipseObject_H
+#define CGnuPlotEllipseObject_H
 
 #include <COptVal.h>
 #include <CPoint2D.h>
@@ -11,33 +11,33 @@
 
 class CGnuPlotPlot;
 
-class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
+class CGnuPlotEllipseObject : public CGnuPlotPlotObject {
  public:
   typedef std::vector<CPoint2D> Points;
 
  public:
-  CGnuPlotPolygonObject(CGnuPlotPlot *plot);
+  CGnuPlotEllipseObject(CGnuPlotPlot *plot);
 
-  virtual ~CGnuPlotPolygonObject() { }
+  virtual ~CGnuPlotEllipseObject() { }
 
-  const Points &points() const { return points_; }
-  void setPoints(const Points &points);
+  const CPoint2D &center() const { return center_; }
+  void setCenter(const CPoint2D &center);
+
+  const CSize2D &size() const { return size_; }
+  void setSize(const CSize2D &size);
 
   bool hasLineColor() const { return lineColor_.isValid(); }
-  const CRGBA &lineColor() const { return lineColor_.getValue(); }
+  const CRGBA &lineColor() const { return lineColor_.getValue(CRGBA(0,0,0)); }
   void setLineColor(const CRGBA &c) { lineColor_ = c; }
   void resetLineColor() { lineColor_.setInvalid(); }
 
   bool hasFillColor() const { return fillColor_.isValid(); }
-  const CRGBA &fillColor() const { return fillColor_.getValue(); }
+  const CRGBA &fillColor() const { return fillColor_.getValue(CRGBA(1,1,1)); }
   void setFillColor(const CRGBA &c) { fillColor_ = c; }
   void resetFillColor() { fillColor_.setInvalid(); }
 
   double lineWidth() const { return lineWidth_; }
   void setLineWidth(double r) { lineWidth_ = r; }
-
-  bool isClipped() const { return clipped_; }
-  void setClipped(bool b) { clipped_ = b; }
 
   const std::string &text() const { return text_; }
   void setText(const std::string &s) { text_ = s; }
@@ -54,11 +54,14 @@ class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
   void draw(CGnuPlotRenderer *renderer) const override;
 
  private:
-  Points           points_;
+  void update();
+
+ private:
+  CPoint2D         center_;
+  CSize2D          size_;
   COptRGBA         lineColor_;
   COptRGBA         fillColor_;
   double           lineWidth_ { 0 };
-  bool             clipped_ { false };
   std::string      text_ { "" };
   std::string      tipText_ { "" };
   mutable CBBox2D  rect_;

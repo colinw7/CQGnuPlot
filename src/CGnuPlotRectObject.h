@@ -46,12 +46,12 @@ class CGnuPlotRectObject : public CGnuPlotPlotObject {
   void draw(CGnuPlotRenderer *renderer) const override;
 
  private:
-  CBBox2D         rect_ { 0, 0, 1, 1 };
-  COptValT<CRGBA> lineColor_;
-  COptValT<CRGBA> fillColor_;
-  double          lineWidth_ { 0 };
-  std::string     text_ { "" };
-  std::string     tipText_ { "" };
+  CBBox2D     rect_ { 0, 0, 1, 1 };
+  COptRGBA    lineColor_;
+  COptRGBA    fillColor_;
+  double      lineWidth_ { 0 };
+  std::string text_ { "" };
+  std::string tipText_ { "" };
 };
 
 #endif

@@ -36,15 +36,15 @@ class CGnuPlotBarObject : public CGnuPlotPlotObject {
   FillPattern fillPattern() const { return fillPattern_; }
   void setFillPattern(FillPattern t) { fillPattern_ = t; }
 
-  const COptValT<CRGBA> &fillColor() const { return fillColor_; }
-  void setFillColor(const COptValT<CRGBA> &c) { fillColor_ = c; }
+  const COptRGBA &fillColor() const { return fillColor_; }
+  void setFillColor(const COptRGBA &c) { fillColor_ = c; }
   void setFillColor(const CRGBA &c) { fillColor_ = c; }
 
   bool hasBorder() const { return border_; }
   void setBorder(bool b) { border_ = b; }
 
-  const COptValT<CRGBA> &lineColor() const { return lineColor_; }
-  void setLineColor(const COptValT<CRGBA> &c) { lineColor_ = c; }
+  const COptRGBA &lineColor() const { return lineColor_; }
+  void setLineColor(const COptRGBA &c) { lineColor_ = c; }
   void setLineColor(const CRGBA &c) { lineColor_ = c; }
 
   double width() const { return width_; }
@@ -64,9 +64,9 @@ class CGnuPlotBarObject : public CGnuPlotPlotObject {
   bool            initialized_ { false };
   FillType        fillType_    { FillType::EMPTY };
   FillPattern     fillPattern_ { FillPattern::NONE };
-  COptValT<CRGBA> fillColor_;
+  COptRGBA        fillColor_;
   bool            border_      { true }; // border displayed
-  COptValT<CRGBA> lineColor_;
+  COptRGBA        lineColor_;
   double          width_       { 0.0 }; // associated value
 };
 

@@ -21,6 +21,7 @@
 #include <CQGnuPlotDevice.h>
 #include <CQGnuPlotBarObject.h>
 #include <CQGnuPlotBubbleObject.h>
+#include <CQGnuPlotEllipseObject.h>
 #include <CQGnuPlotPieObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
@@ -574,6 +575,22 @@ addPlotProperties(CGnuPlotPlot *plot)
     }
   }
 
+  if (! plot->ellipseObjects().empty()) {
+    int i = 0;
+
+    for (const auto &ellipse : plot->ellipseObjects()) {
+      QString ellipseName = QString("%1/Ellipses/Ellipse%2").arg(plotName).arg(i + 1);
+
+      CQGnuPlotEllipseObject *qellipse = static_cast<CQGnuPlotEllipseObject *>(ellipse);
+
+      tree_->addProperty(ellipseName, qellipse, "text"     );
+      tree_->addProperty(ellipseName, qellipse, "fillColor");
+      tree_->addProperty(ellipseName, qellipse, "lineColor");
+
+      ++i;
+    }
+  }
+
   if (! plot->pieObjects().empty()) {
     int i = 0;
 
@@ -637,10 +654,23 @@ void
 CQGnuPlotWindow::
 selectObjects(const std::vector<CQGnuPlotObject *> &objs)
 {
+  disconnect(tree_, SIGNAL(itemSelected(QObject *, const QString &)),
+             this, SLOT(itemSelectedSlot(QObject *, const QString &)));
+
+  deselectAllObjects();
+
   tree_->clearSelection();
 
-  for (const auto &o : objs)
+  for (const auto &o : objs) {
     tree_->selectObject(o);
+
+    o->setSelected(true);
+  }
+
+  connect(tree_, SIGNAL(itemSelected(QObject *, const QString &)),
+          this, SLOT(itemSelectedSlot(QObject *, const QString &)));
+
+  redraw();
 }
 
 QColor
@@ -908,16 +938,23 @@ itemSelectedSlot(QObject *obj, const QString & /*path*/)
   CQGnuPlotObject *qobject = dynamic_cast<CQGnuPlotObject *>(obj);
   if (! qobject) return;
 
-  CQGnuPlotDevice *qdevice = qapp()->qdevice();
-
-  for (auto qobject1 : qdevice->objects())
-    qobject1->setSelected(false);
+  deselectAllObjects();
 
   //std::cerr << "Object \'" << qobject->objectName().toStdString() << "\'" << std::endl;
 
   qobject->setSelected(true);
 
-  canvas_->update();
+  redraw();
+}
+
+void
+CQGnuPlotWindow::
+deselectAllObjects()
+{
+  CQGnuPlotDevice *qdevice = qapp()->qdevice();
+
+  for (auto qobject : qdevice->objects())
+    qobject->setSelected(false);
 }
 
 CQPropertyRealEditor *

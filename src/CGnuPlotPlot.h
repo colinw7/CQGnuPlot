@@ -19,6 +19,7 @@ class CGnuPlotWindow;
 class CGnuPlotGroup;
 class CGnuPlotBarObject;
 class CGnuPlotBubbleObject;
+class CGnuPlotEllipseObject;
 class CGnuPlotPieObject;
 class CGnuPlotPolygonObject;
 class CGnuPlotRectObject;
@@ -48,6 +49,19 @@ class CGnuPlotCacheFactory<CGnuPlotBubbleObject> {
   }
 
   CGnuPlotBubbleObject *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+template<>
+class CGnuPlotCacheFactory<CGnuPlotEllipseObject> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotEllipseObject *make();
 
  private:
   CGnuPlotPlot *plot_;
@@ -114,11 +128,13 @@ class CGnuPlotPlot {
 
   typedef CGnuPlotCache<CGnuPlotBarObject>     BarCache;
   typedef CGnuPlotCache<CGnuPlotBubbleObject>  BubbleCache;
+  typedef CGnuPlotCache<CGnuPlotEllipseObject> EllipseCache;
   typedef CGnuPlotCache<CGnuPlotPieObject>     PieCache;
   typedef CGnuPlotCache<CGnuPlotPolygonObject> PolygonCache;
   typedef CGnuPlotCache<CGnuPlotRectObject>    RectCache;
   typedef std::vector<CGnuPlotBarObject *>     BarObjects;
   typedef std::vector<CGnuPlotBubbleObject *>  BubbleObjects;
+  typedef std::vector<CGnuPlotEllipseObject *> EllipseObjects;
   typedef std::vector<CGnuPlotPieObject *>     PieObjects;
   typedef std::vector<CGnuPlotPolygonObject *> PolygonObjects;
   typedef std::vector<CGnuPlotRectObject *>    RectObjects;
@@ -374,12 +390,14 @@ class CGnuPlotPlot {
 
   void updateBarCacheSize    (int n);
   void updateBubbleCacheSize (int n);
+  void updateEllipseCacheSize(int n);
   void updatePieCacheSize    (int n);
   void updatePolygonCacheSize(int n);
   void updateRectCacheSize   (int n);
 
   const BarObjects     &barObjects    () const { return barCache_    .objects(); }
   const BubbleObjects  &bubbleObjects () const { return bubbleCache_ .objects(); }
+  const EllipseObjects &ellipseObjects() const { return ellipseCache_.objects(); }
   const PieObjects     &pieObjects    () const { return pieCache_    .objects(); }
   const PolygonObjects &polygonObjects() const { return polygonCache_.objects(); }
   const RectObjects    &rectObjects   () const { return rectCache_   .objects(); }
@@ -422,6 +440,7 @@ class CGnuPlotPlot {
 
   CGnuPlotBarObject     *createBarObject    () const;
   CGnuPlotBubbleObject  *createBubbleObject () const;
+  CGnuPlotEllipseObject *createEllipseObject() const;
   CGnuPlotPieObject     *createPieObject    () const;
   CGnuPlotPolygonObject *createPolygonObject() const;
   CGnuPlotRectObject    *createRectObject   () const;
@@ -476,6 +495,7 @@ class CGnuPlotPlot {
   bool               cacheActive_ { true };
   BarCache           barCache_;
   BubbleCache        bubbleCache_;
+  EllipseCache       ellipseCache_;
   PieCache           pieCache_;
   PolygonCache       polygonCache_;
   RectCache          rectCache_;
@@ -496,6 +516,13 @@ CGnuPlotCacheFactory<CGnuPlotBubbleObject>::
 make()
 {
   return plot_->createBubbleObject();
+}
+
+inline CGnuPlotEllipseObject *
+CGnuPlotCacheFactory<CGnuPlotEllipseObject>::
+make()
+{
+  return plot_->createEllipseObject();
 }
 
 inline CGnuPlotPieObject *

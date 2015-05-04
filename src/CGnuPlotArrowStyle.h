@@ -51,7 +51,7 @@ class CGnuPlotArrowStyle {
   double lineWidth(CGnuPlot *plot) const;
   void setLineWidth(double w) { lineWidth_ = w; }
 
-  const COptValT<CRGBA> &lineColor() const { return lineColor_; }
+  const COptRGBA &lineColor() const { return lineColor_; }
   void setLineColor(const CRGBA &c) { lineColor_ = c; }
 
   const COptInt &lineStyle() const { return lineStyle_; }
@@ -99,7 +99,7 @@ class CGnuPlotArrowStyle {
   bool               fixed_     { false }; // no auto size reduce for show arrows
   COptReal           lineWidth_;
   COptInt            lineStyle_;
-  COptValT<CRGBA>    lineColor_;
+  COptRGBA           lineColor_;
   CLineDash          dash_;
   bool               variable_  { false };
   COptReal           varValue_;

@@ -55,15 +55,15 @@ class CGnuPlotPieObject : public CGnuPlotPlotObject {
   void draw(CGnuPlotRenderer *renderer) const override;
 
  private:
-  bool            used_     { false };
-  CPoint2D        c_        { 0, 0 };
-  double          r_        { 1 };
-  double          angle1_   { 0 };
-  double          angle2_   { 360 };
-  COptValT<CRGBA> lineColor_;
-  COptValT<CRGBA> fillColor_;
-  std::string     name_     { "" };
-  bool            exploded_ { false };
+  bool        used_     { false };
+  CPoint2D    c_        { 0, 0 };
+  double      r_        { 1 };
+  double      angle1_   { 0 };
+  double      angle2_   { 360 };
+  COptRGBA    lineColor_;
+  COptRGBA    fillColor_;
+  std::string name_     { "" };
+  bool        exploded_ { false };
 };
 
 #endif

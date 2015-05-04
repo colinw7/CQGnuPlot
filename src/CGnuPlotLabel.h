@@ -8,9 +8,6 @@
 
 class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
  public:
-  typedef COptValT<CPoint2D> OptPoint;
-
- public:
   static const char *getName() { return "label"; }
 
   CGnuPlotLabel(CGnuPlotGroup *group);
@@ -47,7 +44,7 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   double getAngle() const { return angle_; }
   void setAngle(double a) { angle_ = a; }
 
-  const OptPoint &getOffset() const { return offset_; }
+  const COptPoint2D &getOffset() const { return offset_; }
   void setOffset(const CPoint2D &o) { offset_ = o; }
 
   bool isEnhanced() const { return enhanced_; }
@@ -94,7 +91,7 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   CGnuPlotPosition  pos_;
   CFontPtr          font_;
   double            angle_      { -1 };
-  OptPoint          offset_;
+  COptPoint2D       offset_;
   bool              enhanced_   { true };
   bool              showPoint_  { false };
   CGnuPlotColorSpec textColor_;

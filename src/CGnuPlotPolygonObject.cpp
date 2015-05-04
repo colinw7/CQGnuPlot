@@ -37,14 +37,24 @@ void
 CGnuPlotPolygonObject::
 draw(CGnuPlotRenderer *renderer) const
 {
-  if (fillColor_.isValid())
-    renderer->fillPolygon(points_, fillColor_.getValue());
+  if (fillColor_.isValid()) {
+    if (isClipped())
+      renderer->fillClippedPolygon(points_, fillColor_.getValue());
+    else
+      renderer->fillPolygon(points_, fillColor_.getValue());
+  }
 
-  if (lineColor_.isValid())
-    renderer->drawPolygon(points_, lineWidth_, lineColor_.getValue());
+  if (lineColor_.isValid()) {
+    if (isClipped())
+      renderer->drawClippedPolygon(points_, lineWidth_, lineColor_.getValue());
+    else
+      renderer->drawPolygon(points_, lineWidth_, lineColor_.getValue());
+  }
 
-  double tw = renderer->pixelWidthToWindowWidth  (renderer->getFont()->getStringWidth(text_));
-  double th = renderer->pixelHeightToWindowHeight(renderer->getFont()->getCharAscent());
+  if (text_ != "") {
+    double tw = renderer->pixelWidthToWindowWidth  (renderer->getFont()->getStringWidth(text_));
+    double th = renderer->pixelHeightToWindowHeight(renderer->getFont()->getCharAscent());
 
-  renderer->drawText(c_ - CPoint2D(tw/2, th/2), text_, CRGBA(0,0,0));
+    renderer->drawText(c_ - CPoint2D(tw/2, th/2), text_, CRGBA(0,0,0));
+  }
 }

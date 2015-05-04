@@ -46,6 +46,7 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
 
   CGnuPlotBarObject     *createBarObject    (CGnuPlotPlot *plot) override;
   CGnuPlotBubbleObject  *createBubbleObject (CGnuPlotPlot *plot) override;
+  CGnuPlotEllipseObject *createEllipseObject(CGnuPlotPlot *plot) override;
   CGnuPlotPieObject     *createPieObject    (CGnuPlotPlot *plot) override;
   CGnuPlotPolygonObject *createPolygonObject(CGnuPlotPlot *plot) override;
   CGnuPlotRectObject    *createRectObject   (CGnuPlotPlot *plot) override;

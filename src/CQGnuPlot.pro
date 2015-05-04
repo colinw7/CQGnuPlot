@@ -26,6 +26,7 @@ CQGnuPlotCircle.cpp \
 CQGnuPlotColorBox.cpp \
 CQGnuPlotDevice.cpp \
 CQGnuPlotEllipse.cpp \
+CQGnuPlotEllipseObject.cpp \
 CQGnuPlotGroup.cpp \
 CQGnuPlotKey.cpp \
 CQGnuPlotLabel.cpp \
@@ -57,6 +58,7 @@ CGnuPlotContour.cpp \
 CGnuPlotCoordValue.cpp \
 CGnuPlotDevice.cpp \
 CGnuPlotEllipse.cpp \
+CGnuPlotEllipseObject.cpp \
 CGnuPlotFile.cpp \
 CGnuPlotFillStyle.cpp \
 CGnuPlotGroup.cpp \
@@ -179,6 +181,7 @@ CQGnuPlotCircle.h \
 CQGnuPlotColorBox.h \
 CQGnuPlotDevice.h \
 CQGnuPlotEllipse.h \
+CQGnuPlotEllipseObject.h \
 CQGnuPlotGroup.h \
 CQGnuPlotKey.h \
 CQGnuPlotLabel.h \
@@ -214,6 +217,7 @@ CGnuPlotContour.h \
 CGnuPlotCoordValue.h \
 CGnuPlotDevice.h \
 CGnuPlotEllipse.h \
+CGnuPlotEllipseObject.h \
 CGnuPlotFile.h \
 CGnuPlotFillStyle.h \
 CGnuPlotGroup.h \

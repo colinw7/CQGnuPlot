@@ -6,6 +6,7 @@
 #include <CGnuPlotStyle.h>
 #include <CGnuPlotBarObject.h>
 #include <CGnuPlotBubbleObject.h>
+#include <CGnuPlotEllipseObject.h>
 #include <CGnuPlotPieObject.h>
 #include <CGnuPlotRectObject.h>
 #include <CGnuPlotPolygonObject.h>
@@ -23,7 +24,8 @@ int CGnuPlotPlot::nextId_ = 1;
 CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
  group_(group), style_(style), id_(nextId_++), contour_(this),
- barCache_(this), bubbleCache_(this), pieCache_(this), polygonCache_(this), rectCache_(this)
+ barCache_(this), bubbleCache_(this), ellipseCache_(this), pieCache_(this),
+ polygonCache_(this), rectCache_(this)
 {
   setSmooth(app()->getSmooth());
 }
@@ -307,6 +309,13 @@ CGnuPlotPlot::
 updateBubbleCacheSize(int n)
 {
   bubbleCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
+updateEllipseCacheSize(int n)
+{
+  ellipseCache_.updateSize(n);
 }
 
 void
@@ -769,6 +778,13 @@ CGnuPlotPlot::
 createBubbleObject() const
 {
   return app()->device()->createBubbleObject(const_cast<CGnuPlotPlot *>(this));
+}
+
+CGnuPlotEllipseObject *
+CGnuPlotPlot::
+createEllipseObject() const
+{
+  return app()->device()->createEllipseObject(const_cast<CGnuPlotPlot *>(this));
 }
 
 CGnuPlotPieObject *

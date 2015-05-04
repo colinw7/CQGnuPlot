@@ -67,6 +67,8 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow,
 
   void selectObjects(const std::vector<CQGnuPlotObject *> &objs);
 
+  void deselectAllObjects();
+
   void redraw();
 
  public slots:

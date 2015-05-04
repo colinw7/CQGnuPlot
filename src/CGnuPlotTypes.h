@@ -3,8 +3,15 @@
 
 #include <string>
 #include <vector>
+#include <COptVal.h>
+#include <CRGBA.h>
+#include <CPoint2D.h>
+#include <CBBox2D.h>
 
 typedef std::vector<std::string> StringArray;
+typedef COptValT<CRGBA>          COptRGBA;
+typedef COptValT<CPoint2D>       COptPoint2D;
+typedef COptValT<CBBox2D>        COptBBox2D;
 
 namespace CGnuPlotTypes {
   enum class CommandName {

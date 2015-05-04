@@ -5,9 +5,6 @@
 
 class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
  public:
-  typedef COptValT<CRGBA> OptColor;
-
- public:
   static const char *getName() { return "object"; }
 
   CGnuPlotGroupAnnotation(CGnuPlotGroup *group) :
@@ -30,7 +27,7 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
   int getInd() const { return ind_; }
   void setInd(int t) { ind_ = t; }
 
-  const OptColor &getStrokeColor() const { return strokeColor_; }
+  const COptRGBA &getStrokeColor() const { return strokeColor_; }
   void setStrokeColor(const CRGBA &c) { strokeColor_ = c; }
 
   const CGnuPlotColorSpec &getFillColor() const { return fillColor_; }
@@ -45,7 +42,7 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
 
  protected:
   int               ind_   { -1 };
-  OptColor          strokeColor_;
+  COptRGBA          strokeColor_;
   CGnuPlotColorSpec fillColor_;
   DrawLayer         layer_ { CGnuPlotTypes::DrawLayer::BACK };
 };

@@ -176,8 +176,8 @@ class CGnuPlotGroup {
 
   //---
 
-  const COptValT<CBBox2D> &clearRect() const { return clearRect_; }
-  void setClearRect(const COptValT<CBBox2D> &r) { clearRect_ = r; }
+  const COptBBox2D &clearRect() const { return clearRect_; }
+  void setClearRect(const COptBBox2D &r) { clearRect_ = r; }
 
   //---
 
@@ -356,7 +356,7 @@ class CGnuPlotGroup {
   Margin                margin_ {10,10,10,10}; // margin around plots
   CBBox2D               bbox_ { 0, 0, 1, 1 };  // bounding box
   CGnuPlotClip          clip_;                 // clip
-  COptValT<CBBox2D>     clearRect_;            // optional clear rectangle
+  COptBBox2D            clearRect_;            // optional clear rectangle
   PlotSize              plotSize_;
   CGnuPlotHistogramData histogramData_;        // histogram style
   CGnuPlotKeyP          key_;                  // key

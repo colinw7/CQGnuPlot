@@ -192,14 +192,14 @@ class CGnuPlot {
   //---
 
   struct FilledCurve {
-    bool               closed { true };
-    bool               above  { false  };
-    bool               below  { false  };
-    int                xaxis  { 0 };
-    int                yaxis  { 0 };
-    COptReal           xval;
-    COptReal           yval;
-    COptValT<CPoint2D> xyval;
+    bool        closed { true };
+    bool        above  { false  };
+    bool        below  { false  };
+    int         xaxis  { 0 };
+    int         yaxis  { 0 };
+    COptReal    xval;
+    COptReal    yval;
+    COptPoint2D xyval;
   };
 
   //---
@@ -783,7 +783,7 @@ class CGnuPlot {
 
   //---
 
-  const COptValT<CBBox2D> &clearRect() const { return clearRect_; }
+  const COptBBox2D &clearRect() const { return clearRect_; }
 
   //---
 
@@ -1371,7 +1371,7 @@ class CGnuPlot {
   CGnuPlotMultiplot      multiplot_;
   CGnuPlotWindowP        multiWindow_;
   CGnuPlotTimeStampData  timeStamp_;
-  COptValT<CBBox2D>      clearRect_;
+  COptBBox2D             clearRect_;
   Hidden3DData           hidden3D_;
   Surface3DData          surface3D_;
   Contour3DData          contour3D_;

@@ -51,6 +51,9 @@ class CGnuPlotPlotObject {
 
   virtual ~CGnuPlotPlotObject() { }
 
+  bool isModified() const { return modified_; }
+  void setModified(bool b) { modified_ = b; }
+
   virtual bool inside(const CPoint2D &p) const = 0;
 
   virtual void draw(CGnuPlotRenderer *renderer) const = 0;
@@ -60,7 +63,8 @@ class CGnuPlotPlotObject {
   virtual CBBox2D tipRect() const = 0;
 
  protected:
-  CGnuPlotPlot *plot_ { 0 };
+  CGnuPlotPlot *plot_     { 0 };
+  bool          modified_ { false };
 };
 
 //---

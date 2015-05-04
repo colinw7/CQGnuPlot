@@ -3,6 +3,7 @@
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotBarObject.h>
 #include <CQGnuPlotBubbleObject.h>
+#include <CQGnuPlotEllipseObject.h>
 #include <CQGnuPlotPieObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
@@ -157,6 +158,15 @@ mousePress(const CPoint2D &p, std::vector<CQGnuPlotObject *> &objects)
     CQGnuPlotBubbleObject *qbubble = static_cast<CQGnuPlotBubbleObject *>(bubble);
 
     objects.push_back(qbubble);
+  }
+
+  for (auto &ellipse : ellipseObjects()) {
+    if (! ellipse->inside(p))
+      continue;
+
+    CQGnuPlotEllipseObject *qellipse = static_cast<CQGnuPlotEllipseObject *>(ellipse);
+
+    objects.push_back(qellipse);
   }
 
   for (auto &pie : pieObjects()) {
