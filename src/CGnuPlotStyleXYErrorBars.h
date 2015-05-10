@@ -7,6 +7,8 @@ class CGnuPlotStyleXYErrorBars : public CGnuPlotStyleBase {
  public:
   CGnuPlotStyleXYErrorBars();
 
+  int numUsing() const override { return 2; }
+
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
   bool hasKeyLine() const { return true; }

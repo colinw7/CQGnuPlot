@@ -45,8 +45,12 @@ void
 CGnuPlotStyleImageBase::
 drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  double pw = renderer->pixelWidthToWindowWidth  (1);
-  double ph = renderer->pixelHeightToWindowHeight(1);
+  double pw = 1, ph = 1;
+
+  if (! renderer->isPseudo()) {
+    pw = renderer->pixelWidthToWindowWidth  (1);
+    ph = renderer->pixelHeightToWindowHeight(1);
+  }
 
   int npx = (pw < 1 && pw > 0 ? int(1.0/pw + 0.5) : 1);
   int npy = (ph < 1 && ph > 0 ? int(1.0/ph + 0.5) : 1);
@@ -68,7 +72,8 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     dy = imageStyle.c.getValue().y - ih/2.0;
   }
 
-  CPoint2D po = imageStyle.o.getValue(CPoint2D(iw/2.0, ih/2.0));
+  //CPoint2D po = imageStyle.o.getValue(CPoint2D(iw/2.0, ih/2.0));
+  CPoint2D po = imageStyle.o.getValue(CPoint2D(0.5,0.5));
 
   double xo = po.x;
   double yo = po.y;
@@ -102,8 +107,8 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       CRGBA c = imageData[i];
 
-      if (! imageStyle.usingCols.empty()) {
-        if (imageStyle.usingCols.size() > 1) {
+      if (imageStyle.usingCols.numCols() > 0) {
+        if (imageStyle.usingCols.numCols() > 1) {
           double r = decodeImageUsingColor(plot, 0, c);
           double g = decodeImageUsingColor(plot, 1, c);
           double b = decodeImageUsingColor(plot, 2, c);
@@ -122,7 +127,7 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (rotate) {
         CPoint2D p1 = CMathGeom2D::RotatePoint(p, ra, o);
 
-        if (! renderer->clip().inside(p1))
+        if (! renderer->isPseudo() && ! renderer->clip().inside(p1))
           continue;
 
         for (int py = 0; py < npy; ++py) {
@@ -136,7 +141,7 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         }
       }
       else {
-        if (! renderer->clip().inside(p))
+        if (! renderer->isPseudo() && ! renderer->clip().inside(p))
           continue;
 
         CBBox2D bbox(p.x - idx/2.0, p.y - idy/2.0, p.x + idx/2.0, p.y + idy/2.0);
@@ -151,8 +156,12 @@ void
 CGnuPlotStyleImageBase::
 drawImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  double pw = renderer->pixelWidthToWindowWidth  (1);
-  double ph = renderer->pixelHeightToWindowHeight(1);
+  double pw = 1, ph = 1;
+
+  if (! renderer->isPseudo()) {
+    pw = renderer->pixelWidthToWindowWidth  (1);
+    ph = renderer->pixelHeightToWindowHeight(1);
+  }
 
   int npx = (pw < 1 && pw > 0 ? int(1.0/pw + 0.5) : 1);
   int npy = (ph < 1 && ph > 0 ? int(1.0/ph + 0.5) : 1);
@@ -207,7 +216,7 @@ drawImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (rotate) {
         CPoint2D p1 = CMathGeom2D::RotatePoint(p, ra, o);
 
-        if (! renderer->clip().inside(p1))
+        if (! renderer->isPseudo() && ! renderer->clip().inside(p1))
           continue;
 
         for (int py = 0; py < npy; ++py) {
@@ -221,7 +230,7 @@ drawImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         }
       }
       else {
-        if (! renderer->clip().inside(p))
+        if (! renderer->isPseudo() && ! renderer->clip().inside(p))
           continue;
 
         CBBox2D bbox(p.x - 0.5, p.y - 0.5, p.x + 0.5, p.y + 0.5);
@@ -242,15 +251,15 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &c) const
 {
   const CGnuPlotImageStyle &imageStyle = plot->imageStyle();
 
-  int nc = imageStyle.usingCols.size();
+  int nc = imageStyle.usingCols.numCols();
 
   if (col < nc) {
-    if (imageStyle.usingCols[col].isInt)
-      col = imageStyle.usingCols[col].ival;
+    if (imageStyle.usingCols.getCol(col).isInt)
+      col = imageStyle.usingCols.getCol(col).ival;
     else {
       bool lookup = true;
 
-      std::string expr = imageStyle.usingCols[col].str;
+      std::string expr = imageStyle.usingCols.getCol(col).str;
 
       // replace $N variables
       // TODO: easier to define $1 variables

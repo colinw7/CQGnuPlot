@@ -7,6 +7,8 @@ class CGnuPlotStyleDelaunay : public CGnuPlotStyleBase {
  public:
   CGnuPlotStyleDelaunay();
 
+  int numUsing() const override { return 2; }
+
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
   void drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;

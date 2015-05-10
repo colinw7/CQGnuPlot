@@ -109,7 +109,7 @@ mousePress(const QPoint &qp)
   Objects objects;
 
   for (auto &plot : plots()) {
-    plot->initRenderer();
+    plot->initRenderer(renderer);
 
     CPoint2D p;
 
@@ -150,7 +150,7 @@ mouseMove(const QPoint &qp)
   renderer->setRegion(region());
 
   for (auto &plot : plots()) {
-    plot->initRenderer();
+    plot->initRenderer(renderer);
 
     CPoint2D p;
 
@@ -173,7 +173,7 @@ mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
   renderer->setRegion(region());
 
   for (auto &plot : plots()) {
-    plot->initRenderer();
+    plot->initRenderer(renderer);
 
     CPoint2D p;
 

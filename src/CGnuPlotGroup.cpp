@@ -101,6 +101,14 @@ init()
 
 void
 CGnuPlotGroup::
+cameraChanged()
+{
+  for (auto plot : plots_)
+    plot->resetSurface();
+}
+
+void
+CGnuPlotGroup::
 setTitleData(const CGnuPlotTitle &t)
 {
   *title_ = t;
@@ -241,6 +249,7 @@ fit()
     xmin1 = 1; xmax1 = nc;
     ymin1 = 0; ymax1 = 1;
   }
+#if 0
   else if (hasImageStyle()) {
     for (auto plot : plots_) {
       const CGnuPlotImageStyle imageStyle = plot->imageStyle();
@@ -270,6 +279,7 @@ fit()
       ymin1.updateMin(ymin); ymax1.updateMax(ymax);
     }
   }
+#endif
   else {
     COptReal xamin1 = xaxis(1).min(); xmin1 = xamin1;
     COptReal xamax1 = xaxis(1).max(); xmin1 = xamax1;
@@ -652,7 +662,7 @@ draw()
   }
   else {
     for (auto plot : plots_) {
-      plot->initRenderer();
+      plot->initRenderer(renderer);
 
       plot->draw();
     }
@@ -1276,7 +1286,7 @@ drawXAxes(CGnuPlotRenderer *renderer, int xind, bool drawOther)
     plotXAxis->setDrawTickMark(xaxis.showTics());
 
     plotXAxis->setTickInside(xind == 1);
-    plotXAxis->setDrawTickLabel(true);
+    plotXAxis->setDrawTickLabel(xaxis.showTics());
     plotXAxis->setLabelInside(xind == 2);
     plotXAxis->setDrawLabel(true);
 
@@ -1289,7 +1299,7 @@ drawXAxes(CGnuPlotRenderer *renderer, int xind, bool drawOther)
     plotXAxis->setDrawTickLabel1(false);
     plotXAxis->setLabelInside1(false);
     plotXAxis->setDrawLabel1(false);
-    plotXAxis->setDrawTickMark1(xaxis.isMirror());
+    plotXAxis->setDrawTickMark1(xaxis.showTics() && xaxis.isMirror());
 
     //---
 
@@ -1367,7 +1377,7 @@ drawYAxes(CGnuPlotRenderer *renderer, int yind, bool drawOther)
     plotYAxis->setDrawTickMark(yaxis.showTics());
 
     plotYAxis->setTickInside(yind == 1);
-    plotYAxis->setDrawTickLabel(true);
+    plotYAxis->setDrawTickLabel(yaxis.showTics());
     plotYAxis->setLabelInside(yind == 2);
     plotYAxis->setDrawLabel(true);
 
@@ -1380,7 +1390,7 @@ drawYAxes(CGnuPlotRenderer *renderer, int yind, bool drawOther)
     plotYAxis->setDrawTickLabel1(false);
     plotYAxis->setLabelInside1(false);
     plotYAxis->setDrawLabel1(false);
-    plotYAxis->setDrawTickMark1(yaxis.isMirror());
+    plotYAxis->setDrawTickMark1(yaxis.showTics() && yaxis.isMirror());
 
     //---
 
@@ -1452,7 +1462,7 @@ drawZAxes(CGnuPlotRenderer *renderer, int zind, bool drawOther)
     plotZAxis->setDrawTickMark(zaxis.showTics());
 
     plotZAxis->setTickInside(zind == 1);
-    plotZAxis->setDrawTickLabel(true);
+    plotZAxis->setDrawTickLabel(zaxis.showTics());
     plotZAxis->setLabelInside(zind == 2);
     plotZAxis->setDrawLabel(true);
 
@@ -1465,7 +1475,7 @@ drawZAxes(CGnuPlotRenderer *renderer, int zind, bool drawOther)
     plotZAxis->setDrawTickLabel1(false);
     plotZAxis->setLabelInside1(false);
     plotZAxis->setDrawLabel1(false);
-    plotZAxis->setDrawTickMark1(zaxis.isMirror());
+    plotZAxis->setDrawTickMark1(zaxis.showTics() && zaxis.isMirror());
 
     //---
 

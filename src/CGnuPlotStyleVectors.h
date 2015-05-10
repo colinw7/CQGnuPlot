@@ -7,6 +7,8 @@ class CGnuPlotStyleVectors : public CGnuPlotStyleBase {
  public:
   CGnuPlotStyleVectors();
 
+  int numUsing() const override { return 4; }
+
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
   bool hasKeyLine() const { return true; }

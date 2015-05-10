@@ -106,12 +106,21 @@ int
 CGnuPlotPlot::
 addPoint2D(double x, double y)
 {
+  std::vector<double> values = {{x, y}};
+
+  return addPoint2D(values);
+}
+
+int
+CGnuPlotPlot::
+addPoint2D(const std::vector<double> &rvals)
+{
   assert(! is3D());
 
   std::vector<CExprValueP> values;
 
-  values.push_back(CExprInst->createRealValue(x));
-  values.push_back(CExprInst->createRealValue(y));
+  for (auto r : rvals)
+    values.push_back(CExprInst->createRealValue(r));
 
   return addPoint2D(values, false);
 }
@@ -341,10 +350,8 @@ updateRectCacheSize(int n)
 
 void
 CGnuPlotPlot::
-initRenderer()
+initRenderer(CGnuPlotRenderer *renderer)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   renderer->setRange(group_->getDisplayRange(xind(), yind()));
   renderer->setReverse(group_->xaxis(xind()).isReverse(), group_->yaxis(yind()).isReverse());
 }
@@ -998,6 +1005,8 @@ renderBBox(CBBox2D &bbox) const
   CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
 
   if (style) {
+    brenderer.setReverse(group_->xaxis(xind()).isReverse(), group_->yaxis(yind()).isReverse());
+
     style->draw2D(th, &brenderer);
 
     bbox = brenderer.bbox();

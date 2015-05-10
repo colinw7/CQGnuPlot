@@ -1,4 +1,5 @@
 #include <CGnuPlotCamera.h>
+#include <CGnuPlotGroup.h>
 
 CGnuPlotCamera::
 CGnuPlotCamera(CGnuPlotGroup *group) :
@@ -22,6 +23,9 @@ init()
   rotateDX(M_PI*rotateX_/180.0);
   rotateDY(M_PI*rotateY_/180.0);
   rotateDZ(M_PI*rotateZ_/180.0);
+
+  if (group_)
+    group_->cameraChanged();
 }
 
 void

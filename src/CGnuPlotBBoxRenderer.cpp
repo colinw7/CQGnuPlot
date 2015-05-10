@@ -7,6 +7,8 @@ CGnuPlotBBoxRenderer::
 CGnuPlotBBoxRenderer(CGnuPlotRenderer *renderer) :
  renderer_(renderer), bbox_()
 {
+  assert(! renderer_->isPseudo());
+
   width_   = 800;
   height_  = 800;
   mapping_ = true;
@@ -37,15 +39,9 @@ drawPoint(const CPoint2D &point, const CRGBA &)
 
 void
 CGnuPlotBBoxRenderer::
-drawSymbol(const CPoint2D &point, SymbolType, double size, const CRGBA &)
+drawSymbol(const CPoint2D &point, SymbolType, double, const CRGBA &)
 {
-  CPoint2D p;
-
-  double pw = renderer_->pixelWidthToWindowWidth  (size);
-  double ph = renderer_->pixelHeightToWindowHeight(size);
-
-  bbox_.add(point - CPoint2D(pw, ph));
-  bbox_.add(point + CPoint2D(pw, ph));
+  bbox_.add(point);
 }
 
 void
@@ -152,14 +148,9 @@ fillEllipse(const CPoint2D &center, double rx, double ry, double /*a*/, const CR
 
 void
 CGnuPlotBBoxRenderer::
-drawText(const CPoint2D &point, const std::string &text, const CRGBA &)
+drawText(const CPoint2D &point, const std::string &, const CRGBA &)
 {
-  // TODO: rotate by font angle
-  double w = renderer_->pixelWidthToWindowWidth  (getFont()->getStringWidth(text));
-  double h = renderer_->pixelHeightToWindowHeight(getFont()->getCharHeight());
-
   bbox_.add(point);
-  bbox_.add(point + CPoint2D(w, h));
 }
 
 void

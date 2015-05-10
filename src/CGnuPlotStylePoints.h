@@ -7,6 +7,8 @@ class CGnuPlotStylePoints : public CGnuPlotStyleBase {
  public:
   CGnuPlotStylePoints();
 
+  int numUsing() const override { return 2; }
+
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
   void draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 

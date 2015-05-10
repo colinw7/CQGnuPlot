@@ -118,6 +118,8 @@ class CAdjacency {
 
   void draw(CAdjacencyRenderer *renderer);
 
+  void nodeAtPoint(double x, double y);
+
  private:
   typedef std::map<int,CAdjacencyNode *> NodeMap;
   typedef std::vector<CAdjacencyNode *>  NodeArray;

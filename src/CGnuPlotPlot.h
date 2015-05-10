@@ -187,6 +187,10 @@ class CGnuPlotPlot {
 
   //---
 
+  void resetSurface() { surfaceSet_ = false; }
+
+  //---
+
   const ImageData &imageData() const { return imageData_; }
   void setImageData(const ImageData &imageData) { imageData_ = imageData; }
 
@@ -337,6 +341,7 @@ class CGnuPlotPlot {
   //---
 
   int addPoint2D(double x, double y);
+  int addPoint2D(const std::vector<double> &rvals);
   int addPoint2D(double x, CExprValueP y);
   int addPoint2D(const Values &values, bool discontinuity=false, const Params &params=Params());
 
@@ -421,7 +426,7 @@ class CGnuPlotPlot {
 
   //---
 
-  void initRenderer();
+  void initRenderer(CGnuPlotRenderer *renderer);
 
   virtual void draw();
 

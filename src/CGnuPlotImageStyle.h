@@ -14,7 +14,6 @@ struct CGnuPlotImageStyle {
   COptReal          dx, dy;
   COptReal          a;
   bool              flipy { false };
-  std::string       format { "" };
   CGnuPlotUsingCols usingCols;
   ImageType         fileType { CGnuPlotTypes::ImageType::NONE };
 };

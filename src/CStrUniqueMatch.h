@@ -56,6 +56,8 @@ class CStrUniqueMatchValues {
   }
 
   const std::string &lookup(const T &value, const std::string &no_str="<no_value>") {
+    static std::string s_no_str;
+
     auto p = valueStrs_.find(value);
 
     if (p != valueStrs_.end()) {
@@ -63,8 +65,11 @@ class CStrUniqueMatchValues {
 
       return longestString(strs);
     }
-    else
-      return no_str;
+    else {
+      s_no_str = no_str;
+
+      return s_no_str;
+    }
   }
 
   void values(std::vector<std::string> &values) {

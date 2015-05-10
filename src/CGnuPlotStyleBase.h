@@ -19,6 +19,8 @@ class CGnuPlotStyleBase {
 
   virtual bool isSingleType() const { return false; }
 
+  virtual int numUsing() const = 0;
+
   virtual void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) = 0;
 
   virtual void draw3D(CGnuPlotPlot *, CGnuPlotRenderer *) { }

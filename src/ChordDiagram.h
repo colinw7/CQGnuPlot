@@ -174,7 +174,6 @@ class ChordDiagram {
   typedef std::vector<std::string> Names;
 
   Names     names_;
-  int       ind_ = 0;
   ValueSets valueSets_;
   double    valueToDegrees_ = 1.0;
   int       currentInd_ = -1;

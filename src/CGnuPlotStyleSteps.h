@@ -7,6 +7,8 @@ class CGnuPlotStyleStepsBase : public CGnuPlotStyleBase {
  public:
   CGnuPlotStyleStepsBase(CGnuPlotTypes::PlotStyle style);
 
+  int numUsing() const override { return 2; }
+
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
   CBBox2D fit(CGnuPlotPlot *plot) override;

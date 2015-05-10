@@ -64,7 +64,8 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotCamera.h>
 #include <CGnuPlotPalette.h>
 #include <CGnuPlotColorBox.h>
-#include <CGnuPlotUsingCol.h>
+#include <CGnuPlotTicLabel.h>
+#include <CGnuPlotUsingCols.h>
 #include <CGnuPlotImageStyle.h>
 #include <CGnuPlotHistogramData.h>
 #include <CGnuPlotMultiplot.h>
@@ -79,6 +80,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotTimeStampData.h>
 #include <CGnuPlotMouseData.h>
 #include <CGnuPlotClip.h>
+#include <CGnuPlotBinaryFormat.h>
 
 //------
 
@@ -482,22 +484,6 @@ class CGnuPlot {
 
   //---
 
-  struct TicLabel {
-    bool        valid;
-    char        id;
-    int         ind;
-    std::string str;
-
-    TicLabel() {
-      valid = false;
-      id    = 'x';
-      ind   = 1;
-      str   = "";
-    }
-  };
-
-  //---
-
   struct Hidden3DData {
     bool      enabled         { false };
     DrawLayer layer           { DrawLayer::FRONT };
@@ -881,6 +867,9 @@ class CGnuPlot {
   bool isBinary() const { return binary_; }
   void setBinary(bool b) { binary_ = b; }
 
+  const CGnuPlotBinaryFormat &binaryFormat() const { return binaryFormat_; }
+  void setBinaryFormat(const CGnuPlotBinaryFormat &fmt) { binaryFormat_ = fmt; }
+
   bool isMatrix() const { return matrix_; }
   void setMatrix(bool m) { matrix_ = m; }
 
@@ -1004,17 +993,24 @@ class CGnuPlot {
 
   void stateChanged(CGnuPlotWindow *window, CGnuPlotTypes::ChangeState state);
 
-  std::string getField(int i) const {
-    if (i < 1 || i > int(fields_.size())) return "";
-    return fields_[i - 1];
+  int numFieldValues() const { return fieldValues_.size(); }
+
+  CExprValueP fieldValue(int i) const {
+    if (i < 1 || i > int(fieldValues_.size())) return CExprValueP();
+    return fieldValues_[i - 1];
   }
 
-  void setPointNum(int n) { pointNum_ = n; }
+  int setNum() const { return setNum_; }
+  void setSetNum(int i) { setNum_ = i; }
+
   int pointNum() const { return pointNum_; }
+  void setPointNum(int n) { pointNum_ = n; }
 
   int getColumnIndex(const std::string &str) const;
 
-  CExprValueP getFieldValue(int i, int ival, int setNum, int pointNum, bool &skip);
+  CExprValueP fieldToValue(int nf, const std::string &field);
+
+  bool timeToValue(const std::string &str, double &t);
 
   void resetLineStyle();
 
@@ -1025,6 +1021,7 @@ class CGnuPlot {
   CGnuPlotArrowStyle arrowStyle(int id) const;
 
   void errorMsg(const std::string &msg) const;
+  void debugMsg(const std::string &msg) const;
 
   CPoint3D sphericalMap(const CPoint2D &p) const;
 
@@ -1111,7 +1108,7 @@ class CGnuPlot {
 
   void readBlockLines(Statements &lines, std::string &eline, int depth);
 
-  void parseUsing(CParseLine &line, CGnuPlotUsingCols &usingCols);
+  std::string getUsingStr(CParseLine &line);
 
   void parseIndex(CParseLine &line, int &indexStart, int &indexEnd, int &indexStep);
   void parseEvery(CParseLine &line, int &everyPointStart, int &everyPointEnd, int &everyPointStep,
@@ -1135,6 +1132,13 @@ class CGnuPlot {
 
   CGnuPlotPlot *addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
                            const CGnuPlotUsingCols &usingCols);
+  CGnuPlotPlot *addImage3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
+                           const CGnuPlotUsingCols &usingCols);
+
+  CGnuPlotPlot *addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
+                            const CGnuPlotUsingCols &usingCols);
+  CGnuPlotPlot *addBinary3D(CGnuPlotGroup *group, const std::string &filename,
+                            const CGnuPlotUsingCols &usingCols);
 
   bool parseAxisRange   (CParseLine &line, CGnuPlotAxisData &axis, bool hasArgs=true);
   bool parseAxisLabel   (CParseLine &line, CGnuPlotAxisData &axis);
@@ -1145,10 +1149,9 @@ class CGnuPlot {
 
   bool decodeRange(const StringArray &xfields, CGnuPlotAxisData &axis);
 
-  CExprValueP decodeUsingCol(int i, const CGnuPlotUsingCol &col, int setNum, int pointNum,
-                             bool &skip, bool &ignore, TicLabel &ticLabel, Params &params);
+  void parseArrayValues(CParseLine &line, std::vector<CSize2D> &sizes);
 
-  bool evaluateExpression(const std::string &expr, CExprValueP &value, bool quiet=false) const;
+  void processParams(const Params &params);
 
   CExprCTokenStack compileExpression(const std::string &expr) const;
 
@@ -1278,7 +1281,6 @@ class CGnuPlot {
   typedef std::map<std::string,CGnuPlotDevice*>  Devices;
   typedef std::vector<CGnuPlotDevice*>           DeviceStack;
   typedef std::vector<CGnuPlotWindowP>           Windows;
-  typedef StringArray                            Fields;
   typedef StringArray                            FileLines;
   typedef std::vector<FileData>                  FileDataArray;
   typedef CAutoPtr<CGnuPlotReadLine>             ReadLineP;
@@ -1304,7 +1306,6 @@ class CGnuPlot {
   std::string            lastSPlotCmd_;
   std::string            lastFilename_;
   std::string            tableFile_;
-  int                    pointNum_ { 0 };
   Smooth                 smooth_ { Smooth::NONE };
   CGnuPlotHistogramData  histogramData_;
   CGnuPlotLineStyleP     lineStyle_;
@@ -1337,11 +1338,11 @@ class CGnuPlot {
 
   LineDashes             lineDashes_;
   bool                   binary_ { false };
+  CGnuPlotBinaryFormat   binaryFormat_;
   bool                   matrix_ { false };
   CGnuPlotClip           clip_;
   bool                   parametric_ { false };
   bool                   polar_ { false };
-  bool                   enhanced_ { true };
   bool                   macros_ { false };
   double                 zero_ { 1E-8 };
   HistoryData            historyData_;
@@ -1380,7 +1381,11 @@ class CGnuPlot {
   double                 pointIntervalBox_ { 1 };
   double                 whiskerBars_ { 0 };
   ReadLineP              readLine_;
-  mutable Fields         fields_;
+
+  mutable Values           fieldValues_;
+  mutable int              setNum_;
+  mutable int              pointNum_;
+  mutable CGnuPlotTicLabel ticLabel_;
 };
 
 #endif

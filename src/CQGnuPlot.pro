@@ -19,6 +19,7 @@ CQGnuPlotAnnotation.cpp \
 CQGnuPlotArrow.cpp \
 CQGnuPlotAxis.cpp \
 CQGnuPlotBarObject.cpp \
+CGnuPlotBinaryFormat.cpp \
 CQGnuPlotBubbleObject.cpp \
 CQGnuPlotCamera.cpp \
 CQGnuPlotCanvas.cpp \
@@ -76,6 +77,7 @@ CGnuPlotPosition.cpp \
 CGnuPlotRectangle.cpp \
 CGnuPlotRectObject.cpp \
 CGnuPlotRenderer.cpp \
+CGnuPlotUsingCols.cpp \
 \
 CGnuPlotStyleAdjacency.cpp \
 CGnuPlotStyleBoxErrorBars.cpp \
@@ -174,6 +176,7 @@ CQGnuPlotAnnotation.h \
 CQGnuPlotArrow.h \
 CQGnuPlotAxis.h \
 CQGnuPlotBarObject.h \
+CGnuPlotBinaryFormat.h \
 CQGnuPlotBubbleObject.h \
 CQGnuPlotCamera.h \
 CQGnuPlotCanvas.h \
@@ -242,6 +245,7 @@ CGnuPlotRenderer.h \
 CGnuPlotSVGDevice.h \
 CGnuPlotSVGRenderer.h \
 CGnuPlotSize.h \
+CGnuPlotUsingCols.h \
 \
 CGnuPlotStyleAdjacency.h \
 CGnuPlotStyleBase.h \

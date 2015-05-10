@@ -7,6 +7,8 @@ class CGnuPlotStyleParallelAxes : public CGnuPlotStyleBase {
  public:
   CGnuPlotStyleParallelAxes();
 
+  int numUsing() const override { return 2; }
+
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
   void drawAxes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;

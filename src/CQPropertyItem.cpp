@@ -90,7 +90,7 @@ click()
   if (propInfo.isEnumType())
     return false;
 
-  if (typeName == "bool") {
+  if (typeName == "bool" && propInfo.isWritable()) {
     if (! CQUtil::setProperty(object_, name_, ! var.toBool()))
       std::cerr << "Failed to set property " << name_.toStdString() << std::endl;
 

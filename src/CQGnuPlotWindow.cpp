@@ -490,7 +490,6 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   QString plotName = QString("Group%1/Plot%2").arg(qgroup->id()).arg(plot->id());
 
-  tree_->addProperty(plotName, qplot, "is3D");
   tree_->addProperty(plotName, qplot, "xind");
   tree_->addProperty(plotName, qplot, "yind");
 

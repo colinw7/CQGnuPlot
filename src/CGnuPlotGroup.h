@@ -39,6 +39,8 @@ class CGnuPlotGroup {
 
   CGnuPlotTitle *title() const { return title_; }
 
+  void cameraChanged();
+
   void setTitleData(const CGnuPlotTitle &t);
 
   const Plots &plots() const { return plots_; }

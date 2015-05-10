@@ -206,3 +206,30 @@ draw(CAdjacencyRenderer *renderer)
     py += cs_;
   }
 }
+
+void
+CAdjacency::
+nodeAtPoint(double x, double y)
+{
+  int nn = sortedNodes_.size();
+
+  int ix = (x - ts_)/cs_;
+  int iy = (y - ts_)/cs_;
+
+  if (ix >= 0 && ix < nn && iy >= 0 && iy < nn) {
+    ix_ = ix;
+    iy_ = iy;
+
+    CAdjacencyNode *node1 = sortedNodes_[ix_];
+    CAdjacencyNode *node2 = sortedNodes_[iy_];
+
+    int value = node1->nodeValue(node2);
+
+    std::cerr << node1->name() << " ";
+    std::cerr << node2->name() << ":" << value << std::endl;
+  }
+  else {
+    ix_ = -1;
+    iy_ = -1;
+  }
+}

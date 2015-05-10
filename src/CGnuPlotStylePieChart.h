@@ -7,6 +7,8 @@ class CGnuPlotStylePieChart : public CGnuPlotStyleBase {
  public:
   CGnuPlotStylePieChart();
 
+  int numUsing() const override { return 2; }
+
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
   void drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;

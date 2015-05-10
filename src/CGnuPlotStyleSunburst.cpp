@@ -74,6 +74,7 @@ class CGnuPlotStyleSunburstPainter : public CSunburstPainter {
  public:
   CGnuPlotStyleSunburstPainter(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) :
    plot_(plot), renderer_(renderer), ind_(0) {
+    assert(plot_);
   }
 
   void drawNode(CSunburst::Node *node) {

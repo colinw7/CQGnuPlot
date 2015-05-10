@@ -76,6 +76,24 @@ class CUnixFile {
     return true;
   }
 
+  template<typename T>
+  bool readData(T &data) {
+    std::vector<uchar> buffer;
+
+    size_t n = sizeof(T);
+
+    buffer.resize(n);
+
+    for (size_t i = 0; i < n; ++i) {
+      if (! readChar(buffer[i]))
+        return false;
+    }
+
+    memcpy((void *) &data, (void *) &buffer[0], n);
+
+    return true;
+  }
+
   void rewind() {
     if (! fp_) return;
 
