@@ -28,6 +28,7 @@ class CQPoint2DEdit : public QFrame {
 
   void setMinimum(const CPoint2D &point);
   void setMaximum(const CPoint2D &point);
+  void setStep(const CPoint2D &point);
 
   const CPoint2D &getValue() const;
   QPointF getQValue() const;
@@ -50,7 +51,7 @@ class CQPoint2DEdit : public QFrame {
  private:
   CPoint2D          point_;
   bool              spin_;
-  CPoint2D          min_, max_;
+  CPoint2D          min_, max_, step_;
   QDoubleValidator *x_validator_;
   QDoubleValidator *y_validator_;
   QLineEdit        *x_edit_;

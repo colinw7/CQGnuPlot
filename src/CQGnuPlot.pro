@@ -161,10 +161,6 @@ Expr/CExprSValue.cpp \
 Expr/CExprValue.cpp \
 Expr/CExprVariable.cpp \
 \
-MouseMode/CQMouseMode.cpp \
-MouseMode/CQPanMouseMode.cpp \
-MouseMode/CQZoomMouseMode.cpp \
-\
 CQAngleSpinBox.cpp \
 CQLineDash.cpp \
 CQPoint2DEdit.cpp \
@@ -331,11 +327,6 @@ Expr/CExprSValue.h \
 Expr/CExprValue.h \
 Expr/CExprVariable.h \
 \
-MouseMode/CQMouseMode.h \
-MouseMode/CQPanMouseMode.h \
-MouseMode/CQPanZoomIFace.h \
-MouseMode/CQZoomMouseMode.h \
-\
 CQAngleSpinBox.h \
 CQLineDash.h \
 CQPoint2DEdit.h \
@@ -346,7 +337,7 @@ OBJECTS_DIR = ../obj
 LIB_DIR     = ../lib
 
 INCLUDEPATH += \
-. MouseMode Expr ../include \
+. Expr ../include \
 ../../CQApp/include \
 ../../CQUtil/include \
 ../../CFont/include \

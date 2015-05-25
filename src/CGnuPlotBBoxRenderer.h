@@ -30,7 +30,7 @@ class CGnuPlotBBoxRenderer : public CGnuPlotRenderer {
                    const CRGBA &fg, const CRGBA &bg) override;
 
   void drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c,
-                   double width) override;
+                   double width, const CLineDash &dash) override;
   void fillEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c) override;
 
   void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3, const CPoint2D &p4,

@@ -82,38 +82,50 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
+  bool grid = true;
+  int  n    = -1;
+
+  // draw grid of lines
+  typedef std::vector<CPoint3D> Points;
+
+  typedef std::map<int,Points> XPoints;
+
+  XPoints xpoints;
+
   for (const auto &ip : plot->getPoints3D()) {
     uint np = ip.second.size();
 
     CPoint3D p1;
 
-    uint i = 0;
-
-    typedef std::vector<CPoint3D> Points;
+    uint i = 0, j = 0;
 
     while (i < np) {
       // find first point
-      for ( ; i < np; ++i) {
+      for ( ; i < np; ++i, ++j) {
         const CGnuPlotPoint &point1 = ip.second[i];
 
         if (plot->mapPoint3D(point1, p1))
           break;
       }
 
-      ++i;
-
       Points points;
+
+      xpoints[j].push_back(p1);
 
       points.push_back(p1);
 
+      ++i; ++j;
+
       // get next continuous points
-      for ( ; i < np; ++i) {
+      for ( ; i < np; ++i, ++j) {
         CPoint3D p2;
 
         const CGnuPlotPoint &point2 = ip.second[i];
 
         if (! plot->mapPoint3D(point2, p2) || point2.isDiscontinuity())
           break;
+
+        xpoints[j].push_back(p2);
 
         points.push_back(p2);
 
@@ -122,6 +134,21 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       // TODO: clip
       renderer->drawPath(points, lineStyle.width(), c, lineStyle.dash());
+
+      if (n < 0)
+        n = points.size();
+
+      if (grid && n != int(points.size()))
+        grid = false;
+
+      j = 0;
+    }
+  }
+
+  if (grid) {
+    for (const auto &ip : xpoints) {
+      // TODO: clip
+      renderer->drawPath(ip.second, lineStyle.width(), c, lineStyle.dash());
     }
   }
 }

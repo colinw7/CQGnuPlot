@@ -455,6 +455,18 @@ class CGnuPlotPlot {
   void setStyleValue(const std::string &name, StyleValue *value);
   StyleValue *styleValue(const std::string &name) const;
 
+  //------
+
+  bool isParametric() const { return parametric_; }
+  void setParametric(bool b) { parametric_ = b; }
+
+  //------
+
+  CGnuPlotTypes::Mapping mapping() const { return mapping_; }
+  void setMapping(CGnuPlotTypes::Mapping m) { mapping_ = m; }
+
+  //------
+
  protected:
   typedef std::vector<CPoint2D>         Points;
   typedef std::pair<double,Points>      ZPoints;
@@ -463,48 +475,50 @@ class CGnuPlotPlot {
 
   static int nextId_;
 
-  CGnuPlotGroup*     group_;                            // parent group
-  PlotStyle          style_ { PlotStyle::POINTS};       // plot style
-  int                id_;                               // unique id
-  int                ind_       { 0 };                  // axis index
-  bool               displayed_ { true };               // is displayed
-  Points2D           points2D_;                         // 2D points
-  Points3D           points3D_;                         // 3D points
-  ImageData          imageData_;                        // image data
-  bool               binary_ { false };
-  bool               matrix_ { false };
-  CGnuPlotImageStyle imageStyle_;
-  Bars               bars_;
-  CGnuPlotBoxWidth   boxWidth_;                         // box widths
-  FilledCurve        filledCurve_;                      // filled curve data
-  CGnuPlotFillStyle  fillStyle_;                        // fill style
-  CGnuPlotLineStyle  lineStyle_;                        // line style
-  CGnuPlotPointStyle pointStyle_;                       // point style
-  CGnuPlotArrowStyle arrowStyle_;                       // arrow style
-  std::string        keyTitle_;                         // title on key
-  int                xind_ { 1 };                       // xaxis index
-  int                yind_ { 1 };                       // yaxis index
-  COptReal           xmin_, xmax_;                      // calculated points x range
-  COptReal           ymin_, ymax_;                      // calculated points y range
-  COptReal           zmin_, zmax_;                      // calculated points z range
-  COptReal           bymin_, bymax_;                    // calculated points bounded y range
-  CBBox2D            bbox_ { 0, 0, 1, 1 };              // bounding box
-  Smooth             smooth_ { Smooth::NONE };          // smooth data
-  CGnuPlotContour    contour_;                          // contour data
-  bool               contourSet_ { false };
-  ZPolygons          surface_;                          // surface data
-  bool               surfaceSet_ { false };
-  COptReal           surfaceZMin_, surfaceZMax_;
-  Hidden3DData       hidden3D_;
-  double             whiskerBars_ { 0 };                // whisker bar data
-  bool               cacheActive_ { true };
-  BarCache           barCache_;
-  BubbleCache        bubbleCache_;
-  EllipseCache       ellipseCache_;
-  PieCache           pieCache_;
-  PolygonCache       polygonCache_;
-  RectCache          rectCache_;
-  StyleValues        styleValues_;
+  CGnuPlotGroup*         group_;                            // parent group
+  PlotStyle              style_ { PlotStyle::POINTS};       // plot style
+  int                    id_;                               // unique id
+  int                    ind_       { 0 };                  // axis index
+  bool                   displayed_ { true };               // is displayed
+  Points2D               points2D_;                         // 2D points
+  Points3D               points3D_;                         // 3D points
+  ImageData              imageData_;                        // image data
+  bool                   binary_ { false };
+  bool                   matrix_ { false };
+  CGnuPlotImageStyle     imageStyle_;
+  Bars                   bars_;
+  CGnuPlotBoxWidth       boxWidth_;                         // box widths
+  FilledCurve            filledCurve_;                      // filled curve data
+  CGnuPlotFillStyle      fillStyle_;                        // fill style
+  CGnuPlotLineStyle      lineStyle_;                        // line style
+  CGnuPlotPointStyle     pointStyle_;                       // point style
+  CGnuPlotArrowStyle     arrowStyle_;                       // arrow style
+  std::string            keyTitle_;                         // title on key
+  int                    xind_ { 1 };                       // xaxis index
+  int                    yind_ { 1 };                       // yaxis index
+  COptReal               xmin_, xmax_;                      // calculated points x range
+  COptReal               ymin_, ymax_;                      // calculated points y range
+  COptReal               zmin_, zmax_;                      // calculated points z range
+  COptReal               bymin_, bymax_;                    // calculated points bounded y range
+  CBBox2D                bbox_ { 0, 0, 1, 1 };              // bounding box
+  Smooth                 smooth_ { Smooth::NONE };          // smooth data
+  CGnuPlotContour        contour_;                          // contour data
+  bool                   contourSet_ { false };
+  ZPolygons              surface_;                          // surface data
+  bool                   surfaceSet_ { false };
+  COptReal               surfaceZMin_, surfaceZMax_;
+  Hidden3DData           hidden3D_;
+  double                 whiskerBars_ { 0 };                // whisker bar data
+  bool                   cacheActive_ { true };
+  BarCache               barCache_;
+  BubbleCache            bubbleCache_;
+  EllipseCache           ellipseCache_;
+  PieCache               pieCache_;
+  PolygonCache           polygonCache_;
+  RectCache              rectCache_;
+  StyleValues            styleValues_;
+  bool                   parametric_ { false };
+  CGnuPlotTypes::Mapping mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
 };
 
 //------

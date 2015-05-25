@@ -40,6 +40,12 @@ class CGnuPlotAxis {
   double getStart() const { return start1_; }
   double getEnd  () const { return end1_  ; }
 
+  double position() const { return position_; }
+  void setPosition(double r) { position_ = r; }
+
+  double position1() const { return position1_; }
+  void setPosition1(double r) { position1_ = r; }
+
   bool isLogarithmic() const { return logarithmic_; }
   void setLogarithmic(bool b) { logarithmic_ = b; }
 
@@ -120,6 +126,11 @@ class CGnuPlotAxis {
 
   //---
 
+  bool isEnhanced() const { return enhanced_; }
+  void setEnhanced(bool b) { enhanced_ = b; }
+
+  //---
+
   bool isDrawTickMark(bool first) const { return (first ? drawTickMark_ : drawTickMark1_); }
 
   bool isDrawTickMark() const { return drawTickMark_; }
@@ -166,6 +177,8 @@ class CGnuPlotAxis {
 
   virtual void drawGrid(CGnuPlotRenderer *renderer, double start, double end);
 
+  virtual void drawRadialGrid(CGnuPlotRenderer *renderer);
+
   const CBBox2D &getBBox() const { return bbox_; }
 
  private:
@@ -183,8 +196,8 @@ class CGnuPlotAxis {
 
   void drawAxisLabel(const CPoint2D &p, const std::string &str, int maxSize, bool first);
 
-  void drawClipLine(const CPoint2D &p1, const CPoint2D &p2);
-  void drawLine(const CPoint2D &p1, const CPoint2D &p2);
+  void drawClipLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c);
+  void drawLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c);
 
   void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
                         CVAlignType valign, double yOffset, const std::string &str);
@@ -203,6 +216,8 @@ class CGnuPlotAxis {
   double            end_               { 1 };
   double            start1_            { 0 };
   double            end1_              { 1 };
+  double            position_          { 0 };
+  double            position1_         { 0 };
   bool              reverse_           { false };
   bool              logarithmic_       { false };
   int               logarithmicBase_   { 10 };
@@ -231,6 +246,7 @@ class CGnuPlotAxis {
   bool              gridMajor_         { true };
   bool              gridMinor_         { false };
   DrawLayer         gridLayer_         { DrawLayer::BACK };
+  bool              enhanced_          { true };
   mutable CBBox2D   bbox_              { 0, 0, 1, 1 };
   mutable CLineDash lineDash_;
 };

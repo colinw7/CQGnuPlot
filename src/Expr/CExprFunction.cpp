@@ -16,6 +16,10 @@ double RadToDeg(double x) {
   return 180.0*x/M_PI;
 }
 
+double DegToRad(double x) {
+  return M_PI*x/180.0;
+}
+
 }
 
 class CExprSubStr {
@@ -194,7 +198,7 @@ CExprFunction##NAME(const CExprFunction::Values &values) { \
   double real; \
   if (values[0]->getRealValue(real)) { \
     if (CExprInst->getDegrees()) \
-      real = RadToDeg(real); \
+      real = DegToRad(real); \
     double real1 = F(real); \
     return CExprInst->createRealValue(real1); \
   } \
@@ -273,7 +277,7 @@ class CExprFunctionCArg : public CExprFunctionObj {
       if (values[0]->getComplexValue(c)) {
         double r = std::arg(c);
         if (CExprInst->getDegrees())
-          r = RadToDeg(r);
+          r = DegToRad(r);
         return CExprInst->createRealValue(r);
       }
     }

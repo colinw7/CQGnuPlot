@@ -13,6 +13,8 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   Q_PROPERTY(bool    displayed       READ isDisplayed       WRITE setDisplayed)
   Q_PROPERTY(double  start           READ getStart          WRITE setStart)
   Q_PROPERTY(double  end             READ getEnd            WRITE setEnd)
+  Q_PROPERTY(double  position        READ position          WRITE setPosition)
+  Q_PROPERTY(double  position1       READ position1         WRITE setPosition1)
   Q_PROPERTY(bool    logarithmic     READ isLogarithmic     WRITE setLogarithmic)
   Q_PROPERTY(int     logarithmicBase READ logarithmicBase   WRITE setLogarithmicBase)
   Q_PROPERTY(double  majorIncrement  READ getMajorIncrement WRITE setMajorIncrement)

@@ -7,6 +7,7 @@
 #include <CGnuPlotTypes.h>
 
 #include <string>
+#include <memory>
 
 class CParseLine;
 
@@ -37,7 +38,12 @@ class CGnuPlotRenderer;
 class CGnuPlotTitle;
 class CGnuPlotWindow;
 
+typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
+
 class CGnuPlotDevice {
+ public:
+  typedef std::vector<CGnuPlotWindowP> Windows;
+
  public:
   CGnuPlotDevice(const std::string &name);
 
@@ -65,6 +71,31 @@ class CGnuPlotDevice {
 
   double lineWidth() const { return lineWidth_; }
   void setLineWidth(double r) { lineWidth_ = r; }
+
+  CGnuPlotWindowP multiWindow() const { return multiWindow_; }
+  void setMultiWindow(const CGnuPlotWindowP &w) { multiWindow_ = w; }
+  void resetMultiWindow() { multiWindow_ = 0; }
+
+  const Windows &windows() const { return windows_; }
+
+  void addWindow(CGnuPlotWindowP window) {
+    assert(window);
+
+    windows_.push_back(window);
+  }
+
+  void removeWindow(CGnuPlotWindow *window) {
+    assert(window);
+
+    Windows windows;
+
+    for (auto &w : windows_) {
+      if (w.get() != window)
+        windows.push_back(w);
+    }
+
+    windows_ = windows;
+  }
 
   virtual CGnuPlotWindow *createWindow();
 
@@ -114,14 +145,16 @@ class CGnuPlotDevice {
   virtual void show(std::ostream &os) const;
 
  protected:
-  CGnuPlot    *plot_      { 0 };
-  std::string  name_;
-  CISize2D     size_      { 600, 480 };
-  bool         enhanced_  { true };
-  CFontPtr     font_;
-  double       fontScale_ { 1 };
-  bool         dashed_    { false };
-  bool         lineWidth_ { 0 };
+  CGnuPlot*       plot_      { 0 };
+  std::string     name_;
+  CISize2D        size_      { 600, 480 };
+  bool            enhanced_  { true };
+  CFontPtr        font_;
+  double          fontScale_ { 1 };
+  bool            dashed_    { false };
+  bool            lineWidth_ { 0 };
+  Windows         windows_;
+  CGnuPlotWindowP multiWindow_;
 };
 
 #endif

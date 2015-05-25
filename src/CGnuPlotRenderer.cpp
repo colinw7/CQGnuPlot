@@ -432,6 +432,13 @@ drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c)
 
 void
 CGnuPlotRenderer::
+drawPoint(const CPoint3D &p, const CRGBA &c)
+{
+  drawPoint(transform(p), c);
+}
+
+void
+CGnuPlotRenderer::
 drawLine(const CPoint3D &p1, const CPoint3D &p2, double width, const CRGBA &c,
          const CLineDash &dash)
 {

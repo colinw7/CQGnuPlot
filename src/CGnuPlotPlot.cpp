@@ -78,6 +78,8 @@ init()
 
   setBinary(plot->isBinary());
   setMatrix(plot->isMatrix());
+
+  setMapping(plot->mapping());
 }
 
 void
@@ -362,12 +364,10 @@ draw3D(CGnuPlotRenderer *renderer)
 {
   assert(is3D());
 
-  if (style_ == PlotStyle::POINTS || style_ == PlotStyle::LINES ||
-      style_ == PlotStyle::LINES_POINTS) {
-    CGnuPlotStyleBase *style = app()->getPlotStyle(getStyle());
+  CGnuPlotStyleBase *style = app()->getPlotStyle(getStyle());
 
+  if (style && style->has3D())
     style->draw3D(this, renderer);
-  }
   else
     drawSurface(renderer);
 }
@@ -1091,13 +1091,37 @@ bool
 CGnuPlotPlot::
 mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1) const
 {
-  if (app()->mapping() == CGnuPlotTypes::Mapping::SPHERICAL_MAPPING) {
-    CPoint2D p2;
+  std::vector<double> reals;
 
-    if (! p.getPoint(p2))
-      return false;
+  (void) p.getReals(reals);
 
-    p1 = app()->sphericalMap(p2);
+  if      (mapping() == CGnuPlotTypes::Mapping::SPHERICAL_MAPPING) {
+    double theta = (reals.size() > 0 ? reals[0] : 0.0);
+    double phi   = (reals.size() > 1 ? reals[1] : 0.0);
+    double r     = (reals.size() > 2 ? reals[2] : 1.0);
+
+    double theta1 = app()->angleToRad(theta);
+    double phi1   = app()->angleToRad(phi);
+
+    //p1 = app()->sphericalMap(p2);
+
+    double x = r*cos(theta1)*cos(phi1);
+    double y = r*sin(theta1)*cos(phi1);
+    double z = r*sin(phi1);
+
+    p1 = CPoint3D(x, y, z);
+  }
+  else if (mapping() == CGnuPlotTypes::Mapping::CYLINDRICAL_MAPPING) {
+    double theta = (reals.size() > 0 ? reals[0] : 0.0);
+    double z     = (reals.size() > 1 ? reals[1] : 0.0);
+    double r     = (reals.size() > 2 ? reals[2] : 1.0);
+
+    double theta1 = app()->angleToRad(theta);
+
+    double x = r*cos(theta1);
+    double y = r*sin(theta1);
+
+    p1 = CPoint3D(x, y, z);
   }
   else {
     if (! p.getPoint(p1))

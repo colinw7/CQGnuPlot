@@ -10,7 +10,10 @@ class CGnuPlotStyleImageBase : public CGnuPlotStyleBase {
 
   int numUsing() const override { return 2; }
 
+  bool has3D() const override { return true; }
+
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
+  void draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
   CBBox2D fit(CGnuPlotPlot *plot) override;
 

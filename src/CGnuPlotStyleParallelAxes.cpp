@@ -155,7 +155,7 @@ void
 CGnuPlotStyleParallelAxes::
 drawAxes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  plot->group()->drawXAxes(renderer, 1, false);
+  plot->group()->drawXAxis(renderer, 1, false);
 }
 
 CBBox2D

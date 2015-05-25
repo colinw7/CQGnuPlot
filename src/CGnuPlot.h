@@ -707,6 +707,11 @@ class CGnuPlot {
 
   //----
 
+  void addWindow(CGnuPlotWindowP window);
+  void removeWindow(CGnuPlotWindow *window);
+
+  //----
+
   const PlotStyles &plotStyles() const { return plotStyles_; }
 
   void addPlotStyle(PlotStyle plotStyle, CGnuPlotStyleBase *style);
@@ -776,21 +781,89 @@ class CGnuPlot {
   const AxesData &axesData() const { return axesData_; }
   void setAxesData(const AxesData &a) { axesData_ = a; }
 
+  const CGnuPlotAxisData &xaxis(int ind) const {
+    return const_cast<CGnuPlot *>(this)->xaxis(ind);
+  }
+  const CGnuPlotAxisData &yaxis(int ind) const {
+    return const_cast<CGnuPlot *>(this)->yaxis(ind);
+  }
+  const CGnuPlotAxisData &zaxis(int ind) const {
+    return const_cast<CGnuPlot *>(this)->zaxis(ind);
+  }
+  const CGnuPlotAxisData &paxis(int ind) const {
+    return const_cast<CGnuPlot *>(this)->paxis(ind);
+  }
+  const CGnuPlotAxisData &taxis(int ind) const {
+    return const_cast<CGnuPlot *>(this)->taxis(ind);
+  }
+  const CGnuPlotAxisData &cbaxis() const {
+    return const_cast<CGnuPlot *>(this)->cbaxis();
+  }
+
+  CGnuPlotAxisData &xaxis(int ind) {
+    CGnuPlot::IAxisMap::iterator p = axesData_.xaxis.find(ind);
+
+    if (p == axesData_.xaxis.end())
+      p = axesData_.xaxis.insert(p, CGnuPlot::IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
+
+    return (*p).second;
+  }
+
+  CGnuPlotAxisData &yaxis(int ind) {
+    CGnuPlot::IAxisMap::iterator p = axesData_.yaxis.find(ind);
+
+    if (p == axesData_.yaxis.end())
+      p = axesData_.yaxis.insert(p, CGnuPlot::IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
+
+    return (*p).second;
+  }
+
+  CGnuPlotAxisData &zaxis(int ind) {
+    CGnuPlot::IAxisMap::iterator p = axesData_.zaxis.find(ind);
+
+    if (p == axesData_.zaxis.end())
+      p = axesData_.zaxis.insert(p, CGnuPlot::IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
+
+    return (*p).second;
+  }
+
+  CGnuPlotAxisData &paxis(int ind) { return this->axesData_.paxis[ind]; }
+  CGnuPlotAxisData &taxis(int ind) { return this->axesData_.taxis[ind]; }
+
+  CGnuPlotAxisData &cbaxis() { return this->axesData_.cbaxis; }
+  CGnuPlotAxisData &raxis () { return this->axesData_.raxis ; }
+  CGnuPlotAxisData &uaxis () { return this->axesData_.uaxis ; }
+  CGnuPlotAxisData &vaxis () { return this->axesData_.vaxis ; }
+
+  //---
+
   void getXRange(double *xmin, double *xmax) {
-    *xmin = axesData_.xaxis[1].min().getValue(-10);
-    *xmax = axesData_.xaxis[1].max().getValue( 10);
+    *xmin = xaxis(1).min().getValue(-10);
+    *xmax = xaxis(1).max().getValue( 10);
   }
   void getYRange(double *ymin, double *ymax) {
-    *ymin = axesData_.yaxis[1].min().getValue(-10);
-    *ymax = axesData_.yaxis[1].max().getValue( 10);
+    *ymin = yaxis(1).min().getValue(-10);
+    *ymax = yaxis(1).max().getValue( 10);
   }
   void getZRange(double *zmin, double *zmax) {
-    *zmin = axesData_.zaxis[1].min().getValue(-10);
-    *zmax = axesData_.zaxis[1].max().getValue( 10);
+    *zmin = zaxis(1).min().getValue(-10);
+    *zmax = zaxis(1).max().getValue( 10);
   }
   void getTRange(double *tmin, double *tmax) {
-    *tmin = axesData_.taxis[1].min().getValue(0);
-    *tmax = axesData_.taxis[1].max().getValue(M_PI);
+    *tmin = taxis(1).min().getValue(0);
+
+    if (getAngleType() == CGnuPlotTypes::AngleType::DEGREES)
+      *tmax = taxis(1).max().getValue(360.0);
+    else
+      *tmax = taxis(1).max().getValue(2*M_PI);
+  }
+  void getURange(double *umin, double *umax) {
+    *umin = uaxis().min().getValue(-5);
+    *umax = uaxis().max().getValue(5);
+  }
+  void getVRange(double *vmin, double *vmax) {
+    *vmin = vaxis().min().getValue(-5);
+    *vmax = vaxis().max().getValue(5);
   }
 
   //---
@@ -861,6 +934,14 @@ class CGnuPlot {
 
   const CGnuPlotClip &clip() const { return clip_; }
   void setClip(const CGnuPlotClip &clip) { clip_ = clip; }
+
+  //------
+
+  bool isParametric() const { return parametric_; }
+  void setParametric(bool b) { parametric_ = b; }
+
+  bool isPolar() const { return polar_; }
+  void setPolar(bool b) { polar_ = b; }
 
   //------
 
@@ -1065,7 +1146,7 @@ class CGnuPlot {
   void setForCmd  (const ForCmd &forCmd, const std::string &args);
   void unsetForCmd(const ForCmd &forCmd, const std::string &args);
 
-  void splitPlotCmd(const std::string &cmd, std::vector<std::string> &cmds);
+  void splitPlotCmd(const std::string &cmd, std::vector<std::string> &cmds, bool is3D);
 
   bool parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
                         CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as);
@@ -1210,8 +1291,11 @@ class CGnuPlot {
 
   void skipString(CParseLine &line);
 
-  bool parseBracketedString(CParseLine &line, std::string &str) const;
-  bool skipBracketedString(CParseLine &line) const;
+  bool parseRoundBracketedString(CParseLine &line, std::string &str) const;
+  bool skipRoundBracketedString(CParseLine &line) const;
+
+  bool parseSquareBracketedString(CParseLine &line, std::string &str) const;
+  bool skipSquareBracketedString(CParseLine &line) const;
 
   bool getIntegerVariable(const std::string &name, int &value) const;
   bool getRealVariable   (const std::string &name, double &value) const;
@@ -1280,7 +1364,6 @@ class CGnuPlot {
  private:
   typedef std::map<std::string,CGnuPlotDevice*>  Devices;
   typedef std::vector<CGnuPlotDevice*>           DeviceStack;
-  typedef std::vector<CGnuPlotWindowP>           Windows;
   typedef StringArray                            FileLines;
   typedef std::vector<FileData>                  FileDataArray;
   typedef CAutoPtr<CGnuPlotReadLine>             ReadLineP;
@@ -1296,7 +1379,6 @@ class CGnuPlot {
   PlotStyles             plotStyles_;
   FileData               fileData_;
   FileDataArray          fileDataArray_;
-  Windows                windows_;
   CGnuPlotFile           dataFile_;
   CGnuPlotBoxWidth       boxWidth_;
   Bars                   bars_;
@@ -1370,7 +1452,6 @@ class CGnuPlot {
   std::string            locale_;
   CGnuPlotMouseData      mouseData_;
   CGnuPlotMultiplot      multiplot_;
-  CGnuPlotWindowP        multiWindow_;
   CGnuPlotTimeStampData  timeStamp_;
   COptBBox2D             clearRect_;
   Hidden3DData           hidden3D_;

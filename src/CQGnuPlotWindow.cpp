@@ -25,9 +25,8 @@
 #include <CQGnuPlotPieObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
+#include <CQZoomRegion.h>
 
-#include <CQZoomMouseMode.h>
-#include <CQPanMouseMode.h>
 #include <CQPropertyTree.h>
 #include <CQPropertyItem.h>
 #include <CQPropertyEditor.h>
@@ -40,6 +39,14 @@
 #include <QLabel>
 #include <QFrame>
 #include <QTimer>
+#include <QToolBar>
+#include <QRubberBand>
+
+#include <xpm/select.xpm>
+#include <xpm/zoom.xpm>
+#include <xpm/grid.xpm>
+#include <xpm/xaxis.xpm>
+#include <xpm/yaxis.xpm>
 
 static const int TreeWidth = 250;
 
@@ -47,9 +54,33 @@ uint CQGnuPlotWindow::lastId;
 
 CQGnuPlotWindow::
 CQGnuPlotWindow(CQGnuPlot *plot) :
- QMainWindow(), CGnuPlotWindow(plot), id_(++lastId), plot_(plot)
+ QMainWindow(), CGnuPlotWindow(plot), id_(++lastId), plot_(plot), mode_(Mode::SELECT)
 {
   setObjectName("window");
+
+  //---
+
+  selectAction_ = new QAction(QIcon(QPixmap(select_data)), "Select", this);
+  zoomAction_   = new QAction(QIcon(QPixmap(zoom_data  )), "Zoom"  , this);
+
+  selectAction_->setCheckable(true);
+  zoomAction_  ->setCheckable(true);
+
+  selectAction_->setChecked(true);
+
+  connect(selectAction_, SIGNAL(triggered(bool)), this, SLOT(selectMode(bool)));
+  connect(zoomAction_  , SIGNAL(triggered(bool)), this, SLOT(zoomMode  (bool)));
+
+  //---
+
+  QToolBar *toolbar = new QToolBar;
+
+  addToolBar(toolbar);
+
+  toolbar->addAction(selectAction_);
+  toolbar->addAction(zoomAction_);
+
+  //---
 
   QWidget *frame = new QWidget;
   frame->setObjectName("frame");
@@ -99,15 +130,13 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
 
   //----
 
-  zoomMode_ = new CQZoomMouseMode(this, this);
-  panMode_  = new CQPanMouseMode (this, this);
-
-  //----
-
   QMenu *fileMenu = menuBar()->addMenu("&File");
-  QMenu *dispMenu = menuBar()->addMenu("&Display");
-  QMenu *modeMenu = menuBar()->addMenu("&Mode");
-  QMenu *helpMenu = menuBar()->addMenu("&Help");
+
+  QAction *saveSVGAction = new QAction("Save S&VG", this);
+
+  fileMenu->addAction(saveSVGAction);
+
+  connect(saveSVGAction, SIGNAL(triggered()), this, SLOT(saveSVG()));
 
   QAction *closeAction = new QAction("&Close", this);
 
@@ -117,21 +146,38 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
 
   //--------
 
-  CQMouseModeMgrInst->createMenuItems(modeMenu);
+  QMenu *modeMenu = menuBar()->addMenu("&Mode");
 
-  //--------
+  modeMenu->addAction(selectAction_);
+  modeMenu->addAction(zoomAction_);
 
-  QAction *xAxisAction = new QAction("&X Axis", this);
-  QAction *yAxisAction = new QAction("&Y Axis", this);
+  //------
+
+  QMenu *dispMenu = menuBar()->addMenu("&Display");
+
+  QAction *xAxisAction = new QAction(QIcon(QPixmap(xaxis_data)), "&X Axis", this);
+  QAction *yAxisAction = new QAction(QIcon(QPixmap(yaxis_data)), "&Y Axis", this);
+  QAction *gridAction  = new QAction(QIcon(QPixmap(grid_data )), "&Grid"  , this);
 
   xAxisAction->setCheckable(true); xAxisAction->setChecked(true);
   yAxisAction->setCheckable(true); yAxisAction->setChecked(true);
+  gridAction ->setCheckable(true); gridAction ->setChecked(false);
 
   connect(xAxisAction, SIGNAL(triggered(bool)), this, SLOT(xAxisSlot(bool)));
   connect(yAxisAction, SIGNAL(triggered(bool)), this, SLOT(yAxisSlot(bool)));
+  connect(gridAction , SIGNAL(triggered(bool)), this, SLOT(gridSlot(bool)));
 
   dispMenu->addAction(xAxisAction);
   dispMenu->addAction(yAxisAction);
+  dispMenu->addAction(gridAction);
+
+  toolbar->addAction(xAxisAction);
+  toolbar->addAction(yAxisAction);
+  toolbar->addAction(gridAction);
+
+  //------
+
+  QMenu *helpMenu = menuBar()->addMenu("&Help");
 
   QAction *helpAction = new QAction("&Help", this);
 
@@ -149,6 +195,11 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
   statusBar()->addPermanentWidget(plotLabel_);
 
   showPos(0, 0);
+
+  //---
+
+  //zoomRegion_ = new QRubberBand(QRubberBand::Rectangle, canvas_);
+  zoomRegion_ = new CQZoomRegion(canvas_);
 }
 
 CQGnuPlotWindow::
@@ -280,10 +331,11 @@ addGroupProperties(CGnuPlotGroup *group)
 
   QString titleName = QString("%1/title").arg(groupName);
 
-  tree_->addProperty(titleName, qtitle, "text"  );
-  tree_->addProperty(titleName, qtitle, "offset");
-  tree_->addProperty(titleName, qtitle, "color" );
-  tree_->addProperty(titleName, qtitle, "font"  );
+  tree_->addProperty(titleName, qtitle, "text"    );
+  tree_->addProperty(titleName, qtitle, "offset"  );
+  tree_->addProperty(titleName, qtitle, "font"    );
+  tree_->addProperty(titleName, qtitle, "color"   );
+  tree_->addProperty(titleName, qtitle, "enhanced");
 
   //---
 
@@ -295,6 +347,8 @@ addGroupProperties(CGnuPlotGroup *group)
     tree_->addProperty(axesName, qaxis, "displayed");
     tree_->addProperty(axesName, qaxis, "start");
     tree_->addProperty(axesName, qaxis, "end");
+    tree_->addProperty(axesName, qaxis, "position");
+    tree_->addProperty(axesName, qaxis, "position1");
     tree_->addProperty(axesName, qaxis, "logarithmic");
     tree_->addProperty(axesName, qaxis, "majorIncrement");
     tree_->addProperty(axesName, qaxis, "majorTics");
@@ -350,6 +404,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
   QString colorBoxName = groupName + "/colorBox";
 
+  tree_->addProperty(colorBoxName, qcolorBox, "enabled");
   tree_->addProperty(colorBoxName, qcolorBox, "vertical");
   tree_->addProperty(colorBoxName, qcolorBox, "user");
   tree_->addProperty(colorBoxName, qcolorBox, "front");
@@ -695,108 +750,93 @@ redraw()
 
 void
 CQGnuPlotWindow::
-redrawOverlay()
-{
-  redraw();
-}
-
-void
-CQGnuPlotWindow::
 setCursor(QCursor cursor)
 {
   canvas_->setCursor(cursor);
 }
 
-// Pan
 void
 CQGnuPlotWindow::
-panBy(double, double)
+saveSVG()
 {
+  app()->pushDevice();
+
+  app()->setDevice("svg");
+
+  app()->setOutputFile("temp.svg");
+
+  CGnuPlotSVGRenderer *renderer =
+    dynamic_cast<CGnuPlotSVGRenderer *>(app()->device()->renderer());
+
+  renderer->setWindow(this);
+
+  app()->device()->drawInit(this);
+
+  renderer->clear(CGnuPlotWindow::backgroundColor());
+
+  for (auto group : groups()) {
+    renderer->setRegion(group->region());
+
+    group->draw();
+  }
+
+  app()->device()->drawTerm();
+
+  app()->popDevice();
+
+  app()->setOutputFile("");
 }
 
 void
 CQGnuPlotWindow::
-panTo(const CPoint2D &)
+xAxisSlot(bool b)
 {
+  for (auto group : groups())
+    group->showXAxis(b);
+
+  redraw();
 }
 
 void
 CQGnuPlotWindow::
-panLeft()
+yAxisSlot(bool b)
 {
+  for (auto group : groups())
+    group->showYAxis(b);
+
+  redraw();
 }
 
 void
 CQGnuPlotWindow::
-panRight()
+gridSlot(bool b)
 {
+  for (auto group : groups()) {
+    group->setAxisGridDisplayed("x1", b);
+    group->setAxisGridDisplayed("y1", b);
+  }
+
+  redraw();
 }
 
 void
 CQGnuPlotWindow::
-panUp()
+selectMode(bool)
 {
+  mode_ = Mode::SELECT;
+
+  selectAction_->setChecked(true);
+  zoomAction_  ->setChecked(false);
 }
 
 void
 CQGnuPlotWindow::
-panDown()
+zoomMode(bool)
 {
-}
+  mode_ = Mode::ZOOM;
 
-void
-CQGnuPlotWindow::
-resetPan()
-{
-}
-
-// Zoom
-void
-CQGnuPlotWindow::
-zoomTo(const CBBox2D &)
-{
-}
-
-void
-CQGnuPlotWindow::
-zoomIn(const CPoint2D &)
-{
-}
-
-void
-CQGnuPlotWindow::
-zoomOut(const CPoint2D &)
-{
-}
-
-void
-CQGnuPlotWindow::
-zoomIn()
-{
-}
-
-void
-CQGnuPlotWindow::
-zoomOut()
-{
-}
-
-void
-CQGnuPlotWindow::
-resetZoom()
-{
-}
-
-void
-CQGnuPlotWindow::
-xAxisSlot(bool)
-{
-}
-
-void
-CQGnuPlotWindow::
-yAxisSlot(bool)
-{
+  selectAction_->setChecked(false);
+  zoomAction_  ->setChecked(true);
 }
 
 void
@@ -832,21 +872,141 @@ void
 CQGnuPlotWindow::
 mousePress(const QPoint &qp)
 {
-  for (auto group : groups()) {
-    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  escape_ = false;
 
-    qgroup->mousePress(qp);
+  if (mode_ == Mode::SELECT) {
+    for (auto group : groups()) {
+      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+
+      qgroup->mousePress(qp);
+    }
+  }
+  else {
+    zoomPress_   = qp;
+    zoomRelease_ = zoomPress_;
+    zoomGroup_   = currentGroup();
   }
 }
 
 void
 CQGnuPlotWindow::
-mouseMove(const QPoint &qp)
+mouseMove(const QPoint &qp, bool pressed)
 {
-  for (auto group : groups()) {
-    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  if (mode_ == Mode::SELECT) {
+    for (auto group : groups()) {
+      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-    qgroup->mouseMove(qp);
+      qgroup->mouseMove(qp);
+    }
+  }
+  else {
+    if (pressed) {
+      zoomRelease_ = qp;
+
+      int x = std::min(zoomPress_.x(), zoomRelease_.x());
+      int y = std::min(zoomPress_.y(), zoomRelease_.y());
+
+      int w = std::abs(zoomRelease_.x() - zoomPress_.x());
+      int h = std::abs(zoomRelease_.y() - zoomPress_.y());
+
+      if (w > 0 && h > 0) {
+        zoomRegion_->setGeometry(QRect(x, y, w, h));
+
+        CPoint2D start, end;
+
+        if (zoomGroup_) {
+          zoomGroup_->pixelToWindow(CPoint2D(x    , y    ), start);
+          zoomGroup_->pixelToWindow(CPoint2D(x + w, y + h), end  );
+        }
+
+        zoomRegion_->setStart(QPointF(start.x, start.y));
+        zoomRegion_->setEnd  (QPointF(end  .x, end  .y));
+
+        zoomRegion_->show();
+      }
+      else {
+        zoomRegion_->hide();
+      }
+    }
+  }
+}
+
+void
+CQGnuPlotWindow::
+mouseRelease(const QPoint &)
+{
+  if (mode_ == Mode::SELECT) {
+  }
+  else {
+    if (zoomGroup_ && ! escape_) {
+      zoomGroup_->setAxisRange("x1", zoomRegion_->start().x(), zoomRegion_->end().x());
+      zoomGroup_->setAxisRange("y1", zoomRegion_->start().y(), zoomRegion_->end().y());
+
+      redraw();
+    }
+
+    zoomRegion_->hide();
+  }
+}
+
+void
+CQGnuPlotWindow::
+keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
+{
+  if (mode_ == Mode::ZOOM) {
+    CQGnuPlotGroup *group = currentGroup();
+    if (! group) return;
+
+    double xmin = group->getXMin();
+    double ymin = group->getYMin();
+    double xmax = group->getXMax();
+    double ymax = group->getYMax();
+
+    double w = xmax - xmin;
+    double h = ymax - ymin;
+
+    double xc = (xmax + xmin)/2;
+    double yc = (ymax + ymin)/2;
+
+    if      (key == Qt::Key_Left || key == Qt::Key_Right) {
+      double dx = w/4;
+
+      if (key == Qt::Key_Left)
+        dx = -dx;
+
+      group->setAxisRange("x1", xmin + dx, xmax + dx);
+
+      redraw();
+    }
+    else if (key == Qt::Key_Down || key == Qt::Key_Up) {
+      double dy = h/4;
+
+      if (key == Qt::Key_Down)
+        dy = -dy;
+
+      group->setAxisRange("y1", ymin + dy, ymax + dy);
+
+      redraw();
+    }
+    else if (key == Qt::Key_Plus) {
+      group->setAxisRange("x1", xc - w/4, xc + w/4);
+      group->setAxisRange("y1", yc - h/4, yc + h/4);
+
+      redraw();
+    }
+    else if (key == Qt::Key_Minus) {
+      group->setAxisRange("x1", xc - w, xc + w);
+      group->setAxisRange("y1", yc - h, yc + h);
+
+      redraw();
+    }
+    else if (key == Qt::Key_Home) {
+      group->restoreRange();
+
+      redraw();
+    }
+    else if (key == Qt::Key_Escape)
+      escape_ = true;
   }
 }
 

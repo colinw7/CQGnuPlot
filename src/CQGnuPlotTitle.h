@@ -12,10 +12,11 @@ class CQGnuPlotGroup;
 class CQGnuPlotTitle : public CQGnuPlotObject, public CGnuPlotTitle {
   Q_OBJECT
 
-  Q_PROPERTY(QString text   READ text    WRITE setText  )
-  Q_PROPERTY(QPointF offset READ offset  WRITE setOffset)
-  Q_PROPERTY(QColor  color  READ color   WRITE setColor )
-  Q_PROPERTY(QFont   font   READ getFont WRITE setFont  )
+  Q_PROPERTY(QString text     READ text       WRITE setText    )
+  Q_PROPERTY(QPointF offset   READ offset     WRITE setOffset  )
+  Q_PROPERTY(QFont   font     READ getFont    WRITE setFont    )
+  Q_PROPERTY(QColor  color    READ color      WRITE setColor   )
+  Q_PROPERTY(bool    enhanced READ isEnhanced WRITE setEnhanced)
 
  public:
   CQGnuPlotTitle(CQGnuPlotGroup *group);

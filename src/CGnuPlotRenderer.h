@@ -62,6 +62,8 @@ class CGnuPlotRenderer {
   virtual double fontSize() const;
   virtual void setFontSize(double s);
 
+  virtual void setAntiAlias(bool) { }
+
   virtual void clear(const CRGBA &c) = 0;
 
   virtual void drawPoint  (const CPoint2D &p, const CRGBA &c) = 0;
@@ -83,7 +85,7 @@ class CGnuPlotRenderer {
                               const CRGBA &fg, const CRGBA &bg) = 0;
 
   virtual void drawEllipse(const CPoint2D &p, double dx, double ry, double a,
-                           const CRGBA &c, double w) = 0;
+                           const CRGBA &c, double w, const CLineDash &dash=CLineDash()) = 0;
   virtual void fillEllipse(const CPoint2D &p, double dx, double ry, double a,
                            const CRGBA &c) = 0;
 
@@ -112,6 +114,7 @@ class CGnuPlotRenderer {
 
   void drawPath  (const std::vector<CPoint3D> &points, double width,
                   const CRGBA &c, const CLineDash &dash=CLineDash());
+  void drawPoint (const CPoint3D &p, const CRGBA &c);
   void drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c);
   void drawLine  (const CPoint3D &p1, const CPoint3D &p2, double width,
                   const CRGBA &c, const CLineDash &dash=CLineDash());

@@ -75,11 +75,15 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
 
   void draw() override;
 
-  void mousePress(const QPoint &qp);
-  void mouseMove (const QPoint &qp);
-  bool mouseTip  (const QPoint &qp, CQGnuPlot::TipRect &tip);
+  void mousePress  (const QPoint &qp);
+  void mouseMove   (const QPoint &qp);
+  void mouseRelease(const QPoint &qp);
+
+  bool mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip);
 
   void redraw();
+
+  void pixelToWindow(const CPoint2D &p, CPoint2D &w);
 
  private:
   CQGnuPlotWindow *window_;

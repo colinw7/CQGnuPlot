@@ -67,7 +67,7 @@ class CQPropertyRealEditor : public CQPropertyEditorFactory {
 
 class CQPropertyPointEditor : public CQPropertyEditorFactory {
  public:
-  CQPropertyPointEditor();
+  CQPropertyPointEditor(double min=0.0, double max=99.9, double step=1.0);
 
   QWidget *createEdit(QWidget *parent);
 
@@ -76,6 +76,10 @@ class CQPropertyPointEditor : public CQPropertyEditorFactory {
   QVariant getValue(QWidget *w);
 
   void setValue(QWidget *w, const QVariant &var);
+
+ private:
+  double min_, max_;
+  double step_;
 };
 
 //------

@@ -43,11 +43,18 @@ getColor(double x) const
     return rgba1;
   }
   else {
-    double r = CGnuPlotUtil::clamp(interp(rModel_, x), 0.0, 1.0);
-    double g = CGnuPlotUtil::clamp(interp(gModel_, x), 0.0, 1.0);
-    double b = CGnuPlotUtil::clamp(interp(bModel_, x), 0.0, 1.0);
+    if (gray_) {
+      double g = CGnuPlotUtil::clamp(x, 0.0, 1.0);
 
-    return CRGBA(r, g, b);
+      return CRGBA(g, g, g);
+    }
+    else {
+      double r = CGnuPlotUtil::clamp(interp(rModel_, x), 0.0, 1.0);
+      double g = CGnuPlotUtil::clamp(interp(gModel_, x), 0.0, 1.0);
+      double b = CGnuPlotUtil::clamp(interp(bModel_, x), 0.0, 1.0);
+
+      return CRGBA(r, g, b);
+    }
   }
 }
 
@@ -162,6 +169,24 @@ void
 CGnuPlotPalette::
 unset()
 {
+  colorType_    = ColorType::MODEL;
+  gray_         = false;
+  colorModel_   = ColorModel::RGB;
+  rModel_       = 7;
+  gModel_       = 5;
+  bModel_       = 15;
+  rf_           = "";
+  gf_           = "";
+  bf_           = "";
+  negative_     = false;
+  psAllcF_      = false;
+  gamma_        = 1.5;
+  maxColors_    = -1;
+  cbStart_      = 0;
+  cbCycles_     = 1;
+  cbSaturation_ = 1;
+
+  colors_.clear();
 }
 
 void

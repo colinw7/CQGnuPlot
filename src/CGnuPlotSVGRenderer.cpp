@@ -418,7 +418,8 @@ patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern,
 
 void
 CGnuPlotSVGRenderer::
-drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c, double width)
+drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c,
+            double width, const CLineDash & /*dash*/)
 {
   double px1, py1, px2, py2;
 

@@ -110,6 +110,13 @@ setPainter(QPainter *painter)
 
 void
 CQGnuPlotRenderer::
+setAntiAlias(bool b)
+{
+  painter_->setRenderHint(QPainter::Antialiasing, b);
+}
+
+void
+CQGnuPlotRenderer::
 clear(const CRGBA &c)
 {
   painter_->fillRect(canvas_->rect(), QBrush(toQColor(c)));
@@ -222,14 +229,14 @@ drawPath(const std::vector<CPoint2D> &points, double width, const CRGBA &c,
     path.lineTo(px, py);
   }
 
-  QPen p = painter_->pen();
+  QPen pen = painter_->pen();
 
-  p.setWidthF(width);
-  p.setColor(toQColor(c));
+  pen.setWidthF(width);
+  pen.setColor(toQColor(c));
 
-  CQUtil::penSetLineDash(p, dash);
+  CQUtil::penSetLineDash(pen, dash);
 
-  painter_->strokePath(path, p);
+  painter_->strokePath(path, pen);
 }
 
 void
@@ -237,14 +244,14 @@ CQGnuPlotRenderer::
 drawLine(const CPoint2D &point1, const CPoint2D &point2, double width, const CRGBA &c,
          const CLineDash &dash)
 {
-  QPen p = painter_->pen();
+  QPen pen = painter_->pen();
 
-  p.setWidthF(width);
-  p.setColor(toQColor(c));
+  pen.setWidthF(width);
+  pen.setColor(toQColor(c));
 
-  CQUtil::penSetLineDash(p, dash);
+  CQUtil::penSetLineDash(pen, dash);
 
-  painter_->setPen(p);
+  painter_->setPen(pen);
 
   double px1, py1, px2, py2;
 
@@ -258,13 +265,13 @@ void
 CQGnuPlotRenderer::
 drawRect(const CBBox2D &rect, const CRGBA &c, double width)
 {
-  QPen p = painter_->pen();
+  QPen pen = painter_->pen();
 
-  p.setWidthF(width);
-  p.setColor(toQColor(c));
-  p.setStyle(Qt::SolidLine);
+  pen.setWidthF(width);
+  pen.setColor(toQColor(c));
+  pen.setStyle(Qt::SolidLine);
 
-  painter_->setPen(p);
+  painter_->setPen(pen);
 
   double px1, py1, px2, py2;
 
@@ -428,7 +435,8 @@ patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern p
 
 void
 CQGnuPlotRenderer::
-drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c, double width)
+drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c,
+            double width, const CLineDash &dash)
 {
   double px1, py1, px2, py2;
 
@@ -457,6 +465,8 @@ drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA 
   QPen pen(toQColor(c));
 
   pen.setWidthF(width);
+
+  CQUtil::penSetLineDash(pen, dash);
 
   painter_->strokePath(path, pen);
 

@@ -19,20 +19,30 @@ class CGnuPlotStyleBase {
 
   virtual bool isSingleType() const { return false; }
 
+  virtual bool has3D() const { return false; }
+
   virtual int numUsing() const = 0;
 
   virtual void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) = 0;
 
-  virtual void draw3D(CGnuPlotPlot *, CGnuPlotRenderer *) { }
+  virtual void draw3D(CGnuPlotPlot *, CGnuPlotRenderer *) {
+    std::cerr << "draw3D not implemented" << std::endl;
+  }
 
-  virtual void drawKey(CGnuPlotPlot *, CGnuPlotRenderer *) { }
+  virtual void drawKey(CGnuPlotPlot *, CGnuPlotRenderer *) {
+    std::cerr << "drawKey not implemented" << std::endl;
+  }
 
   virtual bool hasKeyLine() const { return false; }
 
   virtual void drawKeyLine(CGnuPlotPlot *, CGnuPlotRenderer *,
-                           const CPoint2D &, const CPoint2D &) { }
+                           const CPoint2D &, const CPoint2D &) {
+    std::cerr << "drawKeyLine not implemented" << std::endl;
+  }
 
-  virtual void drawAxes(CGnuPlotPlot *, CGnuPlotRenderer *) { }
+  virtual void drawAxes(CGnuPlotPlot *, CGnuPlotRenderer *) {
+    std::cerr << "drawAxes not implemented" << std::endl;
+  }
 
   virtual CBBox2D fit(CGnuPlotPlot *plot) = 0;
 

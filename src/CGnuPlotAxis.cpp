@@ -383,6 +383,8 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
 
   CFontPtr font = renderer_->getFont();
 
+  CRGBA c(0,0,0);
+
   //---
 
   std::string str;
@@ -410,9 +412,9 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
 
   if (isDrawLine()) {
     if (direction_ == CORIENTATION_HORIZONTAL)
-      drawClipLine(CPoint2D(getStart(), pos), CPoint2D(getEnd(), pos));
+      drawClipLine(CPoint2D(getStart(), pos), CPoint2D(getEnd(), pos), c);
     else
-      drawClipLine(CPoint2D(pos, getStart()), CPoint2D(pos, getEnd()));
+      drawClipLine(CPoint2D(pos, getStart()), CPoint2D(pos, getEnd()), c);
   }
 
   //---
@@ -590,19 +592,21 @@ drawAxisTick(const CPoint2D &p, CDirectionType type, bool large)
   if (! large)
     psize = 3;
 
+  CRGBA c(0,0,0);
+
   if (type == CDIRECTION_TYPE_LEFT || type == CDIRECTION_TYPE_RIGHT) {
     double dx = (type == CDIRECTION_TYPE_LEFT ? -1 : 1);
 
     double x1 = p1.x + dx*renderer_->pixelWidthToWindowWidth(psize);
 
-    drawLine(p1, CPoint2D(x1, p1.y));
+    drawLine(p1, CPoint2D(x1, p1.y), c);
   }
   else {
     double dy = (type == CDIRECTION_TYPE_DOWN  ? -1 : 1);
 
     double y1 = p1.y + dy*renderer_->pixelHeightToWindowHeight(psize);
 
-    drawLine(p1, CPoint2D(p1.x, y1));
+    drawLine(p1, CPoint2D(p1.x, y1), c);
   }
 }
 
@@ -677,6 +681,8 @@ drawGrid(CGnuPlotRenderer *renderer, double start, double end)
 
   lineDash_ = CLineDash(gridDashes, numGridDashes);
 
+  CRGBA c(0,0,0);
+
   //------*/
 
   if (gridMajor_ || gridMinor_) {
@@ -688,7 +694,7 @@ drawGrid(CGnuPlotRenderer *renderer, double start, double end)
 
         if (gridMajor_) {
           if (x >= getStart() && x <= getEnd())
-            drawClipLine(CPoint2D(x, start), CPoint2D(x, end));
+            drawClipLine(CPoint2D(x, start), CPoint2D(x, end), c);
         }
 
         if (gridMinor_) {
@@ -699,7 +705,7 @@ drawGrid(CGnuPlotRenderer *renderer, double start, double end)
               double x1 = x + j*xincrement1;
 
               if (x1 >= getStart() && x1 <= getEnd())
-                drawClipLine(CPoint2D(x1, start), CPoint2D(x1, end));
+                drawClipLine(CPoint2D(x1, start), CPoint2D(x1, end), c);
             }
           }
         }
@@ -713,7 +719,7 @@ drawGrid(CGnuPlotRenderer *renderer, double start, double end)
 
         if (gridMajor_) {
           if (y >= getStart() && y <= getEnd())
-            drawClipLine(CPoint2D(start, y), CPoint2D(end, y));
+            drawClipLine(CPoint2D(start, y), CPoint2D(end, y), c);
         }
 
         if (gridMinor_) {
@@ -724,8 +730,68 @@ drawGrid(CGnuPlotRenderer *renderer, double start, double end)
               double y1 = y + j*yincrement1;
 
               if (y1 >= getStart() && y1 <= getEnd())
-                drawClipLine(CPoint2D(start, y1), CPoint2D(end, y1));
+                drawClipLine(CPoint2D(start, y1), CPoint2D(end, y1), c);
             }
+          }
+        }
+      }
+    }
+  }
+
+  lineDash_ = CLineDash();
+}
+
+void
+CGnuPlotAxis::
+drawRadialGrid(CGnuPlotRenderer *renderer)
+{
+  static double gridDashes[] = {1, 3};
+  static int    numGridDashes = 2;
+
+  renderer_ = renderer;
+
+  //------*/
+
+  lineDash_ = CLineDash(gridDashes, numGridDashes);
+
+  //------*/
+
+  CRGBA c(0,0,0);
+
+  double da = M_PI/6;
+  int    na = int(2*M_PI/da + 0.5);
+
+  double r1 = 0.0;
+  double r2 = getEnd();
+
+  for (int i = 0; i < na; ++i) {
+    double a = i*da;
+
+    double x1 = r1*cos(a);
+    double y1 = r1*sin(a);
+    double x2 = r2*cos(a);
+    double y2 = r2*sin(a);
+
+    drawClipLine(CPoint2D(x1, y1), CPoint2D(x2, y2), c);
+  }
+
+  if (gridMajor_) {
+    double xincrement = getMajorIncrement();
+
+    for (int i = 0; i <= getNumMajorTicks(); ++i) {
+      double x = i*xincrement + getStart();
+
+      if (x >= getStart() && x <= getEnd())
+        renderer->drawEllipse(CPoint2D(0, 0), x, x, 0, c, 1, lineDash_);
+
+      if (gridMinor_) {
+        double xincrement1 = getMinorIncrement();
+
+        if (checkMinorTickSize(xincrement1)) {
+          for (int j = 0; j < getNumMinorTicks(); ++j) {
+            double x1 = x + j*xincrement1;
+
+            renderer->drawEllipse(CPoint2D(0, 0), x1, x1, 0, c, 1, lineDash_);
           }
         }
       }
@@ -751,18 +817,18 @@ checkMinorTickSize(double d) const
 
 void
 CGnuPlotAxis::
-drawClipLine(const CPoint2D &p1, const CPoint2D &p2)
+drawClipLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c)
 {
   CPoint2D p11 = p1;
   CPoint2D p21 = p2;
 
   if (! clip_ || renderer_->clipLine(p11, p21))
-    drawLine(p11, p21);
+    drawLine(p11, p21, c);
 }
 
 void
 CGnuPlotAxis::
-drawLine(const CPoint2D &p1, const CPoint2D &p2)
+drawLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c)
 {
   double x1 = p1.x, y1 = p1.y;
   double x2 = p2.x, y2 = p2.y;
@@ -771,7 +837,7 @@ drawLine(const CPoint2D &p1, const CPoint2D &p2)
   group_->mapLogPoint(&x2, &y2);
 
   // TODO: custom width and color
-  renderer_->drawLine(CPoint2D(x1, y1), CPoint2D(x2, y2), 1, CRGBA(0,0,0), lineDash_);
+  renderer_->drawLine(CPoint2D(x1, y1), CPoint2D(x2, y2), 1, c, lineDash_);
 }
 
 void
@@ -783,7 +849,34 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
 
   group_->mapLogPoint(&x, &y);
 
-  renderer_->drawHAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str, CRGBA(0,0,0));
+  CPoint2D pos1(x, y);
+
+  CRGBA c(0,0,0);
+
+  if (enhanced_) {
+    CGnuPlotText text(str);
+
+    CBBox2D bbox = text.calcBBox(renderer_);
+
+    double dx = 0.0, dy = 0.0;
+
+    if      (halign == CHALIGN_TYPE_LEFT  ) dx = 0;
+    else if (halign == CHALIGN_TYPE_CENTER) dx = -bbox.getWidth()/2;
+    else if (halign == CHALIGN_TYPE_RIGHT ) dx = bbox.getWidth();
+
+    if      (valign == CVALIGN_TYPE_BOTTOM) dy = bbox.getHeight();
+    else if (valign == CVALIGN_TYPE_CENTER) dy = bbox.getHeight()/2;
+    else if (valign == CVALIGN_TYPE_TOP   ) dy = 0;
+
+    CBBox2D bbox1 = bbox.moveBy(pos1 + CPoint2D(dx, dy));
+
+    bbox1.setYMax(pos1.y + dy);
+
+    text.draw(renderer_, bbox1, CHALIGN_TYPE_CENTER, c);
+  }
+  else {
+    renderer_->drawHAlignedText(pos1, halign, xOffset, valign, yOffset, str, c);
+  }
 }
 
 void
@@ -793,7 +886,9 @@ drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
 {
   double x = pos.x, y = pos.y;
 
+  CRGBA c(0,0,0);
+
   group_->mapLogPoint(&x, &y);
 
-  renderer_->drawVAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str, CRGBA(0,0,0));
+  renderer_->drawVAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str, c);
 }

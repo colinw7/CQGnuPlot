@@ -10,7 +10,7 @@ namespace {
   std::string encodeAxisId(char c, int ind) {
     char id[3] = { c, char('0' + ind), 0 };
 
-    return std::string(id, 3);
+    return std::string(&id[0]);
   }
 
   void decodeAxisId(const std::string &id, char &c, int &ind) {
@@ -97,6 +97,8 @@ init()
     if (zaxis(1).min().isValid()) zaxis(1).setMin(zmin);
     if (zaxis(1).max().isValid()) zaxis(1).setMax(zmax);
   }
+
+  setPolar(plot->isPolar());
 }
 
 void
@@ -421,6 +423,21 @@ fit()
 
 void
 CGnuPlotGroup::
+saveRange()
+{
+  saveRange_ = CBBox2D(getXMin(), getYMin(), getXMax(), getYMax());
+}
+
+void
+CGnuPlotGroup::
+restoreRange()
+{
+  setAxisRange("x1", saveRange_.getXMin(), saveRange_.getXMax());
+  setAxisRange("y1", saveRange_.getYMin(), saveRange_.getYMax());
+}
+
+void
+CGnuPlotGroup::
 setCameraEnabled(bool b)
 {
   camera_->setEnabled(b);
@@ -588,18 +605,24 @@ void
 CGnuPlotGroup::
 showXAxis(bool show)
 {
-  xaxis(1).setDisplayed(show);
+  auto p = axes_.find("x1");
+  if (p == axes_.end()) return;
 
-  app()->stateChanged(window(), CGnuPlotTypes::ChangeState::AXIS_DISPLAY);
+  CGnuPlotAxis *axis = (*p).second;
+
+  axis->setDisplayed(show);
 }
 
 void
 CGnuPlotGroup::
 showYAxis(bool show)
 {
-  yaxis(1).setDisplayed(show);
+  auto p = axes_.find("y1");
+  if (p == axes_.end()) return;
 
-  app()->stateChanged(window(), CGnuPlotTypes::ChangeState::AXIS_DISPLAY);
+  CGnuPlotAxis *axis = (*p).second;
+
+  axis->setDisplayed(show);
 }
 
 void
@@ -647,7 +670,7 @@ draw()
   //---
 
   // draw grid
-  drawGrid(CGnuPlotTypes::DrawLayer::BACK);
+  drawGrid(renderer, CGnuPlotTypes::DrawLayer::BACK);
 
   //---
 
@@ -671,7 +694,7 @@ draw()
   //---
 
   // draw grid
-  drawGrid(CGnuPlotTypes::DrawLayer::FRONT);
+  drawGrid(renderer, CGnuPlotTypes::DrawLayer::FRONT);
 
   //---
 
@@ -722,6 +745,8 @@ getPlotAxis(char c, int ind)
     else if (c == 'y') dir = CORIENTATION_VERTICAL;
     else if (c == 'z') dir = CORIENTATION_HORIZONTAL;
     else if (c == 'p') dir = CORIENTATION_VERTICAL;
+    else if (c == 'r') dir = CORIENTATION_HORIZONTAL;
+    else if (c == 't') dir = CORIENTATION_VERTICAL;
     else               assert(false);
 
     CGnuPlotAxis *axis = app()->createAxis(this, id, dir);
@@ -733,6 +758,33 @@ getPlotAxis(char c, int ind)
 
   return (*p).second;
 }
+
+void
+CGnuPlotGroup::
+setAxisRange(const std::string &id, double r1, double r2)
+{
+  auto p = axes_.find(id);
+  if (p == axes_.end()) return;
+
+  CGnuPlotAxis *axis = (*p).second;
+
+  axis->setRange(r1, r2);
+
+  char c;
+  int  ind;
+
+  decodeAxisId(id, c, ind);
+
+  if      (c == 'x') {
+    xaxis(ind).setMin(axis->getStart());
+    xaxis(ind).setMax(axis->getEnd  ());
+  }
+  else if (c == 'y') {
+    yaxis(ind).setMin(axis->getStart());
+    yaxis(ind).setMax(axis->getEnd  ());
+  }
+}
+
 
 void
 CGnuPlotGroup::
@@ -794,6 +846,18 @@ setAxisEnd(const std::string &id, double r)
 
 void
 CGnuPlotGroup::
+setAxisGridDisplayed(const std::string &id, bool b)
+{
+  auto p = axes_.find(id);
+  if (p == axes_.end()) return;
+
+  CGnuPlotAxis *axis = (*p).second;
+
+  axis->setGrid(b);
+}
+
+void
+CGnuPlotGroup::
 updatePlotAxisRange(const std::string &id)
 {
   char c;
@@ -834,8 +898,12 @@ updatePlotAxisRange(char c, int ind)
       assert(false);
   }
   else if (c == 'p') {
-    start = axesData_.paxis[ind].min().getValue(0.0);
-    end   = axesData_.paxis[ind].max().getValue(1.0);
+    start = paxis(ind).min().getValue(0.0);
+    end   = paxis(ind).max().getValue(1.0);
+  }
+  else if (c == 'r') {
+    start = raxis().min().getValue(0.0);
+    end   = raxis().max().getValue(1.0);
   }
   else
     assert(false);
@@ -1122,9 +1190,9 @@ drawAxes(CGnuPlotRenderer *renderer)
   if (is3D()) {
     drawBorder(renderer);
 
-    drawXAxes(renderer, 1, false);
-    drawYAxes(renderer, 1, false);
-    drawZAxes(renderer, 1, false);
+    drawXAxis(renderer, 1, false);
+    drawYAxis(renderer, 1, false);
+    drawZAxis(renderer, 1, false);
   }
   else {
     CGnuPlotPlot *singlePlot = getSingleStylePlot();
@@ -1149,14 +1217,25 @@ drawAxes(CGnuPlotRenderer *renderer)
         ySet.insert(plot->yind());
       }
 
+      for (int i = 1; i <= 2; ++i) {
+        if (xSet.find(i) == xSet.end() && xaxis(i).text() != "")
+          xSet.insert(i);
+        if (ySet.find(i) == ySet.end() && yaxis(i).text() != "")
+          ySet.insert(i);
+      }
+
       for (const auto &xi : xSet)
-        drawXAxes(renderer, xi, xi == 1 && xSet.find(2) == xSet.end());
+        drawXAxis(renderer, xi, xi == 1 && xSet.find(2) == xSet.end());
 
       for (const auto &yi : ySet)
-        drawYAxes(renderer, yi, yi == 1 && ySet.find(2) == ySet.end());
+        drawYAxis(renderer, yi, yi == 1 && ySet.find(2) == ySet.end());
     }
     else {
-      drawXAxes(renderer, 1, false);
+      drawXAxis(renderer, 1, false);
+    }
+
+    if (isPolar()) {
+      drawAxis(renderer, raxis(), 'r', 1);
     }
   }
 }
@@ -1253,7 +1332,7 @@ drawBorder(CGnuPlotRenderer *renderer)
 
 void
 CGnuPlotGroup::
-drawXAxes(CGnuPlotRenderer *renderer, int xind, bool drawOther)
+drawXAxis(CGnuPlotRenderer *renderer, int xind, bool drawOther)
 {
   CGnuPlotAxisData &xaxis = this->xaxis(xind);
 
@@ -1285,7 +1364,7 @@ drawXAxes(CGnuPlotRenderer *renderer, int xind, bool drawOther)
     plotXAxis->setDrawLine(false);
     plotXAxis->setDrawTickMark(xaxis.showTics());
 
-    plotXAxis->setTickInside(xind == 1);
+    plotXAxis->setTickInside(xaxis.isOutside() ? xind == 1 : xind == 2);
     plotXAxis->setDrawTickLabel(xaxis.showTics());
     plotXAxis->setLabelInside(xind == 2);
     plotXAxis->setDrawLabel(true);
@@ -1295,6 +1374,7 @@ drawXAxes(CGnuPlotRenderer *renderer, int xind, bool drawOther)
 
     //---
 
+    plotXAxis->setEnhanced(xaxis.isEnhanced());
     plotXAxis->setTickInside1(false);
     plotXAxis->setDrawTickLabel1(false);
     plotXAxis->setLabelInside1(false);
@@ -1310,15 +1390,20 @@ drawXAxes(CGnuPlotRenderer *renderer, int xind, bool drawOther)
 
     //---
 
+    CGnuPlotAxis *plotYAxis = getPlotAxis('y', 1);
+
+    double ymin1 = plotYAxis->getStart();
+    double ymax1 = plotYAxis->getEnd  ();
+
+    plotXAxis->setPosition (xind == 2 ? ymax1 : ymin1);
+    plotXAxis->setPosition1(ymax1);
+
+    //---
+
     plotXAxis->setInitialized(true);
   }
 
   //---
-
-  CGnuPlotAxis *plotYAxis = getPlotAxis('y', 1);
-
-  double ymin1 = plotYAxis->getStart();
-  double ymax1 = plotYAxis->getEnd  ();
 
   double zmin1 = 0.0;
 
@@ -1339,16 +1424,16 @@ drawXAxes(CGnuPlotRenderer *renderer, int xind, bool drawOther)
     renderer = &renderer1;
 
   // draw major (bottom)
-  plotXAxis->drawAxis(renderer, xind == 2 ? ymax1 : ymin1, true);
+  plotXAxis->drawAxis(renderer, plotXAxis->position(), true);
 
   // draw minor (top)
   if (drawOther)
-    plotXAxis->drawAxis(renderer, ymax1, false);
+    plotXAxis->drawAxis(renderer, plotXAxis->position1(), false);
 }
 
 void
 CGnuPlotGroup::
-drawYAxes(CGnuPlotRenderer *renderer, int yind, bool drawOther)
+drawYAxis(CGnuPlotRenderer *renderer, int yind, bool drawOther)
 {
   CGnuPlotAxisData &yaxis = this->yaxis(yind);
 
@@ -1376,7 +1461,7 @@ drawYAxes(CGnuPlotRenderer *renderer, int yind, bool drawOther)
     plotYAxis->setDrawLine(false);
     plotYAxis->setDrawTickMark(yaxis.showTics());
 
-    plotYAxis->setTickInside(yind == 1);
+    plotYAxis->setTickInside(yaxis.isOutside() ? yind == 1 : yind == 2);
     plotYAxis->setDrawTickLabel(yaxis.showTics());
     plotYAxis->setLabelInside(yind == 2);
     plotYAxis->setDrawLabel(true);
@@ -1386,6 +1471,7 @@ drawYAxes(CGnuPlotRenderer *renderer, int yind, bool drawOther)
 
     //---
 
+    plotYAxis->setEnhanced(yaxis.isEnhanced());
     plotYAxis->setTickInside1(false);
     plotYAxis->setDrawTickLabel1(false);
     plotYAxis->setLabelInside1(false);
@@ -1401,15 +1487,20 @@ drawYAxes(CGnuPlotRenderer *renderer, int yind, bool drawOther)
 
     //---
 
+    CGnuPlotAxis *plotXAxis = getPlotAxis('x', 1);
+
+    double xmin1 = plotXAxis->getStart();
+    double xmax1 = plotXAxis->getEnd  ();
+
+    plotYAxis->setPosition (yind == 2 ? xmax1 : xmin1);
+    plotYAxis->setPosition1(xmax1);
+
+    //---
+
     plotYAxis->setInitialized(true);
   }
 
   //---
-
-  CGnuPlotAxis *plotXAxis = getPlotAxis('x', 1);
-
-  double xmin1 = plotXAxis->getStart();
-  double xmax1 = plotXAxis->getEnd  ();
 
   double zmin1 = 0.0;
 
@@ -1430,16 +1521,16 @@ drawYAxes(CGnuPlotRenderer *renderer, int yind, bool drawOther)
     renderer = &renderer1;
 
   // draw major (left)
-  plotYAxis->drawAxis(renderer, yind == 2 ? xmax1 : xmin1, true);
+  plotYAxis->drawAxis(renderer, plotYAxis->position(), true);
 
   // draw minor (right)
   if (drawOther)
-    plotYAxis->drawAxis(renderer, xmax1, false);
+    plotYAxis->drawAxis(renderer, plotYAxis->position1(), false);
 }
 
 void
 CGnuPlotGroup::
-drawZAxes(CGnuPlotRenderer *renderer, int zind, bool drawOther)
+drawZAxis(CGnuPlotRenderer *renderer, int zind, bool drawOther)
 {
   CGnuPlotAxisData &zaxis = this->zaxis(zind);
 
@@ -1461,7 +1552,7 @@ drawZAxes(CGnuPlotRenderer *renderer, int zind, bool drawOther)
     plotZAxis->setDrawLine(false);
     plotZAxis->setDrawTickMark(zaxis.showTics());
 
-    plotZAxis->setTickInside(zind == 1);
+    plotZAxis->setTickInside(zaxis.isOutside() ? zind == 1 : zind == 2);
     plotZAxis->setDrawTickLabel(zaxis.showTics());
     plotZAxis->setLabelInside(zind == 2);
     plotZAxis->setDrawLabel(true);
@@ -1471,6 +1562,7 @@ drawZAxes(CGnuPlotRenderer *renderer, int zind, bool drawOther)
 
     //---
 
+    plotZAxis->setEnhanced(zaxis.isEnhanced());
     plotZAxis->setTickInside1(false);
     plotZAxis->setDrawTickLabel1(false);
     plotZAxis->setLabelInside1(false);
@@ -1486,16 +1578,23 @@ drawZAxes(CGnuPlotRenderer *renderer, int zind, bool drawOther)
 
     //---
 
+    CGnuPlotAxis *plotXAxis = getPlotAxis('x', 1);
+
+    double xmin1 = plotXAxis->getStart();
+    double xmax1 = plotXAxis->getEnd  ();
+
+    plotZAxis->setPosition (xmin1);
+    plotZAxis->setPosition1(xmax1);
+
+    //---
+
     plotZAxis->setInitialized(true);
   }
 
   //---
 
-  CGnuPlotAxis *plotXAxis = getPlotAxis('x', 1);
   CGnuPlotAxis *plotYAxis = getPlotAxis('y', 1);
 
-  double xmin1 = plotXAxis->getStart();
-  double xmax1 = plotXAxis->getEnd  ();
   double ymin1 = plotYAxis->getStart();
 //double ymax1 = plotYAxis->getEnd  ();
 
@@ -1509,24 +1608,92 @@ drawZAxes(CGnuPlotRenderer *renderer, int zind, bool drawOther)
   renderer = &renderer1;
 
   // draw major (bottom)
-  plotZAxis->drawAxis(renderer, xmin1, true);
+  plotZAxis->drawAxis(renderer, plotZAxis->position(), true);
 
   // draw minor (top)
   if (drawOther)
-    plotZAxis->drawAxis(renderer, xmax1, false);
+    plotZAxis->drawAxis(renderer, plotZAxis->position1(), false);
 }
 
 void
 CGnuPlotGroup::
-drawGrid(const CGnuPlotTypes::DrawLayer &layer)
+drawAxis(CGnuPlotRenderer *renderer, const CGnuPlotAxisData &axis, char c, int ind)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
+  CGnuPlotAxis *plotAxis = getPlotAxis(c, ind);
 
+  if (! plotAxis->isDisplayed())
+    return;
+
+  if (! plotAxis->isInitialized()) {
+    plotAxis->setLabel(axis.text());
+
+    plotAxis->setLogarithmic(false);
+    plotAxis->setDrawLine(c == 'r');
+    plotAxis->setDrawTickMark(axis.showTics());
+
+    plotAxis->setTickInside(! axis.isOutside());
+    plotAxis->setDrawTickLabel(axis.showTics());
+    plotAxis->setLabelInside(false);
+    plotAxis->setDrawLabel(true);
+
+    if (axis.isTime())
+      plotAxis->setTimeFormat(axis.format());
+
+    //---
+
+    plotAxis->setEnhanced(axis.isEnhanced());
+    plotAxis->setTickInside1(false);
+    plotAxis->setDrawTickLabel1(false);
+    plotAxis->setLabelInside1(false);
+    plotAxis->setDrawLabel1(false);
+    plotAxis->setDrawTickMark1(false);
+
+    //---
+
+    plotAxis->setGrid(axis.hasGrid());
+    plotAxis->setGridMajor(axis.hasGridTics());
+    plotAxis->setGridMinor(axis.hasGridMinorTics());
+    plotAxis->setGridLayer(axesData_.grid.layer);
+
+    //---
+
+    CGnuPlotAxis *plotXAxis = getPlotAxis('x', 1);
+
+  //double xmin = plotXAxis->getStart();
+    double xmax = plotXAxis->getEnd  ();
+
+    plotAxis->setRange(0, xmax);
+
+    //CGnuPlotAxis *plotYAxis = getPlotAxis('y', 1);
+
+    //double ymin = plotYAxis->getStart();
+    //double ymax = plotYAxis->getEnd  ();
+
+    plotAxis->setPosition(0);
+
+    //---
+
+    plotAxis->setInitialized(true);
+  }
+
+  //---
+
+  renderer->setRange(getDisplayRange(1, 1));
+  renderer->setReverse(axis.isReverse(), false);
+
+  plotAxis->drawAxis(renderer, plotAxis->position(), true);
+}
+
+void
+CGnuPlotGroup::
+drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
+{
   bool isBack = (layer == CGnuPlotTypes::DrawLayer::BACK);
 
   if (! is3D()) {
     CGnuPlotAxis *plotXAxis = getPlotAxis('x', 1);
     CGnuPlotAxis *plotYAxis = getPlotAxis('y', 1);
+    CGnuPlotAxis *plotRAxis = getPlotAxis('r', 1);
 
     if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer() == isBack) {
       double ymin1 = plotYAxis->getStart();
@@ -1540,6 +1707,10 @@ drawGrid(const CGnuPlotTypes::DrawLayer &layer)
       double xmax1 = plotXAxis->getEnd  ();
 
       plotYAxis->drawGrid(renderer, xmin1, xmax1);
+    }
+
+    if (plotRAxis->hasGrid() && plotRAxis->isGridBackLayer() == isBack) {
+      plotRAxis->drawRadialGrid(renderer);
     }
   }
   else {
@@ -1678,14 +1849,15 @@ getAxisDataFromId(const std::string &id) const
 
   const CGnuPlotAxisData *axis = 0;
 
-  if      (c == 'x')
-    axis = &xaxis(ind);
-  else if (c == 'y')
-    axis = &yaxis(ind);
-  else if (c == 'z')
-    axis = &zaxis(ind);
-  else if (c == 'p')
-    axis = &paxis(ind);
+  if      (c == 'x') axis = &xaxis(ind);
+  else if (c == 'y') axis = &yaxis(ind);
+  else if (c == 'z') axis = &zaxis(ind);
+  else if (c == 'p') axis = &paxis(ind);
+  else if (c == 'c') axis = &cbaxis();
+  else if (c == 't') axis = &taxis(ind);
+  else if (c == 'r') axis = &raxis();
+  else if (c == 'u') axis = &uaxis();
+  else if (c == 'v') axis = &vaxis();
 
   return axis;
 }

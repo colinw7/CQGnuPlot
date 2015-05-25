@@ -66,6 +66,15 @@ setMaximum(const CPoint2D &p)
 
 void
 CQPoint2DEdit::
+setStep(const CPoint2D &p)
+{
+  step_ = p;
+
+  updateRange();
+}
+
+void
+CQPoint2DEdit::
 updateRange()
 {
   x_validator_->setRange(min_.x, max_.x);
@@ -73,6 +82,9 @@ updateRange()
 
   x_spin_->setRange(min_.x, max_.x);
   y_spin_->setRange(min_.y, max_.y);
+
+  x_spin_->setSingleStep(step_.x);
+  y_spin_->setSingleStep(step_.y);
 }
 
 void
@@ -85,6 +97,8 @@ init(const CPoint2D &value)
 
   min_ = CPoint2D(-1E50, -1E50);
   max_ = CPoint2D( 1E50,  1E50);
+
+  step_ = CPoint2D(1, 1);
 
   //---
 

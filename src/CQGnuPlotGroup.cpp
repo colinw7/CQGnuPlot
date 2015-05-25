@@ -164,6 +164,12 @@ mouseMove(const QPoint &qp)
   }
 }
 
+void
+CQGnuPlotGroup::
+mouseRelease(const QPoint &)
+{
+}
+
 bool
 CQGnuPlotGroup::
 mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
@@ -188,4 +194,21 @@ mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
   }
 
   return false;
+}
+
+void
+CQGnuPlotGroup::
+pixelToWindow(const CPoint2D &p, CPoint2D &w)
+{
+  QPoint pos(p.x, p.y);
+
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setRegion(region());
+
+  renderer->setRange(getDisplayRange(1, 1));
+
+  renderer->pixelToWindow(p, w);
+
+  unmapLogPoint(&w.x, &w.y);
 }

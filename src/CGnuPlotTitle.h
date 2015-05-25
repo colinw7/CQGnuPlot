@@ -66,7 +66,7 @@ class CGnuPlotTitle {
   CPoint2D          offset_ { 0, 0 };
   CFontPtr          font_;
   CGnuPlotColorSpec color_;
-  bool              enhanced_ { false };
+  bool              enhanced_ { true };
 };
 
 #endif

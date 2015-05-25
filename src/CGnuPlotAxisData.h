@@ -3,8 +3,12 @@
 
 class CGnuPlotAxisData {
  public:
-  CGnuPlotAxisData(int i=1) :
-   ind_(i) {
+  CGnuPlotAxisData(int ind=1) :
+   ind_(ind) {
+    displayed_ = (ind_ == 1);
+    gridTics_  = (ind_ == 1);
+    minorTics_ = (ind_ == 1);
+    showTics_  = (ind_ == 1);
   }
 
   int ind() const { return ind_; }
@@ -23,6 +27,9 @@ class CGnuPlotAxisData {
 
   bool isMirror() const { return mirror_; }
   void setMirror(bool b) { mirror_ = b; }
+
+  bool isOutside() const { return outside_; }
+  void setOutside(bool b) { outside_ = b; }
 
   bool isReverse() const { return reverse_; }
   void setReverse(bool b) { reverse_ = b; }
@@ -253,6 +260,7 @@ class CGnuPlotAxisData {
   bool              gridTics_        { true };
   bool              gridMinorTics_   { false };
   bool              mirror_          { true  };
+  bool              outside_         { true  };
   bool              reverse_         { false };
   bool              writeback_       { false };
   bool              extend_          { false };

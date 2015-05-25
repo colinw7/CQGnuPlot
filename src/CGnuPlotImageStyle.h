@@ -16,6 +16,20 @@ struct CGnuPlotImageStyle {
   bool              flipy { false };
   CGnuPlotUsingCols usingCols;
   ImageType         fileType { CGnuPlotTypes::ImageType::NONE };
+
+  void reset() {
+    w .setInvalid();
+    h .setInvalid();
+    o .setInvalid();
+    c .setInvalid();
+    dx.setInvalid();
+    dy.setInvalid();
+    a .setInvalid();
+
+    flipy     = false;
+    usingCols = CGnuPlotUsingCols();
+    fileType  = CGnuPlotTypes::ImageType::NONE;
+  }
 };
 
 

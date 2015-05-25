@@ -123,7 +123,7 @@ patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern,
 void
 CGnuPlotBBoxRenderer::
 drawEllipse(const CPoint2D &center, double rx, double ry, double a,
-            const CRGBA &, double /*width*/)
+            const CRGBA &, double /*width*/, const CLineDash & /*dash*/)
 {
   CPoint2D p1 = center - CPoint2D(rx, ry);
   CPoint2D p2 = center + CPoint2D(rx, ry);

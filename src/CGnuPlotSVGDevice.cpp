@@ -46,6 +46,9 @@ drawInit(CGnuPlotWindow *)
 
   os() << "<svg width=\"" << size_.width << "\" height=\"" << size_.height << "\"" <<
           " viewBox=\"0 0 " << size_.width << " " << size_.height << "\">\n";
+
+  renderer_->setWidth (size_.width );
+  renderer_->setHeight(size_.height);
 }
 
 void

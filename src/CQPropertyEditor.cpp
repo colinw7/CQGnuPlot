@@ -167,7 +167,8 @@ setValue(QWidget *w, const QVariant &var)
 //------
 
 CQPropertyPointEditor::
-CQPropertyPointEditor()
+CQPropertyPointEditor(double min, double max, double step) :
+ min_(min), max_(max), step_(step)
 {
 }
 
@@ -178,6 +179,9 @@ createEdit(QWidget *parent)
   CQPoint2DEdit *edit = new CQPoint2DEdit(parent);
 
   edit->setSpin(true);
+  edit->setMinimum(CPoint2D(min_, min_));
+  edit->setMaximum(CPoint2D(max_, max_));
+  edit->setStep(CPoint2D(step_, step_));
 
   return edit;
 }

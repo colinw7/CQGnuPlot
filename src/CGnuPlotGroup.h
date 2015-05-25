@@ -63,30 +63,67 @@ class CGnuPlotGroup {
   void setAxesData(const AxesData &a) { axesData_ = a; }
 
   const CGnuPlotAxisData &xaxis(int ind) const {
-    return const_cast<CGnuPlotGroup *>(this)->axesData_.xaxis[ind];
+    return const_cast<CGnuPlotGroup *>(this)->xaxis(ind);
   }
   const CGnuPlotAxisData &yaxis(int ind) const {
-    return const_cast<CGnuPlotGroup *>(this)->axesData_.yaxis[ind];
+    return const_cast<CGnuPlotGroup *>(this)->yaxis(ind);
   }
   const CGnuPlotAxisData &zaxis(int ind) const {
-    return const_cast<CGnuPlotGroup *>(this)->axesData_.zaxis[ind];
+    return const_cast<CGnuPlotGroup *>(this)->zaxis(ind);
   }
   const CGnuPlotAxisData &paxis(int ind) const {
-    return const_cast<CGnuPlotGroup *>(this)->axesData_.paxis[ind];
+    return const_cast<CGnuPlotGroup *>(this)->paxis(ind);
+  }
+  const CGnuPlotAxisData &taxis(int ind) const {
+    return const_cast<CGnuPlotGroup *>(this)->taxis(ind);
+  }
+  const CGnuPlotAxisData &cbaxis() const {
+    return const_cast<CGnuPlotGroup *>(this)->cbaxis();
+  }
+  const CGnuPlotAxisData &raxis() const {
+    return const_cast<CGnuPlotGroup *>(this)->raxis();
+  }
+  const CGnuPlotAxisData &uaxis() const {
+    return const_cast<CGnuPlotGroup *>(this)->uaxis();
+  }
+  const CGnuPlotAxisData &vaxis() const {
+    return const_cast<CGnuPlotGroup *>(this)->vaxis();
   }
 
   CGnuPlotAxisData &xaxis(int ind) {
-    return const_cast<CGnuPlotGroup *>(this)->axesData_.xaxis[ind];
+    CGnuPlot::IAxisMap::iterator p = axesData_.xaxis.find(ind);
+
+    if (p == axesData_.xaxis.end())
+      p = axesData_.xaxis.insert(p, CGnuPlot::IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
+
+    return (*p).second;
   }
+
   CGnuPlotAxisData &yaxis(int ind) {
-    return const_cast<CGnuPlotGroup *>(this)->axesData_.yaxis[ind];
+    CGnuPlot::IAxisMap::iterator p = axesData_.yaxis.find(ind);
+
+    if (p == axesData_.yaxis.end())
+      p = axesData_.yaxis.insert(p, CGnuPlot::IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
+
+    return (*p).second;
   }
+
   CGnuPlotAxisData &zaxis(int ind) {
-    return const_cast<CGnuPlotGroup *>(this)->axesData_.zaxis[ind];
+    CGnuPlot::IAxisMap::iterator p = axesData_.zaxis.find(ind);
+
+    if (p == axesData_.zaxis.end())
+      p = axesData_.zaxis.insert(p, CGnuPlot::IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
+
+    return (*p).second;
   }
-  CGnuPlotAxisData &paxis(int ind) {
-    return const_cast<CGnuPlotGroup *>(this)->axesData_.paxis[ind];
-  }
+
+  CGnuPlotAxisData &paxis(int ind) { return this->axesData_.paxis[ind]; }
+  CGnuPlotAxisData &taxis(int ind) { return this->axesData_.taxis[ind]; }
+
+  CGnuPlotAxisData &cbaxis() { return this->axesData_.cbaxis; }
+  CGnuPlotAxisData &raxis () { return this->axesData_.raxis ; }
+  CGnuPlotAxisData &uaxis () { return this->axesData_.uaxis ; }
+  CGnuPlotAxisData &vaxis () { return this->axesData_.vaxis ; }
 
   //---
 
@@ -108,6 +145,11 @@ class CGnuPlotGroup {
     setXMin(b.getXMin()); setYMin(b.getYMin());
     setXMax(b.getXMax()); setYMax(b.getYMax());
   }
+
+  void saveRange();
+  void restoreRange();
+
+  //---
 
   const std::string &getXLabel() const { return xaxis(1).text(); }
   void setXLabel(const std::string &s) { xaxis(1).setText(s); }
@@ -132,6 +174,11 @@ class CGnuPlotGroup {
 
   bool getYGrid() const { return yaxis(1).hasGrid(); }
   void setYGrid(bool b) { yaxis(1).setGrid(b); }
+
+  //---
+
+  bool isPolar() const { return polar_; }
+  void setPolar(bool b) { polar_ = b; }
 
   //---
 
@@ -254,8 +301,12 @@ class CGnuPlotGroup {
   void showXAxis(bool show);
   void showYAxis(bool show);
 
+  void setAxisRange(const std::string &id, double r1, double r2);
+
   void setAxisStart(const std::string &id, double r);
   void setAxisEnd  (const std::string &id, double r);
+
+  void setAxisGridDisplayed(const std::string &id, bool b);
 
   void updatePlotAxisRange(const std::string &id);
   void updatePlotAxisRange(char c, int ind);
@@ -281,11 +332,13 @@ class CGnuPlotGroup {
 
   void drawBorder(CGnuPlotRenderer *renderer);
 
-  void drawXAxes(CGnuPlotRenderer *renderer, int xind, bool other);
-  void drawYAxes(CGnuPlotRenderer *renderer, int yind, bool other);
-  void drawZAxes(CGnuPlotRenderer *renderer, int yind, bool other);
+  void drawXAxis(CGnuPlotRenderer *renderer, int xind, bool other);
+  void drawYAxis(CGnuPlotRenderer *renderer, int yind, bool other);
+  void drawZAxis(CGnuPlotRenderer *renderer, int yind, bool other);
 
-  void drawGrid(const CGnuPlot::DrawLayer &layer);
+  void drawAxis(CGnuPlotRenderer *renderer, const CGnuPlotAxisData &axis, char c, int ind);
+
+  void drawGrid(CGnuPlotRenderer *renderer, const CGnuPlot::DrawLayer &layer);
 
   void drawKey();
   void drawColorBox(CGnuPlotRenderer *renderer);
@@ -368,8 +421,10 @@ class CGnuPlotGroup {
   LogScaleMap           logScale_;             // log axis data
   Annotations           annotations_;          // annotations
   Axes                  axes_;                 // axes
+  bool                  polar_ { false };      // polar
   CGnuPlotCamera*       camera_;               // view camera
   CRGBA                 backgroundColor_;      // background color
+  mutable CBBox2D       saveRange_;
 };
 
 #endif
