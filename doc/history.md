@@ -5,3 +5,7 @@
  + Improve polar plot
  + Enhanced text on title and axis
  + SVG save from menu
+
+### 5/26/2015
+ + improve xtics parsing
+ + boxplot improvements - fill density, range, axes, tics, outlier symbol

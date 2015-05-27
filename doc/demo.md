@@ -30,11 +30,9 @@
   + infinite loop
 
 ## bolditalic.dem
-  + axis labels should use enhanced text
-  + data range incorrect ? parse of [t=0:4*pi]
+  + improve polar layout (axis labels and title)
 
 ## borders.dem
-  + Invalid format string
   + key not needed
 
 ## boxplot.dem

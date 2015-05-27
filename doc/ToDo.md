@@ -3,6 +3,7 @@
   + Better axes ticks for log (match base powers)
   + More Optimization of calc using compiled stack
   + allow select/modifiy all objects (plots, axis, ...)
+  + edit interface (move) for annotations
   + save cmd
   + user shared_ptr/unique_ptr instead of CRefPtr
   + fit command
