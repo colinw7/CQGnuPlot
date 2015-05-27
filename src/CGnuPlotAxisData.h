@@ -99,6 +99,10 @@ class CGnuPlotAxisData {
   const std::string &text() const { return text_; }
   void setText(const std::string &s) { text_ = s; }
 
+  //------
+
+  bool hasTicLabels() const { return ! ticlabel_.empty(); }
+
   bool hasTicLabel(int i) const { return (ticlabel_.find(i) != ticlabel_.end()); }
 
   const std::string &ticLabel(int i) const {
@@ -110,6 +114,10 @@ class CGnuPlotAxisData {
   void setTicLabel(int i, const std::string &s) {
     ticlabel_[i] = s;
   }
+
+  void clearTicLabels() { ticlabel_.clear(); }
+
+  //------
 
   double offset() const { return offset_; }
   void setOffset(double r) { offset_ = r; }

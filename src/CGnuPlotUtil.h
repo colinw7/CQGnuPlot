@@ -25,6 +25,13 @@ namespace CGnuPlotUtil {
     if (val > high) return high;
     return val;
   }
+
+  template<typename T>
+  inline T sign(const T &t) {
+    if (t > T(0)) return  1;
+    if (t < T(0)) return -1;
+    return 0;
+  }
 }
 
 #endif

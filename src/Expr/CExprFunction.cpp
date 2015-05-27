@@ -590,6 +590,7 @@ addFunctions()
 #ifdef GNUPLOT_EXPR
   addObjFunction("rand", "i", new CExprFunctionRand);
 
+  // input types ..., return type, function
   new CExprFunctionObjT1<std::string,long,CExprStrLen>                 (this, "strlen");
   new CExprFunctionObjT3<std::string,long,long,std::string,CExprSubStr>(this, "substr");
   new CExprFunctionObjT2<std::string,std::string,long,CExprStrStrT>    (this, "strstrt");

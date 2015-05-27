@@ -326,6 +326,7 @@ CGnuPlot()
   CExprInst->addFunction("column"      , "is", new CGnuPlotColumnFn(this));
   CExprInst->addFunction("exists"      , "s" , new CGnuPlotExistsFn(this));
   CExprInst->addFunction("stringcolumn", "i" , new CGnuPlotStringColumnFn(this));
+  CExprInst->addFunction("strcol"      , "i" , new CGnuPlotStringColumnFn(this));
   CExprInst->addFunction("valid"       , "i" , new CGnuPlotStringValidFn(this));
   CExprInst->addFunction("value"       , "s" , new CGnuPlotValueFn(this));
   // timecolumn
@@ -2479,6 +2480,8 @@ plotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroup *group, 
     CStrUtil::addWords(forCmd.start, words);
 
     for (const auto &w : words) {
+      incLineStyle();
+
       CExprInst->createStringVariable(forCmd.var, w);
 
       plotCmd1(args, group, plots);
@@ -2511,6 +2514,8 @@ plotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroup *group, 
       return;
 
     while (i1 <= i2) {
+      incLineStyle();
+
       CExprInst->createIntegerVariable(forCmd.var, i1);
 
       plotCmd1(args, group, plots);
@@ -2530,6 +2535,8 @@ splotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroup *group,
     CStrUtil::addWords(forCmd.start, words);
 
     for (const auto &w : words) {
+      incLineStyle();
+
       CExprInst->createStringVariable(forCmd.var, w);
 
       splotCmd1(args, group, plots);
@@ -2562,6 +2569,8 @@ splotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroup *group,
       return;
 
     while (i1 <= i2) {
+      incLineStyle();
+
       CExprInst->createIntegerVariable(forCmd.var, i1);
 
       splotCmd1(args, group, plots);
@@ -4496,18 +4505,33 @@ setCmd(const std::string &args)
   }
   // set format {<axes>} {"<format-string>"}
   else if (var == VariableName::FORMAT) {
-    std::string arg = readNonSpace(line);
-
     std::string formatStr;
 
-    if (parseString(line, formatStr, "Invalid format string")) {
-      if      (arg == "x" ) xaxis(1).setFormat(formatStr);
-      else if (arg == "y" ) yaxis(1).setFormat(formatStr);
-      else if (arg == "x2") xaxis(2).setFormat(formatStr);
-      else if (arg == "y2") yaxis(2).setFormat(formatStr);
-      else if (arg == "z" ) zaxis(1).setFormat(formatStr);
-      else if (arg == "cb") cbaxis().setFormat(formatStr);
-      else if (arg == "r" ) raxis ().setFormat(formatStr);
+    line.skipSpace();
+
+    if (line.isChar('"') || line.isChar('\'')) {
+      if (parseString(line, formatStr, "Invalid format string")) {
+        xaxis(1).setFormat(formatStr);
+        xaxis(2).setFormat(formatStr);
+        yaxis(1).setFormat(formatStr);
+        yaxis(2).setFormat(formatStr);
+        zaxis(1).setFormat(formatStr);
+        cbaxis().setFormat(formatStr);
+        raxis ().setFormat(formatStr);
+      }
+    }
+    else {
+      std::string arg = readNonSpace(line);
+
+      if (parseString(line, formatStr, "Invalid format string")) {
+        if      (arg == "x" ) xaxis(1).setFormat(formatStr);
+        else if (arg == "x2") xaxis(2).setFormat(formatStr);
+        else if (arg == "y" ) yaxis(1).setFormat(formatStr);
+        else if (arg == "y2") yaxis(2).setFormat(formatStr);
+        else if (arg == "z" ) zaxis(1).setFormat(formatStr);
+        else if (arg == "cb") cbaxis().setFormat(formatStr);
+        else if (arg == "r" ) raxis ().setFormat(formatStr);
+      }
     }
   }
   // set functions (invalid)
@@ -12222,8 +12246,8 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
     else if (arg == "add") {
       // TODO
     }
-    else if (arg == "autofreq") {
-      // TODO
+    else if (arg == "autofreq" || arg == "auto") {
+      axis.clearTicLabels();
     }
     else if (arg == "format") {
       std::string formatStr;
@@ -12261,41 +12285,37 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
     }
     // ({"<label>"} <pos> {<level>} {,{"<label>"}...)}
     else if (arg == "(") {
-      bool first = true;
+      line.setPos(line.pos() - 1);
 
-      while (line.isValid()) {
-        if (! first) {
-          if (! line.skipSpaceAndChar(','))
-            break;
-        }
+      std::string str1;
 
-        line.skipSpace();
+      (void) parseRoundBracketedString(line, str1);
+
+      CParseLine line1(str1.substr(1, str1.size() - 2));
+
+      while (line1.isValid()) {
+        line1.skipSpace();
 
         std::string label;
 
-        if (line.isChar('"')) {
-          if (! parseString(line, label))
-            label = "";
-        }
+        if (! parseString(line1, label))
+          label = "";
 
-        std::string arg1 = readNonSpaceNonChar(line, ",)");
+        double pos = 0.0; // pos (integer)
 
-        double pos = 0.0;
-
-        if (arg1 == "" || ! stringToRealExpr(arg1, pos))
+        if (! parseReal(line1, pos))
           pos = 0.0;
 
-        std::string arg2 = readNonSpaceNonChar(line, ",)");
+        double level = 0.0; // level (integer) 0: major, 1: minor
 
-        double level = 0.0;
-
-        if (arg2 == "" || ! stringToRealExpr(arg2, level))
+        if (! parseReal(line1, level))
           level = 0.0;
 
-        first = false;
-      }
+        axis.setTicLabel(int(pos + 0.5), label);
 
-      line.skipSpaceAndChar(')');
+        if (! line1.skipSpaceAndChar(','))
+          break;
+      }
     }
     // <incr> | <start>, <incr> {,<end>} |
     else if (CStrUtil::isReal(arg) && CStrUtil::toReal(arg, &r)) {
@@ -12723,11 +12743,8 @@ parseString(CParseLine &line, std::string &str, const std::string &msg) const
     std::string id;
 
     if (! readIdentifier(line, id)) {
+      if (msg != "") errorMsg(msg);
       line.setPos(pos);
-
-      if (msg != "")
-        errorMsg(msg);
-
       return false;
     }
 
@@ -12743,22 +12760,20 @@ parseString(CParseLine &line, std::string &str, const std::string &msg) const
 
       CExprValueP value;
 
-      if (! evaluateExpression(expr, value))
-        value = CExprValueP();
+      if (! evaluateExpression(expr, value)) {
+        line.setPos(pos);
+        return false;
+      }
 
       if (! value.isValid() || ! value->getStringValue(str)) {
         line.setPos(pos);
-
         return false;
       }
     }
     else {
       if (! getStringVariable(id, str)) {
+        if (msg != "") errorMsg(msg);
         line.setPos(pos);
-
-        if (msg != "")
-          errorMsg(msg);
-
         return false;
       }
     }
@@ -12769,7 +12784,7 @@ parseString(CParseLine &line, std::string &str, const std::string &msg) const
 
 void
 CGnuPlot::
-skipString(CParseLine &line)
+skipString(CParseLine &line) const
 {
   if      (line.skipSpaceAndChar('"')) {
     while (line.isValid() && ! line.isChar('"')) {
@@ -13024,6 +13039,15 @@ parseRoundBracketedString(CParseLine &line, std::string &str) const
       ++brackets;
     else if (line.isChar(')'))
       --brackets;
+    else if (line.isChar('"') || line.isChar('\'')) {
+      int pos = line.pos();
+
+      skipString(line);
+
+      str += line.substr(pos, line.pos() - pos);
+
+      continue;
+    }
 
     str += line.getChar();
 
@@ -13050,6 +13074,11 @@ skipRoundBracketedString(CParseLine &line) const
       ++brackets;
     else if (line.isChar(')'))
       --brackets;
+    else if (line.isChar('"') || line.isChar('\'')) {
+      skipString(line);
+
+      continue;
+    }
 
     line.skipChar();
 

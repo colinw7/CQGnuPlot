@@ -27,7 +27,8 @@ CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
  barCache_(this), bubbleCache_(this), ellipseCache_(this), pieCache_(this),
  polygonCache_(this), rectCache_(this)
 {
-  setSmooth(app()->getSmooth());
+  setSmooth (app()->getSmooth());
+  setBoxPlot(app()->getBoxPlot());
 }
 
 CGnuPlotPlot::

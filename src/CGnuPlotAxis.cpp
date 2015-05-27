@@ -3,6 +3,7 @@
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotUtil.h>
 
 #include <CMathGen.h>
 #include <CStrUtil.h>
@@ -862,11 +863,17 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
 
     if      (halign == CHALIGN_TYPE_LEFT  ) dx = 0;
     else if (halign == CHALIGN_TYPE_CENTER) dx = -bbox.getWidth()/2;
-    else if (halign == CHALIGN_TYPE_RIGHT ) dx = bbox.getWidth();
+    else if (halign == CHALIGN_TYPE_RIGHT ) dx = -bbox.getWidth();
 
     if      (valign == CVALIGN_TYPE_BOTTOM) dy = bbox.getHeight();
     else if (valign == CVALIGN_TYPE_CENTER) dy = bbox.getHeight()/2;
     else if (valign == CVALIGN_TYPE_TOP   ) dy = 0;
+
+    double xo = renderer_->pixelWidthToWindowWidth  (xOffset);
+    double yo = renderer_->pixelHeightToWindowHeight(yOffset);
+
+    dx += xo;
+    dy += yo;
 
     CBBox2D bbox1 = bbox.moveBy(pos1 + CPoint2D(dx, dy));
 

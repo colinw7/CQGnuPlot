@@ -355,8 +355,9 @@ class CGnuPlotGroup {
   CGnuPlotAxisData       *getAxisDataFromId(const std::string &id);
 
   std::string getAxisValueStr(const std::string &id, int i, double r) const;
-
+  std::string getAxisValueStr(const CGnuPlotAxisData &axis, int i, double r) const;
   std::string formatAxisValue(const CGnuPlotAxisData &axis, double r) const;
+
 
   //-----
 

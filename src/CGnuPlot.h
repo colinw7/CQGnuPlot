@@ -1289,7 +1289,7 @@ class CGnuPlot {
   bool parseReal(CParseLine &line, double &r) const;
   bool parseString(CParseLine &line, std::string &str, const std::string &msg="") const;
 
-  void skipString(CParseLine &line);
+  void skipString(CParseLine &line) const;
 
   bool parseRoundBracketedString(CParseLine &line, std::string &str) const;
   bool skipRoundBracketedString(CParseLine &line) const;

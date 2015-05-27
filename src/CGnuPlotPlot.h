@@ -237,6 +237,11 @@ class CGnuPlotPlot {
 
   //---
 
+  void setBoxPlot(const CGnuPlotBoxPlot &b) { boxPlot_ = b; }
+  const CGnuPlotBoxPlot &getBoxPlot() const { return boxPlot_; }
+
+  //---
+
   const CGnuPlotFillStyle &fillStyle() const { return fillStyle_; }
   void setFillStyle(const CGnuPlotFillStyle &f) { fillStyle_ = f; }
 
@@ -502,6 +507,7 @@ class CGnuPlotPlot {
   COptReal               bymin_, bymax_;                    // calculated points bounded y range
   CBBox2D                bbox_ { 0, 0, 1, 1 };              // bounding box
   Smooth                 smooth_ { Smooth::NONE };          // smooth data
+  CGnuPlotBoxPlot        boxPlot_;
   CGnuPlotContour        contour_;                          // contour data
   bool                   contourSet_ { false };
   ZPolygons              surface_;                          // surface data

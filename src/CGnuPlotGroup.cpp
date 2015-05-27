@@ -1316,15 +1316,19 @@ drawBorder(CGnuPlotRenderer *renderer)
       renderer->drawLine(CPoint3D(xmax1, ymin1, zmax1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
   }
   else {
+    // 1 : x axis (bottom)
     if (axesData().border.sides & (1<<0))
       renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmax1, ymin1), bw, c);
 
+    // 2 : y axis (left)
     if (axesData().border.sides & (1<<1))
-      renderer->drawLine(CPoint2D(xmin1, ymax1), CPoint2D(xmax1, ymax1), bw, c);
-
-    if (axesData().border.sides & (1<<2))
       renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmin1, ymax1), bw, c);
 
+    // 4 : x axis (top)
+    if (axesData().border.sides & (1<<2))
+      renderer->drawLine(CPoint2D(xmin1, ymax1), CPoint2D(xmax1, ymax1), bw, c);
+
+    // 8 : y axis (right)
     if (axesData().border.sides & (1<<3))
       renderer->drawLine(CPoint2D(xmax1, ymin1), CPoint2D(xmax1, ymax1), bw, c);
   }
@@ -1342,16 +1346,7 @@ drawXAxis(CGnuPlotRenderer *renderer, int xind, bool drawOther)
     return;
 
   if (! plotXAxis->isInitialized()) {
-    if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
-      plotXAxis->setMajorIncrement(1);
-      plotXAxis->setDrawMinorTickMark(false);
-    }
-    else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
-      plotXAxis->setMajorIncrement(1);
-    }
-
-    //---
-
+    // defaults
     plotXAxis->setLabel(xaxis.text());
 
     if (getLogScale(LogScale::X)) {
@@ -1387,6 +1382,23 @@ drawXAxis(CGnuPlotRenderer *renderer, int xind, bool drawOther)
     plotXAxis->setGridMajor(xaxis.hasGridTics());
     plotXAxis->setGridMinor(xaxis.hasGridMinorTics());
     plotXAxis->setGridLayer(axesData_.grid.layer);
+
+    //---
+
+    // style customization
+    if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
+      plotXAxis->setMajorIncrement(1);
+      plotXAxis->setDrawMinorTickMark(false);
+    }
+    else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
+      plotXAxis->setMajorIncrement(1);
+    }
+    else if (hasPlotStyle(PlotStyle::BOXPLOT)) {
+      plotXAxis->setMajorIncrement(1);
+      plotXAxis->setDrawTickMark(false);
+      plotXAxis->setDrawTickLabel(false);
+      plotXAxis->setDrawMinorTickMark(false);
+    }
 
     //---
 
@@ -1869,15 +1881,21 @@ getAxisValueStr(const std::string &id, int i, double r) const
   const CGnuPlotAxisData *axis = getAxisDataFromId(id);
   if (! axis) return CStrUtil::strprintf("%g", r);
 
-  if (axis->format() != "") {
-    return CStrUtil::strprintf(axis->format().c_str(), r);
-  }
-  else {
-    if (axis->hasTicLabel(i))
-      return axis->ticLabel(i);
+  return getAxisValueStr(*axis, i, r);
+}
 
-    return formatAxisValue(*axis, r);
+std::string
+CGnuPlotGroup::
+getAxisValueStr(const CGnuPlotAxisData &axis, int i, double r) const
+{
+  if (axis.hasTicLabels()) {
+    if (axis.hasTicLabel(i))
+      return axis.ticLabel(i);
+    else
+      return "";
   }
+  else
+    return formatAxisValue(axis, r);
 }
 
 std::string
@@ -1895,8 +1913,10 @@ formatAxisValue(const CGnuPlotAxisData &axis, double r) const
 
     return buffer;
   }
+  else if (axis.format() != "")
+    return CStrUtil::strprintf(axis.format().c_str(), r);
   else
-    return CStrUtil::toString(r);
+    return "";
 }
 
 void
