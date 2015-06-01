@@ -99,7 +99,9 @@ class CGnuPlotStyle {
     if (p == namedPalette_.end())
       return CRGBA(0, 0, 0);
 
-    return (*p).second.getColor(x);
+    CColor c = (*p).second.getColor(x);
+
+    return c.rgba();
   }
 
   double indexWidth(int i) const {
@@ -256,8 +258,11 @@ class CGnuPlotStyle {
 
     palette.setColorType(CGnuPlotPalette::ColorType::DEFINED);
 
-    for (uint i = 0; i < (*p).second.size(); ++i)
-      palette.addDefinedColor(i, (*p).second[i].second);
+    for (uint i = 0; i < (*p).second.size(); ++i) {
+      CColor c((*p).second[i].second);
+
+      palette.addDefinedColor(i, c);
+    }
 
     namedPalette_[name] = palette;
   }

@@ -1,6 +1,7 @@
 #include <CGnuPlotText.h>
 #include <CGnuPlotRenderer.h>
 #include <CParseLine.h>
+#include <CUtf8.h>
 
 CGnuPlotText::
 CGnuPlotText(const std::string &str) :
@@ -123,7 +124,16 @@ init()
       addPart(new CGnuPlotTextPart(CGnuPlotCharType::NEWLINE));
     }
     else {
-      estr_.push_back(c);
+      line.ungetChar();
+
+      int pos = line.pos();
+
+      (void) CUtf8::readNextChar(line.str(), pos);
+
+      int n = pos - line.pos();
+
+      for (int i = 0; i < n; ++i)
+        estr_.push_back(line.getChar());
     }
   }
 }
@@ -274,9 +284,7 @@ draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign, const 
     CBBox2D lbbox;
 
     for (const auto &ch : l.chars) {
-      std::string cs(&ch.c, 1);
-
-      double w  = renderer->pixelWidthToWindowWidth  (ch.font->getStringWidth(cs));
+      double w  = renderer->pixelWidthToWindowWidth  (ch.font->getStringWidth(ch.str));
     //double fa = renderer->pixelHeightToWindowHeight(ch.font->getCharAscent ());
       double fa = l.ascent;
       double fd = renderer->pixelHeightToWindowHeight(ch.font->getCharDescent());
@@ -300,9 +308,7 @@ draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign, const 
     for (const auto &ch : l.chars) {
       renderer->setFont(ch.font);
 
-      std::string cs(&ch.c, 1);
-
-      renderer->drawText(ch.pos + CPoint2D(dx, dy), cs, c);
+      renderer->drawText(ch.pos + CPoint2D(dx, dy), ch.str, c);
     }
 
     dy += lbbox.getYMin();
@@ -388,7 +394,7 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
     dy = renderer->pixelHeightToWindowHeight(o);
   }
 
-  for ( ; i < estr_.size(); ++i) {
+  while (i < estr_.size()) {
     state.pos += CPoint2D(0, dy);
 
     placePartChars(state, i, type);
@@ -402,11 +408,17 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
 
     double fa = line.ascent;
 
-    std::string cs(&estr_[i], 1);
+    int i1 = i;
+
+    (void) CUtf8::readNextChar(estr_, i1);
+
+    std::string cs(&estr_[i], i1 - i);
+
+    i = i1;
 
     CPoint2D pos = state.pos - CPoint2D(0, fa);
 
-    CGnuPlotTextChar c(pos, renderer->getFont(), estr_[i], type);
+    CGnuPlotTextChar c(pos, renderer->getFont(), cs, type);
 
     state.lines.back().chars.push_back(c);
 
@@ -464,9 +476,7 @@ calcBBox(CGnuPlotRenderer *renderer) const
     CBBox2D lbbox;
 
     for (const auto &ch : l.chars) {
-      std::string cs(&ch.c, 1);
-
-      double w  = renderer->pixelWidthToWindowWidth  (ch.font->getStringWidth(cs));
+      double w  = renderer->pixelWidthToWindowWidth  (ch.font->getStringWidth(ch.str));
     //double fa = renderer->pixelHeightToWindowHeight(ch.font->getCharAscent ());
       double fa = l.ascent;
       double fd = renderer->pixelHeightToWindowHeight(ch.font->getCharDescent());

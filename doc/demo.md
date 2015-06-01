@@ -36,8 +36,7 @@
   + key not needed
 
 ## boxplot.dem
-  + Invalid arg 'auto'
-  + eval failed - Missing close round bracket
+  + no issues
 
 ## callargs.dem
   + No issues
@@ -46,16 +45,13 @@
   + No issues
 
 ## cerf.dem
-  + Eval failed: (!strstrt(GPVAL_COMPILE_OPTIONS,"+LIBCERF"))
+  + No issues (cerf not supported)
 
 ## charset.dem
-  + bad enhanced text rendering
+  + No issues
 
 ## circles.dem
-  + Invalid arg 'arc'
-  + Invalid arg 'func', Invalid plot var 'solid'
-  + ... more invalid args
-  + Unhandled binary plot
+  + bad pie chart labels and colors
 
 ## cities.dem
   + No issues
@@ -67,8 +63,7 @@
   + No issues
 
 ## complex_trig.dem
-  + real parse issues -pi/2
-  + Invalid Function 'hsv2rgb'
+  + Slow
 
 ## contours.dem
   + Invalid plot var 'boxed'

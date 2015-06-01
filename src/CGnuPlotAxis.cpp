@@ -367,6 +367,20 @@ getMinorIncrement() const
     return 0.0;
 }
 
+bool
+CGnuPlotAxis::
+hasTicLabels() const
+{
+  return group_->hasTicLabels(id_);
+}
+
+const CGnuPlotAxisData::RTicLabels &
+CGnuPlotAxis::
+getTicLabels() const
+{
+  return group_->ticLabels(id_);
+}
+
 std::string
 CGnuPlotAxis::
 getValueStr(int i, double pos) const
@@ -452,19 +466,21 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
 
       // Create Tick Label (Override with application supplied string if required)
 
-      str = getValueStr(i, pos1);
+      if (! hasTicLabels()) {
+        str = getValueStr(i, pos1);
 
-      maxW = std::max(maxW, font->getStringWidth(str));
+        maxW = std::max(maxW, font->getStringWidth(str));
 
-      //------*/
+        //------*/
 
-      // Draw Tick Label
+        // Draw Tick Label
 
-      if (isDrawTickLabel(first)) {
-        if (direction_ == CORIENTATION_HORIZONTAL)
-          drawTickLabel(CPoint2D(pos1, pos), str, first);
-        else
-          drawTickLabel(CPoint2D(pos, pos1), str, first);
+        if (isDrawTickLabel(first)) {
+          if (direction_ == CORIENTATION_HORIZONTAL)
+            drawTickLabel(CPoint2D(pos1, pos), str, first);
+          else
+            drawTickLabel(CPoint2D(pos, pos1), str, first);
+        }
       }
     }
 
@@ -534,17 +550,41 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
 
     // Create Tick Label (Override with application supplied string if required)
 
-    str = getValueStr(getNumMajorTicks(), pos1);
+    if (! hasTicLabels()) {
+      str = getValueStr(getNumMajorTicks(), pos1);
 
-    //------*/
+      maxW = std::max(maxW, font->getStringWidth(str));
 
-    // Draw Tick Label
+      //------*/
 
-    if (isDrawTickLabel(first)) {
+      // Draw Tick Label
+
+      if (isDrawTickLabel(first)) {
+        if (direction_ == CORIENTATION_HORIZONTAL)
+          drawTickLabel(CPoint2D(pos1, pos), str, first);
+        else
+          drawTickLabel(CPoint2D(pos, pos1), str, first);
+      }
+    }
+  }
+
+  //------*/
+
+  // Draw Custom Tic Labels
+
+  if (hasTicLabels()) {
+    const CGnuPlotAxisData::RTicLabels &ticLabels = getTicLabels();
+
+    for (const auto &label : ticLabels) {
+      double      r = label.first;
+      std::string s = label.second;
+
+      maxW = std::max(maxW, font->getStringWidth(s));
+
       if (direction_ == CORIENTATION_HORIZONTAL)
-        drawTickLabel(CPoint2D(pos1, pos), str, first);
+        drawTickLabel(CPoint2D(r, pos), s, false);
       else
-        drawTickLabel(CPoint2D(pos, pos1), str, first);
+        drawTickLabel(CPoint2D(pos, r), s, false);
     }
   }
 
@@ -855,6 +895,8 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
   CRGBA c(0,0,0);
 
   if (enhanced_) {
+    //CFontPtr font = renderer_->getFont();
+
     CGnuPlotText text(str);
 
     CBBox2D bbox = text.calcBBox(renderer_);
@@ -869,11 +911,13 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
     else if (valign == CVALIGN_TYPE_CENTER) dy = bbox.getHeight()/2;
     else if (valign == CVALIGN_TYPE_TOP   ) dy = 0;
 
+    //dy -= renderer_->pixelHeightToWindowHeight(font->getCharAscent());
+
     double xo = renderer_->pixelWidthToWindowWidth  (xOffset);
     double yo = renderer_->pixelHeightToWindowHeight(yOffset);
 
     dx += xo;
-    dy += yo;
+    dy -= yo;
 
     CBBox2D bbox1 = bbox.moveBy(pos1 + CPoint2D(dx, dy));
 

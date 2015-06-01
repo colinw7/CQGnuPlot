@@ -97,7 +97,7 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CGnuPlotGroup *group = plot->group();
 
-  const CGnuPlotAxisData &cbaxis = group->cbaxis();
+  const CGnuPlotAxisData &cbaxis = group->colorBox()->axis();
 
   COptReal cbmin = cbaxis.min();
   COptReal cbmax = cbaxis.max();
@@ -222,7 +222,7 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
           double g = decodeImageUsingColor(plot, 0, rgba);
 
           if (style_ == CGnuPlotTypes::PlotStyle::IMAGE)
-            rgba = group->palette()->getColor(g/gmax);
+            rgba = group->palette()->getColor(g/gmax).rgba();
           else
             rgba = CRGBA(g, g, g);
         }

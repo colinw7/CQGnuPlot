@@ -142,6 +142,16 @@ BoxWidthTypeConv boxWidthTypeConv({
   { CGnuPlotTypes::BoxWidthType::RELATIVE, CQGnuPlot::BoxWidthRelative },
 });
 
+typedef CEnumConv<CGnuPlotTypes::ColorModel, CQGnuPlot::ColorModelType> ColorModelTypeConv;
+
+ColorModelTypeConv colorModelTypeConv({
+  { CGnuPlotTypes::ColorModel::RGB, CQGnuPlot::ColorModelRGB},
+  { CGnuPlotTypes::ColorModel::HSV, CQGnuPlot::ColorModelHSV},
+  { CGnuPlotTypes::ColorModel::CMY, CQGnuPlot::ColorModelCMY},
+  { CGnuPlotTypes::ColorModel::YIQ, CQGnuPlot::ColorModelYIQ},
+  { CGnuPlotTypes::ColorModel::XYZ, CQGnuPlot::ColorModelXYZ},
+});
+
 typedef CEnumConv<CGnuPlotTypes::DrawLayer, CQGnuPlot::DrawLayerType> DrawLayerTypeConv;
 
 DrawLayerTypeConv drawLayerTypeConv({
@@ -312,6 +322,23 @@ CQGnuPlotUtil::
 boxWidthTypeConv(const CQGnuPlot::BoxWidthType &type)
 {
   return Conv::boxWidthTypeConv.conv(type);
+}
+
+
+//---
+
+CQGnuPlot::ColorModelType
+CQGnuPlotUtil::
+colorModelTypeConv(const CGnuPlotTypes::ColorModel &layer)
+{
+  return Conv::colorModelTypeConv.conv(layer);
+}
+
+CGnuPlotTypes::ColorModel
+CQGnuPlotUtil::
+colorModelTypeConv(const CQGnuPlot::ColorModelType &layer)
+{
+  return Conv::colorModelTypeConv.conv(layer);
 }
 
 //---

@@ -11,6 +11,7 @@ class CQGnuPlotPalette : public CQGnuPlotObject, public CGnuPlotPalette {
   Q_OBJECT
 
   Q_PROPERTY(CQGnuPlot::PaletteColorType colorType  READ colorType  WRITE setColorType )
+  Q_PROPERTY(CQGnuPlot::ColorModelType   colorModel READ colorModel WRITE setColorModel)
   Q_PROPERTY(double                      gamma      READ gamma      WRITE setGamma     )
   Q_PROPERTY(bool                        gray       READ isGray     WRITE setGray      )
   Q_PROPERTY(bool                        negative   READ isNegative WRITE setNegative  )
@@ -24,6 +25,9 @@ class CQGnuPlotPalette : public CQGnuPlotObject, public CGnuPlotPalette {
 
   CQGnuPlot::PaletteColorType colorType() const;
   void setColorType(CQGnuPlot::PaletteColorType c);
+
+  CQGnuPlot::ColorModelType colorModel() const;
+  void setColorModel(CQGnuPlot::ColorModelType c);
 };
 
 #endif

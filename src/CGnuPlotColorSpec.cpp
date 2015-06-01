@@ -49,7 +49,9 @@ calcColor(CGnuPlotPlot *plot, double x) const
 
     double x1 = CGnuPlotUtil::map(x, group->getBBox().getXMin(), group->getBBox().getXMax(), 0, 1);
 
-    return group->palette()->getColor(x1);
+    CColor c = group->palette()->getColor(x1);
+
+    return c.rgba();
   }
   else if (isPaletteVariable()) {
 #if 0

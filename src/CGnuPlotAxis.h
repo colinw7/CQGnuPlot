@@ -2,6 +2,7 @@
 #define CGnuPlotAxis_H
 
 #include <CGnuPlotTypes.h>
+#include <CGnuPlotAxisData.h>
 #include <COrientation.h>
 #include <CAlignType.h>
 #include <CDirectionType.h>
@@ -170,6 +171,10 @@ class CGnuPlotAxis {
   //---
 
   void setRange(double start, double end);
+
+  bool hasTicLabels() const;
+
+  const CGnuPlotAxisData::RTicLabels &getTicLabels() const;
 
   std::string getValueStr(int i, double pos) const;
 

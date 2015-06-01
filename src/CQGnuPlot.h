@@ -21,6 +21,7 @@ class CQGnuPlot : public QObject, public CGnuPlot {
   Q_ENUMS(FillType)
   Q_ENUMS(FillPattern)
   Q_ENUMS(BoxWidthType)
+  Q_ENUMS(ColorModelType)
   Q_ENUMS(DrawLayerType)
   Q_ENUMS(PaletteColorType)
   Q_ENUMS(ArrowCoordType)
@@ -133,6 +134,14 @@ class CQGnuPlot : public QObject, public CGnuPlot {
     BoxWidthAuto,
     BoxWidthAbsolute,
     BoxWidthRelative,
+  };
+
+  enum ColorModelType {
+    ColorModelRGB,
+    ColorModelHSV,
+    ColorModelCMY,
+    ColorModelYIQ,
+    ColorModelXYZ,
   };
 
   enum DrawLayerType {

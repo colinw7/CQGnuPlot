@@ -420,6 +420,7 @@ addGroupProperties(CGnuPlotGroup *group)
   QString paletteName = groupName + "/palette";
 
   tree_->addProperty(paletteName, qpalette, "colorType");
+  tree_->addProperty(paletteName, qpalette, "colorModel");
   tree_->addProperty(paletteName, qpalette, "gamma");
   tree_->addProperty(paletteName, qpalette, "gray");
   tree_->addProperty(paletteName, qpalette, "negative");

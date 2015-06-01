@@ -222,6 +222,28 @@ class CGnuPlotValueFn : public CGnuPlotFn {
   }
 };
 
+class CGnuPlotValueHSV2RGBFn : public CGnuPlotFn {
+ public:
+  CGnuPlotValueHSV2RGBFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
+
+  CExprValueP operator()(const Values &values) {
+    if (values.size() != 3) return CExprValueP();
+
+    double h, s, v;
+
+    if (! values[0]->getRealValue(h) ||
+        ! values[1]->getRealValue(s) ||
+        ! values[2]->getRealValue(v))
+      return CExprValueP();
+
+    CHSV hsv(h*360, s, v);
+
+    CRGB rgb = CRGBUtil::HSVtoRGB(hsv).clamp();
+
+    return CExprInst->createIntegerValue(rgb.encodeRGB());
+  }
+};
+
 //------
 
 namespace {
@@ -329,6 +351,8 @@ CGnuPlot()
   CExprInst->addFunction("strcol"      , "i" , new CGnuPlotStringColumnFn(this));
   CExprInst->addFunction("valid"       , "i" , new CGnuPlotStringValidFn(this));
   CExprInst->addFunction("value"       , "s" , new CGnuPlotValueFn(this));
+
+  CExprInst->addFunction("hsv2rgb", "r,r,r", new CGnuPlotValueHSV2RGBFn(this));
   // timecolumn
 
   CExprInst->createIntegerVariable("ARGC", 0);
@@ -686,21 +710,32 @@ parseLine(const std::string &str)
 
   Statements statements;
 
-  auto str2 = str1;
+  line1.setPos(0);
 
-  auto p = str2.find(';');
+  std::string str2;
 
-  while (p != std::string::npos) {
-    auto str3 = str2.substr(0, p);
+  while (line1.isValid()) {
+    if      (line1.isChar('\"') || line1.isChar('\'')) {
+      int pos = line1.pos();
 
-    statements.push_back(str3);
+      skipString(line1);
 
-    str2 = str2.substr(p + 1);
+      str2 +=  line1.substr(pos, line1.pos() - pos);
+    }
+    else if (line1.isChar(';')) {
+      line1.skipChar();
 
-    p = str2.find(';');
+      if (str2 != "")
+        statements.push_back(str2);
+
+      str2 = "";
+    }
+    else
+      str2 += line1.getChar();
   }
 
-  statements.push_back(str2);
+  if (str2 != "")
+    statements.push_back(str2);
 
   for (int i = 0; i < int(statements.size()); ++i) {
     if (! parseStatement(i, statements))
@@ -1291,8 +1326,10 @@ saveCmd(const std::string &args)
   xaxis(2).showFormat(os, "x2");
   yaxis(2).showFormat(os, "y2");
   zaxis(1).showFormat(os, "z");
-  cbaxis().showFormat(os, "cb");
-  raxis ().showFormat(os, "r");
+
+  colorBox().axis().showFormat(os, "cb");
+
+  raxis().showFormat(os, "r");
 
   os << "set timefmt \"" << timeFmt() << "\"" << std::endl;
 
@@ -2824,50 +2861,71 @@ parseAxisLabel(CParseLine &line, CGnuPlotAxisData &axis)
 
   std::string arg = readNonSpace(line);
 
-  if      (arg == "offset") {
-    double o;
+  while (arg != "") {
+    if      (arg == "offset") {
+      double x = 0, y = 0;
 
-    if (parseReal(line, o))
+      if (parseReal(line, x)) {
+        if (line.skipSpaceAndChar(','))
+          (void) parseReal(line, y);
+      }
+
+      CPoint2D o(x, y);
+
       axis.setOffset(o);
-  }
-  else if (arg == "font") {
-    CFontPtr font;
-
-    if (parseFont(line, font))
-      axis.setFont(font);
-  }
-  else if (arg == "textcolor") {
-    CGnuPlotColorSpec c;
-
-    if (parseColorSpec(line, c))
-      axis.setTextColor(c);
-  }
-  else if (arg == "enhanced" || arg == "noenhanced") {
-    axis.setEnhanced(arg == "enhanced");
-  }
-  else if (arg == "rotate") {
-    std::string arg1 = readNonSpace(line);
-
-    if      (arg1 == "by") {
-      double a;
-
-      if (parseReal(line, a))
-        axis.setRotate(a);
     }
-    else if (arg1 == "parallel") {
-      axis.setRotate(-1);
+    else if (arg == "font") {
+      CFontPtr font;
+
+      if (parseFont(line, font))
+        axis.setFont(font);
     }
-  }
-  else if (arg == "norotate") {
-    axis.setRotate(0);
-  }
-  else {
-    line.setPos(pos);
+    else if (arg == "textcolor") {
+      CGnuPlotColorSpec c;
 
-    std::string labelStr;
+      if (parseColorSpec(line, c))
+        axis.setTextColor(c);
+    }
+    else if (arg == "enhanced" || arg == "noenhanced") {
+      axis.setEnhanced(arg == "enhanced");
+    }
+    else if (arg == "rotate") {
+      int pos1 = line.pos();
 
-    if (parseString(line, labelStr, "Invalid label string"))
-      axis.setText(labelStr);
+      std::string arg1 = readNonSpace(line);
+
+      if      (arg1 == "by") {
+        double a;
+
+        if (parseReal(line, a))
+          axis.setRotate(a);
+      }
+      else if (arg1 == "parallel") {
+        axis.setRotate(-1);
+      }
+      else {
+        axis.setRotate(90);
+
+        line.setPos(pos1);
+      }
+    }
+    else if (arg == "norotate") {
+      axis.setRotate(0);
+    }
+    else {
+      line.setPos(pos);
+
+      std::string labelStr;
+
+      if (parseString(line, labelStr, "Invalid label string"))
+        axis.setText(labelStr);
+      else
+        break;
+    }
+
+    pos = line.pos();
+
+    arg = readNonSpace(line);
   }
 
   return true;
@@ -3315,7 +3373,7 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots)
     style = getDataStyle();
   }
   else {
-    // function (comma separated list(
+    // function (comma separated list)
     while (true) {
       FunctionData functionData;
 
@@ -4516,8 +4574,10 @@ setCmd(const std::string &args)
         yaxis(1).setFormat(formatStr);
         yaxis(2).setFormat(formatStr);
         zaxis(1).setFormat(formatStr);
-        cbaxis().setFormat(formatStr);
-        raxis ().setFormat(formatStr);
+
+        colorBox_.axis().setFormat(formatStr);
+
+        raxis().setFormat(formatStr);
       }
     }
     else {
@@ -4529,7 +4589,7 @@ setCmd(const std::string &args)
         else if (arg == "y" ) yaxis(1).setFormat(formatStr);
         else if (arg == "y2") yaxis(2).setFormat(formatStr);
         else if (arg == "z" ) zaxis(1).setFormat(formatStr);
-        else if (arg == "cb") cbaxis().setFormat(formatStr);
+        else if (arg == "cb") colorBox_.axis().setFormat(formatStr);
         else if (arg == "r" ) raxis ().setFormat(formatStr);
       }
     }
@@ -4579,9 +4639,9 @@ setCmd(const std::string &args)
       else if (arg == "nomy2tics" || arg == "my2tics")
         yaxis(2).setGridMinorTics(arg == "my2tics");
       else if (arg == "nocbtics" || arg == "cbtics")
-        cbaxis().setGridTics(arg == "cbtics");
+        colorBox_.axis().setGridTics(arg == "cbtics");
       else if (arg == "nomcbtics" || arg == "mcbtics")
-        cbaxis().setGridMinorTics(arg == "mcbtics");
+        colorBox_.axis().setGridMinorTics(arg == "mcbtics");
       else if (arg == "polar") {
         raxis().setGrid(true);
 
@@ -6058,8 +6118,8 @@ setCmd(const std::string &args)
         palette_.setGray(false);
 
         if (line.skipSpaceAndChar('(')) {
-          typedef std::pair<double,CRGBA> ValueColor;
-          typedef std::vector<ValueColor> ValueColors;
+          typedef std::pair<double,CColor> ValueColor;
+          typedef std::vector<ValueColor>  ValueColors;
 
           ValueColors valueColors;
 
@@ -6069,11 +6129,28 @@ setCmd(const std::string &args)
             if (! parseReal(line, gray))
               break;
 
-            CRGBA c;
+            if      (palette_.colorModel() == CGnuPlotTypes::ColorModel::RGB) {
+              CRGB   rgb;
+              double a;
 
-            parseColor(line, c);
+              parseRGBColor(line, rgb, a);
 
-            valueColors.push_back(ValueColor(gray, c));
+              CColor c(rgb, a);
+
+              valueColors.push_back(ValueColor(gray, c));
+            }
+            else if (palette_.colorModel() == CGnuPlotTypes::ColorModel::HSV) {
+              CHSV   hsv;
+              double a;
+
+              parseHSVColor(line, hsv, a);
+
+              CColor c(hsv, a);
+
+              valueColors.push_back(ValueColor(gray, c));
+            }
+            else
+              errorMsg("unhandled color model in defined palette");
 
             line.skipSpace();
 
@@ -6979,7 +7056,8 @@ setCmd(const std::string &args)
     parseAxesTics(line, yaxis(1)); line.setPos(pos);
     parseAxesTics(line, yaxis(2)); line.setPos(pos);
     parseAxesTics(line, zaxis(1)); line.setPos(pos);
-    parseAxesTics(line, cbaxis()); line.setPos(pos);
+
+    parseAxesTics(line, colorBox_.axis()); line.setPos(pos);
   }
   // set timestamp {"<format>"} {top|bottom} {{no}rotate}
   //               {offset <xoff>{,<yoff>}} {font "<fontspec>"}
@@ -7144,6 +7222,8 @@ setCmd(const std::string &args)
         camera_.setAxesScale(CGnuPlotCamera::AxesScale::XY);
     }
     else {
+      camera_.setEnabled(true);
+
       line.setPos(pos);
 
       double rx = 0.0;
@@ -7275,10 +7355,7 @@ setCmd(const std::string &args)
   }
   // set y2label "<label>"
   else if (var == VariableName::Y2LABEL) {
-    std::string labelStr;
-
-    if (parseString(line, labelStr, "Invalid ylabel string"))
-      yaxis(2).setText(labelStr);
+    parseAxisLabel(line, yaxis(2));
   }
   // set y2mtics
   else if (var == VariableName::Y2MTICS) {
@@ -7309,10 +7386,7 @@ setCmd(const std::string &args)
   }
   // set ylabel "<label>"
   else if (var == VariableName::YLABEL) {
-    std::string labelStr;
-
-    if (parseString(line, labelStr, "Invalid ylabel string"))
-      yaxis(1).setText(labelStr);
+    parseAxisLabel(line, yaxis(1));
   }
   // set ymtics
   else if (var == VariableName::YMTICS) {
@@ -7350,11 +7424,11 @@ setCmd(const std::string &args)
     std::string arg = readNonSpace(line);
 
     if (arg == "time")
-      cbaxis().setIsTime(true);
+      colorBox_.axis().setIsTime(true);
   }
   // set cbdtics
   else if (var == VariableName::CBDTICS) {
-    cbaxis().setIsDays(true);
+    colorBox_.axis().setIsDays(true);
   }
   // set zero {expression}
   else if (var == VariableName::ZERO) {
@@ -7376,10 +7450,7 @@ setCmd(const std::string &args)
   }
   // set zlabel "<label>"
   else if (var == VariableName::ZLABEL) {
-    std::string labelStr;
-
-    if (parseString(line, labelStr, "Invalid zlabel string"))
-      zaxis(1).setText(labelStr);
+    parseAxisLabel(line, zaxis(1));
   }
   // set zmtics
   else if (var == VariableName::ZMTICS) {
@@ -7395,22 +7466,19 @@ setCmd(const std::string &args)
   }
   // set cblabel "<label>"
   else if (var == VariableName::CBLABEL) {
-    std::string labelStr;
-
-    if (parseString(line, labelStr, "Invalid ylabel string"))
-      cbaxis().setText(labelStr);
+    parseAxisLabel(line, colorBox_.axis());
   }
   // set cbmtics
   else if (var == VariableName::CBMTICS) {
-    cbaxis().setIsMonths(true);
+    colorBox_.axis().setIsMonths(true);
   }
   // set cbrange { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} {{no}extend} } | restore
   else if (var == VariableName::CBRANGE) {
-    parseAxisRange(line, cbaxis());
+    parseAxisRange(line, colorBox_.axis());
   }
   // set cbtics
   else if (var == VariableName::CBTICS) {
-    parseAxesTics(line, cbaxis());
+    parseAxesTics(line, colorBox_.axis());
   }
   // set debug
   else if (var == VariableName::DEBUG) {
@@ -7716,7 +7784,7 @@ showCmd(const std::string &args)
     std::cout << " x2-axis: \"" << xaxis(2).format() << std::endl;
     std::cout << " y2-axis: \"" << yaxis(2).format() << std::endl;
     std::cout << " z-axis: \""  << zaxis(1).format() << std::endl;
-    std::cout << " cb-axis: \"" << cbaxis().format() << std::endl;
+    std::cout << " cb-axis: \"" << colorBox().axis().format() << std::endl;
     std::cout << " r-axis: \""  << raxis ().format() << std::endl;
   }
   // show functions
@@ -8191,7 +8259,8 @@ showCmd(const std::string &args)
     yaxis(1).showMinorTics(std::cout, "ytics", "ytic");
     yaxis(2).showMinorTics(std::cout, "y2tics", "ytic");
     zaxis(1).showMinorTics(std::cout, "ztics", "ztic");
-    cbaxis().showMinorTics(std::cout, "cbtics", "cbtic");
+
+    colorBox().axis().showMinorTics(std::cout, "cbtics", "cbtic");
   }
   // show timestamp
   else if (var == VariableName::TIMESTAMP) {
@@ -8365,11 +8434,13 @@ showCmd(const std::string &args)
   }
   // show cbdata
   else if (var == VariableName::CBDATA) {
-    std::cout << "cb is set to " << (cbaxis().isTime() ? "time" : "numerical") << std::endl;
+    std::cout << "cb is set to " <<
+      (colorBox().axis().isTime() ? "time" : "numerical") << std::endl;
   }
   // show cbdtics
   else if (var == VariableName::CBDTICS) {
-    std::cout << "cb is " << (cbaxis().isDays() ? "days" : "not days") << std::endl;
+    std::cout << "cb is " <<
+      (colorBox().axis().isDays() ? "days" : "not days") << std::endl;
   }
   // show zero
   else if (var == VariableName::ZERO) {
@@ -8402,19 +8473,20 @@ showCmd(const std::string &args)
   }
   // show cblabel
   else if (var == VariableName::CBLABEL) {
-    cbaxis().printLabel(std::cout, "cb");
+    colorBox().axis().printLabel(std::cout, "cb");
   }
   // show cbmtics
   else if (var == VariableName::CBMTICS) {
-    std::cout << "cb is " << (cbaxis().isMonths() ? "months" : "not months") << std::endl;
+    std::cout << "cb is " <<
+      (colorBox().axis().isMonths() ? "months" : "not months") << std::endl;
   }
   // show cbrange
   else if (var == VariableName::CBRANGE) {
-    cbaxis().showRange(std::cout, "cbrange");
+    colorBox().axis().showRange(std::cout, "cbrange");
   }
   // show cbtics
   else if (var == VariableName::CBTICS) {
-    cbaxis().showMinorTics(std::cout, "cbtics", "cbtic");
+    colorBox().axis().showMinorTics(std::cout, "cbtics", "cbtic");
   }
   // show ellipse
   else if (var == VariableName::ELLIPSE) {
@@ -8612,15 +8684,23 @@ resetCmd(const std::string &args)
   fillStyle_.unset();
 
   for (int i = 1; i <= 2; ++i) {
-    xaxis(i).unsetRange();
-    yaxis(i).unsetRange();
-    zaxis(i).unsetRange();
+    xaxis(i).reset();
+    yaxis(i).reset();
+    zaxis(i).reset();
   }
 
-  raxis ().unsetRange();
-  cbaxis().unsetRange();
+  for (int i = 0; i < 8; ++i)
+    paxis(i).reset();
 
-  axesData_.border.unset();
+  taxis(1).reset();
+
+  colorBox_.axis().reset();
+
+  raxis().reset();
+  uaxis().reset();
+  uaxis().reset();
+
+  axesData_.border.sides = 0xFF;
 
   keyData_.reset();
 
@@ -8853,8 +8933,10 @@ unsetCmd(const std::string &args)
     xaxis(2).setFormat("%g");
     yaxis(2).setFormat("%g");
     zaxis(1).setFormat("%g");
-    cbaxis().setFormat("%g");
-    raxis ().setFormat("%g");
+
+    colorBox_.axis().setFormat("%g");
+
+    raxis().setFormat("%g");
   }
   // unset functions (invalid)
   else if (var == VariableName::FUNCTIONS) {
@@ -9140,7 +9222,8 @@ unsetCmd(const std::string &args)
     yaxis(1).setShowTics(false);
     yaxis(2).setShowTics(false);
     zaxis(1).setShowTics(false);
-    cbaxis().setShowTics(false);
+
+    colorBox_.axis().setShowTics(false);
   }
   // unset timestamp
   else if (var == VariableName::TIMESTAMP) {
@@ -9300,11 +9383,11 @@ unsetCmd(const std::string &args)
   }
   // unset cbdata
   else if (var == VariableName::CBDATA) {
-    cbaxis().setIsTime(false);
+    colorBox_.axis().setIsTime(false);
   }
   // unset cbdtics
   else if (var == VariableName::CBDTICS) {
-    cbaxis().setIsDays(false);
+    colorBox_.axis().setIsDays(false);
   }
   // unset zero
   else if (var == VariableName::ZERO) {
@@ -9337,19 +9420,19 @@ unsetCmd(const std::string &args)
   }
   // unset cblabel
   else if (var == VariableName::CBLABEL) {
-    cbaxis().setText("");
+    colorBox_.axis().setText("");
   }
   // unset cbmtics
   else if (var == VariableName::CBMTICS) {
-    cbaxis().setIsMonths(false);
+    colorBox_.axis().setIsMonths(false);
   }
   // unset cbrange
   else if (var == VariableName::CBRANGE) {
-    cbaxis().unsetRange();
+    colorBox_.axis().unsetRange();
   }
   // unset cbtics
   else if (var == VariableName::CBTICS) {
-    cbaxis().setShowTics(false);
+    colorBox_.axis().setShowTics(false);
   }
   else if (var == VariableName::ELLIPSE) {
     clearAnnotations<CGnuPlotEllipse>();
@@ -11388,16 +11471,21 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
       CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
-      bool   bad;
-      Values values;
       Params params;
 
-      setNum_   = 0;
-      pointNum_ = i/nv;
+      if (usingCols.numCols()) {
+        bool   bad;
+        Values values;
 
-      usingCols.decodeValues(th, fieldValues_, bad, values, params);
+        setNum_   = 0;
+        pointNum_ = i/nv;
 
-      plot->addPoint2D(values, false, params);
+        usingCols.decodeValues(th, fieldValues_, bad, values, params);
+
+        plot->addPoint2D(values, false, params);
+      }
+      else
+        plot->addPoint2D(fieldValues_, false, params);
     }
   }
 
@@ -11547,7 +11635,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
         processParams(params);
 
-        plot->addPoint3D(0, values, false);
+        plot->addPoint3D(iy, values, false);
       }
     }
 
@@ -12301,17 +12389,21 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
         if (! parseString(line1, label))
           label = "";
 
-        double pos = 0.0; // pos (integer)
+        double pos = 0.0; // pos
 
-        if (! parseReal(line1, pos))
+        std::string expr1 = readNonSpaceNonComma(line1);
+
+        if (! stringToRealExpr(expr1, pos))
           pos = 0.0;
 
         double level = 0.0; // level (integer) 0: major, 1: minor
 
-        if (! parseReal(line1, level))
+        std::string expr2 = readNonSpaceNonComma(line1);
+
+        if (! stringToRealExpr(expr2, level, /*quiet*/true))
           level = 0.0;
 
-        axis.setTicLabel(int(pos + 0.5), label);
+        axis.setTicLabel(pos, label);
 
         if (! line1.skipSpaceAndChar(','))
           break;
@@ -12477,9 +12569,11 @@ parseColorSpec(CParseLine &line, CGnuPlotColorSpec &c)
 
 bool
 CGnuPlot::
-parseColor(CParseLine &line, CRGBA &c)
+parseRGBColor(CParseLine &line, CRGB &rgb, double &a)
 {
-  // <color> :=  { <r> <g> <b> | '<color-name>' | '#rrggbb' }
+  a = 1.0;
+
+  // <color> :=  { <r> <g> <b> <a> | '<color-name>' | '#rrggbb' }
   line.skipSpace();
 
   if (line.isChar('"') || line.isChar('\'')) {
@@ -12488,7 +12582,7 @@ parseColor(CParseLine &line, CRGBA &c)
     if (! parseString(line, name, "Invalid color string"))
       return false;
 
-    c = CRGBName::toRGBA(name);
+    rgb = CRGBName::toRGB(name);
   }
   else {
     double r = 0.0, g = 0.0, b = 0.0;
@@ -12496,8 +12590,33 @@ parseColor(CParseLine &line, CRGBA &c)
     if (! parseReal(line, r) || ! parseReal(line, g) || ! parseReal(line, b))
       return false;
 
-    c = CRGBA(r, g, b);
+    if (! parseReal(line, a))
+      a = 1.0;
+
+    rgb = CRGB(r, g, b);
   }
+
+  return true;
+}
+
+bool
+CGnuPlot::
+parseHSVColor(CParseLine &line, CHSV &hsv, double &a)
+{
+  a = 1.0;
+
+  // <color> :=  { <h> <s> <v> <a> }
+  line.skipSpace();
+
+  double h = 0.0, s = 0.0, v = 0.0;
+
+  if (! parseReal(line, h) || ! parseReal(line, s) || ! parseReal(line, v))
+    return false;
+
+  if (! parseReal(line, a))
+    a = 1.0;
+
+  hsv = CHSV(h*360, s, v);
 
   return true;
 }
@@ -12717,7 +12836,28 @@ parseString(CParseLine &line, std::string &str, const std::string &msg) const
             case '\"' : str += '\"'; break;
             case '\'' : str += '\''; break;
             case '`'  : str += '`' ; break;
-            default   : str += '?' ; break;
+            case '0': case '1': case '2': case '3':
+            case '4': case '5': case '6': case '7': {
+              line.ungetChar();
+
+              int i = 0;
+
+              while (line.isODigit()) {
+                c = line.getChar();
+
+                i = i*8 + (c - '0');
+              }
+
+              char c1 = char(i);
+
+              if (c1 == '\\' || c1 == '\"')
+                str += "\\" + c1;
+              else
+                str += c1;
+
+              break;
+            }
+            default: str += '?'; break;
           }
         }
         else
@@ -12791,8 +12931,14 @@ skipString(CParseLine &line) const
       char c = line.getChar();
 
       if (c == '\\') {
-        if (line.isValid())
-          line.skipChar();
+        if (line.isValid()) {
+          if (line.isODigit()) {
+            while (line.isODigit())
+              line.skipChar();
+          }
+          else
+            line.skipChar();
+        }
       }
     }
 

@@ -82,6 +82,8 @@ class CGnuPlotPoint {
   bool getValue(int n, int &i) const;
   bool getValue(int n, std::string &str) const;
 
+  double getReal(int n) const { double r; getValue(n, r); return r; }
+
   const std::string &label() const { return label_; }
   void setLabel(const std::string &str) { label_ = str; }
 

@@ -77,9 +77,6 @@ class CGnuPlotGroup {
   const CGnuPlotAxisData &taxis(int ind) const {
     return const_cast<CGnuPlotGroup *>(this)->taxis(ind);
   }
-  const CGnuPlotAxisData &cbaxis() const {
-    return const_cast<CGnuPlotGroup *>(this)->cbaxis();
-  }
   const CGnuPlotAxisData &raxis() const {
     return const_cast<CGnuPlotGroup *>(this)->raxis();
   }
@@ -120,10 +117,9 @@ class CGnuPlotGroup {
   CGnuPlotAxisData &paxis(int ind) { return this->axesData_.paxis[ind]; }
   CGnuPlotAxisData &taxis(int ind) { return this->axesData_.taxis[ind]; }
 
-  CGnuPlotAxisData &cbaxis() { return this->axesData_.cbaxis; }
-  CGnuPlotAxisData &raxis () { return this->axesData_.raxis ; }
-  CGnuPlotAxisData &uaxis () { return this->axesData_.uaxis ; }
-  CGnuPlotAxisData &vaxis () { return this->axesData_.vaxis ; }
+  CGnuPlotAxisData &raxis() { return this->axesData_.raxis ; }
+  CGnuPlotAxisData &uaxis() { return this->axesData_.uaxis ; }
+  CGnuPlotAxisData &vaxis() { return this->axesData_.vaxis ; }
 
   //---
 
@@ -353,6 +349,10 @@ class CGnuPlotGroup {
 
   const CGnuPlotAxisData *getAxisDataFromId(const std::string &id) const;
   CGnuPlotAxisData       *getAxisDataFromId(const std::string &id);
+
+  bool hasTicLabels(const std::string &id) const;
+
+  const CGnuPlotAxisData::RTicLabels &ticLabels(const std::string &id) const;
 
   std::string getAxisValueStr(const std::string &id, int i, double r) const;
   std::string getAxisValueStr(const CGnuPlotAxisData &axis, int i, double r) const;

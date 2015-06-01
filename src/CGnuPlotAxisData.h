@@ -1,7 +1,14 @@
 #ifndef CGnuPlotAxisData_H
 #define CGnuPlotAxisData_H
 
+#include <CGnuPlotColorSpec.h>
+#include <CFont.h>
+
 class CGnuPlotAxisData {
+ public:
+  typedef std::map<int,std::string>    ITicLabels;
+  typedef std::map<double,std::string> RTicLabels;
+
  public:
   CGnuPlotAxisData(int ind=1) :
    ind_(ind) {
@@ -101,26 +108,44 @@ class CGnuPlotAxisData {
 
   //------
 
-  bool hasTicLabels() const { return ! ticlabel_.empty(); }
+  void setTicLabel(double r, const std::string &s) {
+    setITicLabel(int(r + 0.5), s);
+    setRTicLabel(r, s);
+  }
 
-  bool hasTicLabel(int i) const { return (ticlabel_.find(i) != ticlabel_.end()); }
+  bool hasTicLabels() const { return hasITicLabels(); }
 
-  const std::string &ticLabel(int i) const {
-    auto p = ticlabel_.find(i);
+  void clearTicLabels() { clearITicLabels(); clearRTicLabels(); }
+
+  //------
+
+  bool hasITicLabel(int i) const { return (iticLabels_.find(i) != iticLabels_.end()); }
+
+  const std::string &iticLabel(int i) const {
+    auto p = iticLabels_.find(i);
 
     return (*p).second;
   }
 
-  void setTicLabel(int i, const std::string &s) {
-    ticlabel_[i] = s;
-  }
+  //------
 
-  void clearTicLabels() { ticlabel_.clear(); }
+  const RTicLabels &rticLabels() const { return rticLabels_; }
+
+ private:
+  bool hasITicLabels() const { return ! iticLabels_.empty(); }
+  bool hasRTicLabels() const { return ! rticLabels_.empty(); }
+
+  void setITicLabel(int    i, const std::string &s) { iticLabels_[i] = s; }
+  void setRTicLabel(double r, const std::string &s) { rticLabels_[r] = s; }
+
+  void clearITicLabels() { iticLabels_.clear(); }
+  void clearRTicLabels() { rticLabels_.clear(); }
 
   //------
 
-  double offset() const { return offset_; }
-  void setOffset(double r) { offset_ = r; }
+ public:
+  const CPoint2D &offset() const { return offset_; }
+  void setOffset(const CPoint2D &o) { offset_ = o; }
 
   double rotate() const { return rotate_; }
   void setRotate(double r) { rotate_ = r; }
@@ -152,7 +177,8 @@ class CGnuPlotAxisData {
     unsetRange();
 
     text_ = "";
-    offset_ = 0;
+
+    offset_ = CPoint2D(0,0);
   }
 
   void unsetRange() {
@@ -168,6 +194,12 @@ class CGnuPlotAxisData {
     zeroAxis_.lineStyle = -1;
     zeroAxis_.lineType  = -1;
     zeroAxis_.lineWidth = 0;
+  }
+
+  void reset() {
+    unsetRange();
+
+    text_ = "";
   }
 
   void show(std::ostream &os, const std::string &prefix, int n) const {
@@ -210,7 +242,7 @@ class CGnuPlotAxisData {
       os << prefix << " tics: on axis" << std::endl;
       os << "  labels are justified automatically, format \"" <<
             format_ << "\" and are not rotated," << std::endl;
-      os << "  offset (character " << offset_ << ", 0, 0)" << std::endl;
+      os << "  offset (character " << offset_.x << ", " << offset_.y << ", 0)" << std::endl;
       os << "  intervals computed automatically" << std::endl;
     }
     else
@@ -249,12 +281,10 @@ class CGnuPlotAxisData {
 
   void printLabel(std::ostream &os, const std::string &prefix) const {
     os << prefix << "label is \"" << text_ << "\", " <<
-          "offset at ((character units) " << offset_ << ", 0, 0)" << std::endl;
+          "offset at ((character units) " << offset_.x << ", " << offset_.y << ", 0)" << std::endl;
   }
 
  private:
-  typedef std::map<int,std::string> TicLabelMap;
-
   struct ZeroAxis {
     bool   displayed { false };
     int    lineStyle { -1 };
@@ -284,8 +314,9 @@ class CGnuPlotAxisData {
   bool              minorTics_       { true };
   COptReal          minorTicsFreq_;
   std::string       text_;
-  TicLabelMap       ticlabel_;
-  double            offset_          { 0 };
+  ITicLabels        iticLabels_;
+  RTicLabels        rticLabels_;
+  CPoint2D          offset_          { 0, 0 };
   double            rotate_          { 0 };
   std::string       format_          { "%g" };
   CFontPtr          font_;

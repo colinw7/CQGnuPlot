@@ -120,6 +120,10 @@ class CParseLine {
     return (pos_ < len_ && isdigit(str_[pos_]));
   }
 
+  bool isODigit() const {
+    return (pos_ < len_ && isodigit(str_[pos_]));
+  }
+
   bool isAlpha() const {
     return (pos_ < len_ && isalpha(str_[pos_]));
   }
@@ -169,6 +173,10 @@ class CParseLine {
     str_ = str_.substr(0, pos_) + str + str_.substr(pos_);
 
     len_ += str.size();
+  }
+
+  static bool isodigit(char c) {
+    return (c >= '0' && c <= '7');
   }
 
  private:

@@ -26,13 +26,13 @@ enum class CGnuPlotCharType {
 };
 
 struct CGnuPlotTextChar {
-  CGnuPlotTextChar(CPoint2D &p, CFontPtr font1, char c1, CGnuPlotCharType type1) :
-   pos(p), font(font1), c(c1), type(type1) {
+  CGnuPlotTextChar(CPoint2D &p, CFontPtr font1, const std::string &str1, CGnuPlotCharType type1) :
+   pos(p), font(font1), str(str1), type(type1) {
   }
 
   CPoint2D         pos;
   CFontPtr         font;
-  char             c;
+  std::string      str;
   CGnuPlotCharType type;
 };
 

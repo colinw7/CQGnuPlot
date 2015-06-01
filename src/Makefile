@@ -14,7 +14,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-CXXFLAGS      = -m64 -pipe -std=c++11 -DGNUPLOT_EXPR -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
+CXXFLAGS      = -m64 -pipe -std=c++11 -DGNUPLOT_EXPR -DRGB_UTIL -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I. -I../include -I. -IExpr -I../include -I../../CQApp/include -I../../CQUtil/include -I../../CFont/include -I../../CImageLib/include -I../../CReadLine/include -I../../CFile/include -I../../COS/include -I../../CUtil/include -I../../CMath/include -I../../CStrUtil/include -I../../CRGBName/include -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I.
 LINK          = g++
 LFLAGS        = -m64
@@ -719,11 +719,18 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -903,7 +910,7 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -915,6 +922,13 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -1073,7 +1087,7 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -1085,6 +1099,13 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -1276,11 +1297,18 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -1410,7 +1438,7 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -1419,6 +1447,13 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -1581,7 +1616,7 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -1590,6 +1625,13 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -1934,7 +1976,7 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -1946,6 +1988,13 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -2113,10 +2162,27 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CUtil/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -2133,26 +2199,16 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		Expr/CExprCompile.h \
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
-		../../CFont/include/CFont.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
 		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
-		CGnuPlotColorSpec.h \
-		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
-		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotSize.h \
-		CGnuPlotAxisData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -2274,7 +2330,7 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -2286,6 +2342,13 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -2449,7 +2512,7 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -2458,6 +2521,13 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -2590,11 +2660,18 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -2780,7 +2857,7 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -2792,6 +2869,13 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -2951,7 +3035,7 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -2963,6 +3047,13 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -3170,11 +3261,18 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -3365,6 +3463,13 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -3396,7 +3501,7 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
@@ -3522,7 +3627,7 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -3531,6 +3636,13 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -3663,11 +3775,18 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlot.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -3862,7 +3981,7 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -3874,6 +3993,13 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -4036,7 +4162,7 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -4045,6 +4171,13 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -4203,7 +4336,7 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -4215,6 +4348,13 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -4378,7 +4518,7 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -4387,6 +4527,13 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -4544,7 +4691,7 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -4556,6 +4703,13 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CFont/include/CFont.h \
@@ -4696,11 +4850,18 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -5900,11 +6061,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -6203,7 +6371,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -6215,6 +6383,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -6466,7 +6641,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -6478,6 +6653,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -6761,11 +6943,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -6914,7 +7103,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -6923,6 +7112,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -7097,7 +7293,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -7106,6 +7302,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -7314,11 +7517,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -7519,11 +7729,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -7673,7 +7890,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -7685,6 +7902,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -7939,10 +8163,27 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CUtil/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -7959,26 +8200,16 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprCompile.h \
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
-		../../CFont/include/CFont.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
 		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
-		CGnuPlotColorSpec.h \
-		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
-		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotSize.h \
-		CGnuPlotAxisData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -8170,11 +8401,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -8458,7 +8696,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -8470,6 +8708,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -8720,7 +8965,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -8729,6 +8974,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -8868,11 +9120,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -9128,7 +9387,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -9140,6 +9399,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -9391,7 +9657,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -9403,6 +9669,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -9696,11 +9969,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -9919,6 +10199,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -9950,7 +10237,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
@@ -10096,7 +10383,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -10105,6 +10392,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -10244,11 +10538,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -10549,7 +10850,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -10561,6 +10862,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -10729,7 +11037,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -10738,6 +11046,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -10903,7 +11218,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -10915,6 +11230,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -11171,7 +11493,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -11180,6 +11502,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -11318,11 +11647,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -11618,7 +11954,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -11630,6 +11966,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CFont/include/CFont.h \
@@ -11857,11 +12200,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -12032,11 +12382,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -12346,11 +12703,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -12486,7 +12850,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -12498,6 +12862,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -12605,8 +12976,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		CGnuPlotLineStyle.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -12695,15 +13073,30 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CUtil/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
 		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		CDirectionType.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
 		CGnuPlotWindow.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -12720,15 +13113,8 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprCompile.h \
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
-		../../CFont/include/CFont.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
 		../../CMath/include/CAngle.h \
-		CGnuPlotColorSpec.h \
-		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
-		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
@@ -12736,7 +13122,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
-		CGnuPlotAxisData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -12783,7 +13168,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotRenderer.h
+		CGnuPlotRenderer.h \
+		CGnuPlotUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotAxis.o CGnuPlotAxis.cpp
 
 ../obj/CGnuPlotBBoxRenderer.o: CGnuPlotBBoxRenderer.cpp CGnuPlotBBoxRenderer.h \
@@ -12825,11 +13211,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -12903,7 +13296,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -12912,6 +13305,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -13005,7 +13405,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -13014,6 +13414,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -13145,11 +13552,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -13203,7 +13617,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -13215,6 +13629,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -13310,10 +13731,27 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CUtil/include/CRGBName.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -13330,26 +13768,16 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprCompile.h \
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
-		../../CFont/include/CFont.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
 		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
-		CGnuPlotColorSpec.h \
-		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
-		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotSize.h \
-		CGnuPlotAxisData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -13392,7 +13820,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
-		CGnuPlotRenderer.h
+		CGnuPlotRenderer.h \
+		CGnuPlotUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotColorBox.o CGnuPlotColorBox.cpp
 
 ../obj/CGnuPlotColorSpec.o: CGnuPlotColorSpec.cpp CGnuPlotColorSpec.h \
@@ -13400,7 +13829,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -13412,6 +13841,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotGroup.h \
@@ -13539,11 +13975,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -13646,11 +14089,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -13744,11 +14194,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -13823,7 +14280,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -13835,6 +14292,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -13926,7 +14390,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -13935,6 +14399,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -14046,8 +14517,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotNameValues.h \
@@ -14165,11 +14643,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -14242,7 +14727,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -14254,6 +14739,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -14347,7 +14839,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -14359,6 +14851,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -14378,7 +14877,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -14390,6 +14889,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -14487,8 +14993,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CRefPtr.h \
@@ -14509,6 +15022,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		CGnuPlotUtil.h \
 		CUnixFile.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -14526,7 +15046,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -14535,6 +15055,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -14656,11 +15183,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -14774,7 +15308,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -14786,6 +15320,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -14878,7 +15419,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -14887,6 +15428,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -15016,11 +15564,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -15080,7 +15635,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -15092,6 +15647,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -15184,7 +15746,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -15193,6 +15755,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPosition.h \
@@ -15313,11 +15882,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -15420,11 +15996,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -15518,11 +16101,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -15625,11 +16215,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -15728,11 +16325,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -15831,11 +16435,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -15888,6 +16499,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h \
+		CGnuPlotBBoxRenderer.h \
 		CGnuPlotRenderer.h \
 		CBoxWhisker.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleBoxPlot.o CGnuPlotStyleBoxPlot.cpp
@@ -15934,11 +16550,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -16037,11 +16660,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -16152,11 +16782,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -16259,11 +16896,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -16362,11 +17006,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -16466,11 +17117,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -16579,11 +17237,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -16681,11 +17346,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -16783,11 +17455,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -16885,11 +17564,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -16997,11 +17683,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -17099,11 +17792,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -17168,8 +17868,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
 		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
-		../../CUtil/include/CHSV.h
+		../../CMath/include/C2Bezier2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleImage.o CGnuPlotStyleImage.cpp
 
 ../obj/CGnuPlotStyleImpulses.o: CGnuPlotStyleImpulses.cpp CGnuPlotStyleImpulses.h \
@@ -17214,11 +17913,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -17316,11 +18022,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -17419,11 +18132,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -17525,11 +18245,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -17631,11 +18358,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -17739,11 +18473,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -17847,11 +18588,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -17953,11 +18701,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -18055,11 +18810,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -18162,11 +18924,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -18265,11 +19034,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -18373,11 +19149,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -18480,11 +19263,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -18583,11 +19373,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -18692,11 +19489,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -18794,11 +19598,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -18896,11 +19707,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -18998,11 +19816,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -19100,11 +19925,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -19202,11 +20034,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -19304,11 +20143,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -19406,11 +20252,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -19511,11 +20364,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -19614,11 +20474,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -19711,10 +20578,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		COrientation.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -19773,7 +20647,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
@@ -19785,6 +20659,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CFont/include/CFont.h \
@@ -19865,6 +20746,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
+		CGnuPlotDevice.h \
 		../../CFont/include/CFontMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotTitle.o CGnuPlotTitle.cpp
 
@@ -19907,11 +20789,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
@@ -20013,11 +20902,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		../../CRGBName/include/CRGBName.h \
+		../../CUtil/include/CRGBName.h \
 		CGnuPlotTypes.h \
 		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \

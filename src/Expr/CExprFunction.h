@@ -40,6 +40,7 @@ class CExprFunctionMgr {
   CExprFunctionPtr addUserFunction(const std::string &name, const std::vector<std::string> &args,
                                    const std::string &proc);
 
+  void removeFunction(const std::string &name);
   void removeFunction(CExprFunctionPtr function);
 
   void getFunctionNames(std::vector<std::string> &names) const;

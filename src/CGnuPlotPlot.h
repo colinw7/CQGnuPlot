@@ -438,6 +438,7 @@ class CGnuPlotPlot {
   void draw2D(CGnuPlotRenderer *renderer);
   void draw3D(CGnuPlotRenderer *renderer);
 
+  void drawContour(CGnuPlotRenderer *renderer);
   void drawSurface(CGnuPlotRenderer *renderer);
 
   void drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
@@ -474,7 +475,8 @@ class CGnuPlotPlot {
 
  protected:
   typedef std::vector<CPoint2D>         Points;
-  typedef std::pair<double,Points>      ZPoints;
+  typedef std::pair<Points,CRGBA>       PointsColor;
+  typedef std::pair<double,PointsColor> ZPoints;
   typedef std::vector<ZPoints>          ZPointsArray;
   typedef std::map<double,ZPointsArray> ZPolygons;
 

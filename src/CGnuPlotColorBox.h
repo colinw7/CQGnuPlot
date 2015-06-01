@@ -2,6 +2,7 @@
 #define CGnuPlotColorBox_H
 
 #include <CGnuPlotPosition.h>
+#include <CGnuPlotAxisData.h>
 #include <CSize2D.h>
 #include <CBBox2D.h>
 #include <memory>
@@ -53,6 +54,9 @@ class CGnuPlotColorBox {
   const CSize2D &size() const { return size_; }
   void setSize(const CSize2D &s) { size_ = s; }
 
+  const CGnuPlotAxisData &axis() const { return axis_; }
+  CGnuPlotAxisData &axis() { return axis_; }
+
   const CBBox2D &getBBox() const { return bbox_; }
 
   void show(std::ostream &os) const;
@@ -70,7 +74,8 @@ class CGnuPlotColorBox {
   bool             border_      { true };
   int              borderStyle_ { -1 };
   CGnuPlotPosition origin_;
-  CSize2D          size_        { 20, 100 };
+  CSize2D          size_        { 0.05, 0.6 };
+  CGnuPlotAxisData axis_;
   mutable CBBox2D  bbox_;
 };
 

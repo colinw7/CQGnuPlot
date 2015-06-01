@@ -2,7 +2,7 @@
 #define CGnuPlotPalette_H
 
 #include <CGnuPlotTypes.h>
-#include <CRGBA.h>
+#include <CColor.h>
 #include <map>
 #include <memory>
 
@@ -79,11 +79,11 @@ class CGnuPlotPalette {
     colors_.clear();
   }
 
-  void addDefinedColor(double v, const CRGBA &c) {
+  void addDefinedColor(double v, const CColor &c) {
     colors_[v] = c;
   }
 
-  CRGBA getColor(double x) const;
+  CColor getColor(double x) const;
 
   double interp(int ind, double x) const;
 
@@ -112,7 +112,7 @@ class CGnuPlotPalette {
   void showPaletteValues(std::ostream &os, int n, bool is_float, bool is_int);
 
  private:
-  typedef std::map<double,CRGBA> ColorMap;
+  typedef std::map<double,CColor> ColorMap;
 
   CGnuPlotGroup *group_        { 0 };
   ColorType      colorType_    { ColorType::MODEL };

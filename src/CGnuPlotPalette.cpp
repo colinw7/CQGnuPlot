@@ -4,7 +4,7 @@
 #include <CStrUtil.h>
 #include <CAngle.h>
 
-CRGBA
+CColor
 CGnuPlotPalette::
 getColor(double x) const
 {
@@ -21,39 +21,39 @@ getColor(double x) const
 
     auto p = colors_.begin();
 
-    double x1    = ((*p).first - min)/(max - min);
-    CRGBA  rgba1 = (*p).second;
+    double x1 = ((*p).first - min)/(max - min);
+    CColor c1 = (*p).second;
 
-    if (x <= x1) return rgba1;
+    if (x <= x1) return c1;
 
     for (++p; p != colors_.end(); ++p) {
-      double x2    = ((*p).first - min)/(max - min);
-      CRGBA  rgba2 = (*p).second;
+      double x2 = ((*p).first - min)/(max - min);
+      CColor c2 = (*p).second;
 
       if (x <= x2) {
         double m = (x - x1)/(x2 - x1);
 
-        return (1.0 - m)*rgba1 + m*rgba2;
+        return CColor::interp(c1, c2, m);
       }
 
-      x1    = x2;
-      rgba1 = rgba2;
+      x1 = x2;
+      c1 = c2;
     }
 
-    return rgba1;
+    return c1;
   }
   else {
     if (gray_) {
       double g = CGnuPlotUtil::clamp(x, 0.0, 1.0);
 
-      return CRGBA(g, g, g);
+      return CColor(CRGBA(g, g, g));
     }
     else {
       double r = CGnuPlotUtil::clamp(interp(rModel_, x), 0.0, 1.0);
       double g = CGnuPlotUtil::clamp(interp(gModel_, x), 0.0, 1.0);
       double b = CGnuPlotUtil::clamp(interp(bModel_, x), 0.0, 1.0);
 
-      return CRGBA(r, g, b);
+      return CColor(CRGBA(r, g, b));
     }
   }
 }
@@ -243,12 +243,21 @@ showGradient(std::ostream &os) const
     int i = 0;
 
     for (const auto &cc : colors_) {
-      const CRGBA &c = cc.second;
+      const CColor &c = cc.second;
 
-      os << i << ". gray=" << cc.first << ", (r,g,b)=(" <<
-            c.getRed() << "," << c.getGreen() << "," << c.getBlue() <<
-            "), " << c.getRGB().stringEncode() << " = " <<
-            c.getRedI() << " " << c.getGreenI() << " " << c.getBlueI() << std::endl;
+      os << i << ". gray=" << cc.first << ", ";
+
+      if (c.type() == CColor::Type::RGB) {
+        CRGBA rgba = c.rgba();
+
+        os << "(r,g,b)=(" << rgba.getRed() << "," << rgba.getGreen() << "," << rgba.getBlue() <<
+              "), " << rgba.getRGB().stringEncode() << " = " <<
+              rgba.getRedI() << " " << rgba.getGreenI() << " " << rgba.getBlueI() << std::endl;
+      }
+      else if (c.type() == CColor::Type::HSV) {
+        // TODO
+        os << "(h,s,v)=(...)";
+      }
 
       ++i;
     }
@@ -277,21 +286,28 @@ showPaletteValues(std::ostream &os, int n, bool is_float, bool is_int)
   double d = 1.0/(n - 1);
 
   for (int i = 0; i < n; ++i, x += d) {
-    CRGBA c = getColor(x);
+    CColor c = getColor(x);
 
     os << "  ";
 
-    if      (is_float) {
-      os << c.getRed() << " " << c.getGreen() << " " << c.getBlue() << std::endl;
+    if      (c.type() == CColor::Type::RGB) {
+      CRGBA rgba = c.rgba();
+
+      if      (is_float) {
+        os << rgba.getRed() << " " << rgba.getGreen() << " " << rgba.getBlue() << std::endl;
+      }
+      else if (is_int) {
+        os << rgba.getRedI() << " " << rgba.getGreenI() << " " << rgba.getBlueI() << std::endl;
+      }
+      else {
+        os << i << ". gray=" << x << ", (r,g,b)=(" <<
+              rgba.getRed() << "," << rgba.getGreen() << "," << rgba.getBlue() <<
+              "), " << rgba.getRGB().stringEncode() << " = " <<
+              rgba.getRedI() << " " << rgba.getGreenI() << " " << rgba.getBlueI() << std::endl;
+      }
     }
-    else if (is_int) {
-      os << c.getRedI() << " " << c.getGreenI() << " " << c.getBlueI() << std::endl;
-    }
-    else {
-      os << i << ". gray=" << x << ", (r,g,b)=(" <<
-            c.getRed() << "," << c.getGreen() << "," << c.getBlue() <<
-            "), " << c.getRGB().stringEncode() << " = " <<
-            c.getRedI() << " " << c.getGreenI() << " " << c.getBlueI() << std::endl;
+    else if (c.type() == CColor::Type::HSV) {
+      // TODO
     }
   }
 }

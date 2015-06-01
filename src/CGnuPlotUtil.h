@@ -8,6 +8,11 @@ namespace CGnuPlotUtil {
     return std::accumulate(l.begin(), l.end(), 0.0)/l.size();
   }
 
+  template<typename T>
+  inline T avgT(std::initializer_list<T> l, const T &z=T(0)) {
+    T z1 = z; return std::accumulate(l.begin(), l.end(), z1)/l.size();
+  }
+
   inline double norm(double x, double low, double high) {
     return (x - low)/(high - low);
   }

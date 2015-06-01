@@ -7,6 +7,7 @@
 
 class CGnuPlot;
 class CGnuPlotPlot;
+class CGnuPlotRenderer;
 
 class CGnuPlotContour {
  public:
@@ -24,15 +25,15 @@ class CGnuPlotContour {
   void setContourLevels(const std::vector<double> &levels);
   void setContourColours(const std::vector<CRGBA> &colors);
 
-  void drawContour();
+  void drawContour(CGnuPlotRenderer *renderer);
 
  private:
-  void drawContourLines();
-  void drawContourSolid();
+  void drawContourLines(CGnuPlotRenderer *renderer);
+  void drawContourSolid(CGnuPlotRenderer *renderer);
 
   void initLevels(std::vector<double> &levels) const;
 
-  void fillContourBox(double, double, double, double,
+  void fillContourBox(CGnuPlotRenderer *renderer, double, double, double, double,
                       double, double, double, double, const std::vector<double> &);
 
  private:

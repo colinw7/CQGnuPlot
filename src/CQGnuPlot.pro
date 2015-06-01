@@ -8,7 +8,7 @@ DEPENDPATH += .
 
 INCLUDEPATH += . ../include
 
-QMAKE_CXXFLAGS += -std=c++11 -DGNUPLOT_EXPR
+QMAKE_CXXFLAGS += -std=c++11 -DGNUPLOT_EXPR -DRGB_UTIL
 
 CONFIG += debug
 

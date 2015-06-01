@@ -20,6 +20,7 @@
 #include <CLineDash.h>
 #include <COrientation.h>
 #include <CRGBA.h>
+#include <CColor.h>
 #include <CAlignType.h>
 #include <CAngle.h>
 #include <NaN.h>
@@ -176,7 +177,6 @@ class CGnuPlot {
     IAxisMap         zaxis;
     IAxisMap         paxis;
     IAxisMap         taxis;
-    CGnuPlotAxisData cbaxis;
     CGnuPlotAxisData raxis;
     CGnuPlotAxisData uaxis;
     CGnuPlotAxisData vaxis;
@@ -796,10 +796,6 @@ class CGnuPlot {
   const CGnuPlotAxisData &taxis(int ind) const {
     return const_cast<CGnuPlot *>(this)->taxis(ind);
   }
-  const CGnuPlotAxisData &cbaxis() const {
-    return const_cast<CGnuPlot *>(this)->cbaxis();
-  }
-
   CGnuPlotAxisData &xaxis(int ind) {
     CGnuPlot::IAxisMap::iterator p = axesData_.xaxis.find(ind);
 
@@ -830,10 +826,9 @@ class CGnuPlot {
   CGnuPlotAxisData &paxis(int ind) { return this->axesData_.paxis[ind]; }
   CGnuPlotAxisData &taxis(int ind) { return this->axesData_.taxis[ind]; }
 
-  CGnuPlotAxisData &cbaxis() { return this->axesData_.cbaxis; }
-  CGnuPlotAxisData &raxis () { return this->axesData_.raxis ; }
-  CGnuPlotAxisData &uaxis () { return this->axesData_.uaxis ; }
-  CGnuPlotAxisData &vaxis () { return this->axesData_.vaxis ; }
+  CGnuPlotAxisData &raxis() { return this->axesData_.raxis ; }
+  CGnuPlotAxisData &uaxis() { return this->axesData_.uaxis ; }
+  CGnuPlotAxisData &vaxis() { return this->axesData_.vaxis ; }
 
   //---
 
@@ -1282,7 +1277,9 @@ class CGnuPlot {
   const Samples    &samples   () const { return samples_; }
   const ISOSamples &isoSamples() const { return isoSamples_; }
 
-  bool parseColor(CParseLine &line, CRGBA &c);
+  bool parseRGBColor(CParseLine &line, CRGB &rgb, double &a);
+  bool parseHSVColor(CParseLine &line, CHSV &hsv, double &a);
+
   bool parseColorSpec(CParseLine &line, CGnuPlotColorSpec &c);
 
   bool parseInteger(CParseLine &line, int &i) const;

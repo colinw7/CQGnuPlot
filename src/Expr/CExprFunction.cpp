@@ -1,5 +1,6 @@
 #include <CExprI.h>
 #include <cmath>
+#include <complex.h>
 #include <cstdlib>
 #include <cstring>
 
@@ -10,6 +11,18 @@ namespace {
 
 double invnorm(double x) {
   return sqrt(2)/erf(2*x - 1);
+}
+
+// TODO
+std::complex<double> cerf(const std::complex<double> &c) {
+  double r = ::erf(c.real());
+  return std::complex<double>(r, 0);
+}
+
+// TODO
+std::complex<double> cerfc(const std::complex<double> &c) {
+  double r = ::erfc(c.real());
+  return std::complex<double>(r, 0);
 }
 
 double RadToDeg(double x) {
@@ -42,11 +55,14 @@ class CExprSubStr {
 
 class CExprStrStrT {
  public:
+  // find position of str2 in str1
   int operator()(const std::string &str1, const std::string &str2) {
-    for (uint i = 0; i < str1.size(); ++i)
-      if (str2.find(str1[i]) != std::string::npos)
-        return i + 1;
-    return 0;
+    auto p = str1.find(str2);
+
+    if (p == std::string::npos)
+      return 0;
+    else
+      return p + 1;
   }
 };
 
@@ -176,8 +192,9 @@ static CExprValuePtr \
 CExprFunction##NAME(const CExprFunction::Values &values) { \
   assert(values.size() == 1); \
   double r; \
-  std::complex<double> c; \
-  if (values[0]->getComplexValue(c)) { \
+  if (values[0]->isComplexValue()) { \
+    std::complex<double> c; \
+    if (! values[0]->getComplexValue(c)) return CExprValuePtr(); \
     errno = 0; \
     std::complex<double> c1 = F(c); \
     if (errno != 0) return CExprValuePtr(); \
@@ -243,6 +260,21 @@ CExprFunction##NAME(const CExprFunction::Values &values) { \
     return CExprInst->createRealValue(real); \
   } \
   return CExprValuePtr(); \
+}
+
+#define CEXPR_COMPLEX_TO_COMPLEX_FUNC(NAME, F) \
+static CExprValuePtr \
+CExprFunction##NAME(const CExprFunction::Values &values) { \
+  assert(values.size() == 1); \
+  std::complex<double> c; \
+  if (! values[0]->getComplexValue(c)) { \
+    double r; \
+    if (! values[0]->getRealValue(r)) \
+      return CExprValuePtr(); \
+    c = std::complex<double>(r, 0); \
+  } \
+  std::complex<double> c1 = F(c); \
+  return CExprInst->createComplexValue(c1); \
 }
 
 class CExprFunctionAbs : public CExprFunctionObj {
@@ -513,6 +545,10 @@ CEXPR_REAL_TO_REAL_FUNC(BesJ1  , ::j1)
 
 CEXPR_REALC_TO_REAL_FUNC(Erf    , ::erf)
 CEXPR_REALC_TO_REAL_FUNC(ErfC   , ::erfc)
+
+CEXPR_COMPLEX_TO_COMPLEX_FUNC(CErf , ::cerf)
+CEXPR_COMPLEX_TO_COMPLEX_FUNC(CErfC, ::cerfc)
+
 // TODO: inverf, invnorm, norm
 CEXPR_REALC_TO_REAL_FUNC(Gamma  , ::gamma)
 // TODO: igamma
@@ -534,9 +570,9 @@ builtinFns[] = {
   { "acos"   , "rc" , CExprFunctionACos    },
   { "atan"   , "rc" , CExprFunctionATan    },
   { "atan2"  , "r,r", CExprFunctionATan2   },
-  { "sinh"   , "r"  , CExprFunctionSinH    },
-  { "cosh"   , "r"  , CExprFunctionCosH    },
-  { "tanh"   , "r"  , CExprFunctionTanH    },
+  { "sinh"   , "rc" , CExprFunctionSinH    },
+  { "cosh"   , "rc" , CExprFunctionCosH    },
+  { "tanh"   , "rc" , CExprFunctionTanH    },
   { "asinh"  , "rc" , CExprFunctionASinH   },
   { "acosh"  , "rc" , CExprFunctionACosH   },
   { "atanh"  , "rc" , CExprFunctionATanH   },
@@ -547,6 +583,8 @@ builtinFns[] = {
   // besy0, besy1
   { "erf"    , "rc" , CExprFunctionErf     },
   { "erfc"   , "rc" , CExprFunctionErfC    },
+  { "cerf"   , "c"  , CExprFunctionCErf    },
+  { "cerfc"  , "c"  , CExprFunctionCErfC   },
   { "gamma"  , "r"  , CExprFunctionGamma   },
   { "lgamma" , "r"  , CExprFunctionLGamma  },
   { "invnorm", "r"  , CExprFunctionInvNorm },
@@ -629,6 +667,8 @@ addProcFunction(const std::string &name, const std::string &argsStr, CExprFuncti
 
   function->setVariableArgs(variableArgs);
 
+  removeFunction(name);
+
   functions_.push_back(function);
 
   return function;
@@ -647,6 +687,8 @@ addObjFunction(const std::string &name, const std::string &argsStr, CExprFunctio
 
   function->setVariableArgs(variableArgs);
 
+  removeFunction(name);
+
   functions_.push_back(function);
 
   return function;
@@ -659,6 +701,8 @@ addUserFunction(const std::string &name, const std::vector<std::string> &args,
 {
   CExprFunctionPtr function(new CExprUserFunction(name, args, proc));
 
+  removeFunction(name);
+
   functions_.push_back(function);
 
   return function;
@@ -666,9 +710,17 @@ addUserFunction(const std::string &name, const std::vector<std::string> &args,
 
 void
 CExprFunctionMgr::
+removeFunction(const std::string &name)
+{
+  removeFunction(getFunction(name));
+}
+
+void
+CExprFunctionMgr::
 removeFunction(CExprFunctionPtr function)
 {
-  functions_.remove(function);
+  if (function.isValid())
+    functions_.remove(function);
 }
 
 void

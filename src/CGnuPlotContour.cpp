@@ -103,20 +103,18 @@ setContourColours(const std::vector<CRGBA> &colors)
 
 void
 CGnuPlotContour::
-drawContour()
+drawContour(CGnuPlotRenderer *renderer)
 {
   if (solid())
-    drawContourSolid();
+    drawContourSolid(renderer);
   else
-    drawContourLines();
+    drawContourLines(renderer);
 }
 
 void
 CGnuPlotContour::
-drawContourLines()
+drawContourLines(CGnuPlotRenderer *renderer)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   CGnuPlotCamera *camera = plot_->group()->camera();
 
   // draw contour points
@@ -243,7 +241,7 @@ drawContourLines()
 
 void
 CGnuPlotContour::
-drawContourSolid()
+drawContourSolid(CGnuPlotRenderer *renderer)
 {
   std::vector<double> levels;
 
@@ -266,7 +264,7 @@ drawContourSolid()
       double z1 = z_[i1 + j    ], z2 = z_[i2 + j    ];
       double z3 = z_[i1 + j + 1], z4 = z_[i2 + j + 1];
 
-      fillContourBox(x1, y1, x2, y2, z1, z2, z3, z4, levels);
+      fillContourBox(renderer, x1, y1, x2, y2, z1, z2, z3, z4, levels);
     }
   }
 }
@@ -300,11 +298,9 @@ initLevels(std::vector<double> &levels) const
 
 void
 CGnuPlotContour::
-fillContourBox(double x1, double y1, double x2, double y2,
+fillContourBox(CGnuPlotRenderer *renderer, double x1, double y1, double x2, double y2,
                double z1, double z2, double z3, double z4, const std::vector<double> &levels)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   CGnuPlotCamera *camera = plot_->group()->camera();
 
   // get box corner values
@@ -389,8 +385,8 @@ fillContourBox(double x1, double y1, double x2, double y2,
 
   double z1234 = CGnuPlotUtil::avg({z1, z2, z3, z4});
 
-  fillContourBox(x1 , y1 , x12, y12, z1, z12, z13, z1234, levels);
-  fillContourBox(x12, y1 , x2 , y12, z12, z2, z1234, z24, levels);
-  fillContourBox(x1 , y12, x12, y2 , z13, z1234, z3, z34, levels);
-  fillContourBox(x12, y12, x2 , y2 , z1234, z24, z34, z4, levels);
+  fillContourBox(renderer, x1 , y1 , x12, y12, z1, z12, z13, z1234, levels);
+  fillContourBox(renderer, x12, y1 , x2 , y12, z12, z2, z1234, z24, levels);
+  fillContourBox(renderer, x1 , y12, x12, y2 , z13, z1234, z3, z34, levels);
+  fillContourBox(renderer, x12, y12, x2 , y2 , z1234, z24, z34, z4, levels);
 }

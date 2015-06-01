@@ -34,17 +34,19 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     renderer->pixelToWindow(i, 0, &wx, &wy);
 
-    CRGBA c = plot->group()->palette()->getColor(wx);
+    CColor c = plot->group()->palette()->getColor(wx);
 
-    renderer->drawLine(CPoint2D(wx, wy1), CPoint2D(wx, wy2), 0.0, c);
+    CRGBA rgba = c.rgba();
+
+    renderer->drawLine(CPoint2D(wx, wy1), CPoint2D(wx, wy2), 0.0, rgba);
 
     //double x = (i - px1)/(px2 - px1);
 
     double x2 = wx;
-    double r2 = c.getRed  ();
-    double g2 = c.getGreen();
-    double b2 = c.getBlue ();
-    double m2 = c.getGray();
+    double r2 = rgba.getRed  ();
+    double g2 = rgba.getGreen();
+    double b2 = rgba.getBlue ();
+    double m2 = rgba.getGray();
 
     if (! first) {
       renderer->drawLine(CPoint2D(x1, r1), CPoint2D(x2, r2), 0, CRGBA(1,0,0));

@@ -1865,13 +1865,35 @@ getAxisDataFromId(const std::string &id) const
   else if (c == 'y') axis = &yaxis(ind);
   else if (c == 'z') axis = &zaxis(ind);
   else if (c == 'p') axis = &paxis(ind);
-  else if (c == 'c') axis = &cbaxis();
+  else if (c == 'c') axis = &colorBox()->axis();
   else if (c == 't') axis = &taxis(ind);
   else if (c == 'r') axis = &raxis();
   else if (c == 'u') axis = &uaxis();
   else if (c == 'v') axis = &vaxis();
 
   return axis;
+}
+
+bool
+CGnuPlotGroup::
+hasTicLabels(const std::string &id) const
+{
+  const CGnuPlotAxisData *axis = getAxisDataFromId(id);
+  if (! axis) return false;
+
+  return axis->hasTicLabels();
+}
+
+const CGnuPlotAxisData::RTicLabels &
+CGnuPlotGroup::
+ticLabels(const std::string &id) const
+{
+  static CGnuPlotAxisData::RTicLabels noLabels;
+
+  const CGnuPlotAxisData *axis = getAxisDataFromId(id);
+  if (! axis) return noLabels;
+
+  return axis->rticLabels();
 }
 
 std::string
@@ -1889,8 +1911,8 @@ CGnuPlotGroup::
 getAxisValueStr(const CGnuPlotAxisData &axis, int i, double r) const
 {
   if (axis.hasTicLabels()) {
-    if (axis.hasTicLabel(i))
-      return axis.ticLabel(i);
+    if (axis.hasITicLabel(i))
+      return axis.iticLabel(i);
     else
       return "";
   }

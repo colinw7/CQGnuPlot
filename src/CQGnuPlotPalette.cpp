@@ -26,3 +26,17 @@ setColorType(CQGnuPlot::PaletteColorType c)
 {
   CGnuPlotPalette::setColorType(CQGnuPlotUtil::paletteColorTypeConv(c));
 }
+
+CQGnuPlot::ColorModelType
+CQGnuPlotPalette::
+colorModel() const
+{
+  return CQGnuPlotUtil::colorModelTypeConv(CGnuPlotPalette::colorModel());
+}
+
+void
+CQGnuPlotPalette::
+setColorModel(CQGnuPlot::ColorModelType c)
+{
+  CGnuPlotPalette::setColorModel(CQGnuPlotUtil::colorModelTypeConv(c));
+}
