@@ -109,7 +109,9 @@ pixelToWindow(const CPoint2D &p, CPoint2D &w)
 
   renderer->pixelToWindow(p, w);
 
-  group->unmapLogPoint(&w.x, &w.y);
+  double z = 0;
+
+  group->unmapLogPoint(&w.x, &w.y, &z);
 
   return true;
 }

@@ -39,6 +39,21 @@ setFontSize(double s)
 
 void
 CGnuPlotRenderer::
+fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c)
+{
+  std::vector<CPoint2D> points1;
+
+  for (const auto &p : points) {
+    CPoint2D p1 = transform(p);
+
+    points1.push_back(p1);
+  }
+
+  fillPolygon(points1, c);
+}
+
+void
+CGnuPlotRenderer::
 drawClippedPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c)
 {
   if (! isPseudo()) {
@@ -145,6 +160,26 @@ clipLine(CPoint2D &p1, CPoint2D &p2)
   p2 = CPoint2D(x2, y2);
 
   return true;
+}
+
+void
+CGnuPlotRenderer::
+drawEllipse(const CPoint3D &pos, double dx, double ry, double a, const CRGBA &c,
+            double w, const CLineDash &dash)
+{
+  CPoint2D pos1 = transform(pos);
+
+  drawEllipse(pos1, dx, ry, a, c, w, dash);
+}
+
+void
+CGnuPlotRenderer::
+drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
+                 CVAlignType valign, double y_offset, const std::string &str, const CRGBA &c)
+{
+  CPoint2D pos1 = transform(pos);
+
+  drawHAlignedText(pos1, halign, x_offset, valign, y_offset, str, c);
 }
 
 void
@@ -275,6 +310,17 @@ drawHTextInBox(const CBBox2D &bbox, const std::string &str, CHAlignType halign, 
 
   drawText(CPoint2D(x, y), str1, c);
 }
+
+void
+CGnuPlotRenderer::
+drawVAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
+                 CVAlignType valign, double y_offset, const std::string &str, const CRGBA &c)
+{
+  CPoint2D pos1 = transform(pos);
+
+  drawVAlignedText(pos1, halign, x_offset, valign, y_offset, str, c);
+}
+
 void
 CGnuPlotRenderer::
 drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
@@ -656,7 +702,11 @@ CPoint2D
 CGnuPlotRenderer::
 transform(const CPoint3D &p) const
 {
-  CPoint3D p1 = camera_->transform(p);
+  if (camera_) {
+    CPoint3D p1 = camera_->transform(p);
 
-  return CPoint2D(p1.x, p1.y);
+    return CPoint2D(p1.x, p1.y);
+  }
+  else
+    return CPoint2D(p.x, p.y);
 }

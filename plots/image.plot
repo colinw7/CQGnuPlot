@@ -1,1 +1,1 @@
-plot 'dragon.png' binary filetype=png with rgbimage 
+plot 'data/dragon.png' binary filetype=png with rgbimage 

@@ -3,10 +3,10 @@
 
 #include <CGnuPlotTypes.h>
 #include <CGnuPlotAxisData.h>
-#include <COrientation.h>
 #include <CAlignType.h>
 #include <CDirectionType.h>
 #include <CLineDash.h>
+#include <CPoint3D.h>
 #include <CPoint2D.h>
 #include <CBBox2D.h>
 #include <string>
@@ -20,11 +20,17 @@ class CGnuPlotRenderer;
 
 class CGnuPlotAxis {
  public:
+  enum class Direction {
+    X,
+    Y,
+    Z
+  };
+
   typedef CGnuPlotTypes::DrawLayer DrawLayer;
 
  public:
   CGnuPlotAxis(CGnuPlotGroup *group=0, const std::string &id="",
-               COrientation dir=CORIENTATION_HORIZONTAL, double start=0.0, double end=1.0);
+               Direction dir=Direction::X, double start=0.0, double end=1.0);
 
   virtual ~CGnuPlotAxis();
 
@@ -41,11 +47,11 @@ class CGnuPlotAxis {
   double getStart() const { return start1_; }
   double getEnd  () const { return end1_  ; }
 
-  double position() const { return position_; }
-  void setPosition(double r) { position_ = r; }
+  const CPoint3D &position() const { return position_; }
+  void setPosition(const CPoint3D &p) { position_ = p; }
 
-  double position1() const { return position1_; }
-  void setPosition1(double r) { position1_ = r; }
+  const CPoint3D &position1() const { return position1_; }
+  void setPosition1(const CPoint3D &p) { position1_ = p; }
 
   bool isLogarithmic() const { return logarithmic_; }
   void setLogarithmic(bool b) { logarithmic_ = b; }
@@ -178,36 +184,45 @@ class CGnuPlotAxis {
 
   std::string getValueStr(int i, double pos) const;
 
-  virtual void drawAxis(CGnuPlotRenderer *renderer, double pos, bool first=true);
-
-  virtual void drawGrid(CGnuPlotRenderer *renderer, double start, double end);
+  virtual void drawAxis(CGnuPlotRenderer *renderer, bool first=true);
+  virtual void drawGrid(CGnuPlotRenderer *renderer);
 
   virtual void drawRadialGrid(CGnuPlotRenderer *renderer);
 
   const CBBox2D &getBBox() const { return bbox_; }
 
+  static bool calcTics(double start, double end, double &start1, double &end1,
+                       int &numTicks1, int &numTicks2);
+
  private:
   bool calc();
 
-  bool testAxisGaps(double start, double end, double testIncrement,
-                    int testNumGapTicks, double *start1, double *end1,
-                    double *increment, int *numGaps, int *numGapTicks);
+  static bool calcTics(double start, double end, int tickIncrement, double majorIncrement,
+                       double &start1, double &end1, int &numTicks1, int &numTicks2);
+
+  static bool testAxisGaps(double start, double end, double testIncrement,
+                           int testNumGapTicks, double *start1, double *end1,
+                           double *increment, int *numGaps, int *numGapTicks);
 
   bool checkMinorTickSize(double d) const;
 
-  void drawAxisTick(const CPoint2D &p, CDirectionType type, bool large);
+  void drawAxisTick(double pos, bool first, bool large);
 
-  void drawTickLabel(const CPoint2D &p, const std::string &str, bool first);
+  void drawTickLabel(double pos, const std::string &str, bool first);
+  void drawAxisLabel(double pos, const std::string &str, int maxSize, bool first);
 
-  void drawAxisLabel(const CPoint2D &p, const std::string &str, int maxSize, bool first);
+  void drawClipLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c);
+  void drawLine    (const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c);
 
-  void drawClipLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c);
-  void drawLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c);
-
-  void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
+  void drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double xOffset,
                         CVAlignType valign, double yOffset, const std::string &str);
-  void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
+  void drawVAlignedText(const CPoint3D &pos, CHAlignType halign, double xOffset,
                         CVAlignType valign, double yOffset, const std::string &str);
+
+  CPoint3D valueToPoint(double v, bool first) const;
+  CPoint3D ivalueToPoint(double dx, double dy) const;
+
+  CPoint3D perpPoint(const CPoint3D &p, double d) const;
 
  protected:
   typedef std::vector<double> TickSpaces;
@@ -216,13 +231,15 @@ class CGnuPlotAxis {
   CGnuPlotGroup*    group_             { 0 };
   std::string       id_                { "" };
   bool              initialized_       { false };
-  COrientation      direction_         { CORIENTATION_HORIZONTAL };
+  Direction         direction_         { Direction::X };
+  CPoint3D          v_                 { 1, 0, 0 };
+  CPoint3D          iv_                { 0, 1, 0 };
   double            start_             { 0 };
   double            end_               { 1 };
   double            start1_            { 0 };
   double            end1_              { 1 };
-  double            position_          { 0 };
-  double            position1_         { 0 };
+  CPoint3D          position_          { 0, 0, 0 };
+  CPoint3D          position1_         { 0, 0, 0 };
   bool              reverse_           { false };
   bool              logarithmic_       { false };
   int               logarithmicBase_   { 10 };

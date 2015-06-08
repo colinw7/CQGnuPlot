@@ -2433,8 +2433,6 @@ parseModifiers2D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
     else if (line.isString("pointtype") || line.isString("pt")) {
       line.skipNonSpace();
 
-      std::string typeStr = readNonSpaceNonComma(line);
-
       int pt;
 
       if (parseInteger(line, pt))
@@ -2488,13 +2486,19 @@ parseModifiers2D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
 
       line.skipNonSpace();
     }
+    else if (line.isString("notitle")) {
+      line.skipNonSpace();
+    }
+    else if (line.isString("boxed")) {
+      line.skipNonSpace();
+    }
     else if (line.isString("nohidden3d")) {
       line.skipNonSpace();
     }
     else if (line.isString("nocontours")) {
       line.skipNonSpace();
     }
-    else if (line.isString("nosurface")) {
+    else if (line.isString("nosurf") || line.isString("nosurface")) {
       line.skipNonSpace();
     }
     else if (line.isString("palette")) {
@@ -3157,19 +3161,33 @@ splotCmd(const std::string &args)
   // TODO: update local line style copy
 
   CGnuPlotWindowP window;
+  bool            newWindow = false;
 
   if (multiplot_.isEnabled()) {
+    // set multi-window if doesn't exist
     if (! device_->multiWindow()) {
-      device_->setMultiWindow(CGnuPlotWindowP(createWindow()));
+      // create or reuse existing window
+      if (! device_->windows().empty()) {
+        for (auto &w : device_->windows()) {
+          w->clear();
 
-      device_->multiWindow()->set3D(true);
+          window = w;
+        }
+      }
+      else {
+        window    = CGnuPlotWindowP(createWindow());
+        newWindow = true;
+      }
+
+      device_->setMultiWindow(window);
+
       device_->multiWindow()->setBackgroundColor(backgroundColor());
-
-      addWindow(device_->multiWindow());
+      device_->multiWindow()->set3D(true);
     }
+    else
+      window = device_->multiWindow();
 
-    window = device_->multiWindow();
-
+    // set region (default to multiplot grid cell)
     int n = window->numGroups();
 
     double dx = multiplot_.dx();
@@ -3185,6 +3203,7 @@ splotCmd(const std::string &args)
     region_ = CBBox2D(x1, y1, x2, y2);
   }
   else {
+    // create or reuse existing window
     if (! device_->windows().empty()) {
       for (auto &w : device_->windows()) {
         w->clear();
@@ -3193,22 +3212,24 @@ splotCmd(const std::string &args)
       }
     }
     else {
-      window = CGnuPlotWindowP(createWindow());
-
-      window->setBackgroundColor(backgroundColor());
+      window    = CGnuPlotWindowP(createWindow());
+      newWindow = true;
     }
 
+    window->setBackgroundColor(backgroundColor());
     window->set3D(true);
 
+    // set region (default to full screen)
     double x1 = plotSize_.xo.getValue(0.0);
     double y1 = plotSize_.yo.getValue(0.0);
     double x2 = x1 + plotSize_.xsize.getValue(1.0);
     double y2 = y1 + plotSize_.ysize.getValue(1.0);
 
     region_ = CBBox2D(x1, y1, x2, y2);
-
-    addWindow(window);
   }
+
+  if (newWindow)
+    addWindow(window);
 
   //---
 
@@ -3257,9 +3278,7 @@ splotCmd(const std::string &args)
 
   //---
 
-  window->setHidden3D(hidden3D_.enabled);
-  window->setSurface3D(isSurface3D());
-  window->setContour3D(isContour3D());
+  window->setHidden3D(hidden3D().enabled);
   window->setPm3D(pm3D());
 
   //---
@@ -3419,7 +3438,7 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots)
   while (line.isValid() && ! line.isChar(',')) {
     PlotVar plotVar;
 
-    if (! parseOptionValue(this, line, plotVar, "plot var")) {
+    if (! parseOptionValue(this, line, plotVar)) {
       parseModifiers3D(style, line, lineStyle, fillStyle, arrowStyle);
       break;
     }
@@ -3807,6 +3826,14 @@ parseModifiers3D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
       if (parseColorSpec(line, c))
         lineStyle.setColor(c);
     }
+    else if (line.isString("textcolor") || line.isString("tc")) {
+      line.skipNonSpace();
+
+      CGnuPlotColorSpec c;
+
+      if (parseColorSpec(line, c))
+        lineStyle.setColor(c);
+    }
     else if (line.isString("pointtype") || line.isString("pt")) {
       line.skipNonSpace();
 
@@ -3845,13 +3872,19 @@ parseModifiers3D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
 
       line.skipNonSpace();
     }
+    else if (line.isString("notitle")) {
+      line.skipNonSpace();
+    }
+    else if (line.isString("boxed")) {
+      line.skipNonSpace();
+    }
     else if (line.isString("nohidden3d")) {
       line.skipNonSpace();
     }
     else if (line.isString("nocontours")) {
       line.skipNonSpace();
     }
-    else if (line.isString("nosurface")) {
+    else if (line.isString("nosurf") || line.isString("nosurface")) {
       line.skipNonSpace();
     }
     else if (line.isString("palette")) {
@@ -4271,12 +4304,142 @@ setCmd(const std::string &args)
   }
   // set cntrlabel {format "format"} {font "font"}
   // set cntrlabel {start <int>} {interval <int>}
+  // set cntrlabel onecolor
   else if (var == VariableName::CNTRLABEL) {
+    std::string arg = readNonSpace(line);
+
+    while (arg != "") {
+      if      (arg == "format") {
+        std::string format;
+
+        if (parseString(line, format))
+          contourData_.setLabelFormat(format);
+      }
+      else if (arg == "font") {
+        CFontPtr font;
+
+        if (parseFont(line, font))
+          contourData_.setLabelFont(font);
+      }
+      else if (arg == "start") {
+        int n;
+
+        if (parseInteger(line, n))
+          contourData_.setLabelStart(n);
+      }
+      else if (arg == "interval") {
+        int n;
+
+        if (parseInteger(line, n))
+          contourData_.setLabelInterval(n);
+      }
+      else if (arg == "onecolor") {
+        // TODO
+      }
+
+      arg = readNonSpace(line);
+    }
   }
   // set cntrparam { { linear | cubicspline | bspline | points <n> | order <n> |
   //                   levels { auto {<n>} | <n> | discrete <z1> {,<z2>{,<z3>...}} |
   //                            incremental <start>, <incr> {,<end>} } } }
   else if (var == VariableName::CNTRPARAM) {
+    std::string arg = readNonSpace(line);
+
+    while (arg != "") {
+      if      (arg == "linear") {
+        contourData_.setStyle(CGnuPlotContourData::Style::LINEAR);
+      }
+      else if (arg == "cubicspline") {
+        contourData_.setStyle(CGnuPlotContourData::Style::CUBICSPLINE);
+      }
+      else if (arg == "bspline") {
+        contourData_.setStyle(CGnuPlotContourData::Style::BSPLINE);
+      }
+      else if (arg == "points") {
+        int n;
+
+        if (parseInteger(line, n))
+          contourData_.setPoints(n);
+      }
+      else if (arg == "order") {
+        int n;
+
+        if (parseInteger(line, n))
+          contourData_.setOrder(n);
+      }
+      else if (arg == "levels") {
+        int pos = line.pos();
+
+        std::string arg1 = readNonSpace(line);
+
+        while (arg1 != "") {
+          if      (arg1 == "auto") {
+            int n;
+
+            if (parseInteger(line, n))
+              contourData_.setAutoLevels(n);
+          }
+          else if (arg1 == "disc" || arg1 == "discrete") {
+            std::vector<double> z;
+            double              z1;
+
+            if (parseReal(line, z1))
+              z.push_back(z1);
+
+            while (line.skipSpaceAndChar(',')) {
+              if (parseReal(line, z1))
+                z.push_back(z1);
+            }
+
+            contourData_.setDiscreteLevels(z);
+          }
+          else if (arg1 == "incr" || arg1 == "incremental") {
+            double   start = 0, incr = 1;
+            COptReal end;
+
+            if (parseReal(line, start)) {
+              if (line.skipSpaceAndChar(',')) {
+                if (parseReal(line, incr)) {
+                  if (line.skipSpaceAndChar(',')) {
+                    double r;
+
+                    if (parseReal(line, r))
+                      end = r;
+                  }
+
+                  CGnuPlotContourData::Range range;
+
+                  if (end.isValid())
+                    range = CGnuPlotContourData::Range(start, incr, end.getValue());
+                  else
+                    range = CGnuPlotContourData::Range(start, incr);
+
+                  contourData_.setIncrementalRange(range);
+                }
+              }
+            }
+          }
+          else {
+            line.setPos(pos);
+
+            int n = 0;
+
+            if (parseInteger(line, n)) {
+              contourData_.setLevels(n);
+            }
+            else
+              break;
+          }
+
+          pos = line.pos();
+
+          arg1 = readNonSpace(line);
+        }
+      }
+
+      arg = readNonSpace(line);
+    }
   }
   // set colorbox
   // set colorbox { { vertical | horizontal }
@@ -4349,13 +4512,13 @@ setCmd(const std::string &args)
     std::string arg = readNonSpace(line);
 
     if      (arg == "base")
-      contour3D_.pos = Contour3DData::DrawPos::DRAW_BASE;
+      contourData_.setPos(CGnuPlotContourData::DrawPos::BASE);
     else if (arg == "surface")
-      contour3D_.pos = Contour3DData::DrawPos::DRAW_SURFACE;
+      contourData_.setPos(CGnuPlotContourData::DrawPos::SURFACE);
     else if (arg == "both")
-      contour3D_.pos = Contour3DData::DrawPos::DRAW_BOTH;
+      contourData_.setPos(CGnuPlotContourData::DrawPos::BOTH);
 
-    contour3D_.enabled = true;
+    contourData_.setEnabled(true);
   }
   // set dashtype
   else if (var == VariableName::DASHTYPE) {
@@ -5353,12 +5516,11 @@ setCmd(const std::string &args)
         base = 10;
     }
 
-    if (axesStr == "" || axesStr == "x" ) setLogScale(LogScale::X , base);
-    if (axesStr == "" || axesStr == "y" ) setLogScale(LogScale::Y , base);
-    if (axesStr == "" || axesStr == "z" ) setLogScale(LogScale::Z , base);
-    if (axesStr == "" || axesStr == "x2") setLogScale(LogScale::X2, base);
-    if (axesStr == "" || axesStr == "y2") setLogScale(LogScale::Y2, base);
-    if (axesStr == "" || axesStr == "cb") setLogScale(LogScale::CB, base);
+    if (axesStr == "" || axesStr == "x" ) xaxis(1).setLogScale(base);
+    if (axesStr == "" || axesStr == "x2") xaxis(2).setLogScale(base);
+    if (axesStr == "" || axesStr == "y" ) yaxis(1).setLogScale(base);
+    if (axesStr == "" || axesStr == "y2") yaxis(2).setLogScale(base);
+    if (axesStr == "" || axesStr == "z" ) zaxis(1).setLogScale(base);
   }
   // set macros
   else if (var == VariableName::MACROS) {
@@ -6946,7 +7108,7 @@ setCmd(const std::string &args)
   }
   // set surface
   else if (var == VariableName::SURFACE) {
-    setSurface3D(true);
+    surfaceData_.setEnabled(true);
   }
   // set table ["<filename>"]
   else if (var == VariableName::TABLE) {
@@ -7702,20 +7864,7 @@ showCmd(const std::string &args)
   }
   // show contour
   else if (var == VariableName::CONTOUR) {
-    if (! contour3D_.enabled)
-      std::cout << "contour for surfaces are not drawn" << std::endl;
-    else {
-      std::cout << "contour for surfaces are drawn on ";
-
-      if      (contour3D_.pos == Contour3DData::DrawPos::DRAW_BASE   )
-        std::cout << "base";
-      else if (contour3D_.pos == Contour3DData::DrawPos::DRAW_SURFACE)
-        std::cout << "surface";
-      else if (contour3D_.pos == Contour3DData::DrawPos::DRAW_BOTH   )
-        std::cout << "base and surface";
-
-      std::cout << std::endl;
-    }
+    contourData_.show(std::cout);
   }
   // show dashtype
   else if (var == VariableName::DASHTYPE) {
@@ -7953,25 +8102,25 @@ showCmd(const std::string &args)
   }
   // show logscale
   else if (var == VariableName::LOGSCALE) {
-    if (isLogScale(LogScale::X ) || isLogScale(LogScale::Y ) || isLogScale(LogScale::Z ) ||
-        isLogScale(LogScale::X2) || isLogScale(LogScale::Y2) || isLogScale(LogScale::CB)) {
+    if (xaxis(1).logScale().isValid() || xaxis(2).logScale().isValid() ||
+        yaxis(1).logScale().isValid() || yaxis(2).logScale().isValid() ||
+        zaxis(1).logScale().isValid()) {
       std::cout << "logscaling";
 
-      auto print = [&](const std::string &id, LogScale s, bool &output) {
-        if (! isLogScale(s)) return;
+      auto print = [&](const std::string &id, const CGnuPlotAxisData &axis, bool &output) {
+        if (! axis.logScale().isValid()) return;
         if (output) std::cout << " and";
-        std::cout << " " << id << " (base " << getLogScale(s) << ")";
+        std::cout << " " << id << " (base " << axis.logScale().getValue() << ")";
         output = true;
       };
 
       bool output = false;
 
-      print("x" , LogScale::X , output);
-      print("y" , LogScale::Y , output);
-      print("z" , LogScale::Z , output);
-      print("x2", LogScale::X2, output);
-      print("y2", LogScale::Y2, output);
-      print("cb", LogScale::CB, output);
+      print("x" , xaxis(1), output);
+      print("x2", xaxis(2), output);
+      print("y" , yaxis(1), output);
+      print("y2", yaxis(2), output);
+      print("z" , zaxis(1), output);
 
       std::cout << std::endl;
     }
@@ -8236,7 +8385,7 @@ showCmd(const std::string &args)
   }
   // show surface
   else if (var == VariableName::SURFACE) {
-    std::cout << "surface is " << (isSurface3D() ? "drawn" : "not drawn") << std::endl;
+    std::cout << "surface is " << (surfaceData_.isEnabled() ? "drawn" : "not drawn") << std::endl;
   }
   // show table
   else if (var == VariableName::TABLE) {
@@ -8891,7 +9040,7 @@ unsetCmd(const std::string &args)
   }
   // unset contour
   else if (var == VariableName::CONTOUR) {
-    contour3D_.enabled = false;
+    contourData_.setEnabled(false);
   }
   // unset dashtype
   else if (var == VariableName::DASHTYPE) {
@@ -9009,7 +9158,11 @@ unsetCmd(const std::string &args)
   }
   // unset logscale
   else if (var == VariableName::LOGSCALE) {
-    resetLogScale();
+    xaxis(1).resetLogScale();
+    xaxis(2).resetLogScale();
+    yaxis(1).resetLogScale();
+    yaxis(2).resetLogScale();
+    zaxis(1).resetLogScale();
   }
   // unset macros
   else if (var == VariableName::MACROS) {
@@ -9205,7 +9358,7 @@ unsetCmd(const std::string &args)
   }
   // unset surface
   else if (var == VariableName::SURFACE) {
-    setSurface3D(false);
+    surfaceData_.setEnabled(false);
   }
   // unset table
   else if (var == VariableName::TABLE) {
@@ -10322,7 +10475,7 @@ createLineStyle()
 
 CGnuPlotAxis *
 CGnuPlot::
-createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir)
+createAxis(CGnuPlotGroup *group, const std::string &id, CGnuPlotAxis::Direction dir)
 {
   return (device() ? device()->createAxis(group, id, dir) : new CGnuPlotAxis(group, id, dir));
 }
@@ -11775,8 +11928,8 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
             // one value then auto add the point and set number
             if (values.size() == 1) {
-              CExprValueP value1 = CExprInst->createRealValue(pointNum());
-              CExprValueP value2 = CExprInst->createRealValue(setNum());
+              CExprValueP value1 = CExprInst->createRealValue(lineNum);
+              CExprValueP value2 = CExprInst->createRealValue(subSetNum);
 
               if (value1.isValid() && value2.isValid()) {
                 values.push_back(value1);
@@ -11800,7 +11953,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         // add values
         processParams(params);
 
-        plot->addPoint3D(0, values, discontinuity);
+        plot->addPoint3D(subSetNum, values, discontinuity);
       }
     }
   }

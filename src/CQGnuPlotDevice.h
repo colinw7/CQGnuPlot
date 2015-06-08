@@ -33,7 +33,8 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
   CGnuPlotPolygon   *createPolygon  (CGnuPlotGroup *group) override;
   CGnuPlotRectangle *createRectangle(CGnuPlotGroup *group) override;
 
-  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir) override;
+  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
+                           CGnuPlotAxis::Direction dir) override;
 
   CGnuPlotKey  *createKey(CGnuPlotGroup *group) override;
 

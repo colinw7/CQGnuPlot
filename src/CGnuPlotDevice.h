@@ -1,10 +1,10 @@
 #ifndef CGnuPlotDevice_H
 #define CGnuPlotDevice_H
 
-#include <COrientation.h>
 #include <CISize2D.h>
 #include <CFont.h>
 #include <CGnuPlotTypes.h>
+#include <CGnuPlotAxis.h>
 
 #include <string>
 #include <memory>
@@ -112,7 +112,8 @@ class CGnuPlotDevice {
   virtual CGnuPlotPolygon   *createPolygon(CGnuPlotGroup *group);
   virtual CGnuPlotRectangle *createRectangle(CGnuPlotGroup *group);
 
-  virtual CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir);
+  virtual CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
+                                   CGnuPlotAxis::Direction dir);
 
   virtual CGnuPlotKey *createKey(CGnuPlotGroup *group);
 

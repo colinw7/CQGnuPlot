@@ -171,6 +171,10 @@ class CGnuPlotAxisData {
   const CGnuPlotColorSpec &textColor() const { return textColor_; }
   void setTextColor(const CGnuPlotColorSpec &v) { textColor_ = v; }
 
+  const COptInt &logScale() const { return logScale_; }
+  void setLogScale(int s) { logScale_ = s; }
+  void resetLogScale() { logScale_ = COptInt(); }
+
   void unset() {
     displayed_ = false;
 
@@ -324,6 +328,7 @@ class CGnuPlotAxisData {
   bool              front_           { true };
   bool              enhanced_        { true };
   int               lineType_        { -1 };
+  COptInt           logScale_;
   CGnuPlotColorSpec textColor_;
   ZeroAxis          zeroAxis_;
 };

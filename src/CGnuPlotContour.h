@@ -11,6 +11,16 @@ class CGnuPlotRenderer;
 
 class CGnuPlotContour {
  public:
+  struct LevelData {
+    double level;
+    CRGBA  c;
+
+    LevelData(double level1, const CRGBA &c1) :
+     level(level1), c(c1) {
+    }
+  };
+
+ public:
   CGnuPlotContour(CGnuPlotPlot *plot);
 
   CGnuPlot *app() const;
@@ -20,6 +30,8 @@ class CGnuPlotContour {
   bool solid() const { return solid_; }
   void setSolid(bool b) { solid_ = b; }
 
+  void reset();
+
   void setData(double *x, double *y, double *z, int no_x, int no_y);
 
   void setContourLevels(const std::vector<double> &levels);
@@ -27,11 +39,13 @@ class CGnuPlotContour {
 
   void drawContour(CGnuPlotRenderer *renderer);
 
+  void getLevelData(std::vector<LevelData> &levelDatas) const;
+
  private:
   void drawContourLines(CGnuPlotRenderer *renderer);
   void drawContourSolid(CGnuPlotRenderer *renderer);
 
-  void initLevels(std::vector<double> &levels) const;
+  void getLevels(std::vector<double> &levels) const;
 
   void fillContourBox(CGnuPlotRenderer *renderer, double, double, double, double,
                       double, double, double, double, const std::vector<double> &);

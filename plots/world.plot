@@ -6,7 +6,7 @@ unset xtics
 unset ytics
 #
 # plot world map and correspondent locations as a +
-plot 'world.dat' with lines lt 3 , 'world.cor' with points lt 1 pt 2
+plot 'data/world.dat' with lines lt 3 , 'data/world.cor' with points lt 1 pt 2
 set title ""
 set key on
 set border

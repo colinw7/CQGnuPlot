@@ -2,7 +2,6 @@
 #define CGnuPlotKey_H
 
 #include <CGnuPlotKeyData.h>
-#include <COrientation.h>
 #include <CDirectionType.h>
 #include <CPoint2D.h>
 #include <CBBox2D.h>
@@ -15,6 +14,29 @@
 
 class CGnuPlot;
 class CGnuPlotGroup;
+
+class CGnuPlotKeyLabel {
+ public:
+  CGnuPlotKeyLabel(const std::string &text) :
+   text_(text) {
+  }
+
+  CGnuPlotKeyLabel(const std::string &text, const CRGBA &color) :
+   text_(text), color_(color) {
+  }
+
+  const std::string &text() const { return text_; }
+  void setText(const std::string &v) { text_ = v; }
+
+  const COptRGBA &color() const { return color_; }
+  void setColor(const CRGBA &c) { color_ = c; }
+
+ private:
+  std::string text_;
+  COptRGBA    color_;
+};
+
+//---
 
 class CGnuPlotKey {
  public:

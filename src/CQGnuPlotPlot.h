@@ -47,6 +47,11 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_PROPERTY(CQGnuPlot::BoxWidthType boxWidthType   READ getBoxWidthType  WRITE setBoxWidthType )
   Q_PROPERTY(bool                    boxWidthCalc   READ getBoxWidthCalc  WRITE setBoxWidthCalc )
 
+  Q_PROPERTY(bool surfaceEnabled READ isSurfaceEnabled WRITE setSurfaceEnabled)
+
+  Q_PROPERTY(bool contourEnabled READ isContourEnabled WRITE setContourEnabled)
+  Q_PROPERTY(int  contourLevels  READ getContourLevels WRITE setContourLevels)
+
   Q_PROPERTY(int trianglePattern3D READ trianglePattern3D WRITE setTrianglePattern3D)
 
   Q_PROPERTY(double imageAngle READ imageAngle WRITE setImageAngle)

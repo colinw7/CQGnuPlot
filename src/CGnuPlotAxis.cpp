@@ -42,7 +42,7 @@ axesIncrementTests[MAX_GAP_TESTS] = {
 };
 
 CGnuPlotAxis::
-CGnuPlotAxis(CGnuPlotGroup *group, const std::string &id, COrientation direction,
+CGnuPlotAxis(CGnuPlotGroup *group, const std::string &id, Direction direction,
              double start, double end) :
  group_    (group),
  id_       (id),
@@ -52,6 +52,12 @@ CGnuPlotAxis(CGnuPlotGroup *group, const std::string &id, COrientation direction
  start1_   (start),
  end1_     (end)
 {
+  // set direction vector
+  if      (direction == Direction::X) { v_ = CPoint3D(1, 0, 0); iv_ = CPoint3D(0, 1, 0); }
+  else if (direction == Direction::Y) { v_ = CPoint3D(0, 1, 0); iv_ = CPoint3D(1, 0, 0); }
+  else if (direction == Direction::Z) { v_ = CPoint3D(0, 0, 1); iv_ = CPoint3D(1, 0, 0); }
+  else                                assert(false);
+
   calc();
 }
 
@@ -122,16 +128,32 @@ bool
 CGnuPlotAxis::
 calc()
 {
-  numTicks1_ = 1;
-  numTicks2_ = 0;
-
   reverse_ = (start_ > end_);
+
+  return calcTics(start_, end_, tickIncrement_, majorIncrement_,
+                  start1_, end1_, numTicks1_, numTicks2_);
+}
+
+bool
+CGnuPlotAxis::
+calcTics(double start, double end, double &start1, double &end1, int &numTicks1, int &numTicks2)
+{
+  return calcTics(start, end, 0, 0, start1, end1, numTicks1, numTicks2);
+}
+
+bool
+CGnuPlotAxis::
+calcTics(double start, double end, int tickIncrement, double majorIncrement,
+         double &start1, double &end1, int &numTicks1, int &numTicks2)
+{
+  numTicks1 = 1;
+  numTicks2 = 0;
 
   //------
 
   // Ensure Axis Start and End are in the Correct Order
-  double minAxis = std::min(start_, end_);
-  double maxAxis = std::max(start_, end_);
+  double minAxis = std::min(start, end);
+  double maxAxis = std::max(start, end);
 
   //------
 
@@ -150,7 +172,7 @@ calc()
 
   //------
 
-  if (majorIncrement_ <= 0.0) {
+  if (majorIncrement <= 0.0) {
     // Set Default Increment to 0.1 * Power of Ten
     double increment = 0.1;
 
@@ -174,8 +196,8 @@ calc()
 
     // Set Default Start/End to Force Update
 
-    start1_ = 0.0;
-    end1_   = 0.0;
+    start1 = 0.0;
+    end1   = 0.0;
 
     //------
 
@@ -184,20 +206,20 @@ calc()
     int numGaps, numGapTicks;
 
     for (int i = 0; i < MAX_GAP_TESTS; ++i) {
-      if (tickIncrement_ > 0) {
+      if (tickIncrement > 0) {
         int incFactor1 = (int) axesIncrementTests[i].incFactor;
 
         if (((double) incFactor1) != axesIncrementTests[i].incFactor)
           continue;
 
-        if (incFactor1 % tickIncrement_ != 0)
+        if (incFactor1 % tickIncrement != 0)
           continue;
       }
 
       testAxisGaps(minAxis, maxAxis,
                    axesIncrementTests[i].incFactor,
                    axesIncrementTests[i].numTicks,
-                   &start1_, &end1_, &increment,
+                   &start1, &end1, &increment,
                    &numGaps, &numGapTicks);
     }
 
@@ -205,18 +227,18 @@ calc()
 
     // Set the Gap Positions
 
-    numTicks1_ = CMathGen::RoundDown((end1_ - start1_)/increment + 0.5);
-    numTicks2_ = numGapTicks;
+    numTicks1 = CMathGen::RoundDown((end1 - start1)/increment + 0.5);
+    numTicks2 = numGapTicks;
   }
   else {
-    start1_    = start_;
-    end1_      = end_;
-    numTicks1_ = CMathGen::RoundDown((end1_ - start1_)/majorIncrement_ + 0.5);
-    numTicks2_ = 5;
+    start1    = start;
+    end1      = end;
+    numTicks1 = CMathGen::RoundDown((end1 - start1)/majorIncrement + 0.5);
+    numTicks2 = 5;
   }
 
-  numTicks1_ = std::min(numTicks1_, 256);
-  numTicks2_ = std::min(numTicks1_, 10);
+  numTicks1 = std::min(numTicks1, 256);
+  numTicks2 = std::min(numTicks1, 10);
 
   return true;
 }
@@ -390,9 +412,31 @@ getValueStr(int i, double pos) const
 
 void
 CGnuPlotAxis::
-drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
+drawAxis(CGnuPlotRenderer *renderer, bool first)
 {
   renderer_ = renderer;
+
+  if (! isDisplayed())
+    return;
+
+  //---
+
+  // calc bounding box (TODO: 3D box)
+  CPoint3D p1 = valueToPoint(getStart(), first);
+  CPoint3D p2 = valueToPoint(getEnd  (), first);
+
+  double px = renderer_->pixelWidthToWindowWidth(2);
+  double py = renderer_->pixelHeightToWindowHeight(2);
+
+  if      (direction_ == Direction::X)
+    bbox_ = CBBox2D(renderer_->transform(p1) - CPoint2D(0, py/2),
+                    renderer_->transform(p2) + CPoint2D(0, py/2));
+  else if (direction_ == Direction::Y)
+    bbox_ = CBBox2D(renderer_->transform(p1) - CPoint2D(px/2, 0),
+                    renderer_->transform(p2) + CPoint2D(px/2, 0));
+  else
+    bbox_ = CBBox2D(renderer_->transform(p1) - CPoint2D(0, py/2),
+                    renderer_->transform(p2) + CPoint2D(0, py/2));
 
   //---
 
@@ -400,37 +444,17 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
 
   CRGBA c(0,0,0);
 
-  //---
-
-  std::string str;
-
-  if (! isDisplayed())
-    return;
-
   double maxW = 0;
   double maxH = font->getCharHeight();
 
-  if (direction_ == CORIENTATION_HORIZONTAL) {
-    double py = renderer_->pixelHeightToWindowHeight(2);
-
-    bbox_ = CBBox2D(getStart(), pos - py, getEnd(), pos + py);
-  }
-  else {
-    double px = renderer_->pixelWidthToWindowWidth(2);
-
-    bbox_ = CBBox2D(pos - px, getStart(), pos + px, getEnd());
-  }
+  std::string str;
 
   //---
 
   // Draw Axis Line
 
-  if (isDrawLine()) {
-    if (direction_ == CORIENTATION_HORIZONTAL)
-      drawClipLine(CPoint2D(getStart(), pos), CPoint2D(getEnd(), pos), c);
-    else
-      drawClipLine(CPoint2D(pos, getStart()), CPoint2D(pos, getEnd()), c);
-  }
+  if (isDrawLine())
+    drawLine(p1, p2, c);
 
   //---
 
@@ -453,14 +477,8 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
     if (pos1 >= getStart() && pos1 <= getEnd()) {
       // Draw Tick Mark
 
-      if (isDrawTickMark(first)) {
-        if (direction_ == CORIENTATION_HORIZONTAL)
-          drawAxisTick(CPoint2D(pos1, pos),
-           (isTickInside(first) ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), true);
-        else
-          drawAxisTick(CPoint2D(pos, pos1),
-           (isTickInside(first) ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), true);
-      }
+      if (isDrawTickMark(first))
+        drawAxisTick(pos1, first, true);
 
       //------*/
 
@@ -475,12 +493,8 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
 
         // Draw Tick Label
 
-        if (isDrawTickLabel(first)) {
-          if (direction_ == CORIENTATION_HORIZONTAL)
-            drawTickLabel(CPoint2D(pos1, pos), str, first);
-          else
-            drawTickLabel(CPoint2D(pos, pos1), str, first);
-        }
+        if (isDrawTickLabel(first))
+          drawTickLabel(pos1, str, first);
       }
     }
 
@@ -496,14 +510,8 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
           double pos3 = j*dt + pos1;
 
           if (isDrawTickMark(first) && isDrawMinorTickMark()) {
-            if (pos3 >= getStart() && pos3 <= getEnd()) {
-              if (direction_ == CORIENTATION_HORIZONTAL)
-                drawAxisTick(CPoint2D(pos3, pos),
-                  (isTickInside(first) ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), false);
-              else
-                drawAxisTick(CPoint2D(pos, pos3),
-                  (isTickInside(first) ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), false);
-            }
+            if (pos3 >= getStart() && pos3 <= getEnd())
+              drawAxisTick(pos3, first, false);
           }
         }
       }
@@ -513,14 +521,8 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
         double pos3 = getTickSpace(j)*(pos2 - pos1) + pos1;
 
         if (isDrawTickMark(first) && isDrawMinorTickMark()) {
-          if (pos3 >= getStart() && pos3 <= getEnd()) {
-            if (direction_ == CORIENTATION_HORIZONTAL)
-              drawAxisTick(CPoint2D(pos3, pos),
-                (isTickInside(first) ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), false);
-            else
-              drawAxisTick(CPoint2D(pos, pos3),
-                (isTickInside(first) ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), false);
-          }
+          if (pos3 >= getStart() && pos3 <= getEnd())
+            drawAxisTick(pos3, first, false);
         }
       }
     }
@@ -537,14 +539,8 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
   if (pos1 >= getStart() && pos1 <= getEnd()) {
     // Draw Tick Mark
 
-    if (isDrawTickMark(first)) {
-      if (direction_ == CORIENTATION_HORIZONTAL)
-        drawAxisTick(CPoint2D(pos1, pos),
-          (isTickInside(first) ? CDIRECTION_TYPE_UP : CDIRECTION_TYPE_DOWN), true);
-      else
-        drawAxisTick(CPoint2D(pos, pos1),
-          (isTickInside(first) ? CDIRECTION_TYPE_RIGHT : CDIRECTION_TYPE_LEFT), true);
-    }
+    if (isDrawTickMark(first))
+      drawAxisTick(pos1, first, true);
 
     //------*/
 
@@ -559,12 +555,8 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
 
       // Draw Tick Label
 
-      if (isDrawTickLabel(first)) {
-        if (direction_ == CORIENTATION_HORIZONTAL)
-          drawTickLabel(CPoint2D(pos1, pos), str, first);
-        else
-          drawTickLabel(CPoint2D(pos, pos1), str, first);
-      }
+      if (isDrawTickLabel(first))
+        drawTickLabel(pos1, str, first);
     }
   }
 
@@ -581,10 +573,7 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
 
       maxW = std::max(maxW, font->getStringWidth(s));
 
-      if (direction_ == CORIENTATION_HORIZONTAL)
-        drawTickLabel(CPoint2D(r, pos), s, false);
-      else
-        drawTickLabel(CPoint2D(pos, r), s, false);
+      drawTickLabel(r, s, first);
     }
   }
 
@@ -593,39 +582,39 @@ drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
   // Draw Axis Label
 
   if (isDrawLabel(first)) {
-    double x1 = getStart(), y1 = pos;
-    double x2 = getEnd  (), y2 = pos;
+    CPoint3D p1 = valueToPoint(getStart(), first);
+    CPoint3D p2 = valueToPoint(getEnd  (), first);
 
-    group_->mapLogPoint(&x1, &y1);
-    group_->mapLogPoint(&x2, &y2);
+    group_->mapLogPoint(p1);
+    group_->mapLogPoint(p2);
 
-    double mid = (x1 + x2)/2;
+    CPoint3D pm = (p1 + p2)/2;
 
-    group_->unmapLogPoint(&mid, &y1);
+    group_->unmapLogPoint(pm);
 
     const std::string &astr = getLabel();
 
-    if (direction_ == CORIENTATION_HORIZONTAL)
-      drawAxisLabel(CPoint2D(mid, pos), astr, maxH, first);
+    if      (direction_ == Direction::X)
+      drawAxisLabel(pm.x, astr, maxH, first);
+    else if (direction_ == Direction::Y)
+      drawAxisLabel(pm.y, astr, maxH, first);
     else
-      drawAxisLabel(CPoint2D(pos, mid), astr, maxW, first);
+      drawAxisLabel(pm.z, astr, maxH, first);
   }
 }
 
 void
 CGnuPlotAxis::
-drawAxisTick(const CPoint2D &p, CDirectionType type, bool large)
+drawAxisTick(double pos, bool first, bool large)
 {
-  CPoint2D p1 = p;
+  CPoint3D p;
 
-  if (reverse_) {
-    if (direction_ == CORIENTATION_HORIZONTAL)
-      p1.x = end_ - (p.x - start_);
-    else
-      p1.y = end_ - (p.y - start_);
-  }
+  if (reverse_)
+    p = valueToPoint(end_ - (pos - start_), first);
+  else
+    p = valueToPoint(pos, first);
 
-  if (clip_ && ! renderer_->clip().inside(p1))
+  if (clip_ && ! renderer_->clip().inside(CPoint2D(p.x, p.y)))
     return;
 
   double psize = 6;
@@ -633,85 +622,128 @@ drawAxisTick(const CPoint2D &p, CDirectionType type, bool large)
   if (! large)
     psize = 3;
 
+  double xsize = renderer_->pixelWidthToWindowWidth  (psize);
+  double ysize = renderer_->pixelHeightToWindowHeight(psize);
+
+  CPoint3D p1;
+
+  if (isTickInside(first))
+    p1 = p + ivalueToPoint(xsize, ysize);
+  else
+    p1 = p - ivalueToPoint(xsize, ysize);
+
   CRGBA c(0,0,0);
 
-  if (type == CDIRECTION_TYPE_LEFT || type == CDIRECTION_TYPE_RIGHT) {
-    double dx = (type == CDIRECTION_TYPE_LEFT ? -1 : 1);
-
-    double x1 = p1.x + dx*renderer_->pixelWidthToWindowWidth(psize);
-
-    drawLine(p1, CPoint2D(x1, p1.y), c);
-  }
-  else {
-    double dy = (type == CDIRECTION_TYPE_DOWN  ? -1 : 1);
-
-    double y1 = p1.y + dy*renderer_->pixelHeightToWindowHeight(psize);
-
-    drawLine(p1, CPoint2D(p1.x, y1), c);
-  }
+  drawLine(p, p1, c);
 }
 
 void
 CGnuPlotAxis::
-drawTickLabel(const CPoint2D &p, const std::string &str, bool first)
+drawTickLabel(double pos, const std::string &str, bool first)
 {
-  CPoint2D p1 = p;
+  CPoint3D p;
 
-  if (reverse_) {
-    if (direction_ == CORIENTATION_HORIZONTAL)
-      p1.x = end_ - (p.x - start_);
-    else
-      p1.y = end_ - (p.y - start_);
-  }
+  if (reverse_)
+    p = valueToPoint(end_ - (pos - start_), first);
+  else
+    p = valueToPoint(pos, first);
 
-  if (clip_ && ! renderer_->clip().inside(p1))
+  if (clip_ && ! renderer_->clip().inside(CPoint2D(p.x, p.y)))
     return;
 
-  // bool rotatedText = (direction_ == CORIENTATION_VERTICAL);
+  double xsize = renderer_->pixelWidthToWindowWidth  (8);
+  double ysize = renderer_->pixelHeightToWindowHeight(8);
+
+  // bool rotatedText = (direction_ == Direction::Y);
   bool rotatedText = false;
 
-  if (direction_ == CORIENTATION_HORIZONTAL) {
+  if      (direction_ == Direction::X) {
+    CPoint3D p1 = perpPoint(p, (isLabelInside(first) ? ysize : -ysize));
+
     if (isLabelInside(first))
-      drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, -8, str);
+      drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, 0, str);
     else
-      drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP   ,  8, str);
+      drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP   , 0, str);
   }
-  else {
+  else if (direction_ == Direction::Y) {
     if (rotatedText) {
-      if (isLabelInside(first))
-        drawVAlignedText(p1, CHALIGN_TYPE_LEFT , 0, CVALIGN_TYPE_CENTER,  8, str);
-      else
-        drawVAlignedText(p1, CHALIGN_TYPE_RIGHT, 0, CVALIGN_TYPE_CENTER, -8, str);
-    }
-    else
-      if (isLabelInside(first))
-        drawHAlignedText(p1, CHALIGN_TYPE_LEFT ,  8, CVALIGN_TYPE_CENTER, 0, str);
-      else
-        drawHAlignedText(p1, CHALIGN_TYPE_RIGHT, -8, CVALIGN_TYPE_CENTER, 0, str);
-  }
-}
+      CPoint3D p1 = perpPoint(p, (isLabelInside(first) ? ysize : -ysize));
 
-void
-CGnuPlotAxis::
-drawAxisLabel(const CPoint2D &p, const std::string &str, int maxSize, bool first)
-{
-  if (direction_ == CORIENTATION_HORIZONTAL) {
-    if (isLabelInside(first))
-      drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, -(maxSize + 12), str);
-    else
-      drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP   ,   maxSize + 12 , str);
+      if (isLabelInside(first))
+        drawVAlignedText(p1, CHALIGN_TYPE_LEFT , 0, CVALIGN_TYPE_CENTER, 0, str);
+      else
+        drawVAlignedText(p1, CHALIGN_TYPE_RIGHT, 0, CVALIGN_TYPE_CENTER, 0, str);
+    }
+    else {
+      CPoint3D p1 = perpPoint(p, (isLabelInside(first) ? xsize : -xsize));
+
+      if (isLabelInside(first))
+        drawHAlignedText(p1, CHALIGN_TYPE_LEFT , 0, CVALIGN_TYPE_CENTER, 0, str);
+      else
+        drawHAlignedText(p1, CHALIGN_TYPE_RIGHT, 0, CVALIGN_TYPE_CENTER, 0, str);
+    }
   }
   else {
+    CPoint3D p1 = perpPoint(p, (isLabelInside(first) ? xsize : -xsize));
+
     if (isLabelInside(first))
-      drawVAlignedText(p, CHALIGN_TYPE_LEFT ,    maxSize + 12 , CVALIGN_TYPE_CENTER, 0, str);
+      drawHAlignedText(p1, CHALIGN_TYPE_LEFT , 0, CVALIGN_TYPE_CENTER, 0, str);
     else
-      drawVAlignedText(p, CHALIGN_TYPE_RIGHT , -(maxSize + 12), CVALIGN_TYPE_CENTER, 0, str);
+      drawHAlignedText(p1, CHALIGN_TYPE_RIGHT, 0, CVALIGN_TYPE_CENTER, 0, str);
   }
 }
 
 void
 CGnuPlotAxis::
-drawGrid(CGnuPlotRenderer *renderer, double start, double end)
+drawAxisLabel(double pos, const std::string &str, int maxSize, bool first)
+{
+  CPoint3D p;
+
+  if (reverse_)
+    p = valueToPoint(end_ - (pos - start_), first);
+  else
+    p = valueToPoint(pos, first);
+
+  double xsize = renderer_->pixelWidthToWindowWidth  (maxSize + 12);
+  double ysize = renderer_->pixelHeightToWindowHeight(maxSize + 12);
+
+  if      (direction_ == Direction::X) {
+    CPoint3D p1 = perpPoint(p, (isLabelInside(first) ? ysize : -ysize));
+
+    if (isLabelInside(first))
+      drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, 0, str);
+    else
+      drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP   , 0, str);
+  }
+  else if (direction_ == Direction::Y) {
+    CPoint3D p1 = perpPoint(p, (isLabelInside(first) ? xsize : -xsize));
+
+    if (group_->is3D()) {
+      if (isLabelInside(first))
+        drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, 0, str);
+      else
+        drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP   , 0, str);
+    }
+    else {
+      if (isLabelInside(first))
+        drawVAlignedText(p1, CHALIGN_TYPE_LEFT ,  0, CVALIGN_TYPE_CENTER, 0, str);
+      else
+        drawVAlignedText(p1, CHALIGN_TYPE_RIGHT , 0, CVALIGN_TYPE_CENTER, 0, str);
+    }
+  }
+  else {
+    CPoint3D p1 = perpPoint(p, (isLabelInside(first) ? xsize : -xsize));
+
+    if (isLabelInside(first))
+      drawVAlignedText(p1, CHALIGN_TYPE_LEFT ,  0, CVALIGN_TYPE_CENTER, 0, str);
+    else
+      drawVAlignedText(p1, CHALIGN_TYPE_RIGHT , 0, CVALIGN_TYPE_CENTER, 0, str);
+  }
+}
+
+void
+CGnuPlotAxis::
+drawGrid(CGnuPlotRenderer *renderer)
 {
   static double gridDashes[] = {1, 3};
   static int    numGridDashes = 2;
@@ -727,51 +759,32 @@ drawGrid(CGnuPlotRenderer *renderer, double start, double end)
   //------*/
 
   if (gridMajor_ || gridMinor_) {
-    if (direction_ == CORIENTATION_HORIZONTAL) { // x-axis
-      double xincrement = getMajorIncrement();
+    double mi = getMajorIncrement();
 
-      for (int i = 0; i <= getNumMajorTicks(); ++i) {
-        double x = i*xincrement + getStart();
+    for (int i = 0; i <= getNumMajorTicks(); ++i) {
+      double v = i*mi + getStart();
 
-        if (gridMajor_) {
-          if (x >= getStart() && x <= getEnd())
-            drawClipLine(CPoint2D(x, start), CPoint2D(x, end), c);
-        }
+      if (gridMajor_) {
+        if (v >= getStart() && v <= getEnd()) {
+          CPoint3D p1 = valueToPoint(v, false);
+          CPoint3D p2 = valueToPoint(v, true );
 
-        if (gridMinor_) {
-          double xincrement1 = getMinorIncrement();
-
-          if (checkMinorTickSize(xincrement1)) {
-            for (int j = 0; j < getNumMinorTicks(); ++j) {
-              double x1 = x + j*xincrement1;
-
-              if (x1 >= getStart() && x1 <= getEnd())
-                drawClipLine(CPoint2D(x1, start), CPoint2D(x1, end), c);
-            }
-          }
+          drawClipLine(p1, p2, c);
         }
       }
-    }
-    else {
-      double yincrement = getMajorIncrement();
 
-      for (int i = 0; i <= getNumMajorTicks(); ++i) {
-        double y = i*yincrement + getStart();
+      if (gridMinor_) {
+        double mi1 = getMinorIncrement();
 
-        if (gridMajor_) {
-          if (y >= getStart() && y <= getEnd())
-            drawClipLine(CPoint2D(start, y), CPoint2D(end, y), c);
-        }
+        if (checkMinorTickSize(mi1)) {
+          for (int j = 0; j < getNumMinorTicks(); ++j) {
+            double v1 = v + j*mi1;
 
-        if (gridMinor_) {
-          double yincrement1 = getMinorIncrement();
+            if (v1 >= getStart() && v1 <= getEnd()) {
+              CPoint3D p11 = valueToPoint(v1, false);
+              CPoint3D p21 = valueToPoint(v1, true );
 
-          if (checkMinorTickSize(yincrement1)) {
-            for (int j = 0; j <= getNumMinorTicks(); ++j) {
-              double y1 = y + j*yincrement1;
-
-              if (y1 >= getStart() && y1 <= getEnd())
-                drawClipLine(CPoint2D(start, y1), CPoint2D(end, y1), c);
+              drawClipLine(p11, p21, c);
             }
           }
         }
@@ -813,7 +826,7 @@ drawRadialGrid(CGnuPlotRenderer *renderer)
     double x2 = r2*cos(a);
     double y2 = r2*sin(a);
 
-    drawClipLine(CPoint2D(x1, y1), CPoint2D(x2, y2), c);
+    drawClipLine(CPoint3D(x1, y1, 0), CPoint3D(x2, y2, 0), c);
   }
 
   if (gridMajor_) {
@@ -823,7 +836,7 @@ drawRadialGrid(CGnuPlotRenderer *renderer)
       double x = i*xincrement + getStart();
 
       if (x >= getStart() && x <= getEnd())
-        renderer->drawEllipse(CPoint2D(0, 0), x, x, 0, c, 1, lineDash_);
+        renderer->drawEllipse(CPoint3D(0, 0, 0), x, x, 0, c, 1, lineDash_);
 
       if (gridMinor_) {
         double xincrement1 = getMinorIncrement();
@@ -832,7 +845,7 @@ drawRadialGrid(CGnuPlotRenderer *renderer)
           for (int j = 0; j < getNumMinorTicks(); ++j) {
             double x1 = x + j*xincrement1;
 
-            renderer->drawEllipse(CPoint2D(0, 0), x1, x1, 0, c, 1, lineDash_);
+            renderer->drawEllipse(CPoint3D(0, 0, 0), x1, x1, 0, c, 1, lineDash_);
           }
         }
       }
@@ -848,7 +861,7 @@ checkMinorTickSize(double d) const
 {
   double dp = 0;
 
-  if (direction_ == CORIENTATION_HORIZONTAL)
+  if (direction_ == Direction::X || direction_ == Direction::Z)
     dp = renderer_->windowWidthToPixelWidth(d);
   else
     dp = renderer_->windowHeightToPixelHeight(d);
@@ -858,43 +871,44 @@ checkMinorTickSize(double d) const
 
 void
 CGnuPlotAxis::
-drawClipLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c)
+drawClipLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c)
 {
-  CPoint2D p11 = p1;
-  CPoint2D p21 = p2;
+  if (CGnuPlotUtil::realEq(p1.z, p2.z)) {
+    CPoint2D p11(p1.x, p1.y);
+    CPoint2D p21(p2.x, p2.y);
 
-  if (! clip_ || renderer_->clipLine(p11, p21))
-    drawLine(p11, p21, c);
+    if (! clip_ || renderer_->clipLine(p11, p21))
+      drawLine(CPoint3D(p11.x, p11.y, p1.z), CPoint3D(p21.x, p21.y, p2.z), c);
+  }
+  else
+    drawLine(p1, p2, c);
 }
 
 void
 CGnuPlotAxis::
-drawLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c)
+drawLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c)
 {
-  double x1 = p1.x, y1 = p1.y;
-  double x2 = p2.x, y2 = p2.y;
-
-  group_->mapLogPoint(&x1, &y1);
-  group_->mapLogPoint(&x2, &y2);
+  CPoint3D pm1 = group_->mapLogPoint(p1);
+  CPoint3D pm2 = group_->mapLogPoint(p2);
 
   // TODO: custom width and color
-  renderer_->drawLine(CPoint2D(x1, y1), CPoint2D(x2, y2), 1, c, lineDash_);
+  renderer_->drawLine(pm1, pm2, 1, c, lineDash_);
 }
 
 void
 CGnuPlotAxis::
-drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
+drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double xOffset,
                  CVAlignType valign, double yOffset, const std::string &str)
 {
-  double x = pos.x, y = pos.y;
+  double x = pos.x, y = pos.y, z = pos.z;
 
-  group_->mapLogPoint(&x, &y);
+  group_->mapLogPoint(&x, &y, &z);
 
-  CPoint2D pos1(x, y);
+  CPoint3D pos1(x, y, z);
 
   CRGBA c(0,0,0);
 
-  if (enhanced_) {
+  if (enhanced_ && ! group_->is3D()) {
     //CFontPtr font = renderer_->getFont();
 
     CGnuPlotText text(str);
@@ -919,7 +933,7 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
     dx += xo;
     dy -= yo;
 
-    CBBox2D bbox1 = bbox.moveBy(pos1 + CPoint2D(dx, dy));
+    CBBox2D bbox1 = bbox.moveBy(CPoint2D(pos1.x, pos1.y) + CPoint2D(dx, dy));
 
     bbox1.setYMax(pos1.y + dy);
 
@@ -932,14 +946,37 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
 
 void
 CGnuPlotAxis::
-drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double xOffset,
+drawVAlignedText(const CPoint3D &pos, CHAlignType halign, double xOffset,
                  CVAlignType valign, double yOffset, const std::string &str)
 {
-  double x = pos.x, y = pos.y;
+  double x = pos.x, y = pos.y, z = pos.y;
 
   CRGBA c(0,0,0);
 
-  group_->mapLogPoint(&x, &y);
+  group_->mapLogPoint(&x, &y, &z);
 
-  renderer_->drawVAlignedText(CPoint2D(x, y), halign, xOffset, valign, yOffset, str, c);
+  CPoint3D pos1(x, y, z);
+
+  renderer_->drawVAlignedText(pos1, halign, xOffset, valign, yOffset, str, c);
+}
+
+CPoint3D
+CGnuPlotAxis::
+valueToPoint(double v, bool first) const
+{
+  return v*v_ + (first ? position_ : position1_);
+}
+
+CPoint3D
+CGnuPlotAxis::
+ivalueToPoint(double dx, double dy) const
+{
+  return CPoint3D(dx*iv_.x, dy*iv_.y, iv_.z);
+}
+
+CPoint3D
+CGnuPlotAxis::
+perpPoint(const CPoint3D &p, double d) const
+{
+  return p + d*iv_;
 }

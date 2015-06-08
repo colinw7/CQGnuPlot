@@ -25,6 +25,7 @@
 #include <CQGnuPlotPieObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
+#include <CQGnuPlotToolBar.h>
 #include <CQZoomRegion.h>
 
 #include <CQPropertyTree.h>
@@ -39,14 +40,30 @@
 #include <QLabel>
 #include <QFrame>
 #include <QTimer>
-#include <QToolBar>
 #include <QRubberBand>
+#include <QPushButton>
 
-#include <xpm/select.xpm>
-#include <xpm/zoom.xpm>
-#include <xpm/grid.xpm>
-#include <xpm/xaxis.xpm>
-#include <xpm/yaxis.xpm>
+//#include <xpm/select.xpm>
+//#include <xpm/zoom.xpm>
+//#include <xpm/grid.xpm>
+//#include <xpm/xaxis.xpm>
+//#include <xpm/yaxis.xpm>
+
+#include <svg/select_svg.h>
+#include <svg/zoom_svg.h>
+#include <svg/grid_svg.h>
+#include <svg/xaxis_svg.h>
+#include <svg/yaxis_svg.h>
+
+namespace {
+  QIcon svgIcon(const uchar *data, int len) {
+    QPixmap pixmap;
+
+    pixmap.loadFromData(data, len);
+
+    return QIcon(pixmap);
+  }
+}
 
 static const int TreeWidth = 250;
 
@@ -60,8 +77,10 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
 
   //---
 
-  selectAction_ = new QAction(QIcon(QPixmap(select_data)), "Select", this);
-  zoomAction_   = new QAction(QIcon(QPixmap(zoom_data  )), "Zoom"  , this);
+//selectAction_ = new QAction(QIcon(QPixmap(select_data)), "Select", this);
+  selectAction_ = new QAction(svgIcon(select_data, SELECT_DATA_LEN), "Select", this);
+//zoomAction_   = new QAction(QIcon(QPixmap(zoom_data  )), "Zoom"  , this);
+  zoomAction_   = new QAction(svgIcon(zoom_data  , ZOOM_DATA_LEN  ), "Zoom"  , this);
 
   selectAction_->setCheckable(true);
   zoomAction_  ->setCheckable(true);
@@ -73,7 +92,7 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
 
   //---
 
-  QToolBar *toolbar = new QToolBar;
+  CQGnuPlotToolBar *toolbar = new CQGnuPlotToolBar("Controls");
 
   addToolBar(toolbar);
 
@@ -118,6 +137,12 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
   QHBoxLayout *buttonLayout = new QHBoxLayout(buttonFrame);
   buttonLayout->setMargin(2); buttonLayout->setSpacing(2);
 
+  QPushButton *reloadButton = new QPushButton("Reload");
+
+  connect(reloadButton, SIGNAL(clicked()), this, SLOT(addProperties()));
+
+  buttonLayout->addWidget(reloadButton);
+
   buttonLayout->addStretch(1);
 
   rlayout->addWidget(buttonFrame);
@@ -155,9 +180,12 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
 
   QMenu *dispMenu = menuBar()->addMenu("&Display");
 
-  QAction *xAxisAction = new QAction(QIcon(QPixmap(xaxis_data)), "&X Axis", this);
-  QAction *yAxisAction = new QAction(QIcon(QPixmap(yaxis_data)), "&Y Axis", this);
-  QAction *gridAction  = new QAction(QIcon(QPixmap(grid_data )), "&Grid"  , this);
+//QAction *xAxisAction = new QAction(QIcon(QPixmap(xaxis_data)), "&X Axis", this);
+  QAction *xAxisAction = new QAction(svgIcon(xaxis_data, XAXIS_DATA_LEN), "&X Axis", this);
+//QAction *yAxisAction = new QAction(QIcon(QPixmap(yaxis_data)), "&Y Axis", this);
+  QAction *yAxisAction = new QAction(svgIcon(yaxis_data, YAXIS_DATA_LEN), "&Y Axis", this);
+//QAction *gridAction  = new QAction(QIcon(QPixmap(grid_data )), "&Grid"  , this);
+  QAction *gridAction  = new QAction(svgIcon(grid_data , GRID_DATA_LEN ), "&Grid"  , this);
 
   xAxisAction->setCheckable(true); xAxisAction->setChecked(true);
   yAxisAction->setCheckable(true); yAxisAction->setChecked(true);
@@ -234,16 +262,10 @@ addProperties()
 {
   tree_->clear();
 
-  if (iedits_.empty()) {
-    iedits_.push_back(new CQPropertyIntegerEditor(0, 33));
-  }
-
   tree_->addProperty("", this, "backgroundColor");
 
   if (is3D()) {
     tree_->addProperty("", this, "hidden3D");
-    tree_->addProperty("", this, "surface3D");
-    tree_->addProperty("", this, "contour3D");
   }
 
   const CGnuPlot::LineStyles &lineStyles = plot_->lineStyles();
@@ -287,9 +309,9 @@ addGroupProperties(CGnuPlotGroup *group)
 
     tree_->addProperty(cameraName, qcamera, "enabled");
 
-    tree_->addProperty(cameraName, qcamera, "rotateX")->setEditorFactory(realEdit("0:360:1"));
-    tree_->addProperty(cameraName, qcamera, "rotateY")->setEditorFactory(realEdit("0:360:1"));
-    tree_->addProperty(cameraName, qcamera, "rotateZ")->setEditorFactory(realEdit("0:360:1"));
+    tree_->addProperty(cameraName, qcamera, "rotateX")->setEditorFactory(realSlider("0:360:1"));
+    tree_->addProperty(cameraName, qcamera, "rotateY")->setEditorFactory(realSlider("0:360:1"));
+    tree_->addProperty(cameraName, qcamera, "rotateZ")->setEditorFactory(realSlider("0:360:1"));
 
     tree_->addProperty(cameraName, qcamera, "xmin")->setEditorFactory(realEdit("-1000:1000:0.1"));
     tree_->addProperty(cameraName, qcamera, "xmax")->setEditorFactory(realEdit("-1000:1000:0.1"));
@@ -342,32 +364,33 @@ addGroupProperties(CGnuPlotGroup *group)
   for (const auto &axis : qgroup->axes()) {
     CQGnuPlotAxis *qaxis = static_cast<CQGnuPlotAxis *>(axis.second);
 
-    QString axesName = QString("%1/axes_%2").arg(groupName).arg(qaxis->id().c_str());
+    QString axisName = QString("%1/axis_%2").arg(groupName).arg(qaxis->id().c_str());
 
-    tree_->addProperty(axesName, qaxis, "displayed");
-    tree_->addProperty(axesName, qaxis, "start");
-    tree_->addProperty(axesName, qaxis, "end");
-    tree_->addProperty(axesName, qaxis, "position");
-    tree_->addProperty(axesName, qaxis, "position1");
-    tree_->addProperty(axesName, qaxis, "logarithmic");
-    tree_->addProperty(axesName, qaxis, "majorIncrement");
-    tree_->addProperty(axesName, qaxis, "majorTics");
-    tree_->addProperty(axesName, qaxis, "minorIncrement");
-    tree_->addProperty(axesName, qaxis, "minorTics");
-    tree_->addProperty(axesName, qaxis, "tickIncrement");
-    tree_->addProperty(axesName, qaxis, "label");
-    tree_->addProperty(axesName, qaxis, "tickInside");
-    tree_->addProperty(axesName, qaxis, "tickInside1");
-    tree_->addProperty(axesName, qaxis, "drawTickMark");
-    tree_->addProperty(axesName, qaxis, "drawTickMark1");
-    tree_->addProperty(axesName, qaxis, "drawTickLabel");
-    tree_->addProperty(axesName, qaxis, "drawTickLabel1");
-    tree_->addProperty(axesName, qaxis, "labelInside");
-    tree_->addProperty(axesName, qaxis, "labelInside1");
-    tree_->addProperty(axesName, qaxis, "drawLabel");
-    tree_->addProperty(axesName, qaxis, "drawLabel1");
+    tree_->addProperty(axisName, qaxis, "displayed");
+    tree_->addProperty(axisName, qaxis, "start");
+    tree_->addProperty(axisName, qaxis, "end");
+  //tree_->addProperty(axisName, qaxis, "position");
+  //tree_->addProperty(axisName, qaxis, "position1");
+    tree_->addProperty(axisName, qaxis, "logarithmic");
+    tree_->addProperty(axisName, qaxis, "majorIncrement");
+    tree_->addProperty(axisName, qaxis, "majorTics");
+    tree_->addProperty(axisName, qaxis, "minorIncrement");
+    tree_->addProperty(axisName, qaxis, "minorTics");
+    tree_->addProperty(axisName, qaxis, "tickIncrement");
+    tree_->addProperty(axisName, qaxis, "label");
+    tree_->addProperty(axisName, qaxis, "tickInside");
+    tree_->addProperty(axisName, qaxis, "tickInside1");
+    tree_->addProperty(axisName, qaxis, "drawTickMark");
+    tree_->addProperty(axisName, qaxis, "drawTickMark1");
+    tree_->addProperty(axisName, qaxis, "drawTickLabel");
+    tree_->addProperty(axisName, qaxis, "drawTickLabel1");
+    tree_->addProperty(axisName, qaxis, "labelInside");
+    tree_->addProperty(axisName, qaxis, "labelInside1");
+    tree_->addProperty(axisName, qaxis, "drawLabel");
+    tree_->addProperty(axisName, qaxis, "drawLabel1");
+    tree_->addProperty(axisName, qaxis, "enhanced");
 
-    QString gridName = QString("%1/grid").arg(axesName);
+    QString gridName = QString("%1/grid").arg(axisName);
 
     tree_->addProperty(gridName, qaxis, "grid"     )->setLabel("displayed");
     tree_->addProperty(gridName, qaxis, "gridMajor")->setLabel("majorTics");
@@ -425,9 +448,9 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(paletteName, qpalette, "gray");
   tree_->addProperty(paletteName, qpalette, "negative");
 
-  tree_->addProperty(paletteName, qpalette, "redModel"  )->setEditorFactory(iedits_[0]);
-  tree_->addProperty(paletteName, qpalette, "greenModel")->setEditorFactory(iedits_[0]);
-  tree_->addProperty(paletteName, qpalette, "blueModel" )->setEditorFactory(iedits_[0]);
+  tree_->addProperty(paletteName, qpalette, "redModel"  )->setEditorFactory(integerEdit("0:33"));
+  tree_->addProperty(paletteName, qpalette, "greenModel")->setEditorFactory(integerEdit("0:33"));
+  tree_->addProperty(paletteName, qpalette, "blueModel" )->setEditorFactory(integerEdit("0:33"));
 
   //---
 
@@ -561,8 +584,18 @@ addPlotProperties(CGnuPlotPlot *plot)
   tree_->addProperty(rangeName, qplot, "xmax")->setEditorFactory(realEdit("-1000:1000:0.1"));
   tree_->addProperty(rangeName, qplot, "ymax")->setEditorFactory(realEdit("-1000:1000:0.1"));
 
-  if (plot->window()->is3D())
+  if (plot->window()->is3D()) {
+    QString surfaceName = plotName + "/surface";
+
+    tree_->addProperty(surfaceName, qplot, "surfaceEnabled");
+
+    QString contourName = plotName + "/contour";
+
+    tree_->addProperty(contourName, qplot, "contourEnabled");
+    tree_->addProperty(contourName, qplot, "contourLevels")->setEditorFactory(integerEdit("2:100"));
+
     tree_->addProperty(plotName, qplot, "trianglePattern3D");
+  }
 
   if (plot->isImageStyle()) {
     QString imageName = plotName + "/image";
@@ -940,8 +973,10 @@ mouseRelease(const QPoint &)
   }
   else {
     if (zoomGroup_ && ! escape_) {
-      zoomGroup_->setAxisRange("x1", zoomRegion_->start().x(), zoomRegion_->end().x());
-      zoomGroup_->setAxisRange("y1", zoomRegion_->start().y(), zoomRegion_->end().y());
+      if (! zoomGroup_->is3D()) {
+        zoomGroup_->setAxisRange("x1", zoomRegion_->start().x(), zoomRegion_->end().x());
+        zoomGroup_->setAxisRange("y1", zoomRegion_->start().y(), zoomRegion_->end().y());
+      }
 
       redraw();
     }
@@ -954,10 +989,12 @@ void
 CQGnuPlotWindow::
 keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
 {
-  if (mode_ == Mode::ZOOM) {
-    CQGnuPlotGroup *group = currentGroup();
-    if (! group) return;
+  CQGnuPlotGroup *group = currentGroup();
+  if (! group) return;
 
+  CGnuPlotCamera *camera = group->camera();
+
+  if (mode_ == Mode::ZOOM) {
     double xmin = group->getXMin();
     double ymin = group->getYMin();
     double xmax = group->getXMax();
@@ -970,34 +1007,62 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
     double yc = (ymax + ymin)/2;
 
     if      (key == Qt::Key_Left || key == Qt::Key_Right) {
-      double dx = w/4;
+      if (! group->is3D()) {
+        double dx = w/4;
 
-      if (key == Qt::Key_Left)
-        dx = -dx;
+        if (key == Qt::Key_Left)
+          dx = -dx;
 
-      group->setAxisRange("x1", xmin + dx, xmax + dx);
+        group->setAxisRange("x1", xmin + dx, xmax + dx);
+      }
+      else {
+        camera->moveDX(key == Qt::Key_Left ? -0.01 : 0.01);
+
+        group->reset3D();
+      }
 
       redraw();
     }
     else if (key == Qt::Key_Down || key == Qt::Key_Up) {
-      double dy = h/4;
+      if (! group->is3D()) {
+        double dy = h/4;
 
-      if (key == Qt::Key_Down)
-        dy = -dy;
+        if (key == Qt::Key_Down)
+          dy = -dy;
 
-      group->setAxisRange("y1", ymin + dy, ymax + dy);
+        group->setAxisRange("y1", ymin + dy, ymax + dy);
+      }
+      else {
+        camera->moveDY(key == Qt::Key_Down ? -0.01 : 0.01);
+
+        group->reset3D();
+      }
 
       redraw();
     }
     else if (key == Qt::Key_Plus) {
-      group->setAxisRange("x1", xc - w/4, xc + w/4);
-      group->setAxisRange("y1", yc - h/4, yc + h/4);
+      if (! group->is3D()) {
+        group->setAxisRange("x1", xc - w/4, xc + w/4);
+        group->setAxisRange("y1", yc - h/4, yc + h/4);
+      }
+      else {
+        camera->zoomIn();
+
+        group->reset3D();
+      }
 
       redraw();
     }
     else if (key == Qt::Key_Minus) {
-      group->setAxisRange("x1", xc - w, xc + w);
-      group->setAxisRange("y1", yc - h, yc + h);
+      if (! group->is3D()) {
+        group->setAxisRange("x1", xc - w, xc + w);
+        group->setAxisRange("y1", yc - h, yc + h);
+      }
+      else {
+        camera->zoomOut();
+
+        group->reset3D();
+      }
 
       redraw();
     }
@@ -1137,6 +1202,58 @@ realEdit(const std::string &str)
     CQPropertyRealEditor *redit = new CQPropertyRealEditor(start, end, delta);
 
     p = redits_.insert(p, RealEdits::value_type(str, redit));
+  }
+
+  return (*p).second;
+}
+
+CQPropertyIntegerEditor *
+CQGnuPlotWindow::
+integerEdit(const std::string &str)
+{
+  auto p = iedits_.find(str);
+
+  if (p == iedits_.end()) {
+    int start = 0, end = 100, delta = 1;
+
+    std::vector<std::string> fields;
+
+    CStrUtil::addFields(str, fields, ":");
+
+    if (fields.size() > 0) start = CStrUtil::toInteger(fields[0]);
+    if (fields.size() > 1) end   = CStrUtil::toInteger(fields[1]);
+    if (fields.size() > 2) delta = CStrUtil::toInteger(fields[2]);
+
+    CQPropertyIntegerEditor *iedit = new CQPropertyIntegerEditor(start, end, delta);
+
+    p = iedits_.insert(p, IntegerEdits::value_type(str, iedit));
+  }
+
+  return (*p).second;
+}
+
+CQPropertyRealEditor *
+CQGnuPlotWindow::
+realSlider(const std::string &str)
+{
+  auto p = rsliders_.find(str);
+
+  if (p == rsliders_.end()) {
+    double start = 0.0, end = 1.0, delta = 0.1;
+
+    std::vector<std::string> fields;
+
+    CStrUtil::addFields(str, fields, ":");
+
+    if (fields.size() > 0) start = CStrUtil::toReal(fields[0]);
+    if (fields.size() > 1) end   = CStrUtil::toReal(fields[1]);
+    if (fields.size() > 2) delta = CStrUtil::toReal(fields[2]);
+
+    CQPropertyRealEditor *redit = new CQPropertyRealEditor(start, end, delta);
+
+    redit->setType(CQPropertyRealEditor::Type::ComboSlider);
+
+    p = rsliders_.insert(p, RealSliders::value_type(str, redit));
   }
 
   return (*p).second;

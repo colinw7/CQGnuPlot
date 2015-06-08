@@ -63,11 +63,15 @@ draw(CGnuPlotRenderer *renderer)
   }
 
   for (auto plot : group_->plots()) {
-    std::string label = plot->keyTitle();
+    std::vector<CGnuPlotKeyLabel> labels;
 
-    textWidth = std::max(textWidth, font->getStringWidth(label)*pw);
+    plot->getKeyLabels(labels);
 
-    textHeight += font_size*ph;
+    for (const auto &l : labels) {
+      textWidth = std::max(textWidth, font->getStringWidth(l.text())*pw);
+
+      textHeight += font_size*ph;
+    }
   }
 
   size = CSize2D(textWidth + ll + 3*bx, textHeight + 2*by);
@@ -127,50 +131,59 @@ draw(CGnuPlotRenderer *renderer)
 
     const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-    double xx = (isReverse() ? x1 + bx : x2 - ll - bx);
-    double yy = y - font_size*ph/2;
+    std::vector<CGnuPlotKeyLabel> labels;
 
-    CPoint2D p1(xx     , yy);
-    CPoint2D p2(xx + ll, yy);
+    plot->getKeyLabels(labels);
 
-    if      (style && style->hasKeyLine()) {
-      style->drawKeyLine(plot, renderer, p1, p2);
+    for (const auto &l : labels) {
+      double xx = (isReverse() ? x1 + bx : x2 - ll - bx);
+      double yy = y - font_size*ph/2;
+
+      CPoint2D p1(xx     , yy);
+      CPoint2D p2(xx + ll, yy);
+
+      // draw key line
+      if      (l.color().isValid()) {
+        renderer->drawLine(p1, p2, lineStyle.width(), l.color().getValue());
+      }
+      else if (style && style->hasKeyLine()) {
+        style->drawKeyLine(plot, renderer, p1, p2);
+      }
+      else if (group_->hasPlotStyle(CGnuPlotTypes::PlotStyle::HISTOGRAMS)) {
+        double h = (font_size - 4)*ph;
+
+        CBBox2D hbbox(xx, yy - h/2, xx + ll, yy + h/2);
+
+        if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
+          renderer->patternRect(hbbox, plot->fillStyle().pattern(),
+                                lineStyle.calcColor(CRGBA(0,0,0)), CRGBA(1,1,1));
+        else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
+          renderer->fillRect(hbbox, lineStyle.calcColor(CRGBA(1,1,1)));
+
+        renderer->drawRect(hbbox, lineStyle.calcColor(CRGBA(0,0,0)), 1);
+      }
+      else {
+        renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)));
+      }
+
+      // draw key text
+      CRGBA tc = CRGBA(0,0,0);
+
+      if      (isVariableTextColor())
+        tc = lineStyle.calcColor(tc);
+      else if (isIndexTextColor())
+        tc = CGnuPlotStyleInst->indexColor(textColorIndex());
+      else if (isRGBTextColor())
+        tc = textColorRGB();
+
+      if (isReverse())
+        renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), CHALIGN_TYPE_LEFT, 0,
+                                   CVALIGN_TYPE_TOP, 0, l.text(), tc);
+      else
+        renderer->drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
+                                   CVALIGN_TYPE_TOP, 0, l.text(), tc);
+
+      y -= font_size*ph;
     }
-    else if (group_->hasPlotStyle(CGnuPlotTypes::PlotStyle::HISTOGRAMS)) {
-      double h = (font_size - 4)*ph;
-
-      CBBox2D hbbox(xx, yy - h/2, xx + ll, yy + h/2);
-
-      if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
-        renderer->patternRect(hbbox, plot->fillStyle().pattern(),
-                              lineStyle.calcColor(CRGBA(0,0,0)), CRGBA(1,1,1));
-      else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
-        renderer->fillRect(hbbox, lineStyle.calcColor(CRGBA(1,1,1)));
-
-      renderer->drawRect(hbbox, lineStyle.calcColor(CRGBA(0,0,0)), 1);
-    }
-    else {
-      renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)));
-    }
-
-    std::string label = plot->keyTitle();
-
-    CRGBA tc = CRGBA(0,0,0);
-
-    if      (isVariableTextColor())
-      tc = lineStyle.calcColor(tc);
-    else if (isIndexTextColor())
-      tc = CGnuPlotStyleInst->indexColor(textColorIndex());
-    else if (isRGBTextColor())
-      tc = textColorRGB();
-
-    if (isReverse())
-      renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), CHALIGN_TYPE_LEFT, 0,
-                                 CVALIGN_TYPE_TOP, 0, label, tc);
-    else
-      renderer->drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
-                                 CVALIGN_TYPE_TOP, 0, label, tc);
-
-    y -= font_size*ph;
   }
 }

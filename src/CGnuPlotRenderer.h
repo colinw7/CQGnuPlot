@@ -132,6 +132,8 @@ class CGnuPlotRenderer {
   void drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w);
   void fillClippedRect(const CBBox2D &rect, const CRGBA &c);
 
+  void fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c);
+
   void drawClippedPolygon   (const std::vector<CPoint2D> &points, double w, const CRGBA &c);
   void fillClippedPolygon   (const std::vector<CPoint2D> &points, const CRGBA &c);
   void patternClippedPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern pat,
@@ -142,7 +144,17 @@ class CGnuPlotRenderer {
 
   bool clipLine(CPoint2D &p1, CPoint2D &p2);
 
+  void drawEllipse(const CPoint3D &p, double dx, double ry, double a,
+                   const CRGBA &c, double w, const CLineDash &dash=CLineDash());
+
+  void drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
+                        CVAlignType valign, double y_offset, const std::string &str,
+                        const CRGBA &c);
   void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
+                        CVAlignType valign, double y_offset, const std::string &str,
+                        const CRGBA &c);
+
+  void drawVAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
                         CVAlignType valign, double y_offset, const std::string &str,
                         const CRGBA &c);
   void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
@@ -164,7 +176,6 @@ class CGnuPlotRenderer {
 
   void regionToPixel(const CPoint2D &r, CPoint2D &p);
 
- private:
   CPoint2D transform(const CPoint3D &p) const;
 
  protected:

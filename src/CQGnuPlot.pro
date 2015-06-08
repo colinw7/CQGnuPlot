@@ -41,6 +41,7 @@ CQGnuPlotRectangle.cpp \
 CQGnuPlotRectObject.cpp \
 CQGnuPlotRenderer.cpp \
 CQGnuPlotTitle.cpp \
+CQGnuPlotToolBar.cpp \
 CQGnuPlotUtil.cpp \
 CQGnuPlotWindow.cpp \
 \
@@ -133,6 +134,13 @@ CQPaletteChooser.cpp \
 CQPaletteDialog.cpp \
 \
 CQRotatedText.cpp \
+CQComboSlider.cpp \
+CQSlider.cpp \
+CQAngleSpinBox.cpp \
+CQIntegerSpin.cpp \
+CQLineDash.cpp \
+CQPoint2DEdit.cpp \
+CQIconCombo.cpp \
 \
 CAdjacency.cpp \
 CDelaunay.cpp \
@@ -160,11 +168,6 @@ Expr/CExprStrgen.cpp \
 Expr/CExprSValue.cpp \
 Expr/CExprValue.cpp \
 Expr/CExprVariable.cpp \
-\
-CQAngleSpinBox.cpp \
-CQLineDash.cpp \
-CQPoint2DEdit.cpp \
-CQIconCombo.cpp \
 
 HEADERS += \
 CQGnuPlot.h \
@@ -195,6 +198,7 @@ CQGnuPlotRectangle.h \
 CQGnuPlotRectObject.h \
 CQGnuPlotRenderer.h \
 CQGnuPlotTitle.h \
+CQGnuPlotToolBar.h \
 CQGnuPlotUtil.h \
 CQGnuPlotWindow.h \
 CGnuPlot3DRenderer.h \
@@ -297,6 +301,13 @@ CQPaletteChooser.h \
 CQPaletteDialog.h \
 \
 CQRotatedText.h \
+CQComboSlider.h \
+CQSlider.h \
+CQAngleSpinBox.h \
+CQIntegerSpin.h \
+CQLineDash.h \
+CQPoint2DEdit.h \
+CQIconCombo.h \
 \
 CAdjacency.h \
 CDelaunay.h \
@@ -326,11 +337,6 @@ Expr/CExprRValue.h \
 Expr/CExprSValue.h \
 Expr/CExprValue.h \
 Expr/CExprVariable.h \
-\
-CQAngleSpinBox.h \
-CQLineDash.h \
-CQPoint2DEdit.h \
-CQIconCombo.h \
 
 DESTDIR     = ../bin
 OBJECTS_DIR = ../obj

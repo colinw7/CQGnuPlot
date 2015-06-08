@@ -72,6 +72,7 @@ SOURCES       = CQGnuPlot.cpp \
 		CQGnuPlotRectObject.cpp \
 		CQGnuPlotRenderer.cpp \
 		CQGnuPlotTitle.cpp \
+		CQGnuPlotToolBar.cpp \
 		CQGnuPlotUtil.cpp \
 		CQGnuPlotWindow.cpp \
 		CGnuPlot.cpp \
@@ -159,6 +160,13 @@ SOURCES       = CQGnuPlot.cpp \
 		CQPaletteChooser.cpp \
 		CQPaletteDialog.cpp \
 		CQRotatedText.cpp \
+		CQComboSlider.cpp \
+		CQSlider.cpp \
+		CQAngleSpinBox.cpp \
+		CQIntegerSpin.cpp \
+		CQLineDash.cpp \
+		CQPoint2DEdit.cpp \
+		CQIconCombo.cpp \
 		CAdjacency.cpp \
 		CDelaunay.cpp \
 		ChordDiagram.cpp \
@@ -182,11 +190,7 @@ SOURCES       = CQGnuPlot.cpp \
 		Expr/CExprStrgen.cpp \
 		Expr/CExprSValue.cpp \
 		Expr/CExprValue.cpp \
-		Expr/CExprVariable.cpp \
-		CQAngleSpinBox.cpp \
-		CQLineDash.cpp \
-		CQPoint2DEdit.cpp \
-		CQIconCombo.cpp moc_CQGnuPlot.cpp \
+		Expr/CExprVariable.cpp moc_CQGnuPlot.cpp \
 		moc_CQGnuPlotAnnotation.cpp \
 		moc_CQGnuPlotArrow.cpp \
 		moc_CQGnuPlotAxis.cpp \
@@ -211,12 +215,16 @@ SOURCES       = CQGnuPlot.cpp \
 		moc_CQGnuPlotRectangle.cpp \
 		moc_CQGnuPlotRectObject.cpp \
 		moc_CQGnuPlotTitle.cpp \
+		moc_CQGnuPlotToolBar.cpp \
 		moc_CQGnuPlotWindow.cpp \
 		moc_CQPropertyItem.cpp \
 		moc_CQPropertyTree.cpp \
 		moc_CQPaletteChooser.cpp \
 		moc_CQPaletteDialog.cpp \
+		moc_CQComboSlider.cpp \
+		moc_CQSlider.cpp \
 		moc_CQAngleSpinBox.cpp \
+		moc_CQIntegerSpin.cpp \
 		moc_CQLineDash.cpp \
 		moc_CQPoint2DEdit.cpp \
 		moc_CQIconCombo.cpp
@@ -247,6 +255,7 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CQGnuPlotRectObject.o \
 		../obj/CQGnuPlotRenderer.o \
 		../obj/CQGnuPlotTitle.o \
+		../obj/CQGnuPlotToolBar.o \
 		../obj/CQGnuPlotUtil.o \
 		../obj/CQGnuPlotWindow.o \
 		../obj/CGnuPlot.o \
@@ -334,6 +343,13 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CQPaletteChooser.o \
 		../obj/CQPaletteDialog.o \
 		../obj/CQRotatedText.o \
+		../obj/CQComboSlider.o \
+		../obj/CQSlider.o \
+		../obj/CQAngleSpinBox.o \
+		../obj/CQIntegerSpin.o \
+		../obj/CQLineDash.o \
+		../obj/CQPoint2DEdit.o \
+		../obj/CQIconCombo.o \
 		../obj/CAdjacency.o \
 		../obj/CDelaunay.o \
 		../obj/ChordDiagram.o \
@@ -358,10 +374,6 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CExprSValue.o \
 		../obj/CExprValue.o \
 		../obj/CExprVariable.o \
-		../obj/CQAngleSpinBox.o \
-		../obj/CQLineDash.o \
-		../obj/CQPoint2DEdit.o \
-		../obj/CQIconCombo.o \
 		../obj/moc_CQGnuPlot.o \
 		../obj/moc_CQGnuPlotAnnotation.o \
 		../obj/moc_CQGnuPlotArrow.o \
@@ -387,12 +399,16 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/moc_CQGnuPlotRectangle.o \
 		../obj/moc_CQGnuPlotRectObject.o \
 		../obj/moc_CQGnuPlotTitle.o \
+		../obj/moc_CQGnuPlotToolBar.o \
 		../obj/moc_CQGnuPlotWindow.o \
 		../obj/moc_CQPropertyItem.o \
 		../obj/moc_CQPropertyTree.o \
 		../obj/moc_CQPaletteChooser.o \
 		../obj/moc_CQPaletteDialog.o \
+		../obj/moc_CQComboSlider.o \
+		../obj/moc_CQSlider.o \
 		../obj/moc_CQAngleSpinBox.o \
+		../obj/moc_CQIntegerSpin.o \
 		../obj/moc_CQLineDash.o \
 		../obj/moc_CQPoint2DEdit.o \
 		../obj/moc_CQIconCombo.o
@@ -655,7 +671,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d ../obj/CQGnuPlot1.0.0 || mkdir -p ../obj/CQGnuPlot1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBarObject.h CGnuPlotBinaryFormat.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotTitle.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot3DRenderer.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBarObject.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotUsingCols.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CQRotatedText.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h CQAngleSpinBox.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBarObject.cpp CGnuPlotBinaryFormat.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotTitle.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBarObject.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotPalette.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotUsingCols.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlot3DRenderer.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CQRotatedText.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp CQAngleSpinBox.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBarObject.h CGnuPlotBinaryFormat.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot3DRenderer.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBarObject.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotUsingCols.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CQRotatedText.h CQComboSlider.h CQSlider.h CQAngleSpinBox.h CQIntegerSpin.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBarObject.cpp CGnuPlotBinaryFormat.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBarObject.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotPalette.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotUsingCols.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlot3DRenderer.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CQRotatedText.cpp CQComboSlider.cpp CQSlider.cpp CQAngleSpinBox.cpp CQIntegerSpin.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
 
 
 clean:compiler_clean 
@@ -678,9 +694,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotEllipseObject.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotPolygonObject.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQAngleSpinBox.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
+compiler_moc_header_make_all: moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotEllipseObject.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotPolygonObject.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotToolBar.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQComboSlider.cpp moc_CQSlider.cpp moc_CQAngleSpinBox.cpp moc_CQIntegerSpin.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotEllipseObject.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotPolygonObject.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQAngleSpinBox.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
+	-$(DEL_FILE) moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotEllipseObject.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotPolygonObject.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotToolBar.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQComboSlider.cpp moc_CQSlider.cpp moc_CQAngleSpinBox.cpp moc_CQIntegerSpin.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
 moc_CQGnuPlot.cpp: CGnuPlot.h \
 		Expr/CExpr.h \
 		../../CUtil/include/CRefPtr.h \
@@ -715,7 +731,6 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -781,6 +796,11 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -958,7 +978,6 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -1005,6 +1024,11 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -1135,7 +1159,6 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -1182,6 +1205,11 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -1293,7 +1321,6 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -1359,13 +1386,16 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
 		/usr/include/qt5/QtCore/qsize.h \
 		/usr/include/qt5/QtCore/qpoint.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CQGnuPlotAxis.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotAxis.h -o moc_CQGnuPlotAxis.cpp
 
@@ -1483,7 +1513,6 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -1530,6 +1559,11 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -1661,7 +1695,6 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -1708,6 +1741,11 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -2024,7 +2062,6 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -2071,6 +2108,11 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -2200,7 +2242,6 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -2248,6 +2289,11 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -2378,7 +2424,6 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -2425,6 +2470,11 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -2557,7 +2607,6 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -2604,6 +2653,11 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -2656,7 +2710,6 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -2722,6 +2775,11 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -2785,8 +2843,6 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		/usr/include/qt5/QtCore/qsize.h \
 		/usr/include/qt5/QtCore/qpoint.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotGroup.h
@@ -2884,7 +2940,6 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
-		COrientation.h \
 		CDirectionType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -2953,6 +3008,10 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -3083,7 +3142,6 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -3130,6 +3188,11 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -3257,7 +3320,6 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -3323,6 +3385,11 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -3497,7 +3564,6 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
@@ -3550,6 +3616,11 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -3672,7 +3743,6 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -3719,6 +3789,11 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -3771,7 +3846,6 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlot.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -3837,6 +3911,11 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlot.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -3903,6 +3982,7 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -4029,7 +4109,6 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -4076,6 +4155,11 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -4207,7 +4291,6 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -4254,6 +4337,11 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -4384,7 +4472,6 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -4431,6 +4518,11 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -4563,7 +4655,6 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -4610,6 +4701,11 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -4736,7 +4832,6 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -4786,6 +4881,11 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -4810,6 +4910,118 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/qhash.h \
 		CQGnuPlotTitle.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTitle.h -o moc_CQGnuPlotTitle.cpp
+
+moc_CQGnuPlotToolBar.cpp: /usr/include/qt5/QtWidgets/QToolBar \
+		/usr/include/qt5/QtWidgets/qtoolbar.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		CQGnuPlotToolBar.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotToolBar.h -o moc_CQGnuPlotToolBar.cpp
 
 moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlot.h \
@@ -4846,7 +5058,6 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -4912,6 +5123,11 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -5519,6 +5735,230 @@ moc_CQPaletteDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		CQPaletteDialog.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPaletteDialog.h -o moc_CQPaletteDialog.cpp
 
+moc_CQComboSlider.cpp: /usr/include/qt5/QtWidgets/QWidget \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		CQComboSlider.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQComboSlider.h -o moc_CQComboSlider.cpp
+
+moc_CQSlider.cpp: /usr/include/qt5/QtWidgets/QSlider \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		CQSlider.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQSlider.h -o moc_CQSlider.cpp
+
 moc_CQAngleSpinBox.cpp: ../../CMath/include/CAngle.h \
 		/usr/include/qt5/QtWidgets/QDoubleSpinBox \
 		/usr/include/qt5/QtWidgets/qspinbox.h \
@@ -5634,6 +6074,121 @@ moc_CQAngleSpinBox.cpp: ../../CMath/include/CAngle.h \
 		/usr/include/qt5/QtCore/qregularexpression.h \
 		CQAngleSpinBox.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQAngleSpinBox.h -o moc_CQAngleSpinBox.cpp
+
+moc_CQIntegerSpin.cpp: /usr/include/qt5/QtWidgets/QSpinBox \
+		/usr/include/qt5/QtWidgets/qspinbox.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		CQIntegerSpin.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQIntegerSpin.h -o moc_CQIntegerSpin.cpp
 
 moc_CQLineDash.cpp: /usr/include/qt5/QtWidgets/QFrame \
 		/usr/include/qt5/QtWidgets/qframe.h \
@@ -6057,7 +6612,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -6123,6 +6677,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -6245,8 +6804,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qicon.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotPlot.h \
@@ -6419,7 +6976,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -6466,6 +7022,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -6482,8 +7043,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qstringmatcher.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CQGnuPlotUtil.h \
@@ -6689,7 +7248,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -6736,6 +7294,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -6753,8 +7316,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/QPointF \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
@@ -6939,7 +7500,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -7005,13 +7565,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
 		/usr/include/qt5/QtCore/qsize.h \
 		/usr/include/qt5/QtCore/qpoint.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
@@ -7148,7 +7711,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -7195,6 +7757,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -7213,6 +7780,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
+		CGnuPlotKey.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h
@@ -7338,7 +7906,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -7385,6 +7952,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -7403,6 +7975,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
+		CGnuPlotKey.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h
@@ -7513,7 +8086,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -7569,14 +8141,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
 		/usr/include/qt5/QtCore/qsize.h \
 		/usr/include/qt5/QtCore/qpoint.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotCamera.o CQGnuPlotCamera.cpp
 
@@ -7725,7 +8300,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -7791,6 +8365,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -7803,8 +8382,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qicon.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotPlot.h \
@@ -7938,7 +8515,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -7985,6 +8561,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -8002,8 +8583,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/QPointF \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		../../CQUtil/include/CQUtil.h \
@@ -8201,7 +8780,6 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -8249,6 +8827,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -8265,8 +8848,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qpair.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
@@ -8361,7 +8942,6 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CQGnuPlotDevice.o: CQGnuPlotDevice.cpp CQGnuPlotDevice.h \
 		CGnuPlotDevice.h \
-		COrientation.h \
 		../../CMath/include/CISize2D.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
@@ -8386,6 +8966,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
+		CGnuPlotAxis.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CAlignType.h \
+		CDirectionType.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -8406,14 +8998,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
-		../../CUtil/include/CColor.h \
-		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
-		CGnuPlotColorSpec.h \
-		CGnuPlotStyle.h \
-		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
@@ -8421,7 +9006,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
-		CGnuPlotAxisData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -8435,8 +9019,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
@@ -8462,6 +9044,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -8584,8 +9169,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qicon.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotPlot.h \
@@ -8744,7 +9327,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -8791,6 +9373,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -8808,8 +9395,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/QPointF \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		../../CQUtil/include/CQUtil.h \
@@ -9010,7 +9595,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -9057,6 +9641,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -9075,6 +9664,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
+		CGnuPlotKey.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h
@@ -9116,7 +9706,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -9182,6 +9771,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -9245,8 +9839,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qsize.h \
 		/usr/include/qt5/QtCore/qpoint.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotWindow.h \
@@ -9414,7 +10006,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
-		COrientation.h \
 		CDirectionType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -9483,6 +10074,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -9499,7 +10094,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qpair.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
@@ -9705,7 +10299,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -9752,6 +10345,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -9777,8 +10375,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qhash.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CQGnuPlotUtil.h \
@@ -9965,7 +10561,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -10031,6 +10626,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -10042,6 +10642,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CQGnuPlotObject.h \
 		../../CQUtil/include/CQUtil.h \
 		/usr/include/qt5/QtCore/Qt \
@@ -10233,7 +10834,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
@@ -10286,6 +10886,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -10293,8 +10898,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qpoint.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
@@ -10428,7 +11031,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -10475,6 +11077,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -10493,6 +11100,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
+		CGnuPlotKey.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h
@@ -10534,7 +11142,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -10600,6 +11207,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -10666,6 +11278,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -10726,9 +11339,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qicon.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
-		CGnuPlotKey.h \
 		CQGnuPlotBarObject.h \
 		CGnuPlotBarObject.h \
 		CQGnuPlotBubbleObject.h \
@@ -10898,7 +11508,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -10945,6 +11554,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -10961,8 +11575,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qstringmatcher.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotPolygon.o CQGnuPlotPolygon.cpp
@@ -11082,7 +11694,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -11129,6 +11740,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -11147,6 +11763,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
+		CGnuPlotKey.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h
@@ -11266,7 +11883,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -11313,6 +11929,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -11330,8 +11951,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/QPointF \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CQGnuPlotUtil.h \
@@ -11538,7 +12157,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -11585,6 +12203,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -11603,6 +12226,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
+		CGnuPlotKey.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h
@@ -11643,7 +12267,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -11709,6 +12332,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -11834,6 +12462,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotCanvas.h \
 		/usr/include/qt5/QtWidgets/QWidget \
@@ -11843,7 +12472,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qpainter.h \
 		/usr/include/qt5/QtGui/qtextoption.h \
 		/usr/include/qt5/QtGui/qpen.h \
-		CGnuPlotUtil.h \
 		CSymbol2D.h \
 		../../CQUtil/include/CQFont.h \
 		/usr/include/qt5/QtGui/QFont \
@@ -11999,7 +12627,6 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -12049,6 +12676,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -12073,8 +12705,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qhash.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
@@ -12160,6 +12790,140 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotTitle.o CQGnuPlotTitle.cpp
 
+../obj/CQGnuPlotToolBar.o: CQGnuPlotToolBar.cpp CQGnuPlotToolBar.h \
+		/usr/include/qt5/QtWidgets/QToolBar \
+		/usr/include/qt5/QtWidgets/qtoolbar.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		CQIntegerSpin.h \
+		/usr/include/qt5/QtWidgets/QSpinBox \
+		/usr/include/qt5/QtWidgets/qspinbox.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtGui/QContextMenuEvent \
+		/usr/include/qt5/QtWidgets/QWidgetAction \
+		/usr/include/qt5/QtWidgets/qwidgetaction.h \
+		/usr/include/qt5/QtWidgets/qaction.h \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtWidgets/qactiongroup.h \
+		/usr/include/qt5/QtWidgets/QLabel \
+		/usr/include/qt5/QtWidgets/qlabel.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtWidgets/QHBoxLayout \
+		/usr/include/qt5/QtWidgets/qboxlayout.h \
+		/usr/include/qt5/QtWidgets/qlayout.h \
+		/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		/usr/include/qt5/QtWidgets/qgridlayout.h \
+		/usr/include/qt5/QtWidgets/QMenu \
+		/usr/include/qt5/QtWidgets/qmenu.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotToolBar.o CQGnuPlotToolBar.cpp
+
 ../obj/CQGnuPlotUtil.o: CQGnuPlotUtil.cpp CQGnuPlotUtil.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -12196,7 +12960,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -12262,6 +13025,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -12329,6 +13097,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -12378,7 +13147,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -12444,6 +13212,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -12563,8 +13336,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qicon.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotPlot.h \
@@ -12606,6 +13377,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPolygonObject.h \
 		CQGnuPlotRectObject.h \
 		CGnuPlotRectObject.h \
+		CQGnuPlotToolBar.h \
+		/usr/include/qt5/QtWidgets/QToolBar \
+		/usr/include/qt5/QtWidgets/qtoolbar.h \
 		CQZoomRegion.h \
 		/usr/include/qt5/QtGui/QPainter \
 		/usr/include/qt5/QtGui/qpainter.h \
@@ -12655,14 +13429,15 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/QTimer \
 		/usr/include/qt5/QtCore/qtimer.h \
 		/usr/include/qt5/QtCore/qbasictimer.h \
-		/usr/include/qt5/QtWidgets/QToolBar \
-		/usr/include/qt5/QtWidgets/qtoolbar.h \
 		/usr/include/qt5/QtWidgets/QRubberBand \
-		xpm/select.xpm \
-		xpm/zoom.xpm \
-		xpm/grid.xpm \
-		xpm/xaxis.xpm \
-		xpm/yaxis.xpm
+		/usr/include/qt5/QtWidgets/QPushButton \
+		/usr/include/qt5/QtWidgets/qpushbutton.h \
+		/usr/include/qt5/QtWidgets/qabstractbutton.h \
+		svg/select_svg.h \
+		svg/zoom_svg.h \
+		svg/grid_svg.h \
+		svg/xaxis_svg.h \
+		svg/yaxis_svg.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotWindow.o CQGnuPlotWindow.cpp
 
 ../obj/CGnuPlot.o: CGnuPlot.cpp CGnuPlot.h \
@@ -12699,7 +13474,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -12765,10 +13539,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotWindow.h \
-		CGnuPlotGroup.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
+		CGnuPlotWindow.h \
+		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
@@ -12776,7 +13553,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCache.h \
 		CGnuPlotDevice.h \
 		CGnuPlotSVGDevice.h \
-		CGnuPlotUtil.h \
 		CGnuPlotNameValues.h \
 		CGnuPlotStyleAdjacency.h \
 		CGnuPlotStyleBase.h \
@@ -12901,7 +13677,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
@@ -12943,11 +13718,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
-		CGnuPlotUtil.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -13009,7 +13786,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotFillStyle.h \
@@ -13056,7 +13832,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
-		CGnuPlotBinaryFormat.h
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotArrowStyle.o CGnuPlotArrowStyle.cpp
 
 ../obj/CGnuPlotAxis.o: CGnuPlotAxis.cpp CGnuPlotAxis.h \
@@ -13091,9 +13872,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
-		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		CDirectionType.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
 		CGnuPlotWindow.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -13135,8 +13917,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
@@ -13162,14 +13942,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotUtil.h
+		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotAxis.o CGnuPlotAxis.cpp
 
 ../obj/CGnuPlotBBoxRenderer.o: CGnuPlotBBoxRenderer.cpp CGnuPlotBBoxRenderer.h \
@@ -13207,7 +13989,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -13273,8 +14054,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotRenderer.h \
+		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotRenderer.h \
 		CSymbol2D.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
@@ -13341,7 +14126,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -13388,10 +14172,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotUtil.h
+		CGnuPlotKey.h \
+		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBarObject.o CGnuPlotBarObject.cpp
 
 ../obj/CGnuPlotBubbleObject.o: CGnuPlotBubbleObject.cpp CGnuPlotBubbleObject.h \
@@ -13450,7 +14239,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -13497,10 +14285,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotUtil.h
+		CGnuPlotKey.h \
+		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBubbleObject.o CGnuPlotBubbleObject.cpp
 
 ../obj/CGnuPlotCamera.o: CGnuPlotCamera.cpp CGnuPlotCamera.h \
@@ -13548,7 +14341,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -13604,6 +14396,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h
@@ -13667,7 +14462,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotPointStyle.h \
@@ -13710,9 +14504,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotGroup.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
+		CGnuPlotGroup.h \
 		CGnuPlotKey.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotCircle.o CGnuPlotCircle.cpp
 
@@ -13769,7 +14566,6 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -13817,11 +14613,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotUtil.h
+		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotColorBox.o CGnuPlotColorBox.cpp
 
 ../obj/CGnuPlotColorSpec.o: CGnuPlotColorSpec.cpp CGnuPlotColorSpec.h \
@@ -13874,7 +14672,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -13925,14 +14722,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
-		CGnuPlotCache.h \
-		CGnuPlotUtil.h
+		CGnuPlotCache.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotColorSpec.o CGnuPlotColorSpec.cpp
 
 ../obj/CGnuPlotContour.o: CGnuPlotContour.cpp CGnuPlotContour.h \
@@ -13981,7 +14780,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -14037,15 +14835,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotGroup.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
+		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotWindow.h \
 		CGnuPlotPlot.h \
 		CGnuPlotPoint.h \
-		CGnuPlotCache.h \
-		CGnuPlotUtil.h
+		CGnuPlotCache.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotContour.o CGnuPlotContour.cpp
 
 ../obj/CGnuPlotCoordValue.o: CGnuPlotCoordValue.cpp CGnuPlotCoordValue.h \
@@ -14095,7 +14895,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -14149,12 +14948,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotWindow.h \
-		CGnuPlotUtil.h
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotWindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotCoordValue.o CGnuPlotCoordValue.cpp
 
 ../obj/CGnuPlotDevice.o: CGnuPlotDevice.cpp CGnuPlotDevice.h \
-		COrientation.h \
 		../../CMath/include/CISize2D.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
@@ -14179,6 +14981,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
+		CGnuPlotAxis.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CAlignType.h \
+		CDirectionType.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
 		CGnuPlotWindow.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -14199,14 +15013,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
-		../../CUtil/include/CColor.h \
-		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
-		CGnuPlotColorSpec.h \
-		CGnuPlotStyle.h \
-		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
@@ -14214,7 +15021,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
-		CGnuPlotAxisData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -14228,8 +15034,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
@@ -14255,9 +15059,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
@@ -14329,7 +15134,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotPointStyle.h \
@@ -14373,9 +15177,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotGroup.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
+		CGnuPlotGroup.h \
 		CGnuPlotKey.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotEllipse.o CGnuPlotEllipse.cpp
 
@@ -14435,7 +15242,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -14482,8 +15288,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
@@ -14553,7 +15365,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -14601,7 +15412,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
-		CGnuPlotBinaryFormat.h
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotFillStyle.o CGnuPlotFillStyle.cpp
 
 ../obj/CGnuPlotGroup.o: CGnuPlotGroup.cpp CGnuPlotGroup.h \
@@ -14639,7 +15455,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -14705,6 +15520,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -14716,7 +15534,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotDevice.h \
 		CGnuPlotBBoxRenderer.h \
 		CGnuPlotRenderer.h \
-		CGnuPlot3DRenderer.h \
 		CGnuPlotStyleBase.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotGroup.o CGnuPlotGroup.cpp
 
@@ -14754,7 +15571,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
-		COrientation.h \
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
@@ -14823,6 +15639,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
@@ -14926,7 +15745,6 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -14970,9 +15788,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotGroup.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
+		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		../../CFont/include/CFontMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotLabel.o CGnuPlotLabel.cpp
@@ -15092,7 +15913,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -15139,10 +15959,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotUtil.h
+		CGnuPlotKey.h \
+		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPieObject.o CGnuPlotPieObject.cpp
 
 ../obj/CGnuPlotPlot.o: CGnuPlotPlot.cpp CGnuPlotPlot.h \
@@ -15180,7 +16005,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -15246,14 +16070,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
-		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotBarObject.h \
 		CGnuPlotBubbleObject.h \
@@ -15264,7 +16091,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotDevice.h \
 		CGnuPlotBBoxRenderer.h \
 		CGnuPlotStyleBase.h \
-		CGnuPlotUtil.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -15358,7 +16184,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotPointStyle.h \
@@ -15402,9 +16227,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotGroup.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
+		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotWindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPolygon.o CGnuPlotPolygon.cpp
@@ -15465,7 +16293,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -15512,8 +16339,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
@@ -15571,7 +16404,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -15625,7 +16457,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotUtil.h
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPosition.o CGnuPlotPosition.cpp
 
 ../obj/CGnuPlotRectangle.o: CGnuPlotRectangle.cpp CGnuPlotRectangle.h \
@@ -15685,7 +16521,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotPointStyle.h \
@@ -15729,6 +16564,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -15792,7 +16630,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
@@ -15839,8 +16676,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotRectObject.o CGnuPlotRectObject.cpp
 
@@ -15879,7 +16722,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -15945,8 +16787,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotWindow.h \
+		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotWindow.h \
 		../../CFont/include/CFontMgr.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
@@ -15993,7 +16839,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -16057,6 +16902,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CParseLine.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotUsingCols.o CGnuPlotUsingCols.cpp
 
@@ -16108,7 +16958,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -16163,13 +17012,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotRenderer.h \
 		CAdjacency.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleAdjacency.o CGnuPlotStyleAdjacency.cpp
@@ -16222,7 +17074,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -16277,9 +17128,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotBarObject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleBoxErrorBars.o CGnuPlotStyleBoxErrorBars.cpp
@@ -16332,7 +17189,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -16387,9 +17243,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotBarObject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleBoxes.o CGnuPlotStyleBoxes.cpp
@@ -16442,7 +17304,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -16497,13 +17358,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotBBoxRenderer.h \
 		CGnuPlotRenderer.h \
 		CBoxWhisker.h
@@ -16557,7 +17421,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -16612,9 +17475,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotBarObject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleBoxXYErrorBars.o CGnuPlotStyleBoxXYErrorBars.cpp
@@ -16667,7 +17536,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -16722,12 +17590,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotBubbleObject.h \
-		CGnuPlotUtil.h \
 		CirclePack.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
@@ -16789,7 +17662,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -16844,13 +17716,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleCandlesticks.o CGnuPlotStyleCandlesticks.cpp
@@ -16903,7 +17778,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -16958,9 +17832,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		ChordDiagram.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleChordDiagram.o CGnuPlotStyleChordDiagram.cpp
@@ -17013,7 +17893,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -17068,9 +17947,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotPieObject.h \
 		CGnuPlotEllipseObject.h \
 		CGnuPlotRenderer.h
@@ -17124,7 +18009,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -17179,13 +18063,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h \
 		CDelaunay.h \
@@ -17244,7 +18131,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -17299,9 +18185,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleDots.o CGnuPlotStyleDots.cpp
 
@@ -17353,7 +18245,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -17408,9 +18299,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleEllipses.o CGnuPlotStyleEllipses.cpp
 
@@ -17462,7 +18359,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -17517,9 +18413,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleErrorBars.o CGnuPlotStyleErrorBars.cpp
 
@@ -17571,7 +18473,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -17626,13 +18527,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotPolygonObject.h \
-		CGnuPlotUtil.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -17690,7 +18596,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -17745,9 +18650,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleFinanceBars.o CGnuPlotStyleFinanceBars.cpp
 
@@ -17799,7 +18710,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -17854,15 +18764,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotRenderer.h \
-		CGnuPlotUtil.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -17920,7 +18832,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -17975,9 +18886,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleImpulses.o CGnuPlotStyleImpulses.cpp
 
@@ -18029,7 +18946,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -18084,9 +19000,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleLabels.o CGnuPlotStyleLabels.cpp
@@ -18139,7 +19061,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -18194,13 +19115,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleLines.o CGnuPlotStyleLines.cpp
 
@@ -18252,7 +19176,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -18307,13 +19230,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleLinesPoints.o CGnuPlotStyleLinesPoints.cpp
 
@@ -18365,7 +19291,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -18420,16 +19345,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotWindow.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotUtil.h
+		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleParallelAxes.o CGnuPlotStyleParallelAxes.cpp
 
 ../obj/CGnuPlotStylePieChart.o: CGnuPlotStylePieChart.cpp CGnuPlotStylePieChart.h \
@@ -18480,7 +19407,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -18535,13 +19461,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotPieObject.h
@@ -18595,7 +19524,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -18650,13 +19578,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStylePoints.o CGnuPlotStylePoints.cpp
 
@@ -18708,7 +19639,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -18763,9 +19693,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStylePolygons.o CGnuPlotStylePolygons.cpp
 
@@ -18817,7 +19753,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -18872,13 +19807,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleRadar.o CGnuPlotStyleRadar.cpp
@@ -18931,7 +19869,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -18986,11 +19923,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotUtil.h
+		CGnuPlotKey.h \
+		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleSteps.o CGnuPlotStyleSteps.cpp
 
 ../obj/CGnuPlotStyleSunburst.o: CGnuPlotStyleSunburst.cpp CGnuPlotStyleSunburst.h \
@@ -19041,7 +19983,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -19096,13 +20037,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h \
 		CSunburst.h
@@ -19156,7 +20100,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -19211,15 +20154,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotUtil.h
+		CGnuPlotGroup.h \
+		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleTestPalette.o CGnuPlotStyleTestPalette.cpp
 
 ../obj/CGnuPlotStyleTestTerminal.o: CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTestTerminal.h \
@@ -19270,7 +20215,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -19325,11 +20269,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotUtil.h
+		CGnuPlotKey.h \
+		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleTestTerminal.o CGnuPlotStyleTestTerminal.cpp
 
 ../obj/CGnuPlotStyleTreeMap.o: CGnuPlotStyleTreeMap.cpp CGnuPlotStyleTreeMap.h \
@@ -19380,7 +20329,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -19435,13 +20383,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotGroup.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotRectObject.h \
@@ -19496,7 +20447,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -19551,9 +20501,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleVectors.o CGnuPlotStyleVectors.cpp
 
@@ -19605,7 +20561,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -19660,9 +20615,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleXErrorBars.o CGnuPlotStyleXErrorBars.cpp
 
@@ -19714,7 +20675,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -19769,9 +20729,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleXErrorLines.o CGnuPlotStyleXErrorLines.cpp
 
@@ -19823,7 +20789,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -19878,9 +20843,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleXYErrorBars.o CGnuPlotStyleXYErrorBars.cpp
 
@@ -19932,7 +20903,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -19987,9 +20957,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleXYErrorLines.o CGnuPlotStyleXYErrorLines.cpp
 
@@ -20041,7 +21017,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -20096,9 +21071,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleYErrorBars.o CGnuPlotStyleYErrorBars.cpp
 
@@ -20150,7 +21131,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -20205,15 +21185,20 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleYErrorLines.o CGnuPlotStyleYErrorLines.cpp
 
 ../obj/CGnuPlotSVGDevice.o: CGnuPlotSVGDevice.cpp CGnuPlotSVGDevice.h \
 		CGnuPlotDevice.h \
-		COrientation.h \
 		../../CMath/include/CISize2D.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
@@ -20238,6 +21223,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
+		CGnuPlotAxis.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CAlignType.h \
+		CDirectionType.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSVGRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -20258,14 +21255,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
-		../../CUtil/include/CColor.h \
-		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
-		CGnuPlotColorSpec.h \
-		CGnuPlotStyle.h \
-		CGnuPlotPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
@@ -20273,7 +21263,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
-		CGnuPlotAxisData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20287,8 +21276,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
@@ -20314,11 +21301,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
@@ -20361,7 +21349,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -20427,10 +21414,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotSVGDevice.h \
 		CGnuPlotDevice.h \
-		CGnuPlotUtil.h \
 		CSymbol2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotSVGRenderer.o CGnuPlotSVGRenderer.cpp
 
@@ -20481,7 +21472,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
@@ -20535,7 +21525,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotUtil.h
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotSize.o CGnuPlotSize.cpp
 
 ../obj/CGnuPlotText.o: CGnuPlotText.cpp CGnuPlotText.h \
@@ -20585,7 +21579,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CColor.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
@@ -20639,6 +21632,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
 		CParseLine.h \
 		../../CUtil/include/CUtf8.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotText.o CGnuPlotText.cpp
@@ -20694,7 +21692,6 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprExecute.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
-		COrientation.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
@@ -20744,6 +21741,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -20787,7 +21787,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -20853,9 +21852,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotGroup.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
+		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
@@ -20900,7 +21902,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
-		COrientation.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -20966,10 +21967,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotGroup.h \
+		CGnuPlotContourData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
+		CGnuPlotRenderer.h \
+		CGnuPlotGroup.h \
 		CGnuPlotKey.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlot3DRenderer.o CGnuPlot3DRenderer.cpp
 
@@ -21274,6 +22278,11 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		CQAngleSpinBox.h \
 		../../CMath/include/CAngle.h \
+		CQSlider.h \
+		/usr/include/qt5/QtWidgets/QSlider \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		CQComboSlider.h \
 		../../CQUtil/include/CQUtil.h \
 		/usr/include/qt5/QtCore/Qt \
 		/usr/include/qt5/QtGui/QColor \
@@ -21287,8 +22296,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qitemselectionmodel.h \
 		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
 		/usr/include/qt5/QtWidgets/qstyleoption.h \
-		/usr/include/qt5/QtWidgets/qslider.h \
-		/usr/include/qt5/QtWidgets/qabstractslider.h \
 		/usr/include/qt5/QtWidgets/qstyle.h \
 		/usr/include/qt5/QtWidgets/qtabbar.h \
 		/usr/include/qt5/QtWidgets/qtabwidget.h \
@@ -22102,6 +23109,969 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qfontmetrics.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQRotatedText.o CQRotatedText.cpp
 
+../obj/CQComboSlider.o: CQComboSlider.cpp CQComboSlider.h \
+		/usr/include/qt5/QtWidgets/QWidget \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtWidgets/QSlider \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/QHBoxLayout \
+		/usr/include/qt5/QtWidgets/qboxlayout.h \
+		/usr/include/qt5/QtWidgets/qlayout.h \
+		/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		/usr/include/qt5/QtWidgets/qgridlayout.h \
+		/usr/include/qt5/QtWidgets/QDoubleSpinBox \
+		/usr/include/qt5/QtWidgets/qspinbox.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQComboSlider.o CQComboSlider.cpp
+
+../obj/CQSlider.o: CQSlider.cpp CQSlider.h \
+		/usr/include/qt5/QtWidgets/QSlider \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtGui/QPainter \
+		/usr/include/qt5/QtGui/qpainter.h \
+		/usr/include/qt5/QtGui/qtextoption.h \
+		/usr/include/qt5/QtGui/qpen.h \
+		/usr/include/qt5/QtWidgets/QStyleOptionSlider \
+		/usr/include/qt5/QtWidgets/qstyleoption.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtWidgets/qstyle.h \
+		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
+		/usr/include/qt5/QtWidgets/qrubberband.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQSlider.o CQSlider.cpp
+
+../obj/CQAngleSpinBox.o: CQAngleSpinBox.cpp CQAngleSpinBox.h \
+		../../CMath/include/CAngle.h \
+		/usr/include/qt5/QtWidgets/QDoubleSpinBox \
+		/usr/include/qt5/QtWidgets/qspinbox.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQAngleSpinBox.o CQAngleSpinBox.cpp
+
+../obj/CQIntegerSpin.o: CQIntegerSpin.cpp CQIntegerSpin.h \
+		/usr/include/qt5/QtWidgets/QSpinBox \
+		/usr/include/qt5/QtWidgets/qspinbox.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQIntegerSpin.o CQIntegerSpin.cpp
+
+../obj/CQLineDash.o: CQLineDash.cpp CQLineDash.h \
+		/usr/include/qt5/QtWidgets/QFrame \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtWidgets/QAction \
+		/usr/include/qt5/QtWidgets/qaction.h \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtWidgets/qactiongroup.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		CQIconCombo.h \
+		/usr/include/qt5/QtWidgets/QComboBox \
+		/usr/include/qt5/QtWidgets/qcombobox.h \
+		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
+		/usr/include/qt5/QtWidgets/qstyleoption.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qstyle.h \
+		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
+		/usr/include/qt5/QtWidgets/qrubberband.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h \
+		../../CQUtil/include/CQUtil.h \
+		/usr/include/qt5/QtCore/Qt \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtCore/QEvent \
+		/usr/include/qt5/QtCore/QVariant \
+		/usr/include/qt5/QtWidgets/QTableWidget \
+		/usr/include/qt5/QtWidgets/qtablewidget.h \
+		/usr/include/qt5/QtWidgets/qtableview.h \
+		/usr/include/qt5/QtWidgets/qabstractitemview.h \
+		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
+		/usr/include/qt5/QtCore/qitemselectionmodel.h \
+		/usr/include/qt5/QtGui/QPen \
+		/usr/include/qt5/QtGui/qpen.h \
+		../../CUtil/include/CEvent.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CUtil/include/CKeyType.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CAngle.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CImageLib/include/CImageLib.h \
+		../../CFile/include/CFile.h \
+		../../CFile/include/CFileBase.h \
+		../../CFile/include/CFileType.h \
+		../../CUtil/include/CAlignType.h \
+		../../CImageLib/include/CImageState.h \
+		../../CImageLib/include/CImage.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CIBBox2D.h \
+		../../CMath/include/CIVector2D.h \
+		../../CUtil/include/COptVal.h \
+		../../CImageLib/include/CImagePtr.h \
+		../../CImageLib/include/CImageMgr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		../../CImageLib/include/CImageAnim.h \
+		../../CImageLib/include/CImageFile.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CMatrix2D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		/usr/include/qt5/QtWidgets/QHBoxLayout \
+		/usr/include/qt5/QtWidgets/qboxlayout.h \
+		/usr/include/qt5/QtWidgets/qlayout.h \
+		/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		/usr/include/qt5/QtWidgets/qgridlayout.h \
+		/usr/include/qt5/QtWidgets/QLineEdit \
+		/usr/include/qt5/QtWidgets/qlineedit.h \
+		/usr/include/qt5/QtGui/qtextcursor.h \
+		/usr/include/qt5/QtGui/qtextformat.h \
+		/usr/include/qt5/QtGui/qtextoption.h \
+		/usr/include/qt5/QtWidgets/QToolButton \
+		/usr/include/qt5/QtWidgets/qtoolbutton.h \
+		/usr/include/qt5/QtWidgets/qabstractbutton.h \
+		/usr/include/qt5/QtWidgets/QMenu \
+		/usr/include/qt5/QtWidgets/qmenu.h \
+		/usr/include/qt5/QtGui/QPainter \
+		/usr/include/qt5/QtGui/qpainter.h \
+		/usr/include/qt5/QtWidgets/QProxyStyle \
+		/usr/include/qt5/QtWidgets/qproxystyle.h \
+		/usr/include/qt5/QtWidgets/QCommonStyle \
+		/usr/include/qt5/QtWidgets/qcommonstyle.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQLineDash.o CQLineDash.cpp
+
+../obj/CQPoint2DEdit.o: CQPoint2DEdit.cpp CQPoint2DEdit.h \
+		/usr/include/qt5/QtWidgets/QLineEdit \
+		/usr/include/qt5/QtWidgets/qlineedit.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtGui/qtextcursor.h \
+		/usr/include/qt5/QtGui/qtextformat.h \
+		/usr/include/qt5/QtGui/qpen.h \
+		/usr/include/qt5/QtGui/qtextoption.h \
+		/usr/include/qt5/QtWidgets/QDoubleSpinBox \
+		/usr/include/qt5/QtWidgets/qspinbox.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtWidgets/QHBoxLayout \
+		/usr/include/qt5/QtWidgets/qboxlayout.h \
+		/usr/include/qt5/QtWidgets/qlayout.h \
+		/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		/usr/include/qt5/QtWidgets/qgridlayout.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CStrUtil/include/CStrUtil.h \
+		/usr/include/qt5/QtGui/QDoubleValidator
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQPoint2DEdit.o CQPoint2DEdit.cpp
+
+../obj/CQIconCombo.o: CQIconCombo.cpp CQIconCombo.h \
+		/usr/include/qt5/QtWidgets/QComboBox \
+		/usr/include/qt5/QtWidgets/qcombobox.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
+		/usr/include/qt5/QtWidgets/qstyleoption.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qstyle.h \
+		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
+		/usr/include/qt5/QtWidgets/qrubberband.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h \
+		/usr/include/qt5/QtWidgets/QAbstractItemView \
+		/usr/include/qt5/QtWidgets/qabstractitemview.h \
+		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
+		/usr/include/qt5/QtCore/qitemselectionmodel.h \
+		/usr/include/qt5/QtWidgets/QAbstractItemDelegate \
+		/usr/include/qt5/QtWidgets/QListView \
+		/usr/include/qt5/QtWidgets/qlistview.h \
+		/usr/include/qt5/QtWidgets/QStylePainter \
+		/usr/include/qt5/QtWidgets/qstylepainter.h \
+		/usr/include/qt5/QtGui/qpainter.h \
+		/usr/include/qt5/QtGui/qtextoption.h \
+		/usr/include/qt5/QtGui/qpen.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQIconCombo.o CQIconCombo.cpp
+
 ../obj/CAdjacency.o: CAdjacency.cpp CAdjacency.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -22584,601 +24554,6 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprVariable.o Expr/CExprVariable.cpp
 
-../obj/CQAngleSpinBox.o: CQAngleSpinBox.cpp CQAngleSpinBox.h \
-		../../CMath/include/CAngle.h \
-		/usr/include/qt5/QtWidgets/QDoubleSpinBox \
-		/usr/include/qt5/QtWidgets/qspinbox.h \
-		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
-		/usr/include/qt5/QtWidgets/qwidget.h \
-		/usr/include/qt5/QtGui/qwindowdefs.h \
-		/usr/include/qt5/QtCore/qglobal.h \
-		/usr/include/qt5/QtCore/qconfig.h \
-		/usr/include/qt5/QtCore/qfeatures.h \
-		/usr/include/qt5/QtCore/qsystemdetection.h \
-		/usr/include/qt5/QtCore/qprocessordetection.h \
-		/usr/include/qt5/QtCore/qcompilerdetection.h \
-		/usr/include/qt5/QtCore/qglobalstatic.h \
-		/usr/include/qt5/QtCore/qatomic.h \
-		/usr/include/qt5/QtCore/qbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
-		/usr/include/qt5/QtCore/qgenericatomic.h \
-		/usr/include/qt5/QtCore/qatomic_msvc.h \
-		/usr/include/qt5/QtCore/qatomic_integrity.h \
-		/usr/include/qt5/QtCore/qoldbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_vxworks.h \
-		/usr/include/qt5/QtCore/qatomic_power.h \
-		/usr/include/qt5/QtCore/qatomic_alpha.h \
-		/usr/include/qt5/QtCore/qatomic_armv7.h \
-		/usr/include/qt5/QtCore/qatomic_armv6.h \
-		/usr/include/qt5/QtCore/qatomic_armv5.h \
-		/usr/include/qt5/QtCore/qatomic_bfin.h \
-		/usr/include/qt5/QtCore/qatomic_ia64.h \
-		/usr/include/qt5/QtCore/qatomic_mips.h \
-		/usr/include/qt5/QtCore/qatomic_s390.h \
-		/usr/include/qt5/QtCore/qatomic_sh4a.h \
-		/usr/include/qt5/QtCore/qatomic_sparc.h \
-		/usr/include/qt5/QtCore/qatomic_gcc.h \
-		/usr/include/qt5/QtCore/qatomic_x86.h \
-		/usr/include/qt5/QtCore/qatomic_cxx11.h \
-		/usr/include/qt5/QtCore/qatomic_unix.h \
-		/usr/include/qt5/QtCore/qmutex.h \
-		/usr/include/qt5/QtCore/qlogging.h \
-		/usr/include/qt5/QtCore/qflags.h \
-		/usr/include/qt5/QtCore/qtypeinfo.h \
-		/usr/include/qt5/QtCore/qtypetraits.h \
-		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtGui/qwindowdefs_win.h \
-		/usr/include/qt5/QtCore/qobject.h \
-		/usr/include/qt5/QtCore/qstring.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qbytearray.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qarraydata.h \
-		/usr/include/qt5/QtCore/qstringbuilder.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qcoreevent.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
-		/usr/include/qt5/QtCore/qmetatype.h \
-		/usr/include/qt5/QtCore/qvarlengtharray.h \
-		/usr/include/qt5/QtCore/qcontainerfwd.h \
-		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtCore/qmargins.h \
-		/usr/include/qt5/QtCore/qrect.h \
-		/usr/include/qt5/QtCore/qsize.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtGui/qpaintdevice.h \
-		/usr/include/qt5/QtGui/qpalette.h \
-		/usr/include/qt5/QtGui/qcolor.h \
-		/usr/include/qt5/QtGui/qrgb.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtGui/qbrush.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtGui/qmatrix.h \
-		/usr/include/qt5/QtGui/qpolygon.h \
-		/usr/include/qt5/QtGui/qregion.h \
-		/usr/include/qt5/QtCore/qline.h \
-		/usr/include/qt5/QtGui/qtransform.h \
-		/usr/include/qt5/QtGui/qpainterpath.h \
-		/usr/include/qt5/QtGui/qimage.h \
-		/usr/include/qt5/QtGui/qpixmap.h \
-		/usr/include/qt5/QtCore/qsharedpointer.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtGui/qfont.h \
-		/usr/include/qt5/QtGui/qfontmetrics.h \
-		/usr/include/qt5/QtGui/qfontinfo.h \
-		/usr/include/qt5/QtWidgets/qsizepolicy.h \
-		/usr/include/qt5/QtGui/qcursor.h \
-		/usr/include/qt5/QtGui/qkeysequence.h \
-		/usr/include/qt5/QtGui/qevent.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
-		/usr/include/qt5/QtCore/qurl.h \
-		/usr/include/qt5/QtCore/qurlquery.h \
-		/usr/include/qt5/QtCore/qfile.h \
-		/usr/include/qt5/QtCore/qfiledevice.h \
-		/usr/include/qt5/QtGui/qvector2d.h \
-		/usr/include/qt5/QtGui/qtouchdevice.h \
-		/usr/include/qt5/QtGui/qvalidator.h \
-		/usr/include/qt5/QtCore/qregularexpression.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQAngleSpinBox.o CQAngleSpinBox.cpp
-
-../obj/CQLineDash.o: CQLineDash.cpp CQLineDash.h \
-		/usr/include/qt5/QtWidgets/QFrame \
-		/usr/include/qt5/QtWidgets/qframe.h \
-		/usr/include/qt5/QtWidgets/qwidget.h \
-		/usr/include/qt5/QtGui/qwindowdefs.h \
-		/usr/include/qt5/QtCore/qglobal.h \
-		/usr/include/qt5/QtCore/qconfig.h \
-		/usr/include/qt5/QtCore/qfeatures.h \
-		/usr/include/qt5/QtCore/qsystemdetection.h \
-		/usr/include/qt5/QtCore/qprocessordetection.h \
-		/usr/include/qt5/QtCore/qcompilerdetection.h \
-		/usr/include/qt5/QtCore/qglobalstatic.h \
-		/usr/include/qt5/QtCore/qatomic.h \
-		/usr/include/qt5/QtCore/qbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
-		/usr/include/qt5/QtCore/qgenericatomic.h \
-		/usr/include/qt5/QtCore/qatomic_msvc.h \
-		/usr/include/qt5/QtCore/qatomic_integrity.h \
-		/usr/include/qt5/QtCore/qoldbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_vxworks.h \
-		/usr/include/qt5/QtCore/qatomic_power.h \
-		/usr/include/qt5/QtCore/qatomic_alpha.h \
-		/usr/include/qt5/QtCore/qatomic_armv7.h \
-		/usr/include/qt5/QtCore/qatomic_armv6.h \
-		/usr/include/qt5/QtCore/qatomic_armv5.h \
-		/usr/include/qt5/QtCore/qatomic_bfin.h \
-		/usr/include/qt5/QtCore/qatomic_ia64.h \
-		/usr/include/qt5/QtCore/qatomic_mips.h \
-		/usr/include/qt5/QtCore/qatomic_s390.h \
-		/usr/include/qt5/QtCore/qatomic_sh4a.h \
-		/usr/include/qt5/QtCore/qatomic_sparc.h \
-		/usr/include/qt5/QtCore/qatomic_gcc.h \
-		/usr/include/qt5/QtCore/qatomic_x86.h \
-		/usr/include/qt5/QtCore/qatomic_cxx11.h \
-		/usr/include/qt5/QtCore/qatomic_unix.h \
-		/usr/include/qt5/QtCore/qmutex.h \
-		/usr/include/qt5/QtCore/qlogging.h \
-		/usr/include/qt5/QtCore/qflags.h \
-		/usr/include/qt5/QtCore/qtypeinfo.h \
-		/usr/include/qt5/QtCore/qtypetraits.h \
-		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtGui/qwindowdefs_win.h \
-		/usr/include/qt5/QtCore/qobject.h \
-		/usr/include/qt5/QtCore/qstring.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qbytearray.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qarraydata.h \
-		/usr/include/qt5/QtCore/qstringbuilder.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qcoreevent.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
-		/usr/include/qt5/QtCore/qmetatype.h \
-		/usr/include/qt5/QtCore/qvarlengtharray.h \
-		/usr/include/qt5/QtCore/qcontainerfwd.h \
-		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtCore/qmargins.h \
-		/usr/include/qt5/QtCore/qrect.h \
-		/usr/include/qt5/QtCore/qsize.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtGui/qpaintdevice.h \
-		/usr/include/qt5/QtGui/qpalette.h \
-		/usr/include/qt5/QtGui/qcolor.h \
-		/usr/include/qt5/QtGui/qrgb.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtGui/qbrush.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtGui/qmatrix.h \
-		/usr/include/qt5/QtGui/qpolygon.h \
-		/usr/include/qt5/QtGui/qregion.h \
-		/usr/include/qt5/QtCore/qline.h \
-		/usr/include/qt5/QtGui/qtransform.h \
-		/usr/include/qt5/QtGui/qpainterpath.h \
-		/usr/include/qt5/QtGui/qimage.h \
-		/usr/include/qt5/QtGui/qpixmap.h \
-		/usr/include/qt5/QtCore/qsharedpointer.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtGui/qfont.h \
-		/usr/include/qt5/QtGui/qfontmetrics.h \
-		/usr/include/qt5/QtGui/qfontinfo.h \
-		/usr/include/qt5/QtWidgets/qsizepolicy.h \
-		/usr/include/qt5/QtGui/qcursor.h \
-		/usr/include/qt5/QtGui/qkeysequence.h \
-		/usr/include/qt5/QtGui/qevent.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
-		/usr/include/qt5/QtCore/qurl.h \
-		/usr/include/qt5/QtCore/qurlquery.h \
-		/usr/include/qt5/QtCore/qfile.h \
-		/usr/include/qt5/QtCore/qfiledevice.h \
-		/usr/include/qt5/QtGui/qvector2d.h \
-		/usr/include/qt5/QtGui/qtouchdevice.h \
-		/usr/include/qt5/QtWidgets/QAction \
-		/usr/include/qt5/QtWidgets/qaction.h \
-		/usr/include/qt5/QtGui/qicon.h \
-		/usr/include/qt5/QtWidgets/qactiongroup.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
-		CQIconCombo.h \
-		/usr/include/qt5/QtWidgets/QComboBox \
-		/usr/include/qt5/QtWidgets/qcombobox.h \
-		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
-		/usr/include/qt5/QtWidgets/qstyleoption.h \
-		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
-		/usr/include/qt5/QtGui/qvalidator.h \
-		/usr/include/qt5/QtCore/qregularexpression.h \
-		/usr/include/qt5/QtWidgets/qslider.h \
-		/usr/include/qt5/QtWidgets/qabstractslider.h \
-		/usr/include/qt5/QtWidgets/qstyle.h \
-		/usr/include/qt5/QtWidgets/qtabbar.h \
-		/usr/include/qt5/QtWidgets/qtabwidget.h \
-		/usr/include/qt5/QtWidgets/qrubberband.h \
-		/usr/include/qt5/QtCore/qabstractitemmodel.h \
-		../../CQUtil/include/CQUtil.h \
-		/usr/include/qt5/QtCore/Qt \
-		/usr/include/qt5/QtGui/QColor \
-		/usr/include/qt5/QtCore/QEvent \
-		/usr/include/qt5/QtCore/QVariant \
-		/usr/include/qt5/QtWidgets/QTableWidget \
-		/usr/include/qt5/QtWidgets/qtablewidget.h \
-		/usr/include/qt5/QtWidgets/qtableview.h \
-		/usr/include/qt5/QtWidgets/qabstractitemview.h \
-		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
-		/usr/include/qt5/QtCore/qitemselectionmodel.h \
-		/usr/include/qt5/QtGui/QPen \
-		/usr/include/qt5/QtGui/qpen.h \
-		../../CUtil/include/CEvent.h \
-		../../CMath/include/CIPoint2D.h \
-		../../CUtil/include/CKeyType.h \
-		../../CUtil/include/CRGBA.h \
-		../../CUtil/include/CRGB.h \
-		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
-		../../CUtil/include/CCMYK.h \
-		../../CUtil/include/CHSL.h \
-		../../CUtil/include/CHSB.h \
-		../../CUtil/include/CHSI.h \
-		../../CMath/include/CMathGen.h \
-		../../COS/include/NaN.h \
-		../../CUtil/include/CRGBName.h \
-		../../CUtil/include/CColorComponent.h \
-		../../CMath/include/CAngle.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
-		../../CFont/include/CFont.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CImageLib/include/CImageLib.h \
-		../../CFile/include/CFile.h \
-		../../CFile/include/CFileBase.h \
-		../../CFile/include/CFileType.h \
-		../../CUtil/include/CAlignType.h \
-		../../CImageLib/include/CImageState.h \
-		../../CImageLib/include/CImage.h \
-		../../CMath/include/CISize2D.h \
-		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CUtil/include/COptVal.h \
-		../../CImageLib/include/CImagePtr.h \
-		../../CImageLib/include/CImageMgr.h \
-		../../CStrUtil/include/CStrUtil.h \
-		../../CImageLib/include/CImageAnim.h \
-		../../CImageLib/include/CImageFile.h \
-		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CBBox2D.h \
-		../../CMath/include/CVector2D.h \
-		../../CMath/include/CSize2D.h \
-		../../CMath/include/CMatrix2D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
-		/usr/include/qt5/QtWidgets/QHBoxLayout \
-		/usr/include/qt5/QtWidgets/qboxlayout.h \
-		/usr/include/qt5/QtWidgets/qlayout.h \
-		/usr/include/qt5/QtWidgets/qlayoutitem.h \
-		/usr/include/qt5/QtWidgets/qgridlayout.h \
-		/usr/include/qt5/QtWidgets/QLineEdit \
-		/usr/include/qt5/QtWidgets/qlineedit.h \
-		/usr/include/qt5/QtGui/qtextcursor.h \
-		/usr/include/qt5/QtGui/qtextformat.h \
-		/usr/include/qt5/QtGui/qtextoption.h \
-		/usr/include/qt5/QtWidgets/QToolButton \
-		/usr/include/qt5/QtWidgets/qtoolbutton.h \
-		/usr/include/qt5/QtWidgets/qabstractbutton.h \
-		/usr/include/qt5/QtWidgets/QMenu \
-		/usr/include/qt5/QtWidgets/qmenu.h \
-		/usr/include/qt5/QtGui/QPainter \
-		/usr/include/qt5/QtGui/qpainter.h \
-		/usr/include/qt5/QtWidgets/QProxyStyle \
-		/usr/include/qt5/QtWidgets/qproxystyle.h \
-		/usr/include/qt5/QtWidgets/QCommonStyle \
-		/usr/include/qt5/QtWidgets/qcommonstyle.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQLineDash.o CQLineDash.cpp
-
-../obj/CQPoint2DEdit.o: CQPoint2DEdit.cpp CQPoint2DEdit.h \
-		/usr/include/qt5/QtWidgets/QLineEdit \
-		/usr/include/qt5/QtWidgets/qlineedit.h \
-		/usr/include/qt5/QtWidgets/qframe.h \
-		/usr/include/qt5/QtWidgets/qwidget.h \
-		/usr/include/qt5/QtGui/qwindowdefs.h \
-		/usr/include/qt5/QtCore/qglobal.h \
-		/usr/include/qt5/QtCore/qconfig.h \
-		/usr/include/qt5/QtCore/qfeatures.h \
-		/usr/include/qt5/QtCore/qsystemdetection.h \
-		/usr/include/qt5/QtCore/qprocessordetection.h \
-		/usr/include/qt5/QtCore/qcompilerdetection.h \
-		/usr/include/qt5/QtCore/qglobalstatic.h \
-		/usr/include/qt5/QtCore/qatomic.h \
-		/usr/include/qt5/QtCore/qbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
-		/usr/include/qt5/QtCore/qgenericatomic.h \
-		/usr/include/qt5/QtCore/qatomic_msvc.h \
-		/usr/include/qt5/QtCore/qatomic_integrity.h \
-		/usr/include/qt5/QtCore/qoldbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_vxworks.h \
-		/usr/include/qt5/QtCore/qatomic_power.h \
-		/usr/include/qt5/QtCore/qatomic_alpha.h \
-		/usr/include/qt5/QtCore/qatomic_armv7.h \
-		/usr/include/qt5/QtCore/qatomic_armv6.h \
-		/usr/include/qt5/QtCore/qatomic_armv5.h \
-		/usr/include/qt5/QtCore/qatomic_bfin.h \
-		/usr/include/qt5/QtCore/qatomic_ia64.h \
-		/usr/include/qt5/QtCore/qatomic_mips.h \
-		/usr/include/qt5/QtCore/qatomic_s390.h \
-		/usr/include/qt5/QtCore/qatomic_sh4a.h \
-		/usr/include/qt5/QtCore/qatomic_sparc.h \
-		/usr/include/qt5/QtCore/qatomic_gcc.h \
-		/usr/include/qt5/QtCore/qatomic_x86.h \
-		/usr/include/qt5/QtCore/qatomic_cxx11.h \
-		/usr/include/qt5/QtCore/qatomic_unix.h \
-		/usr/include/qt5/QtCore/qmutex.h \
-		/usr/include/qt5/QtCore/qlogging.h \
-		/usr/include/qt5/QtCore/qflags.h \
-		/usr/include/qt5/QtCore/qtypeinfo.h \
-		/usr/include/qt5/QtCore/qtypetraits.h \
-		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtGui/qwindowdefs_win.h \
-		/usr/include/qt5/QtCore/qobject.h \
-		/usr/include/qt5/QtCore/qstring.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qbytearray.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qarraydata.h \
-		/usr/include/qt5/QtCore/qstringbuilder.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qcoreevent.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
-		/usr/include/qt5/QtCore/qmetatype.h \
-		/usr/include/qt5/QtCore/qvarlengtharray.h \
-		/usr/include/qt5/QtCore/qcontainerfwd.h \
-		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtCore/qmargins.h \
-		/usr/include/qt5/QtCore/qrect.h \
-		/usr/include/qt5/QtCore/qsize.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtGui/qpaintdevice.h \
-		/usr/include/qt5/QtGui/qpalette.h \
-		/usr/include/qt5/QtGui/qcolor.h \
-		/usr/include/qt5/QtGui/qrgb.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtGui/qbrush.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtGui/qmatrix.h \
-		/usr/include/qt5/QtGui/qpolygon.h \
-		/usr/include/qt5/QtGui/qregion.h \
-		/usr/include/qt5/QtCore/qline.h \
-		/usr/include/qt5/QtGui/qtransform.h \
-		/usr/include/qt5/QtGui/qpainterpath.h \
-		/usr/include/qt5/QtGui/qimage.h \
-		/usr/include/qt5/QtGui/qpixmap.h \
-		/usr/include/qt5/QtCore/qsharedpointer.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtGui/qfont.h \
-		/usr/include/qt5/QtGui/qfontmetrics.h \
-		/usr/include/qt5/QtGui/qfontinfo.h \
-		/usr/include/qt5/QtWidgets/qsizepolicy.h \
-		/usr/include/qt5/QtGui/qcursor.h \
-		/usr/include/qt5/QtGui/qkeysequence.h \
-		/usr/include/qt5/QtGui/qevent.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
-		/usr/include/qt5/QtCore/qurl.h \
-		/usr/include/qt5/QtCore/qurlquery.h \
-		/usr/include/qt5/QtCore/qfile.h \
-		/usr/include/qt5/QtCore/qfiledevice.h \
-		/usr/include/qt5/QtGui/qvector2d.h \
-		/usr/include/qt5/QtGui/qtouchdevice.h \
-		/usr/include/qt5/QtGui/qtextcursor.h \
-		/usr/include/qt5/QtGui/qtextformat.h \
-		/usr/include/qt5/QtGui/qpen.h \
-		/usr/include/qt5/QtGui/qtextoption.h \
-		/usr/include/qt5/QtWidgets/QDoubleSpinBox \
-		/usr/include/qt5/QtWidgets/qspinbox.h \
-		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
-		/usr/include/qt5/QtGui/qvalidator.h \
-		/usr/include/qt5/QtCore/qregularexpression.h \
-		/usr/include/qt5/QtWidgets/QHBoxLayout \
-		/usr/include/qt5/QtWidgets/qboxlayout.h \
-		/usr/include/qt5/QtWidgets/qlayout.h \
-		/usr/include/qt5/QtWidgets/qlayoutitem.h \
-		/usr/include/qt5/QtWidgets/qgridlayout.h \
-		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
-		../../CStrUtil/include/CStrUtil.h \
-		/usr/include/qt5/QtGui/QDoubleValidator
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQPoint2DEdit.o CQPoint2DEdit.cpp
-
-../obj/CQIconCombo.o: CQIconCombo.cpp CQIconCombo.h \
-		/usr/include/qt5/QtWidgets/QComboBox \
-		/usr/include/qt5/QtWidgets/qcombobox.h \
-		/usr/include/qt5/QtWidgets/qwidget.h \
-		/usr/include/qt5/QtGui/qwindowdefs.h \
-		/usr/include/qt5/QtCore/qglobal.h \
-		/usr/include/qt5/QtCore/qconfig.h \
-		/usr/include/qt5/QtCore/qfeatures.h \
-		/usr/include/qt5/QtCore/qsystemdetection.h \
-		/usr/include/qt5/QtCore/qprocessordetection.h \
-		/usr/include/qt5/QtCore/qcompilerdetection.h \
-		/usr/include/qt5/QtCore/qglobalstatic.h \
-		/usr/include/qt5/QtCore/qatomic.h \
-		/usr/include/qt5/QtCore/qbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
-		/usr/include/qt5/QtCore/qgenericatomic.h \
-		/usr/include/qt5/QtCore/qatomic_msvc.h \
-		/usr/include/qt5/QtCore/qatomic_integrity.h \
-		/usr/include/qt5/QtCore/qoldbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_vxworks.h \
-		/usr/include/qt5/QtCore/qatomic_power.h \
-		/usr/include/qt5/QtCore/qatomic_alpha.h \
-		/usr/include/qt5/QtCore/qatomic_armv7.h \
-		/usr/include/qt5/QtCore/qatomic_armv6.h \
-		/usr/include/qt5/QtCore/qatomic_armv5.h \
-		/usr/include/qt5/QtCore/qatomic_bfin.h \
-		/usr/include/qt5/QtCore/qatomic_ia64.h \
-		/usr/include/qt5/QtCore/qatomic_mips.h \
-		/usr/include/qt5/QtCore/qatomic_s390.h \
-		/usr/include/qt5/QtCore/qatomic_sh4a.h \
-		/usr/include/qt5/QtCore/qatomic_sparc.h \
-		/usr/include/qt5/QtCore/qatomic_gcc.h \
-		/usr/include/qt5/QtCore/qatomic_x86.h \
-		/usr/include/qt5/QtCore/qatomic_cxx11.h \
-		/usr/include/qt5/QtCore/qatomic_unix.h \
-		/usr/include/qt5/QtCore/qmutex.h \
-		/usr/include/qt5/QtCore/qlogging.h \
-		/usr/include/qt5/QtCore/qflags.h \
-		/usr/include/qt5/QtCore/qtypeinfo.h \
-		/usr/include/qt5/QtCore/qtypetraits.h \
-		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtGui/qwindowdefs_win.h \
-		/usr/include/qt5/QtCore/qobject.h \
-		/usr/include/qt5/QtCore/qstring.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qbytearray.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qarraydata.h \
-		/usr/include/qt5/QtCore/qstringbuilder.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qcoreevent.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
-		/usr/include/qt5/QtCore/qmetatype.h \
-		/usr/include/qt5/QtCore/qvarlengtharray.h \
-		/usr/include/qt5/QtCore/qcontainerfwd.h \
-		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtCore/qmargins.h \
-		/usr/include/qt5/QtCore/qrect.h \
-		/usr/include/qt5/QtCore/qsize.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtGui/qpaintdevice.h \
-		/usr/include/qt5/QtGui/qpalette.h \
-		/usr/include/qt5/QtGui/qcolor.h \
-		/usr/include/qt5/QtGui/qrgb.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtGui/qbrush.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtGui/qmatrix.h \
-		/usr/include/qt5/QtGui/qpolygon.h \
-		/usr/include/qt5/QtGui/qregion.h \
-		/usr/include/qt5/QtCore/qline.h \
-		/usr/include/qt5/QtGui/qtransform.h \
-		/usr/include/qt5/QtGui/qpainterpath.h \
-		/usr/include/qt5/QtGui/qimage.h \
-		/usr/include/qt5/QtGui/qpixmap.h \
-		/usr/include/qt5/QtCore/qsharedpointer.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtGui/qfont.h \
-		/usr/include/qt5/QtGui/qfontmetrics.h \
-		/usr/include/qt5/QtGui/qfontinfo.h \
-		/usr/include/qt5/QtWidgets/qsizepolicy.h \
-		/usr/include/qt5/QtGui/qcursor.h \
-		/usr/include/qt5/QtGui/qkeysequence.h \
-		/usr/include/qt5/QtGui/qevent.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
-		/usr/include/qt5/QtCore/qurl.h \
-		/usr/include/qt5/QtCore/qurlquery.h \
-		/usr/include/qt5/QtCore/qfile.h \
-		/usr/include/qt5/QtCore/qfiledevice.h \
-		/usr/include/qt5/QtGui/qvector2d.h \
-		/usr/include/qt5/QtGui/qtouchdevice.h \
-		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
-		/usr/include/qt5/QtWidgets/qstyleoption.h \
-		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
-		/usr/include/qt5/QtGui/qvalidator.h \
-		/usr/include/qt5/QtCore/qregularexpression.h \
-		/usr/include/qt5/QtGui/qicon.h \
-		/usr/include/qt5/QtWidgets/qslider.h \
-		/usr/include/qt5/QtWidgets/qabstractslider.h \
-		/usr/include/qt5/QtWidgets/qstyle.h \
-		/usr/include/qt5/QtWidgets/qtabbar.h \
-		/usr/include/qt5/QtWidgets/qtabwidget.h \
-		/usr/include/qt5/QtWidgets/qrubberband.h \
-		/usr/include/qt5/QtWidgets/qframe.h \
-		/usr/include/qt5/QtCore/qabstractitemmodel.h \
-		/usr/include/qt5/QtWidgets/QAbstractItemView \
-		/usr/include/qt5/QtWidgets/qabstractitemview.h \
-		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
-		/usr/include/qt5/QtCore/qitemselectionmodel.h \
-		/usr/include/qt5/QtWidgets/QAbstractItemDelegate \
-		/usr/include/qt5/QtWidgets/QListView \
-		/usr/include/qt5/QtWidgets/qlistview.h \
-		/usr/include/qt5/QtWidgets/QStylePainter \
-		/usr/include/qt5/QtWidgets/qstylepainter.h \
-		/usr/include/qt5/QtGui/qpainter.h \
-		/usr/include/qt5/QtGui/qtextoption.h \
-		/usr/include/qt5/QtGui/qpen.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQIconCombo.o CQIconCombo.cpp
-
 ../obj/moc_CQGnuPlot.o: moc_CQGnuPlot.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlot.o moc_CQGnuPlot.cpp
 
@@ -23254,6 +24629,9 @@ compiler_clean: compiler_moc_header_clean
 ../obj/moc_CQGnuPlotTitle.o: moc_CQGnuPlotTitle.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotTitle.o moc_CQGnuPlotTitle.cpp
 
+../obj/moc_CQGnuPlotToolBar.o: moc_CQGnuPlotToolBar.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotToolBar.o moc_CQGnuPlotToolBar.cpp
+
 ../obj/moc_CQGnuPlotWindow.o: moc_CQGnuPlotWindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotWindow.o moc_CQGnuPlotWindow.cpp
 
@@ -23269,8 +24647,17 @@ compiler_clean: compiler_moc_header_clean
 ../obj/moc_CQPaletteDialog.o: moc_CQPaletteDialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPaletteDialog.o moc_CQPaletteDialog.cpp
 
+../obj/moc_CQComboSlider.o: moc_CQComboSlider.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQComboSlider.o moc_CQComboSlider.cpp
+
+../obj/moc_CQSlider.o: moc_CQSlider.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQSlider.o moc_CQSlider.cpp
+
 ../obj/moc_CQAngleSpinBox.o: moc_CQAngleSpinBox.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQAngleSpinBox.o moc_CQAngleSpinBox.cpp
+
+../obj/moc_CQIntegerSpin.o: moc_CQIntegerSpin.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQIntegerSpin.o moc_CQIntegerSpin.cpp
 
 ../obj/moc_CQLineDash.o: moc_CQLineDash.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQLineDash.o moc_CQLineDash.cpp

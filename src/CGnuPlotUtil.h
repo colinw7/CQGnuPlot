@@ -37,6 +37,10 @@ namespace CGnuPlotUtil {
     if (t < T(0)) return -1;
     return 0;
   }
+
+  inline bool realEq(double r1, double r2) {
+    return (fabs(r2 - r1) < 1E-6);
+  }
 }
 
 #endif

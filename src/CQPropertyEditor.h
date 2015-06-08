@@ -48,7 +48,17 @@ class CQPropertyIntegerEditor : public CQPropertyEditorFactory {
 
 class CQPropertyRealEditor : public CQPropertyEditorFactory {
  public:
+  enum class Type {
+    DoubleSpin,
+    RealSlider,
+    ComboSlider
+  };
+
+ public:
   CQPropertyRealEditor(double min=0.0, double max=99.9, double step=1.0);
+
+  const Type &type() const { return type_; }
+  void setType(const Type &v) { type_ = v; }
 
   QWidget *createEdit(QWidget *parent);
 
@@ -59,6 +69,7 @@ class CQPropertyRealEditor : public CQPropertyEditorFactory {
   void setValue(QWidget *w, const QVariant &var);
 
  private:
+  Type   type_;
   double min_, max_;
   double step_;
 };

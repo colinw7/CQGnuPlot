@@ -6,4 +6,4 @@ set label 1 "\"This picture was taken by my friend Ansel Adams.\"" at 63,140 cen
 set title "The palette can be changed from color to gray scale"
 set palette gray
 unset colorbox
-plot 'blutux.rgb' binary array=(128,128) flipy format='%uchar%uchar%uchar' using ($1+$2+$3)/3 with image
+plot 'data/blutux.rgb' binary array=(128,128) flipy format='%uchar%uchar%uchar' using ($1+$2+$3)/3 with image

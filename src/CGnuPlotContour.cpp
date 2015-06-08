@@ -73,6 +73,17 @@ app() const
 
 void
 CGnuPlotContour::
+reset()
+{
+  x_.clear();
+  y_.clear();
+  z_.clear();
+
+  levels_.clear();
+}
+
+void
+CGnuPlotContour::
 setData(double *x, double *y, double *z, int no_x, int no_y)
 {
   x_ = std::vector<double>(&x[0], &x[no_x]);
@@ -105,6 +116,12 @@ void
 CGnuPlotContour::
 drawContour(CGnuPlotRenderer *renderer)
 {
+  CGnuPlotAxisData &zaxis = plot_->group()->zaxis(plot_->zind());
+
+  min_z_ = zaxis.min().getValue();
+
+  //---
+
   if (solid())
     drawContourSolid(renderer);
   else
@@ -115,14 +132,28 @@ void
 CGnuPlotContour::
 drawContourLines(CGnuPlotRenderer *renderer)
 {
-  CGnuPlotCamera *camera = plot_->group()->camera();
+  const CGnuPlotLineStyle &lineStyle = plot_->lineStyle();
+
+  CGnuPlotContourData::DrawPos pos = plot_->contourData().pos();
 
   // draw contour points
-  for (auto y : y_) {
-    for (auto x : x_) {
-      CPoint3D p = camera->transform(CPoint3D(x, y, min_z_));
+  for (uint j = 0; j < y_.size() - 1; ++j) {
+    double y = y_[j];
 
-      renderer->drawPoint(CPoint2D(p.x, p.y), CRGBA(0,0,0));
+    int j1 = j*x_.size();
+
+    for (uint i = 0; i < x_.size() - 1; ++i) {
+      double x = x_[i];
+      double z = z_[j1 + i];
+
+      if (pos == CGnuPlotContourData::DrawPos::BASE ||
+          pos == CGnuPlotContourData::DrawPos::BOTH) {
+        renderer->drawPoint(CPoint3D(x, y, min_z_), CRGBA(0,0,0));
+      }
+      if (pos == CGnuPlotContourData::DrawPos::SURFACE ||
+          pos == CGnuPlotContourData::DrawPos::BOTH) {
+        renderer->drawPoint(CPoint3D(x, y, z), CRGBA(0,0,0));
+      }
     }
   }
 
@@ -130,13 +161,14 @@ drawContourLines(CGnuPlotRenderer *renderer)
 
   std::vector<double> levels;
 
-  initLevels(levels);
+  getLevels(levels);
 
   //---
 
-  double xc[8];
-  double yc[8];
+  double width = lineStyle.width();
+
   int    flag[8];
+  double xc[8], yc[8], zc[8];
 
   for (uint l = 0; l < levels.size(); ++l) {
     double level = levels[l];
@@ -146,25 +178,27 @@ drawContourLines(CGnuPlotRenderer *renderer)
     if (! colors_.empty())
       c = colors_[l % colors_.size()];
 
-    if (x_.size() < 1) continue;
+    if (y_.size() < 1) continue;
 
-    for (uint i = 0; i < x_.size() - 1; ++i) {
-      double xi1 = x_[i + 0], xi2 = x_[i + 1];
+    for (uint j = 0; j < y_.size() - 1; ++j) {
+      double yj1 = y_[j + 0], yj2 = y_[j + 1];
 
-      double xm = CGnuPlotUtil::avg({xi1, xi2});
+      double ym = CGnuPlotUtil::avg({yj1, yj2});
 
-      int i1 =  i     *y_.size();
-      int i2 = (i + 1)*y_.size();
+      int j1 =  j     *x_.size();
+      int j2 = (j + 1)*x_.size();
 
-      if (y_.size() < 1) continue;
+      if (x_.size() < 1) continue;
 
-      for (uint j = 0; j < y_.size() - 1; ++j) {
-        double yj1 = y_[j + 0], yj2 = y_[j + 1];
+      for (uint i = 0; i < x_.size() - 1; ++i) {
+        double xi1 = x_[i + 0], xi2 = x_[i + 1];
 
-        double ym = CGnuPlotUtil::avg({yj1, yj2});
+        double xm = CGnuPlotUtil::avg({xi1, xi2});
 
-        double z1 = z_[i1 + j    ], z2 = z_[i2 + j    ];
-        double z3 = z_[i1 + j + 1], z4 = z_[i2 + j + 1];
+        //---
+
+        double z1 = z_[j1 + i], z2 = z_[j1 + i + 1];
+        double z3 = z_[j2 + i], z4 = z_[j2 + i + 1];
 
         double zm = CGnuPlotUtil::avg({z1, z2, z3, z4});
 
@@ -174,24 +208,28 @@ drawContourLines(CGnuPlotRenderer *renderer)
         if ((flag[0] = ((level >= z1 && level <= z2) || (level <= z1 && level >= z2)))) {
           xc[0] = (z1 != z2 ? CGnuPlotUtil::map(level, z1, z2, xi1, xi2) : xi1);
           yc[0] = yj1;
+          zc[0] = level;
         }
 
         // get point on upper side for specified value (if in range)
         if ((flag[1] = ((level >= z3 && level <= z4) || (level <= z3 && level >= z4)))) {
           xc[1] = (z3 != z4 ? CGnuPlotUtil::map(level, z3, z4, xi1, xi2) : xi1);
           yc[1] = yj2;
+          zc[1] = level;
         }
 
         // get point on left side for specified value (if in range)
         if ((flag[2] = ((level >= z1 && level <= z3) || (level <= z1 && level >= z3)))) {
           xc[2] = xi1;
           yc[2] = (z1 != z3 ? CGnuPlotUtil::map(level, z1, z3, yj1, yj2) : yj1);
+          zc[2] = level;
         }
 
         // get point on right side for specified value (if in range)
         if ((flag[3] = ((level >= z2 && level <= z4) || (level <= z2 && level >= z4)))) {
           xc[3] = xi2;
           yc[3] = (z2 != z4 ? CGnuPlotUtil::map(level, z2, z4, yj1, yj2) : yj1);
+          zc[3] = level;
         }
 
         //---
@@ -200,24 +238,28 @@ drawContourLines(CGnuPlotRenderer *renderer)
         if ((flag[4] = ((level >= z1 && level <= zm) || (level <= z1 && level >= zm)))) {
           xc[4] = (z1 != zm ? CGnuPlotUtil::map(level, z1, zm, xi1, xm) : xi1);
           yc[4] = (z1 != zm ? CGnuPlotUtil::map(level, z1, zm, yj1, ym) : yj1);
+          zc[4] = level;
         }
 
         // get point on right half of diagonal down line
         if ((flag[5] = ((level >= z2 && level <= zm) || (level <= z2 && level >= zm)))) {
           xc[5] = (z2 != zm ? CGnuPlotUtil::map(level, z2, zm, xi2, xm) : xi2);
           yc[5] = (z2 != zm ? CGnuPlotUtil::map(level, z2, zm, yj1, ym) : yj1);
+          zc[5] = level;
         }
 
         // get point on left half of diagonal down line
         if ((flag[6] = ((level >= z3 && level <= zm) || (level <= z3 && level >= zm)))) {
           xc[6] = (z3 != zm ? CGnuPlotUtil::map(level, z3, zm, xi1, xm) : xi1);
           yc[6] = (z3 != zm ? CGnuPlotUtil::map(level, z3, zm, yj2, ym) : yj2);
+          zc[6] = level;
         }
 
         // get point on right half of diagonal up line
         if ((flag[7] = ((level >= z4 && level <= zm) || (level <= z4 && level >= zm)))) {
           xc[7] = (z4 != zm ? CGnuPlotUtil::map(level, z4, zm, xi2, xm) : xi2);
           yc[7] = (z4 != zm ? CGnuPlotUtil::map(level, z4, zm, yj2, ym) : yj2);
+          zc[7] = level;
         }
 
         //---
@@ -228,10 +270,17 @@ drawContourLines(CGnuPlotRenderer *renderer)
           int f2 = contour_flags[2*k + 1];
 
           if (flag[f1] && flag[f2]) {
-            CPoint3D p1 = camera->transform(CPoint3D(xc[f1], yc[f1], min_z_));
-            CPoint3D p2 = camera->transform(CPoint3D(xc[f2], yc[f2], min_z_));
+            if (pos == CGnuPlotContourData::DrawPos::BASE ||
+                pos == CGnuPlotContourData::DrawPos::BOTH) {
+              renderer->drawLine(CPoint3D(xc[f1], yc[f1], min_z_),
+                                 CPoint3D(xc[f2], yc[f2], min_z_), width, c);
+            }
 
-            renderer->drawLine(CPoint2D(p1.x, p1.y), CPoint2D(p2.x, p2.y), 0.0, c);
+            if (pos == CGnuPlotContourData::DrawPos::SURFACE ||
+                pos == CGnuPlotContourData::DrawPos::BOTH) {
+              renderer->drawLine(CPoint3D(xc[f1], yc[f1], zc[f1]),
+                                 CPoint3D(xc[f2], yc[f2], zc[f2]), width, c);
+            }
           }
         }
       }
@@ -245,7 +294,7 @@ drawContourSolid(CGnuPlotRenderer *renderer)
 {
   std::vector<double> levels;
 
-  initLevels(levels);
+  getLevels(levels);
 
   //---
 
@@ -271,11 +320,31 @@ drawContourSolid(CGnuPlotRenderer *renderer)
 
 void
 CGnuPlotContour::
-initLevels(std::vector<double> &levels) const
+getLevelData(std::vector<LevelData> &levelDatas) const
 {
-  levels = levels_;
+  std::vector<double> levels;
 
-  if (levels.empty()) {
+  getLevels(levels);
+
+  for (uint l = 0; l < levels.size(); ++l) {
+    double level = levels[l];
+
+    CRGBA c(0,0,0);
+
+    if (! colors_.empty())
+      c = colors_[l % colors_.size()];
+
+    levelDatas.push_back(LevelData(level, c));
+  }
+}
+
+void
+CGnuPlotContour::
+getLevels(std::vector<double> &levels) const
+{
+  if (levels_.empty()) {
+    CGnuPlotContour *th = const_cast<CGnuPlotContour *>(this);
+
     COptReal z1, z2;
 
     for (uint i = 0; i < x_.size(); ++i) {
@@ -287,13 +356,10 @@ initLevels(std::vector<double> &levels) const
       }
     }
 
-    int no_levels = 10;
-
-    levels.resize(no_levels);
-
-    for (int i = 0; i < no_levels; ++i)
-      levels[i] = CGnuPlotUtil::map(i, 0, no_levels - 1, z1.getValue(0.0), z2.getValue(0.0));
+    th->levels_ = plot_->contourData().getLevelValues(z1.getValue(0.0), z2.getValue(0.0));
   }
+
+  levels = levels_;
 }
 
 void
@@ -301,7 +367,7 @@ CGnuPlotContour::
 fillContourBox(CGnuPlotRenderer *renderer, double x1, double y1, double x2, double y2,
                double z1, double z2, double z3, double z4, const std::vector<double> &levels)
 {
-  CGnuPlotCamera *camera = plot_->group()->camera();
+  CGnuPlotContourData::DrawPos pos = plot_->contourData().pos();
 
   // get box corner values
   if      (fabs(x2 - x1) <= min_x_ && fabs(y2 - y1) <= min_y_) {
@@ -355,19 +421,27 @@ fillContourBox(CGnuPlotRenderer *renderer, double x1, double y1, double x2, doub
   if (l >= 0 && l <= int(levels.size())) {
     CRGBA c = colors_[l % colors_.size()];
 
-    std::vector<CPoint2D> points;
+    std::vector<CPoint3D> points;
 
-    CPoint3D p1 = camera->transform(CPoint3D(x1, y1, min_z_));
-    CPoint3D p2 = camera->transform(CPoint3D(x2, y1, min_z_));
-    CPoint3D p3 = camera->transform(CPoint3D(x2, y2, min_z_));
-    CPoint3D p4 = camera->transform(CPoint3D(x1, y2, min_z_));
+    if (pos == CGnuPlotContourData::DrawPos::BASE ||
+        pos == CGnuPlotContourData::DrawPos::BOTH) {
+      points.push_back(CPoint3D(x1, y1, min_z_));
+      points.push_back(CPoint3D(x2, y1, min_z_));
+      points.push_back(CPoint3D(x2, y2, min_z_));
+      points.push_back(CPoint3D(x1, y2, min_z_));
 
-    points.push_back(CPoint2D(p1.x, p1.y));
-    points.push_back(CPoint2D(p2.x, p2.y));
-    points.push_back(CPoint2D(p3.x, p3.y));
-    points.push_back(CPoint2D(p4.x, p4.y));
+      renderer->fillPolygon(points, c);
+    }
 
-    renderer->fillPolygon(points, c);
+    if (pos == CGnuPlotContourData::DrawPos::SURFACE ||
+        pos == CGnuPlotContourData::DrawPos::BOTH) {
+      points.push_back(CPoint3D(x1, y1, z1));
+      points.push_back(CPoint3D(x2, y1, z2));
+      points.push_back(CPoint3D(x2, y2, z4));
+      points.push_back(CPoint3D(x1, y2, z3));
+
+      renderer->fillPolygon(points, c);
+    }
 
     return;
   }

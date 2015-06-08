@@ -1,0 +1,44 @@
+save_encoding = GPVAL_ENCODING
+set encoding utf8
+
+# We don't use the palette for plotting, but defining it allows us to
+# draw a colorbar showing the phase angle color scheme
+set palette model HSV defined ( 0 0 1 1, 1 1 1 1 )
+set cbrange [-pi : pi]
+set cbtics ("0" -pi, "2π" pi)
+set cblabel "Phase Angle" rotate offset -2,0
+
+Hue(x,y) = (pi + atan2(-y,-x)) / (2*pi)
+phase(x,y) = hsv2rgb( Hue(x,y), sqrt(x**2+y**2), 1. )
+
+set xrange [-pi/2. : pi/2.]
+set yrange [-pi/2. : pi/2.]
+set xtics ("-π/2" -pi/2., "-π/4" -pi/4., "0" 0, "π/4" pi/4., "π/2" pi/2.)
+set ytics ("-π/2" -pi/2., "-π/4" -pi/4., "0" 0, "π/4" pi/4., "π/2" pi/2.)
+
+set view map; set size square; unset key
+set isosamples 100,100
+
+rp(x,y) = real(f(x,y))
+ip(x,y) = imag(f(x,y))
+color(x,y) = hsv2rgb( Hue( rp(x,y), ip(x,y) ), abs(f(x,y)), 1. )
+
+set title "atanh( x + iy )"
+f(x,y) = atanh(x + y*{0,1})
+
+set view 66, 336, 1.2, 1.2
+set view equal xyz
+set colorbox user origin 0.85, 0.2
+unset ztics
+
+set zlabel "magnitude" rotate offset 3
+set xlabel "Real" rotate parallel offset 0,-2
+set ylabel "Imaginary" rotate parallel offset 0,-2
+
+set grid x y
+set xyplane at 0.0
+set border -1
+
+splot '++' using 1:2:(abs(f($1,$2))):(color($1,$2)) with pm3d lc rgb variable
+
+pause -1

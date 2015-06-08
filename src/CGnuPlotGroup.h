@@ -10,14 +10,12 @@
 
 class CGnuPlotGroup {
  public:
-  typedef CGnuPlotTypes::LogScale                LogScale;
   typedef CGnuPlotTypes::HistogramStyle          HistogramStyle;
   typedef CGnuPlotTypes::DrawLayer               DrawLayer;
   typedef CGnuPlotTypes::PlotStyle               PlotStyle;
   typedef CGnuPlot::Annotations                  Annotations;
   typedef CGnuPlot::AxesData                     AxesData;
   typedef CGnuPlot::PlotSize                     PlotSize;
-  typedef CGnuPlot::LogScaleMap                  LogScaleMap;
   typedef CGnuPlot::Margin                       Margin;
   typedef std::vector<CGnuPlotPlot *>            Plots;
   typedef std::map<std::string, CGnuPlotAxis *>  Axes;
@@ -280,16 +278,6 @@ class CGnuPlotGroup {
 
   //-----
 
-  void setLogScaleMap(const LogScaleMap &logScale) { logScale_ = logScale; }
-
-  int getLogScale(LogScale scale) const {
-    auto p = logScale_.find(scale);
-
-    return (p != logScale_.end() ? (*p).second : 0);
-  }
-
-  //-----
-
   const Axes &axes() const { return axes_; }
 
   //-----
@@ -384,9 +372,15 @@ class CGnuPlotGroup {
 
   //-----
 
-  void mapLogPoint  (CPoint2D &p) const;
-  void mapLogPoint  (double *x, double *y) const;
-  void unmapLogPoint(double *x, double *y) const;
+  CPoint3D mapLogPoint(const CPoint3D &p) const;
+  CPoint2D mapLogPoint(const CPoint2D &p) const;
+
+  void mapLogPoint(CPoint3D &p) const;
+  void mapLogPoint(CPoint2D &p) const;
+  void mapLogPoint(double *x, double *y, double *z) const;
+
+  void unmapLogPoint(CPoint3D &p) const;
+  void unmapLogPoint(double *x, double *y, double *z) const;
 
   //-----
 
@@ -419,7 +413,6 @@ class CGnuPlotGroup {
   CGnuPlotColorBoxP     colorBox_;             // color box
   CGnuPlotPaletteP      palette_;              // palette
   AxesData              axesData_;             // axes data
-  LogScaleMap           logScale_;             // log axis data
   Annotations           annotations_;          // annotations
   Axes                  axes_;                 // axes
   bool                  polar_ { false };      // polar

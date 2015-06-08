@@ -18,7 +18,6 @@
 #include <CBBox2D.h>
 #include <CRange2D.h>
 #include <CLineDash.h>
-#include <COrientation.h>
 #include <CRGBA.h>
 #include <CColor.h>
 #include <CAlignType.h>
@@ -82,6 +81,9 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotMouseData.h>
 #include <CGnuPlotClip.h>
 #include <CGnuPlotBinaryFormat.h>
+#include <CGnuPlotContourData.h>
+#include <CGnuPlotSurfaceData.h>
+#include <CGnuPlotAxis.h>
 
 //------
 
@@ -96,12 +98,10 @@ class CGnuPlot {
   typedef CGnuPlotTypes::StyleIncrementType      StyleIncrementType;
   typedef CGnuPlotTypes::Smooth                  Smooth;
   typedef CGnuPlotTypes::HistogramStyle          HistogramStyle;
-  typedef CGnuPlotTypes::LogScale                LogScale;
   typedef CGnuPlotTypes::AngleType               AngleType;
   typedef CGnuPlotTypes::DrawLayer               DrawLayer;
 
   typedef std::map<PlotStyle,CGnuPlotStyleBase*> PlotStyles;
-  typedef std::map<LogScale,int>                 LogScaleMap;
   typedef std::map<int,CGnuPlotLineStyleP>       LineStyles;
   typedef std::vector<CExprValueP>               Values;
   typedef std::map<std::string,std::string>      Params;
@@ -494,21 +494,6 @@ class CGnuPlot {
     bool      bentover        { false };
   };
 
-  struct Surface3DData {
-    bool enabled { true };
-  };
-
-  struct Contour3DData {
-    enum class DrawPos {
-      DRAW_BASE,
-      DRAW_SURFACE,
-      DRAW_BOTH
-    };
-
-    bool    enabled { false };
-    DrawPos pos     { DrawPos::DRAW_BASE };
-  };
-
   struct Pm3DData {
     enum class PosType {
       SURFACE,
@@ -894,12 +879,6 @@ class CGnuPlot {
   const FilledCurve &filledCurve() const { return filledCurve_; }
   void setFilledCurve(const FilledCurve &c) { filledCurve_ = c; }
 
-  const LogScaleMap &logScaleMap() const { return logScale_; }
-  void setLogScale(LogScale scale, int base) { logScale_[scale] = base; }
-  bool isLogScale(LogScale scale) const { return logScale_.find(scale) != logScale_.end(); }
-  int getLogScale(LogScale scale) const { auto p = logScale_.find(scale); return (*p).second; }
-  void resetLogScale() { logScale_.clear(); }
-
   double whiskerBars() const { return whiskerBars_; }
   void setWhiskerBars(double w) { whiskerBars_ = w; }
 
@@ -912,13 +891,13 @@ class CGnuPlot {
 
   //---
 
-  bool isSurface3D() const { return surface3D_.enabled; }
-  void setSurface3D(bool b) { surface3D_.enabled = b; }
+  const CGnuPlotSurfaceData &surfaceData() const { return surfaceData_; }
+  void setSurfaceData(const CGnuPlotSurfaceData &d) { surfaceData_ = d; }
 
   //---
 
-  bool isContour3D() const { return contour3D_.enabled; }
-  void setContour3D(bool b) { contour3D_.enabled = b; }
+  const CGnuPlotContourData &contourData() const { return contourData_; }
+  void setContourData(const CGnuPlotContourData &d) { contourData_ = d; }
 
   //---
 
@@ -988,7 +967,8 @@ class CGnuPlot {
 
   CGnuPlotLineStyle *createLineStyle();
 
-  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, COrientation dir);
+  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
+                           CGnuPlotAxis::Direction dir);
   CGnuPlotKey  *createKey (CGnuPlotGroup *group);
 
   CGnuPlotColorBox *createColorBox(CGnuPlotGroup *group);
@@ -1432,7 +1412,6 @@ class CGnuPlot {
   CGnuPlotColorBox       colorBox_;
   FilledCurve            filledCurve_;
   std::string            timeFmt_ { "%d/%m/%y,%H:%M" };
-  LogScaleMap            logScale_;
   DummyVarMap            dummyVars_;
   Samples                samples_;
   LinkData               linkData_;
@@ -1452,8 +1431,8 @@ class CGnuPlot {
   CGnuPlotTimeStampData  timeStamp_;
   COptBBox2D             clearRect_;
   Hidden3DData           hidden3D_;
-  Surface3DData          surface3D_;
-  Contour3DData          contour3D_;
+  CGnuPlotSurfaceData    surfaceData_;
+  CGnuPlotContourData    contourData_;
   XYPlane                xyPlane_;
   Pm3DData               pm3D_;
   double                 pointIntervalBox_ { 1 };

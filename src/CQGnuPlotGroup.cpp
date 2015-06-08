@@ -115,7 +115,9 @@ mousePress(const QPoint &qp)
 
     renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
 
-    unmapLogPoint(&p.x, &p.y);
+    double z = 0;
+
+    unmapLogPoint(&p.x, &p.y, &z);
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
@@ -129,7 +131,9 @@ mousePress(const QPoint &qp)
 
     renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
 
-    unmapLogPoint(&p.x, &p.y);
+    double z = 0;
+
+    unmapLogPoint(&p.x, &p.y, &z);
 
     if (annotation->inside(p)) {
       CQGnuPlotLabel *qann = static_cast<CQGnuPlotLabel *>(annotation.get());
@@ -156,7 +160,9 @@ mouseMove(const QPoint &qp)
 
     renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
 
-    unmapLogPoint(&p.x, &p.y);
+    double z = 0;
+
+    unmapLogPoint(&p.x, &p.y, &z);
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
@@ -185,7 +191,9 @@ mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
 
     renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
 
-    unmapLogPoint(&p.x, &p.y);
+    double z = 0;
+
+    unmapLogPoint(&p.x, &p.y, &z);
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
@@ -210,5 +218,7 @@ pixelToWindow(const CPoint2D &p, CPoint2D &w)
 
   renderer->pixelToWindow(p, w);
 
-  unmapLogPoint(&w.x, &w.y);
+  double z = 0;
+
+  unmapLogPoint(&w.x, &w.y, &z);
 }

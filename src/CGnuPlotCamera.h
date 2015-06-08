@@ -72,6 +72,18 @@ class CGnuPlotCamera {
   double scaleZ() const { return scaleZ_; }
   void setScaleZ(double r) { scaleZ_ = r; }
 
+  void zoomIn() {
+    scaleX_ *= 1.1;
+    scaleY_ *= 1.1;
+    scaleZ_ *= 1.1;
+  }
+
+  void zoomOut() {
+    scaleX_ /= 1.1;
+    scaleY_ /= 1.1;
+    scaleZ_ /= 1.1;
+  }
+
   const AxesScale &axesScale() const { return axesScale_; }
   void setAxesScale(const AxesScale &v) { axesScale_ = v; }
 

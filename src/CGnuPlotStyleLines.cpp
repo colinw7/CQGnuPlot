@@ -17,6 +17,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
 
+  CGnuPlotGroup *group = plot->group();
+
   //------
 
   uint np = plot->numPoints2D();
@@ -39,6 +41,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     Points points;
 
+    group->mapLogPoint(p1);
+
     points.push_back(p1);
 
     for ( ; i < np; ++i) {
@@ -48,6 +52,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       if (! point2.getPoint(p2) || point2.isDiscontinuity())
         break;
+
+      group->mapLogPoint(p2);
 
       points.push_back(p2);
 
@@ -80,6 +86,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
 
+  CGnuPlotGroup *group = plot->group();
+
   //---
 
   bool grid = true;
@@ -110,6 +118,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       Points points;
 
+      group->mapLogPoint(p1);
+
       xpoints[j].push_back(p1);
 
       points.push_back(p1);
@@ -124,6 +134,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
         if (! plot->mapPoint3D(point2, p2) || point2.isDiscontinuity())
           break;
+
+        group->mapLogPoint(p2);
 
         xpoints[j].push_back(p2);
 

@@ -107,7 +107,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CGnuPlotAxis *plotXAxis = group->getPlotAxis('x', 1);
 
-  double ypos = plotXAxis->position();
+  double ypos = plotXAxis->position().y;
 
   //---
 

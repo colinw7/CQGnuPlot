@@ -4,7 +4,7 @@
 #include <CGnuPlotRenderer.h>
 
 CQGnuPlotAxis::
-CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, COrientation dir,
+CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, CGnuPlotAxis::Direction dir,
               double start, double end) :
  CGnuPlotAxis(group, id, dir, start, end)
 {
@@ -59,9 +59,9 @@ setGridLayer(const DrawLayerType &layer)
 
 void
 CQGnuPlotAxis::
-drawAxis(CGnuPlotRenderer *renderer, double pos, bool first)
+drawAxis(CGnuPlotRenderer *renderer, bool first)
 {
-  CGnuPlotAxis::drawAxis(renderer, pos, first);
+  CGnuPlotAxis::drawAxis(renderer, first);
 
   if (isSelected()) {
     renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);

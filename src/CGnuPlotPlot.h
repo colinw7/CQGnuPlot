@@ -6,6 +6,7 @@
 #include <CGnuPlotObject.h>
 #include <CGnuPlotPoint.h>
 #include <CGnuPlotCache.h>
+#include <CGnuPlotKey.h>
 
 #include <CExpr.h>
 #include <CBBox2D.h>
@@ -159,6 +160,7 @@ class CGnuPlotPlot {
 
   int xind() const { return xind_; }
   int yind() const { return yind_; }
+  int zind() const { return zind_; }
 
   //---
 
@@ -285,6 +287,8 @@ class CGnuPlotPlot {
 
   const std::string &keyTitle() const { return keyTitle_; }
   void setKeyTitle(const std::string &s) { keyTitle_ = s; }
+
+  void getKeyLabels(std::vector<CGnuPlotKeyLabel> &labels) const;
 
   //---
 
@@ -435,6 +439,8 @@ class CGnuPlotPlot {
 
   virtual void draw();
 
+  bool isSurfaceData() const;
+
   void draw2D(CGnuPlotRenderer *renderer);
   void draw3D(CGnuPlotRenderer *renderer);
 
@@ -471,6 +477,25 @@ class CGnuPlotPlot {
   CGnuPlotTypes::Mapping mapping() const { return mapping_; }
   void setMapping(CGnuPlotTypes::Mapping m) { mapping_ = m; }
 
+  //---
+
+  const CGnuPlotSurfaceData &surfaceData() const { return surfaceData_; }
+  void setSurfaceData(const CGnuPlotSurfaceData &d) { surfaceData_ = d; }
+
+  bool isSurfaceEnabled() const { return surfaceData_.isEnabled(); }
+  void setSurfaceEnabled(bool b) { surfaceData_.setEnabled(b); }
+
+  //---
+
+  const CGnuPlotContourData &contourData() const { return contourData_; }
+  void setContourData(const CGnuPlotContourData &d) { contourData_ = d; }
+
+  bool isContourEnabled() const { return contourData_.isEnabled(); }
+  void setContourEnabled(bool b) { contourData_.setEnabled(b); }
+
+  int getContourLevels() const { return contourData_.levels().getValue(10); }
+  void setContourLevels(int n);
+
   //------
 
  protected:
@@ -479,6 +504,8 @@ class CGnuPlotPlot {
   typedef std::pair<double,PointsColor> ZPoints;
   typedef std::vector<ZPoints>          ZPointsArray;
   typedef std::map<double,ZPointsArray> ZPolygons;
+  typedef std::map<int,Points>          IPoints;
+  typedef std::map<int,IPoints>         IJPoints;
 
   static int nextId_;
 
@@ -503,6 +530,7 @@ class CGnuPlotPlot {
   std::string            keyTitle_;                         // title on key
   int                    xind_ { 1 };                       // xaxis index
   int                    yind_ { 1 };                       // yaxis index
+  int                    zind_ { 1 };                       // yaxis index
   COptReal               xmin_, xmax_;                      // calculated points x range
   COptReal               ymin_, ymax_;                      // calculated points y range
   COptReal               zmin_, zmax_;                      // calculated points z range
@@ -512,7 +540,8 @@ class CGnuPlotPlot {
   CGnuPlotBoxPlot        boxPlot_;
   CGnuPlotContour        contour_;                          // contour data
   bool                   contourSet_ { false };
-  ZPolygons              surface_;                          // surface data
+  ZPolygons              surfaceZPolygons_;                          // surface data
+  IJPoints               surfaceIJPoints_;                          // surface data
   bool                   surfaceSet_ { false };
   COptReal               surfaceZMin_, surfaceZMax_;
   Hidden3DData           hidden3D_;
@@ -527,6 +556,8 @@ class CGnuPlotPlot {
   StyleValues            styleValues_;
   bool                   parametric_ { false };
   CGnuPlotTypes::Mapping mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
+  CGnuPlotSurfaceData    surfaceData_;
+  CGnuPlotContourData    contourData_;
 };
 
 //------

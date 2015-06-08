@@ -5,6 +5,8 @@
 #include <CQPoint2DEdit.h>
 #include <CQLineDash.h>
 #include <CQAngleSpinBox.h>
+#include <CQSlider.h>
+#include <CQComboSlider.h>
 #include <CQUtil.h>
 #include <QSpinBox>
 #include <cassert>
@@ -115,7 +117,7 @@ setValue(QWidget *w, const QVariant &var)
 
 CQPropertyRealEditor::
 CQPropertyRealEditor(double min, double max, double step) :
- min_(min), max_(max), step_(step)
+ type_(Type::DoubleSpin), min_(min), max_(max), step_(step)
 {
 }
 
@@ -123,45 +125,113 @@ QWidget *
 CQPropertyRealEditor::
 createEdit(QWidget *parent)
 {
-  QDoubleSpinBox *spin = new QDoubleSpinBox(parent);
+  if (type_ == Type::RealSlider) {
+    CQRealSlider *slider = new CQRealSlider(parent);
 
-  spin->setRange(min_, max_);
-  spin->setSingleStep(step_);
-  spin->setDecimals(6);
+    slider->setAutoFillBackground(true);
 
-  return spin;
+    slider->setMinimum(min_);
+    slider->setMaximum(max_);
+  //slider->setDecimals(6);
+
+    slider->setSingleStep(step_);
+
+    return slider;
+  }
+  else if (type_ == Type::ComboSlider) {
+    CQComboSlider *combo = new CQComboSlider(parent, min_, min_, max_);
+
+    combo->setAutoFillBackground(true);
+
+    return combo;
+  }
+  else {
+    QDoubleSpinBox *spin = new QDoubleSpinBox(parent);
+
+    spin->setRange(min_, max_);
+    spin->setSingleStep(step_);
+    spin->setDecimals(6);
+
+    return spin;
+  }
 }
 
 void
 CQPropertyRealEditor::
 connect(QWidget *w, QObject *obj, const char *method)
 {
-  QDoubleSpinBox *spin = qobject_cast<QDoubleSpinBox *>(w);
-  assert(spin);
+  if (type_ == Type::RealSlider) {
+    CQRealSlider *slider = qobject_cast<CQRealSlider *>(w);
+    assert(slider);
 
-  QObject::connect(spin, SIGNAL(valueChanged(double)), obj, method);
+    QObject::connect(slider, SIGNAL(valueChanged(double)), obj, method);
+  }
+  else if (type_ == Type::ComboSlider) {
+    CQComboSlider *combo = qobject_cast<CQComboSlider *>(w);
+    assert(combo);
+
+    QObject::connect(combo, SIGNAL(valueChanged(double)), obj, method);
+  }
+  else {
+    QDoubleSpinBox *spin = qobject_cast<QDoubleSpinBox *>(w);
+    assert(spin);
+
+    QObject::connect(spin, SIGNAL(valueChanged(double)), obj, method);
+  }
 }
 
 QVariant
 CQPropertyRealEditor::
 getValue(QWidget *w)
 {
-  QDoubleSpinBox *spin = qobject_cast<QDoubleSpinBox *>(w);
-  assert(spin);
+  if (type_ == Type::RealSlider) {
+    CQRealSlider *slider = qobject_cast<CQRealSlider *>(w);
+    assert(slider);
 
-  return QVariant(spin->value());
+    return QVariant(slider->value());
+  }
+  else if (type_ == Type::ComboSlider) {
+    CQComboSlider *combo = qobject_cast<CQComboSlider *>(w);
+    assert(combo);
+
+    return QVariant(combo->value());
+  }
+  else {
+    QDoubleSpinBox *spin = qobject_cast<QDoubleSpinBox *>(w);
+    assert(spin);
+
+    return QVariant(spin->value());
+  }
 }
 
 void
 CQPropertyRealEditor::
 setValue(QWidget *w, const QVariant &var)
 {
-  QDoubleSpinBox *spin = qobject_cast<QDoubleSpinBox *>(w);
-  assert(spin);
+  if (type_ == Type::RealSlider) {
+    CQRealSlider *slider = qobject_cast<CQRealSlider *>(w);
+    assert(slider);
 
-  double r = var.toDouble();
+    double r = var.toDouble();
 
-  spin->setValue(r);
+    slider->setValue(r);
+  }
+  else if (type_ == Type::ComboSlider) {
+    CQComboSlider *combo = qobject_cast<CQComboSlider *>(w);
+    assert(combo);
+
+    double r = var.toDouble();
+
+    combo->setValue(r);
+  }
+  else {
+    QDoubleSpinBox *spin = qobject_cast<QDoubleSpinBox *>(w);
+    assert(spin);
+
+    double r = var.toDouble();
+
+    spin->setValue(r);
+  }
 }
 
 //------

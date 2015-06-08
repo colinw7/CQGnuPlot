@@ -39,12 +39,6 @@ class CGnuPlotWindow {
   bool hidden3D() const { return hidden3D_; }
   void setHidden3D(bool b) { hidden3D_ = b; }
 
-  bool surface3D() const { return surface3D_; }
-  void setSurface3D(bool b) { surface3D_ = b; }
-
-  bool contour3D() const { return contour3D_; }
-  void setContour3D(bool b) { contour3D_ = b; }
-
   const Pm3DData &pm3D() const { return pm3D_; }
   void setPm3D(const Pm3DData &p) { pm3D_ = p; }
 
@@ -60,13 +54,11 @@ class CGnuPlotWindow {
   void draw();
 
  private:
-  CGnuPlot* plot_      { 0 };
-  CISize2D  size_      { 100, 100 };
-  bool      is3D_      { false };
+  CGnuPlot* plot_     { 0 };
+  CISize2D  size_     { 100, 100 };
+  bool      is3D_     { false };
   Groups    groups_;
-  bool      hidden3D_  { false };
-  bool      surface3D_ { true  };
-  bool      contour3D_ { false };
+  bool      hidden3D_ { false };
   Pm3DData  pm3D_;
   CRGBA     backgroundColor_ { 1, 1, 1};
 };

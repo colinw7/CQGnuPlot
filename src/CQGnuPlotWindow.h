@@ -26,9 +26,7 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
 
   Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor)
 
-  Q_PROPERTY(bool hidden3D  READ hidden3D  WRITE setHidden3D )
-  Q_PROPERTY(bool surface3D READ surface3D WRITE setSurface3D)
-  Q_PROPERTY(bool contour3D READ contour3D WRITE setContour3D)
+  Q_PROPERTY(bool hidden3D READ hidden3D WRITE setHidden3D)
 
  public:
   enum class Mode {
@@ -90,7 +88,9 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
 
   void pixelToWindow(double px, double py, double *wx, double *wy);
 
-  CQPropertyRealEditor *realEdit(const std::string &str);
+  CQPropertyRealEditor    *realEdit   (const std::string &str);
+  CQPropertyIntegerEditor *integerEdit(const std::string &str);
+  CQPropertyRealEditor    *realSlider (const std::string &str);
 
  private slots:
   void saveSVG();
@@ -105,8 +105,9 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
   void itemSelectedSlot(QObject *obj, const QString &path);
 
  private:
-  typedef std::map<std::string,CQPropertyRealEditor *> RealEdits;
-  typedef std::vector<CQPropertyIntegerEditor *>       IntegerEdits;
+  typedef std::map<std::string,CQPropertyRealEditor *>    RealEdits;
+  typedef std::map<std::string,CQPropertyIntegerEditor *> IntegerEdits;
+  typedef std::map<std::string,CQPropertyRealEditor *>    RealSliders;
 
   static uint lastId;
 
@@ -115,8 +116,9 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
   CQGnuPlotRenderer* renderer_     { 0 };
   CQGnuPlotCanvas*   canvas_       { 0 };
   CQPropertyTree*    tree_         { 0 };
-  RealEdits          redits_;      // TODO: lookup in cache
-  IntegerEdits       iedits_;      // TODO: lookup in cache
+  RealEdits          redits_;
+  IntegerEdits       iedits_;
+  RealSliders        rsliders_;
   QTimer*            propTimer_    { 0 };
   QLabel*            plotLabel_    { 0 };
   QLabel*            posLabel_     { 0 };

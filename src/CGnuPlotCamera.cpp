@@ -51,8 +51,8 @@ setDirection(const CVector3D &dir)
 
   dir1 = dir.unit();
 
-  right = dir1 .crossProduct(up );
-  up    = right.crossProduct(dir1);
+  right = up  .crossProduct(dir1);
+  up    = dir1.crossProduct(right);
 
   if (COrthonormalBasis3DT<double>::validate(right, up, dir1)) {
     coordFrame_.setBasis(right, up, dir1);
@@ -67,13 +67,33 @@ transform(const CPoint3D &p) const
 {
   if (! enabled_) return p;
 
-  CPoint3D p1 = coordFrame_.transformTo(p);
+  // map to unit radius cube centered at 0,0
+  CGnuPlotAxisData &xaxis = group_->xaxis(1);
+  CGnuPlotAxisData &yaxis = group_->yaxis(1);
+  CGnuPlotAxisData &zaxis = group_->zaxis(1);
 
-  CPoint3D p2;
+  double x1 = CGnuPlotUtil::map(p.x,
+    xaxis.min().getValue(0.0), xaxis.max().getValue(1.0), -scaleX_, scaleX_);
+  double y1 = CGnuPlotUtil::map(p.y,
+    yaxis.min().getValue(0.0), yaxis.max().getValue(1.0), -scaleY_, scaleY_);
+  double z1 = CGnuPlotUtil::map(p.z,
+    zaxis.min().getValue(0.0), zaxis.max().getValue(1.0), -scaleZ_, scaleZ_);
 
-  projMatrix_.multiplyPoint(p1, p2);
+  // transform to 2D
+  CPoint3D p1(x1, y1, z1);
 
-  return p2;
+  CPoint3D p2 = coordFrame_.transformTo(p1);
+
+  CPoint3D p3;
+
+  projMatrix_.multiplyPoint(p2, p3);
+
+  // remap back to x/y axis
+  double x2 = CGnuPlotUtil::map(p3.x, -1, 1, xaxis.min().getValue(), xaxis.max().getValue());
+  double y2 = CGnuPlotUtil::map(p3.y, -1, 1, yaxis.min().getValue(), yaxis.max().getValue());
+  double z2 = CGnuPlotUtil::map(p3.z, -1, 1, zaxis.min().getValue(), zaxis.max().getValue());
+
+  return CPoint3D(x2, y2, z2);
 }
 
 void
