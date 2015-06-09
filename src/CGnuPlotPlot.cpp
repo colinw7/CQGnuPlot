@@ -691,11 +691,6 @@ void
 CGnuPlotPlot::
 drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &drawData)
 {
-  double xb = 0;
-
-  if (! renderer->isPseudo())
-    xb = renderer->pixelWidthToWindowWidth(2);
-
   CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
   CRGBA lc = lineStyle().calcColor(c);
@@ -714,9 +709,9 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
     if (! point.getY(y))
       y = 0.0;
 
-    double x = drawData.x2 + i*drawData.d;
+    double xl = drawData.x2 + drawData.i*drawData.w + i*drawData.d;
 
-    CBBox2D bbox(x + xb, drawData.y2, x + drawData.w - xb, y);
+    CBBox2D bbox(xl + drawData.xb, drawData.y2, xl + drawData.w - drawData.xb, y);
 
     if (! renderer->isPseudo()) {
       CGnuPlotBarObject *bar = barObjects()[i];
@@ -749,11 +744,6 @@ void
 CGnuPlotPlot::
 drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &drawData)
 {
-  double xb = 0;
-
-  if (! renderer->isPseudo())
-    xb = renderer->pixelWidthToWindowWidth(2);
-
   CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
   CRGBA lc = lineStyle().calcColor(c);
@@ -786,12 +776,12 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
       yh = reals[2];
     }
 
-    double x = drawData.x2 + i*drawData.d;
+    double xl = drawData.x2 + drawData.i*drawData.w + i*drawData.d;
 
-    double xl = x + xb;
-    double xh = x + drawData.w - xb;
+    double xlb = xl + drawData.xb;
+    double xrb = xl + drawData.w - drawData.xb;
 
-    CBBox2D bbox(xl, drawData.y2, xh, y);
+    CBBox2D bbox(xlb, drawData.y2, xrb, y);
 
     if (! renderer->isPseudo()) {
       CGnuPlotBarObject *bar = barObjects()[i];
@@ -813,11 +803,11 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
     else
       renderer->drawRect(bbox, lc, 1);
 
-    double xm = x + drawData.w/2;
+    double xm = (xlb + + xrb)/2;
 
-    renderer->drawClipLine(CPoint2D(xm, yl), CPoint2D(xm, yh), 1.0, lc);
-    renderer->drawClipLine(CPoint2D(xl, yl), CPoint2D(xh, yl), 1.0, lc);
-    renderer->drawClipLine(CPoint2D(xl, yh), CPoint2D(xh, yh), 1.0, lc);
+    renderer->drawClipLine(CPoint2D(xm , yl), CPoint2D(xm , yh), 1.0, lc);
+    renderer->drawClipLine(CPoint2D(xlb, yl), CPoint2D(xrb, yl), 1.0, lc);
+    renderer->drawClipLine(CPoint2D(xlb, yh), CPoint2D(xrb, yh), 1.0, lc);
 
     ++i;
   }

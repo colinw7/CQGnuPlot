@@ -143,6 +143,14 @@ calcTics(double start, double end, double &start1, double &end1, int &numTicks1,
 
 bool
 CGnuPlotAxis::
+calcTics(double start, double end, double inc, double &start1, double &end1,
+         int &numTicks1, int &numTicks2)
+{
+  return calcTics(start, end, 0, inc, start1, end1, numTicks1, numTicks2);
+}
+
+bool
+CGnuPlotAxis::
 calcTics(double start, double end, int tickIncrement, double majorIncrement,
          double &start1, double &end1, int &numTicks1, int &numTicks2)
 {
@@ -231,8 +239,8 @@ calcTics(double start, double end, int tickIncrement, double majorIncrement,
     numTicks2 = numGapTicks;
   }
   else {
-    start1    = start;
-    end1      = end;
+    start1    = CMathGen::RoundDown(start/majorIncrement)*majorIncrement;
+    end1      = CMathGen::RoundUp  (end  /majorIncrement)*majorIncrement;
     numTicks1 = CMathGen::RoundDown((end1 - start1)/majorIncrement + 0.5);
     numTicks2 = 5;
   }
@@ -391,14 +399,16 @@ getMinorIncrement() const
 
 bool
 CGnuPlotAxis::
-hasTicLabels() const
+hasTicLabels(bool first) const
 {
+  if (! first) return false;
+
   return group_->hasTicLabels(id_);
 }
 
 const CGnuPlotAxisData::RTicLabels &
 CGnuPlotAxis::
-getTicLabels() const
+getTicLabels(bool /*first*/) const
 {
   return group_->ticLabels(id_);
 }
@@ -484,7 +494,7 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
       // Create Tick Label (Override with application supplied string if required)
 
-      if (! hasTicLabels()) {
+      if (! hasTicLabels(first)) {
         str = getValueStr(i, pos1);
 
         maxW = std::max(maxW, font->getStringWidth(str));
@@ -546,7 +556,7 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
     // Create Tick Label (Override with application supplied string if required)
 
-    if (! hasTicLabels()) {
+    if (! hasTicLabels(first)) {
       str = getValueStr(getNumMajorTicks(), pos1);
 
       maxW = std::max(maxW, font->getStringWidth(str));
@@ -564,8 +574,8 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
   // Draw Custom Tic Labels
 
-  if (hasTicLabels()) {
-    const CGnuPlotAxisData::RTicLabels &ticLabels = getTicLabels();
+  if (hasTicLabels(first)) {
+    const CGnuPlotAxisData::RTicLabels &ticLabels = getTicLabels(first);
 
     for (const auto &label : ticLabels) {
       double      r = label.first;
@@ -573,7 +583,8 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
       maxW = std::max(maxW, font->getStringWidth(s));
 
-      drawTickLabel(r, s, first);
+      if (isDrawTickLabel(first))
+        drawTickLabel(r, s, first);
     }
   }
 

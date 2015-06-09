@@ -32,7 +32,7 @@ class CGnuPlotGroup {
   int ind() const { return ind_; }
   void setInd(int ind) { ind_ = ind; }
 
-  void set3D(bool b) { is3D_ = b; }
+  void set3D(bool b);
   bool is3D() const { return is3D_; }
 
   CGnuPlotTitle *title() const { return title_; }
@@ -211,9 +211,9 @@ class CGnuPlotGroup {
 
   //---
 
-  void normalizeXRange(double &xmin, double &xmax) const;
-  void normalizeYRange(double &ymin, double &ymax) const;
-  void normalizeZRange(double &zmin, double &zmax) const;
+  void normalizeXRange(double &xmin, double &xmax, double xi=0) const;
+  void normalizeYRange(double &ymin, double &ymax, double yi=0) const;
+  void normalizeZRange(double &zmin, double &zmax, double zi=0) const;
 
   CBBox2D getClip(int xind=1, int yind=1) const;
 
@@ -310,8 +310,6 @@ class CGnuPlotGroup {
   void drawRowStackedHistograms   (CGnuPlotRenderer *renderer, const Plots &plots);
   void drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots);
 
-  void calcHistogramRange(const Plots &plots, CBBox2D &bbox) const;
-
   void drawAxes(CGnuPlotRenderer *renderer);
 
   void drawBorder(CGnuPlotRenderer *renderer);
@@ -351,8 +349,7 @@ class CGnuPlotGroup {
 
   void calcRange(int xind, int yind, double &xmin, double &ymin, double &xmax, double &ymax) const;
 
-  CBBox2D getDisplayRange (int xind, int yind) const;
-  CBBox2D calcDisplayRange(int xind, int yind) const;
+  CBBox2D getDisplayRange(int xind, int yind) const;
 
   //-----
 

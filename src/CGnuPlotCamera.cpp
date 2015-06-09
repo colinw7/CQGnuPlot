@@ -91,7 +91,11 @@ transform(const CPoint3D &p) const
   // remap back to x/y axis
   double x2 = CGnuPlotUtil::map(p3.x, -1, 1, xaxis.min().getValue(), xaxis.max().getValue());
   double y2 = CGnuPlotUtil::map(p3.y, -1, 1, yaxis.min().getValue(), yaxis.max().getValue());
-  double z2 = CGnuPlotUtil::map(p3.z, -1, 1, zaxis.min().getValue(), zaxis.max().getValue());
+
+  double z2 = 0.0;
+
+  if (zaxis.min().isValid() && zaxis.max().isValid())
+    z2 = CGnuPlotUtil::map(p3.z, -1, 1, zaxis.min().getValue(), zaxis.max().getValue());
 
   return CPoint3D(x2, y2, z2);
 }

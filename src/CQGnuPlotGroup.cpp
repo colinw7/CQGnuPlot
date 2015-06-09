@@ -1,5 +1,6 @@
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotWindow.h>
+#include <CQGnuPlotCanvas.h>
 #include <CQGnuPlotDevice.h>
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
@@ -100,6 +101,8 @@ void
 CQGnuPlotGroup::
 mousePress(const QPoint &qp)
 {
+  if (! inside(qp)) return;
+
   CGnuPlotRenderer *renderer = app()->renderer();
 
   renderer->setRegion(region());
@@ -149,6 +152,8 @@ void
 CQGnuPlotGroup::
 mouseMove(const QPoint &qp)
 {
+  if (! inside(qp)) return;
+
   CGnuPlotRenderer *renderer = app()->renderer();
 
   renderer->setRegion(region());
@@ -174,12 +179,15 @@ void
 CQGnuPlotGroup::
 mouseRelease(const QPoint &)
 {
+  //if (! inside(qp)) return;
 }
 
 bool
 CQGnuPlotGroup::
 mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
 {
+  if (! inside(qp)) return false;
+
   CGnuPlotRenderer *renderer = app()->renderer();
 
   renderer->setRegion(region());
@@ -221,4 +229,16 @@ pixelToWindow(const CPoint2D &p, CPoint2D &w)
   double z = 0;
 
   unmapLogPoint(&w.x, &w.y, &z);
+}
+
+bool
+CQGnuPlotGroup::
+inside(const QPoint &qp) const
+{
+  CQGnuPlotCanvas *canvas = qwindow()->canvas();
+
+  double xr = CGnuPlotUtil::map(qp.x(), 0, canvas->width () - 1, 0, 1);
+  double yr = CGnuPlotUtil::map(qp.y(), 0, canvas->height() - 1, 1, 0);
+
+  return region().inside(CPoint2D(xr, yr));
 }

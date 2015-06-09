@@ -50,7 +50,7 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
 
   void paint(QPainter *p);
 
-  void showPos(double wx, double wy);
+  void showPos(const QString &name, double wx, double wy);
 
   QColor backgroundColor() const;
   void setBackgroundColor(const QColor &c);

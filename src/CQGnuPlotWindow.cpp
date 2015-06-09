@@ -222,7 +222,7 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
   statusBar()->addPermanentWidget(posLabel_ );
   statusBar()->addPermanentWidget(plotLabel_);
 
-  showPos(0, 0);
+  showPos("", 0, 0);
 
   //---
 
@@ -302,7 +302,7 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(groupName, qgroup, "ind" );
   tree_->addProperty(groupName, qgroup, "is3D");
 
-  if (is3D()) {
+  if (group->is3D()) {
     CQGnuPlotCamera *qcamera = static_cast<CQGnuPlotCamera *>(group->camera());
 
     QString cameraName = groupName + "/camera";
@@ -886,17 +886,11 @@ CQGnuPlotGroup *
 CQGnuPlotWindow::
 getGroupAt(const QPoint &pos)
 {
-  double wx, wy;
-
-  pixelToWindow(pos.x(), pos.y(), &wx, &wy);
-
   for (auto group : groups()) {
-    if (group->region().inside(CPoint2D(wx, wy))) {
-      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-      if (qgroup)
-        return qgroup;
-    }
+    if (qgroup->inside(pos))
+      return qgroup;
   }
 
   return 0;
@@ -1121,7 +1115,7 @@ paint(QPainter *p)
 
 void
 CQGnuPlotWindow::
-showPos(double wx, double wy)
+showPos(const QString &name, double wx, double wy)
 {
   std::string xstr, ystr;
 
@@ -1137,7 +1131,10 @@ showPos(double wx, double wy)
     ystr = CStrUtil::toString(wy);
   }
 
-  posLabel_->setText(QString("%1 %2").arg(xstr.c_str()).arg(ystr.c_str()));
+  if (name != "")
+    posLabel_->setText(QString("%1: %2 %3").arg(name).arg(xstr.c_str()).arg(ystr.c_str()));
+  else
+    posLabel_->setText(QString("%1 %2").arg(xstr.c_str()).arg(ystr.c_str()));
 }
 
 // mouse mode (unused ?)

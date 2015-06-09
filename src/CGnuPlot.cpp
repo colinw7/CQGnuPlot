@@ -1618,6 +1618,8 @@ plotCmd(const std::string &args)
 
   //---
 
+  clearTicLabels();
+
   CGnuPlotGroup *group = createGroup(window.get());
 
   group->set3D(false);
@@ -3033,25 +3035,29 @@ decodeRange(const StringArray &fields, CGnuPlotAxisData &axis)
       std::cerr << "Range=(" << min.getValue(-1) << "," <<
                                 max.getValue( 1) << ")" << std::endl;
 
-    if (values[0].second) axis.setMin(min);
-    if (values[1].second) axis.setMax(max);
-
     if (min.isValid() && max.isValid()) {
       if (min.getValue() > max.getValue()) {
         axis.setReverse(true);
 
-        axis.setMin(max);
-        axis.setMax(min);
+        axis.setMin(max.getValue());
+        axis.setMax(min.getValue());
       }
       else {
-        axis.setMin(min);
-        axis.setMax(max);
+        axis.setMin(min.getValue());
+        axis.setMax(max.getValue());
       }
     }
-    else if (min.isValid())
-      axis.setMin(min);
-    else if (max.isValid())
-      axis.setMax(max);
+    else {
+      if      (min.isValid())
+        axis.setMin(min.getValue());
+      else if (values[0].second)
+        axis.resetMin();
+
+      if      (max.isValid())
+        axis.setMax(max.getValue());
+      else if (values[1].second)
+        axis.resetMax();
+    }
   }
   else if (values.size() == 1) {
     COptReal &min = values[0].first;
@@ -3059,10 +3065,11 @@ decodeRange(const StringArray &fields, CGnuPlotAxisData &axis)
     if (isDebug())
       std::cerr << "Range=(" << min.getValue(-1) << ",*)" << std::endl;
 
-    if (values[0].second) axis.setMin(min);
+    if      (min.isValid())
+      axis.setMin(min.getValue());
+    else if (values[0].second)
+      axis.resetMin();
 
-    if (min.isValid())
-      axis.setMin(min);
   }
   else
     return false;
@@ -3238,6 +3245,8 @@ splotCmd(const std::string &args)
   splitPlotCmd(args, cmds, true);
 
   //---
+
+  clearTicLabels();
 
   CGnuPlotGroup *group = createGroup(window.get());
 
@@ -5683,7 +5692,8 @@ setCmd(const std::string &args)
       else if (arg == "font") {
         CFontPtr font;
 
-        (void) parseFont(line, font);
+        if (parseFont(line, font))
+          multiplot_.setTitleFont(font);
       }
       else if (arg == "enhanced" || arg == "noenhanced") {
         multiplot_.setEnhanced(arg == "enhanced");
@@ -5701,21 +5711,39 @@ setCmd(const std::string &args)
 
         multiplot_.setAutoFit(false);
       }
-      else if (arg == "rowsfirst") {
+      else if (arg == "rowsfirst" || arg == "rows") {
+        multiplot_.setRowsFirst(true);
       }
-      else if (arg == "columnsfirst") {
+      else if (arg == "columnsfirst" || arg == "columns") {
+        multiplot_.setRowsFirst(false);
       }
-      else if (arg == "downwards") {
+      else if (arg == "downwards" || arg == "down") {
+        multiplot_.setDownward(true);
       }
-      else if (arg == "upwards") {
+      else if (arg == "upwards" || arg == "up") {
+        multiplot_.setDownward(false);
       }
       else if (arg == "scale") {
-        std::string xStr = readNonSpaceNonComma(line);
-        std::string yStr = readNonSpace(line);
+        double r;
+
+        if (parseReal(line, r))
+          multiplot_.setXScale(r);
+
+        if (line.skipSpaceAndChar(',')) {
+          if (parseReal(line, r))
+            multiplot_.setYScale(r);
+        }
       }
       else if (arg == "offset") {
-        std::string xStr = readNonSpaceNonComma(line);
-        std::string yStr = readNonSpace(line);
+        double r;
+
+        if (parseReal(line, r))
+          multiplot_.setXOffset(r);
+
+        if (line.skipSpaceAndChar(',')) {
+          if (parseReal(line, r))
+            multiplot_.setYOffset(r);
+        }
       }
       else {
         errorMsg("Invalid arg '" + arg + "'");
@@ -8403,11 +8431,11 @@ showCmd(const std::string &args)
   }
   // show tics
   else if (var == VariableName::TICS) {
-    xaxis(1).showMinorTics(std::cout, "xtics", "xtic");
+    xaxis(1).showMinorTics(std::cout, "xtics" , "xtic");
     xaxis(2).showMinorTics(std::cout, "x2tics", "xtic");
-    yaxis(1).showMinorTics(std::cout, "ytics", "ytic");
+    yaxis(1).showMinorTics(std::cout, "ytics" , "ytic");
     yaxis(2).showMinorTics(std::cout, "y2tics", "ytic");
-    zaxis(1).showMinorTics(std::cout, "ztics", "ztic");
+    zaxis(1).showMinorTics(std::cout, "ztics" , "ztic");
 
     colorBox().axis().showMinorTics(std::cout, "cbtics", "cbtic");
   }
@@ -8847,7 +8875,7 @@ resetCmd(const std::string &args)
 
   raxis().reset();
   uaxis().reset();
-  uaxis().reset();
+  vaxis().reset();
 
   axesData_.border.sides = 0xFF;
 
@@ -9956,6 +9984,17 @@ arrowStyle(int id) const
     return arrowStyle_;
 
   return (*p).second;
+}
+
+void
+CGnuPlot::
+clearTicLabels()
+{
+  xaxis(1).clearTicLabels();
+  xaxis(2).clearTicLabels();
+  yaxis(1).clearTicLabels();
+  yaxis(2).clearTicLabels();
+  zaxis(1).clearTicLabels();
 }
 
 void

@@ -29,3 +29,9 @@
  + zoom support in 3d mode
  + add svg buttons to toolbar
  + add slider edit for camera angle
+
+### 6/8/2015
+ + Display group name with x/y pos
+ + only select group items if inside group region
+ + improve bar chart range and tic labels
+ + support multiplot rows/cols first and downward/upward

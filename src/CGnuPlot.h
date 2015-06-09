@@ -1076,6 +1076,8 @@ class CGnuPlot {
 
   CGnuPlotArrowStyle arrowStyle(int id) const;
 
+  void clearTicLabels();
+
   void errorMsg(const std::string &msg) const;
   void debugMsg(const std::string &msg) const;
 

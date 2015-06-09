@@ -20,30 +20,67 @@ class CGnuPlotMultiplot {
   int cols() const { return cols_; }
   void setCols(int i) { cols_ = i; }
 
-  double dx() const { return (cols_ > 0 ? 1.0/cols_ : 1.0); }
-  double dy() const { return (rows_ > 0 ? 1.0/rows_ : 1.0); }
+  bool isRowsFirst() const { return rowsFirst_; }
+  void setRowsFirst(bool b) { rowsFirst_ = b; }
 
-  CIPoint2D pos(int n) {
-    int x = 0, y = 0;
+  bool isDownward() const { return downward_; }
+  void setDownward(bool b) { downward_ = b; }
 
-    if (cols_ > 0 && rows_ > 0) {
-      x = n % cols_;
-      y = n / cols_;
-    }
+  double xScale() const { return xscale_; }
+  void setXScale(double r) { xscale_ = r; }
 
-    return CIPoint2D(x, y);
-  }
+  double yScale() const { return yscale_; }
+  void setYScale(double r) { yscale_ = r; }
+
+  double xOffset() const { return xoffset_; }
+  void setXOffset(double r) { xoffset_ = r; }
+
+  double yOffset() const { return yoffset_; }
+  void setYOffset(double r) { yoffset_ = r; }
 
   const std::string &title() const { return title_; }
   void setTitle(const std::string &title) { title_ = title; }
 
+  const CFontPtr &titleFont() const { return titleFont_; }
+  void setTitleFont(const CFontPtr &f) { titleFont_ = f; }
+
+  double dx() const { return (cols_ > 0 ? 1.0/cols_ : 1.0); }
+  double dy() const { return (rows_ > 0 ? 1.0/rows_ : 1.0); }
+
+  CIPoint2D pos(int n) {
+    int r = 0, c = 0;
+
+    if (cols_ > 0 && rows_ > 0) {
+      if (rowsFirst_) {
+        r = n % rows_;
+        c = n / rows_;
+      }
+      else {
+        c = n % cols_;
+        r = n / cols_;
+      }
+    }
+
+    if (downward_)
+      r = rows_ - 1 - r;
+
+    return CIPoint2D(c, r);
+  }
+
  private:
-  bool        enabled_  { false };
-  bool        autoFit_  { true };
-  bool        enhanced_ { false };
-  int         rows_     { 0 };
-  int         cols_     { 0 };
+  bool        enabled_   { false };
+  bool        autoFit_   { true };
+  bool        enhanced_  { false };
+  int         rows_      { 0 };
+  int         cols_      { 0 };
+  bool        rowsFirst_ { true };
+  bool        downward_  { true };
+  double      xscale_    { 1.0 };
+  double      yscale_    { 1.0 };
+  double      xoffset_   { 0.0 };
+  double      yoffset_   { 0.0 };
   std::string title_;
+  CFontPtr    titleFont_;
 };
 
 #endif

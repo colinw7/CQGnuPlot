@@ -86,13 +86,11 @@ class CGnuPlotAxisData {
 
   const COptReal &min() const { return min_; }
   void setMin(double r) { min_ = r; }
-  void setMin(const COptReal &r) { min_ = r; }
   void updateMin(double r) { min_.updateMin(r); }
   void resetMin() { min_.setInvalid(); }
 
   const COptReal &max() const { return max_; }
   void setMax(double r) { max_ = r; }
-  void setMax(const COptReal &r) { max_ = r; }
   void updateMax(double r) { max_.updateMax(r); }
   void resetMax() { max_.setInvalid(); }
 

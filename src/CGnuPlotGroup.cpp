@@ -100,6 +100,13 @@ init()
 
 void
 CGnuPlotGroup::
+set3D(bool b)
+{
+  is3D_ = b;
+}
+
+void
+CGnuPlotGroup::
 cameraChanged()
 {
   for (auto plot : plots_)
@@ -183,6 +190,8 @@ fit()
   COptReal ymin1, ymax1, ymin2, ymax2;
   COptReal zmin1, zmax1;
 
+  double dx = 0.0, dy = 0.0, dz = 0.0;
+
   if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
     Plots plots;
 
@@ -194,20 +203,31 @@ fit()
 
     CGnuPlotPlot::DrawHistogramData drawData;
 
-    drawData.d = plots.size();
+    drawData.i  = 0;
+    drawData.np = plots.size();
+    drawData.xb = 0;
+
+    drawData.w = 1.0/std::max(drawData.np, 1);
+    drawData.d = 1.0;
+
+    drawData.x2 = -drawData.np*drawData.w/2.0;
 
     if      (hstyle == HistogramStyle::CLUSTERED) {
       for (auto plot : plots) {
         plot->drawClusteredHistogram(&brenderer, drawData);
 
-        drawData.x2 += 1.0;
+        drawData.x2 += drawData.w;
+
+        ++drawData.i;
       }
     }
     else if (hstyle == HistogramStyle::ERRORBARS) {
       for (auto plot : plots) {
         plot->drawErrorBarsHistogram(&brenderer, drawData);
 
-        drawData.x2 += 1.0;
+        drawData.x2 += drawData.w;
+
+        ++drawData.i;
       }
     }
     else if (hstyle == HistogramStyle::ROWSTACKED) {
@@ -221,6 +241,8 @@ fit()
     ymin1.updateMin(brenderer.bbox().getBottom());
     xmax1.updateMax(brenderer.bbox().getRight ());
     ymax1.updateMax(brenderer.bbox().getTop   ());
+
+    dx = 1.0;
   }
   else if (singlePlot) {
     CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->getStyle());
@@ -363,7 +385,7 @@ fit()
     double xmax = xmax1.getValue();
 
     if (! xaxis(1).isAutoScaleFixMin())
-      normalizeXRange(xmin, xmax);
+      normalizeXRange(xmin, xmax, dx);
 
     xaxis(1).setMin(xmin);
     xaxis(1).setMax(xmax);
@@ -374,7 +396,7 @@ fit()
     double ymax = ymax1.getValue();
 
     if (! yaxis(1).isAutoScaleFixMin())
-      normalizeYRange(ymin, ymax);
+      normalizeYRange(ymin, ymax, dy);
 
     yaxis(1).setMin(ymin);
     yaxis(1).setMax(ymax);
@@ -386,7 +408,7 @@ fit()
       double zmax = zmax1.getValue();
 
       if (! zaxis(1).isAutoScaleFixMin())
-        normalizeZRange(zmin, zmax);
+        normalizeZRange(zmin, zmax, dz);
 
       zaxis(1).setMin(zmin);
       zaxis(1).setMax(zmax);
@@ -400,7 +422,7 @@ fit()
     double xmax = xmax2.getValue();
 
     if (! xaxis(2).isAutoScaleFixMin())
-      normalizeXRange(xmin, xmax);
+      normalizeXRange(xmin, xmax, dx);
 
     xaxis(2).setMin(xmin);
     xaxis(2).setMax(xmax);
@@ -411,7 +433,7 @@ fit()
     double ymax = ymax2.getValue();
 
     if (! yaxis(2).isAutoScaleFixMin())
-      normalizeYRange(ymin, ymax);
+      normalizeYRange(ymin, ymax, dy);
 
     yaxis(2).setMin(ymin);
     yaxis(2).setMax(ymax);
@@ -525,12 +547,12 @@ setCameraFar(double z)
 
 void
 CGnuPlotGroup::
-normalizeXRange(double &xmin, double &xmax) const
+normalizeXRange(double &xmin, double &xmax, double xi) const
 {
   double xmin1, xmax1;
   int    numTicks1, numTicks2;
 
-  (void) CGnuPlotAxis::calcTics(xmin, xmax, xmin1, xmax1, numTicks1, numTicks2);
+  (void) CGnuPlotAxis::calcTics(xmin, xmax, xi, xmin1, xmax1, numTicks1, numTicks2);
 
   xmin = xmin1;
   xmax = xmax1;
@@ -538,12 +560,12 @@ normalizeXRange(double &xmin, double &xmax) const
 
 void
 CGnuPlotGroup::
-normalizeYRange(double &ymin, double &ymax) const
+normalizeYRange(double &ymin, double &ymax, double yi) const
 {
   double ymin1, ymax1;
   int    numTicks1, numTicks2;
 
-  (void) CGnuPlotAxis::calcTics(ymin, ymax, ymin1, ymax1, numTicks1, numTicks2);
+  (void) CGnuPlotAxis::calcTics(ymin, ymax, yi, ymin1, ymax1, numTicks1, numTicks2);
 
   ymin = ymin1;
   ymax = ymax1;
@@ -551,12 +573,12 @@ normalizeYRange(double &ymin, double &ymax) const
 
 void
 CGnuPlotGroup::
-normalizeZRange(double &zmin, double &zmax) const
+normalizeZRange(double &zmin, double &zmax, double zi) const
 {
   double zmin1, zmax1;
   int    numTicks1, numTicks2;
 
-  (void) CGnuPlotAxis::calcTics(zmin, zmax, zmin1, zmax1, numTicks1, numTicks2);
+  (void) CGnuPlotAxis::calcTics(zmin, zmax, zi, zmin1, zmax1, numTicks1, numTicks2);
 
   zmin = zmin1;
   zmax = zmax1;
@@ -941,9 +963,15 @@ drawHistogram(const Plots &plots)
 
   CGnuPlotPlot::DrawHistogramData drawData;
 
+  drawData.i  = 0;
+  drawData.np = plots.size();
+  drawData.xb = renderer->pixelWidthToWindowWidth(2);
+
+  drawData.w = 1.0/std::max(drawData.np, 1); // TODO: bbox width
+  drawData.d = 1.0;
+
+  drawData.x2 = -drawData.np*drawData.w/2.0;
   drawData.y2 = std::max(0.0, bbox.getBottom());
-  drawData.w  = 1.0; // TODO: bbox width
-  drawData.d  = plots.size();
 
   if      (hstyle == HistogramStyle::CLUSTERED) {
     renderer->setReverse(xaxis(1).isReverse(), yaxis(1).isReverse());
@@ -951,7 +979,7 @@ drawHistogram(const Plots &plots)
     for (auto plot : plots) {
       plot->drawClusteredHistogram(renderer, drawData);
 
-      drawData.x2 += 1.0;
+      ++drawData.i;
     }
   }
   else if (hstyle == HistogramStyle::ERRORBARS) {
@@ -960,7 +988,7 @@ drawHistogram(const Plots &plots)
     for (auto plot : plots) {
       plot->drawErrorBarsHistogram(renderer, drawData);
 
-      drawData.x2 += 1.0;
+      ++drawData.i;
     }
   }
   else if (hstyle == HistogramStyle::ROWSTACKED) {
@@ -1081,6 +1109,7 @@ drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
     plot->drawBars(renderer);
 }
 
+#if 0
 void
 CGnuPlotGroup::
 calcHistogramRange(const Plots &plots, CBBox2D &bbox) const
@@ -1183,6 +1212,7 @@ calcHistogramRange(const Plots &plots, CBBox2D &bbox) const
 
   bbox = CBBox2D(xmin, ymin, xmax, ymax);
 }
+#endif
 
 void
 CGnuPlotGroup::
@@ -1995,6 +2025,7 @@ getDisplayRange(int xind, int yind) const
   return CBBox2D(xmin, ymin, xmax, ymax);
 }
 
+#if 0
 CBBox2D
 CGnuPlotGroup::
 calcDisplayRange(int xind, int yind) const
@@ -2028,6 +2059,7 @@ calcDisplayRange(int xind, int yind) const
 
   return bbox;
 }
+#endif
 
 bool
 CGnuPlotGroup::

@@ -178,9 +178,9 @@ class CGnuPlotAxis {
 
   void setRange(double start, double end);
 
-  bool hasTicLabels() const;
+  bool hasTicLabels(bool first) const;
 
-  const CGnuPlotAxisData::RTicLabels &getTicLabels() const;
+  const CGnuPlotAxisData::RTicLabels &getTicLabels(bool first) const;
 
   std::string getValueStr(int i, double pos) const;
 
@@ -192,6 +192,8 @@ class CGnuPlotAxis {
   const CBBox2D &getBBox() const { return bbox_; }
 
   static bool calcTics(double start, double end, double &start1, double &end1,
+                       int &numTicks1, int &numTicks2);
+  static bool calcTics(double start, double end, double inc, double &start1, double &end1,
                        int &numTicks1, int &numTicks2);
 
  private:

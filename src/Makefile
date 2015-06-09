@@ -9897,6 +9897,8 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qtouchdevice.h \
 		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		/usr/include/qt5/QtGui/qicon.h \
+		CQGnuPlotCanvas.h \
+		/usr/include/qt5/QtWidgets/QWidget \
 		CQGnuPlotDevice.h \
 		CGnuPlotDevice.h \
 		CQGnuPlotRenderer.h \

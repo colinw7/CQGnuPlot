@@ -312,11 +312,11 @@ class CGnuPlotPlot {
 
   //---
 
-  const Points2D &getPoints2D() const { assert(! is3D()); return points2D_; }
+  const Points2D &getPoints2D() const { return points2D_; }
 
-  uint numPoints2D() const { assert(! is3D()); return points2D_.size(); }
+  uint numPoints2D() const { return points2D_.size(); }
 
-  const CGnuPlotPoint &getPoint2D(int i) const { assert(! is3D()); return points2D_[i]; }
+  const CGnuPlotPoint &getPoint2D(int i) const { return points2D_[i]; }
 
   void setPoint2DLabel(int i, std::string &str) { points2D_[i].setLabel(str); }
 
@@ -427,10 +427,13 @@ class CGnuPlotPlot {
   //---
 
   struct DrawHistogramData {
-    double x2 { 0.5 };
-    double y2 { 0.0 };
-    double d  { 1.0 };
-    double w  { 1.0 };
+    double x2 { 0.0 }; // start x
+    double y2 { 0.0 }; // start y
+    double d  { 1.0 }; // delta
+    double w  { 1.0 }; // width
+    int    np { 1 };   // num plots
+    int    i  { 1 };   // plot index
+    double xb { 1.0 }; // border
   };
 
   //---

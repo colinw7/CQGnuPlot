@@ -54,11 +54,14 @@ void
 CQGnuPlotCanvas::
 mouseMoveEvent(QMouseEvent *e)
 {
+  CQGnuPlotGroup *group = window_->getGroupAt(e->pos());
+
+  QString groupName = (group ? QString("Group%1").arg(group->id()) : QString(""));
+
   CPoint2D p;
 
-  if (pixelToWindow(CPoint2D(e->pos().x(), e->pos().y()), p)) {
-    window_->showPos(p.x, p.y);
-  }
+  if (pixelToWindow(CPoint2D(e->pos().x(), e->pos().y()), p))
+    window_->showPos(groupName, p.x, p.y);
 
   window_->mouseMove(e->pos(), pressed_);
 }

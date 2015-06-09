@@ -85,6 +85,8 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
 
   void pixelToWindow(const CPoint2D &p, CPoint2D &w);
 
+  bool inside(const QPoint &qp) const;
+
  private:
   CQGnuPlotWindow *window_;
 };
