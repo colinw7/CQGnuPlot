@@ -1,6 +1,7 @@
 #include <CGnuPlotStyleLinesPoints.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
+#include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
 
 CGnuPlotStyleLinesPoints::
@@ -18,6 +19,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   bool isCalcColor = lineStyle.color().isCalc();
 
   CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+
+  CRGBA bg = plot->group()->window()->backgroundColor();
+
+  int pi = lineStyle.pointInterval();
+
+  bool erasePoint = (pi < 0);
+
+  int pi1 = abs(pi);
 
   //------
 
@@ -113,7 +122,21 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       c1 = lineStyle.color().calcColor(plot, x);
     }
 
-    renderer->drawSymbol(p, plot->pointType(), size1, c1);
+    if (pi1 == 0) {
+      if (erasePoint) {
+        double pw = renderer->pixelWidthToWindowWidth  (size1);
+        double ph = renderer->pixelHeightToWindowHeight(size1);
+
+        renderer->fillRect(CBBox2D(p - CPoint2D(pw/2, ph/2), p + CPoint2D(pw/2, ph/2)), bg);
+      }
+
+      renderer->drawSymbol(p, plot->pointType(), size1, c1);
+
+      pi1 = abs(pi);
+    }
+
+    if (pi1 > 0)
+      --pi1;
   }
 }
 

@@ -171,7 +171,9 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 {
   const CGnuPlotLineStyle &lineStyle= plot->lineStyle();
 
-  renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)));
+  CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+
+  renderer->drawLine(p1, p2, lineStyle.width(), c, lineStyle.dash());
 }
 
 CBBox2D

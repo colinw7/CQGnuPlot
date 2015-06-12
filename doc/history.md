@@ -35,3 +35,9 @@
  + only select group items if inside group region
  + improve bar chart range and tic labels
  + support multiplot rows/cols first and downward/upward
+
+### 6/11/2015
+ + improve parsing of multiple functions and variables on plot line
+ + support default dash types
+ + support point interval in linespoints
+ + set plot title for binary data

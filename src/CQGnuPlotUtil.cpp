@@ -6,6 +6,7 @@ namespace Conv {
 typedef CEnumConv<CGnuPlotTypes::SymbolType, CQGnuPlot::SymbolType> SymbolConv;
 
 SymbolConv symbolConv({
+  { CGnuPlotTypes::SymbolType::NONE               , CQGnuPlot::SymbolNone            },
   { CGnuPlotTypes::SymbolType::POINT              , CQGnuPlot::SymbolPoint           },
   { CGnuPlotTypes::SymbolType::PLUS               , CQGnuPlot::SymbolPlus            },
   { CGnuPlotTypes::SymbolType::CROSS              , CQGnuPlot::SymbolCross           },

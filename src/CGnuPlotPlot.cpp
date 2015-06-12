@@ -124,6 +124,33 @@ setContourLevels(int n)
   contourSet_ = false;
 }
 
+std::pair<int,int>
+CGnuPlotPlot::
+numPoints3D() const
+{
+  assert(is3D());
+
+  if (points3D_.empty()) return std::pair<int,int>(0,0);
+
+  return std::pair<int,int>(points3D_.begin()->second.size(), points3D_.size());
+}
+
+const CGnuPlotPoint &
+CGnuPlotPlot::
+getPoint3D(int ix, int iy) const
+{
+  assert(is3D());
+
+  auto p = points3D_.find(iy);
+
+  if (p == points3D_.end())
+    assert(false);
+
+  assert(ix >= 0 && ix < int((*p).second.size()));
+
+  return (*p).second[ix];
+}
+
 void
 CGnuPlotPlot::
 clearPoints()
@@ -460,9 +487,22 @@ bool
 CGnuPlotPlot::
 isSurfaceData() const
 {
-  std::pair<int,int> np = numPoints3D();
+  int nx = points3D_.size();
 
-  return (np.first >= 2 && np.second >= 2);
+  if (nx <= 1) return false;
+
+  int ny = -1;
+
+  for (const auto &p : points3D_) {
+    int ny1 = p.second.size();
+
+    if      (ny < 0)
+      ny = ny1;
+    else if (ny1 != ny)
+      return false;
+  }
+
+  return true;
 }
 
 void

@@ -24,6 +24,15 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
     angle_  = label->angle_;
     offset_ = label->offset_;
 
+    enhanced_  = label->enhanced_;
+    showPoint_ = label->showPoint_;
+    textColor_ = label->textColor_;
+    lineType_  = label->lineType_;
+    pointType_ = label->pointType_;
+    pointSize_ = label->pointSize_;
+    box_       = label->box_;
+    hypertext_ = label->hypertext_;
+
     return this;
   }
 

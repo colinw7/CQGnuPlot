@@ -144,7 +144,7 @@ draw(CGnuPlotRenderer *renderer)
 
       // draw key line
       if      (l.color().isValid()) {
-        renderer->drawLine(p1, p2, lineStyle.width(), l.color().getValue());
+        renderer->drawLine(p1, p2, lineStyle.width(), l.color().getValue(), lineStyle.dash());
       }
       else if (style && style->hasKeyLine()) {
         style->drawKeyLine(plot, renderer, p1, p2);
@@ -163,7 +163,9 @@ draw(CGnuPlotRenderer *renderer)
         renderer->drawRect(hbbox, lineStyle.calcColor(CRGBA(0,0,0)), 1);
       }
       else {
-        renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)));
+        CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+
+        renderer->drawLine(p1, p2, lineStyle.width(), c, lineStyle.dash());
       }
 
       // draw key text

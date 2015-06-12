@@ -40,6 +40,7 @@ class CQGnuPlot : public QObject, public CGnuPlot {
   };
 
   enum SymbolType {
+    SymbolNone,
     SymbolPoint,
     SymbolPlus,
     SymbolCross,

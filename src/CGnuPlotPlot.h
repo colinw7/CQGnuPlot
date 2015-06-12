@@ -324,24 +324,9 @@ class CGnuPlotPlot {
 
   const Points3D &getPoints3D() const { assert(is3D()); return points3D_; }
 
-  std::pair<int,int> numPoints3D() const {
-    assert(is3D());
+  std::pair<int,int> numPoints3D() const;
 
-    if (points3D_.empty()) return std::pair<int,int>(0,0);
-
-    return std::pair<int,int>(points3D_.begin()->second.size(), points3D_.size());
-  }
-
-  const CGnuPlotPoint &getPoint3D(int ix, int iy) const {
-    assert(is3D());
-
-    auto p = points3D_.find(iy);
-
-    if (p != points3D_.end())
-      return (*p).second[ix];
-    else
-      assert(false);
-  }
+  const CGnuPlotPoint &getPoint3D(int ix, int iy) const;
 
   //---
 

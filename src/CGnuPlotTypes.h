@@ -407,7 +407,7 @@ namespace CGnuPlotTypes {
   };
 
   enum class SymbolType {
-    NONE,
+    NONE=-1,
     POINT,
     PLUS,
     CROSS,
