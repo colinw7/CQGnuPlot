@@ -19,7 +19,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  bool isCalcColor = lineStyle.color().isCalc();
+  bool isCalcColor = lineStyle.isCalcColor();
 
   typedef std::vector<double>       Reals;
   typedef std::map<int, Reals>      IReals;
@@ -99,9 +99,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CRGBA c;
 
     if (isCalcColor)
-      c = lineStyle.color().calcColor(plot, reals[nr]);
+      c = lineStyle.calcColor(plot, reals[nr]);
     else
-      c = lineStyle.color().calcColor(plot, i);
+      c = lineStyle.calcColor(plot, i);
 
     for (uint j = 1; j < ireals.size(); ++j)
       renderer->drawClipLine(CPoint2D(j, ireals[j - 1]), CPoint2D(j + 1, ireals[j]), 1.0, c);

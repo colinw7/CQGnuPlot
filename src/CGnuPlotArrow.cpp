@@ -14,7 +14,7 @@ getLineColor() const
 
     CGnuPlotLineStyleP lsp = group_->app()->getLineStyleInd(ls);
 
-    return lsp->calcColor(CRGBA(0,0,0));
+    return lsp->calcColor(group_, CRGBA(0,0,0));
   }
   else
     return lineColor_.getValue();
@@ -116,6 +116,8 @@ draw(CGnuPlotRenderer *renderer) const
   if (arrow->isVariable() && arrow->style().varValue().isValid())
     lc = CGnuPlotStyleInst->indexColor(arrow->getVarValue());
 
+  const CLineDash &dash = group()->app()->getLineDash(getDash());
+
   if (arrow->getFHead()) {
     double a1 = a + aa;
     double a2 = a - aa;
@@ -131,8 +133,8 @@ draw(CGnuPlotRenderer *renderer) const
     double xf3 = x2, yf3 = y2;
 
     if (! arrow->getHeadFilled() && ! arrow->getHeadEmpty()) {
-      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf1, yf1), w, lc, getDash());
-      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf2, yf2), w, lc, getDash());
+      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf1, yf1), w, lc, dash);
+      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf2, yf2), w, lc, dash);
     }
     else {
       if (ba > aa && ba < M_PI) {
@@ -175,8 +177,8 @@ draw(CGnuPlotRenderer *renderer) const
     double xt3 = x3, yt3 = y3;
 
     if (! arrow->getHeadFilled() && ! arrow->getHeadEmpty()) {
-      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt1, yt1), w, lc, getDash());
-      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt2, yt2), w, lc, getDash());
+      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt1, yt1), w, lc, dash);
+      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt2, yt2), w, lc, dash);
     }
     else {
       if (ba > aa && ba < M_PI) {
@@ -204,7 +206,7 @@ draw(CGnuPlotRenderer *renderer) const
     }
   }
 
-  renderer->drawLine(CPoint2D(x11, y11), CPoint2D(x41, y41), w, lc, getDash());
+  renderer->drawLine(CPoint2D(x11, y11), CPoint2D(x41, y41), w, lc, dash);
 
   renderer->setMapping(true);
 }

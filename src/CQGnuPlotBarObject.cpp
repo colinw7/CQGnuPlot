@@ -14,7 +14,7 @@ CQGnuPlotBarObject::
 {
 }
 
-CQGnuPlot::FillType
+CQGnuPlotEnum::FillType
 CQGnuPlotBarObject::
 getFillType() const
 {
@@ -23,7 +23,7 @@ getFillType() const
 
 void
 CQGnuPlotBarObject::
-setFillType(const CQGnuPlot::FillType &t)
+setFillType(const CQGnuPlotEnum::FillType &t)
 {
   CGnuPlotTypes::FillType fillType = CQGnuPlotUtil::fillTypeConv(t);
 
@@ -40,7 +40,7 @@ setFillType(const CQGnuPlot::FillType &t)
     CGnuPlotBarObject::setFillType(fillType);
 }
 
-CQGnuPlot::FillPattern
+CQGnuPlotEnum::FillPattern
 CQGnuPlotBarObject::
 getFillPattern() const
 {
@@ -49,7 +49,7 @@ getFillPattern() const
 
 void
 CQGnuPlotBarObject::
-setFillPattern(const CQGnuPlot::FillPattern &p)
+setFillPattern(const CQGnuPlotEnum::FillPattern &p)
 {
   CGnuPlotTypes::FillPattern pattern = CQGnuPlotUtil::fillPatternConv(p);
 

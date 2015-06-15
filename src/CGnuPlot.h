@@ -45,6 +45,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 
 #include <CGnuPlotColorSpec.h>
 #include <CGnuPlotLineStyle.h>
+#include <CGnuPlotLineType.h>
 #include <CGnuPlotFillStyle.h>
 #include <CGnuPlotPointStyle.h>
 #include <CGnuPlotCoordValue.h>
@@ -103,6 +104,7 @@ class CGnuPlot {
 
   typedef std::map<PlotStyle,CGnuPlotStyleBase*> PlotStyles;
   typedef std::map<int,CGnuPlotLineStyleP>       LineStyles;
+  typedef std::map<int,CGnuPlotLineTypeP>        LineTypes;
   typedef std::vector<CExprValueP>               Values;
   typedef std::map<std::string,std::string>      Params;
 
@@ -713,18 +715,31 @@ class CGnuPlot {
   const CGnuPlotFillStyle &fillStyle() const { return fillStyle_; }
   void setFillStyle(const CGnuPlotFillStyle &s) { fillStyle_ = s; }
 
+  //---
+
+  // current line style
   CGnuPlotLineStyleP lineStyle();
   void setLineStyle(CGnuPlotLineStyleP ls) { lineStyle_ = ls; }
 
+  // get indexed line style
   CGnuPlotLineStyleP getLineStyleInd(int ind);
   void setLineStyleInd(int ind);
   void resetLineStyleInd(int ind);
 
-  const CGnuPlotPointStyle &pointStyle() const { return pointStyle_; }
-  void setPointStyle(const CGnuPlotPointStyle &s) { pointStyle_ = s; }
-
   const LineStyles &lineStyles() const { return lineStyles_; }
   CGnuPlotLineStyleP lineStyle(int i) const;
+
+  // get indexed line type
+  CGnuPlotLineTypeP getLineTypeInd(int ind);
+  void resetLineTypeInd(int ind);
+
+  const LineTypes &lineTypes() const { return lineTypes_; }
+  CGnuPlotLineTypeP lineType(int i) const;
+
+  //---
+
+  const CGnuPlotPointStyle &pointStyle() const { return pointStyle_; }
+  void setPointStyle(const CGnuPlotPointStyle &s) { pointStyle_ = s; }
 
   const CGnuPlotHistogramData &histogramData() { return histogramData_; }
   void setHistogramData(const CGnuPlotHistogramData &data) { histogramData_ = data; }
@@ -965,7 +980,8 @@ class CGnuPlot {
 
   CGnuPlotPlot *createPlot(CGnuPlotGroup *group, PlotStyle plotStyle);
 
-  CGnuPlotLineStyle *createLineStyle();
+  CGnuPlotLineStyle *createLineStyle(CGnuPlot *plot);
+  CGnuPlotLineType  *createLineType();
 
   CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
                            CGnuPlotAxis::Direction dir);
@@ -1394,6 +1410,7 @@ class CGnuPlot {
   PlotStyle              functionStyle_  { PlotStyle::LINES };
   StyleIncrement         styleIncrement_;
   LineStyles             lineStyles_;
+  LineTypes              lineTypes_;
   CGnuPlotCircleStyle    circleStyle_;
   CGnuPlotRectStyle      rectStyle_;
   CGnuPlotEllipseStyle   ellipseStyle_;

@@ -41,3 +41,8 @@
  + support default dash types
  + support point interval in linespoints
  + set plot title for binary data
+
+### 6/14/2015
+ + move Qt enums to separate class
+ + improve handling of linetype/linestyle
+ + improve dash support

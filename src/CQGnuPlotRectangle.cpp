@@ -50,7 +50,7 @@ getLineWidth() const
   return CGnuPlotRectangle::getLineWidth().getValue(0);
 }
 
-CQGnuPlot::FillType
+CQGnuPlotEnum::FillType
 CQGnuPlotRectangle::
 fillType() const
 {
@@ -59,7 +59,7 @@ fillType() const
 
 void
 CQGnuPlotRectangle::
-setFillType(const CQGnuPlot::FillType &type)
+setFillType(const CQGnuPlotEnum::FillType &type)
 {
   CGnuPlotFillStyle fs = CGnuPlotRectangle::getFillStyle();
 

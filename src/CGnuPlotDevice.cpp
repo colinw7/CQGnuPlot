@@ -42,9 +42,9 @@ createPlot(CGnuPlotGroup *group, CGnuPlotTypes::PlotStyle plotStyle)
 
 CGnuPlotLineStyle *
 CGnuPlotDevice::
-createLineStyle()
+createLineStyle(CGnuPlot *plot)
 {
-  return new CGnuPlotLineStyle;
+  return new CGnuPlotLineStyle(plot);
 }
 
 CGnuPlotArrow *

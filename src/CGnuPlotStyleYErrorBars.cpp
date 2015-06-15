@@ -14,9 +14,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  bool isCalcColor = lineStyle.color().isCalc();
+  bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   double pw = 0;
 
@@ -46,7 +46,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[4];
 
-        lc1 = lineStyle.color().calcColor(plot, x);
+        lc1 = lineStyle.calcColor(plot, x);
       }
     }
     // x y xdelta
@@ -59,7 +59,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[3];
 
-        lc1 = lineStyle.color().calcColor(plot, x);
+        lc1 = lineStyle.calcColor(plot, x);
       }
     }
 

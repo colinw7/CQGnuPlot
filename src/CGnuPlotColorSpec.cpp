@@ -17,8 +17,26 @@ void
 CGnuPlotColorSpec::
 print(std::ostream &os) const
 {
-  if (isBackground())
-    os << "bgnd";
+  // bgnd: color -3
+  // black: color -1
+  if      (isBackground())
+    os << "bgnd"; // -3
+  else if (isRGB())
+    os << "rgb \"" << c_.getRGB().stringEncode() << "\"";
+  else if (isVariable())
+    os << "variable";
+  else if (isRGBVariable())
+    os << "rgb variable";
+  else if (isPaletteFrac())
+    os << "palette frac";
+  else if (isPaletteCB())
+    os << "palette cb";
+  else if (isPaletteZ())
+    os << "palette z";
+  else if (isPaletteVariable())
+    os << "palette var";
+  else if (isIndex())
+    os << i_;
   else
     os << "rgb \"" << c_.getRGB().stringEncode() << "\"";
 }

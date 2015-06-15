@@ -103,7 +103,7 @@ class CGnuPlotDevice {
 
   virtual CGnuPlotPlot *createPlot(CGnuPlotGroup *group, CGnuPlotTypes::PlotStyle plotStyle);
 
-  virtual CGnuPlotLineStyle *createLineStyle();
+  virtual CGnuPlotLineStyle *createLineStyle(CGnuPlot *plot);
 
   virtual CGnuPlotArrow     *createArrow(CGnuPlotGroup *group);
   virtual CGnuPlotCircle    *createCircle(CGnuPlotGroup *group);

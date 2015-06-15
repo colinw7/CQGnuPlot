@@ -261,18 +261,20 @@ class CGnuPlotPlot {
   int lineStyleId() const { return lineStyle().ind(); }
   void setLineStyleId(int ind);
 
-  const CRGBA &lineColor(const CRGBA &c) const { return lineStyle().calcColor(c); }
-  void setLineColor(const CGnuPlotColorSpec &c) { lineStyle_.setColor(c); }
+  CRGBA lineColor(const CRGBA &c) const { return lineStyle().calcColor(this->group(), c); }
+  void setLineColor(const CGnuPlotColorSpec &c) { lineStyle_.setLineColor(c); }
 
-  double lineWidth() const { return lineStyle().width(); }
-  void setLineWidth(double w) { lineStyle_.setWidth(w); }
+  double lineWidth() const { return lineStyle().calcWidth(); }
+  void setLineWidth(double w) { lineStyle_.setLineWidth(w); }
 
   //---
 
-  SymbolType pointType() const { return lineStyle().pointType(); }
-  void setPointType(SymbolType type) { lineStyle_.setPointType(type); }
+  SymbolType pointType() const { return lineStyle().calcPointType(); }
+  void setPointType(int type) { lineStyle_.setPointType(type); }
 
-  double pointSize() const { return lineStyle().pointSize(); }
+  std::string pointTypeStr() const { return lineStyle().pointTypeStr(); }
+
+  double pointSize() const { return lineStyle().calcPointSize(); }
   void setPointSize(double s) { lineStyle_.setPointSize(s); }
 
   const CGnuPlotPointStyle &pointStyle() const { return pointStyle_; }

@@ -256,12 +256,14 @@ fit()
     int nc = 0;
 
     for (auto plot : plots_) {
+      const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+
       int nc1 = 0;
 
       for (const auto &p : plot->getPoints2D())
         nc1 = std::max(nc, p.getNumValues());
 
-      if (plot->lineStyle().color().isCalc())
+      if (lineStyle.lineColor().isValid() && lineStyle.lineColor().getValue().isCalc())
         --nc1;
 
       nc = std::max(nc, nc1);

@@ -50,7 +50,7 @@ setRatio(double r)
   plotSize_.xratio = r;
 }
 
-CQGnuPlot::HistogramStyle
+CQGnuPlotEnum::HistogramStyle
 CQGnuPlotGroup::
 histogramStyle() const
 {
@@ -61,7 +61,7 @@ histogramStyle() const
 
 void
 CQGnuPlotGroup::
-setHistogramStyle(const CQGnuPlot::HistogramStyle &s)
+setHistogramStyle(const CQGnuPlotEnum::HistogramStyle &s)
 {
   CGnuPlotHistogramData data = CGnuPlotGroup::getHistogramData();
 
@@ -70,7 +70,7 @@ setHistogramStyle(const CQGnuPlot::HistogramStyle &s)
   CGnuPlotGroup::setHistogramData(data);
 }
 
-CQGnuPlot::DrawLayerType
+CQGnuPlotEnum::DrawLayerType
 CQGnuPlotGroup::
 getBorderLayer() const
 {

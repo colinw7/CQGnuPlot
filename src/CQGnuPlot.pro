@@ -68,6 +68,7 @@ CGnuPlotKey.cpp \
 CGnuPlotKeyData.cpp \
 CGnuPlotLabel.cpp \
 CGnuPlotLineStyle.cpp \
+CGnuPlotLineType.cpp \
 CGnuPlotPalette.cpp \
 CGnuPlotPieObject.cpp \
 CGnuPlotPlot.cpp \
@@ -175,7 +176,6 @@ CQGnuPlotAnnotation.h \
 CQGnuPlotArrow.h \
 CQGnuPlotAxis.h \
 CQGnuPlotBarObject.h \
-CGnuPlotBinaryFormat.h \
 CQGnuPlotBubbleObject.h \
 CQGnuPlotCamera.h \
 CQGnuPlotCanvas.h \
@@ -184,6 +184,7 @@ CQGnuPlotColorBox.h \
 CQGnuPlotDevice.h \
 CQGnuPlotEllipse.h \
 CQGnuPlotEllipseObject.h \
+CQGnuPlotEnum.h \
 CQGnuPlotGroup.h \
 CQGnuPlotKey.h \
 CQGnuPlotLabel.h \
@@ -210,6 +211,7 @@ CGnuPlotAxis.h \
 CGnuPlotAxisData.h \
 CGnuPlotBBoxRenderer.h \
 CGnuPlotBarObject.h \
+CGnuPlotBinaryFormat.h \
 CGnuPlotBubbleObject.h \
 CGnuPlotCache.h \
 CGnuPlotCamera.h \
@@ -228,6 +230,7 @@ CGnuPlotKey.h \
 CGnuPlotKeyData.h \
 CGnuPlotLabel.h \
 CGnuPlotLineStyle.h \
+CGnuPlotLineType.h \
 CGnuPlotNameValues.h \
 CGnuPlotObject.h \
 CGnuPlotPalette.h \

@@ -55,7 +55,7 @@ setLineColor(const QColor &c)
   CGnuPlotPlot::setLineColor(cs);
 }
 
-CQGnuPlot::PlotStyle
+CQGnuPlotEnum::PlotStyle
 CQGnuPlotPlot::
 plotStyle() const
 {
@@ -64,12 +64,12 @@ plotStyle() const
 
 void
 CQGnuPlotPlot::
-setPlotStyle(const CQGnuPlot::PlotStyle &s)
+setPlotStyle(const CQGnuPlotEnum::PlotStyle &s)
 {
   CGnuPlotPlot::setStyle(CQGnuPlotUtil::plotStyleConv(s));
 }
 
-CQGnuPlot::FillType
+CQGnuPlotEnum::FillType
 CQGnuPlotPlot::
 fillType() const
 {
@@ -78,12 +78,12 @@ fillType() const
 
 void
 CQGnuPlotPlot::
-setFillType(const CQGnuPlot::FillType &type)
+setFillType(const CQGnuPlotEnum::FillType &type)
 {
   CGnuPlotPlot::setFillType(CQGnuPlotUtil::fillTypeConv(type));
 }
 
-CQGnuPlot::FillPattern
+CQGnuPlotEnum::FillPattern
 CQGnuPlotPlot::
 fillPattern() const
 {
@@ -92,12 +92,12 @@ fillPattern() const
 
 void
 CQGnuPlotPlot::
-setFillPattern(const CQGnuPlot::FillPattern &pattern)
+setFillPattern(const CQGnuPlotEnum::FillPattern &pattern)
 {
   CGnuPlotPlot::setFillPattern(CQGnuPlotUtil::fillPatternConv(pattern));
 }
 
-CQGnuPlot::SymbolType
+CQGnuPlotEnum::SymbolType
 CQGnuPlotPlot::
 pointType() const
 {
@@ -106,12 +106,12 @@ pointType() const
 
 void
 CQGnuPlotPlot::
-setPointType(const CQGnuPlot::SymbolType &type)
+setPointType(const CQGnuPlotEnum::SymbolType &type)
 {
-  CGnuPlotPlot::setPointType(CQGnuPlotUtil::symbolConv(type));
+  CGnuPlotPlot::setPointType(int(CQGnuPlotUtil::symbolConv(type)));
 }
 
-CQGnuPlot::BoxWidthType
+CQGnuPlotEnum::BoxWidthType
 CQGnuPlotPlot::
 getBoxWidthType() const
 {
@@ -120,7 +120,7 @@ getBoxWidthType() const
 
 void
 CQGnuPlotPlot::
-setBoxWidthType(const CQGnuPlot::BoxWidthType &type)
+setBoxWidthType(const CQGnuPlotEnum::BoxWidthType &type)
 {
   CGnuPlotPlot::setBoxWidthType(CQGnuPlotUtil::boxWidthTypeConv(type));
 }

@@ -35,13 +35,14 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   Q_PROPERTY(bool     drawLabel1      READ isDrawLabel1      WRITE setDrawLabel1)
   Q_PROPERTY(bool     enhanced        READ isEnhanced        WRITE setEnhanced)
 
-  Q_PROPERTY(bool                     grid      READ hasGrid      WRITE setGrid)
-  Q_PROPERTY(bool                     gridMajor READ hasGridMajor WRITE setGridMajor)
-  Q_PROPERTY(bool                     gridMinor READ hasGridMinor WRITE setGridMinor)
-  Q_PROPERTY(CQGnuPlot::DrawLayerType gridLayer READ getGridLayer WRITE setGridLayer)
+  Q_PROPERTY(bool     grid      READ hasGrid      WRITE setGrid)
+  Q_PROPERTY(bool     gridMajor READ hasGridMajor WRITE setGridMajor)
+  Q_PROPERTY(bool     gridMinor READ hasGridMinor WRITE setGridMinor)
+
+  Q_PROPERTY(CQGnuPlotEnum::DrawLayerType gridLayer READ getGridLayer WRITE setGridLayer)
 
  public:
-  typedef CQGnuPlot::DrawLayerType DrawLayerType;
+  typedef CQGnuPlotEnum::DrawLayerType DrawLayerType;
 
   CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, CGnuPlotAxis::Direction dir,
                 double start=0.0, double end=1.0);

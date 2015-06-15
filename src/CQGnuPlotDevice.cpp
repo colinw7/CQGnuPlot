@@ -87,9 +87,9 @@ createPlot(CGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style)
 
 CGnuPlotLineStyle *
 CQGnuPlotDevice::
-createLineStyle()
+createLineStyle(CGnuPlot *plot)
 {
-  return new CQGnuPlotLineStyle;
+  return new CQGnuPlotLineStyle(plot);
 }
 
 CGnuPlotArrow *

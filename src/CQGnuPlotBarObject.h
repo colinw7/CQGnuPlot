@@ -12,22 +12,23 @@ class CQGnuPlotPlot;
 class CQGnuPlotBarObject : public CQGnuPlotObject, public CGnuPlotBarObject {
   Q_OBJECT
 
-  Q_PROPERTY(double                 value       READ value)
-  Q_PROPERTY(CQGnuPlot::FillType    fillType    READ getFillType    WRITE setFillType   )
-  Q_PROPERTY(CQGnuPlot::FillPattern fillPattern READ getFillPattern WRITE setFillPattern)
-  Q_PROPERTY(QColor                 fillColor   READ getFillColor   WRITE setFillColor  )
-  Q_PROPERTY(bool                   border      READ hasBorder      WRITE setBorder     )
-  Q_PROPERTY(QColor                 lineColor   READ getLineColor   WRITE setLineColor  )
+  Q_PROPERTY(double value       READ value                          )
+  Q_PROPERTY(QColor fillColor   READ getFillColor WRITE setFillColor)
+  Q_PROPERTY(bool   border      READ hasBorder    WRITE setBorder   )
+  Q_PROPERTY(QColor lineColor   READ getLineColor WRITE setLineColor)
+
+  Q_PROPERTY(CQGnuPlotEnum::FillType    fillType    READ getFillType    WRITE setFillType   )
+  Q_PROPERTY(CQGnuPlotEnum::FillPattern fillPattern READ getFillPattern WRITE setFillPattern)
 
  public:
   CQGnuPlotBarObject(CQGnuPlotPlot *plot);
  ~CQGnuPlotBarObject();
 
-  CQGnuPlot::FillType getFillType() const;
-  void setFillType(const CQGnuPlot::FillType &t);
+  CQGnuPlotEnum::FillType getFillType() const;
+  void setFillType(const CQGnuPlotEnum::FillType &t);
 
-  CQGnuPlot::FillPattern getFillPattern() const;
-  void setFillPattern(const CQGnuPlot::FillPattern &p);
+  CQGnuPlotEnum::FillPattern getFillPattern() const;
+  void setFillPattern(const CQGnuPlotEnum::FillPattern &p);
 
   QColor getFillColor() const;
   void setFillColor(const QColor &c);

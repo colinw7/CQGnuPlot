@@ -10,7 +10,7 @@ CQGnuPlotArrow(CQGnuPlotGroup *group) :
   setObjectName("arrow");
 }
 
-CQGnuPlot::ArrowCoordType
+CQGnuPlotEnum::ArrowCoordType
 CQGnuPlotArrow::
 getCoordType() const
 {
@@ -19,7 +19,7 @@ getCoordType() const
 
 void
 CQGnuPlotArrow::
-setCoordType(CQGnuPlot::ArrowCoordType type)
+setCoordType(CQGnuPlotEnum::ArrowCoordType type)
 {
   CGnuPlotArrow::setCoordType(CQGnuPlotUtil::arrowCoordTypeConv(type));
 }

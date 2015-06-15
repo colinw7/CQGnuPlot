@@ -42,7 +42,7 @@ setFillColor(const QColor &c)
   obj_->setFillColor(spec);
 }
 
-CQGnuPlot::DrawLayerType
+CQGnuPlotEnum::DrawLayerType
 CQGnuPlotAnnotation::
 getDrawLayer() const
 {

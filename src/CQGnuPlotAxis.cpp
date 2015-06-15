@@ -43,7 +43,7 @@ setEnd(double r)
   group_->setAxisEnd(id_, r);
 }
 
-CQGnuPlot::DrawLayerType
+CQGnuPlotEnum::DrawLayerType
 CQGnuPlotAxis::
 getGridLayer() const
 {

@@ -1,6 +1,7 @@
 #ifndef CQGnuPlotPlot_H
 #define CQGnuPlotPlot_H
 
+#include <CQGnuPlotEnum.h>
 #include <CQGnuPlot.h>
 #include <CGnuPlotPlot.h>
 #include <CQGnuPlotObject.h>
@@ -30,22 +31,24 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_PROPERTY(double xmax READ getXMax)
   Q_PROPERTY(double ymax READ getYMax)
 
-  Q_PROPERTY(CQGnuPlot::PlotStyle plotStyle READ plotStyle WRITE setPlotStyle)
+  Q_PROPERTY(CQGnuPlotEnum::PlotStyle plotStyle READ plotStyle WRITE setPlotStyle)
 
-  Q_PROPERTY(int                     lineStyleId    READ lineStyleId      WRITE setLineStyleId  )
-  Q_PROPERTY(CQGnuPlot::FillType     fillType       READ fillType         WRITE setFillType     )
-  Q_PROPERTY(CQGnuPlot::FillPattern  fillPattern    READ fillPattern      WRITE setFillPattern  )
-  Q_PROPERTY(QColor                  lineColor      READ lineColor        WRITE setLineColor    )
-  Q_PROPERTY(double                  lineWidth      READ lineWidth        WRITE setLineWidth    )
-  Q_PROPERTY(CQGnuPlot::SymbolType   pointType      READ pointType        WRITE setPointType    )
-  Q_PROPERTY(double                  pointSize      READ pointSize        WRITE setPointSize    )
+  Q_PROPERTY(int    lineStyleId READ lineStyleId WRITE setLineStyleId)
+  Q_PROPERTY(double lineWidth   READ lineWidth   WRITE setLineWidth  )
+  Q_PROPERTY(QColor lineColor   READ lineColor   WRITE setLineColor  )
+  Q_PROPERTY(double pointSize   READ pointSize   WRITE setPointSize  )
+
+  Q_PROPERTY(CQGnuPlotEnum::SymbolType pointType    READ pointType   WRITE setPointType  )
+  Q_PROPERTY(CQGnuPlotEnum::FillType fillType       READ fillType    WRITE setFillType   )
+  Q_PROPERTY(CQGnuPlotEnum::FillPattern fillPattern READ fillPattern WRITE setFillPattern)
 
   Q_PROPERTY(double barsSize  READ barsSize  WRITE setBarsSize )
   Q_PROPERTY(bool   barsFront READ barsFront WRITE setBarsFront)
 
-  Q_PROPERTY(double                  boxWidthValue  READ getBoxWidthValue WRITE setBoxWidthValue)
-  Q_PROPERTY(CQGnuPlot::BoxWidthType boxWidthType   READ getBoxWidthType  WRITE setBoxWidthType )
-  Q_PROPERTY(bool                    boxWidthCalc   READ getBoxWidthCalc  WRITE setBoxWidthCalc )
+  Q_PROPERTY(double boxWidthValue  READ getBoxWidthValue WRITE setBoxWidthValue)
+  Q_PROPERTY(bool   boxWidthCalc   READ getBoxWidthCalc  WRITE setBoxWidthCalc )
+
+  Q_PROPERTY(CQGnuPlotEnum::BoxWidthType boxWidthType READ getBoxWidthType WRITE setBoxWidthType)
 
   Q_PROPERTY(bool surfaceEnabled READ isSurfaceEnabled WRITE setSurfaceEnabled)
 
@@ -71,20 +74,20 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   QColor lineColor() const;
   void setLineColor(const QColor &c);
 
-  CQGnuPlot::PlotStyle plotStyle() const;
-  void setPlotStyle(const CQGnuPlot::PlotStyle &s);
+  CQGnuPlotEnum::PlotStyle plotStyle() const;
+  void setPlotStyle(const CQGnuPlotEnum::PlotStyle &s);
 
-  CQGnuPlot::FillType fillType() const;
-  void setFillType(const CQGnuPlot::FillType &type);
+  CQGnuPlotEnum::FillType fillType() const;
+  void setFillType(const CQGnuPlotEnum::FillType &type);
 
-  CQGnuPlot::FillPattern fillPattern() const;
-  void setFillPattern(const CQGnuPlot::FillPattern &f);
+  CQGnuPlotEnum::FillPattern fillPattern() const;
+  void setFillPattern(const CQGnuPlotEnum::FillPattern &f);
 
-  CQGnuPlot::SymbolType pointType() const;
-  void setPointType(const CQGnuPlot::SymbolType &type);
+  CQGnuPlotEnum::SymbolType pointType() const;
+  void setPointType(const CQGnuPlotEnum::SymbolType &type);
 
-  CQGnuPlot::BoxWidthType getBoxWidthType() const;
-  void setBoxWidthType(const CQGnuPlot::BoxWidthType &type);
+  CQGnuPlotEnum::BoxWidthType getBoxWidthType() const;
+  void setBoxWidthType(const CQGnuPlotEnum::BoxWidthType &type);
 
   bool syncBars() const { return syncBars_; }
   void setSyncBars(bool b) { syncBars_ = b; }

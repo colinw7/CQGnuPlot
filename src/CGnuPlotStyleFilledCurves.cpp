@@ -132,7 +132,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
               for (auto p1 = points2.rbegin(), p2 = points2.rend(); p1 != p2; ++p1)
                 points1.push_back(*p1);
 
-              renderer->fillClippedPolygon(points1, lineStyle.calcColor(CRGBA(1,1,1)));
+              CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,1,1));
+
+              renderer->fillClippedPolygon(points1, c);
             }
 
             points1.clear();
@@ -151,7 +153,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       for (auto p1 = points2.rbegin(), p2 = points2.rend(); p1 != p2; ++p1)
         points1.push_back(*p1);
 
-      renderer->fillClippedPolygon(points1, lineStyle.calcColor(CRGBA(1,1,1)));
+      CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,1,1));
+
+      renderer->fillClippedPolygon(points1, c);
     }
   }
 }
@@ -267,7 +271,7 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, std::vector<C
       // TODO
     }
     else if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID) {
-      CRGBA fc = lineStyle.calcColor(CRGBA(1,1,1));
+      CRGBA fc = lineStyle.calcColor(plot->group(), CRGBA(1,1,1));
 
       if (fillStyle.isTransparent())
         fc.setAlpha(fillStyle.density());
@@ -284,7 +288,7 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, std::vector<C
         lc = fillStyle.borderColor().getValue().calcColor(plot);
 
       if (! polygon->isModified()) {
-        polygon->setLineWidth(lineStyle.width());
+        polygon->setLineWidth(lineStyle.calcWidth());
         polygon->setLineColor(lc);
       }
     }
@@ -294,13 +298,13 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, std::vector<C
   else {
     // fill polygon
     if (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN) {
-      CRGBA fg = lineStyle.calcColor(CRGBA(1,1,1));
+      CRGBA fg = lineStyle.calcColor(plot->group(), CRGBA(1,1,1));
       CRGBA bg = plot->window()->backgroundColor();
 
       renderer->patternClippedPolygon(points1, fillStyle.pattern(), fg, bg);
     }
     else if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID) {
-      CRGBA fc = lineStyle.calcColor(CRGBA(1,1,1));
+      CRGBA fc = lineStyle.calcColor(plot->group(), CRGBA(1,1,1));
 
       if (fillStyle.isTransparent())
         fc.setAlpha(fillStyle.density());
@@ -318,7 +322,9 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, std::vector<C
       if (fillStyle.borderColor().isValid())
         lc = fillStyle.borderColor().getValue().calcColor(plot);
 
-      renderer->drawClippedPolygon(points1, lineStyle.width(), lc);
+      double lw = lineStyle.calcWidth();
+
+      renderer->drawClippedPolygon(points1, lw, lc);
     }
   }
 }
@@ -333,7 +339,7 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   CBBox2D cbbox(p1.x, p1.y - h, p2.x, p1.y + h);
 
-  renderer->fillRect(cbbox, lineStyle.calcColor(CRGBA(1,1,1)));
+  renderer->fillRect(cbbox, lineStyle.calcColor(plot->group(), CRGBA(1,1,1)));
 }
 
 CBBox2D

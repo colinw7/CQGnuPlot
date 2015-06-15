@@ -14,10 +14,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  bool isCalcColor = lineStyle.color().isCalc();
+  bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA  lc = lineStyle.calcColor(CRGBA(0,0,0));
-  double lw = lineStyle.width();
+  CRGBA  lc = lineStyle.calcColor(plot->group(), CRGBA(0,0,0));
+  double lw = lineStyle.calcWidth();
 
   double sl = 0;
 
@@ -43,7 +43,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (isCalcColor) {
       double x = reals[5];
 
-      lc1 = lineStyle.color().calcColor(plot, x);
+      lc1 = lineStyle.calcColor(plot, x);
     }
 
     renderer->drawClipLine(CPoint2D(date, low), CPoint2D(date, high), lw, lc1);

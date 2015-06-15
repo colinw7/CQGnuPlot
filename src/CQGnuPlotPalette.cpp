@@ -13,7 +13,7 @@ CQGnuPlotPalette::
 {
 }
 
-CQGnuPlot::PaletteColorType
+CQGnuPlotEnum::PaletteColorType
 CQGnuPlotPalette::
 colorType() const
 {
@@ -22,12 +22,12 @@ colorType() const
 
 void
 CQGnuPlotPalette::
-setColorType(CQGnuPlot::PaletteColorType c)
+setColorType(CQGnuPlotEnum::PaletteColorType c)
 {
   CGnuPlotPalette::setColorType(CQGnuPlotUtil::paletteColorTypeConv(c));
 }
 
-CQGnuPlot::ColorModelType
+CQGnuPlotEnum::ColorModelType
 CQGnuPlotPalette::
 colorModel() const
 {
@@ -36,7 +36,7 @@ colorModel() const
 
 void
 CQGnuPlotPalette::
-setColorModel(CQGnuPlot::ColorModelType c)
+setColorModel(CQGnuPlotEnum::ColorModelType c)
 {
   CGnuPlotPalette::setColorModel(CQGnuPlotUtil::colorModelTypeConv(c));
 }

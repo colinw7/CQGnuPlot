@@ -10,13 +10,14 @@
 class CQGnuPlotLabel : public CQGnuPlotAnnotation, public CGnuPlotLabel {
   Q_OBJECT
 
-  Q_PROPERTY(QString               text     READ getText    WRITE setText    )
-  Q_PROPERTY(CQGnuPlot::HAlignType align    READ getAlign   WRITE setAlign   )
-  Q_PROPERTY(QPointF               pos      READ getPos     WRITE setPos     )
-  Q_PROPERTY(QFont                 font     READ getFont    WRITE setFont    )
-  Q_PROPERTY(double                angle    READ getAngle   WRITE setAngle   )
-  Q_PROPERTY(QPointF               offset   READ getOffset  WRITE setOffset  )
-  Q_PROPERTY(bool                  enhanced READ isEnhanced WRITE setEnhanced)
+  Q_PROPERTY(QString text     READ getText    WRITE setText    )
+  Q_PROPERTY(QPointF pos      READ getPos     WRITE setPos     )
+  Q_PROPERTY(QFont   font     READ getFont    WRITE setFont    )
+  Q_PROPERTY(double  angle    READ getAngle   WRITE setAngle   )
+  Q_PROPERTY(QPointF offset   READ getOffset  WRITE setOffset  )
+  Q_PROPERTY(bool    enhanced READ isEnhanced WRITE setEnhanced)
+
+  Q_PROPERTY(CQGnuPlotEnum::HAlignType align READ getAlign WRITE setAlign)
 
  public:
   CQGnuPlotLabel(CQGnuPlotGroup *group);
@@ -24,8 +25,8 @@ class CQGnuPlotLabel : public CQGnuPlotAnnotation, public CGnuPlotLabel {
   QString getText() const;
   void setText(const QString &s);
 
-  CQGnuPlot::HAlignType getAlign() const;
-  void setAlign(const CQGnuPlot::HAlignType &a);
+  CQGnuPlotEnum::HAlignType getAlign() const;
+  void setAlign(const CQGnuPlotEnum::HAlignType &a);
 
   QPointF getPos() const;
   void setPos(const QPointF &p);

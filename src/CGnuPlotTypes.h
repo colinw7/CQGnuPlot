@@ -7,11 +7,13 @@
 #include <CRGBA.h>
 #include <CPoint2D.h>
 #include <CBBox2D.h>
+#include <CLineDash.h>
 
 typedef std::vector<std::string> StringArray;
 typedef COptValT<CRGBA>          COptRGBA;
 typedef COptValT<CPoint2D>       COptPoint2D;
 typedef COptValT<CBBox2D>        COptBBox2D;
+typedef COptValT<CLineDash>      COptLineDash;
 
 namespace CGnuPlotTypes {
   enum class CommandName {
@@ -422,7 +424,8 @@ namespace CGnuPlotTypes {
     FILLED_INV_TRIANGLE,
     DIAMOND,
     FILLED_DIAMOND,
-    LAST=FILLED_DIAMOND
+    LAST=FILLED_DIAMOND,
+    STRING=999
   };
 
   enum class ChangeState {

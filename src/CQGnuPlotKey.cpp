@@ -15,7 +15,7 @@ CQGnuPlotKey::
 {
 }
 
-CQGnuPlot::HAlignType
+CQGnuPlotEnum::HAlignType
 CQGnuPlotKey::
 halign() const
 {
@@ -24,12 +24,12 @@ halign() const
 
 void
 CQGnuPlotKey::
-setHAlign(const CQGnuPlot::HAlignType &a)
+setHAlign(const CQGnuPlotEnum::HAlignType &a)
 {
   CGnuPlotKey::setHAlign(CQGnuPlotUtil::alignConv(a));
 }
 
-CQGnuPlot::VAlignType
+CQGnuPlotEnum::VAlignType
 CQGnuPlotKey::
 valign() const
 {
@@ -38,7 +38,7 @@ valign() const
 
 void
 CQGnuPlotKey::
-setVAlign(const CQGnuPlot::VAlignType &a)
+setVAlign(const CQGnuPlotEnum::VAlignType &a)
 {
   CGnuPlotKey::setVAlign(CQGnuPlotUtil::alignConv(a));
 }

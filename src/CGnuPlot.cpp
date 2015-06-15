@@ -46,6 +46,7 @@
 #include <CGnuPlotStyleYErrorBars.h>
 #include <CGnuPlotStyleYErrorLines.h>
 
+#include <CRange.h>
 #include <CImageLib.h>
 #include <CUnixFile.h>
 #include <CParseLine.h>
@@ -375,7 +376,7 @@ CGnuPlot()
 
   addDevice("svg", svgDevice_);
 
-  for (int i = 0; i < 8; ++i)
+  for (const auto &i : IRange(0, 8))
     paxis(i).unset();
 
   addPlotStyles();
@@ -547,10 +548,10 @@ load(const std::string &filename, const StringArray &args)
   if (! args.empty()) {
     CExprInst->createIntegerVariable("ARGC", args.size());
 
-    for (uint i = 0; i < 9; ++i) {
+    for (const auto &i : IRange::range(0, 9)) {
       std::string argName = CStrUtil::strprintf("ARG%d", i + 1);
 
-      if (i < args.size())
+      if (i < int(args.size()))
         CExprInst->createStringVariable(argName, args[i]);
       else
         CExprInst->createStringVariable(argName, "");
@@ -559,7 +560,7 @@ load(const std::string &filename, const StringArray &args)
   else {
     CExprInst->createIntegerVariable("ARGC", 0);
 
-    for (uint i = 1; i <= 9; ++i) {
+    for (const auto &i : IRange::rangeClosed(1, 9)) {
       std::string argName = CStrUtil::strprintf("ARG%d", i);
 
       CExprInst->removeVariable(argName);
@@ -737,7 +738,7 @@ parseLine(const std::string &str)
   if (str2 != "")
     statements.push_back(str2);
 
-  for (int i = 0; i < int(statements.size()); ++i) {
+  for (auto i : IRange::range(0, statements.size())) {
     if (! parseStatement(i, statements))
       return false;
   }
@@ -784,11 +785,11 @@ replaceEmbedded(const std::string &str) const
 
       str1 += "\'";
 
-      for (int i = 0; i < int(str2.size()); ++i) {
-        if (str2[i] == '\'')
+      for (const auto &c : str2) {
+        if (c == '\'')
           str1 += "\\";
 
-        str1 += str2[i];
+        str1 += c;
       }
 
       str1 += "\'";
@@ -802,11 +803,11 @@ replaceEmbedded(const std::string &str) const
 
       str1 += "\"";
 
-      for (int i = 0; i < int(str2.size()); ++i) {
-        if (str2[i] == '"')
+      for (const auto &c : str2) {
+        if (c == '"')
           str1 += "\\";
 
-        str1 += str2[i];
+        str1 += c;
       }
 
       str1 += "\"";
@@ -1079,9 +1080,8 @@ historyCmd(const std::string &args)
 
   readLine_->getHistoryEntries(entries);
 
-  for (uint i = 0; i < entries.size(); ++i) {
-    std::cout << entries[i].line_num << ": " << entries[i].line << std::endl;
-  }
+  for (const auto &e : entries)
+    std::cout << e.line_num << ": " << e.line << std::endl;
 }
 
 // print {expression} [, {expression} ]
@@ -2043,14 +2043,14 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots)
       int lt;
 
       if (parseInteger(line, lt))
-        lineStyle.setType(lt);
+        lineStyle.setLineType(lt);
     }
     // linewidth <lw>
     else if (plotVar == PlotVar::LINEWIDTH) {
       double lw;
 
       if (parseReal(line, lw))
-        lineStyle.setWidth(lw);
+        lineStyle.setLineWidth(lw);
     }
     // fillstyle <fs>
     else if (plotVar == PlotVar::FILLSTYLE) {
@@ -2064,7 +2064,7 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots)
       int dt;
 
       if (parseInteger(line, dt))
-        lineStyle.setDash(getLineDash(dt));
+        lineStyle.setLineDash(dt);
     }
     // pointsize <size>
     else if (plotVar == PlotVar::POINTSIZE) {
@@ -2433,7 +2433,9 @@ parseModifiers2D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
       int lt;
 
       if (parseInteger(line, lt))
-        lineStyle.setType(lt);
+        lineStyle.setLineType(lt);
+
+      found = true;
     }
     else if (line.isString("linewidth") || line.isString("lw")) {
       line.skipNonSpace();
@@ -2441,7 +2443,7 @@ parseModifiers2D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
       double lw;
 
       if (parseReal(line, lw))
-        lineStyle.setWidth(lw);
+        lineStyle.setLineWidth(lw);
 
       found = true;
     }
@@ -2451,7 +2453,7 @@ parseModifiers2D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
       CGnuPlotColorSpec c;
 
       if (parseColorSpec(line, c))
-        lineStyle.setColor(c);
+        lineStyle.setLineColor(c);
 
       found = true;
     }
@@ -2461,7 +2463,7 @@ parseModifiers2D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
       CGnuPlotColorSpec c;
 
       if (parseColorSpec(line, c))
-        lineStyle.setColor(c);
+        lineStyle.setLineColor(c);
 
       found = true;
     }
@@ -2471,10 +2473,10 @@ parseModifiers2D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
       int         pt = 1;
       std::string ptstr;
 
-      if (parseInteger(line, pt))
-        lineStyle.setPointType(static_cast<CGnuPlotTypes::SymbolType>(pt));
+      if      (parseInteger(line, pt))
+        lineStyle.setPointType(pt);
       else if (parseString(line, ptstr))
-        lineStyle.setPointType(static_cast<CGnuPlotTypes::SymbolType>(pt)); // TODO
+        lineStyle.setPointType(ptstr);
 
       found = true;
     }
@@ -3169,10 +3171,10 @@ parseArrayValues(CParseLine &line, std::vector<CSize2D> &sizes)
 
       CStrUtil::addFields(arg, fields, ":");
 
-      for (uint i = 0; i < fields.size(); ++i) {
+      for (const auto &f : fields) {
         int w;
 
-        if (! CStrUtil::toInteger(fields[i], &w))
+        if (! CStrUtil::toInteger(f, &w))
           continue;
 
         sizes.push_back(CSize2D(w, 1));
@@ -3629,14 +3631,14 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots)
       int lt;
 
       if (parseInteger(line, lt))
-        lineStyle.setType(lt);
+        lineStyle.setLineType(lt);
     }
     // linewidth <lw>
     else if (plotVar == PlotVar::LINEWIDTH) {
       double lw;
 
       if (parseReal(line, lw))
-        lineStyle.setWidth(lw);
+        lineStyle.setLineWidth(lw);
     }
     // fillstyle <fs>
     else if (plotVar == PlotVar::FILLSTYLE) {
@@ -3650,7 +3652,7 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots)
       int dt;
 
       if (parseInteger(line, dt))
-        lineStyle.setDash(getLineDash(dt));
+        lineStyle.setLineDash(dt);
     }
     // pointsize <size>
     else if (plotVar == PlotVar::POINTSIZE) {
@@ -3864,6 +3866,7 @@ parseModifiers3D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
                  CGnuPlotFillStyle &fillStyle, CGnuPlotArrowStyle &arrowStyle)
 {
   bool modifiers = true;
+  bool found     = false;
 
   while (modifiers) {
     line.skipSpace();
@@ -3875,6 +3878,8 @@ parseModifiers3D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
 
       if (parseInteger(line, ls))
         setLineStyleInd(ls);
+
+      found = true;
     }
     else if (line.isString("linetype") || line.isString("lt")) {
       line.skipNonSpace();
@@ -3882,7 +3887,9 @@ parseModifiers3D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
       int lt;
 
       if (parseInteger(line, lt))
-        lineStyle.setType(lt);
+        lineStyle.setLineType(lt);
+
+      found = true;
     }
     else if (line.isString("linewidth") || line.isString("lw")) {
       line.skipNonSpace();
@@ -3890,7 +3897,9 @@ parseModifiers3D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
       double lw;
 
       if (parseReal(line, lw))
-        lineStyle.setWidth(lw);
+        lineStyle.setLineWidth(lw);
+
+      found = true;
     }
     else if (line.isString("linecolor") || line.isString("lc")) {
       line.skipNonSpace();
@@ -3898,7 +3907,9 @@ parseModifiers3D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
       CGnuPlotColorSpec c;
 
       if (parseColorSpec(line, c))
-        lineStyle.setColor(c);
+        lineStyle.setLineColor(c);
+
+      found = true;
     }
     else if (line.isString("textcolor") || line.isString("tc")) {
       line.skipNonSpace();
@@ -3906,15 +3917,22 @@ parseModifiers3D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
       CGnuPlotColorSpec c;
 
       if (parseColorSpec(line, c))
-        lineStyle.setColor(c);
+        lineStyle.setLineColor(c);
+
+      found = true;
     }
     else if (line.isString("pointtype") || line.isString("pt")) {
       line.skipNonSpace();
 
-      int pt;
+      int         pt = 1;
+      std::string ptstr;
 
-      if (parseInteger(line, pt))
-        lineStyle.setPointType(static_cast<CGnuPlotTypes::SymbolType>(pt));
+      if      (parseInteger(line, pt))
+        lineStyle.setPointType(pt);
+      else if (parseString(line, ptstr))
+        lineStyle.setPointType(ptstr);
+
+      found = true;
     }
     else if (line.isString("pointsize") || line.isString("ps")) {
       line.skipNonSpace();
@@ -3927,6 +3945,8 @@ parseModifiers3D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
         pointStyle_.setVarSize(true);
       else if (CStrUtil::toReal(style, &s))
         lineStyle.setPointSize(s);
+
+      found = true;
     }
     else if (line.isString("fill") || line.isString("fs")) {
       line.skipNonSpace();
@@ -3935,40 +3955,58 @@ parseModifiers3D(PlotStyle /*style*/, CParseLine &line, CGnuPlotLineStyle &lineS
 
       if (parseFillStyle(line, fillStyle1))
         fillStyle = fillStyle1;
+
+      found = true;
     }
     else if (line.isString("filled")) {
       arrowStyle.setFilled(true);
 
       line.skipNonSpace();
+
+      found = true;
     }
     else if (line.isString("nohead")) {
       arrowStyle.setHeads(false, false);
 
       line.skipNonSpace();
+
+      found = true;
     }
     else if (line.isString("notitle")) {
       line.skipNonSpace();
+
+      found = true;
     }
     else if (line.isString("boxed")) {
       line.skipNonSpace();
+
+      found = true;
     }
     else if (line.isString("nohidden3d")) {
       line.skipNonSpace();
+
+      found = true;
     }
     else if (line.isString("nocontours")) {
       line.skipNonSpace();
+
+      found = true;
     }
     else if (line.isString("nosurf") || line.isString("nosurface")) {
       line.skipNonSpace();
+
+      found = true;
     }
     else if (line.isString("palette")) {
       line.skipNonSpace();
+
+      found = true;
     }
     else
       modifiers = false;
   }
 
-  return true;
+  return found;
 }
 
 // set ...
@@ -4152,7 +4190,7 @@ setCmd(const std::string &args)
         int dt = -1;
 
         if (parseInteger(line, dt))
-          arrow->setDash(getLineDash(dt));
+          arrow->setDash(dt);
       }
       else {
         errorMsg("Invalid arg '" + arg + "'");
@@ -4168,7 +4206,7 @@ setCmd(const std::string &args)
     std::string arg = readNonSpace(line);
 
     if      (arg == "") {
-      for (int i = 1; i <= 2; ++i) {
+      for (auto i : IRange::rangeClosed(1, 2)) {
         xaxis(i).setAutoScaleMin(true);
         xaxis(i).setAutoScaleMax(true);
         yaxis(i).setAutoScaleMin(true);
@@ -4181,7 +4219,7 @@ setCmd(const std::string &args)
       }
     }
     else if (arg == "noextend") {
-      for (int i = 1; i <= 2; ++i) {
+      for (auto i : IRange::rangeClosed(1, 2)) {
         xaxis(i).setAutoScaleFixMin(true);
         xaxis(i).setAutoScaleFixMax(true);
         yaxis(i).setAutoScaleFixMin(true);
@@ -5436,8 +5474,7 @@ setCmd(const std::string &args)
         label->setText(str);
     }
   }
-  // set linetype {index} {{linetype  | lt ] <linetype> | <colorspec>}
-  //                      {{linecolor | lc } <colorspace>}
+  // set linetype {index} {{linecolor | lc } <colorspace>}
   //                      {{linewidth | lw } <linewidth>}
   //                      {{pointtype | pt } <pointtype>}
   //                      {{pointsize | ps } <pointsize>}
@@ -5460,54 +5497,51 @@ setCmd(const std::string &args)
       if (! parseInteger(line, ind))
         ind = 0;
 
-      CGnuPlotLineStyleP lineStyle = getLineStyleInd(ind);
+      CGnuPlotLineTypeP lineType = getLineTypeInd(ind);
 
       line.skipSpace();
 
       while (line.isValid()) {
         std::string arg = readNonSpace(line);
 
-        if      (arg == "linetype" || arg == "lt") {
-          int lt;
-
-          if (parseInteger(line, lt))
-            lineStyle->setType(lt);
-        }
-        else if (arg == "linecolor" || arg == "lc") {
+        if      (arg == "linecolor" || arg == "lc") {
           CGnuPlotColorSpec c;
 
           if (parseColorSpec(line, c))
-            lineStyle->setColor(c);
+            lineType->setLineColor(c);
         }
         else if (arg == "linewidth" || arg == "lw") {
           double lw;
 
           if (parseReal(line, lw))
-            lineStyle->setWidth(lw);
+            lineType->setLineWidth(lw);
         }
         else if (arg == "pointtype" || arg == "pt") {
-          int pt;
+          int         pt = 1;
+          std::string ptstr;
 
-          if (parseInteger(line, pt))
-            lineStyle->setPointType(static_cast<CGnuPlotTypes::SymbolType>(pt));
+          if      (parseInteger(line, pt))
+            lineType->setPointType(pt);
+          else if (parseString(line, ptstr))
+            lineType->setPointType(ptstr);
         }
         else if (arg == "pointsize" || arg == "ps") {
           double ps;
 
           if (parseReal(line, ps))
-            lineStyle->setPointSize(ps);
+            lineType->setPointSize(ps);
         }
         else if (arg == "pointinterval" || arg == "pi") {
           int pi;
 
           if (parseInteger(line, pi))
-            lineStyle->setPointInterval(pi);
+            lineType->setPointInterval(pi);
         }
         else if (arg == "dashtype" || arg == "dt") {
           int dt = -1;
 
           if (parseInteger(line, dt))
-            lineStyle->setDash(getLineDash(dt));
+            lineType->setLineDash(dt);
         }
         else {
           std::cerr << "Invalid line modifier '" << arg << "'" << std::endl;
@@ -6251,10 +6285,10 @@ setCmd(const std::string &args)
 
         std::string arg1 = readNonSpaceNonComma(line);
 
-        for (uint i = 0; i < arg1.size(); ++i) {
-          if      (arg1[i] == 's') pm3D_.pos.push_back(Pm3DData::PosType::SURFACE);
-          else if (arg1[i] == 't') pm3D_.pos.push_back(Pm3DData::PosType::TOP);
-          else if (arg1[i] == 'b') pm3D_.pos.push_back(Pm3DData::PosType::BOTTOM);
+        for (const auto &a1 : arg1) {
+          if      (a1 == 's') pm3D_.pos.push_back(Pm3DData::PosType::SURFACE);
+          else if (a1 == 't') pm3D_.pos.push_back(Pm3DData::PosType::TOP);
+          else if (a1 == 'b') pm3D_.pos.push_back(Pm3DData::PosType::BOTTOM);
         }
       }
       else if (arg == "interpolate") {
@@ -6937,25 +6971,28 @@ setCmd(const std::string &args)
           int lt;
 
           if (parseInteger(line, lt))
-            lineStyle->setType(lt);
+            lineStyle->setLineType(lt);
         }
         else if (arg == "linecolor" || arg == "lc") {
           CGnuPlotColorSpec c;
 
           if (parseColorSpec(line, c))
-            lineStyle->setColor(c);
+            lineStyle->setLineColor(c);
         }
         else if (arg == "linewidth" || arg == "lw") {
           double lw;
 
           if (parseReal(line, lw))
-            lineStyle->setWidth(lw);
+            lineStyle->setLineWidth(lw);
         }
         else if (arg == "pointtype" || arg == "pt") {
-          int pt;
+          int         pt = 1;
+          std::string ptstr;
 
-          if (parseInteger(line, pt))
-            lineStyle->setPointType(static_cast<CGnuPlotTypes::SymbolType>(pt));
+          if      (parseInteger(line, pt))
+            lineStyle->setPointType(pt);
+          else if (parseString(line, ptstr))
+            lineStyle->setPointType(ptstr);
         }
         else if (arg == "pointsize" || arg == "ps") {
           double ps;
@@ -6993,7 +7030,7 @@ setCmd(const std::string &args)
 
       while (arg != "") {
         if      (arg == "radius") {
-          for (int i = 0; i < 3; ++i) {
+          for (auto i : IRange::range(0, 3)) {
             line.skipSpace();
 
             CGnuPlotTypes::CoordSys coordSys = CGnuPlotTypes::CoordSys::FIRST;
@@ -8137,15 +8174,18 @@ showCmd(const std::string &args)
     int ind;
 
     if (parseInteger(line, ind)) {
-      CGnuPlotLineStyleP lineStyle = getLineStyleInd(ind);
+      CGnuPlotLineTypeP lineType = getLineTypeInd(ind);
 
-      lineStyle->show(std::cout);
+      lineType->show(std::cout);
     }
     else {
-      for (int i = 1; i <= 8; ++i) {
-        CGnuPlotLineStyleP lineStyle = getLineStyleInd(i);
+      // TODO: just defined ?
+      for (auto i : IRange::rangeClosed(1, 8)) {
+        CGnuPlotLineTypeP lineType = getLineTypeInd(i);
 
-        lineStyle->show(std::cout);
+        std::cout << "linetype " << i << ", ";
+
+        lineType->show(std::cout);
       }
 
       if (styleIncrement_.increment > 0)
@@ -8772,7 +8812,7 @@ showColorNames()
 
   int n = CRGBName::numColorNames();
 
-  for (int i = 0; i < n; ++i) {
+  for (auto i : IRange::range(0, n)) {
     std::string name = CRGBName::colorName(i);
     CRGB        rgb  = CRGBName::colorRGBA(i).getRGB();
 
@@ -8895,8 +8935,8 @@ showFunctions(std::ostream &os)
 
   CExprInst->getFunctionNames(names);
 
-  for (uint i = 0; i < names.size(); ++i) {
-    CExprFunctionPtr function = CExprInst->getFunction(names[i]);
+  for (const auto &n : names) {
+    CExprFunctionPtr function = CExprInst->getFunction(n);
 
     if (! function->isBuiltin())
       os << function << std::endl;
@@ -8939,13 +8979,13 @@ resetCmd(const std::string &args)
 
   fillStyle_.unset();
 
-  for (int i = 1; i <= 2; ++i) {
+  for (auto i : IRange::rangeClosed(1, 2)) {
     xaxis(i).reset();
     yaxis(i).reset();
     zaxis(i).reset();
   }
 
-  for (int i = 0; i < 8; ++i)
+  for (auto i : IRange::range(0, 8))
     paxis(i).reset();
 
   taxis(1).reset();
@@ -8961,6 +9001,8 @@ resetCmd(const std::string &args)
   keyData_.reset();
 
   palette_.unset();
+
+  lineStyles_.clear();
 }
 
 // undefine ...
@@ -9057,7 +9099,7 @@ unsetCmd(const std::string &args)
     std::string arg = readNonSpace(line);
 
     if      (arg == "") {
-      for (int i = 1; i <= 2; ++i) {
+      for (auto i : IRange::rangeClosed(1, 2)) {
         xaxis(i).setAutoScaleMin(false);
         xaxis(i).setAutoScaleMax(false);
         yaxis(i).setAutoScaleMin(false);
@@ -9232,15 +9274,15 @@ unsetCmd(const std::string &args)
     int ind;
 
     if (parseInteger(line, ind)) {
-      CGnuPlotLineStyleP lineStyle = getLineStyleInd(ind);
+      CGnuPlotLineTypeP lineType = getLineTypeInd(ind);
 
-      lineStyle->unset();
+      lineType->unset();
     }
     else {
-      for (int i = 1; i <= 8; ++i) {
-        CGnuPlotLineStyleP lineStyle = getLineStyleInd(i);
+      for (auto i : IRange::rangeClosed(1, 8)) {
+        CGnuPlotLineTypeP lineType = getLineTypeInd(i);
 
-        lineStyle->unset();
+        lineType->unset();
       }
 
       styleIncrement_.increment = -1;
@@ -10491,9 +10533,8 @@ doCmd(const std::string &args)
     while (i1 <= i2) {
       CExprInst->createIntegerVariable(var, i1);
 
-      for (uint i = 0; i < lines.size(); ++i) {
-        parseLine(lines[i]);
-      }
+      for (const auto &l : lines)
+        parseLine(l);
 
       i1 += i3;
     }
@@ -10502,9 +10543,8 @@ doCmd(const std::string &args)
     for (const auto &f : fields) {
       CExprInst->createStringVariable(var, f);
 
-      for (uint i = 0; i < lines.size(); ++i) {
-        parseLine(lines[i]);
-      }
+      for (const auto &l : lines)
+        parseLine(l);
     }
   }
 }
@@ -10641,9 +10681,16 @@ createPlot(CGnuPlotGroup *group, PlotStyle style)
 
 CGnuPlotLineStyle *
 CGnuPlot::
-createLineStyle()
+createLineStyle(CGnuPlot *plot)
 {
-  return (device() ? device()->createLineStyle() : new CGnuPlotLineStyle);
+  return (device() ? device()->createLineStyle(plot) : new CGnuPlotLineStyle(plot));
+}
+
+CGnuPlotLineType *
+CGnuPlot::
+createLineType()
+{
+  return new CGnuPlotLineType;
 }
 
 CGnuPlotAxis *
@@ -10812,17 +10859,16 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 
     CExprVariablePtr xvar = CExprInst->createRealVariable(varName1, 0.0);
 
-    double x  = xmin;
     double dx = (xmax - xmin)/nx;
 
     if (functions[0] == "NaN") {
-      for (int i = 0; i <= nx; ++i, x += dx)
+      for (auto x : RRange::range(xmin).step(dx).limit(nx + 1))
         plot->addPoint2D(x, CExprValueP());
     }
     else {
       CExprCTokenStack cstack = compileExpression(functions[0]);
 
-      for (int i = 0; i <= nx; ++i, x += dx) {
+      for (auto x : RRange::range(xmin).step(dx).limit(nx + 1)) {
         xvar->setRealValue(x);
 
         CExprValueP value;
@@ -10859,17 +10905,16 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 
     CExprVariablePtr tvar = CExprInst->createRealVariable(varName, 0.0);
 
-    double a  = tmin;
     double da = (tmax - tmin)/nx;
 
     if (functions[0] == "NaN") {
-      for (int i = 0; i <= nx; ++i, a += da)
+      for (auto a : RRange::range(tmin).step(da).limit(nx + 1))
         plot->addPoint2D(a, CExprValueP());
     }
     else {
       CExprCTokenStack cstack = compileExpression(functions[0]);
 
-      for (int i = 0; i <= nx; ++i, a += da) {
+      for (auto a : RRange::range(tmin).step(da).limit(nx + 1)) {
         double c = cos(a);
         double s = sin(a);
 
@@ -10920,7 +10965,6 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 
     CExprVariablePtr tvar = CExprInst->createRealVariable(varName, 0.0);
 
-    double t  = tmin;
     double dt = (tmax - tmin)/nx;
 
     bool f1 = (functions[0] != "NaN");
@@ -10931,7 +10975,7 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     if (f1) cstack1 = compileExpression(functions[0]);
     if (f2) cstack2 = compileExpression(functions[1]);
 
-    for (int i = 0; i <= nx; ++i, t += dt) {
+    for (auto t : RRange::range(tmin).step(dt).limit(nx + 1)) {
       tvar->setRealValue(t);
 
       double x, y;
@@ -11035,28 +11079,29 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     CExprVariablePtr xvar = CExprInst->createRealVariable(varName1, 0.0);
     CExprVariablePtr yvar = CExprInst->createRealVariable(varName2, 0.0);
 
-    double y  = ymin;
     double dx = (xmax - xmin)/nx;
     double dy = (ymax - ymin)/ny;
 
     if (functions[0] == "NaN") {
-      for (int iy = 0; iy <= ny; ++iy, y += dy) {
-        double x = xmin;
+      int iy = 0;
 
-        for (int ix = 0; ix <= nx; ++ix, x += dx) {
+      for (auto y : RRange::range(ymin).step(dy).limit(ny + 1)) {
+        for (auto x : RRange::range(xmin).step(dx).limit(nx + 1)) {
           plot->addPoint3D(iy, x, y, CExprValueP());
         }
+
+        ++iy;
       }
     }
     else {
       CExprCTokenStack cstack = compileExpression(functions[0]);
 
-      for (int iy = 0; iy <= ny; ++iy, y += dy) {
+      int iy = 0;
+
+      for (auto y : RRange::range(ymin).step(dy).limit(ny + 1)) {
         yvar->setRealValue(y);
 
-        double x = xmin;
-
-        for (int ix = 0; ix <= nx; ++ix, x += dx) {
+        for (auto x : RRange::range(xmin).step(dx).limit(nx + 1)) {
           xvar->setRealValue(x);
 
           CExprValueP value;
@@ -11079,6 +11124,8 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
             }
           }
         }
+
+        ++iy;
       }
     }
   }
@@ -11559,7 +11606,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
             if (plotStyle)
               nv = std::min(nv, plotStyle->numUsing());
 
-            for (int i = 0; i < nv; ++i) {
+            for (auto i : IRange::range(0, nv)) {
               if (! fieldValues_[i].isValid())
                 bad = true;
 
@@ -11635,8 +11682,8 @@ addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     istyle.w = image->getWidth ();
     istyle.h = image->getHeight();
 
-    for (int y = 0; y < istyle.h; ++y) {
-      for (int x = 0; x < istyle.w; ++x) {
+    for (auto y : IRange::range(0, istyle.h.getValue())) {
+      for (auto x : IRange::range(0, istyle.w.getValue())) {
         CRGBA rgba;
 
         image->getRGBAPixel(x, y, rgba);
@@ -11766,10 +11813,10 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
     //---
 
-    for (auto iy = 0; iy < ny; ++iy) {
+    for (auto iy : IRange::range(0, ny)) {
       float y = yvals[iy];
 
-      for (auto ix = 0; ix < ny; ++ix) {
+      for (auto ix : IRange::range(0, nx)) {
         float x = xvals[ix];
         float z = data[iy][ix];
 
@@ -11808,10 +11855,10 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
     int n = vals.size();
 
-    for (auto i = 0; i < n; i += nv) {
+    for (auto i : IRange::range(0, n, nv)) {
       fieldValues_.clear();
 
-      for (auto j = 0; j < nv; ++j) {
+      for (auto j : IRange::range(0, nv)) {
         CExprValueP val = CExprInst->createRealValue(vals[i + j]);
 
         fieldValues_.push_back(val);
@@ -12176,8 +12223,8 @@ addImage3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     istyle.w = image->getWidth ();
     istyle.h = image->getHeight();
 
-    for (int y = 0; y < istyle.h; ++y) {
-      for (int x = 0; x < istyle.w; ++x) {
+    for (auto y : IRange::range(0, istyle.h.getValue())) {
+      for (auto x : IRange::range(0, istyle.w.getValue())) {
         CRGBA rgba;
 
         image->getRGBAPixel(x, y, rgba);
@@ -12306,10 +12353,10 @@ addBinary3D(CGnuPlotGroup *group, const std::string &filename, const CGnuPlotUsi
 
   //---
 
-  for (auto iy = 0; iy < ny; ++iy) {
+  for (auto iy : IRange::range(0, ny)) {
     float y = yvals[iy];
 
-    for (auto ix = 0; ix < ny; ++ix) {
+    for (auto ix : IRange::range(0, nx)) {
       float x = xvals[ix];
 
       float z = data[iy][ix];
@@ -12329,9 +12376,9 @@ getColumnIndex(const std::string &str) const
 {
   const CGnuPlotKeyData::Columns &columns = keyData_.columns();
 
-  for (uint i = 0; i < columns.size(); ++i)
-    if (columns[i] == str)
-      return i;
+  for (const auto &c : SRange::ofPair(columns))
+    if (c.second == str)
+      return c.first;
 
   return -1;
 }
@@ -12467,12 +12514,14 @@ fieldToReal(const std::string &str, double &r) const
   return true;
 }
 
+//------
+
 CGnuPlotLineStyleP
 CGnuPlot::
 lineStyle()
 {
   if (! lineStyle_) {
-    CGnuPlotLineStyleP lineStyle = CGnuPlotLineStyleP(createLineStyle());
+    CGnuPlotLineStyleP lineStyle = CGnuPlotLineStyleP(createLineStyle(this));
 
     lineStyles_[-1] = lineStyle;
 
@@ -12489,7 +12538,7 @@ getLineStyleInd(int ind)
   CGnuPlotLineStyleP lineStyle = this->lineStyle(ind);
 
   if (! lineStyle) {
-    lineStyle = CGnuPlotLineStyleP(createLineStyle());
+    lineStyle = CGnuPlotLineStyleP(createLineStyle(this));
 
     lineStyle->setInd(ind);
 
@@ -12528,6 +12577,48 @@ lineStyle(int i) const
   return (p != lineStyles_.end() ? (*p).second : CGnuPlotLineStyleP());
 }
 
+//------
+
+CGnuPlotLineTypeP
+CGnuPlot::
+getLineTypeInd(int ind)
+{
+  CGnuPlotLineTypeP lineType = this->lineType(ind);
+
+  if (! lineType) {
+    lineType = CGnuPlotLineTypeP(createLineType());
+
+    lineType->setInd(ind);
+
+    if (ind > 0)
+      lineType->init(ind);
+
+    lineTypes_[ind] = lineType;
+  }
+
+  return lineType;
+}
+
+void
+CGnuPlot::
+resetLineTypeInd(int ind)
+{
+  lineTypes_.erase(ind);
+}
+
+CGnuPlotLineTypeP
+CGnuPlot::
+lineType(int i) const
+{
+  int i1 = i % 8;
+
+  auto p = lineTypes_.find(i1);
+
+  return (p != lineTypes_.end() ? (*p).second : CGnuPlotLineTypeP());
+}
+
+//-----
+
 void
 CGnuPlot::
 resetLineStyle()
@@ -12545,7 +12636,7 @@ incLineStyle()
 #if 0
   CGnuPlotLineStyleP ls = lineStyle();
 
-  ls->setColor(CGnuPlotStyleInst->indexColor(styleIncrement_.colorInd));
+  ls->setLineColor(CGnuPlotStyleInst->indexColor(styleIncrement_.colorInd));
 
   if (fillStyle().style() == CGnuPlotTypes::FillType::PATTERN)
     fillStyle_.setPattern(static_cast<CGnuPlotTypes::FillPattern>(
@@ -13215,9 +13306,9 @@ parseString(CParseLine &line, std::string &str, const std::string &msg) const
               char c1 = char(i);
 
               if (c1 == '\\' || c1 == '\"')
-                str += "\\" + c1;
-              else
-                str += c1;
+                str += "\\";
+
+              str += c1;
 
               break;
             }

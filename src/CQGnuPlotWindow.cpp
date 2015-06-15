@@ -275,10 +275,14 @@ addProperties()
 
     QString lineStyleName = QString("LineStyles/lineStyle%1").arg(ls1->ind());
 
-    tree_->addProperty(lineStyleName, ls1, "width"    );
-    tree_->addProperty(lineStyleName, ls1, "color"    );
-    tree_->addProperty(lineStyleName, ls1, "pointType");
-    tree_->addProperty(lineStyleName, ls1, "pointSize");
+    tree_->addProperty(lineStyleName, ls1, "lineType"     );
+    tree_->addProperty(lineStyleName, ls1, "lineWidth"    );
+    tree_->addProperty(lineStyleName, ls1, "lineDash"     );
+    tree_->addProperty(lineStyleName, ls1, "lineColor"    );
+    tree_->addProperty(lineStyleName, ls1, "pointType"    );
+    tree_->addProperty(lineStyleName, ls1, "pointSize"    );
+    tree_->addProperty(lineStyleName, ls1, "pointInterval");
+    tree_->addProperty(lineStyleName, ls1, "palette"      );
   }
 
   for (auto group : groups()) {

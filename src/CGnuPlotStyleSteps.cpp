@@ -53,7 +53,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  const CRGBA &c = lineStyle.calcColor(CRGBA(1,0,0));
+  const CRGBA &c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   uint np = plot->numPoints2D();
 
@@ -63,6 +63,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CPoint2D p1, p2;
 
+    double lw = lineStyle.calcWidth();
+
     if (point1.getPoint(p1) && point2.getPoint(p2)) {
       if      (plot->getStyle() == CGnuPlotTypes::PlotStyle::HISTEPS) {
         double xm = CGnuPlotUtil::avg({p1.x, p2.x});
@@ -70,21 +72,21 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         CPoint2D p3(xm, p1.y);
         CPoint2D p4(xm, p2.y);
 
-        renderer->drawClipLine(p1, p3, lineStyle.width(), c);
-        renderer->drawClipLine(p3, p4, lineStyle.width(), c);
-        renderer->drawClipLine(p4, p2, lineStyle.width(), c);
+        renderer->drawClipLine(p1, p3, lw, c);
+        renderer->drawClipLine(p3, p4, lw, c);
+        renderer->drawClipLine(p4, p2, lw, c);
       }
       else if (plot->getStyle() == CGnuPlotTypes::PlotStyle::STEPS) {
         CPoint2D p3(p2.x, p1.y);
 
-        renderer->drawClipLine(p1, p3, lineStyle.width(), c);
-        renderer->drawClipLine(p3, p2, lineStyle.width(), c);
+        renderer->drawClipLine(p1, p3, lw, c);
+        renderer->drawClipLine(p3, p2, lw, c);
       }
       else if (plot->getStyle() == CGnuPlotTypes::PlotStyle::FSTEPS) {
         CPoint2D p3(p1.x, p2.y);
 
-        renderer->drawClipLine(p1, p3, lineStyle.width(), c);
-        renderer->drawClipLine(p3, p2, lineStyle.width(), c);
+        renderer->drawClipLine(p1, p3, lw, c);
+        renderer->drawClipLine(p3, p2, lw, c);
       }
       else if (plot->getStyle() == CGnuPlotTypes::PlotStyle::FILLSTEPS) {
         CBBox2D bbox(p1.x, ymin, p2.x, p1.y);

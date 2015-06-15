@@ -16,13 +16,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  bool isCalcColor = lineStyle.color().isCalc();
+  bool isCalcColor = lineStyle.isCalcColor();
 
   CRGBA c1 = (plot->fillType() == CGnuPlotTypes::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  CRGBA  lc = lineStyle.calcColor(CRGBA(0,0,0));
-  double lw = lineStyle.width();
-  CRGBA  fc = lineStyle.calcColor(c1);
+  CRGBA  lc = lineStyle.calcColor(plot->group(), CRGBA(0,0,0));
+  double lw = lineStyle.calcWidth();
+  CRGBA  fc = lineStyle.calcColor(plot->group(), c1);
 
   double bw = plot->boxWidth().getSpacing(0.1);
 
@@ -54,8 +54,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (isCalcColor) {
       double x = reals[ind];
 
-      lc1 = lineStyle.color().calcColor(plot, x);
-      fc1 = lineStyle.color().calcColor(plot, x);
+      lc1 = lineStyle.calcColor(plot, x);
+      fc1 = lineStyle.calcColor(plot, x);
     }
 
     renderer->drawClipLine(CPoint2D(x, wmin), CPoint2D(x, bmin), lw, lc1);
@@ -96,13 +96,13 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   CBBox2D hbbox(p1.x, p1.y - h/2, p2.x, p1.y + h/2);
 
-  const CRGBA &lc = lineStyle.calcColor(CRGBA(0,0,0));
+  const CRGBA &lc = lineStyle.calcColor(plot->group(), CRGBA(0,0,0));
   double       lw = 1;
 
   if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
     renderer->patternRect(hbbox, plot->fillStyle().pattern(), lc, CRGBA(1,1,1));
   else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
-    renderer->fillRect(hbbox, lineStyle.calcColor(CRGBA(1,1,1)));
+    renderer->fillRect(hbbox, lineStyle.calcColor(plot->group(), CRGBA(1,1,1)));
 
   renderer->drawRect(hbbox, lc, lw);
 }

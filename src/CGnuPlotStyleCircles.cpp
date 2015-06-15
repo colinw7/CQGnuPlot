@@ -52,9 +52,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  bool isCalcColor = lineStyle.color().isCalc();
+  bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
   CRGBA fc = lc;
 
   if (plot->fillStyle().isTransparent())
@@ -82,13 +82,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       r = 1; // TODO: get from set circle
 
       if (isCalcColor)
-        fc1 = lineStyle.color().calcColor(plot, reals[2]);
+        fc1 = lineStyle.calcColor(plot, reals[2]);
     }
     else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
       r = reals[2];
 
       if (isCalcColor)
-        fc1 = lineStyle.color().calcColor(plot, reals[3]);
+        fc1 = lineStyle.calcColor(plot, reals[3]);
     }
     else if ((! isCalcColor && reals.size() == 5) || (isCalcColor && reals.size() == 6)) {
       is_angle = true;
@@ -98,7 +98,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       a2 = reals[4];
 
       if (isCalcColor)
-        fc1 = lineStyle.color().calcColor(plot, reals[5]);
+        fc1 = lineStyle.calcColor(plot, reals[5]);
     }
     else if (reals.size() == 6) {
       is_angle = true;
@@ -106,7 +106,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       r   = reals[2];
       a1  = reals[3];
       a2  = reals[4];
-      fc1 = lineStyle.color().calcColor(plot, reals[5]);
+      fc1 = lineStyle.calcColor(plot, reals[5]);
     }
     else {
       std::cerr << "Bad circle points" << std::endl;

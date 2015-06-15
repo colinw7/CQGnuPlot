@@ -10,10 +10,11 @@
 class CQGnuPlotRectangle : public CQGnuPlotAnnotation, public CGnuPlotRectangle {
   Q_OBJECT
 
-  Q_PROPERTY(QPointF             from      READ getFrom      WRITE setFrom     )
-  Q_PROPERTY(QPointF             to        READ getTo        WRITE setTo       )
-  Q_PROPERTY(double              lineWidth READ getLineWidth WRITE setLineWidth)
-  Q_PROPERTY(CQGnuPlot::FillType fillType  READ fillType     WRITE setFillType )
+  Q_PROPERTY(QPointF from      READ getFrom      WRITE setFrom     )
+  Q_PROPERTY(QPointF to        READ getTo        WRITE setTo       )
+  Q_PROPERTY(double  lineWidth READ getLineWidth WRITE setLineWidth)
+
+  Q_PROPERTY(CQGnuPlotEnum::FillType fillType READ fillType WRITE setFillType)
 
  public:
   CQGnuPlotRectangle(CQGnuPlotGroup *group);
@@ -26,8 +27,8 @@ class CQGnuPlotRectangle : public CQGnuPlotAnnotation, public CGnuPlotRectangle 
 
   double getLineWidth() const;
 
-  CQGnuPlot::FillType fillType() const;
-  void setFillType(const CQGnuPlot::FillType &type);
+  CQGnuPlotEnum::FillType fillType() const;
+  void setFillType(const CQGnuPlotEnum::FillType &type);
 
   void draw(CGnuPlotRenderer *renderer) const override;
 };

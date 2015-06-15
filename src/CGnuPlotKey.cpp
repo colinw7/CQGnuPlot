@@ -144,7 +144,9 @@ draw(CGnuPlotRenderer *renderer)
 
       // draw key line
       if      (l.color().isValid()) {
-        renderer->drawLine(p1, p2, lineStyle.width(), l.color().getValue(), lineStyle.dash());
+        CRGBA c = l.color().getValue();
+
+        renderer->drawLine(p1, p2, lineStyle.calcWidth(), c, lineStyle.calcDash());
       }
       else if (style && style->hasKeyLine()) {
         style->drawKeyLine(plot, renderer, p1, p2);
@@ -156,23 +158,23 @@ draw(CGnuPlotRenderer *renderer)
 
         if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
           renderer->patternRect(hbbox, plot->fillStyle().pattern(),
-                                lineStyle.calcColor(CRGBA(0,0,0)), CRGBA(1,1,1));
+                                lineStyle.calcColor(group_, CRGBA(0,0,0)), CRGBA(1,1,1));
         else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
-          renderer->fillRect(hbbox, lineStyle.calcColor(CRGBA(1,1,1)));
+          renderer->fillRect(hbbox, lineStyle.calcColor(group_, CRGBA(1,1,1)));
 
-        renderer->drawRect(hbbox, lineStyle.calcColor(CRGBA(0,0,0)), 1);
+        renderer->drawRect(hbbox, lineStyle.calcColor(group_, CRGBA(0,0,0)), 1);
       }
       else {
-        CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+        CRGBA c = lineStyle.calcColor(group_, CRGBA(1,0,0));
 
-        renderer->drawLine(p1, p2, lineStyle.width(), c, lineStyle.dash());
+        renderer->drawLine(p1, p2, lineStyle.calcWidth(), c, lineStyle.calcDash());
       }
 
       // draw key text
       CRGBA tc = CRGBA(0,0,0);
 
       if      (isVariableTextColor())
-        tc = lineStyle.calcColor(tc);
+        tc = lineStyle.calcColor(group_, tc);
       else if (isIndexTextColor())
         tc = CGnuPlotStyleInst->indexColor(textColorIndex());
       else if (isRGBTextColor())

@@ -11,24 +11,25 @@ class CQGnuPlotGroup;
 class CQGnuPlotKey : public CQGnuPlotObject, public CGnuPlotKey {
   Q_OBJECT
 
-  Q_PROPERTY(bool                  displayed READ isDisplayed WRITE setDisplayed)
-  Q_PROPERTY(bool                  drawBox   READ getDrawBox  WRITE setDrawBox  )
-  Q_PROPERTY(bool                  fillBox   READ getFillBox  WRITE setFillBox  )
-  Q_PROPERTY(bool                  reverse   READ isReverse   WRITE setReverse  )
-  Q_PROPERTY(bool                  outside   READ isOutside   WRITE setOutside  )
-  Q_PROPERTY(CQGnuPlot::HAlignType halign    READ halign      WRITE setHAlign   )
-  Q_PROPERTY(CQGnuPlot::VAlignType valign    READ valign      WRITE setVAlign   )
-  Q_PROPERTY(QFont                 font      READ getFont     WRITE setFont     )
+  Q_PROPERTY(bool  displayed READ isDisplayed WRITE setDisplayed)
+  Q_PROPERTY(bool  drawBox   READ getDrawBox  WRITE setDrawBox  )
+  Q_PROPERTY(bool  fillBox   READ getFillBox  WRITE setFillBox  )
+  Q_PROPERTY(bool  reverse   READ isReverse   WRITE setReverse  )
+  Q_PROPERTY(bool  outside   READ isOutside   WRITE setOutside  )
+  Q_PROPERTY(QFont font      READ getFont     WRITE setFont     )
+
+  Q_PROPERTY(CQGnuPlotEnum::HAlignType halign READ halign WRITE setHAlign)
+  Q_PROPERTY(CQGnuPlotEnum::VAlignType valign READ valign WRITE setVAlign)
 
  public:
   CQGnuPlotKey(CQGnuPlotGroup *group);
  ~CQGnuPlotKey();
 
-  CQGnuPlot::HAlignType halign() const;
-  void setHAlign(const CQGnuPlot::HAlignType &a);
+  CQGnuPlotEnum::HAlignType halign() const;
+  void setHAlign(const CQGnuPlotEnum::HAlignType &a);
 
-  CQGnuPlot::VAlignType valign() const;
-  void setVAlign(const CQGnuPlot::VAlignType &a);
+  CQGnuPlotEnum::VAlignType valign() const;
+  void setVAlign(const CQGnuPlotEnum::VAlignType &a);
 
   QFont getFont() const;
   void setFont(const QFont &f);

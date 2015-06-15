@@ -10,20 +10,35 @@
 class CQGnuPlotLineStyle : public QObject, public CGnuPlotLineStyle {
   Q_OBJECT
 
-  Q_PROPERTY(double                width     READ width     WRITE setWidth    )
-  Q_PROPERTY(QColor                color     READ color     WRITE setColor    )
-  Q_PROPERTY(CQGnuPlot::SymbolType pointType READ pointType WRITE setPointType)
-  Q_PROPERTY(double                pointSize READ pointSize WRITE setPointSize)
+  Q_PROPERTY(int    lineType      READ lineType      WRITE setLineType     )
+  Q_PROPERTY(double lineWidth     READ lineWidth     WRITE setLineWidth    )
+  Q_PROPERTY(int    lineDash      READ lineDash      WRITE setLineDash     )
+  Q_PROPERTY(QColor lineColor     READ lineColor     WRITE setLineColor    )
+  Q_PROPERTY(double pointSize     READ pointSize     WRITE setPointSize    )
+  Q_PROPERTY(int    pointInterval READ pointInterval WRITE setPointInterval)
+  Q_PROPERTY(bool   palette       READ palette       WRITE setPalette      )
+
+  Q_PROPERTY(CQGnuPlotEnum::SymbolType pointType READ pointType WRITE setPointType)
 
  public:
-  CQGnuPlotLineStyle();
+  CQGnuPlotLineStyle(CGnuPlot *plot);
  ~CQGnuPlotLineStyle();
 
-  QColor color() const;
-  void setColor(const QColor &c);
+  int lineType() const;
 
-  CQGnuPlot::SymbolType pointType() const;
-  void setPointType(const CQGnuPlot::SymbolType &type);
+  double lineWidth() const;
+
+  int lineDash() const;
+
+  QColor lineColor() const;
+  void setLineColor(const QColor &c);
+
+  CQGnuPlotEnum::SymbolType pointType() const;
+  void setPointType(const CQGnuPlotEnum::SymbolType &type);
+
+  int pointInterval() const;
+
+  double pointSize() const;
 };
 
 #endif

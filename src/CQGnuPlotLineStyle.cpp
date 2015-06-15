@@ -3,7 +3,8 @@
 #include <CQUtil.h>
 
 CQGnuPlotLineStyle::
-CQGnuPlotLineStyle()
+CQGnuPlotLineStyle(CGnuPlot *plot) :
+ CGnuPlotLineStyle(plot)
 {
 }
 
@@ -12,34 +13,69 @@ CQGnuPlotLineStyle::
 {
 }
 
+int
+CQGnuPlotLineStyle::
+lineType() const
+{
+  return CGnuPlotLineStyle::lineType().getValue(0);
+}
+
+double
+CQGnuPlotLineStyle::
+lineWidth() const
+{
+  return CGnuPlotLineStyle::calcWidth();
+}
+
+int
+CQGnuPlotLineStyle::
+lineDash() const
+{
+  return CGnuPlotLineStyle::lineDash().getValue(0);
+}
+
 QColor
 CQGnuPlotLineStyle::
-color() const
+lineColor() const
 {
-  return CQUtil::rgbaToColor(CGnuPlotLineStyle::calcColor(CRGBA(0,0,0)));
+  return CQUtil::rgbaToColor(CGnuPlotLineStyle::calcColor(0, CRGBA(0,0,0)));
 }
 
 void
 CQGnuPlotLineStyle::
-setColor(const QColor &c)
+setLineColor(const QColor &c)
 {
   CGnuPlotColorSpec cs;
 
   cs.setRGB(CQUtil::colorToRGBA(c));
 
-  CGnuPlotLineStyle::setColor(cs);
+  CGnuPlotLineStyle::setLineColor(cs);
 }
 
-CQGnuPlot::SymbolType
+CQGnuPlotEnum::SymbolType
 CQGnuPlotLineStyle::
 pointType() const
 {
-  return CQGnuPlotUtil::symbolConv(CGnuPlotLineStyle::pointType());
+  return CQGnuPlotUtil::symbolConv(CGnuPlotLineStyle::calcPointType());
 }
 
 void
 CQGnuPlotLineStyle::
-setPointType(const CQGnuPlot::SymbolType &type)
+setPointType(const CQGnuPlotEnum::SymbolType &type)
 {
-  CGnuPlotLineStyle::setPointType(CQGnuPlotUtil::symbolConv(type));
+  CGnuPlotLineStyle::setPointType(int(CQGnuPlotUtil::symbolConv(type)));
+}
+
+double
+CQGnuPlotLineStyle::
+pointSize() const
+{
+  return CGnuPlotLineStyle::calcPointSize();
+}
+
+int
+CQGnuPlotLineStyle::
+pointInterval() const
+{
+  return CGnuPlotLineStyle::pointInterval().getValue(0);
 }

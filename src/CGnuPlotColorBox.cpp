@@ -232,8 +232,8 @@ draw(CGnuPlotRenderer *renderer)
     if (borderStyle_ >= 0) {
       CGnuPlotLineStyleP lineStyle = group_->app()->getLineStyleInd(borderStyle_);
 
-      c = lineStyle->calcColor(c);
-      w = lineStyle->width();
+      c = lineStyle->calcColor(group_, c);
+      w = lineStyle->calcWidth();
     }
 
     renderer->drawRect(bbox_, c, w);

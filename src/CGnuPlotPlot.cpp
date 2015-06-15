@@ -23,8 +23,8 @@ int CGnuPlotPlot::nextId_ = 1;
 
 CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
- group_(group), style_(style), id_(nextId_++), contour_(this),
- barCache_(this), bubbleCache_(this), ellipseCache_(this), pieCache_(this),
+ group_(group), style_(style), id_(nextId_++), lineStyle_(app()),
+ contour_(this), barCache_(this), bubbleCache_(this), ellipseCache_(this), pieCache_(this),
  polygonCache_(this), rectCache_(this)
 {
   setSmooth (app()->getSmooth());
@@ -511,11 +511,11 @@ drawSurface(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  CRGBA c = lineStyle.calcColor(CRGBA(0,0,0));
+  CRGBA c = lineStyle.calcColor(group_, CRGBA(0,0,0));
 
   CGnuPlotCamera *camera = group()->camera();
 
-  bool isCalcColor = lineStyle.color().isCalc();
+  bool isCalcColor = lineStyle.isCalcColor();
 
   std::pair<int,int> np = numPoints3D();
 
@@ -571,10 +571,10 @@ drawSurface(CGnuPlotRenderer *renderer)
 
             int nc = ppoint1.getNumValues();
 
-            CRGBA rgba1 = lineStyle.color().calcColor(this, ppoint1.getReal(nc));
-            CRGBA rgba2 = lineStyle.color().calcColor(this, ppoint2.getReal(nc));
-            CRGBA rgba3 = lineStyle.color().calcColor(this, ppoint3.getReal(nc));
-            CRGBA rgba4 = lineStyle.color().calcColor(this, ppoint4.getReal(nc));
+            CRGBA rgba1 = lineStyle.calcColor(this, ppoint1.getReal(nc));
+            CRGBA rgba2 = lineStyle.calcColor(this, ppoint2.getReal(nc));
+            CRGBA rgba3 = lineStyle.calcColor(this, ppoint3.getReal(nc));
+            CRGBA rgba4 = lineStyle.calcColor(this, ppoint4.getReal(nc));
 
             ca = CGnuPlotUtil::avgT<CRGBA>({rgba1, rgba2, rgba3, rgba4}, CRGBA(0,0,0,0));
           }
@@ -703,7 +703,7 @@ draw2D(CGnuPlotRenderer *renderer)
   if (getSmooth() == Smooth::BEZIER) {
     const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-    const CRGBA &c = lineStyle.calcColor(CRGBA(1,0,0));
+    const CRGBA &c = lineStyle.calcColor(group_, CRGBA(1,0,0));
 
     uint np = numPoints2D();
 
@@ -722,7 +722,7 @@ draw2D(CGnuPlotRenderer *renderer)
 
       renderer->drawBezier(CPoint2D(x1, y1), CPoint2D(x2, y2),
                            CPoint2D(x3, y3), CPoint2D(x4, y4),
-                           lineStyle.width(), c);
+                           lineStyle.calcWidth(), c);
     }
   }
 }
@@ -733,8 +733,8 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
 {
   CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  CRGBA lc = lineStyle().calcColor(c);
-  CRGBA fc = lineStyle().calcColor(CRGBA(0,0,0));
+  CRGBA lc = lineStyle().calcColor(group_, c);
+  CRGBA fc = lineStyle().calcColor(group_, CRGBA(0,0,0));
 
   //---
 
@@ -786,8 +786,8 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
 {
   CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  CRGBA lc = lineStyle().calcColor(c);
-  CRGBA fc = lineStyle().calcColor(CRGBA(0,0,0));
+  CRGBA lc = lineStyle().calcColor(group_, c);
+  CRGBA fc = lineStyle().calcColor(group_, CRGBA(0,0,0));
 
   //---
 
@@ -869,8 +869,8 @@ drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox)
 
   CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  CRGBA lc = lineStyle().calcColor(c);
-  CRGBA fc = lineStyle().calcColor(CRGBA(0,0,0));
+  CRGBA lc = lineStyle().calcColor(group_, c);
+  CRGBA fc = lineStyle().calcColor(group_, CRGBA(0,0,0));
 
   //---
 
@@ -933,7 +933,7 @@ setLineStyleId(int ind)
 {
   CGnuPlotLineStyleP ls = app()->lineStyle(ind);
 
-  if (ls.get())
+  if (ls.isValid())
     setLineStyle(*ls);
 }
 

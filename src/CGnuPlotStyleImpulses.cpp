@@ -14,9 +14,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  bool isCalcColor = lineStyle.color().isCalc();
+  bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   double ymin = plot->getBBox().getYMin();
 
@@ -38,10 +38,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (reals.size() >= 3 && isCalcColor) {
       double x = reals[2];
 
-      lc1 = lineStyle.color().calcColor(plot, x);
+      lc1 = lineStyle.calcColor(plot, x);
     }
 
-    renderer->drawClipLine(p1, p2, lineStyle.width(), lc1);
+    double lw = lineStyle.calcWidth();
+
+    renderer->drawClipLine(p1, p2, lw, lc1);
   }
 }
 
@@ -51,7 +53,9 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  renderer->drawLine(p1, p2, lineStyle.width(), lineStyle.calcColor(CRGBA(1,0,0)));
+  double lw = lineStyle.calcWidth();
+
+  renderer->drawLine(p1, p2, lw, lineStyle.calcColor(plot->group(), CRGBA(1,0,0)));
 }
 
 CBBox2D

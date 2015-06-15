@@ -12,13 +12,14 @@ class CQGnuPlotGroup;
 class CQGnuPlotAnnotation : public CQGnuPlotObject {
   Q_OBJECT
 
-  Q_PROPERTY(QColor                   strokeColor READ getStrokeColor WRITE setStrokeColor)
-  Q_PROPERTY(QColor                   fillColor   READ getFillColor   WRITE setFillColor  )
-  Q_PROPERTY(QColor                   fillColor   READ getFillColor   WRITE setFillColor  )
-  Q_PROPERTY(CQGnuPlot::DrawLayerType drawLayer   READ getDrawLayer   WRITE setDrawLayer  )
+  Q_PROPERTY(QColor strokeColor READ getStrokeColor WRITE setStrokeColor)
+  Q_PROPERTY(QColor fillColor   READ getFillColor   WRITE setFillColor  )
+  Q_PROPERTY(QColor fillColor   READ getFillColor   WRITE setFillColor  )
+
+  Q_PROPERTY(CQGnuPlotEnum::DrawLayerType drawLayer READ getDrawLayer WRITE setDrawLayer)
 
  public:
-  typedef CQGnuPlot::DrawLayerType DrawLayerType;
+  typedef CQGnuPlotEnum::DrawLayerType DrawLayerType;
 
  public:
   CQGnuPlotAnnotation(CGnuPlotGroupAnnotation *obj);

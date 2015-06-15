@@ -165,7 +165,7 @@ drawContourLines(CGnuPlotRenderer *renderer)
 
   //---
 
-  double width = lineStyle.width();
+  double width = lineStyle.calcWidth();
 
   int    flag[8];
   double xc[8], yc[8], zc[8];

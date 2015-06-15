@@ -15,7 +15,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   const CGnuPlotLineStyle  &lineStyle  = plot->lineStyle();
   const CGnuPlotArrowStyle &arrowStyle = plot->arrowStyle();
 
-  bool isCalcColor = lineStyle.color().isCalc();
+  bool isCalcColor = lineStyle.isCalcColor();
   bool isVarArrow  = plot->arrowStyle().isVariable();
 
   uint numExtra = 0;
@@ -23,7 +23,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   if (isCalcColor) ++numExtra;
   if (isVarArrow ) ++numExtra;
 
-  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   for (const auto &point : plot->getPoints2D()) {
     std::vector<double> reals;
@@ -54,7 +54,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (isCalcColor) {
       double x = reals[pos++];
 
-      lc1 = lineStyle.color().calcColor(plot, x);
+      lc1 = lineStyle.calcColor(plot, x);
     }
 
     CGnuPlotArrowStyle as = arrowStyle;
@@ -96,7 +96,7 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   const CGnuPlotLineStyle  &lineStyle  = plot->lineStyle();
   const CGnuPlotArrowStyle &arrowStyle = plot->arrowStyle();
 
-  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   //---
 

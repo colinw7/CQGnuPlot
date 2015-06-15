@@ -20,7 +20,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
   const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
-  CRGBA fc = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA fc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
   CRGBA lc = CRGBA(0,0,0);
 
   if (fillStyle.isTransparent())

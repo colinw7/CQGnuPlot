@@ -7,69 +7,83 @@
 #include <CRefPtr.h>
 #include <CRGBA.h>
 #include <COptVal.h>
-#include <CLineDash.h>
 #include <CStrUtil.h>
 
 #include <sstream>
 
+class CGnuPlot;
+
 class CGnuPlotLineStyle {
  public:
-  typedef CGnuPlotTypes::SymbolType SymbolType;
+  typedef CGnuPlotTypes::SymbolType   SymbolType;
+  typedef COptValT<SymbolType>        OptSymbolType;
+  typedef COptValT<CGnuPlotColorSpec> OptColorSpec;
 
  public:
-  CGnuPlotLineStyle() { }
+  CGnuPlotLineStyle(CGnuPlot *plot);
 
   virtual ~CGnuPlotLineStyle() { }
 
   int ind() const { return ind_; }
   void setInd(int i) { ind_ = i; }
 
-  const COptInt &type() const { return type_; }
-  void setType(int type) { type_ = type; }
-  void unsetType() { type_.setInvalid(); }
+  const COptInt &lineType() const { return lineType_; }
+  void setLineType(int type);
+  void unsetLineType() { lineType_.setInvalid(); }
 
-  double width() const { return width_; }
-  void setWidth(double width) { width_ = width; }
+  const COptReal &lineWidth() const { return lineWidth_; }
+  void setLineWidth(double width) { lineWidth_ = width; }
+  void unsetLineWidth() { lineWidth_.setInvalid(); }
 
-  const CLineDash &dash() const { return dash_; }
-  void setDash(const CLineDash &d) { dash_ = d; }
+  const COptInt &lineDash() const { return lineDash_; }
+  void setLineDash(int d) { lineDash_ = d; }
+  void unsetLineDash() { lineDash_.setInvalid(); }
 
-  const CGnuPlotColorSpec &color() const { return color_; }
-  void setColor(const CGnuPlotColorSpec &c) { color_ = c; }
+  const OptColorSpec &lineColor() const { return lineColor_; }
+  void setLineColor(const CGnuPlotColorSpec &c) { lineColor_ = c; }
+  void unsetLineColor() { lineColor_.setInvalid(); }
 
-  const CRGBA &calcColor(const CRGBA &c) const {
-    if      (color_.type() == CGnuPlotColorSpec::Type::RGB ||
-             color_.type() == CGnuPlotColorSpec::Type::INDEX)
-      return color_.color();
-    else if (type_.isValid())
-      return CGnuPlotStyleInst->indexColor(type_.getValue());
-    else if (ind_ > 0)
-      return CGnuPlotStyleInst->indexColor(ind_);
-    else
-      return c;
-  }
-  //void setColor(const CRGBA &c) { color_.setRGB(c); }
+  const COptInt &pointType() const { return pointType_; }
+  void setPointType(int type) { pointTypeStr_ = ""; pointType_ = type; }
+  void setPointType(const std::string &str) {pointType_.setInvalid();  pointTypeStr_ = str; }
+  void resetPointType() { pointType_.setInvalid(); pointTypeStr_ = ""; }
 
-  SymbolType pointType() const { return pointType_; }
-  void setPointType(SymbolType type) { pointType_ = type; }
+  const std::string &pointTypeStr() const { return pointTypeStr_; }
 
-  double pointSize() const { return pointSize_.getValue(1); }
+  const COptReal &pointSize() const { return pointSize_; }
   void setPointSize(double s) { pointSize_ = s; }
-  void resetPointSize() { pointSize_ = COptReal(); }
+  void resetPointSize() { pointSize_.setInvalid(); }
 
-  int pointInterval() const { return pointInterval_; }
+  const COptInt &pointInterval() const { return pointInterval_; }
   void setPointInterval(int pi) { pointInterval_ = pi; }
+  void resetPointInterval() { pointInterval_.setInvalid(); }
 
   bool palette() const { return palette_; }
   void setPalette(bool b) { palette_ = b; }
 
-  void init(int ind) {
-    unset();
+  //---
 
-    ind_ = ind;
+  double calcWidth(double w=1) const;
 
-    //color_.setRGB(CGnuPlotStyleInst->indexColor(ind_));
-  }
+  int calcDashInd(int d=0) const;
+
+  CLineDash calcDash(const CLineDash &d=CLineDash()) const;
+
+  CRGBA calcColor(CGnuPlotPlot *plot, double x=0.0) const;
+
+  CRGBA calcColor(CGnuPlotGroup *group, const CRGBA &c=CRGBA(0,0,0)) const;
+
+  SymbolType calcPointType(const SymbolType &t=SymbolType::PLUS) const;
+
+  double calcPointSize(double s=1) const;
+
+  int calcPointInterval(int i=0) const;
+
+  bool isCalcColor() const;
+
+  //---
+
+  void init(int ind);
 
   void unset();
 
@@ -77,29 +91,18 @@ class CGnuPlotLineStyle {
 
   void show(std::ostream &os) const;
 
- private:
-  std::string pointSizeStr() const {
-    if (pointSize_.isValid()) {
-      std::stringstream os;
-
-      os << pointSize_.getValue();
-
-      return os.str();
-    }
-    else
-      return "default";
-  }
-
- private:
-  int               ind_       { -1 };
-  COptInt           type_;
-  double            width_     { 1 };
-  CLineDash         dash_;
-  CGnuPlotColorSpec color_;
-  SymbolType        pointType_ { SymbolType::PLUS };
-  COptReal          pointSize_;
-  double            pointInterval_ { 0 };
-  bool              palette_ { false };
+ protected:
+  CGnuPlot*    plot_ { 0 };
+  int          ind_  { -1 };
+  COptInt      lineType_;
+  COptReal     lineWidth_;
+  COptInt      lineDash_;
+  OptColorSpec lineColor_;
+  COptInt      pointType_;
+  std::string  pointTypeStr_;
+  COptReal     pointSize_;
+  COptInt      pointInterval_;
+  bool         palette_ { false };
 };
 
 typedef CRefPtr<CGnuPlotLineStyle> CGnuPlotLineStyleP;

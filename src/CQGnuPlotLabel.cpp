@@ -25,7 +25,7 @@ setText(const QString &s)
   CGnuPlotLabel::setText(s.toStdString());
 }
 
-CQGnuPlot::HAlignType
+CQGnuPlotEnum::HAlignType
 CQGnuPlotLabel::
 getAlign() const
 {
@@ -34,7 +34,7 @@ getAlign() const
 
 void
 CQGnuPlotLabel::
-setAlign(const CQGnuPlot::HAlignType &a)
+setAlign(const CQGnuPlotEnum::HAlignType &a)
 {
   CGnuPlotLabel::setAlign(CQGnuPlotUtil::alignConv(a));
 }

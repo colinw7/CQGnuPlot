@@ -15,9 +15,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  bool isCalcColor = lineStyle.color().isCalc();
+  bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   //---
 
@@ -57,7 +57,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (isCalcColor && valueNum < reals.size()) {
       double x = reals[valueNum++];
 
-      c1 = lineStyle.color().calcColor(plot, x);
+      c1 = lineStyle.calcColor(plot, x);
     }
 
     renderer->drawSymbol(p, pointType, size1, c1);
@@ -72,7 +72,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //bool isCalcColor = lineStyle.color().isCalc();
 
-  CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   //---
 
@@ -116,7 +116,7 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   double                   pointSize = plot->pointSize();
   CGnuPlotPlot::SymbolType pointType = plot->pointType();
 
-  CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   CPoint2D pm = (p1 + p2)/2;
 

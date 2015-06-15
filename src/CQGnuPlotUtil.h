@@ -6,44 +6,44 @@
 #include <CAlignType.h>
 
 namespace CQGnuPlotUtil {
-  CQGnuPlot::SymbolType     symbolConv(const CGnuPlotTypes::SymbolType &type);
-  CGnuPlotTypes::SymbolType symbolConv(const CQGnuPlot::SymbolType     &type);
+  CQGnuPlotEnum::SymbolType symbolConv(const CGnuPlotTypes::SymbolType &type);
+  CGnuPlotTypes::SymbolType symbolConv(const CQGnuPlotEnum::SymbolType &type);
 
-  CQGnuPlot::HAlignType alignConv(const CHAlignType           &type);
-  CHAlignType           alignConv(const CQGnuPlot::HAlignType &type);
+  CQGnuPlotEnum::HAlignType alignConv(const CHAlignType &type);
+  CHAlignType alignConv(const CQGnuPlotEnum::HAlignType &type);
 
-  CQGnuPlot::VAlignType alignConv(const CVAlignType           &type);
-  CVAlignType           alignConv(const CQGnuPlot::VAlignType &type);
+  CQGnuPlotEnum::VAlignType alignConv(const CVAlignType &type);
+  CVAlignType alignConv(const CQGnuPlotEnum::VAlignType &type);
 
-  CQGnuPlot::PlotStyle plotStyleConv(const CGnuPlot::PlotStyle  &type);
-  CGnuPlot::PlotStyle  plotStyleConv(const CQGnuPlot::PlotStyle &type);
+  CQGnuPlotEnum::PlotStyle plotStyleConv(const CGnuPlot::PlotStyle &type);
+  CGnuPlot::PlotStyle plotStyleConv(const CQGnuPlotEnum::PlotStyle &type);
 
-  CQGnuPlot::HistogramStyle histogramStyleConv(const CGnuPlot::HistogramStyle  &type);
-  CGnuPlot::HistogramStyle  histogramStyleConv(const CQGnuPlot::HistogramStyle &type);
+  CQGnuPlotEnum::HistogramStyle histogramStyleConv(const CGnuPlot::HistogramStyle &type);
+  CGnuPlot::HistogramStyle histogramStyleConv(const CQGnuPlotEnum::HistogramStyle &type);
 
-  CQGnuPlot::FillType     fillTypeConv(const CGnuPlotTypes::FillType &type);
-  CGnuPlotTypes::FillType fillTypeConv(const CQGnuPlot::FillType     &type);
+  CQGnuPlotEnum::FillType fillTypeConv(const CGnuPlotTypes::FillType &type);
+  CGnuPlotTypes::FillType fillTypeConv(const CQGnuPlotEnum::FillType &type);
 
-  CQGnuPlot::FillPattern     fillPatternConv(const CGnuPlotTypes::FillPattern &type);
-  CGnuPlotTypes::FillPattern fillPatternConv(const CQGnuPlot::FillPattern     &type);
+  CQGnuPlotEnum::FillPattern fillPatternConv(const CGnuPlotTypes::FillPattern &type);
+  CGnuPlotTypes::FillPattern fillPatternConv(const CQGnuPlotEnum::FillPattern &type);
 
-  Qt::BrushStyle             fillPatternQtConv(const CGnuPlotTypes::FillPattern &type);
-  CGnuPlotTypes::FillPattern fillPatternQtConv(const Qt::BrushStyle             &type);
+  Qt::BrushStyle fillPatternQtConv(const CGnuPlotTypes::FillPattern &type);
+  CGnuPlotTypes::FillPattern fillPatternQtConv(const Qt::BrushStyle &type);
 
-  CQGnuPlot::BoxWidthType     boxWidthTypeConv(const CGnuPlotTypes::BoxWidthType  &type);
-  CGnuPlotTypes::BoxWidthType boxWidthTypeConv(const CQGnuPlot::BoxWidthType &type);
+  CQGnuPlotEnum::BoxWidthType boxWidthTypeConv(const CGnuPlotTypes::BoxWidthType &type);
+  CGnuPlotTypes::BoxWidthType boxWidthTypeConv(const CQGnuPlotEnum::BoxWidthType &type);
 
-  CQGnuPlot::ColorModelType colorModelTypeConv(const CGnuPlotTypes::ColorModel &layer);
-  CGnuPlotTypes::ColorModel colorModelTypeConv(const CQGnuPlot::ColorModelType &layer);
+  CQGnuPlotEnum::ColorModelType colorModelTypeConv(const CGnuPlotTypes::ColorModel &layer);
+  CGnuPlotTypes::ColorModel colorModelTypeConv(const CQGnuPlotEnum::ColorModelType &layer);
 
-  CQGnuPlot::DrawLayerType drawLayerTypeConv(const CGnuPlotTypes::DrawLayer &layer);
-  CGnuPlotTypes::DrawLayer drawLayerTypeConv(const CQGnuPlot::DrawLayerType &layer);
+  CQGnuPlotEnum::DrawLayerType drawLayerTypeConv(const CGnuPlotTypes::DrawLayer &layer);
+  CGnuPlotTypes::DrawLayer drawLayerTypeConv(const CQGnuPlotEnum::DrawLayerType &layer);
 
-  CQGnuPlot::PaletteColorType paletteColorTypeConv(const CGnuPlotPalette::ColorType    &layer);
-  CGnuPlotPalette::ColorType  paletteColorTypeConv(const CQGnuPlot::PaletteColorType &layer);
+  CQGnuPlotEnum::PaletteColorType paletteColorTypeConv(const CGnuPlotPalette::ColorType &layer);
+  CGnuPlotPalette::ColorType paletteColorTypeConv(const CQGnuPlotEnum::PaletteColorType &layer);
 
-  CQGnuPlot::ArrowCoordType arrowCoordTypeConv(const CGnuPlotArrow::CoordType  &type);
-  CGnuPlotArrow::CoordType  arrowCoordTypeConv(const CQGnuPlot::ArrowCoordType &type);
+  CQGnuPlotEnum::ArrowCoordType arrowCoordTypeConv(const CGnuPlotArrow::CoordType &type);
+  CGnuPlotArrow::CoordType  arrowCoordTypeConv(const CQGnuPlotEnum::ArrowCoordType &type);
 }
 
 #endif

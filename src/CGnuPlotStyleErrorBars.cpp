@@ -14,7 +14,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   typedef std::map<std::string,int> IndexMap;
 
@@ -71,7 +71,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         double x;
 
         if (point.getValue(7, x))
-          c = lineStyle.color().calcColor(plot, x);
+          c = lineStyle.calcColor(plot, x);
       }
     }
     // x y xdelta ydelta
@@ -91,7 +91,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         double x;
 
         if (point.getValue(5, x))
-          c = lineStyle.color().calcColor(plot, x);
+          c = lineStyle.calcColor(plot, x);
       }
     }
     // x y delta

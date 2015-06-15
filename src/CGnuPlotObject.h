@@ -29,6 +29,8 @@ class CGnuPlotObject {
 
   virtual ~CGnuPlotObject() { }
 
+  CGnuPlot *plot() const { return plot_; }
+
   virtual bool inside(const CPoint2D &p) const = 0;
 
   virtual void draw(CGnuPlotRenderer *renderer) const = 0;
@@ -50,6 +52,8 @@ class CGnuPlotPlotObject {
   }
 
   virtual ~CGnuPlotPlotObject() { }
+
+  CGnuPlotPlot *plot() const { return plot_; }
 
   bool isModified() const { return modified_; }
   void setModified(bool b) { modified_ = b; }
@@ -79,6 +83,8 @@ class CGnuPlotGroupObject {
   }
 
   virtual ~CGnuPlotGroupObject() { }
+
+  CGnuPlotGroup *group() const { return group_; }
 
   virtual bool inside(const CPoint2D &p) const = 0;
 

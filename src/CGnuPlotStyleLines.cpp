@@ -15,7 +15,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   CGnuPlotGroup *group = plot->group();
 
@@ -61,7 +61,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
 
     // TODO: clip
-    renderer->drawPath(points, lineStyle.width(), c, lineStyle.dash());
+    double lw = lineStyle.calcWidth();
+
+    renderer->drawPath(points, lw, c, lineStyle.calcDash());
   }
 
 #if 0
@@ -72,8 +74,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CPoint2D p1, p2;
 
     if (! point1.isDiscontinuity() && point1.getPoint(p1) && point2.getPoint(p2))
-      renderer->drawClipLine(p1, p2, lineStyle.width(), c),
-                             lineStyle.dash());
+      renderer->drawClipLine(p1, p2, lw, c), lineStyle.calcDash());
   }
 #endif
 }
@@ -84,7 +85,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   CGnuPlotGroup *group = plot->group();
 
@@ -145,7 +146,9 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
 
       // TODO: clip
-      renderer->drawPath(points, lineStyle.width(), c, lineStyle.dash());
+      double lw = lineStyle.calcWidth();
+
+      renderer->drawPath(points, lw, c, lineStyle.calcDash());
 
       if (n < 0)
         n = points.size();
@@ -160,7 +163,9 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   if (grid) {
     for (const auto &ip : xpoints) {
       // TODO: clip
-      renderer->drawPath(ip.second, lineStyle.width(), c, lineStyle.dash());
+      double lw = lineStyle.calcWidth();
+
+      renderer->drawPath(ip.second, lw, c, lineStyle.calcDash());
     }
   }
 }
@@ -171,9 +176,11 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 {
   const CGnuPlotLineStyle &lineStyle= plot->lineStyle();
 
-  CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
-  renderer->drawLine(p1, p2, lineStyle.width(), c, lineStyle.dash());
+  double lw = lineStyle.calcWidth();
+
+  renderer->drawLine(p1, p2, lw, c, lineStyle.calcDash());
 }
 
 CBBox2D

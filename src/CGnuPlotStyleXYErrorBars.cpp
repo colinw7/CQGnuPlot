@@ -14,9 +14,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  bool isCalcColor = lineStyle.color().isCalc();
+  bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   double pw = 0, ph = 0;
 
@@ -52,7 +52,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[6];
 
-        lc1 = lineStyle.color().calcColor(plot, x);
+        lc1 = lineStyle.calcColor(plot, x);
       }
     }
     // x y xdelta ydelta
@@ -68,7 +68,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (isCalcColor) {
         double x = reals[4];
 
-        lc1 = lineStyle.color().calcColor(plot, x);
+        lc1 = lineStyle.calcColor(plot, x);
       }
     }
 
@@ -89,9 +89,9 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  CRGBA c = lineStyle.calcColor(CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
-  double lw = lineStyle.width();
+  double lw = lineStyle.calcWidth();
   double h  = renderer->pixelHeightToWindowHeight(3);
 
   renderer->drawLine(p1, p2, lw, c);

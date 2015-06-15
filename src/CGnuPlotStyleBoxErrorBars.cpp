@@ -16,7 +16,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
   const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
-  bool isCalcColor = lineStyle.color().isCalc();
+  bool isCalcColor = lineStyle.isCalcColor();
 
   CBBox2D bbox = plot->getBBox();
 
@@ -87,7 +87,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CRGBA fc1 = fc;
 
     if (colorVal.isValid()) {
-      fc1 = lineStyle.color().calcColor(plot, colorVal.getValue());
+      fc1 = lineStyle.calcColor(plot, colorVal.getValue());
     }
 
     CBBox2D bbox(x - dx/2, y2, x + dx/2, y);
@@ -116,12 +116,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     else
       renderer->drawRect(bbox, fc1, 1);
 
-    renderer->drawClipLine(CPoint2D(x, yl), CPoint2D(x, yh), lineStyle.width(), fc1);
+    double lw = lineStyle.calcWidth();
+
+    renderer->drawClipLine(CPoint2D(x, yl), CPoint2D(x, yh), lw, fc1);
 
     double w = dx/2;
 
-    renderer->drawClipLine(CPoint2D(x - w/2, yl), CPoint2D(x + w/2, yl), lineStyle.width(), fc1);
-    renderer->drawClipLine(CPoint2D(x - w/2, yh), CPoint2D(x + w/2, yh), lineStyle.width(), fc1);
+    renderer->drawClipLine(CPoint2D(x - w/2, yl), CPoint2D(x + w/2, yl), lw, fc1);
+    renderer->drawClipLine(CPoint2D(x - w/2, yh), CPoint2D(x + w/2, yh), lw, fc1);
 
     ++i;
   }
