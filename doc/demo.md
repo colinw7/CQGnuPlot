@@ -2,10 +2,10 @@
   + No issues
 
 ## animate2.dem
-  + No animation : recursive script - doesn't seem to work
+  + No issues
 
 ## animate.dem
-  + No animation : recursive script - doesn't seem to work
+  + No issues
 
 ## approximate.dem
   + no issues
@@ -14,23 +14,20 @@
   + should have no key on first few plots
 
 ## autoscale.dem
-  + symbol should be plus
   + handle range limits
 
 ## barchart_art.dem
   + No issues
 
 ## binary.dem
-  + Bad view/axis
   + Bad fill color (top/bottom sides)
-  + Missing text on key
 
 ## bivariat.dem
   + expr crash on user func (x>=-d*.1) ? 0 : (int1b(x+d,d)+(f(x+d)+4*f(x+d*.5)+f(x))*d/6.)
   + infinite loop
 
 ## bolditalic.dem
-  + improve polar layout (axis labels and title)
+  + No issues
 
 ## borders.dem
   + key not needed
@@ -64,40 +61,38 @@
 
 ## complex_trig.dem
   + Slow
+  + z axis should not be drawn
 
 ## contours.dem
-  + Invalid plot var 'boxed'
-  + Invalid plot var 'nosurf'
-  + Missing plot var '/ (x**2 + y**2 + 0.1)
+  + Spaces in expressions (original code)
+  + last multiplot should overlay
 
 ## controls.dem
-  + Crash 15->Enum conversion
+  + No issues
 
 ## dashcolor.dem
-  + Invalid line modifier 'dt'
-  + Invalid arg 'title' ...
+  + No issues
 
 ## dashtypes.dem
-  + Invalid arg 'new', Invalid arg '+(i-1)%5, no dash type support yet
+  + wrong color line 
 
 ## datastrings.dem
-  + Invalid Function 'xticlabel'
-  + Invalid arg 'offset', 'boxed', 'notitle'
+  + Invalid arg 'offset'
 
 ## dgrid3d.dem
-  + no data on plot
+  + splines, qnorm, gauss not working
 
 ## discrete.dem
-  + bad data
+  + No issues
 
 ## electron.dem
-  + Invalid format string
   + bad log axis
   + Unhandled autoscale y2
 
 ## ellipse.dem
+  + Invalid Function 'exist'
   + Missing command name '}'
-  + Invalid arg 'front', Invalid Character "$random#$#random
+  + Invalid arg 'front', Invalid Character "$random#$#random"
 
 ## ellipses_style.dem
   + runs, need check output
@@ -107,7 +102,8 @@
   + runs, need check output
 
 ## enhanced_utf8.dem
-  + bad display
+  + some display wrong
+  + key does not display enhanced
 
 ## epslatex.dem
   + terminal not supported, device push/pop
@@ -124,12 +120,13 @@
   + Invalid arg '1.0'
   + Invalid arg 'lc'
   + Invalid arg 'rgb'
-  + Invalid arg ''dark-goldenrod'
+  + Invalid arg 'dark-goldenrod'
 
 ## fillstyle.dem
   + runs ok, need to check output
 
 ## finance.dem
+  + Invalid format string
   + runs ok, need to check output
 
 ## fit.dem
@@ -189,15 +186,14 @@
 ## imageNaN.dem
   + Invalid option name 'tic'
   + Invalid arg '0'
-  + Invalid command name 'Junk
+  + Invalid command name 'Junk'
 
 ## iterate.dem
-  + Invalid arg '/2'
-  + runs ok, bad output
+  + bad key
 
 ## kdensity2d.dem
   + bad display
-  + Invalid Character "$random#$#random
+  + Invalid Character "$random#$#random"
 
 ## key.dem
   + No issues
@@ -207,17 +203,17 @@
   + Invalid arg 'margins'
 
 ## lines_arrows.dem
-  + Invalid line modifier 'dt'
-  + Invalid arg 'title', 'ls'
+  + No issues
 
 ## linkedaxes.dem
-  + Invalid option name 'ticslevel
+  + Invalid option name 'ticslevel'
   + Invalid arg 'volatile', ...
 
 ## macros.dem
   + Missing plot style '@style1 title 'plot1', '1.dat' using 1:($2+1) with @style2 title 'plot2''
 
 ## margins.dem
+  + Syntax Error >>*<<
   + maybe bad display
 
 ## mgr.dem
@@ -225,7 +221,7 @@
   + Invalid plot style 'xerr', 'yerr'
 
 ## molecule.dem
-  + Display off screen
+  + Bad display ?
 
 ## mouselab_1.dem
   + Eval failed:  LID + 1
@@ -251,17 +247,17 @@
 
 ## multiplt.dem
   + Invalid arg '-'
-  + Crash on Qt conv
+  + bad axes
 
 ## named_var.dem
   + bad plot
 
 ## nokey.dem
   + Invalid separator type
+  + Invalid arg 'at' 'end'
 
 ## orbits.dem
-  + Invalid Character "$3#$#3
-  + symbol qt conv
+  + Invalid arg '(cy($2,$3,$4,$5,$6))'
 
 ## parallel.dem
   + second plot bad range
@@ -271,11 +267,12 @@
   + Invalid arg 'cycle'
 
 ## piecewise.dem
-  + Failed to eval sample for x=-2
+  + Failed to eval sample for x=-2, ...
 
 ## pm3dcolors.dem
   + Invalid arg '.'
   + Invalid arg 'rgb'
+  + bad 3d plots
 
 ## pm3d.dem
   + Invalid option name 'ticslevel'
@@ -285,11 +282,12 @@
   + bad plots
 
 ## pointsize.dem
-  + Invalid option name 'ticslevel'
   + Invalid arg ',-1.2'
 
 ## polar.dem
   + check output
+  + Invalid arg 'r=2.5'
+  + Invalid arg 'notitle'
 
 ## poldat.dem
   + Invalid option name 'noxtics'
@@ -305,7 +303,6 @@
 
 ## rainbow.dem
   + Invalid line modifier 'rgb'
-  + Invalid arg 'title'
   + Invalid line modifier 'pal'
 
 ## random.dem
@@ -336,12 +333,13 @@
 
 ## scatter.dem
   + some missing data on plots
+  + crash on contour plot (array access)
 
 ## simple.dem
   + no issues
 
 ## singulr.dem
-  + some missing data on plots
+  + No issues
 
 ## smooth.dem
   + Invalid smooth type 'cumulative'
@@ -350,13 +348,17 @@
   + no issues
 
 ## stats.dem
+  + No support
   + Failed to eval A_mean for x=-10
 
 ## steps.dem
   + bad plots
+  + Invalid Function 'norm'
+  + Invalid Function 'inverf'
 
 ## stringvar.dem
   + bad expression foo[5:]
+  + Invalid Function 'strptime'
 
 ## surface1.dem
   + Missing command name '$grid << EOD'
@@ -366,6 +368,7 @@
 
 ## textcolor.dem
   + bad colors
+  + Invalid label string
 
 ## textrotate.dem
   + bad text rotate
@@ -374,8 +377,9 @@
   + Invalid arg ','
 
 ## timedat.dem
+  + Invalid Function 'strftime'
   + bad axis format
-  + Eval failed: 7"
+  + Eval failed: "7"
 
 ## transparent.dem
   + Invalid arg 'solid'
@@ -383,26 +387,25 @@
 
 ## transparent_solids.dem
   + Invalid arg ','
-  + bad plot
+  + no transparent
 
 ## using.dem
   + no issues
 
 ## utf8.dem
-  + bad text
+  + looks ok
 
 ## varcolor.dem
-  + Invalid color string
-  + Invalid arg 'var'
+  + looks ok
 
 ## vector.dem
   + Invalid filename
-  + "$equipo2#$#equipo2
+  + "$equipo2#$#equipo2"
 
 ## world2.dem
-  + Invalid plot var 'pt'
+  + Invalid plot var 'left, offset, 1, font, Helvetica'
+  + Invalid comma ',7" tc pal'
 
 ## world.dem
   + Invalid arg 'geographic'
-  + bad label format
-  + Invalid option name 'ticslevel'
+  + Invalid arg ',-1.2'

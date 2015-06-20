@@ -29,12 +29,17 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
       return CExprInst->createBooleanValue(str_ > rstr);
     case CEXPR_OP_GREATER_EQUAL:
       return CExprInst->createBooleanValue(str_ >= rstr);
+    // TODO: disable for gnuplot ?
     case CEXPR_OP_EQUAL:
       return CExprInst->createBooleanValue(str_ == rstr);
     case CEXPR_OP_NOT_EQUAL:
       return CExprInst->createBooleanValue(str_ != rstr);
 #ifdef GNUPLOT_EXPR
-    case CEXPR_OP_CONCAT:
+    case CEXPR_OP_STR_EQUAL:
+      return CExprInst->createBooleanValue(str_ == rstr);
+    case CEXPR_OP_STR_NOT_EQUAL:
+      return CExprInst->createBooleanValue(str_ != rstr);
+    case CEXPR_OP_STR_CONCAT:
       return CExprInst->createStringValue(str_ + rstr);
     default: {
       uint   i1       = 0    , i2       = 0;

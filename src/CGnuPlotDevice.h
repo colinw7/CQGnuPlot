@@ -97,6 +97,8 @@ class CGnuPlotDevice {
     windows_ = windows;
   }
 
+  virtual void redraw() { }
+
   virtual CGnuPlotWindow *createWindow();
 
   virtual CGnuPlotGroup *createGroup(CGnuPlotWindow *window);

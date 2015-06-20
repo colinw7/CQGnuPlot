@@ -3,6 +3,7 @@
 
 #include <CGnuPlotTypes.h>
 #include <CGnuPlotColorSpec.h>
+#include <CGnuPlotDash.h>
 
 #include <CRefPtr.h>
 #include <CRGBA.h>
@@ -35,9 +36,9 @@ class CGnuPlotLineStyle {
   void setLineWidth(double width) { lineWidth_ = width; }
   void unsetLineWidth() { lineWidth_.setInvalid(); }
 
-  const COptInt &lineDash() const { return lineDash_; }
-  void setLineDash(int d) { lineDash_ = d; }
-  void unsetLineDash() { lineDash_.setInvalid(); }
+  const CGnuPlotDash &lineDash() const { return lineDash_; }
+  void setLineDash(const CGnuPlotDash &dash) { lineDash_ = dash; }
+  void unsetLineDash() { lineDash_.reset(); }
 
   const OptColorSpec &lineColor() const { return lineColor_; }
   void setLineColor(const CGnuPlotColorSpec &c) { lineColor_ = c; }
@@ -64,8 +65,6 @@ class CGnuPlotLineStyle {
   //---
 
   double calcWidth(double w=1) const;
-
-  int calcDashInd(int d=0) const;
 
   CLineDash calcDash(const CLineDash &d=CLineDash()) const;
 
@@ -96,7 +95,7 @@ class CGnuPlotLineStyle {
   int          ind_  { -1 };
   COptInt      lineType_;
   COptReal     lineWidth_;
-  COptInt      lineDash_;
+  CGnuPlotDash lineDash_;
   OptColorSpec lineColor_;
   COptInt      pointType_;
   std::string  pointTypeStr_;

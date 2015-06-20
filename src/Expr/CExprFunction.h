@@ -1,7 +1,11 @@
 #ifndef CExprFunction_H
 #define CExprFunction_H
 
+#include <CExprParse.h>
+
 class CExpr;
+
+//------
 
 class CExprFunctionObj {
  public:
@@ -12,6 +16,8 @@ class CExprFunctionObj {
   virtual CExprValuePtr operator()(const std::vector<CExprValuePtr> &values) = 0;
 };
 
+//------
+
 struct CExprFunctionArg {
   CExprFunctionArg(CExprValueType type1=CEXPR_VALUE_NONE) :
    type(type1) {
@@ -19,6 +25,8 @@ struct CExprFunctionArg {
 
   CExprValueType type;
 };
+
+//------
 
 class CExprFunctionMgr {
  public:
@@ -56,6 +64,8 @@ class CExprFunctionMgr {
   CExpr        *expr_;
   FunctionList  functions_;
 };
+
+//------
 
 class CExprFunction {
  public:
@@ -100,6 +110,8 @@ class CExprFunction {
   bool        variableArgs_;
 };
 
+//------
+
 class CExprProcFunction : public CExprFunction {
  public:
   typedef std::vector<CExprFunctionArg> Args;
@@ -123,6 +135,8 @@ class CExprProcFunction : public CExprFunction {
   CExprFunctionProc proc_;
 };
 
+//------
+
 class CExprObjFunction : public CExprFunction {
  public:
   typedef std::vector<CExprFunctionArg> Args;
@@ -145,6 +159,8 @@ class CExprObjFunction : public CExprFunction {
   Args              args_;
   CExprFunctionObj *proc_;
 };
+
+//------
 
 class CExprUserFunction : public CExprFunction {
  public:
@@ -172,8 +188,11 @@ class CExprUserFunction : public CExprFunction {
   }
 
  private:
-  Args        args_;
-  std::string proc_;
+  Args             args_;
+  std::string      proc_;
+  CExprPTokenStack pstack_;
 };
+
+//------
 
 #endif

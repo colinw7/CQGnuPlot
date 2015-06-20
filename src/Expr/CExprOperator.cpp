@@ -76,7 +76,9 @@ operator_data[] = {
 #ifdef GNUPLOT_EXPR
   { CEXPR_OP_OPEN_SBRACKET    , "["  , },
   { CEXPR_OP_CLOSE_SBRACKET   , "]"  , },
-  { CEXPR_OP_CONCAT           , "."  , },
+  { CEXPR_OP_STR_CONCAT       , "."  , },
+  { CEXPR_OP_STR_EQUAL        , "eq" , },
+  { CEXPR_OP_STR_NOT_EQUAL    , "ne" , },
 #endif
   { CEXPR_OP_COMMA            , ","  , },
   { CEXPR_OP_UNKNOWN          , 0    , }

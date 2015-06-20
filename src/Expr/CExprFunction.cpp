@@ -841,6 +841,7 @@ CExprUserFunction::
 CExprUserFunction(const std::string &name, const Args &args, const std::string &proc) :
  CExprFunction(name), args_(args), proc_(proc)
 {
+  pstack_ = CExprInst->parseLine(proc_);
 }
 
 bool
@@ -883,7 +884,9 @@ exec(const Values &values)
 
   CExprValuePtr value;
 
-  if (! CExprInst->evaluateExpression(proc_, value))
+  //if (! CExprInst->evaluateExpression(proc_, value))
+  //  value = CExprValuePtr();
+  if (! CExprInst->executePTokenStack(pstack_, value))
     value = CExprValuePtr();
 
   CExprInst->restoreCompileState();

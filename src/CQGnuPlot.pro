@@ -58,6 +58,7 @@ CGnuPlotColorBox.cpp \
 CGnuPlotColorSpec.cpp \
 CGnuPlotContour.cpp \
 CGnuPlotCoordValue.cpp \
+CGnuPlotDash.cpp \
 CGnuPlotDevice.cpp \
 CGnuPlotEllipse.cpp \
 CGnuPlotEllipseObject.cpp \

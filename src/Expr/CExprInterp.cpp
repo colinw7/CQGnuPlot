@@ -697,9 +697,11 @@ readEqualityExpression()
   if (itoken.isValid()) {
     CExprITokenPtr itoken1 = unstackIToken();
 
-    while (isOperatorIToken(itoken1, CEXPR_OP_EQUAL       ) ||
-           isOperatorIToken(itoken1, CEXPR_OP_NOT_EQUAL   ) ||
-           isOperatorIToken(itoken1, CEXPR_OP_APPROX_EQUAL)) {
+    while (isOperatorIToken(itoken1, CEXPR_OP_EQUAL        ) ||
+           isOperatorIToken(itoken1, CEXPR_OP_STR_EQUAL    ) ||
+           isOperatorIToken(itoken1, CEXPR_OP_NOT_EQUAL    ) ||
+           isOperatorIToken(itoken1, CEXPR_OP_STR_NOT_EQUAL) ||
+           isOperatorIToken(itoken1, CEXPR_OP_APPROX_EQUAL )) {
       CExprITokenPtr itoken2 = readRelationalExpression();
 
       if (itoken2.isValid()) {
@@ -872,7 +874,7 @@ readAdditiveExpression()
 #ifdef GNUPLOT_EXPR
     while (isOperatorIToken(itoken1, CEXPR_OP_PLUS ) ||
            isOperatorIToken(itoken1, CEXPR_OP_MINUS) ||
-           isOperatorIToken(itoken1, CEXPR_OP_CONCAT)) {
+           isOperatorIToken(itoken1, CEXPR_OP_STR_CONCAT)) {
 #else
     while (isOperatorIToken(itoken1, CEXPR_OP_PLUS ) ||
            isOperatorIToken(itoken1, CEXPR_OP_MINUS)) {
@@ -894,7 +896,7 @@ readAdditiveExpression()
         else if (isOperatorIToken(itoken1, CEXPR_OP_MINUS))
           setLastError("Missing right expression for '-'");
 #ifdef GNUPLOT_EXPR
-        else if (isOperatorIToken(itoken1, CEXPR_OP_CONCAT))
+        else if (isOperatorIToken(itoken1, CEXPR_OP_STR_CONCAT))
           setLastError("Missing right expression for '.'");
 #endif
 

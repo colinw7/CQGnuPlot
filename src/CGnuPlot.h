@@ -17,7 +17,6 @@
 #include <CPoint2D.h>
 #include <CBBox2D.h>
 #include <CRange2D.h>
-#include <CLineDash.h>
 #include <CRGBA.h>
 #include <CColor.h>
 #include <CAlignType.h>
@@ -44,6 +43,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 //------
 
 #include <CGnuPlotColorSpec.h>
+#include <CGnuPlotDash.h>
 #include <CGnuPlotLineStyle.h>
 #include <CGnuPlotLineType.h>
 #include <CGnuPlotFillStyle.h>
@@ -1109,6 +1109,7 @@ class CGnuPlot {
   bool parseLine(const std::string &str);
 
   std::string replaceEmbedded(const std::string &str) const;
+  void replaceEmbeddedString(CParseLine &line, std::string &str) const;
 
   bool execCmd(const std::string &cmd, StringArray &lines) const;
 
@@ -1277,14 +1278,22 @@ class CGnuPlot {
   const Samples    &samples   () const { return samples_; }
   const ISOSamples &isoSamples() const { return isoSamples_; }
 
+  bool parseLineType(CParseLine &line, int &lt);
+
   bool parseRGBColor(CParseLine &line, CRGB &rgb, double &a);
   bool parseHSVColor(CParseLine &line, CHSV &hsv, double &a);
 
   bool parseColorSpec(CParseLine &line, CGnuPlotColorSpec &c);
 
+  bool parseDash(CParseLine &line, CGnuPlotDash &dash);
+  bool parseDash(CParseLine &line, CLineDash &dash);
+
   bool parseInteger(CParseLine &line, int &i) const;
   bool parseReal(CParseLine &line, double &r) const;
   bool parseString(CParseLine &line, std::string &str, const std::string &msg="") const;
+  bool parseValue(CParseLine &line, CExprValueP &value, const std::string &msg="") const;
+
+  bool skipExpression(const char *id, CParseLine &line, std::string &expr) const;
 
   void skipString(CParseLine &line) const;
 
@@ -1357,6 +1366,12 @@ class CGnuPlot {
   void printPrefValue(std::ostream &os, VariableName name) {
     varPrefs_[name]->print(os);
   }
+
+  bool evaluateExpression(const std::string &expr, CExprValueP &value, bool quiet=false) const;
+
+  bool exprToInteger(const std::string &expr, int &i, bool quiet=false) const;
+  bool exprToReal   (const std::string &expr, double &r, bool quiet=false) const;
+  bool exprToString (const std::string &expr, std::string &s, bool quiet=false) const;
 
  private:
   typedef std::map<std::string,CGnuPlotDevice*>  Devices;

@@ -18,6 +18,8 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
 
   CQGnuPlotRenderer *qrenderer() const { return renderer_; }
 
+  void redraw() override;
+
   CGnuPlotWindow *createWindow() override;
 
   CGnuPlotGroup *createGroup(CGnuPlotWindow *window) override;

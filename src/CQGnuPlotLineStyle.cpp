@@ -31,7 +31,14 @@ int
 CQGnuPlotLineStyle::
 lineDash() const
 {
-  return CGnuPlotLineStyle::lineDash().getValue(0);
+  return CGnuPlotLineStyle::lineDash().ind().getValue(0);
+}
+
+void
+CQGnuPlotLineStyle::
+setLineDash(int ind)
+{
+  return CGnuPlotLineStyle::setLineDash(CGnuPlotDash(ind));
 }
 
 QColor

@@ -222,9 +222,11 @@ executeOperator(const CExprOperatorPtr &op)
     case CEXPR_OP_GREATER:
     case CEXPR_OP_GREATER_EQUAL:
     case CEXPR_OP_EQUAL:
+    case CEXPR_OP_STR_EQUAL:
     case CEXPR_OP_NOT_EQUAL:
+    case CEXPR_OP_STR_NOT_EQUAL:
 #ifdef GNUPLOT_EXPR
-    case CEXPR_OP_CONCAT:
+    case CEXPR_OP_STR_CONCAT:
 #endif
       if (! executeBinaryOperator(type))
         return false;
@@ -355,8 +357,12 @@ executeLogicalUnaryOperator(CExprOpType type)
   if (! value.isValid())
     return;
 
-  if (! value->convToBoolean())
-    return;
+  if (! value->isBooleanValue()) {
+    value = value->dup();
+
+    if (! value->convToBoolean())
+      return;
+  }
 
   CExprValuePtr value1 = value->execUnaryOp(type);
 
@@ -382,8 +388,12 @@ executeBitwiseUnaryOperator(CExprOpType type)
   if (! value.isValid())
     return;
 
-  if (! value->convToInteger())
-    return;
+  if (! value->isBooleanValue()) {
+    value = value->dup();
+
+    if (! value->convToBoolean())
+      return;
+  }
 
   CExprValuePtr value1 = value->execUnaryOp(type);
 
@@ -452,8 +462,19 @@ executeLogicalBinaryOperator(CExprOpType type)
   if (! value1.isValid() || ! value2.isValid())
     return;
 
-  if (! value1->convToBoolean()) return;
-  if (! value2->convToBoolean()) return;
+  if (! value1->isBooleanValue()) {
+    value1 = value1->dup();
+
+    if (! value1->convToBoolean())
+      return;
+  }
+
+  if (! value2->isBooleanValue()) {
+    value2 = value2->dup();
+
+    if (! value2->convToBoolean())
+      return;
+  }
 
   CExprValuePtr value = value1->execBinaryOp(value2, type);
 

@@ -46,3 +46,9 @@
  + move Qt enums to separate class
  + improve handling of linetype/linestyle
  + improve dash support
+
+### 6/20/2015
+ + Use expression code to parse reals, integers and strings
+ + Support black, nodraw, bgnd line types
+ + support dash strings
+ + pre-parse user functions

@@ -3,7 +3,10 @@
 
 #include <CGnuPlotTypes.h>
 #include <CGnuPlotColorSpec.h>
+#include <CGnuPlotDash.h>
 #include <CRefPtr.h>
+
+class CGnuPlot;
 
 class CGnuPlotLineType {
  public:
@@ -20,8 +23,8 @@ class CGnuPlotLineType {
   double lineWidth() const { return lineWidth_; }
   void setLineWidth(double width) { lineWidth_ = width; }
 
-  int lineDash() const { return lineDash_; }
-  void setLineDash(int d) { lineDash_ = d; }
+  const CGnuPlotDash &lineDash() const { return lineDash_; }
+  void setLineDash(const CGnuPlotDash &dash) { lineDash_ = dash; }
 
   const CGnuPlotColorSpec &lineColor() const { return lineColor_; }
   void setLineColor(const CGnuPlotColorSpec &c) { lineColor_ = c; }
@@ -43,6 +46,8 @@ class CGnuPlotLineType {
 
   const CRGBA &calcColor(const CRGBA &c=CRGBA(0,0,0)) const;
 
+  CLineDash calcDash(CGnuPlot *plot, const CLineDash &d=CLineDash()) const;
+
   void init(int ind);
 
   void unset();
@@ -57,7 +62,7 @@ class CGnuPlotLineType {
 
   int               ind_       { -1 };
   double            lineWidth_ { 1 };
-  int               lineDash_  { 0 };
+  CGnuPlotDash      lineDash_;
   CGnuPlotColorSpec lineColor_;
   int               pointType_ { -1 };
   std::string       pointTypeStr_;

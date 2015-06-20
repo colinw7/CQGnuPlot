@@ -352,6 +352,19 @@ stateChanged(CGnuPlotWindow *window, CGnuPlotTypes::ChangeState)
   qwindow->redraw();
 }
 
+void
+CQGnuPlotDevice::
+redraw()
+{
+  for (auto &w : windows_) {
+    CQGnuPlotWindow *qwindow = static_cast<CQGnuPlotWindow *>(w.get());
+
+    qwindow->redraw();
+  }
+
+  qApp->processEvents();
+}
+
 CGnuPlotRenderer *
 CQGnuPlotDevice::
 renderer()

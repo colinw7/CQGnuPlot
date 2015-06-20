@@ -11,6 +11,8 @@ class CExprParseImpl {
   CExprPTokenStack parseFile(CFile &file);
   CExprPTokenStack parseLine(const std::string &str);
 
+  bool skipExpression(const std::string &str, uint &i);
+
  private:
   bool           parseLine(CExprPTokenStack &stack, const std::string &line);
   bool           parseLine(CExprPTokenStack &stack, const std::string &line, uint &i);
@@ -29,6 +31,19 @@ class CExprParseImpl {
   CExprPTokenPtr readUnknown(const std::string &str, uint *i);
 #endif
 
+  bool        skipNumber(const std::string &str, uint *i);
+  bool        skipString(const std::string &str, uint *i);
+  bool        skipComplex(const std::string &str, uint *i);
+  CExprOpType skipOperator(const std::string &str, uint *i);
+#ifdef GNUPLOT_EXPR
+  CExprOpType skipOperatorStr(const std::string &str, uint *i);
+#endif
+  void        skipIdentifier(const std::string &str, uint *i);
+
+  bool readStringChars(const std::string &str, uint *i, bool process, std::string &str1);
+  bool readComplexChars(const std::string &str, uint *i, std::complex<double> &c);
+  void readIdentifierChars(const std::string &str, uint *i, std::string &identifier);
+
 #if 0
   CExprPTokenPtr createUnknownToken();
 #endif
@@ -40,6 +55,8 @@ class CExprParseImpl {
   CExprPTokenPtr createComplexToken(const std::complex<double> &c);
 
   std::string replaceEscapeCodes(const std::string &str);
+
+  bool isStringOp(CExprOpType op) const;
 
  private:
   CExprPTokenStack ptoken_stack_;
@@ -77,6 +94,13 @@ CExprParse::
 parseLine(const std::string &line)
 {
   return impl_->parseLine(line);
+}
+
+bool
+CExprParse::
+skipExpression(const std::string &line, uint &i)
+{
+  return impl_->skipExpression(line, i);
 }
 
 //-----------
@@ -203,8 +227,10 @@ parseLine(CExprPTokenStack &stack, const std::string &line, uint &i)
       ptoken = readIdentifier(line, &i);
     else if (line[i] == '\'' || line[i] == '\"')
       ptoken = readString(line, &i);
+#ifdef GNUPLOT_EXPR
     else if (line[i] == '{')
       ptoken = readComplex(line, &i);
+#endif
     else {
       parseError("Invalid Character", line, i);
       return false;
@@ -218,6 +244,191 @@ parseLine(CExprPTokenStack &stack, const std::string &line, uint &i)
     stack.addToken(ptoken);
 
     lastPToken = ptoken;
+  }
+
+  return true;
+}
+
+bool
+CExprParseImpl::
+skipExpression(const std::string &line, uint &i)
+{
+  CExprPTokenType lastTokenType = CEXPR_PTOKEN_UNKNOWN;
+  CExprOpType     lastOpType    = CEXPR_OP_UNKNOWN;
+
+  uint i1   = i;
+  uint len1 = line.size();
+
+  while (true) {
+    CStrUtil::skipSpace(line, &i);
+    if (i >= len1) break;
+
+    CExprPTokenType lastTokenType1 = lastTokenType;
+    CExprOpType     lastOpType1    = lastOpType;
+
+    lastTokenType = CEXPR_PTOKEN_UNKNOWN;
+    lastOpType    = CEXPR_OP_UNKNOWN;
+
+    if      (CExprOperator::isOperatorChar(line[i])) {
+      if (line[i] == ',' || line[i] == ')')
+        break;
+
+      if (lastTokenType1 == CEXPR_PTOKEN_OPERATOR && lastOpType1 != CEXPR_OP_UNKNOWN) {
+        if ((line[i] == '-' || line[i] == '+') && i < len1 - 1 && isdigit(line[i + 1])) {
+          if (! skipNumber(line, &i)) {
+            break;
+          }
+
+          lastTokenType = CEXPR_PTOKEN_REAL;
+        }
+        else {
+          int i2 = i;
+
+          lastOpType = skipOperator(line, &i);
+
+          if (lastOpType != CEXPR_OP_UNKNOWN) {
+            if (lastTokenType1 == CEXPR_PTOKEN_STRING && ! isStringOp(lastOpType)) {
+              i = i2;
+              break;
+            }
+
+            lastTokenType = CEXPR_PTOKEN_OPERATOR;
+          }
+        }
+      }
+      else {
+        int i2 = i;
+
+        lastOpType = skipOperator(line, &i);
+
+        if (lastOpType != CEXPR_OP_UNKNOWN) {
+          if (lastTokenType1 == CEXPR_PTOKEN_STRING && ! isStringOp(lastOpType)) {
+            i = i2;
+            break;
+          }
+
+          lastTokenType = CEXPR_PTOKEN_OPERATOR;
+        }
+      }
+
+#ifdef GNUPLOT_EXPR
+      if (lastTokenType == CEXPR_PTOKEN_UNKNOWN && line[i] == '.') {
+        if (! skipNumber(line, &i)) {
+          break;
+        }
+
+        lastTokenType = CEXPR_PTOKEN_REAL;
+      }
+#endif
+
+      if (lastTokenType == CEXPR_PTOKEN_OPERATOR) {
+        if      (lastTokenType == CEXPR_PTOKEN_OPERATOR && lastOpType == CEXPR_OP_OPEN_RBRACKET) {
+          while (i < len1) {
+            if (! skipExpression(line, i)) {
+              i = i1; return false;
+            }
+
+            // check for comma separated expression list
+            CStrUtil::skipSpace(line, &i);
+
+            if (i >= len1 || line[i] != ',')
+              break;
+
+            lastTokenType = CEXPR_PTOKEN_OPERATOR;
+            lastOpType    = CEXPR_OP_COMMA;
+
+            ++i;
+          }
+
+          CStrUtil::skipSpace(line, &i);
+
+          if (i >= len1 || line[i] != ')') {
+            i = i1; return false;
+          }
+
+          lastTokenType = CEXPR_PTOKEN_VALUE;
+
+          ++i;
+
+          continue;
+        }
+        else if (lastTokenType == CEXPR_PTOKEN_OPERATOR && lastOpType == CEXPR_OP_CLOSE_RBRACKET) {
+          break;
+        }
+      }
+    }
+#ifdef GNUPLOT_EXPR
+    else if (CExprOperator::isOperatorStr(line[i])) {
+      int i2 = i;
+
+      CExprOpType lastOpType2 = skipOperatorStr(line, &i);
+
+      if (lastOpType2 == CEXPR_OP_UNKNOWN) {
+        if (lastTokenType1 != CEXPR_PTOKEN_UNKNOWN && lastTokenType1 != CEXPR_PTOKEN_OPERATOR)
+          break;
+
+        skipIdentifier(line, &i);
+
+        lastTokenType = CEXPR_PTOKEN_IDENTIFIER;
+      }
+      else {
+        if (lastTokenType1 == CEXPR_PTOKEN_STRING && ! isStringOp(lastOpType2)) {
+          i = i2;
+          break;
+        }
+
+        lastOpType    = lastOpType2;
+        lastTokenType = CEXPR_PTOKEN_OPERATOR;
+      }
+    }
+#endif
+    else if (isNumber(line, i)) {
+      if (lastTokenType1 != CEXPR_PTOKEN_UNKNOWN && lastTokenType1 != CEXPR_PTOKEN_OPERATOR)
+        break;
+
+      if (! skipNumber(line, &i)) {
+        i = i1; return false;
+      }
+
+      lastTokenType = CEXPR_PTOKEN_REAL;
+    }
+    else if (line[i] == '_' || isalpha(line[i])) {
+      if (lastTokenType1 != CEXPR_PTOKEN_UNKNOWN && lastTokenType1 != CEXPR_PTOKEN_OPERATOR)
+        break;
+
+      skipIdentifier(line, &i);
+
+      lastTokenType = CEXPR_PTOKEN_IDENTIFIER;
+    }
+    else if (line[i] == '\'' || line[i] == '\"') {
+      if (lastTokenType1 != CEXPR_PTOKEN_UNKNOWN && lastTokenType1 != CEXPR_PTOKEN_OPERATOR)
+        break;
+
+      if (! skipString(line, &i)) {
+        i = i1; return false;
+      }
+
+      lastTokenType = CEXPR_PTOKEN_STRING;
+    }
+#ifdef GNUPLOT_EXPR
+    else if (line[i] == '{') {
+      if (lastTokenType1 != CEXPR_PTOKEN_UNKNOWN && lastTokenType1 != CEXPR_PTOKEN_OPERATOR)
+        break;
+
+      if (! skipComplex(line, &i)) {
+        i = i1; return false;
+      }
+
+      lastTokenType = CEXPR_PTOKEN_COMPLEX;
+    }
+#endif
+    else {
+      break;
+    }
+
+    if (lastTokenType == CEXPR_PTOKEN_UNKNOWN) {
+      break;
+    }
   }
 
   return true;
@@ -238,6 +449,13 @@ parseError(const std::string &msg, const std::string &line, uint i)
   ostr << "^";
 
   CExprInst->errorMsg(ostr.str());
+}
+
+bool
+CExprParseImpl::
+isStringOp(CExprOpType op) const
+{
+  return (op == CEXPR_OP_STR_CONCAT || op == CEXPR_OP_STR_EQUAL || op == CEXPR_OP_STR_NOT_EQUAL);
 }
 
 bool
@@ -288,13 +506,46 @@ readNumber(const std::string &str, uint *i)
     return createRealToken(real);
 }
 
+bool
+CExprParseImpl::
+skipNumber(const std::string &str, uint *i)
+{
+  long   integer = 0;
+  double real    = 0.0;
+  bool   is_int  = false;
+
+  if (! CExprParseUtil::stringToNumber(str, i, integer, real, is_int))
+    return false;
+
+  return true;
+}
+
 CExprPTokenPtr
 CExprParseImpl::
 readString(const std::string &str, uint *i)
 {
   std::string str1;
 
-  if (str[*i] == '\'') {
+  if (! readStringChars(str, i, true, str1))
+    return CExprPTokenPtr();
+
+  return createStringToken(str1);
+}
+
+bool
+CExprParseImpl::
+skipString(const std::string &str, uint *i)
+{
+  std::string str1;
+
+  return readStringChars(str, i, false, str1);
+}
+
+bool
+CExprParseImpl::
+readStringChars(const std::string &str, uint *i, bool process, std::string &str1)
+{
+  if      (str[*i] == '\'') {
     (*i)++;
 
     uint j = *i;
@@ -309,13 +560,13 @@ readString(const std::string &str, uint *i)
     }
 
     if (*i >= str.size())
-      return CExprPTokenPtr();
+      return false;
 
     str1 = str.substr(j, *i - j);
 
     (*i)++;
   }
-  else {
+  else if (str[*i] == '\"') {
     (*i)++;
 
     uint j = *i;
@@ -332,16 +583,19 @@ readString(const std::string &str, uint *i)
     }
 
     if (*i >= str.size())
-      return CExprPTokenPtr();
+      return false;
 
     str1 = str.substr(j, *i - j);
 
     (*i)++;
 
-    str1 = replaceEscapeCodes(str1);
+    if (process)
+      str1 = replaceEscapeCodes(str1);
   }
+  else
+    assert(false);
 
-  return createStringToken(str1);
+  return true;
 }
 
 std::string
@@ -490,8 +744,29 @@ CExprPTokenPtr
 CExprParseImpl::
 readComplex(const std::string &str, uint *i)
 {
-  if (*i >= str.size() || str[*i] != '{')
+  std::complex<double> c;
+
+  if (! readComplexChars(str, i, c))
     return CExprPTokenPtr();
+
+  return createComplexToken(c);
+}
+
+bool
+CExprParseImpl::
+skipComplex(const std::string &str, uint *i)
+{
+  std::complex<double> c;
+
+  return readComplexChars(str, i, c);
+}
+
+bool
+CExprParseImpl::
+readComplexChars(const std::string &str, uint *i, std::complex<double> &c)
+{
+  if (*i >= str.size() || str[*i] != '{')
+    return false;
 
   (*i)++;
 
@@ -502,12 +777,12 @@ readComplex(const std::string &str, uint *i)
   bool   is_int1  = false;
 
   if (! CExprParseUtil::stringToNumber(str, i, integer1, real1, is_int1))
-    return CExprPTokenPtr();
+    return false;
 
   CStrUtil::skipSpace(str, i);
 
   if (*i >= str.size() || str[*i] != ',')
-    return CExprPTokenPtr();
+    return false;
 
   (*i)++;
 
@@ -518,21 +793,40 @@ readComplex(const std::string &str, uint *i)
   bool   is_int2  = false;
 
   if (! CExprParseUtil::stringToNumber(str, i, integer2, real2, is_int2))
-    return CExprPTokenPtr();
+    return false;
 
   CStrUtil::skipSpace(str, i);
 
   if (*i >= str.size() || str[*i] != '}')
-    return CExprPTokenPtr();
+    return false;
 
   (*i)++;
 
-  return createComplexToken(std::complex<double>(real1, real2));
+  c = std::complex<double>(real1, real2);
+
+  return true;
 }
 
 CExprPTokenPtr
 CExprParseImpl::
 readOperator(const std::string &str, uint *i)
+{
+  CExprOpType id = skipOperator(str, i);
+
+  if (id == CEXPR_OP_UNKNOWN)
+    return CExprPTokenPtr();
+
+  CExprOperatorPtr op = CExprInst->getOperator(id);
+
+  if (! op.isValid())
+    return CExprPTokenPtr();
+
+  return createOperatorToken(op);
+}
+
+CExprOpType
+CExprParseImpl::
+skipOperator(const std::string &str, uint *i)
 {
   CExprOpType id = CEXPR_OP_UNKNOWN;
 
@@ -751,11 +1045,11 @@ readOperator(const std::string &str, uint *i)
       uint i1 = (*i) + 1;
 
       if (i1 < str.size() && isdigit(str[i1]))
-        return CExprPTokenPtr();
+        return CEXPR_OP_UNKNOWN;
 
       (*i)++;
 
-      id = CEXPR_OP_CONCAT;
+      id = CEXPR_OP_STR_CONCAT;
 
       break;
     }
@@ -768,21 +1062,27 @@ readOperator(const std::string &str, uint *i)
       break;
   }
 
-  if (id == CEXPR_OP_UNKNOWN)
-    return CExprPTokenPtr();
-
-  CExprOperatorPtr op = CExprInst->getOperator(id);
-
-  if (! op.isValid())
-    return CExprPTokenPtr();
-
-  return createOperatorToken(op);
+  return id;
 }
 
 #ifdef GNUPLOT_EXPR
 CExprPTokenPtr
 CExprParseImpl::
 readOperatorStr(const std::string &str, uint *i)
+{
+  CExprOpType id = skipOperatorStr(str, i);
+
+  if (id == CEXPR_OP_UNKNOWN)
+    return CExprPTokenPtr();
+
+  CExprOperatorPtr op = CExprInst->getOperator(id);
+
+  return createOperatorToken(op);
+}
+
+CExprOpType
+CExprParseImpl::
+skipOperatorStr(const std::string &str, uint *i)
 {
   uint j = *i;
 
@@ -794,17 +1094,15 @@ readOperatorStr(const std::string &str, uint *i)
   CExprOpType id = CEXPR_OP_UNKNOWN;
 
   if      (identifier == "eq")
-    id = CEXPR_OP_EQUAL;
+    id = CEXPR_OP_STR_EQUAL;
   else if (identifier == "ne")
-    id = CEXPR_OP_NOT_EQUAL;
+    id = CEXPR_OP_STR_NOT_EQUAL;
   else {
     *i = j;
-    return CExprPTokenPtr();
+    id = CEXPR_OP_UNKNOWN;
   }
 
-  CExprOperatorPtr op = CExprInst->getOperator(id);
-
-  return createOperatorToken(op);
+  return id;
 }
 #endif
 
@@ -812,14 +1110,32 @@ CExprPTokenPtr
 CExprParseImpl::
 readIdentifier(const std::string &str, uint *i)
 {
+  std::string identifier;
+
+  readIdentifierChars(str, i, identifier);
+
+  return createIdentifierToken(identifier);
+}
+
+void
+CExprParseImpl::
+skipIdentifier(const std::string &str, uint *i)
+{
+  std::string identifier;
+
+  readIdentifierChars(str, i, identifier);
+}
+
+void
+CExprParseImpl::
+readIdentifierChars(const std::string &str, uint *i, std::string &identifier)
+{
   uint j = *i;
 
   while (*i < str.size() && (str[*i] == '_' || isalnum(str[*i])))
     (*i)++;
 
-  std::string identifier = str.substr(j, *i - j);
-
-  return createIdentifierToken(identifier);
+  identifier = str.substr(j, *i - j);
 }
 
 #if 0
@@ -929,6 +1245,60 @@ print(std::ostream &os) const
 
     stack_[i]->printQualified(os);
   }
+}
+
+//------
+
+void
+CExprPTokenIdentifier::
+print(std::ostream &os) const
+{
+  os << identifier_;
+}
+
+//------
+
+void
+CExprPTokenOperator::
+print(std::ostream &os) const
+{
+  os << *op_;
+}
+
+//------
+
+void
+CExprPTokenInteger::
+print(std::ostream &os) const
+{
+  os << integer_;
+}
+
+//------
+
+void
+CExprPTokenReal::
+print(std::ostream &os) const
+{
+  os << real_;
+}
+
+//------
+
+void
+CExprPTokenString::
+print(std::ostream &os) const
+{
+  os << "\"" << str_ << "\"";
+}
+
+//------
+
+void
+CExprPTokenComplex::
+print(std::ostream &os) const
+{
+  os << "{" << c_.real() << ", " << c_.imag() << "}";
 }
 
 //------

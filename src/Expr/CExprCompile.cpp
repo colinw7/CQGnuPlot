@@ -498,19 +498,21 @@ compileEqualityExpression(CExprITokenPtr itoken)
 
     CExprOperatorPtr op = itoken1->getOperator();
 
-    if      (op->getType() == CEXPR_OP_EQUAL) {
+    if      (op->getType() == CEXPR_OP_EQUAL ||
+             op->getType() == CEXPR_OP_STR_EQUAL) {
       compileEqualityExpression(itoken->getChild(0));
 
       compileRelationalExpression(itoken->getChild(2));
 
-      stackOperator(CExprInst->getOperator(CEXPR_OP_EQUAL));
+      stackOperator(CExprInst->getOperator(op->getType()));
     }
-    else if (op->getType() == CEXPR_OP_NOT_EQUAL) {
+    else if (op->getType() == CEXPR_OP_NOT_EQUAL ||
+             op->getType() == CEXPR_OP_STR_NOT_EQUAL) {
       compileEqualityExpression(itoken->getChild(0));
 
       compileRelationalExpression(itoken->getChild(2));
 
-      stackOperator(CExprInst->getOperator(CEXPR_OP_NOT_EQUAL));
+      stackOperator(CExprInst->getOperator(op->getType()));
     }
     else {
       compileEqualityExpression(itoken->getChild(0));
@@ -617,8 +619,8 @@ compileAdditiveExpression(CExprITokenPtr itoken)
     else if (op->getType() == CEXPR_OP_MINUS)
       stackOperator(CExprInst->getOperator(CEXPR_OP_MINUS));
 #ifdef GNUPLOT_EXPR
-    else if (op->getType() == CEXPR_OP_CONCAT)
-      stackOperator(CExprInst->getOperator(CEXPR_OP_CONCAT));
+    else if (op->getType() == CEXPR_OP_STR_CONCAT)
+      stackOperator(CExprInst->getOperator(CEXPR_OP_STR_CONCAT));
 #endif
   }
   else

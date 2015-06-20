@@ -1,7 +1,9 @@
 #ifndef CExprParse_H
 #define CExprParse_H
 
+#include <CExpr.h>
 #include <deque>
+#include <iostream>
 
 enum CExprPTokenType {
   CEXPR_PTOKEN_UNKNOWN    = -1,
@@ -10,7 +12,8 @@ enum CExprPTokenType {
   CEXPR_PTOKEN_INTEGER    = 3,
   CEXPR_PTOKEN_REAL       = 4,
   CEXPR_PTOKEN_STRING     = 5,
-  CEXPR_PTOKEN_COMPLEX    = 6
+  CEXPR_PTOKEN_COMPLEX    = 6,
+  CEXPR_PTOKEN_VALUE      = 7
 };
 
 class CExprPTokenBase {
@@ -28,9 +31,7 @@ class CExprPTokenIdentifier : public CExprPTokenBase {
 
   const std::string &getIdentifier() const { return identifier_; }
 
-  void print(std::ostream &os) const {
-    os << identifier_;
-  }
+  void print(std::ostream &os) const;
 
  private:
   std::string identifier_;
@@ -44,9 +45,7 @@ class CExprPTokenOperator : public CExprPTokenBase {
 
   CExprOperatorPtr getOperator() const { return op_; }
 
-  void print(std::ostream &os) const {
-    os << *op_;
-  }
+  void print(std::ostream &os) const;
 
  private:
   CExprOperatorPtr op_;
@@ -60,9 +59,7 @@ class CExprPTokenInteger : public CExprPTokenBase {
 
   long getInteger() const { return integer_; }
 
-  void print(std::ostream &os) const {
-    os << integer_;
-  }
+  void print(std::ostream &os) const;
 
  private:
   long integer_;
@@ -76,9 +73,7 @@ class CExprPTokenReal : public CExprPTokenBase {
 
   double getReal() const { return real_; }
 
-  void print(std::ostream &os) const {
-    os << real_;
-  }
+  void print(std::ostream &os) const;
 
  private:
   double real_;
@@ -92,9 +87,7 @@ class CExprPTokenString : public CExprPTokenBase {
 
   const std::string &getString() const { return str_; }
 
-  void print(std::ostream &os) const {
-    os << "\"" << str_ << "\"";
-  }
+  void print(std::ostream &os) const;
 
  private:
   std::string str_;
@@ -108,9 +101,7 @@ class CExprPTokenComplex : public CExprPTokenBase {
 
   const std::complex<double> &getComplex() const { return c_; }
 
-  void print(std::ostream &os) const {
-    os << "{" << c_.real() << ", " << c_.imag() << "}";
-  }
+  void print(std::ostream &os) const;
 
  private:
   std::complex<double> c_;
@@ -298,6 +289,8 @@ class CExprParse {
   CExprPTokenStack parseFile(const std::string &filename);
   CExprPTokenStack parseFile(FILE *fp);
   CExprPTokenStack parseLine(const std::string &str);
+
+  bool skipExpression(const std::string &str, uint &i);
 
  private:
   friend class CExpr;

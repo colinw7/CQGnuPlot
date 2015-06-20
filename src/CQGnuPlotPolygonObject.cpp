@@ -34,7 +34,10 @@ QColor
 CQGnuPlotPolygonObject::
 getFillColor() const
 {
-  return toQColor(CGnuPlotPolygonObject::fillColor());
+  if (CGnuPlotPolygonObject::hasFillColor())
+    return toQColor(CGnuPlotPolygonObject::fillColor());
+  else
+    return QColor();
 }
 
 void
@@ -50,7 +53,10 @@ QColor
 CQGnuPlotPolygonObject::
 getLineColor() const
 {
-  return toQColor(CGnuPlotPolygonObject::lineColor());
+  if (CGnuPlotPolygonObject::hasLineColor())
+    return toQColor(CGnuPlotPolygonObject::lineColor());
+  else
+    return QColor();
 }
 
 void
@@ -68,13 +74,22 @@ draw(CGnuPlotRenderer *renderer) const
 {
   CQGnuPlotPolygonObject *th = const_cast<CQGnuPlotPolygonObject *>(this);
 
-  CRGBA c = lineColor();
+  bool hasLineColor = th->CGnuPlotPolygonObject::hasLineColor();
+
+  CRGBA c;
+
+  if (hasLineColor)
+    c = lineColor();
 
   if (isSelected())
     th->CGnuPlotPolygonObject::setLineColor(CRGBA(1,0,0));
 
   CGnuPlotPolygonObject::draw(renderer);
 
-  if (isSelected())
-    th->CGnuPlotPolygonObject::setLineColor(c);
+  if (isSelected()) {
+    if (hasLineColor)
+      th->CGnuPlotPolygonObject::setLineColor(c);
+    else
+      th->CGnuPlotPolygonObject::resetLineColor();
+  }
 }

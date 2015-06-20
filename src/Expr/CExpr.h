@@ -47,9 +47,11 @@ enum CExprOpType {
 #ifdef GNUPLOT_EXPR
   CEXPR_OP_OPEN_SBRACKET     = 41,
   CEXPR_OP_CLOSE_SBRACKET    = 42,
-  CEXPR_OP_CONCAT            = 43,
+  CEXPR_OP_STR_EQUAL         = 43,
+  CEXPR_OP_STR_NOT_EQUAL     = 44,
+  CEXPR_OP_STR_CONCAT        = 45,
 #endif
-  CEXPR_OP_COMMA             = 44
+  CEXPR_OP_COMMA             = 46
 };
 
 enum CExprValueType {
@@ -164,9 +166,14 @@ class CExpr {
   bool evaluateExpression(const std::string &str, std::vector<CExprValuePtr> &values);
   bool evaluateExpression(const std::string &str, CExprValuePtr &value);
 
+  bool executePTokenStack(const CExprPTokenStack &stack, std::vector<CExprValuePtr> &values);
+  bool executePTokenStack(const CExprPTokenStack &stack, CExprValuePtr &value);
+
   CExprPTokenStack parseLine(const std::string &line);
   CExprITokenPtr   interpPTokenStack(const CExprPTokenStack &stack);
   CExprCTokenStack compileIToken(CExprITokenPtr itoken);
+
+  bool skipExpression(const std::string &line, uint &i);
 
   bool executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values);
   bool executeCTokenStack(const CExprCTokenStack &stack, CExprValuePtr &value);

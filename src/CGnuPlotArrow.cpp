@@ -116,7 +116,7 @@ draw(CGnuPlotRenderer *renderer) const
   if (arrow->isVariable() && arrow->style().varValue().isValid())
     lc = CGnuPlotStyleInst->indexColor(arrow->getVarValue());
 
-  const CLineDash &dash = group()->app()->getLineDash(getDash());
+  CLineDash dash = getDash().calcDash(group()->app());
 
   if (arrow->getFHead()) {
     double a1 = a + aa;

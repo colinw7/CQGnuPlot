@@ -17,6 +17,13 @@ calcColor(const CRGBA &c) const
     return c;
 }
 
+CLineDash
+CGnuPlotLineType::
+calcDash(CGnuPlot *plot, const CLineDash &d) const
+{
+  return lineDash_.calcDash(plot, d);
+}
+
 void
 CGnuPlotLineType::
 init(int ind)
@@ -41,7 +48,7 @@ CGnuPlotLineType::
 unset()
 {
   lineWidth_     = 1;
-  lineDash_      = 0;
+  lineDash_      = CGnuPlotDash();
   lineColor_     = CGnuPlotColorSpec();
   pointType_     = -1;
   pointSize_     = -1;
@@ -63,10 +70,7 @@ show(std::ostream &os) const
 
   os << " linewidth " << lineWidth();
 
-  if (lineDash() != 0)
-    os << " dashtype " << lineDash();
-  else
-    os << " dashtype solid";
+  os << " dashtype " << lineDash();
 
   if (pointType_ >= 0)
     os << " pointtype " << pointType();

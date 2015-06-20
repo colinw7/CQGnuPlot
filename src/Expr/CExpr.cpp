@@ -34,6 +34,23 @@ CExpr::
 evaluateExpression(const std::string &str, std::vector<CExprValuePtr> &values)
 {
   CExprPTokenStack pstack = parseLine(str);
+
+  return executePTokenStack(pstack, values);
+}
+
+bool
+CExpr::
+evaluateExpression(const std::string &str, CExprValuePtr &value)
+{
+  CExprPTokenStack pstack = parseLine(str);
+
+  return executePTokenStack(pstack, value);
+}
+
+bool
+CExpr::
+executePTokenStack(const CExprPTokenStack &pstack, std::vector<CExprValuePtr> &values)
+{
   CExprITokenPtr   itoken = interpPTokenStack(pstack);
   CExprCTokenStack cstack = compileIToken(itoken);
 
@@ -42,9 +59,8 @@ evaluateExpression(const std::string &str, std::vector<CExprValuePtr> &values)
 
 bool
 CExpr::
-evaluateExpression(const std::string &str, CExprValuePtr &value)
+executePTokenStack(const CExprPTokenStack &pstack, CExprValuePtr &value)
 {
-  CExprPTokenStack pstack = parseLine(str);
   CExprITokenPtr   itoken = interpPTokenStack(pstack);
   CExprCTokenStack cstack = compileIToken(itoken);
 
@@ -85,6 +101,13 @@ compileIToken(CExprITokenPtr itoken)
     std::cerr << "CTokenStack:" << cstack << std::endl;
 
   return cstack;
+}
+
+bool
+CExpr::
+skipExpression(const std::string &line, uint &i)
+{
+  return parse_->skipExpression(line, i);
 }
 
 bool
@@ -285,30 +308,33 @@ class CExprPrintF : public CPrintF {
   long getLongLong() const { return getLong(); }
 
   long getLong() const {
+    CExprValuePtr value = nextValue();
     long l = 0;
-    if (iv_ < values_.size()) {
-      values_[iv_]->getIntegerValue(l);
-      ++iv_;
-    }
+    if (value.isValid())
+      value->getIntegerValue(l);
     return l;
   }
 
   double getDouble() const {
+    CExprValuePtr value = nextValue();
     double r = 0.0;
-    if (iv_ < values_.size()) {
-      values_[iv_]->getRealValue(r);
-      ++iv_;
-    }
+    if (value.isValid())
+      value->getRealValue(r);
     return r;
   }
 
   std::string getString() const {
+    CExprValuePtr value = nextValue();
     std::string s;
-    if (iv_ < values_.size()) {
-      values_[iv_]->getStringValue(s);
-      ++iv_;
-    }
+    if (value.isValid())
+      value->getStringValue(s);
     return s;
+  }
+
+ private:
+  CExprValuePtr nextValue() const {
+    if (iv_ >= values_.size() || ! values_[iv_].isValid()) return CExprValuePtr();
+    return values_[iv_++];
   }
 
  private:

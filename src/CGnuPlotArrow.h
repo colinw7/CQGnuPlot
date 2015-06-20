@@ -108,8 +108,8 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
   int getLineStyle() const { return style_.lineStyle().getValue(-1); }
   void setLineStyle(int t) { style_.setLineStyle(t); }
 
-  int getDash() const { return style_.dash().getValue(0); }
-  void setDash(int dash) { style_.setDash(dash); }
+  const CGnuPlotDash &getDash() const { return style_.dash(); }
+  void setDash(const CGnuPlotDash &dash) { style_.setDash(dash); }
 
   bool isVariable() const { return style_.isVariable(); }
   void setVariable(bool b) { style_.setVariable(b); }

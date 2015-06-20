@@ -29,6 +29,7 @@ class CQGnuPlotLineStyle : public QObject, public CGnuPlotLineStyle {
   double lineWidth() const;
 
   int lineDash() const;
+  void setLineDash(int ind);
 
   QColor lineColor() const;
   void setLineColor(const QColor &c);

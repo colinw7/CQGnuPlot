@@ -2,6 +2,7 @@
 #define CGnuPlotArrowStyle_H
 
 #include <CGnuPlotCoordValue.h>
+#include <CGnuPlotDash.h>
 #include <COptVal.h>
 #include <CRGBA.h>
 
@@ -56,8 +57,8 @@ class CGnuPlotArrowStyle {
   const COptInt &lineStyle() const { return lineStyle_; }
   void setLineStyle(int t) { lineStyle_ = t; }
 
-  const COptInt &dash() const { return dash_; }
-  void setDash(int d) { dash_ = d; }
+  const CGnuPlotDash &dash() const { return dash_; }
+  void setDash(const CGnuPlotDash &d) { dash_ = d; }
 
   bool isVariable() const { return variable_; }
   void setVariable(bool b) { variable_ = b; }
@@ -99,7 +100,7 @@ class CGnuPlotArrowStyle {
   COptReal           lineWidth_;
   COptInt            lineStyle_;
   COptRGBA           lineColor_;
-  COptInt            dash_;
+  CGnuPlotDash       dash_;
   bool               variable_  { false };
   COptReal           varValue_;
 };
