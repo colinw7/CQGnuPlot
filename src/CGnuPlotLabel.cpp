@@ -26,19 +26,20 @@ draw(CGnuPlotRenderer *renderer) const
   else
     renderer->setFont(defFont_);
 
-  CPoint2D pos = pos_.getPoint(renderer);
+  CPoint3D pos  = pos_.getPoint3D(renderer);
+  CPoint2D pos1 = renderer->transform(pos);
 
   if (enhanced_)
-    bbox_ = text_.calcBBox(renderer).moveBy(pos);
+    bbox_ = text_.calcBBox(renderer).moveBy(pos1);
   else
-    bbox_ = renderer->getHAlignedTextBBox(getText().text()).moveBy(pos);
+    bbox_ = renderer->getHAlignedTextBBox(getText().text()).moveBy(pos1);
 
   CPoint2D d(0, 0);
 
   double w = bbox_.getWidth ();
   double h = bbox_.getHeight();
 
-  double dh = std::max(bbox_.getTop() - pos.y, 0.0);
+  double dh = std::max(bbox_.getTop() - pos1.y, 0.0);
 
   h -= dh;
 
@@ -62,7 +63,7 @@ draw(CGnuPlotRenderer *renderer) const
 
   bbox_.moveBy(d);
 
-  pos += d;
+  pos1 += d;
 
   if (showPoint_) {
     // TODO: show point
@@ -73,7 +74,7 @@ draw(CGnuPlotRenderer *renderer) const
   if (enhanced_) {
     CBBox2D bbox = bbox_;
 
-    bbox.setYMax(pos.y);
+    bbox.setYMax(pos1.y);
 
     text_.draw(renderer, bbox, halign, c);
   }

@@ -219,10 +219,23 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
       std::string name  = expr.substr(0, pos);
       std::string name1 = expr.substr(pos + 1);
 
-      auto p1 = name1.find(')');
+      uint j = 0;
 
-      if (p1 != std::string::npos)
-        name1 = name1.substr(0, p1);
+      int brackets = 1;
+
+      for ( ; j < name1.size(); ++j) {
+        if      (name1[j] == '(')
+          brackets++;
+        else if (name1[j] == ')') {
+          --brackets;
+
+          if (brackets == 0)
+            break;
+        }
+      }
+
+      if (j < name1.size())
+        name1 = name1.substr(0, j);
 
       CExprValueP value;
 

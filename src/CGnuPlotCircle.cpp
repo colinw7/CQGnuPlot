@@ -8,7 +8,7 @@ draw(CGnuPlotRenderer *renderer) const
 {
   const CGnuPlotCircle *e = this;
 
-  c_ = e->getCenter().getPoint(renderer);
+  c_ = e->getCenter().getPoint2D(renderer);
 
   // TODO: always round
   xr_ = e->getRadius().getXDistance(renderer);

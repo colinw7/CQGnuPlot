@@ -2,7 +2,7 @@
 #define CGnuPlotPosition_H
 
 #include <CGnuPlotTypes.h>
-#include <CPoint2D.h>
+#include <CPoint3D.h>
 
 class CGnuPlotRenderer;
 
@@ -11,12 +11,12 @@ class CGnuPlotPosition {
   typedef CGnuPlotTypes::CoordSys CoordSys;
 
  public:
-  CGnuPlotPosition(const CPoint2D &p=CPoint2D(0,0), CoordSys s=CoordSys::FIRST) :
-   p_(p), systemX_(s), systemY_(s) {
+  CGnuPlotPosition(const CPoint3D &p=CPoint3D(0,0,0), CoordSys s=CoordSys::FIRST) :
+   p_(p), systemX_(s), systemY_(s), systemZ_(s) {
   }
 
-  const CPoint2D &point() const { return p_; }
-  void setPoint(const CPoint2D &p) { p_ = p; }
+  const CPoint3D &point() const { return p_; }
+  void setPoint(const CPoint3D &p) { p_ = p; }
 
   CGnuPlotTypes::CoordSys systemX() const { return systemX_; }
   void setSystemX(const CGnuPlotTypes::CoordSys &s) { systemX_ = s; }
@@ -24,12 +24,16 @@ class CGnuPlotPosition {
   CGnuPlotTypes::CoordSys systemY() const { return systemY_; }
   void setSystemY(const CGnuPlotTypes::CoordSys &s) { systemY_ = s; }
 
-  CPoint2D getPoint(CGnuPlotRenderer *renderer) const;
+  CGnuPlotTypes::CoordSys systemZ() const { return systemZ_; }
+  void setSystemZ(const CGnuPlotTypes::CoordSys &s) { systemZ_ = s; }
+
+  CPoint3D getPoint3D(CGnuPlotRenderer *renderer) const;
+  CPoint2D getPoint2D(CGnuPlotRenderer *renderer) const;
 
   CPoint2D getDistance(CGnuPlotRenderer *renderer) const;
 
   void print(std::ostream &os) const {
-    if (systemX_ == systemY_) {
+    if (systemX_ == systemY_ && systemX_ == systemZ_) {
       if (systemX_ != CoordSys::FIRST)
         printSystem(os, systemX_);
 
@@ -45,6 +49,11 @@ class CGnuPlotPosition {
         printSystem(os, systemY_);
 
       os << p_.y;
+
+      if (systemZ_ != CoordSys::FIRST)
+        printSystem(os, systemZ_);
+
+      os << p_.z;
     }
   }
 
@@ -65,12 +74,13 @@ class CGnuPlotPosition {
   }
 
  private:
-  CPoint2D getPoint(CGnuPlotRenderer *renderer, double x, double y) const;
+  CPoint3D getPoint(CGnuPlotRenderer *renderer, double x, double y, double z) const;
 
  private:
-  CPoint2D p_       { 0, 0 };
+  CPoint3D p_       { 0, 0, 0 };
   CoordSys systemX_ { CoordSys::FIRST };
   CoordSys systemY_ { CoordSys::FIRST };
+  CoordSys systemZ_ { CoordSys::FIRST };
 };
 
 #endif

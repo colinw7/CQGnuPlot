@@ -43,14 +43,18 @@ QPointF
 CQGnuPlotLabel::
 getPos() const
 {
-  return CQUtil::toQPoint(CGnuPlotLabel::getPos().point());
+  CPoint3D p = CGnuPlotLabel::getPos().point();
+
+  return CQUtil::toQPoint(CPoint2D(p.x, p.y));
 }
 
 void
 CQGnuPlotLabel::
 setPos(const QPointF &p)
 {
-  CGnuPlotLabel::setPos(CQUtil::fromQPoint(p));
+  CPoint2D p1 = CQUtil::fromQPoint(p);
+
+  CGnuPlotLabel::setPos(CPoint3D(p1.x, p1.y, 0));
 }
 
 QFont

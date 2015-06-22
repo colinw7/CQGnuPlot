@@ -20,6 +20,13 @@ getLineColor() const
     return lineColor_.getValue();
 }
 
+void
+CGnuPlotArrow::
+setLineColor(const CGnuPlotColorSpec &c)
+{
+  setLineColor(c.color());
+}
+
 CGnuPlot *
 CGnuPlotArrow::
 app() const
@@ -40,14 +47,14 @@ draw(CGnuPlotRenderer *renderer) const
 {
   const CGnuPlotArrow *arrow = this;
 
-  CPoint2D from = arrow->from_.getPoint(renderer);
+  CPoint2D from = arrow->from_.getPoint2D(renderer);
 
   CPoint2D to;
 
   if      (coordType_ == CoordType::FROM_TO)
-    to = arrow->to_.getPoint(renderer);
+    to = arrow->to_.getPoint2D(renderer);
   else if (coordType_ == CoordType::FROM_RTO)
-    to = from + arrow->to_.getPoint(renderer);
+    to = from + arrow->to_.getPoint2D(renderer);
   else if (coordType_ == CoordType::FROM_ANGLE) {
     double dx = arrow->length_.getXValue(renderer)*cos(arrow->angle_.radians());
     double dy = arrow->length_.getXValue(renderer)*sin(arrow->angle_.radians());

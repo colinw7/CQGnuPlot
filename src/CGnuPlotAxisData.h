@@ -76,13 +76,19 @@ class CGnuPlotAxisData {
 
   bool isAutoScaleMin() const { return autoScaleMin_; }
   void setAutoScaleMin(bool b) { autoScaleMin_ = b; }
+
   bool isAutoScaleMax() const { return autoScaleMax_; }
   void setAutoScaleMax(bool b) { autoScaleMax_ = b; }
 
+  void setAutoScale(bool b) { setAutoScaleMin(b); setAutoScaleMax(b); }
+
   bool isAutoScaleFixMin() const { return autoScaleFixMin_; }
   void setAutoScaleFixMin(bool b) { autoScaleFixMin_ = b; }
+
   bool isAutoScaleFixMax() const { return autoScaleFixMax_; }
   void setAutoScaleFixMax(bool b) { autoScaleFixMax_ = b; }
+
+  void setAutoScaleFix(bool b) { setAutoScaleFixMin(b); setAutoScaleFixMax(b); }
 
   const COptReal &min() const { return min_; }
   void setMin(double r) { min_ = r; }

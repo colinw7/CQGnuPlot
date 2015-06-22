@@ -64,7 +64,6 @@
   + z axis should not be drawn
 
 ## contours.dem
-  + Spaces in expressions (original code)
   + last multiplot should overlay
 
 ## controls.dem
@@ -77,7 +76,7 @@
   + wrong color line 
 
 ## datastrings.dem
-  + Invalid arg 'offset'
+  + No issues
 
 ## dgrid3d.dem
   + splines, qnorm, gauss not working
@@ -87,16 +86,12 @@
 
 ## electron.dem
   + bad log axis
-  + Unhandled autoscale y2
 
 ## ellipse.dem
-  + Invalid Function 'exist'
-  + Missing command name '}'
-  + Invalid arg 'front', Invalid Character "$random#$#random"
+  + ellipse points in wrong position
 
 ## ellipses_style.dem
   + runs, need check output
-  + Invalid arg 'units', Invalid arg 'xx', ...
 
 ## enhancedtext.dem
   + runs, need check output
@@ -116,11 +111,6 @@
 
 ## fillcrvs.dem
   + runs ok, need to check output
-  + Invalid arg 'solid'
-  + Invalid arg '1.0'
-  + Invalid arg 'lc'
-  + Invalid arg 'rgb'
-  + Invalid arg 'dark-goldenrod'
 
 ## fillstyle.dem
   + runs ok, need to check output
@@ -135,7 +125,7 @@
   + crash in CExprPrintF
 
 ## fitmulti.dem
-  + Invalid filename
+  + bad results
 
 ## fontfile.dem
   + postscript terminal not supported
@@ -148,17 +138,13 @@
   + Eval failed: strptime("%m","2")
 
 ## heatmaps.dem
-  + Invalid option name 'tic'
-  + Invalid arg 'rgbformula'
   + inline data not supported
 
 ## hidden2.dem
-  + bad 3d plot
+  + hidden not working
 
 ## hidden.dem
-  + Missing plot var '/ (x*x + y*y + 1)'
-  + Invalid arg '-'
-  + some bad plots at end
+  + no issues
 
 ## histograms2.dem
   + bad range
@@ -237,10 +223,10 @@
   + Mouse click no handled
 
 ## multiaxis.dem
-  + Unhandled autoscale y2
+  + bad plot ?
 
 ## multimsh.dem
-  + Unhandled autoscale z
+  + bad plot ?
 
 ## multipalette.dem
   + Bad display
@@ -357,8 +343,7 @@
   + Invalid Function 'inverf'
 
 ## stringvar.dem
-  + bad expression foo[5:]
-  + Invalid Function 'strptime'
+  + bad expression foo[5:] (no support of empty or '*' in array indices)
 
 ## surface1.dem
   + Missing command name '$grid << EOD'
@@ -368,25 +353,20 @@
 
 ## textcolor.dem
   + bad colors
-  + Invalid label string
 
 ## textrotate.dem
   + bad text rotate
 
 ## tics.dem
-  + Invalid arg ','
+  + bad tics ?
 
 ## timedat.dem
-  + Invalid Function 'strftime'
-  + bad axis format
-  + Eval failed: "7"
+  + bad display
 
 ## transparent.dem
-  + Invalid arg 'solid'
-  + Invalid arg 'σ'
+  + no issues
 
 ## transparent_solids.dem
-  + Invalid arg ','
   + no transparent
 
 ## using.dem
@@ -400,12 +380,9 @@
 
 ## vector.dem
   + Invalid filename
-  + "$equipo2#$#equipo2"
 
 ## world2.dem
-  + Invalid plot var 'left, offset, 1, font, Helvetica'
-  + Invalid comma ',7" tc pal'
+  + Check output
 
 ## world.dem
-  + Invalid arg 'geographic'
-  + Invalid arg ',-1.2'
+  + Check output

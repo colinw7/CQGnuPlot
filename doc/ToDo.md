@@ -1,5 +1,7 @@
 ## ToDo
 
+  + Batch generate images from demo scripts
+
   + Better axes ticks for log (match base powers)
   + More Optimization of calc using compiled stack
   + allow select/modifiy all objects (plots, axis, ...)

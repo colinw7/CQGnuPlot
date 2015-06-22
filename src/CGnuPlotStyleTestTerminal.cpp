@@ -195,8 +195,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     renderer->pixelToWindow(CPoint2D(pxm - 100 + dx, pym + 100 + dy), ac1);
 
-    arrow.setFrom(ac);
-    arrow.setTo  (ac1);
+    arrow.setFrom(CPoint3D(ac .x, ac .y, 0));
+    arrow.setTo  (CPoint3D(ac1.x, ac1.y, 0));
 
     arrow.setHeadLength(renderer->pixelWidthToWindowWidth(al/5));
 

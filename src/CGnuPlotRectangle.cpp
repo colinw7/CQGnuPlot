@@ -32,28 +32,38 @@ calcBBox() const
 
   if      (from_.isValid()) {
     if      (to_.isValid()) {
-      CPoint2D from = from_.getValue().getPoint(renderer);
-      CPoint2D to   = to_  .getValue().getPoint(renderer);
+      CPoint2D from = from_.getValue().getPoint2D(renderer);
+      CPoint2D to   = to_  .getValue().getPoint2D(renderer);
 
       bbox_ = CBBox2D(from, to);
     }
-    else if (rto_.isValid())
-      bbox_ = CBBox2D(from_.getValue().point(), from_.getValue().point() + rto_.getValue().point());
+    else if (rto_.isValid()) {
+      const CPoint3D &p1 = from_.getValue().point();
+      CPoint3D        p2 = p1 + rto_.getValue().point();
+
+      bbox_ = CBBox2D(CPoint2D(p1.x, p1.y), CPoint2D(p2.x, p2.y));
+    }
     else if (size_.isValid()) {
       CSize2D size = size_.getValue().getSize(renderer);
 
-      CPoint2D s(size.width, size.height);
+      CPoint3D s(size.width, size.height, 0);
 
-      bbox_ = CBBox2D(from_.getValue().point(), from_.getValue().point() + s);
+      const CPoint3D &p1 = from_.getValue().point();
+      CPoint3D        p2 = p1 + s;
+
+      bbox_ = CBBox2D(CPoint2D(p1.x, p1.y), CPoint2D(p2.x, p2.y));
     }
   }
   else if (center_.isValid()) {
     if (size_.isValid()) {
       CSize2D size = size_.getValue().getSize(renderer);
 
-      CPoint2D s(size.width, size.height);
+      CPoint3D s(size.width, size.height, 0);
 
-      bbox_ = CBBox2D(center_.getValue().point() - s/2, center_.getValue().point() + s/2);
+      CPoint3D p1 = center_.getValue().point() - s/2;
+      CPoint3D p2 = center_.getValue().point() + s/2;
+
+      bbox_ = CBBox2D(CPoint2D(p1.x, p1.y), CPoint2D(p2.x, p2.y));
     }
   }
 

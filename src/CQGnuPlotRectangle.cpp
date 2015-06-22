@@ -24,7 +24,9 @@ void
 CQGnuPlotRectangle::
 setFrom(const QPointF &p)
 {
-  CGnuPlotRectangle::setFrom(CQUtil::fromQPoint(p));
+  CPoint2D p1 = CQUtil::fromQPoint(p);
+
+  CGnuPlotRectangle::setFrom(CPoint3D(p1.x, p1.y, 0));
 }
 
 QPointF
@@ -40,7 +42,9 @@ void
 CQGnuPlotRectangle::
 setTo(const QPointF &p)
 {
-  CGnuPlotRectangle::setTo(CQUtil::fromQPoint(p));
+  CPoint2D p1 = CQUtil::fromQPoint(p);
+
+  CGnuPlotRectangle::setTo(CPoint3D(p1.x, p1.y, 0));
 }
 
 double

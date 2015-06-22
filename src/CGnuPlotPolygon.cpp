@@ -29,7 +29,7 @@ calcBBox() const
   bbox_ = CBBox2D();
 
   for (const auto &p : points_)
-    bbox_.add(p);
+    bbox_.add(CPoint2D(p.x, p.y));
 
   return bbox_;
 }

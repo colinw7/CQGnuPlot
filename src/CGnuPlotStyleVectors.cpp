@@ -77,8 +77,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       arrow.setLineColor(lc1);
 
-      arrow.setFrom(from);
-      arrow.setTo  (to);
+      arrow.setFrom(CPoint3D(from.x, from.y, 0));
+      arrow.setTo  (CPoint3D(to  .x, to  .y, 0));
 
       arrow.draw(renderer);
     }
@@ -106,8 +106,8 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   arrow.setLineColor(lc);
 
-  arrow.setFrom(p1);
-  arrow.setTo  (p2);
+  arrow.setFrom(CPoint3D(p1.x, p1.y, 0));
+  arrow.setTo  (CPoint3D(p2.x, p2.y, 0));
 
   arrow.draw(renderer);
 }

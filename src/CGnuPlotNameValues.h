@@ -136,6 +136,7 @@ namespace CStrUniqueMatch {
                           {"ticscale"        , CGnuPlotTypes::VariableName::TICSCALE},
                           {"ticslevel"       , CGnuPlotTypes::VariableName::TICSLEVEL},
                           {"tics"            , CGnuPlotTypes::VariableName::TICS},
+                          {"tic"             , CGnuPlotTypes::VariableName::TICS},
                           {"time"            , CGnuPlotTypes::VariableName::TIMESTAMP},
                           {"timefmt"         , CGnuPlotTypes::VariableName::TIMEFMT},
                           {"timestamp"       , CGnuPlotTypes::VariableName::TIMESTAMP},

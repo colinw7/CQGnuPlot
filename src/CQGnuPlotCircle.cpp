@@ -14,16 +14,18 @@ QPointF
 CQGnuPlotCircle::
 getCenter() const
 {
-  CPoint2D center = CGnuPlotCircle::getCenter().point();
+  CPoint3D center = CGnuPlotCircle::getCenter().point();
 
-  return CQUtil::toQPoint(center);
+  return CQUtil::toQPoint(CPoint2D(center.x, center.y));
 }
 
 void
 CQGnuPlotCircle::
 setCenter(const QPointF &p)
 {
-  CGnuPlotCircle::setCenter(CQUtil::fromQPoint(p));
+  CPoint2D p1 = CQUtil::fromQPoint(p);
+
+  CGnuPlotCircle::setCenter(CPoint3D(p1.x, p1.y, 0));
 }
 
 double
@@ -47,7 +49,7 @@ draw(CGnuPlotRenderer *renderer) const
   CGnuPlotCircle::draw(renderer);
 
   if (isSelected()) {
-    CPoint2D center = CGnuPlotCircle::getCenter().getPoint(renderer);
+    CPoint2D center = CGnuPlotCircle::getCenter().getPoint2D(renderer);
 
     double xr = CGnuPlotCircle::getRadius().getXDistance(renderer);
     double yr = CGnuPlotCircle::getRadius().getYDistance(renderer);

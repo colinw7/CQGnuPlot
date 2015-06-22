@@ -4,9 +4,11 @@
 #include <CGnuPlotAnnotation.h>
 #include <CGnuPlotFillStyle.h>
 
+class CGnuPlotPlot;
+
 class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
  public:
-  typedef std::vector<CPoint2D> Points;
+  typedef std::vector<CPoint3D> Points;
 
  public:
   static const char *getName() { return "polygon"; }
@@ -28,7 +30,7 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
 
   CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::POLYGON; }
 
-  void addPoint(const CPoint2D &p) { points_.push_back(p); }
+  void addPoint(const CPoint3D &p) { points_.push_back(p); }
 
   const Points &getPoints() const { return points_; }
 

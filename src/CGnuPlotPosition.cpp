@@ -2,16 +2,25 @@
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotUtil.h>
 
-CPoint2D
+CPoint3D
 CGnuPlotPosition::
-getPoint(CGnuPlotRenderer *renderer) const
+getPoint3D(CGnuPlotRenderer *renderer) const
 {
-  return getPoint(renderer, p_.x, p_.y);
+  return getPoint(renderer, p_.x, p_.y, p_.z);
 }
 
 CPoint2D
 CGnuPlotPosition::
-getPoint(CGnuPlotRenderer *renderer, double x, double y) const
+getPoint2D(CGnuPlotRenderer *renderer) const
+{
+  CPoint3D p = getPoint(renderer, p_.x, p_.y, p_.z);
+
+  return CPoint2D(p.x, p.y);
+}
+
+CPoint3D
+CGnuPlotPosition::
+getPoint(CGnuPlotRenderer *renderer, double x, double y, double z) const
 {
   if      (systemX_ == CGnuPlotTypes::CoordSys::SECOND) {
     // TODO
@@ -33,6 +42,8 @@ getPoint(CGnuPlotRenderer *renderer, double x, double y) const
     // TODO
   }
 
+  //---
+
   if      (systemY_ == CGnuPlotTypes::CoordSys::SECOND) {
     // TODO
   }
@@ -53,15 +64,32 @@ getPoint(CGnuPlotRenderer *renderer, double x, double y) const
     // TODO
   }
 
-  return CPoint2D(x, y);
+  //---
+
+  if      (systemZ_ == CGnuPlotTypes::CoordSys::SECOND) {
+    // TODO
+  }
+  else if (systemZ_ == CGnuPlotTypes::CoordSys::GRAPH) {
+    // TODO
+  }
+  else if (systemZ_ == CGnuPlotTypes::CoordSys::SCREEN) {
+    // TODO
+  }
+  else if (systemZ_ == CGnuPlotTypes::CoordSys::CHARACTER) {
+    // TODO
+  }
+
+  return CPoint3D(x, y, z);
 }
 
 CPoint2D
 CGnuPlotPosition::
 getDistance(CGnuPlotRenderer *renderer) const
 {
-  CPoint2D p1 = getPoint(renderer, 0   , 0   );
-  CPoint2D p2 = getPoint(renderer, p_.x, p_.y);
+  CPoint3D p1 = getPoint(renderer, 0   , 0   , 0);
+  CPoint3D p2 = getPoint(renderer, p_.x, p_.y, 0);
 
-  return (p2 - p1);
+  CPoint3D d = p2 - p1;
+
+  return CPoint2D(d.x, d.y);
 }

@@ -77,6 +77,7 @@ CGnuPlotPoint.cpp \
 CGnuPlotPolygon.cpp \
 CGnuPlotPolygonObject.cpp \
 CGnuPlotPosition.cpp \
+CGnuPlotPrintFile.cpp \
 CGnuPlotRectangle.cpp \
 CGnuPlotRectObject.cpp \
 CGnuPlotRenderer.cpp \
@@ -243,6 +244,7 @@ CGnuPlotPolygon.h \
 CGnuPlotPolygonObject.h \
 CGnuPlotPosition.h \
 CGnuPlotPrefValue.h \
+CGnuPlotPrintFile.h \
 CGnuPlotRectangle.h \
 CGnuPlotRectObject.h \
 CGnuPlotRenderer.h \

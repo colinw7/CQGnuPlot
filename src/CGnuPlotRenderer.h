@@ -133,6 +133,7 @@ class CGnuPlotRenderer {
   void fillClippedRect(const CBBox2D &rect, const CRGBA &c);
 
   void fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c);
+  void drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c);
 
   void drawClippedPolygon   (const std::vector<CPoint2D> &points, double w, const CRGBA &c);
   void fillClippedPolygon   (const std::vector<CPoint2D> &points, const CRGBA &c);

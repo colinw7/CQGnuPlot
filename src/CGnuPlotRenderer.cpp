@@ -54,6 +54,21 @@ fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c)
 
 void
 CGnuPlotRenderer::
+drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c)
+{
+  std::vector<CPoint2D> points1;
+
+  for (const auto &p : points) {
+    CPoint2D p1 = transform(p);
+
+    points1.push_back(p1);
+  }
+
+  drawPolygon(points1, lw, c);
+}
+
+void
+CGnuPlotRenderer::
 drawClippedPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c)
 {
   if (! isPseudo()) {

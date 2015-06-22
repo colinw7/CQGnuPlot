@@ -8,7 +8,7 @@ draw(CGnuPlotRenderer *renderer) const
 {
   const CGnuPlotEllipse *e = this;
 
-  CPoint2D center = e->getCenter().getPoint(renderer);
+  CPoint2D center = e->getCenter().getPoint2D(renderer);
 
   if (e->getFillColor().isRGB())
     renderer->fillEllipse(center, e->getRX(), e->getRY(), 0, e->getFillColor().color());

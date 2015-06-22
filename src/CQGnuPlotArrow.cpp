@@ -28,28 +28,36 @@ QPointF
 CQGnuPlotArrow::
 getFrom() const
 {
-  return CQUtil::toQPoint(CGnuPlotArrow::getFrom().point());
+  CPoint3D p = CGnuPlotArrow::getFrom().point();
+
+  return CQUtil::toQPoint(CPoint2D(p.x, p.y));
 }
 
 void
 CQGnuPlotArrow::
 setFrom(const QPointF &p)
 {
-  CGnuPlotArrow::setFrom(CQUtil::fromQPoint(p));
+  CPoint2D p1 = CQUtil::fromQPoint(p);
+
+  CGnuPlotArrow::setFrom(CPoint3D(p1.x, p1.y, 0));
 }
 
 QPointF
 CQGnuPlotArrow::
 getTo() const
 {
-  return CQUtil::toQPoint(CGnuPlotArrow::getTo().point());
+  CPoint3D p = CGnuPlotArrow::getTo().point();
+
+  return CQUtil::toQPoint(CPoint2D(p.x, p.y));
 }
 
 void
 CQGnuPlotArrow::
 setTo(const QPointF &p)
 {
-  CGnuPlotArrow::setTo(CQUtil::fromQPoint(p));
+  CPoint2D p1 = CQUtil::fromQPoint(p);
+
+  CGnuPlotArrow::setTo(CPoint3D(p1.x, p1.y, 0));
 }
 
 double
@@ -100,8 +108,8 @@ draw(CGnuPlotRenderer *renderer) const
 {
   CQGnuPlotArrow *th = const_cast<CQGnuPlotArrow *>(this);
 
-  th->qfrom_ = CQUtil::toQPoint(CGnuPlotArrow::getFrom().getPoint(renderer));
-  th->qto_   = CQUtil::toQPoint(CGnuPlotArrow::getTo  ().getPoint(renderer));
+  th->qfrom_ = CQUtil::toQPoint(CGnuPlotArrow::getFrom().getPoint2D(renderer));
+  th->qto_   = CQUtil::toQPoint(CGnuPlotArrow::getTo  ().getPoint2D(renderer));
 
   CRGBA c = getLineColor();
 

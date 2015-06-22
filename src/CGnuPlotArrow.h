@@ -126,6 +126,8 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
       lineColor_.setInvalid();
   }
 
+  void setLineColor(const CGnuPlotColorSpec &c);
+
   void draw(CGnuPlotRenderer *renderer) const override;
 
   bool inside(const CPoint2D &p) const override;

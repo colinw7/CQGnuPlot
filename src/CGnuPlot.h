@@ -85,6 +85,8 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotContourData.h>
 #include <CGnuPlotSurfaceData.h>
 #include <CGnuPlotAxis.h>
+#include <CGnuPlotPrintFile.h>
+#include <CGnuPlotBlock.h>
 
 //------
 
@@ -450,38 +452,6 @@ class CGnuPlot {
     double      lambda_factor { 0 };
     std::string script;
     int         version { 5 };
-  };
-
-  struct PrintFile {
-    std::string filename;
-    bool        isError { true };
-    bool        isBlock { false };
-    bool        append  { false };
-
-    void unset() {
-      filename = "";
-      isError  = true;
-      isBlock  = false;
-      append   = false;
-    };
-
-    void show(std::ostream &os) const {
-      if (isBlock) {
-        os << "print output is saved to datablock $" << filename << std::endl;
-      }
-      else {
-        os << "print output is sent to ";
-
-        if (filename != "")
-          os << "'" << filename << "'";
-        else if (isError)
-          os << "<stderr>";
-        else
-          os << "<stdout>";
-
-        os << std::endl;
-      }
-    }
   };
 
   //---
@@ -1103,6 +1073,8 @@ class CGnuPlot {
 
   double angleToRad(double a) const;
 
+  CGnuPlotBlock *getBlock(const std::string &name);
+
  private:
   void addPlotStyles();
 
@@ -1234,21 +1206,6 @@ class CGnuPlot {
 
   //---
 
-  void setPrintStdOut() {
-    printFile_.filename = ""; printFile_.isError = false; printFile_.isBlock = false;
-  }
-  void setPrintFile(const std::string &file) {
-    printFile_.filename = file; printFile_.isError = false; printFile_.isBlock = false;
-  }
-  void setPrintDataBlock(const std::string &name) {
-    printFile_.filename = name; printFile_.isError = false; printFile_.isBlock = true;
-  }
-
-  void setPrintAppend(bool b) { printFile_.append = b; }
-  bool getPrintAppend() { return printFile_.append; }
-
-  //---
-
   void setTableFile(const std::string &file) { tableFile_ = file; }
   const std::string &getTableFile() const { return tableFile_; }
 
@@ -1309,6 +1266,7 @@ class CGnuPlot {
 
   bool parsePosition(CParseLine &line, CGnuPlotPosition &pos);
   bool parseCoordValue(CParseLine &line, CGnuPlotCoordValue &v);
+  bool parseOffset(CParseLine &line, CPoint2D &point);
   bool parsePoint(CParseLine &line, CPoint2D &point);
   bool parseSize(CParseLine &line, CGnuPlotSize &size);
   bool parseSize(CParseLine &line, CSize2D &size);
@@ -1381,6 +1339,7 @@ class CGnuPlot {
   typedef CAutoPtr<CGnuPlotReadLine>             ReadLineP;
   typedef std::map<std::string,std::string>      DummyVarMap;
   typedef std::vector<std::string>               PathList;
+  typedef std::map<std::string,CGnuPlotBlock *>  Blocks;
 
   bool                   debug_  { false };
   bool                   edebug_ { false };
@@ -1395,7 +1354,7 @@ class CGnuPlot {
   CGnuPlotBoxWidth       boxWidth_;
   Bars                   bars_;
   std::string            outputFile_;
-  PrintFile              printFile_;
+  CGnuPlotPrintFile      printFile_;
   std::string            lastPlotCmd_;
   std::string            lastSPlotCmd_;
   std::string            lastFilename_;
@@ -1474,6 +1433,7 @@ class CGnuPlot {
   double                 pointIntervalBox_ { 1 };
   double                 whiskerBars_ { 0 };
   ReadLineP              readLine_;
+  Blocks                 blocks_;
 
   mutable Values           fieldValues_;
   mutable int              setNum_;

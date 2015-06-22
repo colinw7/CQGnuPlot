@@ -19,14 +19,18 @@ QPointF
 CQGnuPlotColorBox::
 origin() const
 {
-  return CQUtil::toQPoint(CGnuPlotColorBox::origin().point());
+  CPoint3D p = CGnuPlotColorBox::origin().point();
+
+  return CQUtil::toQPoint(CPoint2D(p.x, p.y));
 }
 
 void
 CQGnuPlotColorBox::
 setOrigin(const QPointF &p)
 {
-  CGnuPlotColorBox::setOrigin(CQUtil::fromQPoint(p));
+  CPoint2D p1 = CQUtil::fromQPoint(p);
+
+  CGnuPlotColorBox::setOrigin(CPoint3D(p1.x, p1.y, 0));
 }
 
 QSizeF

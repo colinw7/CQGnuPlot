@@ -50,7 +50,7 @@ draw(CGnuPlotRenderer *renderer)
 
   if (user_) {
     // screen coords
-    CPoint2D origin = origin_.getPoint(renderer);
+    CPoint2D origin = origin_.getPoint2D(renderer);
 
     x1 = CGnuPlotUtil::map(origin.x, 0, 1, orbbox.getXMin(), orbbox.getXMax());
     y1 = CGnuPlotUtil::map(origin.y, 0, 1, orbbox.getYMin(), orbbox.getYMax());

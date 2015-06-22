@@ -100,8 +100,20 @@ class CExprStrLen {
 
 class CExprSystem {
  public:
-  int operator()(const std::string &str) {
-    return system(str.c_str());
+  std::string operator()(const std::string &str) {
+    FILE *fp = popen(str.c_str(), "r");
+    if (! fp) return "";
+
+    std::string res;
+
+    int c;
+
+    while ((c = fgetc(fp)) != EOF)
+      res += char(c);
+
+    pclose(fp);
+
+    return res;
   }
 };
 #endif
@@ -630,11 +642,11 @@ addFunctions()
 
   // input types ..., return type, function
   new CExprFunctionObjT1<std::string,long,CExprStrLen>                 (this, "strlen");
-  new CExprFunctionObjT3<std::string,long,long,std::string,CExprSubStr>(this, "substr");
   new CExprFunctionObjT2<std::string,std::string,long,CExprStrStrT>    (this, "strstrt");
-  new CExprFunctionObjT1<std::string,long,CExprWords>                  (this, "words");
+  new CExprFunctionObjT3<std::string,long,long,std::string,CExprSubStr>(this, "substr");
+  new CExprFunctionObjT1<std::string,std::string,CExprSystem>          (this, "system");
   new CExprFunctionObjT2<std::string,long,std::string,CExprWord>       (this, "word");
-  new CExprFunctionObjT1<std::string,long,CExprSystem>                 (this, "system");
+  new CExprFunctionObjT1<std::string,long,CExprWords>                  (this, "words");
 
   // gprintf ?
   addObjFunction("sprintf", "s,...", new CExprFunctionSPrintF);
