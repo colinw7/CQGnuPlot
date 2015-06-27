@@ -3,6 +3,10 @@
 
 #include <map>
 
+class CExprOperator;
+
+typedef CRefPtr<CExprOperator> CExprOperatorPtr;
+
 class CExprOperatorMgr {
  public:
  ~CExprOperatorMgr() { }
@@ -20,17 +24,24 @@ class CExprOperatorMgr {
   OperatorMap operator_map_;
 };
 
+//---
+
 class CExprOperator {
  public:
   static bool isOperatorChar(char c);
-  static bool isOperatorStr(char c);
+  static bool isOperatorStr (char c);
 
   CExprOperator(CExprOpType type, const std::string &name);
 
   CExprOpType getType() const { return type_; }
+  std::string getName() const { return name_; }
+
+  void print(std::ostream &os) const {
+    os << name_;
+  }
 
   friend std::ostream &operator<<(std::ostream &os, const CExprOperator &op) {
-    os << op.name_;
+    op.print(os);
 
     return os;
   }

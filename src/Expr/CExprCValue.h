@@ -26,7 +26,7 @@ class CExprComplexValue : public CExprValueBase {
 
   void setComplexValue(const std::complex<double> &c) { c_ = c; }
 
-  CExprValuePtr execUnaryOp(CExprOpType op) const;
+  CExprValuePtr execUnaryOp (CExprOpType op) const;
   CExprValuePtr execBinaryOp(CExprValuePtr rhs, CExprOpType op) const;
 
   void print(std::ostream &os) const {

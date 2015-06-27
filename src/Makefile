@@ -181,8 +181,8 @@ SOURCES       = CQGnuPlot.cpp \
 		CSymbol2D.cpp \
 		Expr/CExpr.cpp \
 		Expr/CExprBValue.cpp \
-		Expr/CExprCValue.cpp \
 		Expr/CExprCompile.cpp \
+		Expr/CExprCValue.cpp \
 		Expr/CExprExecute.cpp \
 		Expr/CExprFunction.cpp \
 		Expr/CExprInterp.cpp \
@@ -192,6 +192,7 @@ SOURCES       = CQGnuPlot.cpp \
 		Expr/CExprRValue.cpp \
 		Expr/CExprStrgen.cpp \
 		Expr/CExprSValue.cpp \
+		Expr/CExprToken.cpp \
 		Expr/CExprValue.cpp \
 		Expr/CExprVariable.cpp moc_CQGnuPlot.cpp \
 		moc_CQGnuPlotAnnotation.cpp \
@@ -368,8 +369,8 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CSymbol2D.o \
 		../obj/CExpr.o \
 		../obj/CExprBValue.o \
-		../obj/CExprCValue.o \
 		../obj/CExprCompile.o \
+		../obj/CExprCValue.o \
 		../obj/CExprExecute.o \
 		../obj/CExprFunction.o \
 		../obj/CExprInterp.o \
@@ -379,6 +380,7 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CExprRValue.o \
 		../obj/CExprStrgen.o \
 		../obj/CExprSValue.o \
+		../obj/CExprToken.o \
 		../obj/CExprValue.o \
 		../obj/CExprVariable.o \
 		../obj/moc_CQGnuPlot.o \
@@ -679,7 +681,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d ../obj/CQGnuPlot1.0.0 || mkdir -p ../obj/CQGnuPlot1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBarObject.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEnum.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot3DRenderer.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBarObject.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotUsingCols.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CQRotatedText.h CQComboSlider.h CQSlider.h CQAngleSpinBox.h CQIntegerSpin.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBarObject.cpp CGnuPlotBinaryFormat.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBarObject.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotPalette.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotUsingCols.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlot3DRenderer.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CQRotatedText.cpp CQComboSlider.cpp CQSlider.cpp CQAngleSpinBox.cpp CQIntegerSpin.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBarObject.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEnum.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot3DRenderer.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBarObject.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotUsingCols.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CQRotatedText.h CQComboSlider.h CQSlider.h CQAngleSpinBox.h CQIntegerSpin.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBarObject.cpp CGnuPlotBinaryFormat.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBarObject.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotPalette.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotUsingCols.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlot3DRenderer.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CQRotatedText.cpp CQComboSlider.cpp CQSlider.cpp CQAngleSpinBox.cpp CQIntegerSpin.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCompile.cpp Expr/CExprCValue.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprToken.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
 
 
 clean:compiler_clean 
@@ -716,13 +718,15 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -813,6 +817,7 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -981,13 +986,15 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -1046,6 +1053,7 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -1167,13 +1175,15 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -1232,6 +1242,7 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -1321,13 +1332,15 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -1418,6 +1431,7 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -1531,13 +1545,15 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -1596,6 +1612,7 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -1718,13 +1735,15 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -1783,6 +1802,7 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -2090,13 +2110,15 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -2155,6 +2177,7 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -2278,13 +2301,15 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CAlignType.h \
@@ -2341,6 +2366,7 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -2462,13 +2488,15 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -2527,6 +2555,7 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -2650,13 +2679,15 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -2715,6 +2746,7 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -2805,13 +2837,15 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -2902,6 +2936,7 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -3077,13 +3112,15 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CMath/include/CAngle.h \
@@ -3139,6 +3176,7 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotAxis.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -3260,13 +3298,15 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -3325,6 +3365,7 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -3430,13 +3471,15 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -3527,6 +3570,7 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -3690,13 +3734,15 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -3763,6 +3809,7 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -3876,13 +3923,15 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -3941,6 +3990,7 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -4029,13 +4079,15 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -4126,6 +4178,7 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -4252,13 +4305,15 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -4317,6 +4372,7 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -4439,13 +4495,15 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -4504,6 +4562,7 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -4625,13 +4684,15 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -4690,6 +4751,7 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -4813,13 +4875,15 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -4878,6 +4942,7 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -4996,13 +5061,15 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CAlignType.h \
@@ -5063,6 +5130,7 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -5213,13 +5281,15 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -5310,6 +5380,7 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -6772,13 +6843,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -6869,6 +6942,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -7154,13 +7228,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -7219,6 +7295,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -7431,13 +7508,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -7496,6 +7575,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -7675,13 +7755,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -7772,6 +7854,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -7904,13 +7987,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -7969,6 +8054,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -8104,13 +8190,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -8169,6 +8257,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -8278,13 +8367,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -8363,6 +8454,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -8497,13 +8589,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -8592,6 +8686,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QString \
@@ -8728,13 +8823,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -8793,6 +8890,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -9001,13 +9099,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CAlignType.h \
@@ -9064,6 +9164,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -9222,13 +9323,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CMath/include/CAngle.h \
@@ -9284,6 +9387,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurfaceData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -9555,13 +9659,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -9620,6 +9726,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -9828,13 +9935,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -9893,6 +10002,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -9931,13 +10041,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -10028,6 +10140,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -10275,13 +10388,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CMath/include/CAngle.h \
@@ -10337,6 +10452,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -10549,13 +10665,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -10614,6 +10732,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -10803,13 +10922,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -10900,6 +11021,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -11092,13 +11214,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -11165,6 +11289,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -11296,13 +11421,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -11361,6 +11488,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -11457,13 +11585,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -11554,6 +11684,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -11783,13 +11914,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -11848,6 +11981,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -11974,13 +12108,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -12039,6 +12175,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -12168,13 +12305,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -12233,6 +12372,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -12447,13 +12587,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -12512,6 +12654,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -12549,13 +12692,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -12646,6 +12791,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -12928,13 +13074,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CAlignType.h \
@@ -12995,6 +13143,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -13252,13 +13401,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -13349,6 +13500,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -13444,13 +13596,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -13541,6 +13695,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -13776,13 +13931,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -13873,6 +14030,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
@@ -13998,13 +14156,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -14057,6 +14217,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CMathGeom2D.h \
@@ -14109,13 +14270,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -14175,7 +14338,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
-		CGnuPlotBlock.h
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotArrowStyle.o CGnuPlotArrowStyle.cpp
 
 ../obj/CGnuPlotAxis.o: CGnuPlotAxis.cpp CGnuPlotAxis.h \
@@ -14225,13 +14389,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CMath/include/CAngle.h \
@@ -14287,6 +14453,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurfaceData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotPlot.h \
@@ -14308,13 +14475,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -14405,6 +14574,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotRenderer.h \
 		CSymbol2D.h \
 		CMathGeom2D.h \
@@ -14462,13 +14632,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -14527,6 +14699,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
@@ -14579,13 +14752,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -14644,6 +14819,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
@@ -14674,13 +14850,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -14759,6 +14937,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotKey.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotCamera.o CGnuPlotCamera.cpp
 
@@ -14810,13 +14989,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -14871,6 +15052,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotCircle.o CGnuPlotCircle.cpp
@@ -14921,13 +15103,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CAlignType.h \
@@ -14984,6 +15168,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotColorBox.o CGnuPlotColorBox.cpp
@@ -15026,13 +15211,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -15097,6 +15284,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotKey.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
@@ -15130,13 +15318,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -15214,6 +15404,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotWindow.h \
@@ -15257,13 +15448,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -15331,6 +15524,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotWindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotCoordValue.o CGnuPlotCoordValue.cpp
 
@@ -15368,13 +15562,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -15441,7 +15637,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
-		CGnuPlotBlock.h
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotDash.o CGnuPlotDash.cpp
 
 ../obj/CGnuPlotDevice.o: CGnuPlotDevice.cpp CGnuPlotDevice.h \
@@ -15492,13 +15689,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CMath/include/CAngle.h \
@@ -15554,6 +15753,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurfaceData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotPlot.h \
@@ -15616,13 +15816,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -15678,6 +15880,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotEllipse.o CGnuPlotEllipse.cpp
@@ -15728,13 +15931,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -15793,6 +15998,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
@@ -15853,13 +16059,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -15921,7 +16129,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
-		CGnuPlotBlock.h
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotFillStyle.o CGnuPlotFillStyle.cpp
 
 ../obj/CGnuPlotGroup.o: CGnuPlotGroup.cpp CGnuPlotGroup.h \
@@ -15936,13 +16145,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -16033,6 +16244,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotKey.h \
 		CGnuPlotWindow.h \
 		CGnuPlotPlot.h \
@@ -16093,13 +16305,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CMath/include/CAngle.h \
@@ -16155,6 +16369,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
@@ -16252,13 +16467,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CMath/include/CAngle.h \
@@ -16311,6 +16528,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		../../CFont/include/CFontMgr.h
@@ -16355,13 +16573,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -16424,6 +16644,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotWindow.h
@@ -16536,13 +16757,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -16601,6 +16824,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
@@ -16619,13 +16843,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -16716,6 +16942,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -16752,13 +16979,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -16815,13 +17044,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -16877,6 +17108,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotWindow.h
@@ -16928,13 +17160,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -16993,6 +17227,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
@@ -17043,13 +17278,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -17114,7 +17351,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
-		CGnuPlotBlock.h
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPosition.o CGnuPlotPosition.cpp
 
 ../obj/CGnuPlotPrintFile.o: CGnuPlotPrintFile.cpp CGnuPlotPrintFile.h \
@@ -17129,13 +17367,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -17224,7 +17464,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
-		CGnuPlotBlock.h
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPrintFile.o CGnuPlotPrintFile.cpp
 
 ../obj/CGnuPlotRectangle.o: CGnuPlotRectangle.cpp CGnuPlotRectangle.h \
@@ -17274,13 +17515,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -17336,6 +17579,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotWindow.h
@@ -17387,13 +17631,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -17452,6 +17698,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
@@ -17470,13 +17717,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -17567,6 +17816,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotWindow.h \
 		../../CFont/include/CFontMgr.h \
 		CMathGeom2D.h \
@@ -17589,13 +17839,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		CGnuPlotTicLabel.h \
 		CGnuPlot.h \
@@ -17686,6 +17938,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CParseLine.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotUsingCols.o CGnuPlotUsingCols.cpp
 
@@ -17725,13 +17978,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -17800,6 +18055,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -17845,13 +18101,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -17920,6 +18178,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -17964,13 +18223,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -18039,6 +18300,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -18083,13 +18345,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -18158,6 +18422,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -18204,13 +18469,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -18279,6 +18546,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -18323,13 +18591,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -18398,6 +18668,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -18453,13 +18724,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -18528,6 +18801,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -18573,13 +18847,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -18648,6 +18924,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -18692,13 +18969,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -18767,6 +19046,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -18812,13 +19092,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -18887,6 +19169,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -18938,13 +19221,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -19013,6 +19298,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19056,13 +19342,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -19131,6 +19419,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19174,13 +19463,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -19249,6 +19540,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19292,13 +19584,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -19367,6 +19661,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19419,13 +19714,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -19494,6 +19791,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19537,13 +19835,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -19612,6 +19912,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19663,13 +19964,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -19738,6 +20041,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19781,13 +20085,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -19856,6 +20162,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19900,13 +20207,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -19975,6 +20284,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20019,13 +20329,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -20094,6 +20406,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20139,13 +20452,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -20214,6 +20529,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20259,13 +20575,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -20334,6 +20652,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20380,13 +20699,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -20455,6 +20776,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20499,13 +20821,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -20574,6 +20898,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20617,13 +20942,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -20692,6 +21019,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20737,13 +21065,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -20812,6 +21142,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20855,13 +21186,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -20930,6 +21263,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20976,13 +21310,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -21051,6 +21387,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21095,13 +21432,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -21170,6 +21509,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21213,13 +21553,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -21288,6 +21630,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21335,13 +21678,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -21410,6 +21755,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21453,13 +21799,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -21528,6 +21876,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21571,13 +21920,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -21646,6 +21997,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21689,13 +22041,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -21764,6 +22118,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21807,13 +22162,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -21882,6 +22239,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21925,13 +22283,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -22000,6 +22360,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -22043,13 +22404,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -22118,6 +22481,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -22174,13 +22538,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CMath/include/CAngle.h \
@@ -22236,6 +22602,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurfaceData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
@@ -22258,13 +22625,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -22355,6 +22724,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotSVGDevice.h \
 		CGnuPlotDevice.h \
@@ -22396,13 +22766,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -22469,7 +22841,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
-		CGnuPlotBlock.h
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotSize.o CGnuPlotSize.cpp
 
 ../obj/CGnuPlotText.o: CGnuPlotText.cpp CGnuPlotText.h \
@@ -22507,13 +22880,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CRange2D.h \
@@ -22581,6 +22956,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CParseLine.h \
 		../../CUtil/include/CUtf8.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotText.o CGnuPlotText.cpp
@@ -22627,13 +23003,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CAlignType.h \
@@ -22694,6 +23072,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotKey.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotDevice.h \
@@ -22712,13 +23091,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -22809,6 +23190,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotPlot.h \
@@ -22831,13 +23213,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
@@ -22928,6 +23312,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h
@@ -25160,13 +25545,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CStrUtil/include/CPrintF.h \
 		../../CStrUtil/include/CConv.h
@@ -25186,39 +25573,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprBValue.o Expr/CExprBValue.cpp
-
-../obj/CExprCValue.o: Expr/CExprCValue.cpp Expr/CExprI.h \
-		../../CStrUtil/include/CStrUtil.h \
-		../../CFile/include/CFile.h \
-		../../CFile/include/CFileBase.h \
-		../../CFile/include/CFileType.h \
-		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
-		Expr/CExprBValue.h \
-		Expr/CExprIValue.h \
-		Expr/CExprRValue.h \
-		Expr/CExprSValue.h \
-		Expr/CExprCValue.h \
-		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
-		Expr/CExprOperator.h \
-		Expr/CExprInterp.h \
-		Expr/CExprCompile.h \
-		Expr/CExprExecute.h \
-		Expr/CExprError.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprCValue.o Expr/CExprCValue.cpp
 
 ../obj/CExprCompile.o: Expr/CExprCompile.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -25234,15 +25599,43 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprCompile.o Expr/CExprCompile.cpp
+
+../obj/CExprCValue.o: Expr/CExprCValue.cpp Expr/CExprI.h \
+		../../CStrUtil/include/CStrUtil.h \
+		../../CFile/include/CFile.h \
+		../../CFile/include/CFileBase.h \
+		../../CFile/include/CFileType.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprCValue.o Expr/CExprCValue.cpp
 
 ../obj/CExprExecute.o: Expr/CExprExecute.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -25258,13 +25651,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprExecute.o Expr/CExprExecute.cpp
 
@@ -25282,13 +25677,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprFunction.o Expr/CExprFunction.cpp
 
@@ -25306,13 +25703,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprInterp.o Expr/CExprInterp.cpp
 
@@ -25330,13 +25729,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprIValue.o Expr/CExprIValue.cpp
 
@@ -25354,13 +25755,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprOperator.o Expr/CExprOperator.cpp
 
@@ -25378,13 +25781,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprParse.o Expr/CExprParse.cpp
 
@@ -25402,13 +25807,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h
@@ -25428,13 +25835,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprStrgen.o Expr/CExprStrgen.cpp
 
@@ -25452,15 +25861,43 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprSValue.o Expr/CExprSValue.cpp
+
+../obj/CExprToken.o: Expr/CExprToken.cpp Expr/CExprI.h \
+		../../CStrUtil/include/CStrUtil.h \
+		../../CFile/include/CFile.h \
+		../../CFile/include/CFileBase.h \
+		../../CFile/include/CFileType.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprToken.o Expr/CExprToken.cpp
 
 ../obj/CExprValue.o: Expr/CExprValue.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -25476,13 +25913,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprValue.o Expr/CExprValue.cpp
 
@@ -25500,13 +25939,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprSValue.h \
 		Expr/CExprCValue.h \
 		Expr/CExprValue.h \
-		Expr/CExprVariable.h \
-		Expr/CExprFunction.h \
-		Expr/CExprParse.h \
 		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
 		Expr/CExprError.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprVariable.o Expr/CExprVariable.cpp
 

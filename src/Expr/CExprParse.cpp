@@ -6,60 +6,62 @@ class CExprParseImpl {
   CExprParseImpl() { }
  ~CExprParseImpl() { }
 
-  CExprPTokenStack parseFile(const std::string &filename);
-  CExprPTokenStack parseFile(FILE *fp);
-  CExprPTokenStack parseFile(CFile &file);
-  CExprPTokenStack parseLine(const std::string &str);
+  CExprTokenStack parseFile(const std::string &filename);
+  CExprTokenStack parseFile(FILE *fp);
+  CExprTokenStack parseFile(CFile &file);
+  CExprTokenStack parseLine(const std::string &str);
 
   bool skipExpression(const std::string &str, uint &i);
 
  private:
-  bool           parseLine(CExprPTokenStack &stack, const std::string &line);
-  bool           parseLine(CExprPTokenStack &stack, const std::string &line, uint &i);
-  void           parseError(const std::string &msg, const std::string &line, uint i);
+  bool parseLine(CExprTokenStack &stack, const std::string &line);
+  bool parseLine(CExprTokenStack &stack, const std::string &line, uint &i);
 
-  bool           isNumber(const std::string &str, uint i);
-  CExprPTokenPtr readNumber(const std::string &str, uint *i);
-  CExprPTokenPtr readString(const std::string &str, uint *i);
-  CExprPTokenPtr readComplex(const std::string &str, uint *i);
-  CExprPTokenPtr readOperator(const std::string &str, uint *i);
+  void parseError(const std::string &msg, const std::string &line, uint i);
+
+  bool isNumber(const std::string &str, uint i);
+
+  CExprTokenBaseP readNumber     (const std::string &str, uint *i);
+  CExprTokenBaseP readString     (const std::string &str, uint *i);
+  CExprTokenBaseP readComplex    (const std::string &str, uint *i);
+  CExprTokenBaseP readOperator   (const std::string &str, uint *i);
 #ifdef GNUPLOT_EXPR
-  CExprPTokenPtr readOperatorStr(const std::string &str, uint *i);
+  CExprTokenBaseP readOperatorStr(const std::string &str, uint *i);
 #endif
-  CExprPTokenPtr readIdentifier(const std::string &str, uint *i);
+  CExprTokenBaseP readIdentifier (const std::string &str, uint *i);
 #if 0
-  CExprPTokenPtr readUnknown(const std::string &str, uint *i);
+  CExprTokenBaseP readUnknown(const std::string &str, uint *i);
 #endif
 
-  bool        skipNumber(const std::string &str, uint *i);
-  bool        skipString(const std::string &str, uint *i);
-  bool        skipComplex(const std::string &str, uint *i);
-  CExprOpType skipOperator(const std::string &str, uint *i);
+  bool        skipNumber     (const std::string &str, uint *i);
+  bool        skipString     (const std::string &str, uint *i);
+  bool        skipComplex    (const std::string &str, uint *i);
+  CExprOpType skipOperator   (const std::string &str, uint *i);
 #ifdef GNUPLOT_EXPR
   CExprOpType skipOperatorStr(const std::string &str, uint *i);
 #endif
-  void        skipIdentifier(const std::string &str, uint *i);
+  void        skipIdentifier (const std::string &str, uint *i);
 
-  bool readStringChars(const std::string &str, uint *i, bool process, std::string &str1);
-  bool readComplexChars(const std::string &str, uint *i, std::complex<double> &c);
+  bool readStringChars    (const std::string &str, uint *i, bool process, std::string &str1);
+  bool readComplexChars   (const std::string &str, uint *i, std::complex<double> &c);
   void readIdentifierChars(const std::string &str, uint *i, std::string &identifier);
 
 #if 0
-  CExprPTokenPtr createUnknownToken();
+  CExprTokenBaseP createUnknownToken();
 #endif
-  CExprPTokenPtr createIdentifierToken(const std::string &str);
-  CExprPTokenPtr createOperatorToken(CExprOperatorPtr);
-  CExprPTokenPtr createIntegerToken(long);
-  CExprPTokenPtr createRealToken(double);
-  CExprPTokenPtr createStringToken(const std::string &str);
-  CExprPTokenPtr createComplexToken(const std::complex<double> &c);
+  CExprTokenBaseP createIdentifierToken(const std::string &str);
+  CExprTokenBaseP createOperatorToken  (CExprOpType op);
+  CExprTokenBaseP createIntegerToken   (long);
+  CExprTokenBaseP createRealToken      (double);
+  CExprTokenBaseP createStringToken    (const std::string &str);
+  CExprTokenBaseP createComplexToken   (const std::complex<double> &c);
 
   std::string replaceEscapeCodes(const std::string &str);
 
   bool isStringOp(CExprOpType op) const;
 
  private:
-  CExprPTokenStack ptoken_stack_;
+  CExprTokenStack tokenStack_;
 };
 
 //-----------
@@ -75,21 +77,21 @@ CExprParse::
 {
 }
 
-CExprPTokenStack
+CExprTokenStack
 CExprParse::
 parseFile(const std::string &filename)
 {
   return impl_->parseFile(filename);
 }
 
-CExprPTokenStack
+CExprTokenStack
 CExprParse::
 parseFile(FILE *fp)
 {
   return impl_->parseFile(fp);
 }
 
-CExprPTokenStack
+CExprTokenStack
 CExprParse::
 parseLine(const std::string &line)
 {
@@ -105,7 +107,7 @@ skipExpression(const std::string &line, uint &i)
 
 //-----------
 
-CExprPTokenStack
+CExprTokenStack
 CExprParseImpl::
 parseFile(const std::string &filename)
 {
@@ -114,7 +116,7 @@ parseFile(const std::string &filename)
   return parseFile(file);
 }
 
-CExprPTokenStack
+CExprTokenStack
 CExprParseImpl::
 parseFile(FILE *fp)
 {
@@ -123,7 +125,7 @@ parseFile(FILE *fp)
   return parseFile(file);
 }
 
-CExprPTokenStack
+CExprTokenStack
 CExprParseImpl::
 parseFile(CFile &file)
 {
@@ -131,34 +133,34 @@ parseFile(CFile &file)
 
   file.toLines(lines);
 
-  ptoken_stack_.clear();
+  tokenStack_.clear();
 
   uint num_lines = lines.size();
 
   for (uint i = 0; i < num_lines; i++)
-    if (! parseLine(ptoken_stack_, lines[i]))
-      return CExprPTokenStack();
+    if (! parseLine(tokenStack_, lines[i]))
+      return CExprTokenStack();
 
-  return ptoken_stack_;
+  return tokenStack_;
 }
 
-CExprPTokenStack
+CExprTokenStack
 CExprParseImpl::
 parseLine(const std::string &line)
 {
-  ptoken_stack_.clear();
+  tokenStack_.clear();
 
-  bool flag = parseLine(ptoken_stack_, line);
+  bool flag = parseLine(tokenStack_, line);
 
   if (! flag)
-    return CExprPTokenStack();
+    return CExprTokenStack();
 
-  return ptoken_stack_;
+  return tokenStack_;
 }
 
 bool
 CExprParseImpl::
-parseLine(CExprPTokenStack &stack, const std::string &line)
+parseLine(CExprTokenStack &stack, const std::string &line)
 {
   uint i = 0;
 
@@ -167,10 +169,10 @@ parseLine(CExprPTokenStack &stack, const std::string &line)
 
 bool
 CExprParseImpl::
-parseLine(CExprPTokenStack &stack, const std::string &line, uint &i)
+parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
 {
-  CExprPTokenPtr ptoken;
-  CExprPTokenPtr lastPToken;
+  CExprTokenBaseP ptoken;
+  CExprTokenBaseP lastPToken;
 
   while (true) {
     CStrUtil::skipSpace(line, &i);
@@ -178,8 +180,8 @@ parseLine(CExprPTokenStack &stack, const std::string &line, uint &i)
 
     if      (CExprOperator::isOperatorChar(line[i])) {
       CExprOpType lastOpType =
-       (lastPToken.isValid() && lastPToken->getType() == CEXPR_PTOKEN_OPERATOR ?
-        lastPToken->getOperator()->getType() : CEXPR_OP_UNKNOWN);
+       (lastPToken.isValid() && lastPToken->type() == CEXPR_TOKEN_OPERATOR ?
+        lastPToken->getOperator() : CEXPR_OP_UNKNOWN);
 
       if (lastOpType != CEXPR_OP_UNKNOWN) {
         if ((line[i] == '-' || line[i] == '+') && i < line.size() - 1 && isdigit(line[i + 1]))
@@ -195,18 +197,18 @@ parseLine(CExprPTokenStack &stack, const std::string &line, uint &i)
         ptoken = readNumber(line, &i);
 #endif
 
-      if (ptoken.isValid() && ptoken->getType() == CEXPR_PTOKEN_OPERATOR) {
-        if      (ptoken->getOperator()->getType() == CEXPR_OP_OPEN_RBRACKET) {
+      if (ptoken.isValid() && ptoken->type() == CEXPR_TOKEN_OPERATOR) {
+        if      (ptoken->getOperator() == CEXPR_OP_OPEN_RBRACKET) {
           stack.addToken(ptoken);
 
           if (! parseLine(stack, line, i))
             return false;
 
-          lastPToken = CExprPTokenPtr();
+          lastPToken = CExprTokenBaseP();
 
           continue;
         }
-        else if (ptoken->getOperator()->getType() == CEXPR_OP_CLOSE_RBRACKET) {
+        else if (ptoken->getOperator() == CEXPR_OP_CLOSE_RBRACKET) {
           stack.addToken(ptoken);
 
           return true;
@@ -253,8 +255,8 @@ bool
 CExprParseImpl::
 skipExpression(const std::string &line, uint &i)
 {
-  CExprPTokenType lastTokenType = CEXPR_PTOKEN_UNKNOWN;
-  CExprOpType     lastOpType    = CEXPR_OP_UNKNOWN;
+  CExprTokenType lastTokenType = CEXPR_TOKEN_UNKNOWN;
+  CExprOpType    lastOpType    = CEXPR_OP_UNKNOWN;
 
   uint i1   = i;
   uint len1 = line.size();
@@ -263,23 +265,23 @@ skipExpression(const std::string &line, uint &i)
     CStrUtil::skipSpace(line, &i);
     if (i >= len1) break;
 
-    CExprPTokenType lastTokenType1 = lastTokenType;
-    CExprOpType     lastOpType1    = lastOpType;
+    CExprTokenType lastTokenType1 = lastTokenType;
+    CExprOpType    lastOpType1    = lastOpType;
 
-    lastTokenType = CEXPR_PTOKEN_UNKNOWN;
+    lastTokenType = CEXPR_TOKEN_UNKNOWN;
     lastOpType    = CEXPR_OP_UNKNOWN;
 
     if      (CExprOperator::isOperatorChar(line[i])) {
       if (line[i] == ',' || line[i] == ')')
         break;
 
-      if (lastTokenType1 == CEXPR_PTOKEN_OPERATOR && lastOpType1 != CEXPR_OP_UNKNOWN) {
+      if (lastTokenType1 == CEXPR_TOKEN_OPERATOR && lastOpType1 != CEXPR_OP_UNKNOWN) {
         if ((line[i] == '-' || line[i] == '+') && i < len1 - 1 && isdigit(line[i + 1])) {
           if (! skipNumber(line, &i)) {
             break;
           }
 
-          lastTokenType = CEXPR_PTOKEN_REAL;
+          lastTokenType = CEXPR_TOKEN_REAL;
         }
         else {
           int i2 = i;
@@ -287,12 +289,12 @@ skipExpression(const std::string &line, uint &i)
           lastOpType = skipOperator(line, &i);
 
           if (lastOpType != CEXPR_OP_UNKNOWN) {
-            if (lastTokenType1 == CEXPR_PTOKEN_STRING && ! isStringOp(lastOpType)) {
+            if (lastTokenType1 == CEXPR_TOKEN_STRING && ! isStringOp(lastOpType)) {
               i = i2;
               break;
             }
 
-            lastTokenType = CEXPR_PTOKEN_OPERATOR;
+            lastTokenType = CEXPR_TOKEN_OPERATOR;
           }
         }
       }
@@ -302,27 +304,27 @@ skipExpression(const std::string &line, uint &i)
         lastOpType = skipOperator(line, &i);
 
         if (lastOpType != CEXPR_OP_UNKNOWN) {
-          if (lastTokenType1 == CEXPR_PTOKEN_STRING && ! isStringOp(lastOpType)) {
+          if (lastTokenType1 == CEXPR_TOKEN_STRING && ! isStringOp(lastOpType)) {
             i = i2;
             break;
           }
 
-          lastTokenType = CEXPR_PTOKEN_OPERATOR;
+          lastTokenType = CEXPR_TOKEN_OPERATOR;
         }
       }
 
 #ifdef GNUPLOT_EXPR
-      if (lastTokenType == CEXPR_PTOKEN_UNKNOWN && line[i] == '.') {
+      if (lastTokenType == CEXPR_TOKEN_UNKNOWN && line[i] == '.') {
         if (! skipNumber(line, &i)) {
           break;
         }
 
-        lastTokenType = CEXPR_PTOKEN_REAL;
+        lastTokenType = CEXPR_TOKEN_REAL;
       }
 #endif
 
-      if (lastTokenType == CEXPR_PTOKEN_OPERATOR) {
-        if      (lastTokenType == CEXPR_PTOKEN_OPERATOR && lastOpType == CEXPR_OP_OPEN_RBRACKET) {
+      if (lastTokenType == CEXPR_TOKEN_OPERATOR) {
+        if      (lastTokenType == CEXPR_TOKEN_OPERATOR && lastOpType == CEXPR_OP_OPEN_RBRACKET) {
           while (i < len1) {
             if (! skipExpression(line, i)) {
               i = i1; return false;
@@ -334,7 +336,7 @@ skipExpression(const std::string &line, uint &i)
             if (i >= len1 || line[i] != ',')
               break;
 
-            lastTokenType = CEXPR_PTOKEN_OPERATOR;
+            lastTokenType = CEXPR_TOKEN_OPERATOR;
             lastOpType    = CEXPR_OP_COMMA;
 
             ++i;
@@ -346,13 +348,13 @@ skipExpression(const std::string &line, uint &i)
             i = i1; return false;
           }
 
-          lastTokenType = CEXPR_PTOKEN_VALUE;
+          lastTokenType = CEXPR_TOKEN_VALUE;
 
           ++i;
 
           continue;
         }
-        else if (lastTokenType == CEXPR_PTOKEN_OPERATOR && lastOpType == CEXPR_OP_CLOSE_RBRACKET) {
+        else if (lastTokenType == CEXPR_TOKEN_OPERATOR && lastOpType == CEXPR_OP_CLOSE_RBRACKET) {
           break;
         }
       }
@@ -364,69 +366,69 @@ skipExpression(const std::string &line, uint &i)
       CExprOpType lastOpType2 = skipOperatorStr(line, &i);
 
       if (lastOpType2 == CEXPR_OP_UNKNOWN) {
-        if (lastTokenType1 != CEXPR_PTOKEN_UNKNOWN && lastTokenType1 != CEXPR_PTOKEN_OPERATOR)
+        if (lastTokenType1 != CEXPR_TOKEN_UNKNOWN && lastTokenType1 != CEXPR_TOKEN_OPERATOR)
           break;
 
         skipIdentifier(line, &i);
 
-        lastTokenType = CEXPR_PTOKEN_IDENTIFIER;
+        lastTokenType = CEXPR_TOKEN_IDENTIFIER;
       }
       else {
-        if (lastTokenType1 == CEXPR_PTOKEN_STRING && ! isStringOp(lastOpType2)) {
+        if (lastTokenType1 == CEXPR_TOKEN_STRING && ! isStringOp(lastOpType2)) {
           i = i2;
           break;
         }
 
         lastOpType    = lastOpType2;
-        lastTokenType = CEXPR_PTOKEN_OPERATOR;
+        lastTokenType = CEXPR_TOKEN_OPERATOR;
       }
     }
 #endif
     else if (isNumber(line, i)) {
-      if (lastTokenType1 != CEXPR_PTOKEN_UNKNOWN && lastTokenType1 != CEXPR_PTOKEN_OPERATOR)
+      if (lastTokenType1 != CEXPR_TOKEN_UNKNOWN && lastTokenType1 != CEXPR_TOKEN_OPERATOR)
         break;
 
       if (! skipNumber(line, &i)) {
         i = i1; return false;
       }
 
-      lastTokenType = CEXPR_PTOKEN_REAL;
+      lastTokenType = CEXPR_TOKEN_REAL;
     }
     else if (line[i] == '_' || isalpha(line[i])) {
-      if (lastTokenType1 != CEXPR_PTOKEN_UNKNOWN && lastTokenType1 != CEXPR_PTOKEN_OPERATOR)
+      if (lastTokenType1 != CEXPR_TOKEN_UNKNOWN && lastTokenType1 != CEXPR_TOKEN_OPERATOR)
         break;
 
       skipIdentifier(line, &i);
 
-      lastTokenType = CEXPR_PTOKEN_IDENTIFIER;
+      lastTokenType = CEXPR_TOKEN_IDENTIFIER;
     }
     else if (line[i] == '\'' || line[i] == '\"') {
-      if (lastTokenType1 != CEXPR_PTOKEN_UNKNOWN && lastTokenType1 != CEXPR_PTOKEN_OPERATOR)
+      if (lastTokenType1 != CEXPR_TOKEN_UNKNOWN && lastTokenType1 != CEXPR_TOKEN_OPERATOR)
         break;
 
       if (! skipString(line, &i)) {
         i = i1; return false;
       }
 
-      lastTokenType = CEXPR_PTOKEN_STRING;
+      lastTokenType = CEXPR_TOKEN_STRING;
     }
 #ifdef GNUPLOT_EXPR
     else if (line[i] == '{') {
-      if (lastTokenType1 != CEXPR_PTOKEN_UNKNOWN && lastTokenType1 != CEXPR_PTOKEN_OPERATOR)
+      if (lastTokenType1 != CEXPR_TOKEN_UNKNOWN && lastTokenType1 != CEXPR_TOKEN_OPERATOR)
         break;
 
       if (! skipComplex(line, &i)) {
         i = i1; return false;
       }
 
-      lastTokenType = CEXPR_PTOKEN_COMPLEX;
+      lastTokenType = CEXPR_TOKEN_COMPLEX;
     }
 #endif
     else {
       break;
     }
 
-    if (lastTokenType == CEXPR_PTOKEN_UNKNOWN) {
+    if (lastTokenType == CEXPR_TOKEN_UNKNOWN) {
       break;
     }
   }
@@ -489,7 +491,7 @@ isNumber(const std::string &str, uint i)
   return false;
 }
 
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 readNumber(const std::string &str, uint *i)
 {
@@ -497,8 +499,8 @@ readNumber(const std::string &str, uint *i)
   double real    = 0.0;
   bool   is_int  = false;
 
-  if (! CExprParseUtil::stringToNumber(str, i, integer, real, is_int))
-    return CExprPTokenPtr();
+  if (! CExprStringToNumber(str, i, integer, real, is_int))
+    return CExprTokenBaseP();
 
   if (is_int)
     return createIntegerToken(integer);
@@ -514,20 +516,20 @@ skipNumber(const std::string &str, uint *i)
   double real    = 0.0;
   bool   is_int  = false;
 
-  if (! CExprParseUtil::stringToNumber(str, i, integer, real, is_int))
+  if (! CExprStringToNumber(str, i, integer, real, is_int))
     return false;
 
   return true;
 }
 
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 readString(const std::string &str, uint *i)
 {
   std::string str1;
 
   if (! readStringChars(str, i, true, str1))
-    return CExprPTokenPtr();
+    return CExprTokenBaseP();
 
   return createStringToken(str1);
 }
@@ -740,14 +742,14 @@ replaceEscapeCodes(const std::string &str)
   return str1;
 }
 
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 readComplex(const std::string &str, uint *i)
 {
   std::complex<double> c;
 
   if (! readComplexChars(str, i, c))
-    return CExprPTokenPtr();
+    return CExprTokenBaseP();
 
   return createComplexToken(c);
 }
@@ -776,7 +778,7 @@ readComplexChars(const std::string &str, uint *i, std::complex<double> &c)
   double real1    = 0.0;
   bool   is_int1  = false;
 
-  if (! CExprParseUtil::stringToNumber(str, i, integer1, real1, is_int1))
+  if (! CExprStringToNumber(str, i, integer1, real1, is_int1))
     return false;
 
   CStrUtil::skipSpace(str, i);
@@ -792,7 +794,7 @@ readComplexChars(const std::string &str, uint *i, std::complex<double> &c)
   double real2    = 0.0;
   bool   is_int2  = false;
 
-  if (! CExprParseUtil::stringToNumber(str, i, integer2, real2, is_int2))
+  if (! CExprStringToNumber(str, i, integer2, real2, is_int2))
     return false;
 
   CStrUtil::skipSpace(str, i);
@@ -807,21 +809,16 @@ readComplexChars(const std::string &str, uint *i, std::complex<double> &c)
   return true;
 }
 
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 readOperator(const std::string &str, uint *i)
 {
   CExprOpType id = skipOperator(str, i);
 
   if (id == CEXPR_OP_UNKNOWN)
-    return CExprPTokenPtr();
+    return CExprTokenBaseP();
 
-  CExprOperatorPtr op = CExprInst->getOperator(id);
-
-  if (! op.isValid())
-    return CExprPTokenPtr();
-
-  return createOperatorToken(op);
+  return createOperatorToken(id);
 }
 
 CExprOpType
@@ -1066,16 +1063,14 @@ skipOperator(const std::string &str, uint *i)
 }
 
 #ifdef GNUPLOT_EXPR
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 readOperatorStr(const std::string &str, uint *i)
 {
-  CExprOpType id = skipOperatorStr(str, i);
+  CExprOpType op = skipOperatorStr(str, i);
 
-  if (id == CEXPR_OP_UNKNOWN)
-    return CExprPTokenPtr();
-
-  CExprOperatorPtr op = CExprInst->getOperator(id);
+  if (op == CEXPR_OP_UNKNOWN)
+    return CExprTokenBaseP();
 
   return createOperatorToken(op);
 }
@@ -1106,7 +1101,7 @@ skipOperatorStr(const std::string &str, uint *i)
 }
 #endif
 
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 readIdentifier(const std::string &str, uint *i)
 {
@@ -1139,7 +1134,7 @@ readIdentifierChars(const std::string &str, uint *i, std::string &identifier)
 }
 
 #if 0
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 readUnknown(const std::string &str, uint *i)
 {
@@ -1149,284 +1144,52 @@ readUnknown(const std::string &str, uint *i)
   return createUnknownToken();
 }
 
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 createUnknownToken()
 {
-  return CExprPToken::createUnknownToken();
+  return CExprTokenBaseP(CExprTokenMgrInst->createUnknownToken());
 }
 #endif
 
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 createIdentifierToken(const std::string &identifier)
 {
-  return CExprPToken::createIdentifierToken(identifier);
+  return CExprTokenBaseP(CExprTokenMgrInst->createIdentifierToken(identifier));
 }
 
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
-createOperatorToken(CExprOperatorPtr op)
+createOperatorToken(CExprOpType id)
 {
-  return CExprPToken::createOperatorToken(op);
+  return CExprTokenBaseP(CExprTokenMgrInst->createOperatorToken(id));
 }
 
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 createIntegerToken(long integer)
 {
-  return CExprPToken::createIntegerToken(integer);
+  return CExprTokenBaseP(CExprTokenMgrInst->createIntegerToken(integer));
 }
 
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 createRealToken(double real)
 {
-  return CExprPToken::createRealToken(real);
+  return CExprTokenBaseP(CExprTokenMgrInst->createRealToken(real));
 }
 
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 createStringToken(const std::string &str)
 {
-  return CExprPToken::createStringToken(str);
+  return CExprTokenBaseP(CExprTokenMgrInst->createStringToken(str));
 }
 
-CExprPTokenPtr
+CExprTokenBaseP
 CExprParseImpl::
 createComplexToken(const std::complex<double> &c)
 {
-  return CExprPToken::createComplexToken(c);
-}
-
-//------
-
-void
-CExprPToken::
-printQualified(std::ostream &os) const
-{
-  switch (type_) {
-    case CEXPR_PTOKEN_IDENTIFIER:
-      os << "<identifier>";
-      break;
-    case CEXPR_PTOKEN_OPERATOR:
-      os << "<operator>";
-      break;
-    case CEXPR_PTOKEN_INTEGER:
-      os << "<integer>";
-      break;
-    case CEXPR_PTOKEN_REAL:
-      os << "<real>";
-      break;
-    case CEXPR_PTOKEN_STRING:
-      os << "<string>";
-      break;
-    case CEXPR_PTOKEN_COMPLEX:
-      os << "<complex>";
-      break;
-    default:
-      os << "<-?->";
-      break;
-  }
-
-  base_->print(os);
-}
-
-//------
-
-void
-CExprPTokenStack::
-print(std::ostream &os) const
-{
-  uint len = stack_.size();
-
-  for (uint i = 0; i < len; ++i) {
-    if (i > 0) os << " ";
-
-    stack_[i]->printQualified(os);
-  }
-}
-
-//------
-
-void
-CExprPTokenIdentifier::
-print(std::ostream &os) const
-{
-  os << identifier_;
-}
-
-//------
-
-void
-CExprPTokenOperator::
-print(std::ostream &os) const
-{
-  os << *op_;
-}
-
-//------
-
-void
-CExprPTokenInteger::
-print(std::ostream &os) const
-{
-  os << integer_;
-}
-
-//------
-
-void
-CExprPTokenReal::
-print(std::ostream &os) const
-{
-  os << real_;
-}
-
-//------
-
-void
-CExprPTokenString::
-print(std::ostream &os) const
-{
-  os << "\"" << str_ << "\"";
-}
-
-//------
-
-void
-CExprPTokenComplex::
-print(std::ostream &os) const
-{
-  os << "{" << c_.real() << ", " << c_.imag() << "}";
-}
-
-//------
-
-bool
-CExprParseUtil::
-stringToNumber(const std::string &str, uint *i, long &integer, double &real, bool &is_int)
-{
-  uint i1 = *i;
-
-  if (str[*i] == '+' || str[*i] == '-')
-    (*i)++;
-
-  if (*i >= str.size())
-    return false;
-
-  if (*i < str.size() - 2 && str[*i] == '0' &&
-      (str[*i + 1] == 'x' || str[*i + 1] == 'X') && isxdigit(str[*i + 2])) {
-    (*i)++;
-    (*i)++;
-
-    uint j = *i;
-
-    while (*i < str.size() && isxdigit(str[*i]))
-      (*i)++;
-
-    std::string str1 = str.substr(j, *i - j);
-
-    long unsigned integer1;
-
-    sscanf(str1.c_str(), "%lx", &integer1);
-
-    integer = integer1;
-    real    = integer1;
-    is_int  = true;
-
-    return true;
-  }
-
-  //uint j = *i;
-
-  while (*i < str.size() && isdigit(str[*i]))
-    (*i)++;
-
-  bool point_found = (*i < str.size() && str[*i] == '.');
-
-  if (point_found) {
-    (*i)++;
-
-    //j = *i;
-
-    while (*i < str.size() && isdigit(str[*i]))
-      (*i)++;
-  }
-
-  bool exponent_found = (*i < str.size() && (str[*i] == 'e' || str[*i] == 'E'));
-
-  if (exponent_found) {
-    uint i2 = *i;
-
-    (*i)++;
-
-    if (*i < str.size() && (str[*i] == '+' || str[*i] == '-'))
-      (*i)++;
-
-    if (*i < str.size() && isdigit(str[*i])) {
-      //j = *i;
-
-      while (*i < str.size() && isdigit(str[*i]))
-        (*i)++;
-    }
-    else {
-      *i = i2;
-
-      exponent_found = false;
-    }
-  }
-
-  std::string str1 = str.substr(i1, *i - i1);
-
-  if (! point_found && ! exponent_found) {
-    if (*i < str.size() && (str[*i] == 'l' || str[*i] == 'L' || str[*i] == 'u' || str[*i] == 'U'))
-      (*i)++;
-  }
-
-  CExprPTokenPtr ptoken;
-
-  if (point_found || exponent_found) {
-    real    = CStrUtil::toReal(str1);
-    integer = real;
-    is_int  = false;
-
-    return true;
-  }
-
-  //------
-
-  bool octal = false;
-
-  if (str1[0] == '0') {
-    octal = true;
-
-    for (uint j = 1; j < str1.size(); ++j)
-      if (str1[j] < '0' || str1[j] > '7') {
-        octal = false;
-        break;
-      }
-  }
-
-  if (octal) {
-    long unsigned integer1;
-
-    sscanf(str1.c_str(), "%lo", &integer1);
-
-    integer = integer1;
-    real    = integer1;
-    is_int  = true;
-
-    return true;
-  }
-
-  long integer1;
-
-  sscanf(str1.c_str(), "%ld", &integer1);
-
-  integer = integer1;
-  real    = integer1;
-  is_int  = true;
-
-  return true;
+  return CExprTokenBaseP(CExprTokenMgrInst->createComplexToken(c));
 }

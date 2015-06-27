@@ -51,7 +51,9 @@ enum CExprOpType {
   CEXPR_OP_STR_NOT_EQUAL     = 44,
   CEXPR_OP_STR_CONCAT        = 45,
 #endif
-  CEXPR_OP_COMMA             = 46
+  CEXPR_OP_COMMA             = 46,
+  CEXPR_OP_START_BLOCK       = 47,
+  CEXPR_OP_END_BLOCK         = 48
 };
 
 enum CExprValueType {
@@ -68,13 +70,9 @@ enum CExprValueType {
 };
 
 class CExprValue;
-class CExprPToken;
 class CExprIToken;
-class CExprCToken;
-class CExprEToken;
 class CExprVariable;
 class CExprFunction;
-class CExprOperator;
 
 #include <CRefPtr.h>
 #include <CAutoPtr.h>
@@ -82,15 +80,13 @@ class CExprOperator;
 #include <complex>
 
 typedef CRefPtr<CExprValue>    CExprValuePtr;
-typedef CRefPtr<CExprPToken>   CExprPTokenPtr;
-typedef CRefPtr<CExprCToken>   CExprCTokenPtr;
 typedef CRefPtr<CExprIToken>   CExprITokenPtr;
-typedef CRefPtr<CExprEToken>   CExprETokenPtr;
 typedef CRefPtr<CExprVariable> CExprVariablePtr;
 typedef CRefPtr<CExprFunction> CExprFunctionPtr;
-typedef CRefPtr<CExprOperator> CExprOperatorPtr;
 
-typedef CExprValuePtr (*CExprFunctionProc)(const std::vector<CExprValuePtr> &values);
+typedef std::vector<CExprValuePtr> CExprValueArray;
+
+typedef CExprValuePtr (*CExprFunctionProc)(const CExprValueArray &values);
 
 class CExprValueBase {
  public:
@@ -118,7 +114,7 @@ class CExprValueBase {
     return CExprValuePtr();
   }
 
-  virtual CExprValuePtr subscript(const std::vector<CExprValuePtr> &) const {
+  virtual CExprValuePtr subscript(const CExprValueArray &) const {
     return CExprValuePtr();
   }
 
@@ -129,19 +125,61 @@ class CExprValueBase {
 
 //-------
 
+enum CExprTokenType {
+  CEXPR_TOKEN_UNKNOWN = -1,
+
+  CEXPR_TOKEN_NONE = 0,
+
+  CEXPR_TOKEN_IDENTIFIER = 1,
+  CEXPR_TOKEN_OPERATOR   = 2,
+  CEXPR_TOKEN_INTEGER    = 4,
+  CEXPR_TOKEN_REAL       = 5,
+  CEXPR_TOKEN_STRING     = 6,
+  CEXPR_TOKEN_COMPLEX    = 7,
+  CEXPR_TOKEN_FUNCTION   = 8,
+  CEXPR_TOKEN_VALUE      = 9,
+  CEXPR_TOKEN_BLOCK      = 10
+};
+
+enum CExprITokenType {
+  CEXPR_TOKEN_TYPE                = 100,
+  CEXPR_EXPRESSION                = 101,
+  CEXPR_ASSIGNMENT_EXPRESSION     = 102,
+  CEXPR_CONDITIONAL_EXPRESSION    = 103,
+  CEXPR_LOGICAL_OR_EXPRESSION     = 104,
+  CEXPR_LOGICAL_AND_EXPRESSION    = 105,
+  CEXPR_INCLUSIVE_OR_EXPRESSION   = 106,
+  CEXPR_EXCLUSIVE_OR_EXPRESSION   = 107,
+  CEXPR_AND_EXPRESSION            = 108,
+  CEXPR_EQUALITY_EXPRESSION       = 109,
+  CEXPR_RELATIONAL_EXPRESSION     = 110,
+  CEXPR_SHIFT_EXPRESSION          = 111,
+  CEXPR_ADDITIVE_EXPRESSION       = 112,
+  CEXPR_MULTIPLICATIVE_EXPRESSION = 113,
+  CEXPR_POWER_EXPRESSION          = 114,
+  CEXPR_UNARY_EXPRESSION          = 115,
+  CEXPR_POSTFIX_EXPRESSION        = 116,
+  CEXPR_PRIMARY_EXPRESSION        = 117,
+  CEXPR_ARGUMENT_EXPRESSION_LIST  = 118
+};
+
+//-------
+
 #include <CExprBValue.h>
 #include <CExprIValue.h>
 #include <CExprRValue.h>
 #include <CExprSValue.h>
 #include <CExprCValue.h>
 #include <CExprValue.h>
-#include <CExprVariable.h>
-#include <CExprFunction.h>
 #include <CExprOperator.h>
+#include <CExprToken.h>
 #include <CExprParse.h>
+#include <CExprVariable.h>
 #include <CExprInterp.h>
 #include <CExprCompile.h>
+#include <CExprFunction.h>
 #include <CExprExecute.h>
+#include <CExprStrgen.h>
 #include <CExprError.h>
 
 //-------
@@ -163,28 +201,28 @@ class CExpr {
   bool getDegrees() const { return degrees_; }
   void setDegrees(bool b) { degrees_ = b; }
 
-  bool evaluateExpression(const std::string &str, std::vector<CExprValuePtr> &values);
+  bool evaluateExpression(const std::string &str, CExprValueArray &values);
   bool evaluateExpression(const std::string &str, CExprValuePtr &value);
 
-  bool executePTokenStack(const CExprPTokenStack &stack, std::vector<CExprValuePtr> &values);
-  bool executePTokenStack(const CExprPTokenStack &stack, CExprValuePtr &value);
+  bool executePTokenStack(const CExprTokenStack &stack, CExprValueArray &values);
+  bool executePTokenStack(const CExprTokenStack &stack, CExprValuePtr &value);
 
-  CExprPTokenStack parseLine(const std::string &line);
-  CExprITokenPtr   interpPTokenStack(const CExprPTokenStack &stack);
-  CExprCTokenStack compileIToken(CExprITokenPtr itoken);
+  CExprTokenStack parseLine(const std::string &line);
+  CExprITokenPtr  interpPTokenStack(const CExprTokenStack &stack);
+  CExprTokenStack compileIToken(CExprITokenPtr itoken);
 
   bool skipExpression(const std::string &line, uint &i);
 
-  bool executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values);
-  bool executeCTokenStack(const CExprCTokenStack &stack, CExprValuePtr &value);
+  bool executeCTokenStack(const CExprTokenStack &stack, CExprValueArray &values);
+  bool executeCTokenStack(const CExprTokenStack &stack, CExprValuePtr &value);
 
   void saveCompileState();
   void restoreCompileState();
 
-  CExprVariablePtr getVariable(const std::string &name) const;
-  CExprVariablePtr createVariable(const std::string &name, CExprValuePtr value);
-  void removeVariable(const std::string &name);
-  void getVariableNames(std::vector<std::string> &names) const;
+  CExprVariablePtr getVariable     (const std::string &name) const;
+  CExprVariablePtr createVariable  (const std::string &name, CExprValuePtr value);
+  void             removeVariable  (const std::string &name);
+  void             getVariableNames(std::vector<std::string> &names) const;
 
   CExprVariablePtr createRealVariable   (const std::string &name, double x);
   CExprVariablePtr createIntegerVariable(const std::string &name, long l);
@@ -198,7 +236,9 @@ class CExpr {
                                CExprFunctionObj *proc);
   void getFunctionNames(std::vector<std::string> &names) const;
 
-  CExprOperatorPtr getOperator(CExprOpType type) const;
+  CExprTokenBaseP getOperator(CExprOpType id);
+
+  std::string getOperatorName(CExprOpType type) const;
 
   CExprValuePtr createBooleanValue(bool b);
   CExprValuePtr createIntegerValue(long i);
@@ -206,7 +246,7 @@ class CExpr {
   CExprValuePtr createStringValue (const std::string &s);
   CExprValuePtr createComplexValue(const std::complex<double> &c);
 
-  std::string printf(const std::string &fmt, const std::vector<CExprValuePtr> &values) const;
+  std::string printf(const std::string &fmt, const CExprValueArray &values) const;
 
   void errorMsg(const std::string &msg) const;
 

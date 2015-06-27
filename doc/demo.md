@@ -60,7 +60,6 @@
   + No issues
 
 ## complex_trig.dem
-  + Slow
   + z axis should not be drawn
 
 ## contours.dem

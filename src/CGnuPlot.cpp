@@ -1026,6 +1026,8 @@ parseStatement(int &i, const Statements &statements)
   //---
 
   // get command name or variable name
+  line.skipSpace();
+
   int pos = line.pos();
 
   std::string identifier;
@@ -1036,6 +1038,40 @@ parseStatement(int &i, const Statements &statements)
   if (identifier.empty()) {
     if (line.substr() == "")
       return true;
+
+    if (line.skipSpaceAndChar('$')) {
+      std::string name = readNonSpace(line);
+
+      if (name == "") {
+        errorMsg("Missing block name");
+        return false;
+      }
+
+      line.skipSpace();
+
+      if (! line.isChars("<<")) {
+        errorMsg("Missing block << for '" + name + "'");
+        return false;
+      }
+
+      line.skipChars(2);
+
+      line.skipSpace();
+
+      std::string eofStr = line.substr();
+
+      if (! readNamedBlock(name, eofStr)) {
+        errorMsg("Failed to read block '" + name + "'");
+        return false;
+      }
+    }
+    else {
+      line.setPos(pos);
+      errorMsg("Invalid statement '" + line.substr());
+      return false;
+    }
+
+    return true;
   }
 
   bool keyword = (identifier == "if" || identifier == "while");
@@ -1979,6 +2015,10 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots)
     std::string name = readNonSpace(line);
 
     filename = "$" + name;
+
+    lastFilename_ = filename;
+
+    style = getDataStyle();
   }
   else {
     // any number of assigns followed by single function
@@ -3616,8 +3656,6 @@ void
 CGnuPlot::
 splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots)
 {
-  //----
-
   CParseLine line(args);
 
   line.skipSpace();
@@ -3712,6 +3750,17 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots)
 
     style = getDataStyle();
   }
+  else if (line.isChar('$')) {
+    line.skipChar();
+
+    std::string name = readNonSpace(line);
+
+    filename = "$" + name;
+
+    lastFilename_ = filename;
+
+    style = getDataStyle();
+  }
   else {
     // function (comma separated list)
     while (true) {
@@ -3760,8 +3809,10 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots)
     PlotVar plotVar;
 
     if (! parseOptionValue(this, line, plotVar)) {
-      parseModifiers3D(style, line, lineStyle, fillStyle, arrowStyle);
-      break;
+      if (! parseModifiers3D(style, line, lineStyle, fillStyle, arrowStyle))
+        break;
+
+      continue;
     }
 
     line.skipSpace();
@@ -6564,14 +6615,14 @@ setCmd(const std::string &args)
 
     while (arg != "") {
       if      (arg == "at") {
-        pm3D_.pos.clear();
+        pm3D_.clearPos();
 
         std::string arg1 = readNonSpaceNonComma(line);
 
         for (const auto &a1 : arg1) {
-          if      (a1 == 's') pm3D_.pos.push_back(Pm3DData::PosType::SURFACE);
-          else if (a1 == 't') pm3D_.pos.push_back(Pm3DData::PosType::TOP);
-          else if (a1 == 'b') pm3D_.pos.push_back(Pm3DData::PosType::BOTTOM);
+          if      (a1 == 's') pm3D_.addPos(CGnuPlotPm3DData::PosType::SURFACE);
+          else if (a1 == 't') pm3D_.addPos(CGnuPlotPm3DData::PosType::TOP);
+          else if (a1 == 'b') pm3D_.addPos(CGnuPlotPm3DData::PosType::BOTTOM);
         }
       }
       else if (arg == "interpolate") {
@@ -6580,68 +6631,66 @@ setCmd(const std::string &args)
         if (parseInteger(line, steps1)) {
           if (line.skipSpaceAndChar(',')) {
             if (parseInteger(line, steps2)) {
-              pm3D_.isteps1 = steps1;
-              pm3D_.isteps2 = steps2;
+              pm3D_.setSteps(steps1, steps2);
             }
           }
         }
       }
       else if (arg == "scansautomatic") {
-        pm3D_.scanType = Pm3DData::ScanType::AUTOMATIC;
+        pm3D_.setScanType(CGnuPlotPm3DData::ScanType::AUTOMATIC);
       }
       else if (arg == "scansforward") {
-        pm3D_.scanType = Pm3DData::ScanType::FORWARD;
+        pm3D_.setScanType(CGnuPlotPm3DData::ScanType::FORWARD);
       }
       else if (arg == "scansbackward") {
-        pm3D_.scanType = Pm3DData::ScanType::BACKWARD;
+        pm3D_.setScanType(CGnuPlotPm3DData::ScanType::BACKWARD);
       }
       else if (arg == "depthorder") {
-        pm3D_.scanType = Pm3DData::ScanType::DEPTH_ORDER;
+        pm3D_.setScanType(CGnuPlotPm3DData::ScanType::DEPTH_ORDER);
       }
       else if (arg == "flush") {
         std::string arg1 = readNonSpaceNonComma(line);
 
-        if      (arg1 == "begin" ) { pm3D_.flushType = Pm3DData::FlushType::BEGIN; }
-        else if (arg1 == "center") { pm3D_.flushType = Pm3DData::FlushType::CENTER; }
-        else if (arg1 == "end"   ) { pm3D_.flushType = Pm3DData::FlushType::END; }
+        if      (arg1 == "begin" ) { pm3D_.setFlushType(CGnuPlotPm3DData::FlushType::BEGIN ); }
+        else if (arg1 == "center") { pm3D_.setFlushType(CGnuPlotPm3DData::FlushType::CENTER); }
+        else if (arg1 == "end"   ) { pm3D_.setFlushType(CGnuPlotPm3DData::FlushType::END   ); }
       }
       else if (arg == "ftriangles" || arg == "noftriangles") {
-        pm3D_.ftriangles = (arg == "ftriangles");
+        pm3D_.setFTriangles(arg == "ftriangles");
       }
       else if (arg == "clip1in" || arg == "clip4in") {
-        pm3D_.clipin = (arg == "clip1in" ? 1 : 4);
+        pm3D_.setClipIn(arg == "clip1in" ? 1 : 4);
       }
       else if (arg == "corners2color") {
         std::string arg1 = readNonSpaceNonComma(line);
 
-        if      (arg1 == "mean"   ) { pm3D_.cornerType = Pm3DData::CornerType::MEAN; }
-        else if (arg1 == "geomean") { pm3D_.cornerType = Pm3DData::CornerType::GEOMEAN; }
-        else if (arg1 == "harmean") { pm3D_.cornerType = Pm3DData::CornerType::HARMEAN; }
-        else if (arg1 == "rms"    ) { pm3D_.cornerType = Pm3DData::CornerType::RMS; }
-        else if (arg1 == "median" ) { pm3D_.cornerType = Pm3DData::CornerType::MEDIAN; }
-        else if (arg1 == "min"    ) { pm3D_.cornerType = Pm3DData::CornerType::MIN; }
-        else if (arg1 == "max"    ) { pm3D_.cornerType = Pm3DData::CornerType::MAX; }
-        else if (arg1 == "c1"     ) { pm3D_.cornerType = Pm3DData::CornerType::C1; }
-        else if (arg1 == "c2"     ) { pm3D_.cornerType = Pm3DData::CornerType::C2; }
-        else if (arg1 == "c3"     ) { pm3D_.cornerType = Pm3DData::CornerType::C3; }
-        else if (arg1 == "c4"     ) { pm3D_.cornerType = Pm3DData::CornerType::C4; }
+        if      (arg1 == "mean"   ) { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::MEAN   ); }
+        else if (arg1 == "geomean") { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::GEOMEAN); }
+        else if (arg1 == "harmean") { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::HARMEAN); }
+        else if (arg1 == "rms"    ) { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::RMS    ); }
+        else if (arg1 == "median" ) { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::MEDIAN ); }
+        else if (arg1 == "min"    ) { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::MIN    ); }
+        else if (arg1 == "max"    ) { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::MAX    ); }
+        else if (arg1 == "c1"     ) { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::C1     ); }
+        else if (arg1 == "c2"     ) { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::C2     ); }
+        else if (arg1 == "c3"     ) { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::C3     ); }
+        else if (arg1 == "c4"     ) { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::C4     ); }
       }
       else if (arg == "hidden3d") {
         int lt;
 
         if (parseInteger(line, lt))
-          pm3D_.linetype = lt;
+          pm3D_.setLineType(lt);
       }
       else if (arg == "nohidden3d") {
-        pm3D_.linetype = -1;
+        pm3D_.unsetLineType();
       }
       else if (arg == "implicit" || arg == "explicit") {
-        pm3D_.implicit = (arg == "implicit");
+        pm3D_.setImplicit(arg == "implicit");
       }
       else if (arg == "map") {
         //set pm3d at b; set view map scale 1.0; set style data pm3d; set style func pm3d;
-        pm3D_.pos.clear();
-        pm3D_.pos.push_back(Pm3DData::PosType::SURFACE);
+        pm3D_.setMapPos();
       }
 
       arg = readNonSpaceNonComma(line);
@@ -10535,6 +10584,24 @@ readBlockLines(Statements &lines, std::string &eline, int depth)
   }
 }
 
+bool
+CGnuPlot::
+readNamedBlock(const std::string &name, const std::string &eofStr)
+{
+  CGnuPlotBlock *block = getBlock(name);
+
+  std::string line;
+
+  while (fileReadLine(line)) {
+    if (line == eofStr)
+      return true;
+
+    block->addString(line + "\n");
+  }
+
+  return false;
+}
+
 std::string
 CGnuPlot::
 getUsingStr(CParseLine &line)
@@ -11159,7 +11226,7 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
         plot->addPoint2D(x, CExprValueP());
     }
     else {
-      CExprCTokenStack cstack = compileExpression(functions[0]);
+      CExprTokenStack cstack = compileExpression(functions[0]);
 
       for (auto x : RRange::range(xmin).step(dx).limit(nx + 1)) {
         xvar->setRealValue(x);
@@ -11205,7 +11272,7 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
         plot->addPoint2D(a, CExprValueP());
     }
     else {
-      CExprCTokenStack cstack = compileExpression(functions[0]);
+      CExprTokenStack cstack = compileExpression(functions[0]);
 
       for (auto a : RRange::range(tmin).step(da).limit(nx + 1)) {
         double c = cos(a);
@@ -11263,7 +11330,7 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     bool f1 = (functions[0] != "NaN");
     bool f2 = (functions[1] != "NaN");
 
-    CExprCTokenStack cstack1, cstack2;
+    CExprTokenStack cstack1, cstack2;
 
     if (f1) cstack1 = compileExpression(functions[0]);
     if (f2) cstack2 = compileExpression(functions[1]);
@@ -11387,7 +11454,7 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
       }
     }
     else {
-      CExprCTokenStack cstack = compileExpression(functions[0]);
+      CExprTokenStack cstack = compileExpression(functions[0]);
 
       int iy = 0;
 
@@ -11446,7 +11513,7 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     bool f1 = (functions[0] != "NaN");
     bool f2 = (functions[1] != "NaN");
 
-    CExprCTokenStack cstack1, cstack2;
+    CExprTokenStack cstack1, cstack2;
 
     if (f1) cstack1 = compileExpression(functions[0]);
     if (f2) cstack2 = compileExpression(functions[1]);
@@ -11552,7 +11619,7 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     bool f2 = (functions[1] != "NaN");
     bool f3 = (functions[2] != "NaN");
 
-    CExprCTokenStack cstack1, cstack2, cstack3;
+    CExprTokenStack cstack1, cstack2, cstack3;
 
     if (f1) cstack1 = compileExpression(functions[0]);
     if (f2) cstack2 = compileExpression(functions[1]);
@@ -12264,12 +12331,12 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
       ticLabel_ = CGnuPlotTicLabel();
 
+      setNum_   = 0;
+      pointNum_ = ix;
+
       bool   bad;
       Values values;
       Params params;
-
-      setNum_   = 0;
-      pointNum_ = ix;
 
       CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
@@ -12339,12 +12406,12 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
         ticLabel_ = CGnuPlotTicLabel();
 
+        setNum_   = 0;
+        pointNum_ = ix;
+
         bool   bad;
         Values values;
         Params params;
-
-        setNum_   = 0;
-        pointNum_ = ix;
 
         CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
@@ -12362,7 +12429,34 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
   //---
 
   // get file lines
-  if (filename != "-") {
+  if      (filename[0] == '$') {
+    std::string name = filename.substr(1);
+
+    CGnuPlotBlock *block = getBlock(name);
+
+    const std::string &str = block->str();
+    uint               len = str.size();
+
+    CGnuPlotFile::Lines lines;
+
+    std::string line;
+
+    for (uint i = 0; i < len; ++i) {
+      if (str[i] == '\n') {
+        lines.push_back(line);
+
+        line = "";
+      }
+      else
+        line += str[i];
+    }
+
+    if (line != "")
+      lines.push_back(line);
+
+    dataFile_.setLines(lines);
+  }
+  else if (filename != "-") {
     // open file
     CUnixFile file(filename);
 
@@ -12517,7 +12611,26 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         // add values
         processParams(params);
 
-        plot->addPoint3D(subSetNum, values, discontinuity);
+        if (isMatrix()) {
+          int x = 0;
+
+          for (const auto &value : fieldValues_) {
+            Values values1;
+
+            CExprValuePtr value1 = CExprInst->createIntegerValue(x);
+            CExprValuePtr value2 = CExprInst->createIntegerValue(lineNum);
+
+            values1.push_back(value1);
+            values1.push_back(value2);
+            values1.push_back(value);
+
+            plot->addPoint3D(lineNum, values1, discontinuity);
+
+            ++x;
+          }
+        }
+        else
+          plot->addPoint3D(subSetNum, values, discontinuity);
       }
     }
   }
@@ -12738,14 +12851,14 @@ processParams(const Params &params)
   }
 }
 
-CExprCTokenStack
+CExprTokenStack
 CGnuPlot::
 compileExpression(const std::string &expr) const
 {
-  CExprPTokenStack pstack = CExprInst->parseLine(expr);
-  CExprITokenPtr   itoken = CExprInst->interpPTokenStack(pstack);
+  CExprTokenStack pstack = CExprInst->parseLine(expr);
+  CExprITokenPtr  itoken = CExprInst->interpPTokenStack(pstack);
 
-  CExprCTokenStack cstack;
+  CExprTokenStack cstack;
 
   if (itoken.isValid())
     cstack = CExprInst->compileIToken(itoken);

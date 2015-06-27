@@ -158,8 +158,8 @@ CSymbol2D.cpp \
 \
 Expr/CExpr.cpp \
 Expr/CExprBValue.cpp \
-Expr/CExprCValue.cpp \
 Expr/CExprCompile.cpp \
+Expr/CExprCValue.cpp \
 Expr/CExprExecute.cpp \
 Expr/CExprFunction.cpp \
 Expr/CExprInterp.cpp \
@@ -169,6 +169,7 @@ Expr/CExprParse.cpp \
 Expr/CExprRValue.cpp \
 Expr/CExprStrgen.cpp \
 Expr/CExprSValue.cpp \
+Expr/CExprToken.cpp \
 Expr/CExprValue.cpp \
 Expr/CExprVariable.cpp \
 

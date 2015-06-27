@@ -27,6 +27,8 @@ class CExprVariableMgr {
   VariableList variables_;
 };
 
+//---
+
 class CExprVariable {
  public:
  ~CExprVariable();
@@ -34,15 +36,16 @@ class CExprVariable {
   const std::string &name () const { return name_ ; }
   CExprValuePtr      value() const { return value_; }
 
-  void setValue(CExprValuePtr value);
+  void setValue(const CExprValuePtr &value);
+
   void setRealValue(double x);
 
-  CExprValuePtr getValue() const;
+  const CExprValuePtr &getValue() const { return value_; }
 
   CExprValueType getValueType() const;
 
  private:
-  CExprVariable(const std::string &name, CExprValuePtr value);
+  CExprVariable(const std::string &name, const CExprValuePtr &value);
 
  private:
   friend class CExprVariableMgr;

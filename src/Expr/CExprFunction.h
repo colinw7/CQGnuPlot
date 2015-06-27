@@ -1,8 +1,6 @@
 #ifndef CExprFunction_H
 #define CExprFunction_H
 
-#include <CExprParse.h>
-
 class CExpr;
 
 //------
@@ -13,7 +11,7 @@ class CExprFunctionObj {
 
   virtual ~CExprFunctionObj() { }
 
-  virtual CExprValuePtr operator()(const std::vector<CExprValuePtr> &values) = 0;
+  virtual CExprValuePtr operator()(const CExprValueArray &values) = 0;
 };
 
 //------
@@ -43,8 +41,8 @@ class CExprFunctionMgr {
 
   CExprFunctionPtr addProcFunction(const std::string &name, const std::string &args,
                                    CExprFunctionProc proc);
-  CExprFunctionPtr addObjFunction(const std::string &name, const std::string &args,
-                                  CExprFunctionObj *proc);
+  CExprFunctionPtr addObjFunction (const std::string &name, const std::string &args,
+                                   CExprFunctionObj *proc);
   CExprFunctionPtr addUserFunction(const std::string &name, const std::vector<std::string> &args,
                                    const std::string &proc);
 
@@ -54,6 +52,9 @@ class CExprFunctionMgr {
   void getFunctionNames(std::vector<std::string> &names) const;
 
   static bool parseArgs(const std::string &argsStr, Args &args, bool &variableArgs);
+
+ private:
+  void resetCompiled();
 
  private:
   CExprFunctionMgr(CExpr *expr);
@@ -68,9 +69,6 @@ class CExprFunctionMgr {
 //------
 
 class CExprFunction {
- public:
-  typedef std::vector<CExprValuePtr> Values;
-
  public:
   CExprFunction(const std::string &name) :
    name_(name), builtin_(false), variableArgs_(false) {
@@ -90,9 +88,11 @@ class CExprFunction {
 
   virtual CExprValueType argType(uint) const { return CEXPR_VALUE_ANY; }
 
-  virtual bool checkValues(const Values &) const { return true; }
+  virtual bool checkValues(const CExprValueArray &) const { return true; }
 
-  virtual CExprValuePtr exec(const Values &values) = 0;
+  virtual void reset() { }
+
+  virtual CExprValuePtr exec(const CExprValueArray &values) = 0;
 
   friend std::ostream &operator<<(std::ostream &os, const CExprFunction &fn) {
     fn.print(os);
@@ -100,8 +100,13 @@ class CExprFunction {
     return os;
   }
 
-  virtual void print(std::ostream &os) const {
-    os << name_ << "(" << ")";
+  virtual void print(std::ostream &os, bool expanded=true) const {
+    os << name_ << "(";
+
+    if (expanded && variableArgs_)
+      os << "...";
+
+    os << ")";
   }
 
  protected:
@@ -126,9 +131,9 @@ class CExprProcFunction : public CExprFunction {
     return (i < args_.size() ? args_[i].type : CEXPR_VALUE_NULL);
   }
 
-  bool checkValues(const Values &) const override;
+  bool checkValues(const CExprValueArray &) const override;
 
-  CExprValuePtr exec(const Values &values) override;
+  CExprValuePtr exec(const CExprValueArray &values) override;
 
  private:
   Args              args_;
@@ -151,9 +156,9 @@ class CExprObjFunction : public CExprFunction {
     return (i < args_.size() ? args_[i].type : CEXPR_VALUE_NULL);
   }
 
-  bool checkValues(const Values &values) const override;
+  bool checkValues(const CExprValueArray &values) const override;
 
-  CExprValuePtr exec(const Values &values) override;
+  CExprValuePtr exec(const CExprValueArray &values) override;
 
  private:
   Args              args_;
@@ -171,11 +176,13 @@ class CExprUserFunction : public CExprFunction {
 
   uint numArgs() const override { return args_.size(); }
 
-  bool checkValues(const Values &) const override;
+  bool checkValues(const CExprValueArray &) const override;
 
-  CExprValuePtr exec(const Values &values) override;
+  void reset() override;
 
-  void print(std::ostream &os) const override {
+  CExprValuePtr exec(const CExprValueArray &values) override;
+
+  void print(std::ostream &os, bool expanded=true) const override {
     os << name_ << "(";
 
     for (uint i = 0; i < args_.size(); ++i) {
@@ -184,13 +191,19 @@ class CExprUserFunction : public CExprFunction {
       os << args_[i];
     }
 
-    os << ") = " << proc_;
+    os << ")";
+
+    if (expanded)
+      os << "= " << proc_;
   }
 
  private:
-  Args             args_;
-  std::string      proc_;
-  CExprPTokenStack pstack_;
+  Args                    args_;
+  std::string             proc_;
+  mutable bool            compiled_;
+  mutable CExprTokenStack pstack_;
+  mutable CExprITokenPtr  itoken_;
+  mutable CExprTokenStack cstack_;
 };
 
 //------

@@ -87,6 +87,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotAxis.h>
 #include <CGnuPlotPrintFile.h>
 #include <CGnuPlotBlock.h>
+#include <CGnuPlotPm3DData.h>
 
 //------
 
@@ -466,142 +467,6 @@ class CGnuPlot {
     bool      bentover        { false };
   };
 
-  struct Pm3DData {
-    enum class PosType {
-      SURFACE,
-      TOP,
-      BOTTOM
-    };
-
-    enum class ScanType {
-      AUTOMATIC,
-      FORWARD,
-      BACKWARD,
-      DEPTH_ORDER
-    };
-
-    enum class FlushType {
-      BEGIN,
-      CENTER,
-      END
-    };
-
-    enum class CornerType {
-      MEAN,
-      GEOMEAN,
-      HARMEAN,
-      RMS,
-      MEDIAN,
-      MIN,
-      MAX,
-      C1,
-      C2,
-      C3,
-      C4
-    };
-
-    bool isEnabled() const { return enabled; }
-    void setEnabled(bool b) { enabled = b; }
-
-    static std::string posTypeToStr(const PosType &p) {
-      if      (p == PosType::SURFACE) return "SURFACE";
-      else if (p == PosType::TOP    ) return "TOP";
-      else if (p == PosType::BOTTOM ) return "BOTTOM";
-      else                            return "???";
-    }
-
-    void show(std::ostream &os) const {
-      os << "pm3d style is " << (implicit ? "implicit" : "explicit");
-      os << " (draw pm3d surface according to style)" << std::endl;
-
-      os << "pm3d plotted at";
-      if (pos.empty())
-        os << " SURFACE";
-      else {
-        for (uint i = 0; i < pos.size(); ++i) {
-          if (i > 0) os << ", then";
-
-          os << " " << posTypeToStr(pos[i]);
-        }
-      }
-      os << std::endl;
-
-      if      (scanType == ScanType::AUTOMATIC)
-        os << "taking scans direction automatically" << std::endl;
-      else if (scanType == ScanType::FORWARD)
-        os << "taking scans in FORWARD direction" << std::endl;
-      else if (scanType == ScanType::BACKWARD)
-        os << "taking scans in BACKWARD direction" << std::endl;
-      else if (scanType == ScanType::DEPTH_ORDER)
-        os << "true depth ordering" << std::endl;
-
-      os << "subsequent scans with different nb of pts are flushed from";
-      if      (flushType == FlushType::BEGIN ) os << "BEGIN"  << std::endl;
-      else if (flushType == FlushType::CENTER) os << "CENTER" << std::endl;
-      else if (flushType == FlushType::END   ) os << "END"    << std::endl;
-
-      if (ftriangles)
-        os << "flushing triangles are drawn" << std::endl;
-      else
-        os << "flushing triangles are not drawn" << std::endl;
-
-      if (clipin == 4)
-        os << "clipping: all 4 points of the quadrangle in x,y ranges" << std::endl;
-      else
-        os << "clipping: at least 1 point of the quadrangle in x,y ranges" << std::endl;
-
-      if (linetype != -1)
-        os << "pm3d quadrangle borders will default to linetype " << linetype << std::endl;
-      else
-        os << "pm3d quadrangles will have no border" << std::endl;
-
-      os << "steps for bilinear interpolation: " << isteps1 << "," << isteps2 << std::endl;
-
-      if      (cornerType == CornerType::MEAN)
-        os << "quadrangle color according to averaged 4 corners" << std::endl;
-      else if (cornerType == CornerType::GEOMEAN)
-        os << "quadrangle color according to geometrical mean of 4 corners" << std::endl;
-      else if (cornerType == CornerType::HARMEAN)
-        os << "quadrangle color according to harmonic mean of 4 corners" << std::endl;
-      else if (cornerType == CornerType::RMS)
-        os << "quadrangle color according to root mean square of 4 corners" << std::endl;
-      else if (cornerType == CornerType::MEDIAN)
-        os << "quadrangle color according to median of 4 corners" << std::endl;
-      else if (cornerType == CornerType::MIN)
-        os << "quadrangle color according to min of 4 corners" << std::endl;
-      else if (cornerType == CornerType::MAX)
-        os << "quadrangle color according to max of 4 corners" << std::endl;
-      else if (cornerType == CornerType::C1)
-        os << "quadrangle color according to corner 1" << std::endl;
-      else if (cornerType == CornerType::C2)
-        os << "quadrangle color according to corner 2" << std::endl;
-      else if (cornerType == CornerType::C3)
-        os << "quadrangle color according to corner 3" << std::endl;
-      else if (cornerType == CornerType::C4)
-        os << "quadrangle color according to corner 4" << std::endl;
-    }
-
-    void unset() {
-      enabled  = false;
-      implicit = false;
-      linetype = -1;
-    }
-
-    typedef std::vector<PosType> PosTypeList;
-
-    bool             enabled    { false };
-    PosTypeList      pos;
-    int              isteps1    { -1 };
-    int              isteps2    { -1 };
-    ScanType         scanType   { ScanType::AUTOMATIC };
-    FlushType        flushType  { FlushType::BEGIN };
-    bool             ftriangles { false };
-    int              clipin     { 4 };
-    CornerType       cornerType { CornerType::MEAN };
-    int              linetype   { -1 };
-    bool             implicit   { false };
-  };
-
   //---
 
   class XYPlane {
@@ -886,8 +751,8 @@ class CGnuPlot {
 
   //---
 
-  const Pm3DData &pm3D() const { return pm3D_; }
-  void setPm3D(const Pm3DData &p) { pm3D_ = p; }
+  const CGnuPlotPm3DData &pm3D() const { return pm3D_; }
+  void setPm3D(const CGnuPlotPm3DData &p) { pm3D_ = p; }
 
   //------
 
@@ -1157,6 +1022,8 @@ class CGnuPlot {
 
   void readBlockLines(Statements &lines, std::string &eline, int depth);
 
+  bool readNamedBlock(const std::string &name, const std::string &eofStr);
+
   std::string getUsingStr(CParseLine &line);
 
   void parseIndex(CParseLine &line, int &indexStart, int &indexEnd, int &indexStep);
@@ -1202,7 +1069,7 @@ class CGnuPlot {
 
   void processParams(const Params &params);
 
-  CExprCTokenStack compileExpression(const std::string &expr) const;
+  CExprTokenStack compileExpression(const std::string &expr) const;
 
   //---
 
@@ -1429,7 +1296,7 @@ class CGnuPlot {
   CGnuPlotSurfaceData    surfaceData_;
   CGnuPlotContourData    contourData_;
   XYPlane                xyPlane_;
-  Pm3DData               pm3D_;
+  CGnuPlotPm3DData       pm3D_;
   double                 pointIntervalBox_ { 1 };
   double                 whiskerBars_ { 0 };
   ReadLineP              readLine_;

@@ -2,53 +2,47 @@
 
 class CExprCompileImpl {
  public:
-  CExprCTokenStack compileIToken(CExprITokenPtr itoken);
+  CExprTokenStack compileIToken(CExprITokenPtr itoken);
 
  private:
-  void        compileIToken1(CExprITokenPtr itoken);
-  void        compileExpression(CExprITokenPtr itoken);
-  void        compileAssignmentExpression(CExprITokenPtr itoken);
-  void        compileConditionalExpression(CExprITokenPtr itoken);
-  void        compileLogicalOrExpression(CExprITokenPtr itoken);
-  void        compileLogicalAndExpression(CExprITokenPtr itoken);
-  void        compileInclusiveOrExpression(CExprITokenPtr itoken);
-  void        compileExclusiveOrExpression(CExprITokenPtr itoken);
-  void        compileAndExpression(CExprITokenPtr itoken);
-  void        compileEqualityExpression(CExprITokenPtr itoken);
-  void        compileRelationalExpression(CExprITokenPtr itoken);
-  void        compileShiftExpression(CExprITokenPtr itoken);
-  void        compileAdditiveExpression(CExprITokenPtr itoken);
-  void        compileMultiplicativeExpression(CExprITokenPtr itoken);
-  void        compileUnaryExpression(CExprITokenPtr itoken);
-  void        compilePowerExpression(CExprITokenPtr itoken);
-  void        compilePostfixExpression(CExprITokenPtr itoken);
-  void        compilePrimaryExpression(CExprITokenPtr itoken);
-  void        compileArgumentExpressionList(CExprITokenPtr itoken);
-  void        compileIdentifier(CExprITokenPtr itoken);
-  void        compileOperator(CExprITokenPtr itoken);
-  void        compileInteger(CExprITokenPtr itoken);
-  void        compileReal(CExprITokenPtr itoken);
-  void        compileString(CExprITokenPtr itoken);
-  void        compileComplex(CExprITokenPtr itoken);
+  void compileIToken1                 (CExprITokenPtr itoken);
+  void compileExpression              (CExprITokenPtr itoken);
+  void compileAssignmentExpression    (CExprITokenPtr itoken);
+  void compileConditionalExpression   (CExprITokenPtr itoken);
+  void compileLogicalOrExpression     (CExprITokenPtr itoken);
+  void compileLogicalAndExpression    (CExprITokenPtr itoken);
+  void compileInclusiveOrExpression   (CExprITokenPtr itoken);
+  void compileExclusiveOrExpression   (CExprITokenPtr itoken);
+  void compileAndExpression           (CExprITokenPtr itoken);
+  void compileEqualityExpression      (CExprITokenPtr itoken);
+  void compileRelationalExpression    (CExprITokenPtr itoken);
+  void compileShiftExpression         (CExprITokenPtr itoken);
+  void compileAdditiveExpression      (CExprITokenPtr itoken);
+  void compileMultiplicativeExpression(CExprITokenPtr itoken);
+  void compileUnaryExpression         (CExprITokenPtr itoken);
+  void compilePowerExpression         (CExprITokenPtr itoken);
+  void compilePostfixExpression       (CExprITokenPtr itoken);
+  void compilePrimaryExpression       (CExprITokenPtr itoken);
+  void compileArgumentExpressionList  (CExprITokenPtr itoken);
+
+  void compileIdentifier(CExprITokenPtr itoken);
+  void compileOperator  (CExprITokenPtr itoken);
+  void compileInteger   (CExprITokenPtr itoken);
+  void compileReal      (CExprITokenPtr itoken);
+  void compileString    (CExprITokenPtr itoken);
+  void compileComplex   (CExprITokenPtr itoken);
+  void compileValue     (CExprITokenPtr itoken);
 #if 0
-  void        compileITokenChildren(CExprITokenPtr itoken);
+  void compileITokenChildren(CExprITokenPtr itoken);
 #endif
-  void        stackIdentifier(const std::string &identifier);
-  void        stackOperator(CExprOperatorPtr op);
-  void        stackInteger(long);
-  void        stackReal(double);
-  void        stackString(const std::string &str);
-  void        stackComplex(const std::complex<double> &c);
-  void        stackFunction(CExprFunctionPtr function);
-  void        stackValue(CExprValuePtr);
-  void        setLastError(const std::string &msg);
-  bool        isError();
-  std::string getLastError();
+
+  void stackFunction  (CExprFunctionPtr function);
+  void stackDummyValue();
+  void stackCToken    (const CExprTokenBaseP &base);
 
  private:
-  CExprCTokenStack ctoken_stack_;
-  bool             error_flag;
-  std::string      last_error_message;
+  CExprTokenStack tokenStack_;
+  CExprErrorData  errorData_;
 };
 
 //------
@@ -64,7 +58,7 @@ CExprCompile::
 {
 }
 
-CExprCTokenStack
+CExprTokenStack
 CExprCompile::
 compileIToken(CExprITokenPtr itoken)
 {
@@ -73,32 +67,32 @@ compileIToken(CExprITokenPtr itoken)
 
 //------
 
-CExprCTokenStack
+CExprTokenStack
 CExprCompileImpl::
 compileIToken(CExprITokenPtr itoken)
 {
-  ctoken_stack_.clear();
+  tokenStack_.clear();
 
   if (! itoken.isValid())
-    return ctoken_stack_;
+    return tokenStack_;
 
-  setLastError("");
+  errorData_.setLastError("");
 
   compileIToken1(itoken);
 
-  if (isError()) {
-    CExprInst->errorMsg(getLastError());
-    return CExprCTokenStack();
+  if (errorData_.isError()) {
+    CExprInst->errorMsg(errorData_.getLastError());
+    return CExprTokenStack();
   }
 
-  return ctoken_stack_;
+  return tokenStack_;
 }
 
 void
 CExprCompileImpl::
 compileIToken1(CExprITokenPtr itoken)
 {
-  switch (itoken->getType()) {
+  switch (itoken->getIType()) {
     case CEXPR_EXPRESSION:
       compileExpression(itoken);
 
@@ -171,31 +165,40 @@ compileIToken1(CExprITokenPtr itoken)
       compileArgumentExpressionList(itoken);
 
       break;
-    case CEXPR_ITOKEN_IDENTIFIER:
-      compileIdentifier(itoken);
+    case CEXPR_TOKEN_TYPE: {
+      switch (itoken->getType()) {
+        case CEXPR_TOKEN_IDENTIFIER:
+          compileIdentifier(itoken);
 
-      break;
-    case CEXPR_ITOKEN_OPERATOR:
-      compileOperator(itoken);
+          break;
+        case CEXPR_TOKEN_OPERATOR:
+          compileOperator(itoken);
 
-      break;
-    case CEXPR_ITOKEN_INTEGER:
-      compileInteger(itoken);
+          break;
+        case CEXPR_TOKEN_INTEGER:
+          compileInteger(itoken);
 
-      break;
-    case CEXPR_ITOKEN_REAL:
-      compileReal(itoken);
+          break;
+        case CEXPR_TOKEN_REAL:
+          compileReal(itoken);
 
-      break;
-    case CEXPR_ITOKEN_STRING:
-      compileString(itoken);
+          break;
+        case CEXPR_TOKEN_STRING:
+          compileString(itoken);
 
-      break;
-    case CEXPR_ITOKEN_COMPLEX:
-      compileComplex(itoken);
+          break;
+        case CEXPR_TOKEN_COMPLEX:
+          compileComplex(itoken);
 
+          break;
+        default:
+          assert(false);
+          break;
+      }
       break;
+    }
     default:
+      assert(false);
       break;
   }
 }
@@ -216,7 +219,7 @@ compileExpression(CExprITokenPtr itoken)
 
     compileAssignmentExpression(itoken->getChild(2));
 
-    stackOperator(CExprInst->getOperator(CEXPR_OP_COMMA));
+    stackCToken(itoken->getChild(1)->base());
   }
   else if (num_children == 1)
     compileAssignmentExpression(itoken->getChild(0));
@@ -248,9 +251,9 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
     CExprITokenPtr itoken1 = itoken->getChild(1);
 
-    CExprOperatorPtr op = itoken1->getOperator();
+    CExprOpType op = itoken1->getOperator();
 
-    switch (op->getType()) {
+    switch (op) {
       case CEXPR_OP_EQUALS:
         compileAssignmentExpression(itoken->getChild(2));
 
@@ -260,7 +263,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_TIMES));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_TIMES));
 
         break;
       case CEXPR_OP_DIVIDE_EQUALS:
@@ -268,7 +271,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_DIVIDE));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_DIVIDE));
 
         break;
       case CEXPR_OP_MODULUS_EQUALS:
@@ -276,7 +279,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_MODULUS));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_MODULUS));
 
         break;
       case CEXPR_OP_PLUS_EQUALS:
@@ -284,7 +287,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_PLUS));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_PLUS));
 
         break;
       case CEXPR_OP_MINUS_EQUALS:
@@ -292,7 +295,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_MINUS));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_MINUS));
 
         break;
       case CEXPR_OP_BIT_LSHIFT_EQUALS:
@@ -300,7 +303,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_BIT_LSHIFT));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_LSHIFT));
 
         break;
       case CEXPR_OP_BIT_RSHIFT_EQUALS:
@@ -308,7 +311,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_BIT_RSHIFT));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_RSHIFT));
 
         break;
       case CEXPR_OP_BIT_AND_EQUALS:
@@ -316,7 +319,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_BIT_AND));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_AND));
 
         break;
       case CEXPR_OP_BIT_XOR_EQUALS:
@@ -324,7 +327,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_BIT_XOR));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_XOR));
 
         break;
       case CEXPR_OP_BIT_OR_EQUALS:
@@ -332,14 +335,15 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_BIT_OR));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_OR));
 
         break;
       default:
+        assert(false);
         break;
     }
 
-    stackOperator(CExprInst->getOperator(CEXPR_OP_EQUALS));
+    stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
   }
   else
     compileConditionalExpression(itoken->getChild(0));
@@ -358,13 +362,30 @@ compileConditionalExpression(CExprITokenPtr itoken)
   uint num_children = itoken->getNumChildren();
 
   if (num_children == 5) {
-    compileConditionalExpression(itoken->getChild(4));
+    // 0 boolean, 2 = lhs, 4 = rhs
+
+    // stack lhs expression
+    stackCToken(CExprInst->getOperator(CEXPR_OP_START_BLOCK));
 
     compileExpression(itoken->getChild(2));
 
+    stackCToken(CExprInst->getOperator(CEXPR_OP_END_BLOCK));
+
+    //---
+
+    // stack lhs expression
+    stackCToken(CExprInst->getOperator(CEXPR_OP_START_BLOCK));
+
+    compileConditionalExpression(itoken->getChild(4));
+
+    stackCToken(CExprInst->getOperator(CEXPR_OP_END_BLOCK));
+
+    //---
+
+    // stack conditional
     compileLogicalOrExpression(itoken->getChild(0));
 
-    stackOperator(CExprInst->getOperator(CEXPR_OP_QUESTION));
+    stackCToken(CExprInst->getOperator(CEXPR_OP_QUESTION));
   }
   else
     compileLogicalOrExpression(itoken->getChild(0));
@@ -386,7 +407,7 @@ compileLogicalOrExpression(CExprITokenPtr itoken)
 
     compileLogicalAndExpression(itoken->getChild(2));
 
-    stackOperator(CExprInst->getOperator(CEXPR_OP_LOGICAL_OR));
+    stackCToken(CExprInst->getOperator(CEXPR_OP_LOGICAL_OR));
   }
   else
     compileLogicalAndExpression(itoken->getChild(0));
@@ -408,7 +429,7 @@ compileLogicalAndExpression(CExprITokenPtr itoken)
 
     compileInclusiveOrExpression(itoken->getChild(2));
 
-    stackOperator(CExprInst->getOperator(CEXPR_OP_LOGICAL_AND));
+    stackCToken(CExprInst->getOperator(CEXPR_OP_LOGICAL_AND));
   }
   else
     compileInclusiveOrExpression(itoken->getChild(0));
@@ -430,7 +451,7 @@ compileInclusiveOrExpression(CExprITokenPtr itoken)
 
     compileExclusiveOrExpression(itoken->getChild(2));
 
-    stackOperator(CExprInst->getOperator(CEXPR_OP_BIT_OR));
+    stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_OR));
   }
   else
     compileExclusiveOrExpression(itoken->getChild(0));
@@ -452,7 +473,7 @@ compileExclusiveOrExpression(CExprITokenPtr itoken)
 
     compileAndExpression(itoken->getChild(2));
 
-    stackOperator(CExprInst->getOperator(CEXPR_OP_BIT_XOR));
+    stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_XOR));
   }
   else
     compileAndExpression(itoken->getChild(0));
@@ -474,7 +495,7 @@ compileAndExpression(CExprITokenPtr itoken)
 
     compileEqualityExpression(itoken->getChild(2));
 
-    stackOperator(CExprInst->getOperator(CEXPR_OP_BIT_AND));
+    stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_AND));
   }
   else
     compileEqualityExpression(itoken->getChild(0));
@@ -496,30 +517,28 @@ compileEqualityExpression(CExprITokenPtr itoken)
   if (num_children == 3) {
     CExprITokenPtr itoken1 = itoken->getChild(1);
 
-    CExprOperatorPtr op = itoken1->getOperator();
+    CExprOpType op = itoken1->getOperator();
 
-    if      (op->getType() == CEXPR_OP_EQUAL ||
-             op->getType() == CEXPR_OP_STR_EQUAL) {
+    if      (op == CEXPR_OP_EQUAL || op == CEXPR_OP_STR_EQUAL) {
       compileEqualityExpression(itoken->getChild(0));
 
       compileRelationalExpression(itoken->getChild(2));
 
-      stackOperator(CExprInst->getOperator(op->getType()));
+      stackCToken(itoken1->base());
     }
-    else if (op->getType() == CEXPR_OP_NOT_EQUAL ||
-             op->getType() == CEXPR_OP_STR_NOT_EQUAL) {
+    else if (op == CEXPR_OP_NOT_EQUAL || op == CEXPR_OP_STR_NOT_EQUAL) {
       compileEqualityExpression(itoken->getChild(0));
 
       compileRelationalExpression(itoken->getChild(2));
 
-      stackOperator(CExprInst->getOperator(op->getType()));
+      stackCToken(itoken1->base());
     }
     else {
       compileEqualityExpression(itoken->getChild(0));
 
       compileRelationalExpression(itoken->getChild(2));
 
-      stackOperator(CExprInst->getOperator(CEXPR_OP_APPROX_EQUAL));
+      stackCToken(CExprInst->getOperator(CEXPR_OP_APPROX_EQUAL));
     }
   }
   else
@@ -547,9 +566,7 @@ compileRelationalExpression(CExprITokenPtr itoken)
 
     CExprITokenPtr itoken1 = itoken->getChild(1);
 
-    CExprOperatorPtr op = itoken1->getOperator();
-
-    stackOperator(op);
+    stackCToken(itoken1->base());
   }
   else
     compileShiftExpression(itoken->getChild(0));
@@ -574,12 +591,12 @@ compileShiftExpression(CExprITokenPtr itoken)
 
     CExprITokenPtr itoken1 = itoken->getChild(1);
 
-    CExprOperatorPtr op = itoken1->getOperator();
+    CExprOpType op = itoken1->getOperator();
 
-    if (op->getType() == CEXPR_OP_BIT_LSHIFT)
-      stackOperator(CExprInst->getOperator(CEXPR_OP_BIT_LSHIFT));
+    if (op == CEXPR_OP_BIT_LSHIFT)
+      stackCToken(itoken1->base());
     else
-      stackOperator(CExprInst->getOperator(CEXPR_OP_BIT_RSHIFT));
+      stackCToken(itoken1->base());
   }
   else
     compileAdditiveExpression(itoken->getChild(0));
@@ -612,15 +629,15 @@ compileAdditiveExpression(CExprITokenPtr itoken)
 
     CExprITokenPtr itoken1 = itoken->getChild(1);
 
-    CExprOperatorPtr op = itoken1->getOperator();
+    CExprOpType op = itoken1->getOperator();
 
-    if      (op->getType() == CEXPR_OP_PLUS)
-      stackOperator(CExprInst->getOperator(CEXPR_OP_PLUS ));
-    else if (op->getType() == CEXPR_OP_MINUS)
-      stackOperator(CExprInst->getOperator(CEXPR_OP_MINUS));
+    if      (op == CEXPR_OP_PLUS)
+      stackCToken(itoken1->base());
+    else if (op == CEXPR_OP_MINUS)
+      stackCToken(itoken1->base());
 #ifdef GNUPLOT_EXPR
-    else if (op->getType() == CEXPR_OP_STR_CONCAT)
-      stackOperator(CExprInst->getOperator(CEXPR_OP_STR_CONCAT));
+    else if (op == CEXPR_OP_STR_CONCAT)
+      stackCToken(itoken1->base());
 #endif
   }
   else
@@ -647,14 +664,14 @@ compileMultiplicativeExpression(CExprITokenPtr itoken)
 
     CExprITokenPtr itoken1 = itoken->getChild(1);
 
-    CExprOperatorPtr op = itoken1->getOperator();
+    CExprOpType op = itoken1->getOperator();
 
-    if      (op->getType() == CEXPR_OP_TIMES)
-      stackOperator(CExprInst->getOperator(CEXPR_OP_TIMES));
-    else if (op->getType() == CEXPR_OP_DIVIDE)
-      stackOperator(CExprInst->getOperator(CEXPR_OP_DIVIDE));
+    if      (op == CEXPR_OP_TIMES)
+      stackCToken(itoken1->base());
+    else if (op == CEXPR_OP_DIVIDE)
+      stackCToken(itoken1->base());
     else
-      stackOperator(CExprInst->getOperator(CEXPR_OP_MODULUS));
+      stackCToken(itoken1->base());
   }
   else
     compileUnaryExpression(itoken->getChild(0));
@@ -679,17 +696,16 @@ compileUnaryExpression(CExprITokenPtr itoken)
   if (num_children == 2) {
     CExprITokenPtr itoken0 = itoken->getChild(0);
 
-    CExprOperatorPtr op = itoken0->getOperator();
+    CExprOpType op = itoken0->getOperator();
 
-    switch (op->getType()) {
+    switch (op) {
       case CEXPR_OP_INCREMENT:
         compileUnaryExpression(itoken->getChild(1));
 
         compileUnaryExpression(itoken->getChild(1));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_PLUS));
-
-        stackOperator(CExprInst->getOperator(CEXPR_OP_EQUALS));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_PLUS));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
 
         break;
       case CEXPR_OP_DECREMENT:
@@ -697,36 +713,36 @@ compileUnaryExpression(CExprITokenPtr itoken)
 
         compileUnaryExpression(itoken->getChild(1));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_MINUS));
-
-        stackOperator(CExprInst->getOperator(CEXPR_OP_EQUALS));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_MINUS));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
 
         break;
       case CEXPR_OP_PLUS:
         compileUnaryExpression(itoken->getChild(1));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_UNARY_PLUS));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_UNARY_PLUS));
 
         break;
       case CEXPR_OP_MINUS:
         compileUnaryExpression(itoken->getChild(1));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_UNARY_MINUS));
+        stackCToken(CExprInst->getOperator(CEXPR_OP_UNARY_MINUS));
 
         break;
       case CEXPR_OP_BIT_NOT:
         compileUnaryExpression(itoken->getChild(1));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_BIT_NOT));
+        stackCToken(itoken0->base());
 
         break;
       case CEXPR_OP_LOGICAL_NOT:
         compileUnaryExpression(itoken->getChild(1));
 
-        stackOperator(CExprInst->getOperator(CEXPR_OP_LOGICAL_NOT));
+        stackCToken(itoken0->base());
 
         break;
       default:
+        assert(false);
         break;
     }
   }
@@ -750,7 +766,7 @@ compilePowerExpression(CExprITokenPtr itoken)
 
     compilePowerExpression(itoken->getChild(2));
 
-    stackOperator(CExprInst->getOperator(CEXPR_OP_POWER));
+    stackCToken(CExprInst->getOperator(CEXPR_OP_POWER));
   }
   else
     compilePostfixExpression(itoken->getChild(0));
@@ -780,10 +796,10 @@ compilePostfixExpression(CExprITokenPtr itoken)
 
   CExprITokenPtr itoken1 = itoken->getChild(1);
 
-  CExprOperatorPtr op = itoken1->getOperator();
+  CExprOpType op = itoken1->getOperator();
 
-  if      (op->getType() == CEXPR_OP_OPEN_RBRACKET) {
-    stackOperator(op);
+  if      (op == CEXPR_OP_OPEN_RBRACKET) {
+    stackCToken(itoken1->base());
 
     uint num_args = 0;
 
@@ -801,7 +817,7 @@ compilePostfixExpression(CExprITokenPtr itoken)
     CExprFunctionPtr function = CExprInst->getFunction(identifier);
 
     if (! function.isValid()) {
-      setLastError("Invalid Function '" + identifier + "'");
+      errorData_.setLastError("Invalid Function '" + identifier + "'");
       return;
     }
 
@@ -811,20 +827,20 @@ compilePostfixExpression(CExprITokenPtr itoken)
       if (! (function->argType(i) & CEXPR_VALUE_NULL))
         break;
 
-      stackValue(CExprValuePtr());
+      stackDummyValue();
 
       ++num_args;
     }
 
     if (function->isVariableArgs()) {
       if (function_num_args > num_args) {
-        setLastError("Function called with too few arguments");
+        errorData_.setLastError("Function called with too few arguments");
         return;
       }
     }
     else {
       if (function_num_args != num_args) {
-        setLastError("Function called with wrong number of arguments");
+        errorData_.setLastError("Function called with wrong number of arguments");
         return;
       }
     }
@@ -832,55 +848,47 @@ compilePostfixExpression(CExprITokenPtr itoken)
     stackFunction(function);
   }
 #ifdef GNUPLOT_EXPR
-  else if (op->getType() == CEXPR_OP_OPEN_SBRACKET) {
+  else if (op == CEXPR_OP_OPEN_SBRACKET) {
     // <var> [ <ind> ]
     if (num_children == 4) {
       CExprITokenPtr itoken0 = itoken->getChild(0);
 
-      const std::string &identifier = itoken0->getIdentifier();
+      stackCToken(itoken0->base());
 
-      stackIdentifier(identifier);
-
-      stackOperator(CExprInst->getOperator(CEXPR_OP_OPEN_SBRACKET));
+      stackCToken(itoken1->base());
 
       compileExpression(itoken->getChild(2));
 
-      stackOperator(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
+      stackCToken(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
     }
     // <var> [ <ind> : <ind> ]
     else {
       CExprITokenPtr itoken0 = itoken->getChild(0);
 
-      const std::string &identifier = itoken0->getIdentifier();
+      stackCToken(itoken0->base());
 
-      stackIdentifier(identifier);
-
-      stackOperator(CExprInst->getOperator(CEXPR_OP_OPEN_SBRACKET));
+      stackCToken(itoken1->base());
 
       compileExpression(itoken->getChild(2));
       compileExpression(itoken->getChild(4));
 
-      stackOperator(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
+      stackCToken(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
     }
   }
 #endif
-  else if (op->getType() == CEXPR_OP_INCREMENT) {
+  else if (op == CEXPR_OP_INCREMENT) {
+    compilePostfixExpression(itoken->getChild(0));
     compilePostfixExpression(itoken->getChild(0));
 
-    compilePostfixExpression(itoken->getChild(0));
-
-    stackOperator(CExprInst->getOperator(CEXPR_OP_EQUALS));
-
-    stackOperator(CExprInst->getOperator(CEXPR_OP_PLUS));
+    stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
+    stackCToken(CExprInst->getOperator(CEXPR_OP_PLUS));
   }
-  else if (op->getType() == CEXPR_OP_DECREMENT) {
+  else if (op == CEXPR_OP_DECREMENT) {
+    compilePostfixExpression(itoken->getChild(0));
     compilePostfixExpression(itoken->getChild(0));
 
-    compilePostfixExpression(itoken->getChild(0));
-
-    stackOperator(CExprInst->getOperator(CEXPR_OP_EQUALS));
-
-    stackOperator(CExprInst->getOperator(CEXPR_OP_MINUS));
+    stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
+    stackCToken(CExprInst->getOperator(CEXPR_OP_MINUS));
   }
 }
 
@@ -904,27 +912,28 @@ compilePrimaryExpression(CExprITokenPtr itoken)
   }
   else {
     switch (itoken->getChild(0)->getType()) {
-      case CEXPR_ITOKEN_INTEGER:
+      case CEXPR_TOKEN_INTEGER:
         compileInteger(itoken->getChild(0));
 
         break;
-      case CEXPR_ITOKEN_REAL:
+      case CEXPR_TOKEN_REAL:
         compileReal(itoken->getChild(0));
 
         break;
-      case CEXPR_ITOKEN_STRING:
+      case CEXPR_TOKEN_STRING:
         compileString(itoken->getChild(0));
 
         break;
-      case CEXPR_ITOKEN_COMPLEX:
+      case CEXPR_TOKEN_COMPLEX:
         compileComplex(itoken->getChild(0));
 
         break;
-      case CEXPR_ITOKEN_IDENTIFIER:
+      case CEXPR_TOKEN_IDENTIFIER:
         compileIdentifier(itoken->getChild(0));
 
         break;
       default:
+        assert(false);
         break;
     }
   }
@@ -954,42 +963,65 @@ void
 CExprCompileImpl::
 compileIdentifier(CExprITokenPtr itoken)
 {
-  stackIdentifier(itoken->getIdentifier());
+  stackCToken(itoken->base());
 }
 
 void
 CExprCompileImpl::
 compileOperator(CExprITokenPtr itoken)
 {
-  stackOperator(itoken->getOperator());
+  stackCToken(itoken->base());
 }
 
 void
 CExprCompileImpl::
 compileInteger(CExprITokenPtr itoken)
 {
-  stackInteger(itoken->getInteger());
+  CExprValuePtr value = CExprInst->createIntegerValue(itoken->getInteger());
+
+  CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(value));
+
+  stackCToken(base);
 }
 
 void
 CExprCompileImpl::
 compileReal(CExprITokenPtr itoken)
 {
-  stackReal(itoken->getReal());
+  CExprValuePtr value = CExprInst->createRealValue(itoken->getReal());
+
+  CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(value));
+
+  stackCToken(base);
 }
 
 void
 CExprCompileImpl::
 compileString(CExprITokenPtr itoken)
 {
-  stackString(itoken->getString());
+  CExprValuePtr value = CExprInst->createStringValue(itoken->getString());
+
+  CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(value));
+
+  stackCToken(base);
 }
 
 void
 CExprCompileImpl::
 compileComplex(CExprITokenPtr itoken)
 {
-  stackComplex(itoken->getComplex());
+  CExprValuePtr value = CExprInst->createComplexValue(itoken->getComplex());
+
+  CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(value));
+
+  stackCToken(base);
+}
+
+void
+CExprCompileImpl::
+compileValue(CExprITokenPtr itoken)
+{
+  stackCToken(itoken->base());
 }
 
 #if 0
@@ -1006,162 +1038,25 @@ compileITokenChildren(CExprITokenPtr itoken)
 
 void
 CExprCompileImpl::
-stackIdentifier(const std::string &identifier)
-{
-  CExprCTokenPtr ctoken = CExprCToken::createIdentifierToken(identifier);
-
-  ctoken_stack_.addToken(ctoken);
-}
-
-void
-CExprCompileImpl::
-stackOperator(CExprOperatorPtr op)
-{
-  CExprCTokenPtr ctoken = CExprCToken::createOperatorToken(op);
-
-  ctoken_stack_.addToken(ctoken);
-}
-
-void
-CExprCompileImpl::
-stackInteger(long integer)
-{
-  CExprCTokenPtr ctoken = CExprCToken::createIntegerToken(integer);
-
-  ctoken_stack_.addToken(ctoken);
-}
-
-void
-CExprCompileImpl::
-stackReal(double real)
-{
-  CExprCTokenPtr ctoken = CExprCToken::createRealToken(real);
-
-  ctoken_stack_.addToken(ctoken);
-}
-
-void
-CExprCompileImpl::
-stackString(const std::string &str)
-{
-  CExprCTokenPtr ctoken = CExprCToken::createStringToken(str);
-
-  ctoken_stack_.addToken(ctoken);
-}
-
-void
-CExprCompileImpl::
-stackComplex(const std::complex<double> &c)
-{
-  CExprCTokenPtr ctoken = CExprCToken::createComplexToken(c);
-
-  ctoken_stack_.addToken(ctoken);
-}
-
-void
-CExprCompileImpl::
 stackFunction(CExprFunctionPtr function)
 {
-  CExprCTokenPtr ctoken = CExprCToken::createFunctionToken(function);
+  CExprTokenBaseP base(CExprTokenMgrInst->createFunctionToken(function));
 
-  ctoken_stack_.addToken(ctoken);
+  stackCToken(base);
 }
 
 void
 CExprCompileImpl::
-stackValue(CExprValuePtr value)
+stackDummyValue()
 {
-  CExprCTokenPtr ctoken = CExprCToken::createValueToken(value);
+  CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(CExprValuePtr()));
 
-  ctoken_stack_.addToken(ctoken);
+  stackCToken(base);
 }
 
 void
 CExprCompileImpl::
-setLastError(const std::string &message)
+stackCToken(const CExprTokenBaseP &base)
 {
-  if (message == "") {
-    last_error_message = "";
-
-    error_flag = false;
-
-    return;
-  }
-
-  if (error_flag)
-    return;
-
-  last_error_message = message;
-
-  error_flag = true;
-}
-
-bool
-CExprCompileImpl::
-isError()
-{
-  return error_flag;
-}
-
-std::string
-CExprCompileImpl::
-getLastError()
-{
-  return last_error_message;
-}
-
-//------
-
-void
-CExprCToken::
-print(std::ostream &os) const
-{
-  switch (type_) {
-    case CEXPR_CTOKEN_IDENTIFIER:
-      os << "<identifier>";
-      break;
-    case CEXPR_CTOKEN_OPERATOR:
-      os << "<operator>";
-      break;
-    case CEXPR_CTOKEN_INTEGER:
-      os << "<integer>";
-      break;
-    case CEXPR_CTOKEN_REAL:
-      os << "<real>";
-      break;
-    case CEXPR_CTOKEN_STRING:
-      os << "<string>";
-      break;
-    case CEXPR_CTOKEN_COMPLEX:
-      os << "<complex>";
-      break;
-    case CEXPR_CTOKEN_FUNCTION:
-      os << "<function>";
-      break;
-    case CEXPR_CTOKEN_VALUE:
-      os << "<value>";
-      break;
-    default:
-      os << "<-?->";
-      break;
-  }
-
-  base_->print(os);
-
-  os << " ";
-}
-
-//------
-
-void
-CExprCTokenStack::
-print(std::ostream &os) const
-{
-  uint len = stack_.size();
-
-  for (uint i = 0; i < len; ++i) {
-    if (i > 0) os << " ";
-
-    stack_[i]->print(os);
-  }
+  tokenStack_.addToken(base);
 }

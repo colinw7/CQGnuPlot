@@ -63,7 +63,7 @@ getVariableNames(std::vector<std::string> &names) const
 //------
 
 CExprVariable::
-CExprVariable(const std::string &name, CExprValuePtr value) :
+CExprVariable(const std::string &name, const CExprValuePtr &value) :
  name_(name), value_(value)
 {
 }
@@ -75,7 +75,7 @@ CExprVariable::
 
 void
 CExprVariable::
-setValue(CExprValuePtr value)
+setValue(const CExprValuePtr &value)
 {
   value_ = value;
 }
@@ -88,13 +88,6 @@ setRealValue(double x)
     value_->setRealValue(x);
   else
     value_ = CExprInst->createRealValue(x);
-}
-
-CExprValuePtr
-CExprVariable::
-getValue() const
-{
-  return value_;
 }
 
 CExprValueType

@@ -195,7 +195,7 @@ bool
 CExprValue::
 convToBoolean()
 {
-  if (type_ == CEXPR_VALUE_BOOLEAN) return true;
+  if (isBooleanValue()) return true;
 
   bool boolean;
 
@@ -212,7 +212,7 @@ bool
 CExprValue::
 convToInteger()
 {
-  if (type_ == CEXPR_VALUE_INTEGER) return true;
+  if (isIntegerValue()) return true;
 
   long integer;
 
@@ -229,14 +229,14 @@ bool
 CExprValue::
 convToReal()
 {
-  if (type_ == CEXPR_VALUE_REAL) return true;
+  if (isRealValue()) return true;
 
   double real;
 
   if (! getRealValue(real))
     return false;
 
-  type_ = CEXPR_VALUE_INTEGER;
+  type_ = CEXPR_VALUE_REAL;
   base_ = new CExprRealValue(real);
 
   return true;
@@ -246,7 +246,7 @@ bool
 CExprValue::
 convToString()
 {
-  if (type_ == CEXPR_VALUE_STRING) return true;
+  if (isStringValue()) return true;
 
   std::string str;
 
@@ -263,7 +263,7 @@ bool
 CExprValue::
 convToComplex()
 {
-  if (type_ == CEXPR_VALUE_COMPLEX) return true;
+  if (isComplexValue()) return true;
 
   std::complex<double> c;
 
@@ -292,7 +292,7 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 
 CExprValuePtr
 CExprValue::
-subscript(const std::vector<CExprValuePtr> &values) const
+subscript(const CExprValueArray &values) const
 {
   return base_->subscript(values);
 }

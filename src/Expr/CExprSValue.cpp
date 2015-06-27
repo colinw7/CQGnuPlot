@@ -50,8 +50,8 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
       CStrUtil::skipSpace(str_, &i1);
       CStrUtil::skipSpace(rstr, &i2);
 
-      if (! CExprParseUtil::stringToNumber(str_, &i1, integer1, real1, is_int1) ||
-          ! CExprParseUtil::stringToNumber(rstr, &i2, integer2, real2, is_int2))
+      if (! CExprStringToNumber(str_, &i1, integer1, real1, is_int1) ||
+          ! CExprStringToNumber(rstr, &i2, integer2, real2, is_int2))
         return CExprValuePtr();
 
       CStrUtil::skipSpace(str_, &i1);
@@ -84,7 +84,7 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 
 CExprValuePtr
 CExprStringValue::
-subscript(const std::vector<CExprValuePtr> &values) const
+subscript(const CExprValueArray &values) const
 {
 #ifdef GNUPLOT_EXPR
   if      (values.size() == 2) {

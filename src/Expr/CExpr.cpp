@@ -31,9 +31,9 @@ CExpr() :
 
 bool
 CExpr::
-evaluateExpression(const std::string &str, std::vector<CExprValuePtr> &values)
+evaluateExpression(const std::string &str, CExprValueArray &values)
 {
-  CExprPTokenStack pstack = parseLine(str);
+  CExprTokenStack pstack = parseLine(str);
 
   return executePTokenStack(pstack, values);
 }
@@ -42,36 +42,36 @@ bool
 CExpr::
 evaluateExpression(const std::string &str, CExprValuePtr &value)
 {
-  CExprPTokenStack pstack = parseLine(str);
+  CExprTokenStack pstack = parseLine(str);
 
   return executePTokenStack(pstack, value);
 }
 
 bool
 CExpr::
-executePTokenStack(const CExprPTokenStack &pstack, std::vector<CExprValuePtr> &values)
+executePTokenStack(const CExprTokenStack &pstack, CExprValueArray &values)
 {
-  CExprITokenPtr   itoken = interpPTokenStack(pstack);
-  CExprCTokenStack cstack = compileIToken(itoken);
+  CExprITokenPtr  itoken = interpPTokenStack(pstack);
+  CExprTokenStack cstack = compileIToken(itoken);
 
   return executeCTokenStack(cstack, values);
 }
 
 bool
 CExpr::
-executePTokenStack(const CExprPTokenStack &pstack, CExprValuePtr &value)
+executePTokenStack(const CExprTokenStack &pstack, CExprValuePtr &value)
 {
-  CExprITokenPtr   itoken = interpPTokenStack(pstack);
-  CExprCTokenStack cstack = compileIToken(itoken);
+  CExprITokenPtr  itoken = interpPTokenStack(pstack);
+  CExprTokenStack cstack = compileIToken(itoken);
 
   return executeCTokenStack(cstack, value);
 }
 
-CExprPTokenStack
+CExprTokenStack
 CExpr::
 parseLine(const std::string &line)
 {
-  CExprPTokenStack pstack = parse_->parseLine(line);
+  CExprTokenStack pstack = parse_->parseLine(line);
 
   if (getDebug())
     std::cerr << "PTokenStack:" << pstack << std::endl;
@@ -81,7 +81,7 @@ parseLine(const std::string &line)
 
 CExprITokenPtr
 CExpr::
-interpPTokenStack(const CExprPTokenStack &stack)
+interpPTokenStack(const CExprTokenStack &stack)
 {
   CExprITokenPtr itoken = interp_->interpPTokenStack(stack);
 
@@ -91,11 +91,11 @@ interpPTokenStack(const CExprPTokenStack &stack)
   return itoken;
 }
 
-CExprCTokenStack
+CExprTokenStack
 CExpr::
 compileIToken(CExprITokenPtr itoken)
 {
-  CExprCTokenStack cstack = compile_->compileIToken(itoken);
+  CExprTokenStack cstack = compile_->compileIToken(itoken);
 
   if (getDebug())
     std::cerr << "CTokenStack:" << cstack << std::endl;
@@ -112,7 +112,7 @@ skipExpression(const std::string &line, uint &i)
 
 bool
 CExpr::
-executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &values)
+executeCTokenStack(const CExprTokenStack &stack, CExprValueArray &values)
 {
   if (! execute_->executeCTokenStack(stack, values))
     return false;
@@ -129,7 +129,7 @@ executeCTokenStack(const CExprCTokenStack &stack, std::vector<CExprValuePtr> &va
 
 bool
 CExpr::
-executeCTokenStack(const CExprCTokenStack &stack, CExprValuePtr &value)
+executeCTokenStack(const CExprTokenStack &stack, CExprValuePtr &value)
 {
   if (! execute_->executeCTokenStack(stack, value))
     return false;
@@ -245,11 +245,18 @@ getFunctionNames(std::vector<std::string> &names) const
   functionMgr_->getFunctionNames(names);
 }
 
-CExprOperatorPtr
+CExprTokenBaseP
 CExpr::
-getOperator(CExprOpType type) const
+getOperator(CExprOpType id)
 {
-  return operatorMgr_->getOperator(type);
+  return CExprTokenBaseP(CExprTokenMgrInst->createOperatorToken(id));
+}
+
+std::string
+CExpr::
+getOperatorName(CExprOpType type) const
+{
+  return operatorMgr_->getOperator(type)->getName();
 }
 
 CExprValuePtr
@@ -295,7 +302,7 @@ class CExprPrintF : public CPrintF {
    fmt_(fmt) {
   }
 
-  std::string exec(const std::vector<CExprValuePtr> &values) {
+  std::string exec(const CExprValueArray &values) {
     setFormatString(fmt_);
 
     values_ = values;
@@ -338,14 +345,14 @@ class CExprPrintF : public CPrintF {
   }
 
  private:
-  std::string           fmt_;
-  CExprFunction::Values values_;
-  mutable uint          iv_;
+  std::string     fmt_;
+  CExprValueArray values_;
+  mutable uint    iv_;
 };
 
 std::string
 CExpr::
-printf(const std::string &fmt, const std::vector<CExprValuePtr> &values) const
+printf(const std::string &fmt, const CExprValueArray &values) const
 {
   CExprPrintF printf(fmt);
 

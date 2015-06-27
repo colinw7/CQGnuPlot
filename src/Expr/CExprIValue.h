@@ -22,7 +22,7 @@ class CExprIntegerValue : public CExprValueBase {
 
   void setIntegerValue(long l) { integer_ = l; }
 
-  CExprValuePtr execUnaryOp(CExprOpType op) const;
+  CExprValuePtr execUnaryOp (CExprOpType op) const;
   CExprValuePtr execBinaryOp(CExprValuePtr rhs, CExprOpType op) const;
 
   void print(std::ostream &os) const {

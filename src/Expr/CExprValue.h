@@ -43,9 +43,10 @@ class CExprValue {
   bool convToString ();
   bool convToComplex();
 
-  CExprValuePtr execUnaryOp(CExprOpType op) const;
+  CExprValuePtr execUnaryOp (CExprOpType op) const;
   CExprValuePtr execBinaryOp(CExprValuePtr rhs, CExprOpType op) const;
-  CExprValuePtr subscript(const std::vector<CExprValuePtr> &values) const;
+
+  CExprValuePtr subscript(const CExprValueArray &values) const;
 
   void print(std::ostream &os) const;
 

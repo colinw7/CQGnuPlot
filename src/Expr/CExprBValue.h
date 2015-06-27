@@ -18,7 +18,7 @@ class CExprBooleanValue : public CExprValueBase {
 
   void setBooleanValue(bool b) { boolean_ = b; }
 
-  CExprValuePtr execUnaryOp(CExprOpType op) const;
+  CExprValuePtr execUnaryOp (CExprOpType op) const;
   CExprValuePtr execBinaryOp(CExprValuePtr rhs, CExprOpType op) const;
 
   void print(std::ostream &os) const {

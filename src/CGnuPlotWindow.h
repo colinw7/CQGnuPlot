@@ -8,7 +8,6 @@
 class CGnuPlotWindow {
  public:
   typedef std::vector<CGnuPlotGroup *> Groups;
-  typedef CGnuPlot::Pm3DData           Pm3DData;
 
  public:
   CGnuPlotWindow(CGnuPlot *plot);
@@ -39,8 +38,8 @@ class CGnuPlotWindow {
   bool hidden3D() const { return hidden3D_; }
   void setHidden3D(bool b) { hidden3D_ = b; }
 
-  const Pm3DData &pm3D() const { return pm3D_; }
-  void setPm3D(const Pm3DData &p) { pm3D_ = p; }
+  const CGnuPlotPm3DData &pm3D() const { return pm3D_; }
+  void setPm3D(const CGnuPlotPm3DData &p) { pm3D_ = p; }
 
   //---
 
@@ -54,13 +53,13 @@ class CGnuPlotWindow {
   void draw();
 
  private:
-  CGnuPlot* plot_     { 0 };
-  CISize2D  size_     { 100, 100 };
-  bool      is3D_     { false };
-  Groups    groups_;
-  bool      hidden3D_ { false };
-  Pm3DData  pm3D_;
-  CRGBA     backgroundColor_ { 1, 1, 1};
+  CGnuPlot*        plot_     { 0 };
+  CISize2D         size_     { 100, 100 };
+  bool             is3D_     { false };
+  Groups           groups_;
+  bool             hidden3D_ { false };
+  CGnuPlotPm3DData pm3D_;
+  CRGBA            backgroundColor_ { 1, 1, 1};
 };
 
 #endif

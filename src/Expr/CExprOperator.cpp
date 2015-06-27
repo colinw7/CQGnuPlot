@@ -81,8 +81,12 @@ operator_data[] = {
   { CEXPR_OP_STR_NOT_EQUAL    , "ne" , },
 #endif
   { CEXPR_OP_COMMA            , ","  , },
+  { CEXPR_OP_START_BLOCK      , "{"  , },
+  { CEXPR_OP_END_BLOCK        , "}"  , },
   { CEXPR_OP_UNKNOWN          , 0    , }
 };
+
+//------
 
 CExprOperatorMgr::
 CExprOperatorMgr()
