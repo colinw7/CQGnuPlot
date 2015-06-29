@@ -26,6 +26,8 @@
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
 #include <CQGnuPlotToolBar.h>
+#include <CQGnuPlotPNGRenderer.h>
+#include <CGnuPlotSVGRenderer.h>
 #include <CQZoomRegion.h>
 
 #include <CQPropertyTree.h>
@@ -158,10 +160,13 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
   QMenu *fileMenu = menuBar()->addMenu("&File");
 
   QAction *saveSVGAction = new QAction("Save S&VG", this);
+  QAction *savePNGAction = new QAction("Save &PNG", this);
 
   fileMenu->addAction(saveSVGAction);
+  fileMenu->addAction(savePNGAction);
 
   connect(saveSVGAction, SIGNAL(triggered()), this, SLOT(saveSVG()));
+  connect(savePNGAction, SIGNAL(triggered()), this, SLOT(savePNG()));
 
   QAction *closeAction = new QAction("&Close", this);
 
@@ -805,6 +810,38 @@ saveSVG()
 
   CGnuPlotSVGRenderer *renderer =
     dynamic_cast<CGnuPlotSVGRenderer *>(app()->device()->renderer());
+
+  renderer->setWindow(this);
+
+  app()->device()->drawInit(this);
+
+  renderer->clear(CGnuPlotWindow::backgroundColor());
+
+  for (auto group : groups()) {
+    renderer->setRegion(group->region());
+
+    group->draw();
+  }
+
+  app()->device()->drawTerm();
+
+  app()->popDevice();
+
+  app()->setOutputFile("");
+}
+
+void
+CQGnuPlotWindow::
+savePNG()
+{
+  app()->pushDevice();
+
+  app()->setDevice("png");
+
+  app()->setOutputFile("temp.png");
+
+  CQGnuPlotPNGRenderer *renderer =
+    dynamic_cast<CQGnuPlotPNGRenderer *>(app()->device()->renderer());
 
   renderer->setWindow(this);
 

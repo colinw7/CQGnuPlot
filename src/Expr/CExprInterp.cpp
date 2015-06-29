@@ -1745,7 +1745,7 @@ print(std::ostream &os, bool children) const
   if (base_.isValid())
     base_->print(os);
   else
-    os << "<" << CExprInterpUtil::getTypeName(getIType(), getType()) << ">";
+    os << "<" << CExprInterpUtil::getTypeName(getIType(), CEXPR_TOKEN_UNKNOWN) << ">";
 
   if (children) {
     uint num_children = children_.size();

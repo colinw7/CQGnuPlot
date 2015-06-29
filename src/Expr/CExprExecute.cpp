@@ -404,17 +404,25 @@ executeBinaryOperator(CExprOpType type)
     return false;
 
   if (value1->isComplexValue() || value2->isComplexValue()) {
+    if (! value1->isComplexValue()) value1 = value1->dup();
+    if (! value2->isComplexValue()) value2 = value2->dup();
+
     if (! value1->convToComplex()) return false;
     if (! value2->convToComplex()) return false;
   }
 
   if (value1->isRealValue() || value2->isRealValue()) {
+    if (! value1->isRealValue()) value1 = value1->dup();
+    if (! value2->isRealValue()) value2 = value2->dup();
+
     if (! value1->convToReal()) return false;
     if (! value2->convToReal()) return false;
   }
 
 #ifdef GNUPLOT_EXPR
   if (value2->isStringValue() && ! value1->isStringValue()) {
+    if (! value1->isStringValue()) value1 = value1->dup();
+
     if (! value1->convToString()) return false;
   }
 #endif
@@ -477,8 +485,19 @@ executeBitwiseBinaryOperator(CExprOpType type)
   if (! value1.isValid() || ! value2.isValid())
     return;
 
-  if (! value1->convToInteger()) return;
-  if (! value2->convToInteger()) return;
+  if (! value1->isIntegerValue()) {
+    value1 = value1->dup();
+
+    if (! value1->convToInteger())
+      return;
+  }
+
+  if (! value2->isIntegerValue()) {
+    value2 = value2->dup();
+
+    if (! value2->convToInteger())
+      return;
+  }
 
   CExprValuePtr value = value1->execBinaryOp(value2, type);
 
@@ -606,9 +625,14 @@ executeFunction(const CExprFunctionPtr &function, CExprValuePtr &value)
       }
     }
     else {
-      if (! (argType & CEXPR_VALUE_NULL) && ! value1->convToType(argType)) {
-        CExprInst->errorMsg("Invalid type for function argument");
-        return false;
+      if (! (argType & CEXPR_VALUE_NULL)) {
+        if (! (value1->getType() & argType))
+          value1 = value1->dup();
+
+        if (! value1->convToType(argType)) {
+          CExprInst->errorMsg("Invalid type for function argument");
+          return false;
+        }
       }
     }
   }

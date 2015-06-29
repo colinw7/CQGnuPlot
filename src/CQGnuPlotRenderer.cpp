@@ -101,11 +101,10 @@ void
 CQGnuPlotRenderer::
 setPainter(QPainter *painter)
 {
-  assert(canvas_);
-
   painter_ = painter;
 
-  window()->setSize(CISize2D(canvas_->width(), canvas_->height()));
+  if (canvas_)
+    window()->setSize(CISize2D(canvas_->width(), canvas_->height()));
 }
 
 void
@@ -119,7 +118,8 @@ void
 CQGnuPlotRenderer::
 clear(const CRGBA &c)
 {
-  painter_->fillRect(canvas_->rect(), QBrush(toQColor(c)));
+  if (canvas_)
+    painter_->fillRect(canvas_->rect(), QBrush(toQColor(c)));
 }
 
 void

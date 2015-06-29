@@ -35,6 +35,8 @@ CQGnuPlotLineStyle.cpp \
 CQGnuPlotPalette.cpp \
 CQGnuPlotPieObject.cpp \
 CQGnuPlotPlot.cpp \
+CQGnuPlotPNGDevice.cpp \
+CQGnuPlotPNGRenderer.cpp \
 CQGnuPlotPolygon.cpp \
 CQGnuPlotPolygonObject.cpp \
 CQGnuPlotRectangle.cpp \
@@ -196,6 +198,8 @@ CQGnuPlotObject.h \
 CQGnuPlotPalette.h \
 CQGnuPlotPieObject.h \
 CQGnuPlotPlot.h \
+CQGnuPlotPNGDevice.h \
+CQGnuPlotPNGRenderer.h \
 CQGnuPlotPolygon.h \
 CQGnuPlotPolygonObject.h \
 CQGnuPlotRectangle.h \

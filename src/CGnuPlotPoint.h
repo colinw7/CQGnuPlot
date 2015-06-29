@@ -54,10 +54,13 @@ class CGnuPlotPoint {
     return b;
   }
 
-  bool getPoint(CPoint2D &p) const {
+  bool getPoint(CPoint2D &p, bool checkNaN=true) const {
     double x, y;
 
     if (! getXY(x, y))
+      return false;
+
+    if (checkNaN && (IsNaN(x) || IsNaN(y)))
       return false;
 
     p = CPoint2D(x, y);

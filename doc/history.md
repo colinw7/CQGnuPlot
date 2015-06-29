@@ -52,3 +52,11 @@
  + Support black, nodraw, bgnd line types
  + support dash strings
  + pre-parse user functions
+
+### 6/29/2015
+ + Improve speed of expression evaluation by pre-compiling user functions and
+   reducing nuber of memory allocations
+ + mark all default functions as builtin
+ + support named range variable
+ + replace backtick command in double quotes
+ + support PNG terminal type

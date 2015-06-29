@@ -9,6 +9,7 @@
 #include <QRect>
 
 class CQGnuPlotDevice;
+class CQGnuPlotPNGDevice;
 class CQGnuPlotRenderer;
 
 class CQGnuPlot : public QObject, public CGnuPlot {
@@ -29,7 +30,8 @@ class CQGnuPlot : public QObject, public CGnuPlot {
   CQGnuPlotRenderer *qrenderer() const;
 
  private:
-  CQGnuPlotDevice *device_;
+  CQGnuPlotDevice    *device_;
+  CQGnuPlotPNGDevice *pngDevice_;
 };
 
 #endif

@@ -154,11 +154,15 @@ CExprFunctionExp(const CExprValueArray &values)
   double               r;
   std::complex<double> c;
 
-  if      (values[0]->getComplexValue(c)) {
-    double r1 = exp(c.real())*cos(c.imag());
-    double c1 = exp(c.real())*sin(c.imag());
+  if      (values[0]->isComplexValue()) {
+    if (values[0]->getComplexValue(c)) {
+      double r1 = exp(c.real())*cos(c.imag());
+      double c1 = exp(c.real())*sin(c.imag());
 
-    return CExprInst->createComplexValue(std::complex<double>(r1, c1));
+      return CExprInst->createComplexValue(std::complex<double>(r1, c1));
+    }
+    else
+      return CExprValuePtr();
   }
   else if (values[0]->getRealValue(r)) {
     double r1 = exp(r);
@@ -187,9 +191,13 @@ static CExprValuePtr \
 CExprFunction##NAME(const CExprValueArray &values) { \
   assert(values.size() == 1); \
   double r = 0.0; \
-  std::complex<double> c; \
-  if (values[0]->getComplexValue(c)) { \
-    r = c.real(); \
+  if (values[0]->isComplexValue()) { \
+    std::complex<double> c; \
+    if (values[0]->getComplexValue(c)) { \
+      r = c.real(); \
+    } \
+    else \
+      return CExprValuePtr(); \
   } \
   else if (values[0]->getRealValue(r)) { \
   } \
@@ -206,11 +214,13 @@ CExprFunction##NAME(const CExprValueArray &values) { \
   double r; \
   if (values[0]->isComplexValue()) { \
     std::complex<double> c; \
-    if (! values[0]->getComplexValue(c)) return CExprValuePtr(); \
-    errno = 0; \
-    std::complex<double> c1 = F(c); \
-    if (errno != 0) return CExprValuePtr(); \
-    return CExprInst->createComplexValue(c1); \
+    if (values[0]->getComplexValue(c)) { \
+      errno = 0; \
+      std::complex<double> c1 = F(c); \
+      if (errno != 0) return CExprValuePtr(); \
+      return CExprInst->createComplexValue(c1); \
+    } \
+      return CExprValuePtr(); \
   } \
   else if (values[0]->getRealValue(r)) { \
     double r1 = F(r); \
@@ -239,14 +249,18 @@ static CExprValuePtr \
 CExprFunction##NAME(const CExprValueArray &values) { \
   assert(values.size() == 1); \
   double r; \
-  std::complex<double> c; \
-  if (values[0]->getComplexValue(c)) { \
-    errno = 0; \
-    std::complex<double> c1 = F(c); \
-    if (errno != 0) return CExprValuePtr(); \
-    if (CExprInst->getDegrees()) \
-      c1 = std::complex<double>(RadToDeg(c1.real()), RadToDeg(c1.imag())); \
-    return CExprInst->createComplexValue(c1); \
+  if (values[0]->isComplexValue()) { \
+    std::complex<double> c; \
+    if (values[0]->getComplexValue(c)) { \
+      errno = 0; \
+      std::complex<double> c1 = F(c); \
+      if (errno != 0) return CExprValuePtr(); \
+      if (CExprInst->getDegrees()) \
+        c1 = std::complex<double>(RadToDeg(c1.real()), RadToDeg(c1.imag())); \
+      return CExprInst->createComplexValue(c1); \
+    } \
+    else \
+      return CExprValuePtr(); \
   } \
   else if (values[0]->getRealValue(r)) { \
     errno = 0; \
@@ -469,7 +483,7 @@ class CExprFunctionObjT1 : public CExprFunctionObj {
   CExprFunctionObjT1(CExprFunctionMgr *mgr, const std::string &name) {
     std::string argsStr = CExprUtil<T>::argTypeStr();
 
-    mgr->addObjFunction(name, argsStr, this);
+    func_ = mgr->addObjFunction(name, argsStr, this);
   }
 
   CExprValuePtr operator()(const CExprValueArray &values) {
@@ -480,8 +494,13 @@ class CExprFunctionObjT1 : public CExprFunctionObj {
     return CExprValuePtr();
   }
 
+  void setBuiltin(bool b) {
+    func_->setBuiltin(b);
+  }
+
  private:
-  FUNC f_;
+  FUNC             f_;
+  CExprFunctionPtr func_;
 };
 
 template<typename T1, typename T2, typename R, typename FUNC>
@@ -490,7 +509,7 @@ class CExprFunctionObjT2 : public CExprFunctionObj {
   CExprFunctionObjT2(CExprFunctionMgr *mgr, const std::string &name) {
     std::string argsStr = CExprUtil<T1>::argTypeStr() + "," + CExprUtil<T2>::argTypeStr();
 
-    mgr->addObjFunction(name, argsStr, this);
+    func_ = mgr->addObjFunction(name, argsStr, this);
   }
 
   CExprValuePtr operator()(const CExprValueArray &values) {
@@ -502,8 +521,13 @@ class CExprFunctionObjT2 : public CExprFunctionObj {
     return CExprValuePtr();
   }
 
+  void setBuiltin(bool b) {
+    func_->setBuiltin(b);
+  }
+
  private:
-  FUNC f_;
+  FUNC             f_;
+  CExprFunctionPtr func_;
 };
 
 template<typename T1, typename T2, typename T3, typename R, typename FUNC>
@@ -513,7 +537,7 @@ class CExprFunctionObjT3 : public CExprFunctionObj {
     std::string argsStr = CExprUtil<T1>::argTypeStr() + "," +
       CExprUtil<T2>::argTypeStr() + "," + CExprUtil<T3>::argTypeStr();
 
-    mgr->addObjFunction(name, argsStr, this);
+    func_ = mgr->addObjFunction(name, argsStr, this);
   }
 
   CExprValuePtr operator()(const CExprValueArray &values) {
@@ -526,8 +550,13 @@ class CExprFunctionObjT3 : public CExprFunctionObj {
     return CExprValuePtr();
   }
 
+  void setBuiltin(bool b) {
+    func_->setBuiltin(b);
+  }
+
  private:
-  FUNC f_;
+  FUNC             f_;
+  CExprFunctionPtr func_;
 };
 
 CEXPR_REALC_TO_REALC_FUNC(Log  , std::log)
@@ -628,31 +657,40 @@ addFunctions()
     function->setBuiltin(true);
   }
 
-  addObjFunction("abs"  , "ric", new CExprFunctionAbs);
-  addObjFunction("arg"  , "c"  , new CExprFunctionCArg);
-  addObjFunction("ceil" , "rc" , new CExprFunctionCeil);
-  addObjFunction("floor", "rc" , new CExprFunctionFloor);
-  addObjFunction("int"  , "ric", new CExprFunctionInt); // TODO: use conversion rules
-  addObjFunction("real" , "ric", new CExprFunctionReal); // TODO: use conversion rules
-  addObjFunction("imag" , "c"  , new CExprFunctionImag);
-  addObjFunction("sgn"  , "ric", new CExprFunctionSign);
+  addObjFunction("abs"  , "ric", new CExprFunctionAbs  )->setBuiltin(true);
+  addObjFunction("arg"  , "c"  , new CExprFunctionCArg )->setBuiltin(true);
+  addObjFunction("ceil" , "rc" , new CExprFunctionCeil )->setBuiltin(true);
+  addObjFunction("floor", "rc" , new CExprFunctionFloor)->setBuiltin(true);
+
+  // TODO: use conversion rules
+  addObjFunction("int"  , "ric", new CExprFunctionInt  )->setBuiltin(true);
+  addObjFunction("real" , "ric", new CExprFunctionReal )->setBuiltin(true);
+  addObjFunction("imag" , "c"  , new CExprFunctionImag )->setBuiltin(true);
+
+  addObjFunction("sgn"  , "ric", new CExprFunctionSign )->setBuiltin(true);
 
 #ifdef GNUPLOT_EXPR
-  addObjFunction("rand", "i", new CExprFunctionRand);
+  addObjFunction("rand", "i", new CExprFunctionRand)->setBuiltin(true);
 
   // input types ..., return type, function
-  new CExprFunctionObjT1<std::string,long,CExprStrLen>                 (this, "strlen");
-  new CExprFunctionObjT2<std::string,std::string,long,CExprStrStrT>    (this, "strstrt");
-  new CExprFunctionObjT3<std::string,long,long,std::string,CExprSubStr>(this, "substr");
-  new CExprFunctionObjT1<std::string,std::string,CExprSystem>          (this, "system");
-  new CExprFunctionObjT2<std::string,long,std::string,CExprWord>       (this, "word");
-  new CExprFunctionObjT1<std::string,long,CExprWords>                  (this, "words");
+  (new CExprFunctionObjT1<std::string,long,CExprStrLen>
+         (this, "strlen" ))->setBuiltin(true);
+  (new CExprFunctionObjT2<std::string,std::string,long,CExprStrStrT>
+         (this, "strstrt"))->setBuiltin(true);
+  (new CExprFunctionObjT3<std::string,long,long,std::string,CExprSubStr>
+         (this, "substr" ))->setBuiltin(true);
+  (new CExprFunctionObjT1<std::string,std::string,CExprSystem>
+         (this, "system" ))->setBuiltin(true);
+  (new CExprFunctionObjT2<std::string,long,std::string,CExprWord>
+         (this, "word"   ))->setBuiltin(true);
+  (new CExprFunctionObjT1<std::string,long,CExprWords>
+         (this, "words"  ))->setBuiltin(true);
 
   // gprintf ?
-  addObjFunction("sprintf", "s,...", new CExprFunctionSPrintF);
+  addObjFunction("sprintf", "s,...", new CExprFunctionSPrintF)->setBuiltin(true);
 #endif
 
-  addObjFunction("expr", "s", new CExprFunctionExpr);
+  addObjFunction("expr", "s", new CExprFunctionExpr)->setBuiltin(true);
 }
 
 CExprFunctionPtr

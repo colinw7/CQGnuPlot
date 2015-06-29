@@ -1,5 +1,6 @@
 #include <CQGnuPlot.h>
 #include <CQGnuPlotDevice.h>
+#include <CQGnuPlotPNGDevice.h>
 #include <CQGnuPlotWindow.h>
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotPlot.h>
@@ -14,10 +15,12 @@ main(int argc, char **argv)
 {
   CQApp app(argc, argv);
 
-  bool debug  = false;
-  bool edebug = false;
-  bool svg    = false;
-  bool exit   = false;
+  bool debug        = false;
+  bool edebug       = false;
+  bool svg          = false;
+  bool png          = false;
+  bool autoContinue = false;
+  bool autoExit     = false;
 
   std::string ofile = "";
 
@@ -50,8 +53,14 @@ main(int argc, char **argv)
         svg   = true;
         ofile = "temp.svg";
       }
+      else if (arg == "png") {
+        png   = true;
+        ofile = "temp_#.png";
+      }
+      else if (arg == "c")
+        autoContinue = true;
       else if (arg == "x")
-        exit = true;
+        autoExit = true;
     }
     else
       files.push_back(argv[i]);
@@ -61,9 +70,16 @@ main(int argc, char **argv)
 
   plot.setDebug(debug);
   plot.setExprDebug(edebug);
+  plot.setAutoContinue(autoContinue);
 
-  if (svg) {
+  if      (svg) {
     plot.setDevice("SVG");
+
+    if (ofile != "")
+      plot.setOutputFile(ofile);
+  }
+  else if (png) {
+    plot.setDevice("PNG");
 
     if (ofile != "")
       plot.setOutputFile(ofile);
@@ -75,7 +91,7 @@ main(int argc, char **argv)
   for (const auto &file : files)
     plot.load(file);
 
-  if (! exit)
+  if (! autoExit)
     plot.loop();
 
   return 0;
@@ -89,6 +105,11 @@ CQGnuPlot()
   device_ = new CQGnuPlotDevice;
 
   addDevice("Qt", device_);
+
+  pngDevice_ = new CQGnuPlotPNGDevice;
+
+  addDevice("PNG", pngDevice_);
+
   setDevice("Qt");
 }
 

@@ -135,6 +135,11 @@ class CGnuPlotAxisData {
 
   const RTicLabels &rticLabels() const { return rticLabels_; }
 
+  //------
+
+  const std::string &getDummyVar() { return dummyVar_; }
+  void setDummyVar(const std::string &name) { dummyVar_ = name; }
+
  private:
   bool hasITicLabels() const { return ! iticLabels_.empty(); }
   bool hasRTicLabels() const { return ! rticLabels_.empty(); }
@@ -208,6 +213,8 @@ class CGnuPlotAxisData {
     unsetRange();
 
     text_ = "";
+
+    dummyVar_ = "";
   }
 
   void show(std::ostream &os, const std::string &prefix, int n) const {
@@ -335,6 +342,7 @@ class CGnuPlotAxisData {
   COptInt           logScale_;
   CGnuPlotColorSpec textColor_;
   ZeroAxis          zeroAxis_;
+  std::string       dummyVar_;
 };
 
 #endif

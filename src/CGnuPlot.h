@@ -517,6 +517,9 @@ class CGnuPlot {
   void setExprDebug(bool b);
   bool isExprDebug() const { return edebug_; }
 
+  void setAutoContinue(bool b) { autoContinue_ = b; }
+  bool isAutoContinue() const { return autoContinue_; }
+
   //----
 
   CGnuPlotDevice *device() const { return device_; }
@@ -946,7 +949,9 @@ class CGnuPlot {
   bool parseLine(const std::string &str);
 
   std::string replaceEmbedded(const std::string &str) const;
+
   void replaceEmbeddedString(CParseLine &line, std::string &str) const;
+  bool replaceEmbeddedCmd   (CParseLine &line, std::string &str) const;
 
   bool execCmd(const std::string &cmd, StringArray &lines) const;
 
@@ -1061,9 +1066,9 @@ class CGnuPlot {
   bool parseAxesTics    (CParseLine &line, CGnuPlotAxisData &axis);
   void parseAxisZeroAxis(CParseLine &line, CGnuPlotAxisData &axis);
 
-  bool parseRange(CParseLine &line, StringArray &fields);
+  bool parseRange(CParseLine &line, StringArray &fields, std::string &dummyVar);
 
-  bool decodeRange(const StringArray &xfields, CGnuPlotAxisData &axis);
+  bool decodeRange(const StringArray &fields, CGnuPlotAxisData &axis);
 
   void parseArrayValues(CParseLine &line, std::vector<CSize2D> &sizes);
 
@@ -1145,7 +1150,7 @@ class CGnuPlot {
 
   bool parseFunction(CParseLine &line, FunctionData &functionData);
 
-  bool processAssignFunction(const std::string &lhs, const std::string &rhs);
+  bool processAssignFunction(const std::string &str);
 
   bool readIdentifier(CParseLine &line, std::string &identifier) const;
 
@@ -1210,6 +1215,7 @@ class CGnuPlot {
 
   bool                   debug_  { false };
   bool                   edebug_ { false };
+  bool                   autoContinue_ { false };
   CGnuPlotSVGDevice*     svgDevice_ { 0 };
   CGnuPlotDevice*        device_ { 0 };
   Devices                devices_;

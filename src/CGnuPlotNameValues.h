@@ -28,6 +28,7 @@ namespace CStrUniqueMatch {
                           {"pause"   , CGnuPlotTypes::CommandName::PAUSE},
                           {"plot"    , CGnuPlotTypes::CommandName::PLOT},
                           {"print"   , CGnuPlotTypes::CommandName::PRINT},
+                          {"p"       , CGnuPlotTypes::CommandName::PRINT},
                           {"printf"  , CGnuPlotTypes::CommandName::PRINTF},
                           {"pwd"     , CGnuPlotTypes::CommandName::PWD},
                           {"quit"    , CGnuPlotTypes::CommandName::QUIT},
@@ -305,10 +306,13 @@ namespace CStrUniqueMatch {
                           {"vectors"       , CGnuPlotTypes::PlotStyle::VECTORS},
                           {"xerrorbars"    , CGnuPlotTypes::PlotStyle::XERRORBARS},
                           {"xerrorlines"   , CGnuPlotTypes::PlotStyle::XERRORLINES},
+                          {"xerr"          , CGnuPlotTypes::PlotStyle::XERRORBARS},
                           {"xyerrorbars"   , CGnuPlotTypes::PlotStyle::XYERRORBARS},
                           {"xyerrorlines"  , CGnuPlotTypes::PlotStyle::XYERRORLINES},
+                          {"xyerr"         , CGnuPlotTypes::PlotStyle::XYERRORBARS},
                           {"yerrorbars"    , CGnuPlotTypes::PlotStyle::YERRORBARS},
-                          {"yerrorlines"   , CGnuPlotTypes::PlotStyle::YERRORLINES}});
+                          {"yerrorlines"   , CGnuPlotTypes::PlotStyle::YERRORLINES},
+                          {"yerr"          , CGnuPlotTypes::PlotStyle::XERRORBARS}});
   }
 
   CStrUniqueMatchInitT(CGnuPlotTypes::Smooth) {

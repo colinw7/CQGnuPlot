@@ -3,7 +3,6 @@
 
 #include <CQGnuPlot.h>
 #include <CGnuPlotWindow.h>
-#include <CGnuPlotSVGRenderer.h>
 
 #include <QMainWindow>
 
@@ -94,6 +93,7 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
 
  private slots:
   void saveSVG();
+  void savePNG();
 
   void xAxisSlot(bool show);
   void yAxisSlot(bool show);
