@@ -1405,6 +1405,7 @@ drawXAxis(CGnuPlotRenderer *renderer, int xind, bool drawOther)
       plotXAxis->setLogarithmic(false);
 
     plotXAxis->setDrawLine(false);
+    plotXAxis->setDrawLine1(false);
     plotXAxis->setDrawTickMark(xaxis.showTics());
 
     plotXAxis->setTickInside(xaxis.isOutside() ? xind == 1 : xind == 2);
@@ -1450,8 +1451,15 @@ drawXAxis(CGnuPlotRenderer *renderer, int xind, bool drawOther)
 
     //---
 
-    plotXAxis->setPosition (CPoint3D(0, xind == 2 ? ymax1 : ymin1, zmin1));
-    plotXAxis->setPosition1(CPoint3D(0, ymax1                    , zmin1));
+    if (xaxis.isZeroAxisDisplayed()) {
+      plotXAxis->setPosition(CPoint3D(0, 0, zmin1));
+      plotXAxis->setDrawLine(true);
+      plotXAxis->setDrawTickMark1(false);
+    }
+    else
+      plotXAxis->setPosition(CPoint3D(0, xind == 2 ? ymax1 : ymin1, zmin1));
+
+    plotXAxis->setPosition1(CPoint3D(0, ymax1, zmin1));
 
     //---
 
@@ -1516,6 +1524,7 @@ drawYAxis(CGnuPlotRenderer *renderer, int yind, bool drawOther)
       plotYAxis->setLogarithmic(false);
 
     plotYAxis->setDrawLine(false);
+    plotYAxis->setDrawLine1(false);
     plotYAxis->setDrawTickMark(yaxis.showTics());
 
     plotYAxis->setTickInside(yaxis.isOutside() ? yind == 1 : yind == 2);
@@ -1544,8 +1553,15 @@ drawYAxis(CGnuPlotRenderer *renderer, int yind, bool drawOther)
 
     //---
 
-    plotYAxis->setPosition (CPoint3D(yind == 2 ? xmax1 : xmin1, 0, zmin1));
-    plotYAxis->setPosition1(CPoint3D(xmax1                    , 0, zmin1));
+    if (yaxis.isZeroAxisDisplayed()) {
+      plotYAxis->setPosition(CPoint3D(0, 0, zmin1));
+      plotYAxis->setDrawLine(true);
+      plotYAxis->setDrawTickMark1(false);
+    }
+    else
+      plotYAxis->setPosition(CPoint3D(yind == 2 ? xmax1 : xmin1, 0, zmin1));
+
+    plotYAxis->setPosition1(CPoint3D(xmax1, 0, zmin1));
 
     //---
 
@@ -1601,6 +1617,7 @@ drawZAxis(CGnuPlotRenderer *renderer, int zind, bool drawOther)
       plotZAxis->setLogarithmic(false);
 
     plotZAxis->setDrawLine(false);
+    plotZAxis->setDrawLine1(false);
     plotZAxis->setDrawTickMark(zaxis.showTics());
 
     plotZAxis->setTickInside(zaxis.isOutside() ? zind == 1 : zind == 2);
@@ -1629,7 +1646,14 @@ drawZAxis(CGnuPlotRenderer *renderer, int zind, bool drawOther)
 
     //---
 
-    plotZAxis->setPosition (CPoint3D(xmin1, ymin1, 0));
+    if (zaxis.isZeroAxisDisplayed()) {
+      plotZAxis->setPosition(CPoint3D(xmin1, ymin1, 0));
+      plotZAxis->setDrawLine(true);
+      plotZAxis->setDrawTickMark1(false);
+    }
+    else
+      plotZAxis->setPosition(CPoint3D(xmin1, ymin1, 0));
+
     plotZAxis->setPosition1(CPoint3D(xmax1, ymin1, 0));
 
     //---

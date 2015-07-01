@@ -463,7 +463,7 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
   // Draw Axis Line
 
-  if (isDrawLine())
+  if ((first && isDrawLine()) || (! first && isDrawLine1()))
     drawLine(p1, p2, c);
 
   //---

@@ -682,7 +682,11 @@ class CGnuPlot {
     *zmin = zaxis(1).min().getValue(-10);
     *zmax = zaxis(1).max().getValue( 10);
   }
-  void getTRange(double *tmin, double *tmax) {
+  void getParametricTRange(double *tmin, double *tmax) {
+    *tmin = taxis(1).min().getValue(-5);
+    *tmax = taxis(1).max().getValue( 5);
+  }
+  void getPolarTRange(double *tmin, double *tmax) {
     *tmin = taxis(1).min().getValue(0);
 
     if (getAngleType() == CGnuPlotTypes::AngleType::DEGREES)
@@ -971,11 +975,13 @@ class CGnuPlot {
   void saveCmd(const std::string &args);
 
   void plotCmd   (const std::string &args);
-  void plotCmd1  (const std::string &args, CGnuPlotGroup *group, Plots &plots);
+  void plotCmd1  (const std::string &args, CGnuPlotGroup *group, Plots &plots,
+                  bool &sample, bool &first);
   void replotCmd (const std::string &args);
   void refreshCmd(const std::string &args);
   void splotCmd  (const std::string &args);
-  void splotCmd1 (const std::string &args, CGnuPlotGroup *group, Plots &plots);
+  void splotCmd1 (const std::string &args, CGnuPlotGroup *group, Plots &plots,
+                  bool &sample, bool &first);
 
   void plotForCmd (const ForCmd &forCmd, const std::string &args,
                    CGnuPlotGroup *group, Plots &plots);
@@ -1043,13 +1049,21 @@ class CGnuPlot {
 
   bool parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle);
 
-  CGnuPlotPlot *addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style);
-  CGnuPlotPlot *addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style);
+  CGnuPlotPlot *addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style,
+                              const std::string &sampleXVar,
+                              const COptReal &sampleXMin, const COptReal &sampleXMax);
+  CGnuPlotPlot *addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style,
+                              const std::string &sampleXVar,
+                              const COptReal &sampleXMin, const COptReal &sampleXMax,
+                              const std::string &sampleYVar,
+                              const COptReal &sampleYMin, const COptReal &sampleYMax);
 
   Plots addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-                  const CGnuPlotUsingCols &usingCols);
+                  const CGnuPlotUsingCols &usingCols, const std::string &sampleXVar,
+                  const COptReal &sampleXMin, const COptReal &sampleXMax);
   Plots addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-                  const CGnuPlotUsingCols &usingCols);
+                  const CGnuPlotUsingCols &usingCols, const std::string &sampleXVar,
+                  const COptReal &sampleXMin, const COptReal &sampleXMax);
 
   CGnuPlotPlot *addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
                            const CGnuPlotUsingCols &usingCols);
@@ -1118,9 +1132,10 @@ class CGnuPlot {
   bool parseDash(CParseLine &line, CLineDash &dash);
 
   bool parseInteger(CParseLine &line, int &i) const;
-  bool parseReal(CParseLine &line, double &r) const;
-  bool parseString(CParseLine &line, std::string &str, const std::string &msg="") const;
-  bool parseValue(CParseLine &line, CExprValueP &value, const std::string &msg="") const;
+  bool parseReal   (CParseLine &line, double &r) const;
+  bool parseString (CParseLine &line, std::string &str,
+                    const std::string &msg="", bool conv=true) const;
+  bool parseValue  (CParseLine &line, CExprValueP &value, const std::string &msg="") const;
 
   bool skipExpression(const char *id, CParseLine &line, std::string &expr) const;
 
@@ -1201,7 +1216,8 @@ class CGnuPlot {
 
   bool exprToInteger(const std::string &expr, int &i, bool quiet=false) const;
   bool exprToReal   (const std::string &expr, double &r, bool quiet=false) const;
-  bool exprToString (const std::string &expr, std::string &s, bool quiet=false) const;
+  bool exprToString (const std::string &expr, std::string &s,
+                     bool quiet=false, bool conv=true) const;
 
  private:
   typedef std::map<std::string,CGnuPlotDevice*>  Devices;

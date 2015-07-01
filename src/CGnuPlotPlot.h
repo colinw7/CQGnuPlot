@@ -379,10 +379,10 @@ class CGnuPlotPlot {
   double getZMin() const { return zmin_.getValue(-10); }
   double getZMax() const { return zmax_.getValue( 10); }
 
-  //void setXMin(double x) { xmin_ = x; }
-  //void setXMax(double x) { xmax_ = x; }
-  //void setYMin(double y) { ymin_ = y; }
-  //void setYMax(double y) { ymax_ = y; }
+  //void setXMin(const COptReal &x) { xmin_ = x; }
+  //void setXMax(const COptReal &x) { xmax_ = x; }
+  //void setYMin(const COptReal &y) { ymin_ = y; }
+  //void setYMax(const COptReal &y) { ymax_ = y; }
 
   //---
 
@@ -530,8 +530,8 @@ class CGnuPlotPlot {
   CGnuPlotBoxPlot        boxPlot_;
   CGnuPlotContour        contour_;                          // contour data
   bool                   contourSet_ { false };
-  ZPolygons              surfaceZPolygons_;                          // surface data
-  IJPoints               surfaceIJPoints_;                          // surface data
+  ZPolygons              surfaceZPolygons_;                 // surface data
+  IJPoints               surfaceIJPoints_;                  // surface data
   bool                   surfaceSet_ { false };
   COptReal               surfaceZMin_, surfaceZMax_;
   Hidden3DData           hidden3D_;

@@ -107,6 +107,23 @@ class CGnuPlotAxisData {
   void setMinorTicsFreq(double r) { minorTicsFreq_ = r; }
   void resetMinorTicsFreq() { minorTicsFreq_.setInvalid(); }
 
+  //------
+
+  void setTicScale(double majorScale, double minorScale) {
+    majorScale_ = majorScale;
+    minorScale_ = minorScale;
+  }
+
+  double getTicMajorScale() const { return majorScale_; }
+  double getTicMinorScale() const { return minorScale_; }
+
+  //------
+
+  double getTextRotate() const { return textRotate_; }
+  void setTextRotate(double a) { textRotate_ = a; }
+
+  //------
+
   const std::string &text() const { return text_; }
   void setText(const std::string &s) { text_ = s; }
 
@@ -328,6 +345,9 @@ class CGnuPlotAxisData {
   COptReal          max_;
   bool              minorTics_       { true };
   COptReal          minorTicsFreq_;
+  double            majorScale_      { 1.0 };
+  double            minorScale_      { 0.5 };
+  double            textRotate_      { 0.0 };
   std::string       text_;
   ITicLabels        iticLabels_;
   RTicLabels        rticLabels_;

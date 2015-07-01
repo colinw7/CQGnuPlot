@@ -115,6 +115,9 @@ class CGnuPlotAxis {
   bool isDrawLine() const { return drawLine_; }
   void setDrawLine(bool b) { drawLine_ = b; }
 
+  bool isDrawLine1() const { return drawLine1_; }
+  void setDrawLine1(bool b) { drawLine1_ = b; }
+
   bool hasGrid() const { return grid_; }
   void setGrid(bool b) { grid_ = b; }
 
@@ -258,6 +261,7 @@ class CGnuPlotAxis {
   std::string       timeFmt_;
   bool              displayed_         { true };
   bool              drawLine_          { true };
+  bool              drawLine1_         { true };
   bool              drawTickMark_      { true };
   bool              drawTickMark1_     { true };
   bool              drawMinorTickMark_ { true };

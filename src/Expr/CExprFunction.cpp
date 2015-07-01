@@ -13,6 +13,14 @@ double invnorm(double x) {
   return sqrt(2)/erf(2*x - 1);
 }
 
+double norm(double x)
+{
+  x = 0.5*sqrt(2)*x;
+  x = 0.5*erfc(-x);
+
+  return x;
+}
+
 // TODO
 std::complex<double> cerf(const std::complex<double> &c) {
   double r = ::erf(c.real());
@@ -594,6 +602,7 @@ CEXPR_COMPLEX_TO_COMPLEX_FUNC(CErfC, ::cerfc)
 CEXPR_REALC_TO_REAL_FUNC(Gamma  , ::gamma)
 // TODO: igamma
 CEXPR_REALC_TO_REAL_FUNC(LGamma , ::lgamma)
+CEXPR_REALC_TO_REAL_FUNC(Norm   , ::norm)
 CEXPR_REALC_TO_REAL_FUNC(InvNorm, ::invnorm)
 // TODO: lambertw
 #endif
@@ -628,6 +637,7 @@ builtinFns[] = {
   { "cerfc"  , "c"  , CExprFunctionCErfC   },
   { "gamma"  , "r"  , CExprFunctionGamma   },
   { "lgamma" , "r"  , CExprFunctionLGamma  },
+  { "norm"   , "r"  , CExprFunctionNorm    },
   { "invnorm", "r"  , CExprFunctionInvNorm },
 #endif
   { "", "", 0 }

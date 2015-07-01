@@ -1,29 +1,28 @@
 ## ToDo
 
-  + Batch generate images from demo scripts
-
   + Better axes ticks for log (match base powers)
-  + More Optimization of calc using compiled stack
   + allow select/modifiy all objects (plots, axis, ...)
   + edit interface (move) for annotations
   + save cmd
   + user shared_ptr/unique_ptr instead of CRefPtr
   + fit command
-  + more color schemes
+  + more color schemes (selectable)
   + don't recalc bar/bubble/pie on plot
   + consistent handling of position front,back,behind
-  + xticlabels for each unique value overriding axis tics
   + startup file
   + improve variable color, ... handling for each plot type
   + rationalize use of line style/line type (one copies current values, one use global values)
   + plot options (after with) are type specific
+  + cleanup axis usage (single class instead of two)
   + axis data
   + use color box in test palette command
   + lookup box by id to avoid overwritting object values
   + with label point/nopoint options
   + reset on loadCmd
-  + named variable range [gamma=0.6:1.2]
+
   + zoom on mouse
+  + zoom on wheel
+  + 3d zoom/probe
 
   + more axis property settings
   + more bar settings (fill, border, ...)
@@ -43,6 +42,7 @@
   + new histogram multiple histogram groups
 
   + renderer pixel data with no transform
+  + images rendered to image area instead of individual pixels
 
   + multiple variable values
 
@@ -57,7 +57,8 @@
 
   + better input of points in polygons style
 
-  + support parameter setting from file data 'param("color",$2)' and use in plot for point customization
+  + support parameter setting from file data 'param("color",$2)'
+    and use in plot for point customization
 
   + support mouse probe
 

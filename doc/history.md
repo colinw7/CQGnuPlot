@@ -60,3 +60,8 @@
  + support named range variable
  + replace backtick command in double quotes
  + support PNG terminal type
+
+### 6/30/2015
+ + add zero axis support
+ + add named parameter range and sample
+ + add norm function
