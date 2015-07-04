@@ -65,3 +65,8 @@
  + add zero axis support
  + add named parameter range and sample
  + add norm function
+
+### 7/3/2015
+ + improve line type/line style handle (0, -1, -2, -3 indices)
+ + add pentagon symbol
+ + improve zero axis rendering with line type and tics above/below
