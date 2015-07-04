@@ -133,7 +133,7 @@ draw(CGnuPlotRenderer *renderer)
   //---
 
   // draw tics
-  if (! cbaxis.hasTicLabels()) {
+  if (! cbaxis.hasRTicLabels(0)) {
   //int n = CGnuPlotStyleInst->getNumColors("basic");
     int n = 10; // TODO: from palette
 
@@ -193,7 +193,7 @@ draw(CGnuPlotRenderer *renderer)
     }
   }
   else {
-    const CGnuPlotAxisData::RTicLabels &ticLabels = cbaxis.rticLabels();
+    const CGnuPlotAxisData::RTicLabels &ticLabels = cbaxis.rticLabels(0);
 
     if (vertical_) {
       for (const auto &label : ticLabels) {

@@ -1,7 +1,8 @@
 #include <CGnuPlotLineStyle.h>
 #include <CGnuPlot.h>
-#include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
+#include <CGnuPlotGroup.h>
+#include <CGnuPlotPlot.h>
 
 CGnuPlotLineStyle::
 CGnuPlotLineStyle(CGnuPlot *plot) :
@@ -14,15 +15,14 @@ setLineType(int type)
 {
   lineType_ = type;
 
-  if (lineType_ < 1)
-    unsetLineColor();
+  unsetLineColor();
 }
 
 double
 CGnuPlotLineStyle::
 calcWidth(double w) const
 {
-  if (lineWidth_.isValid())
+  if      (lineWidth_.isValid())
     return lineWidth_.getValue();
   else if (lineType_.isValid()) {
     CGnuPlotLineTypeP lineType = plot_->getLineTypeInd(lineType_.getValue());
@@ -58,7 +58,7 @@ CRGBA
 CGnuPlotLineStyle::
 calcColor(CGnuPlotPlot *plot, double x) const
 {
-  if (lineColor_.isValid())
+  if      (lineColor_.isValid())
     return lineColor_.getValue().calcColor(plot, x);
   else if (lineType_.isValid()) {
     CGnuPlotLineTypeP lineType;
@@ -79,24 +79,22 @@ CRGBA
 CGnuPlotLineStyle::
 calcColor(CGnuPlotGroup *group, const CRGBA &c) const
 {
-  if (lineColor_.isValid()) {
+  if      (lineColor_.isValid()) {
     const CGnuPlotColorSpec &color = lineColor_.getValue();
 
     if      (color.type() == CGnuPlotColorSpec::Type::RGB ||
              color.type() == CGnuPlotColorSpec::Type::INDEX)
       return color.color();
-    else if (ind_ > 0)
-      return CGnuPlotStyleInst->indexColor(ind_);
+    else if (ind_.isValid())
+      return CGnuPlotStyleInst->indexColor(ind_.getValue());
     else
       return c;
   }
   else if (lineType_.isValid()) {
     int lt = lineType_.getValue();
 
-    if      (lt == -1)
-      return CRGBA(0,0,0);
-    else if (lt == -2)
-      return CRGBA(0,0,0,0);
+    if      (lt == 0 || lt == -1 || lt == -2)
+      return CGnuPlotStyleInst->indexColor(lt);
     else if (lt == -3) {
       if (group)
         return group->window()->backgroundColor();
@@ -107,7 +105,7 @@ calcColor(CGnuPlotGroup *group, const CRGBA &c) const
       CGnuPlotLineTypeP lineType = plot_->getLineTypeInd(lt);
 
       if (lineType.isValid())
-        return lineType->calcColor(c);
+        return lineType->calcColor(group, c);
       else
         return c;
     }
@@ -120,7 +118,7 @@ CGnuPlotLineStyle::SymbolType
 CGnuPlotLineStyle::
 calcPointType(const SymbolType &t) const
 {
-  if (pointType_.isValid()) {
+  if      (pointType_.isValid()) {
     if (pointType_.getValue() < 0 || pointType_.getValue() > int(SymbolType::LAST))
       return SymbolType::PLUS;
     else
@@ -145,7 +143,7 @@ double
 CGnuPlotLineStyle::
 calcPointSize(double s) const
 {
-  if (pointSize_.isValid())
+  if      (pointSize_.isValid())
     return pointSize_.getValue();
   else if (lineType_.isValid()) {
     CGnuPlotLineTypeP lineType = plot_->getLineTypeInd(lineType_.getValue());
@@ -163,7 +161,7 @@ int
 CGnuPlotLineStyle::
 calcPointInterval(int i) const
 {
-  if (pointInterval_.isValid())
+  if      (pointInterval_.isValid())
     return pointInterval_.getValue();
   else if (lineType_.isValid()) {
     CGnuPlotLineTypeP lineType = plot_->getLineTypeInd(lineType_.getValue());
@@ -239,22 +237,19 @@ void
 CGnuPlotLineStyle::
 show(std::ostream &os) const
 {
-  os << "linecolor ";
-
-  if      (palette_)
-    os << "palette z";
-  else if (lineColor_.isValid())
-    os << lineColor();
-  else if (lineType_.isValid()) {
-    CGnuPlotLineTypeP lineType = plot_->getLineTypeInd(lineType_.getValue());
-
-    if (lineType.isValid())
-      os << lineType->lineColor();
-    else
-      os << CGnuPlotColorSpec();
+  if (lineType_.isValid()) {
+    os << "lt " << lineType_.getValue();
   }
-  else
+  else {
+    os << "linecolor ";
+
+    if      (palette_)
+      os << "palette z";
+    else if (lineColor_.isValid())
+      os << lineColor();
+    else
     os << CGnuPlotColorSpec();
+  }
 
   os << " linewidth " << calcWidth();
 

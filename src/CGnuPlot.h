@@ -557,7 +557,7 @@ class CGnuPlot {
 
   // current line style
   CGnuPlotLineStyleP lineStyle();
-  void setLineStyle(CGnuPlotLineStyleP ls) { lineStyle_ = ls; }
+  void setLineStyle(CGnuPlotLineStyleP ls);
 
   // get indexed line style
   CGnuPlotLineStyleP getLineStyleInd(int ind);
@@ -566,6 +566,10 @@ class CGnuPlot {
 
   const LineStyles &lineStyles() const { return lineStyles_; }
   CGnuPlotLineStyleP lineStyle(int i) const;
+
+  void clearLineStyles();
+
+  //---
 
   // get indexed line type
   CGnuPlotLineTypeP getLineTypeInd(int ind);
@@ -609,6 +613,9 @@ class CGnuPlot {
 
   void setMacros(bool b) { macros_ = b; }
   bool isMacros() const { return macros_; }
+
+  double zero() const { return zero_; }
+  void setZero(double r) { zero_ = r; }
 
   //---
 
@@ -1274,6 +1281,9 @@ class CGnuPlot {
   StyleIncrement         styleIncrement_;
   LineStyles             lineStyles_;
   LineTypes              lineTypes_;
+  CGnuPlotLineTypeP      blackLineType_;
+  CGnuPlotLineTypeP      nodrawLineType_;
+  CGnuPlotLineTypeP      bgndLineType_;
   CGnuPlotCircleStyle    circleStyle_;
   CGnuPlotRectStyle      rectStyle_;
   CGnuPlotEllipseStyle   ellipseStyle_;

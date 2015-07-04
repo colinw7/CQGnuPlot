@@ -278,7 +278,10 @@ addProperties()
   for (const auto &ls : lineStyles) {
     CQGnuPlotLineStyle *ls1 = static_cast<CQGnuPlotLineStyle *>(ls.second.get());
 
-    QString lineStyleName = QString("LineStyles/lineStyle%1").arg(ls1->ind());
+    if (! ls1->ind().isValid())
+      continue;
+
+    QString lineStyleName = QString("LineStyles/lineStyle%1").arg(ls1->ind().getValue());
 
     tree_->addProperty(lineStyleName, ls1, "lineType"     );
     tree_->addProperty(lineStyleName, ls1, "lineWidth"    );

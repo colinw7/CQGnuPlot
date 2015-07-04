@@ -13,7 +13,7 @@ class CGnuPlotLineType {
   typedef CGnuPlotTypes::SymbolType SymbolType;
 
  public:
-  CGnuPlotLineType() { }
+  CGnuPlotLineType();
 
   virtual ~CGnuPlotLineType() { }
 
@@ -23,10 +23,10 @@ class CGnuPlotLineType {
   double lineWidth() const { return lineWidth_; }
   void setLineWidth(double width) { lineWidth_ = width; }
 
-  const CGnuPlotDash &lineDash() const { return lineDash_; }
+  const CGnuPlotDash &lineDash() const;
   void setLineDash(const CGnuPlotDash &dash) { lineDash_ = dash; }
 
-  const CGnuPlotColorSpec &lineColor() const { return lineColor_; }
+  const CGnuPlotColorSpec &lineColor() const;
   void setLineColor(const CGnuPlotColorSpec &c) { lineColor_ = c; }
 
   int pointType() const { return pointType_; }
@@ -44,7 +44,7 @@ class CGnuPlotLineType {
 
   SymbolType symbolType() const;
 
-  const CRGBA &calcColor(const CRGBA &c=CRGBA(0,0,0)) const;
+  CRGBA calcColor(const CGnuPlotGroup *group=0, const CRGBA &c=CRGBA(0,0,0)) const;
 
   CLineDash calcDash(CGnuPlot *plot, const CLineDash &d=CLineDash()) const;
 

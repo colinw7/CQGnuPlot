@@ -1921,7 +1921,7 @@ plotCmd(const std::string &args)
 
   group->setClearRect(clearRect);
 
-  group->setTitleData(title_);
+  group->setTitleData(title());
 
   group->addSubPlots(plots);
 
@@ -2787,7 +2787,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       int ls;
 
       if (parseInteger(line, ls))
-        setLineStyleInd(ls);
+        lineStyle = *getLineStyleInd(ls);
 
       found = true;
     }
@@ -3246,7 +3246,9 @@ parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle)
     line.skipSpace();
 
     if      (line.isString("lt")) {
-      fillStyle.setBorderLineType(lineStyle()->ind());
+      if (lineStyle()->ind().isValid())
+        fillStyle.setBorderLineType(lineStyle()->ind().getValue());
+
       fillStyle.unsetBorderColor();
     }
     else if (line.isString("lc")) {
@@ -3778,7 +3780,7 @@ splotCmd(const std::string &args)
 
   group->setClearRect(clearRect);
 
-  group->setTitleData(title_);
+  group->setTitleData(title());
 
   group->addSubPlots(plots);
 
@@ -4385,7 +4387,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       int ls;
 
       if (parseInteger(line, ls))
-        setLineStyleInd(ls);
+        lineStyle = *getLineStyleInd(ls);
 
       found = true;
     }
@@ -8295,7 +8297,7 @@ setCmd(const std::string &args)
     double r;
 
     if (parseReal(line, r))
-      zero_ = r;
+      setZero(r);
   }
   // set zeroaxis
   else if (var == VariableName::ZEROAXIS) {
@@ -9064,7 +9066,7 @@ showCmd(const std::string &args)
     }
     // show style line
     else if (show.empty() || show.find("line") != show.end()) {
-      for (const auto &lt : lineStyles_) {
+      for (const auto &lt : lineStyles()) {
         std::cout << "linestyle " << lt.first << ", ";
         lt.second->show(std::cout);
       }
@@ -9296,7 +9298,7 @@ showCmd(const std::string &args)
   }
   // show zero
   else if (var == VariableName::ZERO) {
-    std::cout << "zero is " << zero_ << std::endl;
+    std::cout << "zero is " << zero() << std::endl;
   }
   // show zeroaxis
   else if (var == VariableName::ZEROAXIS) {
@@ -9558,7 +9560,7 @@ resetCmd(const std::string &args)
 
   palette_.unset();
 
-  lineStyles_.clear();
+  clearLineStyles();
 }
 
 // undefine ...
@@ -10045,7 +10047,7 @@ unsetCmd(const std::string &args)
     }
     // unset style line
     else if (unset.empty() || unset.find("line") != unset.end()) {
-      lineStyles_.clear();
+      clearLineStyles();
     }
     // unset style circle
     else if (unset.empty() || unset.find("circle") != unset.end()) {
@@ -10252,7 +10254,7 @@ unsetCmd(const std::string &args)
   }
   // unset zero
   else if (var == VariableName::ZERO) {
-    zero_ = 1E-8;
+    setZero(1E-8);
   }
   // unset zeroaxis
   else if (var == VariableName::ZEROAXIS) {
@@ -12607,6 +12609,36 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
       plot->addPoint3D(0, values, false);
     }
 
+    for (auto &plot : plots) {
+      if (plot->keyTitle() == "") {
+        std::string title;
+
+        if (sampleXVar != "") {
+          title += "[" + sampleXVar + "=";
+
+          if (sampleXMin.isValid())
+            title += CStrUtil::strprintf("%g", sampleXMin.getValue());
+          else
+            title += "*";
+
+          title += ":";
+
+          if (sampleXMax.isValid())
+            title += CStrUtil::strprintf("%g", sampleXMax.getValue());
+          else
+            title += "*";
+
+          title += "]";
+        }
+
+        title += " \'+\' using " + usingCols.toString();
+
+        plot->setKeyTitle(title);
+      }
+    }
+
+    //---
+
     return plots;
   }
   // gen file lines (two dimensions)
@@ -13097,19 +13129,19 @@ processParams(const Params &params)
 
       if      (name == "xtic" || name == "xticlabels") {
         ticLabel_.id = 'x'; ticLabel_.ind = 1;
-        xaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str);
+        xaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str, 0);
       }
       else if (name == "x2tic"|| name == "x2ticlabels") {
         ticLabel_.id = 'x'; ticLabel_.ind = 2;
-        xaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str);
+        xaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str, 0);
       }
       else if (name == "ytic" || name == "yticlabels") {
         ticLabel_.id = 'y'; ticLabel_.ind = 1;
-        yaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str);
+        yaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str, 0);
       }
       else if (name == "y2tic"|| name == "y2ticlabels") {
         ticLabel_.id = 'y'; ticLabel_.ind = 2;
-        yaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str);
+        yaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str, 0);
       }
     }
   }
@@ -13219,15 +13251,19 @@ CGnuPlotLineStyleP
 CGnuPlot::
 lineStyle()
 {
-  if (! lineStyle_) {
-    CGnuPlotLineStyleP lineStyle = CGnuPlotLineStyleP(createLineStyle(this));
-
-    lineStyles_[-1] = lineStyle;
-
-    lineStyle_ = lineStyle;
-  }
+  if (! lineStyle_.isValid())
+    setLineStyle(getLineStyleInd(0));
 
   return lineStyle_;
+}
+
+void
+CGnuPlot::
+setLineStyle(CGnuPlotLineStyleP ls)
+{
+  lineStyle_ = ls->dup();
+
+  lineStyle_->resetInd();
 }
 
 CGnuPlotLineStyleP
@@ -13240,9 +13276,7 @@ getLineStyleInd(int ind)
     lineStyle = CGnuPlotLineStyleP(createLineStyle(this));
 
     lineStyle->setInd(ind);
-
-    if (ind > 0)
-      lineStyle->init(ind);
+    lineStyle->init  (ind);
 
     lineStyles_[ind] = lineStyle;
   }
@@ -13256,8 +13290,7 @@ setLineStyleInd(int ind)
 {
   CGnuPlotLineStyleP lineStyle = getLineStyleInd(ind);
 
-  if (! lineStyle_ || lineStyle->ind() != lineStyle_->ind())
-    lineStyle_ = lineStyle;
+  setLineStyle(lineStyle);
 }
 
 void
@@ -13276,6 +13309,33 @@ lineStyle(int i) const
   return (p != lineStyles_.end() ? (*p).second : CGnuPlotLineStyleP());
 }
 
+void
+CGnuPlot::
+clearLineStyles()
+{
+  lineStyles_.clear();
+}
+
+void
+CGnuPlot::
+resetLineStyle()
+{
+  styleIncrement_.styleInd = 0;
+}
+
+void
+CGnuPlot::
+incLineStyle()
+{
+  // TODO: StyleIncrementType::USER, StyleIncrementType::DEFAULT
+  ++styleIncrement_.styleInd;
+
+  if (! lineStyle_.isValid())
+    setLineStyle(getLineStyleInd(0));
+
+  lineStyle_->setLineType(styleIncrement_.styleInd);
+}
+
 //------
 
 CGnuPlotLineTypeP
@@ -13288,9 +13348,7 @@ getLineTypeInd(int ind)
     lineType = CGnuPlotLineTypeP(createLineType());
 
     lineType->setInd(ind);
-
-    if (ind > 0)
-      lineType->init(ind);
+    lineType->init  (ind);
 
     lineTypes_[ind] = lineType;
   }
@@ -13309,31 +13367,50 @@ CGnuPlotLineTypeP
 CGnuPlot::
 lineType(int i) const
 {
-  int i1 = i % 8;
+  CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
-  auto p = lineTypes_.find(i1);
+  if      (i == -1) {
+    if (! blackLineType_.isValid()) {
+      th->blackLineType_ = CGnuPlotLineTypeP(new CGnuPlotLineType);
 
-  return (p != lineTypes_.end() ? (*p).second : CGnuPlotLineTypeP());
+      th->blackLineType_->setInd(-1);
+      th->blackLineType_->init  (-1);
+    }
+
+    return blackLineType_;
+  }
+  else if (i == -2) {
+    if (! nodrawLineType_.isValid()) {
+      th->nodrawLineType_ = CGnuPlotLineTypeP(new CGnuPlotLineType);
+
+      th->nodrawLineType_->setInd(-2);
+      th->nodrawLineType_->init  (-2);
+    }
+
+    return nodrawLineType_;
+  }
+  else if (i == -3) {
+    if (! bgndLineType_.isValid()) {
+      th->bgndLineType_ = CGnuPlotLineTypeP(new CGnuPlotLineType);
+
+      th->bgndLineType_->setInd(-3);
+      th->bgndLineType_->init  (-3);
+    }
+
+    return bgndLineType_;
+  }
+  else if (i >= 0) {
+    int i1 = i % 8;
+
+    auto p = lineTypes_.find(i1);
+
+    return (p != lineTypes_.end() ? (*p).second : CGnuPlotLineTypeP());
+  }
+  else
+    return CGnuPlotLineTypeP();
 }
 
 //-----
-
-void
-CGnuPlot::
-resetLineStyle()
-{
-  styleIncrement_.styleInd = 0;
-}
-
-void
-CGnuPlot::
-incLineStyle()
-{
-  // TODO: StyleIncrementType::USER, StyleIncrementType::DEFAULT
-  ++styleIncrement_.styleInd;
-
-  lineStyle()->setLineType(styleIncrement_.styleInd);
-}
 
 void
 CGnuPlot::
@@ -13426,11 +13503,11 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
   }
 
   while (arg != "") {
-    if      (arg == "axis"  ) {
-      // TODO. display tics on axis
+    if      (arg == "axis") {
+      axis.setBorderTics(false);
     }
     else if (arg == "border") {
-      // TODO. display tics on border
+      axis.setBorderTics(true);
     }
     else if (arg == "mirror" || arg == "nomirror") {
       axis.setMirror(arg == "mirror");
@@ -13570,7 +13647,7 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
         if (! parseReal(line1, level))
           level = 0.0;
 
-        axis.setTicLabel(pos, label);
+        axis.setTicLabel(pos, label, int(level));
 
         if (! line1.skipSpaceAndChar(','))
           break;
@@ -13634,27 +13711,37 @@ void
 CGnuPlot::
 parseAxisZeroAxis(CParseLine &line, CGnuPlotAxisData &axis)
 {
+  axis.resetZeroAxis();
+
   axis.setZeroAxisDisplayed(true);
 
-  std::string arg = readNonSpace(line);
+  while (line.isValid()) {
+    int pos = line.pos();
 
-  if      (arg == "linestyle" || arg == "ls") {
-    int ls = -1;
+    std::string arg = readNonSpace(line);
 
-    if (parseInteger(line, ls))
-      axis.setZeroAxisLineStyle(ls);
-  }
-  else if (arg == "linetype" || arg == "lt") {
-    int lt;
+    if      (arg == "linestyle" || arg == "ls") {
+      int ls = -1;
 
-    if (parseLineType(line, lt))
-      axis.setZeroAxisLineType(lt);
-  }
-  else if (arg == "linewidth" || arg == "lw") {
-    double lw;
+      if (parseInteger(line, ls))
+        axis.setZeroAxisLineStyle(ls);
+    }
+    else if (arg == "linetype" || arg == "lt") {
+      int lt;
 
-    if (parseReal(line, lw))
-      axis.setZeroAxisLineWidth(lw);
+      if (parseLineType(line, lt))
+        axis.setZeroAxisLineType(lt);
+    }
+    else if (arg == "linewidth" || arg == "lw") {
+      double lw;
+
+      if (parseReal(line, lw))
+        axis.setZeroAxisLineWidth(lw);
+    }
+    else {
+      line.setPos(pos);
+      break;
+    }
   }
 }
 

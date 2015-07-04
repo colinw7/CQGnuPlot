@@ -81,19 +81,38 @@ draw(CGnuPlotRenderer *renderer)
 
   double x1 = 0, y1 = 0;
 
-  if      (halign == CHALIGN_TYPE_LEFT)
-    x1 = rbbox.getLeft () + bx;
-  else if (halign == CHALIGN_TYPE_RIGHT)
-    x1 = rbbox.getRight() - bx - size.width;
-  else if (halign == CHALIGN_TYPE_CENTER)
-    x1 = rbbox.getXMid() - size.width/2;
+  if (keyData_.position().isValid()) {
+    CPoint2D p = keyData_.position().getValue().getPoint2D(renderer);
 
-  if      (valign == CVALIGN_TYPE_TOP)
-    y1 = rbbox.getTop   () - by - size.height;
-  else if (valign == CVALIGN_TYPE_BOTTOM)
-    y1 = rbbox.getBottom() + by;
-  else if (valign == CVALIGN_TYPE_CENTER)
-    y1 = rbbox.getYMid() - size.height/2;
+    if      (halign == CHALIGN_TYPE_LEFT)
+      x1 = p.x;
+    else if (halign == CHALIGN_TYPE_RIGHT)
+      x1 = p.x - size.width;
+    else if (halign == CHALIGN_TYPE_CENTER)
+      x1 = p.x - size.width/2;
+
+    if      (valign == CVALIGN_TYPE_TOP)
+      y1 = p.y - size.height;
+    else if (valign == CVALIGN_TYPE_BOTTOM)
+      y1 = p.y;
+    else if (valign == CVALIGN_TYPE_CENTER)
+      y1 = p.y - size.height/2;
+  }
+  else {
+    if      (halign == CHALIGN_TYPE_LEFT)
+      x1 = rbbox.getLeft () + bx;
+    else if (halign == CHALIGN_TYPE_RIGHT)
+      x1 = rbbox.getRight() - bx - size.width;
+    else if (halign == CHALIGN_TYPE_CENTER)
+      x1 = rbbox.getXMid() - size.width/2;
+
+    if      (valign == CVALIGN_TYPE_TOP)
+      y1 = rbbox.getTop   () - by - size.height;
+    else if (valign == CVALIGN_TYPE_BOTTOM)
+      y1 = rbbox.getBottom() + by;
+    else if (valign == CVALIGN_TYPE_CENTER)
+      y1 = rbbox.getYMid() - size.height/2;
+  }
 
   double x2 = x1 + size.width;
   double y2 = y1 + size.height;

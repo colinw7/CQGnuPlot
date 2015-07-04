@@ -399,18 +399,34 @@ getMinorIncrement() const
 
 bool
 CGnuPlotAxis::
-hasTicLabels(bool first) const
+hasMajorTicLabels(bool first) const
 {
   if (! first) return false;
 
-  return group_->hasTicLabels(id_);
+  return group_->hasTicLabels(id_, 0);
 }
 
-const CGnuPlotAxisData::RTicLabels &
+bool
 CGnuPlotAxis::
-getTicLabels(bool /*first*/) const
+hasMinorTicLabels(bool first) const
 {
-  return group_->ticLabels(id_);
+  if (! first) return false;
+
+  return group_->hasTicLabels(id_, 1);
+}
+
+CGnuPlotAxisData::RTicLabels
+CGnuPlotAxis::
+getMajorTicLabels(bool /*first*/) const
+{
+  return group_->ticLabels(id_, 0);
+}
+
+CGnuPlotAxisData::RTicLabels
+CGnuPlotAxis::
+getMinorTicLabels(bool /*first*/) const
+{
+  return group_->ticLabels(id_, 1);
 }
 
 std::string
@@ -452,7 +468,7 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
   CFontPtr font = renderer_->getFont();
 
-  CRGBA c(0,0,0);
+  CRGBA c(0, 0, 0);
 
   double maxW = 0;
   double maxH = font->getCharHeight();
@@ -463,8 +479,12 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
   // Draw Axis Line
 
-  if ((first && isDrawLine()) || (! first && isDrawLine1()))
-    drawLine(p1, p2, c);
+  if ((first && isDrawLine()) || (! first && isDrawLine1())) {
+    CPoint3D p1 = lineValueToPoint(getStart(), first);
+    CPoint3D p2 = lineValueToPoint(getEnd  (), first);
+
+    drawLine(p1, p2, lineColor_, lineWidth_, lineDash_);
+  }
 
   //---
 
@@ -492,9 +512,9 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
       //------*/
 
-      // Create Tick Label (Override with application supplied string if required)
+      // Create Major Tick Label (Override with application supplied string if required)
 
-      if (! hasTicLabels(first)) {
+      if (! hasMajorTicLabels(first)) {
         str = getValueStr(i, pos1);
 
         maxW = std::max(maxW, font->getStringWidth(str));
@@ -512,16 +532,18 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
     // Draw Minor Ticks (use user defined distribution if defined)
 
-    if (getTickSpaces() == 0) {
-      double dt = (pos2 - pos1)/getNumMinorTicks();
+    if      (getTickSpaces() == 0) {
+      if (! hasMinorTicLabels(first)) {
+        double dt = (pos2 - pos1)/getNumMinorTicks();
 
-      if (checkMinorTickSize(dt)) {
-        for (int j = 1; j < getNumMinorTicks(); j++) {
-          double pos3 = j*dt + pos1;
+        if (checkMinorTickSize(dt)) {
+          for (int j = 1; j < getNumMinorTicks(); j++) {
+            double pos3 = j*dt + pos1;
 
-          if (isDrawTickMark(first) && isDrawMinorTickMark()) {
-            if (pos3 >= getStart() && pos3 <= getEnd())
-              drawAxisTick(pos3, first, false);
+            if (isDrawTickMark(first) && isDrawMinorTickMark()) {
+              if (pos3 >= getStart() && pos3 <= getEnd())
+                drawAxisTick(pos3, first, false);
+            }
           }
         }
       }
@@ -554,9 +576,9 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
     //------*/
 
-    // Create Tick Label (Override with application supplied string if required)
+    // Create Major Tick Label (Override with application supplied string if required)
 
-    if (! hasTicLabels(first)) {
+    if (! hasMajorTicLabels(first)) {
       str = getValueStr(getNumMajorTicks(), pos1);
 
       maxW = std::max(maxW, font->getStringWidth(str));
@@ -572,10 +594,10 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
   //------*/
 
-  // Draw Custom Tic Labels
+  // Draw Custom Major Tic Labels
 
-  if (hasTicLabels(first)) {
-    const CGnuPlotAxisData::RTicLabels &ticLabels = getTicLabels(first);
+  if (hasMajorTicLabels(first)) {
+    const CGnuPlotAxisData::RTicLabels &ticLabels = getMajorTicLabels(first);
 
     for (const auto &label : ticLabels) {
       double      r = label.first;
@@ -585,6 +607,22 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
       if (isDrawTickLabel(first))
         drawTickLabel(r, s, first);
+    }
+  }
+
+  if (hasMinorTicLabels(first)) {
+    const CGnuPlotAxisData::RTicLabels &ticLabels = getMinorTicLabels(first);
+
+    for (const auto &label : ticLabels) {
+      double      r = label.first;
+      std::string s = label.second;
+
+      maxW = std::max(maxW, font->getStringWidth(s));
+
+      if (isDrawTickLabel(first))
+        drawTickLabel(r, s, first);
+
+      drawAxisTick(r, first, false);
     }
   }
 
@@ -630,22 +668,26 @@ drawAxisTick(double pos, bool first, bool large)
 
   double psize = 6;
 
-  if (! large)
-    psize = 3;
+  if (large)
+    psize *= group_->getMajorTicSize(id_);
+  else
+    psize *= group_->getMinorTicSize(id_);
 
   double xsize = renderer_->pixelWidthToWindowWidth  (psize);
   double ysize = renderer_->pixelHeightToWindowHeight(psize);
 
-  CPoint3D p1;
+  CPoint3D p1 = p;
+  CPoint3D p2 = p;
 
   if (isTickInside(first))
-    p1 = p + ivalueToPoint(xsize, ysize);
-  else
-    p1 = p - ivalueToPoint(xsize, ysize);
+    p1 += ivalueToPoint(xsize, ysize);
+
+  if (isTickOutside(first))
+    p2 -= ivalueToPoint(xsize, ysize);
 
   CRGBA c(0,0,0);
 
-  drawLine(p, p1, c);
+  drawLine(p1, p2, c, 1, CLineDash());
 }
 
 void
@@ -763,7 +805,7 @@ drawGrid(CGnuPlotRenderer *renderer)
 
   //------*/
 
-  lineDash_ = CLineDash(gridDashes, numGridDashes);
+  CLineDash lineDash(gridDashes, numGridDashes);
 
   CRGBA c(0,0,0);
 
@@ -780,7 +822,7 @@ drawGrid(CGnuPlotRenderer *renderer)
           CPoint3D p1 = valueToPoint(v, false);
           CPoint3D p2 = valueToPoint(v, true );
 
-          drawClipLine(p1, p2, c);
+          drawClipLine(p1, p2, c, 1, lineDash);
         }
       }
 
@@ -795,15 +837,13 @@ drawGrid(CGnuPlotRenderer *renderer)
               CPoint3D p11 = valueToPoint(v1, false);
               CPoint3D p21 = valueToPoint(v1, true );
 
-              drawClipLine(p11, p21, c);
+              drawClipLine(p11, p21, c, 1, lineDash);
             }
           }
         }
       }
     }
   }
-
-  lineDash_ = CLineDash();
 }
 
 void
@@ -817,7 +857,7 @@ drawRadialGrid(CGnuPlotRenderer *renderer)
 
   //------*/
 
-  lineDash_ = CLineDash(gridDashes, numGridDashes);
+  CLineDash lineDash(gridDashes, numGridDashes);
 
   //------*/
 
@@ -837,7 +877,7 @@ drawRadialGrid(CGnuPlotRenderer *renderer)
     double x2 = r2*cos(a);
     double y2 = r2*sin(a);
 
-    drawClipLine(CPoint3D(x1, y1, 0), CPoint3D(x2, y2, 0), c);
+    drawClipLine(CPoint3D(x1, y1, 0), CPoint3D(x2, y2, 0), c, 1, lineDash);
   }
 
   if (gridMajor_) {
@@ -847,7 +887,7 @@ drawRadialGrid(CGnuPlotRenderer *renderer)
       double x = i*xincrement + getStart();
 
       if (x >= getStart() && x <= getEnd())
-        renderer->drawEllipse(CPoint3D(0, 0, 0), x, x, 0, c, 1, lineDash_);
+        renderer->drawEllipse(CPoint3D(0, 0, 0), x, x, 0, c, 1, lineDash);
 
       if (gridMinor_) {
         double xincrement1 = getMinorIncrement();
@@ -856,14 +896,12 @@ drawRadialGrid(CGnuPlotRenderer *renderer)
           for (int j = 0; j < getNumMinorTicks(); ++j) {
             double x1 = x + j*xincrement1;
 
-            renderer->drawEllipse(CPoint3D(0, 0, 0), x1, x1, 0, c, 1, lineDash_);
+            renderer->drawEllipse(CPoint3D(0, 0, 0), x1, x1, 0, c, 1, lineDash);
           }
         }
       }
     }
   }
-
-  lineDash_ = CLineDash();
 }
 
 bool
@@ -882,28 +920,30 @@ checkMinorTickSize(double d) const
 
 void
 CGnuPlotAxis::
-drawClipLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c)
+drawClipLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c,
+             double w, const CLineDash &lineDash)
 {
   if (CGnuPlotUtil::realEq(p1.z, p2.z)) {
     CPoint2D p11(p1.x, p1.y);
     CPoint2D p21(p2.x, p2.y);
 
     if (! clip_ || renderer_->clipLine(p11, p21))
-      drawLine(CPoint3D(p11.x, p11.y, p1.z), CPoint3D(p21.x, p21.y, p2.z), c);
+      drawLine(CPoint3D(p11.x, p11.y, p1.z), CPoint3D(p21.x, p21.y, p2.z), c, w, lineDash);
   }
   else
-    drawLine(p1, p2, c);
+    drawLine(p1, p2, c, w, lineDash);
 }
 
 void
 CGnuPlotAxis::
-drawLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c)
+drawLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c,
+         double w, const CLineDash &lineDash)
 {
   CPoint3D pm1 = group_->mapLogPoint(p1);
   CPoint3D pm2 = group_->mapLogPoint(p2);
 
   // TODO: custom width and color
-  renderer_->drawLine(pm1, pm2, 1, c, lineDash_);
+  renderer_->drawLine(pm1, pm2, w, c, lineDash);
 }
 
 void
@@ -976,6 +1016,13 @@ CGnuPlotAxis::
 valueToPoint(double v, bool first) const
 {
   return v*v_ + (first ? position_ : position1_);
+}
+
+CPoint3D
+CGnuPlotAxis::
+lineValueToPoint(double v, bool first) const
+{
+  return v*v_ + (first ? linePosition_ : linePosition1_);
 }
 
 CPoint3D

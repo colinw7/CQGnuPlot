@@ -71,6 +71,8 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   CQGnuPlotWindow *qwindow() const;
   CQGnuPlotCanvas *canvas() const;
 
+  int lineStyleId() const { return CGnuPlotPlot::lineStyleId().getValue(-1); }
+
   QColor lineColor() const;
   void setLineColor(const QColor &c);
 

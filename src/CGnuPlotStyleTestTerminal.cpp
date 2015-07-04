@@ -1,8 +1,10 @@
 #include <CGnuPlotStyleTestTerminal.h>
 #include <CGnuPlotPlot.h>
+#include <CGnuPlotDevice.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotUtil.h>
 
+// TODO: Enhanced text, rounded end cap, ticscale
 CGnuPlotStyleTestTerminal::
 CGnuPlotStyleTestTerminal() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::TEST_TERMINAL)
@@ -49,8 +51,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   renderer->pixelToWindow(CPoint2D(px1 + 4, py2 + 4), p1);
 
-  renderer->drawHAlignedText(p1, CHALIGN_TYPE_LEFT, 0, CVALIGN_TYPE_TOP, 0,
-                             "terminal test", CRGBA(1,0,0));
+  std::string terminalStr = plot->app()->device()->name() + " terminal test";
+
+  CRGBA c(0, 0, 0);
+
+  renderer->drawHAlignedText(p1, CHALIGN_TYPE_LEFT, 0, CVALIGN_TYPE_TOP, 0, terminalStr, c);
   }
 
   //---
@@ -59,29 +64,34 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   int    nlines = int(ph/font_size);
   double dy     = 1.0/nlines;
 
+  double lw = 1.0/30;
+  int    sw = 24;
+
   for (int i = 0; i < nlines; ++i) {
     std::string str = CStrUtil::toString(i - 1);
 
     double w = font->getStringWidth(str);
 
-    CRGBA c = CGnuPlotStyleInst->indexColor(i - 1);
+    CRGBA                    c      = CGnuPlotStyleInst->indexColor(i - 1);
+    CGnuPlotPlot::SymbolType symbol = CGnuPlotStyleInst->indexSymbol(i - 1);
+    double                   width  = 1.0;
+    CLineDash                dash   = CGnuPlotStyleInst->indexDash(i - 1);
 
     double x, y;
 
-    renderer->pixelToWindow(px2 - 48 - w, py2 + font->getCharAscent(), &x, &y);
+    renderer->pixelToWindow(px2 - w - sw - 4, py2 + font->getCharAscent(), &x, &y);
 
-    renderer->drawText(CPoint2D(x, y - i*dy), str, c);
+    renderer->drawText(CPoint2D(x - lw, y - i*dy), str, c);
 
-    double x1, y1, x2, y2;
+    double x1, y1;
 
-    renderer->pixelToWindow(px2 - 48, py2 + font->getCharAscent()/2, &x1, &y1);
-    renderer->pixelToWindow(px2 - 24, py2 + font->getCharAscent()/2, &x2, &y2);
+    renderer->pixelToWindow(px2 - sw, py2 + font->getCharAscent()/2, &x1, &y1);
 
-    renderer->drawLine(CPoint2D(x1, y1 - i*dy), CPoint2D(x2, y1 - i*dy), 0, c);
+    renderer->drawLine(CPoint2D(x1 - lw, y1 - i*dy), CPoint2D(x1, y1 - i*dy), width, c, dash);
 
-    renderer->pixelToWindow(px2 - 16, py2 + font->getCharAscent()/2, &x1, &y1);
+    renderer->pixelToWindow(px2 - sw/2, py2 + font->getCharAscent()/2, &x1, &y1);
 
-    renderer->drawSymbol(CPoint2D(x1, y1 - i*dy), CGnuPlotStyleInst->indexSymbol(i - 1), 1.0, c);
+    renderer->drawSymbol(CPoint2D(x1, y1 - i*dy), symbol, width, c);
   }
 
   //---
@@ -208,7 +218,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     arrow.setHeadFilled(i == 2);
     arrow.setHeadEmpty (i == 1 || i == 4 || i == 5 || i == 6 || i == 7);
 
-    arrow.setStrokeColor(CRGBA(1,0,0));
+    arrow.setLineColor(CRGBA(1,0,0));
 
     arrow.draw(renderer);
   }

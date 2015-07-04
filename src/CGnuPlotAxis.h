@@ -53,6 +53,12 @@ class CGnuPlotAxis {
   const CPoint3D &position1() const { return position1_; }
   void setPosition1(const CPoint3D &p) { position1_ = p; }
 
+  const CPoint3D &linePosition() const { return linePosition_; }
+  void setLinePosition(const CPoint3D &p) { linePosition_ = p; }
+
+  const CPoint3D &linePosition1() const { return linePosition1_; }
+  void setLinePosition1(const CPoint3D &p) { linePosition1_ = p; }
+
   bool isLogarithmic() const { return logarithmic_; }
   void setLogarithmic(bool b) { logarithmic_ = b; }
 
@@ -78,13 +84,20 @@ class CGnuPlotAxis {
 
   //---
 
-  bool isTickInside(bool first) const { return (first ? tickInside_ : tickInside1_); }
+  bool isTickInside (bool first) const { return (first ? tickInside_  : tickInside1_ ); }
+  bool isTickOutside(bool first) const { return (first ? tickOutside_ : tickOutside1_); }
 
-  bool isTickInside() const { return tickInside_; }
-  void setTickInside(bool b) { tickInside_ = b; }
+  bool isTickInside () const { return tickInside_; }
+  bool isTickOutside() const { return tickOutside_; }
 
-  bool isTickInside1() const { return tickInside1_; }
-  void setTickInside1(bool b) { tickInside1_ = b; }
+  void setTickInside (bool b) { tickInside_  = b; }
+  void setTickOutside(bool b) { tickOutside_ = b; }
+
+  bool isTickInside1 () const { return tickInside1_; }
+  bool isTickOutside1() const { return tickOutside1_; }
+
+  void setTickInside1 (bool b) { tickInside1_  = b; }
+  void setTickOutside1(bool b) { tickOutside1_ = b; }
 
   //---
 
@@ -95,10 +108,10 @@ class CGnuPlotAxis {
 
   bool isLabelInside(bool first) const { return (first ? labelInside_ : labelInside1_); }
 
-  bool isLabelInside() const { return labelInside_; }
-  void setLabelInside(bool b) { labelInside_ = b; }
-
+  bool isLabelInside () const { return labelInside_ ; }
   bool isLabelInside1() const { return labelInside1_; }
+
+  void setLabelInside (bool b) { labelInside_  = b; }
   void setLabelInside1(bool b) { labelInside1_ = b; }
 
   //---
@@ -117,6 +130,15 @@ class CGnuPlotAxis {
 
   bool isDrawLine1() const { return drawLine1_; }
   void setDrawLine1(bool b) { drawLine1_ = b; }
+
+  const CRGBA &lineColor() const { return lineColor_; }
+  void setLineColor(const CRGBA &v) { lineColor_ = v; }
+
+  double lineWidth() const { return lineWidth_; }
+  void setLineWidth(double r) { lineWidth_ = r; }
+
+  const CLineDash &lineDash() const { return lineDash_; }
+  void setLineDash(const CLineDash &d) { lineDash_ = d; }
 
   bool hasGrid() const { return grid_; }
   void setGrid(bool b) { grid_ = b; }
@@ -181,9 +203,11 @@ class CGnuPlotAxis {
 
   void setRange(double start, double end);
 
-  bool hasTicLabels(bool first) const;
+  bool hasMajorTicLabels(bool first) const;
+  bool hasMinorTicLabels(bool first) const;
 
-  const CGnuPlotAxisData::RTicLabels &getTicLabels(bool first) const;
+  CGnuPlotAxisData::RTicLabels getMajorTicLabels(bool first) const;
+  CGnuPlotAxisData::RTicLabels getMinorTicLabels(bool first) const;
 
   std::string getValueStr(int i, double pos) const;
 
@@ -216,8 +240,10 @@ class CGnuPlotAxis {
   void drawTickLabel(double pos, const std::string &str, bool first);
   void drawAxisLabel(double pos, const std::string &str, int maxSize, bool first);
 
-  void drawClipLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c);
-  void drawLine    (const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c);
+  void drawClipLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c,
+                    double w, const CLineDash &lineDash);
+  void drawLine    (const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c,
+                    double w, const CLineDash &lineDash);
 
   void drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double xOffset,
                         CVAlignType valign, double yOffset, const std::string &str);
@@ -226,6 +252,8 @@ class CGnuPlotAxis {
 
   CPoint3D valueToPoint(double v, bool first) const;
   CPoint3D ivalueToPoint(double dx, double dy) const;
+
+  CPoint3D lineValueToPoint(double v, bool first) const;
 
   CPoint3D perpPoint(const CPoint3D &p, double d) const;
 
@@ -245,6 +273,8 @@ class CGnuPlotAxis {
   double            end1_              { 1 };
   CPoint3D          position_          { 0, 0, 0 };
   CPoint3D          position1_         { 0, 0, 0 };
+  CPoint3D          linePosition_      { 0, 0, 0 };
+  CPoint3D          linePosition1_     { 0, 0, 0 };
   bool              reverse_           { false };
   bool              logarithmic_       { false };
   int               logarithmicBase_   { 10 };
@@ -255,6 +285,8 @@ class CGnuPlotAxis {
   TickSpaces        tickSpaces_;
   bool              tickInside_        { false };
   bool              tickInside1_       { true  };
+  bool              tickOutside_       { false };
+  bool              tickOutside1_      { false };
   bool              labelInside_       { false };
   bool              labelInside1_      { false };
   std::string       label_;
@@ -262,6 +294,9 @@ class CGnuPlotAxis {
   bool              displayed_         { true };
   bool              drawLine_          { true };
   bool              drawLine1_         { true };
+  CRGBA             lineColor_;
+  double            lineWidth_         { 0 };
+  CLineDash         lineDash_;
   bool              drawTickMark_      { true };
   bool              drawTickMark1_     { true };
   bool              drawMinorTickMark_ { true };
@@ -276,7 +311,6 @@ class CGnuPlotAxis {
   DrawLayer         gridLayer_         { DrawLayer::BACK };
   bool              enhanced_          { true };
   mutable CBBox2D   bbox_              { 0, 0, 1, 1 };
-  mutable CLineDash lineDash_;
 };
 
 #endif

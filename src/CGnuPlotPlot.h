@@ -258,7 +258,7 @@ class CGnuPlotPlot {
   const CGnuPlotLineStyle &lineStyle() const { return lineStyle_; }
   void setLineStyle(const CGnuPlotLineStyle &ls) { lineStyle_ = ls; }
 
-  int lineStyleId() const { return lineStyle().ind(); }
+  const COptInt &lineStyleId() const { return lineStyle().ind(); }
   void setLineStyleId(int ind);
 
   CRGBA lineColor(const CRGBA &c) const { return lineStyle().calcColor(this->group(), c); }

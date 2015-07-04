@@ -203,6 +203,14 @@ drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c)
       r.setBrush(brush); r.drawSymbol(CSYMBOL_DIAMOND);
       break;
     }
+    case SymbolType::PENTAGON: { // pentagon
+      r.setPen(pen); r.drawSymbol(CSYMBOL_PENTAGON);
+      break;
+    }
+    case SymbolType::FILLED_PENTAGON: { // filled pentagon
+      r.setBrush(brush); r.drawSymbol(CSYMBOL_PENTAGON);
+      break;
+    }
     default:
       break;
   }

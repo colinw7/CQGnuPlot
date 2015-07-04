@@ -98,7 +98,13 @@ CSymbol2DList symbols({
   { CSYMBOL_STAR1    , {{-1.0,  0.0,  1.0,  0.0, CSymbol2D::STROKE},
                         { 0.0, -1.0,  0.0,  1.0, CSymbol2D::STROKE},
                         {-1.0, -1.0,  1.0,  1.0, CSymbol2D::STROKE},
-                        {-1.0,  1.0,  1.0, -1.0, CSymbol2D::STROKE}} }
+                        {-1.0,  1.0,  1.0, -1.0, CSymbol2D::STROKE}} },
+  { CSYMBOL_PENTAGON , {{  0.000000, -1.000000,  0.951057, -0.309017, CSymbol2D::LINE},
+                        {  0.951057, -0.309017,  0.587785,  0.809017, CSymbol2D::LINE},
+                        {  0.587785,  0.809017, -0.587785,  0.809017, CSymbol2D::LINE},
+                        { -0.587785,  0.809017, -0.951057, -0.309017, CSymbol2D::LINE},
+                        { -0.951057, -0.309017,  0.000000, -1.000000, CSymbol2D::CLOSE},
+                        {  0.000000, -1.000000,  0.000000,  0.000000, CSymbol2D::STROKE}} }
 });
 
 bool

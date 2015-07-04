@@ -294,11 +294,22 @@ getFieldValue(const Values &fieldValues, int icol, int &ns) const
   return value;
 }
 
+std::string
+CGnuPlotUsingCols::
+toString() const
+{
+  std::ostringstream ostr;
+
+  print(ostr);
+
+  return ostr.str();
+}
+
 void
 CGnuPlotUsingCols::
 print(std::ostream &os) const
 {
-  std::cerr << "using ";
+  os << "using ";
 
   int i = 0;
 

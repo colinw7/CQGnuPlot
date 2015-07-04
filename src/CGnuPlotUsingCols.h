@@ -54,6 +54,8 @@ class CGnuPlotUsingCols {
 
   CExprValueP getFieldValue(const Values &fieldValues, int ival, int &ns) const;
 
+  std::string toString() const;
+
   void print(std::ostream &os) const;
 
  private:

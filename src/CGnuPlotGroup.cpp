@@ -1220,6 +1220,9 @@ void
 CGnuPlotGroup::
 drawAxes(CGnuPlotRenderer *renderer)
 {
+  if (hasPlotStyle(PlotStyle::TEST_TERMINAL))
+    return;
+
   if (is3D()) {
     drawBorder(renderer);
 
@@ -1277,6 +1280,9 @@ void
 CGnuPlotGroup::
 drawBorder(CGnuPlotRenderer *renderer)
 {
+  if (hasPlotStyle(PlotStyle::TEST_TERMINAL))
+    return;
+
   if (! axesData().border.sides)
     return;
 
@@ -1404,29 +1410,38 @@ drawXAxis(CGnuPlotRenderer *renderer, int xind, bool drawOther)
     else
       plotXAxis->setLogarithmic(false);
 
-    plotXAxis->setDrawLine(false);
-    plotXAxis->setDrawLine1(false);
-    plotXAxis->setDrawTickMark(xaxis.showTics());
-
-    plotXAxis->setTickInside(xaxis.isOutside() ? xind == 1 : xind == 2);
-    plotXAxis->setDrawTickLabel(xaxis.showTics());
-    plotXAxis->setLabelInside(xind == 2);
-    plotXAxis->setDrawLabel(true);
+    plotXAxis->setEnhanced(xaxis.isEnhanced());
 
     if (xaxis.isTime())
       plotXAxis->setTimeFormat(xaxis.format());
 
-    //---
-
-    plotXAxis->setEnhanced(xaxis.isEnhanced());
-    plotXAxis->setTickInside1(false);
-    plotXAxis->setDrawTickLabel1(false);
-    plotXAxis->setLabelInside1(false);
-    plotXAxis->setDrawLabel1(false);
+    plotXAxis->setDrawTickMark (xaxis.showTics());
     plotXAxis->setDrawTickMark1(xaxis.showTics() && xaxis.isMirror());
 
+    if (xaxis.isBorderTics()) {
+      plotXAxis->setTickInside (xaxis.isOutside() ? xind == 1 : xind == 2);
+      plotXAxis->setTickOutside(false);
+    }
+    else {
+      plotXAxis->setTickInside (true);
+      plotXAxis->setTickOutside(true);
+    }
+
+    plotXAxis->setTickInside1 (false);
+    plotXAxis->setTickOutside1(false);
+
+    plotXAxis->setDrawTickLabel (xaxis.showTics());
+    plotXAxis->setDrawTickLabel1(false);
+
+    plotXAxis->setLabelInside (xind == 2);
+    plotXAxis->setLabelInside1(false);
+
+    plotXAxis->setDrawLabel (true);
+    plotXAxis->setDrawLabel1(false);
+
     //---
 
+    // set grid
     plotXAxis->setGrid(xaxis.hasGrid());
     plotXAxis->setGridMajor(xaxis.hasGridTics());
     plotXAxis->setGridMinor(xaxis.hasGridMinorTics());
@@ -1437,6 +1452,7 @@ drawXAxis(CGnuPlotRenderer *renderer, int xind, bool drawOther)
     // style customization
     if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
       plotXAxis->setMajorIncrement(1);
+
       plotXAxis->setDrawMinorTickMark(false);
     }
     else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
@@ -1444,22 +1460,34 @@ drawXAxis(CGnuPlotRenderer *renderer, int xind, bool drawOther)
     }
     else if (hasPlotStyle(PlotStyle::BOXPLOT)) {
       plotXAxis->setMajorIncrement(1);
-      plotXAxis->setDrawTickMark(false);
-      plotXAxis->setDrawTickLabel(false);
+
+      plotXAxis->setDrawTickMark     (false);
+      plotXAxis->setDrawTickLabel    (false);
       plotXAxis->setDrawMinorTickMark(false);
     }
 
     //---
 
-    if (xaxis.isZeroAxisDisplayed()) {
-      plotXAxis->setPosition(CPoint3D(0, 0, zmin1));
-      plotXAxis->setDrawLine(true);
+    // draw axis (zero) line
+    plotXAxis->setLinePosition(CPoint3D(0, 0, zmin1));
+    plotXAxis->setDrawLine    (xaxis.isZeroAxisDisplayed());
+    plotXAxis->setDrawLine1   (false);
+    plotXAxis->setLineColor   (xaxis.getZeroAxisColor(this));
+    plotXAxis->setLineWidth   (xaxis.getZeroAxisWidth());
+    plotXAxis->setLineDash    (xaxis.getZeroAxisDash());
+
+    if (xaxis.isBorderTics()) {
+      plotXAxis->setPosition (CPoint3D(0, xind == 2 ? ymax1 : ymin1, zmin1));
+      plotXAxis->setPosition1(CPoint3D(0,                     ymax1, zmin1));
+
+      plotXAxis->setDrawTickMark1(true);
+    }
+    else {
+      plotXAxis->setPosition (CPoint3D(0, 0, zmin1));
+      plotXAxis->setPosition1(CPoint3D(0, 0, zmin1));
+
       plotXAxis->setDrawTickMark1(false);
     }
-    else
-      plotXAxis->setPosition(CPoint3D(0, xind == 2 ? ymax1 : ymin1, zmin1));
-
-    plotXAxis->setPosition1(CPoint3D(0, ymax1, zmin1));
 
     //---
 
@@ -1508,12 +1536,7 @@ drawYAxis(CGnuPlotRenderer *renderer, int yind, bool drawOther)
   //---
 
   if (! plotYAxis->isInitialized()) {
-    if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
-      plotYAxis->setDrawMinorTickMark(false);
-    }
-
-    //---
-
+    // defaults
     plotYAxis->setLabel(yaxis.text());
 
     if (yaxis.logScale().isValid()) {
@@ -1523,29 +1546,34 @@ drawYAxis(CGnuPlotRenderer *renderer, int yind, bool drawOther)
     else
       plotYAxis->setLogarithmic(false);
 
-    plotYAxis->setDrawLine(false);
-    plotYAxis->setDrawLine1(false);
-    plotYAxis->setDrawTickMark(yaxis.showTics());
-
-    plotYAxis->setTickInside(yaxis.isOutside() ? yind == 1 : yind == 2);
-    plotYAxis->setDrawTickLabel(yaxis.showTics());
-    plotYAxis->setLabelInside(yind == 2);
-    plotYAxis->setDrawLabel(true);
+    plotYAxis->setEnhanced(yaxis.isEnhanced());
 
     if (yaxis.isTime())
       plotYAxis->setTimeFormat(yaxis.format());
 
-    //---
-
-    plotYAxis->setEnhanced(yaxis.isEnhanced());
-    plotYAxis->setTickInside1(false);
-    plotYAxis->setDrawTickLabel1(false);
-    plotYAxis->setLabelInside1(false);
-    plotYAxis->setDrawLabel1(false);
+    plotYAxis->setDrawTickMark (yaxis.showTics());
     plotYAxis->setDrawTickMark1(yaxis.showTics() && yaxis.isMirror());
 
+    plotYAxis->setTickInside  (yaxis.isOutside() ? yind == 1 : yind == 2);
+    plotYAxis->setTickOutside (false);
+    plotYAxis->setTickInside1 (false);
+    plotYAxis->setTickOutside1(false);
+
+    plotYAxis->setDrawTickLabel (yaxis.showTics());
+    plotYAxis->setDrawTickLabel1(false);
+
+    plotYAxis->setLabelInside (yind == 2);
+    plotYAxis->setLabelInside1(false);
+
+    plotYAxis->setDrawLabel (true);
+    plotYAxis->setDrawLabel1(false);
+
+    plotYAxis->setDrawLine (false);
+    plotYAxis->setDrawLine1(false);
+
     //---
 
+    // set grid
     plotYAxis->setGrid(yaxis.hasGrid());
     plotYAxis->setGridMajor(yaxis.hasGridTics());
     plotYAxis->setGridMinor(yaxis.hasGridMinorTics());
@@ -1553,15 +1581,33 @@ drawYAxis(CGnuPlotRenderer *renderer, int yind, bool drawOther)
 
     //---
 
-    if (yaxis.isZeroAxisDisplayed()) {
-      plotYAxis->setPosition(CPoint3D(0, 0, zmin1));
-      plotYAxis->setDrawLine(true);
+    // style customization
+    if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
+      plotYAxis->setDrawMinorTickMark(false);
+    }
+
+    //---
+
+    // draw axis (zero) line
+    plotYAxis->setLinePosition(CPoint3D(0, 0, zmin1));
+    plotYAxis->setDrawLine    (yaxis.isZeroAxisDisplayed());
+    plotYAxis->setDrawLine1   (false);
+    plotYAxis->setLineColor   (yaxis.getZeroAxisColor(this));
+    plotYAxis->setLineWidth   (yaxis.getZeroAxisWidth());
+    plotYAxis->setLineDash    (yaxis.getZeroAxisDash());
+
+    if (yaxis.isBorderTics()) {
+      plotYAxis->setPosition (CPoint3D(yind == 2 ? xmax1 : xmin1, 0, zmin1));
+      plotYAxis->setPosition1(CPoint3D(xmax1, 0, zmin1));
+
       plotYAxis->setDrawTickMark1(false);
     }
-    else
-      plotYAxis->setPosition(CPoint3D(yind == 2 ? xmax1 : xmin1, 0, zmin1));
+    else {
+      plotYAxis->setPosition (CPoint3D(0, 0, zmin1));
+      plotYAxis->setPosition1(CPoint3D(0, 0, zmin1));
 
-    plotYAxis->setPosition1(CPoint3D(xmax1, 0, zmin1));
+      plotYAxis->setDrawTickMark1(false);
+    }
 
     //---
 
@@ -1620,7 +1666,11 @@ drawZAxis(CGnuPlotRenderer *renderer, int zind, bool drawOther)
     plotZAxis->setDrawLine1(false);
     plotZAxis->setDrawTickMark(zaxis.showTics());
 
-    plotZAxis->setTickInside(zaxis.isOutside() ? zind == 1 : zind == 2);
+    plotZAxis->setTickInside  (zaxis.isOutside() ? zind == 1 : zind == 2);
+    plotZAxis->setTickOutside (false);
+    plotZAxis->setTickInside1 (false);
+    plotZAxis->setTickOutside1(false);
+
     plotZAxis->setDrawTickLabel(zaxis.showTics());
     plotZAxis->setLabelInside(zind == 2);
     plotZAxis->setDrawLabel(true);
@@ -1631,7 +1681,6 @@ drawZAxis(CGnuPlotRenderer *renderer, int zind, bool drawOther)
     //---
 
     plotZAxis->setEnhanced(zaxis.isEnhanced());
-    plotZAxis->setTickInside1(false);
     plotZAxis->setDrawTickLabel1(false);
     plotZAxis->setLabelInside1(false);
     plotZAxis->setDrawLabel1(false);
@@ -1650,6 +1699,9 @@ drawZAxis(CGnuPlotRenderer *renderer, int zind, bool drawOther)
       plotZAxis->setPosition(CPoint3D(xmin1, ymin1, 0));
       plotZAxis->setDrawLine(true);
       plotZAxis->setDrawTickMark1(false);
+      plotZAxis->setLineColor(zaxis.getZeroAxisColor(this));
+      plotZAxis->setLineWidth(zaxis.getZeroAxisWidth());
+      plotZAxis->setLineDash (zaxis.getZeroAxisDash());
     }
     else
       plotZAxis->setPosition(CPoint3D(xmin1, ymin1, 0));
@@ -1760,6 +1812,9 @@ void
 CGnuPlotGroup::
 drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
 {
+  if (hasPlotStyle(PlotStyle::TEST_TERMINAL))
+    return;
+
   bool isBack = (layer == CGnuPlotTypes::DrawLayer::BACK);
 
   if (! is3D()) {
@@ -1828,6 +1883,9 @@ void
 CGnuPlotGroup::
 drawKey()
 {
+  if (hasPlotStyle(PlotStyle::TEST_TERMINAL))
+    return;
+
   CGnuPlotRenderer *renderer = app()->renderer();
 
   CGnuPlotPlot *singlePlot = getSingleStylePlot();
@@ -1873,6 +1931,9 @@ void
 CGnuPlotGroup::
 drawColorBox(CGnuPlotRenderer *renderer)
 {
+  if (hasPlotStyle(PlotStyle::TEST_TERMINAL))
+    return;
+
   colorBox_->draw(renderer);
 }
 
@@ -1880,6 +1941,9 @@ void
 CGnuPlotGroup::
 drawAnnotations(DrawLayer layer)
 {
+  if (hasPlotStyle(PlotStyle::TEST_TERMINAL))
+    return;
+
   // draw labels last
   CGnuPlotRenderer *renderer = app()->renderer();
 
@@ -1928,24 +1992,24 @@ getAxisDataFromId(const std::string &id) const
 
 bool
 CGnuPlotGroup::
-hasTicLabels(const std::string &id) const
+hasTicLabels(const std::string &id, int level) const
 {
   const CGnuPlotAxisData *axis = getAxisDataFromId(id);
   if (! axis) return false;
 
-  return axis->hasTicLabels();
+  return axis->hasRTicLabels(level);
 }
 
-const CGnuPlotAxisData::RTicLabels &
+CGnuPlotAxisData::RTicLabels
 CGnuPlotGroup::
-ticLabels(const std::string &id) const
+ticLabels(const std::string &id, int level) const
 {
   static CGnuPlotAxisData::RTicLabels noLabels;
 
   const CGnuPlotAxisData *axis = getAxisDataFromId(id);
   if (! axis) return noLabels;
 
-  return axis->rticLabels();
+  return axis->rticLabels(level);
 }
 
 std::string
@@ -1962,7 +2026,7 @@ std::string
 CGnuPlotGroup::
 getAxisValueStr(const CGnuPlotAxisData &axis, int i, double r) const
 {
-  if (axis.hasTicLabels()) {
+  if (axis.hasITicLabels()) {
     if (axis.hasITicLabel(i))
       return axis.iticLabel(i);
     else
@@ -1991,6 +2055,26 @@ formatAxisValue(const CGnuPlotAxisData &axis, double r) const
     return CStrUtil::strprintf(axis.format().c_str(), r);
   else
     return "";
+}
+
+double
+CGnuPlotGroup::
+getMajorTicSize(const std::string &id) const
+{
+  const CGnuPlotAxisData *axis = getAxisDataFromId(id);
+  if (! axis) return false;
+
+  return axis->getTicMajorScale();
+}
+
+double
+CGnuPlotGroup::
+getMinorTicSize(const std::string &id) const
+{
+  const CGnuPlotAxisData *axis = getAxisDataFromId(id);
+  if (! axis) return false;
+
+  return axis->getTicMinorScale();
 }
 
 void

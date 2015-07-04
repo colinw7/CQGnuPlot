@@ -25,8 +25,13 @@ class CGnuPlotLineStyle {
 
   virtual ~CGnuPlotLineStyle() { }
 
-  int ind() const { return ind_; }
+  CGnuPlotLineStyle *dup() const {
+    return new CGnuPlotLineStyle(*this);
+  }
+
+  const COptInt &ind() const { return ind_; }
   void setInd(int i) { ind_ = i; }
+  void resetInd() { ind_.setInvalid(); }
 
   const COptInt &lineType() const { return lineType_; }
   void setLineType(int type);
@@ -92,7 +97,7 @@ class CGnuPlotLineStyle {
 
  protected:
   CGnuPlot*    plot_ { 0 };
-  int          ind_  { -1 };
+  COptInt      ind_;
   COptInt      lineType_;
   COptReal     lineWidth_;
   CGnuPlotDash lineDash_;

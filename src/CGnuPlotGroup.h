@@ -336,14 +336,16 @@ class CGnuPlotGroup {
   const CGnuPlotAxisData *getAxisDataFromId(const std::string &id) const;
   CGnuPlotAxisData       *getAxisDataFromId(const std::string &id);
 
-  bool hasTicLabels(const std::string &id) const;
+  bool hasTicLabels(const std::string &id, int level) const;
 
-  const CGnuPlotAxisData::RTicLabels &ticLabels(const std::string &id) const;
+  CGnuPlotAxisData::RTicLabels ticLabels(const std::string &id, int level) const;
 
   std::string getAxisValueStr(const std::string &id, int i, double r) const;
   std::string getAxisValueStr(const CGnuPlotAxisData &axis, int i, double r) const;
   std::string formatAxisValue(const CGnuPlotAxisData &axis, double r) const;
 
+  double getMajorTicSize(const std::string &id) const;
+  double getMinorTicSize(const std::string &id) const;
 
   //-----
 

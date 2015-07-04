@@ -1,10 +1,53 @@
 #include <CGnuPlotLineType.h>
+#include <CGnuPlotGroup.h>
 
-const CRGBA &
 CGnuPlotLineType::
-calcColor(const CRGBA &c) const
+CGnuPlotLineType()
 {
-  if (lineColor_.isValid()) {
+}
+
+const CGnuPlotDash &
+CGnuPlotLineType::
+lineDash() const
+{
+  if (ind_ <= 0 && ! lineDash_.isValid()) {
+    CGnuPlotLineType *th = const_cast<CGnuPlotLineType *>(this);
+
+    th->lineDash_.setDash(CGnuPlotStyleInst->indexDash(ind_));
+  }
+
+  return lineDash_;
+}
+
+const CGnuPlotColorSpec &
+CGnuPlotLineType::
+lineColor() const
+{
+  if (ind_ <= 0 && ! lineColor_.isValid()) {
+    CGnuPlotLineType *th = const_cast<CGnuPlotLineType *>(this);
+
+    th->lineColor_.setRGB(CGnuPlotStyleInst->indexColor(ind_));
+  }
+
+  return lineColor_;
+}
+
+CRGBA
+CGnuPlotLineType::
+calcColor(const CGnuPlotGroup *group, const CRGBA &c) const
+{
+  if      (ind_ < 0) {
+    CGnuPlotColorSpec c = lineColor();
+
+    return c.color();
+  }
+  else if (ind_ == -3) {
+    if (group)
+      return group->backgroundColor();
+    else
+      return CRGBA(1,1,1);
+  }
+  else if (lineColor_.isValid()) {
     if      (lineColor_.type() == CGnuPlotColorSpec::Type::RGB ||
              lineColor_.type() == CGnuPlotColorSpec::Type::INDEX)
       return lineColor_.color();
@@ -21,7 +64,7 @@ CLineDash
 CGnuPlotLineType::
 calcDash(CGnuPlot *plot, const CLineDash &d) const
 {
-  return lineDash_.calcDash(plot, d);
+  return lineDash().calcDash(plot, d);
 }
 
 void
@@ -61,7 +104,7 @@ CGnuPlotLineType::
 show(std::ostream &os) const
 {
   if (lineColor_.isValid())
-    os << "linecolor " << lineColor();
+    os << "linecolor " << calcColor();
   else {
     CRGBA c = CGnuPlotStyleInst->indexColor(ind_);
 

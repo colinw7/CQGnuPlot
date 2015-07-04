@@ -51,6 +51,7 @@ CGnuPlot.cpp \
 CGnuPlotArrow.cpp \
 CGnuPlotArrowStyle.cpp \
 CGnuPlotAxis.cpp \
+CGnuPlotAxisData.cpp \
 CGnuPlotBBoxRenderer.cpp \
 CGnuPlotBarObject.cpp \
 CGnuPlotBubbleObject.cpp \
@@ -83,6 +84,7 @@ CGnuPlotPrintFile.cpp \
 CGnuPlotRectangle.cpp \
 CGnuPlotRectObject.cpp \
 CGnuPlotRenderer.cpp \
+CGnuPlotStyle.cpp \
 CGnuPlotUsingCols.cpp \
 \
 CGnuPlotStyleAdjacency.cpp \

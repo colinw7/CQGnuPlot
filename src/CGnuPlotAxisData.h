@@ -8,15 +8,10 @@ class CGnuPlotAxisData {
  public:
   typedef std::map<int,std::string>    ITicLabels;
   typedef std::map<double,std::string> RTicLabels;
+  typedef std::map<int,RTicLabels>     LevelRTicLabels;
 
  public:
-  CGnuPlotAxisData(int ind=1) :
-   ind_(ind) {
-    displayed_ = (ind_ == 1);
-    gridTics_  = (ind_ == 1);
-    minorTics_ = (ind_ == 1);
-    showTics_  = (ind_ == 1);
-  }
+  CGnuPlotAxisData(int ind=1);
 
   int ind() const { return ind_; }
 
@@ -60,17 +55,37 @@ class CGnuPlotAxisData {
 
   //---
 
+  void resetZeroAxis() {
+    setZeroAxisDisplayed(false);
+
+    resetZeroAxisLineStyle();
+    resetZeroAxisLineType();
+    resetZeroAxisLineWidth();
+    resetZeroAxisLineDash();
+  }
+
   bool isZeroAxisDisplayed() const { return zeroAxis_.displayed; }
   void setZeroAxisDisplayed(bool b) { zeroAxis_.displayed = b; }
 
-  int  zeroAxisLineStyle() const { return zeroAxis_.lineStyle; }
+  const COptInt &zeroAxisLineStyle() const { return zeroAxis_.lineStyle; }
   void setZeroAxisLineStyle(int lt) { zeroAxis_.lineStyle = lt; }
+  void resetZeroAxisLineStyle() { zeroAxis_.lineStyle.setInvalid(); }
 
-  int  zeroAxisLineType() const { return zeroAxis_.lineType; }
+  const COptInt &zeroAxisLineType() const { return zeroAxis_.lineType; }
   void setZeroAxisLineType(int lt) { zeroAxis_.lineType = lt; }
+  void resetZeroAxisLineType() { zeroAxis_.lineType.setInvalid(); }
 
-  double zeroAxisLineWidth() const { return zeroAxis_.lineWidth; }
+  const COptReal &zeroAxisLineWidth() const { return zeroAxis_.lineWidth; }
   void setZeroAxisLineWidth(double lw) { zeroAxis_.lineWidth = lw; }
+  void resetZeroAxisLineWidth() { zeroAxis_.lineWidth.setInvalid(); }
+
+  const COptLineDash &zeroAxisLineDash() const { return zeroAxis_.lineDash; }
+  void setZeroAxisLineDash(const CLineDash &dash) { zeroAxis_.lineDash = dash; }
+  void resetZeroAxisLineDash() { zeroAxis_.lineDash.setInvalid(); }
+
+  CRGBA     getZeroAxisColor(CGnuPlotGroup *group) const;
+  double    getZeroAxisWidth() const;
+  CLineDash getZeroAxisDash() const;
 
   //---
 
@@ -100,6 +115,9 @@ class CGnuPlotAxisData {
   void updateMax(double r) { max_.updateMax(r); }
   void resetMax() { max_.setInvalid(); }
 
+  bool isBorderTics() const { return borderTics_; }
+  void setBorderTics(bool b) { borderTics_ = b; }
+
   bool isMinorTicsDisplayed() const { return minorTics_; }
   void setMinorTicsDisplayed(bool b) { minorTics_ = b; }
 
@@ -109,10 +127,7 @@ class CGnuPlotAxisData {
 
   //------
 
-  void setTicScale(double majorScale, double minorScale) {
-    majorScale_ = majorScale;
-    minorScale_ = minorScale;
-  }
+  void setTicScale(double majorScale, double minorScale);
 
   double getTicMajorScale() const { return majorScale_; }
   double getTicMinorScale() const { return minorScale_; }
@@ -129,12 +144,10 @@ class CGnuPlotAxisData {
 
   //------
 
-  void setTicLabel(double r, const std::string &s) {
-    setITicLabel(int(r + 0.5), s);
-    setRTicLabel(r, s);
-  }
+  void setTicLabel(double r, const std::string &s, int level);
 
-  bool hasTicLabels() const { return hasITicLabels(); }
+  bool hasITicLabels() const { return ! iticLabels_.empty(); }
+  bool hasRTicLabels(int level) const;
 
   void clearTicLabels() { clearITicLabels(); clearRTicLabels(); }
 
@@ -142,15 +155,11 @@ class CGnuPlotAxisData {
 
   bool hasITicLabel(int i) const { return (iticLabels_.find(i) != iticLabels_.end()); }
 
-  const std::string &iticLabel(int i) const {
-    auto p = iticLabels_.find(i);
-
-    return (*p).second;
-  }
+  const std::string &iticLabel(int i) const;
 
   //------
 
-  const RTicLabels &rticLabels() const { return rticLabels_; }
+  RTicLabels rticLabels(int level) const;
 
   //------
 
@@ -158,11 +167,8 @@ class CGnuPlotAxisData {
   void setDummyVar(const std::string &name) { dummyVar_ = name; }
 
  private:
-  bool hasITicLabels() const { return ! iticLabels_.empty(); }
-  bool hasRTicLabels() const { return ! rticLabels_.empty(); }
-
   void setITicLabel(int    i, const std::string &s) { iticLabels_[i] = s; }
-  void setRTicLabel(double r, const std::string &s) { rticLabels_[r] = s; }
+  void setRTicLabel(double r, const std::string &s, int level) { rticLabels_[level][r] = s; }
 
   void clearITicLabels() { iticLabels_.clear(); }
   void clearRTicLabels() { rticLabels_.clear(); }
@@ -201,127 +207,29 @@ class CGnuPlotAxisData {
   void setLogScale(int s) { logScale_ = s; }
   void resetLogScale() { logScale_ = COptInt(); }
 
-  void unset() {
-    displayed_ = false;
+  void unset();
+  void unsetRange();
+  void unsetZeroAxis();
 
-    unsetRange();
+  void reset();
 
-    text_ = "";
+  void show(std::ostream &os, const std::string &prefix, int n) const;
 
-    offset_ = CPoint2D(0,0);
-  }
+  void showRange    (std::ostream &os, const std::string &prefix) const;
+  void showTics     (std::ostream &os, const std::string &prefix) const;
+  void showFormat   (std::ostream &os, const std::string &prefix) const;
+  void showMinorTics(std::ostream &os, const std::string &str, const std::string &str1) const;
+  void showZeroAxis (std::ostream &os, const std::string &str);
 
-  void unsetRange() {
-    min_ = COptReal();
-    max_ = COptReal();
-
-    reverse_   = false;
-    writeback_ = false;
-  }
-
-  void unsetZeroAxis() {
-    zeroAxis_.displayed = false;
-    zeroAxis_.lineStyle = -1;
-    zeroAxis_.lineType  = -1;
-    zeroAxis_.lineWidth = 0;
-  }
-
-  void reset() {
-    unsetRange();
-
-    text_ = "";
-
-    dummyVar_ = "";
-  }
-
-  void show(std::ostream &os, const std::string &prefix, int n) const {
-    os << "set " << prefix << "axis " << n;
-    os << " range [" << min_.getValue(0) << " : " << max_.getValue(10) << " ] ";
-    os << " " << (reverse_   ? "reverse"   : "noreverse" );
-    os << " " << (writeback_ ? "writeback" : "nowriteback");
-
-    // paxis 1 -axis tics are IN, major ticscale is 1 and minor ticscale is 0.5
-    // paxis 1 -axis tics: on axis tics are limited to data range
-
-    os << " ";
-    printLabel(os, prefix);
-
-    // intervals computed automatically
-  }
-
-  void showRange(std::ostream &os, const std::string &prefix) const {
-    os << "set " << prefix;
-    os << " [ "; min_.print(os, "*"); os << " : "; max_.print(os, "*"); os << " ]";
-
-    os << " " << (reverse_   ? "reverse"   : "noreverse" );
-    os << " " << (writeback_ ? "writeback" : "nowriteback");
-
-    if (! min_.isValid() || ! max_.isValid()) {
-      os << " # (currently [";
-      if (! min_.isValid()) os << min_.getValue(-10);
-      os << ":";
-      if (! max_.isValid()) os << max_.getValue( 10);
-      os << "] )";
-    }
-
-    os << std::endl;
-  }
-
-  void showTics(std::ostream &os, const std::string &prefix) const {
-    os << prefix << " tics are IN, major ticscale is 1 and minor ticscale is 0.5" << std::endl;
-
-    if (showTics_) {
-      os << prefix << " tics: on axis" << std::endl;
-      os << "  labels are justified automatically, format \"" <<
-            format_ << "\" and are not rotated," << std::endl;
-      os << "  offset (character " << offset_.x << ", " << offset_.y << ", 0)" << std::endl;
-      os << "  intervals computed automatically" << std::endl;
-    }
-    else
-      os << prefix << " tics: OFF" << std::endl;
-  }
-
-  void showFormat(std::ostream &os, const std::string &prefix) const {
-    os << "set format " << prefix << " \"" << format_ << "\"" << std::endl;
-  }
-
-  void showMinorTics(std::ostream &os, const std::string &str, const std::string &str1) const {
-    if (isMinorTicsDisplayed()) {
-      if (getMinorTicsFreq().isValid())
-        os << "minor " << str << " are drawn with " << getMinorTicsFreq().getValue() <<
-              " subintervals between major " << str1 << " marks" << std::endl;
-      else
-        os << "minor " << str << " are computed automatically" << std::endl;
-    }
-    else
-      os << "minor " << str << " are off" << std::endl;
-  }
-
-  void showZeroAxis(std::ostream &os, const std::string &str) {
-    os << str << "zeroaxis is ";
-
-    if (zeroAxis_.displayed) {
-      os << "drawn with";
-      os << " lt " << zeroAxis_.lineType;
-      os << " linewidth " << zeroAxis_.lineWidth;
-    }
-    else
-      os << "OFF";
-
-    os << std::endl;
-  }
-
-  void printLabel(std::ostream &os, const std::string &prefix) const {
-    os << prefix << "label is \"" << text_ << "\", " <<
-          "offset at ((character units) " << offset_.x << ", " << offset_.y << ", 0)" << std::endl;
-  }
+  void printLabel(std::ostream &os, const std::string &prefix) const;
 
  private:
   struct ZeroAxis {
-    bool   displayed { false };
-    int    lineStyle { -1 };
-    int    lineType  { -1 };
-    double lineWidth { 0 };
+    bool         displayed { false };
+    COptInt      lineStyle;
+    COptInt      lineType;
+    COptReal     lineWidth;
+    COptLineDash lineDash;
   };
 
   int               ind_;
@@ -343,6 +251,7 @@ class CGnuPlotAxisData {
   bool              autoScaleFixMax_ { false };
   COptReal          min_;
   COptReal          max_;
+  bool              borderTics_      { true };
   bool              minorTics_       { true };
   COptReal          minorTicsFreq_;
   double            majorScale_      { 1.0 };
@@ -350,7 +259,7 @@ class CGnuPlotAxisData {
   double            textRotate_      { 0.0 };
   std::string       text_;
   ITicLabels        iticLabels_;
-  RTicLabels        rticLabels_;
+  LevelRTicLabels   rticLabels_;
   CPoint2D          offset_          { 0, 0 };
   double            rotate_          { 0 };
   std::string       format_          { "%g" };

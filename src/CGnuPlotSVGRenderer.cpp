@@ -239,6 +239,14 @@ drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c)
       r.setFillColor(c); r.drawSymbol(CSYMBOL_DIAMOND);
       break;
     }
+    case SymbolType::PENTAGON: { // pentagon
+      r.setLineColor(c); r.drawSymbol(CSYMBOL_PENTAGON);
+      break;
+    }
+    case SymbolType::FILLED_PENTAGON: { // filled pentagon
+      r.setFillColor(c); r.drawSymbol(CSYMBOL_PENTAGON);
+      break;
+    }
     default:
       break;
   }
