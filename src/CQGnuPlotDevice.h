@@ -36,7 +36,7 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
   CGnuPlotRectangle *createRectangle(CGnuPlotGroup *group) override;
 
   CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
-                           CGnuPlotAxis::Direction dir) override;
+                           CGnuPlotTypes::AxisDirection dir) override;
 
   CGnuPlotKey  *createKey(CGnuPlotGroup *group) override;
 

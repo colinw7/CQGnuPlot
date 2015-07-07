@@ -13,11 +13,11 @@ void
 CGnuPlotStyleLines::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
-
-  CGnuPlotGroup *group = plot->group();
+  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
 
   //------
 
@@ -30,6 +30,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   typedef std::vector<CPoint2D> Points;
 
   while (i < np) {
+    // get first point
     for ( ; i < np; ++i) {
       const CGnuPlotPoint &point1 = plot->getPoint2D(i);
 
@@ -41,10 +42,17 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     Points points;
 
+    if (plot->isPolar()) {
+      bool inside;
+
+      p1 = group->convertPolarAxisPoint(p1, inside);
+    }
+
     group->mapLogPoint(p1);
 
     points.push_back(p1);
 
+    // add points until discontinuity
     for ( ; i < np; ++i) {
       CPoint2D p2;
 
@@ -52,6 +60,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       if (! point2.getPoint(p2) || point2.isDiscontinuity())
         break;
+
+      if (plot->isPolar()) {
+        bool inside;
+
+        p2 = group->convertPolarAxisPoint(p2, inside);
+      }
 
       group->mapLogPoint(p2);
 

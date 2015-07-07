@@ -31,13 +31,29 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 
       double real = realPower(real_, rrhs, &error_code);
 
-      if (error_code != 0) {
 #ifdef GNUPLOT_EXPR
+      if      (error_code == CEXPR_ERROR_NON_INTEGER_POWER_OF_NEGATIVE) {
+        std::complex<double> c(real_, 0);
+
+        errno = 0;
+
+        std::complex<double> c1 = std::pow(c, rrhs);
+
+        if (errno != 0) {
+          real = CMathGen::getNaN();
+          return CExprValuePtr();
+        }
+
+        return CExprInst->createComplexValue(c1);
+      }
+      else if (error_code != 0) {
         real = CMathGen::getNaN();
+        return CExprValuePtr();
+      }
 #else
+      if (error_code != 0)
         return CExprValuePtr();
 #endif
-      }
 
       return CExprInst->createRealValue(real);
     }

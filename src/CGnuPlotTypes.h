@@ -119,6 +119,10 @@ namespace CGnuPlotTypes {
     MY2TICS,
     MYTICS,
     MZTICS,
+    NOX2TICS,
+    NOXTICS,
+    NOY2TICS,
+    NOYTICS,
     OBJECT,
     OFFSETS,
     ORIGIN,
@@ -454,6 +458,12 @@ namespace CGnuPlotTypes {
     CARTESIAN_MAPPING,
     CYLINDRICAL_MAPPING,
     SPHERICAL_MAPPING
+  };
+
+  enum class AxisDirection {
+    X,
+    Y,
+    Z
   };
 }
 

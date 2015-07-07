@@ -172,7 +172,7 @@ createRectangle(CGnuPlotGroup *group)
 
 CGnuPlotAxis *
 CQGnuPlotDevice::
-createAxis(CGnuPlotGroup *group, const std::string &id, CGnuPlotAxis::Direction dir)
+createAxis(CGnuPlotGroup *group, const std::string &id, CGnuPlotTypes::AxisDirection dir)
 {
   CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 

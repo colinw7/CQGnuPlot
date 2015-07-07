@@ -20,17 +20,12 @@ class CGnuPlotRenderer;
 
 class CGnuPlotAxis {
  public:
-  enum class Direction {
-    X,
-    Y,
-    Z
-  };
-
-  typedef CGnuPlotTypes::DrawLayer DrawLayer;
+  typedef CGnuPlotTypes::DrawLayer     DrawLayer;
+  typedef CGnuPlotTypes::AxisDirection AxisDirection;
 
  public:
   CGnuPlotAxis(CGnuPlotGroup *group=0, const std::string &id="",
-               Direction dir=Direction::X, double start=0.0, double end=1.0);
+               AxisDirection dir=AxisDirection::X, double start=0.0, double end=1.0);
 
   virtual ~CGnuPlotAxis();
 
@@ -149,8 +144,13 @@ class CGnuPlotAxis {
   bool hasGridMinor() const { return gridMinor_; }
   void setGridMinor(bool b) { gridMinor_ = b; }
 
-  bool isGridBackLayer() const {
-    return (gridLayer_ == DrawLayer::BACK || gridLayer_ == DrawLayer::DEFAULT);
+  bool isGridBackLayer(bool defBack) const {
+    if      (gridLayer_ == DrawLayer::BACK)
+      return true;
+    else if (gridLayer_ == DrawLayer::DEFAULT)
+      return defBack;
+    else
+      return false;
   }
 
   DrawLayer getGridLayer() const { return gridLayer_; }
@@ -264,7 +264,7 @@ class CGnuPlotAxis {
   CGnuPlotGroup*    group_             { 0 };
   std::string       id_                { "" };
   bool              initialized_       { false };
-  Direction         direction_         { Direction::X };
+  AxisDirection     direction_         { AxisDirection::X };
   CPoint3D          v_                 { 1, 0, 0 };
   CPoint3D          iv_                { 0, 1, 0 };
   double            start_             { 0 };

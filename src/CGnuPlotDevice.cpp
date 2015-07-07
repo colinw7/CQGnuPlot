@@ -90,7 +90,7 @@ createRectangle(CGnuPlotGroup *group)
 
 CGnuPlotAxis *
 CGnuPlotDevice::
-createAxis(CGnuPlotGroup *group, const std::string &id, CGnuPlotAxis::Direction dir)
+createAxis(CGnuPlotGroup *group, const std::string &id, CGnuPlotTypes::AxisDirection dir)
 {
   return new CGnuPlotAxis(group, id, dir);
 }

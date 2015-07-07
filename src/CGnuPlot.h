@@ -84,10 +84,12 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotBinaryFormat.h>
 #include <CGnuPlotContourData.h>
 #include <CGnuPlotSurfaceData.h>
-#include <CGnuPlotAxis.h>
+#include <CGnuPlotAxesData.h>
 #include <CGnuPlotPrintFile.h>
 #include <CGnuPlotBlock.h>
 #include <CGnuPlotPm3DData.h>
+#include <CGnuPlotPlotSize.h>
+#include <CGnuPlotFilledCurve.h>
 
 //------
 
@@ -104,6 +106,7 @@ class CGnuPlot {
   typedef CGnuPlotTypes::HistogramStyle          HistogramStyle;
   typedef CGnuPlotTypes::AngleType               AngleType;
   typedef CGnuPlotTypes::DrawLayer               DrawLayer;
+  typedef CGnuPlotTypes::AxisDirection           AxisDirection;
 
   typedef std::map<PlotStyle,CGnuPlotStyleBase*> PlotStyles;
   typedef std::map<int,CGnuPlotLineStyleP>       LineStyles;
@@ -146,113 +149,12 @@ class CGnuPlot {
 
   typedef std::map<int,CGnuPlotAxisData> IAxisMap;
 
-  struct BorderData {
-    int       sides     { 0xFF };
-    DrawLayer layer     { DrawLayer::FRONT };
-    double    lineWidth { 1.0 };
-    COptInt   lineStyle;
-    COptInt   lineType;
-
-    void unset() {
-      sides = 0;
-    }
-
-    void show(std::ostream &os) const;
-    void save(std::ostream &os) const;
-  };
-
-  struct GridData {
-    bool      enabled        { false };
-    DrawLayer layer          { DrawLayer::DEFAULT };
-    double    polarAngle     { 0 };
-    int       majorLineStyle { -1 };
-    int       minorLineStyle { -1 };
-    int       majorLineType  { -1 };
-    int       minorLineType  { -1 };
-    double    majorLineWidth { 1.0 };
-    double    minorLineWidth { 1.0 };
-  };
-
-  struct AxesData {
-    AxesData() { }
-
-    GridData         grid;
-    IAxisMap         xaxis;
-    IAxisMap         yaxis;
-    IAxisMap         zaxis;
-    IAxisMap         paxis;
-    IAxisMap         taxis;
-    CGnuPlotAxisData raxis;
-    CGnuPlotAxisData uaxis;
-    CGnuPlotAxisData vaxis;
-    BorderData       border;
-  };
-
   struct StyleIncrement {
     StyleIncrement() { }
 
     StyleIncrementType type      { StyleIncrementType::DEFAULT };
     int                styleInd  { 0 };
     int                increment { 8 };
-  };
-
-  //---
-
-  struct FilledCurve {
-    bool        closed { true };
-    bool        above  { false  };
-    bool        below  { false  };
-    int         xaxis  { 0 };
-    int         yaxis  { 0 };
-    COptReal    xval;
-    COptReal    yval;
-    COptPoint2D xyval;
-  };
-
-  //---
-
-  struct PlotSize {
-    PlotSize() { }
-
-    void unsetSize() {
-      square = false;
-
-      xsize.setInvalid();
-      ysize.setInvalid();
-
-      xratio.setInvalid();
-      yratio.setInvalid();
-    }
-
-    void unsetOrigin() {
-      xo.setInvalid();
-      yo.setInvalid();
-    }
-
-    void showSize(std::ostream &os) {
-      if (square)
-        os << "size is scaled by 1,1" << std::endl;
-      else
-        os << "size is scaled by " << xsize.getValue(1) << "," << ysize.getValue(1) << std::endl;
-
-      if (! xratio.isValid() && ! yratio.isValid())
-        os << "No attempt to control aspect ratio" << std::endl;
-      else
-        os << "Try to set aspect ratio to " <<
-              xratio.getValue(1) << ":" << yratio.getValue(1) << std::endl;
-    }
-
-    void showOrigin(std::ostream &os) {
-      os << "origin is set to " << xo.getValue(0) << ", " << yo.getValue(0) << std::endl;
-    }
-
-    bool     square { false };
-    COptReal xo;
-    COptReal yo;
-    COptReal xsize;
-    COptReal ysize;
-    COptReal xratio;
-    COptReal yratio;
   };
 
   //---
@@ -608,8 +510,8 @@ class CGnuPlot {
   CGnuPlotTypes::Mapping mapping() const { return mapping_; }
   void setMapping(CGnuPlotTypes::Mapping m) { mapping_ = m; }
 
-  const PlotSize &plotSize() const { return plotSize_; }
-  void setPlotSize(const PlotSize &s) { plotSize_ = s; }
+  const CGnuPlotPlotSize &plotSize() const { return plotSize_; }
+  void setPlotSize(const CGnuPlotPlotSize &s) { plotSize_ = s; }
 
   void setMacros(bool b) { macros_ = b; }
   bool isMacros() const { return macros_; }
@@ -623,8 +525,8 @@ class CGnuPlot {
 
   //---
 
-  const AxesData &axesData() const { return axesData_; }
-  void setAxesData(const AxesData &a) { axesData_ = a; }
+  const CGnuPlotAxesData &axesData() const { return axesData_; }
+  void setAxesData(const CGnuPlotAxesData &a) { axesData_ = a; }
 
   const CGnuPlotAxisData &xaxis(int ind) const {
     return const_cast<CGnuPlot *>(this)->xaxis(ind);
@@ -641,39 +543,17 @@ class CGnuPlot {
   const CGnuPlotAxisData &taxis(int ind) const {
     return const_cast<CGnuPlot *>(this)->taxis(ind);
   }
-  CGnuPlotAxisData &xaxis(int ind) {
-    CGnuPlot::IAxisMap::iterator p = axesData_.xaxis.find(ind);
 
-    if (p == axesData_.xaxis.end())
-      p = axesData_.xaxis.insert(p, CGnuPlot::IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
+  CGnuPlotAxisData &xaxis(int ind) { return axesData_.xaxis(ind); }
+  CGnuPlotAxisData &yaxis(int ind) { return axesData_.yaxis(ind); }
+  CGnuPlotAxisData &zaxis(int ind) { return axesData_.zaxis(ind); }
 
-    return (*p).second;
-  }
+  CGnuPlotAxisData &paxis(int ind) { return this->axesData_.paxis(ind); }
+  CGnuPlotAxisData &taxis(int ind) { return this->axesData_.taxis(ind); }
 
-  CGnuPlotAxisData &yaxis(int ind) {
-    CGnuPlot::IAxisMap::iterator p = axesData_.yaxis.find(ind);
-
-    if (p == axesData_.yaxis.end())
-      p = axesData_.yaxis.insert(p, CGnuPlot::IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
-
-    return (*p).second;
-  }
-
-  CGnuPlotAxisData &zaxis(int ind) {
-    CGnuPlot::IAxisMap::iterator p = axesData_.zaxis.find(ind);
-
-    if (p == axesData_.zaxis.end())
-      p = axesData_.zaxis.insert(p, CGnuPlot::IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
-
-    return (*p).second;
-  }
-
-  CGnuPlotAxisData &paxis(int ind) { return this->axesData_.paxis[ind]; }
-  CGnuPlotAxisData &taxis(int ind) { return this->axesData_.taxis[ind]; }
-
-  CGnuPlotAxisData &raxis() { return this->axesData_.raxis ; }
-  CGnuPlotAxisData &uaxis() { return this->axesData_.uaxis ; }
-  CGnuPlotAxisData &vaxis() { return this->axesData_.vaxis ; }
+  CGnuPlotAxisData &raxis() { return this->axesData_.raxis(); }
+  CGnuPlotAxisData &uaxis() { return this->axesData_.uaxis(); }
+  CGnuPlotAxisData &vaxis() { return this->axesData_.vaxis(); }
 
   //---
 
@@ -696,7 +576,7 @@ class CGnuPlot {
   void getPolarTRange(double *tmin, double *tmax) {
     *tmin = taxis(1).min().getValue(0);
 
-    if (getAngleType() == CGnuPlotTypes::AngleType::DEGREES)
+    if (isAngleDegrees())
       *tmax = taxis(1).max().getValue(360.0);
     else
       *tmax = taxis(1).max().getValue(2*M_PI);
@@ -740,8 +620,8 @@ class CGnuPlot {
   const CGnuPlotColorBox &colorBox() const { return colorBox_; }
   void setColorBox(const CGnuPlotColorBox &c) { colorBox_ = c; }
 
-  const FilledCurve &filledCurve() const { return filledCurve_; }
-  void setFilledCurve(const FilledCurve &c) { filledCurve_ = c; }
+  const CGnuPlotFilledCurve &filledCurve() const { return filledCurve_; }
+  void setFilledCurve(const CGnuPlotFilledCurve &c) { filledCurve_ = c; }
 
   double whiskerBars() const { return whiskerBars_; }
   void setWhiskerBars(double w) { whiskerBars_ = w; }
@@ -832,8 +712,7 @@ class CGnuPlot {
   CGnuPlotLineStyle *createLineStyle(CGnuPlot *plot);
   CGnuPlotLineType  *createLineType();
 
-  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
-                           CGnuPlotAxis::Direction dir);
+  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, AxisDirection dir);
   CGnuPlotKey  *createKey (CGnuPlotGroup *group);
 
   CGnuPlotColorBox *createColorBox(CGnuPlotGroup *group);
@@ -950,6 +829,10 @@ class CGnuPlot {
 
   CPoint3D sphericalMap(const CPoint2D &p) const;
 
+  CPoint2D convertPolarPoint(const CPoint2D &p) const;
+
+  bool isAngleDegrees() const { return (getAngleType() == CGnuPlotTypes::AngleType::DEGREES); }
+
   double angleToRad(double a) const;
 
   CGnuPlotBlock *getBlock(const std::string &name);
@@ -999,8 +882,11 @@ class CGnuPlot {
 
   void splitPlotCmd(const std::string &cmd, std::vector<std::string> &cmds, bool is3D);
 
+  void parseFilledCurve(CParseLine &line, CGnuPlotFilledCurve &filledCurve);
+
   bool parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
-                        CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as);
+                        CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as,
+                        COptString &keyTitle);
   bool parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
                         CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as);
 
@@ -1107,8 +993,10 @@ class CGnuPlot {
   void setAngleType(AngleType type);
   AngleType getAngleType() const { return getPrefValue<AngleType>(VariableName::ANGLES); }
   void resetAngleType() { resetPrefValue(VariableName::ANGLES); }
+
   void printAngleType(std::ostream &os) { printPrefValue(os, VariableName::ANGLES); }
   void showAngleType(std::ostream &os) { showPrefValue(os, VariableName::ANGLES); }
+
   std::string getAngleTypeString() const {
     return getPrefValueString<AngleType>(VariableName::ANGLES);
   }
@@ -1137,6 +1025,8 @@ class CGnuPlot {
 
   bool parseDash(CParseLine &line, CGnuPlotDash &dash);
   bool parseDash(CParseLine &line, CLineDash &dash);
+
+  bool parseAssignment(CParseLine &line);
 
   bool parseInteger(CParseLine &line, int &i) const;
   bool parseReal   (CParseLine &line, double &r) const;
@@ -1261,7 +1151,7 @@ class CGnuPlot {
   CGnuPlotPointStyle     pointStyle_;
   CGnuPlotTitle          title_;
   VarPrefs               varPrefs_;
-  AxesData               axesData_;
+  CGnuPlotAxesData       axesData_;
   CGnuPlotKeyData        keyData_;
   CBBox2D                region_ { 0, 0, 1, 1 };
   Margin                 margin_;
@@ -1304,14 +1194,14 @@ class CGnuPlot {
   CGnuPlotCamera         camera_;
   CGnuPlotPalette        palette_;
   CGnuPlotColorBox       colorBox_;
-  FilledCurve            filledCurve_;
+  CGnuPlotFilledCurve    filledCurve_;
   std::string            timeFmt_ { "%d/%m/%y,%H:%M" };
   DummyVarMap            dummyVars_;
   Samples                samples_;
   LinkData               linkData_;
   ISOSamples             isoSamples_;
   CGnuPlotTypes::Mapping mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
-  PlotSize               plotSize_;
+  CGnuPlotPlotSize       plotSize_;
   DecimalSign            decimalSign_;
   Offsets                offsets_;
   FitData                fitData_;

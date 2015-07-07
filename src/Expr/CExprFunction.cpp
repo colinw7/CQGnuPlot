@@ -273,10 +273,23 @@ CExprFunction##NAME(const CExprValueArray &values) { \
   else if (values[0]->getRealValue(r)) { \
     errno = 0; \
     double r1 = F(r); \
-    if (errno != 0) return CExprValuePtr(); \
-    if (CExprInst->getDegrees()) \
-      r1 = RadToDeg(r1); \
-    return CExprInst->createRealValue(r1); \
+    if (errno == 0) { \
+      if (CExprInst->getDegrees()) \
+        r1 = RadToDeg(r1); \
+      return CExprInst->createRealValue(r1); \
+    } \
+    else if (errno == EDOM) { \
+      std::complex<double> c(r,0); \
+      errno = 0; \
+      std::complex<double> c1 = F(c); \
+      if (errno != 0) return CExprValuePtr(); \
+      if (CExprInst->getDegrees()) \
+        c1 = std::complex<double>(RadToDeg(c1.real()), RadToDeg(c1.imag())); \
+      return CExprInst->createComplexValue(c1); \
+    } \
+    else { \
+      return CExprValuePtr(); \
+    } \
   } \
   else \
     return CExprValuePtr(); \

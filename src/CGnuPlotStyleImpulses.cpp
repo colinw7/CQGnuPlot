@@ -1,5 +1,6 @@
 #include <CGnuPlotStyleImpulses.h>
 #include <CGnuPlotPlot.h>
+#include <CGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
 
 CGnuPlotStyleImpulses::
@@ -12,11 +13,13 @@ void
 CGnuPlotStyleImpulses::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(group, CRGBA(1,0,0));
 
   double ymin = plot->getBBox().getYMin();
 
@@ -32,6 +35,16 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CPoint2D p1(reals[0], reals[1]);
     CPoint2D p2(reals[0], y2);
+
+    if (plot->isPolar()) {
+      bool inside1, inside2;
+
+      p1 = group->convertPolarAxisPoint(p1, inside1);
+      p2 = group->convertPolarAxisPoint(p2, inside2);
+
+      if (! inside1 && ! inside2)
+        continue;
+    }
 
     CRGBA lc1 = lc;
 

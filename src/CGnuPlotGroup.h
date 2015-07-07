@@ -14,8 +14,6 @@ class CGnuPlotGroup {
   typedef CGnuPlotTypes::DrawLayer               DrawLayer;
   typedef CGnuPlotTypes::PlotStyle               PlotStyle;
   typedef CGnuPlot::Annotations                  Annotations;
-  typedef CGnuPlot::AxesData                     AxesData;
-  typedef CGnuPlot::PlotSize                     PlotSize;
   typedef CGnuPlot::Margin                       Margin;
   typedef std::vector<CGnuPlotPlot *>            Plots;
   typedef std::map<std::string, CGnuPlotAxis *>  Axes;
@@ -57,8 +55,8 @@ class CGnuPlotGroup {
 
   //---
 
-  const AxesData &axesData() const { return axesData_; }
-  void setAxesData(const AxesData &a) { axesData_ = a; }
+  const CGnuPlotAxesData &axesData() const { return axesData_; }
+  void setAxesData(const CGnuPlotAxesData &a) { axesData_ = a; }
 
   const CGnuPlotAxisData &xaxis(int ind) const {
     return const_cast<CGnuPlotGroup *>(this)->xaxis(ind);
@@ -85,39 +83,16 @@ class CGnuPlotGroup {
     return const_cast<CGnuPlotGroup *>(this)->vaxis();
   }
 
-  CGnuPlotAxisData &xaxis(int ind) {
-    CGnuPlot::IAxisMap::iterator p = axesData_.xaxis.find(ind);
+  CGnuPlotAxisData &xaxis(int ind) { return axesData_.xaxis(ind); }
+  CGnuPlotAxisData &yaxis(int ind) { return axesData_.yaxis(ind); }
+  CGnuPlotAxisData &zaxis(int ind) { return axesData_.zaxis(ind); }
 
-    if (p == axesData_.xaxis.end())
-      p = axesData_.xaxis.insert(p, CGnuPlot::IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
+  CGnuPlotAxisData &paxis(int ind) { return this->axesData_.paxis(ind); }
+  CGnuPlotAxisData &taxis(int ind) { return this->axesData_.taxis(ind); }
 
-    return (*p).second;
-  }
-
-  CGnuPlotAxisData &yaxis(int ind) {
-    CGnuPlot::IAxisMap::iterator p = axesData_.yaxis.find(ind);
-
-    if (p == axesData_.yaxis.end())
-      p = axesData_.yaxis.insert(p, CGnuPlot::IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
-
-    return (*p).second;
-  }
-
-  CGnuPlotAxisData &zaxis(int ind) {
-    CGnuPlot::IAxisMap::iterator p = axesData_.zaxis.find(ind);
-
-    if (p == axesData_.zaxis.end())
-      p = axesData_.zaxis.insert(p, CGnuPlot::IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
-
-    return (*p).second;
-  }
-
-  CGnuPlotAxisData &paxis(int ind) { return this->axesData_.paxis[ind]; }
-  CGnuPlotAxisData &taxis(int ind) { return this->axesData_.taxis[ind]; }
-
-  CGnuPlotAxisData &raxis() { return this->axesData_.raxis ; }
-  CGnuPlotAxisData &uaxis() { return this->axesData_.uaxis ; }
-  CGnuPlotAxisData &vaxis() { return this->axesData_.vaxis ; }
+  CGnuPlotAxisData &raxis() { return this->axesData_.raxis(); }
+  CGnuPlotAxisData &uaxis() { return this->axesData_.uaxis(); }
+  CGnuPlotAxisData &vaxis() { return this->axesData_.vaxis(); }
 
   //---
 
@@ -194,20 +169,20 @@ class CGnuPlotGroup {
 
   //---
 
-  int getBorderSides() const { return axesData_.border.sides; }
-  void setBorderSides(int b) { axesData_.border.sides = b; }
+  int getBorderSides() const { return axesData_.getBorderSides(); }
+  void setBorderSides(int b) { axesData_.setBorderSides(b); }
 
-  const DrawLayer &getBorderLayer() const { return axesData_.border.layer; }
-  void setBorderLayer(const DrawLayer &l) { axesData_.border.layer = l; }
+  const DrawLayer &getBorderLayer() const { return axesData_.getBorderLayer(); }
+  void setBorderLayer(const DrawLayer &l) { axesData_.setBorderLayer(l); }
 
-  int getBorderWidth() const { return axesData_.border.lineWidth; }
-  void setBorderWidth(double w) { axesData_.border.lineWidth = w; }
+  int getBorderWidth() const { return axesData_.getBorderWidth(); }
+  void setBorderWidth(double w) { axesData_.setBorderWidth(w); }
 
-  int getBorderStyle() const { return axesData_.border.lineStyle.getValue(-1); }
-  void setBorderStyle(int ls) { axesData_.border.lineStyle = ls; }
+  int getBorderStyle() const { return axesData_.getBorderStyle(); }
+  void setBorderStyle(int ls) { axesData_.setBorderStyle(ls); }
 
-  int getBorderType() const { return axesData_.border.lineType.getValue(-1); }
-  void setBorderType(int lt) { axesData_.border.lineType = lt; }
+  int getBorderType() const { return axesData_.getBorderType(); }
+  void setBorderType(int lt) { axesData_.setBorderType(lt); }
 
   //---
 
@@ -268,8 +243,8 @@ class CGnuPlotGroup {
 
   //-----
 
-  const PlotSize &plotSize() const { return plotSize_; }
-  void setPlotSize(const PlotSize &s) { plotSize_ = s; }
+  const CGnuPlotPlotSize &plotSize() const { return plotSize_; }
+  void setPlotSize(const CGnuPlotPlotSize &s) { plotSize_ = s; }
 
   //-----
 
@@ -371,6 +346,8 @@ class CGnuPlotGroup {
 
   //-----
 
+  CPoint2D convertPolarAxisPoint(const CPoint2D &p, bool &inside) const;
+
   CPoint3D mapLogPoint(const CPoint3D &p) const;
   CPoint2D mapLogPoint(const CPoint2D &p) const;
 
@@ -399,6 +376,7 @@ class CGnuPlotGroup {
   int                   id_   { 0 };           // unique id
   int                   ind_  { 0 };           // group index in window
   bool                  is3D_ { false };       // plots are 3D
+  bool                  polar_ { false };      // is polar
   CGnuPlotTitle*        title_;                // plot title
   Plots                 plots_;                // plots
   CBBox2D               region_ {0,0,1,1};     // region of window
@@ -406,15 +384,14 @@ class CGnuPlotGroup {
   CBBox2D               bbox_ { 0, 0, 1, 1 };  // bounding box
   CGnuPlotClip          clip_;                 // clip
   COptBBox2D            clearRect_;            // optional clear rectangle
-  PlotSize              plotSize_;
+  CGnuPlotPlotSize      plotSize_;             // plot size
   CGnuPlotHistogramData histogramData_;        // histogram style
   CGnuPlotKeyP          key_;                  // key
   CGnuPlotColorBoxP     colorBox_;             // color box
   CGnuPlotPaletteP      palette_;              // palette
-  AxesData              axesData_;             // axes data
+  CGnuPlotAxesData      axesData_;             // axes data
   Annotations           annotations_;          // annotations
   Axes                  axes_;                 // axes
-  bool                  polar_ { false };      // polar
   CGnuPlotCamera*       camera_;               // view camera
   CRGBA                 backgroundColor_;      // background color
   mutable CBBox2D       saveRange_;

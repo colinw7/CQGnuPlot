@@ -309,6 +309,13 @@ fit()
     COptReal xamin2 = xaxis(2).min(); xmin2 = xamin2;
     COptReal xamax2 = xaxis(2).max(); xmin2 = xamax2;
 
+    if (isPolar()) {
+      if (! xamin1.isValid() && raxis().min().isValid())
+        xamin1 = raxis().min();
+      if (! xamax1.isValid() && raxis().max().isValid())
+        xamax1 = raxis().max();
+    }
+
     for (auto plot : plots_) {
       double xmin, xmax;
 
@@ -332,6 +339,13 @@ fit()
     COptReal yamax1 = yaxis(1).max(); ymax1 = yamax1;
     COptReal yamin2 = yaxis(2).min(); ymin2 = yamin2;
     COptReal yamax2 = yaxis(2).max(); ymax2 = yamax2;
+
+    if (isPolar()) {
+      if (! yamin1.isValid() && raxis().min().isValid())
+        yamin1 = raxis().min();
+      if (! yamax1.isValid() && raxis().max().isValid())
+        yamax1 = raxis().max();
+    }
 
     for (auto plot : plots_) {
       double ymin, ymax;
@@ -764,14 +778,14 @@ getPlotAxis(char c, int ind)
   auto p = axes_.find(id);
 
   if (p == axes_.end()) {
-    CGnuPlotAxis::Direction dir;
+    CGnuPlotTypes::AxisDirection dir;
 
-    if      (c == 'x') dir = CGnuPlotAxis::Direction::X;
-    else if (c == 'y') dir = CGnuPlotAxis::Direction::Y;
-    else if (c == 'z') dir = CGnuPlotAxis::Direction::Z;
-    else if (c == 'p') dir = CGnuPlotAxis::Direction::Y;
-    else if (c == 'r') dir = CGnuPlotAxis::Direction::X;
-    else if (c == 't') dir = CGnuPlotAxis::Direction::Y;
+    if      (c == 'x') dir = CGnuPlotTypes::AxisDirection::X;
+    else if (c == 'y') dir = CGnuPlotTypes::AxisDirection::Y;
+    else if (c == 'z') dir = CGnuPlotTypes::AxisDirection::Z;
+    else if (c == 'p') dir = CGnuPlotTypes::AxisDirection::Y;
+    else if (c == 'r') dir = CGnuPlotTypes::AxisDirection::X;
+    else if (c == 't') dir = CGnuPlotTypes::AxisDirection::Y;
     else               assert(false);
 
     CGnuPlotAxis *axis = app()->createAxis(this, id, dir);
@@ -1283,7 +1297,7 @@ drawBorder(CGnuPlotRenderer *renderer)
   if (hasPlotStyle(PlotStyle::TEST_TERMINAL))
     return;
 
-  if (! axesData().border.sides)
+  if (! axesData().getBorderSides())
     return;
 
   CRGBA c(0,0,0);
@@ -1296,79 +1310,79 @@ drawBorder(CGnuPlotRenderer *renderer)
   double xmin1 = bbox.getLeft  (), ymin1 = bbox.getBottom();
   double xmax1 = bbox.getRight (), ymax1 = bbox.getTop   ();
 
-  double bw = axesData().border.lineWidth;
+  double bw = axesData().getBorderWidth();
 
   if (is3D()) {
     double zmin1 = zaxis(1).min().getValue(-10);
     double zmax1 = zaxis(1).max().getValue( 10);
 
     // 1 : x front, bottom
-    if (axesData().border.sides & (1<<0))
+    if (axesData().getBorderSides() & (1<<0))
       renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmax1, ymin1, zmin1), bw, c);
 
     // 2 : y left, bottom
-    if (axesData().border.sides & (1<<1))
+    if (axesData().getBorderSides() & (1<<1))
       renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmin1, ymax1, zmin1), bw, c);
 
     // 4 : y right, bottom
-    if (axesData().border.sides & (1<<2))
+    if (axesData().getBorderSides() & (1<<2))
       renderer->drawLine(CPoint3D(xmax1, ymin1, zmin1), CPoint3D(xmax1, ymax1, zmin1), bw, c);
 
     // 8 : x back, bottom
-    if (axesData().border.sides & (1<<3))
+    if (axesData().getBorderSides() & (1<<3))
       renderer->drawLine(CPoint3D(xmin1, ymax1, zmin1), CPoint3D(xmax1, ymax1, zmin1), bw, c);
 
     //---
 
     // 16 : vertical, left, front
-    if (axesData().border.sides & (1<<4))
+    if (axesData().getBorderSides() & (1<<4))
       renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmin1, ymin1, zmax1), bw, c);
 
     // 32 : vertical, left, back
-    if (axesData().border.sides & (1<<5))
+    if (axesData().getBorderSides() & (1<<5))
       renderer->drawLine(CPoint3D(xmin1, ymax1, zmin1), CPoint3D(xmin1, ymax1, zmax1), bw, c);
 
     // 64 : vertical, right, back
-    if (axesData().border.sides & (1<<6))
+    if (axesData().getBorderSides() & (1<<6))
       renderer->drawLine(CPoint3D(xmax1, ymax1, zmin1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
 
     // 128 : vertical, right, front
-    if (axesData().border.sides & (1<<7))
+    if (axesData().getBorderSides() & (1<<7))
       renderer->drawLine(CPoint3D(xmax1, ymin1, zmin1), CPoint3D(xmax1, ymin1, zmax1), bw, c);
 
     //---
 
     // 256: y left, top
-    if (axesData().border.sides & (1<<8))
+    if (axesData().getBorderSides() & (1<<8))
       renderer->drawLine(CPoint3D(xmin1, ymin1, zmax1), CPoint3D(xmin1, ymax1, zmax1), bw, c);
 
     // 512: x back, top
-    if (axesData().border.sides & (1<<9))
+    if (axesData().getBorderSides() & (1<<9))
       renderer->drawLine(CPoint3D(xmin1, ymax1, zmax1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
 
     // 1024: x front, top
-    if (axesData().border.sides & (1<<10))
+    if (axesData().getBorderSides() & (1<<10))
       renderer->drawLine(CPoint3D(xmin1, ymin1, zmax1), CPoint3D(xmax1, ymin1, zmax1), bw, c);
 
     // 2048: y right, top
-    if (axesData().border.sides & (1<<11))
+    if (axesData().getBorderSides() & (1<<11))
       renderer->drawLine(CPoint3D(xmax1, ymin1, zmax1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
   }
   else {
     // 1 : x axis (bottom)
-    if (axesData().border.sides & (1<<0))
+    if (axesData().getBorderSides() & (1<<0))
       renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmax1, ymin1), bw, c);
 
     // 2 : y axis (left)
-    if (axesData().border.sides & (1<<1))
+    if (axesData().getBorderSides() & (1<<1))
       renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmin1, ymax1), bw, c);
 
     // 4 : x axis (top)
-    if (axesData().border.sides & (1<<2))
+    if (axesData().getBorderSides() & (1<<2))
       renderer->drawLine(CPoint2D(xmin1, ymax1), CPoint2D(xmax1, ymax1), bw, c);
 
     // 8 : y axis (right)
-    if (axesData().border.sides & (1<<3))
+    if (axesData().getBorderSides() & (1<<3))
       renderer->drawLine(CPoint2D(xmax1, ymin1), CPoint2D(xmax1, ymax1), bw, c);
   }
 }
@@ -1445,7 +1459,7 @@ drawXAxis(CGnuPlotRenderer *renderer, int xind, bool drawOther)
     plotXAxis->setGrid(xaxis.hasGrid());
     plotXAxis->setGridMajor(xaxis.hasGridTics());
     plotXAxis->setGridMinor(xaxis.hasGridMinorTics());
-    plotXAxis->setGridLayer(axesData_.grid.layer);
+    plotXAxis->setGridLayer(axesData_.getGridLayer());
 
     //---
 
@@ -1577,7 +1591,7 @@ drawYAxis(CGnuPlotRenderer *renderer, int yind, bool drawOther)
     plotYAxis->setGrid(yaxis.hasGrid());
     plotYAxis->setGridMajor(yaxis.hasGridTics());
     plotYAxis->setGridMinor(yaxis.hasGridMinorTics());
-    plotYAxis->setGridLayer(axesData_.grid.layer);
+    plotYAxis->setGridLayer(axesData_.getGridLayer());
 
     //---
 
@@ -1691,7 +1705,7 @@ drawZAxis(CGnuPlotRenderer *renderer, int zind, bool drawOther)
     plotZAxis->setGrid(zaxis.hasGrid());
     plotZAxis->setGridMajor(zaxis.hasGridTics());
     plotZAxis->setGridMinor(zaxis.hasGridMinorTics());
-    plotZAxis->setGridLayer(axesData_.grid.layer);
+    plotZAxis->setGridLayer(axesData_.getGridLayer());
 
     //---
 
@@ -1777,7 +1791,7 @@ drawAxis(CGnuPlotRenderer *renderer, const CGnuPlotAxisData &axis, char c, int i
     plotAxis->setGrid(axis.hasGrid());
     plotAxis->setGridMajor(axis.hasGridTics());
     plotAxis->setGridMinor(axis.hasGridMinorTics());
-    plotAxis->setGridLayer(axesData_.grid.layer);
+    plotAxis->setGridLayer(axesData_.getGridLayer());
 
     //---
 
@@ -1822,22 +1836,25 @@ drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
     CGnuPlotAxis *plotYAxis = getPlotAxis('y', 1);
     CGnuPlotAxis *plotRAxis = getPlotAxis('r', 1);
 
-    if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer() == isBack) {
-      //double ymin1 = plotYAxis->getStart();
-      //double ymax1 = plotYAxis->getEnd  ();
+    if (! isPolar()) {
+      if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer(/*back*/true) == isBack) {
+        //double ymin1 = plotYAxis->getStart();
+        //double ymax1 = plotYAxis->getEnd  ();
 
-      plotXAxis->drawGrid(renderer);
+        plotXAxis->drawGrid(renderer);
+      }
+
+      if (plotYAxis->hasGrid() && plotYAxis->isGridBackLayer(/*back*/true) == isBack) {
+        //double xmin1 = plotXAxis->getStart();
+        //double xmax1 = plotXAxis->getEnd  ();
+
+        plotYAxis->drawGrid(renderer);
+      }
     }
-
-    if (plotYAxis->hasGrid() && plotYAxis->isGridBackLayer() == isBack) {
-      //double xmin1 = plotXAxis->getStart();
-      //double xmax1 = plotXAxis->getEnd  ();
-
-      plotYAxis->drawGrid(renderer);
-    }
-
-    if (plotRAxis->hasGrid() && plotRAxis->isGridBackLayer() == isBack) {
-      plotRAxis->drawRadialGrid(renderer);
+    else {
+      if (plotRAxis->hasGrid() && plotRAxis->isGridBackLayer(/*back*/true) == isBack) {
+        plotRAxis->drawRadialGrid(renderer);
+      }
     }
   }
   else {
@@ -1846,14 +1863,14 @@ drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
     CGnuPlotAxis *plotZAxis = getPlotAxis('z', 1);
 
     // x/y grid at zmin
-    if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer() == isBack) {
+    if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer(/*back*/false) == isBack) {
       //double ymin1 = plotYAxis->getStart();
       //double ymax1 = plotYAxis->getEnd  ();
       //double zmin1 = plotZAxis->getStart();
 
       plotXAxis->drawGrid(renderer);
     }
-    if (plotYAxis->hasGrid() && plotYAxis->isGridBackLayer() == isBack) {
+    if (plotYAxis->hasGrid() && plotYAxis->isGridBackLayer(/*back*/false) == isBack) {
       //double xmin1 = plotXAxis->getStart();
       //double xmax1 = plotXAxis->getEnd  ();
       //double zmin1 = plotZAxis->getStart();
@@ -1862,14 +1879,14 @@ drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
     }
 
     // z/x grid at ymin
-    if (plotZAxis->hasGrid() && plotZAxis->isGridBackLayer() == isBack) {
+    if (plotZAxis->hasGrid() && plotZAxis->isGridBackLayer(/*back*/false) == isBack) {
       //double zmin1 = plotZAxis->getStart();
       //double zmax1 = plotZAxis->getEnd  ();
       //double ymin1 = plotYAxis->getStart();
 
       plotZAxis->drawGrid(renderer);
     }
-    if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer() == isBack) {
+    if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer(/*back*/false) == isBack) {
       //double zmin1 = plotZAxis->getStart();
       //double zmax1 = plotZAxis->getEnd  ();
       //double ymin1 = plotYAxis->getStart();
@@ -2149,7 +2166,8 @@ calcDisplayRange(int xind, int yind) const
 
     calcHistogramRange(hplots, bbox);
 
-    CGnuPlotAxis plotYAxis(const_cast<CGnuPlotGroup *>(this), "y1", CGnuPlotAxis::Direction::Y);
+    CGnuPlotAxis plotYAxis(const_cast<CGnuPlotGroup *>(this), "y1",
+                           CGnuPlotTypes::AxisDirection::Y);
 
     plotYAxis.setRange(bbox.getYMin(), bbox.getYMax());
 
@@ -2294,6 +2312,21 @@ pixelHeightToWindowHeight(double h) const
 }
 #endif
 
+CPoint2D
+CGnuPlotGroup::
+convertPolarAxisPoint(const CPoint2D &p, bool &inside) const
+{
+  CGnuPlotGroup *th = const_cast<CGnuPlotGroup *>(this);
+
+  CPoint2D p1 = p;
+
+  inside = th->taxis(1).inside(p1.x) && th->raxis().inside(p1.y);
+
+  p1 = app()->convertPolarPoint(p1);
+
+  return p1;
+}
+
 CPoint3D
 CGnuPlotGroup::
 mapLogPoint(const CPoint3D &p) const
@@ -2336,17 +2369,9 @@ void
 CGnuPlotGroup::
 mapLogPoint(double *x, double *y, double *z) const
 {
-  int xbase = xaxis(1).logScale().getValue(-1);
-  int ybase = yaxis(1).logScale().getValue(-1);
-  int zbase = zaxis(1).logScale().getValue(-1);
-
-  double xlogscale = (xbase > 1 ? log(xbase) : 1);
-  double ylogscale = (ybase > 1 ? log(ybase) : 1);
-  double zlogscale = (zbase > 1 ? log(zbase) : 1);
-
-  if (xbase > 1) *x = log(std::max(*x, 0.5))/xlogscale;
-  if (ybase > 1) *y = log(std::max(*y, 0.5))/ylogscale;
-  if (zbase > 1) *z = log(std::max(*z, 0.5))/zlogscale;
+  *x = xaxis(1).mapLogValue(*x);
+  *y = yaxis(1).mapLogValue(*y);
+  *z = zaxis(1).mapLogValue(*z);
 }
 
 void
@@ -2360,15 +2385,7 @@ void
 CGnuPlotGroup::
 unmapLogPoint(double *x, double *y, double *z) const
 {
-  int xbase = xaxis(1).logScale().getValue(-1);
-  int ybase = yaxis(1).logScale().getValue(-1);
-  int zbase = zaxis(1).logScale().getValue(-1);
-
-  double xlogscale = (xbase > 1 ? log(xbase) : 1);
-  double ylogscale = (ybase > 1 ? log(ybase) : 1);
-  double zlogscale = (zbase > 1 ? log(zbase) : 1);
-
-  if (xbase > 1) *x = exp((*x)*xlogscale);
-  if (ybase > 1) *y = exp((*y)*ylogscale);
-  if (zbase > 1) *x = exp((*z)*zlogscale);
+  *x = xaxis(1).unmapLogPoint(*x);
+  *y = yaxis(1).unmapLogPoint(*y);
+  *z = zaxis(1).unmapLogPoint(*z);
 }

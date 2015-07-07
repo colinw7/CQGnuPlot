@@ -173,6 +173,7 @@ parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
 {
   CExprTokenBaseP ptoken;
   CExprTokenBaseP lastPToken;
+  CExprTokenType  lastPTokenType = CEXPR_TOKEN_UNKNOWN;
 
   while (true) {
     CStrUtil::skipSpace(line, &i);
@@ -183,7 +184,7 @@ parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
        (lastPToken.isValid() && lastPToken->type() == CEXPR_TOKEN_OPERATOR ?
         lastPToken->getOperator() : CEXPR_OP_UNKNOWN);
 
-      if (lastOpType != CEXPR_OP_UNKNOWN) {
+      if (lastPTokenType == CEXPR_TOKEN_UNKNOWN || lastOpType != CEXPR_OP_UNKNOWN) {
         if ((line[i] == '-' || line[i] == '+') && i < line.size() - 1 && isdigit(line[i + 1]))
           ptoken = readNumber(line, &i);
         else
@@ -204,7 +205,8 @@ parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
           if (! parseLine(stack, line, i))
             return false;
 
-          lastPToken = CExprTokenBaseP();
+          lastPToken     = CExprTokenBaseP();
+          lastPTokenType = CEXPR_TOKEN_VALUE;
 
           continue;
         }
@@ -245,7 +247,8 @@ parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
 
     stack.addToken(ptoken);
 
-    lastPToken = ptoken;
+    lastPToken     = ptoken;
+    lastPTokenType = ptoken->type();
   }
 
   return true;

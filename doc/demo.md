@@ -108,7 +108,7 @@
   + Invalid arg 'filledcu'
   + runs ok, need to check output
 
-## fillcrvs.dem
+## fillcvrs.dem
   + runs ok, need to check output
 
 ## fillstyle.dem

@@ -1574,7 +1574,7 @@ saveCmd(const std::string &args)
 
   bars_.save(os);
 
-  axesData_.border.save(os);
+  axesData_.saveBorder(os);
 
   /*
   set zdata
@@ -1895,9 +1895,14 @@ plotCmd(const std::string &args)
   CGnuPlotGroup *group = createGroup(window.get());
 
   group->set3D(false);
+  group->setPolar(isPolar());
 
   Plots plots;
   bool  sample = false, first = true;
+
+  CGnuPlotAxesData axesData;
+
+  std::swap(axesData, axesData_);
 
   for (const auto &cmd : cmds) {
     incLineStyle();
@@ -1906,6 +1911,8 @@ plotCmd(const std::string &args)
 
     first = false;
   }
+
+  std::swap(axesData, axesData_);
 
   //---
 
@@ -2186,7 +2193,7 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     PlotVar plotVar;
 
     if (! parseOptionValue(this, line, plotVar)) {
-      if (! parseModifiers2D(style, line, lineStyle, fillStyle, arrowStyle))
+      if (! parseModifiers2D(style, line, lineStyle, fillStyle, arrowStyle, keyTitle))
         break;
 
       continue;
@@ -2242,75 +2249,15 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
           debugMsg("with " + CStrUniqueMatch::valueToString(style));
 
         if (style == CGnuPlot::PlotStyle::FILLEDCURVES) {
-          int         pos = line.pos();
-          std::string arg = readNonSpaceNonComma(line);
+          // re-init style for filled curves
+          fillStyle.setStyle (CGnuPlotTypes::FillType::SOLID);
+          fillStyle.setBorder(false);
 
-          filledCurve_.closed = false;
-          filledCurve_.above  = false;
-          filledCurve_.below  = false;
-          filledCurve_.xaxis  = 0;
-          filledCurve_.yaxis  = 0;
-
-          filledCurve_.xval .setInvalid();
-          filledCurve_.yval .setInvalid();
-          filledCurve_.xyval.setInvalid();
-
-          if (arg == "closed") {
-            filledCurve_.closed = true;
-
-            pos = line.pos();
-            arg = readNonSpaceNonComma(line);
-          }
-
-          if (arg == "above" || arg == "below") {
-            filledCurve_.above = (arg == "above");
-            filledCurve_.below = (arg == "below");
-
-            pos = line.pos();
-            arg = readNonSpaceNonComma(line);
-          }
-
-          auto p = arg.find('=');
-
-          std::string lhs, rhs;
-
-          if (p != std::string::npos) {
-            lhs = arg.substr(0, p);
-            rhs = arg.substr(p + 1);
-          }
-          else
-            lhs = arg;
-
-          double x, y;
-
-          if      (lhs == "x1" || lhs == "x2") {
-            filledCurve_.xaxis = (lhs == "x1" ? 1 : 2);
-
-            if (CStrUtil::toReal(rhs, &x))
-              filledCurve_.xval = x;
-          }
-          else if (lhs == "y1" || lhs == "y2") {
-            filledCurve_.yaxis = (lhs == "y1" ? 1 : 2);
-
-            if (CStrUtil::toReal(rhs, &y))
-              filledCurve_.yval = y;
-          }
-          else if (lhs == "xy") {
-            std::string rhs1;
-
-            if (line.skipSpaceAndChar(','))
-              rhs1 = readNonSpaceNonComma(line);
-
-            if (CStrUtil::toReal(rhs, &x) && CStrUtil::toReal(rhs1, &y))
-              filledCurve_.xyval = CPoint2D(x, y);
-          }
-          else {
-            line.setPos(pos);
-          }
+          parseFilledCurve(line, filledCurve_);
         }
       }
 
-      parseModifiers2D(style, line, lineStyle, fillStyle, arrowStyle);
+      parseModifiers2D(style, line, lineStyle, fillStyle, arrowStyle, keyTitle);
     }
     // title string
     else if (plotVar == PlotVar::TITLE) {
@@ -2339,7 +2286,7 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     }
     // disable title
     else if (plotVar == PlotVar::NOTITLE) {
-      // TODO
+      keyTitle = "";
     }
     // smooth type
     else if (plotVar == PlotVar::SMOOTH) {
@@ -2383,7 +2330,7 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     }
     // fillstyle <fs>
     else if (plotVar == PlotVar::FILLSTYLE) {
-      CGnuPlotFillStyle fillStyle1;
+      CGnuPlotFillStyle fillStyle1 = fillStyle;
 
       if (parseFillStyle(line, fillStyle1))
         fillStyle = fillStyle1;
@@ -2738,24 +2685,63 @@ splitPlotCmd(const std::string &cmd, std::vector<std::string> &cmds, bool is3D)
 
     // skip to ',' or end of line
     while (line.isValid()) {
-      if (line.isChar(',')) {
-        line.skipChar();
+      if (line.isSpace()) {
+        while (line.isSpace())
+          line.skipChar();
 
-        break;
+        cmd1 += " ";
       }
-      else if (line.isChar('\"') || line.isChar('\'')) {
+
+      // skip string
+      if      (line.isChar('\"') || line.isChar('\'')) {
         int pos = line.pos();
 
         skipString(line);
 
         cmd1 += line.substr(pos, line.pos() - pos);
       }
+      // skip bracked expression
       else if (line.isChar('(')) {
         int pos = line.pos();
 
         skipRoundBracketedString(line);
 
         cmd1 += line.substr(pos, line.pos() - pos);
+      }
+      else if (line.isChar(',')) {
+        line.skipChar();
+
+        break;
+      }
+      else if (line.isString("with")) {
+        line.skipNonSpace();
+
+        cmd1 += "with ";
+
+        if (line.isSpace()) {
+          while (line.isSpace())
+            line.skipChar();
+
+          cmd1 += " ";
+        }
+
+        int pos = line.pos();
+
+        PlotStyle style;
+
+        if (parseOptionValue(this, line, style, "plot style")) {
+          cmd1 += line.str().substr(pos, line.pos() - pos);
+
+          if (style == CGnuPlot::PlotStyle::FILLEDCURVES) {
+            int pos = line.pos();
+
+            CGnuPlotFilledCurve filledCurve;
+
+            parseFilledCurve(line, filledCurve);
+
+            cmd1 += line.str().substr(pos, line.pos() - pos);
+          }
+        }
       }
       else
         cmd1 += line.getChar();
@@ -2770,10 +2756,88 @@ splitPlotCmd(const std::string &cmd, std::vector<std::string> &cmds, bool is3D)
   }
 }
 
+void
+CGnuPlot::
+parseFilledCurve(CParseLine &line, CGnuPlotFilledCurve &filledCurve)
+{
+  int         pos = line.pos();
+  std::string arg = readNonSpaceNonComma(line);
+
+  filledCurve.closed = false;
+  filledCurve.above  = false;
+  filledCurve.below  = false;
+  filledCurve.xaxis  = 0;
+  filledCurve.yaxis  = 0;
+
+  filledCurve.xval .setInvalid();
+  filledCurve.yval .setInvalid();
+  filledCurve.xyval.setInvalid();
+
+  if (arg == "closed") {
+    filledCurve.closed = true;
+
+    pos = line.pos();
+    arg = readNonSpaceNonComma(line);
+  }
+
+  if (arg == "above" || arg == "below") {
+    filledCurve.above = (arg == "above");
+    filledCurve.below = (arg == "below");
+
+    pos = line.pos();
+    arg = readNonSpaceNonComma(line);
+  }
+
+  auto p = arg.find('=');
+
+  std::string lhs, rhs;
+
+  if (p != std::string::npos) {
+    lhs = arg.substr(0, p);
+    rhs = arg.substr(p + 1);
+  }
+  else
+    lhs = arg;
+
+  double x, y;
+
+  if      (lhs == "x1" || lhs == "x2") {
+    filledCurve.xaxis = (lhs == "x1" ? 1 : 2);
+
+    if (CStrUtil::toReal(rhs, &x))
+      filledCurve.xval = x;
+  }
+  else if (lhs == "y1" || lhs == "y2") {
+    filledCurve.yaxis = (lhs == "y1" ? 1 : 2);
+
+    if (CStrUtil::toReal(rhs, &y))
+      filledCurve.yval = y;
+  }
+  else if (lhs == "xy") {
+    std::string rhs1;
+
+    if (line.skipSpaceAndChar(','))
+      rhs1 = readNonSpaceNonComma(line);
+
+    if (CStrUtil::toReal(rhs, &x) && CStrUtil::toReal(rhs1, &y))
+      filledCurve.xyval = CPoint2D(x, y);
+  }
+  else if (lhs == "r") {
+    filledCurve.raxis = 1;
+
+    if (CStrUtil::toReal(rhs, &x))
+      filledCurve.rval = x;
+  }
+  else {
+    line.setPos(pos);
+  }
+}
+
 bool
 CGnuPlot::
 parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle,
-                 CGnuPlotFillStyle &fillStyle, CGnuPlotArrowStyle &arrowStyle)
+                 CGnuPlotFillStyle &fillStyle, CGnuPlotArrowStyle &arrowStyle,
+                 COptString &keyTitle)
 {
   bool modifiers = true;
   bool found     = false;
@@ -2871,7 +2935,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
     else if (line.isString("fill") || line.isString("fs")) {
       line.skipNonSpace();
 
-      CGnuPlotFillStyle fillStyle1;
+      CGnuPlotFillStyle fillStyle1 = fillStyle;
 
       if (parseFillStyle(line, fillStyle1))
         fillStyle = fillStyle1;
@@ -2915,29 +2979,36 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
     else if (line.isString("notitle")) {
       line.skipNonSpace();
 
+      keyTitle = "";
+
       found = true;
     }
     else if (line.isString("boxed")) {
+      // TODO
       line.skipNonSpace();
 
       found = true;
     }
     else if (line.isString("nohidden3d")) {
+      // TODO
       line.skipNonSpace();
 
       found = true;
     }
     else if (line.isString("nocontours")) {
+      // TODO
       line.skipNonSpace();
 
       found = true;
     }
     else if (line.isString("nosurf") || line.isString("nosurface")) {
+      // TODO
       line.skipNonSpace();
 
       found = true;
     }
     else if (line.isString("palette") || line.isString("pal")) {
+      // TODO
       line.skipNonSpace();
 
       found = true;
@@ -2989,8 +3060,12 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       else
         modifiers = false;
     }
-    else
+    else if (parseAssignment(line)) {
+      found = true;
+    }
+    else {
       modifiers = false;
+    }
   }
 
   return found;
@@ -4106,7 +4181,7 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
     }
     // disable title
     else if (plotVar == PlotVar::NOTITLE) {
-      // TODO
+      keyTitle = "";
     }
     // smooth type
     else if (plotVar == PlotVar::SMOOTH) {
@@ -4471,7 +4546,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
     else if (line.isString("fill") || line.isString("fs")) {
       line.skipNonSpace();
 
-      CGnuPlotFillStyle fillStyle1;
+      CGnuPlotFillStyle fillStyle1 = fillStyle;
 
       if (parseFillStyle(line, fillStyle1))
         fillStyle = fillStyle1;
@@ -4513,31 +4588,37 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       found = true;
     }
     else if (line.isString("notitle")) {
+      // TODO
       line.skipNonSpace();
 
       found = true;
     }
     else if (line.isString("boxed")) {
+      // TODO
       line.skipNonSpace();
 
       found = true;
     }
     else if (line.isString("nohidden3d")) {
+      // TODO
       line.skipNonSpace();
 
       found = true;
     }
     else if (line.isString("nocontours")) {
+      // TODO
       line.skipNonSpace();
 
       found = true;
     }
     else if (line.isString("nosurf") || line.isString("nosurface")) {
+      // TODO
       line.skipNonSpace();
 
       found = true;
     }
     else if (line.isString("palette") || line.isString("pal")) {
+      // TODO
       line.skipNonSpace();
 
       found = true;
@@ -4905,39 +4986,39 @@ setCmd(const std::string &args)
     std::string arg = readNonSpace(line);
 
     if (arg == "")
-      axesData_.border.sides = 0xFF;
+      axesData_.resetBorderSides();
     else {
       while (arg != "") {
         if      (arg == "front" || arg == "back" || arg == "behind") {
-          if      (arg == "front" ) axesData_.border.layer = DrawLayer::FRONT;
-          else if (arg == "back"  ) axesData_.border.layer = DrawLayer::BACK;
-          else if (arg == "behind") axesData_.border.layer = DrawLayer::BEHIND;
+          if      (arg == "front" ) axesData_.setBorderLayer(DrawLayer::FRONT);
+          else if (arg == "back"  ) axesData_.setBorderLayer(DrawLayer::BACK);
+          else if (arg == "behind") axesData_.setBorderLayer(DrawLayer::BEHIND);
         }
         else if (arg == "linewidth" || arg == "lw") {
           double lw;
 
           if (parseReal(line, lw))
-            axesData_.border.lineWidth = lw;
+            axesData_.setBorderWidth(lw);
         }
         else if (arg == "linestyle" || arg == "ls") {
           int ls;
 
           if (parseInteger(line, ls))
-            axesData_.border.lineStyle = ls;
+            axesData_.setBorderStyle(ls);
         }
         else if (arg == "linetype" || arg == "lt") {
           int lt;
 
           if (parseLineType(line, lt))
-            axesData_.border.lineType = lt;
+            axesData_.setBorderType(lt);
         }
         else {
           int i;
 
           if      (getIntegerVariable(arg, i))
-            axesData_.border.sides = i;
+            axesData_.setBorderSides(i);
           else if (CStrUtil::toInteger(arg, &i))
-            axesData_.border.sides = i;
+            axesData_.setBorderSides(i);
         }
 
         arg = readNonSpace(line);
@@ -5432,7 +5513,7 @@ setCmd(const std::string &args)
   //            { , {linestyle | ls <minor_linestyle>} | {linetype | lt <minor_linetype>}
   //            {linewidth | lw <minor_linewidth>} } }
   else if (var == VariableName::GRID) {
-    axesData_.grid.enabled = true;
+    axesData_.setGridEnabled(true);
 
     xaxis(1).setGrid(true);
     yaxis(1).setGrid(true);
@@ -5472,21 +5553,21 @@ setCmd(const std::string &args)
         double r = 0;
 
         if (parseReal(line, r))
-          axesData_.grid.polarAngle = angleToRad(r);
+          axesData_.setGridPolarAngle(angleToRad(r));
       }
       else if (arg == "front" || arg == "back" || arg == "layerdefault") {
-        if      (arg == "front"  ) axesData_.grid.layer = DrawLayer::FRONT;
-        else if (arg == "back"   ) axesData_.grid.layer = DrawLayer::BACK;
-        else if (arg == "default") axesData_.grid.layer = DrawLayer::DEFAULT;
+        if      (arg == "front"       ) axesData_.setGridLayer(DrawLayer::FRONT);
+        else if (arg == "back"        ) axesData_.setGridLayer(DrawLayer::BACK);
+        else if (arg == "layerdefault") axesData_.setGridLayer(DrawLayer::DEFAULT);
       }
       else if (arg == "linestyle" || arg == "ls") {
         int ls = -1;
 
         if (parseInteger(line, ls)) {
           if (ns == 0)
-            axesData_.grid.majorLineStyle = ls;
+            axesData_.setGridMajorLineStyle(ls);
           else
-            axesData_.grid.minorLineStyle = ls;
+            axesData_.setGridMinorLineStyle(ls);
         }
 
         ++ns;
@@ -5496,9 +5577,9 @@ setCmd(const std::string &args)
 
         if (parseLineType(line, lt)) {
           if (nt == 0)
-            axesData_.grid.majorLineType = lt;
+            axesData_.setGridMajorLineType(lt);
           else
-            axesData_.grid.minorLineType = lt;
+            axesData_.setGridMinorLineType(lt);
         }
 
         ++nt;
@@ -5508,9 +5589,9 @@ setCmd(const std::string &args)
 
         if (parseReal(line, lw)) {
           if (nw == 0)
-            axesData_.grid.majorLineWidth = lw;
+            axesData_.setGridMajorLineWidth(lw);
           else
-            axesData_.grid.minorLineWidth = lw;
+            axesData_.setGridMinorLineWidth(lw);
         }
 
         ++nw;
@@ -6480,6 +6561,22 @@ setCmd(const std::string &args)
       if (parseReal(line, r))
         zaxis(1).setMinorTicsFreq(r);
     }
+  }
+  // set nox2tics
+  else if (var == VariableName::NOX2TICS) {
+    xaxis(2).setShowTics(false);
+  }
+  // set noxtics
+  else if (var == VariableName::NOXTICS) {
+    xaxis(1).setShowTics(false);
+  }
+  // set noy2tics
+  else if (var == VariableName::NOY2TICS) {
+    yaxis(2).setShowTics(false);
+  }
+  // set noytics
+  else if (var == VariableName::NOYTICS) {
+    yaxis(1).setShowTics(false);
   }
   // set object <index> <object-type> <object-properties>
   //            {front|back|behind} {fc|fillcolor <colorspec>} {fs <fillstyle>}
@@ -8540,7 +8637,7 @@ showCmd(const std::string &args)
   }
   // show border
   else if (var == VariableName::BORDER) {
-    axesData_.border.show(std::cout);
+    axesData_.showBorder(std::cout);
   }
   // show boxwidth
   else if (var == VariableName::BOXWIDTH) {
@@ -8642,27 +8739,27 @@ showCmd(const std::string &args)
   }
   // show grid
   else if (var == VariableName::GRID) {
-    if (! axesData_.grid.enabled)
+    if (! axesData_.isGridEnabled())
       std::cout << "grid is OFF" << std::endl;
     else {
       std::cout << "Polar grid drawn at r tics" << std::endl;
 
       std::cout << "Major grid drawn with linestyle " <<
-                   axesData_.grid.majorLineStyle << std::endl;
+                   axesData_.gridMajorLineStyle() << std::endl;
       std::cout << "Minor grid drawn with linestyle " <<
-                   axesData_.grid.minorLineStyle << std::endl;
+                   axesData_.gridMinorLineStyle() << std::endl;
       std::cout << "Major grid drawn with linetype " <<
-                   axesData_.grid.majorLineType << std::endl;
+                   axesData_.gridMajorLineType() << std::endl;
       std::cout << "Minor grid drawn with linetype " <<
-                   axesData_.grid.minorLineType << std::endl;
+                   axesData_.gridMinorLineType() << std::endl;
 
       std::cout << "Grid radii drawn every " <<
-                   axesData_.grid.polarAngle << " radians" << std::endl;
+                   axesData_.gridPolarAngle() << " radians" << std::endl;
 
       std::cout << "Grid drawn at ";
 
       std::cout << CStrUniqueMatch::
-        valueToString<CGnuPlotTypes::DrawLayer>(axesData_.grid.layer) << " layer";
+        valueToString<CGnuPlotTypes::DrawLayer>(axesData_.getGridLayer()) << " layer";
 
       std::cout << std::endl;
     }
@@ -9554,7 +9651,7 @@ resetCmd(const std::string &args)
   uaxis().reset();
   vaxis().reset();
 
-  axesData_.border.sides = 0xFF;
+  axesData_.resetBorderSides();
 
   keyData_.reset();
 
@@ -9712,7 +9809,7 @@ unsetCmd(const std::string &args)
   }
   // unset border
   else if (var == VariableName::BORDER) {
-    axesData_.border.unset();
+    axesData_.unsetBorder();
   }
   // unset boxwidth
   else if (var == VariableName::BOXWIDTH) {
@@ -9801,7 +9898,7 @@ unsetCmd(const std::string &args)
   }
   // unset grid
   else if (var == VariableName::GRID) {
-    axesData_.grid.enabled = false;
+    axesData_.setGridEnabled(false);
 
     xaxis(1).setGrid(false);
     yaxis(1).setGrid(false);
@@ -11281,7 +11378,7 @@ createLineType()
 
 CGnuPlotAxis *
 CGnuPlot::
-createAxis(CGnuPlotGroup *group, const std::string &id, CGnuPlotAxis::Direction dir)
+createAxis(CGnuPlotGroup *group, const std::string &id, CGnuPlotTypes::AxisDirection dir)
 {
   return (device() ? device()->createAxis(group, id, dir) : new CGnuPlotAxis(group, id, dir));
 }
@@ -12193,6 +12290,9 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     }
 
     plot->init();
+
+    if (isPolar())
+      plot->setPolar(true);
 
     plots.push_back(plot);
 
@@ -13429,6 +13529,26 @@ setAngleType(AngleType type)
   CExprInst->setDegrees(type == AngleType::DEGREES);
 }
 
+CPoint2D
+CGnuPlot::
+convertPolarPoint(const CPoint2D &p) const
+{
+  double a = angleToRad(p.x);
+  double r = p.y;
+
+  double x = r*cos(a);
+  double y = r*sin(a);
+
+  return CPoint2D(x, y);
+}
+
+double
+CGnuPlot::
+angleToRad(double a) const
+{
+  return (isAngleDegrees() ? CAngle::Deg2Rad(a) : a);
+}
+
 void
 CGnuPlot::
 setDummyVars(const std::string &dummyVar1, const std::string &dummyVar2)
@@ -13988,6 +14108,49 @@ parseDash(CParseLine &line, CLineDash &dash)
     return false;
 
   dash = CLineDash(dashes);
+
+  return true;
+}
+
+bool
+CGnuPlot::
+parseAssignment(CParseLine &line)
+{
+  int pos = line.pos();
+
+  std::string identifier;
+
+  if (! readIdentifier(line, identifier)) {
+    line.setPos(pos);
+    return false;
+  }
+
+  if (line.skipSpaceAndChar('=')) {
+    std::string expr;
+
+    if (! skipExpression("parseAssignment", line, expr)) {
+      line.setPos(pos);
+      return false;
+    }
+
+    CExprValueP value;
+
+    if (! evaluateExpression(expr, value)) {
+      line.setPos(pos);
+      return false;
+    }
+
+    if (! value.isValid()) {
+      line.setPos(pos);
+      return false;
+    }
+
+    CExprInst->createVariable(identifier, value);
+  }
+  else {
+    line.setPos(pos);
+    return false;
+  }
 
   return true;
 }
@@ -14667,13 +14830,6 @@ sphericalMap(const CPoint2D &p) const
   return CPoint3D(x, y, z);
 }
 
-double
-CGnuPlot::
-angleToRad(double a) const
-{
-  return (getAngleType() == CGnuPlotTypes::AngleType::DEGREES ? CAngle::Deg2Rad(a) : a);
-}
-
 bool
 CGnuPlot::
 evaluateExpression(const std::string &expr, CExprValueP &value, bool quiet) const
@@ -14765,31 +14921,4 @@ getBlock(const std::string &name)
   }
 
   return (*p).second;
-}
-
-//-----
-
-void
-CGnuPlot::BorderData::
-show(std::ostream &os) const
-{
-  if (! sides)
-    os << "border is not drawn" << std::endl;
-  else
-    os << "border " << sides << " is drawn in" <<
-          CStrUniqueMatch::valueToString<DrawLayer>(layer) << " layer with" <<
-          " linecolor " << lineStyle <<
-          " linewidth " << lineWidth <<
-          " lineType " << lineType << std::endl;
-}
-
-void
-CGnuPlot::BorderData::
-save(std::ostream &os) const
-{
-  os << "set border " << sides << " " <<
-        CStrUniqueMatch::valueToString<DrawLayer>(layer) <<
-        " lt " << lineType <<
-        " linewidth " << lineWidth <<
-        " dashtype solid" << std::endl;
 }

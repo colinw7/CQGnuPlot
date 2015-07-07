@@ -42,7 +42,7 @@ axesIncrementTests[MAX_GAP_TESTS] = {
 };
 
 CGnuPlotAxis::
-CGnuPlotAxis(CGnuPlotGroup *group, const std::string &id, Direction direction,
+CGnuPlotAxis(CGnuPlotGroup *group, const std::string &id, AxisDirection direction,
              double start, double end) :
  group_    (group),
  id_       (id),
@@ -53,10 +53,10 @@ CGnuPlotAxis(CGnuPlotGroup *group, const std::string &id, Direction direction,
  end1_     (end)
 {
   // set direction vector
-  if      (direction == Direction::X) { v_ = CPoint3D(1, 0, 0); iv_ = CPoint3D(0, 1, 0); }
-  else if (direction == Direction::Y) { v_ = CPoint3D(0, 1, 0); iv_ = CPoint3D(1, 0, 0); }
-  else if (direction == Direction::Z) { v_ = CPoint3D(0, 0, 1); iv_ = CPoint3D(1, 0, 0); }
-  else                                assert(false);
+  if      (direction == AxisDirection::X) { v_ = CPoint3D(1, 0, 0); iv_ = CPoint3D(0, 1, 0); }
+  else if (direction == AxisDirection::Y) { v_ = CPoint3D(0, 1, 0); iv_ = CPoint3D(1, 0, 0); }
+  else if (direction == AxisDirection::Z) { v_ = CPoint3D(0, 0, 1); iv_ = CPoint3D(1, 0, 0); }
+  else                                    assert(false);
 
   calc();
 }
@@ -454,10 +454,10 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
   double px = renderer_->pixelWidthToWindowWidth(2);
   double py = renderer_->pixelHeightToWindowHeight(2);
 
-  if      (direction_ == Direction::X)
+  if      (direction_ == AxisDirection::X)
     bbox_ = CBBox2D(renderer_->transform(p1) - CPoint2D(0, py/2),
                     renderer_->transform(p2) + CPoint2D(0, py/2));
-  else if (direction_ == Direction::Y)
+  else if (direction_ == AxisDirection::Y)
     bbox_ = CBBox2D(renderer_->transform(p1) - CPoint2D(px/2, 0),
                     renderer_->transform(p2) + CPoint2D(px/2, 0));
   else
@@ -643,9 +643,9 @@ drawAxis(CGnuPlotRenderer *renderer, bool first)
 
     const std::string &astr = getLabel();
 
-    if      (direction_ == Direction::X)
+    if      (direction_ == AxisDirection::X)
       drawAxisLabel(pm.x, astr, maxH, first);
-    else if (direction_ == Direction::Y)
+    else if (direction_ == AxisDirection::Y)
       drawAxisLabel(pm.y, astr, maxH, first);
     else
       drawAxisLabel(pm.z, astr, maxH, first);
@@ -707,10 +707,10 @@ drawTickLabel(double pos, const std::string &str, bool first)
   double xsize = renderer_->pixelWidthToWindowWidth  (8);
   double ysize = renderer_->pixelHeightToWindowHeight(8);
 
-  // bool rotatedText = (direction_ == Direction::Y);
+  // bool rotatedText = (direction_ == AxisDirection::Y);
   bool rotatedText = false;
 
-  if      (direction_ == Direction::X) {
+  if      (direction_ == AxisDirection::X) {
     CPoint3D p1 = perpPoint(p, (isLabelInside(first) ? ysize : -ysize));
 
     if (isLabelInside(first))
@@ -718,7 +718,7 @@ drawTickLabel(double pos, const std::string &str, bool first)
     else
       drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP   , 0, str);
   }
-  else if (direction_ == Direction::Y) {
+  else if (direction_ == AxisDirection::Y) {
     if (rotatedText) {
       CPoint3D p1 = perpPoint(p, (isLabelInside(first) ? ysize : -ysize));
 
@@ -760,7 +760,7 @@ drawAxisLabel(double pos, const std::string &str, int maxSize, bool first)
   double xsize = renderer_->pixelWidthToWindowWidth  (maxSize + 12);
   double ysize = renderer_->pixelHeightToWindowHeight(maxSize + 12);
 
-  if      (direction_ == Direction::X) {
+  if      (direction_ == AxisDirection::X) {
     CPoint3D p1 = perpPoint(p, (isLabelInside(first) ? ysize : -ysize));
 
     if (isLabelInside(first))
@@ -768,7 +768,7 @@ drawAxisLabel(double pos, const std::string &str, int maxSize, bool first)
     else
       drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP   , 0, str);
   }
-  else if (direction_ == Direction::Y) {
+  else if (direction_ == AxisDirection::Y) {
     CPoint3D p1 = perpPoint(p, (isLabelInside(first) ? xsize : -xsize));
 
     if (group_->is3D()) {
@@ -910,7 +910,7 @@ checkMinorTickSize(double d) const
 {
   double dp = 0;
 
-  if (direction_ == Direction::X || direction_ == Direction::Z)
+  if (direction_ == AxisDirection::X || direction_ == AxisDirection::Z)
     dp = renderer_->windowWidthToPixelWidth(d);
   else
     dp = renderer_->windowHeightToPixelHeight(d);

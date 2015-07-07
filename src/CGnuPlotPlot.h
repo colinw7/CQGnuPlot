@@ -118,8 +118,6 @@ class CGnuPlotPlot {
   typedef CGnuPlotTypes::Smooth             Smooth;
   typedef CGnuPlotTypes::SymbolType         SymbolType;
   typedef CGnuPlot::Bars                    Bars;
-  typedef CGnuPlot::AxesData                AxesData;
-  typedef CGnuPlot::FilledCurve             FilledCurve;
   typedef CGnuPlot::Hidden3DData            Hidden3DData;
   typedef std::vector<CExprValueP>          Values;
   typedef std::map<std::string,std::string> Params;
@@ -178,7 +176,10 @@ class CGnuPlotPlot {
   void setBinary(bool b) { binary_ = b; }
 
   bool isMatrix() const { return matrix_; }
-  void setMatrix(bool m) { matrix_ = m; }
+  void setMatrix(bool b) { matrix_ = b; }
+
+  bool isPolar() const { return polar_; }
+  void setPolar(bool b) { polar_ = b; }
 
   bool is3D() const;
 
@@ -294,8 +295,8 @@ class CGnuPlotPlot {
 
   //---
 
-  const FilledCurve &filledCurve() const { return filledCurve_; }
-  void setFilledCurve(const FilledCurve &c) { filledCurve_ = c; }
+  const CGnuPlotFilledCurve &filledCurve() const { return filledCurve_; }
+  void setFilledCurve(const CGnuPlotFilledCurve &c) { filledCurve_ = c; }
 
   double whiskerBars() const { return whiskerBars_; }
   void setWhiskerBars(double w) { whiskerBars_ = w; }
@@ -509,10 +510,11 @@ class CGnuPlotPlot {
   ImageData              imageData_;                        // image data
   bool                   binary_ { false };
   bool                   matrix_ { false };
+  bool                   polar_  { false };
   CGnuPlotImageStyle     imageStyle_;
   Bars                   bars_;
   CGnuPlotBoxWidth       boxWidth_;                         // box widths
-  FilledCurve            filledCurve_;                      // filled curve data
+  CGnuPlotFilledCurve    filledCurve_;                      // filled curve data
   CGnuPlotFillStyle      fillStyle_;                        // fill style
   CGnuPlotLineStyle      lineStyle_;                        // line style
   CGnuPlotPointStyle     pointStyle_;                       // point style

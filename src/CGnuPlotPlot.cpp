@@ -995,6 +995,9 @@ calcXRange(double *xmin, double *xmax) const
           if (! mapPoint3D(p, p1))
             continue;
 
+          if (IsNaN(p1.x))
+            continue;
+
           th->xmin_.updateMin(p1.x);
           th->xmax_.updateMax(p1.x);
         }
@@ -1012,6 +1015,9 @@ calcXRange(double *xmin, double *xmax) const
           double x;
 
           if (! p.getX(x))
+            continue;
+
+          if (IsNaN(x))
             continue;
 
           th->xmin_.updateMin(x);
@@ -1041,6 +1047,9 @@ calcYRange(double *ymin, double *ymax) const
           if (! mapPoint3D(p, p1))
             continue;
 
+          if (IsNaN(p1.y))
+            continue;
+
           th->ymin_.updateMin(p1.y);
           th->ymax_.updateMax(p1.y);
         }
@@ -1058,6 +1067,9 @@ calcYRange(double *ymin, double *ymax) const
           double y;
 
           if (! p.getY(y))
+            continue;
+
+          if (IsNaN(y))
             continue;
 
           th->ymin_.updateMin(y);
@@ -1127,29 +1139,29 @@ calcBoundedYRange(double *ymin, double *ymax) const
           if (p1.x < xmin || p1.x > xmax)
             continue;
 
+          if (IsNaN(p1.y))
+            continue;
+
           th->bymin_.updateMin(p1.y);
           th->bymax_.updateMax(p1.y);
         }
       }
     }
     else {
-      if (renderBBox(bbox)) {
-        th->bymin_.updateMin(bbox.getBottom());
-        th->bymax_.updateMax(bbox.getTop   ());
-      }
-      else {
-        for (const auto &p : getPoints2D()) {
-          double x, y;
+      for (const auto &p : getPoints2D()) {
+        double x, y;
 
-          if (! p.getXY(x, y))
-            continue;
+        if (! p.getXY(x, y))
+          continue;
 
-          if (x < xmin || x > xmax)
-            continue;
+        if (x < xmin || x > xmax)
+          continue;
 
-          th->bymin_.updateMin(y);
-          th->bymax_.updateMax(y);
-        }
+        if (IsNaN(y))
+          continue;
+
+        th->bymin_.updateMin(y);
+        th->bymax_.updateMax(y);
       }
     }
   }
@@ -1232,8 +1244,15 @@ getPointsRange(CBBox2D &bbox) const
         if (! mapPoint3D(p, p1))
           continue;
 
-        xmin.updateMin(p1.x); ymin.updateMin(p1.y);
-        xmax.updateMax(p1.x); ymax.updateMax(p1.y);
+        if (! IsNaN(p1.x)) {
+          xmin.updateMin(p1.x);
+          xmax.updateMax(p1.x);
+        }
+
+        if (! IsNaN(p1.y)) {
+          ymin.updateMin(p1.y);
+          ymax.updateMax(p1.y);
+        }
       }
     }
   }
@@ -1244,8 +1263,15 @@ getPointsRange(CBBox2D &bbox) const
       if (! p.getXY(x, y))
         continue;
 
-      xmin.updateMin(x); ymin.updateMin(y);
-      xmax.updateMax(x); ymax.updateMax(y);
+      if (! IsNaN(x)) {
+        xmin.updateMin(x);
+        xmax.updateMax(x);
+      }
+
+      if (! IsNaN(y)) {
+        ymin.updateMin(y);
+        ymax.updateMax(y);
+      }
     }
   }
 

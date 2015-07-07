@@ -5,6 +5,9 @@
 
 class CGnuPlotStyleFilledCurves : public CGnuPlotStyleBase {
  public:
+  typedef std::vector<CPoint2D> Points;
+  typedef std::vector<Points>   PointsArray;
+
   CGnuPlotStyleFilledCurves();
 
   int numUsing() const override { return 2; }
@@ -19,8 +22,8 @@ class CGnuPlotStyleFilledCurves : public CGnuPlotStyleBase {
   CBBox2D fit(CGnuPlotPlot *plot) override;
 
  private:
-  void drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
-                   int i, std::vector<CPoint2D> &points);
+  void addPolygons(CGnuPlotPlot *plot, const Points &points, PointsArray &pointsArray);
+  void drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &points);
 };
 
 #endif

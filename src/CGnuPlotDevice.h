@@ -115,7 +115,7 @@ class CGnuPlotDevice {
   virtual CGnuPlotRectangle *createRectangle(CGnuPlotGroup *group);
 
   virtual CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
-                                   CGnuPlotAxis::Direction dir);
+                                   CGnuPlotTypes::AxisDirection dir);
 
   virtual CGnuPlotKey *createKey(CGnuPlotGroup *group);
 

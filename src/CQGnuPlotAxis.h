@@ -44,7 +44,7 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
  public:
   typedef CQGnuPlotEnum::DrawLayerType DrawLayerType;
 
-  CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, CGnuPlotAxis::Direction dir,
+  CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, AxisDirection dir,
                 double start=0.0, double end=1.0);
  ~CQGnuPlotAxis();
 

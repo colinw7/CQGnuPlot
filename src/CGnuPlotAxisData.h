@@ -2,6 +2,7 @@
 #define CGnuPlotAxisData_H
 
 #include <CGnuPlotColorSpec.h>
+#include <CGnuPlotUtil.h>
 #include <CFont.h>
 
 class CGnuPlotAxisData {
@@ -115,6 +116,19 @@ class CGnuPlotAxisData {
   void updateMax(double r) { max_.updateMax(r); }
   void resetMax() { max_.setInvalid(); }
 
+  bool inside(double x) {
+    if      (min_.isValid() && max_.isValid())
+      return (x >= min_.getValue() && x <= max_.getValue());
+    else if (min_.isValid())
+      return (x >= min_.getValue());
+    else if (max_.isValid())
+      return (x <= max_.getValue());
+    else
+      return true;
+  }
+
+  //-----
+
   bool isBorderTics() const { return borderTics_; }
   void setBorderTics(bool b) { borderTics_ = b; }
 
@@ -206,6 +220,30 @@ class CGnuPlotAxisData {
   const COptInt &logScale() const { return logScale_; }
   void setLogScale(int s) { logScale_ = s; }
   void resetLogScale() { logScale_ = COptInt(); }
+
+  double mapLogValue(double x) const {
+    if (! logScale().isValid())
+      return x;
+
+    int base = logScale().getValue();
+    if (base <= 1) return x;
+
+    double logscale = log(base);
+
+    return log(std::max(x, 0.5))/logscale; // TODO: min value ?
+  }
+
+  double unmapLogPoint(double x) const {
+    if (! logScale().isValid())
+      return x;
+
+    int base = logScale().getValue();
+    if (base <= 1) return x;
+
+    double logscale = log(base);
+
+    return exp(x*logscale);
+  }
 
   void unset();
   void unsetRange();

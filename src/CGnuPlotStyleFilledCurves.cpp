@@ -6,6 +6,143 @@
 #include <CGnuPlotUtil.h>
 #include <CMathGeom2D.h>
 
+namespace {
+
+void getLimit(const CGnuPlotFilledCurve &filledCurve, const CBBox2D &bbox,
+              COptReal &x, COptReal &y, COptReal &r) {
+  double xmin = bbox.getXMin();
+  double ymin = bbox.getYMin();
+  double xmax = bbox.getXMax();
+  double ymax = bbox.getYMax();
+
+  if      (filledCurve.yval.isValid())
+    y = filledCurve.yval.getValue();
+  else if (filledCurve.xval.isValid())
+    x = filledCurve.xval.getValue();
+  else if (filledCurve.rval.isValid())
+    r = filledCurve.rval.getValue();
+  else if (filledCurve.xaxis == 1)
+    y = ymin;
+  else if (filledCurve.xaxis == 2)
+    y = ymax;
+  else if (filledCurve.yaxis == 1)
+    x = xmin;
+  else if (filledCurve.yaxis == 2)
+    x = xmax;
+}
+
+bool isInside(const CGnuPlotFilledCurve &filledCurve,
+              const CPoint2D &p, const COptReal &x, const COptReal &y, const COptReal &r) {
+  if      (filledCurve.above) {
+    if (x.isValid()) return p.x >= x.getValue();
+    if (y.isValid()) return p.y >= y.getValue();
+
+    if (r.isValid()) {
+      double r1 = hypot(p.x, p.y);
+
+      return (r1 >= r.getValue());
+    }
+  }
+  else if (filledCurve.below) {
+    if (x.isValid()) return p.x <= x.getValue();
+    if (y.isValid()) return p.y <= y.getValue();
+
+    if (r.isValid()) {
+      double r1 = hypot(p.x, p.y);
+
+      return (r1 < r.getValue());
+    }
+  }
+
+  return true;
+}
+
+bool interpPoint(const CPoint2D &p1, const CPoint2D &p2,
+                 const COptReal &x, const COptReal &y, const COptReal &r, CPoint2D &pi) {
+  double mi = 0;
+
+  if      (x.isValid()) {
+    if (fabs(p2.x - p1.x) > 1E-6)
+      mi = (x.getValue() - p1.x)/(p2.x - p1.x);
+
+    double yi = p1.y + mi*(p2.y - p1.y);
+
+    pi = CPoint2D(x.getValue(), yi);
+  }
+  else if (y.isValid()) {
+    if (fabs(p2.y - p1.y) > 1E-6)
+      mi = (y.getValue() - p1.y)/(p2.y - p1.y);
+
+    double xi = p1.x + mi*(p2.x - p1.x);
+
+    pi = CPoint2D(xi, y.getValue());
+  }
+  else if (r.isValid()) {
+    double r1 = hypot(p1.x, p1.y);
+    double r2 = hypot(p2.x, p2.y);
+
+    if (fabs(r2 - r1) > 1E-6)
+      mi = (r.getValue() - r1)/(r2 - r1);
+
+    double xi = p1.x + mi*(p2.x - p1.x);
+    double yi = p1.y + mi*(p2.y - p1.y);
+
+    pi = CPoint2D(xi, yi);
+  }
+  else
+    return false;
+
+  return true;
+}
+
+void closePoints(std::vector<CPoint2D> &points,
+                 const COptReal &x, const COptReal &y, const COptReal &r) {
+  if (points.size() < 3) return;
+
+  const CPoint2D &p1 = points[points.size() - 1];
+  const CPoint2D &p3 = points[0];
+
+  CPoint2D p2 = (p1 + p3)/2;
+
+  if (p1 == p2)
+    return;
+
+  if      (x.isValid() || y.isValid()) {
+    points.push_back(p3);
+    points.push_back(p2);
+  }
+  else if (r.isValid()) {
+    double r1 = hypot(p1.x, p1.y);
+    double r3 = hypot(p3.x, p3.y);
+    double a1 = atan2(p1.y, p1.x);
+    double a2 = atan2(p2.y, p2.x);
+    double a3 = atan2(p3.y, p3.x);
+
+    if (a1 < 0) a1 = 2*M_PI + a1;
+    if (a2 < 0) a2 = 2*M_PI + a2;
+    if (a3 < 0) a3 = 2*M_PI + a3;
+
+    bool between = (a2 > std::min(a1, a3) && a2 < std::max(a1, a3));
+
+    if (! between)
+      a1 += 2*M_PI;
+
+    int n = 50;
+
+    for (int i = 1; i < n; ++i) {
+      double r = r1 + i*(r3 - r1)/(n - 1);
+      double a = a1 + i*(a3 - a1)/(n - 1);
+
+      double x = r*cos(a);
+      double y = r*sin(a);
+
+      points.push_back(CPoint2D(x, y));
+    }
+  }
+}
+
+}
+
 CGnuPlotStyleFilledCurves::
 CGnuPlotStyleFilledCurves() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::FILLEDCURVES)
@@ -16,21 +153,14 @@ void
 CGnuPlotStyleFilledCurves::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  //const CBBox2D &bbox = plot->getBBox();
-
-  //double xmin = bbox.getXMin();
-  //double ymin = bbox.getYMin();
-  //double xmax = bbox.getYMax();
-  //double ymax = bbox.getYMax();
-
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-  //const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
+//const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
   //---
 
   bool fillbetween = false;
 
-  const CGnuPlot::FilledCurve &filledCurve = plot->filledCurve();
+  const CGnuPlotFilledCurve &filledCurve = plot->filledCurve();
 
   if (! filledCurve.xaxis && ! filledCurve.yaxis && ! filledCurve.xyval.isValid()) {
     if (! plot->getPoints2D().empty() && plot->getPoints2D()[0].getNumValues() > 2)
@@ -40,10 +170,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   if (! fillbetween) {
-    typedef std::vector<CPoint2D> Points;
-    typedef std::vector<Points>   PointsVector;
-
-    PointsVector pointsVector;
+    PointsArray pointsVector;
 
     uint np = plot->numPoints2D();
 
@@ -82,13 +209,18 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         pointsVector.push_back(points);
     }
 
+    PointsArray pointsArray;
+
+    for (auto &points : pointsVector)
+      addPolygons(plot, points, pointsArray);
+
     if (! renderer->isPseudo() && plot->isCacheActive()) {
-      plot->updatePolygonCacheSize(pointsVector.size());
+      plot->updatePolygonCacheSize(pointsArray.size());
     }
 
     int pi = 0;
 
-    for (auto &points : pointsVector) {
+    for (auto &points : pointsArray) {
       drawPolygon(plot, renderer, pi, points);
 
       ++pi;
@@ -162,74 +294,53 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
 void
 CGnuPlotStyleFilledCurves::
-drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, std::vector<CPoint2D> &points)
+addPolygons(CGnuPlotPlot *plot, const Points &points, PointsArray &pointsArray)
 {
-  if (points[0] != points[points.size() - 1])
-    points.push_back(points[0]);
+  const CGnuPlotFilledCurve &filledCurve = plot->filledCurve();
 
   const CBBox2D &bbox = plot->getBBox();
 
-  double xmin = bbox.getXMin();
-  double ymin = bbox.getYMin();
-  double xmax = bbox.getYMax();
-  double ymax = bbox.getYMax();
+  COptReal x, y, r;
 
-  bool inside = false;
-
-  const CGnuPlot::FilledCurve &filledCurve = plot->filledCurve();
-  const CGnuPlotLineStyle     &lineStyle   = plot->lineStyle();
-  const CGnuPlotFillStyle     &fillStyle   = plot->fillStyle();
-
-  COptReal x, y;
-
-  if      (filledCurve.yval.isValid())
-    y = filledCurve.yval.getValue();
-  else if (filledCurve.xaxis == 1)
-    y = ymin;
-  else if (filledCurve.xaxis == 2)
-    y = ymax;
-  else if (filledCurve.yaxis == 1)
-    x = xmin;
-  else if (filledCurve.yaxis == 2)
-    x = xmax;
+  getLimit(filledCurve, bbox, x, y, r);
 
   bool bxy = filledCurve.xyval.isValid();
 
-  std::vector<CPoint2D> points1;
+  bool inside = false;
+
+  Points   points1;
+  CPoint2D lastPoint;
+  bool     lastPointValid = false;
 
   for (const auto &p : points) {
-    if ((filledCurve.above && ((x.isValid() && x.getValue() > p.x) ||
-                               (y.isValid() && y.getValue() > p.y))) ||
-        (filledCurve.below && ((x.isValid() && x.getValue() < p.x) ||
-                               (y.isValid() && y.getValue() < p.y)))) {
-      if (inside) {
-        if (! points1.empty()) {
-          const CPoint2D &p1 = points1.back();
+    bool inside1 = isInside(filledCurve, p, x, y, r);
 
-          if      (x.isValid())
-            points1.push_back(CPoint2D(x.getValue(), CGnuPlotUtil::avg({p1.y,p.y})));
-          else if (y.isValid())
-            points1.push_back(CPoint2D(CGnuPlotUtil::avg({p1.x,p.x}), y.getValue()));
-        }
-        else {
-          if      (x.isValid())
-            points1.push_back(CPoint2D(x.getValue(), p.y));
-          else if (y.isValid())
-            points1.push_back(CPoint2D(p.x, y.getValue()));
-        }
+    if (! inside1) {
+      if (inside) {
+        CPoint2D pi;
+
+        if (interpPoint(lastPoint, p, x, y, r, pi))
+          points1.push_back(pi);
+
+        closePoints(points1, x, y, r);
+
+        pointsArray.push_back(points1);
+
+        points1.clear();
 
         inside = false;
       }
-
-      continue;
     }
     else {
       if (! inside) {
         if (! bxy) {
-          if      (x.isValid())
-            points1.push_back(CPoint2D(x.getValue(), p.y));
-          else if (y.isValid())
-            points1.push_back(CPoint2D(p.x, y.getValue()));
+          if (! lastPointValid)
+            lastPoint = p;
+
+          CPoint2D pi;
+
+          if (interpPoint(lastPoint, p, x, y, r, pi))
+            points1.push_back(pi);
         }
 
         inside = true;
@@ -238,36 +349,47 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, std::vector<C
 
     if (inside)
       points1.push_back(p);
+
+    lastPoint      = p;
+    lastPointValid = true;
   }
 
   if (inside) {
     if (! points1.empty()) {
       if (! bxy) {
-        const CPoint2D &p = points1.back();
+        CPoint2D pi;
 
-        if      (x.isValid())
-          points1.push_back(CPoint2D(x.getValue(), p.y));
-        else if (y.isValid())
-          points1.push_back(CPoint2D(p.x, y.getValue()));
+        if (interpPoint(lastPoint, lastPoint, x, y, r, pi))
+          points1.push_back(pi);
       }
       else
         points1.push_back(filledCurve.xyval.getValue());
+
+      closePoints(points1, x, y, r);
+
+      pointsArray.push_back(points1);
     }
   }
+}
 
-  //-----
+void
+CGnuPlotStyleFilledCurves::
+drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &points)
+{
+  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
   if (! renderer->isPseudo() && plot->isCacheActive()) {
     CGnuPlotPolygonObject *polygon = plot->polygonObjects()[i];
 
-    polygon->setPoints(points1);
+    polygon->setPoints(points);
 
     if (! polygon->isModified()) {
       polygon->resetFillColor();
       polygon->resetLineColor();
     }
 
-    if (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN) {
+    if      (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN) {
       // TODO
     }
     else if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID) {
@@ -297,11 +419,11 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, std::vector<C
   }
   else {
     // fill polygon
-    if (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN) {
+    if      (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN) {
       CRGBA fg = lineStyle.calcColor(plot->group(), CRGBA(1,1,1));
       CRGBA bg = plot->window()->backgroundColor();
 
-      renderer->patternClippedPolygon(points1, fillStyle.pattern(), fg, bg);
+      renderer->patternClippedPolygon(points, fillStyle.pattern(), fg, bg);
     }
     else if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID) {
       CRGBA fc = lineStyle.calcColor(plot->group(), CRGBA(1,1,1));
@@ -309,7 +431,7 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, std::vector<C
       if (fillStyle.isTransparent())
         fc.setAlpha(fillStyle.density());
 
-      renderer->fillClippedPolygon(points1, fc);
+      renderer->fillClippedPolygon(points, fc);
     }
 
     //-----
@@ -324,7 +446,7 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, std::vector<C
 
       double lw = lineStyle.calcWidth();
 
-      renderer->drawClippedPolygon(points1, lw, lc);
+      renderer->drawClippedPolygon(points, lw, lc);
     }
   }
 }

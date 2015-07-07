@@ -70,3 +70,9 @@
  + improve line type/line style handle (0, -1, -2, -3 indices)
  + add pentagon symbol
  + improve zero axis rendering with line type and tics above/below
+
+### 7/6/2015
+ + improve plot parsing for filled curves
+ + support polar clip for filled curves 
+ + improve polar plots (lines, impulses)
+ + return complex values for real powers and out of range asin, acos, atan

@@ -4,7 +4,7 @@
 #include <CGnuPlotRenderer.h>
 
 CQGnuPlotAxis::
-CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, CGnuPlotAxis::Direction dir,
+CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, AxisDirection dir,
               double start, double end) :
  CGnuPlotAxis(group, id, dir, start, end)
 {
