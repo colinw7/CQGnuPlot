@@ -108,13 +108,13 @@ pixelToWindow(const CPoint2D &p, CPoint2D &w)
 
   renderer->setRegion(group->region());
 
-  renderer->setRange(group->getDisplayRange(1, 1));
+  renderer->setRange(group->getMappedDisplayRange(1, 1));
 
   renderer->pixelToWindow(p, w);
 
   double z = 0;
 
-  group->unmapLogPoint(&w.x, &w.y, &z);
+  group->unmapLogPoint(1, 1, 1, &w.x, &w.y, &z);
 
   return true;
 }

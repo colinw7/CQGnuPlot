@@ -710,7 +710,7 @@ void
 CGnuPlotRenderer::
 regionToPixel(const CPoint2D &r, CPoint2D &p)
 {
-  p = CPoint2D(r.x*width() - 1, (1 - r.y)*height());
+  p = CPoint2D(r.x*(width() - 1), (1 - r.y)*(height() - 1));
 }
 
 CPoint2D

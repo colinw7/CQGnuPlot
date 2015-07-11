@@ -383,7 +383,8 @@ addGroupProperties(CGnuPlotGroup *group)
     tree_->addProperty(axisName, qaxis, "end");
   //tree_->addProperty(axisName, qaxis, "position");
   //tree_->addProperty(axisName, qaxis, "position1");
-    tree_->addProperty(axisName, qaxis, "logarithmic");
+    tree_->addProperty(axisName, qaxis, "logarithmicX");
+    tree_->addProperty(axisName, qaxis, "logarithmicY");
     tree_->addProperty(axisName, qaxis, "majorIncrement");
     tree_->addProperty(axisName, qaxis, "majorTics");
     tree_->addProperty(axisName, qaxis, "minorIncrement");

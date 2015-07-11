@@ -186,9 +186,9 @@ class CGnuPlotGroup {
 
   //---
 
-  void normalizeXRange(double &xmin, double &xmax, double xi=0) const;
-  void normalizeYRange(double &ymin, double &ymax, double yi=0) const;
-  void normalizeZRange(double &zmin, double &zmax, double zi=0) const;
+  void normalizeXRange(int ind, double &xmin, double &xmax, double xi=0) const;
+  void normalizeYRange(int ind, double &ymin, double &ymax, double yi=0) const;
+  void normalizeZRange(int ind, double &zmin, double &zmax, double zi=0) const;
 
   CBBox2D getClip(int xind=1, int yind=1) const;
 
@@ -293,7 +293,7 @@ class CGnuPlotGroup {
   void drawYAxis(CGnuPlotRenderer *renderer, int yind, bool other);
   void drawZAxis(CGnuPlotRenderer *renderer, int yind, bool other);
 
-  void drawAxis(CGnuPlotRenderer *renderer, const CGnuPlotAxisData &axis, char c, int ind);
+  void drawRAxis(CGnuPlotRenderer *renderer, const CGnuPlotAxisData &axis, char c, int ind);
 
   void drawGrid(CGnuPlotRenderer *renderer, const CGnuPlot::DrawLayer &layer);
 
@@ -304,7 +304,7 @@ class CGnuPlotGroup {
 
   CGnuPlotPlot *getSingleStylePlot() const;
 
-  CGnuPlotAxis *getPlotAxis(char c, int ind);
+  CGnuPlotAxis *getPlotAxis(char c, int ind) const;
 
   //-----
 
@@ -325,6 +325,8 @@ class CGnuPlotGroup {
   //-----
 
   void calcRange(int xind, int yind, double &xmin, double &ymin, double &xmax, double &ymax) const;
+
+  CBBox2D getMappedDisplayRange(int xind, int yind) const;
 
   CBBox2D getDisplayRange(int xind, int yind) const;
 
@@ -348,15 +350,15 @@ class CGnuPlotGroup {
 
   CPoint2D convertPolarAxisPoint(const CPoint2D &p, bool &inside) const;
 
-  CPoint3D mapLogPoint(const CPoint3D &p) const;
-  CPoint2D mapLogPoint(const CPoint2D &p) const;
+  CPoint3D mapLogPoint(int xind, int yind, int zind, const CPoint3D &p) const;
+  CPoint2D mapLogPoint(int xind, int yind, int zind, const CPoint2D &p) const;
 
-  void mapLogPoint(CPoint3D &p) const;
-  void mapLogPoint(CPoint2D &p) const;
-  void mapLogPoint(double *x, double *y, double *z) const;
+  void mapLogPoint(int xind, int yind, int zind, CPoint3D &p) const;
+  void mapLogPoint(int xind, int yind, int zind, CPoint2D &p) const;
+  void mapLogPoint(int xind, int yind, int zind, double *x, double *y, double *z) const;
 
-  void unmapLogPoint(CPoint3D &p) const;
-  void unmapLogPoint(double *x, double *y, double *z) const;
+  void unmapLogPoint(int xind, int yind, int zind, CPoint3D &p) const;
+  void unmapLogPoint(int xind, int yind, int zind, double *x, double *y, double *z) const;
 
   //-----
 

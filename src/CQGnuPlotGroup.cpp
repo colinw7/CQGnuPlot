@@ -120,14 +120,14 @@ mousePress(const QPoint &qp)
 
     double z = 0;
 
-    unmapLogPoint(&p.x, &p.y, &z);
+    unmapLogPoint(1, 1, 1, &p.x, &p.y, &z);
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
     qplot->mousePress(p, objects);
   }
 
-  renderer->setRange(getDisplayRange(1, 1));
+  renderer->setRange(getMappedDisplayRange(1, 1));
 
   for (auto &annotation : annotations()) {
     CPoint2D p;
@@ -136,7 +136,7 @@ mousePress(const QPoint &qp)
 
     double z = 0;
 
-    unmapLogPoint(&p.x, &p.y, &z);
+    unmapLogPoint(1, 1, 1, &p.x, &p.y, &z);
 
     if (annotation->inside(p)) {
       CQGnuPlotLabel *qann = static_cast<CQGnuPlotLabel *>(annotation.get());
@@ -167,7 +167,7 @@ mouseMove(const QPoint &qp)
 
     double z = 0;
 
-    unmapLogPoint(&p.x, &p.y, &z);
+    unmapLogPoint(1, 1, 1, &p.x, &p.y, &z);
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
@@ -201,7 +201,7 @@ mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
 
     double z = 0;
 
-    unmapLogPoint(&p.x, &p.y, &z);
+    unmapLogPoint(1, 1, 1, &p.x, &p.y, &z);
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
@@ -222,13 +222,13 @@ pixelToWindow(const CPoint2D &p, CPoint2D &w)
 
   renderer->setRegion(region());
 
-  renderer->setRange(getDisplayRange(1, 1));
+  renderer->setRange(getMappedDisplayRange(1, 1));
 
   renderer->pixelToWindow(p, w);
 
   double z = 0;
 
-  unmapLogPoint(&w.x, &w.y, &z);
+  unmapLogPoint(1, 1, 1, &w.x, &w.y, &z);
 }
 
 bool

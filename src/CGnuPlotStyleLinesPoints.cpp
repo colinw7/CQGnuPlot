@@ -14,13 +14,15 @@ void
 CGnuPlotStyleLinesPoints::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
 
-  CRGBA bg = plot->group()->window()->backgroundColor();
+  CRGBA bg = group->window()->backgroundColor();
 
   int pi = lineStyle.calcPointInterval();
 
@@ -39,6 +41,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   typedef std::vector<CPoint2D> Points;
 
   while (i < np) {
+    // get first point
     for ( ; i < np; ++i) {
       const CGnuPlotPoint &point1 = plot->getPoint2D(i);
 
@@ -50,8 +53,17 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     Points points;
 
+    if (plot->isPolar()) {
+      bool inside;
+
+      p1 = group->convertPolarAxisPoint(p1, inside);
+    }
+
+    group->mapLogPoint(plot->xind(), plot->yind(), 1, p1);
+
     points.push_back(p1);
 
+    // add points until discontinuity
     for ( ; i < np; ++i) {
       CPoint2D p2;
 
@@ -59,6 +71,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       if (! point2.getPoint(p2) || point2.isDiscontinuity())
         break;
+
+      if (plot->isPolar()) {
+        bool inside;
+
+        p2 = group->convertPolarAxisPoint(p2, inside);
+      }
+
+      group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);
 
       points.push_back(p2);
 
@@ -85,7 +105,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //------
 
-  double size = plot->pointSize();
+  double                    pointSize = plot->pointSize();
+  CGnuPlotTypes::SymbolType pointType = plot->pointType();
 
   uint pointNum = 0;
 
@@ -107,9 +128,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       p.y = reals[valueNum++];
     }
 
-    plot->group()->mapLogPoint(p);
+    group->mapLogPoint(plot->xind(), plot->yind(), 1, p);
 
-    double size1 = size;
+    double size1 = pointSize;
 
     if ((! isCalcColor && valueNum < reals.size()) ||
         (  isCalcColor && valueNum < reals.size() - 1))
@@ -131,13 +152,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         renderer->fillRect(CBBox2D(p - CPoint2D(pw/2, ph/2), p + CPoint2D(pw/2, ph/2)), bg);
       }
 
-      CGnuPlotTypes::SymbolType pt = plot->pointType();
-
-      if (pt == CGnuPlotTypes::SymbolType::STRING)
+      if (pointType == CGnuPlotTypes::SymbolType::STRING)
         renderer->drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
                                    plot->pointTypeStr(), c1);
       else
-        renderer->drawSymbol(p, pt, size1, c1);
+        renderer->drawSymbol(p, pointType, size1, c1);
 
       pi1 = abs(pi);
     }

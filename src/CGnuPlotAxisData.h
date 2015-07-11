@@ -221,30 +221,6 @@ class CGnuPlotAxisData {
   void setLogScale(int s) { logScale_ = s; }
   void resetLogScale() { logScale_ = COptInt(); }
 
-  double mapLogValue(double x) const {
-    if (! logScale().isValid())
-      return x;
-
-    int base = logScale().getValue();
-    if (base <= 1) return x;
-
-    double logscale = log(base);
-
-    return log(std::max(x, 0.5))/logscale; // TODO: min value ?
-  }
-
-  double unmapLogPoint(double x) const {
-    if (! logScale().isValid())
-      return x;
-
-    int base = logScale().getValue();
-    if (base <= 1) return x;
-
-    double logscale = log(base);
-
-    return exp(x*logscale);
-  }
-
   void unset();
   void unsetRange();
   void unsetZeroAxis();

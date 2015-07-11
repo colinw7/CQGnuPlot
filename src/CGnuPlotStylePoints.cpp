@@ -44,7 +44,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       p.y = reals[valueNum++];
     }
 
-    plot->group()->mapLogPoint(p);
+    plot->group()->mapLogPoint(plot->xind(), plot->yind(), 1, p);
 
     double size1 = pointSize;
 

@@ -1900,9 +1900,7 @@ plotCmd(const std::string &args)
   Plots plots;
   bool  sample = false, first = true;
 
-  CGnuPlotAxesData axesData;
-
-  std::swap(axesData, axesData_);
+  CGnuPlotAxesData axesData = axesData_;
 
   for (const auto &cmd : cmds) {
     incLineStyle();
@@ -1912,43 +1910,42 @@ plotCmd(const std::string &args)
     first = false;
   }
 
-  std::swap(axesData, axesData_);
+  //---
+
+  if (! plots.empty()) {
+    group->addObjects();
+
+    group->init();
+    group->set3D(false);
+
+    group->setClearRect(clearRect);
+
+    group->setTitleData(title());
+
+    group->addSubPlots(plots);
+
+    group->fit();
+
+    window->addGroup(group);
+
+    for (auto plot : plots)
+      plot->smooth();
+
+    //---
+
+    group->saveRange();
+
+    clearTicLabels();
+
+    //---
+
+    if (device())
+      stateChanged(window.get(), CGnuPlotTypes::ChangeState::PLOT_ADDED);
+  }
 
   //---
 
-  if (plots.empty())
-    return;
-
-  //---
-
-  group->addObjects();
-
-  group->init();
-  group->set3D(false);
-
-  group->setClearRect(clearRect);
-
-  group->setTitleData(title());
-
-  group->addSubPlots(plots);
-
-  group->fit();
-
-  window->addGroup(group);
-
-  for (auto plot : plots)
-    plot->smooth();
-
-  //---
-
-  group->saveRange();
-
-  clearTicLabels();
-
-  //---
-
-  if (device())
-    stateChanged(window.get(), CGnuPlotTypes::ChangeState::PLOT_ADDED);
+  axesData_ = axesData;
 }
 
 void
@@ -6267,6 +6264,7 @@ setCmd(const std::string &args)
     if (axesStr == "" || axesStr == "y" ) yaxis(1).setLogScale(base);
     if (axesStr == "" || axesStr == "y2") yaxis(2).setLogScale(base);
     if (axesStr == "" || axesStr == "z" ) zaxis(1).setLogScale(base);
+    if (axesStr == "" || axesStr == "r" ) raxis( ).setLogScale(base);
   }
   // set macros
   else if (var == VariableName::MACROS) {
@@ -8906,7 +8904,7 @@ showCmd(const std::string &args)
   else if (var == VariableName::LOGSCALE) {
     if (xaxis(1).logScale().isValid() || xaxis(2).logScale().isValid() ||
         yaxis(1).logScale().isValid() || yaxis(2).logScale().isValid() ||
-        zaxis(1).logScale().isValid()) {
+        zaxis(1).logScale().isValid() || raxis( ).logScale().isValid()) {
       std::cout << "logscaling";
 
       auto print = [&](const std::string &id, const CGnuPlotAxisData &axis, bool &output) {
@@ -8923,6 +8921,7 @@ showCmd(const std::string &args)
       print("y" , yaxis(1), output);
       print("y2", yaxis(2), output);
       print("z" , zaxis(1), output);
+      print("r" , raxis( ), output);
 
       std::cout << std::endl;
     }
@@ -9970,6 +9969,7 @@ unsetCmd(const std::string &args)
     yaxis(1).resetLogScale();
     yaxis(2).resetLogScale();
     zaxis(1).resetLogScale();
+    raxis( ).resetLogScale();
   }
   // unset macros
   else if (var == VariableName::MACROS) {
@@ -13766,6 +13766,9 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
 
         if (! parseReal(line1, level))
           level = 0.0;
+
+        if (label == "")
+          label = CStrUtil::strprintf("%g", pos);
 
         axis.setTicLabel(pos, label, int(level));
 

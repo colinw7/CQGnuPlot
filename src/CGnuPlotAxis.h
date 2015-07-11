@@ -39,8 +39,11 @@ class CGnuPlotAxis {
   bool isInitialized() const { return initialized_; }
   void setInitialized(bool b) { initialized_ = b; }
 
-  double getStart() const { return start1_; }
-  double getEnd  () const { return end1_  ; }
+  double getStart() const { return start_; }
+  double getEnd  () const { return end_  ; }
+
+  double getStart1() const { return start1_; }
+  double getEnd1  () const { return end1_  ; }
 
   const CPoint3D &position() const { return position_; }
   void setPosition(const CPoint3D &p) { position_ = p; }
@@ -54,11 +57,85 @@ class CGnuPlotAxis {
   const CPoint3D &linePosition1() const { return linePosition1_; }
   void setLinePosition1(const CPoint3D &p) { linePosition1_ = p; }
 
-  bool isLogarithmic() const { return logarithmic_; }
-  void setLogarithmic(bool b) { logarithmic_ = b; }
+  //---
 
-  int logarithmicBase() const { return logarithmicBase_; }
-  void setLogarithmicBase(int b) { logarithmicBase_ = b; }
+  bool isLogarithmicX() const { return logarithmicX_; }
+  void setLogarithmicX(bool b) { logarithmicX_ = b; }
+
+  int logarithmicBaseX() const { return logarithmicBaseX_; }
+  void setLogarithmicBaseX(int b) { logarithmicBaseX_ = b; }
+
+  bool isLogarithmicY() const { return logarithmicY_; }
+  void setLogarithmicY(bool b) { logarithmicY_ = b; }
+
+  int logarithmicBaseY() const { return logarithmicBaseY_; }
+  void setLogarithmicBaseY(int b) { logarithmicBaseY_ = b; }
+
+  bool isLogarithmicZ() const { return logarithmicZ_; }
+  void setLogarithmicZ(bool b) { logarithmicZ_ = b; }
+
+  int logarithmicBaseZ() const { return logarithmicBaseZ_; }
+  void setLogarithmicBaseZ(int b) { logarithmicBaseZ_ = b; }
+
+  CPoint3D mapLogPoint(const CPoint3D &p) const {
+    return CPoint3D(mapLogXValue(p.x), mapLogYValue(p.y), mapLogZValue(p.z));
+  }
+
+  CPoint3D unmapLogPoint(const CPoint3D &p) const {
+    return CPoint3D(unmapLogXValue(p.x), unmapLogYValue(p.y), unmapLogZValue(p.z));
+  }
+
+  double logValue(double x, int base) const {
+    return log(std::max(x, 0.5))/log(base); // TODO: min value ?
+  }
+
+  double expValue(double x, int base) const {
+    return exp(x*log(base)); // TODO: min value ?
+  }
+
+  double mapLogXValue(double x) const {
+    if (logarithmicX_ && logarithmicBaseX_ > 1)
+      return logValue(x, logarithmicBaseX_);
+    else
+      return x;
+  }
+
+  double mapLogYValue(double y) const {
+    if (logarithmicY_ && logarithmicBaseY_ > 1)
+      return logValue(y, logarithmicBaseY_);
+    else
+      return y;
+  }
+
+  double mapLogZValue(double z) const {
+    if (logarithmicZ_ && logarithmicBaseZ_ > 1)
+      return logValue(z, logarithmicBaseZ_);
+    else
+      return z;
+  }
+
+  double unmapLogXValue(double x) const {
+    if (logarithmicX_ && logarithmicBaseX_ > 1)
+      return expValue(x, logarithmicBaseX_);
+    else
+      return x;
+  }
+
+  double unmapLogYValue(double y) const {
+    if (logarithmicY_ && logarithmicBaseY_ > 1)
+      return expValue(y, logarithmicBaseY_);
+    else
+      return y;
+  }
+
+  double unmapLogZValue(double z) const {
+    if (logarithmicZ_ && logarithmicBaseZ_ > 1)
+      return expValue(z, logarithmicBaseZ_);
+    else
+      return z;
+  }
+
+  //---
 
   int getNumMajorTicks() const { return numTicks1_; }
   void setNumMajorTicks(int n) { numTicks1_ = n; }
@@ -246,12 +323,14 @@ class CGnuPlotAxis {
                     double w, const CLineDash &lineDash);
 
   void drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double xOffset,
-                        CVAlignType valign, double yOffset, const std::string &str);
+                        CVAlignType valign, double yOffset, const std::string &str,
+                        bool map=false);
   void drawVAlignedText(const CPoint3D &pos, CHAlignType halign, double xOffset,
-                        CVAlignType valign, double yOffset, const std::string &str);
+                        CVAlignType valign, double yOffset, const std::string &str, bool map=false);
 
   CPoint3D valueToPoint(double v, bool first) const;
-  CPoint3D ivalueToPoint(double dx, double dy) const;
+  CPoint3D ivalueToPoint(const CPoint3D &d) const;
+  CPoint2D ivalueToPoint(const CPoint2D &d) const;
 
   CPoint3D lineValueToPoint(double v, bool first) const;
 
@@ -276,8 +355,12 @@ class CGnuPlotAxis {
   CPoint3D          linePosition_      { 0, 0, 0 };
   CPoint3D          linePosition1_     { 0, 0, 0 };
   bool              reverse_           { false };
-  bool              logarithmic_       { false };
-  int               logarithmicBase_   { 10 };
+  bool              logarithmicX_      { false };
+  int               logarithmicBaseX_  { 10 };
+  bool              logarithmicY_      { false };
+  int               logarithmicBaseY_  { 10 };
+  bool              logarithmicZ_      { false };
+  int               logarithmicBaseZ_  { 10 };
   int               numTicks1_         { 1 };
   int               numTicks2_         { 0 };
   int               tickIncrement_     { 0 };

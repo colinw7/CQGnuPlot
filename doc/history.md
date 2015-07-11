@@ -76,3 +76,6 @@
  + support polar clip for filled curves 
  + improve polar plots (lines, impulses)
  + return complex values for real powers and out of range asin, acos, atan
+
+### 7/11/2015
+ + improve log axis

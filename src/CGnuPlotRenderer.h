@@ -66,12 +66,13 @@ class CGnuPlotRenderer {
 
   virtual void clear(const CRGBA &c) = 0;
 
-  virtual void drawPoint  (const CPoint2D &p, const CRGBA &c) = 0;
-  virtual void drawSymbol (const CPoint2D &p, SymbolType type, double size, const CRGBA &c) = 0;
-  virtual void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width,
-                           const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
-  virtual void drawPath   (const std::vector<CPoint2D> &points, double width,
-                           const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
+  virtual void drawPoint (const CPoint2D &p, const CRGBA &c) = 0;
+  virtual void drawSymbol(const CPoint2D &p, SymbolType type, double size, const CRGBA &c) = 0;
+
+  virtual void drawLine(const CPoint2D &p1, const CPoint2D &p2, double width,
+                        const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
+  virtual void drawPath(const std::vector<CPoint2D> &points, double width,
+                        const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
 
   virtual void drawRect   (const CBBox2D &rect, const CRGBA &c, double w) = 0;
   virtual void fillRect   (const CBBox2D &rect, const CRGBA &c) = 0;

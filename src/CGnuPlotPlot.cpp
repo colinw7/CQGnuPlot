@@ -414,7 +414,7 @@ void
 CGnuPlotPlot::
 initRenderer(CGnuPlotRenderer *renderer)
 {
-  renderer->setRange(group_->getDisplayRange(xind(), yind()));
+  renderer->setRange(group_->getMappedDisplayRange(xind(), yind()));
   renderer->setReverse(group_->xaxis(xind()).isReverse(), group_->yaxis(yind()).isReverse());
 }
 
@@ -546,10 +546,10 @@ drawSurface(CGnuPlotRenderer *renderer)
           ppoint3.getPoint(p3);
           ppoint4.getPoint(p4);
 
-          group_->mapLogPoint(p1);
-          group_->mapLogPoint(p2);
-          group_->mapLogPoint(p3);
-          group_->mapLogPoint(p4);
+          group_->mapLogPoint(xind(), yind(), 1, p1);
+          group_->mapLogPoint(xind(), yind(), 1, p2);
+          group_->mapLogPoint(xind(), yind(), 1, p3);
+          group_->mapLogPoint(xind(), yind(), 1, p4);
 
           // average color
           double za;
@@ -1100,7 +1100,7 @@ calcZRange(double *zmin, double *zmax) const
         if (! mapPoint3D(p, p1))
           continue;
 
-        group_->mapLogPoint(p1);
+        group_->mapLogPoint(xind(), yind(), 1, p1);
 
         th->zmin_.updateMin(p1.z);
         th->zmax_.updateMax(p1.z);

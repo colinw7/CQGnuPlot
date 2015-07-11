@@ -15,13 +15,20 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   CGnuPlotGroup *group = plot->group();
 
+  CGnuPlotAxis *raxis = group->getPlotAxis('r', 1);
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   bool isCalcColor = lineStyle.isCalcColor();
 
   CRGBA lc = lineStyle.calcColor(group, CRGBA(1,0,0));
 
-  double ymin = plot->getBBox().getYMin();
+  double ymin = 0.0;
+
+  if (plot->isPolar())
+    ymin = group->raxis().min().getValue(0);
+  else
+    ymin = plot->getBBox().getYMin();
 
   double y2 = std::max(0.0, ymin);
 
@@ -44,6 +51,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       if (! inside1 && ! inside2)
         continue;
+
+      p1.x = raxis->mapLogXValue(p1.x);
+      p1.y = raxis->mapLogYValue(p1.y);
+      p2.x = raxis->mapLogXValue(p2.x);
+      p2.y = raxis->mapLogYValue(p2.y);
     }
 
     CRGBA lc1 = lc;
