@@ -19,7 +19,6 @@ CQGnuPlotAnnotation.cpp \
 CQGnuPlotArrow.cpp \
 CQGnuPlotAxis.cpp \
 CQGnuPlotBarObject.cpp \
-CGnuPlotBinaryFormat.cpp \
 CQGnuPlotBubbleObject.cpp \
 CQGnuPlotCamera.cpp \
 CQGnuPlotCanvas.cpp \
@@ -52,8 +51,10 @@ CGnuPlotArrow.cpp \
 CGnuPlotArrowStyle.cpp \
 CGnuPlotAxis.cpp \
 CGnuPlotAxisData.cpp \
-CGnuPlotBBoxRenderer.cpp \
 CGnuPlotBarObject.cpp \
+CGnuPlotBBoxRenderer.cpp \
+CGnuPlotBinaryFormat.cpp \
+CGnuPlotBorderData.cpp \
 CGnuPlotBubbleObject.cpp \
 CGnuPlotCamera.cpp \
 CGnuPlotCircle.cpp \
@@ -131,7 +132,6 @@ CGnuPlotSize.cpp \
 CGnuPlotText.cpp \
 CGnuPlotTitle.cpp \
 CGnuPlotWindow.cpp \
-CGnuPlot3DRenderer.cpp \
 \
 CQPropertyDelegate.cpp \
 CQPropertyEditor.cpp \
@@ -211,7 +211,6 @@ CQGnuPlotTitle.h \
 CQGnuPlotToolBar.h \
 CQGnuPlotUtil.h \
 CQGnuPlotWindow.h \
-CGnuPlot3DRenderer.h \
 \
 CGnuPlot.h \
 CGnuPlotArrow.h \
