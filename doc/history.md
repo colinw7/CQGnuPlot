@@ -79,3 +79,7 @@
 
 ### 7/11/2015
  + improve log axis
+
+### 7/19/2015
+ + improve polar plot (log on/off)
+ + make time stamp configurable object
