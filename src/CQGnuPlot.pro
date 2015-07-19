@@ -41,6 +41,7 @@ CQGnuPlotPolygonObject.cpp \
 CQGnuPlotRectangle.cpp \
 CQGnuPlotRectObject.cpp \
 CQGnuPlotRenderer.cpp \
+CQGnuPlotTimeStamp.cpp \
 CQGnuPlotTitle.cpp \
 CQGnuPlotToolBar.cpp \
 CQGnuPlotUtil.cpp \
@@ -86,6 +87,7 @@ CGnuPlotRectangle.cpp \
 CGnuPlotRectObject.cpp \
 CGnuPlotRenderer.cpp \
 CGnuPlotStyle.cpp \
+CGnuPlotTimeStamp.cpp \
 CGnuPlotUsingCols.cpp \
 \
 CGnuPlotStyleAdjacency.cpp \
@@ -207,6 +209,7 @@ CQGnuPlotPolygonObject.h \
 CQGnuPlotRectangle.h \
 CQGnuPlotRectObject.h \
 CQGnuPlotRenderer.h \
+CQGnuPlotTimeStamp.h \
 CQGnuPlotTitle.h \
 CQGnuPlotToolBar.h \
 CQGnuPlotUtil.h \
@@ -257,6 +260,7 @@ CGnuPlotRenderer.h \
 CGnuPlotSVGDevice.h \
 CGnuPlotSVGRenderer.h \
 CGnuPlotSize.h \
+CGnuPlotTimeStamp.h \
 CGnuPlotUsingCols.h \
 \
 CGnuPlotStyleAdjacency.h \

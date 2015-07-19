@@ -513,7 +513,7 @@ drawSurface(CGnuPlotRenderer *renderer)
 
   CRGBA c = lineStyle.calcColor(group_, CRGBA(0,0,0));
 
-  CGnuPlotCamera *camera = group()->camera();
+  CGnuPlotCameraP camera = group()->camera();
 
   bool isCalcColor = lineStyle.isCalcColor();
 
@@ -546,10 +546,10 @@ drawSurface(CGnuPlotRenderer *renderer)
           ppoint3.getPoint(p3);
           ppoint4.getPoint(p4);
 
-          group_->mapLogPoint(xind(), yind(), 1, p1);
-          group_->mapLogPoint(xind(), yind(), 1, p2);
-          group_->mapLogPoint(xind(), yind(), 1, p3);
-          group_->mapLogPoint(xind(), yind(), 1, p4);
+          p1 = group_->mapLogPoint(xind(), yind(), 1, p1);
+          p2 = group_->mapLogPoint(xind(), yind(), 1, p2);
+          p3 = group_->mapLogPoint(xind(), yind(), 1, p3);
+          p4 = group_->mapLogPoint(xind(), yind(), 1, p4);
 
           // average color
           double za;
@@ -1100,7 +1100,7 @@ calcZRange(double *zmin, double *zmax) const
         if (! mapPoint3D(p, p1))
           continue;
 
-        group_->mapLogPoint(xind(), yind(), 1, p1);
+        p1 = group_->mapLogPoint(xind(), yind(), 1, p1);
 
         th->zmin_.updateMin(p1.z);
         th->zmax_.updateMax(p1.z);

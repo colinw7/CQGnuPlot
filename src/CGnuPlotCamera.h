@@ -5,6 +5,7 @@
 #include <CVector3D.h>
 #include <CCoordFrame3D.h>
 #include <CMatrix3DH.h>
+#include <CRefPtr.h>
 
 class CGnuPlotGroup;
 
@@ -128,5 +129,7 @@ class CGnuPlotCamera {
   double         fov_        { 90 };
   CMatrix3DH     projMatrix_;
 };
+
+typedef CRefPtr<CGnuPlotCamera> CGnuPlotCameraP;
 
 #endif

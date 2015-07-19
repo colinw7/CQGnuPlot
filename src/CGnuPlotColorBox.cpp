@@ -5,7 +5,7 @@
 
 CGnuPlotColorBox::
 CGnuPlotColorBox(CGnuPlotGroup *group) :
- group_(group)
+ group_(group), axis_(CGnuPlotTypes::AxisType::CB, 1)
 {
 }
 
@@ -247,13 +247,13 @@ draw(CGnuPlotRenderer *renderer)
     if (vertical_) {
       double ym = (y1 + y2)/2;
 
-      renderer->drawRotatedText(CPoint2D(x2, ym), cbaxis.text(), cbaxis.rotate(),
+      renderer->drawRotatedText(CPoint2D(x2, ym), cbaxis.text(), cbaxis.labelRotate(),
                                 CHALIGN_TYPE_LEFT, CVALIGN_TYPE_CENTER, CRGBA(0,0,0));
     }
     else {
       double xm = (x1 + x2)/2;
 
-      renderer->drawRotatedText(CPoint2D(xm, y1), cbaxis.text(), cbaxis.rotate(),
+      renderer->drawRotatedText(CPoint2D(xm, y1), cbaxis.text(), cbaxis.labelRotate(),
                                 CHALIGN_TYPE_LEFT, CVALIGN_TYPE_CENTER, CRGBA(0,0,0));
     }
   }

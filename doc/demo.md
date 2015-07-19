@@ -275,9 +275,9 @@
   + Invalid arg 'notitle'
 
 ## poldat.dem
-  + Invalid option name 'noxtics'
-  + Invalid arg 'title'
-  + Invalid arg ''silver.dat''
+  + axis labels no spaced correctly
+  + timestamp position on left plot edge
+  + polar empty center circle
 
 ## prob2.dem
   + Eval failed:  1.1 * binom(floor((n+1)*p), n, p)

@@ -21,6 +21,7 @@ main(int argc, char **argv)
   bool png          = false;
   bool autoContinue = false;
   bool autoExit     = false;
+  bool mainLoop     = false;
 
   std::string ofile = "";
 
@@ -61,6 +62,8 @@ main(int argc, char **argv)
         autoContinue = true;
       else if (arg == "x")
         autoExit = true;
+      else if (arg == "qt")
+        mainLoop = true;
     }
     else
       files.push_back(argv[i]);
@@ -91,7 +94,9 @@ main(int argc, char **argv)
   for (const auto &file : files)
     plot.load(file);
 
-  if (! autoExit)
+  if      (mainLoop)
+    app.exec();
+  else if (! autoExit)
     plot.loop();
 
   return 0;

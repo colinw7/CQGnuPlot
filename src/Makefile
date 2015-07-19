@@ -72,6 +72,7 @@ SOURCES       = CQGnuPlot.cpp \
 		CQGnuPlotRectangle.cpp \
 		CQGnuPlotRectObject.cpp \
 		CQGnuPlotRenderer.cpp \
+		CQGnuPlotTimeStamp.cpp \
 		CQGnuPlotTitle.cpp \
 		CQGnuPlotToolBar.cpp \
 		CQGnuPlotUtil.cpp \
@@ -116,6 +117,7 @@ SOURCES       = CQGnuPlot.cpp \
 		CGnuPlotRectObject.cpp \
 		CGnuPlotRenderer.cpp \
 		CGnuPlotStyle.cpp \
+		CGnuPlotTimeStamp.cpp \
 		CGnuPlotUsingCols.cpp \
 		CGnuPlotStyleAdjacency.cpp \
 		CGnuPlotStyleBoxErrorBars.cpp \
@@ -223,6 +225,7 @@ SOURCES       = CQGnuPlot.cpp \
 		moc_CQGnuPlotPolygonObject.cpp \
 		moc_CQGnuPlotRectangle.cpp \
 		moc_CQGnuPlotRectObject.cpp \
+		moc_CQGnuPlotTimeStamp.cpp \
 		moc_CQGnuPlotTitle.cpp \
 		moc_CQGnuPlotToolBar.cpp \
 		moc_CQGnuPlotWindow.cpp \
@@ -264,6 +267,7 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CQGnuPlotRectangle.o \
 		../obj/CQGnuPlotRectObject.o \
 		../obj/CQGnuPlotRenderer.o \
+		../obj/CQGnuPlotTimeStamp.o \
 		../obj/CQGnuPlotTitle.o \
 		../obj/CQGnuPlotToolBar.o \
 		../obj/CQGnuPlotUtil.o \
@@ -308,6 +312,7 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CGnuPlotRectObject.o \
 		../obj/CGnuPlotRenderer.o \
 		../obj/CGnuPlotStyle.o \
+		../obj/CGnuPlotTimeStamp.o \
 		../obj/CGnuPlotUsingCols.o \
 		../obj/CGnuPlotStyleAdjacency.o \
 		../obj/CGnuPlotStyleBoxErrorBars.o \
@@ -416,6 +421,7 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/moc_CQGnuPlotPolygonObject.o \
 		../obj/moc_CQGnuPlotRectangle.o \
 		../obj/moc_CQGnuPlotRectObject.o \
+		../obj/moc_CQGnuPlotTimeStamp.o \
 		../obj/moc_CQGnuPlotTitle.o \
 		../obj/moc_CQGnuPlotToolBar.o \
 		../obj/moc_CQGnuPlotWindow.o \
@@ -689,7 +695,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d ../obj/CQGnuPlot1.0.0 || mkdir -p ../obj/CQGnuPlot1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBarObject.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEnum.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBarObject.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotUsingCols.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CQRotatedText.h CQComboSlider.h CQSlider.h CQAngleSpinBox.h CQIntegerSpin.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBarObject.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBarObject.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotPalette.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStyle.cpp CGnuPlotUsingCols.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CQRotatedText.cpp CQComboSlider.cpp CQSlider.cpp CQAngleSpinBox.cpp CQIntegerSpin.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCompile.cpp Expr/CExprCValue.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprToken.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBarObject.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEnum.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBarObject.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CQRotatedText.h CQComboSlider.h CQSlider.h CQAngleSpinBox.h CQIntegerSpin.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBarObject.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBarObject.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotPalette.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStyle.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CQRotatedText.cpp CQComboSlider.cpp CQSlider.cpp CQAngleSpinBox.cpp CQIntegerSpin.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CMathGeom2D.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCompile.cpp Expr/CExprCValue.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprToken.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
 
 
 clean:compiler_clean 
@@ -712,9 +718,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotEllipseObject.cpp moc_CQGnuPlotEnum.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotPolygonObject.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotToolBar.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQComboSlider.cpp moc_CQSlider.cpp moc_CQAngleSpinBox.cpp moc_CQIntegerSpin.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
+compiler_moc_header_make_all: moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotEllipseObject.cpp moc_CQGnuPlotEnum.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotPolygonObject.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTimeStamp.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotToolBar.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQComboSlider.cpp moc_CQSlider.cpp moc_CQAngleSpinBox.cpp moc_CQIntegerSpin.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotEllipseObject.cpp moc_CQGnuPlotEnum.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotPolygonObject.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotToolBar.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQComboSlider.cpp moc_CQSlider.cpp moc_CQAngleSpinBox.cpp moc_CQIntegerSpin.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
+	-$(DEL_FILE) moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotEllipseObject.cpp moc_CQGnuPlotEnum.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotPolygonObject.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTimeStamp.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotToolBar.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQComboSlider.cpp moc_CQSlider.cpp moc_CQAngleSpinBox.cpp moc_CQIntegerSpin.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
 moc_CQGnuPlot.cpp: CGnuPlot.h \
 		Expr/CExpr.h \
 		../../CUtil/include/CRefPtr.h \
@@ -765,6 +771,10 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -776,11 +786,10 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -794,7 +803,6 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -822,13 +830,14 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -976,13 +985,15 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -1021,6 +1032,7 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -1033,7 +1045,6 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -1061,13 +1072,14 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -1168,13 +1180,15 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -1213,6 +1227,7 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -1225,7 +1240,6 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -1253,13 +1267,14 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -1388,6 +1403,10 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -1399,11 +1418,10 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -1417,7 +1435,6 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -1445,13 +1462,14 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -1460,6 +1478,23 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/qpoint.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/QFont \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
 		CQGnuPlotAxis.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotAxis.h -o moc_CQGnuPlotAxis.cpp
 
@@ -1546,13 +1581,15 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -1591,6 +1628,7 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -1603,7 +1641,6 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -1631,13 +1668,14 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -1739,13 +1777,15 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -1784,6 +1824,7 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -1796,7 +1837,6 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -1824,13 +1864,14 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -1919,6 +1960,7 @@ moc_CQGnuPlotCamera.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CMatrixType.h \
 		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
+		../../CUtil/include/CRefPtr.h \
 		CQGnuPlotCamera.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCamera.h -o moc_CQGnuPlotCamera.cpp
 
@@ -2117,13 +2159,15 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -2162,6 +2206,7 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -2174,7 +2219,6 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -2202,13 +2246,14 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -2308,16 +2353,19 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
+		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
@@ -2367,7 +2415,6 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -2394,13 +2441,14 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -2501,13 +2549,15 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -2546,6 +2596,7 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -2558,7 +2609,6 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -2586,13 +2636,14 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -2695,13 +2746,15 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -2740,6 +2793,7 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -2752,7 +2806,6 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -2780,13 +2833,14 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -2916,6 +2970,10 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -2927,11 +2985,10 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -2945,7 +3002,6 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -2973,13 +3029,14 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -3047,6 +3104,7 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotGroup.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotGroup.h -o moc_CQGnuPlotGroup.cpp
@@ -3133,13 +3191,15 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		../../CUtil/include/CAlignType.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
@@ -3178,6 +3238,7 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -3191,7 +3252,6 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -3219,13 +3279,14 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -3326,13 +3387,15 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -3371,6 +3434,7 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -3383,7 +3447,6 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -3411,13 +3474,14 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -3562,6 +3626,10 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -3573,11 +3641,10 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -3591,7 +3658,6 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -3619,13 +3685,14 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -3774,6 +3841,10 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CColor.h \
@@ -3815,11 +3886,10 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -3833,7 +3903,6 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -3861,13 +3930,14 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -3960,13 +4030,15 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -4005,6 +4077,7 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -4017,7 +4090,6 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -4045,13 +4117,14 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -4179,6 +4252,10 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -4190,11 +4267,10 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -4208,7 +4284,6 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -4236,13 +4311,14 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -4349,13 +4425,15 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -4394,6 +4472,7 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -4406,7 +4485,6 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -4434,13 +4512,14 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -4542,13 +4621,15 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -4587,6 +4668,7 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -4599,7 +4681,6 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -4627,13 +4708,14 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -4734,13 +4816,15 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -4779,6 +4863,7 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -4791,7 +4876,6 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -4819,13 +4903,14 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -4928,13 +5013,15 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -4973,6 +5060,7 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -4985,7 +5073,6 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -5013,13 +5100,14 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -5037,6 +5125,103 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/qstringmatcher.h \
 		CQGnuPlotRectObject.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotRectObject.h -o moc_CQGnuPlotRectObject.cpp
+
+moc_CQGnuPlotTimeStamp.cpp: CQGnuPlotObject.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CGnuPlotTimeStamp.h \
+		CGnuPlotTimeStampData.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		CQGnuPlotTimeStamp.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTimeStamp.h -o moc_CQGnuPlotTimeStamp.cpp
 
 moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -5119,6 +5304,10 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -5159,11 +5348,10 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -5176,7 +5364,6 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -5204,13 +5391,14 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -5400,6 +5588,10 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -5411,11 +5603,10 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -5429,7 +5620,6 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -5457,13 +5647,14 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -6963,6 +7154,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -6974,11 +7169,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -6992,7 +7186,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -7020,13 +7213,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -7152,6 +7346,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
@@ -7292,13 +7487,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -7337,6 +7534,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -7349,7 +7547,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -7377,13 +7574,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -7404,6 +7602,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
@@ -7577,13 +7776,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -7622,6 +7823,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -7634,7 +7836,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -7662,13 +7863,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -7690,6 +7892,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
@@ -7889,6 +8092,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -7900,11 +8107,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -7918,7 +8124,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -7946,13 +8151,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -7961,15 +8167,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qpoint.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
-		CQGnuPlotGroup.h \
-		CGnuPlotGroup.h \
-		CGnuPlotKey.h \
-		CQGnuPlotUtil.h \
-		CQGnuPlotPlot.h \
-		CGnuPlotPlot.h \
-		CGnuPlotContour.h \
-		CGnuPlotPoint.h \
-		CGnuPlotCache.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
 		/usr/include/qt5/QtGui/qrgb.h \
@@ -7979,7 +8176,100 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qpair.h \
 		/usr/include/qt5/QtCore/qregexp.h \
 		/usr/include/qt5/QtCore/qstringmatcher.h \
-		CGnuPlotRenderer.h
+		/usr/include/qt5/QtGui/QFont \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		CQGnuPlotGroup.h \
+		CGnuPlotGroup.h \
+		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
+		CQGnuPlotUtil.h \
+		CQGnuPlotPlot.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CQGnuPlotRenderer.h \
+		CGnuPlotRenderer.h \
+		../../CQUtil/include/CQUtil.h \
+		/usr/include/qt5/QtCore/Qt \
+		/usr/include/qt5/QtCore/QEvent \
+		/usr/include/qt5/QtCore/QVariant \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtWidgets/QTableWidget \
+		/usr/include/qt5/QtWidgets/qtablewidget.h \
+		/usr/include/qt5/QtWidgets/qtableview.h \
+		/usr/include/qt5/QtWidgets/qabstractitemview.h \
+		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h \
+		/usr/include/qt5/QtCore/qitemselectionmodel.h \
+		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
+		/usr/include/qt5/QtWidgets/qstyleoption.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qstyle.h \
+		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
+		/usr/include/qt5/QtWidgets/qrubberband.h \
+		/usr/include/qt5/QtGui/QPen \
+		/usr/include/qt5/QtGui/qpen.h \
+		../../CUtil/include/CEvent.h \
+		../../CUtil/include/CKeyType.h \
+		../../CImageLib/include/CImageLib.h \
+		../../CFile/include/CFile.h \
+		../../CFile/include/CFileBase.h \
+		../../CFile/include/CFileType.h \
+		../../CImageLib/include/CImageState.h \
+		../../CImageLib/include/CImage.h \
+		../../CMath/include/CIBBox2D.h \
+		../../CMath/include/CIVector2D.h \
+		../../CImageLib/include/CImagePtr.h \
+		../../CImageLib/include/CImageMgr.h \
+		../../CImageLib/include/CImageAnim.h \
+		../../CImageLib/include/CImageFile.h \
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotAxis.o CQGnuPlotAxis.cpp
 
 ../obj/CQGnuPlotBarObject.o: CQGnuPlotBarObject.cpp CQGnuPlotBarObject.h \
@@ -8066,13 +8356,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -8111,6 +8403,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -8123,7 +8416,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -8151,13 +8443,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -8268,13 +8561,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -8313,6 +8608,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -8325,7 +8621,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -8353,13 +8648,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -8457,11 +8753,11 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CMatrixType.h \
 		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
+		../../CUtil/include/CRefPtr.h \
 		CQGnuPlotGroup.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -8507,6 +8803,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -8521,6 +8818,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -8554,13 +8852,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -8570,7 +8869,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
-		CGnuPlotKey.h
+		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotCamera.o CQGnuPlotCamera.cpp
 
 ../obj/CQGnuPlotCanvas.o: CQGnuPlotCanvas.cpp CQGnuPlotCanvas.h \
@@ -8734,6 +9034,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -8745,11 +9049,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -8763,7 +9066,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -8791,13 +9093,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QString \
@@ -8812,6 +9115,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
@@ -8914,13 +9218,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -8959,6 +9265,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -8971,7 +9278,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -8999,13 +9305,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -9027,6 +9334,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h \
 		../../CQUtil/include/CQUtil.h \
 		/usr/include/qt5/QtCore/Qt \
@@ -9192,16 +9500,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
+		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
@@ -9251,7 +9562,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -9278,13 +9588,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -9305,6 +9616,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
@@ -9422,6 +9734,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxis.h \
@@ -9431,10 +9747,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		../../CUtil/include/CAlignType.h \
 		CDirectionType.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -9480,7 +9795,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -9508,13 +9822,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -9638,6 +9953,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
@@ -9660,6 +9976,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotPalette.h \
 		CQGnuPlotTitle.h \
 		CQGnuPlotCamera.h \
+		CQGnuPlotTimeStamp.h \
 		CQGnuPlotBubbleObject.h \
 		CGnuPlotBubbleObject.h \
 		CQGnuPlotBarObject.h \
@@ -9764,13 +10081,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -9809,6 +10128,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -9821,7 +10141,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -9849,13 +10168,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -9877,6 +10197,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h \
 		../../CQUtil/include/CQUtil.h \
 		/usr/include/qt5/QtCore/Qt \
@@ -10045,13 +10366,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -10090,6 +10413,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -10102,7 +10426,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -10130,13 +10453,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -10215,6 +10539,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -10226,11 +10554,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -10244,7 +10571,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -10272,13 +10598,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -10346,6 +10673,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotWindow.h \
 		CGnuPlotWindow.h \
@@ -10503,13 +10831,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		../../CUtil/include/CAlignType.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
@@ -10548,6 +10878,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -10561,7 +10892,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -10589,13 +10919,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -10614,6 +10945,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
@@ -10788,13 +11120,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -10833,6 +11167,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -10845,7 +11180,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -10873,13 +11207,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -10909,6 +11244,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
@@ -11110,6 +11446,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -11121,11 +11461,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -11139,7 +11478,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -11167,13 +11505,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -11352,6 +11691,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CColor.h \
@@ -11393,11 +11736,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -11411,7 +11753,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -11439,13 +11780,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -11457,6 +11799,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
@@ -11558,13 +11901,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -11603,6 +11948,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -11615,7 +11961,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -11643,13 +11988,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -11786,6 +12132,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -11797,11 +12147,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -11815,7 +12164,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -11843,13 +12191,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -11920,6 +12269,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CQGnuPlotBarObject.h \
 		CGnuPlotBarObject.h \
 		CQGnuPlotBubbleObject.h \
@@ -12002,6 +12352,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxis.h \
@@ -12011,10 +12365,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		../../CUtil/include/CAlignType.h \
 		CDirectionType.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CQGnuPlotPNGRenderer.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlot.h \
@@ -12061,7 +12414,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -12089,13 +12441,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -12165,6 +12518,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
@@ -12251,6 +12605,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -12262,11 +12620,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -12280,7 +12637,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -12308,13 +12664,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -12470,13 +12827,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -12515,6 +12874,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -12527,7 +12887,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -12555,13 +12914,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -12582,6 +12942,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotPolygon.o CQGnuPlotPolygon.cpp
 
@@ -12669,13 +13030,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -12714,6 +13077,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -12726,7 +13090,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -12754,13 +13117,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -12870,13 +13234,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -12915,6 +13281,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -12927,7 +13294,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -12955,13 +13321,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -12983,6 +13350,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
@@ -13157,13 +13525,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
@@ -13202,6 +13572,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -13214,7 +13585,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -13242,13 +13612,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -13326,6 +13697,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -13337,11 +13712,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -13355,7 +13729,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -13383,13 +13756,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -13571,6 +13945,197 @@ compiler_clean: compiler_moc_header_clean
 		../../CFont/include/CFontMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotRenderer.o CQGnuPlotRenderer.cpp
 
+../obj/CQGnuPlotTimeStamp.o: CQGnuPlotTimeStamp.cpp CQGnuPlotTimeStamp.h \
+		CQGnuPlotObject.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CGnuPlotTimeStamp.h \
+		CGnuPlotTimeStampData.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		CQGnuPlotGroup.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotDash.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CQGnuPlotEnum.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotTimeStamp.o CQGnuPlotTimeStamp.cpp
+
 ../obj/CQGnuPlotTitle.o: CQGnuPlotTitle.cpp CQGnuPlotTitle.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -13653,6 +14218,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -13693,11 +14262,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -13710,7 +14278,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -13738,13 +14305,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -13773,6 +14341,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
@@ -14043,6 +14612,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -14054,11 +14627,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -14072,7 +14644,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -14100,13 +14671,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -14242,6 +14814,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -14253,11 +14829,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -14271,7 +14846,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -14299,13 +14873,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -14427,6 +15002,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
@@ -14447,12 +15023,13 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotPolygon.h \
 		CQGnuPlotRectangle.h \
 		CQGnuPlotAxis.h \
-		CQGnuPlotKey.h \
 		/usr/include/qt5/QtGui/QFont \
+		CQGnuPlotKey.h \
 		CQGnuPlotColorBox.h \
 		CQGnuPlotPalette.h \
 		CQGnuPlotTitle.h \
 		CQGnuPlotCamera.h \
+		CQGnuPlotTimeStamp.h \
 		CQGnuPlotLabel.h \
 		CQGnuPlotDevice.h \
 		CGnuPlotDevice.h \
@@ -14583,6 +15160,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -14594,11 +15175,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -14612,7 +15192,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -14640,18 +15219,20 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
@@ -14749,13 +15330,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotArrowStyle.h \
@@ -14795,6 +15378,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
@@ -14804,7 +15388,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -14832,16 +15415,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
@@ -14874,6 +15459,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotDash.h \
@@ -14914,11 +15503,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPointStyle.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -14931,7 +15519,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -14959,13 +15546,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
-		CGnuPlotFilledCurve.h
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotArrowStyle.o CGnuPlotArrowStyle.cpp
 
 ../obj/CGnuPlotAxis.o: CGnuPlotAxis.cpp CGnuPlotAxis.h \
@@ -14989,6 +15577,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxisData.h \
@@ -14997,14 +15589,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CUtil/include/CAlignType.h \
 		CDirectionType.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotWindow.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -15050,7 +15641,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -15078,15 +15668,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
@@ -15117,11 +15709,16 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
@@ -15158,8 +15755,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
@@ -15174,7 +15769,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -15202,16 +15796,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
-		CGnuPlotKey.h
+		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotAxisData.o CGnuPlotAxisData.cpp
 
 ../obj/CGnuPlotBarObject.o: CGnuPlotBarObject.cpp CGnuPlotBarObject.h \
@@ -15239,13 +15835,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPlot.h \
@@ -15284,6 +15882,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -15296,7 +15895,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -15324,13 +15922,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
@@ -15389,6 +15988,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -15400,11 +16003,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -15418,7 +16020,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -15446,13 +16047,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotRenderer.h \
 		CSymbol2D.h \
 		CMathGeom2D.h \
@@ -15490,6 +16092,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CStrUniqueMatch.h
@@ -15520,13 +16126,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPlot.h \
@@ -15565,6 +16173,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -15577,7 +16186,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -15605,13 +16213,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
@@ -15631,10 +16240,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CMatrixType.h \
 		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -15680,6 +16289,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -15694,6 +16304,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -15727,16 +16338,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
-		CGnuPlotKey.h
+		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotCamera.o CGnuPlotCamera.cpp
 
 ../obj/CGnuPlotCircle.o: CGnuPlotCircle.cpp CGnuPlotCircle.h \
@@ -15764,13 +16377,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotFillStyle.h \
@@ -15809,6 +16424,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotArrowStyle.h \
@@ -15819,7 +16435,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -15847,17 +16462,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
-		CGnuPlotKey.h
+		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotCircle.o CGnuPlotCircle.cpp
 
 ../obj/CGnuPlotColorBox.o: CGnuPlotColorBox.cpp CGnuPlotColorBox.h \
@@ -15882,16 +16499,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
+		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
@@ -15941,7 +16561,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -15968,16 +16587,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotColorBox.o CGnuPlotColorBox.cpp
 
@@ -16003,6 +16624,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -16043,11 +16668,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -16061,7 +16685,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -16089,16 +16712,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
@@ -16157,6 +16782,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -16168,11 +16797,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -16186,7 +16814,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -16214,17 +16841,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotWindow.h \
 		CGnuPlotPlot.h \
 		CGnuPlotPoint.h \
@@ -16252,6 +16881,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotRenderer.h \
@@ -16293,11 +16926,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPointStyle.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -16311,7 +16943,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -16339,13 +16970,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotWindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotCoordValue.o CGnuPlotCoordValue.cpp
 
@@ -16370,6 +17002,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlot.h \
@@ -16410,11 +17046,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -16428,7 +17063,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -16456,13 +17090,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
-		CGnuPlotFilledCurve.h
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotDash.o CGnuPlotDash.cpp
 
 ../obj/CGnuPlotDevice.o: CGnuPlotDevice.cpp CGnuPlotDevice.h \
@@ -16490,6 +17125,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxis.h \
@@ -16499,10 +17138,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		../../CUtil/include/CAlignType.h \
 		CDirectionType.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotWindow.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -16548,7 +17186,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -16576,15 +17213,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
@@ -16623,13 +17262,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotFillStyle.h \
@@ -16668,6 +17309,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotArrowStyle.h \
@@ -16678,7 +17320,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -16706,17 +17347,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
-		CGnuPlotKey.h
+		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotEllipse.o CGnuPlotEllipse.cpp
 
 ../obj/CGnuPlotEllipseObject.o: CGnuPlotEllipseObject.cpp CGnuPlotEllipseObject.h \
@@ -16744,13 +17387,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPlot.h \
@@ -16789,6 +17434,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -16801,7 +17447,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -16829,13 +17474,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
@@ -16878,6 +17524,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotColorSpec.h \
@@ -16920,11 +17570,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -16938,7 +17587,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -16965,13 +17613,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
-		CGnuPlotFilledCurve.h
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotFillStyle.o CGnuPlotFillStyle.cpp
 
 ../obj/CGnuPlotGroup.o: CGnuPlotGroup.cpp CGnuPlotGroup.h \
@@ -17025,6 +17674,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -17036,11 +17689,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -17054,7 +17706,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -17082,16 +17733,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotWindow.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
@@ -17127,13 +17780,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		../../CUtil/include/CAlignType.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
@@ -17172,6 +17827,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -17185,7 +17841,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -17213,14 +17868,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
@@ -17253,13 +17910,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		../../CUtil/include/CAlignType.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
@@ -17293,13 +17952,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotText.h \
@@ -17339,6 +18000,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotArrowStyle.h \
@@ -17348,7 +18010,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -17376,17 +18037,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		../../CFont/include/CFontMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotLabel.o CGnuPlotLabel.cpp
 
@@ -17411,6 +18074,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotColorSpec.h \
@@ -17451,11 +18118,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -17469,7 +18135,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -17497,18 +18162,20 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
@@ -17536,6 +18203,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotColorSpec.h \
@@ -17577,11 +18248,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -17595,7 +18265,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -17623,16 +18292,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
-		CGnuPlotKey.h
+		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotLineType.o CGnuPlotLineType.cpp
 
 ../obj/CGnuPlotPalette.o: CGnuPlotPalette.cpp CGnuPlotPalette.h \
@@ -17656,6 +18327,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CColor.h \
@@ -17690,13 +18365,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPlot.h \
@@ -17735,6 +18412,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -17747,7 +18425,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -17775,13 +18452,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
@@ -17840,6 +18518,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -17851,11 +18533,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -17869,7 +18550,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -17897,13 +18577,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -17912,6 +18593,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotBarObject.h \
 		CGnuPlotBubbleObject.h \
@@ -17985,13 +18667,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotFillStyle.h \
@@ -18030,6 +18714,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotArrowStyle.h \
@@ -18040,7 +18725,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -18068,17 +18752,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotWindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPolygon.o CGnuPlotPolygon.cpp
 
@@ -18107,13 +18793,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPlot.h \
@@ -18152,6 +18840,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -18164,7 +18853,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -18192,13 +18880,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
@@ -18234,10 +18923,12 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
+		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
 		CGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -18280,6 +18971,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -18293,7 +18985,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -18321,13 +19012,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
-		CGnuPlotFilledCurve.h
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPosition.o CGnuPlotPosition.cpp
 
 ../obj/CGnuPlotPrintFile.o: CGnuPlotPrintFile.cpp CGnuPlotPrintFile.h \
@@ -18381,6 +19073,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -18392,11 +19088,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -18410,7 +19105,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -18438,12 +19132,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
-		CGnuPlotFilledCurve.h
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPrintFile.o CGnuPlotPrintFile.cpp
 
 ../obj/CGnuPlotRectangle.o: CGnuPlotRectangle.cpp CGnuPlotRectangle.h \
@@ -18471,13 +19166,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotFillStyle.h \
@@ -18516,6 +19213,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotArrowStyle.h \
@@ -18526,7 +19224,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPolygon.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -18554,16 +19251,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotWindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotRectangle.o CGnuPlotRectangle.cpp
@@ -18593,13 +19292,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPlot.h \
@@ -18638,6 +19339,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -18650,7 +19352,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -18678,13 +19379,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
@@ -18743,6 +19445,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -18754,11 +19460,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -18772,7 +19477,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -18800,13 +19504,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotWindow.h \
 		../../CFont/include/CFontMgr.h \
 		CMathGeom2D.h \
@@ -18839,11 +19544,140 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyle.o CGnuPlotStyle.cpp
+
+../obj/CGnuPlotTimeStamp.o: CGnuPlotTimeStamp.cpp CGnuPlotTimeStamp.h \
+		CGnuPlotTimeStampData.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h \
+		CGnuPlotGroup.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		../../CMath/include/CRange2D.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotDash.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotText.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotCamera.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CGnuPlotAxis.h \
+		CDirectionType.h \
+		CGnuPlotKey.h \
+		CGnuPlotRenderer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotTimeStamp.o CGnuPlotTimeStamp.cpp
 
 ../obj/CGnuPlotUsingCols.o: CGnuPlotUsingCols.cpp CGnuPlotUsingCols.h \
 		Expr/CExpr.h \
@@ -18867,20 +19701,8 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
 		CGnuPlotTicLabel.h \
-		CGnuPlot.h \
-		../../CFont/include/CFont.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
+		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
-		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
-		../../CMath/include/CBBox2D.h \
-		../../CMath/include/CMathGen.h \
-		../../COS/include/NaN.h \
-		../../CMath/include/CVector2D.h \
-		../../CMath/include/CSize2D.h \
-		../../CMath/include/CISize2D.h \
-		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
@@ -18889,16 +19711,32 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		CGnuPlot.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CMath/include/CRange2D.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
-		CGnuPlotTypes.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -18908,11 +19746,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -18926,7 +19763,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -18952,13 +19788,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CParseLine.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotUsingCols.o CGnuPlotUsingCols.cpp
 
@@ -18984,6 +19821,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -19026,11 +19867,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -19044,7 +19884,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -19072,13 +19911,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19086,6 +19926,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h \
 		CAdjacency.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleAdjacency.o CGnuPlotStyleAdjacency.cpp
@@ -19112,6 +19953,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -19154,11 +19999,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -19172,7 +20016,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -19200,13 +20043,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19238,6 +20082,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -19280,11 +20128,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -19298,7 +20145,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -19326,13 +20172,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19364,6 +20211,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -19406,11 +20257,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -19424,7 +20274,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -19452,13 +20301,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19466,6 +20316,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotBBoxRenderer.h \
 		CGnuPlotRenderer.h \
 		CBoxWhisker.h
@@ -19493,6 +20344,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -19535,11 +20390,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -19553,7 +20407,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -19581,13 +20434,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19619,6 +20473,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -19661,11 +20519,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -19679,7 +20536,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -19707,13 +20563,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19756,6 +20613,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -19798,11 +20659,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -19816,7 +20676,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -19844,13 +20703,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -19858,6 +20718,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleCandlesticks.o CGnuPlotStyleCandlesticks.cpp
@@ -19884,6 +20745,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -19926,11 +20791,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -19944,7 +20808,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -19972,13 +20835,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20010,6 +20874,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -20052,11 +20920,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20070,7 +20937,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -20098,13 +20964,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20137,6 +21004,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -20179,11 +21050,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20197,7 +21067,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -20225,13 +21094,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20239,6 +21109,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h \
 		CDelaunay.h \
@@ -20271,6 +21142,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -20313,11 +21188,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20331,7 +21205,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -20359,13 +21232,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20396,6 +21270,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -20438,11 +21316,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20456,7 +21333,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -20484,13 +21360,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20521,6 +21398,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -20563,11 +21444,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20581,7 +21461,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -20609,13 +21488,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20646,6 +21526,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -20688,11 +21572,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20706,7 +21589,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -20734,13 +21616,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20780,6 +21663,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -20822,11 +21709,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20840,7 +21726,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -20868,13 +21753,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -20905,6 +21791,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -20947,11 +21837,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20965,7 +21854,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -20993,13 +21881,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21007,6 +21896,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
@@ -21039,6 +21929,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -21081,11 +21975,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21099,7 +21992,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -21127,13 +22019,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21141,6 +22034,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleImpulses.o CGnuPlotStyleImpulses.cpp
 
@@ -21166,6 +22060,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -21208,11 +22106,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21226,7 +22123,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -21254,13 +22150,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21293,6 +22190,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -21335,11 +22236,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21353,7 +22253,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -21381,13 +22280,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21395,6 +22295,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleLines.o CGnuPlotStyleLines.cpp
 
@@ -21420,6 +22321,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -21462,11 +22367,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21480,7 +22384,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -21508,13 +22411,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21522,6 +22426,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleLinesPoints.o CGnuPlotStyleLinesPoints.cpp
@@ -21548,6 +22453,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -21590,11 +22499,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21608,7 +22516,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -21636,13 +22543,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21650,6 +22558,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleParallelAxes.o CGnuPlotStyleParallelAxes.cpp
@@ -21676,6 +22585,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -21718,11 +22631,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21736,7 +22648,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -21764,13 +22675,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21778,6 +22690,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotPieObject.h
@@ -21805,6 +22718,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -21847,11 +22764,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21865,7 +22781,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -21893,13 +22808,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -21907,6 +22823,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStylePoints.o CGnuPlotStylePoints.cpp
 
@@ -21932,6 +22849,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -21974,11 +22895,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21992,7 +22912,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -22020,13 +22939,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -22057,6 +22977,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -22099,11 +23023,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22117,7 +23040,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -22145,13 +23067,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -22159,6 +23082,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleRadar.o CGnuPlotStyleRadar.cpp
@@ -22185,6 +23109,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -22227,11 +23155,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22245,7 +23172,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -22273,13 +23199,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -22310,6 +23237,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -22352,11 +23283,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22370,7 +23300,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -22398,13 +23327,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -22412,6 +23342,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h \
 		CSunburst.h
@@ -22439,6 +23370,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -22481,11 +23416,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22499,7 +23433,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -22527,13 +23460,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -22541,6 +23475,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleTestPalette.o CGnuPlotStyleTestPalette.cpp
 
@@ -22566,6 +23501,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -22608,11 +23547,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22626,7 +23564,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -22654,13 +23591,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -22693,6 +23631,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -22735,11 +23677,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22753,7 +23694,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -22781,13 +23721,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -22795,6 +23736,7 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotRectObject.h \
@@ -22823,6 +23765,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -22865,11 +23811,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22883,7 +23828,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -22911,13 +23855,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -22948,6 +23893,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -22990,11 +23939,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23008,7 +23956,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -23036,13 +23983,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -23073,6 +24021,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -23115,11 +24067,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23133,7 +24084,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -23161,13 +24111,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -23198,6 +24149,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -23240,11 +24195,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23258,7 +24212,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -23286,13 +24239,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -23323,6 +24277,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -23365,11 +24323,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23383,7 +24340,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -23411,13 +24367,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -23448,6 +24405,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -23490,11 +24451,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23508,7 +24468,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -23536,13 +24495,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -23573,6 +24533,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CUtil/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPlot.h \
@@ -23615,11 +24579,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23633,7 +24596,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -23661,13 +24623,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
@@ -23702,6 +24665,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxis.h \
@@ -23711,10 +24678,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		../../CUtil/include/CAlignType.h \
 		CDirectionType.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSVGRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -23760,7 +24726,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -23788,17 +24753,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
@@ -23856,6 +24823,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -23867,11 +24838,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23885,7 +24855,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -23913,13 +24882,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotSVGDevice.h \
 		CGnuPlotDevice.h \
@@ -23949,6 +24919,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotRenderer.h \
@@ -23991,10 +24965,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -24008,7 +24981,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -24036,13 +25008,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
-		CGnuPlotFilledCurve.h
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotSize.o CGnuPlotSize.cpp
 
 ../obj/CGnuPlotText.o: CGnuPlotText.cpp CGnuPlotText.h \
@@ -24097,6 +25070,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -24108,11 +25085,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -24125,7 +25101,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -24153,13 +25128,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CParseLine.h \
 		../../CUtil/include/CUtf8.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotText.o CGnuPlotText.cpp
@@ -24187,6 +25163,10 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -24227,11 +25207,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -24244,7 +25223,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -24272,16 +25250,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotDevice.h \
 		../../CFont/include/CFontMgr.h
@@ -24338,6 +25318,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotTypes.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -24349,11 +25333,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -24367,7 +25350,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotCamera.h \
-		../../CMath/include/CVector3D.h \
 		CCoordFrame3D.h \
 		COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
@@ -24395,17 +25377,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotSurfaceData.h \
 		CGnuPlotAxesData.h \
-		CGnuPlotGridData.h \
 		CGnuPlotBorderData.h \
 		CGnuPlotPrintFile.h \
 		CGnuPlotBlock.h \
 		CGnuPlotPm3DData.h \
 		CGnuPlotPlotSize.h \
 		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
+		CGnuPlotTimeStamp.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		CGnuPlotPoint.h \
@@ -27121,6 +28105,9 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/moc_CQGnuPlotRectObject.o: moc_CQGnuPlotRectObject.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotRectObject.o moc_CQGnuPlotRectObject.cpp
+
+../obj/moc_CQGnuPlotTimeStamp.o: moc_CQGnuPlotTimeStamp.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotTimeStamp.o moc_CQGnuPlotTimeStamp.cpp
 
 ../obj/moc_CQGnuPlotTitle.o: moc_CQGnuPlotTitle.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotTitle.o moc_CQGnuPlotTitle.cpp

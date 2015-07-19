@@ -90,9 +90,9 @@ createRectangle(CGnuPlotGroup *group)
 
 CGnuPlotAxis *
 CGnuPlotDevice::
-createAxis(CGnuPlotGroup *group, const std::string &id, CGnuPlotTypes::AxisDirection dir)
+createAxis(CGnuPlotGroup *group, const CGnuPlotAxisData &data)
 {
-  return new CGnuPlotAxis(group, id, dir);
+  return new CGnuPlotAxis(group, data);
 }
 
 CGnuPlotKey *
@@ -128,6 +128,13 @@ CGnuPlotDevice::
 createCamera(CGnuPlotGroup *group)
 {
   return new CGnuPlotCamera(group);
+}
+
+CGnuPlotTimeStamp *
+CGnuPlotDevice::
+createTimeStamp(CGnuPlotGroup *group)
+{
+  return new CGnuPlotTimeStamp(group);
 }
 
 CGnuPlotBarObject *

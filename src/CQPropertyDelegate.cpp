@@ -189,6 +189,14 @@ createEdit(QWidget *parent, const QString &text) const
   return edit;
 }
 
+bool
+CQPropertyDelegate::
+editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option,
+            const QModelIndex &index)
+{
+  return QItemDelegate::editorEvent(event, model, option, index);
+}
+
 void
 CQPropertyDelegate::
 drawCheck(QPainter *painter, const QStyleOptionViewItem &option,

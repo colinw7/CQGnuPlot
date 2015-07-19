@@ -118,7 +118,6 @@ class CGnuPlotPlot {
   typedef CGnuPlotTypes::Smooth             Smooth;
   typedef CGnuPlotTypes::SymbolType         SymbolType;
   typedef CGnuPlot::Bars                    Bars;
-  typedef CGnuPlot::Hidden3DData            Hidden3DData;
   typedef std::vector<CExprValueP>          Values;
   typedef std::map<std::string,std::string> Params;
   typedef std::vector<CGnuPlotPoint>        Points2D;
@@ -303,8 +302,8 @@ class CGnuPlotPlot {
 
   //---
 
-  const Hidden3DData &hidden3D() const { return hidden3D_; }
-  void setHidden3D(const Hidden3DData &h) { hidden3D_ = h; }
+  const CGnuPlotHidden3DData &hidden3D() const { return hidden3D_; }
+  void setHidden3D(const CGnuPlotHidden3DData &h) { hidden3D_ = h; }
 
   int trianglePattern3D() const { return hidden3D_.trianglePattern; }
   void setTrianglePattern3D(int i) { hidden3D_.trianglePattern = i; }
@@ -536,7 +535,7 @@ class CGnuPlotPlot {
   IJPoints               surfaceIJPoints_;                  // surface data
   bool                   surfaceSet_ { false };
   COptReal               surfaceZMin_, surfaceZMax_;
-  Hidden3DData           hidden3D_;
+  CGnuPlotHidden3DData   hidden3D_;
   double                 whiskerBars_ { 0 };                // whisker bar data
   bool                   cacheActive_ { true };
   BarCache               barCache_;

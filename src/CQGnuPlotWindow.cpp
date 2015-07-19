@@ -17,6 +17,7 @@
 #include <CQGnuPlotPalette.h>
 #include <CQGnuPlotTitle.h>
 #include <CQGnuPlotCamera.h>
+#include <CQGnuPlotTimeStamp.h>
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotDevice.h>
 #include <CQGnuPlotBarObject.h>
@@ -315,7 +316,7 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(groupName, qgroup, "is3D");
 
   if (group->is3D()) {
-    CQGnuPlotCamera *qcamera = static_cast<CQGnuPlotCamera *>(group->camera());
+    CQGnuPlotCamera *qcamera = static_cast<CQGnuPlotCamera *>(group->camera().getPtr());
 
     QString cameraName = groupName + "/camera";
 
@@ -373,42 +374,71 @@ addGroupProperties(CGnuPlotGroup *group)
 
   //---
 
+  CQGnuPlotTimeStamp *qtimeStamp = static_cast<CQGnuPlotTimeStamp *>(group->timeStamp().getPtr());
+
+  QString timeStampName = QString("%1/timeStamp").arg(groupName);
+
+  tree_->addProperty(timeStampName, qtimeStamp, "top");
+
+  //---
+
   for (const auto &axis : qgroup->axes()) {
-    CQGnuPlotAxis *qaxis = static_cast<CQGnuPlotAxis *>(axis.second);
+    const CGnuPlotGroup::IAxes &iaxes = axis.second;
 
-    QString axisName = QString("%1/axis_%2").arg(groupName).arg(qaxis->id().c_str());
+    for (const auto &iaxis : iaxes) {
+      CQGnuPlotAxis *qaxis = static_cast<CQGnuPlotAxis *>(iaxis.second);
 
-    tree_->addProperty(axisName, qaxis, "displayed");
-    tree_->addProperty(axisName, qaxis, "start");
-    tree_->addProperty(axisName, qaxis, "end");
-  //tree_->addProperty(axisName, qaxis, "position");
-  //tree_->addProperty(axisName, qaxis, "position1");
-    tree_->addProperty(axisName, qaxis, "logarithmicX");
-    tree_->addProperty(axisName, qaxis, "logarithmicY");
-    tree_->addProperty(axisName, qaxis, "majorIncrement");
-    tree_->addProperty(axisName, qaxis, "majorTics");
-    tree_->addProperty(axisName, qaxis, "minorIncrement");
-    tree_->addProperty(axisName, qaxis, "minorTics");
-    tree_->addProperty(axisName, qaxis, "tickIncrement");
-    tree_->addProperty(axisName, qaxis, "label");
-    tree_->addProperty(axisName, qaxis, "tickInside");
-    tree_->addProperty(axisName, qaxis, "tickInside1");
-    tree_->addProperty(axisName, qaxis, "drawTickMark");
-    tree_->addProperty(axisName, qaxis, "drawTickMark1");
-    tree_->addProperty(axisName, qaxis, "drawTickLabel");
-    tree_->addProperty(axisName, qaxis, "drawTickLabel1");
-    tree_->addProperty(axisName, qaxis, "labelInside");
-    tree_->addProperty(axisName, qaxis, "labelInside1");
-    tree_->addProperty(axisName, qaxis, "drawLabel");
-    tree_->addProperty(axisName, qaxis, "drawLabel1");
-    tree_->addProperty(axisName, qaxis, "enhanced");
+      QString axisName = QString("%1/axis_%2").arg(groupName).arg(qaxis->id().c_str());
 
-    QString gridName = QString("%1/grid").arg(axisName);
+      tree_->addProperty(axisName, qaxis, "displayed");
+      tree_->addProperty(axisName, qaxis, "start");
+      tree_->addProperty(axisName, qaxis, "end");
+      tree_->addProperty(axisName, qaxis, "start1");
+      tree_->addProperty(axisName, qaxis, "end1");
+      tree_->addProperty(axisName, qaxis, "log");
+      tree_->addProperty(axisName, qaxis, "logBase");
+      tree_->addProperty(axisName, qaxis, "majorTics");
+      tree_->addProperty(axisName, qaxis, "minorTics");
+      tree_->addProperty(axisName, qaxis, "majorIncrement");
+      tree_->addProperty(axisName, qaxis, "minorIncrement");
+      tree_->addProperty(axisName, qaxis, "tickIncrement");
+      tree_->addProperty(axisName, qaxis, "majorScale");
+      tree_->addProperty(axisName, qaxis, "minorScale");
+      tree_->addProperty(axisName, qaxis, "ticsRotate")->setEditorFactory(realSlider("0:360:1"));
+      tree_->addProperty(axisName, qaxis, "labelRotate")->setEditorFactory(realSlider("0:360:1"));
+      tree_->addProperty(axisName, qaxis, "tickInside");
+      tree_->addProperty(axisName, qaxis, "labelInside");
+      tree_->addProperty(axisName, qaxis, "label");
+      tree_->addProperty(axisName, qaxis, "timeFormat");
+      tree_->addProperty(axisName, qaxis, "ticFont");
+      tree_->addProperty(axisName, qaxis, "labelFont");
+      tree_->addProperty(axisName, qaxis, "ticColor");
+      tree_->addProperty(axisName, qaxis, "labelColor");
+      tree_->addProperty(axisName, qaxis, "parallel");
+      tree_->addProperty(axisName, qaxis, "zeroAxisDisplayed");
+      tree_->addProperty(axisName, qaxis, "zeroAxisLineWidth");
+      tree_->addProperty(axisName, qaxis, "borderTics");
+      tree_->addProperty(axisName, qaxis, "enhanced");
+      tree_->addProperty(axisName, qaxis, "mirror");
+      tree_->addProperty(axisName, qaxis, "drawTickMark");
+      tree_->addProperty(axisName, qaxis, "drawMinorTickMark");
+      tree_->addProperty(axisName, qaxis, "drawTickLabel");
+      tree_->addProperty(axisName, qaxis, "drawLabel");
 
-    tree_->addProperty(gridName, qaxis, "grid"     )->setLabel("displayed");
-    tree_->addProperty(gridName, qaxis, "gridMajor")->setLabel("majorTics");
-    tree_->addProperty(gridName, qaxis, "gridMinor")->setLabel("minorTics");
-    tree_->addProperty(gridName, qaxis, "gridLayer")->setLabel("layer");
+      QString gridName = QString("%1/grid").arg(axisName);
+
+      tree_->addProperty(gridName, qaxis, "grid"              )->setLabel("displayed");
+      tree_->addProperty(gridName, qaxis, "gridMajor"         )->setLabel("majorTics");
+      tree_->addProperty(gridName, qaxis, "gridMinor"         )->setLabel("minorTics");
+      tree_->addProperty(gridName, qaxis, "gridPolarAngle"    )->setLabel("polarAngle");
+      tree_->addProperty(gridName, qaxis, "gridMajorLineStyle")->setLabel("majorLineStyle");
+      tree_->addProperty(gridName, qaxis, "gridMinorLineStyle")->setLabel("minorLineStyle");
+      tree_->addProperty(gridName, qaxis, "gridMajorLineType" )->setLabel("majorLineType");
+      tree_->addProperty(gridName, qaxis, "gridMinorLineType" )->setLabel("minorLineType");
+      tree_->addProperty(gridName, qaxis, "gridMajorLineWidth")->setLabel("majorLineWidth");
+      tree_->addProperty(gridName, qaxis, "gridMinorLineWidth")->setLabel("minorLineWidth");
+      tree_->addProperty(gridName, qaxis, "gridLayer"         )->setLabel("layer");
+    }
   }
 
   QString borderName = groupName + "/border";
@@ -891,8 +921,8 @@ CQGnuPlotWindow::
 gridSlot(bool b)
 {
   for (auto group : groups()) {
-    group->setAxisGridDisplayed("x1", b);
-    group->setAxisGridDisplayed("y1", b);
+    group->setAxisGridDisplayed(CGnuPlotTypes::AxisType::X, 1, b);
+    group->setAxisGridDisplayed(CGnuPlotTypes::AxisType::Y, 1, b);
   }
 
   redraw();
@@ -1011,13 +1041,20 @@ mouseRelease(const QPoint &)
   if (mode_ == Mode::SELECT) {
   }
   else {
-    if (zoomGroup_ && ! escape_) {
-      if (! zoomGroup_->is3D()) {
-        zoomGroup_->setAxisRange("x1", zoomRegion_->start().x(), zoomRegion_->end().x());
-        zoomGroup_->setAxisRange("y1", zoomRegion_->start().y(), zoomRegion_->end().y());
-      }
+    int dx = abs(zoomRelease_.x() - zoomPress_.x());
+    int dy = abs(zoomRelease_.y() - zoomPress_.y());
 
-      redraw();
+    if (dx >= 4 && dy >= 4) {
+      if (zoomGroup_ && ! escape_) {
+        if (! zoomGroup_->is3D()) {
+          zoomGroup_->setAxisRange(CGnuPlotTypes::AxisType::X, 1,
+                                   zoomRegion_->start().x(), zoomRegion_->end().x());
+          zoomGroup_->setAxisRange(CGnuPlotTypes::AxisType::Y, 1,
+                                   zoomRegion_->start().y(), zoomRegion_->end().y());
+        }
+
+        redraw();
+      }
     }
 
     zoomRegion_->hide();
@@ -1031,19 +1068,20 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
   CQGnuPlotGroup *group = currentGroup();
   if (! group) return;
 
-  CGnuPlotCamera *camera = group->camera();
+  CGnuPlotCameraP camera = group->camera();
 
   if (mode_ == Mode::ZOOM) {
-    double xmin = group->getXMin();
-    double ymin = group->getYMin();
-    double xmax = group->getXMax();
-    double ymax = group->getYMax();
+    double xmin = group->getXMin(), ymin = group->getYMin();
+    double xmax = group->getXMax(), ymax = group->getYMax();
 
-    double w = xmax - xmin;
-    double h = ymax - ymin;
+    CPoint2D p1 = group->mapLogPoint(1, 1, 1, CPoint2D(xmin, ymin));
+    CPoint2D p2 = group->mapLogPoint(1, 1, 1, CPoint2D(xmax, ymax));
 
-    double xc = (xmax + xmin)/2;
-    double yc = (ymax + ymin)/2;
+    double w = p2.x - p1.x;
+    double h = p2.y - p1.y;
+
+    double xc = (p1.x + p2.x)/2;
+    double yc = (p1.y + p2.y)/2;
 
     if      (key == Qt::Key_Left || key == Qt::Key_Right) {
       if (! group->is3D()) {
@@ -1052,7 +1090,10 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
         if (key == Qt::Key_Left)
           dx = -dx;
 
-        group->setAxisRange("x1", xmin + dx, xmax + dx);
+        CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(p1.x + dx, p1.y));
+        CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(p2.x + dx, p1.y));
+
+        group->setAxisRange(CGnuPlotTypes::AxisType::X, 1, p3.x, p4.x);
       }
       else {
         camera->moveDX(key == Qt::Key_Left ? -0.01 : 0.01);
@@ -1069,7 +1110,10 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
         if (key == Qt::Key_Down)
           dy = -dy;
 
-        group->setAxisRange("y1", ymin + dy, ymax + dy);
+        CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(p1.x, p1.y + dy));
+        CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(p1.x, p2.y + dy));
+
+        group->setAxisRange(CGnuPlotTypes::AxisType::Y, 1, p3.y, p4.y);
       }
       else {
         camera->moveDY(key == Qt::Key_Down ? -0.01 : 0.01);
@@ -1081,8 +1125,11 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
     }
     else if (key == Qt::Key_Plus) {
       if (! group->is3D()) {
-        group->setAxisRange("x1", xc - w/4, xc + w/4);
-        group->setAxisRange("y1", yc - h/4, yc + h/4);
+        CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc - w/4, xc + w/4));
+        CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(yc - h/4, yc + h/4));
+
+        group->setAxisRange(CGnuPlotTypes::AxisType::X, 1, p3.x, p4.x);
+        group->setAxisRange(CGnuPlotTypes::AxisType::Y, 1, p3.y, p4.y);
       }
       else {
         camera->zoomIn();
@@ -1094,8 +1141,11 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
     }
     else if (key == Qt::Key_Minus) {
       if (! group->is3D()) {
-        group->setAxisRange("x1", xc - w, xc + w);
-        group->setAxisRange("y1", yc - h, yc + h);
+        CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc - w, xc + w));
+        CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(yc - h, yc + h));
+
+        group->setAxisRange(CGnuPlotTypes::AxisType::X, 1, p3.x, p4.x);
+        group->setAxisRange(CGnuPlotTypes::AxisType::Y, 1, p3.y, p4.y);
       }
       else {
         camera->zoomOut();
@@ -1168,8 +1218,8 @@ showPos(const QString &name, double wx, double wy)
     const CGnuPlotAxisData &xaxis = currentGroup_->xaxis(1);
     const CGnuPlotAxisData &yaxis = currentGroup_->yaxis(1);
 
-    xstr = currentGroup_->formatAxisValue(xaxis, wx);
-    ystr = currentGroup_->formatAxisValue(yaxis, wy);
+    xstr = xaxis.formatAxisValue(wx);
+    ystr = yaxis.formatAxisValue(wy);
   }
   else {
     xstr = CStrUtil::toString(wx);

@@ -263,13 +263,17 @@ readBraceString(CParseLine &line, std::string &tstr)
 
 void
 CGnuPlotText::
-draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign, const CRGBA &c) const
+draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
+     const CRGBA &c, double a) const
 {
   CFontPtr origFont = renderer->getFont();
 
   //---
 
   CGnuPlotTextState state(renderer);
+
+  state.ca = cos(CAngle::Deg2Rad(a));
+  state.sa = sin(CAngle::Deg2Rad(a));
 
   state.lines.push_back(CGnuPlotTextLine());
 
@@ -308,7 +312,11 @@ draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign, const 
     for (const auto &ch : l.chars) {
       renderer->setFont(ch.font);
 
-      renderer->drawText(ch.pos + CPoint2D(dx, dy), ch.str, c);
+      if (fabs(a) < 1E-6)
+        renderer->drawText(ch.pos + CPoint2D(dx, dy), ch.str, c);
+      else
+        renderer->drawRotatedText(ch.pos + CPoint2D(dx, dy), ch.str, a,
+                                  CHALIGN_TYPE_CENTER, CVALIGN_TYPE_CENTER, c);
     }
 
     dy += lbbox.getYMin();
@@ -395,7 +403,7 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
   }
 
   while (i < estr_.size()) {
-    state.pos += CPoint2D(0, dy);
+    state.pos += CPoint2D(-state.sa*dy, state.ca*dy);
 
     placePartChars(state, i, type);
 
@@ -424,10 +432,10 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
 
     double w = renderer->pixelWidthToWindowWidth(renderer->getFont()->getStringWidth(cs));
 
-    state.pos += CPoint2D(w, 0);
+    state.pos += CPoint2D(state.ca*w, state.sa*w);
   }
 
-  state.pos += CPoint2D(0, dy);
+  state.pos += CPoint2D(-state.sa*dy, state.ca*dy);
 
   placePartChars(state, estr_.size(), type);
 
@@ -538,7 +546,7 @@ placeChars(CGnuPlotTextState &state) const
   if      (type_ == CGnuPlotCharType::SUPERSCRIPT) {
     double h = renderer->pixelHeightToWindowHeight(font->getCharHeight()/2);
 
-    state.pos += CPoint2D(0, h);
+    state.pos += CPoint2D(-state.sa*h, state.ca*h);
 
     text_.placeChars(state, type_);
 
@@ -551,7 +559,7 @@ placeChars(CGnuPlotTextState &state) const
 
     text_.placeChars(state, type_);
 
-    state.pos += CPoint2D(0, h);
+    state.pos += CPoint2D(-state.sa*h, state.ca*h);
   }
   else if (type_ == CGnuPlotCharType::OVERPRINT) {
     CPoint2D pos1 = state.pos;
@@ -568,7 +576,7 @@ placeChars(CGnuPlotTextState &state) const
   else if (type_ == CGnuPlotCharType::SPACE) {
     double w = renderer->pixelWidthToWindowWidth(font->getStringWidth(text_.etext()));
 
-    state.pos += CPoint2D(w, 0);
+    state.pos += CPoint2D(state.ca*w, state.sa*w);
   }
   else if (type_ == CGnuPlotCharType::NEWLINE) {
     state.pos = CPoint2D(0, 0);

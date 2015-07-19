@@ -3,6 +3,7 @@
 
 #include <CGnuPlotColorSpec.h>
 #include <CGnuPlotUtil.h>
+#include <CGnuPlotGridData.h>
 #include <CFont.h>
 
 class CGnuPlotAxisData {
@@ -10,29 +11,71 @@ class CGnuPlotAxisData {
   typedef std::map<int,std::string>    ITicLabels;
   typedef std::map<double,std::string> RTicLabels;
   typedef std::map<int,RTicLabels>     LevelRTicLabels;
+  typedef CGnuPlotTypes::DrawLayer     DrawLayer;
+  typedef CGnuPlotTypes::AxisType      AxisType;
+  typedef CGnuPlotTypes::AxisDirection AxisDirection;
+
+  enum Justify {
+    LEFT,
+    RIGHT,
+    CENTER,
+    AUTOJUSTIFY
+  };
 
  public:
-  CGnuPlotAxisData(int ind=1);
+  CGnuPlotAxisData(AxisType type=AxisType::X, int ind=1);
+
+  AxisType type() const { return type_; }
 
   int ind() const { return ind_; }
 
   bool isDisplayed() const { return displayed_; }
   void setDisplayed(bool b) { displayed_ = b; }
 
-  bool hasGrid() const { return grid_; }
-  void setGrid(bool b) { grid_ = b; }
+  AxisDirection direction() const;
 
-  bool hasGridTics() const { return gridTics_; }
-  void setGridTics(bool b) { gridTics_ = b; }
+  //---
 
-  bool hasGridMinorTics() const { return gridMinorTics_; }
-  void setGridMinorTics(bool b) { gridMinorTics_ = b; }
+  bool hasGrid() const { return grid_.enabled; }
+  void setGrid(bool b) { grid_.enabled = b; }
+
+  bool hasGridMajor() const { return grid_.majorTics; }
+  void setGridMajor(bool b) { grid_.majorTics = b; }
+
+  bool hasGridMinor() const { return grid_.minorTics; }
+  void setGridMinor(bool b) { grid_.minorTics = b; }
+
+  const DrawLayer &getGridLayer() const { return grid_.layer; }
+  void setGridLayer(const DrawLayer &l) { grid_.layer = l; }
+
+  double gridPolarAngle() const { return grid_.polarAngle; }
+  void setGridPolarAngle(double r) { grid_.polarAngle = r; }
+
+  int gridMajorLineStyle() const { return grid_.majorLineStyle; }
+  void setGridMajorLineStyle(int i) { grid_.majorLineStyle = i; }
+
+  int gridMinorLineStyle() const { return grid_.minorLineStyle; }
+  void setGridMinorLineStyle(int i) { grid_.minorLineStyle = i; }
+
+  int gridMajorLineType() const { return grid_.majorLineType; }
+  void setGridMajorLineType(int i) { grid_.majorLineType = i; }
+
+  int gridMinorLineType() const { return grid_.minorLineType; }
+  void setGridMinorLineType(int i) { grid_.minorLineType = i; }
+
+  double gridMajorLineWidth() const { return grid_.majorLineWidth; }
+  void setGridMajorLineWidth(double r) { grid_.majorLineWidth = r; }
+
+  double gridMinorLineWidth() const { return grid_.minorLineWidth; }
+  void setGridMinorLineWidth(double r) { grid_.minorLineWidth = r; }
+
+  //---
 
   bool isMirror() const { return mirror_; }
   void setMirror(bool b) { mirror_ = b; }
 
-  bool isOutside() const { return outside_; }
-  void setOutside(bool b) { outside_ = b; }
+  bool isInside() const { return inside_; }
+  void setInside(bool b) { inside_ = b; }
 
   bool isReverse() const { return reverse_; }
   void setReverse(bool b) { reverse_ = b; }
@@ -79,14 +122,14 @@ class CGnuPlotAxisData {
   const COptReal &zeroAxisLineWidth() const { return zeroAxis_.lineWidth; }
   void setZeroAxisLineWidth(double lw) { zeroAxis_.lineWidth = lw; }
   void resetZeroAxisLineWidth() { zeroAxis_.lineWidth.setInvalid(); }
+  double getZeroAxisWidth() const;
 
   const COptLineDash &zeroAxisLineDash() const { return zeroAxis_.lineDash; }
   void setZeroAxisLineDash(const CLineDash &dash) { zeroAxis_.lineDash = dash; }
   void resetZeroAxisLineDash() { zeroAxis_.lineDash.setInvalid(); }
-
-  CRGBA     getZeroAxisColor(CGnuPlotGroup *group) const;
-  double    getZeroAxisWidth() const;
   CLineDash getZeroAxisDash() const;
+
+  CRGBA getZeroAxisColor(CGnuPlotGroup *group) const;
 
   //---
 
@@ -106,6 +149,8 @@ class CGnuPlotAxisData {
 
   void setAutoScaleFix(bool b) { setAutoScaleFixMin(b); setAutoScaleFixMax(b); }
 
+  //---
+
   const COptReal &min() const { return min_; }
   void setMin(double r) { min_ = r; }
   void updateMin(double r) { min_.updateMin(r); }
@@ -116,16 +161,9 @@ class CGnuPlotAxisData {
   void updateMax(double r) { max_.updateMax(r); }
   void resetMax() { max_.setInvalid(); }
 
-  bool inside(double x) {
-    if      (min_.isValid() && max_.isValid())
-      return (x >= min_.getValue() && x <= max_.getValue());
-    else if (min_.isValid())
-      return (x >= min_.getValue());
-    else if (max_.isValid())
-      return (x <= max_.getValue());
-    else
-      return true;
-  }
+  bool inside(double x) const;
+
+  bool mappedInside(double x) const;
 
   //-----
 
@@ -144,12 +182,18 @@ class CGnuPlotAxisData {
   void setTicScale(double majorScale, double minorScale);
 
   double getTicMajorScale() const { return majorScale_; }
+  void setTicMajorScale(double s) { majorScale_ = s; }
+
   double getTicMinorScale() const { return minorScale_; }
+  void setTicMinorScale(double s) { minorScale_ = s; }
 
   //------
 
-  double getTextRotate() const { return textRotate_; }
-  void setTextRotate(double a) { textRotate_ = a; }
+  double ticsRotate() const { return ticsRotate_; }
+  void setTicsRotate(double a) { ticsRotate_ = a; }
+
+  double labelRotate() const { return labelRotate_; }
+  void setLabelRotate(double a) { labelRotate_ = a; }
 
   //------
 
@@ -190,17 +234,31 @@ class CGnuPlotAxisData {
   //------
 
  public:
-  const CPoint2D &offset() const { return offset_; }
-  void setOffset(const CPoint2D &o) { offset_ = o; }
+  const CPoint2D &ticOffset() const { return ticOffset_; }
+  void setTicOffset(const CPoint2D &o) { ticOffset_ = o; }
 
-  double rotate() const { return rotate_; }
-  void setRotate(double r) { rotate_ = r; }
+  const CPoint2D &labelOffset() const { return labelOffset_; }
+  void setLabelOffset(const CPoint2D &o) { labelOffset_ = o; }
+
+  //---
+
+  Justify ticJustify() const { return ticJustify_; }
+  void setTicJustify(Justify justify) { ticJustify_ = justify; }
+
+  //---
 
   const std::string &format() const { return format_; }
   void setFormat(const std::string &s) { format_ = s; }
 
-  const CFontPtr &font() const { return font_; }
-  void setFont(const CFontPtr &f) { font_ = f; }
+  //--
+
+  const CFontPtr &ticFont() const { return ticFont_; }
+  void setTicFont(const CFontPtr &f) { ticFont_ = f; }
+
+  const CFontPtr &labelFont() const { return labelFont_; }
+  void setLabelFont(const CFontPtr &f) { labelFont_ = f; }
+
+  //--
 
   bool showTics() const { return showTics_; }
   void setShowTics(bool b) { showTics_ = b; }
@@ -211,21 +269,71 @@ class CGnuPlotAxisData {
   bool isEnhanced() const { return enhanced_; }
   void setEnhanced(bool b) { enhanced_ = b; }
 
+  bool isNumeric() const { return numeric_; }
+  void setNumeric(bool b) { numeric_ = b; }
+
+  bool isTimeDate() const { return timedate_; }
+  void setTimeDate(bool b) { timedate_ = b; }
+
+  bool isGeographic() const { return geographic_; }
+  void setGeographic(bool b) { geographic_ = b; }
+
+  bool isRangeLimited() const { return rangelimited_; }
+  void setRangeLimited(bool b) { rangelimited_ = b; }
+
+  //---
+
+  const CGnuPlotColorSpec &labelColor() const { return labelColor_; }
+  void setLabelColor(const CGnuPlotColorSpec &c) { labelColor_ = c; }
+
+  const CGnuPlotColorSpec &ticColor() const { return ticColor_; }
+  void setTicColor(const CGnuPlotColorSpec &c) { ticColor_ = c; }
+
+  //---
+
   int lineType() const { return lineType_; }
   void setLineType(int i) { lineType_ = i; }
 
-  const CGnuPlotColorSpec &textColor() const { return textColor_; }
-  void setTextColor(const CGnuPlotColorSpec &v) { textColor_ = v; }
+  //---
 
-  const COptInt &logScale() const { return logScale_; }
-  void setLogScale(int s) { logScale_ = s; }
-  void resetLogScale() { logScale_ = COptInt(); }
+  const COptInt &logBase() const { return logBase_; }
+  void setLogBase(int s) { logBase_ = s; }
+  void resetLogBase() { logBase_ = COptInt(); }
+
+  double logTol() const { return 0.1; }
+
+  double logValue(double x, int base) const {
+    return log(x + logTol())/log(base);
+  }
+
+  double expValue(double x, int base) const {
+    return exp(x*log(base)) - logTol();
+  }
+
+  double mapLogValue(double x) const {
+    if (logBase_.isValid() && logBase_.getValue() > 1)
+      return logValue(x, logBase_.getValue());
+    else
+      return x;
+  }
+
+  double unmapLogValue(double x) const {
+    if (logBase_.isValid() && logBase_.getValue() > 1)
+      return expValue(x, logBase_.getValue());
+    else
+      return x;
+  }
+
+  //---
 
   void unset();
   void unsetRange();
   void unsetZeroAxis();
 
   void reset();
+
+  std::string getAxisValueStr(int i, double r) const;
+  std::string formatAxisValue(double r) const;
 
   void show(std::ostream &os, const std::string &prefix, int n) const;
 
@@ -246,13 +354,12 @@ class CGnuPlotAxisData {
     COptLineDash lineDash;
   };
 
-  int               ind_;
+  AxisType          type_            { AxisType::X };
+  int               ind_             { 1 };
   bool              displayed_       { true  };
-  bool              grid_            { false };
-  bool              gridTics_        { true };
-  bool              gridMinorTics_   { false };
+  CGnuPlotGridData  grid_;
   bool              mirror_          { true  };
-  bool              outside_         { true  };
+  bool              inside_          { false };
   bool              reverse_         { false };
   bool              writeback_       { false };
   bool              extend_          { false };
@@ -266,24 +373,32 @@ class CGnuPlotAxisData {
   COptReal          min_;
   COptReal          max_;
   bool              borderTics_      { true };
-  bool              minorTics_       { true };
+  bool              minorTics_       { false };
   COptReal          minorTicsFreq_;
   double            majorScale_      { 1.0 };
   double            minorScale_      { 0.5 };
-  double            textRotate_      { 0.0 };
   std::string       text_;
   ITicLabels        iticLabels_;
   LevelRTicLabels   rticLabels_;
-  CPoint2D          offset_          { 0, 0 };
-  double            rotate_          { 0 };
+  CPoint2D          ticOffset_       { 0, 0 };
+  CPoint2D          labelOffset_     { 0, 0 };
+  double            ticsRotate_      { 0.0 };
+  double            labelRotate_     { 0.0 };
   std::string       format_          { "%g" };
-  CFontPtr          font_;
+  Justify           ticJustify_      { Justify::CENTER };
+  CFontPtr          ticFont_;
+  CFontPtr          labelFont_;
   bool              showTics_        { true };
   bool              front_           { true };
   bool              enhanced_        { true };
+  bool              numeric_         { false };
+  bool              timedate_        { false };
+  bool              geographic_      { false };
+  bool              rangelimited_    { false };
   int               lineType_        { -1 };
-  COptInt           logScale_;
-  CGnuPlotColorSpec textColor_;
+  COptInt           logBase_;
+  CGnuPlotColorSpec ticColor_;
+  CGnuPlotColorSpec labelColor_;
   ZeroAxis          zeroAxis_;
   std::string       dummyVar_;
 };

@@ -22,10 +22,11 @@ class CGnuPlotAxis {
  public:
   typedef CGnuPlotTypes::DrawLayer     DrawLayer;
   typedef CGnuPlotTypes::AxisDirection AxisDirection;
+  typedef CGnuPlotTypes::AxisType      AxisType;
 
  public:
-  CGnuPlotAxis(CGnuPlotGroup *group=0, const std::string &id="",
-               AxisDirection dir=AxisDirection::X, double start=0.0, double end=1.0);
+  CGnuPlotAxis(CGnuPlotGroup *group, const CGnuPlotAxisData &data,
+               double start=0.0, double end=1.0);
 
   virtual ~CGnuPlotAxis();
 
@@ -33,11 +34,17 @@ class CGnuPlotAxis {
 
   CGnuPlotGroup *group() const { return group_; }
 
-  const std::string &id() const { return id_; }
-  void setId(const std::string &id) { id_ = id; }
+  const CGnuPlotAxisData &data() { return data_; }
 
-  bool isInitialized() const { return initialized_; }
-  void setInitialized(bool b) { initialized_ = b; }
+  AxisType type() const { return data_.type(); }
+  int      ind () const { return data_.ind (); }
+
+  std::string id() const;
+
+  bool isDisplayed() const { return data_.isDisplayed(); }
+  void setDisplayed(bool b) { data_.setDisplayed(b); }
+
+  //---
 
   double getStart() const { return start_; }
   double getEnd  () const { return end_  ; }
@@ -45,95 +52,40 @@ class CGnuPlotAxis {
   double getStart1() const { return start1_; }
   double getEnd1  () const { return end1_  ; }
 
-  const CPoint3D &position() const { return position_; }
-  void setPosition(const CPoint3D &p) { position_ = p; }
+  //---
 
-  const CPoint3D &position1() const { return position1_; }
-  void setPosition1(const CPoint3D &p) { position1_ = p; }
-
-  const CPoint3D &linePosition() const { return linePosition_; }
-  void setLinePosition(const CPoint3D &p) { linePosition_ = p; }
-
-  const CPoint3D &linePosition1() const { return linePosition1_; }
-  void setLinePosition1(const CPoint3D &p) { linePosition1_ = p; }
+  double zposition() const { return zposition_; }
+  void setZPosition(double p) { zposition_ = p; }
 
   //---
 
-  bool isLogarithmicX() const { return logarithmicX_; }
-  void setLogarithmicX(bool b) { logarithmicX_ = b; }
+  CPoint3D mapLogPoint(const CPoint3D &p) const;
 
-  int logarithmicBaseX() const { return logarithmicBaseX_; }
-  void setLogarithmicBaseX(int b) { logarithmicBaseX_ = b; }
+  //---
 
-  bool isLogarithmicY() const { return logarithmicY_; }
-  void setLogarithmicY(bool b) { logarithmicY_ = b; }
+  const COptInt &logBase() const { return data_.logBase(); }
+  void setLogBase(int b) { data_.setLogBase(b); }
+  void resetLogBase() { data_.resetLogBase(); }
 
-  int logarithmicBaseY() const { return logarithmicBaseY_; }
-  void setLogarithmicBaseY(int b) { logarithmicBaseY_ = b; }
-
-  bool isLogarithmicZ() const { return logarithmicZ_; }
-  void setLogarithmicZ(bool b) { logarithmicZ_ = b; }
-
-  int logarithmicBaseZ() const { return logarithmicBaseZ_; }
-  void setLogarithmicBaseZ(int b) { logarithmicBaseZ_ = b; }
-
-  CPoint3D mapLogPoint(const CPoint3D &p) const {
-    return CPoint3D(mapLogXValue(p.x), mapLogYValue(p.y), mapLogZValue(p.z));
-  }
-
-  CPoint3D unmapLogPoint(const CPoint3D &p) const {
-    return CPoint3D(unmapLogXValue(p.x), unmapLogYValue(p.y), unmapLogZValue(p.z));
-  }
+  double logTol() const { return 0.1; }
 
   double logValue(double x, int base) const {
-    return log(std::max(x, 0.5))/log(base); // TODO: min value ?
+    return log(x + logTol())/log(base);
   }
 
   double expValue(double x, int base) const {
-    return exp(x*log(base)); // TODO: min value ?
+    return exp(x*log(base)) - logTol();
   }
 
-  double mapLogXValue(double x) const {
-    if (logarithmicX_ && logarithmicBaseX_ > 1)
-      return logValue(x, logarithmicBaseX_);
-    else
-      return x;
+  double mapLogValue(double x) const {
+    return data_.mapLogValue(x);
   }
 
-  double mapLogYValue(double y) const {
-    if (logarithmicY_ && logarithmicBaseY_ > 1)
-      return logValue(y, logarithmicBaseY_);
-    else
-      return y;
+  double unmapLogValue(double x) const {
+    return data_.unmapLogValue(x);
   }
 
-  double mapLogZValue(double z) const {
-    if (logarithmicZ_ && logarithmicBaseZ_ > 1)
-      return logValue(z, logarithmicBaseZ_);
-    else
-      return z;
-  }
-
-  double unmapLogXValue(double x) const {
-    if (logarithmicX_ && logarithmicBaseX_ > 1)
-      return expValue(x, logarithmicBaseX_);
-    else
-      return x;
-  }
-
-  double unmapLogYValue(double y) const {
-    if (logarithmicY_ && logarithmicBaseY_ > 1)
-      return expValue(y, logarithmicBaseY_);
-    else
-      return y;
-  }
-
-  double unmapLogZValue(double z) const {
-    if (logarithmicZ_ && logarithmicBaseZ_ > 1)
-      return expValue(z, logarithmicBaseZ_);
-    else
-      return z;
-  }
+  bool mappedInside(double x) const { return data_.mappedInside(x); }
 
   //---
 
@@ -156,20 +108,24 @@ class CGnuPlotAxis {
 
   //---
 
-  bool isTickInside (bool first) const { return (first ? tickInside_  : tickInside1_ ); }
-  bool isTickOutside(bool first) const { return (first ? tickOutside_ : tickOutside1_); }
+  double getTicMajorScale() const { return data_.getTicMajorScale(); }
+  void setTicMajorScale(double s) { data_.setTicMajorScale(s); }
 
-  bool isTickInside () const { return tickInside_; }
-  bool isTickOutside() const { return tickOutside_; }
+  double getTicMinorScale() const { return data_.getTicMinorScale(); }
+  void setTicMinorScale(double s) { data_.setTicMinorScale(s); }
 
-  void setTickInside (bool b) { tickInside_  = b; }
-  void setTickOutside(bool b) { tickOutside_ = b; }
+  //------
 
-  bool isTickInside1 () const { return tickInside1_; }
-  bool isTickOutside1() const { return tickOutside1_; }
+  double ticsRotate() const { return data_.ticsRotate(); }
+  void setTicsRotate(double a) { data_.setTicsRotate(a); }
 
-  void setTickInside1 (bool b) { tickInside1_  = b; }
-  void setTickOutside1(bool b) { tickOutside1_ = b; }
+  double labelRotate() const { return data_.labelRotate(); }
+  void setLabelRotate(double a) { data_.setLabelRotate(a); }
+
+  //---
+
+  bool isTickInside() const { return data_.isInside(); }
+  void setTickInside(bool b) { data_.setInside(b); }
 
   //---
 
@@ -178,75 +134,114 @@ class CGnuPlotAxis {
 
   //---
 
-  bool isLabelInside(bool first) const { return (first ? labelInside_ : labelInside1_); }
-
-  bool isLabelInside () const { return labelInside_ ; }
-  bool isLabelInside1() const { return labelInside1_; }
-
-  void setLabelInside (bool b) { labelInside_  = b; }
-  void setLabelInside1(bool b) { labelInside1_ = b; }
+  bool isLabelInside() const { return labelInside_; }
+  void setLabelInside(bool b) { labelInside_ = b; }
 
   //---
 
-  const std::string &getLabel() const { return label_; }
-  void setLabel(const std::string &str);
+  const std::string &getLabel() const { return data_.text(); }
+  void setLabel(const std::string &str) { data_.setText(str); }
 
-  const std::string &getTimeFormat() const { return timeFmt_; }
-  void setTimeFormat(const std::string &ftm);
+  const std::string &getTimeFormat() const { return data_.format(); }
+  void setTimeFormat(const std::string &s) { data_.setFormat(s); }
 
-  bool isDisplayed() const { return displayed_; }
-  void setDisplayed(bool b) { displayed_ = b; }
+  //---
 
-  bool isDrawLine() const { return drawLine_; }
-  void setDrawLine(bool b) { drawLine_ = b; }
+  const CFontPtr &ticFont() const { return data_.ticFont(); }
+  void setTicFont(const CFontPtr &f) { data_.setTicFont(f); }
 
-  bool isDrawLine1() const { return drawLine1_; }
-  void setDrawLine1(bool b) { drawLine1_ = b; }
+  const CFontPtr &labelFont() const { return data_.labelFont(); }
+  void setLabelFont(const CFontPtr &f) { data_.setLabelFont(f); }
 
-  const CRGBA &lineColor() const { return lineColor_; }
-  void setLineColor(const CRGBA &v) { lineColor_ = v; }
+  //---
 
-  double lineWidth() const { return lineWidth_; }
-  void setLineWidth(double r) { lineWidth_ = r; }
+  const CGnuPlotColorSpec &ticColor() const { return data_.ticColor(); }
+  void setTicColor(const CGnuPlotColorSpec &c) { data_.setTicColor(c); }
 
-  const CLineDash &lineDash() const { return lineDash_; }
-  void setLineDash(const CLineDash &d) { lineDash_ = d; }
+  const CGnuPlotColorSpec &labelColor() const { return data_.labelColor(); }
+  void setLabelColor(const CGnuPlotColorSpec &c) { data_.setLabelColor(c); }
 
-  bool hasGrid() const { return grid_; }
-  void setGrid(bool b) { grid_ = b; }
+  //---
 
-  bool hasGridMajor() const { return gridMajor_; }
-  void setGridMajor(bool b) { gridMajor_ = b; }
+  bool isParallel() const { return parallel_; }
+  void setParallel(bool b) { parallel_ = b; }
 
-  bool hasGridMinor() const { return gridMinor_; }
-  void setGridMinor(bool b) { gridMinor_ = b; }
+  //---
+
+  bool isZeroAxisDisplayed() const { return data_.isZeroAxisDisplayed(); }
+  void setZeroAxisDisplayed(bool b) { data_.setZeroAxisDisplayed(b); }
+
+  CRGBA zeroAxisLineColor() const { return data_.getZeroAxisColor(group_); }
+
+  double zeroAxisLineWidth() const { return data_.getZeroAxisWidth(); }
+  void setZeroAxisLineWidth(double w) { data_.setZeroAxisLineWidth(w); }
+
+  CLineDash zeroAxisLineDash() const { return data_.getZeroAxisDash(); }
+  void setZeroAxisLineDash(const CLineDash &d) { data_.setZeroAxisLineDash(d); }
+
+  //---
+
+  bool isBorderTics() const { return data_.isBorderTics(); }
+  void setBorderTics(bool b) { data_.setBorderTics(b); }
+
+  //---
+
+  bool hasGrid() const { return data_.hasGrid(); }
+  void setGrid(bool b) { data_.setGrid(b); }
+
+  bool hasGridMajor() const { return data_.hasGridMajor(); }
+  void setGridMajor(bool b) { data_.setGridMajor(b); }
+
+  bool hasGridMinor() const { return data_.hasGridMinor(); }
+  void setGridMinor(bool b) { data_.setGridMinor(b); }
 
   bool isGridBackLayer(bool defBack) const {
-    if      (gridLayer_ == DrawLayer::BACK)
+    if      (getGridLayer() == DrawLayer::BACK)
       return true;
-    else if (gridLayer_ == DrawLayer::DEFAULT)
+    else if (getGridLayer() == DrawLayer::DEFAULT)
       return defBack;
     else
       return false;
   }
 
-  DrawLayer getGridLayer() const { return gridLayer_; }
-  void setGridLayer(const DrawLayer &layer) { gridLayer_ = layer; }
+  DrawLayer getGridLayer() const { return data_.getGridLayer(); }
+  void setGridLayer(const DrawLayer &layer) { data_.setGridLayer(layer); }
+
+  double gridPolarAngle() const { return data_.gridPolarAngle(); }
+  void setGridPolarAngle(double r) { data_.setGridPolarAngle(r); }
+
+  int gridMajorLineStyle() const { return data_.gridMajorLineStyle(); }
+  void setGridMajorLineStyle(int i) { data_.setGridMajorLineStyle(i); }
+
+  int gridMinorLineStyle() const { return data_.gridMinorLineStyle(); }
+  void setGridMinorLineStyle(int i) { data_.setGridMinorLineStyle(i); }
+
+  int gridMajorLineType() const { return data_.gridMajorLineType(); }
+  void setGridMajorLineType(int i) { data_.setGridMajorLineType(i); }
+
+  int gridMinorLineType() const { return data_.gridMinorLineType(); }
+  void setGridMinorLineType(int i) { data_.setGridMinorLineType(i); }
+
+  double gridMajorLineWidth() const { return data_.gridMajorLineWidth(); }
+  void setGridMajorLineWidth(double r) { data_.setGridMajorLineWidth(r); }
+
+  double gridMinorLineWidth() const { return data_.gridMinorLineWidth(); }
+  void setGridMinorLineWidth(double r) { data_.setGridMinorLineWidth(r); }
 
   //---
 
-  bool isEnhanced() const { return enhanced_; }
-  void setEnhanced(bool b) { enhanced_ = b; }
+  bool isEnhanced() const { return data_.isEnhanced(); }
+  void setEnhanced(bool b) { data_.setEnhanced(b); }
 
   //---
 
-  bool isDrawTickMark(bool first) const { return (first ? drawTickMark_ : drawTickMark1_); }
+  bool isDrawTickMark() const { return data_.showTics(); }
+  void setDrawTickMark(bool b) { data_.setShowTics(b); }
 
-  bool isDrawTickMark() const { return drawTickMark_; }
-  void setDrawTickMark(bool b) { drawTickMark_ = b; }
+  bool isMirror() const { return data_.isMirror(); }
+  void setMirror(bool b) { data_.setMirror(b); }
 
-  bool isDrawTickMark1() const { return drawTickMark1_; }
-  void setDrawTickMark1(bool b) { drawTickMark1_ = b; }
+  bool isReverse() const { return data_.isReverse(); }
 
   //---
 
@@ -258,38 +253,32 @@ class CGnuPlotAxis {
 
   //---
 
-  bool isDrawTickLabel(bool first) const { return (first ? drawTickLabel_ : drawTickLabel1_); }
-
   bool isDrawTickLabel() const { return drawTickLabel_; }
-  void setDrawTickLabel(bool b) { drawTickLabel_ = b; }
-
   bool isDrawTickLabel1() const { return drawTickLabel1_; }
+
+  void setDrawTickLabel(bool b) { drawTickLabel_ = b; }
   void setDrawTickLabel1(bool b) { drawTickLabel1_ = b; }
 
   //---
 
-  bool isDrawLabel(bool first) const { return (first ? drawLabel_ : drawLabel1_); }
-
   bool isDrawLabel() const { return drawLabel_; }
   void setDrawLabel(bool b) { drawLabel_ = b; }
-
-  bool isDrawLabel1() const { return drawLabel1_; }
-  void setDrawLabel1(bool b) { drawLabel1_ = b; }
 
   //---
 
   void setRange(double start, double end);
 
-  bool hasMajorTicLabels(bool first) const;
-  bool hasMinorTicLabels(bool first) const;
+  bool hasMajorTicLabels() const;
+  bool hasMinorTicLabels() const;
 
-  CGnuPlotAxisData::RTicLabels getMajorTicLabels(bool first) const;
-  CGnuPlotAxisData::RTicLabels getMinorTicLabels(bool first) const;
+  CGnuPlotAxisData::RTicLabels getMajorTicLabels() const;
+  CGnuPlotAxisData::RTicLabels getMinorTicLabels() const;
 
   std::string getValueStr(int i, double pos) const;
 
-  virtual void drawAxis(CGnuPlotRenderer *renderer, bool first=true);
-  virtual void drawGrid(CGnuPlotRenderer *renderer);
+  virtual void drawAxes(CGnuPlotRenderer *renderer, bool showBoth);
+
+  void drawGrid(CGnuPlotRenderer *renderer);
 
   virtual void drawRadialGrid(CGnuPlotRenderer *renderer);
 
@@ -301,6 +290,12 @@ class CGnuPlotAxis {
                        int &numTicks1, int &numTicks2);
 
  private:
+  void setBoundingBox();
+
+  void drawAxisLine();
+
+  void drawAxis();
+
   bool calc();
 
   static bool calcTics(double start, double end, int tickIncrement, double majorIncrement,
@@ -312,27 +307,33 @@ class CGnuPlotAxis {
 
   bool checkMinorTickSize(double d) const;
 
-  void drawAxisTick(double pos, bool first, bool large);
+  bool isVisibleValue(double pos) const;
 
-  void drawTickLabel(double pos, const std::string &str, bool first);
-  void drawAxisLabel(double pos, const std::string &str, int maxSize, bool first);
+  void drawAxisTicks(double pos, bool large);
+  void drawAxisTick (double pos, bool first, bool large);
+
+  void drawTickLabels(double pos, const std::string &str);
+  void drawTickLabel (double pos, const std::string &str, bool first);
+
+  void drawAxisLabel();
+  void drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first);
 
   void drawClipLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c,
                     double w, const CLineDash &lineDash);
-  void drawLine    (const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c,
-                    double w, const CLineDash &lineDash);
+
+  void drawLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c,
+                double w, const CLineDash &lineDash);
 
   void drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double xOffset,
                         CVAlignType valign, double yOffset, const std::string &str,
-                        bool map=false);
+                        const CRGBA &c, double angle=0);
   void drawVAlignedText(const CPoint3D &pos, CHAlignType halign, double xOffset,
-                        CVAlignType valign, double yOffset, const std::string &str, bool map=false);
+                        CVAlignType valign, double yOffset, const std::string &str,
+                        const CRGBA &c, double angle=0);
 
-  CPoint3D valueToPoint(double v, bool first) const;
+  CPoint3D valueToPoint(double v, bool first, bool zero) const;
   CPoint3D ivalueToPoint(const CPoint3D &d) const;
   CPoint2D ivalueToPoint(const CPoint2D &d) const;
-
-  CPoint3D lineValueToPoint(double v, bool first) const;
 
   CPoint3D perpPoint(const CPoint3D &p, double d) const;
 
@@ -341,59 +342,31 @@ class CGnuPlotAxis {
 
   CGnuPlotRenderer *renderer_          { 0 };
   CGnuPlotGroup*    group_             { 0 };
-  std::string       id_                { "" };
-  bool              initialized_       { false };
+  CGnuPlotAxisData  data_;
   AxisDirection     direction_         { AxisDirection::X };
   CPoint3D          v_                 { 1, 0, 0 };
   CPoint3D          iv_                { 0, 1, 0 };
   double            start_             { 0 };
   double            end_               { 1 };
-  double            start1_            { 0 };
-  double            end1_              { 1 };
-  CPoint3D          position_          { 0, 0, 0 };
-  CPoint3D          position1_         { 0, 0, 0 };
-  CPoint3D          linePosition_      { 0, 0, 0 };
-  CPoint3D          linePosition1_     { 0, 0, 0 };
-  bool              reverse_           { false };
-  bool              logarithmicX_      { false };
-  int               logarithmicBaseX_  { 10 };
-  bool              logarithmicY_      { false };
-  int               logarithmicBaseY_  { 10 };
-  bool              logarithmicZ_      { false };
-  int               logarithmicBaseZ_  { 10 };
-  int               numTicks1_         { 1 };
-  int               numTicks2_         { 0 };
-  int               tickIncrement_     { 0 };
-  double            majorIncrement_    { 0 };
-  TickSpaces        tickSpaces_;
-  bool              tickInside_        { false };
-  bool              tickInside1_       { true  };
-  bool              tickOutside_       { false };
-  bool              tickOutside1_      { false };
+  double            zposition_         { 0 };
+  bool              parallel_          { false };
   bool              labelInside_       { false };
-  bool              labelInside1_      { false };
-  std::string       label_;
-  std::string       timeFmt_;
-  bool              displayed_         { true };
-  bool              drawLine_          { true };
-  bool              drawLine1_         { true };
-  CRGBA             lineColor_;
-  double            lineWidth_         { 0 };
-  CLineDash         lineDash_;
-  bool              drawTickMark_      { true };
-  bool              drawTickMark1_     { true };
-  bool              drawMinorTickMark_ { true };
+  bool              drawMinorTickMark_ { false };
   bool              drawTickLabel_     { true };
   bool              drawTickLabel1_    { false };
   bool              drawLabel_         { true };
-  bool              drawLabel1_        { false };
   bool              clip_              { false };
-  bool              grid_              { false };
-  bool              gridMajor_         { true };
-  bool              gridMinor_         { false };
-  DrawLayer         gridLayer_         { DrawLayer::BACK };
-  bool              enhanced_          { true };
+  int               tickIncrement_     { 0 };
+  double            majorIncrement_    { 0 };
+  TickSpaces        tickSpaces_;
+  mutable double    start1_            { 0 };
+  mutable double    end1_              { 1 };
+  mutable int       numTicks1_         { 1 };
+  mutable int       numTicks2_         { 0 };
+  mutable bool      reverse_           { false };
   mutable CBBox2D   bbox_              { 0, 0, 1, 1 };
+  mutable bool      drawOther_         { false };
+  mutable double    maxW_, maxH_;
 };
 
 #endif

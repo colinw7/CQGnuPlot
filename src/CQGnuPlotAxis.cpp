@@ -1,12 +1,12 @@
 #include <CQGnuPlotAxis.h>
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotUtil.h>
-#include <CGnuPlotRenderer.h>
+#include <CQGnuPlotRenderer.h>
+#include <CQUtil.h>
 
 CQGnuPlotAxis::
-CQGnuPlotAxis(CQGnuPlotGroup *group, const std::string &id, AxisDirection dir,
-              double start, double end) :
- CGnuPlotAxis(group, id, dir, start, end)
+CQGnuPlotAxis(CQGnuPlotGroup *group, const CGnuPlotAxisData &data, double start, double end) :
+ CGnuPlotAxis(group, data, start, end)
 {
 }
 
@@ -24,23 +24,37 @@ getLabel() const
 
 void
 CQGnuPlotAxis::
-setLabel(const QString &label)
+setLabel(const QString &s)
 {
-  CGnuPlotAxis::setLabel(label.toStdString());
+  CGnuPlotAxis::setLabel(s.toStdString());
+}
+
+QString
+CQGnuPlotAxis::
+getTimeFormat() const
+{
+  return QString(CGnuPlotAxis::getTimeFormat().c_str());
 }
 
 void
 CQGnuPlotAxis::
-setStart(double r)
+setTimeFormat(const QString &s)
 {
-  group_->setAxisStart(id_, r);
+  CGnuPlotAxis::setTimeFormat(s.toStdString());
 }
 
 void
 CQGnuPlotAxis::
-setEnd(double r)
+setStart1(double r)
 {
-  group_->setAxisEnd(id_, r);
+  group_->setAxisStart1(type(), ind(), r);
+}
+
+void
+CQGnuPlotAxis::
+setEnd1(double r)
+{
+  group_->setAxisEnd1(type(), ind(), r);
 }
 
 CQGnuPlotEnum::DrawLayerType
@@ -57,11 +71,79 @@ setGridLayer(const DrawLayerType &layer)
   CGnuPlotAxis::setGridLayer(CQGnuPlotUtil::drawLayerTypeConv(layer));
 }
 
+QFont
+CQGnuPlotAxis::
+getTicFont() const
+{
+  return CQUtil::toQFont(CGnuPlotAxis::ticFont());
+}
+
 void
 CQGnuPlotAxis::
-drawAxis(CGnuPlotRenderer *renderer, bool first)
+setTicFont(const QFont &f)
 {
-  CGnuPlotAxis::drawAxis(renderer, first);
+  CGnuPlotAxis::setTicFont(CQUtil::fromQFont(f));
+}
+
+QFont
+CQGnuPlotAxis::
+getLabelFont() const
+{
+  return CQUtil::toQFont(CGnuPlotAxis::labelFont());
+}
+
+void
+CQGnuPlotAxis::
+setLabelFont(const QFont &f)
+{
+  CGnuPlotAxis::setLabelFont(CQUtil::fromQFont(f));
+}
+
+QColor
+CQGnuPlotAxis::
+getTicColor() const
+{
+  const CGnuPlotColorSpec &cs = CGnuPlotAxis::ticColor();
+
+  return toQColor(cs.color());
+}
+
+void
+CQGnuPlotAxis::
+setTicColor(const QColor &c)
+{
+  CGnuPlotColorSpec cs = CGnuPlotAxis::ticColor();
+
+  cs.setRGB(fromQColor(c));
+
+  CGnuPlotAxis::setTicColor(cs);
+}
+
+QColor
+CQGnuPlotAxis::
+getLabelColor() const
+{
+  const CGnuPlotColorSpec &cs = CGnuPlotAxis::labelColor();
+
+  return toQColor(cs.color());
+}
+
+void
+CQGnuPlotAxis::
+setLabelColor(const QColor &c)
+{
+  CGnuPlotColorSpec cs = CGnuPlotAxis::labelColor();
+
+  cs.setRGB(fromQColor(c));
+
+  CGnuPlotAxis::setLabelColor(cs);
+}
+
+void
+CQGnuPlotAxis::
+drawAxes(CGnuPlotRenderer *renderer, bool drawOther)
+{
+  CGnuPlotAxis::drawAxes(renderer, drawOther);
 
   if (isSelected()) {
     renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);

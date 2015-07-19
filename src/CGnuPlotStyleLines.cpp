@@ -48,7 +48,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       p1 = group->convertPolarAxisPoint(p1, inside);
     }
 
-    group->mapLogPoint(plot->xind(), plot->yind(), 1, p1);
+    p1 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p1);
 
     points.push_back(p1);
 
@@ -67,7 +67,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         p2 = group->convertPolarAxisPoint(p2, inside);
       }
 
-      group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);
+      p2 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);
 
       points.push_back(p2);
 
@@ -77,7 +77,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     // TODO: clip
     double lw = lineStyle.calcWidth();
 
-    renderer->drawPath(points, lw, c, lineStyle.calcDash());
+    renderer->drawClippedPath(points, lw, c, lineStyle.calcDash());
   }
 
 #if 0
@@ -133,7 +133,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       Points points;
 
-      group->mapLogPoint(plot->xind(), plot->yind(), 1, p1);
+      p1 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p1);
 
       xpoints[j].push_back(p1);
 
@@ -150,7 +150,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         if (! plot->mapPoint3D(point2, p2) || point2.isDiscontinuity())
           break;
 
-        group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);
+        p2 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);
 
         xpoints[j].push_back(p2);
 
@@ -162,7 +162,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       // TODO: clip
       double lw = lineStyle.calcWidth();
 
-      renderer->drawPath(points, lw, c, lineStyle.calcDash());
+      renderer->drawClippedPath(points, lw, c, lineStyle.calcDash());
 
       if (n < 0)
         n = points.size();
@@ -179,7 +179,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       // TODO: clip
       double lw = lineStyle.calcWidth();
 
-      renderer->drawPath(ip.second, lw, c, lineStyle.calcDash());
+      renderer->drawClippedPath(ip.second, lw, c, lineStyle.calcDash());
     }
   }
 }

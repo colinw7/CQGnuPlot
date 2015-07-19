@@ -17,6 +17,7 @@
 #include <CQGnuPlotPalette.h>
 #include <CQGnuPlotTitle.h>
 #include <CQGnuPlotCamera.h>
+#include <CQGnuPlotTimeStamp.h>
 #include <CQGnuPlotBubbleObject.h>
 #include <CQGnuPlotBarObject.h>
 #include <CQGnuPlotEllipseObject.h>
@@ -172,11 +173,11 @@ createRectangle(CGnuPlotGroup *group)
 
 CGnuPlotAxis *
 CQGnuPlotDevice::
-createAxis(CGnuPlotGroup *group, const std::string &id, CGnuPlotTypes::AxisDirection dir)
+createAxis(CGnuPlotGroup *group, const CGnuPlotAxisData &data)
 {
   CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-  CQGnuPlotAxis *axis = new CQGnuPlotAxis(qgroup, id, dir);
+  CQGnuPlotAxis *axis = new CQGnuPlotAxis(qgroup, data);
 
   objects_.push_back(axis);
 
@@ -244,6 +245,17 @@ createCamera(CGnuPlotGroup *group)
   CQGnuPlotCamera *camera = new CQGnuPlotCamera(qgroup);
 
   return camera;
+}
+
+CGnuPlotTimeStamp *
+CQGnuPlotDevice::
+createTimeStamp(CGnuPlotGroup *group)
+{
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+
+  CQGnuPlotTimeStamp *timeStamp = new CQGnuPlotTimeStamp(qgroup);
+
+  return timeStamp;
 }
 
 CGnuPlotBarObject *

@@ -15,7 +15,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   CGnuPlotGroup *group = plot->group();
 
-  CGnuPlotAxis *raxis = group->getPlotAxis('r', 1);
+  CGnuPlotAxis *raxis = group->getPlotAxis(CGnuPlotTypes::AxisType::R, 1, true);
 
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
@@ -32,6 +32,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   double y2 = std::max(0.0, ymin);
 
+  if (plot->isPolar())
+    y2 = std::max(ymin, 1.0);
+
   for (const auto &point : plot->getPoints2D()) {
     std::vector<double> reals;
 
@@ -40,22 +43,20 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (reals.size() < 2)
       continue;
 
-    CPoint2D p1(reals[0], reals[1]);
-    CPoint2D p2(reals[0], y2);
+    CPoint2D p1(reals[0], y2);
+    CPoint2D p2(reals[0], reals[1]);
 
     if (plot->isPolar()) {
       bool inside1, inside2;
+
+      p1.y = raxis->mapLogValue(p1.y);
+      p2.y = raxis->mapLogValue(p2.y);
 
       p1 = group->convertPolarAxisPoint(p1, inside1);
       p2 = group->convertPolarAxisPoint(p2, inside2);
 
       if (! inside1 && ! inside2)
         continue;
-
-      p1.x = raxis->mapLogXValue(p1.x);
-      p1.y = raxis->mapLogYValue(p1.y);
-      p2.x = raxis->mapLogXValue(p2.x);
-      p2.y = raxis->mapLogYValue(p2.y);
     }
 
     CRGBA lc1 = lc;

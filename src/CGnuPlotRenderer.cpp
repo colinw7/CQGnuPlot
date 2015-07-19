@@ -190,29 +190,33 @@ drawEllipse(const CPoint3D &pos, double dx, double ry, double a, const CRGBA &c,
 void
 CGnuPlotRenderer::
 drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
-                 CVAlignType valign, double y_offset, const std::string &str, const CRGBA &c)
+                 CVAlignType valign, double y_offset, const std::string &str,
+                 const CRGBA &c, double a)
 {
   CPoint2D pos1 = transform(pos);
 
-  drawHAlignedText(pos1, halign, x_offset, valign, y_offset, str, c);
+  drawHAlignedText(pos1, halign, x_offset, valign, y_offset, str, c, a);
 }
 
 void
 CGnuPlotRenderer::
 drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
-                 CVAlignType valign, double y_offset, const std::string &str, const CRGBA &c)
+                 CVAlignType valign, double y_offset, const std::string &str,
+                 const CRGBA &c, double a)
 {
+  if (fabs(a) > 1E-6)
+    return drawRotatedText(pos, str, a, halign, valign, c);
+
+  CFontPtr font = getFont();
+
   /* Calculate width and height of string (max width and sum of heights of all lines) */
+  double font_size = font->getCharAscent() + font->getCharDescent();
+//double font_size = font->getCharHeight();
+
   CBBox2D bbox = getHAlignedTextBBox(str);
 
 //double width1  = bbox.getWidth();
   double height1 = bbox.getHeight();
-
-  //------
-
-  CFontPtr font = getFont();
-
-  double font_size = font->getCharAscent() + font->getCharDescent();
 
   //------
 
@@ -329,18 +333,23 @@ drawHTextInBox(const CBBox2D &bbox, const std::string &str, CHAlignType halign, 
 void
 CGnuPlotRenderer::
 drawVAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
-                 CVAlignType valign, double y_offset, const std::string &str, const CRGBA &c)
+                 CVAlignType valign, double y_offset, const std::string &str,
+                 const CRGBA &c, double a)
 {
   CPoint2D pos1 = transform(pos);
 
-  drawVAlignedText(pos1, halign, x_offset, valign, y_offset, str, c);
+  drawVAlignedText(pos1, halign, x_offset, valign, y_offset, str, c, a);
 }
 
 void
 CGnuPlotRenderer::
 drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
-                 CVAlignType valign, double y_offset, const std::string &str, const CRGBA &c)
+                 CVAlignType valign, double y_offset, const std::string &str,
+                 const CRGBA &c, double a)
 {
+  if (fabs(a) > 1E-6)
+    return drawRotatedText(pos, str, a, halign, valign, c);
+
   CFontPtr font = getFont();
 
   /* Calculate width and height of string (max width and sum of heights of all lines) */
@@ -348,6 +357,10 @@ drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
 
   double width1  = 0;
   double height1 = 0;
+
+  //------
+
+  // Draw each line using X and Y alignment
 
   std::string str1 = str;
 
@@ -480,6 +493,55 @@ drawPath(const std::vector<CPoint3D> &points, double width, const CRGBA &c,
 
   for (const auto &p : points)
     points1.push_back(transform(p));
+
+  drawPath(points1, width, c, dash);
+}
+
+void
+CGnuPlotRenderer::
+drawClippedPath(const std::vector<CPoint2D> &points, double width, const CRGBA &c,
+                const CLineDash &dash)
+{
+  int np = points.size();
+  if (np < 2) return;
+
+  std::vector<CPoint2D> points1;
+
+  for (int i = 1; i < np; ++i) {
+    CPoint2D p1 = points[i - 1];
+    CPoint2D p2 = points[i    ];
+
+    if (clipLine(p1, p2)) {
+      if (points1.empty() || points1.back() != p1)
+        points1.push_back(p1);
+
+      points1.push_back(p2);
+    }
+    else {
+      if (! points1.empty())
+        drawPath(points1, width, c, dash);
+
+      points1.clear();
+    }
+  }
+
+  if (! points1.empty())
+    drawPath(points1, width, c, dash);
+}
+
+void
+CGnuPlotRenderer::
+drawClippedPath(const std::vector<CPoint3D> &points, double width, const CRGBA &c,
+                const CLineDash &dash)
+{
+  std::vector<CPoint2D> points1;
+
+  for (const auto &p : points) {
+    CPoint2D p1 = transform(p);
+
+    if (clip_.inside(p1))
+      points1.push_back(p1);
+  }
 
   drawPath(points1, width, c, dash);
 }
@@ -717,7 +779,7 @@ CPoint2D
 CGnuPlotRenderer::
 transform(const CPoint3D &p) const
 {
-  if (camera_) {
+  if (camera_.isValid()) {
     CPoint3D p1 = camera_->transform(p);
 
     return CPoint2D(p1.x, p1.y);

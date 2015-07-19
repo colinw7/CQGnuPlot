@@ -7,6 +7,7 @@
 #include <CRGBA.h>
 #include <CPoint2D.h>
 #include <CBBox2D.h>
+#include <CBBox3D.h>
 #include <CLineDash.h>
 
 typedef std::vector<std::string> StringArray;
@@ -445,25 +446,28 @@ namespace CGnuPlotTypes {
     RELATIVE
   };
 
-  enum class LogScale {
+  enum class AxisType {
     X,
     Y,
     Z,
-    X2,
-    Y2,
+    R,
+    P,
+    T,
+    U,
+    V,
     CB
-  };
-
-  enum class Mapping {
-    CARTESIAN_MAPPING,
-    CYLINDRICAL_MAPPING,
-    SPHERICAL_MAPPING
   };
 
   enum class AxisDirection {
     X,
     Y,
     Z
+  };
+
+  enum class Mapping {
+    CARTESIAN_MAPPING,
+    CYLINDRICAL_MAPPING,
+    SPHERICAL_MAPPING
   };
 }
 

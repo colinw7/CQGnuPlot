@@ -103,6 +103,8 @@ setPainter(QPainter *painter)
 {
   painter_ = painter;
 
+  setAntiAlias(true);
+
   if (canvas_)
     window()->setSize(CISize2D(canvas_->width(), canvas_->height()));
 }
@@ -550,6 +552,10 @@ CQGnuPlotRenderer::
 drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
                 CHAlignType halign, CVAlignType valign, const CRGBA &c)
 {
+  CQFont *qfont = getFont().cast<CQFont>();
+
+  painter_->setFont(qfont->getQFont());
+
   double px, py;
 
   windowToPixel(p.x, p.y, &px, &py);

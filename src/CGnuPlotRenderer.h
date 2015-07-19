@@ -20,8 +20,8 @@ class CGnuPlotRenderer {
   void setWindow(CGnuPlotWindow *w) { window_ = w; }
   CGnuPlotWindow *window() const { return window_; }
 
-  void setCamera(CGnuPlotCamera *c) { camera_ = c; }
-  CGnuPlotCamera *camera() const { return camera_; }
+  void setCamera(const CGnuPlotCameraP &c) { camera_ = c; }
+  const CGnuPlotCameraP &camera() const { return camera_; }
 
   int width() const { return width_; }
   void setWidth(int w) { width_ = w; }
@@ -113,6 +113,11 @@ class CGnuPlotRenderer {
 
   //---
 
+  void drawClippedPath(const std::vector<CPoint2D> &points, double width,
+                       const CRGBA &c, const CLineDash &dash=CLineDash());
+  void drawClippedPath(const std::vector<CPoint3D> &points, double width,
+                       const CRGBA &c, const CLineDash &dash=CLineDash());
+
   void drawPath  (const std::vector<CPoint3D> &points, double width,
                   const CRGBA &c, const CLineDash &dash=CLineDash());
   void drawPoint (const CPoint3D &p, const CRGBA &c);
@@ -151,17 +156,17 @@ class CGnuPlotRenderer {
 
   void drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
                         CVAlignType valign, double y_offset, const std::string &str,
-                        const CRGBA &c);
+                        const CRGBA &c, double a=0);
   void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
                         CVAlignType valign, double y_offset, const std::string &str,
-                        const CRGBA &c);
+                        const CRGBA &c, double a=0);
 
   void drawVAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
                         CVAlignType valign, double y_offset, const std::string &str,
-                        const CRGBA &c);
+                        const CRGBA &c, double a=0);
   void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
                         CVAlignType valign, double y_offset, const std::string &str,
-                        const CRGBA &c);
+                        const CRGBA &c, double a=0);
 
   void drawHTextInBox(const CBBox2D &bbox, const std::string &str,
                       CHAlignType halign, const CRGBA &c);
@@ -181,19 +186,19 @@ class CGnuPlotRenderer {
   CPoint2D transform(const CPoint3D &p) const;
 
  protected:
-  CGnuPlotWindow *window_ { 0 };     // current window
-  CGnuPlotCamera *camera_ { 0 };     // camera
-  int             width_ { 100 };    // pixel width
-  int             height_ { 100 };   // pixel height
-  bool            mapping_ { true }; // mapping enabled
-  CBBox2D         region_;           // window region (0,0) -> (1,1)
-  CRange2D        margin_;           // margin for plot
-  CBBox2D         range_;            // data range
-  COptReal        ratio_;            // aspect ratio
-  CBBox2D         clip_;             // clip area
-  CFontPtr        font_;             // font
-  bool            reverseX_ { false };
-  bool            reverseY_ { false };
+  CGnuPlotWindow  *window_ { 0 };     // current window
+  CGnuPlotCameraP  camera_;           // camera
+  int              width_ { 100 };    // pixel width
+  int              height_ { 100 };   // pixel height
+  bool             mapping_ { true }; // mapping enabled
+  CBBox2D          region_;           // window region (0,0) -> (1,1)
+  CRange2D         margin_;           // margin for plot
+  CBBox2D          range_;            // data range
+  COptReal         ratio_;            // aspect ratio
+  CBBox2D          clip_;             // clip area
+  CFontPtr         font_;             // font
+  bool             reverseX_ { false };
+  bool             reverseY_ { false };
 };
 
 #endif

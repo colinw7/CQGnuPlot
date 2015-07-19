@@ -67,8 +67,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   renderer->drawRect(CBBox2D(0.0, wy1, 1.0, wy2), CRGBA(0,0,0), 1);
 
 #if 0
-  CGnuPlotAxis *xaxis = group()->getPlotAxis('x', 1);
-  CGnuPlotAxis *yaxis = group()->getPlotAxis('y', 1);
+  CGnuPlotAxis *xaxis = group()->getPlotAxis(AxisType::X, 1);
+  CGnuPlotAxis *yaxis = group()->getPlotAxis(AxisType::Y, 1);
 
   xaxis->drawAxis(0.0);
   yaxis->drawAxis(0.0);

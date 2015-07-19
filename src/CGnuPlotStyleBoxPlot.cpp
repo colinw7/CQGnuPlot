@@ -17,6 +17,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   CGnuPlotGroup *group = plot->group();
 
+  const CGnuPlotAxis *xaxis = group->getPlotAxis(CGnuPlotTypes::AxisType::X, 1, true);
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
   const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
@@ -105,9 +107,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  CGnuPlotAxis *plotXAxis = group->getPlotAxis('x', 1);
+  CBBox3D bbox = group->getPlotBorderBox(1, 1, 1);
 
-  double ypos = plotXAxis->position().y;
+  double ypos = bbox.getYMin();
 
   //---
 
@@ -145,7 +147,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       renderer->drawSymbol(CPoint2D(ix + 1, 0), outlierSymbol, ps, lc);
     }
 
-    std::string s = group->getAxisValueStr("x1", ix, ix);
+    std::string s = xaxis->getValueStr(ix, ix);
 
     renderer->drawHAlignedText(CPoint2D(ix, ypos), CHALIGN_TYPE_CENTER, 0,
                                CVALIGN_TYPE_TOP, -8, s, CRGBA(0,0,0));

@@ -3441,19 +3441,19 @@ parseAxisLabel(CParseLine &line, CGnuPlotAxisData &axis)
       CPoint2D o;
 
       if (parseOffset(line, o))
-        axis.setOffset(o);
+        axis.setLabelOffset(o);
     }
     else if (arg == "font") {
       CFontPtr font;
 
       if (parseFont(line, font))
-        axis.setFont(font);
+        axis.setLabelFont(font);
     }
     else if (arg == "textcolor") {
       CGnuPlotColorSpec c;
 
       if (parseColorSpec(line, c))
-        axis.setTextColor(c);
+        axis.setLabelColor(c);
     }
     else if (arg == "enhanced" || arg == "noenhanced") {
       axis.setEnhanced(arg == "enhanced");
@@ -3467,19 +3467,19 @@ parseAxisLabel(CParseLine &line, CGnuPlotAxisData &axis)
         double a;
 
         if (parseReal(line, a))
-          axis.setRotate(a);
+          axis.setLabelRotate(a);
       }
       else if (arg1 == "parallel") {
-        axis.setRotate(-1);
+        axis.setLabelRotate(-1);
       }
       else {
-        axis.setRotate(90);
+        axis.setLabelRotate(90);
 
         line.setPos(pos1);
       }
     }
     else if (arg == "norotate") {
-      axis.setRotate(0);
+      axis.setLabelRotate(0);
     }
     else {
       line.setPos(pos);
@@ -5521,36 +5521,36 @@ setCmd(const std::string &args)
 
     while (arg != "") {
       if      (arg == "noxtics" || arg == "xtics")
-        xaxis(1).setGridTics(arg == "xtics");
+        xaxis(1).setGridMajor(arg == "xtics");
       else if (arg == "nomxtics" || arg == "mxtics")
-        xaxis(1).setGridMinorTics(arg == "mxtics");
+        xaxis(1).setGridMinor(arg == "mxtics");
       else if (arg == "noytics" || arg == "ytics")
-        yaxis(1).setGridTics(arg == "ytics");
+        yaxis(1).setGridMajor(arg == "ytics");
       else if (arg == "nomytics" || arg == "mytics")
-        yaxis(1).setGridMinorTics(arg == "mytics");
+        yaxis(1).setGridMinor(arg == "mytics");
       else if (arg == "noztics" || arg == "ztics")
-        zaxis(1).setGridTics(arg == "ztics");
+        zaxis(1).setGridMajor(arg == "ztics");
       else if (arg == "nomztics" || arg == "mztics")
-        zaxis(1).setGridMinorTics(arg == "mztics");
+        zaxis(1).setGridMinor(arg == "mztics");
       else if (arg == "nox2tics" || arg == "x2tics")
-        xaxis(2).setGridTics(arg == "x2tics");
+        xaxis(2).setGridMajor(arg == "x2tics");
       else if (arg == "nomx2tics" || arg == "mx2tics")
-        xaxis(2).setGridMinorTics(arg == "mx2tics");
+        xaxis(2).setGridMinor(arg == "mx2tics");
       else if (arg == "noy2tics" || arg == "y2tics")
-        yaxis(2).setGridTics(arg == "y2tics");
+        yaxis(2).setGridMajor(arg == "y2tics");
       else if (arg == "nomy2tics" || arg == "my2tics")
-        yaxis(2).setGridMinorTics(arg == "my2tics");
+        yaxis(2).setGridMinor(arg == "my2tics");
       else if (arg == "nocbtics" || arg == "cbtics")
-        colorBox_.axis().setGridTics(arg == "cbtics");
+        colorBox_.axis().setGridMajor(arg == "cbtics");
       else if (arg == "nomcbtics" || arg == "mcbtics")
-        colorBox_.axis().setGridMinorTics(arg == "mcbtics");
+        colorBox_.axis().setGridMinor(arg == "mcbtics");
       else if (arg == "polar") {
         raxis().setGrid(true);
 
         double r = 0;
 
         if (parseReal(line, r))
-          axesData_.setGridPolarAngle(angleToRad(r));
+          axesData_.setGridPolarAngle(angleToDeg(r));
       }
       else if (arg == "front" || arg == "back" || arg == "layerdefault") {
         if      (arg == "front"       ) axesData_.setGridLayer(DrawLayer::FRONT);
@@ -6259,12 +6259,12 @@ setCmd(const std::string &args)
         base = 10;
     }
 
-    if (axesStr == "" || axesStr == "x" ) xaxis(1).setLogScale(base);
-    if (axesStr == "" || axesStr == "x2") xaxis(2).setLogScale(base);
-    if (axesStr == "" || axesStr == "y" ) yaxis(1).setLogScale(base);
-    if (axesStr == "" || axesStr == "y2") yaxis(2).setLogScale(base);
-    if (axesStr == "" || axesStr == "z" ) zaxis(1).setLogScale(base);
-    if (axesStr == "" || axesStr == "r" ) raxis( ).setLogScale(base);
+    if (axesStr == "" || axesStr == "x" ) xaxis(1).setLogBase(base);
+    if (axesStr == "" || axesStr == "x2") xaxis(2).setLogBase(base);
+    if (axesStr == "" || axesStr == "y" ) yaxis(1).setLogBase(base);
+    if (axesStr == "" || axesStr == "y2") yaxis(2).setLogBase(base);
+    if (axesStr == "" || axesStr == "z" ) zaxis(1).setLogBase(base);
+    if (axesStr == "" || axesStr == "r" ) raxis( ).setLogBase(base);
   }
   // set macros
   else if (var == VariableName::MACROS) {
@@ -7286,6 +7286,17 @@ setCmd(const std::string &args)
   // set rrange { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} {{no}extend} } | restore
   else if (var == VariableName::RRANGE) {
     parseAxisRange(line, raxis());
+
+    double s = raxis().max().getValue(100) - raxis().min().getValue(0);
+
+    if (raxis().logBase().isValid())
+      s = raxis().mapLogValue(s);
+
+    xaxis(1).setMin(-s);
+    xaxis(1).setMax( s);
+
+    yaxis(1).setMin(-s);
+    yaxis(1).setMax( s);
   }
   // set rtics
   else if (var == VariableName::RTICS) {
@@ -8034,6 +8045,8 @@ setCmd(const std::string &args)
       if (parseString(line, fmt))
         timeStamp_.setFormat(fmt);
     }
+    else
+      timeStamp_.setFormat("%a %b %d %H:%M:%S %Y");
 
     std::string arg = readNonSpace(line);
 
@@ -8902,15 +8915,15 @@ showCmd(const std::string &args)
   }
   // show logscale
   else if (var == VariableName::LOGSCALE) {
-    if (xaxis(1).logScale().isValid() || xaxis(2).logScale().isValid() ||
-        yaxis(1).logScale().isValid() || yaxis(2).logScale().isValid() ||
-        zaxis(1).logScale().isValid() || raxis( ).logScale().isValid()) {
+    if (xaxis(1).logBase().isValid() || xaxis(2).logBase().isValid() ||
+        yaxis(1).logBase().isValid() || yaxis(2).logBase().isValid() ||
+        zaxis(1).logBase().isValid() || raxis( ).logBase().isValid()) {
       std::cout << "logscaling";
 
       auto print = [&](const std::string &id, const CGnuPlotAxisData &axis, bool &output) {
-        if (! axis.logScale().isValid()) return;
+        if (! axis.logBase().isValid()) return;
         if (output) std::cout << " and";
-        std::cout << " " << id << " (base " << axis.logScale().getValue() << ")";
+        std::cout << " " << id << " (base " << axis.logBase().getValue() << ")";
         output = true;
       };
 
@@ -9964,12 +9977,12 @@ unsetCmd(const std::string &args)
   }
   // unset logscale
   else if (var == VariableName::LOGSCALE) {
-    xaxis(1).resetLogScale();
-    xaxis(2).resetLogScale();
-    yaxis(1).resetLogScale();
-    yaxis(2).resetLogScale();
-    zaxis(1).resetLogScale();
-    raxis( ).resetLogScale();
+    xaxis(1).resetLogBase();
+    xaxis(2).resetLogBase();
+    yaxis(1).resetLogBase();
+    yaxis(2).resetLogBase();
+    zaxis(1).resetLogBase();
+    raxis( ).resetLogBase();
   }
   // unset macros
   else if (var == VariableName::MACROS) {
@@ -11378,9 +11391,9 @@ createLineType()
 
 CGnuPlotAxis *
 CGnuPlot::
-createAxis(CGnuPlotGroup *group, const std::string &id, CGnuPlotTypes::AxisDirection dir)
+createAxis(CGnuPlotGroup *group, const CGnuPlotAxisData &data)
 {
-  return (device() ? device()->createAxis(group, id, dir) : new CGnuPlotAxis(group, id, dir));
+  return (device() ? device()->createAxis(group, data) : new CGnuPlotAxis(group, data));
 }
 
 CGnuPlotKey *
@@ -11416,6 +11429,13 @@ CGnuPlot::
 createCamera(CGnuPlotGroup *group)
 {
   return (device() ? device()->createCamera(group) : new CGnuPlotCamera(group));
+}
+
+CGnuPlotTimeStamp *
+CGnuPlot::
+createTimeStamp(CGnuPlotGroup *group)
+{
+  return (device() ? device()->createTimeStamp(group) : new CGnuPlotTimeStamp(group));
 }
 
 CGnuPlotRenderer *
@@ -13228,19 +13248,19 @@ processParams(const Params &params)
       ticLabel_.str   = value;
 
       if      (name == "xtic" || name == "xticlabels") {
-        ticLabel_.id = 'x'; ticLabel_.ind = 1;
+        ticLabel_.id = AxisType::X; ticLabel_.ind = 1;
         xaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str, 0);
       }
       else if (name == "x2tic"|| name == "x2ticlabels") {
-        ticLabel_.id = 'x'; ticLabel_.ind = 2;
+        ticLabel_.id = AxisType::X; ticLabel_.ind = 2;
         xaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str, 0);
       }
       else if (name == "ytic" || name == "yticlabels") {
-        ticLabel_.id = 'y'; ticLabel_.ind = 1;
+        ticLabel_.id = AxisType::Y; ticLabel_.ind = 1;
         yaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str, 0);
       }
       else if (name == "y2tic"|| name == "y2ticlabels") {
-        ticLabel_.id = 'y'; ticLabel_.ind = 2;
+        ticLabel_.id = AxisType::Y; ticLabel_.ind = 2;
         yaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str, 0);
       }
     }
@@ -13549,6 +13569,13 @@ angleToRad(double a) const
   return (isAngleDegrees() ? CAngle::Deg2Rad(a) : a);
 }
 
+double
+CGnuPlot::
+angleToDeg(double a) const
+{
+  return (! isAngleDegrees() ? CAngle::Rad2Deg(a) : a);
+}
+
 void
 CGnuPlot::
 setDummyVars(const std::string &dummyVar1, const std::string &dummyVar2)
@@ -13633,7 +13660,7 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
       axis.setMirror(arg == "mirror");
     }
     else if (arg == "in" || arg == "out") {
-      axis.setOutside(arg == "out");
+      axis.setInside(arg == "in");
     }
     else if (arg == "front" || arg == "back") {
       axis.setFront(arg == "front");
@@ -13667,25 +13694,27 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
         double r;
 
         if (parseReal(line, r))
-          axis.setTextRotate(r);
+          axis.setTicsRotate(r);
       }
     }
     else if (arg == "norotate") {
-      // TODO
+      axis.setTicsRotate(0);
     }
     else if (arg == "offset") {
       CPoint2D o(0, 0);
 
-      if (! parseOffset(line, o))
-        o = CPoint2D(0,0);
+      if (parseOffset(line, o))
+        axis.setTicOffset(o);
     }
     else if (arg == "nooffset") {
-      // TODO
+      CPoint2D o(0, 0);
+
+      axis.setTicOffset(o);
     }
     else if (arg == "left" || arg == "right" ||  arg == "center" || arg == "autojustify") {
-      // TODO
-      //setTicJustify(arg != "left" ?
-      //  (arg != "right" ? (arg != "center" ? AUTOJUSTIFY : CENTER) : RIGHT) : LEFT);
+      axis.setTicJustify(arg != "left" ?  (arg != "right" ?  (arg != "center" ?
+       CGnuPlotAxisData::Justify::AUTOJUSTIFY : CGnuPlotAxisData::Justify::CENTER) :
+       CGnuPlotAxisData::Justify::RIGHT) : CGnuPlotAxisData::Justify::LEFT);
     }
     else if (arg == "add") {
       add = true; // TODO: don't clear
@@ -13704,22 +13733,22 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
       CFontPtr font;
 
       if (parseFont(line, font))
-        axis.setFont(font);
+        axis.setTicFont(font);
     }
     else if (arg == "enhanced" || arg == "noenhanced") {
       axis.setEnhanced(arg == "enhanced");
     }
     else if (arg == "numeric") {
-      // TODO
+      axis.setNumeric(true);
     }
     else if (arg == "timedate" || arg == "time") {
-      // TODO
+      axis.setTimeDate(true);
     }
     else if (arg == "geographic") {
-      // TODO
+      axis.setGeographic(true);
     }
     else if (arg == "rangelimited") {
-      // TODO
+      axis.setRangeLimited(true);
     }
     else if (arg == "textcolor" || arg == "tc") {
       line.skipNonSpace();
@@ -13727,7 +13756,7 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
       CGnuPlotColorSpec c;
 
       if (parseColorSpec(line, c))
-        axis.setTextColor(c);
+        axis.setTicColor(c);
     }
     else if (arg == "linetype" || arg == "lt") {
       int lt;

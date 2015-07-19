@@ -2,13 +2,27 @@
 #include <CGnuPlotGroup.h>
 
 CGnuPlotAxisData::
-CGnuPlotAxisData(int ind) :
- ind_(ind)
+CGnuPlotAxisData(AxisType type, int ind) :
+ type_(type), ind_(ind)
 {
-  displayed_ = (ind_ == 1);
-  gridTics_  = (ind_ == 1);
-  minorTics_ = (ind_ == 1);
-  showTics_  = (ind_ == 1);
+  setDisplayed(ind_ == 1);
+
+  setGridMajor(ind_ == 1);
+
+  setShowTics(ind_ == 1);
+}
+
+CGnuPlotTypes::AxisDirection
+CGnuPlotAxisData::
+direction() const
+{
+  if      (type_ == AxisType::X) return CGnuPlotTypes::AxisDirection::X;
+  else if (type_ == AxisType::Y) return CGnuPlotTypes::AxisDirection::Y;
+  else if (type_ == AxisType::Z) return CGnuPlotTypes::AxisDirection::Z;
+  else if (type_ == AxisType::P) return CGnuPlotTypes::AxisDirection::Y;
+  else if (type_ == AxisType::R) return CGnuPlotTypes::AxisDirection::X;
+  else if (type_ == AxisType::T) return CGnuPlotTypes::AxisDirection::Y;
+  else                           assert(false);
 }
 
 CRGBA
@@ -115,7 +129,8 @@ unset()
 
   text_ = "";
 
-  offset_ = CPoint2D(0,0);
+  ticOffset_   = CPoint2D(0,0);
+  labelOffset_ = CPoint2D(0,0);
 }
 
 void
@@ -154,6 +169,79 @@ reset()
   minorScale_ = 1.0;
 
   dummyVar_ = "";
+}
+
+std::string
+CGnuPlotAxisData::
+getAxisValueStr(int i, double r) const
+{
+  if (hasITicLabels()) {
+    if (hasITicLabel(i))
+      return iticLabel(i);
+    else
+      return "";
+  }
+  else
+    return formatAxisValue(r);
+}
+
+std::string
+CGnuPlotAxisData::
+formatAxisValue(double r) const
+{
+  if (isTime()) {
+    static char buffer[512];
+
+    time_t t(r);
+
+    struct tm *tm1 = localtime(&t);
+
+    (void) strftime(buffer, 512, format().c_str(), tm1);
+
+    return buffer;
+  }
+  else if (format() != "")
+    return CStrUtil::strprintf(format().c_str(), r);
+  else
+    return "";
+}
+
+bool
+CGnuPlotAxisData::
+inside(double x) const
+{
+  if      (min_.isValid() && max_.isValid())
+    return (x >= min_.getValue() && x <= max_.getValue());
+  else if (min_.isValid())
+    return (x >= min_.getValue());
+  else if (max_.isValid())
+    return (x <= max_.getValue());
+  else
+    return true;
+}
+
+bool
+CGnuPlotAxisData::
+mappedInside(double x) const
+{
+  if      (min_.isValid() && max_.isValid()) {
+    double x1 = mapLogValue(min_.getValue());
+    double x2 = mapLogValue(max_.getValue());
+
+    return (x >= x1 && x <= x2);
+  }
+  else if (min_.isValid()) {
+    double x1 = mapLogValue(min_.getValue());
+
+    return (x >= x1);
+  }
+  else if (max_.isValid()) {
+    double x2 = mapLogValue(max_.getValue());
+
+    return (x <= x2);
+  }
+  else
+    return true;
 }
 
 void
@@ -205,7 +293,8 @@ showTics(std::ostream &os, const std::string &prefix) const
     os << prefix << " tics: on axis" << std::endl;
     os << "  labels are justified automatically, format \"" <<
           format_ << "\" and are not rotated," << std::endl;
-    os << "  offset (character " << offset_.x << ", " << offset_.y << ", 0)" << std::endl;
+    os << "  offset (character " <<
+             labelOffset_.x << ", " << labelOffset_.y << ", 0)" << std::endl;
     os << "  intervals computed automatically" << std::endl;
   }
   else
@@ -256,5 +345,6 @@ CGnuPlotAxisData::
 printLabel(std::ostream &os, const std::string &prefix) const
 {
   os << prefix << "label is \"" << text_ << "\", " <<
-        "offset at ((character units) " << offset_.x << ", " << offset_.y << ", 0)" << std::endl;
+        "offset at ((character units) " <<
+        labelOffset_.x << ", " << labelOffset_.y << ", 0)" << std::endl;
 }

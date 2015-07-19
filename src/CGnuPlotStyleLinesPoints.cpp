@@ -59,7 +59,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       p1 = group->convertPolarAxisPoint(p1, inside);
     }
 
-    group->mapLogPoint(plot->xind(), plot->yind(), 1, p1);
+    p1 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p1);
 
     points.push_back(p1);
 
@@ -78,7 +78,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         p2 = group->convertPolarAxisPoint(p2, inside);
       }
 
-      group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);
+      p2 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);
 
       points.push_back(p2);
 
@@ -128,7 +128,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       p.y = reals[valueNum++];
     }
 
-    group->mapLogPoint(plot->xind(), plot->yind(), 1, p);
+    p = group->mapLogPoint(plot->xind(), plot->yind(), 1, p);
 
     double size1 = pointSize;
 

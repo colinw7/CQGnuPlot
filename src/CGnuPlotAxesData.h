@@ -7,7 +7,9 @@
 class CGnuPlotAxesData {
  public:
   typedef CGnuPlotTypes::DrawLayer       DrawLayer;
+  typedef CGnuPlotTypes::AxisType        AxisType;
   typedef std::map<int,CGnuPlotAxisData> IAxisMap;
+  typedef std::map<AxisType,IAxisMap>    TIAxisMap;
 
  public:
   CGnuPlotAxesData() { }
@@ -43,39 +45,30 @@ class CGnuPlotAxesData {
 
   //---
 
-  CGnuPlotAxisData &xaxis(int ind) {
-    IAxisMap::iterator p = xaxis_.find(ind);
+  CGnuPlotAxisData &xaxis(int ind) { return axis(AxisType::X, ind); }
+  CGnuPlotAxisData &yaxis(int ind) { return axis(AxisType::Y, ind); }
+  CGnuPlotAxisData &zaxis(int ind) { return axis(AxisType::Z, ind); }
+  CGnuPlotAxisData &paxis(int ind) { return axis(AxisType::P, ind); }
+  CGnuPlotAxisData &taxis(int ind) { return axis(AxisType::T, ind); }
+  CGnuPlotAxisData &raxis()        { return axis(AxisType::R, 1); }
+  CGnuPlotAxisData &uaxis()        { return axis(AxisType::U, 1); }
+  CGnuPlotAxisData &vaxis()        { return axis(AxisType::V, 1); }
 
-    if (p == xaxis_.end())
-      p = xaxis_.insert(p, IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
+  CGnuPlotAxisData &axis(AxisType type, int ind) {
+    auto p = taxis_.find(type);
 
-    return (*p).second;
+    if (p == taxis_.end())
+      p = taxis_.insert(p, TIAxisMap::value_type(type, IAxisMap()));
+
+    IAxisMap &axis = (*p).second;
+
+    auto p1 = axis.find(ind);
+
+    if (p1 == axis.end())
+      p1 = axis.insert(p1, IAxisMap::value_type(ind, CGnuPlotAxisData(type, ind)));
+
+    return (*p1).second;
   }
-
-  CGnuPlotAxisData &yaxis(int ind) {
-    IAxisMap::iterator p = yaxis_.find(ind);
-
-    if (p == yaxis_.end())
-      p = yaxis_.insert(p, IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
-
-    return (*p).second;
-  }
-
-  CGnuPlotAxisData &zaxis(int ind) {
-    IAxisMap::iterator p = zaxis_.find(ind);
-
-    if (p == zaxis_.end())
-      p = zaxis_.insert(p, IAxisMap::value_type(ind, CGnuPlotAxisData(ind)));
-
-    return (*p).second;
-  }
-
-  CGnuPlotAxisData &paxis(int ind) { return paxis_[ind]; }
-  CGnuPlotAxisData &taxis(int ind) { return taxis_[ind]; }
-
-  CGnuPlotAxisData &raxis() { return raxis_; }
-  CGnuPlotAxisData &uaxis() { return uaxis_; }
-  CGnuPlotAxisData &vaxis() { return vaxis_; }
 
   //---
 
@@ -103,14 +96,7 @@ class CGnuPlotAxesData {
 
  private:
   CGnuPlotGridData   grid_;
-  IAxisMap           xaxis_;
-  IAxisMap           yaxis_;
-  IAxisMap           zaxis_;
-  IAxisMap           paxis_;
-  IAxisMap           taxis_;
-  CGnuPlotAxisData   raxis_;
-  CGnuPlotAxisData   uaxis_;
-  CGnuPlotAxisData   vaxis_;
+  TIAxisMap          taxis_;
   CGnuPlotBorderData border_;
 };
 

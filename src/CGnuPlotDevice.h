@@ -26,6 +26,7 @@ class CGnuPlotPalette;
 class CGnuPlotPlot;
 class CGnuPlotPolygon;
 class CGnuPlotRectangle;
+class CGnuPlotTimeStamp;
 
 class CGnuPlotBarObject;
 class CGnuPlotBubbleObject;
@@ -43,6 +44,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 class CGnuPlotDevice {
  public:
   typedef std::vector<CGnuPlotWindowP> Windows;
+  typedef CGnuPlotTypes::AxisType      AxisType;
 
  public:
   CGnuPlotDevice(const std::string &name);
@@ -114,8 +116,7 @@ class CGnuPlotDevice {
   virtual CGnuPlotPolygon   *createPolygon(CGnuPlotGroup *group);
   virtual CGnuPlotRectangle *createRectangle(CGnuPlotGroup *group);
 
-  virtual CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
-                                   CGnuPlotTypes::AxisDirection dir);
+  virtual CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const CGnuPlotAxisData &data);
 
   virtual CGnuPlotKey *createKey(CGnuPlotGroup *group);
 
@@ -126,6 +127,8 @@ class CGnuPlotDevice {
   virtual CGnuPlotTitle *createTitle(CGnuPlotGroup *group);
 
   virtual CGnuPlotCamera *createCamera(CGnuPlotGroup *group);
+
+  virtual CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group);
 
   virtual CGnuPlotBarObject     *createBarObject    (CGnuPlotPlot *plot);
   virtual CGnuPlotBubbleObject  *createBubbleObject (CGnuPlotPlot *plot);

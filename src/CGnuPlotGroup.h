@@ -7,16 +7,19 @@
 #include <CGnuPlotColorBox.h>
 #include <CGnuPlotPalette.h>
 #include <CGnuPlotClip.h>
+#include <CGnuPlotTimeStamp.h>
 
 class CGnuPlotGroup {
  public:
-  typedef CGnuPlotTypes::HistogramStyle          HistogramStyle;
-  typedef CGnuPlotTypes::DrawLayer               DrawLayer;
-  typedef CGnuPlotTypes::PlotStyle               PlotStyle;
-  typedef CGnuPlot::Annotations                  Annotations;
-  typedef CGnuPlot::Margin                       Margin;
-  typedef std::vector<CGnuPlotPlot *>            Plots;
-  typedef std::map<std::string, CGnuPlotAxis *>  Axes;
+  typedef CGnuPlotTypes::HistogramStyle  HistogramStyle;
+  typedef CGnuPlotTypes::DrawLayer       DrawLayer;
+  typedef CGnuPlotTypes::PlotStyle       PlotStyle;
+  typedef CGnuPlotTypes::AxisType        AxisType;
+  typedef CGnuPlot::Annotations          Annotations;
+  typedef CGnuPlot::Margin               Margin;
+  typedef std::vector<CGnuPlotPlot *>    Plots;
+  typedef std::map<int, CGnuPlotAxis *>  IAxes;
+  typedef std::map<AxisType, IAxes>      Axes;
 
  public:
   CGnuPlotGroup(CGnuPlotWindow *window);
@@ -82,6 +85,9 @@ class CGnuPlotGroup {
   const CGnuPlotAxisData &vaxis() const {
     return const_cast<CGnuPlotGroup *>(this)->vaxis();
   }
+  const CGnuPlotAxisData &axis(AxisType type, int ind) const {
+    return const_cast<CGnuPlotGroup *>(this)->axis(type, ind);
+  }
 
   CGnuPlotAxisData &xaxis(int ind) { return axesData_.xaxis(ind); }
   CGnuPlotAxisData &yaxis(int ind) { return axesData_.yaxis(ind); }
@@ -93,6 +99,8 @@ class CGnuPlotGroup {
   CGnuPlotAxisData &raxis() { return this->axesData_.raxis(); }
   CGnuPlotAxisData &uaxis() { return this->axesData_.uaxis(); }
   CGnuPlotAxisData &vaxis() { return this->axesData_.vaxis(); }
+
+  CGnuPlotAxisData &axis(AxisType type, int ind) { return this->axesData_.axis(type, ind); }
 
   //---
 
@@ -151,8 +159,7 @@ class CGnuPlotGroup {
 
   //---
 
-  CGnuPlotCamera *camera() const { return camera_; }
-  void setCamera(CGnuPlotCamera *c);
+  CGnuPlotCameraP camera() const { return camera_; }
 
   void setCameraEnabled(bool b);
 
@@ -166,6 +173,10 @@ class CGnuPlotGroup {
   void setCameraYMax(double y);
   void setCameraNear(double z);
   void setCameraFar (double z);
+
+  //---
+
+  CGnuPlotTimeStampP timeStamp() const { return timeStamp_; }
 
   //---
 
@@ -260,15 +271,14 @@ class CGnuPlotGroup {
   void showXAxis(bool show);
   void showYAxis(bool show);
 
-  void setAxisRange(const std::string &id, double r1, double r2);
+  void setAxisRange(AxisType type, int ind, double r1, double r2);
 
-  void setAxisStart(const std::string &id, double r);
-  void setAxisEnd  (const std::string &id, double r);
+  void setAxisStart1(AxisType type, int ind, double r);
+  void setAxisEnd1  (AxisType type, int ind, double r);
 
-  void setAxisGridDisplayed(const std::string &id, bool b);
+  void setAxisGridDisplayed(AxisType type, int ind, bool b);
 
-  void updatePlotAxisRange(const std::string &id);
-  void updatePlotAxisRange(char c, int ind);
+  void updatePlotAxisRange(AxisType type, int ind);
 
   //-----
 
@@ -293,7 +303,7 @@ class CGnuPlotGroup {
   void drawYAxis(CGnuPlotRenderer *renderer, int yind, bool other);
   void drawZAxis(CGnuPlotRenderer *renderer, int yind, bool other);
 
-  void drawRAxis(CGnuPlotRenderer *renderer, const CGnuPlotAxisData &axis, char c, int ind);
+  void drawRAxis(CGnuPlotRenderer *renderer);
 
   void drawGrid(CGnuPlotRenderer *renderer, const CGnuPlot::DrawLayer &layer);
 
@@ -304,27 +314,13 @@ class CGnuPlotGroup {
 
   CGnuPlotPlot *getSingleStylePlot() const;
 
-  CGnuPlotAxis *getPlotAxis(char c, int ind) const;
-
-  //-----
-
-  const CGnuPlotAxisData *getAxisDataFromId(const std::string &id) const;
-  CGnuPlotAxisData       *getAxisDataFromId(const std::string &id);
-
-  bool hasTicLabels(const std::string &id, int level) const;
-
-  CGnuPlotAxisData::RTicLabels ticLabels(const std::string &id, int level) const;
-
-  std::string getAxisValueStr(const std::string &id, int i, double r) const;
-  std::string getAxisValueStr(const CGnuPlotAxisData &axis, int i, double r) const;
-  std::string formatAxisValue(const CGnuPlotAxisData &axis, double r) const;
-
-  double getMajorTicSize(const std::string &id) const;
-  double getMinorTicSize(const std::string &id) const;
+  CGnuPlotAxis *getPlotAxis(AxisType type, int ind, bool create) const;
 
   //-----
 
   void calcRange(int xind, int yind, double &xmin, double &ymin, double &xmax, double &ymax) const;
+
+  CBBox3D getPlotBorderBox(int xind, int yind, int zind) const;
 
   CBBox2D getMappedDisplayRange(int xind, int yind) const;
 
@@ -352,24 +348,13 @@ class CGnuPlotGroup {
 
   CPoint3D mapLogPoint(int xind, int yind, int zind, const CPoint3D &p) const;
   CPoint2D mapLogPoint(int xind, int yind, int zind, const CPoint2D &p) const;
+  void     mapLogPoint  (int xind, int yind, int zind, double *x, double *y, double *z) const;
 
-  void mapLogPoint(int xind, int yind, int zind, CPoint3D &p) const;
-  void mapLogPoint(int xind, int yind, int zind, CPoint2D &p) const;
-  void mapLogPoint(int xind, int yind, int zind, double *x, double *y, double *z) const;
-
-  void unmapLogPoint(int xind, int yind, int zind, CPoint3D &p) const;
-  void unmapLogPoint(int xind, int yind, int zind, double *x, double *y, double *z) const;
+  CPoint3D unmapLogPoint(int xind, int yind, int zind, const CPoint3D &p) const;
+  CPoint2D unmapLogPoint(int xind, int yind, int zind, const CPoint2D &p) const;
+  void     unmapLogPoint(int xind, int yind, int zind, double *x, double *y, double *z) const;
 
   //-----
-
-  //void windowToPixel(double wx, double wy, double *px, double *py) const;
-  //void pixelToWindow(double px, double py, double *wx, double *wy) const;
-
-  //CPoint2D windowToPixel(const CPoint2D &p) const;
-  //CPoint2D pixelToWindow(const CPoint2D &p) const;
-
-  //double pixelWidthToWindowWidth  (double w) const;
-  //double pixelHeightToWindowHeight(double h) const;
 
  protected:
   static int nextId_;
@@ -394,7 +379,8 @@ class CGnuPlotGroup {
   CGnuPlotAxesData      axesData_;             // axes data
   Annotations           annotations_;          // annotations
   Axes                  axes_;                 // axes
-  CGnuPlotCamera*       camera_;               // view camera
+  CGnuPlotCameraP       camera_;               // view camera
+  CGnuPlotTimeStampP    timeStamp_;            // time stamp
   CRGBA                 backgroundColor_;      // background color
   mutable CBBox2D       saveRange_;
 };

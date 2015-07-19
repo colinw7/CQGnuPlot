@@ -35,8 +35,7 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
   CGnuPlotPolygon   *createPolygon  (CGnuPlotGroup *group) override;
   CGnuPlotRectangle *createRectangle(CGnuPlotGroup *group) override;
 
-  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id,
-                           CGnuPlotTypes::AxisDirection dir) override;
+  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const CGnuPlotAxisData &data) override;
 
   CGnuPlotKey  *createKey(CGnuPlotGroup *group) override;
 
@@ -46,6 +45,8 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
 
   CGnuPlotTitle  *createTitle (CGnuPlotGroup *group) override;
   CGnuPlotCamera *createCamera(CGnuPlotGroup *group) override;
+
+  CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group) override;
 
   CGnuPlotBarObject     *createBarObject    (CGnuPlotPlot *plot) override;
   CGnuPlotBubbleObject  *createBubbleObject (CGnuPlotPlot *plot) override;

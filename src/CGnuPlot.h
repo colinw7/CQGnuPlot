@@ -32,6 +32,7 @@ class CGnuPlotPlot;
 class CGnuPlotReadLine;
 class CGnuPlotSVGDevice;
 class CGnuPlotWindow;
+class CGnuPlotTimeStamp;
 class CGnuPlotStyleBase;
 
 class CUnixFile;
@@ -90,6 +91,8 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotPm3DData.h>
 #include <CGnuPlotPlotSize.h>
 #include <CGnuPlotFilledCurve.h>
+#include <CGnuPlotFitData.h>
+#include <CGnuPlotHidden3DData.h>
 
 //------
 
@@ -106,6 +109,7 @@ class CGnuPlot {
   typedef CGnuPlotTypes::HistogramStyle          HistogramStyle;
   typedef CGnuPlotTypes::AngleType               AngleType;
   typedef CGnuPlotTypes::DrawLayer               DrawLayer;
+  typedef CGnuPlotTypes::AxisType                AxisType;
   typedef CGnuPlotTypes::AxisDirection           AxisDirection;
 
   typedef std::map<PlotStyle,CGnuPlotStyleBase*> PlotStyles;
@@ -336,37 +340,6 @@ class CGnuPlot {
 
    private:
     CGnuPlotCoordValue l_, r_, t_, b_;
-  };
-
-  struct FitData {
-    std::string logfile { false };
-    bool        quiet { false };
-    bool        results { false };
-    bool        brief { false };
-    bool        verbose { false };
-    bool        errorvariables { false };
-    bool        covariancevariables { false };
-    bool        errorscaling { false };
-    bool        prescale { false };
-    int         maxiter { -1 };
-    double      limit { 0 };
-    double      limit_abs { 0 };
-    double      start_lambda { 0 };
-    double      lambda_factor { 0 };
-    std::string script;
-    int         version { 5 };
-  };
-
-  //---
-
-  struct Hidden3DData {
-    bool      enabled         { false };
-    DrawLayer layer           { DrawLayer::FRONT };
-    COptReal  offset;
-    int       trianglePattern { 3 };
-    COptInt   undefined;
-    bool      altdiagonal     { false };
-    bool      bentover        { false };
   };
 
   //---
@@ -630,8 +603,8 @@ class CGnuPlot {
 
   //---
 
-  const Hidden3DData &hidden3D() const { return hidden3D_; }
-  void setHidden3D(const Hidden3DData &h) { hidden3D_ = h; }
+  const CGnuPlotHidden3DData &hidden3D() const { return hidden3D_; }
+  void setHidden3D(const CGnuPlotHidden3DData &h) { hidden3D_ = h; }
 
   //---
 
@@ -685,6 +658,10 @@ class CGnuPlot {
 
   //------
 
+  const CGnuPlotTimeStampData &timeStamp() const { return timeStamp_; }
+
+  //------
+
   const Annotations &annotations() const { return annotations_; }
   void setAnnotations(const Annotations &annotations) { annotations_ = annotations; }
 
@@ -712,7 +689,7 @@ class CGnuPlot {
   CGnuPlotLineStyle *createLineStyle(CGnuPlot *plot);
   CGnuPlotLineType  *createLineType();
 
-  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const std::string &id, AxisDirection dir);
+  CGnuPlotAxis *createAxis(CGnuPlotGroup *group, const CGnuPlotAxisData &data);
   CGnuPlotKey  *createKey (CGnuPlotGroup *group);
 
   CGnuPlotColorBox *createColorBox(CGnuPlotGroup *group);
@@ -722,6 +699,8 @@ class CGnuPlot {
   CGnuPlotTitle *createTitle(CGnuPlotGroup *group);
 
   CGnuPlotCamera *createCamera(CGnuPlotGroup *group);
+
+  CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group);
 
   CGnuPlotRenderer *renderer();
 
@@ -834,6 +813,7 @@ class CGnuPlot {
   bool isAngleDegrees() const { return (getAngleType() == CGnuPlotTypes::AngleType::DEGREES); }
 
   double angleToRad(double a) const;
+  double angleToDeg(double a) const;
 
   CGnuPlotBlock *getBlock(const std::string &name);
 
@@ -1204,7 +1184,7 @@ class CGnuPlot {
   CGnuPlotPlotSize       plotSize_;
   DecimalSign            decimalSign_;
   Offsets                offsets_;
-  FitData                fitData_;
+  CGnuPlotFitData        fitData_;
   PathList               loadPaths_;
   PathList               fontPath_;
   std::string            psDir_;
@@ -1214,7 +1194,7 @@ class CGnuPlot {
   CGnuPlotMultiplot      multiplot_;
   CGnuPlotTimeStampData  timeStamp_;
   COptBBox2D             clearRect_;
-  Hidden3DData           hidden3D_;
+  CGnuPlotHidden3DData   hidden3D_;
   CGnuPlotSurfaceData    surfaceData_;
   CGnuPlotContourData    contourData_;
   XYPlane                xyPlane_;

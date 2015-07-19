@@ -125,7 +125,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (paxis.min().isValid()) ymin = paxis.min().getValue();
     if (paxis.max().isValid()) ymax = paxis.max().getValue();
 
-    CGnuPlotAxis *yaxis = group->getPlotAxis('p', i + 1);
+    CGnuPlotAxis *yaxis = group->getPlotAxis(CGnuPlotTypes::AxisType::P, i + 1, true);
 
     if (! paxis.isReverse())
       yaxis->setRange(ymin, ymax);
@@ -144,7 +144,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     renderer->setClip(CBBox2D(clip.getXMin(), std::max(ymin, mm.first),
                               clip.getXMax(), std::min(ymax, mm.second)));
 
-    yaxis->drawAxis(renderer, i + 1);
+    yaxis->drawAxes(renderer, false);
   }
 
   renderer->setRange(range);

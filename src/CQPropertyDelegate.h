@@ -31,6 +31,9 @@ class CQPropertyDelegate : public QItemDelegate {
 
   QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index ) const;
 
+  bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option,
+                   const QModelIndex &index);
+
   QWidget *createEdit(QWidget *parent, const QString &text) const;
 
   void drawCheck(QPainter *painter, const QStyleOptionViewItem &option,

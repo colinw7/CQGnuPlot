@@ -1,6 +1,11 @@
 #ifndef CGnuPlotTimeStampData_H
 #define CGnuPlotTimeStampData_H
 
+#include <string>
+#include <CPoint2D.h>
+#include <CFont.h>
+#include <CGnuPlotColorSpec.h>
+
 class CGnuPlotTimeStampData {
  public:
   CGnuPlotTimeStampData() { }
