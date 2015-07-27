@@ -620,6 +620,8 @@ addPlotProperties(CGnuPlotPlot *plot)
   tree_->addProperty(plotName, qplot, "binary");
   tree_->addProperty(plotName, qplot, "matrix");
 
+  tree_->addProperty(plotName, qplot, "enhanced");
+
   QString rangeName = plotName + "/range";
 
   tree_->addProperty(rangeName, qplot, "xmin")->setEditorFactory(realEdit("-1000:1000:0.1"));
@@ -1125,8 +1127,8 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
     }
     else if (key == Qt::Key_Plus) {
       if (! group->is3D()) {
-        CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc - w/4, xc + w/4));
-        CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(yc - h/4, yc + h/4));
+        CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc - w/4, yc - h/4));
+        CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc + w/4, yc + h/4));
 
         group->setAxisRange(CGnuPlotTypes::AxisType::X, 1, p3.x, p4.x);
         group->setAxisRange(CGnuPlotTypes::AxisType::Y, 1, p3.y, p4.y);
@@ -1141,8 +1143,8 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
     }
     else if (key == Qt::Key_Minus) {
       if (! group->is3D()) {
-        CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc - w, xc + w));
-        CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(yc - h, yc + h));
+        CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc - w, yc - h));
+        CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc + w, yc + h));
 
         group->setAxisRange(CGnuPlotTypes::AxisType::X, 1, p3.x, p4.x);
         group->setAxisRange(CGnuPlotTypes::AxisType::Y, 1, p3.y, p4.y);

@@ -20,6 +20,9 @@ class CGnuPlotHistogramData {
   double lineWidth() const { return lineWidth_; }
   void setLineWidth(double w) { lineWidth_ = w; }
 
+  bool isBoxed() const { return boxed_; }
+  void setBoxed(bool b) { boxed_ = b; }
+
   const CPoint2D &titleOffset() const { return titleOffset_; }
   void setTitleOffset(const CPoint2D &o) { titleOffset_ = o; }
 
@@ -36,6 +39,7 @@ class CGnuPlotHistogramData {
   HistogramStyle style_       { HistogramStyle::CLUSTERED };
   double         gap_         { 2 };
   double         lineWidth_   { 0 };
+  bool           boxed_       { false };
   CPoint2D       titleOffset_ { 0, 0 };
   CFontPtr       titleFont_;
   NewTitles      newTitles_;

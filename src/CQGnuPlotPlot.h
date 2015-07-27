@@ -26,6 +26,8 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_PROPERTY(bool binary READ isBinary)
   Q_PROPERTY(bool matrix READ isMatrix)
 
+  Q_PROPERTY(bool enhanced READ isEnhanced WRITE setEnhanced)
+
   Q_PROPERTY(double xmin READ getXMin)
   Q_PROPERTY(double ymin READ getYMin)
   Q_PROPERTY(double xmax READ getXMax)

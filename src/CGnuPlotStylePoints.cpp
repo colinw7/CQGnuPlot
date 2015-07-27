@@ -19,6 +19,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
+  double lw = lineStyle.calcWidth();
+
   //---
 
   double                   pointSize = plot->pointSize();
@@ -60,7 +62,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       c1 = lineStyle.calcColor(plot, x);
     }
 
-    renderer->drawSymbol(p, pointType, size1, c1);
+    renderer->drawSymbol(p, pointType, size1, c1, lw);
   }
 }
 
@@ -73,6 +75,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //bool isCalcColor = lineStyle.color().isCalc();
 
   CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+
+  double lw = lineStyle.calcWidth();
 
   //---
 
@@ -102,7 +106,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         p.z = reals[valueNum++];
       }
 
-      renderer->drawSymbol(p, pointType, pointSize, c);
+      renderer->drawSymbol(p, pointType, pointSize, c, lw);
     }
   }
 }
@@ -118,9 +122,11 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
+  double lw = lineStyle.calcWidth();
+
   CPoint2D pm = (p1 + p2)/2;
 
-  renderer->drawSymbol(pm, pointType, pointSize, c);
+  renderer->drawSymbol(pm, pointType, pointSize, c, lw);
 }
 
 CBBox2D

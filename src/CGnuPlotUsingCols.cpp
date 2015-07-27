@@ -52,9 +52,13 @@ init(const std::string &str)
 
   CParseLine line(str);
 
-  std::string usingStr;
-  StringArray usingStrs;
-  bool        isExpr = false;
+  std::string             usingStr;
+  StringArray             usingStrs;
+  bool                    isExpr = false;
+  bool                    isFunc = false;
+  std::string             identifier, value;
+  CGnuPlotTypes::AxisType ticId;
+  int                     ticInd;
 
   int rbrackets = 0;
 
@@ -66,8 +70,13 @@ init(const std::string &str)
         usingStr = CStrUtil::stripSpaces(usingStr);
 
         if (! usingStr.empty()) {
-          if (isExpr)
+          if      (isExpr)
             usingStr = "(" + usingStr + ")";
+          else if (isFunc && CGnuPlotTicLabel::isTicLabel(identifier, ticId, ticInd)) {
+            setTicLabel(ticId, ticInd, value);
+
+            usingStr = "";
+          }
           else {
             if (splitUsingFn(usingStr, usingStrs))
               usingStr = "";
@@ -77,11 +86,16 @@ init(const std::string &str)
             usingStrs.push_back(usingStr);
         }
 
-        usingStr = "";
-        isExpr   = false;
+        usingStr   = "";
+        isExpr     = false;
+        isFunc     = false;
+        identifier = "";
+        value      = "";
       }
       else {
         if (line.isChar('(')) {
+          identifier = usingStr;
+
           ++rbrackets;
 
           if (usingStr.empty()) {
@@ -89,8 +103,11 @@ init(const std::string &str)
 
             isExpr = true;
           }
-          else
+          else {
             usingStr += line.getChar();
+
+            isFunc = true;
+          }
         }
         else
           usingStr += line.getChar();
@@ -102,16 +119,29 @@ init(const std::string &str)
       else if (line.isChar(')'))
         --rbrackets;
 
-      if (rbrackets == 0 && isExpr)
-        line.skipChar();
-      else
-        usingStr += line.getChar();
+      if (rbrackets == 0) {
+        if (isExpr)
+          line.skipChar();
+        else
+          usingStr += line.getChar();
+      }
+      else {
+        char c = line.getChar();
+
+        usingStr += c;
+        value    += c;
+      }
     }
   }
 
   if (! usingStr.empty()) {
-    if (isExpr)
+    if      (isExpr)
       usingStr = "(" + usingStr + ")";
+    else if (isFunc && CGnuPlotTicLabel::isTicLabel(identifier, ticId, ticInd)) {
+      setTicLabel(ticId, ticInd, value);
+
+      usingStr = "";
+    }
     else {
       if (splitUsingFn(usingStr, usingStrs))
         usingStr = "";
@@ -132,7 +162,7 @@ init(const std::string &str)
 
 int
 CGnuPlotUsingCols::
-decodeValues(CGnuPlot *plot, const Values &fieldValues, bool &bad,
+decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
              Values &values, Params &params) const
 {
   plot_ = plot;
@@ -153,6 +183,42 @@ decodeValues(CGnuPlot *plot, const Values &fieldValues, bool &bad,
 
       values.push_back(value);
     }
+  }
+
+  //---
+
+  for (int ind = 0; ind < 4; ++ind) {
+    CGnuPlotTypes::AxisType type =
+      (ind == 0 || ind == 2 ? CGnuPlotTypes::AxisType::X : CGnuPlotTypes::AxisType::Y);
+
+    int ind1 = ind/2 + 1;
+
+    std::string str;
+
+    if (! this->getTicLabel(type, ind1, str))
+      continue;
+
+    CExprValueP value;
+
+    if (! evaluateExpression(str, value, true))
+      continue;
+
+    int         ns;
+    long        icol;
+    std::string str1;
+
+    if (! value.isValid() || ! value->getIntegerValue(icol))
+      continue;
+
+    CExprValueP value1 = getFieldValue(fieldValues, icol, ns);
+
+    if (! value1.isValid() || ! value1->getStringValue(str1))
+      continue;
+
+    if (type == CGnuPlotTypes::AxisType::X)
+      plot->xaxis(ind1).setTicLabel(pointNum, str1, 0);
+    else
+      plot->yaxis(ind1).setTicLabel(pointNum, str1, 0);
   }
 
   return ns;
@@ -340,4 +406,41 @@ CGnuPlotUsingCol(const std::string &str1) :
  str(str1), isInt(false), ival(-1)
 {
   isInt = CStrUtil::toInteger(str1, &ival);
+
+  if (! isInt)
+    parseString();
+}
+
+bool
+CGnuPlotUsingCol::
+parseString()
+{
+  CParseLine line(str);
+
+  if (! line.isAlpha())
+    return false;
+
+  std::string identifier;
+
+  identifier += line.getChar();
+
+  while (line.isAlNum())
+    identifier += line.getChar();
+
+  if (! line.isChar('('))
+    return false;
+
+  line.skipChar();
+
+  std::string value;
+
+  while (line.isDigit())
+    value += line.getChar();
+
+  if (! line.isChar(')'))
+    return false;
+
+  line.skipChar();
+
+  return ticLabel.setTicLabel(identifier, value);
 }

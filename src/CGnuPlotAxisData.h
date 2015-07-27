@@ -36,38 +36,37 @@ class CGnuPlotAxisData {
 
   //---
 
-  bool hasGrid() const { return grid_.enabled; }
-  void setGrid(bool b) { grid_.enabled = b; }
+  bool hasGrid() const { return grid_.isEnabled(); }
 
-  bool hasGridMajor() const { return grid_.majorTics; }
-  void setGridMajor(bool b) { grid_.majorTics = b; }
+  bool hasGridMajor() const { return grid_.hasMajorTics(); }
+  void setGridMajor(bool b) { grid_.setMajorTics(b); }
 
-  bool hasGridMinor() const { return grid_.minorTics; }
-  void setGridMinor(bool b) { grid_.minorTics = b; }
+  bool hasGridMinor() const { return grid_.hasMinorTics(); }
+  void setGridMinor(bool b) { grid_.setMinorTics(b); }
 
-  const DrawLayer &getGridLayer() const { return grid_.layer; }
-  void setGridLayer(const DrawLayer &l) { grid_.layer = l; }
+  const DrawLayer &getGridLayer() const { return grid_.layer(); }
+  void setGridLayer(const DrawLayer &l) { grid_.setLayer(l); }
 
-  double gridPolarAngle() const { return grid_.polarAngle; }
-  void setGridPolarAngle(double r) { grid_.polarAngle = r; }
+  double gridPolarAngle() const { return grid_.polarAngle(); }
+  void setGridPolarAngle(double r) { grid_.setPolarAngle(r); }
 
-  int gridMajorLineStyle() const { return grid_.majorLineStyle; }
-  void setGridMajorLineStyle(int i) { grid_.majorLineStyle = i; }
+  int gridMajorLineStyle() const { return grid_.majorLineStyle(); }
+  void setGridMajorLineStyle(int i) { grid_.setMajorLineStyle(i); }
 
-  int gridMinorLineStyle() const { return grid_.minorLineStyle; }
-  void setGridMinorLineStyle(int i) { grid_.minorLineStyle = i; }
+  int gridMinorLineStyle() const { return grid_.minorLineStyle(); }
+  void setGridMinorLineStyle(int i) { grid_.setMinorLineStyle(i); }
 
-  int gridMajorLineType() const { return grid_.majorLineType; }
-  void setGridMajorLineType(int i) { grid_.majorLineType = i; }
+  int gridMajorLineType() const { return grid_.majorLineType(); }
+  void setGridMajorLineType(int i) { grid_.setMajorLineType(i); }
 
-  int gridMinorLineType() const { return grid_.minorLineType; }
-  void setGridMinorLineType(int i) { grid_.minorLineType = i; }
+  int gridMinorLineType() const { return grid_.minorLineType(); }
+  void setGridMinorLineType(int i) { grid_.setMinorLineType(i); }
 
-  double gridMajorLineWidth() const { return grid_.majorLineWidth; }
-  void setGridMajorLineWidth(double r) { grid_.majorLineWidth = r; }
+  double gridMajorLineWidth() const { return grid_.majorLineWidth(); }
+  void setGridMajorLineWidth(double r) { grid_.setMajorLineWidth(r); }
 
-  double gridMinorLineWidth() const { return grid_.minorLineWidth; }
-  void setGridMinorLineWidth(double r) { grid_.minorLineWidth = r; }
+  double gridMinorLineWidth() const { return grid_.minorLineWidth(); }
+  void setGridMinorLineWidth(double r) { grid_.setMinorLineWidth(r); }
 
   //---
 
@@ -355,47 +354,47 @@ class CGnuPlotAxisData {
   };
 
   AxisType          type_            { AxisType::X };
-  int               ind_             { 1 };
+  int               ind_             { 1     };
   bool              displayed_       { true  };
   CGnuPlotGridData  grid_;
-  bool              mirror_          { true  };
-  bool              inside_          { false };
+  bool              mirror_          { false };
+  bool              inside_          { true  };
   bool              reverse_         { false };
   bool              writeback_       { false };
   bool              extend_          { false };
   bool              isTime_          { false };
   bool              isDay_           { false };
   bool              isMonth_         { false };
-  bool              autoScaleMin_    { true };
-  bool              autoScaleMax_    { true };
+  bool              autoScaleMin_    { true  };
+  bool              autoScaleMax_    { true  };
   bool              autoScaleFixMin_ { false };
   bool              autoScaleFixMax_ { false };
   COptReal          min_;
   COptReal          max_;
-  bool              borderTics_      { true };
+  bool              borderTics_      { true  };
   bool              minorTics_       { false };
   COptReal          minorTicsFreq_;
-  double            majorScale_      { 1.0 };
-  double            minorScale_      { 0.5 };
+  double            majorScale_      { 1.0   };
+  double            minorScale_      { 0.5   };
   std::string       text_;
   ITicLabels        iticLabels_;
   LevelRTicLabels   rticLabels_;
-  CPoint2D          ticOffset_       { 0, 0 };
-  CPoint2D          labelOffset_     { 0, 0 };
-  double            ticsRotate_      { 0.0 };
-  double            labelRotate_     { 0.0 };
-  std::string       format_          { "%g" };
+  CPoint2D          ticOffset_       { 0, 0  };
+  CPoint2D          labelOffset_     { 0, 0  };
+  double            ticsRotate_      { 0.0   };
+  double            labelRotate_     { 0.0   };
+  std::string       format_          { "%g"  };
   Justify           ticJustify_      { Justify::CENTER };
   CFontPtr          ticFont_;
   CFontPtr          labelFont_;
-  bool              showTics_        { true };
-  bool              front_           { true };
-  bool              enhanced_        { true };
+  bool              showTics_        { true  };
+  bool              front_           { true  };
+  bool              enhanced_        { true  };
   bool              numeric_         { false };
   bool              timedate_        { false };
   bool              geographic_      { false };
   bool              rangelimited_    { false };
-  int               lineType_        { -1 };
+  int               lineType_        { -1    };
   COptInt           logBase_;
   CGnuPlotColorSpec ticColor_;
   CGnuPlotColorSpec labelColor_;

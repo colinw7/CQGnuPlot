@@ -33,7 +33,8 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void clear(const CRGBA &c) override;
 
   void drawPoint  (const CPoint2D &p, const CRGBA &c) override;
-  void drawSymbol (const CPoint2D &p, SymbolType type, double size, const CRGBA &c) override;
+  void drawSymbol (const CPoint2D &p, SymbolType type, double size,
+                   const CRGBA &c, double lw) override;
   void drawPath   (const std::vector<CPoint2D> &points, double width, const CRGBA &c,
                    const CLineDash &dash) override;
   void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,

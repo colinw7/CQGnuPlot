@@ -134,24 +134,6 @@ class CGnuPlotGroup {
   const std::string &getYLabel() const { return yaxis(1).text(); }
   void setYLabel(const std::string &s) { yaxis(1).setText(s); }
 
-  bool getXTics() const { return xaxis(1).showTics(); }
-  void setXTics(bool b) { xaxis(1).setShowTics(b); }
-
-  bool getXTicsMirror() const { return xaxis(1).isMirror(); }
-  void setXTicsMirror(bool b) { xaxis(1).setMirror(b); }
-
-  bool getYTics() const { return yaxis(1).showTics(); }
-  void setYTics(bool b) { yaxis(1).setShowTics(b); }
-
-  bool getYTicsMirror() const { return yaxis(1).isMirror(); }
-  void setYTicsMirror(bool b) { yaxis(1).setMirror(b); }
-
-  bool getXGrid() const { return xaxis(1).hasGrid(); }
-  void setXGrid(bool b) { xaxis(1).setGrid(b); }
-
-  bool getYGrid() const { return yaxis(1).hasGrid(); }
-  void setYGrid(bool b) { yaxis(1).setGrid(b); }
-
   //---
 
   bool isPolar() const { return polar_; }
@@ -273,8 +255,8 @@ class CGnuPlotGroup {
 
   void setAxisRange(AxisType type, int ind, double r1, double r2);
 
-  void setAxisStart1(AxisType type, int ind, double r);
-  void setAxisEnd1  (AxisType type, int ind, double r);
+  void setAxisStart(AxisType type, int ind, double r);
+  void setAxisEnd  (AxisType type, int ind, double r);
 
   void setAxisGridDisplayed(AxisType type, int ind, bool b);
 
@@ -299,9 +281,9 @@ class CGnuPlotGroup {
 
   void drawBorder(CGnuPlotRenderer *renderer);
 
-  void drawXAxis(CGnuPlotRenderer *renderer, int xind, bool other);
-  void drawYAxis(CGnuPlotRenderer *renderer, int yind, bool other);
-  void drawZAxis(CGnuPlotRenderer *renderer, int yind, bool other);
+  void drawXAxis(CGnuPlotRenderer *renderer, int xind);
+  void drawYAxis(CGnuPlotRenderer *renderer, int yind);
+  void drawZAxis(CGnuPlotRenderer *renderer, int yind);
 
   void drawRAxis(CGnuPlotRenderer *renderer);
 
@@ -339,6 +321,11 @@ class CGnuPlotGroup {
 
   const CBBox2D &getBBox() const { return bbox_; }
 
+  const CBBox2D &getAxisBBox() const { return axisBBox_; }
+
+  void updateAxisBBox(const CPoint2D &p) { axisBBox_.add(p); }
+  void updateAxisBBox(const CBBox2D &box) { axisBBox_.add(box); }
+
   const CRGBA &backgroundColor() const { return backgroundColor_; }
   void setBackgroundColor(const CRGBA &r) { backgroundColor_ = r; }
 
@@ -359,29 +346,30 @@ class CGnuPlotGroup {
  protected:
   static int nextId_;
 
-  CGnuPlotWindow*       window_;               // parent window
-  int                   id_   { 0 };           // unique id
-  int                   ind_  { 0 };           // group index in window
-  bool                  is3D_ { false };       // plots are 3D
-  bool                  polar_ { false };      // is polar
-  CGnuPlotTitle*        title_;                // plot title
-  Plots                 plots_;                // plots
-  CBBox2D               region_ {0,0,1,1};     // region of window
-  Margin                margin_ {10,10,10,10}; // margin around plots
-  CBBox2D               bbox_ { 0, 0, 1, 1 };  // bounding box
-  CGnuPlotClip          clip_;                 // clip
-  COptBBox2D            clearRect_;            // optional clear rectangle
-  CGnuPlotPlotSize      plotSize_;             // plot size
-  CGnuPlotHistogramData histogramData_;        // histogram style
-  CGnuPlotKeyP          key_;                  // key
-  CGnuPlotColorBoxP     colorBox_;             // color box
-  CGnuPlotPaletteP      palette_;              // palette
-  CGnuPlotAxesData      axesData_;             // axes data
-  Annotations           annotations_;          // annotations
-  Axes                  axes_;                 // axes
-  CGnuPlotCameraP       camera_;               // view camera
-  CGnuPlotTimeStampP    timeStamp_;            // time stamp
-  CRGBA                 backgroundColor_;      // background color
+  CGnuPlotWindow*       window_;                   // parent window
+  int                   id_   { 0 };               // unique id
+  int                   ind_  { 0 };               // group index in window
+  bool                  is3D_ { false };           // plots are 3D
+  bool                  polar_ { false };          // is polar
+  CGnuPlotTitle*        title_;                    // plot title
+  Plots                 plots_;                    // plots
+  CBBox2D               region_ {0,0,1,1};         // region of window
+  Margin                margin_ {10,10,10,10};     // margin around plots
+  CBBox2D               bbox_ { 0, 0, 1, 1 };      // bounding box
+  CBBox2D               axisBBox_ { 0, 0, 1, 1 };  // bounding box
+  CGnuPlotClip          clip_;                     // clip
+  COptBBox2D            clearRect_;                // optional clear rectangle
+  CGnuPlotPlotSize      plotSize_;                 // plot size
+  CGnuPlotHistogramData histogramData_;            // histogram style
+  CGnuPlotKeyP          key_;                      // key
+  CGnuPlotColorBoxP     colorBox_;                 // color box
+  CGnuPlotPaletteP      palette_;                  // palette
+  CGnuPlotAxesData      axesData_;                 // axes data
+  Annotations           annotations_;              // annotations
+  Axes                  axes_;                     // axes
+  CGnuPlotCameraP       camera_;                   // view camera
+  CGnuPlotTimeStampP    timeStamp_;                // time stamp
+  CRGBA                 backgroundColor_;          // background color
   mutable CBBox2D       saveRange_;
 };
 

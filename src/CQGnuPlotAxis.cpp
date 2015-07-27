@@ -45,16 +45,16 @@ setTimeFormat(const QString &s)
 
 void
 CQGnuPlotAxis::
-setStart1(double r)
+setStart(double r)
 {
-  group_->setAxisStart1(type(), ind(), r);
+  group_->setAxisStart(type(), ind(), r);
 }
 
 void
 CQGnuPlotAxis::
-setEnd1(double r)
+setEnd(double r)
 {
-  group_->setAxisEnd1(type(), ind(), r);
+  group_->setAxisEnd(type(), ind(), r);
 }
 
 CQGnuPlotEnum::DrawLayerType
@@ -141,9 +141,9 @@ setLabelColor(const QColor &c)
 
 void
 CQGnuPlotAxis::
-drawAxes(CGnuPlotRenderer *renderer, bool drawOther)
+drawAxes(CGnuPlotRenderer *renderer)
 {
-  CGnuPlotAxis::drawAxes(renderer, drawOther);
+  CGnuPlotAxis::drawAxes(renderer);
 
   if (isSelected()) {
     renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);

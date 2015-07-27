@@ -195,7 +195,7 @@ initColors() const
 {
   CGnuPlotStyle *th = const_cast<CGnuPlotStyle *>(this);
 
-  if (namedColors_.empty()) {
+  if (th->namedColors_.empty()) {
 #define NAME_COLOR_DEF(a) { a, CRGBName::toRGBA(a) }
     Colors basicColors = {{
       NAME_COLOR_DEF("#FF0000"), // red

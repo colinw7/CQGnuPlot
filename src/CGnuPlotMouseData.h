@@ -25,7 +25,7 @@ class CGnuPlotMouseData {
   void setRulerPos(const CPoint2D &p) { rulerPos_ = p; }
   void resetRulerPos() { rulerPos_.setInvalid(); }
 
-  void setPolarDisance(PolarDistanceType type) { polarDistType_ = type; }
+  void setPolarDistance(PolarDistanceType type) { polarDistType_ = type; }
 
   void setFormat(const std::string &fmt) { format_ = fmt; }
 

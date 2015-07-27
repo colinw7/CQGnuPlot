@@ -94,9 +94,11 @@ class CGnuPlotKeyData {
 
   const COptInt &boxLineType() const { return boxLineType_; }
   void setBoxLineType(int lt) { boxLineType_ = lt; }
+  void resetBoxLineType() { boxLineType_.setInvalid(); }
 
   const COptInt &boxLineStyle() const { return boxLineStyle_; }
   void setBoxLineStyle(int lt) { boxLineStyle_ = lt; }
+  void resetBoxLineStyle() { boxLineStyle_.setInvalid(); }
 
   double boxLineWidth() const { return boxLineWidth_; }
   void setBoxLineWidth(double w) { boxLineWidth_ = w; }
@@ -108,6 +110,7 @@ class CGnuPlotKeyData {
 
   const COptInt &columnNum() const { return columnNum_; }
   void setColumnNum(int i) { columnNum_ = i; }
+  void resetColumnNum() { columnNum_.setInvalid(); }
 
   const Columns &columns() const { return columns_; }
   void setColumns(const Columns &c) { columns_ = c; }
@@ -117,11 +120,25 @@ class CGnuPlotKeyData {
 
   const COptInt &maxCols() const { return maxCols_; }
   void setMaxCols(int i) { maxCols_ = i; }
-  void resetMaxCols() { maxCols_ = COptInt(); }
+  void resetMaxCols() { maxCols_.setInvalid(); }
 
   const COptInt &maxRows() const { return maxRows_; }
   void setMaxRows(int i) { maxRows_ = i; }
-  void resetMaxRows() { maxRows_ = COptInt(); }
+  void resetMaxRows() { maxRows_.setInvalid(); }
+
+  //---
+
+  bool isColumnNumValid() const {
+    const COptInt &inum = columnNum();
+    if (! inum.isValid()) return false;
+
+    int num = inum.getValue();
+    return (num >= 1 && num <= int(columns().size()));
+  }
+
+  std::string columnNumValue() const {
+    return columns_[columnNum_.getValue(0) - 1];
+  }
 
   void reset() {
     displayed_       = true;

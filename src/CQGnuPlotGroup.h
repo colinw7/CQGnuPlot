@@ -32,13 +32,6 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   Q_PROPERTY(double ymin         READ getYMin         WRITE setYMin)
   Q_PROPERTY(double ymax         READ getYMax         WRITE setYMax)
 
-  Q_PROPERTY(bool   xtics        READ getXTics        WRITE setXTics)
-  Q_PROPERTY(bool   ytics        READ getYTics        WRITE setYTics)
-  Q_PROPERTY(bool   xticsMirror  READ getXTicsMirror  WRITE setXTicsMirror)
-  Q_PROPERTY(bool   yticsMirror  READ getYTicsMirror  WRITE setYTicsMirror)
-  Q_PROPERTY(bool   xgrid        READ getXGrid        WRITE setXGrid)
-  Q_PROPERTY(bool   ygrid        READ getYGrid        WRITE setYGrid)
-
   Q_PROPERTY(int    borderSides  READ getBorderSides  WRITE setBorderSides)
   Q_PROPERTY(double borderWidth  READ getBorderWidth  WRITE setBorderWidth)
   Q_PROPERTY(double borderStyle  READ getBorderStyle  WRITE setBorderStyle)

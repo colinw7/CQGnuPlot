@@ -24,7 +24,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CRGBA bg = group->window()->backgroundColor();
 
-  int pi = lineStyle.calcPointInterval();
+  int       pi = lineStyle.calcPointInterval();
+  double    lw = lineStyle.calcWidth();
+  CLineDash ld = lineStyle.calcDash();
 
   bool erasePoint = (pi < 0);
 
@@ -86,9 +88,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
 
     // TODO: clip
-    double lw = lineStyle.calcWidth();
-
-    renderer->drawPath(points, lw, c, lineStyle.calcDash());
+    renderer->drawPath(points, lw, c, ld);
   }
 
 #if 0
@@ -99,7 +99,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CPoint2D p1, p2;
 
     if (! point1.isDiscontinuity() && point1.getPoint(p1) && point2.getPoint(p2))
-      renderer->drawClipLine(p1, p2, lw, lineStyle.calcColor(CRGBA(1,0,0)), lineStyle.calcDash());
+      renderer->drawClipLine(p1, p2, lw, c, ld));
   }
 #endif
 
@@ -156,7 +156,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         renderer->drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
                                    plot->pointTypeStr(), c1);
       else
-        renderer->drawSymbol(p, pointType, size1, c1);
+        renderer->drawSymbol(p, pointType, size1, c1, lw);
 
       pi1 = abs(pi);
     }
@@ -175,6 +175,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //bool isCalcColor = lineStyle.color().isCalc();
 
   CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+
+  double lw = lineStyle.calcWidth();
 
   //------
 
@@ -217,8 +219,6 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
 
       // TODO: clip
-      double lw = lineStyle.calcWidth();
-
       renderer->drawPath(points, lw, c, lineStyle.calcDash());
     }
   }
@@ -250,7 +250,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         p.z = reals[valueNum++];
       }
 
-      renderer->drawSymbol(p, plot->pointType(), size, c);
+      renderer->drawSymbol(p, plot->pointType(), size, c, lw);
     }
   }
 }
@@ -269,7 +269,7 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   renderer->drawLine(p1, p2, lw, c);
 
-  renderer->drawSymbol(pm, plot->pointType(), plot->pointSize(), c);
+  renderer->drawSymbol(pm, plot->pointType(), plot->pointSize(), c, lw);
 }
 
 CBBox2D

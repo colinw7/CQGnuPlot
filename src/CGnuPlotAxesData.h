@@ -16,32 +16,29 @@ class CGnuPlotAxesData {
 
   //---
 
-  const DrawLayer &getGridLayer() const { return grid_.layer; }
-  void setGridLayer(const DrawLayer &l) { grid_.layer = l; }
+  const DrawLayer &getGridLayer() const { return grid_.layer(); }
+  void setGridLayer(const DrawLayer &l) { grid_.setLayer(l); }
 
-  bool isGridEnabled() const { return grid_.enabled; }
-  void setGridEnabled(bool b) { grid_.enabled = b; }
+  double gridPolarAngle() const { return grid_.polarAngle(); }
+  void setGridPolarAngle(double r) { grid_.setPolarAngle(r); }
 
-  double gridPolarAngle() const { return grid_.polarAngle; }
-  void setGridPolarAngle(double r) { grid_.polarAngle = r; }
+  int gridMajorLineStyle() const { return grid_.majorLineStyle(); }
+  void setGridMajorLineStyle(int i) { grid_.setMajorLineStyle(i); }
 
-  int gridMajorLineStyle() const { return grid_.majorLineStyle; }
-  void setGridMajorLineStyle(int i) { grid_.majorLineStyle = i; }
+  int gridMinorLineStyle() const { return grid_.minorLineStyle(); }
+  void setGridMinorLineStyle(int i) { grid_.setMinorLineStyle(i); }
 
-  int gridMinorLineStyle() const { return grid_.minorLineStyle; }
-  void setGridMinorLineStyle(int i) { grid_.minorLineStyle = i; }
+  int gridMajorLineType() const { return grid_.majorLineType(); }
+  void setGridMajorLineType(int i) { grid_.setMajorLineType(i); }
 
-  int gridMajorLineType() const { return grid_.majorLineType; }
-  void setGridMajorLineType(int i) { grid_.majorLineType = i; }
+  int gridMinorLineType() const { return grid_.minorLineType(); }
+  void setGridMinorLineType(int i) { grid_.setMinorLineType(i); }
 
-  int gridMinorLineType() const { return grid_.minorLineType; }
-  void setGridMinorLineType(int i) { grid_.minorLineType = i; }
+  double gridMajorLineWidth() const { return grid_.majorLineWidth(); }
+  void setGridMajorLineWidth(double r) { grid_.setMajorLineWidth(r); }
 
-  double gridMajorLineWidth() const { return grid_.majorLineWidth; }
-  void setGridMajorLineWidth(double r) { grid_.majorLineWidth = r; }
-
-  double gridMinorLineWidth() const { return grid_.minorLineWidth; }
-  void setGridMinorLineWidth(double r) { grid_.minorLineWidth = r; }
+  double gridMinorLineWidth() const { return grid_.minorLineWidth(); }
+  void setGridMinorLineWidth(double r) { grid_.setMinorLineWidth(r); }
 
   //---
 

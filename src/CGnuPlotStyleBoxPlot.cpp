@@ -107,9 +107,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  CBBox3D bbox = group->getPlotBorderBox(1, 1, 1);
+  double ypos = 0;
 
-  double ypos = bbox.getYMin();
+  if (! renderer->isPseudo()) {
+    CBBox3D bbox = group->getPlotBorderBox(1, 1, 1);
+
+    ypos = bbox.getYMin();
+  }
 
   //---
 
@@ -211,7 +215,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
 
     renderer->drawHAlignedText(CPoint2D(ix, ypos), CHALIGN_TYPE_CENTER, 0,
-                               CVALIGN_TYPE_TOP, -8, s, CRGBA(0,0,0));
+                               CVALIGN_TYPE_TOP, 8, s, CRGBA(0,0,0));
 
     ++ix;
   }

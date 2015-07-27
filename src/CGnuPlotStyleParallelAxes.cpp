@@ -144,7 +144,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     renderer->setClip(CBBox2D(clip.getXMin(), std::max(ymin, mm.first),
                               clip.getXMax(), std::min(ymax, mm.second)));
 
-    yaxis->drawAxes(renderer, false);
+    yaxis->drawAxes(renderer);
   }
 
   renderer->setRange(range);
@@ -155,7 +155,7 @@ void
 CGnuPlotStyleParallelAxes::
 drawAxes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  plot->group()->drawXAxis(renderer, 1, false);
+  plot->group()->drawXAxis(renderer, 1);
 }
 
 CBBox2D

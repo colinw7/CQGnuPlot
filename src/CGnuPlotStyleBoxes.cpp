@@ -1,4 +1,5 @@
 #include <CGnuPlotStyleBoxes.h>
+#include <CGnuPlotWindow.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotBarObject.h>
@@ -13,7 +14,10 @@ void
 CGnuPlotStyleBoxes::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
   bool isCalcColor = lineStyle.isCalcColor();
 
@@ -27,8 +31,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CRGBA ftc = (plot->fillType() == CGnuPlotTypes::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  const CRGBA &lc = lineStyle.calcColor(plot->group(), ftc);
-  const CRGBA &fc = lineStyle.calcColor(plot->group(), CRGBA(0,0,0));
+  const CRGBA &lc = lineStyle.calcColor(group, ftc);
+  const CRGBA &fc = lineStyle.calcColor(group, CRGBA(0,0,0));
 
   //---
 
@@ -90,6 +94,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CBBox2D bbox(x - bw1/2, y2, x + bw1/2, y);
 
+    double lw = lineStyle.calcWidth();
+
     if (! renderer->isPseudo()) {
       CGnuPlotBarObject *bar = plot->barObjects()[i];
 
@@ -98,19 +104,33 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (! bar->isInitialized()) {
         bar->setValue(y);
 
-        bar->setWidth      (bw1);
+        bar->setWidth      (lw);
         bar->setFillType   (plot->fillType());
         bar->setFillPattern(plot->fillPattern());
         bar->setFillColor  (fc);
 
-        bar->setBorder   (true);
-        bar->setLineColor(lc1);
+        // border line type ?
+        CRGBA lc2;
+
+        if (fillStyle.calcColor(plot, lc2)) {
+          bar->setBorder(true);
+          bar->setLineColor(lc2);
+        }
+        else
+          bar->setBorder(false);
 
         bar->setInitialized(true);
       }
     }
-    else
-      renderer->drawRect(bbox, lc1, 1);
+    else {
+      if (fillStyle.hasBorder()) {
+        // border line type ?
+        CRGBA lc2 = lc1;
+
+        if (fillStyle.calcColor(plot, lc2))
+          renderer->drawRect(bbox, lc2, lw);
+      }
+    }
 
     ++i;
   }
@@ -125,7 +145,10 @@ void
 CGnuPlotStyleBoxes::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
   CFontPtr font = renderer->getFont();
 
@@ -135,15 +158,31 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   CBBox2D hbbox(p1.x, p1.y - h/2, p2.x, p1.y + h/2);
 
-  const CRGBA &lc = lineStyle.calcColor(plot->group(), CRGBA(0,0,0));
-  double       lw = 1;
+  const CRGBA &lc = lineStyle.calcColor(group, CRGBA(0,0,0));
 
-  if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
-    renderer->patternRect(hbbox, plot->fillStyle().pattern(), lc, CRGBA(1,1,1));
-  else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
-    renderer->fillRect(hbbox, lineStyle.calcColor(plot->group(), CRGBA(1,1,1)));
+  if      (fillStyle.style() == CGnuPlotPlot::FillType::PATTERN) {
+    CRGBA fg = lineStyle.calcColor(group, CRGBA(1,1,1));
+    CRGBA bg = plot->window()->backgroundColor();
 
-  renderer->drawRect(hbbox, lc, lw);
+    renderer->patternRect(hbbox, fillStyle.pattern(), fg, bg);
+  }
+  else if (fillStyle.style() == CGnuPlotPlot::FillType::SOLID) {
+    CRGBA fc = lineStyle.calcColor(group, CRGBA(1,1,1));
+
+    if (fillStyle.isTransparent())
+      fc.setAlpha(fillStyle.density());
+
+    renderer->fillRect(hbbox, fc);
+  }
+
+  CRGBA lc1 = lc;
+
+  if (fillStyle.calcColor(plot, lc1)) {
+    // border line type ?
+    double lw = lineStyle.calcWidth();
+
+    renderer->drawRect(hbbox, lc1, lw);
+  }
 }
 
 CBBox2D

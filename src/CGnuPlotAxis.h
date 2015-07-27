@@ -187,7 +187,6 @@ class CGnuPlotAxis {
   //---
 
   bool hasGrid() const { return data_.hasGrid(); }
-  void setGrid(bool b) { data_.setGrid(b); }
 
   bool hasGridMajor() const { return data_.hasGridMajor(); }
   void setGridMajor(bool b) { data_.setGridMajor(b); }
@@ -276,7 +275,7 @@ class CGnuPlotAxis {
 
   std::string getValueStr(int i, double pos) const;
 
-  virtual void drawAxes(CGnuPlotRenderer *renderer, bool showBoth);
+  virtual void drawAxes(CGnuPlotRenderer *renderer);
 
   void drawGrid(CGnuPlotRenderer *renderer);
 
@@ -310,7 +309,9 @@ class CGnuPlotAxis {
   bool isVisibleValue(double pos) const;
 
   void drawAxisTicks(double pos, bool large);
-  void drawAxisTick (double pos, bool first, bool large);
+
+  void drawAxisTick(double pos, bool large);
+  void drawAxisTick(double pos, bool first, bool large);
 
   void drawTickLabels(double pos, const std::string &str);
   void drawTickLabel (double pos, const std::string &str, bool first);
@@ -324,14 +325,13 @@ class CGnuPlotAxis {
   void drawLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c,
                 double w, const CLineDash &lineDash);
 
-  void drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double xOffset,
-                        CVAlignType valign, double yOffset, const std::string &str,
-                        const CRGBA &c, double angle=0);
-  void drawVAlignedText(const CPoint3D &pos, CHAlignType halign, double xOffset,
-                        CVAlignType valign, double yOffset, const std::string &str,
-                        const CRGBA &c, double angle=0);
+  void drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
+                        const std::string &str, const CRGBA &c, double angle=0);
+  void drawVAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
+                        const std::string &str, const CRGBA &c, double angle=0);
 
   CPoint3D valueToPoint(double v, bool first, bool zero) const;
+
   CPoint3D ivalueToPoint(const CPoint3D &d) const;
   CPoint2D ivalueToPoint(const CPoint2D &d) const;
 

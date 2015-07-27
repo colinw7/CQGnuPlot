@@ -104,6 +104,10 @@ class CSymbol2DSVGRenderer : public CSymbol2DRenderer {
     lc_ = c; stroke_ = true;
   }
 
+  void setLineWidth(double w) {
+    lw_ = w;
+  }
+
   void setFillColor(const CRGBA &c) {
     fc_ = c; fill_ = true;
   }
@@ -132,6 +136,7 @@ class CSymbol2DSVGRenderer : public CSymbol2DRenderer {
   CPoint2D             p_;
   std::stringstream    str_;
   CRGBA                lc_, fc_;
+  double               lw_     { 0 };
   bool                 stroke_ { false };
   bool                 fill_   { false };
   double               ss_     { 1.0 };
@@ -178,9 +183,11 @@ drawPoint(const CPoint2D &point, const CRGBA &c)
 
 void
 CGnuPlotSVGRenderer::
-drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c)
+drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c, double lw)
 {
   CSymbol2DSVGRenderer r(this, point, size);
+
+  r.setLineWidth(lw);
 
   switch (type) {
     case SymbolType::POINT: { // point

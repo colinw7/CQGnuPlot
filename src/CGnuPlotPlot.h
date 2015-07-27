@@ -180,6 +180,9 @@ class CGnuPlotPlot {
   bool isPolar() const { return polar_; }
   void setPolar(bool b) { polar_ = b; }
 
+  bool isEnhanced() const { return enhanced_; }
+  void setEnhanced(bool b) { enhanced_ = b; }
+
   bool is3D() const;
 
   //---
@@ -287,6 +290,16 @@ class CGnuPlotPlot {
 
   //---
 
+  const CGnuPlotTextBoxStyle &textBoxStyle() const { return textBoxStyle_; }
+  void setTextBoxStyle(const CGnuPlotTextBoxStyle &ts) { textBoxStyle_ = ts; }
+
+  //---
+
+  const CGnuPlotTextStyle &textStyle() const { return textStyle_; }
+  void setTextStyle(const CGnuPlotTextStyle &ts) { textStyle_ = ts; }
+
+  //---
+
   const std::string &keyTitle() const { return keyTitle_; }
   void setKeyTitle(const std::string &s) { keyTitle_ = s; }
 
@@ -355,7 +368,7 @@ class CGnuPlotPlot {
   void calcYRange(double *ymin, double *ymax) const;
   void calcZRange(double *zmin, double *zmax) const;
 
-  void calcBoundedYRange  (double *ymin, double *ymax) const;
+  bool calcBoundedYRange  (double *ymin, double *ymax) const;
   void recalcBoundedYRange(double *ymin, double *ymax) const;
 
   void getGroupXRange(double *xmin, double *xmax) const;
@@ -510,6 +523,7 @@ class CGnuPlotPlot {
   bool                   binary_ { false };
   bool                   matrix_ { false };
   bool                   polar_  { false };
+  bool                   enhanced_ { true };
   CGnuPlotImageStyle     imageStyle_;
   Bars                   bars_;
   CGnuPlotBoxWidth       boxWidth_;                         // box widths
@@ -518,6 +532,8 @@ class CGnuPlotPlot {
   CGnuPlotLineStyle      lineStyle_;                        // line style
   CGnuPlotPointStyle     pointStyle_;                       // point style
   CGnuPlotArrowStyle     arrowStyle_;                       // arrow style
+  CGnuPlotTextBoxStyle   textBoxStyle_;                     // text box style
+  CGnuPlotTextStyle      textStyle_;                        // text style
   std::string            keyTitle_;                         // title on key
   int                    xind_ { 1 };                       // xaxis index
   int                    yind_ { 1 };                       // yaxis index

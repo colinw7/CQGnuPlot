@@ -83,3 +83,10 @@
 ### 7/19/2015
  + improve polar plot (log on/off)
  + make time stamp configurable object
+
+### 7/26/2015
+ + Improve axis tics, labels for secondary axis
+ + Support filled and border for labels style
+ + Improve key columnhead and columns() using function
+ + Support Symbol width
+ + better position of plot title (above axis labels)

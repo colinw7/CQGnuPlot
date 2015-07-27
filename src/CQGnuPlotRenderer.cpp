@@ -42,6 +42,8 @@ class CQSymbol2DRenderer : public CSymbol2DRenderer {
   void setStroke(const QPen   &pen  ) { pen_   = pen  ; stroke_ = true; }
   void setFill  (const QBrush &brush) { brush_ = brush; fill_   = true; }
 
+  void setLineWidth(double w) { pen_.setWidthF(w); }
+
   void moveTo(double x, double y) {
     path_.moveTo(QPointF(px_ + ss_*x, py_ - ss_*y));
   }
@@ -139,7 +141,7 @@ drawPoint(const CPoint2D &point, const CRGBA &c)
 
 void
 CQGnuPlotRenderer::
-drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c)
+drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c, double lw)
 {
   CQSymbol2DRenderer r(this, point, size);
 
@@ -147,6 +149,8 @@ drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c)
   QBrush brush(toQColor(c));
 
   pen.setStyle(Qt::SolidLine);
+
+  pen.setWidthF(lw);
 
   switch (type) {
     case SymbolType::POINT: { // point

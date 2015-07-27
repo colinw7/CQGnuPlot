@@ -137,8 +137,19 @@ class CGnuPlotColumnFn : public CGnuPlotFn {
       value = CExprInst->createRealValue(plot_->pointNum());
     else if (icol == -2)
       value = CExprInst->createRealValue(plot_->setNum());
-    else
-      value = plot_->fieldValue(icol);
+    else {
+      if (plot_->isParsePlotTitle()) {
+        plot_->setKeyColumnHeadNum(icol);
+
+        value = CExprInst->createStringValue("");
+      }
+      else {
+        value = plot_->fieldValue(icol);
+
+        if (! value.isValid())
+          value = CExprInst->createStringValue("column(" + std::to_string(icol) + ")");
+      }
+    }
 
     return value;
   }
@@ -1997,6 +2008,7 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
   CGnuPlotLineStyle  lineStyle  = *this->lineStyle();
   CGnuPlotFillStyle  fillStyle  = this->fillStyle();
   CGnuPlotArrowStyle arrowStyle = this->arrowStyle();
+  CGnuPlotTextStyle  textStyle;
 
   //----
 
@@ -2059,6 +2071,8 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
   //----
 
   COptString keyTitle;
+
+  fieldValues_.clear();
 
   //----
 
@@ -2190,7 +2204,7 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     PlotVar plotVar;
 
     if (! parseOptionValue(this, line, plotVar)) {
-      if (! parseModifiers2D(style, line, lineStyle, fillStyle, arrowStyle, keyTitle))
+      if (! parseModifiers2D(style, line, lineStyle, fillStyle, arrowStyle, textStyle, keyTitle))
         break;
 
       continue;
@@ -2254,17 +2268,17 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
         }
       }
 
-      parseModifiers2D(style, line, lineStyle, fillStyle, arrowStyle, keyTitle);
+      parseModifiers2D(style, line, lineStyle, fillStyle, arrowStyle, textStyle, keyTitle);
     }
     // title string
     else if (plotVar == PlotVar::TITLE) {
       std::string titleStr;
       int         columnNum;
 
-      if      (line.isString("col") || line.isString("columnhead") ||
-               line.isString("columnheader") || line.isString("columnheaders")) {
-        keyData_.setColumnHead(true);
-        keyData_.setColumnNum (0);
+      parsePlotTitle_ = true;
+
+      if      (line.isOneOf({"col", "columnhead", "columnheader", "columnheaders"})) {
+        setKeyColumnHeadNum(0);
 
         (void) readNonSpaceNonComma(line);
       }
@@ -2272,18 +2286,20 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
         if (isDebug())
           debugMsg("title " + titleStr);
 
-        keyTitle = titleStr;
+        if (titleStr != "")
+          keyTitle = titleStr;
       }
       else if (parseInteger(line, columnNum)) {
-        keyData_.setColumnNum (columnNum);
-        keyData_.setColumnHead(true);
+        setKeyColumnHeadNum(columnNum);
       }
+
+      parsePlotTitle_ = false;
 
       line.skipSpace();
     }
     // disable title
     else if (plotVar == PlotVar::NOTITLE) {
-      keyTitle = "";
+      keyTitle.setInvalid();
     }
     // smooth type
     else if (plotVar == PlotVar::SMOOTH) {
@@ -2526,9 +2542,11 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     if (keyTitle.isValid())
       plot1->setKeyTitle(keyTitle.getValue());
 
-    plot1->setLineStyle (lineStyle);
-    plot1->setFillStyle (fillStyle);
-    plot1->setArrowStyle(arrowStyle);
+    plot1->setLineStyle   (lineStyle);
+    plot1->setFillStyle   (fillStyle);
+    plot1->setArrowStyle  (arrowStyle);
+    plot1->setTextBoxStyle(textBoxStyle_);
+    plot1->setTextStyle   (textStyle);
 
     plots.push_back(plot1);
   }
@@ -2740,8 +2758,24 @@ splitPlotCmd(const std::string &cmd, std::vector<std::string> &cmds, bool is3D)
           }
         }
       }
-      else
-        cmd1 += line.getChar();
+      // handle options with comma values (position, offset, point, size)
+      else if (line.isString("offset")) {
+        cmd1 += line.getChars(6) + " ";
+
+        line.skipSpace();
+
+        CPoint2D o(0, 0);
+
+        int pos = line.pos();
+
+        (void) parseOffset(line, o);
+
+        cmd1 += line.str().substr(pos, line.pos() - pos);
+      }
+      else {
+        if (line.isValid())
+          cmd1 += line.getChar();
+      }
     }
 
     if (cmd1 != "") {
@@ -2834,7 +2868,7 @@ bool
 CGnuPlot::
 parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle,
                  CGnuPlotFillStyle &fillStyle, CGnuPlotArrowStyle &arrowStyle,
-                 COptString &keyTitle)
+                 CGnuPlotTextStyle &textStyle, COptString &keyTitle)
 {
   bool modifiers = true;
   bool found     = false;
@@ -2842,7 +2876,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
   while (modifiers) {
     line.skipSpace();
 
-    if      (line.isString("linestyle") || line.isString("ls")) {
+    if      (line.isOneOf({"linestyle", "ls"})) {
       line.skipNonSpace();
 
       int ls;
@@ -2852,7 +2886,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("linetype") || line.isString("lt")) {
+    else if (line.isOneOf({"linetype", "lt"})) {
       line.skipNonSpace();
 
       int lt;
@@ -2862,7 +2896,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("linewidth") || line.isString("lw")) {
+    else if (line.isOneOf({"linewidth", "lw"})) {
       line.skipNonSpace();
 
       double lw;
@@ -2872,7 +2906,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("linecolor") || line.isString("lc")) {
+    else if (line.isOneOf({"linecolor", "lc"})) {
       line.skipNonSpace();
 
       CGnuPlotColorSpec c;
@@ -2882,7 +2916,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("textcolor") || line.isString("tc")) {
+    else if (line.isOneOf({"textcolor", "tc"})) {
       line.skipNonSpace();
 
       CGnuPlotColorSpec c;
@@ -2892,7 +2926,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("pointtype") || line.isString("pt")) {
+    else if (line.isOneOf({"pointtype", "pt"})) {
       line.skipNonSpace();
 
       int         pt = 1;
@@ -2905,7 +2939,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("pointsize") || line.isString("ps")) {
+    else if (line.isOneOf({"pointsize", "ps"})) {
       line.skipNonSpace();
 
       std::string style = readNonSpaceNonComma(line);
@@ -2919,7 +2953,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("pointinterval") || line.isString("pi")) {
+    else if (line.isOneOf({"pointinterval", "pi"})) {
       line.skipNonSpace();
 
       int pi;
@@ -2929,7 +2963,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("fill") || line.isString("fs")) {
+    else if (line.isOneOf({"fill", "fs"})) {
       line.skipNonSpace();
 
       CGnuPlotFillStyle fillStyle1 = fillStyle;
@@ -2939,7 +2973,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("arrowstyle") || line.isString("as")) {
+    else if (line.isOneOf({"arrowstyle", "as"})) {
       line.skipNonSpace();
 
       int pos = line.pos();
@@ -2976,13 +3010,14 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
     else if (line.isString("notitle")) {
       line.skipNonSpace();
 
-      keyTitle = "";
+      keyTitle.setInvalid();
 
       found = true;
     }
     else if (line.isString("boxed")) {
-      // TODO
       line.skipNonSpace();
+
+      textStyle.setBoxed(true);
 
       found = true;
     }
@@ -2998,13 +3033,13 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("nosurf") || line.isString("nosurface")) {
+    else if (line.isOneOf({"nosurf", "nosurface"})) {
       // TODO
       line.skipNonSpace();
 
       found = true;
     }
-    else if (line.isString("palette") || line.isString("pal")) {
+    else if (line.isOneOf({"palette", "pal"})) {
       // TODO
       line.skipNonSpace();
 
@@ -3026,8 +3061,8 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
         CPoint2D o(0, 0);
 
-        if (! parseOffset(line, o))
-          o = CPoint2D();
+        if (parseOffset(line, o))
+          textStyle.setOffset(o);
 
         found = true;
       }
@@ -3036,7 +3071,14 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
         found = true;
       }
-      else if (line.isString("left") || line.isString("center") || line.isString("right")) {
+      else if (line.isOneOf({"left", "center", "right"})) {
+        if      (line.isString("left"))
+          textStyle.setHAlign(CHALIGN_TYPE_LEFT);
+        else if (line.isString("center"))
+          textStyle.setHAlign(CHALIGN_TYPE_CENTER);
+        else
+          textStyle.setHAlign(CHALIGN_TYPE_RIGHT);
+
         line.skipNonSpace();
 
         found = true;
@@ -3912,6 +3954,7 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
   CGnuPlotLineStyle  lineStyle  = *this->lineStyle();
   CGnuPlotFillStyle  fillStyle  = this->fillStyle();
   CGnuPlotArrowStyle arrowStyle = this->arrowStyle();
+  CGnuPlotTextStyle  textStyle;
 
   //----
 
@@ -4093,7 +4136,7 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
     PlotVar plotVar;
 
     if (! parseOptionValue(this, line, plotVar)) {
-      if (! parseModifiers3D(style, line, lineStyle, fillStyle, arrowStyle))
+      if (! parseModifiers3D(style, line, lineStyle, fillStyle, arrowStyle, textStyle, keyTitle))
         break;
 
       continue;
@@ -4149,17 +4192,15 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
           debugMsg("with " + CStrUniqueMatch::valueToString(style));
       }
 
-      parseModifiers3D(style, line, lineStyle, fillStyle, arrowStyle);
+      parseModifiers3D(style, line, lineStyle, fillStyle, arrowStyle, textStyle, keyTitle);
     }
     // title string
     else if (plotVar == PlotVar::TITLE) {
       std::string titleStr;
       int         columnNum;
 
-      if      (line.isString("col") || line.isString("columnhead") ||
-               line.isString("columnheader") || line.isString("columnheaders")) {
-        keyData_.setColumnHead(true);
-        keyData_.setColumnNum (0);
+      if      (line.isOneOf({"col", "columnhead", "columnheader", "columnheaders"})) {
+        setKeyColumnHeadNum(0);
 
         (void) readNonSpaceNonComma(line);
       }
@@ -4167,18 +4208,18 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
         if (isDebug())
           debugMsg("title " + titleStr);
 
-        keyTitle = titleStr;
+        if (titleStr != "")
+          keyTitle = titleStr;
       }
       else if (parseInteger(line, columnNum)) {
-        keyData_.setColumnNum (columnNum);
-        keyData_.setColumnHead(true);
+        setKeyColumnHeadNum(columnNum);
       }
 
       line.skipSpace();
     }
     // disable title
     else if (plotVar == PlotVar::NOTITLE) {
-      keyTitle = "";
+      keyTitle.setInvalid();
     }
     // smooth type
     else if (plotVar == PlotVar::SMOOTH) {
@@ -4418,9 +4459,11 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
     if (keyTitle.isValid())
       plot1->setKeyTitle(keyTitle.getValue());
 
-    plot1->setLineStyle (lineStyle);
-    plot1->setFillStyle (fillStyle);
-    plot1->setArrowStyle(arrowStyle);
+    plot1->setLineStyle   (lineStyle);
+    plot1->setFillStyle   (fillStyle);
+    plot1->setArrowStyle  (arrowStyle);
+    plot1->setTextBoxStyle(textBoxStyle_);
+    plot1->setTextStyle   (textStyle);
 
     plots.push_back(plot1);
   }
@@ -4445,7 +4488,8 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
 bool
 CGnuPlot::
 parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle,
-                 CGnuPlotFillStyle &fillStyle, CGnuPlotArrowStyle &arrowStyle)
+                 CGnuPlotFillStyle &fillStyle, CGnuPlotArrowStyle &arrowStyle,
+                 CGnuPlotTextStyle &textStyle, COptString &keyTitle)
 {
   bool modifiers = true;
   bool found     = false;
@@ -4453,7 +4497,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
   while (modifiers) {
     line.skipSpace();
 
-    if      (line.isString("linestyle") || line.isString("ls")) {
+    if      (line.isOneOf({"linestyle", "ls"})) {
       line.skipNonSpace();
 
       int ls;
@@ -4463,7 +4507,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("linetype") || line.isString("lt")) {
+    else if (line.isOneOf({"linetype", "lt"})) {
       line.skipNonSpace();
 
       int lt;
@@ -4473,7 +4517,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("linewidth") || line.isString("lw")) {
+    else if (line.isOneOf({"linewidth", "lw"})) {
       line.skipNonSpace();
 
       double lw;
@@ -4483,7 +4527,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("linecolor") || line.isString("lc")) {
+    else if (line.isOneOf({"linecolor", "lc"})) {
       line.skipNonSpace();
 
       CGnuPlotColorSpec c;
@@ -4493,7 +4537,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("textcolor") || line.isString("tc")) {
+    else if (line.isOneOf({"textcolor", "tc"})) {
       line.skipNonSpace();
 
       CGnuPlotColorSpec c;
@@ -4503,7 +4547,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("pointtype") || line.isString("pt")) {
+    else if (line.isOneOf({"pointtype", "pt"})) {
       line.skipNonSpace();
 
       int         pt = 1;
@@ -4516,7 +4560,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("pointsize") || line.isString("ps")) {
+    else if (line.isOneOf({"pointsize", "ps"})) {
       line.skipNonSpace();
 
       std::string style = readNonSpaceNonComma(line);
@@ -4530,7 +4574,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("pointinterval") || line.isString("pi")) {
+    else if (line.isOneOf({"pointinterval", "pi"})) {
       line.skipNonSpace();
 
       int pi;
@@ -4540,7 +4584,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("fill") || line.isString("fs")) {
+    else if (line.isOneOf({"fill", "fs"})) {
       line.skipNonSpace();
 
       CGnuPlotFillStyle fillStyle1 = fillStyle;
@@ -4550,7 +4594,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("arrowstyle") || line.isString("as")) {
+    else if (line.isOneOf({"arrowstyle", "as"})) {
       line.skipNonSpace();
 
       int pos = line.pos();
@@ -4585,14 +4629,16 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       found = true;
     }
     else if (line.isString("notitle")) {
-      // TODO
       line.skipNonSpace();
+
+      keyTitle.setInvalid();
 
       found = true;
     }
     else if (line.isString("boxed")) {
-      // TODO
       line.skipNonSpace();
+
+      textStyle.setBoxed(true);
 
       found = true;
     }
@@ -4608,13 +4654,13 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isString("nosurf") || line.isString("nosurface")) {
+    else if (line.isOneOf({"nosurf", "nosurface"})) {
       // TODO
       line.skipNonSpace();
 
       found = true;
     }
-    else if (line.isString("palette") || line.isString("pal")) {
+    else if (line.isOneOf({"palette", "pal"})) {
       // TODO
       line.skipNonSpace();
 
@@ -4636,8 +4682,8 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
         CPoint2D o(0, 0);
 
-        if (! parseOffset(line, o))
-          o = CPoint2D();
+        if (parseOffset(line, o))
+          textStyle.setOffset(o);
 
         found = true;
       }
@@ -4646,7 +4692,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
         found = true;
       }
-      else if (line.isString("left") || line.isString("center") || line.isString("right")) {
+      else if (line.isOneOf({"left", "center", "right"})) {
         line.skipNonSpace();
 
         found = true;
@@ -4933,7 +4979,7 @@ setCmd(const std::string &args)
 
     double size  = 1.0;
 
-    if (line.isString("small") || line.isString("large") || line.isString("fullwidth")) {
+    if (line.isOneOf({"small", "large", "fullwidth"})) {
       std::string str = readNonSpace(line);
 
       if      (str == "small"    ) size = 0.0;
@@ -4948,7 +4994,7 @@ setCmd(const std::string &args)
 
     line.skipSpace();
 
-    if      (line.isString("front") || line.isString("back")) {
+    if      (line.isOneOf({"front", "back"})) {
       std::string str = readNonSpace(line);
 
       setBarsFront(str == "front" ? true : false);
@@ -5510,34 +5556,31 @@ setCmd(const std::string &args)
   //            { , {linestyle | ls <minor_linestyle>} | {linetype | lt <minor_linetype>}
   //            {linewidth | lw <minor_linewidth>} } }
   else if (var == VariableName::GRID) {
-    axesData_.setGridEnabled(true);
-
-    xaxis(1).setGrid(true);
-    yaxis(1).setGrid(true);
-
     int ns = 0, nt = 0, nw = 0;
 
     std::string arg = readNonSpace(line);
 
     while (arg != "") {
-      if      (arg == "noxtics" || arg == "xtics")
-        xaxis(1).setGridMajor(arg == "xtics");
+      if      (arg == "xtics"    || arg == "x"   ) xaxis(1).setGridMajor(true);
+      else if (arg == "x2tics"   || arg == "x2"  ) xaxis(2).setGridMajor(true);
+      else if (arg == "ytics"    || arg == "y"   ) yaxis(1).setGridMajor(true);
+      else if (arg == "y2tics"   || arg == "y2"  ) yaxis(2).setGridMajor(true);
+      else if (arg == "ztics"    || arg == "z"   ) zaxis(1).setGridMajor(true);
+
+      else if (arg == "noxtics"  || arg == "nox" ) xaxis(1).setGridMajor(false);
+      else if (arg == "nox2tics" || arg == "nox2") xaxis(2).setGridMajor(false);
+      else if (arg == "noytics"  || arg == "noy" ) yaxis(1).setGridMajor(false);
+      else if (arg == "noy2tics" || arg == "noy2") yaxis(2).setGridMajor(false);
+      else if (arg == "noztics"  || arg == "noz" ) zaxis(1).setGridMajor(false);
+
       else if (arg == "nomxtics" || arg == "mxtics")
         xaxis(1).setGridMinor(arg == "mxtics");
-      else if (arg == "noytics" || arg == "ytics")
-        yaxis(1).setGridMajor(arg == "ytics");
       else if (arg == "nomytics" || arg == "mytics")
         yaxis(1).setGridMinor(arg == "mytics");
-      else if (arg == "noztics" || arg == "ztics")
-        zaxis(1).setGridMajor(arg == "ztics");
       else if (arg == "nomztics" || arg == "mztics")
         zaxis(1).setGridMinor(arg == "mztics");
-      else if (arg == "nox2tics" || arg == "x2tics")
-        xaxis(2).setGridMajor(arg == "x2tics");
       else if (arg == "nomx2tics" || arg == "mx2tics")
         xaxis(2).setGridMinor(arg == "mx2tics");
-      else if (arg == "noy2tics" || arg == "y2tics")
-        yaxis(2).setGridMajor(arg == "y2tics");
       else if (arg == "nomy2tics" || arg == "my2tics")
         yaxis(2).setGridMinor(arg == "my2tics");
       else if (arg == "nocbtics" || arg == "cbtics")
@@ -5545,8 +5588,6 @@ setCmd(const std::string &args)
       else if (arg == "nomcbtics" || arg == "mcbtics")
         colorBox_.axis().setGridMinor(arg == "mcbtics");
       else if (arg == "polar") {
-        raxis().setGrid(true);
-
         double r = 0;
 
         if (parseReal(line, r))
@@ -5592,6 +5633,10 @@ setCmd(const std::string &args)
         }
 
         ++nw;
+      }
+      else {
+        errorMsg("Invalid arg '" + arg + "'");
+        break;
       }
 
       arg = readNonSpace(line);
@@ -5825,7 +5870,7 @@ setCmd(const std::string &args)
         std::string arg1 = readNonSpace(line);
 
         if (arg1 == "columnhead" || arg1 == "columnheader" || arg1 == "columnheaders")
-          keyData_.setColumnHead(true);
+          setKeyAutoColumnHeadNum();
       }
       else if (arg == "noautotitle") {
         keyData_.setAutotitle(false);
@@ -6360,13 +6405,13 @@ setCmd(const std::string &args)
         mouseData_.resetRulerPos();
       }
       else if (arg == "polardistancedeg") {
-        mouseData_.setPolarDisance(CGnuPlotMouseData::PolarDistanceType::DEG);
+        mouseData_.setPolarDistance(CGnuPlotMouseData::PolarDistanceType::DEG);
       }
       else if (arg == "polardistancetan") {
-        mouseData_.setPolarDisance(CGnuPlotMouseData::PolarDistanceType::TAN);
+        mouseData_.setPolarDistance(CGnuPlotMouseData::PolarDistanceType::TAN);
       }
       else if (arg == "nopolardistance") {
-        mouseData_.setPolarDisance(CGnuPlotMouseData::PolarDistanceType::NONE);
+        mouseData_.setPolarDistance(CGnuPlotMouseData::PolarDistanceType::NONE);
       }
       else if (arg == "format") {
         std::string str;
@@ -7703,7 +7748,7 @@ setCmd(const std::string &args)
 
             CGnuPlotTypes::CoordSys coordSys = CGnuPlotTypes::CoordSys::FIRST;
 
-            if (line.isString("screen") || line.isString("graph")) {
+            if (line.isOneOf({"screen", "graph"})) {
               if      (line.isString("screen"))
                 coordSys = CGnuPlotTypes::CoordSys::SCREEN;
               else if (line.isString("graph"))
@@ -7790,7 +7835,7 @@ setCmd(const std::string &args)
 
           line.skipSpace();
 
-          if (line.isString("graph") || line.isString("screen")) {
+          if (line.isOneOf({"graph", "screen"})) {
             if (line.isString("graph"))
               coordSys = CGnuPlotTypes::CoordSys::GRAPH;
             else
@@ -7812,7 +7857,7 @@ setCmd(const std::string &args)
 
             line.skipSpace();
 
-            if (line.isString("graph") || line.isString("screen")) {
+            if (line.isOneOf({"graph", "screen"})) {
               if (line.isString("graph"))
                 coordSys = CGnuPlotTypes::CoordSys::GRAPH;
               else
@@ -7858,6 +7903,10 @@ setCmd(const std::string &args)
         else if (arg == "border" || arg == "noborder") {
           textBoxStyle_.setBorder(arg == "border");
         }
+        else {
+          errorMsg("Invalid arg '" + arg + "'");
+          break;
+        }
 
         arg = readNonSpace(line);
       }
@@ -7888,6 +7937,7 @@ setCmd(const std::string &args)
             histogramData_.setLineWidth(lw);
         }
         else if (arg == "title") {
+          // TODO
         }
         else if (arg == "offset") {
           CPoint2D o(0, 0);
@@ -7902,6 +7952,7 @@ setCmd(const std::string &args)
             histogramData_.setTitleFont(font);
         }
         else if (arg == "boxed") {
+          histogramData_.setBoxed(true);
         }
         else
           errorMsg("Invalid histogram style '" + arg + "'");
@@ -8227,6 +8278,8 @@ setCmd(const std::string &args)
   }
   // set x2data {time}
   else if (var == VariableName::X2DATA) {
+    xaxis(2).setDisplayed(true);
+
     std::string arg = readNonSpace(line);
 
     if (arg == "time")
@@ -8234,26 +8287,38 @@ setCmd(const std::string &args)
   }
   // set x2dtics
   else if (var == VariableName::X2DTICS) {
+    xaxis(2).setDisplayed(true);
+
     xaxis(2).setIsDays(true);
   }
   // set x2label "<label>"
   else if (var == VariableName::X2LABEL) {
+    xaxis(2).setDisplayed(true);
+
     parseAxisLabel(line, xaxis(2));
   }
   // set x2mtics
   else if (var == VariableName::X2MTICS) {
+    xaxis(2).setDisplayed(true);
+
     xaxis(2).setIsMonths(true);
   }
   // set x2range { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} {{no}extend} } | restore
   else if (var == VariableName::X2RANGE) {
+    xaxis(2).setDisplayed(true);
+
     parseAxisRange(line, xaxis(2));
   }
   // set x2tics
   else if (var == VariableName::X2TICS) {
+    xaxis(2).setDisplayed(true);
+
     parseAxesTics(line, xaxis(2));
   }
   // set x2zeroaxis
   else if (var == VariableName::X2ZEROAXIS) {
+    xaxis(2).setDisplayed(true);
+
     parseAxisZeroAxis(line, xaxis(2));
   }
   // set xdata {time}
@@ -8314,6 +8379,8 @@ setCmd(const std::string &args)
   }
   // set y2data {time}
   else if (var == VariableName::Y2DATA) {
+    yaxis(2).setDisplayed(true);
+
     std::string arg = readNonSpace(line);
 
     if (arg == "time")
@@ -8321,26 +8388,38 @@ setCmd(const std::string &args)
   }
   // set y2dtics
   else if (var == VariableName::Y2DTICS) {
+    yaxis(2).setDisplayed(true);
+
     yaxis(2).setIsDays(true);
   }
   // set y2label "<label>"
   else if (var == VariableName::Y2LABEL) {
+    yaxis(2).setDisplayed(true);
+
     parseAxisLabel(line, yaxis(2));
   }
   // set y2mtics
   else if (var == VariableName::Y2MTICS) {
+    yaxis(2).setDisplayed(true);
+
     yaxis(2).setIsMonths(true);
   }
   // set y2range { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} {{no}extend} } | restore
   else if (var == VariableName::Y2RANGE) {
+    yaxis(2).setDisplayed(true);
+
     parseAxisRange(line, yaxis(2));
   }
   // set y2tics
   else if (var == VariableName::Y2TICS) {
+    yaxis(2).setDisplayed(true);
+
     parseAxesTics(line, yaxis(2));
   }
   // set y2zeroaxis
   else if (var == VariableName::Y2ZEROAXIS) {
+    yaxis(2).setDisplayed(true);
+
     parseAxisZeroAxis(line, yaxis(2));
   }
   // set ydata {time}
@@ -8750,7 +8829,9 @@ showCmd(const std::string &args)
   }
   // show grid
   else if (var == VariableName::GRID) {
-    if (! axesData_.isGridEnabled())
+    bool enabled = (xaxis(1).hasGrid() || yaxis(1).hasGrid());
+
+    if (! enabled)
       std::cout << "grid is OFF" << std::endl;
     else {
       std::cout << "Polar grid drawn at r tics" << std::endl;
@@ -9910,10 +9991,10 @@ unsetCmd(const std::string &args)
   }
   // unset grid
   else if (var == VariableName::GRID) {
-    axesData_.setGridEnabled(false);
-
-    xaxis(1).setGrid(false);
-    yaxis(1).setGrid(false);
+    xaxis(1).setGridMajor(false);
+    xaxis(1).setGridMinor(false);
+    yaxis(1).setGridMajor(false);
+    yaxis(1).setGridMinor(false);
   }
   // unset hidden3d
   else if (var == VariableName::HIDDEN3D) {
@@ -10992,7 +11073,7 @@ parseIndex(CParseLine &line, int &indexStart, int &indexEnd, int &indexStep)
   };
 
   parseInd(0, indexStart, 0);
-  parseInd(1, indexEnd  , std::numeric_limits<int>::max());
+  parseInd(1, indexEnd  , indexStart /*std::numeric_limits<int>::max()*/);
   parseInd(2, indexStep , 1);
 }
 
@@ -11547,6 +11628,9 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     }
 
     plot->init();
+
+    // don't set polar for plot (double conversion)
+    // TODO: set polar and mark converted
   }
 
   //---
@@ -12151,9 +12235,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
       CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
-      usingCols.decodeValues(th, fieldValues_, bad, values, params);
-
-      processParams(params);
+      usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
       plot->addPoint2D(values, false, params);
     }
@@ -12215,8 +12297,6 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
         //---
 
-        ticLabel_ = CGnuPlotTicLabel();
-
         setNum_   = 0;
         pointNum_ = ix;
 
@@ -12226,9 +12306,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
         CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
-        usingCols.decodeValues(th, fieldValues_, bad, values, params);
-
-        processParams(params);
+        usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
         plot->addPoint2D(values, false, params);
       }
@@ -12293,18 +12371,8 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     // create plot
     CGnuPlotPlot *plot = createPlot(group, style);
 
-    if (plot->keyTitle() == "") {
-      std::string title;
-
-      if      (keyData_.columnHead() && usingCols.numCols() > 1 && usingCols.getCol(1).isInt &&
-               usingCols.getCol(1).ival >= 1 &&
-               usingCols.getCol(1).ival <= int(keyData_.columns().size()))
-        title = keyData_.columns()[usingCols.getCol(1).ival - 1];
-      else if (keyData_.columnNum().isValid() && keyData_.columnNum().getValue() >= 1 &&
-               keyData_.columnNum().getValue() <= int(keyData_.columns().size()))
-        title = keyData_.columns()[keyData_.columnNum().getValue()];
-      else
-        title = "\"" + filename + "\"";
+    if (plot->keyTitle() == "" && ! keyData_.columnHead()) {
+      std::string title = "\"" + filename + "\"";
 
       plot->setKeyTitle(title);
     }
@@ -12329,6 +12397,19 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         const CGnuPlotFile::Fields &fields = dataFile_.fields(setNum_, subSetNum, lineNum);
 
         keyData_.setColumns(fields);
+
+        if (plot->keyTitle() == "" && keyData_.columnHead()) {
+          std::string title;
+
+          if      (keyData_.isColumnNumValid())
+            title = keyData_.columnNumValue();
+          else if (keyData_.columns().size() > 1)
+            title = keyData_.columns()[1];
+          else if (keyData_.columns().size() > 0)
+            title = keyData_.columns()[0];
+
+          plot->setKeyTitle(title);
+        }
 
         ++lineNum;
       }
@@ -12357,8 +12438,6 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
           ++nf;
         }
-
-        ticLabel_ = CGnuPlotTicLabel();
 
         Values values;
         Params params;
@@ -12392,7 +12471,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
           else {
             CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
-            nskip = usingCols.decodeValues(th, fieldValues_, bad, values, params);
+            nskip = usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
             // one value then auto add the point number
             if (values.size() == 1) {
@@ -12413,12 +12492,9 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         //---
 
         // add values
-        processParams(params);
+        /*int pointNum=*/ plot->addPoint2D(values, discontinuity, params);
 
-        int pointNum = plot->addPoint2D(values, discontinuity, params);
-
-        if (ticLabel_.valid)
-          plot->setPoint2DLabel(pointNum, ticLabel_.str);
+        //if (ticLabel_.valid) plot->setPoint2DLabel(pointNum, ticLabel_.str);
       }
     }
   }
@@ -12639,7 +12715,7 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         setNum_   = 0;
         pointNum_ = i/nv;
 
-        usingCols.decodeValues(th, fieldValues_, bad, values, params);
+        usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
         plot->addPoint2D(values, false, params);
       }
@@ -12711,8 +12787,6 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
       //---
 
-      ticLabel_ = CGnuPlotTicLabel();
-
       setNum_   = 0;
       pointNum_ = ix;
 
@@ -12722,9 +12796,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
       CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
-      usingCols.decodeValues(th, fieldValues_, bad, values, params);
-
-      processParams(params);
+      usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
       plot->addPoint3D(0, values, false);
     }
@@ -12831,8 +12903,6 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
         //---
 
-        ticLabel_ = CGnuPlotTicLabel();
-
         setNum_   = 0;
         pointNum_ = ix;
 
@@ -12842,9 +12912,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
         CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
-        usingCols.decodeValues(th, fieldValues_, bad, values, params);
-
-        processParams(params);
+        usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
         plot->addPoint3D(iy, values, false);
       }
@@ -12971,8 +13039,6 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
           ++nf;
         }
 
-        ticLabel_ = CGnuPlotTicLabel();
-
         Values values;
         Params params;
 
@@ -12998,7 +13064,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
           else {
             CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
-            usingCols.decodeValues(th, fieldValues_, bad, values, params);
+            usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
             // one value then auto add the point and set number
             if (values.size() == 1) {
@@ -13025,8 +13091,6 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         //---
 
         // add values
-        processParams(params);
-
         if (isMatrix()) {
           int x = 0;
 
@@ -13232,39 +13296,6 @@ getColumnIndex(const std::string &str) const
       return c.first;
 
   return -1;
-}
-
-void
-CGnuPlot::
-processParams(const Params &params)
-{
-  for (const auto &param : params) {
-    const std::string &name  = param.first;
-    const std::string &value = param.second;
-
-    if (name == "xtic"  || name == "xticlabels"  || name == "ytic"  || name == "yticlabels" ||
-        name == "x2tic" || name == "x2ticlabels" || name == "y2tic" || name == "y2ticlabels") {
-      ticLabel_.valid = true;
-      ticLabel_.str   = value;
-
-      if      (name == "xtic" || name == "xticlabels") {
-        ticLabel_.id = AxisType::X; ticLabel_.ind = 1;
-        xaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str, 0);
-      }
-      else if (name == "x2tic"|| name == "x2ticlabels") {
-        ticLabel_.id = AxisType::X; ticLabel_.ind = 2;
-        xaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str, 0);
-      }
-      else if (name == "ytic" || name == "yticlabels") {
-        ticLabel_.id = AxisType::Y; ticLabel_.ind = 1;
-        yaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str, 0);
-      }
-      else if (name == "y2tic"|| name == "y2ticlabels") {
-        ticLabel_.id = AxisType::Y; ticLabel_.ind = 2;
-        yaxis(ticLabel_.ind).setTicLabel(pointNum_, ticLabel_.str, 0);
-      }
-    }
-  }
 }
 
 CExprTokenStack
@@ -13908,7 +13939,7 @@ parseColorSpec(CParseLine &line, CGnuPlotColorSpec &c)
   if      (arg == "rgbcolor" || arg == "rgb") {
     line.skipSpace();
 
-    if (line.isString("var") || line.isString("variable")) {
+    if (line.isOneOf({"var", "variable"})) {
       arg = readNonSpaceNonComma(line);
 
       c.setRGBVariable();

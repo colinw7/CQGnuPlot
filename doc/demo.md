@@ -33,7 +33,7 @@
   + key not needed
 
 ## boxplot.dem
-  + no issues
+  + candlesticks wrong :
 
 ## callargs.dem
   + No issues

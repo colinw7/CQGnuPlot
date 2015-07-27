@@ -210,8 +210,6 @@ fit()
   COptReal ymin1, ymax1, ymin2, ymax2;
   COptReal zmin1, zmax1;
 
-  std::set<int> xinds, yinds;
-
   double dx = 0.0, dy = 0.0, dz = 0.0;
 
   if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
@@ -359,8 +357,6 @@ fit()
 
       plot->calcXRange(&xmin, &xmax);
 
-      xinds.insert(plot->xind());
-
       if (plot->xind() == 1) {
         if (! xamin1.isValid())
           xmin1.updateMin(xmin);
@@ -406,9 +402,8 @@ fit()
     for (auto plot : plots_) {
       double ymin, ymax;
 
-      plot->calcBoundedYRange(&ymin, &ymax);
-
-      yinds.insert(plot->yind());
+      if (! plot->calcBoundedYRange(&ymin, &ymax))
+        continue;
 
       if (plot->yind() == 1) {
         if (! yamin1.isValid())
@@ -445,7 +440,10 @@ fit()
     if (isPolar()) {
       CGnuPlotAxis *plotRAxis = getPlotAxis(AxisType::R, 1, true);
 
-      double r = plotRAxis->mapLogValue(std::max(xamax1.getValue(10), yamax1.getValue(10)));
+      double xmax2 = (xamax1.isValid() ? xamax1.getValue(10) : xmax1.getValue(10));
+      double ymax2 = (yamax1.isValid() ? yamax1.getValue(10) : ymax1.getValue(10));
+
+      double r = plotRAxis->mapLogValue(std::max(xmax2, ymax2));
 
       if (! xmin1.isValid()) xmin1 = -r;
       if (! xmax1.isValid()) xmax1 =  r;
@@ -455,15 +453,42 @@ fit()
   }
 
   if (! xmin1.isValid()) xmin1 = -10; if (! xmax1.isValid()) xmax1 = 10;
-  if (! xmin2.isValid()) xmin2 = -10; if (! xmax2.isValid()) xmax2 = 10;
   if (! ymin1.isValid()) ymin1 = -10; if (! ymax1.isValid()) ymax1 = 10;
-  if (! ymin2.isValid()) ymin2 = -10; if (! ymax2.isValid()) ymax2 = 10;
+
+  if (! xmin2.isValid()) xmin2 = xmin1; if (! xmax2.isValid()) xmax2 = xmax1;
+  if (! ymin2.isValid()) ymin2 = ymin1; if (! ymax2.isValid()) ymax2 = ymax1;
 
   if (is3D()) {
     if (! zmin1.isValid()) zmin1 = -10; if (! zmax1.isValid()) zmax1 = 10;
   }
 
   //---
+
+  if (isPolar()) {
+    if (! raxis().min().isValid() || ! raxis().max().isValid()) {
+      CGnuPlotAxis *plotRAxis = getPlotAxis(AxisType::R, 1, true);
+
+      double xmax = xmax1.getValue();
+      double ymax = ymax1.getValue();
+
+      double r = plotRAxis->mapLogValue(std::max(xmax, ymax));
+
+      raxis().setMin(0);
+      raxis().setMax(r);
+    }
+
+    updatePlotAxisRange(AxisType::R, 1);
+
+    double s = raxis().max().getValue(100) - raxis().min().getValue(0);
+
+    if (raxis().logBase().isValid())
+      s = raxis().mapLogValue(s);
+
+    xmin1 = -s;
+    ymin1 = -s;
+    xmax1 =  s;
+    ymax1 =  s;
+  }
 
   if (! xaxis(1).min().isValid() || ! xaxis(1).max().isValid()) {
     double xmin = xmin1.getValue();
@@ -505,35 +530,30 @@ fit()
 
   //---
 
-  if (xinds.find(2) != xinds.end()) {
-    if (! xaxis(2).min().isValid() || ! xaxis(2).max().isValid()) {
-      double xmin = xmin2.getValue();
-      double xmax = xmax2.getValue();
+  if (! xaxis(2).min().isValid() || ! xaxis(2).max().isValid()) {
+    double xmin = xmin2.getValue();
+    double xmax = xmax2.getValue();
 
-      if (! xaxis(2).isAutoScaleFixMin())
-        normalizeXRange(2, xmin, xmax, dx);
+    if (! xaxis(2).isAutoScaleFixMin())
+      normalizeXRange(2, xmin, xmax, dx);
 
-      xaxis(2).setMin(xmin);
-      xaxis(2).setMax(xmax);
-    }
-
-    updatePlotAxisRange(AxisType::X, 2);
+    xaxis(2).setMin(xmin);
+    xaxis(2).setMax(xmax);
   }
 
-  if (yinds.find(2) != yinds.end()) {
-    if (! yaxis(2).min().isValid() || ! yaxis(2).max().isValid()) {
-      double ymin = ymin2.getValue();
-      double ymax = ymax2.getValue();
+  if (! yaxis(2).min().isValid() || ! yaxis(2).max().isValid()) {
+    double ymin = ymin2.getValue();
+    double ymax = ymax2.getValue();
 
-      if (! yaxis(2).isAutoScaleFixMin())
-        normalizeYRange(2, ymin, ymax, dy);
+    if (! yaxis(2).isAutoScaleFixMin())
+      normalizeYRange(2, ymin, ymax, dy);
 
-      yaxis(2).setMin(ymin);
-      yaxis(2).setMax(ymax);
-    }
-
-    updatePlotAxisRange(AxisType::Y, 2);
+    yaxis(2).setMin(ymin);
+    yaxis(2).setMax(ymax);
   }
+
+  updatePlotAxisRange(AxisType::X, 2);
+  updatePlotAxisRange(AxisType::Y, 2);
 }
 
 void
@@ -803,15 +823,21 @@ draw()
 
   //---
 
+  // draw axes (underneath plot)
+  axisBBox_ = CBBox2D();
+
+  drawAxes(renderer);
+
+//CBBox2D bbox = getMappedDisplayRange(1, 1);
+//renderer->setRange(bbox);
+//renderer->drawRect(axisBBox_, CRGBA(1,0,0), 1);
+
+  //---
+
   // draw title (TODO: order)
   drawTitle();
 
   timeStamp_->draw(renderer);
-
-  //---
-
-  // draw axes (underneath plot)
-  drawAxes(renderer);
 
   //---
 
@@ -901,8 +927,6 @@ getPlotAxis(AxisType type, int ind, bool create) const
 
     CGnuPlotAxis *axis = app()->createAxis(th, axisData);
 
-    axis->setLabelInside(ind == 2);
-
     axis->setGridLayer(axesData_.getGridLayer());
 
     axis->setGridPolarAngle    (axesData_.gridPolarAngle());
@@ -983,13 +1007,13 @@ setAxisRange(AxisType type, int ind, double r1, double r2)
 
 void
 CGnuPlotGroup::
-setAxisStart1(AxisType type, int ind, double r)
+setAxisStart(AxisType type, int ind, double r)
 {
   CGnuPlotAxis *axis = getPlotAxis(type, ind, false);
   if (! axis) return;
 
   double start = r;
-  double end   = axis->getEnd1();
+  double end   = axis->getEnd();
 
   axis->setRange(start, end);
 
@@ -999,12 +1023,12 @@ setAxisStart1(AxisType type, int ind, double r)
 
 void
 CGnuPlotGroup::
-setAxisEnd1(AxisType type, int ind, double r)
+setAxisEnd(AxisType type, int ind, double r)
 {
   CGnuPlotAxis *axis = getPlotAxis(type, ind, false);
   if (! axis) return;
 
-  double start = axis->getStart1();
+  double start = axis->getStart();
   double end   = r;
 
   axis->setRange(start, end);
@@ -1020,7 +1044,7 @@ setAxisGridDisplayed(AxisType type, int ind, bool b)
   CGnuPlotAxis *axis = getPlotAxis(type, ind, false);
   if (! axis) return;
 
-  axis->setGrid(b);
+  axis->setGridMajor(b);
 }
 
 void
@@ -1029,7 +1053,9 @@ drawTitle()
 {
   CGnuPlotRenderer *renderer = app()->renderer();
 
-  renderer->setRange(region());
+  CBBox2D bbox = getMappedDisplayRange(1, 1);
+
+  renderer->setRange(bbox);
   renderer->setReverse(false, false);
 
   title_->draw(renderer);
@@ -1319,9 +1345,9 @@ drawAxes(CGnuPlotRenderer *renderer)
   if (is3D()) {
     drawBorder(renderer);
 
-    drawXAxis(renderer, 1, false);
-    drawYAxis(renderer, 1, false);
-    drawZAxis(renderer, 1, false);
+    drawXAxis(renderer, 1);
+    drawYAxis(renderer, 1);
+    drawZAxis(renderer, 1);
   }
   else {
     CGnuPlotPlot *singlePlot = getSingleStylePlot();
@@ -1339,31 +1365,13 @@ drawAxes(CGnuPlotRenderer *renderer)
     drawBorder(renderer);
 
     if (! hasPlotStyle(PlotStyle::PARALLELAXES)) {
-      std::set<int> xSet, ySet;
-
-      for (auto plot : plots_) {
-        xSet.insert(plot->xind());
-        ySet.insert(plot->yind());
-      }
-
       for (int i = 1; i <= 2; ++i) {
-        CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, i, true);
-        CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, i, true);
-
-        if (xSet.find(i) == xSet.end() && plotXAxis->getLabel() != "")
-          xSet.insert(i);
-        if (ySet.find(i) == ySet.end() && plotYAxis->getLabel() != "")
-          ySet.insert(i);
+        drawXAxis(renderer, i);
+        drawYAxis(renderer, i);
       }
-
-      for (const auto &xi : xSet)
-        drawXAxis(renderer, xi, xi == 1 && xSet.find(2) == xSet.end());
-
-      for (const auto &yi : ySet)
-        drawYAxis(renderer, yi, yi == 1 && ySet.find(2) == ySet.end());
     }
     else {
-      drawXAxis(renderer, 1, false);
+      drawXAxis(renderer, 1);
     }
 
     if (isPolar()) {
@@ -1387,6 +1395,8 @@ drawBorder(CGnuPlotRenderer *renderer)
   CBBox2D bbox = getMappedDisplayRange(1, 1);
 
   renderer->setRange(bbox);
+
+  axisBBox_ = bbox;
 
   CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, 1, true);
   CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, 1, true);
@@ -1475,7 +1485,7 @@ drawBorder(CGnuPlotRenderer *renderer)
 
 void
 CGnuPlotGroup::
-drawXAxis(CGnuPlotRenderer *renderer, int xind, bool drawOther)
+drawXAxis(CGnuPlotRenderer *renderer, int xind)
 {
   CGnuPlotAxisData &xaxis = this->xaxis(xind);
 
@@ -1490,12 +1500,12 @@ drawXAxis(CGnuPlotRenderer *renderer, int xind, bool drawOther)
   renderer->setReverse(xaxis.isReverse(), false);
 
   // draw major/minor (bottom/top)
-  plotXAxis->drawAxes(renderer, drawOther);
+  plotXAxis->drawAxes(renderer);
 }
 
 void
 CGnuPlotGroup::
-drawYAxis(CGnuPlotRenderer *renderer, int yind, bool drawOther)
+drawYAxis(CGnuPlotRenderer *renderer, int yind)
 {
   CGnuPlotAxisData &yaxis = this->yaxis(yind);
 
@@ -1510,12 +1520,12 @@ drawYAxis(CGnuPlotRenderer *renderer, int yind, bool drawOther)
   renderer->setReverse(false, yaxis.isReverse());
 
   // draw major/minor (left/right)
-  plotYAxis->drawAxes(renderer, drawOther);
+  plotYAxis->drawAxes(renderer);
 }
 
 void
 CGnuPlotGroup::
-drawZAxis(CGnuPlotRenderer *renderer, int zind, bool drawOther)
+drawZAxis(CGnuPlotRenderer *renderer, int zind)
 {
   CGnuPlotAxisData &zaxis = this->zaxis(zind);
 
@@ -1530,7 +1540,7 @@ drawZAxis(CGnuPlotRenderer *renderer, int zind, bool drawOther)
   renderer->setReverse(zaxis.isReverse(), false);
 
   // draw major/minor (bottom/top)
-  plotZAxis->drawAxes(renderer, drawOther);
+  plotZAxis->drawAxes(renderer);
 }
 
 // polar (raxis) ?
@@ -1551,7 +1561,7 @@ drawRAxis(CGnuPlotRenderer *renderer)
   renderer->setReverse(axis.isReverse(), false);
 
   // draw single (major)
-  plotAxis->drawAxes(renderer, /*drawOther*/false);
+  plotAxis->drawAxes(renderer);
 }
 
 void
@@ -1569,6 +1579,9 @@ drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
       CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, 1, true);
 
       if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer(/*back*/true) == isBack) {
+        renderer->setRange(getMappedDisplayRange(1, 1));
+        renderer->setReverse(plotXAxis->isReverse(), false);
+
         //double ymin1 = plotYAxis->getStart1();
         //double ymax1 = plotYAxis->getEnd1  ();
 
@@ -1576,6 +1589,9 @@ drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
       }
 
       if (plotYAxis->hasGrid() && plotYAxis->isGridBackLayer(/*back*/true) == isBack) {
+        renderer->setRange(getMappedDisplayRange(1, 1));
+        renderer->setReverse(false, plotYAxis->isReverse());
+
         //double xmin1 = plotXAxis->getStart1();
         //double xmax1 = plotXAxis->getEnd1  ();
 
@@ -1597,6 +1613,9 @@ drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
 
     // x/y grid at zmin
     if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer(/*back*/false) == isBack) {
+      renderer->setRange(getMappedDisplayRange(1, 1));
+      renderer->setReverse(plotXAxis->isReverse(), false);
+
       //double ymin1 = plotYAxis->getStart1();
       //double ymax1 = plotYAxis->getEnd1  ();
       //double zmin1 = plotZAxis->getStart1();
@@ -1604,6 +1623,9 @@ drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
       plotXAxis->drawGrid(renderer);
     }
     if (plotYAxis->hasGrid() && plotYAxis->isGridBackLayer(/*back*/false) == isBack) {
+      renderer->setRange(getMappedDisplayRange(1, 1));
+      renderer->setReverse(false, plotYAxis->isReverse());
+
       //double xmin1 = plotXAxis->getStart1();
       //double xmax1 = plotXAxis->getEnd1  ();
       //double zmin1 = plotZAxis->getStart1();
@@ -1613,18 +1635,14 @@ drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
 
     // z/x grid at ymin
     if (plotZAxis->hasGrid() && plotZAxis->isGridBackLayer(/*back*/false) == isBack) {
+      renderer->setRange(getMappedDisplayRange(1, 1));
+      renderer->setReverse(plotZAxis->isReverse(), false);
+
       //double zmin1 = plotZAxis->getStart1();
       //double zmax1 = plotZAxis->getEnd1  ();
       //double ymin1 = plotYAxis->getStart1();
 
       plotZAxis->drawGrid(renderer);
-    }
-    if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer(/*back*/false) == isBack) {
-      //double zmin1 = plotZAxis->getStart1();
-      //double zmax1 = plotZAxis->getEnd1  ();
-      //double ymin1 = plotYAxis->getStart1();
-
-      plotXAxis->drawGrid(renderer);
     }
   }
 }
@@ -1735,7 +1753,8 @@ calcRange(int xind, int yind, double &xmin, double &ymin, double &xmax, double &
 
     double ymin2, ymax2;
 
-    plot->calcBoundedYRange(&ymin2, &ymax2);
+    if (! plot->calcBoundedYRange(&ymin2, &ymax2))
+      continue;
 
     ymin1.updateMin(ymin2);
     ymax1.updateMax(ymax2);

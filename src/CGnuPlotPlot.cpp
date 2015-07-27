@@ -103,6 +103,8 @@ init()
 
   setContourData(plot->contourData());
   setSurfaceData(plot->surfaceData());
+
+  setEnhanced(plot->device()->isEnhanced());
 }
 
 void
@@ -1112,7 +1114,7 @@ calcZRange(double *zmin, double *zmax) const
   *zmax = zmax_.getValue( 10);
 }
 
-void
+bool
 CGnuPlotPlot::
 calcBoundedYRange(double *ymin, double *ymax) const
 {
@@ -1168,6 +1170,8 @@ calcBoundedYRange(double *ymin, double *ymax) const
 
   *ymin = bymin_.getValue(-10);
   *ymax = bymax_.getValue( 10);
+
+  return (bymin_.isValid() && bymax_.isValid());
 }
 
 bool

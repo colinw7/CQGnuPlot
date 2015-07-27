@@ -37,6 +37,8 @@ class CGnuPlotFillStyle {
   void setBorderColor(const CGnuPlotColorSpec &c) { borderColor_ = c; }
   void unsetBorderColor() { borderColor_ = OptColor(); }
 
+  bool calcColor(CGnuPlotPlot *plot, CRGBA &c) const;
+
   void unset() {
     style_          = FillType::EMPTY;
     density_        = 1.0;

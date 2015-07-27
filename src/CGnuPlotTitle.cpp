@@ -17,21 +17,24 @@ draw(CGnuPlotRenderer *renderer) const
 {
   if (text_.empty()) return;
 
-  const CBBox2D &region = group_->region();
+  if (font_.isValid())
+    renderer->setFont(font_);
 
-  double xmin = region.getXMin();
-  double xmax = region.getXMax();
-//double ymin = region.getYMin();
-  double ymax = region.getYMax();
+  CBBox2D bbox = group_->getAxisBBox();
+
+  double xmin = bbox.getXMin();
+  double xmax = bbox.getXMax();
+//double ymin = bbox.getYMin();
+  double ymax = bbox.getYMax();
+
+//double pw = renderer->pixelWidthToWindowWidth  (1);
+  double ph = renderer->pixelHeightToWindowHeight(1);
 
   CPoint2D p((xmin + xmax)/2, ymax);
 
-  p += offset_;
+  p += offset_; // offset units ?
 
   CRGBA c = color_.color();
-
-  if (font_.isValid())
-    renderer->setFont(font_);
 
   if (isEnhanced()) {
     CGnuPlotText text(text_);
@@ -44,6 +47,9 @@ draw(CGnuPlotRenderer *renderer) const
 
     text.draw(renderer, bbox1, CHALIGN_TYPE_CENTER, c);
   }
-  else
-    renderer->drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, -8, text_, c);
+  else {
+    CPoint2D p1(p.x, p.y - 8*ph);
+
+    renderer->drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, 0, text_, c);
+  }
 }

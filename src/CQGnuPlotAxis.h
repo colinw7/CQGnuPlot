@@ -13,10 +13,10 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   Q_OBJECT
 
   Q_PROPERTY(bool     displayed          READ isDisplayed         WRITE setDisplayed)
-  Q_PROPERTY(double   start              READ getStart)
-  Q_PROPERTY(double   end                READ getEnd)
-  Q_PROPERTY(double   start1             READ getStart1           WRITE setStart1)
-  Q_PROPERTY(double   end1               READ getEnd1             WRITE setEnd1)
+  Q_PROPERTY(double   start              READ getStart            WRITE setStart)
+  Q_PROPERTY(double   end                READ getEnd              WRITE setEnd)
+  Q_PROPERTY(double   start1             READ getStart1)
+  Q_PROPERTY(double   end1               READ getEnd1)
 //Q_PROPERTY(CPoint3D position           READ position            WRITE setPosition)
 //Q_PROPERTY(CPoint3D position1          READ position1           WRITE setPosition1)
   Q_PROPERTY(bool     log                READ isLog               WRITE setLog)
@@ -42,7 +42,7 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   Q_PROPERTY(bool     zeroAxisDisplayed  READ isZeroAxisDisplayed WRITE setZeroAxisDisplayed)
   Q_PROPERTY(double   zeroAxisLineWidth  READ zeroAxisLineWidth   WRITE setZeroAxisLineWidth)
   Q_PROPERTY(bool     borderTics         READ isBorderTics        WRITE setBorderTics)
-  Q_PROPERTY(bool     grid               READ hasGrid             WRITE setGrid)
+  Q_PROPERTY(bool     grid               READ hasGrid)
   Q_PROPERTY(bool     gridMajor          READ hasGridMajor        WRITE setGridMajor)
   Q_PROPERTY(bool     gridMinor          READ hasGridMinor        WRITE setGridMinor)
   Q_PROPERTY(double   gridPolarAngle     READ gridPolarAngle      WRITE setGridPolarAngle)
@@ -74,8 +74,8 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   QString getTimeFormat() const;
   void setTimeFormat(const QString &str);
 
-  void setStart1(double r);
-  void setEnd1  (double r);
+  void setStart(double r);
+  void setEnd  (double r);
 
   bool isLog() const { return CGnuPlotAxis::logBase().isValid(); }
 
@@ -105,7 +105,7 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   QColor getLabelColor() const;
   void setLabelColor(const QColor &c);
 
-  void drawAxes(CGnuPlotRenderer *renderer, bool drawOther) override;
+  void drawAxes(CGnuPlotRenderer *renderer) override;
 };
 
 #endif

@@ -114,7 +114,7 @@ void
 CGnuPlotRenderer::
 drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w)
 {
-  if (! isPseudo()) {
+  if (clip_.isSet() && ! isPseudo()) {
     if      (clip_.inside(rect))
       drawRect(rect, c, w);
     else if (clip_.intersect(rect)) {
@@ -132,7 +132,7 @@ void
 CGnuPlotRenderer::
 fillClippedRect(const CBBox2D &rect, const CRGBA &c)
 {
-  if (! isPseudo()) {
+  if (clip_.isSet() && ! isPseudo()) {
     CBBox2D crect;
 
     if      (clip_.inside(rect))
@@ -164,6 +164,9 @@ bool
 CGnuPlotRenderer::
 clipLine(CPoint2D &p1, CPoint2D &p2)
 {
+  if (! clip_.isSet() || isPseudo())
+    return true;
+
   double x1 = p1.x, y1 = p1.y;
   double x2 = p2.x, y2 = p2.y;
 
@@ -534,23 +537,27 @@ CGnuPlotRenderer::
 drawClippedPath(const std::vector<CPoint3D> &points, double width, const CRGBA &c,
                 const CLineDash &dash)
 {
-  std::vector<CPoint2D> points1;
+  if (clip_.isSet() && ! isPseudo()) {
+    std::vector<CPoint2D> points1;
 
-  for (const auto &p : points) {
-    CPoint2D p1 = transform(p);
+    for (const auto &p : points) {
+      CPoint2D p1 = transform(p);
 
-    if (clip_.inside(p1))
-      points1.push_back(p1);
+      if (clip_.inside(p1))
+        points1.push_back(p1);
+    }
+
+    drawPath(points1, width, c, dash);
   }
-
-  drawPath(points1, width, c, dash);
+  else
+    drawPath(points, width, c, dash);
 }
 
 void
 CGnuPlotRenderer::
-drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c)
+drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c, double lw)
 {
-  drawSymbol(transform(p), type, size, c);
+  drawSymbol(transform(p), type, size, c, lw);
 }
 
 void

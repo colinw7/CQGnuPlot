@@ -1,4 +1,5 @@
 #include <CGnuPlotFillStyle.h>
+#include <CGnuPlotPlot.h>
 #include <CGnuPlotNameValues.h>
 
 void
@@ -38,6 +39,23 @@ show(std::ostream &os) const
     os << " with no border";
 
   os << std::endl;
+}
+
+bool
+CGnuPlotFillStyle::
+calcColor(CGnuPlotPlot *plot, CRGBA &c) const
+{
+  if      (borderColor_.isValid())
+    c = borderColor_.getValue().calcColor(plot);
+  else if (borderLineType_.isValid()) {
+    CGnuPlotLineTypeP lineType = plot->app()->getLineTypeInd(borderLineType_.getValue());
+
+    c = lineType->calcColor(plot->group(), c);
+  }
+  else
+    return false;
+
+  return true;
 }
 
 void

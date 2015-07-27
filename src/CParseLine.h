@@ -45,17 +45,15 @@ class CParseLine {
   }
 
   char lookChar() const {
-    if (pos_ < len_)
-      return str_[pos_];
-    else
-      return '\0';
+    assert(pos_ < len_);
+
+    return str_[pos_];
   }
 
   char getChar() {
-    if (pos_ < len_)
-      return str_[pos_++];
-    else
-      return '\0';
+    assert(pos_ < len_);
+
+    return str_[pos_++];
   }
 
   void ungetChar(int n=1) { if (n <= pos_) pos_ -= n; }
@@ -70,10 +68,9 @@ class CParseLine {
   }
 
   char lookNextChar(int offset=1) {
-    if (pos_ + offset <= len_)
-      return str_[pos_ + offset];
-    else
-      return '\0';
+    assert(pos_ + offset <= len_);
+
+    return str_[pos_ + offset];
   }
 
   void skipChar() { ++pos_; }
@@ -151,6 +148,15 @@ class CParseLine {
       return false;
 
     return true;
+  }
+
+  bool isOneOf(std::initializer_list<std::string> strs) {
+    for (auto s : strs) {
+      if (isString(s))
+        return true;
+    }
+
+    return false;
   }
 
   bool isString(const std::string &str) const {

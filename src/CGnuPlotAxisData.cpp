@@ -7,9 +7,8 @@ CGnuPlotAxisData(AxisType type, int ind) :
 {
   setDisplayed(ind_ == 1);
 
-  setGridMajor(ind_ == 1);
-
   setShowTics(ind_ == 1);
+  setMirror  (ind_ == 1);
 }
 
 CGnuPlotTypes::AxisDirection

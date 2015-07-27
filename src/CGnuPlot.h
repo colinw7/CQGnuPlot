@@ -78,6 +78,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotCircleStyle.h>
 #include <CGnuPlotEllipseStyle.h>
 #include <CGnuPlotRectStyle.h>
+#include <CGnuPlotTextStyle.h>
 #include <CGnuPlotTextBoxStyle.h>
 #include <CGnuPlotTimeStampData.h>
 #include <CGnuPlotMouseData.h>
@@ -467,6 +468,16 @@ class CGnuPlot {
   const CGnuPlotKeyData &keyData() const { return keyData_; }
   void setKeyData(const CGnuPlotKeyData &k) { keyData_ = k; }
 
+  void setKeyColumnHeadNum(int icol) {
+    keyData_.setColumnHead(true);
+    keyData_.setColumnNum (icol);
+  }
+
+  void setKeyAutoColumnHeadNum() {
+    keyData_.setColumnHead (true);
+    keyData_.resetColumnNum();
+  }
+
   const CBBox2D &region() const { return region_; }
   void setRegion(const CBBox2D &r) { region_ = r; }
 
@@ -772,12 +783,18 @@ class CGnuPlot {
 
   void stateChanged(CGnuPlotWindow *window, CGnuPlotTypes::ChangeState state);
 
+  //---
+
   int numFieldValues() const { return fieldValues_.size(); }
 
   CExprValueP fieldValue(int i) const {
     if (i < 1 || i > int(fieldValues_.size())) return CExprValueP();
     return fieldValues_[i - 1];
   }
+
+  bool isParsePlotTitle() const { return parsePlotTitle_; }
+
+  //---
 
   int setNum() const { return setNum_; }
   void setSetNum(int i) { setNum_ = i; }
@@ -866,9 +883,10 @@ class CGnuPlot {
 
   bool parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
                         CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as,
-                        COptString &keyTitle);
+                        CGnuPlotTextStyle &textStyle, COptString &keyTitle);
   bool parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
-                        CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as);
+                        CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as,
+                        CGnuPlotTextStyle &textStyle, COptString &keyTitle);
 
   bool parseFor(CParseLine &line, ForCmd &forCmd, std::string &cmd);
 
@@ -958,8 +976,6 @@ class CGnuPlot {
   bool decodeRange(const StringArray &fields, CGnuPlotAxisData &axis);
 
   void parseArrayValues(CParseLine &line, std::vector<CSize2D> &sizes);
-
-  void processParams(const Params &params);
 
   CExprTokenStack compileExpression(const std::string &expr) const;
 
@@ -1204,10 +1220,10 @@ class CGnuPlot {
   ReadLineP              readLine_;
   Blocks                 blocks_;
 
-  mutable Values           fieldValues_;
-  mutable int              setNum_;
-  mutable int              pointNum_;
-  mutable CGnuPlotTicLabel ticLabel_;
+  mutable Values         fieldValues_;
+  bool                   parsePlotTitle_ { false };
+  mutable int            setNum_;
+  mutable int            pointNum_;
 };
 
 #endif

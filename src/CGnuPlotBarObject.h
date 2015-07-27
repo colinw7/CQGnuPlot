@@ -67,7 +67,7 @@ class CGnuPlotBarObject : public CGnuPlotPlotObject {
   COptRGBA        fillColor_;
   bool            border_      { true }; // border displayed
   COptRGBA        lineColor_;
-  double          width_       { 0.0 }; // associated value
+  double          width_       { 1.0 }; // border value
 };
 
 #endif
