@@ -94,7 +94,7 @@ class CGnuPlotColorSpec {
     return isVariable() || isRGBVariable() || isPaletteZ() || isPaletteVariable();
   }
 
-  CRGBA calcColor(CGnuPlotPlot *plot, double x=0.0) const;
+  CRGBA calcColor(CGnuPlotGroup *group, double x=0.0) const;
 
   void reset();
 

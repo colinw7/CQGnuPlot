@@ -9,6 +9,9 @@ CGnuPlotBBoxRenderer(CGnuPlotRenderer *renderer) :
 {
   assert(! renderer_->isPseudo());
 
+  xmin_ = -std::numeric_limits<double>::max();
+  xmax_ =  std::numeric_limits<double>::max();
+
   width_   = 800;
   height_  = 800;
   mapping_ = true;
@@ -22,6 +25,29 @@ CGnuPlotBBoxRenderer(CGnuPlotRenderer *renderer) :
 CGnuPlotBBoxRenderer::
 ~CGnuPlotBBoxRenderer()
 {
+}
+
+void
+CGnuPlotBBoxRenderer::
+setXRange(double xmin, double xmax)
+{
+  xmin_ = xmin;
+  xmax_ = xmax;
+}
+
+void
+CGnuPlotBBoxRenderer::
+setCBValue(double x)
+{
+  cbmin_.updateMin(x);
+  cbmax_.updateMax(x);
+}
+
+bool
+CGnuPlotBBoxRenderer::
+isInside(const CPoint2D &p) const
+{
+  return (p.x >= xmin_ && p.x <= xmax_);
 }
 
 void
@@ -122,28 +148,30 @@ patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern,
 
 void
 CGnuPlotBBoxRenderer::
-drawEllipse(const CPoint2D &center, double rx, double ry, double a,
+drawEllipse(const CPoint2D &center, double rx, double ry, double angle,
             const CRGBA &, double /*width*/, const CLineDash & /*dash*/)
 {
-  CPoint2D p1 = center - CPoint2D(rx, ry);
-  CPoint2D p2 = center + CPoint2D(rx, ry);
+  CPoint2D p1 = center + CPoint2D(-rx, -ry);
+  CPoint2D p2 = center + CPoint2D(-rx,  ry);
+  CPoint2D p3 = center + CPoint2D( rx,  ry);
+  CPoint2D p4 = center + CPoint2D( rx, -ry);
 
-  CPoint2D pr1 = CMathGeom2D::RotatePoint(p1, a, center);
-  CPoint2D pr2 = CMathGeom2D::RotatePoint(p2, a, center);
+  CPoint2D pr1 = CMathGeom2D::RotatePoint(p1, angle, center);
+  CPoint2D pr2 = CMathGeom2D::RotatePoint(p2, angle, center);
+  CPoint2D pr3 = CMathGeom2D::RotatePoint(p3, angle, center);
+  CPoint2D pr4 = CMathGeom2D::RotatePoint(p4, angle, center);
 
-  CBBox2D rect(pr1, pr2);
-
-  bbox_.add(rect);
+  bbox_.add(pr1);
+  bbox_.add(pr2);
+  bbox_.add(pr3);
+  bbox_.add(pr4);
 }
 
 void
 CGnuPlotBBoxRenderer::
-fillEllipse(const CPoint2D &center, double rx, double ry, double /*a*/, const CRGBA &)
+fillEllipse(const CPoint2D &center, double rx, double ry, double angle, const CRGBA &c)
 {
-  // TODO: rotate by angle
-  CBBox2D rect(center - CPoint2D(rx, ry), center + CPoint2D(rx, ry));
-
-  bbox_.add(rect);
+  drawEllipse(center, rx, ry, angle, c, 0, CLineDash());
 }
 
 void

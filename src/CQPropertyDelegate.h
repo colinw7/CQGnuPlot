@@ -46,6 +46,8 @@ class CQPropertyDelegate : public QItemDelegate {
                  const QPointF &p, const QModelIndex &index) const;
   void drawAngle(QPainter *painter, const QStyleOptionViewItem &option,
                  const CAngle &a, const QModelIndex &index) const;
+  void drawString(QPainter *painter, const QStyleOptionViewItem &option,
+                  const QString &str, const QModelIndex &index) const;
 
  private:
   QTreeWidget *tree_;

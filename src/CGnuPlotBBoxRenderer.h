@@ -15,6 +15,15 @@ class CGnuPlotBBoxRenderer : public CGnuPlotRenderer {
 
   bool isPseudo() const override { return true; }
 
+  bool isInside(const CPoint2D &p) const override;
+
+  void setXRange(double xmin, double xmax);
+
+  void setCBValue(double x) override;
+
+  const COptReal &cbMin() const { return cbmin_; }
+  const COptReal &cbMax() const { return cbmax_; }
+
   void clear(const CRGBA &c);
 
   void drawPoint  (const CPoint2D &p, const CRGBA &c) override;
@@ -63,6 +72,9 @@ class CGnuPlotBBoxRenderer : public CGnuPlotRenderer {
  private:
   CGnuPlotRenderer *renderer_;
   CBBox2D           bbox_;
+  double            xmin_ { -std::numeric_limits<double>::max() };
+  double            xmax_ {  std::numeric_limits<double>::max() };
+  COptReal          cbmin_, cbmax_;
 };
 
 #endif

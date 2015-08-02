@@ -46,6 +46,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       p.y = reals[valueNum++];
     }
 
+    if (renderer->isPseudo() && ! renderer->isInside(p))
+      continue;
+
     p = plot->group()->mapLogPoint(plot->xind(), plot->yind(), 1, p);
 
     double size1 = pointSize;

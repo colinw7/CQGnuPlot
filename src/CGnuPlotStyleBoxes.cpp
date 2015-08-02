@@ -112,7 +112,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         // border line type ?
         CRGBA lc2;
 
-        if (fillStyle.calcColor(plot, lc2)) {
+        if (fillStyle.calcColor(group, lc2)) {
           bar->setBorder(true);
           bar->setLineColor(lc2);
         }
@@ -127,7 +127,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         // border line type ?
         CRGBA lc2 = lc1;
 
-        if (fillStyle.calcColor(plot, lc2))
+        if (fillStyle.calcColor(group, lc2))
           renderer->drawRect(bbox, lc2, lw);
       }
     }
@@ -177,7 +177,7 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   CRGBA lc1 = lc;
 
-  if (fillStyle.calcColor(plot, lc1)) {
+  if (fillStyle.calcColor(group, lc1)) {
     // border line type ?
     double lw = lineStyle.calcWidth();
 

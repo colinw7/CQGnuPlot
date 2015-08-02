@@ -6,6 +6,9 @@
 
 class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {
  public:
+  typedef CGnuPlotTypes::EllipseUnits EllipseUnits;
+
+ public:
   static const char *getName() { return "ellipse"; }
 
   CGnuPlotEllipse(CGnuPlotGroup *group) :
@@ -17,9 +20,12 @@ class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {
   CGnuPlotEllipse *setData(const CGnuPlotEllipse *ellipse) {
     (void) CGnuPlotGroupAnnotation::setData(ellipse);
 
-    p_  = ellipse->p_;
-    rx_ = ellipse->rx_;
-    ry_ = ellipse->ry_;
+    p_     = ellipse->p_;
+    rx_    = ellipse->rx_;
+    ry_    = ellipse->ry_;
+    angle_ = ellipse->angle_;
+    units_ = ellipse->units_;
+    fs_    = ellipse->fs_;
 
     return this;
   }
@@ -37,6 +43,9 @@ class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {
 
   double getAngle() const { return angle_; }
   void setAngle(double a) { angle_ = a; }
+
+  const EllipseUnits &units() const { return units_; }
+  void setUnits(const EllipseUnits &v) { units_ = v; }
 
   const CGnuPlotFillStyle &getFillStyle() const { return fs_; }
   void setFillStyle(const CGnuPlotFillStyle &fs) { fs_ = fs; }
@@ -56,6 +65,7 @@ class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {
   double            rx_    { 1 };
   double            ry_    { 1 };
   double            angle_ { 0 };
+  EllipseUnits      units_ { EllipseUnits::XY };
   CGnuPlotFillStyle fs_;
 };
 

@@ -206,9 +206,10 @@ fit()
 {
   CGnuPlotPlot *singlePlot = getSingleStylePlot();
 
-  COptReal xmin1, xmax1, xmin2, xmax2;
-  COptReal ymin1, ymax1, ymin2, ymax2;
-  COptReal zmin1, zmax1;
+  // data range (ind == 1)
+  COptReal xmin1, xmax1, ymin1, ymax1, zmin1, zmax1;
+  // data range (ind == 2)
+  COptReal xmin2, xmax2, ymin2, ymax2;
 
   double dx = 0.0, dy = 0.0, dz = 0.0;
 
@@ -263,6 +264,12 @@ fit()
     ymax1.updateMax(brenderer.bbox().getTop   ());
 
     dx = 1.0;
+
+    CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
+    CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
+
+    plotXAxis1->setDataRange(brenderer.bbox().getLeft  (), brenderer.bbox().getRight());
+    plotYAxis1->setDataRange(brenderer.bbox().getBottom(), brenderer.bbox().getTop  ());
   }
   else if (singlePlot) {
     CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->getStyle());
@@ -271,6 +278,12 @@ fit()
 
     xmin1 = rect.getXMin(); ymin1 = rect.getYMin();
     xmax1 = rect.getXMax(); ymax1 = rect.getYMax();
+
+    CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
+    CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
+
+    plotXAxis1->setDataRange(xmin1.getValue(), xmax1.getValue());
+    plotYAxis1->setDataRange(ymin1.getValue(), ymax1.getValue());
   }
   else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
     int nc = 0;
@@ -291,6 +304,12 @@ fit()
 
     xmin1 = 1; xmax1 = nc;
     ymin1 = 0; ymax1 = 1;
+
+    CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
+    CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
+
+    plotXAxis1->setDataRange(xmin1.getValue(), xmax1.getValue());
+    plotYAxis1->setDataRange(ymin1.getValue(), ymax1.getValue());
   }
 #if 0
   else if (hasImageStyle()) {
@@ -324,27 +343,27 @@ fit()
   }
 #endif
   else {
-    COptReal xamin1 = xaxis(1).min();
-    COptReal xamax1 = xaxis(1).max();
-    COptReal xamin2 = xaxis(2).min();
-    COptReal xamax2 = xaxis(2).max();
+    CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
+    CGnuPlotAxis *plotXAxis2 = getPlotAxis(AxisType::X, 2, true);
+
+    COptReal xamin1 = xaxis(1).min(), xamax1 = xaxis(1).max();
+    COptReal xamin2 = xaxis(2).min(), xamax2 = xaxis(2).max();
 
     if (xamin1.isValid() || xamax1.isValid()) {
-      CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
-
       if (xamin1.isValid()) xmin1 = plotXAxis1->mapLogValue(xamin1.getValue());
       if (xamax1.isValid()) xmax1 = plotXAxis1->mapLogValue(xamax1.getValue());
     }
 
     if (xamin2.isValid() || xamax2.isValid()) {
-      CGnuPlotAxis *plotXAxis2 = getPlotAxis(AxisType::X, 2, true);
       if (xamin2.isValid()) xmin2 = plotXAxis2->mapLogValue(xamin2.getValue());
       if (xamax2.isValid()) xmax2 = plotXAxis2->mapLogValue(xamax2.getValue());
     }
 
-    if (isPolar()) {
-      CGnuPlotAxis *plotRAxis = getPlotAxis(AxisType::R, 1, true);
+    //---
 
+    CGnuPlotAxis *plotRAxis = getPlotAxis(AxisType::R, 1, true);
+
+    if (isPolar()) {
       if (! xamin1.isValid() && raxis().max().isValid()) {
         xamin1 = -plotRAxis->mapLogValue(raxis().max().getValue());
       }
@@ -352,52 +371,67 @@ fit()
         xamax1 =  plotRAxis->mapLogValue(raxis().max().getValue());
     }
 
+    //---
+
+    COptReal xpmin1, xpmax1, xpmin2, xpmax2;
+    COptReal cbmin, cbmax;
+
     for (auto plot : plots_) {
       double xmin, xmax;
 
       plot->calcXRange(&xmin, &xmax);
 
       if (plot->xind() == 1) {
-        if (! xamin1.isValid())
-          xmin1.updateMin(xmin);
-        if (! xamax1.isValid())
-          xmax1.updateMax(xmax);
+        xpmin1.updateMin(xmin);
+        xpmax1.updateMax(xmax);
       }
       else {
-        if (! xamin2.isValid())
-          xmin2.updateMin(xmin);
-        if (! xamax2.isValid())
-          xmax2.updateMax(xmax);
+        xpmin2.updateMin(xmin);
+        xpmax2.updateMax(xmax);
       }
+
+      cbmin.updateMin(plot->cbmin());
+      cbmax.updateMax(plot->cbmax());
     }
 
-    COptReal yamin1 = yaxis(1).min();
-    COptReal yamax1 = yaxis(1).max();
-    COptReal yamin2 = yaxis(2).min();
-    COptReal yamax2 = yaxis(2).max();
+    if (! xamin1.isValid()) xmin1.updateMin(xpmin1);
+    if (! xamax1.isValid()) xmax1.updateMax(xpmax1);
+    if (! xamin2.isValid()) xmin2.updateMin(xpmin2);
+    if (! xamax2.isValid()) xmax2.updateMax(xpmax2);
+
+    //---
+
+    CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
+    CGnuPlotAxis *plotYAxis2 = getPlotAxis(AxisType::Y, 2, true);
+
+    COptReal yamin1 = yaxis(1).min(), yamax1 = yaxis(1).max();
+    COptReal yamin2 = yaxis(2).min(), yamax2 = yaxis(2).max();
 
     if (yamin1.isValid() || yamax1.isValid()) {
-      CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
-
       if (yamin1.isValid()) ymin1 = plotYAxis1->mapLogValue(yamin1.getValue());
       if (yamax1.isValid()) ymax1 = plotYAxis1->mapLogValue(yamax1.getValue());
     }
 
     if (yamin2.isValid() || yamax2.isValid()) {
-      CGnuPlotAxis *plotYAxis2 = getPlotAxis(AxisType::Y, 2, true);
-
       if (yamin2.isValid()) ymin2 = plotYAxis2->mapLogValue(yamin2.getValue());
       if (yamax2.isValid()) ymax2 = plotYAxis2->mapLogValue(yamax2.getValue());
     }
 
     if (isPolar()) {
-      CGnuPlotAxis *plotRAxis = getPlotAxis(AxisType::R, 1, true);
-
       if (! yamin1.isValid() && raxis().max().isValid())
         yamin1 = -plotRAxis->mapLogValue(raxis().max().getValue());
       if (! yamax1.isValid() && raxis().max().isValid())
         yamax1 =  plotRAxis->mapLogValue(raxis().max().getValue());
     }
+
+    if (! colorBox_->axis().min().isValid() && cbmin.isValid())
+      colorBox_->axis().setMin(cbmin.getValue());
+    if (! colorBox_->axis().max().isValid() && cbmax.isValid())
+      colorBox_->axis().setMax(cbmax.getValue());
+
+    //---
+
+    COptReal ypmin1, ypmax1, ypmin2, ypmax2;
 
     for (auto plot : plots_) {
       double ymin, ymax;
@@ -406,18 +440,23 @@ fit()
         continue;
 
       if (plot->yind() == 1) {
-        if (! yamin1.isValid())
-          ymin1.updateMin(ymin);
-        if (! yamax1.isValid())
-          ymax1.updateMax(ymax);
+        ypmin1.updateMin(ymin);
+        ypmax1.updateMax(ymax);
       }
       else {
-        if (! yamin2.isValid())
-          ymin2.updateMin(ymin);
-        if (! yamax2.isValid())
-          ymax2.updateMax(ymax);
+        ypmin2.updateMin(ymin);
+        ypmax2.updateMax(ymax);
       }
     }
+
+    if (! yamin1.isValid()) ymin1.updateMin(ypmin1);
+    if (! yamax1.isValid()) ymax1.updateMax(ypmax1);
+    if (! yamin2.isValid()) ymin2.updateMin(ypmin2);
+    if (! yamax2.isValid()) ymax2.updateMax(ypmax2);
+
+    //---
+
+    COptReal zpmin1, zpmax1;
 
     if (is3D()) {
       COptReal zamin1 = zaxis(1).min(); zmin1 = zamin1;
@@ -428,18 +467,17 @@ fit()
 
         plot->calcZRange(&zmin, &zmax);
 
-        if (! zamin1.isValid())
-          zmin1.updateMin(zmin);
-        if (! zamax1.isValid())
-          zmax1.updateMax(zmax);
+        zpmin1.updateMin(zmin);
+        zpmax1.updateMax(zmax);
       }
+
+      if (! zamin1.isValid()) zmin1.updateMin(zpmin1);
+      if (! zamax1.isValid()) zmax1.updateMax(zpmax1);
     }
 
     //---
 
     if (isPolar()) {
-      CGnuPlotAxis *plotRAxis = getPlotAxis(AxisType::R, 1, true);
-
       double xmax2 = (xamax1.isValid() ? xamax1.getValue(10) : xmax1.getValue(10));
       double ymax2 = (yamax1.isValid() ? yamax1.getValue(10) : ymax1.getValue(10));
 
@@ -449,6 +487,18 @@ fit()
       if (! xmax1.isValid()) xmax1 =  r;
       if (! ymin1.isValid()) ymin1 = -r;
       if (! ymax1.isValid()) ymax1 =  r;
+    }
+
+    //---
+
+    if (xpmin1.isValid()) {
+      plotXAxis1->setDataRange(xpmin1.getValue(), xpmax1.getValue());
+      plotYAxis1->setDataRange(ypmin1.getValue(), ypmax1.getValue());
+    }
+
+    if (xpmin2.isValid()) {
+      plotXAxis2->setDataRange(xpmin2.getValue(), xpmax2.getValue());
+      plotYAxis2->setDataRange(ypmin2.getValue(), ypmax2.getValue());
     }
   }
 
@@ -484,10 +534,8 @@ fit()
     if (raxis().logBase().isValid())
       s = raxis().mapLogValue(s);
 
-    xmin1 = -s;
-    ymin1 = -s;
-    xmax1 =  s;
-    ymax1 =  s;
+    xmin1 = -s; ymin1 = -s;
+    xmax1 =  s; ymax1 =  s;
   }
 
   if (! xaxis(1).min().isValid() || ! xaxis(1).max().isValid()) {
@@ -1390,6 +1438,8 @@ drawBorder(CGnuPlotRenderer *renderer)
   if (! axesData().getBorderSides())
     return;
 
+  uint sides = axesData().getBorderSides();
+
   CRGBA c(0,0,0);
 
   CBBox2D bbox = getMappedDisplayRange(1, 1);
@@ -1413,73 +1463,73 @@ drawBorder(CGnuPlotRenderer *renderer)
     double zmax1 = zaxis(1).max().getValue( 10);
 
     // 1 : x front, bottom
-    if (axesData().getBorderSides() & (1<<0))
+    if (sides & (1<<0))
       renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmax1, ymin1, zmin1), bw, c);
 
     // 2 : y left, bottom
-    if (axesData().getBorderSides() & (1<<1))
+    if (sides & (1<<1))
       renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmin1, ymax1, zmin1), bw, c);
 
     // 4 : y right, bottom
-    if (axesData().getBorderSides() & (1<<2))
+    if (sides & (1<<2))
       renderer->drawLine(CPoint3D(xmax1, ymin1, zmin1), CPoint3D(xmax1, ymax1, zmin1), bw, c);
 
     // 8 : x back, bottom
-    if (axesData().getBorderSides() & (1<<3))
+    if (sides & (1<<3))
       renderer->drawLine(CPoint3D(xmin1, ymax1, zmin1), CPoint3D(xmax1, ymax1, zmin1), bw, c);
 
     //---
 
     // 16 : vertical, left, front
-    if (axesData().getBorderSides() & (1<<4))
+    if (sides & (1<<4))
       renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmin1, ymin1, zmax1), bw, c);
 
     // 32 : vertical, left, back
-    if (axesData().getBorderSides() & (1<<5))
+    if (sides & (1<<5))
       renderer->drawLine(CPoint3D(xmin1, ymax1, zmin1), CPoint3D(xmin1, ymax1, zmax1), bw, c);
 
     // 64 : vertical, right, back
-    if (axesData().getBorderSides() & (1<<6))
+    if (sides & (1<<6))
       renderer->drawLine(CPoint3D(xmax1, ymax1, zmin1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
 
     // 128 : vertical, right, front
-    if (axesData().getBorderSides() & (1<<7))
+    if (sides & (1<<7))
       renderer->drawLine(CPoint3D(xmax1, ymin1, zmin1), CPoint3D(xmax1, ymin1, zmax1), bw, c);
 
     //---
 
     // 256: y left, top
-    if (axesData().getBorderSides() & (1<<8))
+    if (sides & (1<<8))
       renderer->drawLine(CPoint3D(xmin1, ymin1, zmax1), CPoint3D(xmin1, ymax1, zmax1), bw, c);
 
     // 512: x back, top
-    if (axesData().getBorderSides() & (1<<9))
+    if (sides & (1<<9))
       renderer->drawLine(CPoint3D(xmin1, ymax1, zmax1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
 
     // 1024: x front, top
-    if (axesData().getBorderSides() & (1<<10))
+    if (sides & (1<<10))
       renderer->drawLine(CPoint3D(xmin1, ymin1, zmax1), CPoint3D(xmax1, ymin1, zmax1), bw, c);
 
     // 2048: y right, top
-    if (axesData().getBorderSides() & (1<<11))
+    if (sides & (1<<11))
       renderer->drawLine(CPoint3D(xmax1, ymin1, zmax1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
   }
   else {
     // 1 : x axis (bottom)
-    if (axesData().getBorderSides() & (1<<0))
-      renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmax1, ymin1), bw, c);
+    if (sides & (1<<0))
+      plotXAxis->drawLowerLine(renderer, c, bw, CLineDash());
 
     // 2 : y axis (left)
-    if (axesData().getBorderSides() & (1<<1))
-      renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmin1, ymax1), bw, c);
+    if (sides & (1<<1))
+      plotYAxis->drawLowerLine(renderer, c, bw, CLineDash());
 
     // 4 : x axis (top)
-    if (axesData().getBorderSides() & (1<<2))
-      renderer->drawLine(CPoint2D(xmin1, ymax1), CPoint2D(xmax1, ymax1), bw, c);
+    if (sides & (1<<2))
+      plotXAxis->drawUpperLine(renderer, c, bw, CLineDash());
 
     // 8 : y axis (right)
-    if (axesData().getBorderSides() & (1<<3))
-      renderer->drawLine(CPoint2D(xmax1, ymin1), CPoint2D(xmax1, ymax1), bw, c);
+    if (sides & (1<<3))
+      plotYAxis->drawUpperLine(renderer, c, bw, CLineDash());
   }
 }
 
@@ -1575,27 +1625,24 @@ drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
 
   if (! is3D()) {
     if (! isPolar()) {
-      CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, 1, true);
-      CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, 1, true);
+      for (int i = 1; i <= 2; ++i) {
+        CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, i, true);
 
-      if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer(/*back*/true) == isBack) {
-        renderer->setRange(getMappedDisplayRange(1, 1));
-        renderer->setReverse(plotXAxis->isReverse(), false);
+        if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer(/*back*/true) == isBack) {
+          renderer->setRange(getMappedDisplayRange(i, 1));
+          renderer->setReverse(plotXAxis->isReverse(), false);
 
-        //double ymin1 = plotYAxis->getStart1();
-        //double ymax1 = plotYAxis->getEnd1  ();
+          plotXAxis->drawGrid(renderer);
+        }
 
-        plotXAxis->drawGrid(renderer);
-      }
+        CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, i, true);
 
-      if (plotYAxis->hasGrid() && plotYAxis->isGridBackLayer(/*back*/true) == isBack) {
-        renderer->setRange(getMappedDisplayRange(1, 1));
-        renderer->setReverse(false, plotYAxis->isReverse());
+        if (plotYAxis->hasGrid() && plotYAxis->isGridBackLayer(/*back*/true) == isBack) {
+          renderer->setRange(getMappedDisplayRange(1, i));
+          renderer->setReverse(false, plotYAxis->isReverse());
 
-        //double xmin1 = plotXAxis->getStart1();
-        //double xmax1 = plotXAxis->getEnd1  ();
-
-        plotYAxis->drawGrid(renderer);
+          plotYAxis->drawGrid(renderer);
+        }
       }
     }
     else {
@@ -1607,42 +1654,36 @@ drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
     }
   }
   else {
-    CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, 1, true);
-    CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, 1, true);
-    CGnuPlotAxis *plotZAxis = getPlotAxis(AxisType::Z, 1, true);
+    for (int i = 1; i <= 2; ++i) {
+      CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, i, true);
 
-    // x/y grid at zmin
-    if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer(/*back*/false) == isBack) {
-      renderer->setRange(getMappedDisplayRange(1, 1));
-      renderer->setReverse(plotXAxis->isReverse(), false);
+      // x/y grid at zmin
+      if (plotXAxis->hasGrid() && plotXAxis->isGridBackLayer(/*back*/false) == isBack) {
+        renderer->setRange(getMappedDisplayRange(i, 1));
+        renderer->setReverse(plotXAxis->isReverse(), false);
 
-      //double ymin1 = plotYAxis->getStart1();
-      //double ymax1 = plotYAxis->getEnd1  ();
-      //double zmin1 = plotZAxis->getStart1();
+        plotXAxis->drawGrid(renderer);
+      }
 
-      plotXAxis->drawGrid(renderer);
-    }
-    if (plotYAxis->hasGrid() && plotYAxis->isGridBackLayer(/*back*/false) == isBack) {
-      renderer->setRange(getMappedDisplayRange(1, 1));
-      renderer->setReverse(false, plotYAxis->isReverse());
+      // y/z grid at xmin
+      CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, i, true);
 
-      //double xmin1 = plotXAxis->getStart1();
-      //double xmax1 = plotXAxis->getEnd1  ();
-      //double zmin1 = plotZAxis->getStart1();
+      if (plotYAxis->hasGrid() && plotYAxis->isGridBackLayer(/*back*/false) == isBack) {
+        renderer->setRange(getMappedDisplayRange(1, i));
+        renderer->setReverse(false, plotYAxis->isReverse());
 
-      plotYAxis->drawGrid(renderer);
-    }
+        plotYAxis->drawGrid(renderer);
+      }
 
-    // z/x grid at ymin
-    if (plotZAxis->hasGrid() && plotZAxis->isGridBackLayer(/*back*/false) == isBack) {
-      renderer->setRange(getMappedDisplayRange(1, 1));
-      renderer->setReverse(plotZAxis->isReverse(), false);
+      // z/x grid at ymin
+      CGnuPlotAxis *plotZAxis = getPlotAxis(AxisType::Z, i, true);
 
-      //double zmin1 = plotZAxis->getStart1();
-      //double zmax1 = plotZAxis->getEnd1  ();
-      //double ymin1 = plotYAxis->getStart1();
+      if (plotZAxis->hasGrid() && plotZAxis->isGridBackLayer(/*back*/false) == isBack) {
+        renderer->setRange(getMappedDisplayRange(i, 1));
+        renderer->setReverse(plotZAxis->isReverse(), false);
 
-      plotZAxis->drawGrid(renderer);
+        plotZAxis->drawGrid(renderer);
+      }
     }
   }
 }
@@ -1667,6 +1708,7 @@ drawKey()
   }
 
   // TODO: key drawn in own coord system
+  // TODO: always fill background, opaque draws on top of plots
   CBBox2D bbox = getMappedDisplayRange(1, 1);
 
   renderer->setRange(bbox);

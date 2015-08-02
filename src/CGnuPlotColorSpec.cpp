@@ -43,7 +43,7 @@ print(std::ostream &os) const
 
 CRGBA
 CGnuPlotColorSpec::
-calcColor(CGnuPlotPlot *plot, double x) const
+calcColor(CGnuPlotGroup *group, double x) const
 {
   if      (isVariable())
     return CGnuPlotStyleInst->indexColor(int(x));
@@ -63,8 +63,6 @@ calcColor(CGnuPlotPlot *plot, double x) const
     return CRGBA(r/255.0, g/255.0, b/255.0, a/255.0);
   }
   else if (isPaletteZ()) {
-    CGnuPlotGroup *group = plot->group();
-
     double x1 = CGnuPlotUtil::map(x, group->getBBox().getXMin(), group->getBBox().getXMax(), 0, 1);
 
     CColor c = group->palette()->getColor(x1);
@@ -73,13 +71,14 @@ calcColor(CGnuPlotPlot *plot, double x) const
   }
   else if (isPaletteVariable()) {
 #if 0
-    CGnuPlotGroup *group = plot->group();
-
     double x1 = CGnuPlotUtil::map(x, group->getBBox().getXMin(), group->getBBox().getXMax(), 0, 1);
 
     return group->palette()->getColor(x1);
 #else
-    return CGnuPlotStyleInst->indexColor(int(x) + 1);
+    //return CGnuPlotStyleInst->indexColor(int(x) + 1);
+    const CGnuPlotColorBoxP &cb = group->colorBox();
+
+    return cb->valueToColor(x).rgba();
 #endif
   }
   else

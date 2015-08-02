@@ -63,6 +63,8 @@ draw(CGnuPlotRenderer *renderer)
   }
 
   for (auto plot : group_->plots()) {
+    if (! plot->isKeyTitleEnabled()) continue;
+
     std::vector<CGnuPlotKeyLabel> labels;
 
     plot->getKeyLabels(labels);
@@ -144,6 +146,8 @@ draw(CGnuPlotRenderer *renderer)
   }
 
   for (auto plot : group_->plots()) {
+    if (! plot->isKeyTitleEnabled()) continue;
+
     CGnuPlotTypes::PlotStyle plotStyle = plot->getStyle();
 
     CGnuPlotStyleBase *style = app()->getPlotStyle(plotStyle);

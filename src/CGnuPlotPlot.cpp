@@ -61,7 +61,7 @@ void
 CGnuPlotPlot::
 getKeyLabels(std::vector<CGnuPlotKeyLabel> &labels) const
 {
-  labels.push_back(CGnuPlotKeyLabel(keyTitle_));
+  labels.push_back(CGnuPlotKeyLabel(keyTitleString()));
 
   if (is3D() && isContourEnabled()) {
     std::vector<CGnuPlotContour::LevelData> levelDatas;
@@ -349,7 +349,10 @@ draw()
   double xmax = xaxis.max().getValue(1.0);
   double ymax = yaxis.max().getValue(1.0);
 
-  bbox_ = CBBox2D(xmin, ymin, xmax, ymax);
+  CPoint2D p1 = group_->mapLogPoint(xind(), yind(), 1, CPoint2D(xmin, ymin));
+  CPoint2D p2 = group_->mapLogPoint(xind(), yind(), 1, CPoint2D(xmax, ymax));
+
+  bbox_ = CBBox2D(p1, p2);
 
   //---
 
@@ -1006,11 +1009,16 @@ calcXRange(double *xmin, double *xmax) const
       }
     }
     else {
-      CBBox2D bbox;
+      CGnuPlotBBoxRenderer brenderer(app()->renderer());
 
-      if (renderBBox(bbox)) {
+      if (renderBBox(brenderer)) {
+        CBBox2D bbox = brenderer.bbox();
+
         th->xmin_.updateMin(bbox.getLeft ());
         th->xmax_.updateMax(bbox.getRight());
+
+        th->cbmin_.updateMin(brenderer.cbMin());
+        th->cbmax_.updateMin(brenderer.cbMax());
       }
       else {
         for (const auto &p : getPoints2D()) {
@@ -1058,9 +1066,11 @@ calcYRange(double *ymin, double *ymax) const
       }
     }
     else {
-      CBBox2D bbox;
+      CGnuPlotBBoxRenderer brenderer(app()->renderer());
 
-      if (renderBBox(bbox)) {
+      if (renderBBox(brenderer)) {
+        CBBox2D bbox = brenderer.bbox();
+
         th->ymin_.updateMin(bbox.getBottom());
         th->ymax_.updateMax(bbox.getTop   ());
       }
@@ -1118,7 +1128,7 @@ bool
 CGnuPlotPlot::
 calcBoundedYRange(double *ymin, double *ymax) const
 {
-  // TODO: use dumy renderer which updates bbox
+  // TODO: use dummy renderer which updates bbox
 
   // get y range constrained by parent group x range
   if (! bymin_.isValid() || ! bymax_.isValid()) {
@@ -1150,20 +1160,32 @@ calcBoundedYRange(double *ymin, double *ymax) const
       }
     }
     else {
-      for (const auto &p : getPoints2D()) {
-        double x, y;
+      CGnuPlotBBoxRenderer brenderer(app()->renderer());
 
-        if (! p.getXY(x, y))
-          continue;
+      brenderer.setXRange(xmin, xmax);
 
-        if (x < xmin || x > xmax)
-          continue;
+      if (renderBBox(brenderer)) {
+        CBBox2D bbox = brenderer.bbox();
 
-        if (IsNaN(y))
-          continue;
+        th->bymin_.updateMin(bbox.getBottom());
+        th->bymax_.updateMax(bbox.getTop   ());
+      }
+      else {
+        for (const auto &p : getPoints2D()) {
+          double x, y;
 
-        th->bymin_.updateMin(y);
-        th->bymax_.updateMax(y);
+          if (! p.getXY(x, y))
+            continue;
+
+          if (x < xmin || x > xmax)
+            continue;
+
+          if (IsNaN(y))
+            continue;
+
+          th->bymin_.updateMin(y);
+          th->bymax_.updateMax(y);
+        }
       }
     }
   }
@@ -1176,29 +1198,16 @@ calcBoundedYRange(double *ymin, double *ymax) const
 
 bool
 CGnuPlotPlot::
-renderBBox(CBBox2D &bbox) const
+renderBBox(CGnuPlotBBoxRenderer &brenderer) const
 {
+  CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
+  if (! style) return false;
+
   CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
-  CGnuPlotBBoxRenderer brenderer(app()->renderer());
+  brenderer.setReverse(group_->xaxis(xind()).isReverse(), group_->yaxis(yind()).isReverse());
 
-  //---
-
-  CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
-
-  if (style) {
-    brenderer.setReverse(group_->xaxis(xind()).isReverse(), group_->yaxis(yind()).isReverse());
-
-    style->draw2D(th, &brenderer);
-
-    bbox = brenderer.bbox();
-
-    return true;
-  }
-
-  //---
-
-  bbox = brenderer.bbox();
+  style->draw2D(th, &brenderer);
 
   return true;
 }

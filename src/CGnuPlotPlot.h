@@ -24,6 +24,7 @@ class CGnuPlotEllipseObject;
 class CGnuPlotPieObject;
 class CGnuPlotPolygonObject;
 class CGnuPlotRectObject;
+class CGnuPlotBBoxRenderer;
 
 typedef CRefPtr<CExprValue> CExprValueP;
 
@@ -300,8 +301,20 @@ class CGnuPlotPlot {
 
   //---
 
-  const std::string &keyTitle() const { return keyTitle_; }
-  void setKeyTitle(const std::string &s) { keyTitle_ = s; }
+  const CGnuPlotEllipseStyle &ellipseStyle() const { return ellipseStyle_; }
+  void setEllipseStyle(const CGnuPlotEllipseStyle &ts) { ellipseStyle_ = ts; }
+
+  //---
+
+  const CGnuPlotKeyTitle &keyTitle() const { return keyTitle_; }
+
+  const std::string &keyTitleString() const { return keyTitle_.str; }
+  void setKeyTitleString(const std::string &s) { keyTitle_.str = s; }
+
+  bool isKeyTitleEnabled() const { return keyTitle_.enabled; }
+  void setKeyTitleEnabled(bool b) { keyTitle_.enabled = b; }
+
+  //---
 
   void getKeyLabels(std::vector<CGnuPlotKeyLabel> &labels) const;
 
@@ -373,8 +386,6 @@ class CGnuPlotPlot {
 
   void getGroupXRange(double *xmin, double *xmax) const;
 
-  bool renderBBox(CBBox2D &bbox) const;
-
   void getPointsRange(CBBox2D &bbox) const;
 
   //---
@@ -396,6 +407,9 @@ class CGnuPlotPlot {
   //void setXMax(const COptReal &x) { xmax_ = x; }
   //void setYMin(const COptReal &y) { ymin_ = y; }
   //void setYMax(const COptReal &y) { ymax_ = y; }
+
+  const COptReal &cbmin() const { return cbmin_; }
+  const COptReal &cbmax() const { return cbmax_; }
 
   //---
 
@@ -501,6 +515,9 @@ class CGnuPlotPlot {
 
   //------
 
+ private:
+  bool renderBBox(CGnuPlotBBoxRenderer &brenderer) const;
+
  protected:
   typedef std::vector<CPoint2D>         Points;
   typedef std::pair<Points,CRGBA>       PointsColor;
@@ -533,8 +550,9 @@ class CGnuPlotPlot {
   CGnuPlotPointStyle     pointStyle_;                       // point style
   CGnuPlotArrowStyle     arrowStyle_;                       // arrow style
   CGnuPlotTextBoxStyle   textBoxStyle_;                     // text box style
+  CGnuPlotEllipseStyle   ellipseStyle_;                     // ellipse style
   CGnuPlotTextStyle      textStyle_;                        // text style
-  std::string            keyTitle_;                         // title on key
+  CGnuPlotKeyTitle       keyTitle_;                         // title on key
   int                    xind_ { 1 };                       // xaxis index
   int                    yind_ { 1 };                       // yaxis index
   int                    zind_ { 1 };                       // yaxis index
@@ -542,6 +560,7 @@ class CGnuPlotPlot {
   COptReal               ymin_, ymax_;                      // calculated points y range
   COptReal               zmin_, zmax_;                      // calculated points z range
   COptReal               bymin_, bymax_;                    // calculated points bounded y range
+  COptReal               cbmin_, cbmax_;                    // color box range
   CBBox2D                bbox_ { 0, 0, 1, 1 };              // bounding box
   Smooth                 smooth_ { Smooth::NONE };          // smooth data
   CGnuPlotBoxPlot        boxPlot_;

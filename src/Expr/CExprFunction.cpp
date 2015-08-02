@@ -1,4 +1,5 @@
 #include <CExprI.h>
+#include <CInvNorm.h>
 #include <cmath>
 #include <complex.h>
 #include <cstdlib>
@@ -10,7 +11,8 @@
 namespace {
 
 double invnorm(double x) {
-  return sqrt(2)/erf(2*x - 1);
+  //return sqrt(2)/erf(2*x - 1);
+  return CInvNorm::calc(x);
 }
 
 double norm(double x)

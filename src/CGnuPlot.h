@@ -94,6 +94,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotFilledCurve.h>
 #include <CGnuPlotFitData.h>
 #include <CGnuPlotHidden3DData.h>
+#include <CGnuPlotKeyTitle.h>
 
 //------
 
@@ -118,6 +119,14 @@ class CGnuPlot {
   typedef std::map<int,CGnuPlotLineTypeP>        LineTypes;
   typedef std::vector<CExprValueP>               Values;
   typedef std::map<std::string,std::string>      Params;
+  typedef CGnuPlotTypes::AxisTypeId              AxisTypeId;
+  typedef std::set<AxisTypeId>                   AxisTypeIdSet;
+
+  struct StyleData {
+    CGnuPlotArrowStyle   arrow;
+    CGnuPlotEllipseStyle ellipse;
+    CGnuPlotTextStyle    text;
+  };
 
   //---
 
@@ -462,8 +471,11 @@ class CGnuPlot {
   const CGnuPlotHistogramData &histogramData() { return histogramData_; }
   void setHistogramData(const CGnuPlotHistogramData &data) { histogramData_ = data; }
 
-  const CGnuPlotArrowStyle &arrowStyle() const { return arrowStyle_; }
-  void setArrowStyle(const CGnuPlotArrowStyle &as) { arrowStyle_ = as; }
+  const CGnuPlotArrowStyle &arrowStyle() const { return styleData_.arrow; }
+  void setArrowStyle(const CGnuPlotArrowStyle &as) { styleData_.arrow = as; }
+
+  const StyleData &styleData() const { return styleData_; }
+  void setStyleData(const StyleData &d) { styleData_ = d; }
 
   const CGnuPlotKeyData &keyData() const { return keyData_; }
   void setKeyData(const CGnuPlotKeyData &k) { keyData_ = k; }
@@ -882,11 +894,9 @@ class CGnuPlot {
   void parseFilledCurve(CParseLine &line, CGnuPlotFilledCurve &filledCurve);
 
   bool parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
-                        CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as,
-                        CGnuPlotTextStyle &textStyle, COptString &keyTitle);
+                        CGnuPlotFillStyle &fs, StyleData &styleData, CGnuPlotKeyTitle &keyTitle);
   bool parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
-                        CGnuPlotFillStyle &fs, CGnuPlotArrowStyle &as,
-                        CGnuPlotTextStyle &textStyle, COptString &keyTitle);
+                        CGnuPlotFillStyle &fs, StyleData &styleData, CGnuPlotKeyTitle &keyTitle);
 
   bool parseFor(CParseLine &line, ForCmd &forCmd, std::string &cmd);
 
@@ -916,6 +926,8 @@ class CGnuPlot {
   void evaluateCmd(const std::string &args);
   void pauseCmd   (const std::string &args);
   void rereadCmd  (const std::string &args);
+
+  bool stringToAxes(const std::string &axesStr, AxisTypeIdSet &axisTypeIdSet) const;
 
   void showColorNames();
   void showVariables(std::ostream &os, const StringArray &args=StringArray());
@@ -1159,7 +1171,6 @@ class CGnuPlot {
 
   // styles
   ArrowStyles            arrowStyles_;
-  CGnuPlotArrowStyle     arrowStyle_;
   CGnuPlotBoxPlot        boxPlot_;
   PlotStyle              dataStyle_      { PlotStyle::POINTS };
   CGnuPlotFillStyle      fillStyle_;
@@ -1172,7 +1183,7 @@ class CGnuPlot {
   CGnuPlotLineTypeP      bgndLineType_;
   CGnuPlotCircleStyle    circleStyle_;
   CGnuPlotRectStyle      rectStyle_;
-  CGnuPlotEllipseStyle   ellipseStyle_;
+  StyleData              styleData_;
   CGnuPlotTextBoxStyle   textBoxStyle_;
 
   LineDashes             lineDashes_;

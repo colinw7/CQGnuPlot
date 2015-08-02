@@ -205,7 +205,10 @@ createEditor(QWidget *parent)
   else {
     QLineEdit *edit = new QLineEdit(parent);
 
-    QString valueStr = var.toString();
+    QString valueStr;
+
+    if (! CQUtil::variantToString(var, valueStr))
+      std::cerr << "Failed to convert to string" << std::endl;
 
     edit->setText(valueStr);
 
@@ -369,6 +372,11 @@ paint(const CQPropertyDelegate *delegate, QPainter *painter,
     delegate->drawCheck(painter, option, var.toBool(), index);
     return true;
   }
-
-  return false;
+  else {
+    QString str;
+    if (! CQUtil::variantToString(var, str))
+      return false;
+    delegate->drawString(painter, option, str, index);
+    return true;
+  }
 }

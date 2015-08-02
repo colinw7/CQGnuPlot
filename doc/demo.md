@@ -84,20 +84,23 @@
   + No issues
 
 ## electron.dem
-  + bad log axis
+  + No issues
 
 ## ellipse.dem
   + ellipse points in wrong position
 
 ## ellipses_style.dem
-  + runs, need check output
+  + No issues
 
 ## enhancedtext.dem
-  + runs, need check output
+  + y axis not correct
+  + power 3/2 not spaced properly
+  + v overprint in wrong spot
 
 ## enhanced_utf8.dem
-  + some display wrong
-  + key does not display enhanced
+  + y axis not correct
+  + power 3/2 not spaced properly
+  + v overprint in wrong spot
 
 ## epslatex.dem
   + terminal not supported, device push/pop

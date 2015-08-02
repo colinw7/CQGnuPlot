@@ -478,6 +478,8 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(colorBoxName, qcolorBox, "borderStyle");
   tree_->addProperty(colorBoxName, qcolorBox, "origin");
   tree_->addProperty(colorBoxName, qcolorBox, "size");
+  tree_->addProperty(colorBoxName, qcolorBox, "min");
+  tree_->addProperty(colorBoxName, qcolorBox, "max");
 
   //---
 
@@ -556,6 +558,7 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(name1, qellipse, "center");
       tree_->addProperty(name1, qellipse, "rx");
       tree_->addProperty(name1, qellipse, "ry");
+      tree_->addProperty(name1, qellipse, "angle");
     }
     else if ((label = dynamic_cast<CGnuPlotLabel *>(ann.get()))) {
       QString name1 = QString("%1/%2_%3").arg(groupName).arg(label->getName()).arg(ann->getInd());

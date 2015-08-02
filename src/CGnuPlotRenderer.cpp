@@ -182,12 +182,12 @@ clipLine(CPoint2D &p1, CPoint2D &p2)
 
 void
 CGnuPlotRenderer::
-drawEllipse(const CPoint3D &pos, double dx, double ry, double a, const CRGBA &c,
+drawEllipse(const CPoint3D &pos, double dx, double ry, double angle, const CRGBA &c,
             double w, const CLineDash &dash)
 {
   CPoint2D pos1 = transform(pos);
 
-  drawEllipse(pos1, dx, ry, a, c, w, dash);
+  drawEllipse(pos1, dx, ry, angle, c, w, dash);
 }
 
 void

@@ -47,6 +47,34 @@ setSize(const QSizeF &s)
   CGnuPlotColorBox::setSize(CQUtil::fromQSize(s));
 }
 
+double
+CQGnuPlotColorBox::
+getMin() const
+{
+  return CGnuPlotColorBox::min().getValue(0);
+}
+
+void
+CQGnuPlotColorBox::
+setMin(double r)
+{
+  CGnuPlotColorBox::setMin(r);
+}
+
+double
+CQGnuPlotColorBox::
+getMax() const
+{
+  return CGnuPlotColorBox::max().getValue(10);
+}
+
+void
+CQGnuPlotColorBox::
+setMax(double r)
+{
+  CGnuPlotColorBox::setMax(r);
+}
+
 void
 CQGnuPlotColorBox::
 draw(CGnuPlotRenderer *renderer)

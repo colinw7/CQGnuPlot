@@ -159,6 +159,7 @@ CSunburst.cpp \
 CTreeMap.cpp \
 \
 CMathGeom2D.cpp \
+CInvNorm.cpp \
 CArcToBezier.cpp \
 CSymbol2D.cpp \
 \

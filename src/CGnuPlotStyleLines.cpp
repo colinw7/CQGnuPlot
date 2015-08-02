@@ -34,8 +34,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     for ( ; i < np; ++i) {
       const CGnuPlotPoint &point1 = plot->getPoint2D(i);
 
-      if (point1.getPoint(p1))
-        break;
+      if (! point1.getPoint(p1))
+        continue;
+
+      if (renderer->isPseudo() && ! renderer->isInside(p1))
+        continue;
+
+      break;
     }
 
     ++i;
@@ -59,6 +64,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       const CGnuPlotPoint &point2 = plot->getPoint2D(i);
 
       if (! point2.getPoint(p2) || point2.isDiscontinuity())
+        break;
+
+      if (renderer->isPseudo() && ! renderer->isInside(p1))
         break;
 
       if (plot->isPolar()) {

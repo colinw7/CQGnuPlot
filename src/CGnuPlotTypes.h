@@ -469,6 +469,19 @@ namespace CGnuPlotTypes {
     CYLINDRICAL_MAPPING,
     SPHERICAL_MAPPING
   };
+
+  enum class EllipseUnits {
+    X_ = (1<<0),
+    Y_ = (1<<1),
+    _X = (X_<<8),
+    _Y = (Y_<<8),
+
+    XX = (X_|_X),
+    XY = (X_|_Y),
+    YY = (Y_|_Y)
+  };
+
+  typedef std::pair<AxisType, int> AxisTypeId;
 }
 
 #endif

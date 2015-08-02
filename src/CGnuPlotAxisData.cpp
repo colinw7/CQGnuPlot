@@ -199,8 +199,12 @@ formatAxisValue(double r) const
 
     return buffer;
   }
-  else if (format() != "")
-    return CStrUtil::strprintf(format().c_str(), r);
+  else if (format() != "") {
+    if (fabs(r) < 1E-6)
+      return CStrUtil::strprintf(format().c_str(), 0.0);
+    else
+      return CStrUtil::strprintf(format().c_str(), r);
+  }
   else
     return "";
 }

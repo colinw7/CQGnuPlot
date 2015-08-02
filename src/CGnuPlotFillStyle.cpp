@@ -1,5 +1,5 @@
 #include <CGnuPlotFillStyle.h>
-#include <CGnuPlotPlot.h>
+#include <CGnuPlotGroup.h>
 #include <CGnuPlotNameValues.h>
 
 void
@@ -43,14 +43,14 @@ show(std::ostream &os) const
 
 bool
 CGnuPlotFillStyle::
-calcColor(CGnuPlotPlot *plot, CRGBA &c) const
+calcColor(CGnuPlotGroup *group, CRGBA &c) const
 {
   if      (borderColor_.isValid())
-    c = borderColor_.getValue().calcColor(plot);
+    c = borderColor_.getValue().calcColor(group);
   else if (borderLineType_.isValid()) {
-    CGnuPlotLineTypeP lineType = plot->app()->getLineTypeInd(borderLineType_.getValue());
+    CGnuPlotLineTypeP lineType = group->app()->getLineTypeInd(borderLineType_.getValue());
 
-    c = lineType->calcColor(plot->group(), c);
+    c = lineType->calcColor(group, c);
   }
   else
     return false;

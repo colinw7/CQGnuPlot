@@ -77,6 +77,9 @@ class CGnuPlotUsingCols {
     return (usingCol.ival >= low && usingCol.ival <= high);
   }
 
+  const std::string &format() const { return format_; }
+  void setFormat(const std::string &format) { format_ = format; }
+
   int decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
                    Values &values, Params &params) const;
 
@@ -94,6 +97,7 @@ class CGnuPlotUsingCols {
 
   Cols              cols_;
   AxisTicLabel      axisTicLabel_;
+  std::string       format_;
   mutable CGnuPlot *plot_;
 };
 

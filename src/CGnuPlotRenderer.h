@@ -54,6 +54,10 @@ class CGnuPlotRenderer {
 
   virtual bool isPseudo() const { return false; }
 
+  virtual bool isInside(const CPoint2D &) const { return true; }
+
+  virtual void setCBValue(double) { }
+
   //---
 
   virtual CFontPtr getFont() const { return font_; }
@@ -115,6 +119,8 @@ class CGnuPlotRenderer {
 
   //---
 
+  void drawPoint(const CPoint3D &p, const CRGBA &c);
+
   void drawClippedPath(const std::vector<CPoint2D> &points, double width,
                        const CRGBA &c, const CLineDash &dash=CLineDash());
   void drawClippedPath(const std::vector<CPoint3D> &points, double width,
@@ -122,7 +128,6 @@ class CGnuPlotRenderer {
 
   void drawPath  (const std::vector<CPoint3D> &points, double width,
                   const CRGBA &c, const CLineDash &dash=CLineDash());
-  void drawPoint (const CPoint3D &p, const CRGBA &c);
   void drawSymbol(const CPoint3D &p, SymbolType type, double size,
                   const CRGBA &c, double lw);
   void drawLine  (const CPoint3D &p1, const CPoint3D &p2, double width,

@@ -49,17 +49,19 @@ class CGnuPlotAxis {
   double getStart() const { return start_; }
   double getEnd  () const { return end_  ; }
 
+  double getDataStart() const { return dataStart_; }
+  double getDataEnd  () const { return dataEnd_  ; }
+
   double getStart1() const { return start1_; }
   double getEnd1  () const { return end1_  ; }
+
+  double getStart2() const;
+  double getEnd2  () const;
 
   //---
 
   double zposition() const { return zposition_; }
   void setZPosition(double p) { zposition_ = p; }
-
-  //---
-
-  CPoint3D mapLogPoint(const CPoint3D &p) const;
 
   //---
 
@@ -265,7 +267,8 @@ class CGnuPlotAxis {
 
   //---
 
-  void setRange(double start, double end);
+  void setRange    (double start, double end);
+  void setDataRange(double start, double end);
 
   bool hasMajorTicLabels() const;
   bool hasMinorTicLabels() const;
@@ -280,6 +283,10 @@ class CGnuPlotAxis {
   void drawGrid(CGnuPlotRenderer *renderer);
 
   virtual void drawRadialGrid(CGnuPlotRenderer *renderer);
+
+  void drawLowerLine(CGnuPlotRenderer *renderer, const CRGBA &c, double w, const CLineDash &dash);
+  void drawUpperLine(CGnuPlotRenderer *renderer, const CRGBA &c, double w, const CLineDash &dash);
+  void drawZeroLine (CGnuPlotRenderer *renderer, const CRGBA &c, double w, const CLineDash &dash);
 
   const CBBox2D &getBBox() const { return bbox_; }
 
@@ -348,6 +355,8 @@ class CGnuPlotAxis {
   CPoint3D          iv_                { 0, 1, 0 };
   double            start_             { 0 };
   double            end_               { 1 };
+  double            dataStart_         { 0 };
+  double            dataEnd_           { 1 };
   double            zposition_         { 0 };
   bool              parallel_          { false };
   bool              labelInside_       { false };

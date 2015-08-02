@@ -59,7 +59,7 @@ CGnuPlotLineStyle::
 calcColor(CGnuPlotPlot *plot, double x) const
 {
   if      (lineColor_.isValid())
-    return lineColor_.getValue().calcColor(plot, x);
+    return lineColor_.getValue().calcColor(plot->group(), x);
   else if (lineType_.isValid()) {
     CGnuPlotLineTypeP lineType;
 
@@ -67,7 +67,7 @@ calcColor(CGnuPlotPlot *plot, double x) const
       lineType = plot_->getLineTypeInd(lineType_.getValue());
 
     if (lineType.isValid())
-      return lineType->lineColor().calcColor(plot, x);
+      return lineType->lineColor().calcColor(plot->group(), x);
     else
       return CRGBA(0,0,0);
   }

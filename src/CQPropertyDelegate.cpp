@@ -1,5 +1,6 @@
 #include <CQPropertyDelegate.h>
 #include <CQPropertyItem.h>
+#include <CQUtil.h>
 
 #include <QApplication>
 #include <QTreeWidget>
@@ -67,7 +68,12 @@ setEditorData(QWidget *, const QModelIndex &index) const
     CQPropertyItem *item1 = dynamic_cast<CQPropertyItem *>(item);
     assert(item1);
 
-    QString value = index.model()->data(index, Qt::DisplayRole).toString();
+    QVariant var = index.model()->data(index, Qt::DisplayRole);
+
+    QString value;
+
+    if (! CQUtil::variantToString(var, value))
+      std::cerr << "Failed to convert to string" << std::endl;
 
     item1->setEditorData(value);
   }
@@ -343,6 +349,18 @@ drawAngle(QPainter *painter, const QStyleOptionViewItem &option,
   //QFontMetrics fm(painter->font());
 
   QString str = QString("%1").arg(a.degrees());
+
+  QItemDelegate::drawDisplay(painter, option, rect, str);
+}
+
+void
+CQPropertyDelegate::
+drawString(QPainter *painter, const QStyleOptionViewItem &option,
+           const QString &str, const QModelIndex &index) const
+{
+  QItemDelegate::drawBackground(painter, option, index);
+
+  QRect rect = option.rect;
 
   QItemDelegate::drawDisplay(painter, option, rect, str);
 }

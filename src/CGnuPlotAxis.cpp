@@ -106,6 +106,14 @@ setRange(double start, double end)
 
 void
 CGnuPlotAxis::
+setDataRange(double start, double end)
+{
+  dataStart_ = start;
+  dataEnd_   = end;
+}
+
+void
+CGnuPlotAxis::
 setMajorIncrement(double i)
 {
   majorIncrement_ = i;
@@ -394,6 +402,26 @@ testAxisGaps(double start, double end, double testIncrement, int testNumGapTicks
 
 double
 CGnuPlotAxis::
+getStart2() const
+{
+  if (data_.isRangeLimited())
+    return getDataStart();
+  else
+    return getStart1();
+}
+
+double
+CGnuPlotAxis::
+getEnd2() const
+{
+  if (data_.isRangeLimited())
+    return getDataEnd();
+  else
+    return getEnd1();
+}
+
+double
+CGnuPlotAxis::
 getMajorIncrement() const
 {
   if (majorIncrement_ > 0.0)
@@ -523,12 +551,8 @@ drawAxisLine()
 
   // Draw Axis Line (radial or zero axis)
   if (type() != AxisType::R) {
-    if (isZeroAxisDisplayed()) {
-      CPoint3D p1 = valueToPoint(getStart1(), first, true);
-      CPoint3D p2 = valueToPoint(getEnd1  (), first, true);
-
-      drawLine(p1, p2, zeroAxisLineColor(), zeroAxisLineWidth(), zeroAxisLineDash());
-    }
+    if (isZeroAxisDisplayed())
+      drawZeroLine(renderer_, zeroAxisLineColor(), zeroAxisLineWidth(), zeroAxisLineDash());
   }
   else {
     CPoint3D p1 = valueToPoint(getStart(), first, false);
@@ -536,6 +560,42 @@ drawAxisLine()
 
     drawLine(p1, p2, labelColor().color(), 1, CLineDash());
   }
+}
+
+void
+CGnuPlotAxis::
+drawLowerLine(CGnuPlotRenderer *renderer, const CRGBA &c, double w, const CLineDash &dash)
+{
+  renderer_ = renderer;
+
+  CPoint3D p1 = valueToPoint(getStart2(), true, false);
+  CPoint3D p2 = valueToPoint(getEnd2  (), true, false);
+
+  drawLine(p1, p2, c, w, dash);
+}
+
+void
+CGnuPlotAxis::
+drawUpperLine(CGnuPlotRenderer *renderer, const CRGBA &c, double w, const CLineDash &dash)
+{
+  renderer_ = renderer;
+
+  CPoint3D p1 = valueToPoint(getStart2(), false, false);
+  CPoint3D p2 = valueToPoint(getEnd2  (), false, false);
+
+  drawLine(p1, p2, c, w, dash);
+}
+
+void
+CGnuPlotAxis::
+drawZeroLine(CGnuPlotRenderer *renderer, const CRGBA &c, double w, const CLineDash &dash)
+{
+  renderer_ = renderer;
+
+  CPoint3D p1 = valueToPoint(getStart1(), true, true);
+  CPoint3D p2 = valueToPoint(getEnd1  (), true, true);
+
+  drawLine(p1, p2, c, w, dash);
 }
 
 void
@@ -913,8 +973,11 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
 
   CPoint3D p = valueToPoint(reverse_ ? end_ - (pos - start_) : pos, first, isZeroAxisDisplayed());
 
-  double xsize = renderer_->pixelWidthToWindowWidth  (maxSize + 12);
-  double ysize = renderer_->pixelHeightToWindowHeight(maxSize + 12);
+  double pw = renderer_->pixelWidthToWindowWidth  (1);
+  double ph = renderer_->pixelHeightToWindowHeight(1);
+
+  double xsize = (maxSize + 12)*pw;
+  double ysize = (maxSize + 12)*ph;
 
   if      (direction_ == AxisDirection::X) {
     CPoint3D    p1;
@@ -934,10 +997,25 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
   else if (direction_ == AxisDirection::Y) {
     CPoint3D p1;
 
-    if (first)
-      p1 = perpPoint(p, (  isLabelInside() ? xsize : -xsize));
-    else
-      p1 = perpPoint(p, (! isLabelInside() ? xsize : -xsize));
+    double dx = 4*pw;
+
+    if (first) {
+      if (! isLabelInside()) {
+        p.x = group_->getAxisBBox().getXMin();
+
+        p1 = perpPoint(p, -dx);
+      }
+      else {
+        p.x = group_->getAxisBBox().getXMax();
+
+        p1 = perpPoint(p, dx);
+      }
+    }
+    else {
+      p.x = group_->getAxisBBox().getXMax();
+
+      p1 = perpPoint(p, (! isLabelInside() ? dx : -dx));
+    }
 
     if (group_->is3D()) {
       CVAlignType valign;
@@ -1151,7 +1229,7 @@ isVisibleValue(double pos) const
   if (logBase().isValid() || type() == AxisType::R)
     return (pos >= getStart () && pos <= getEnd ());
   else
-    return (pos >= getStart1() && pos <= getEnd1());
+    return (pos >= getStart2() && pos <= getEnd2());
 }
 
 bool

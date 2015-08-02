@@ -449,7 +449,7 @@ patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern p
 
 void
 CQGnuPlotRenderer::
-drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c,
+drawEllipse(const CPoint2D &center, double rx, double ry, double angle, const CRGBA &c,
             double width, const CLineDash &dash)
 {
   double px1, py1, px2, py2;
@@ -472,7 +472,7 @@ drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA 
   double px = (px1 + px2)/2.0;
   double py = (py1 + py2)/2.0;
 
-  t1.translate(px, py); t2.rotate(-a); t3.translate(-px, -py);
+  t1.translate(px, py); t2.rotate(-angle); t3.translate(-px, -py);
 
   painter_->setWorldTransform(t3*t2*t1);
 
@@ -489,7 +489,7 @@ drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA 
 
 void
 CQGnuPlotRenderer::
-fillEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c)
+fillEllipse(const CPoint2D &center, double rx, double ry, double angle, const CRGBA &c)
 {
   double px1, py1, px2, py2;
 
@@ -511,7 +511,7 @@ fillEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA 
   double px = (px1 + px2)/2.0;
   double py = (py1 + py2)/2.0;
 
-  t1.translate(px, py); t2.rotate(-a); t3.translate(-px, -py);
+  t1.translate(px, py); t2.rotate(-angle); t3.translate(-px, -py);
 
   painter_->setWorldTransform(t3*t2*t1);
 

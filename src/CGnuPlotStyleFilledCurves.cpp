@@ -1,4 +1,5 @@
 #include <CGnuPlotStyleFilledCurves.h>
+#include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
@@ -153,8 +154,10 @@ void
 CGnuPlotStyleFilledCurves::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-//const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
+  const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
   //---
 
@@ -169,6 +172,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
+  CRGBA bg = group->window()->backgroundColor();
+
+  //---
+
   if (! fillbetween) {
     PointsArray pointsVector;
 
@@ -179,11 +186,17 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     uint i = 0;
 
     while (i < np) {
+      // get first point
       for ( ; i < np; ++i) {
         const CGnuPlotPoint &point1 = plot->getPoint2D(i);
 
-        if (point1.getPoint(p1))
-          break;
+        if (! point1.getPoint(p1))
+          continue;
+
+        if (renderer->isPseudo() && ! renderer->isInside(p1))
+          continue;
+
+        break;
       }
 
       ++i;
@@ -192,12 +205,16 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       points.push_back(p1);
 
+      // add points until discontinuity
       for ( ; i < np; ++i) {
         CPoint2D p2;
 
         const CGnuPlotPoint &point2 = plot->getPoint2D(i);
 
         if (! point2.getPoint(p2) || point2.isDiscontinuity())
+          break;
+
+        if (renderer->isPseudo() && ! renderer->isInside(p1))
           break;
 
         points.push_back(p2);
@@ -239,55 +256,69 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     for (const auto &point : plot->getPoints2D()) {
       double x, y1, y2;
 
-      if (point.getXYZ(x, y1, y2)) {
-        CPoint2D p1(x, y1);
-        CPoint2D p2(x, y2);
+      if (! point.getXYZ(x, y1, y2))
+        continue;
 
-        bool oldInside = inside;
+      CPoint2D p1(x, y1);
+      CPoint2D p2(x, y2);
 
-        inside = ((! filledCurve.above && ! filledCurve.below) ||
-                  (filledCurve.above && y1 <= y2) ||
-                  (filledCurve.below && y1 >= y2));
+      if (renderer->isPseudo() && ! renderer->isInside(p1))
+        continue;
 
-        if (oldInside != inside) {
-          if (! points2.empty()) {
-            const auto &p11 = points1.back();
-            const auto &p21 = points2.back();
+      bool oldInside = inside;
 
-            CPoint2D pi;
+      inside = ((! filledCurve.above && ! filledCurve.below) ||
+                (filledCurve.above && y1 <= y2) ||
+                (filledCurve.below && y1 >= y2));
 
-            CMathGeom2D::IntersectLine(p11, p1, p21, p2, &pi);
+      if (oldInside != inside) {
+        if (! points2.empty()) {
+          const auto &p11 = points1.back();
+          const auto &p21 = points2.back();
 
-            if (inside) {
-              points1.push_back(pi);
+          CPoint2D pi;
 
-              for (auto p1 = points2.rbegin(), p2 = points2.rend(); p1 != p2; ++p1)
-                points1.push_back(*p1);
+          CMathGeom2D::IntersectLine(p11, p1, p21, p2, &pi);
 
-              CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,1,1));
+          if (inside) {
+            points1.push_back(pi);
 
+            for (auto p1 = points2.rbegin(), p2 = points2.rend(); p1 != p2; ++p1)
+              points1.push_back(*p1);
+
+            CRGBA c = lineStyle.calcColor(group, CRGBA(1,1,1));
+
+            if      (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN) {
+              renderer->patternClippedPolygon(points1, fillStyle.pattern(), c, bg);
+            }
+            else if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID) {
               renderer->fillClippedPolygon(points1, c);
             }
-
-            points1.clear();
-            points2.clear();
-
-            points1.push_back(pi);
           }
-        }
 
-        points1.push_back(p1);
-        points2.push_back(p2);
+          points1.clear();
+          points2.clear();
+
+          points1.push_back(pi);
+        }
       }
+
+      points1.push_back(p1);
+      points2.push_back(p2);
     }
 
     if (! points1.empty()) {
       for (auto p1 = points2.rbegin(), p2 = points2.rend(); p1 != p2; ++p1)
         points1.push_back(*p1);
 
-      CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,1,1));
+      CRGBA c = lineStyle.calcColor(group, CRGBA(1,1,1));
 
-      renderer->fillClippedPolygon(points1, c);
+      if      (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN) {
+        renderer->patternClippedPolygon(points1, fillStyle.pattern(), c, bg);
+      }
+      else if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID) {
+        renderer->fillClippedPolygon(points1, c);
+      }
     }
   }
 }
@@ -376,6 +407,8 @@ void
 CGnuPlotStyleFilledCurves::
 drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &points)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
   const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
@@ -393,7 +426,7 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &point
       // TODO
     }
     else if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID) {
-      CRGBA fc = lineStyle.calcColor(plot->group(), CRGBA(1,1,1));
+      CRGBA fc = lineStyle.calcColor(group, CRGBA(1,1,1));
 
       if (fillStyle.isTransparent())
         fc.setAlpha(fillStyle.density());
@@ -407,7 +440,7 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &point
       CRGBA lc = CRGBA(0,0,0);
 
       if (fillStyle.borderColor().isValid())
-        lc = fillStyle.borderColor().getValue().calcColor(plot);
+        lc = fillStyle.borderColor().getValue().calcColor(group);
 
       if (! polygon->isModified()) {
         polygon->setLineWidth(lineStyle.calcWidth());
@@ -420,13 +453,13 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &point
   else {
     // fill polygon
     if      (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN) {
-      CRGBA fg = lineStyle.calcColor(plot->group(), CRGBA(1,1,1));
+      CRGBA fg = lineStyle.calcColor(group, CRGBA(1,1,1));
       CRGBA bg = plot->window()->backgroundColor();
 
       renderer->patternClippedPolygon(points, fillStyle.pattern(), fg, bg);
     }
     else if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID) {
-      CRGBA fc = lineStyle.calcColor(plot->group(), CRGBA(1,1,1));
+      CRGBA fc = lineStyle.calcColor(group, CRGBA(1,1,1));
 
       if (fillStyle.isTransparent())
         fc.setAlpha(fillStyle.density());
@@ -442,7 +475,7 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &point
       CRGBA lc = CRGBA(0,0,0);
 
       if (fillStyle.borderColor().isValid())
-        lc = fillStyle.borderColor().getValue().calcColor(plot);
+        lc = fillStyle.borderColor().getValue().calcColor(group);
 
       double lw = lineStyle.calcWidth();
 
@@ -455,13 +488,23 @@ void
 CGnuPlotStyleFilledCurves::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
+
+  CRGBA bg = group->window()->backgroundColor();
 
   double h = renderer->pixelHeightToWindowHeight(4);
 
   CBBox2D cbbox(p1.x, p1.y - h, p2.x, p1.y + h);
 
-  renderer->fillRect(cbbox, lineStyle.calcColor(plot->group(), CRGBA(1,1,1)));
+  CRGBA c = lineStyle.calcColor(group, CRGBA(1,1,1));
+
+  if (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN)
+    renderer->patternRect(cbbox, fillStyle.pattern(), c, bg);
+  else
+    renderer->fillRect(cbbox, c);
 }
 
 CBBox2D

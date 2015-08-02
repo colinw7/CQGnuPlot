@@ -57,7 +57,15 @@ class CGnuPlotColorBox {
   const CGnuPlotAxisData &axis() const { return axis_; }
   CGnuPlotAxisData &axis() { return axis_; }
 
+  const COptReal &min() const { return axis_.min(); }
+  void setMin(double r) { axis_.setMin(r); }
+
+  const COptReal &max() const { return axis_.max(); }
+  void setMax(double r) { axis_.setMax(r); }
+
   const CBBox2D &getBBox() const { return bbox_; }
+
+  CColor valueToColor(double x) const;
 
   void show(std::ostream &os) const;
 
