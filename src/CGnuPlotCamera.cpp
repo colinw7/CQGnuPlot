@@ -119,9 +119,13 @@ void
 CGnuPlotCamera::
 unsetView()
 {
+  enabled_ = true;
+
   rotateX_   = 60.0;
   rotateZ_   = 30.0;
   scaleX_    = 1.0;
   scaleZ_    = 1.0;
   axesScale_ = AxesScale::NONE;
+
+  init();
 }

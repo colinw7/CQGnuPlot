@@ -114,10 +114,10 @@ void
 CGnuPlotRenderer::
 drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w)
 {
-  if (clip_.isSet() && ! isPseudo()) {
-    if      (clip_.inside(rect))
+  if (clip().isSet() && ! isPseudo()) {
+    if      (clip().inside(rect))
       drawRect(rect, c, w);
-    else if (clip_.intersect(rect)) {
+    else if (clip().intersect(rect)) {
       drawClipLine(rect.getLL(), rect.getLR(), w, c);
       drawClipLine(rect.getLR(), rect.getUR(), w, c);
       drawClipLine(rect.getUR(), rect.getUL(), w, c);
@@ -132,16 +132,33 @@ void
 CGnuPlotRenderer::
 fillClippedRect(const CBBox2D &rect, const CRGBA &c)
 {
-  if (clip_.isSet() && ! isPseudo()) {
+  if (clip().isSet() && ! isPseudo()) {
     CBBox2D crect;
 
-    if      (clip_.inside(rect))
+    if      (clip().inside(rect))
       fillRect(rect, c);
-    else if (clip_.intersect(rect, crect))
+    else if (clip().intersect(rect, crect))
       fillRect(crect, c);
   }
   else
     fillRect(rect, c);
+}
+
+void
+CGnuPlotRenderer::
+patternClippedRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
+                   const CRGBA &fg, const CRGBA &bg)
+{
+  if (clip().isSet() && ! isPseudo()) {
+    CBBox2D crect;
+
+    if      (clip().inside(rect))
+      patternRect(rect, pattern, fg, bg);
+    else if (clip().intersect(rect, crect))
+      patternRect(crect, pattern, fg, bg);
+  }
+  else
+    patternRect(rect, pattern, fg, bg);
 }
 
 void
@@ -164,13 +181,14 @@ bool
 CGnuPlotRenderer::
 clipLine(CPoint2D &p1, CPoint2D &p2)
 {
-  if (! clip_.isSet() || isPseudo())
+  if (! clip().isSet() || isPseudo())
     return true;
 
   double x1 = p1.x, y1 = p1.y;
   double x2 = p2.x, y2 = p2.y;
 
-  if (! CMathGeom2D::clipLine(clip_.getXMin(), clip_.getYMin(), clip_.getXMax(), clip_.getYMax(),
+  if (! CMathGeom2D::clipLine(clip().getXMin(), clip().getYMin(),
+                              clip().getXMax(), clip().getYMax(),
                               &x1, &y1, &x2, &y2))
     return false;
 
@@ -537,13 +555,13 @@ CGnuPlotRenderer::
 drawClippedPath(const std::vector<CPoint3D> &points, double width, const CRGBA &c,
                 const CLineDash &dash)
 {
-  if (clip_.isSet() && ! isPseudo()) {
+  if (clip().isSet() && ! isPseudo()) {
     std::vector<CPoint2D> points1;
 
     for (const auto &p : points) {
       CPoint2D p1 = transform(p);
 
-      if (clip_.inside(p1))
+      if (clip().inside(p1))
         points1.push_back(p1);
     }
 
@@ -660,12 +678,10 @@ windowToPixel(double wx, double wy, double *px, double *py)
   double ph = pymax - pymin;
 
   // add margin
-  double ps = std::min(pw, ph);
-
-  double lmargin = ps*margin_.left  ()/100.0;
-  double rmargin = ps*margin_.right ()/100.0;
-  double tmargin = ps*margin_.top   ()/100.0;
-  double bmargin = ps*margin_.bottom()/100.0;
+  double lmargin = margin_.left  ().xValue(this);
+  double rmargin = margin_.right ().xValue(this);
+  double tmargin = margin_.top   ().yValue(this);
+  double bmargin = margin_.bottom().yValue(this);
 
   pxmin += lmargin; pxmax -= rmargin;
   pymin += tmargin; pymax -= bmargin;
@@ -729,12 +745,10 @@ pixelToWindow(double px, double py, double *wx, double *wy)
   double ph = pymax - pymin;
 
   // add margin
-  double ps = std::min(pw, ph);
-
-  double lmargin = ps*margin_.left  ()/100.0;
-  double rmargin = ps*margin_.right ()/100.0;
-  double tmargin = ps*margin_.top   ()/100.0;
-  double bmargin = ps*margin_.bottom()/100.0;
+  double lmargin = margin_.left  ().xValue(this);
+  double rmargin = margin_.right ().xValue(this);
+  double tmargin = margin_.top   ().yValue(this);
+  double bmargin = margin_.bottom().yValue(this);
 
   pxmin += lmargin; pxmax -= rmargin;
   pymin += tmargin; pymax -= bmargin;

@@ -110,10 +110,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         bar->setFillColor  (fc);
 
         // border line type ?
-        CRGBA lc2;
-
-        if (fillStyle.calcColor(group, lc2)) {
+        if (fillStyle.hasBorder()) {
           bar->setBorder(true);
+
+          CRGBA lc2 = lc1;
+
+          //if (fillStyle.calcColor(group, lc2))
+
           bar->setLineColor(lc2);
         }
         else
@@ -127,8 +130,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         // border line type ?
         CRGBA lc2 = lc1;
 
-        if (fillStyle.calcColor(group, lc2))
-          renderer->drawRect(bbox, lc2, lw);
+        //if (fillStyle.calcColor(group, lc2))
+
+        renderer->drawRect(bbox, lc2, lw);
       }
     }
 

@@ -1,9 +1,11 @@
 #ifndef CGnuPlotContour_H
 #define CGnuPlotContour_H
 
-#include <vector>
 #include <CRGBA.h>
 #include <COptVal.h>
+#include <CLine3D.h>
+#include <vector>
+#include <map>
 
 class CGnuPlot;
 class CGnuPlotPlot;
@@ -11,6 +13,9 @@ class CGnuPlotRenderer;
 
 class CGnuPlotContour {
  public:
+  typedef std::vector<CLine3D> Lines;
+  typedef std::map<int,Lines>  LevelLines;
+
   struct LevelData {
     double level;
     CRGBA  c;
@@ -34,18 +39,36 @@ class CGnuPlotContour {
 
   void setData(double *x, double *y, double *z, int no_x, int no_y);
 
+  int nx() const { return x_.size(); }
+  int ny() const { return y_.size(); }
+
+  double x(int i) const { return x_[i]; }
+  double y(int j) const { return y_[j]; }
+
+  double z(int i, int j) const { return z_[j*x_.size() + i]; }
+
   void setContourLevels(const std::vector<double> &levels);
-  void setContourColours(const std::vector<CRGBA> &colors);
+  void setContourColors(const std::vector<CRGBA> &colors);
 
   void drawContour(CGnuPlotRenderer *renderer);
 
   void getLevelData(std::vector<LevelData> &levelDatas) const;
 
+  const LevelLines &levelLines() const { return llines_; }
+
+  CRGBA levelColor(int level) const;
+
+  double levelValue(int l) const;
+
  private:
   void drawContourLines(CGnuPlotRenderer *renderer);
   void drawContourSolid(CGnuPlotRenderer *renderer);
 
+  void calcContourLines();
+
   void getLevels(std::vector<double> &levels) const;
+
+  void initLevels() const;
 
   void fillContourBox(CGnuPlotRenderer *renderer, double, double, double, double,
                       double, double, double, double, const std::vector<double> &);
@@ -59,6 +82,7 @@ class CGnuPlotContour {
   COptReal            xmin_, ymin_, zmin_;
   COptReal            xmax_, ymax_, zmax_;
   double              min_x_, min_y_, min_z_;
+  LevelLines          llines_;
 };
 
 #endif

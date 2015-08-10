@@ -2,6 +2,7 @@
 #define CGnuPlotLabel_H
 
 #include <CGnuPlotAnnotation.h>
+#include <CGnuPlotLabelStyle.h>
 #include <CGnuPlotText.h>
 #include <CGnuPlotColorSpec.h>
 #include <CFont.h>
@@ -17,21 +18,16 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   CGnuPlotLabel *setData(const CGnuPlotLabel *label) {
     (void) CGnuPlotGroupAnnotation::setData(label);
 
-    text_   = label->text_;
-    align_  = label->align_;
-    pos_    = label->pos_;
-    font_   = label->font_;
-    angle_  = label->angle_;
-    offset_ = label->offset_;
+    text_  = label->text_;
+    pos_   = label->pos_;
+    angle_ = label->angle_;
 
-    enhanced_  = label->enhanced_;
-    showPoint_ = label->showPoint_;
-    textColor_ = label->textColor_;
-    lineType_  = label->lineType_;
-    pointType_ = label->pointType_;
-    pointSize_ = label->pointSize_;
-    box_       = label->box_;
-    hypertext_ = label->hypertext_;
+    enhanced_   = label->enhanced_;
+    labelStyle_ = label->labelStyle_;
+    textColor_  = label->textColor_;
+    lineType_   = label->lineType_;
+    box_        = label->box_;
+    hypertext_  = label->hypertext_;
 
     return this;
   }
@@ -41,26 +37,23 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   const CGnuPlotText &getText() const { return text_; }
   void setText(const CGnuPlotText &text) { text_ = text; }
 
-  const CHAlignType &getAlign() const { return align_; }
-  void setAlign(const CHAlignType &a) { align_ = a; }
+  const CHAlignType &getAlign() const { return labelStyle_.align(); }
+  void setAlign(const CHAlignType &a) { labelStyle_.setAlign(a); }
 
   const CGnuPlotPosition &getPos() const { return pos_; }
   void setPos(const CGnuPlotPosition &p) { pos_ = p; }
 
-  const CFontPtr &getFont() const { return font_; }
-  void setFont(const CFontPtr &f) { font_ = f; }
+  const CFontPtr &getFont() const { return labelStyle_.font(); }
+  void setFont(const CFontPtr &f) { labelStyle_.setFont(f); }
 
   double getAngle() const { return angle_; }
   void setAngle(double a) { angle_ = a; }
 
-  const COptPoint2D &getOffset() const { return offset_; }
-  void setOffset(const CPoint2D &o) { offset_ = o; }
+  const COptPoint2D &getOffset() const { return labelStyle_.offset(); }
+  void setOffset(const CPoint2D &o) { labelStyle_.setOffset(o); }
 
   bool isEnhanced() const { return enhanced_; }
   void setEnhanced(bool b) { enhanced_ = b; }
-
-  bool showPoint() const { return showPoint_; }
-  void setShowPoint(bool b) { showPoint_ = b; }
 
   const CGnuPlotColorSpec &textColor() const { return textColor_; }
   void setTextColor(const CGnuPlotColorSpec &c) { textColor_ = c; }
@@ -68,11 +61,18 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   int lineType() const { return lineType_; }
   void setLineType(int i) { lineType_ = i; }
 
-  int pointType() const { return pointType_; }
-  void setPointType(int i) { pointType_ = i; }
+  //---
 
-  double pointSize() const { return pointSize_; }
-  void setPointSize(double s) { pointSize_ = s; }
+  bool showPoint() const { return labelStyle_.showPoint(); }
+  void setShowPoint(bool b) { labelStyle_.setShowPoint(b); }
+
+  int pointType() const { return labelStyle_.pointType(); }
+  void setPointType(int i) { labelStyle_.setPointType(i); }
+
+  double pointSize() const { return labelStyle_.pointSize(); }
+  void setPointSize(double s) { labelStyle_.setPointSize(s); }
+
+  //---
 
   bool hasBox() const { return box_; }
   void setBox(bool b) { box_ = b; }
@@ -95,21 +95,16 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
  protected:
   static CFontPtr defFont_;
 
-  CGnuPlotText      text_;
-  CHAlignType       align_      { CHALIGN_TYPE_LEFT };
-  CGnuPlotPosition  pos_;
-  CFontPtr          font_;
-  double            angle_      { -1 };
-  COptPoint2D       offset_;
-  bool              enhanced_   { true };
-  bool              showPoint_  { false };
-  CGnuPlotColorSpec textColor_;
-  int               lineType_   { -1 };
-  int               pointType_  { -1 };
-  double            pointSize_  { -1 };
-  bool              box_        { false };
-  bool              hypertext_  { false };
-  mutable CBBox2D   bbox_;
+  CGnuPlotText       text_;
+  CGnuPlotPosition   pos_;
+  double             angle_      { -1 };
+  bool               enhanced_   { true };
+  CGnuPlotLabelStyle labelStyle_;
+  CGnuPlotColorSpec  textColor_;
+  int                lineType_   { -1 };
+  bool               box_        { false };
+  bool               hypertext_  { false };
+  mutable CBBox2D    bbox_;
 };
 
 typedef std::shared_ptr<CGnuPlotLabel> CGnuPlotLabelP;

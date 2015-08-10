@@ -223,6 +223,10 @@ class CGnuPlotAxisData {
   const std::string &getDummyVar() { return dummyVar_; }
   void setDummyVar(const std::string &name) { dummyVar_ = name; }
 
+  //-----
+
+  std::string geographicFormat(const std::string &fmt, double r) const;
+
  private:
   void setITicLabel(int    i, const std::string &s) { iticLabels_[i] = s; }
   void setRTicLabel(double r, const std::string &s, int level) { rticLabels_[level][r] = s; }
@@ -259,7 +263,7 @@ class CGnuPlotAxisData {
 
   //--
 
-  bool showTics() const { return showTics_; }
+  bool isShowTics() const { return showTics_; }
   void setShowTics(bool b) { showTics_ = b; }
 
   bool isFront() const { return front_; }
@@ -322,6 +326,17 @@ class CGnuPlotAxisData {
     else
       return x;
   }
+
+  //---
+
+  const COptReal &ticStart() const { return ticStart_; }
+  void setTicStart(double r) { ticStart_ = r; }
+
+  const COptReal &ticEnd() const { return ticEnd_; }
+  void setTicEnd(double r) { ticEnd_ = r; }
+
+  const COptReal &ticIncr() const { return ticIncr_; }
+  void setTicIncr(double r) { ticIncr_ = r; }
 
   //---
 
@@ -396,6 +411,9 @@ class CGnuPlotAxisData {
   bool              rangelimited_    { false };
   int               lineType_        { -1    };
   COptInt           logBase_;
+  COptReal          ticStart_;
+  COptReal          ticEnd_;
+  COptReal          ticIncr_;
   CGnuPlotColorSpec ticColor_;
   CGnuPlotColorSpec labelColor_;
   ZeroAxis          zeroAxis_;

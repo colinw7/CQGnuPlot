@@ -85,6 +85,7 @@ namespace CGnuPlotTypes {
     CONTOUR,
     CPLANE,
     DASHTYPE,
+    DATABLOCK,
     DATAFILE,
     DEBUG,
     DECIMALSIGN,

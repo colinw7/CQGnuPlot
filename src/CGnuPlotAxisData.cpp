@@ -1,5 +1,6 @@
 #include <CGnuPlotAxisData.h>
 #include <CGnuPlotGroup.h>
+#include <CParseLine.h>
 
 CGnuPlotAxisData::
 CGnuPlotAxisData(AxisType type, int ind) :
@@ -164,10 +165,17 @@ reset()
 
   text_ = "";
 
+  iticLabels_.clear();
+  rticLabels_.clear();
+
   majorScale_ = 1.0;
   minorScale_ = 1.0;
 
   dummyVar_ = "";
+
+  format_ = "%g";
+
+  geographic_ = false;
 }
 
 std::string
@@ -200,13 +208,102 @@ formatAxisValue(double r) const
     return buffer;
   }
   else if (format() != "") {
-    if (fabs(r) < 1E-6)
-      return CStrUtil::strprintf(format().c_str(), 0.0);
-    else
-      return CStrUtil::strprintf(format().c_str(), r);
+    if (isGeographic()) {
+      return geographicFormat(format(), r);
+    }
+    else {
+      if (fabs(r) < 1E-6)
+        return CStrUtil::strprintf(format().c_str(), 0.0);
+      else
+        return CStrUtil::strprintf(format().c_str(), r);
+    }
   }
   else
     return "";
+}
+
+std::string
+CGnuPlotAxisData::
+geographicFormat(const std::string &fmt, double r) const
+{
+  double ar =fabs(r);
+
+  CParseLine line(fmt);
+
+  std::string str;
+
+  while (line.isValid()) {
+    char c = line.getChar();
+
+    std::string fmt1;
+
+    if (c == '%') {
+      int pos1 = line.pos();
+
+      if (line.isDigit()) {
+        while (line.isDigit())
+          line.skipChar();
+
+        if (line.isChar('.')) {
+          line.skipChar();
+
+          while (line.isDigit())
+            line.skipChar();
+        }
+
+        fmt1 += line.substr(pos1, line.pos() - pos1);
+      }
+
+      c = line.getChar();
+
+      if      (c == 'D') {
+        str += std::to_string(int(ar));
+      }
+      else if (c == 'd') {
+        fmt1 += "d";
+
+        str += CStrUtil::strprintf(fmt1.c_str(), ar);
+      }
+      else if (c == 'M') {
+        double r1 = 60*(ar - int(ar));
+
+        str += std::to_string(int(r1));
+      }
+      else if (c == 'm') {
+        double r1 = 60*(ar - int(ar));
+
+        str += CStrUtil::strprintf(fmt1.c_str(), r1);
+      }
+      else if (c == 'S') {
+        double r1 = 60*ar;
+        double r2 = 60*(r1 - int(r1));
+
+        str += CStrUtil::strprintf(fmt1.c_str(), r2);
+      }
+      else if (c == 's') {
+        double r1 = 60*ar;
+        double r2 = 60*(r1 - int(r1));
+
+        str += std::to_string(r2);
+      }
+      else if (c == 'E') {
+        if (ar > 1E-6)
+          str += (r < 0 ? "W" : "E");
+      }
+      else if (c == 'N') {
+        if (ar > 1E-6)
+          str += (r < 0 ? "S" : "N");
+      }
+      else {
+        str += '%';
+        str += c;
+      }
+    }
+    else
+      str += c;
+  }
+
+  return str;
 }
 
 bool
@@ -292,7 +389,7 @@ showTics(std::ostream &os, const std::string &prefix) const
 {
   os << prefix << " tics are in, major ticscale is 1 and minor ticscale is 0.5" << std::endl;
 
-  if (showTics()) {
+  if (isShowTics()) {
     os << prefix << " tics: on axis" << std::endl;
     os << "  labels are justified automatically, format \"" <<
           format_ << "\" and are not rotated," << std::endl;

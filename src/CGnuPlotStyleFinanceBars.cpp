@@ -1,4 +1,5 @@
 #include <CGnuPlotStyleFinanceBars.h>
+#include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
 
@@ -12,11 +13,13 @@ void
 CGnuPlotStyleFinanceBars::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA  lc = lineStyle.calcColor(plot->group(), CRGBA(0,0,0));
+  CRGBA  lc = lineStyle.calcColor(group, CRGBA(0,0,0));
   double lw = lineStyle.calcWidth();
 
   double sl = 0;
@@ -38,6 +41,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     double high  = reals[3];
     double close = reals[4];
 
+    if (renderer->isPseudo() && ! renderer->isInside(CPoint2D(date, low)))
+      continue;
+
     CRGBA lc1 = lc;
 
     if (isCalcColor) {
@@ -46,10 +52,22 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       lc1 = lineStyle.calcColor(plot, x);
     }
 
-    renderer->drawClipLine(CPoint2D(date, low), CPoint2D(date, high), lw, lc1);
+    CPoint2D p1(date, low );
+    CPoint2D p2(date, high);
 
-    renderer->drawClipLine(CPoint2D(date, open ), CPoint2D(date - sl, open ), lw, lc1);
-    renderer->drawClipLine(CPoint2D(date, close), CPoint2D(date + sl, close), lw, lc1);
+    p1 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p1);
+    p2 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);
+
+    renderer->drawClipLine(p1, p2, lw, lc1);
+
+    CPoint2D p3(date, open );
+    CPoint2D p4(date, close);
+
+    p3 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p3);
+    p4 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p4);
+
+    renderer->drawClipLine(p3, p3 - CPoint2D(sl, 0), lw, lc1);
+    renderer->drawClipLine(p4, p4 + CPoint2D(sl, 0), lw, lc1);
   }
 }
 
@@ -59,4 +77,3 @@ fit(CGnuPlotPlot *)
 {
   return CBBox2D();
 }
-

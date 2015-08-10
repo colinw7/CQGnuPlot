@@ -7,6 +7,8 @@ class CGnuPlotBlock {
    name_(name) {
   }
 
+  const std::string &name() { return name_; }
+
   const std::string &str() { return str_; }
 
   void clear() {

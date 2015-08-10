@@ -14,15 +14,17 @@ void
 CGnuPlotStyleCandlesticks::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   bool isCalcColor = lineStyle.isCalcColor();
 
   CRGBA c1 = (plot->fillType() == CGnuPlotTypes::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  CRGBA  lc = lineStyle.calcColor(plot->group(), CRGBA(0,0,0));
+  CRGBA  lc = lineStyle.calcColor(group, CRGBA(0,0,0));
   double lw = lineStyle.calcWidth();
-  CRGBA  fc = lineStyle.calcColor(plot->group(), c1);
+  CRGBA  fc = lineStyle.calcColor(group, c1);
 
   double bw = plot->boxWidth().getSpacing(0.1);
 
@@ -41,6 +43,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     double wmax = reals[3];
     double bmax = reals[4];
 
+    if (renderer->isPseudo() && ! renderer->isInside(CPoint2D(x, bmin)))
+      continue;
+
     double bw1 = bw;
 
     int ind = 5;
@@ -52,33 +57,43 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CRGBA fc1 = lc;
 
     if (isCalcColor) {
-      double x = reals[ind];
+      double z = reals[ind];
 
-      lc1 = lineStyle.calcColor(plot, x);
-      fc1 = lineStyle.calcColor(plot, x);
+      lc1 = lineStyle.calcColor(plot, z);
+      fc1 = lineStyle.calcColor(plot, z);
     }
 
-    renderer->drawClipLine(CPoint2D(x, wmin), CPoint2D(x, bmin), lw, lc1);
-    renderer->drawClipLine(CPoint2D(x, bmax), CPoint2D(x, wmax), lw, lc1);
+    CPoint2D p1(x, wmin);
+    CPoint2D p2(x, bmin);
+    CPoint2D p3(x, bmax);
+    CPoint2D p4(x, wmax);
 
-    double x1 = x - bw1/2;
-    double x2 = x + bw1/2;
+    p1 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p1);
+    p2 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);
+    p3 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p3);
+    p4 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p4);
+
+    renderer->drawClipLine(p1, p2, lw, lc1);
+    renderer->drawClipLine(p3, p4, lw, lc1);
+
+    double x1 = p1.x - bw1/2;
+    double x2 = p1.x + bw1/2;
 
     if (plot->whiskerBars() > 0) {
-      renderer->drawClipLine(CPoint2D(x1, wmin), CPoint2D(x2, wmin), lw, lc1);
-      renderer->drawClipLine(CPoint2D(x1, wmax), CPoint2D(x2, wmax), lw, lc1);
+      renderer->drawClipLine(CPoint2D(x1, p1.y), CPoint2D(x2, p1.y), lw, lc1);
+      renderer->drawClipLine(CPoint2D(x1, p4.y), CPoint2D(x2, p4.y), lw, lc1);
     }
 
-    CBBox2D bbox(x1, bmin, x2, bmax);
+    CBBox2D bbox(x1, p2.y, x2, p3.y);
 
     if      (plot->fillType() == CGnuPlotTypes::FillType::PATTERN)
       renderer->patternRect(bbox, plot->fillPattern(), fc1, CRGBA(1,1,1));
     else if (plot->fillType() == CGnuPlotTypes::FillType::SOLID)
-      renderer->fillRect(bbox, fc1);
+      renderer->fillClippedRect(bbox, fc1);
     else if (bmin > bmax)
-      renderer->fillRect(bbox, fc1);
+      renderer->fillClippedRect(bbox, fc1);
 
-    renderer->drawRect(bbox, lc1, 1);
+    renderer->drawClippedRect(bbox, lc1, 1);
   }
 }
 
@@ -86,6 +101,8 @@ void
 CGnuPlotStyleCandlesticks::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   CFontPtr font = renderer->getFont();
@@ -96,13 +113,13 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   CBBox2D hbbox(p1.x, p1.y - h/2, p2.x, p1.y + h/2);
 
-  const CRGBA &lc = lineStyle.calcColor(plot->group(), CRGBA(0,0,0));
+  const CRGBA &lc = lineStyle.calcColor(group, CRGBA(0,0,0));
   double       lw = 1;
 
   if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
     renderer->patternRect(hbbox, plot->fillStyle().pattern(), lc, CRGBA(1,1,1));
   else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
-    renderer->fillRect(hbbox, lineStyle.calcColor(plot->group(), CRGBA(1,1,1)));
+    renderer->fillRect(hbbox, lineStyle.calcColor(group, CRGBA(1,1,1)));
 
   renderer->drawRect(hbbox, lc, lw);
 }

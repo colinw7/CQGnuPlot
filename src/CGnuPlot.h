@@ -95,6 +95,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotFitData.h>
 #include <CGnuPlotHidden3DData.h>
 #include <CGnuPlotKeyTitle.h>
+#include <CGnuPlotMargin.h>
 
 //------
 
@@ -126,6 +127,7 @@ class CGnuPlot {
     CGnuPlotArrowStyle   arrow;
     CGnuPlotEllipseStyle ellipse;
     CGnuPlotTextStyle    text;
+    CGnuPlotLabelStyle   label;
   };
 
   //---
@@ -176,74 +178,6 @@ class CGnuPlot {
   typedef std::map<int,CGnuPlotArrowStyle>      ArrowStyles;
   typedef std::map<int,CLineDash>               LineDashes;
   typedef std::vector<CGnuPlotGroupAnnotationP> Annotations;
-
-  //---
-
-  struct MarginValue {
-    COptReal value;
-    bool     screen { false };
-
-    MarginValue() { }
-
-    MarginValue(double v, bool s=false) { value = v; screen = s; }
-
-    void setValue(double v, bool b) { value = v; screen = b; }
-
-    void resetValue() { value.setInvalid(); screen = false; }
-
-    void show(std::ostream &os, const std::string &id) {
-      os << id << " is ";
-
-      if (! value.isValid())
-        os << "computed automatically" << std::endl;
-      else {
-        os << "set to";
-
-        if (screen)
-          os << " screen";
-
-        os << " " << value.getValue() << std::endl;
-      }
-    }
-  };
-
-  struct Margin {
-    Margin() { }
-
-    Margin(double l, double b, double r, double t) :
-     lmargin(l), bmargin(b), rmargin(r), tmargin(t) {
-    }
-
-    const COptReal &left  () const { return lmargin.value; }
-    const COptReal &bottom() const { return bmargin.value; }
-    const COptReal &right () const { return rmargin.value; }
-    const COptReal &top   () const { return tmargin.value; }
-
-    void setLeft  (double l, bool s=false) { lmargin.setValue(l, s); }
-    void setBottom(double b, bool s=false) { bmargin.setValue(b, s); }
-    void setRight (double r, bool s=false) { rmargin.setValue(r, s); }
-    void setTop   (double t, bool s=false) { tmargin.setValue(t, s); }
-
-    void resetLeft  () { lmargin.resetValue(); }
-    void resetBottom() { bmargin.resetValue(); }
-    void resetRight () { rmargin.resetValue(); }
-    void resetTop   () { tmargin.resetValue(); }
-
-    CRange2D range() const {
-      return CRange2D(left ().getValue(10), bottom().getValue(10),
-                      right().getValue(10), top   ().getValue(10));
-    }
-
-    void showLeft  (std::ostream &os) { lmargin.show(os, "lmargin"); }
-    void showBottom(std::ostream &os) { bmargin.show(os, "bmargin"); }
-    void showRight (std::ostream &os) { rmargin.show(os, "rmargin"); }
-    void showTop   (std::ostream &os) { tmargin.show(os, "tmargin"); }
-
-    MarginValue lmargin;
-    MarginValue bmargin;
-    MarginValue rmargin;
-    MarginValue tmargin;
-  };
 
   //---
 
@@ -318,6 +252,12 @@ class CGnuPlot {
    private:
     int samples1_ { 10 };
     int samples2_ { 10 };
+  };
+
+  struct SampleVar {
+    std::string var;
+    COptReal    min;
+    COptReal    max;
   };
 
   struct DecimalSign {
@@ -493,8 +433,8 @@ class CGnuPlot {
   const CBBox2D &region() const { return region_; }
   void setRegion(const CBBox2D &r) { region_ = r; }
 
-  const Margin &margin() const { return margin_; }
-  void setMargin(const Margin &b) { margin_ = b; }
+  const CGnuPlotMargin &margin() const { return margin_; }
+  void setMargin(const CGnuPlotMargin &b) { margin_ = b; }
 
   const CRGBA &backgroundColor() const { return backgroundColor_; }
   void setBackgroundColor(const CRGBA &c) { backgroundColor_ = c; }
@@ -846,6 +786,8 @@ class CGnuPlot {
 
   CGnuPlotBlock *getBlock(const std::string &name);
 
+  const CGnuPlotPrintFile &tableFile() const { return tableFile_; }
+
  private:
   void addPlotStyles();
 
@@ -927,6 +869,8 @@ class CGnuPlot {
   void pauseCmd   (const std::string &args);
   void rereadCmd  (const std::string &args);
 
+  void resetPlotData();
+
   bool stringToAxes(const std::string &axesStr, AxisTypeIdSet &axisTypeIdSet) const;
 
   void showColorNames();
@@ -953,20 +897,14 @@ class CGnuPlot {
   bool parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle);
 
   CGnuPlotPlot *addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style,
-                              const std::string &sampleXVar,
-                              const COptReal &sampleXMin, const COptReal &sampleXMax);
+                              const SampleVar &sampleX);
   CGnuPlotPlot *addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style,
-                              const std::string &sampleXVar,
-                              const COptReal &sampleXMin, const COptReal &sampleXMax,
-                              const std::string &sampleYVar,
-                              const COptReal &sampleYMin, const COptReal &sampleYMax);
+                              const SampleVar &sampleX, const SampleVar &sampleY);
 
   Plots addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-                  const CGnuPlotUsingCols &usingCols, const std::string &sampleXVar,
-                  const COptReal &sampleXMin, const COptReal &sampleXMax);
+                  const CGnuPlotUsingCols &usingCols, const SampleVar &sampleX);
   Plots addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-                  const CGnuPlotUsingCols &usingCols, const std::string &sampleXVar,
-                  const COptReal &sampleXMin, const COptReal &sampleXMax);
+                  const CGnuPlotUsingCols &usingCols, const SampleVar &sampleX);
 
   CGnuPlotPlot *addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
                            const CGnuPlotUsingCols &usingCols);
@@ -993,8 +931,25 @@ class CGnuPlot {
 
   //---
 
-  void setTableFile(const std::string &file) { tableFile_ = file; }
-  const std::string &getTableFile() const { return tableFile_; }
+  bool hasTableFile() const { return tableFile_.isEnabled(); }
+
+  void setTableStdErr() {
+    tableFile_.setStdErr(); tableFile_.setEnabled(true);
+  }
+
+  const std::string &getTableFile() const { return tableFile_.getFile(); }
+  void setTableFile(const std::string &file) {
+    tableFile_.setFile(file); tableFile_.setEnabled(true);
+  }
+
+  const std::string &getTableDataBlock() const { return tableFile_.getDataBlock(); }
+  void setTableDataBlock(const std::string &block) {
+    tableFile_.setDataBlock(block); tableFile_.setEnabled(true);
+  }
+
+  void unsetTableFile() {
+    tableFile_.unset(); tableFile_.setEnabled(false);
+  }
 
   //---
 
@@ -1018,7 +973,7 @@ class CGnuPlot {
   void setTitle(const CGnuPlotTitle &t) { title_ = t; }
 
   void setDummyVars(const std::string &dummyVar1, const std::string &dummyVar2);
-  void getDummyVars(std::string &dummyVar1, std::string &dummyVar2) const;
+  void getDummyVars(std::string &dummyVar1, std::string &dummyVar2, bool is3D=false) const;
   void resetDummyVars();
 
   const Samples    &samples   () const { return samples_; }
@@ -1152,7 +1107,7 @@ class CGnuPlot {
   std::string            lastPlotCmd_;
   std::string            lastSPlotCmd_;
   std::string            lastFilename_;
-  std::string            tableFile_;
+  CGnuPlotPrintFile      tableFile_;
   Smooth                 smooth_ { Smooth::NONE };
   CGnuPlotHistogramData  histogramData_;
   CGnuPlotLineStyleP     lineStyle_;
@@ -1162,7 +1117,7 @@ class CGnuPlot {
   CGnuPlotAxesData       axesData_;
   CGnuPlotKeyData        keyData_;
   CBBox2D                region_ { 0, 0, 1, 1 };
-  Margin                 margin_;
+  CGnuPlotMargin         margin_;
   CRGBA                  backgroundColor_ { 1, 1, 1};
   std::string            colorSequence_ { "default" };
   int                    xind_ { 1 };

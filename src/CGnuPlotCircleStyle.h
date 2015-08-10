@@ -33,8 +33,8 @@ class CGnuPlotCircleStyle {
 
     os << ")";
 
-    os << (wedge_ ? " wedge" : " nowedge");
-    os << (clip_  ? " clip"  : " noclip" );
+    os << (wedge() ? " wedge" : " nowedge");
+    os << (clip()  ? " clip"  : " noclip" );
 
     os << std::endl;
   }

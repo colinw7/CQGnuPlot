@@ -71,7 +71,7 @@ class CGnuPlotAxesData {
 
   int getBorderSides() const { return border_.sides; }
   void setBorderSides(int b) { border_.sides = b; }
-  void resetBorderSides() { border_.sides = 0xFF; }
+  void resetBorderSides() { border_.sides = 31; }
 
   const DrawLayer &getBorderLayer() const { return border_.layer; }
   void setBorderLayer(const DrawLayer &l) { border_.layer = l; }

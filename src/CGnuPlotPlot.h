@@ -302,7 +302,12 @@ class CGnuPlotPlot {
   //---
 
   const CGnuPlotEllipseStyle &ellipseStyle() const { return ellipseStyle_; }
-  void setEllipseStyle(const CGnuPlotEllipseStyle &ts) { ellipseStyle_ = ts; }
+  void setEllipseStyle(const CGnuPlotEllipseStyle &es) { ellipseStyle_ = es; }
+
+  //---
+
+  const CGnuPlotLabelStyle &labelStyle() const { return labelStyle_; }
+  void setLabelStyle(const CGnuPlotLabelStyle &s) { labelStyle_ = s; }
 
   //---
 
@@ -454,6 +459,10 @@ class CGnuPlotPlot {
 
   void initRenderer(CGnuPlotRenderer *renderer);
 
+  void printValues() const;
+  void printSurfaceValues() const;
+  void printContourValues() const;
+
   virtual void draw();
 
   bool isSurfaceData() const;
@@ -463,6 +472,8 @@ class CGnuPlotPlot {
 
   void drawContour(CGnuPlotRenderer *renderer);
   void drawSurface(CGnuPlotRenderer *renderer);
+
+  void initContour() const;
 
   void drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
   void drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
@@ -479,7 +490,7 @@ class CGnuPlotPlot {
   CGnuPlotPolygonObject *createPolygonObject() const;
   CGnuPlotRectObject    *createRectObject   () const;
 
-  bool mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1) const;
+  bool mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const;
 
   void setStyleValue(const std::string &name, StyleValue *value);
   StyleValue *styleValue(const std::string &name) const;
@@ -512,6 +523,11 @@ class CGnuPlotPlot {
 
   int getContourLevels() const { return contourData_.levels().getValue(10); }
   void setContourLevels(int n);
+
+  //------
+
+  const CGnuPlotPrintFile &tableFile() const { return tableFile_; }
+  void setTableFile(const CGnuPlotPrintFile &v) { tableFile_ = v; }
 
   //------
 
@@ -552,6 +568,7 @@ class CGnuPlotPlot {
   CGnuPlotTextBoxStyle   textBoxStyle_;                     // text box style
   CGnuPlotEllipseStyle   ellipseStyle_;                     // ellipse style
   CGnuPlotTextStyle      textStyle_;                        // text style
+  CGnuPlotLabelStyle     labelStyle_;                       // label style
   CGnuPlotKeyTitle       keyTitle_;                         // title on key
   int                    xind_ { 1 };                       // xaxis index
   int                    yind_ { 1 };                       // yaxis index
@@ -584,6 +601,7 @@ class CGnuPlotPlot {
   CGnuPlotTypes::Mapping mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
   CGnuPlotSurfaceData    surfaceData_;
   CGnuPlotContourData    contourData_;
+  CGnuPlotPrintFile      tableFile_;
 };
 
 //------

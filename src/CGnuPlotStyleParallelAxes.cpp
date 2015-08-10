@@ -132,7 +132,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     else
       yaxis->setRange(ymax, ymin);
 
-    yaxis->setDrawTickMark(paxis.showTics());
+    yaxis->setDrawTickMark(paxis.isShowTics());
     yaxis->setDrawMinorTickMark(false);
     yaxis->setLabelInside(i > nr/2);
 

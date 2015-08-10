@@ -75,6 +75,7 @@ CGnuPlotKeyData.cpp \
 CGnuPlotLabel.cpp \
 CGnuPlotLineStyle.cpp \
 CGnuPlotLineType.cpp \
+CGnuPlotMargin.cpp \
 CGnuPlotPalette.cpp \
 CGnuPlotPieObject.cpp \
 CGnuPlotPlot.cpp \

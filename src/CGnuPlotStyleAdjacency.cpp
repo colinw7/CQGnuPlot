@@ -58,7 +58,7 @@ void
 CGnuPlotStyleAdjacency::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  plot->group()->setMargin(CGnuPlot::Margin(0, 0, 0, 0));
+  plot->group()->setMargin(CGnuPlotMargin(0, 0, 0, 0));
 
   CAdjacency adjacency;
 

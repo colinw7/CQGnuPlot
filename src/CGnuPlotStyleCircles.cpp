@@ -81,14 +81,18 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if      ((! isCalcColor && reals.size() == 2) || (isCalcColor && reals.size() == 3)) {
       r = 1; // TODO: get from set circle
 
-      if (isCalcColor)
+      if (isCalcColor) {
         fc1 = lineStyle.calcColor(plot, reals[2]);
+        lc1 = fc1;
+      }
     }
     else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
       r = reals[2];
 
-      if (isCalcColor)
+      if (isCalcColor) {
         fc1 = lineStyle.calcColor(plot, reals[3]);
+        lc1 = fc1;
+      }
     }
     else if ((! isCalcColor && reals.size() == 5) || (isCalcColor && reals.size() == 6)) {
       is_angle = true;
@@ -97,16 +101,20 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       a1 = reals[3];
       a2 = reals[4];
 
-      if (isCalcColor)
+      if (isCalcColor) {
         fc1 = lineStyle.calcColor(plot, reals[5]);
+        lc1 = fc1;
+      }
     }
     else if (reals.size() == 6) {
       is_angle = true;
 
-      r   = reals[2];
-      a1  = reals[3];
-      a2  = reals[4];
+      r  = reals[2];
+      a1 = reals[3];
+      a2 = reals[4];
+
       fc1 = lineStyle.calcColor(plot, reals[5]);
+      lc1 = fc1;
     }
     else {
       std::cerr << "Bad circle points" << std::endl;

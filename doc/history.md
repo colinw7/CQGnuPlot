@@ -90,3 +90,10 @@
  + Improve key columnhead and columns() using function
  + Support Symbol width
  + better position of plot title (above axis labels)
+
+### 8/9/2015
+ + 3D arrow
+ + geographic format string
+ + improve table output (discontinuity, contour and surface)
+ + fix z axis position and border
+ + margins in character units

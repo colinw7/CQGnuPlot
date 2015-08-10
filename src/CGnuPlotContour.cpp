@@ -10,12 +10,13 @@
 static int contour_flags[] = {
   0, 4, // bottom edge to diagonals
   0, 5,
-  1, 6, // top edge to diagonals
-  1, 7,
+  6, 1, // top edge to diagonals
+  7, 1,
+
   2, 4, // left edge to diagonals
   2, 6,
-  3, 5, // right edge to diagonals
-  3, 7,
+  5, 3, // right edge to diagonals
+  7, 3,
 
   4, 5, // diagonal to diagonal
   4, 6,
@@ -96,6 +97,8 @@ setData(double *x, double *y, double *z, int no_x, int no_y)
   for (auto x : x_) { xmin_.updateMin(x); xmax_.updateMax(x); }
   for (auto y : y_) { ymin_.updateMin(y); ymax_.updateMax(y); }
   for (auto z : z_) { zmin_.updateMin(z); zmax_.updateMax(z); }
+
+  calcContourLines();
 }
 
 void
@@ -107,7 +110,7 @@ setContourLevels(const std::vector<double> &levels)
 
 void
 CGnuPlotContour::
-setContourColours(const std::vector<CRGBA> &colors)
+setContourColors(const std::vector<CRGBA> &colors)
 {
   colors_ = colors;
 }
@@ -159,24 +162,41 @@ drawContourLines(CGnuPlotRenderer *renderer)
 
   //---
 
+  double width = lineStyle.calcWidth();
+
+  for (const auto &llines : llines_) {
+    int          l     = llines.first;
+    const Lines &lines = llines.second;
+
+    CRGBA c = levelColor(l);
+
+    for (const auto &line : lines) {
+      renderer->drawLine(line.start(), line.end(), width, c);
+    }
+  }
+}
+
+void
+CGnuPlotContour::
+calcContourLines()
+{
+  llines_.clear();
+
+  CGnuPlotContourData::DrawPos pos = plot_->contourData().pos();
+
+  //---
+
   std::vector<double> levels;
 
   getLevels(levels);
 
   //---
 
-  double width = lineStyle.calcWidth();
-
   int    flag[8];
   double xc[8], yc[8], zc[8];
 
   for (uint l = 0; l < levels.size(); ++l) {
     double level = levels[l];
-
-    CRGBA c(0,0,0);
-
-    if (! colors_.empty())
-      c = colors_[l % colors_.size()];
 
     if (y_.size() < 1) continue;
 
@@ -272,18 +292,63 @@ drawContourLines(CGnuPlotRenderer *renderer)
           if (flag[f1] && flag[f2]) {
             if (pos == CGnuPlotContourData::DrawPos::BASE ||
                 pos == CGnuPlotContourData::DrawPos::BOTH) {
-              renderer->drawLine(CPoint3D(xc[f1], yc[f1], min_z_),
-                                 CPoint3D(xc[f2], yc[f2], min_z_), width, c);
+              CPoint3D p1(xc[f1], yc[f1], min_z_);
+              CPoint3D p2(xc[f2], yc[f2], min_z_);
+
+              llines_[l].push_back(CLine3D(p1, p2));
             }
 
             if (pos == CGnuPlotContourData::DrawPos::SURFACE ||
                 pos == CGnuPlotContourData::DrawPos::BOTH) {
-              renderer->drawLine(CPoint3D(xc[f1], yc[f1], zc[f1]),
-                                 CPoint3D(xc[f2], yc[f2], zc[f2]), width, c);
+              CPoint3D p1(xc[f1], yc[f1], zc[f1]);
+              CPoint3D p2(xc[f2], yc[f2], zc[f2]);
+
+              llines_[l].push_back(CLine3D(p1, p2));
             }
           }
         }
       }
+    }
+
+    // sort lines
+    Lines &lines = llines_[l];
+
+    int nl = lines.size();
+
+    for (int i = 0; i < nl - 1; ++i) {
+      // find best start matching this line's end
+      CLine3D  &line1  = lines[i];
+      CPoint3D &point1 = line1.end();
+
+      int    min_j = -1;
+      double min_d = 1E50;
+      bool   flip  = false;
+
+      for (int j = i + 1; j < nl; ++j) {
+        CLine3D  &line2  = lines[j];
+        CPoint3D &point2 = line2.start();
+        CPoint3D &point3 = line2.end  ();
+
+        double d1 = fabs(point1.x - point2.x) + fabs(point1.y - point2.y);
+        double d2 = fabs(point1.x - point3.x) + fabs(point1.y - point3.y);
+
+        if (min_j < 0 || d1 < min_d) {
+          min_j = j;
+          min_d = d1;
+          flip  = false;
+        }
+
+        if (min_j < 0 || d2 < min_d) {
+          min_j = j;
+          min_d = d2;
+          flip  = true;
+        }
+      }
+
+      std::swap(lines[i + 1], lines[min_j]);
+
+      if (flip)
+        lines[i + 1].flip();
     }
   }
 }
@@ -329,10 +394,7 @@ getLevelData(std::vector<LevelData> &levelDatas) const
   for (uint l = 0; l < levels.size(); ++l) {
     double level = levels[l];
 
-    CRGBA c(0,0,0);
-
-    if (! colors_.empty())
-      c = colors_[l % colors_.size()];
+    CRGBA c = levelColor(l);
 
     levelDatas.push_back(LevelData(level, c));
   }
@@ -341,6 +403,15 @@ getLevelData(std::vector<LevelData> &levelDatas) const
 void
 CGnuPlotContour::
 getLevels(std::vector<double> &levels) const
+{
+  initLevels();
+
+  levels = levels_;
+}
+
+void
+CGnuPlotContour::
+initLevels() const
 {
   if (levels_.empty()) {
     CGnuPlotContour *th = const_cast<CGnuPlotContour *>(this);
@@ -358,8 +429,15 @@ getLevels(std::vector<double> &levels) const
 
     th->levels_ = plot_->contourData().getLevelValues(z1.getValue(0.0), z2.getValue(0.0));
   }
+}
 
-  levels = levels_;
+double
+CGnuPlotContour::
+levelValue(int l) const
+{
+  initLevels();
+
+  return levels_[l];
 }
 
 void
@@ -419,7 +497,7 @@ fillContourBox(CGnuPlotRenderer *renderer, double x1, double y1, double x2, doub
 
   // if consistent level then fill
   if (l >= 0 && l <= int(levels.size())) {
-    CRGBA c = colors_[l % colors_.size()];
+    CRGBA c = levelColor(l);
 
     std::vector<CPoint3D> points;
 
@@ -463,4 +541,16 @@ fillContourBox(CGnuPlotRenderer *renderer, double x1, double y1, double x2, doub
   fillContourBox(renderer, x12, y1 , x2 , y12, z12, z2, z1234, z24, levels);
   fillContourBox(renderer, x1 , y12, x12, y2 , z13, z1234, z3, z34, levels);
   fillContourBox(renderer, x12, y12, x2 , y2 , z1234, z24, z34, z4, levels);
+}
+
+CRGBA
+CGnuPlotContour::
+levelColor(int level) const
+{
+  CRGBA c(0,0,0);
+
+  if (! colors_.empty())
+    c = colors_[level % colors_.size()];
+
+  return c;
 }

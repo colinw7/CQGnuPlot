@@ -31,7 +31,7 @@ class CGnuPlotClip {
     two_    = false;
   }
 
-  void show(std::ostream &os) {
+  void show(std::ostream &os) const {
     os << "point clip is " << (isOn() ? "ON" : "OFF") << std::endl;
 
     if (points_)

@@ -105,11 +105,11 @@ void
 CGnuPlotStyleLines::
 draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
-
-  CGnuPlotGroup *group = plot->group();
+  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
 
   //---
 
@@ -127,6 +127,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     uint np = ip.second.size();
 
     CPoint3D p1;
+    int      ind1;
 
     uint i = 0, j = 0;
 
@@ -135,7 +136,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       for ( ; i < np; ++i, ++j) {
         const CGnuPlotPoint &point1 = ip.second[i];
 
-        if (plot->mapPoint3D(point1, p1))
+        if (plot->mapPoint3D(point1, p1, ind1))
           break;
       }
 
@@ -152,10 +153,11 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       // get next continuous points
       for ( ; i < np; ++i, ++j) {
         CPoint3D p2;
+        int      ind2;
 
         const CGnuPlotPoint &point2 = ip.second[i];
 
-        if (! plot->mapPoint3D(point2, p2) || point2.isDiscontinuity())
+        if (! plot->mapPoint3D(point2, p2, ind2) || point2.isDiscontinuity())
           break;
 
         p2 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);
@@ -196,9 +198,11 @@ void
 CGnuPlotStyleLines::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle= plot->lineStyle();
 
-  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
 
   double lw = lineStyle.calcWidth();
 

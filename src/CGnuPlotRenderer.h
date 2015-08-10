@@ -20,8 +20,9 @@ class CGnuPlotRenderer {
   void setWindow(CGnuPlotWindow *w) { window_ = w; }
   CGnuPlotWindow *window() const { return window_; }
 
-  void setCamera(const CGnuPlotCameraP &c) { camera_ = c; }
   const CGnuPlotCameraP &camera() const { return camera_; }
+  void setCamera(const CGnuPlotCameraP &c) { camera_ = c; }
+  void unsetCamera() { camera_ = CGnuPlotCameraP(); }
 
   int width() const { return width_; }
   void setWidth(int w) { width_ = w; }
@@ -32,8 +33,8 @@ class CGnuPlotRenderer {
   const CBBox2D &region() const { return region_; }
   void setRegion(const CBBox2D &region) { region_ = region; }
 
-  const CRange2D &margin() const { return margin_; }
-  void setMargin(const CRange2D &b) { margin_ = b; }
+  const CGnuPlotMargin &margin() const { return margin_; }
+  void setMargin(const CGnuPlotMargin &m) { margin_ = m; }
 
   const CBBox2D &range() const { return range_; }
   void setRange(const CBBox2D &r) { range_ = r; }
@@ -143,8 +144,10 @@ class CGnuPlotRenderer {
 
   //---
 
-  void drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w);
-  void fillClippedRect(const CBBox2D &rect, const CRGBA &c);
+  void drawClippedRect   (const CBBox2D &rect, const CRGBA &c, double w);
+  void fillClippedRect   (const CBBox2D &rect, const CRGBA &c);
+  void patternClippedRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
+                          const CRGBA &fg, const CRGBA &bg);
 
   void fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c);
   void drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c);
@@ -200,7 +203,7 @@ class CGnuPlotRenderer {
   int              height_ { 100 };   // pixel height
   bool             mapping_ { true }; // mapping enabled
   CBBox2D          region_;           // window region (0,0) -> (1,1)
-  CRange2D         margin_;           // margin for plot
+  CGnuPlotMargin   margin_;           // margin for plot
   CBBox2D          range_;            // data range
   COptReal         ratio_;            // aspect ratio
   CBBox2D          clip_;             // clip area

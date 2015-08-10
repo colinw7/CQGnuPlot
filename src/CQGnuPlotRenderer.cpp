@@ -45,11 +45,11 @@ class CQSymbol2DRenderer : public CSymbol2DRenderer {
   void setLineWidth(double w) { pen_.setWidthF(w); }
 
   void moveTo(double x, double y) {
-    path_.moveTo(QPointF(px_ + ss_*x, py_ - ss_*y));
+    path_.moveTo(QPointF(px_ + ss_*x, py_ - ss_*(1 - y)));
   }
 
   void lineTo(double x, double y) {
-    path_.lineTo(QPointF(px_ + ss_*x, py_ - ss_*y));
+    path_.lineTo(QPointF(px_ + ss_*x, py_ - ss_*(1 - y)));
   }
 
   void closePath() {

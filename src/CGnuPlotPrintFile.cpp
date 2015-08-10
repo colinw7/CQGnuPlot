@@ -2,8 +2,8 @@
 #include <CGnuPlot.h>
 
 CGnuPlotPrintFile::
-CGnuPlotPrintFile(CGnuPlot *plot) :
- plot_(plot)
+CGnuPlotPrintFile(CGnuPlot *plot, bool enabled) :
+ plot_(plot), enabled_(enabled)
 {
 }
 
@@ -17,10 +17,9 @@ void
 CGnuPlotPrintFile::
 unset()
 {
-  filename_ = "";
-  isError_  = true;
-  isBlock_  = false;
-  append_   = false;
+  setStdErr();
+
+  append_ = false;
 }
 
 void
@@ -31,6 +30,17 @@ setStdOut()
 
   filename_ = "";
   isError_  = false;
+  isBlock_  = false;
+}
+
+void
+CGnuPlotPrintFile::
+setStdErr()
+{
+  close();
+
+  filename_ = "";
+  isError_  = true;
   isBlock_  = false;
 }
 

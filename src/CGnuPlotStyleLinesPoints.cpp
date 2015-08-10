@@ -192,6 +192,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     uint np = ip.second.size();
 
     CPoint3D p1;
+    int      ind1;
 
     uint i = 0;
 
@@ -202,7 +203,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       for ( ; i < np; ++i) {
         const CGnuPlotPoint &point1 = ip.second[i];
 
-        if (plot->mapPoint3D(point1, p1))
+        if (plot->mapPoint3D(point1, p1, ind1))
           break;
       }
 
@@ -215,10 +216,11 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       // get next continuous points
       for ( ; i < np; ++i) {
         CPoint3D p2;
+        int      ind2;
 
         const CGnuPlotPoint &point2 = ip.second[i];
 
-        if (! plot->mapPoint3D(point2, p2) || point2.isDiscontinuity())
+        if (! plot->mapPoint3D(point2, p2, ind2) || point2.isDiscontinuity())
           break;
 
         points.push_back(p2);

@@ -51,9 +51,9 @@ class CGnuPlotLineStyle {
 
   const COptInt &pointType() const { return pointType_; }
   void setPointType(int type) { pointTypeStr_ = ""; pointType_ = type; }
-  void setPointType(const std::string &str) {pointType_.setInvalid();  pointTypeStr_ = str; }
   void resetPointType() { pointType_.setInvalid(); pointTypeStr_ = ""; }
 
+  void setPointTypeStr(const std::string &str) {pointType_.setInvalid(); pointTypeStr_ = str; }
   const std::string &pointTypeStr() const { return pointTypeStr_; }
 
   const COptReal &pointSize() const { return pointSize_; }

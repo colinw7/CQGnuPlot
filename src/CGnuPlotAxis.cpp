@@ -618,32 +618,27 @@ drawAxis()
 
   for (int i = 0; i < getNumMajorTicks(); ++i) {
     // Calculate Next Tick Point
-
     pos2 = (i + 1)*increment + getStart1();
 
     //------*/
 
     // Draw Major Tick
 
-    if (isVisibleValue(pos1)) {
+    if (! hasMajorTicLabels() && isVisibleValue(pos1)) {
       // Draw Tick Mark
-
       drawAxisTicks(pos1, true);
 
       //------*/
 
       // Create Major Tick Label (Override with application supplied string if required)
+      std::string str = getValueStr(i, pos1);
 
-      if (! hasMajorTicLabels()) {
-        std::string str = getValueStr(i, pos1);
+      maxW_ = std::max(maxW_, font->getStringWidth(str));
 
-        maxW_ = std::max(maxW_, font->getStringWidth(str));
+      //------*/
 
-        //------*/
-
-        // Draw Tick Labels
-        drawTickLabels(pos1, str);
-      }
+      // Draw Tick Labels
+      drawTickLabels(pos1, str);
     }
 
     //------*/
@@ -664,8 +659,10 @@ drawAxis()
             if (isDrawMinorTickMark()) {
               double pos3 = mapLogValue(mpos3);
 
-              if (isVisibleValue(pos3))
+              if (! hasMinorTicLabels() && isVisibleValue(pos3)) {
+                // Draw Tick Mark
                 drawAxisTicks(pos3, false);
+              }
             }
           }
         }
@@ -676,8 +673,10 @@ drawAxis()
         double pos3 = getTickSpace(j)*(pos2 - pos1) + pos1;
 
         if (isDrawMinorTickMark()) {
-          if (isVisibleValue(pos3))
+          if (! hasMinorTicLabels() && isVisibleValue(pos3)) {
+            // Draw Tick Mark
             drawAxisTicks(pos3, false);
+          }
         }
       }
     }
@@ -690,32 +689,26 @@ drawAxis()
   //------*/
 
   // Draw Last Major Tick
-
-  if (isVisibleValue(pos1)) {
+  if (! hasMajorTicLabels() && isVisibleValue(pos1)) {
     // Draw Tick Mark
-
     drawAxisTicks(pos1, true);
 
     //------*/
 
     // Create Major Tick Label (Override with application supplied string if required)
+    std::string str = getValueStr(getNumMajorTicks(), pos1);
 
-    if (! hasMajorTicLabels()) {
-      std::string str = getValueStr(getNumMajorTicks(), pos1);
+    maxW_ = std::max(maxW_, font->getStringWidth(str));
 
-      maxW_ = std::max(maxW_, font->getStringWidth(str));
+    //------*/
 
-      //------*/
-
-      // Draw Tick Label
-      drawTickLabels(pos1, str);
-    }
+    // Draw Tick Label
+    drawTickLabels(pos1, str);
   }
 
   //------*/
 
   // Draw Custom Major Tic Labels
-
   if (hasMajorTicLabels()) {
     const CGnuPlotAxisData::RTicLabels &ticLabels = getMajorTicLabels();
 
@@ -725,6 +718,10 @@ drawAxis()
 
       maxW_ = std::max(maxW_, font->getStringWidth(s));
 
+      // Draw Tick Mark
+      drawAxisTicks(r, true);
+
+      // Draw Tick Label
       drawTickLabels(r, s);
     }
   }
@@ -738,9 +735,11 @@ drawAxis()
 
       maxW_ = std::max(maxW_, font->getStringWidth(s));
 
-      drawTickLabels(r, s);
-
+      // Draw Tick Mark
       drawAxisTicks(r, false);
+
+      // Draw Tick Label
+      drawTickLabels(r, s);
     }
   }
 }
@@ -808,7 +807,7 @@ drawAxisTick(double pos, bool first, bool large)
   //  mirror draw up/down
   CPoint3D p = valueToPoint(reverse_ ? end_ - (pos - start_) : pos, first, ! isBorderTics());
 
-  if (clip_ && ! renderer_->clip().inside(CPoint2D(p.x, p.y)))
+  if (clip() && ! renderer_->clip().inside(CPoint2D(p.x, p.y)))
     return;
 
   double psize = 6*(large ? getTicMajorScale() : getTicMinorScale());
@@ -888,7 +887,7 @@ drawTickLabel(double pos, const std::string &str, bool first)
 
   CPoint3D p = valueToPoint(reverse_ ? end_ - (pos - start_) : pos, first, ! isBorderTics());
 
-  if (clip_ && ! renderer_->clip().inside(CPoint2D(p.x, p.y)))
+  if (clip() && ! renderer_->clip().inside(CPoint2D(p.x, p.y)))
     return;
 
   CRGBA c = ticColor().color();
@@ -1078,12 +1077,13 @@ drawGrid(CGnuPlotRenderer *renderer)
   if (hasGridMajor() || hasGridMinor()) {
     double mi = getMajorIncrement();
 
+    // draw grid on major ticks
     for (int i = 0; i <= getNumMajorTicks(); ++i) {
       double pos1 = i*mi + getStart1();
       double pos2 = pos1 + mi;
 
       if (hasGridMajor()) {
-        if (isVisibleValue(pos1)) {
+        if (! hasMajorTicLabels() && isVisibleValue(pos1)) {
           CPoint3D p1 = valueToPoint(pos1, /*first*/false, /*zero*/false);
           CPoint3D p2 = valueToPoint(pos1, /*first*/true , /*zero*/false);
 
@@ -1103,7 +1103,7 @@ drawGrid(CGnuPlotRenderer *renderer)
 
             double pos3 = mapLogValue(mpos3);
 
-            if (isVisibleValue(pos3)) {
+            if (! hasMinorTicLabels() && isVisibleValue(pos3)) {
               CPoint3D p11 = valueToPoint(pos3, /*first*/false, /*zero*/false);
               CPoint3D p21 = valueToPoint(pos3, /*first*/true , /*zero*/false);
 
@@ -1112,6 +1112,20 @@ drawGrid(CGnuPlotRenderer *renderer)
           }
         }
       }
+    }
+  }
+
+  // Draw Grid at Custom Major Tic Labels
+  if (hasMajorTicLabels()) {
+    const CGnuPlotAxisData::RTicLabels &ticLabels = getMajorTicLabels();
+
+    for (const auto &label : ticLabels) {
+      double r = mapLogValue(label.first);
+
+      CPoint3D p1 = valueToPoint(r, /*first*/false, /*zero*/false);
+      CPoint3D p2 = valueToPoint(r, /*first*/true , /*zero*/false);
+
+      drawClipLine(p1, p2, c, w1, lineDash);
     }
   }
 }
@@ -1226,10 +1240,11 @@ bool
 CGnuPlotAxis::
 isVisibleValue(double pos) const
 {
-  if (logBase().isValid() || type() == AxisType::R)
-    return (pos >= getStart () && pos <= getEnd ());
-  else
-    return (pos >= getStart2() && pos <= getEnd2());
+  //if (logBase().isValid() || type() == AxisType::R)
+  //  return (pos >= getStart () && pos <= getEnd ());
+  //else
+  //  return (pos >= getStart2() && pos <= getEnd2());
+  return (pos >= getStart() && pos <= getEnd());
 }
 
 bool
@@ -1255,7 +1270,7 @@ drawClipLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c,
     CPoint2D p11(p1.x, p1.y);
     CPoint2D p21(p2.x, p2.y);
 
-    if (! clip_ || renderer_->clipLine(p11, p21))
+    if (! clip() || renderer_->clipLine(p11, p21))
       drawLine(CPoint3D(p11.x, p11.y, p1.z), CPoint3D(p21.x, p21.y, p2.z), c, w, lineDash);
   }
   else
@@ -1370,10 +1385,12 @@ valueToPoint(double v, bool first, bool zero) const
       else if (type() == AxisType::Z) p += CPoint3D(zposition_, bbox.getYMin(), 0);
     }
     else {
+      CPoint3D iv1 = CPoint3D(1, 1, 1) - v_;
+
       if (first)
-        p += iv_*bbox.getMin();
+        p += iv1*bbox.getMin();
       else
-        p += iv_*bbox.getMax();
+        p += iv1*bbox.getBottomMax();
     }
   }
 

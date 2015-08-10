@@ -381,10 +381,15 @@
   + looks ok
 
 ## vector.dem
-  + Invalid filename
+  + key order
+  + set view map disable Z axis ?
+  + arrow size
+  + no plot when table
 
 ## world2.dem
-  + Check output
+  + artifacts on colorbar
+  + point/text not consistent (enhanced and non-enhaned)
+  + no hidden removal
 
 ## world.dem
-  + Check output
+  + default margins wrong (2d and 3d)

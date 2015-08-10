@@ -25,7 +25,7 @@ CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
  group_(group), style_(style), id_(nextId_++), lineStyle_(app()),
  contour_(this), barCache_(this), bubbleCache_(this), ellipseCache_(this), pieCache_(this),
- polygonCache_(this), rectCache_(this)
+ polygonCache_(this), rectCache_(this), tableFile_(group->app())
 {
   setSmooth (app()->getSmooth());
   setBoxPlot(app()->getBoxPlot());
@@ -105,6 +105,8 @@ init()
   setSurfaceData(plot->surfaceData());
 
   setEnhanced(plot->device()->isEnhanced());
+
+  setTableFile(plot->tableFile());
 }
 
 void
@@ -372,6 +374,147 @@ draw()
   }
 }
 
+void
+CGnuPlotPlot::
+printValues() const
+{
+  assert(tableFile_.isEnabled());
+
+  if (! is3D()) {
+    for (const auto &point : getPoints2D()) {
+      std::vector<double> reals;
+
+      if (point.isDiscontinuity()) {
+        std::stringstream ss;
+        ss << std::endl;
+        tableFile_.print(ss.str());
+      }
+
+      (void) point.getReals(reals);
+
+      if (reals.size() < 2)
+        continue;
+
+      // TODO: inside/outside test
+      std::stringstream ss;
+      ss << reals[0] << " " << reals[1] << " i" << std::endl;
+      tableFile_.print(ss.str());
+    }
+  }
+  else {
+    if (isSurfaceData()) {
+      if (isSurfaceEnabled())
+        printSurfaceValues();
+    }
+    else {
+      CGnuPlotStyleBase *style = app()->getPlotStyle(getStyle());
+
+      if (style && style->has3D())
+        printSurfaceValues(); // TODO: different format ?
+      else {
+        if (isSurfaceEnabled())
+          printSurfaceValues();
+      }
+    }
+
+    if (isContourEnabled()) {
+      printContourValues();
+    }
+  }
+}
+
+void
+CGnuPlotPlot::
+printSurfaceValues() const
+{
+  int iy = 0;
+
+  for (const auto &ip : getPoints3D()) {
+    std::stringstream ss;
+    ss << std::endl;
+    ss << "# IsoCurve " << iy << ", " << ip.second.size() << " points" << std::endl;
+    ss << "# x y z type" << std::endl;
+    tableFile_.print(ss.str());
+
+    //---
+
+    for (const auto &point : ip.second) {
+      std::vector<double> reals;
+
+      (void) point.getReals(reals);
+
+      if (reals.size() < 3)
+        continue;
+
+      // TODO: inside/outside test
+      std::stringstream ss;
+      ss << reals[0] << " " << reals[1] << " " << reals[2] << " i" << std::endl;
+      tableFile_.print(ss.str());
+    }
+
+    ++iy;
+  }
+}
+
+void
+CGnuPlotPlot::
+printContourValues() const
+{
+  initContour();
+
+#if 0
+  // draw contour points
+  int nx = contour_.nx();
+  int ny = contour_.ny();
+
+  for (int j = 0; j < ny - 1; ++j) {
+    std::stringstream ss;
+    ss << std::endl;
+    ss << "# Contour " << j << std::endl;
+    tableFile_.print(ss.str());
+
+    double y = contour_.y(j);
+
+    for (int i = 0; i < nx - 1; ++i) {
+      double x = contour_.x(i);
+      double z = contour_.z(i, j);
+
+      std::stringstream ss;
+      ss << x << " " << y << " " << z << std::endl;
+      tableFile_.print(ss.str());
+    }
+  }
+#endif
+
+  const CGnuPlotContour::LevelLines &llines = contour_.levelLines();
+
+  for (const auto &ll : llines) {
+    int                           l     = ll.first;
+    const CGnuPlotContour::Lines &lines = ll.second;
+
+    std::stringstream ss;
+    ss << std::endl;
+    ss << "# Contour " << l << std::endl;
+    tableFile_.print(ss.str());
+
+    double z = contour_.levelValue(l);
+
+    int il = 0;
+
+    for (const auto &line : lines) {
+      std::stringstream ss;
+
+      if (il == 0)
+        ss << line.start().x << " " << line.start().y << " " << z << std::endl;
+
+      ss << line.end().x << " " << line.end().y << " " << z << std::endl;
+
+      tableFile_.print(ss.str());
+
+      ++il;
+    }
+  }
+}
 
 void
 CGnuPlotPlot::
@@ -452,12 +595,23 @@ void
 CGnuPlotPlot::
 drawContour(CGnuPlotRenderer *renderer)
 {
-  std::pair<int,int> np = numPoints3D();
+  initContour();
 
-  //---
+  contour_.drawContour(renderer);
+}
 
-  if (! contourSet_) {
-    contour_.reset();
+void
+CGnuPlotPlot::
+initContour() const
+{
+  CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
+
+  if (! th->contourSet_) {
+    std::pair<int,int> np = numPoints3D();
+
+    //---
+
+    th->contour_.reset();
 
     std::vector<double> xc, yc, zc;
 
@@ -480,12 +634,10 @@ drawContour(CGnuPlotRenderer *renderer)
       }
     }
 
-    contour_.setData(&xc[0], &yc[0], &zc[0], np.first, np.second);
+    th->contour_.setData(&xc[0], &yc[0], &zc[0], np.first, np.second);
 
-    contourSet_ = true;
+    th->contourSet_ = true;
   }
-
-  contour_.drawContour(renderer);
 }
 
 bool
@@ -996,8 +1148,9 @@ calcXRange(double *xmin, double *xmax) const
       for (const auto &ip : getPoints3D()) {
         for (const auto &p : ip.second) {
           CPoint3D p1;
+          int      ind;
 
-          if (! mapPoint3D(p, p1))
+          if (! mapPoint3D(p, p1, ind))
             continue;
 
           if (IsNaN(p1.x))
@@ -1053,8 +1206,9 @@ calcYRange(double *ymin, double *ymax) const
       for (const auto &ip : getPoints3D()) {
         for (const auto &p : ip.second) {
           CPoint3D p1;
+          int      ind;
 
-          if (! mapPoint3D(p, p1))
+          if (! mapPoint3D(p, p1, ind))
             continue;
 
           if (IsNaN(p1.y))
@@ -1108,8 +1262,9 @@ calcZRange(double *zmin, double *zmax) const
     for (const auto &ip : getPoints3D()) {
       for (const auto &p : ip.second) {
         CPoint3D p1;
+        int      ind;
 
-        if (! mapPoint3D(p, p1))
+        if (! mapPoint3D(p, p1, ind))
           continue;
 
         p1 = group_->mapLogPoint(xind(), yind(), 1, p1);
@@ -1144,8 +1299,9 @@ calcBoundedYRange(double *ymin, double *ymax) const
       for (const auto &ip : getPoints3D()) {
         for (const auto &p : ip.second) {
           CPoint3D p1;
+          int      ind;
 
-          if (! mapPoint3D(p, p1))
+          if (! mapPoint3D(p, p1, ind))
             continue;
 
           if (p1.x < xmin || p1.x > xmax)
@@ -1253,8 +1409,9 @@ getPointsRange(CBBox2D &bbox) const
     for (const auto &ip : getPoints3D()) {
       for (const auto &p : ip.second) {
         CPoint3D p1;
+        int      ind;
 
-        if (! mapPoint3D(p, p1))
+        if (! mapPoint3D(p, p1, ind))
           continue;
 
         if (! IsNaN(p1.x)) {
@@ -1294,7 +1451,7 @@ getPointsRange(CBBox2D &bbox) const
 
 bool
 CGnuPlotPlot::
-mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1) const
+mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const
 {
   std::vector<double> reals;
 
@@ -1315,6 +1472,8 @@ mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1) const
     double z = r*sin(phi1);
 
     p1 = CPoint3D(x, y, z);
+
+    ind = (reals.size() > 3 ? 3 : reals.size());
   }
   else if (mapping() == CGnuPlotTypes::Mapping::CYLINDRICAL_MAPPING) {
     double theta = (reals.size() > 0 ? reals[0] : 0.0);
@@ -1327,10 +1486,14 @@ mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1) const
     double y = r*sin(theta1);
 
     p1 = CPoint3D(x, y, z);
+
+    ind = (reals.size() > 3 ? 3 : reals.size());
   }
   else {
     if (! p.getPoint(p1))
       return false;
+
+    ind = 3;
   }
 
   return true;

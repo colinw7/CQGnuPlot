@@ -20,12 +20,24 @@ draw(CGnuPlotRenderer *renderer) const
   if (font_.isValid())
     renderer->setFont(font_);
 
-  CBBox2D bbox = group_->getAxisBBox();
+  double xmin, xmax, ymax;
 
-  double xmin = bbox.getXMin();
-  double xmax = bbox.getXMax();
-//double ymin = bbox.getYMin();
-  double ymax = bbox.getYMax();
+  if (! group_->is3D()) {
+    CBBox2D bbox = group_->getAxisBBox();
+
+    xmin = bbox.getXMin();
+    xmax = bbox.getXMax();
+  //ymin = bbox.getYMin();
+    ymax = bbox.getYMax();
+  }
+  else {
+    const CBBox2D &region = group_->region();
+
+    xmin = region.getXMin();
+    xmax = region.getXMax();
+  //ymin = region.getYMin();
+    ymax = region.getYMax();
+  }
 
 //double pw = renderer->pixelWidthToWindowWidth  (1);
   double ph = renderer->pixelHeightToWindowHeight(1);

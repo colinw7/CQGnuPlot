@@ -31,6 +31,7 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
     length_    = arrow->length_;
     angle_     = arrow->angle_;
     style_     = arrow->style_;
+    lineColor_ = arrow->lineColor_;
 
     return this;
   }

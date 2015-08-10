@@ -86,28 +86,12 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   double                   pointSize = plot->pointSize();
   CGnuPlotPlot::SymbolType pointType = plot->pointType();
 
-  uint pointNum = 0;
-
   for (const auto &ip : plot->getPoints3D()) {
     for (const auto &point : ip.second) {
-      std::vector<double> reals;
+      CPoint3D p;
+      int      ind;
 
-      (void) point.getReals(reals);
-
-      CPoint3D p(0, 0, 0);
-
-      uint valueNum = 0;
-
-      if      (reals.size() == 2) {
-        p.x = reals[valueNum++];
-        p.y = reals[valueNum++];
-        p.z = pointNum;
-      }
-      else if (reals.size() >= 3) {
-        p.x = reals[valueNum++];
-        p.y = reals[valueNum++];
-        p.z = reals[valueNum++];
-      }
+      (void) plot->mapPoint3D(point, p, ind);
 
       renderer->drawSymbol(p, pointType, pointSize, c, lw);
     }

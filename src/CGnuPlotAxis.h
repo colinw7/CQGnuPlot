@@ -236,7 +236,7 @@ class CGnuPlotAxis {
 
   //---
 
-  bool isDrawTickMark() const { return data_.showTics(); }
+  bool isDrawTickMark() const { return data_.isShowTics(); }
   void setDrawTickMark(bool b) { data_.setShowTics(b); }
 
   bool isMirror() const { return data_.isMirror(); }

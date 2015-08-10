@@ -47,25 +47,29 @@ draw(CGnuPlotRenderer *renderer) const
 {
   const CGnuPlotArrow *arrow = this;
 
-  CPoint2D from = arrow->from_.getPoint2D(renderer);
+  CPoint3D from = arrow->from_.getPoint3D(renderer);
 
-  CPoint2D to;
+  CPoint3D to;
 
   if      (coordType_ == CoordType::FROM_TO)
-    to = arrow->to_.getPoint2D(renderer);
+    to = arrow->to_.getPoint3D(renderer);
   else if (coordType_ == CoordType::FROM_RTO)
-    to = from + arrow->to_.getPoint2D(renderer);
+    to = from + arrow->to_.getPoint3D(renderer);
   else if (coordType_ == CoordType::FROM_ANGLE) {
     double dx = arrow->length_.getXValue(renderer)*cos(arrow->angle_.radians());
     double dy = arrow->length_.getXValue(renderer)*sin(arrow->angle_.radians());
+    double dz = 0;
 
-    to = from + CPoint2D(dx, dy);
+    to = from + CPoint3D(dx, dy, dz);
   }
+
+  CPoint2D from1 = renderer->transform(from);
+  CPoint2D to1   = renderer->transform(to);
 
   double fx, fy, tx, ty;
 
-  renderer->windowToPixel(from.x, from.y, &fx, &fy);
-  renderer->windowToPixel(to  .x, to  .y, &tx, &ty);
+  renderer->windowToPixel(from1.x, from1.y, &fx, &fy);
+  renderer->windowToPixel(to1  .x, to1  .y, &tx, &ty);
 
   double w = (arrow->getLineWidth() > 0 ? arrow->getLineWidth() : 1);
 

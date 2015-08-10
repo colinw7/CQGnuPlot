@@ -21,15 +21,15 @@ draw(CGnuPlotRenderer *renderer) const
 //CVAlignType valign = (getFront() ? CVALIGN_TYPE_TOP : CVALIGN_TYPE_CENTER);
   CVAlignType valign = CVALIGN_TYPE_CENTER;
 
-  if (font_.isValid())
-    renderer->setFont(font_);
+  if (getFont().isValid())
+    renderer->setFont(getFont());
   else
     renderer->setFont(defFont_);
 
-  CPoint3D pos  = pos_.getPoint3D(renderer);
+  CPoint3D pos  = getPos().getPoint3D(renderer);
   CPoint2D pos1 = renderer->transform(pos);
 
-  if (enhanced_)
+  if (isEnhanced())
     bbox_ = text_.calcBBox(renderer).moveBy(pos1);
   else
     bbox_ = renderer->getHAlignedTextBBox(getText().text()).moveBy(pos1);
@@ -65,13 +65,13 @@ draw(CGnuPlotRenderer *renderer) const
 
   pos1 += d;
 
-  if (showPoint_) {
+  if (showPoint()) {
     // TODO: show point
   }
 
   CRGBA c = textColor_.color();
 
-  if (enhanced_) {
+  if (isEnhanced()) {
     CBBox2D bbox = bbox_;
 
     bbox.setYMax(pos1.y);
@@ -99,17 +99,17 @@ print(std::ostream &os) const
 
   os << "\"" << " at " << pos_;
 
-  if (hypertext_)
+  if (hasHypertext())
     os << " hypertext";
 
-  if      (align_ == CHALIGN_TYPE_LEFT  ) os << " left";
-  else if (align_ == CHALIGN_TYPE_CENTER) os << " center";
-  else if (align_ == CHALIGN_TYPE_RIGHT ) os << " right";
+  if      (getAlign() == CHALIGN_TYPE_LEFT  ) os << " left";
+  else if (getAlign() == CHALIGN_TYPE_CENTER) os << " center";
+  else if (getAlign() == CHALIGN_TYPE_RIGHT ) os << " right";
 
-  if (angle_ < 0)
+  if (getAngle() < 0)
     os << " not rotated";
   else
-    os << " rotated by " << angle_ << " degrees";
+    os << " rotated by " << getAngle() << " degrees";
 
   if      (layer_ == DrawLayer::FRONT)
     os << " front";
@@ -118,31 +118,31 @@ print(std::ostream &os) const
   else if (layer_ == DrawLayer::BEHIND)
     os << " behind";
 
-  if (font_.isValid())
-    os << " font \"" << font_ << "\"";
+  if (getFont().isValid())
+    os << " font \"" << getFont() << "\"";
 
   if (textColor_.isValid())
     os << " textcolor " << textColor_;
 
-  if (showPoint_) {
+  if (showPoint()) {
     os << " point with";
 
-    if (lineType_ >= 0)
-      os << " linetype " << lineType_;
+    if (lineType() >= 0)
+      os << " linetype " << lineType();
 
-    if (pointType_ >= 0)
-      os << " pointtype " << pointType_;
+    if (pointType() >= 0)
+      os << " pointtype " << pointType();
 
-    if (pointSize_ >= 0)
-      os << " pointsize " << pointSize_;
+    if (pointSize() >= 0)
+      os << " pointsize " << pointSize();
     else
       os << " pointsize default";
   }
   else
     os << " nopoint ";
 
-  if (offset_.isValid())
-    os << " offset " << offset_.getValue();
+  if (getOffset().isValid())
+    os << " offset " << getOffset().getValue();
 
   if (box_)
    os << " boxed";

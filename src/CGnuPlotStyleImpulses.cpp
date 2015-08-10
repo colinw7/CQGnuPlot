@@ -21,7 +21,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = lineStyle.calcColor(group, CRGBA(1,0,0));
+  CRGBA  lc = lineStyle.calcColor(group, CRGBA(1,0,0));
+  double lw = lineStyle.calcWidth();
 
   double ymin = 0.0;
 
@@ -46,6 +47,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CPoint2D p1(reals[0], y2);
     CPoint2D p2(reals[0], reals[1]);
 
+    if (renderer->isPseudo() && ! renderer->isInside(p2))
+      continue;
+
     if (plot->isPolar()) {
       bool inside1, inside2;
 
@@ -66,8 +70,6 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       lc1 = lineStyle.calcColor(plot, x);
     }
-
-    double lw = lineStyle.calcWidth();
 
     renderer->drawClipLine(p1, p2, lw, lc1);
   }

@@ -491,15 +491,10 @@ fit()
 
     //---
 
-    if (xpmin1.isValid()) {
-      plotXAxis1->setDataRange(xpmin1.getValue(), xpmax1.getValue());
-      plotYAxis1->setDataRange(ypmin1.getValue(), ypmax1.getValue());
-    }
-
-    if (xpmin2.isValid()) {
-      plotXAxis2->setDataRange(xpmin2.getValue(), xpmax2.getValue());
-      plotYAxis2->setDataRange(ypmin2.getValue(), ypmax2.getValue());
-    }
+    if (xpmin1.isValid()) { plotXAxis1->setDataRange(xpmin1.getValue(), xpmax1.getValue()); }
+    if (ypmin1.isValid()) { plotYAxis1->setDataRange(ypmin1.getValue(), ypmax1.getValue()); }
+    if (xpmin2.isValid()) { plotXAxis2->setDataRange(xpmin2.getValue(), xpmax2.getValue()); }
+    if (xpmin2.isValid()) { plotYAxis2->setDataRange(ypmin2.getValue(), ypmax2.getValue()); }
   }
 
   if (! xmin1.isValid()) xmin1 = -10; if (! xmax1.isValid()) xmax1 = 10;
@@ -575,6 +570,10 @@ fit()
 
   updatePlotAxisRange(AxisType::X, 1);
   updatePlotAxisRange(AxisType::Y, 1);
+
+  if (is3D()) {
+    updatePlotAxisRange(AxisType::Z, 1);
+  }
 
   //---
 
@@ -848,13 +847,15 @@ draw()
 
   if (is3D())
     renderer->setCamera(camera_);
+  else
+    renderer->unsetCamera();
 
   drawClearRect(renderer);
 
   //renderer->clear(backgroundColor());
 
   renderer->setRegion(region());
-  renderer->setMargin(margin().range());
+  renderer->setMargin(margin());
 
   if (plotSize().xratio.isValid())
     renderer->setRatio(COptReal(plotSize().xratio.getValue()));
@@ -987,7 +988,7 @@ getPlotAxis(AxisType type, int ind, bool create) const
 
     p1 = iaxis.insert(p1, IAxes::value_type(ind, axis));
 
-    axis->setDrawTickLabel(axisData.showTics());
+    axis->setDrawTickLabel(axisData.isShowTics());
 
     // style customization
     if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
@@ -1032,6 +1033,9 @@ getPlotAxis(AxisType type, int ind, bool create) const
     if (type == AxisType::P) {
       axis->setParallel(true);
     }
+
+    if (axisData.ticIncr().isValid())
+      axis->setMajorIncrement(axisData.ticIncr().getValue());
 
     th->updatePlotAxisRange(type, ind);
   }
@@ -1101,9 +1105,14 @@ drawTitle()
 {
   CGnuPlotRenderer *renderer = app()->renderer();
 
-  CBBox2D bbox = getMappedDisplayRange(1, 1);
+  if (! is3D()) {
+    CBBox2D bbox = getMappedDisplayRange(1, 1);
 
-  renderer->setRange(bbox);
+    renderer->setRange(bbox);
+  }
+  else
+    renderer->setRange(region());
+
   renderer->setReverse(false, false);
 
   title_->draw(renderer);
@@ -1517,19 +1526,19 @@ drawBorder(CGnuPlotRenderer *renderer)
   else {
     // 1 : x axis (bottom)
     if (sides & (1<<0))
-      plotXAxis->drawLowerLine(renderer, c, bw, CLineDash());
+      renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmax1, ymin1), bw, c);
 
     // 2 : y axis (left)
     if (sides & (1<<1))
-      plotYAxis->drawLowerLine(renderer, c, bw, CLineDash());
+      renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmin1, ymax1), bw, c);
 
     // 4 : x axis (top)
     if (sides & (1<<2))
-      plotXAxis->drawUpperLine(renderer, c, bw, CLineDash());
+      renderer->drawLine(CPoint2D(xmin1, ymax1), CPoint2D(xmax1, ymax1), bw, c);
 
     // 8 : y axis (right)
     if (sides & (1<<3))
-      plotYAxis->drawUpperLine(renderer, c, bw, CLineDash());
+      renderer->drawLine(CPoint2D(xmax1, ymin1), CPoint2D(xmax1, ymax1), bw, c);
   }
 }
 

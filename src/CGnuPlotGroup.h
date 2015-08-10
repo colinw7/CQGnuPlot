@@ -16,7 +16,6 @@ class CGnuPlotGroup {
   typedef CGnuPlotTypes::PlotStyle       PlotStyle;
   typedef CGnuPlotTypes::AxisType        AxisType;
   typedef CGnuPlot::Annotations          Annotations;
-  typedef CGnuPlot::Margin               Margin;
   typedef std::vector<CGnuPlotPlot *>    Plots;
   typedef std::map<int, CGnuPlotAxis *>  IAxes;
   typedef std::map<AxisType, IAxes>      Axes;
@@ -216,18 +215,18 @@ class CGnuPlotGroup {
 
   //-----
 
-  double marginLeft  () const { return margin_.left  ().getValue(10); }
-  double marginRight () const { return margin_.right ().getValue(10); }
-  double marginTop   () const { return margin_.top   ().getValue(10); }
-  double marginBottom() const { return margin_.bottom().getValue(10); }
+  double marginLeft  () const { return margin_.leftValue  ().getValue(2); }
+  double marginRight () const { return margin_.rightValue ().getValue(2); }
+  double marginTop   () const { return margin_.topValue   ().getValue(2); }
+  double marginBottom() const { return margin_.bottomValue().getValue(2); }
 
   void setMarginLeft  (double v) { margin_.setLeft  (v); }
   void setMarginRight (double v) { margin_.setRight (v); }
   void setMarginTop   (double v) { margin_.setTop   (v); }
   void setMarginBottom(double v) { margin_.setBottom(v); }
 
-  const Margin &margin() const { return margin_; }
-  void setMargin(const Margin &m) { margin_ = m; }
+  const CGnuPlotMargin &margin() const { return margin_; }
+  void setMargin(const CGnuPlotMargin &m) { margin_ = m; }
 
   //-----
 
@@ -335,7 +334,7 @@ class CGnuPlotGroup {
 
   CPoint3D mapLogPoint(int xind, int yind, int zind, const CPoint3D &p) const;
   CPoint2D mapLogPoint(int xind, int yind, int zind, const CPoint2D &p) const;
-  void     mapLogPoint  (int xind, int yind, int zind, double *x, double *y, double *z) const;
+  void     mapLogPoint(int xind, int yind, int zind, double *x, double *y, double *z) const;
 
   CPoint3D unmapLogPoint(int xind, int yind, int zind, const CPoint3D &p) const;
   CPoint2D unmapLogPoint(int xind, int yind, int zind, const CPoint2D &p) const;
@@ -346,30 +345,30 @@ class CGnuPlotGroup {
  protected:
   static int nextId_;
 
-  CGnuPlotWindow*       window_;                   // parent window
-  int                   id_   { 0 };               // unique id
-  int                   ind_  { 0 };               // group index in window
-  bool                  is3D_ { false };           // plots are 3D
-  bool                  polar_ { false };          // is polar
-  CGnuPlotTitle*        title_;                    // plot title
-  Plots                 plots_;                    // plots
-  CBBox2D               region_ {0,0,1,1};         // region of window
-  Margin                margin_ {10,10,10,10};     // margin around plots
-  CBBox2D               bbox_ { 0, 0, 1, 1 };      // bounding box
-  CBBox2D               axisBBox_ { 0, 0, 1, 1 };  // bounding box
-  CGnuPlotClip          clip_;                     // clip
-  COptBBox2D            clearRect_;                // optional clear rectangle
-  CGnuPlotPlotSize      plotSize_;                 // plot size
-  CGnuPlotHistogramData histogramData_;            // histogram style
-  CGnuPlotKeyP          key_;                      // key
-  CGnuPlotColorBoxP     colorBox_;                 // color box
-  CGnuPlotPaletteP      palette_;                  // palette
-  CGnuPlotAxesData      axesData_;                 // axes data
-  Annotations           annotations_;              // annotations
-  Axes                  axes_;                     // axes
-  CGnuPlotCameraP       camera_;                   // view camera
-  CGnuPlotTimeStampP    timeStamp_;                // time stamp
-  CRGBA                 backgroundColor_;          // background color
+  CGnuPlotWindow*       window_;                  // parent window
+  int                   id_   { 0 };              // unique id
+  int                   ind_  { 0 };              // group index in window
+  bool                  is3D_ { false };          // plots are 3D
+  bool                  polar_ { false };         // is polar
+  CGnuPlotTitle*        title_;                   // plot title
+  Plots                 plots_;                   // plots
+  CBBox2D               region_ {0,0,1,1};        // region of window
+  CGnuPlotMargin        margin_;                  // margin around plots
+  CBBox2D               bbox_ { 0, 0, 1, 1 };     // bounding box
+  CBBox2D               axisBBox_ { 0, 0, 1, 1 }; // bounding box
+  CGnuPlotClip          clip_;                    // clip
+  COptBBox2D            clearRect_;               // optional clear rectangle
+  CGnuPlotPlotSize      plotSize_;                // plot size
+  CGnuPlotHistogramData histogramData_;           // histogram style
+  CGnuPlotKeyP          key_;                     // key
+  CGnuPlotColorBoxP     colorBox_;                // color box
+  CGnuPlotPaletteP      palette_;                 // palette
+  CGnuPlotAxesData      axesData_;                // axes data
+  Annotations           annotations_;             // annotations
+  Axes                  axes_;                    // axes
+  CGnuPlotCameraP       camera_;                  // view camera
+  CGnuPlotTimeStampP    timeStamp_;               // time stamp
+  CRGBA                 backgroundColor_;         // background color
   mutable CBBox2D       saveRange_;
 };
 
