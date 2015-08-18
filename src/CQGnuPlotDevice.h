@@ -45,6 +45,7 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
 
   CGnuPlotTitle  *createTitle (CGnuPlotGroup *group) override;
   CGnuPlotCamera *createCamera(CGnuPlotGroup *group) override;
+  CGnuPlotPm3D   *createPm3D  (CGnuPlotGroup *group) override;
 
   CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group) override;
 

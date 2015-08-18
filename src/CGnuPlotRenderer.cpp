@@ -177,6 +177,23 @@ drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &
     drawLine(p1, p2, width, c, dash);
 }
 
+void
+CGnuPlotRenderer::
+drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w)
+{
+  CPoint2D o = rect.getCenter();
+
+  CPoint2D p1 = rotatePoint(rect.getLL(), a, o);
+  CPoint2D p2 = rotatePoint(rect.getLR(), a, o);
+  CPoint2D p3 = rotatePoint(rect.getUR(), a, o);
+  CPoint2D p4 = rotatePoint(rect.getUL(), a, o);
+
+  drawLine(p1, p2, w, c);
+  drawLine(p2, p3, w, c);
+  drawLine(p3, p4, w, c);
+  drawLine(p4, p1, w, c);
+}
+
 bool
 CGnuPlotRenderer::
 clipLine(CPoint2D &p1, CPoint2D &p2)
@@ -580,6 +597,19 @@ drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c, doub
 
 void
 CGnuPlotRenderer::
+drawPixelLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,
+              const CLineDash &dash)
+{
+  double wx1, wy1, wx2, wy2;
+
+  windowToPixel(p1.x, p1.y, &wx1, &wy1);
+  windowToPixel(p2.x, p2.y, &wx2, &wy2);
+
+   drawLine(CPoint2D(wx1, wy1), CPoint2D(wx2, wy2), width, c, dash);
+}
+
+void
+CGnuPlotRenderer::
 drawPoint(const CPoint3D &p, const CRGBA &c)
 {
   drawPoint(transform(p), c);
@@ -613,6 +643,30 @@ pixelHeightToWindowHeight(double h)
 
   pixelToWindow(0, 0, &wx1, &wy1);
   pixelToWindow(h, h, &wx2, &wy2);
+
+  return wy1 - wy2;
+}
+
+double
+CGnuPlotRenderer::
+pixelWidthToWindowWidthNoMargin(double w)
+{
+  double wx1, wy1, wx2, wy2;
+
+  pixelToWindowNoMargin(0, 0, &wx1, &wy1);
+  pixelToWindowNoMargin(w, w, &wx2, &wy2);
+
+  return wx2 - wx1;
+}
+
+double
+CGnuPlotRenderer::
+pixelHeightToWindowHeightNoMargin(double h)
+{
+  double wx1, wy1, wx2, wy2;
+
+  pixelToWindowNoMargin(0, 0, &wx1, &wy1);
+  pixelToWindowNoMargin(h, h, &wx2, &wy2);
 
   return wy1 - wy2;
 }
@@ -726,6 +780,20 @@ void
 CGnuPlotRenderer::
 pixelToWindow(double px, double py, double *wx, double *wy)
 {
+  pixelToWindowI(px, py, wx, wy, true);
+}
+
+void
+CGnuPlotRenderer::
+pixelToWindowNoMargin(double px, double py, double *wx, double *wy)
+{
+  pixelToWindowI(px, py, wx, wy, false);
+}
+
+void
+CGnuPlotRenderer::
+pixelToWindowI(double px, double py, double *wx, double *wy, bool margin)
+{
   if (! mapping_) {
     *wx = px;
     *wy = py;
@@ -745,10 +813,20 @@ pixelToWindow(double px, double py, double *wx, double *wy)
   double ph = pymax - pymin;
 
   // add margin
-  double lmargin = margin_.left  ().xValue(this);
-  double rmargin = margin_.right ().xValue(this);
-  double tmargin = margin_.top   ().yValue(this);
-  double bmargin = margin_.bottom().yValue(this);
+  double lmargin, rmargin, tmargin, bmargin;
+
+  if (margin) {
+    lmargin = margin_.left  ().xValue(this);
+    rmargin = margin_.right ().xValue(this);
+    tmargin = margin_.top   ().yValue(this);
+    bmargin = margin_.bottom().yValue(this);
+  }
+  else {
+    lmargin = 0;
+    rmargin = 0;
+    tmargin = 0;
+    bmargin = 0;
+  }
 
   pxmin += lmargin; pxmax -= rmargin;
   pymin += tmargin; pymax -= bmargin;
@@ -807,4 +885,27 @@ transform(const CPoint3D &p) const
   }
   else
     return CPoint2D(p.x, p.y);
+}
+
+CPoint2D
+CGnuPlotRenderer::
+rotatePoint(const CPoint2D &p, double a, const CPoint2D &o)
+{
+  double a1 = CAngle::Deg2Rad(a);
+
+  CPoint2D po;
+
+  windowToPixel(o, po);
+
+  CPoint2D p1;
+
+  windowToPixel(p, p1);
+
+  CPoint2D pr1 = CMathGeom2D::RotatePoint(p1, -a1, po);
+
+  CPoint2D pr;
+
+  pixelToWindow(pr1, pr);
+
+  return pr;
 }

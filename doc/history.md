@@ -97,3 +97,13 @@
  + improve table output (discontinuity, contour and surface)
  + fix z axis position and border
  + margins in character units
+
+### 8/17/2015
+ + Improve rotated axis tic labels
+ + Auto calc margins based on axis, colorbox and title
+ + Use axis tic size on color box
+ + Support margins for key placement
+ + Improve pm3d handling (set pm3d view)
+ + Pm3D virtual class
+ + Filled curves pattern fill
+ + add factorial to expression eval

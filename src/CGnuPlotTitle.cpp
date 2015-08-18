@@ -8,21 +8,21 @@ CGnuPlotTitle::
 CGnuPlotTitle(CGnuPlotGroup *group) :
  group_(group)
 {
-  font_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
+  setFont(CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12));
 }
 
 void
 CGnuPlotTitle::
 draw(CGnuPlotRenderer *renderer) const
 {
-  if (text_.empty()) return;
+  if (text().empty()) return;
 
-  if (font_.isValid())
-    renderer->setFont(font_);
+  if (font().isValid())
+    renderer->setFont(font());
 
   double xmin, xmax, ymax;
 
-  if (! group_->is3D()) {
+  if (! group_->is3D() || group_->pm3D()->isEnabled()) {
     CBBox2D bbox = group_->getAxisBBox();
 
     xmin = bbox.getXMin();
@@ -44,12 +44,12 @@ draw(CGnuPlotRenderer *renderer) const
 
   CPoint2D p((xmin + xmax)/2, ymax);
 
-  p += offset_; // offset units ?
+  p += offset(); // offset units ?
 
-  CRGBA c = color_.color();
+  CRGBA c = color().color();
 
   if (isEnhanced()) {
-    CGnuPlotText text(text_);
+    CGnuPlotText text(this->text());
 
     CBBox2D bbox = text.calcBBox(renderer);
 
@@ -58,10 +58,19 @@ draw(CGnuPlotRenderer *renderer) const
     bbox1.setYMax(p.y + bbox.getHeight());
 
     text.draw(renderer, bbox1, CHALIGN_TYPE_CENTER, c);
+
+    bbox_ = bbox1;
   }
   else {
     CPoint2D p1(p.x, p.y - 8*ph);
 
-    renderer->drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, 0, text_, c);
+    renderer->drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0,
+                               CVALIGN_TYPE_BOTTOM, 0, this->text(), c);
+
+    bbox_ = renderer->getHAlignedTextBBox(this->text()).moveBy(p1);
   }
+
+  //renderer->drawRect(bbox_, CRGBA(1,0,0), 1);
+
+  group_->updateMarginBBox(bbox_);
 }

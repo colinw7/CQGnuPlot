@@ -120,6 +120,11 @@ class CGnuPlotRenderer {
 
   //---
 
+  virtual void drawPixelLine(const CPoint2D &p1, const CPoint2D &p2, double width,
+                             const CRGBA &c, const CLineDash &dash=CLineDash());
+
+  //---
+
   void drawPoint(const CPoint3D &p, const CRGBA &c);
 
   void drawClippedPath(const std::vector<CPoint2D> &points, double width,
@@ -142,12 +147,16 @@ class CGnuPlotRenderer {
   void windowToPixel(double x, double y, double *px, double *py);
   void pixelToWindow(double px, double py, double *wx, double *wy);
 
+  void pixelToWindowNoMargin(double px, double py, double *wx, double *wy);
+
   //---
 
   void drawClippedRect   (const CBBox2D &rect, const CRGBA &c, double w);
   void fillClippedRect   (const CBBox2D &rect, const CRGBA &c);
   void patternClippedRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
                           const CRGBA &fg, const CRGBA &bg);
+
+  void drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w);
 
   void fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c);
   void drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c);
@@ -189,12 +198,20 @@ class CGnuPlotRenderer {
   double pixelWidthToWindowWidth  (double p);
   double pixelHeightToWindowHeight(double p);
 
+  double pixelWidthToWindowWidthNoMargin  (double p);
+  double pixelHeightToWindowHeightNoMargin(double p);
+
   double windowWidthToPixelWidth  (double w);
   double windowHeightToPixelHeight(double w);
 
   void regionToPixel(const CPoint2D &r, CPoint2D &p);
 
   CPoint2D transform(const CPoint3D &p) const;
+
+  CPoint2D rotatePoint(const CPoint2D &p, double a, const CPoint2D &o);
+
+ private:
+  void pixelToWindowI(double px, double py, double *wx, double *wy, bool margin);
 
  protected:
   CGnuPlotWindow  *window_ { 0 };     // current window

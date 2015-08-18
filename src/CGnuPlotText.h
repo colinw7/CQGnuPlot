@@ -41,6 +41,7 @@ struct CGnuPlotTextLine {
 
   Chars  chars;
   double ascent { 0 };
+  double descent { 0 };
 };
 
 struct CGnuPlotTextState {
@@ -51,8 +52,7 @@ struct CGnuPlotTextState {
   }
 
   CGnuPlotRenderer *renderer;
-  double            sa { 0 };
-  double            ca { 1 };
+  CFontPtr          font;
   CPoint2D          pos { 0, 0 };
   Lines             lines;
 };

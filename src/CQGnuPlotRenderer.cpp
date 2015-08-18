@@ -255,6 +255,23 @@ drawPath(const std::vector<CPoint2D> &points, double width, const CRGBA &c,
 
 void
 CQGnuPlotRenderer::
+drawPixelLine(const CPoint2D &point1, const CPoint2D &point2, double width, const CRGBA &c,
+              const CLineDash &dash)
+{
+  QPen pen = painter_->pen();
+
+  pen.setWidthF(width);
+  pen.setColor(toQColor(c));
+
+  CQUtil::penSetLineDash(pen, dash);
+
+  painter_->setPen(pen);
+
+  painter_->drawLine(point1.x, point1.y, point2.x, point2.y);
+}
+
+void
+CQGnuPlotRenderer::
 drawLine(const CPoint2D &point1, const CPoint2D &point2, double width, const CRGBA &c,
          const CLineDash &dash)
 {
@@ -554,7 +571,7 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 void
 CQGnuPlotRenderer::
 drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
-                CHAlignType halign, CVAlignType valign, const CRGBA &c)
+                CHAlignType halign, CVAlignType valign, const CRGBA &tc)
 {
   CQFont *qfont = getFont().cast<CQFont>();
 
@@ -566,9 +583,58 @@ drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
 
   Qt::Alignment qalign = CQUtil::toQAlign(halign) | CQUtil::toQAlign(valign);
 
-  painter_->setPen(toQColor(c));
+  painter_->setPen(toQColor(tc));
 
-  CQRotatedText::drawRotatedText(painter_, px, py, text.c_str(), -ta, qalign);
+  //CQRotatedText::drawRotatedText(painter_, px, py, text.c_str(), -ta, qalign);
+
+  //---
+
+  painter_->save();
+
+  QFontMetrics fm(painter_->font());
+
+  int th = fm.height();
+  int tw = fm.width(text.c_str());
+
+  double dx;
+
+  if      (qalign & Qt::AlignLeft)
+    dx = 0;
+  else if (qalign & Qt::AlignRight)
+    dx = -tw;
+  else if (qalign & Qt::AlignHCenter)
+    dx = -tw/2.0;
+
+  double dy;
+
+  if      (qalign & Qt::AlignBottom)
+    dy = 0;
+  else if (qalign & Qt::AlignTop)
+    dy = th;
+  else if (qalign & Qt::AlignVCenter)
+    dy = th/2.0;
+
+  double angle = -ta;
+
+  double a1 = M_PI*angle/180.0;
+
+  double c = cos(a1);
+  double s = sin(a1);
+
+  double tx = c*dx - s*dy;
+  double ty = s*dx + c*dy;
+
+  QTransform t;
+
+  t.translate(px + tx, py + ty);
+  t.rotate(angle);
+  //t.translate(0, -fm.descent());
+
+  painter_->setTransform(t);
+
+  painter_->drawText(0, 0, text.c_str());
+
+  painter_->restore();
 }
 
 void

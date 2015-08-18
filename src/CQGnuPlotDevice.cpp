@@ -17,6 +17,7 @@
 #include <CQGnuPlotPalette.h>
 #include <CQGnuPlotTitle.h>
 #include <CQGnuPlotCamera.h>
+#include <CQGnuPlotPm3D.h>
 #include <CQGnuPlotTimeStamp.h>
 #include <CQGnuPlotBubbleObject.h>
 #include <CQGnuPlotBarObject.h>
@@ -245,6 +246,17 @@ createCamera(CGnuPlotGroup *group)
   CQGnuPlotCamera *camera = new CQGnuPlotCamera(qgroup);
 
   return camera;
+}
+
+CGnuPlotPm3D *
+CQGnuPlotDevice::
+createPm3D(CGnuPlotGroup *group)
+{
+  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+
+  CQGnuPlotPm3D *pm3d = new CQGnuPlotPm3D(qgroup);
+
+  return pm3d;
 }
 
 CGnuPlotTimeStamp *

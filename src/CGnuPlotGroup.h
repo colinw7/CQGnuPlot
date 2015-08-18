@@ -8,6 +8,7 @@
 #include <CGnuPlotPalette.h>
 #include <CGnuPlotClip.h>
 #include <CGnuPlotTimeStamp.h>
+#include <CGnuPlotPm3D.h>
 
 class CGnuPlotGroup {
  public:
@@ -35,11 +36,11 @@ class CGnuPlotGroup {
   void set3D(bool b);
   bool is3D() const { return is3D_; }
 
-  CGnuPlotTitle *title() const { return title_; }
+  CGnuPlotTitleP title() const { return title_; }
 
   void cameraChanged();
 
-  void setTitleData(const CGnuPlotTitle &t);
+  void setTitleData(const CGnuPlotTitleData &t);
 
   const Plots &plots() const { return plots_; }
   void addSubPlots(const Plots &plots);
@@ -157,6 +158,14 @@ class CGnuPlotGroup {
 
   //---
 
+  bool hidden3D() const { return hidden3D_; }
+  void setHidden3D(bool b) { hidden3D_ = b; }
+
+  CGnuPlotPm3DP pm3D() const { return pm3D_; }
+  void setPm3D(CGnuPlotPm3DP p) { pm3D_ = p; }
+
+  //---
+
   CGnuPlotTimeStampP timeStamp() const { return timeStamp_; }
 
   //---
@@ -215,10 +224,10 @@ class CGnuPlotGroup {
 
   //-----
 
-  double marginLeft  () const { return margin_.leftValue  ().getValue(2); }
-  double marginRight () const { return margin_.rightValue ().getValue(2); }
-  double marginTop   () const { return margin_.topValue   ().getValue(2); }
-  double marginBottom() const { return margin_.bottomValue().getValue(2); }
+  double marginLeft  () const { return margin_.left  ().realValue(); }
+  double marginRight () const { return margin_.right ().realValue(); }
+  double marginTop   () const { return margin_.top   ().realValue(); }
+  double marginBottom() const { return margin_.bottom().realValue(); }
 
   void setMarginLeft  (double v) { margin_.setLeft  (v); }
   void setMarginRight (double v) { margin_.setRight (v); }
@@ -269,7 +278,7 @@ class CGnuPlotGroup {
 
   void drawClearRect(CGnuPlotRenderer *renderer);
 
-  void drawTitle();
+  void drawTitle(CGnuPlotRenderer *renderer);
 
   void drawHistogram(const Plots &plots);
 
@@ -318,12 +327,17 @@ class CGnuPlotGroup {
 
   CBBox2D getRegionBBox() const;
 
-  const CBBox2D &getBBox() const { return bbox_; }
+  const CBBox2D &getBBox     () const { return bbox_      ; }
+  const CBBox2D &getAxisBBox () const { return axisBBox_  ; }
+  const CBBox2D &getMarginBox() const { return marginBBox_; }
 
-  const CBBox2D &getAxisBBox() const { return axisBBox_; }
-
+  void updateAxisBBox(const CPoint3D &p);
   void updateAxisBBox(const CPoint2D &p) { axisBBox_.add(p); }
   void updateAxisBBox(const CBBox2D &box) { axisBBox_.add(box); }
+
+  void updateMarginBBox(const CBBox2D &box) { marginBBox_.add(box); }
+
+  //------
 
   const CRGBA &backgroundColor() const { return backgroundColor_; }
   void setBackgroundColor(const CRGBA &r) { backgroundColor_ = r; }
@@ -345,31 +359,34 @@ class CGnuPlotGroup {
  protected:
   static int nextId_;
 
-  CGnuPlotWindow*       window_;                  // parent window
-  int                   id_   { 0 };              // unique id
-  int                   ind_  { 0 };              // group index in window
-  bool                  is3D_ { false };          // plots are 3D
-  bool                  polar_ { false };         // is polar
-  CGnuPlotTitle*        title_;                   // plot title
-  Plots                 plots_;                   // plots
-  CBBox2D               region_ {0,0,1,1};        // region of window
-  CGnuPlotMargin        margin_;                  // margin around plots
-  CBBox2D               bbox_ { 0, 0, 1, 1 };     // bounding box
-  CBBox2D               axisBBox_ { 0, 0, 1, 1 }; // bounding box
-  CGnuPlotClip          clip_;                    // clip
-  COptBBox2D            clearRect_;               // optional clear rectangle
-  CGnuPlotPlotSize      plotSize_;                // plot size
-  CGnuPlotHistogramData histogramData_;           // histogram style
-  CGnuPlotKeyP          key_;                     // key
-  CGnuPlotColorBoxP     colorBox_;                // color box
-  CGnuPlotPaletteP      palette_;                 // palette
-  CGnuPlotAxesData      axesData_;                // axes data
-  Annotations           annotations_;             // annotations
-  Axes                  axes_;                    // axes
-  CGnuPlotCameraP       camera_;                  // view camera
-  CGnuPlotTimeStampP    timeStamp_;               // time stamp
-  CRGBA                 backgroundColor_;         // background color
-  mutable CBBox2D       saveRange_;
+  CGnuPlotWindow*       window_;                    // parent window
+  int                   id_   { 0 };                // unique id
+  int                   ind_  { 0 };                // group index in window
+  bool                  is3D_ { false };            // plots are 3D
+  bool                  polar_ { false };           // is polar
+  CGnuPlotTitleP        title_;                     // plot title
+  Plots                 plots_;                     // plots
+  CBBox2D               region_ {0,0,1,1};          // region of window
+  CGnuPlotMargin        margin_;                    // margin around plots
+  CBBox2D               bbox_       { 0, 0, 1, 1 }; // bounding box
+  CBBox2D               axisBBox_   { 0, 0, 1, 1 }; // bounding box
+  CBBox2D               marginBBox_ { 0, 0, 1, 1 }; // bounding box
+  CGnuPlotClip          clip_;                      // clip
+  COptBBox2D            clearRect_;                 // optional clear rectangle
+  CGnuPlotPlotSize      plotSize_;                  // plot size
+  CGnuPlotHistogramData histogramData_;             // histogram style
+  CGnuPlotKeyP          key_;                       // key
+  CGnuPlotColorBoxP     colorBox_;                  // color box
+  CGnuPlotPaletteP      palette_;                   // palette
+  CGnuPlotAxesData      axesData_;                  // axes data
+  Annotations           annotations_;               // annotations
+  Axes                  axes_;                      // axes
+  CGnuPlotCameraP       camera_;                    // view camera
+  bool                  hidden3D_ { false };        // hidden 3d
+  CGnuPlotPm3DP         pm3D_;                      // pm3d data
+  CGnuPlotTimeStampP    timeStamp_;                 // time stamp
+  CRGBA                 backgroundColor_;           // background color
+  mutable CBBox2D       saveRange_;                 // save range
 };
 
 #endif

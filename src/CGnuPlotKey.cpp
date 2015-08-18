@@ -34,8 +34,6 @@ draw(CGnuPlotRenderer *renderer)
 
   //---
 
-  CBBox2D rbbox = (isOutside() ? group_->getRegionBBox() : renderer->range());
-
   //---
 
   CFontPtr font = renderer->getFont();
@@ -100,7 +98,36 @@ draw(CGnuPlotRenderer *renderer)
     else if (valign == CVALIGN_TYPE_CENTER)
       y1 = p.y - size.height/2;
   }
+  else if (inMargin()) {
+    double px1, py1, px2, py2;
+
+    renderer->pixelToWindow(                    0,                      0, &px1, &py2);
+    renderer->pixelToWindow(renderer->width() - 1, renderer->height() - 1, &px2, &py1);
+
+    if (isLMargin() || isRMargin()) {
+      x1 = (isLMargin() ? px1 + bx : px2 - size.width - bx);
+
+      if      (valign == CVALIGN_TYPE_TOP)
+        y1 = py2 - by - size.height;
+      else if (valign == CVALIGN_TYPE_BOTTOM)
+        y1 = py1 + by;
+      else if (valign == CVALIGN_TYPE_CENTER)
+        y1 = (py1 + py2)/2 - size.height/2;
+    }
+    else {
+      y1 = (isBMargin() ? py1 + by : py2 - size.height - by);
+
+      if      (halign == CHALIGN_TYPE_LEFT)
+        x1 = px1 + bx;
+      else if (halign == CHALIGN_TYPE_RIGHT)
+        x1 = px2 - bx - size.width;
+      else if (halign == CHALIGN_TYPE_CENTER)
+        x1 = (px1 + px2)/2 - size.width/2;
+    }
+  }
   else {
+    CBBox2D rbbox = (isOutside() ? group_->getRegionBBox() : renderer->range());
+
     if      (halign == CHALIGN_TYPE_LEFT)
       x1 = rbbox.getLeft () + bx;
     else if (halign == CHALIGN_TYPE_RIGHT)

@@ -39,9 +39,6 @@ class CGnuPlotKeyData {
   bool vertical() const { return vertical_; }
   void setVertical(bool b) { vertical_ = b; }
 
-  bool under() const { return under_; }
-  void setUnder(bool b) { under_ = b; }
-
   CHAlignType justify() const { return justify_; }
   void setJustify(CHAlignType j) { justify_ = j; }
 
@@ -62,9 +59,6 @@ class CGnuPlotKeyData {
 
   bool isEnhanced() const { return enhanced_; }
   void setEnhanced(bool b) { enhanced_ = b; }
-
-  bool below() const { return below_; }
-  void setBelow(bool b) { below_ = b; }
 
   int widthIncrement() const { return widthIncrement_; }
   void setWidthIncrement(int i) { widthIncrement_ = i; }
@@ -150,7 +144,6 @@ class CGnuPlotKeyData {
     halign_          = CHALIGN_TYPE_RIGHT;
     valign_          = CVALIGN_TYPE_TOP;
     vertical_        = true;
-    under_           = false;
     justify_         = CHALIGN_TYPE_RIGHT;
     right_           = true;
     reverse_         = false;
@@ -158,7 +151,6 @@ class CGnuPlotKeyData {
     autotitle_       = true;
     opaque_          = false;
     enhanced_        = false;
-    below_           = false;
     pos_             = OptPos();
     widthIncrement_  = 0;
     heightIncrement_ = 0;
@@ -190,7 +182,6 @@ class CGnuPlotKeyData {
   CHAlignType       halign_     { CHALIGN_TYPE_RIGHT }; // key horizontal side
   CVAlignType       valign_     { CVALIGN_TYPE_TOP   }; // key vertical side
   bool              vertical_   { true };               // ??
-  bool              under_      { false };              // ??
   CHAlignType       justify_    { CHALIGN_TYPE_RIGHT };
   bool              right_      { true };               // text justification
   bool              reverse_    { false };              // reverse text and sample
@@ -198,7 +189,6 @@ class CGnuPlotKeyData {
   bool              autotitle_  { true };
   bool              opaque_     { false };              // draw opaque
   bool              enhanced_   { false };              // enhanced text
-  bool              below_      { false };              // draw below plot
   OptPos            pos_;
   int               widthIncrement_  { 0 };
   int               heightIncrement_ { 0 };

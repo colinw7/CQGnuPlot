@@ -685,6 +685,7 @@ compileMultiplicativeExpression(CExprITokenPtr itoken)
  * <unary_expression>:= -  <unary_expression>
  * <unary_expression>:= ~  <unary_expression>
  * <unary_expression>:= !  <unary_expression>
+ * <unary_expression>:= <power_expression> !
  */
 
 void
@@ -696,54 +697,63 @@ compileUnaryExpression(CExprITokenPtr itoken)
   if (num_children == 2) {
     CExprITokenPtr itoken0 = itoken->getChild(0);
 
-    CExprOpType op = itoken0->getOperator();
+    if (itoken0->base().isValid()) {
+      CExprOpType op = itoken0->getOperator();
 
-    switch (op) {
-      case CEXPR_OP_INCREMENT:
-        compileUnaryExpression(itoken->getChild(1));
+      switch (op) {
+        case CEXPR_OP_INCREMENT:
+          compileUnaryExpression(itoken->getChild(1));
 
-        compileUnaryExpression(itoken->getChild(1));
+          compileUnaryExpression(itoken->getChild(1));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_PLUS));
-        stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
+          stackCToken(CExprInst->getOperator(CEXPR_OP_PLUS));
+          stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
 
-        break;
-      case CEXPR_OP_DECREMENT:
-        compileUnaryExpression(itoken->getChild(1));
+          break;
+        case CEXPR_OP_DECREMENT:
+          compileUnaryExpression(itoken->getChild(1));
 
-        compileUnaryExpression(itoken->getChild(1));
+          compileUnaryExpression(itoken->getChild(1));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_MINUS));
-        stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
+          stackCToken(CExprInst->getOperator(CEXPR_OP_MINUS));
+          stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
 
-        break;
-      case CEXPR_OP_PLUS:
-        compileUnaryExpression(itoken->getChild(1));
+          break;
+        case CEXPR_OP_PLUS:
+          compileUnaryExpression(itoken->getChild(1));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_UNARY_PLUS));
+          stackCToken(CExprInst->getOperator(CEXPR_OP_UNARY_PLUS));
 
-        break;
-      case CEXPR_OP_MINUS:
-        compileUnaryExpression(itoken->getChild(1));
+          break;
+        case CEXPR_OP_MINUS:
+          compileUnaryExpression(itoken->getChild(1));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_UNARY_MINUS));
+          stackCToken(CExprInst->getOperator(CEXPR_OP_UNARY_MINUS));
 
-        break;
-      case CEXPR_OP_BIT_NOT:
-        compileUnaryExpression(itoken->getChild(1));
+          break;
+        case CEXPR_OP_BIT_NOT:
+          compileUnaryExpression(itoken->getChild(1));
 
-        stackCToken(itoken0->base());
+          stackCToken(itoken0->base());
 
-        break;
-      case CEXPR_OP_LOGICAL_NOT:
-        compileUnaryExpression(itoken->getChild(1));
+          break;
+        case CEXPR_OP_LOGICAL_NOT:
+          compileUnaryExpression(itoken->getChild(1));
 
-        stackCToken(itoken0->base());
+          stackCToken(itoken0->base());
 
-        break;
-      default:
-        assert(false);
-        break;
+          break;
+        default:
+          assert(false);
+          break;
+      }
+    }
+    else {
+      compilePowerExpression(itoken->getChild(0));
+
+      CExprITokenPtr itoken1 = itoken->getChild(1);
+
+      stackCToken(itoken1->base());
     }
   }
   else

@@ -23,7 +23,6 @@ class CQGnuPlotCamera : public CQGnuPlotObject, public CGnuPlotCamera {
 
  public:
   CQGnuPlotCamera(CQGnuPlotGroup *group);
- ~CQGnuPlotCamera();
 };
 
 #endif

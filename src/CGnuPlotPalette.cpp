@@ -8,7 +8,7 @@ CColor
 CGnuPlotPalette::
 getColor(double x) const
 {
-  if (colorType_ == ColorType::DEFINED) {
+  if (colorType() == ColorType::DEFINED) {
     if (colors_.empty()) {
       CGnuPlotPalette *th = const_cast<CGnuPlotPalette *>(this);
 
@@ -43,7 +43,10 @@ getColor(double x) const
     return c1;
   }
   else {
-    if (gray_) {
+    if (isNegative())
+      x = 1.0 - x;
+
+    if (isGray()) {
       double g = CGnuPlotUtil::clamp(x, 0.0, 1.0);
 
       return CColor(CRGBA(g, g, g));
@@ -193,25 +196,25 @@ void
 CGnuPlotPalette::
 show(std::ostream &os) const
 {
-  os << "palette is " << (gray_ ? "GRAY" : "COLOR") << std::endl;
+  os << "palette is " << (isGray() ? "GRAY" : "COLOR") << std::endl;
 
-  if (! gray_) {
-    if      (colorType_ == ColorType::MODEL)
+  if (! isGray()) {
+    if      (colorType() == ColorType::MODEL)
       os << "rgb color mapping by rgbformulae are " <<
             rModel_ << "," << gModel_ << "," << bModel_ << std::endl;
-    else if (colorType_ == ColorType::DEFINED)
+    else if (colorType() == ColorType::DEFINED)
       os << "color mapping by defined gradient" << std::endl;
-    else if (colorType_ == ColorType::FUNCTIONS)
+    else if (colorType() == ColorType::FUNCTIONS)
       os << "color mapping is done by user defined functions " <<
             "A-formula: " << rf_ <<
             "B-formula: " << gf_ <<
             "C-formula: " << bf_ << std::endl;
-    else if (colorType_ == ColorType::CUBEHELIX)
+    else if (colorType() == ColorType::CUBEHELIX)
       os << "Cubehelix color palette: start " << cbStart_ <<
             " cycles " << cbCycles_ << " saturation " << cbSaturation_ << std::endl;
   }
 
-  os << "figure is " << (negative_ ? "NEGATIVE" : "POSITIVE") << std::endl;
+  os << "figure is " << (isNegative() ? "NEGATIVE" : "POSITIVE") << std::endl;
 
   if (psAllcF_)
     os << "all color formulae ARE written into output postscript file" << std::endl;
@@ -225,11 +228,11 @@ show(std::ostream &os) const
   os << " color positions for discrete palette terminals" << std::endl;
 
   os << "Color-Model: ";
-  if      (colorModel_ == ColorModel::RGB) os << "RGB";
-  else if (colorModel_ == ColorModel::HSV) os << "HSV";
-  else if (colorModel_ == ColorModel::CMY) os << "CMY";
-  else if (colorModel_ == ColorModel::YIQ) os << "YIQ";
-  else if (colorModel_ == ColorModel::XYZ) os << "XYZ";
+  if      (colorModel() == ColorModel::RGB) os << "RGB";
+  else if (colorModel() == ColorModel::HSV) os << "HSV";
+  else if (colorModel() == ColorModel::CMY) os << "CMY";
+  else if (colorModel() == ColorModel::YIQ) os << "YIQ";
+  else if (colorModel() == ColorModel::XYZ) os << "XYZ";
   os << std::endl;
 
   os << "gamma is " << gamma_ << std::endl;
@@ -239,7 +242,7 @@ void
 CGnuPlotPalette::
 showGradient(std::ostream &os) const
 {
-  if (colorType_ != ColorType::DEFINED) {
+  if (colorType() != ColorType::DEFINED) {
     int i = 0;
 
     for (const auto &cc : colors_) {

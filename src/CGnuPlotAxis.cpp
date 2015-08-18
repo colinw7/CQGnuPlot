@@ -285,8 +285,13 @@ testAxisGaps(double start, double end, double testIncrement, int testNumGapTicks
 {
   // Calculate New Start and End implied by the Test Increment
 
+  errno = 0;
   double newStart = CMathGen::RoundDown(start/testIncrement)*testIncrement;
+  if (errno == ERANGE) return false;
+
+  errno = 0;
   double newEnd   = CMathGen::RoundUp  (end  /testIncrement)*testIncrement;
+  if (errno == ERANGE) return false;
 
   while (newStart > start)
     newStart -= testIncrement;
@@ -294,7 +299,9 @@ testAxisGaps(double start, double end, double testIncrement, int testNumGapTicks
   while (newEnd < end)
     newEnd += testIncrement;
 
+  errno = 0;
   int testNumGaps = CMathGen::RoundUp((newEnd - newStart)/testIncrement);
+  if (errno == ERANGE) return false;
 
   //------
 
@@ -849,6 +856,11 @@ drawAxisTick(double pos, bool first, bool large)
   CRGBA c = ticColor().color();
 
   renderer_->drawLine(p1, p2, 1, c, CLineDash());
+
+  //---
+
+  group_->updateAxisBBox(p1);
+  group_->updateAxisBBox(p2);
 }
 
 void
@@ -1292,10 +1304,6 @@ drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
 {
   CBBox2D bbox;
 
-  double x = pos.x, y = pos.y, z = pos.z;
-
-  CPoint3D pos1(x, y, z);
-
   if (isEnhanced() && ! group_->is3D()) {
     CGnuPlotText text(str);
 
@@ -1313,14 +1321,13 @@ drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
 
     //dy -= renderer_->pixelHeightToWindowHeight(font->getCharAscent());
 
-    CBBox2D bbox1 = bbox.moveBy(CPoint2D(pos1.x, pos1.y) + CPoint2D(dx, dy));
+    CBBox2D bbox1 = bbox.moveBy(CPoint2D(pos.x, pos.y) + CPoint2D(dx, dy));
 
-    bbox1.setYMax(pos1.y + dy);
+    bbox1.setYMax(pos.y + dy);
 
     text.draw(renderer_, bbox1, CHALIGN_TYPE_CENTER, c, angle);
 
     group_->updateAxisBBox(bbox1);
-  //renderer_->drawRect(bbox1, CRGBA(1,0,0), 1);
   }
   else {
     CFontPtr font = renderer_->getFont();
@@ -1329,7 +1336,7 @@ drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
     double ta = renderer_->pixelHeightToWindowHeight(font->getCharAscent ());
     double td = renderer_->pixelHeightToWindowHeight(font->getCharDescent());
 
-    bbox = CBBox2D(CPoint2D(pos1.x, pos1.y - td), CPoint2D(pos1.x + tw, pos1.y + ta));
+    bbox = CBBox2D(CPoint2D(pos.x, pos.y - td), CPoint2D(pos.x + tw, pos.y + ta));
 
     double dx = 0.0, dy = 0.0;
 
@@ -1343,7 +1350,7 @@ drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
 
     CBBox2D bbox1 = bbox.moveBy(CPoint2D(dx, dy));
 
-    renderer_->drawHAlignedText(pos1, halign, 0, valign, 0, str, c, angle);
+    renderer_->drawHAlignedText(pos, halign, 0, valign, 0, str, c, angle);
 
     group_->updateAxisBBox(bbox1);
   //renderer_->drawRect(bbox1, CRGBA(1,0,0), 1);
@@ -1355,11 +1362,13 @@ CGnuPlotAxis::
 drawVAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
                  const std::string &str, const CRGBA &c, double angle)
 {
-  double x = pos.x, y = pos.y, z = pos.y;
+  renderer_->drawVAlignedText(pos, halign, 0, valign, 0, str, c, angle);
 
-  CPoint3D pos1(x, y, z);
+  CFontPtr font = renderer_->getFont();
 
-  renderer_->drawVAlignedText(pos1, halign, 0, valign, 0, str, c, angle);
+  double px = renderer_->pixelWidthToWindowWidth(font->getCharAscent());
+
+  group_->updateAxisBBox(renderer_->transform(pos) - CPoint2D(px, 0));
 }
 
 CPoint3D

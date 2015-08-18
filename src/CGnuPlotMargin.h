@@ -17,7 +17,13 @@ class CGnuPlotMarginValue {
 
   void resetValue() { value_.setInvalid(); screen_ = false; }
 
+  double realValue() const { return value_.getValue(defValue_); }
+
   bool isScreen() const { return screen_; }
+  void setScreen(bool b) { screen_ = b; }
+
+  double defValue() const { return defValue_; }
+  void setDefValue(double r) { defValue_ = r; }
 
   double xValue(CGnuPlotRenderer *renderer) const;
   double yValue(CGnuPlotRenderer *renderer) const;
@@ -39,7 +45,8 @@ class CGnuPlotMarginValue {
 
  private:
   COptReal value_;
-  bool     screen_ { false };
+  double   defValue_ { 0 };
+  bool     screen_   { false };
 };
 
 class CGnuPlotMargin {
@@ -55,10 +62,10 @@ class CGnuPlotMargin {
   const CGnuPlotMarginValue &right () const { return rmargin_; }
   const CGnuPlotMarginValue &top   () const { return tmargin_; }
 
-  const COptReal &leftValue  () const { return lmargin_.value(); }
-  const COptReal &bottomValue() const { return bmargin_.value(); }
-  const COptReal &rightValue () const { return rmargin_.value(); }
-  const COptReal &topValue   () const { return tmargin_.value(); }
+  const COptReal &leftValue  () const { return left  ().value(); }
+  const COptReal &bottomValue() const { return bottom().value(); }
+  const COptReal &rightValue () const { return right ().value(); }
+  const COptReal &topValue   () const { return top   ().value(); }
 
   void setLeft  (double l, bool s=false) { lmargin_.setValue(l, s); }
   void setBottom(double b, bool s=false) { bmargin_.setValue(b, s); }
@@ -71,6 +78,8 @@ class CGnuPlotMargin {
   void resetTop   () { tmargin_.resetValue(); }
 
   void reset() { resetLeft(); resetBottom(); resetRight(); resetTop(); }
+
+  void updateDefaultValues(CGnuPlotRenderer *renderer, double lm, double bm, double rm, double tm);
 
   void showLeft  (std::ostream &os) { lmargin_.show(os, "lmargin"); }
   void showBottom(std::ostream &os) { bmargin_.show(os, "bmargin"); }

@@ -63,14 +63,14 @@ CQGnuPlotEnum::SymbolType
 CQGnuPlotLineStyle::
 pointType() const
 {
-  return CQGnuPlotUtil::symbolConv(CGnuPlotLineStyle::calcPointType());
+  return CQGnuPlotEnum::symbolConv(CGnuPlotLineStyle::calcPointType());
 }
 
 void
 CQGnuPlotLineStyle::
 setPointType(const CQGnuPlotEnum::SymbolType &type)
 {
-  CGnuPlotLineStyle::setPointType(int(CQGnuPlotUtil::symbolConv(type)));
+  CGnuPlotLineStyle::setPointType(int(CQGnuPlotEnum::symbolConv(type)));
 }
 
 double

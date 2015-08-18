@@ -14,8 +14,8 @@ CGnuPlotGroup(CGnuPlotWindow *window) :
   key_      = CGnuPlotKeyP     (app()->createKey     (this));
   colorBox_ = CGnuPlotColorBoxP(app()->createColorBox(this));
   palette_  = CGnuPlotPaletteP (app()->createPalette (this));
+  title_    = CGnuPlotTitleP   (app()->createTitle   (this));
 
-  title_  = app()->createTitle (this);
   camera_ = app()->createCamera(this);
 
   timeStamp_ = app()->createTimeStamp(this);
@@ -99,6 +99,12 @@ init()
   setAxesData(plot->axesData());
 
   setPolar(plot->isPolar());
+
+  hidden3D_ = plot->hidden3D().enabled;
+
+  pm3D_ = CGnuPlotPm3DP(plot->createPm3D(this));
+
+  pm3D_->setData(plot->pm3D());
 }
 
 void
@@ -135,9 +141,9 @@ cameraChanged()
 
 void
 CGnuPlotGroup::
-setTitleData(const CGnuPlotTitle &t)
+setTitleData(const CGnuPlotTitleData &t)
 {
-  *title_ = t;
+  title_->setData(t);
 
   title_->setGroup(this);
 }
@@ -601,6 +607,32 @@ fit()
 
   updatePlotAxisRange(AxisType::X, 2);
   updatePlotAxisRange(AxisType::Y, 2);
+
+  //---
+
+  {
+  // fit axes
+  CBBox2D bbox = getMappedDisplayRange(1, 1);
+
+  CGnuPlotBBoxRenderer brenderer(app()->renderer());
+
+  axisBBox_ = CBBox2D();
+
+  drawAxes(&brenderer);
+
+  marginBBox_ = axisBBox_;
+
+  drawColorBox(&brenderer);
+
+  drawTitle(&brenderer);
+
+  double lm = fabs(bbox.getLeft  () - marginBBox_.getLeft  ());
+  double bm = fabs(bbox.getBottom() - marginBBox_.getBottom());
+  double rm = fabs(bbox.getRight () - marginBBox_.getRight ());
+  double tm = fabs(bbox.getTop   () - marginBBox_.getTop   ());
+
+  margin_.updateDefaultValues(&brenderer, lm, bm, rm, tm);
+  }
 }
 
 void
@@ -876,17 +908,31 @@ draw()
   axisBBox_ = CBBox2D();
 
   drawAxes(renderer);
+//renderer->drawRect(axisBBox_, CRGBA(1,0,0), 1);
 
 //CBBox2D bbox = getMappedDisplayRange(1, 1);
 //renderer->setRange(bbox);
-//renderer->drawRect(axisBBox_, CRGBA(1,0,0), 1);
+
+  marginBBox_ = axisBBox_;
 
   //---
 
   // draw title (TODO: order)
-  drawTitle();
+  drawTitle(renderer);
 
   timeStamp_->draw(renderer);
+//renderer->drawRect(marginBBox_, CRGBA(1,0,0), 1);
+
+  //---
+
+#if 0
+  double lm = fabs(bbox_.getLeft  () - marginBBox_.getLeft  ());
+  double bm = fabs(bbox_.getBottom() - marginBBox_.getBottom());
+  double rm = fabs(bbox_.getRight () - marginBBox_.getRight ());
+  double tm = fabs(bbox_.getTop   () - marginBBox_.getTop   ());
+
+  margin_.updateDefaultValues(renderer, lm, bm, rm, tm);
+#endif
 
   //---
 
@@ -1101,11 +1147,9 @@ setAxisGridDisplayed(AxisType type, int ind, bool b)
 
 void
 CGnuPlotGroup::
-drawTitle()
+drawTitle(CGnuPlotRenderer *renderer)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
-  if (! is3D()) {
+  if (! is3D() || pm3D()->isEnabled()) {
     CBBox2D bbox = getMappedDisplayRange(1, 1);
 
     renderer->setRange(bbox);
@@ -1404,7 +1448,9 @@ drawAxes(CGnuPlotRenderer *renderer)
 
     drawXAxis(renderer, 1);
     drawYAxis(renderer, 1);
-    drawZAxis(renderer, 1);
+
+    if (! pm3D()->isEnabled())
+      drawZAxis(renderer, 1);
   }
   else {
     CGnuPlotPlot *singlePlot = getSingleStylePlot();
@@ -1973,6 +2019,17 @@ getRegionBBox() const
   renderer->pixelToWindow(CPoint2D(x2, y2), p2);
 
   return CBBox2D(p1, p2);
+}
+
+void
+CGnuPlotGroup::
+updateAxisBBox(const CPoint3D &p)
+{
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  CPoint2D p1 = renderer->transform(p);
+
+  axisBBox_.add(p1);
 }
 
 #if 0

@@ -1,6 +1,8 @@
 #ifndef CGnuPlotPm3DData_H
 #define CGnuPlotPm3DData_H
 
+#include <CGnuPlotLineProp.h>
+
 class CGnuPlotPm3DData {
  public:
   enum class PosType {
@@ -67,36 +69,30 @@ class CGnuPlotPm3DData {
     isteps2_ = s2;
   }
 
-  void setScanType(ScanType type) {
-    scanType_ = type;
-  }
+  ScanType scanType() const { return scanType_; }
+  void setScanType(ScanType type) { scanType_ = type; }
 
-  void setFlushType(FlushType type) {
-    flushType_ = type;
-  }
+  FlushType flushType() const { return flushType_; }
+  void setFlushType(FlushType type) { flushType_ = type; }
 
-  void setCornerType(CornerType type) {
-    cornerType_ = type;
-  }
+  CornerType cornerType() const { return cornerType_; }
+  void setCornerType(CornerType type) { cornerType_ = type; }
 
-  void setFTriangles(bool b) {
-    ftriangles_ = b;
-  }
+  bool ftriangles() const { return ftriangles_; }
+  void setFTriangles(bool b) { ftriangles_ = b; }
 
-  void setClipIn(bool b) {
-    clipin_ = b;
-  }
+  bool isClipIn() const { return clipin_; }
+  void setClipIn(bool b) { clipin_ = b; }
 
-  void setLineType(int lt) {
-    linetype_ = lt;
-  }
+  int linetype() const { return linetype_; }
+  void setLineType(int lt) { linetype_ = lt; }
+  void unsetLineType() { linetype_ = -1; }
 
-  void unsetLineType() {
-    linetype_ = -1;
-  }
+  bool isImplicit() { return implicit_; }
+  void setImplicit(bool b) { implicit_ = b; }
 
-  void setImplicit(bool b) {
-    implicit_ = b;
+  void setBorder(const CGnuPlotLineProp &lineProp) {
+    borderLineProp_ = lineProp;
   }
 
   void show(std::ostream &os) const {
@@ -190,6 +186,7 @@ class CGnuPlotPm3DData {
   CornerType       cornerType_ { CornerType::MEAN };
   int              linetype_   { -1 };
   bool             implicit_   { false };
+  CGnuPlotLineProp borderLineProp_;
 };
 
 #endif

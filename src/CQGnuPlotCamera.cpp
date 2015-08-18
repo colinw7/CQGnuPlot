@@ -6,8 +6,3 @@ CQGnuPlotCamera(CQGnuPlotGroup *group) :
  CGnuPlotCamera(group)
 {
 }
-
-CQGnuPlotCamera::
-~CQGnuPlotCamera()
-{
-}

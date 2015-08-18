@@ -6,9 +6,6 @@
 #include <CAlignType.h>
 
 namespace CQGnuPlotUtil {
-  CQGnuPlotEnum::SymbolType symbolConv(const CGnuPlotTypes::SymbolType &type);
-  CGnuPlotTypes::SymbolType symbolConv(const CQGnuPlotEnum::SymbolType &type);
-
   CQGnuPlotEnum::HAlignType alignConv(const CHAlignType &type);
   CHAlignType alignConv(const CQGnuPlotEnum::HAlignType &type);
 

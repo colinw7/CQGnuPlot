@@ -101,14 +101,14 @@ CQGnuPlotEnum::SymbolType
 CQGnuPlotPlot::
 pointType() const
 {
-  return CQGnuPlotUtil::symbolConv(CGnuPlotPlot::pointType());
+  return CQGnuPlotEnum::symbolConv(CGnuPlotPlot::pointType());
 }
 
 void
 CQGnuPlotPlot::
 setPointType(const CQGnuPlotEnum::SymbolType &type)
 {
-  CGnuPlotPlot::setPointType(int(CQGnuPlotUtil::symbolConv(type)));
+  CGnuPlotPlot::setPointType(int(CQGnuPlotEnum::symbolConv(type)));
 }
 
 CQGnuPlotEnum::BoxWidthType

@@ -5,7 +5,7 @@
 
 CGnuPlotColorBox::
 CGnuPlotColorBox(CGnuPlotGroup *group) :
- group_(group), axis_(CGnuPlotTypes::AxisType::CB, 1)
+ group_(group)
 {
 }
 
@@ -43,20 +43,20 @@ draw(CGnuPlotRenderer *renderer)
 
   const CGnuPlotAxisData &cbaxis = group_->colorBox()->axis();
 
-  double cbmin = cbaxis.min().getValue(0);
-  double cbmax = cbaxis.max().getValue(1);
+  double cbmin = cbaxis.min().getValue(group_->zaxis(1).min().getValue(0));
+  double cbmax = cbaxis.max().getValue(group_->zaxis(1).max().getValue(1));
 
   // calc color box position
   double x1, y1, x2, y2, tx, ty;
 
-  if (user_) {
+  if (isUser()) {
     // screen coords
-    CPoint2D origin = origin_.getPoint2D(renderer);
+    CPoint2D origin = this->origin().getPoint2D(renderer);
 
     x1 = CGnuPlotUtil::map(origin.x, 0, 1, orbbox.getXMin(), orbbox.getXMax());
     y1 = CGnuPlotUtil::map(origin.y, 0, 1, orbbox.getYMin(), orbbox.getYMax());
-    x2 = x1 + CGnuPlotUtil::map(size_.width , 0, 1, 0, orbbox.getWidth ());
-    y2 = y1 + CGnuPlotUtil::map(size_.height, 0, 1, 0, orbbox.getHeight());
+    x2 = x1 + CGnuPlotUtil::map(size().width , 0, 1, 0, orbbox.getWidth ());
+    y2 = y1 + CGnuPlotUtil::map(size().height, 0, 1, 0, orbbox.getHeight());
 
     if (isVertical()) {
       tx = x2 + bx;
@@ -69,19 +69,23 @@ draw(CGnuPlotRenderer *renderer)
   }
   else {
     if (isVertical()) {
+      dx = CGnuPlotUtil::map(size().width , 0, 1, 0, irbbox.getWidth ());
+
       x1 = irbbox.getRight() + bx;
       y1 = irbbox.getBottom();
-      x2 = x1 + dx/2;
+      x2 = x1 + dx;
       y2 = irbbox.getTop();
 
       tx = x2 + bx;
       ty = y1;
     }
     else {
+      dy = CGnuPlotUtil::map(size().height, 0, 1, 0, irbbox.getWidth ());
+
       x1 = irbbox.getLeft();
       y2 = axbbox.getBottom() - by;
       x2 = irbbox.getRight();
-      y1 = y2 - dy/2;
+      y1 = y2 - dy;
 
       tx = x1;
       ty = y1 - by;
@@ -101,16 +105,14 @@ draw(CGnuPlotRenderer *renderer)
     int    ih = int(h);
 
     for (int i = 0; i < ih; ++i) {
-      CPoint2D pl1, pl2;
-
-      renderer->pixelToWindow(CPoint2D(p1.x, p1.y - i), pl1);
-      renderer->pixelToWindow(CPoint2D(p2.x, p1.y - i), pl2);
+      CPoint2D pl1(p1.x, p1.y - i);
+      CPoint2D pl2(p2.x, p1.y - i);
 
       double z = CGnuPlotUtil::map(i, 0, ih - 1, 0, 1);
 
       CColor c = group_->palette()->getColor(z);
 
-      renderer->drawLine(pl1, pl2, 1, c.rgba());
+      renderer->drawPixelLine(pl1, pl2, 1, c.rgba());
     }
   }
   else {
@@ -118,16 +120,14 @@ draw(CGnuPlotRenderer *renderer)
     int    iw = int(w);
 
     for (int i = 0; i < iw; ++i) {
-      CPoint2D pl1, pl2;
-
-      renderer->pixelToWindow(CPoint2D(p1.x + i, p1.y), pl1);
-      renderer->pixelToWindow(CPoint2D(p1.x + i, p2.y), pl2);
+      CPoint2D pl1(p1.x + i, p1.y);
+      CPoint2D pl2(p1.x + i, p2.y);
 
       double z = CGnuPlotUtil::map(i, 0, iw - 1, 0, 1);
 
       CColor c = group_->palette()->getColor(z);
 
-      renderer->drawLine(pl1, pl2, 1, c.rgba());
+      renderer->drawPixelLine(pl1, pl2, 1, c.rgba());
     }
   }
 
@@ -154,16 +154,18 @@ draw(CGnuPlotRenderer *renderer)
 
       //double y = y1;
 
+      double w1 = cbaxis.getTicMajorScale()*6*pw;
+
       for (int i = 0; i <= numTicks1; ++i) {
         double yy = CGnuPlotUtil::map(c, cbmin, cbmax, y1, y2);
 
         if (i != 0 && i != numTicks1) {
           CPoint2D pl1(x1     , yy);
-          CPoint2D pl2(x1 + bx, yy);
+          CPoint2D pl2(x1 + w1, yy);
 
           renderer->drawLine(pl1, pl2, 1, CRGBA(0,0,0));
 
-          CPoint2D pl3(x2 - bx, yy);
+          CPoint2D pl3(x2 - w1, yy);
           CPoint2D pl4(x2     , yy);
 
           renderer->drawLine(pl3, pl4, 1, CRGBA(0,0,0));
@@ -173,8 +175,12 @@ draw(CGnuPlotRenderer *renderer)
 
         ss << c;
 
-        renderer->drawHAlignedText(CPoint2D(tx, yy), CHALIGN_TYPE_LEFT, 0, CVALIGN_TYPE_CENTER, 0,
+        CPoint2D p(tx, yy);
+
+        renderer->drawHAlignedText(p, CHALIGN_TYPE_LEFT, 0, CVALIGN_TYPE_CENTER, 0,
                                    ss.str(), CRGBA(0,0,0));
+
+        group_->updateMarginBBox(renderer->getHAlignedTextBBox(ss.str()).moveBy(p));
 
         //y += dy;
         c += dc;
@@ -185,16 +191,18 @@ draw(CGnuPlotRenderer *renderer)
 
       //double x = x1;
 
+      double h1 = cbaxis.getTicMajorScale()*6*ph;
+
       for (int i = 0; i <= numTicks1; ++i) {
         double xx = CGnuPlotUtil::map(c, cbmin, cbmax, x1, x2);
 
         if (i != 0 && i != numTicks1) {
           CPoint2D pl1(xx, y1     );
-          CPoint2D pl2(xx, y1 + by);
+          CPoint2D pl2(xx, y1 + h1);
 
           renderer->drawLine(pl1, pl2, 1, CRGBA(0,0,0));
 
-          CPoint2D pl3(xx, y2 - by);
+          CPoint2D pl3(xx, y2 - h1);
           CPoint2D pl4(xx, y2     );
 
           renderer->drawLine(pl3, pl4, 1, CRGBA(0,0,0));
@@ -204,8 +212,12 @@ draw(CGnuPlotRenderer *renderer)
 
         ss << c;
 
-        renderer->drawHAlignedText(CPoint2D(xx, ty), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP, 0,
+        CPoint2D p(xx, ty);
+
+        renderer->drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP, 0,
                                    ss.str(), CRGBA(0,0,0));
+
+        group_->updateMarginBBox(renderer->getHAlignedTextBBox(ss.str()).moveBy(p));
 
         //x += dx;
         c += dc;
@@ -241,16 +253,18 @@ draw(CGnuPlotRenderer *renderer)
 
   bbox_ = CBBox2D(CPoint2D(x1, y1), CPoint2D(x2, y2));
 
+  group_->updateMarginBBox(bbox_);
+
   //---
 
   // draw border
 
-  if (border_) {
+  if (hasBorder()) {
     CRGBA  c = CRGBA(0, 0, 0);
     double w = 1.0;
 
-    if (borderStyle_ >= 0) {
-      CGnuPlotLineStyleP lineStyle = group_->app()->getLineStyleInd(borderStyle_);
+    if (borderStyle() >= 0) {
+      CGnuPlotLineStyleP lineStyle = group_->app()->getLineStyleInd(borderStyle());
 
       c = lineStyle->calcColor(group_, c);
       w = lineStyle->calcWidth();
@@ -264,18 +278,30 @@ draw(CGnuPlotRenderer *renderer)
   // draw label
 
   if (cbaxis.text() != "") {
+    CRGBA c(0,0,0);
+
+    double             a   = cbaxis.labelRotate();
+    const std::string &str = cbaxis.text();
+
+    CPoint2D p;
+
     if (isVertical()) {
       double ym = (y1 + y2)/2;
 
-      renderer->drawRotatedText(CPoint2D(x2, ym), cbaxis.text(), cbaxis.labelRotate(),
-                                CHALIGN_TYPE_LEFT, CVALIGN_TYPE_CENTER, CRGBA(0,0,0));
+      p = CPoint2D(x2, ym);
+
+      renderer->drawRotatedText(p, str, a, CHALIGN_TYPE_LEFT, CVALIGN_TYPE_CENTER, c);
     }
     else {
       double xm = (x1 + x2)/2;
 
-      renderer->drawRotatedText(CPoint2D(xm, y1), cbaxis.text(), cbaxis.labelRotate(),
-                                CHALIGN_TYPE_LEFT, CVALIGN_TYPE_CENTER, CRGBA(0,0,0));
+       p = CPoint2D(xm, y1);
+
+      renderer->drawRotatedText(p, str, a, CHALIGN_TYPE_CENTER, CVALIGN_TYPE_TOP, c);
     }
+
+    if (fabs(a) < 1E-6)
+      group_->updateMarginBBox(renderer->getHAlignedTextBBox(str).moveBy(p));
   }
 }
 
@@ -293,22 +319,30 @@ valueToColor(double x) const
   return group_->palette()->getColor(z);
 }
 
+//------
+
+CGnuPlotColorBoxData::
+CGnuPlotColorBoxData() :
+ axis_(CGnuPlotTypes::AxisType::CB, 1)
+{
+}
+
 void
-CGnuPlotColorBox::
+CGnuPlotColorBoxData::
 show(std::ostream &os) const
 {
   os << "color box " <<
-        (border_ ? "with border" : "without border") << ", ";
+        (hasBorder() ? "with border" : "without border") << ", ";
 
-  if (enabled_) {
-    os << (borderStyle_ < 0 ? std::string("DEFAULT line type") :
-                              "line type " + CStrUtil::toString(borderStyle_)) << " " <<
-          (front_ ? "is drawn front" : "is drawn back") << std::endl;
+  if (isEnabled()) {
+    os << (borderStyle() < 0 ? std::string("DEFAULT line type") :
+                               "line type " + CStrUtil::toString(borderStyle())) << " " <<
+          (isFront() ? "is drawn front" : "is drawn back") << std::endl;
 
-    if (! user_)
+    if (! isUser())
       os << "at DEFAULT position" << std::endl;
     else
-      os << "at USER origin: " << origin_ << " size: " << size_ << std::endl;
+      os << "at USER origin: " << origin() << " size: " << size() << std::endl;
   }
   else {
     os << "DEFAULT line type is NOT drawn" << std::endl;
@@ -321,7 +355,7 @@ show(std::ostream &os) const
 }
 
 void
-CGnuPlotColorBox::
+CGnuPlotColorBoxData::
 save(std::ostream &os) const
 {
   os << "set colorbox ";
@@ -331,23 +365,23 @@ save(std::ostream &os) const
   else
     os << "horizontal ";
 
-  if (user_) {
-    os << "origin " << origin_ << " ";
-    os << "size "   << size_   << " ";
+  if (isUser()) {
+    os << "origin " << origin() << " ";
+    os << "size "   << size()   << " ";
   }
   else
     os << "default ";
 
-  if (front_)
+  if (isFront())
     os << "front ";
   else
     os << "back ";
 
-  if (border_) {
-    if (borderStyle_ < 0)
+  if (hasBorder()) {
+    if (borderStyle() < 0)
       os << "bdefault";
     else
-      os << "border " << borderStyle_;
+      os << "border " << borderStyle();
   }
   else
     os << "noborder";

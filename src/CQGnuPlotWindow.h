@@ -25,8 +25,6 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
 
   Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor)
 
-  Q_PROPERTY(bool hidden3D READ hidden3D WRITE setHidden3D)
-
  public:
   enum class Mode {
     SELECT,

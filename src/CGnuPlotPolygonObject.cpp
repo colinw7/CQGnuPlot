@@ -37,18 +37,27 @@ void
 CGnuPlotPolygonObject::
 draw(CGnuPlotRenderer *renderer) const
 {
-  if (fillColor_.isValid()) {
+  if (hasFillPattern()) {
+    CRGBA bg = fillBackground_.getValue(CRGBA(1,1,1)); // background ?
+    CRGBA fg = fillColor_     .getValue(CRGBA(0,0,0));
+
     if (isClipped())
-      renderer->fillClippedPolygon(points_, fillColor_.getValue());
+      renderer->patternClippedPolygon(points_, fillPattern(), fg, bg);
     else
-      renderer->fillPolygon(points_, fillColor_.getValue());
+      renderer->patternPolygon(points_, fillPattern(), fg, bg);
+  }
+  else if (fillColor_.isValid()) {
+    if (isClipped())
+      renderer->fillClippedPolygon(points_, fillColor());
+    else
+      renderer->fillPolygon(points_, fillColor());
   }
 
   if (lineColor_.isValid()) {
     if (isClipped())
-      renderer->drawClippedPolygon(points_, lineWidth_, lineColor_.getValue());
+      renderer->drawClippedPolygon(points_, lineWidth_, lineColor());
     else
-      renderer->drawPolygon(points_, lineWidth_, lineColor_.getValue());
+      renderer->drawPolygon(points_, lineWidth_, lineColor());
   }
 
   if (text_ != "") {

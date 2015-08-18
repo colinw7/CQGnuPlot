@@ -50,10 +50,11 @@ enum CExprOpType {
   CEXPR_OP_STR_EQUAL         = 43,
   CEXPR_OP_STR_NOT_EQUAL     = 44,
   CEXPR_OP_STR_CONCAT        = 45,
+  CEXPR_OP_FACTORIAL         = 46,
 #endif
-  CEXPR_OP_COMMA             = 46,
-  CEXPR_OP_START_BLOCK       = 47,
-  CEXPR_OP_END_BLOCK         = 48
+  CEXPR_OP_COMMA             = 47,
+  CEXPR_OP_START_BLOCK       = 48,
+  CEXPR_OP_END_BLOCK         = 49
 };
 
 enum CExprValueType {

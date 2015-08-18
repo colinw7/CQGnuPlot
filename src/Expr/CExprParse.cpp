@@ -216,6 +216,14 @@ parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
           return true;
         }
       }
+
+#ifdef GNUPLOT_EXPR
+      if (ptoken.isValid() && ptoken->type() == CEXPR_TOKEN_OPERATOR &&
+          ptoken->getOperator() == CEXPR_OP_LOGICAL_NOT &&
+          lastPToken.isValid() && lastPToken->type() == CEXPR_TOKEN_INTEGER) {
+        ptoken = createOperatorToken(CEXPR_OP_FACTORIAL);
+      }
+#endif
     }
 #ifdef GNUPLOT_EXPR
     else if (CExprOperator::isOperatorStr(line[i])) {

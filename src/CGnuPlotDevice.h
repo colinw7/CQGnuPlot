@@ -24,6 +24,7 @@ class CGnuPlotLabel;
 class CGnuPlotLineStyle;
 class CGnuPlotPalette;
 class CGnuPlotPlot;
+class CGnuPlotPm3D;
 class CGnuPlotPolygon;
 class CGnuPlotRectangle;
 class CGnuPlotTimeStamp;
@@ -127,6 +128,8 @@ class CGnuPlotDevice {
   virtual CGnuPlotTitle *createTitle(CGnuPlotGroup *group);
 
   virtual CGnuPlotCamera *createCamera(CGnuPlotGroup *group);
+
+  virtual CGnuPlotPm3D *createPm3D(CGnuPlotGroup *group);
 
   virtual CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group);
 

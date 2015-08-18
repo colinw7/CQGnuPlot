@@ -2957,7 +2957,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       CGnuPlotColorSpec c;
 
       if (parseColorSpec(line, c))
-        lineStyle.setLineColor(c);
+        lineStyle.setLineColor(c); // set text color ?
 
       found = true;
     }
@@ -3152,6 +3152,8 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
           styleData.ellipse.setUnits(CGnuPlotTypes::EllipseUnits::XY);
         else if (arg == "yy")
           styleData.ellipse.setUnits(CGnuPlotTypes::EllipseUnits::YY);
+        else
+          errorMsg("Invalid ellips style \'" + arg + "'");
 
         found = true;
       }
@@ -3472,6 +3474,54 @@ parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle)
   return true;
 }
 
+void
+CGnuPlot::
+parseLineProp(CParseLine &line, CGnuPlotLineProp &lineProp)
+{
+  int         pos = line.pos();
+  std::string arg = readNonSpace(line);
+
+  while (arg != "") {
+    if      (arg == "linewidth" || arg == "lw") {
+      double lw;
+
+      if (parseReal(line, lw))
+        lineProp.setLineWidth(lw);
+    }
+    else if (arg == "linestyle" || arg == "ls") {
+      int ls;
+
+      if (parseInteger(line, ls))
+        lineProp.setLineStyle(ls);
+    }
+    else if (arg == "linetype" || arg == "lt") {
+      int lt;
+
+      if (parseLineType(line, lt))
+        lineProp.setLineType(lt);
+    }
+    else if (arg == "linecolor" || arg == "lc") {
+      CGnuPlotColorSpec c;
+
+      if (parseColorSpec(line, c))
+        lineProp.setLineColor(c);
+    }
+    else if (arg == "dashtype" || arg == "dt") {
+      CGnuPlotDash dash;
+
+      if (parseDash(line, dash))
+        lineProp.setLineDash(dash);
+    }
+    else {
+      line.setPos(pos);
+      break;
+    }
+
+    pos = line.pos();
+    arg = readNonSpace(line);
+  }
+}
+
 // [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} {{no}extend} } | restore
 bool
 CGnuPlot::
@@ -3515,6 +3565,7 @@ parseAxisRange(CParseLine &line, CGnuPlotAxisData &axis, bool hasArgs)
         axis.setExtend(arg == "extend");
       }
       else if (arg == "restore") {
+        // TODO
       }
       else
         return false;
@@ -3967,11 +4018,6 @@ splotCmd(const std::string &args)
 
     //---
 
-    window->setHidden3D(hidden3D().enabled);
-    window->setPm3D(pm3D());
-
-    //---
-
     group->saveRange();
 
     clearTicLabels();
@@ -4304,6 +4350,9 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
       else if (axesStr == "x2y2") {
         xind_ = 2; yind_ = 2;
       }
+      else {
+        errorMsg("Invalid axes string '" + axesStr + "'");
+      }
     }
     // linetype <lt>
     else if (plotVar == PlotVar::LINETYPE) {
@@ -4608,7 +4657,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       CGnuPlotColorSpec c;
 
       if (parseColorSpec(line, c))
-        lineStyle.setLineColor(c);
+        lineStyle.setLineColor(c); // text color ?
 
       found = true;
     }
@@ -5180,6 +5229,8 @@ setCmd(const std::string &args)
             boxWidthType = CGnuPlotTypes::BoxWidthType::ABSOLUTE;
           else if (arg == "rel" || arg == "relative")
             boxWidthType = CGnuPlotTypes::BoxWidthType::RELATIVE;
+          else
+            errorMsg("Invalid boxwidth '" + arg + "'");
         }
         else
           boxWidthType = CGnuPlotTypes::BoxWidthType::ABSOLUTE;
@@ -5237,6 +5288,9 @@ setCmd(const std::string &args)
       }
       else if (arg == "onecolor") {
         // TODO
+      }
+      else {
+        errorMsg("Invalid arg '" + arg + "'");
       }
 
       arg = readNonSpace(line);
@@ -5338,6 +5392,9 @@ setCmd(const std::string &args)
 
           arg1 = readNonSpace(line);
         }
+      }
+      else {
+        errorMsg("Invalid arg '" + arg + "'");
       }
 
       arg = readNonSpace(line);
@@ -5799,6 +5856,9 @@ setCmd(const std::string &args)
       else if (arg == "nobentover" || arg == "bentover") {
         hidden3D_.bentover = (arg == "bentover");
       }
+      else {
+        errorMsg("Invalid arg '" + arg + "'");
+      }
 
       arg = readNonSpace(line);
     }
@@ -5831,6 +5891,9 @@ setCmd(const std::string &args)
         historyData_.size    = 500;
         historyData_.numbers = true;
         historyData_.trim    = true;
+      }
+      else {
+        errorMsg("Invalid arg '" + arg + "'");
       }
 
       arg = readNonSpace(line);
@@ -5889,19 +5952,24 @@ setCmd(const std::string &args)
       }
       else if (arg == "inside"  || arg == "ins" ||
                arg == "outside" || arg == "out") {
+        // outside defaults to  top, right and vertical
         keyData_.setOutside(arg == "outside" || arg == "out");
       }
       else if (arg == "lmargin") {
         keyData_.setLMargin(true);
+        keyData_.setRMargin(false);
       }
       else if (arg == "rmargin") {
+        keyData_.setLMargin(false);
         keyData_.setRMargin(true);
       }
       else if (arg == "tmargin") {
+        keyData_.setBMargin(false);
         keyData_.setTMargin(true);
       }
       else if (arg == "bmargin") {
         keyData_.setBMargin(true);
+        keyData_.setTMargin(false);
       }
       else if (arg == "at") {
         CGnuPlotPosition p;
@@ -5934,9 +6002,6 @@ setCmd(const std::string &args)
       else if (arg == "vertical"   || arg == "vert" ||
                arg == "horizontal" || arg == "horiz") {
         keyData_.setVertical(arg == "vertical" || arg == "vert");
-      }
-      else if (arg == "under") {
-        keyData_.setUnder(true);
       }
       else if (arg == "Left" || arg == "Right") {
         keyData_.setJustify(arg == "Left" ? CHALIGN_TYPE_LEFT : CHALIGN_TYPE_RIGHT);
@@ -6041,8 +6106,19 @@ setCmd(const std::string &args)
       else if (arg == "nobox") {
         keyData_.setBox(false);
       }
-      else if (arg == "above" || arg == "below") {
-        keyData_.setBelow(arg == "below");
+      else if (arg == "above" || arg == "over") {
+        keyData_.setTMargin(true);
+        keyData_.setBMargin(true);
+
+        keyData_.setHAlign(CHALIGN_TYPE_CENTER);
+        keyData_.setVertical(false);
+      }
+      else if (arg == "below" || arg == "under") {
+        keyData_.setTMargin(false);
+        keyData_.setBMargin(true);
+
+        keyData_.setHAlign(CHALIGN_TYPE_CENTER);
+        keyData_.setVertical(false);
       }
       else if (arg == "maxcols") {
         int n = 0;
@@ -6583,6 +6659,9 @@ setCmd(const std::string &args)
       else if (arg == "verbose" || arg == "noverbose") {
         mouseData_.setVerbose(arg == "verbose");
       }
+      else {
+        errorMsg("Invalid arg '" + arg + "'");
+      }
 
       arg = readNonSpace(line);
     }
@@ -6881,6 +6960,8 @@ setCmd(const std::string &args)
             ellipse->setUnits(CGnuPlotTypes::EllipseUnits::XY);
           else if (arg == "yy")
             ellipse->setUnits(CGnuPlotTypes::EllipseUnits::YY);
+          else
+            errorMsg("Invalid arg '" + arg + "'");
         }
         else if (arg == "fillcolor" || arg == "fc") {
           CGnuPlotColorSpec c;
@@ -7154,6 +7235,7 @@ setCmd(const std::string &args)
         if      (arg1 == "begin" ) { pm3D_.setFlushType(CGnuPlotPm3DData::FlushType::BEGIN ); }
         else if (arg1 == "center") { pm3D_.setFlushType(CGnuPlotPm3DData::FlushType::CENTER); }
         else if (arg1 == "end"   ) { pm3D_.setFlushType(CGnuPlotPm3DData::FlushType::END   ); }
+        else                       { errorMsg("Invalid arg '" + arg1 + "'"); }
       }
       else if (arg == "ftriangles" || arg == "noftriangles") {
         pm3D_.setFTriangles(arg == "ftriangles");
@@ -7175,6 +7257,7 @@ setCmd(const std::string &args)
         else if (arg1 == "c2"     ) { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::C2     ); }
         else if (arg1 == "c3"     ) { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::C3     ); }
         else if (arg1 == "c4"     ) { pm3D_.setCornerType(CGnuPlotPm3DData::CornerType::C4     ); }
+        else                        { errorMsg("Invalid arg '" + arg1 + "'"); }
       }
       else if (arg == "hidden3d") {
         int lt;
@@ -7190,7 +7273,26 @@ setCmd(const std::string &args)
       }
       else if (arg == "map") {
         //set pm3d at b; set view map scale 1.0; set style data pm3d; set style func pm3d;
-        pm3D_.setMapPos();
+        colorBox_.setEnabled(true);
+
+        pm3D_.addPos(CGnuPlotPm3DData::PosType::BOTTOM);
+
+        camera_.setMap();
+
+        setDataStyle    (PlotStyle::PM3D);
+        setFunctionStyle(PlotStyle::PM3D);
+
+        //pm3D_.setMapPos();
+      }
+      else if (arg == "border") {
+        CGnuPlotLineProp lineProp;
+
+        parseLineProp(line, lineProp);
+
+        pm3D_.setBorder(lineProp);
+      }
+      else {
+        errorMsg("Invalid arg '" + arg + "'");
       }
 
       arg = readNonSpaceNonComma(line);
@@ -7374,6 +7476,7 @@ setCmd(const std::string &args)
         else if (arg1 == "CMY") palette_.setColorModel(CGnuPlotTypes::ColorModel::CMY);
         else if (arg1 == "YIQ") palette_.setColorModel(CGnuPlotTypes::ColorModel::YIQ);
         else if (arg1 == "XYZ") palette_.setColorModel(CGnuPlotTypes::ColorModel::XYZ);
+        else                    { errorMsg("Invalid arg '" + arg1 + "'"); }
       }
       else if (arg == "positive" || arg == "negative") {
         palette_.setNegative(arg == "negative");
@@ -7739,6 +7842,7 @@ setCmd(const std::string &args)
           else if (arg == "auto") boxPlot_.setLabels(CGnuPlotBoxPlot::Labels::Auto);
           else if (arg == "x"   ) boxPlot_.setLabels(CGnuPlotBoxPlot::Labels::X);
           else if (arg == "x2"  ) boxPlot_.setLabels(CGnuPlotBoxPlot::Labels::X2);
+          else                    errorMsg("Invalid arg '" + arg + "'");
         }
         // sorted | unsorted
         else if (arg == "sorted" || arg == "unsorted") {
@@ -7919,6 +8023,9 @@ setCmd(const std::string &args)
         else if (arg == "clip" || arg == "noclip") {
           circleStyle_.setClip(arg == "wedge");
         }
+        else {
+          errorMsg("Invalid arg '" + arg + "'");
+        }
 
         arg = readNonSpace(line);
       }
@@ -7951,6 +8058,9 @@ setCmd(const std::string &args)
           if (parseFillStyle(line, fs))
             rectStyle_.setFillStyle(fs);
         }
+        else {
+          errorMsg("Invalid arg '" + arg + "'");
+        }
 
         arg = readNonSpace(line);
       }
@@ -7972,6 +8082,9 @@ setCmd(const std::string &args)
             styleData_.ellipse.setUnits(CGnuPlotTypes::EllipseUnits::XY);
           else if (arg == "yy")
             styleData_.ellipse.setUnits(CGnuPlotTypes::EllipseUnits::YY);
+          else {
+            errorMsg("Invalid arg '" + arg + "'");
+          }
         }
         else if (arg == "size") {
           CGnuPlotTypes::CoordSys coordSys = CGnuPlotTypes::CoordSys::FIRST;
@@ -8282,6 +8395,9 @@ setCmd(const std::string &args)
         if (parseColorSpec(line, c))
           timeStamp_.setTextColor(c);
       }
+      else {
+        errorMsg("Invalid arg '" + arg + "'");
+      }
 
       arg = readNonSpace(line);
     }
@@ -8386,6 +8502,16 @@ setCmd(const std::string &args)
 
     if      (arg == "map") {
       camera_.setMap();
+
+      std::string arg = readNonSpaceNonComma(line);
+
+      if (arg == "scale") {
+        double r;
+
+        // TODO
+        if (! parseReal(line, r))
+          r = 0.0;
+      }
     }
     else if (arg == "noequal") {
       camera_.setAxesScale(CGnuPlotCamera::AxesScale::NONE);
@@ -10112,6 +10238,7 @@ unsetCmd(const std::string &args)
         if      (arg == "points") clip_.setPoints(false);
         else if (arg == "one"   ) clip_.setOne   (false);
         else if (arg == "two"   ) clip_.setTwo   (false);
+        else                      errorMsg("Invalid arg '" + arg + "'");
 
         arg = readNonSpace(line);
       }
@@ -11767,6 +11894,13 @@ createCamera(CGnuPlotGroup *group)
   return (device() ? device()->createCamera(group) : new CGnuPlotCamera(group));
 }
 
+CGnuPlotPm3D *
+CGnuPlot::
+createPm3D(CGnuPlotGroup *group)
+{
+  return (device() ? device()->createPm3D(group) : new CGnuPlotPm3D(group));
+}
+
 CGnuPlotTimeStamp *
 CGnuPlot::
 createTimeStamp(CGnuPlotGroup *group)
@@ -12178,7 +12312,7 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
           double z = 0.0;
 
           if (value.isValid() && value->getRealValue(z)) {
-            assert(! IsNaN(z));
+            //assert(! IsNaN(z));
 
             plot->addPoint3D(iy, x, y, z);
           }

@@ -988,6 +988,7 @@ readMultiplicativeExpression()
  * <unary_expression>:= -  <unary_expression>
  * <unary_expression>:= ~  <unary_expression>
  * <unary_expression>:= !  <unary_expression>
+ * <unary_expression>:= <power_expression> !
  */
 
 CExprITokenPtr
@@ -1029,6 +1030,19 @@ readUnaryExpression()
       addITokenToType(itoken1, itoken);
     }
   }
+
+#ifdef GNUPLOT_EXPR
+  if (itoken.isValid()) {
+    CExprITokenPtr itoken2 = unstackIToken();
+
+    if (isOperatorIToken(itoken2, CEXPR_OP_FACTORIAL)) {
+      addITokenToType(itoken2, itoken);
+    }
+    else {
+      stackIToken(itoken2);
+    }
+  }
+#endif
 
   DEBUG_PRINT(itoken);
 

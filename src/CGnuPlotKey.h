@@ -60,6 +60,20 @@ class CGnuPlotKey {
   bool isOutside() const { return keyData_.outside(); }
   void setOutside(bool b) { keyData_.setOutside(b); }
 
+  bool isLMargin() const { return keyData_.lmargin(); }
+  void setLMargin(bool b) { keyData_.setLMargin(b); }
+
+  bool isRMargin() const { return keyData_.rmargin(); }
+  void setRMargin(bool b) { keyData_.setRMargin(b); }
+
+  bool isTMargin() const { return keyData_.tmargin(); }
+  void setTMargin(bool b) { keyData_.setTMargin(b); }
+
+  bool isBMargin() const { return keyData_.bmargin(); }
+  void setBMargin(bool b) { keyData_.setBMargin(b); }
+
+  bool inMargin() const { return isLMargin() || isRMargin() || isTMargin() || isBMargin(); }
+
   bool showTitle() const { return keyData_.title().isValid(); }
 
   std::string getTitle() const { return keyData_.title().getValue(""); }

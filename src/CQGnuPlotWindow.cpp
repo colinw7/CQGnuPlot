@@ -17,6 +17,7 @@
 #include <CQGnuPlotPalette.h>
 #include <CQGnuPlotTitle.h>
 #include <CQGnuPlotCamera.h>
+#include <CQGnuPlotPm3D.h>
 #include <CQGnuPlotTimeStamp.h>
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotDevice.h>
@@ -270,10 +271,6 @@ addProperties()
 
   tree_->addProperty("", this, "backgroundColor");
 
-  if (is3D()) {
-    tree_->addProperty("", this, "hidden3D");
-  }
-
   const CGnuPlot::LineStyles &lineStyles = plot_->lineStyles();
 
   for (const auto &ls : lineStyles) {
@@ -332,6 +329,18 @@ addGroupProperties(CGnuPlotGroup *group)
     tree_->addProperty(cameraName, qcamera, "ymax")->setEditorFactory(realEdit("-1000:1000:0.1"));
     tree_->addProperty(cameraName, qcamera, "near")->setEditorFactory(realEdit("-1000:1000:0.1"));
     tree_->addProperty(cameraName, qcamera, "far" )->setEditorFactory(realEdit("-1000:1000:0.1"));
+
+    tree_->addProperty(groupName, qgroup, "hidden3D");
+
+    //---
+
+    CQGnuPlotPm3D *qpm3d = static_cast<CQGnuPlotPm3D *>(group->pm3D().get());
+
+    QString pm3dName = groupName + "/pm3d";
+
+    tree_->addProperty(pm3dName, qpm3d, "enabled");
+    tree_->addProperty(pm3dName, qpm3d, "ftriangles");
+    tree_->addProperty(pm3dName, qpm3d, "clipIn");
   }
 
   QString regionName = groupName + "/region";
@@ -362,7 +371,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
   //---
 
-  CQGnuPlotTitle *qtitle = static_cast<CQGnuPlotTitle *>(group->title());
+  CQGnuPlotTitle *qtitle = static_cast<CQGnuPlotTitle *>(group->title().get());
 
   QString titleName = QString("%1/title").arg(groupName);
 
@@ -463,6 +472,10 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(keyName, qkey, "halign");
   tree_->addProperty(keyName, qkey, "valign");
   tree_->addProperty(keyName, qkey, "font");
+  tree_->addProperty(keyName, qkey, "lmargin");
+  tree_->addProperty(keyName, qkey, "rmargin");
+  tree_->addProperty(keyName, qkey, "tmargin");
+  tree_->addProperty(keyName, qkey, "bmargin");
 
   //---
 

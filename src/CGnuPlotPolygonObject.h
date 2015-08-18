@@ -13,7 +13,9 @@ class CGnuPlotPlot;
 
 class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
  public:
-  typedef std::vector<CPoint2D> Points;
+  typedef std::vector<CPoint2D>      Points;
+  typedef CGnuPlotTypes::FillPattern FillPattern;
+  typedef COptValT<FillPattern>      OptFillPattern;
 
  public:
   CGnuPlotPolygonObject(CGnuPlotPlot *plot);
@@ -32,6 +34,16 @@ class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
   const CRGBA &fillColor() const { return fillColor_.getValue(); }
   void setFillColor(const CRGBA &c) { fillColor_ = c; }
   void resetFillColor() { fillColor_.setInvalid(); }
+
+  bool hasFillPattern() const { return fillPattern_.isValid(); }
+  const FillPattern &fillPattern() const { return fillPattern_.getValue(); }
+  void setFillPattern(const FillPattern &p) { fillPattern_ = p; }
+  void resetFillPattern() { fillPattern_.setInvalid(); }
+
+  bool hasFillBackground() const { return fillBackground_.isValid(); }
+  const CRGBA &fillBackground() const { return fillBackground_.getValue(); }
+  void setFillBackground(const CRGBA &c) { fillBackground_ = c; }
+  void resetFillBackground() { fillBackground_.setInvalid(); }
 
   double lineWidth() const { return lineWidth_; }
   void setLineWidth(double r) { lineWidth_ = r; }
@@ -57,6 +69,8 @@ class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
   Points           points_;
   COptRGBA         lineColor_;
   COptRGBA         fillColor_;
+  OptFillPattern   fillPattern_;
+  COptRGBA         fillBackground_;
   double           lineWidth_ { 0 };
   bool             clipped_ { false };
   std::string      text_ { "" };

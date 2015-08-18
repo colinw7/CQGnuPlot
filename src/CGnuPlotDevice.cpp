@@ -130,6 +130,13 @@ createCamera(CGnuPlotGroup *group)
   return new CGnuPlotCamera(group);
 }
 
+CGnuPlotPm3D *
+CGnuPlotDevice::
+createPm3D(CGnuPlotGroup *group)
+{
+  return new CGnuPlotPm3D(group);
+}
+
 CGnuPlotTimeStamp *
 CGnuPlotDevice::
 createTimeStamp(CGnuPlotGroup *group)

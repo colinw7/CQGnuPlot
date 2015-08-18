@@ -16,7 +16,6 @@ CGnuPlotBBoxRenderer(CGnuPlotRenderer *renderer) :
   height_  = 800;
   mapping_ = true;
   region_  = CBBox2D(0, 0, 1, 1);
-  margin_  = CGnuPlotMargin(2, 2, 2, 2);
   range_   = CBBox2D(-1, -1, 1, 1);
 
   // font_ = renderer_->font();

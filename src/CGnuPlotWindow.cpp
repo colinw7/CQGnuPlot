@@ -24,10 +24,6 @@ clear()
   is3D_ = false;
 
   groups_.clear();
-
-  hidden3D_ = false;
-
-  pm3D_.unset();
 }
 
 void

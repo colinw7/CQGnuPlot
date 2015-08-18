@@ -422,11 +422,24 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &point
       polygon->resetLineColor();
     }
 
+    CRGBA fc;
+
     if      (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN) {
-      // TODO
+      CRGBA bg = plot->window()->backgroundColor();
+
+      fc = lineStyle.calcColor(group, CRGBA(1,1,1));
+
+      if (fillStyle.isTransparent())
+        fc.setAlpha(fillStyle.density());
+
+      if (! polygon->isModified()) {
+        polygon->setFillPattern   (fillStyle.pattern());
+        polygon->setFillColor     (fc);
+        polygon->setFillBackground(bg);
+      }
     }
     else if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID) {
-      CRGBA fc = lineStyle.calcColor(group, CRGBA(1,1,1));
+      fc = lineStyle.calcColor(group, CRGBA(1,1,1));
 
       if (fillStyle.isTransparent())
         fc.setAlpha(fillStyle.density());
@@ -437,7 +450,7 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &point
 
     if (fillStyle.hasBorder()) {
       // border line type ?
-      CRGBA lc = CRGBA(0,0,0);
+      CRGBA lc = fc;
 
       if (fillStyle.borderColor().isValid())
         lc = fillStyle.borderColor().getValue().calcColor(group);
@@ -451,15 +464,21 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &point
     polygon->setClipped(true);
   }
   else {
+    CRGBA fc;
+
     // fill polygon
     if      (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN) {
-      CRGBA fg = lineStyle.calcColor(group, CRGBA(1,1,1));
       CRGBA bg = plot->window()->backgroundColor();
 
-      renderer->patternClippedPolygon(points, fillStyle.pattern(), fg, bg);
+      fc = lineStyle.calcColor(group, CRGBA(1,1,1));
+
+      if (fillStyle.isTransparent())
+        fc.setAlpha(fillStyle.density());
+
+      renderer->patternClippedPolygon(points, fillStyle.pattern(), fc, bg);
     }
     else if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID) {
-      CRGBA fc = lineStyle.calcColor(group, CRGBA(1,1,1));
+      fc = lineStyle.calcColor(group, CRGBA(1,1,1));
 
       if (fillStyle.isTransparent())
         fc.setAlpha(fillStyle.density());
@@ -472,7 +491,7 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &point
     // draw border
     if (fillStyle.hasBorder()) {
       // border line type ?
-      CRGBA lc = CRGBA(0,0,0);
+      CRGBA lc = fc;
 
       if (fillStyle.borderColor().isValid())
         lc = fillStyle.borderColor().getValue().calcColor(group);
@@ -493,18 +512,32 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
   const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
-  CRGBA bg = group->window()->backgroundColor();
-
   double h = renderer->pixelHeightToWindowHeight(4);
 
   CBBox2D cbbox(p1.x, p1.y - h, p2.x, p1.y + h);
 
   CRGBA c = lineStyle.calcColor(group, CRGBA(1,1,1));
 
-  if (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN)
+  if (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN) {
+    CRGBA bg = group->window()->backgroundColor();
+
     renderer->patternRect(cbbox, fillStyle.pattern(), c, bg);
+  }
   else
     renderer->fillRect(cbbox, c);
+
+  // draw border
+  if (fillStyle.hasBorder()) {
+    // border line type ?
+    CRGBA lc = c;
+
+    if (fillStyle.borderColor().isValid())
+      lc = fillStyle.borderColor().getValue().calcColor(group);
+
+    double lw = lineStyle.calcWidth();
+
+    renderer->drawRect(cbbox, lc, lw);
+  }
 }
 
 CBBox2D

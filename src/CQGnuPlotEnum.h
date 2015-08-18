@@ -1,14 +1,15 @@
 #ifndef CQGnuPlotEnum_H
 #define CQGnuPlotEnum_H
 
+#include <CGnuPlotTypes.h>
 #include <QObject>
 
 class CQGnuPlotEnum : public QObject {
   Q_OBJECT
 
-  Q_ENUMS(SymbolType)
   Q_ENUMS(HAlignType)
   Q_ENUMS(VAlignType)
+  Q_ENUMS(SymbolType)
   Q_ENUMS(PlotStyle)
   Q_ENUMS(HistogramStyle)
   Q_ENUMS(FillType)
@@ -18,6 +19,8 @@ class CQGnuPlotEnum : public QObject {
   Q_ENUMS(DrawLayerType)
   Q_ENUMS(PaletteColorType)
   Q_ENUMS(ArrowCoordType)
+
+  Q_PROPERTY(SymbolType symbolType READ symbolType)
 
  public:
   enum HAlignType {
@@ -160,6 +163,15 @@ class CQGnuPlotEnum : public QObject {
 
  public:
   CQGnuPlotEnum() { }
+
+  const SymbolType &symbolType() const { return symbolType_; }
+  void setSymbolType(const SymbolType &v) { symbolType_ = v; }
+
+  static SymbolType symbolConv(const CGnuPlotTypes::SymbolType &type);
+  static CGnuPlotTypes::SymbolType symbolConv(const SymbolType &type);
+
+ private:
+  SymbolType symbolType_;
 };
 
 #endif

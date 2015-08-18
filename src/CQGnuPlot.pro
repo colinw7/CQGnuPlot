@@ -27,6 +27,7 @@ CQGnuPlotColorBox.cpp \
 CQGnuPlotDevice.cpp \
 CQGnuPlotEllipse.cpp \
 CQGnuPlotEllipseObject.cpp \
+CQGnuPlotEnum.cpp \
 CQGnuPlotGroup.cpp \
 CQGnuPlotKey.cpp \
 CQGnuPlotLabel.cpp \
@@ -34,6 +35,7 @@ CQGnuPlotLineStyle.cpp \
 CQGnuPlotPalette.cpp \
 CQGnuPlotPieObject.cpp \
 CQGnuPlotPlot.cpp \
+CQGnuPlotPm3D.cpp \
 CQGnuPlotPNGDevice.cpp \
 CQGnuPlotPNGRenderer.cpp \
 CQGnuPlotPolygon.cpp \
@@ -204,6 +206,7 @@ CQGnuPlotObject.h \
 CQGnuPlotPalette.h \
 CQGnuPlotPieObject.h \
 CQGnuPlotPlot.h \
+CQGnuPlotPm3D.h \
 CQGnuPlotPNGDevice.h \
 CQGnuPlotPNGRenderer.h \
 CQGnuPlotPolygon.h \

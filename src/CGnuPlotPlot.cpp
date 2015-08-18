@@ -678,7 +678,7 @@ drawSurface(CGnuPlotRenderer *renderer)
 
   //---
 
-  bool pm3D = (style_ == PlotStyle::PM3D || window()->pm3D().isEnabled());
+  bool pm3D = (style_ == PlotStyle::PM3D || group()->pm3D()->isEnabled());
 
   if (isSurfaceEnabled() || pm3D) {
     if (! surfaceSet_) {
@@ -767,7 +767,7 @@ drawSurface(CGnuPlotRenderer *renderer)
   }
 
   if (isSurfaceEnabled()) {
-    if (window()->hidden3D()) {
+    if (group()->hidden3D()) {
       CRGBA fc(1,1,1);
 
       for (auto polys : surfaceZPolygons_) {
@@ -808,7 +808,7 @@ drawSurface(CGnuPlotRenderer *renderer)
     }
   }
 
-  if (style_ == PlotStyle::PM3D || pm3D) {
+  if (pm3D) {
     for (auto polys : surfaceZPolygons_) {
       for (auto poly : polys.second) {
         double z = poly.first;

@@ -27,13 +27,13 @@ class CGnuPlotAxis;
 class CGnuPlotDevice;
 class CGnuPlotGroup;
 class CGnuPlotKey;
-class CGnuPlotColorBox;
 class CGnuPlotPlot;
 class CGnuPlotReadLine;
 class CGnuPlotSVGDevice;
 class CGnuPlotWindow;
 class CGnuPlotTimeStamp;
 class CGnuPlotStyleBase;
+class CGnuPlotPm3D;
 
 class CUnixFile;
 class CParseLine;
@@ -96,6 +96,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotHidden3DData.h>
 #include <CGnuPlotKeyTitle.h>
 #include <CGnuPlotMargin.h>
+#include <CGnuPlotLineProp.h>
 
 //------
 
@@ -553,8 +554,8 @@ class CGnuPlot {
   const CGnuPlotPalette &palette() const { return palette_; }
   void setPalette(const CGnuPlotPalette &p) { palette_ = p; }
 
-  const CGnuPlotColorBox &colorBox() const { return colorBox_; }
-  void setColorBox(const CGnuPlotColorBox &c) { colorBox_ = c; }
+  const CGnuPlotColorBoxData &colorBox() const { return colorBox_; }
+  void setColorBox(const CGnuPlotColorBoxData &c) { colorBox_ = c; }
 
   const CGnuPlotFilledCurve &filledCurve() const { return filledCurve_; }
   void setFilledCurve(const CGnuPlotFilledCurve &c) { filledCurve_ = c; }
@@ -662,6 +663,8 @@ class CGnuPlot {
   CGnuPlotTitle *createTitle(CGnuPlotGroup *group);
 
   CGnuPlotCamera *createCamera(CGnuPlotGroup *group);
+
+  CGnuPlotPm3D *createPm3D(CGnuPlotGroup *group);
 
   CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group);
 
@@ -916,6 +919,8 @@ class CGnuPlot {
   CGnuPlotPlot *addBinary3D(CGnuPlotGroup *group, const std::string &filename,
                             const CGnuPlotUsingCols &usingCols);
 
+  void parseLineProp(CParseLine &line, CGnuPlotLineProp &lineProp);
+
   bool parseAxisRange   (CParseLine &line, CGnuPlotAxisData &axis, bool hasArgs=true);
   bool parseAxisLabel   (CParseLine &line, CGnuPlotAxisData &axis);
   bool parseAxesTics    (CParseLine &line, CGnuPlotAxisData &axis);
@@ -969,8 +974,8 @@ class CGnuPlot {
   void setStyleIncrementType(StyleIncrementType s) { styleIncrement_.type = s; }
   StyleIncrementType getStyleIncrementType() { return styleIncrement_.type; }
 
-  const CGnuPlotTitle &title() const { return title_; }
-  void setTitle(const CGnuPlotTitle &t) { title_ = t; }
+  const CGnuPlotTitleData &title() const { return title_; }
+  void setTitle(const CGnuPlotTitleData &t) { title_ = t; }
 
   void setDummyVars(const std::string &dummyVar1, const std::string &dummyVar2);
   void getDummyVars(std::string &dummyVar1, std::string &dummyVar2, bool is3D=false) const;
@@ -1112,7 +1117,7 @@ class CGnuPlot {
   CGnuPlotHistogramData  histogramData_;
   CGnuPlotLineStyleP     lineStyle_;
   CGnuPlotPointStyle     pointStyle_;
-  CGnuPlotTitle          title_;
+  CGnuPlotTitleData      title_;
   VarPrefs               varPrefs_;
   CGnuPlotAxesData       axesData_;
   CGnuPlotKeyData        keyData_;
@@ -1155,7 +1160,7 @@ class CGnuPlot {
   Annotations            annotations_;
   CGnuPlotCamera         camera_;
   CGnuPlotPalette        palette_;
-  CGnuPlotColorBox       colorBox_;
+  CGnuPlotColorBoxData   colorBox_;
   CGnuPlotFilledCurve    filledCurve_;
   std::string            timeFmt_ { "%d/%m/%y,%H:%M" };
   DummyVarMap            dummyVars_;

@@ -366,19 +366,21 @@
   + bad display
 
 ## transparent.dem
-  + no issues
+  + not filled to axis
 
 ## transparent_solids.dem
   + no transparent
 
 ## using.dem
-  + no issues
+  + key margin formatting
 
 ## utf8.dem
   + looks ok
 
 ## varcolor.dem
-  + looks ok
+  + box border needed
+  + symbol center (triangle) not exact
+  + border and fill color same for error bars ?
 
 ## vector.dem
   + key order

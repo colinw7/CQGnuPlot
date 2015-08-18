@@ -206,6 +206,9 @@ executeOperator(const CExprTokenBaseP &ctoken)
       break;
     case CEXPR_OP_UNARY_PLUS:
     case CEXPR_OP_UNARY_MINUS:
+#ifdef GNUPLOT_EXPR
+    case CEXPR_OP_FACTORIAL:
+#endif
       executeUnaryOperator(type);
       break;
     case CEXPR_OP_POWER:

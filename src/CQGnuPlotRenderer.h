@@ -40,6 +40,9 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,
                    const CLineDash &dash) override;
 
+  void drawPixelLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,
+                     const CLineDash &dash) override;
+
   void drawRect   (const CBBox2D &rect, const CRGBA &c, double width) override;
   void fillRect   (const CBBox2D &rect, const CRGBA &c) override;
   void patternRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,

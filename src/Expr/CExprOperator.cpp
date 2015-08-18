@@ -79,6 +79,7 @@ operator_data[] = {
   { CEXPR_OP_STR_CONCAT       , "."  , },
   { CEXPR_OP_STR_EQUAL        , "eq" , },
   { CEXPR_OP_STR_NOT_EQUAL    , "ne" , },
+  { CEXPR_OP_FACTORIAL        , "!"  , },
 #endif
   { CEXPR_OP_COMMA            , ","  , },
   { CEXPR_OP_START_BLOCK      , "{"  , },

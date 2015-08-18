@@ -2,6 +2,18 @@
 #include <cerrno>
 #include <cmath>
 
+namespace {
+
+double factorial(int i) {
+  if (i < 0) return -factorial(-i);
+  if (i < 1) return 1;
+  return i*factorial(i - 1);
+}
+
+}
+
+//---
+
 CExprValuePtr
 CExprIntegerValue::
 execUnaryOp(CExprOpType op) const
@@ -13,6 +25,8 @@ execUnaryOp(CExprOpType op) const
       return CExprInst->createIntegerValue(-integer_);
     case CEXPR_OP_BIT_NOT:
       return CExprInst->createIntegerValue(~integer_);
+    case CEXPR_OP_FACTORIAL:
+      return CExprInst->createRealValue(factorial(integer_));
     default:
       return CExprValuePtr();
   }
