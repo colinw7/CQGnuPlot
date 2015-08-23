@@ -59,6 +59,7 @@ class CQPoint2DEdit : public QFrame {
   QDoubleSpinBox   *x_spin_;
   QDoubleSpinBox   *y_spin_;
   QHBoxLayout      *layout_;
+  mutable bool      disableSignals_;
 };
 
 #endif

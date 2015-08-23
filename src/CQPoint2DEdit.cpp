@@ -1,6 +1,6 @@
 #include <CQPoint2DEdit.h>
+#include <CQRealSpin.h>
 #include <CStrUtil.h>
-#include <QDoubleValidator>
 
 CQPoint2DEdit::
 CQPoint2DEdit(QWidget *parent, const CPoint2D &value, bool spin) :
@@ -93,6 +93,8 @@ init(const CPoint2D &value)
 {
   setObjectName("edit");
 
+  disableSignals_ = false;
+
   setFrameStyle(QFrame::NoFrame | QFrame::Plain);
 
   min_ = CPoint2D(-1E50, -1E50);
@@ -119,8 +121,8 @@ init(const CPoint2D &value)
 
   //---
 
-  x_spin_ = new QDoubleSpinBox; x_spin_->setObjectName("xspin");
-  y_spin_ = new QDoubleSpinBox; y_spin_->setObjectName("yspin");
+  x_spin_ = new CQRealSpin; x_spin_->setObjectName("xspin");
+  y_spin_ = new CQRealSpin; y_spin_->setObjectName("yspin");
 
   x_spin_->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
   y_spin_->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -188,6 +190,8 @@ void
 CQPoint2DEdit::
 editingFinishedI()
 {
+  if (disableSignals_) return;
+
   widgetToPoint();
 
   emit valueChanged();
@@ -197,11 +201,15 @@ void
 CQPoint2DEdit::
 pointToWidget()
 {
+  disableSignals_ = true;
+
   x_edit_->setText(CStrUtil::toString(point_.getX()).c_str());
   y_edit_->setText(CStrUtil::toString(point_.getY()).c_str());
 
   x_spin_->setValue(point_.getX());
   y_spin_->setValue(point_.getY());
+
+  disableSignals_ = false;
 }
 
 void
@@ -209,8 +217,13 @@ CQPoint2DEdit::
 widgetToPoint()
 {
   if (! spin_) {
-    point_.setX(CStrUtil::toReal(x_edit_->text().toStdString()));
-    point_.setY(CStrUtil::toReal(y_edit_->text().toStdString()));
+    double x = 0.0, y = 0.0;
+
+    if (! CStrUtil::toReal(x_edit_->text().toStdString(), &x)) x = 0.0;
+    if (! CStrUtil::toReal(y_edit_->text().toStdString(), &y)) y = 0.0;
+
+    point_.setX(x);
+    point_.setY(y);
   }
   else {
     point_.setX(x_spin_->value());
