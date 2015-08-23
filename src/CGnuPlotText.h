@@ -1,6 +1,7 @@
 #ifndef CGnuPlotText_H
 #define CGnuPlotText_H
 
+#include <CGnuPlotTypes.h>
 #include <CBBox2D.h>
 #include <CAlignType.h>
 #include <CRGBA.h>
@@ -68,7 +69,7 @@ class CGnuPlotText {
   const std::string &etext() const { return estr_; }
 
   void draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
-            const CRGBA &c=CRGBA(0,0,0), double a=0) const;
+            const CRGBA &c=CRGBA(0,0,0), double a=0, const COptPoint2D &o=COptPoint2D()) const;
 
   CBBox2D calcBBox(CGnuPlotRenderer *renderer) const;
 

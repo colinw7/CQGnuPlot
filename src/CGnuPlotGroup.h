@@ -176,7 +176,7 @@ class CGnuPlotGroup {
   const DrawLayer &getBorderLayer() const { return axesData_.getBorderLayer(); }
   void setBorderLayer(const DrawLayer &l) { axesData_.setBorderLayer(l); }
 
-  int getBorderWidth() const { return axesData_.getBorderWidth(); }
+  double getBorderWidth() const { return axesData_.getBorderWidth(); }
   void setBorderWidth(double w) { axesData_.setBorderWidth(w); }
 
   int getBorderStyle() const { return axesData_.getBorderStyle(); }
@@ -288,6 +288,9 @@ class CGnuPlotGroup {
   void drawAxes(CGnuPlotRenderer *renderer);
 
   void drawBorder(CGnuPlotRenderer *renderer);
+
+  void drawBorderLine(CGnuPlotRenderer *renderer, const CPoint3D &p1, const CPoint3D &p2);
+  void drawBorderLine(CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2);
 
   void drawXAxis(CGnuPlotRenderer *renderer, int xind);
   void drawYAxis(CGnuPlotRenderer *renderer, int yind);

@@ -63,7 +63,18 @@ calcColor(CGnuPlotGroup *group, double x) const
     return CRGBA(r/255.0, g/255.0, b/255.0, a/255.0);
   }
   else if (isPaletteZ()) {
-    double x1 = CGnuPlotUtil::map(x, group->getBBox().getXMin(), group->getBBox().getXMax(), 0, 1);
+    double x1;
+
+    if (! group->is3D()) {
+      const CBBox2D &bbox = group->getBBox();
+
+      x1 = CGnuPlotUtil::map(x, bbox.getXMin(), bbox.getXMax(), 0, 1);
+    }
+    else {
+      CGnuPlotAxisData &zaxis = group->zaxis(1);
+
+      x1 = CGnuPlotUtil::map(x, zaxis.min().getValue(), zaxis.max().getValue(), 0, 1);
+    }
 
     CColor c = group->palette()->getColor(x1);
 

@@ -202,9 +202,15 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
   connect(yAxisAction, SIGNAL(triggered(bool)), this, SLOT(yAxisSlot(bool)));
   connect(gridAction , SIGNAL(triggered(bool)), this, SLOT(gridSlot(bool)));
 
+  QAction *pixelAction = new QAction("&Pixels", this);
+  pixelAction->setCheckable(true); pixelAction->setChecked(false);
+
+  connect(pixelAction, SIGNAL(triggered(bool)), this, SLOT(pixelSlot(bool)));
+
   dispMenu->addAction(xAxisAction);
   dispMenu->addAction(yAxisAction);
   dispMenu->addAction(gridAction);
+  dispMenu->addAction(pixelAction);
 
   toolbar->addAction(xAxisAction);
   toolbar->addAction(yAxisAction);
@@ -229,7 +235,7 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
   statusBar()->addPermanentWidget(posLabel_ );
   statusBar()->addPermanentWidget(plotLabel_);
 
-  showPos("", 0, 0);
+  showPos("", 0, 0, 0, 0);
 
   //---
 
@@ -397,7 +403,7 @@ addGroupProperties(CGnuPlotGroup *group)
     for (const auto &iaxis : iaxes) {
       CQGnuPlotAxis *qaxis = static_cast<CQGnuPlotAxis *>(iaxis.second);
 
-      QString axisName = QString("%1/axis_%2").arg(groupName).arg(qaxis->id().c_str());
+      QString axisName = QString("%1/Axes/axis_%2").arg(groupName).arg(qaxis->id().c_str());
 
       tree_->addProperty(axisName, qaxis, "displayed");
       tree_->addProperty(axisName, qaxis, "start");
@@ -574,22 +580,27 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(name1, qellipse, "angle");
     }
     else if ((label = dynamic_cast<CGnuPlotLabel *>(ann.get()))) {
-      QString name1 = QString("%1/%2_%3").arg(groupName).arg(label->getName()).arg(ann->getInd());
+      QString labelName =
+        QString("%1/Labels/%2_%3").arg(groupName).arg(label->getName()).arg(ann->getInd());
 
       CQGnuPlotLabel *qlabel = static_cast<CQGnuPlotLabel *>(label);
 
-      tree_->addProperty(name1, qlabel, "strokeColor");
-      //tree_->addProperty(name1, qlabel, "fillColor");
-      tree_->addProperty(name1, qlabel, "drawLayer");
-
-      tree_->addProperty(name1, qlabel, "text");
-      tree_->addProperty(name1, qlabel, "align");
-      tree_->addProperty(name1, qlabel, "pos");
-      tree_->addProperty(name1, qlabel, "font");
-      tree_->addProperty(name1, qlabel, "angle");
-      tree_->addProperty(name1, qlabel, "offset");
-      tree_->addProperty(name1, qlabel, "enhanced");
-      tree_->addProperty(name1, qlabel, "offset");
+      tree_->addProperty(labelName, qlabel, "displayed");
+      tree_->addProperty(labelName, qlabel, "drawLayer");
+      tree_->addProperty(labelName, qlabel, "text");
+      tree_->addProperty(labelName, qlabel, "pos");
+      tree_->addProperty(labelName, qlabel, "font");
+      tree_->addProperty(labelName, qlabel, "angle")->setEditorFactory(realSlider("0:360:1"));
+      tree_->addProperty(labelName, qlabel, "align");
+      tree_->addProperty(labelName, qlabel, "offset");
+      tree_->addProperty(labelName, qlabel, "enhanced");
+      tree_->addProperty(labelName, qlabel, "color");
+      tree_->addProperty(labelName, qlabel, "lineType");
+      tree_->addProperty(labelName, qlabel, "showPoint");
+      tree_->addProperty(labelName, qlabel, "pointType");
+      tree_->addProperty(labelName, qlabel, "pointSize");
+      tree_->addProperty(labelName, qlabel, "box");
+      tree_->addProperty(labelName, qlabel, "hypertext");
     }
     else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann.get()))) {
       QString name1 = QString("%1/%2_%3").arg(groupName).arg(poly->getName()).arg(ann->getInd());
@@ -948,6 +959,13 @@ gridSlot(bool b)
 
 void
 CQGnuPlotWindow::
+pixelSlot(bool b)
+{
+  setShowPixels(b);
+}
+
+void
+CQGnuPlotWindow::
 selectMode(bool)
 {
   mode_ = Mode::SELECT;
@@ -1228,7 +1246,7 @@ paint(QPainter *p)
 
 void
 CQGnuPlotWindow::
-showPos(const QString &name, double wx, double wy)
+showPos(const QString &name, double px, double py, double wx, double wy)
 {
   std::string xstr, ystr;
 
@@ -1244,10 +1262,17 @@ showPos(const QString &name, double wx, double wy)
     ystr = CStrUtil::toString(wy);
   }
 
+  QString text;
+
   if (name != "")
-    posLabel_->setText(QString("%1: %2 %3").arg(name).arg(xstr.c_str()).arg(ystr.c_str()));
-  else
-    posLabel_->setText(QString("%1 %2").arg(xstr.c_str()).arg(ystr.c_str()));
+    text += QString("%1: ").arg(name);
+
+  text += QString("%1 %2").arg(xstr.c_str()).arg(ystr.c_str());
+
+  if (isShowPixels())
+    text += QString(" : %1 %2").arg(px).arg(py);
+
+  posLabel_->setText(text);
 }
 
 // mouse mode (unused ?)

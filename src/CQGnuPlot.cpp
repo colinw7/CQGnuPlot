@@ -6,6 +6,7 @@
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotLineStyle.h>
 #include <CQGnuPlotAnnotation.h>
+#include <CQPropertyEditor.h>
 
 #include <CQApp.h>
 #include <CQUtil.h>
@@ -106,6 +107,8 @@ CQGnuPlot::
 CQGnuPlot()
 {
   CQUtil::initProperties();
+
+  CQPropertyEditorMgrInst->setEditor("double", new CQPropertyRealEditor);
 
   device_ = new CQGnuPlotDevice;
 

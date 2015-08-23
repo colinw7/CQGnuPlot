@@ -156,7 +156,8 @@ class CGnuPlotRenderer {
   void patternClippedRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
                           const CRGBA &fg, const CRGBA &bg);
 
-  void drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w);
+  void drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w,
+                       const COptPoint2D &o=COptPoint2D());
 
   void fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c);
   void drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c);

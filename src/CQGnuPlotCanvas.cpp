@@ -61,7 +61,7 @@ mouseMoveEvent(QMouseEvent *e)
   CPoint2D p;
 
   if (pixelToWindow(CPoint2D(e->pos().x(), e->pos().y()), p))
-    window_->showPos(groupName, p.x, p.y);
+    window_->showPos(groupName, e->pos().x(), e->pos().y(), p.x, p.y);
 
   window_->mouseMove(e->pos(), pressed_);
 }

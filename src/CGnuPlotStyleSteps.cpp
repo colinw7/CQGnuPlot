@@ -72,9 +72,29 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         CPoint2D p3(xm, p1.y);
         CPoint2D p4(xm, p2.y);
 
+        if      (i1 == 0) {
+          double xm1 = p1.x - (xm - p1.x);
+
+          CPoint2D p5(xm1, 0);
+          CPoint2D p6(xm1, p1.y);
+
+          renderer->drawClipLine(p5, p6, lw, c);
+          renderer->drawClipLine(p6, p1, lw, c);
+        }
+
         renderer->drawClipLine(p1, p3, lw, c);
         renderer->drawClipLine(p3, p4, lw, c);
         renderer->drawClipLine(p4, p2, lw, c);
+
+        if (i2 == np - 1) {
+          double xm1 = p2.x + (p2.x - xm);
+
+          CPoint2D p5(xm1, p2.y);
+          CPoint2D p6(xm1, 0);
+
+          renderer->drawClipLine(p2, p5, lw, c);
+          renderer->drawClipLine(p5, p6, lw, c);
+        }
       }
       else if (plot->getStyle() == CGnuPlotTypes::PlotStyle::STEPS) {
         CPoint2D p3(p2.x, p1.y);
@@ -96,6 +116,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
   }
 
+#if 0
+  // TODO: when is symbol needed ?
   if (plot->getStyle() != CGnuPlotTypes::PlotStyle::FILLSTEPS) {
     for (const auto &point : plot->getPoints2D()) {
       CPoint2D p;
@@ -104,6 +126,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         renderer->drawSymbol(p, CGnuPlotTypes::SymbolType::FILLED_BOX, 1.0, c);
     }
   }
+#endif
 }
 
 CBBox2D

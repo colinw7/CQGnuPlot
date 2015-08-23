@@ -1,6 +1,6 @@
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotGroup.h>
-#include <CGnuPlotRenderer.h>
+#include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
 
@@ -83,6 +83,26 @@ CQGnuPlotLabel::
 setOffset(const QPointF &p)
 {
   CGnuPlotLabel::setOffset(CQUtil::fromQPoint(p));
+}
+
+QColor
+CQGnuPlotLabel::
+color() const
+{
+  const CGnuPlotColorSpec &cs = CGnuPlotLabel::textColor();
+
+  return toQColor(cs.color());
+}
+
+void
+CQGnuPlotLabel::
+setColor(const QColor &c)
+{
+  CGnuPlotColorSpec cs = CGnuPlotLabel::textColor();
+
+  cs.setRGB(fromQColor(c));
+
+  CGnuPlotLabel::setTextColor(cs);
 }
 
 void

@@ -148,7 +148,7 @@ indexDash(int i)
   return CLineDash();
 }
 
-CGnuPlotStyle::SymbolType
+CGnuPlotTypes::SymbolType
 CGnuPlotStyle::
 indexSymbol(int i)
 {

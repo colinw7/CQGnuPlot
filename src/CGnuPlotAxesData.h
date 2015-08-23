@@ -76,7 +76,7 @@ class CGnuPlotAxesData {
   const DrawLayer &getBorderLayer() const { return border_.layer; }
   void setBorderLayer(const DrawLayer &l) { border_.layer = l; }
 
-  int getBorderWidth() const { return border_.lineWidth; }
+  double getBorderWidth() const { return border_.lineWidth; }
   void setBorderWidth(double w) { border_.lineWidth = w; }
 
   int getBorderStyle() const { return border_.lineStyle.getValue(-1); }

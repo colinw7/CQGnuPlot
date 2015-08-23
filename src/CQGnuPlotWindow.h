@@ -47,7 +47,7 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
 
   void paint(QPainter *p);
 
-  void showPos(const QString &name, double wx, double wy);
+  void showPos(const QString &name, double px, double py, double wx, double wy);
 
   QColor backgroundColor() const;
   void setBackgroundColor(const QColor &c);
@@ -57,13 +57,16 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
 
   CQGnuPlotGroup *getGroupAt(const QPoint &pos);
 
+  bool isShowPixels() const { return showPixels_; }
+  void setShowPixels(bool b) { showPixels_ = b; }
+
   void mousePress  (const QPoint &qp);
   void mouseMove   (const QPoint &qp, bool pressed);
   void mouseRelease(const QPoint &qp);
 
   void keyPress(int key, Qt::KeyboardModifiers modifiers);
 
-  bool mouseTip  (const QPoint &qp, CQGnuPlot::TipRect &tip);
+  bool mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip);
 
   void selectObject(const QObject *);
 
@@ -97,6 +100,8 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
   void yAxisSlot(bool show);
   void gridSlot(bool show);
 
+  void pixelSlot(bool show);
+
   void selectMode(bool b);
   void zoomMode  (bool b);
 
@@ -122,6 +127,7 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
   QLabel*            posLabel_     { 0 };
   CQGnuPlotGroup*    currentGroup_ { 0 };
   Mode               mode_         { Mode::SELECT };
+  bool               showPixels_   { false };
   QAction*           selectAction_ { 0 };
   QAction*           zoomAction_   { 0 };
   CQZoomRegion*      zoomRegion_   { 0 };

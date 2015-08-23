@@ -31,6 +31,9 @@ class CGnuPlotObject {
 
   CGnuPlot *plot() const { return plot_; }
 
+  bool isDisplayed() const { return displayed_; }
+  void setDisplayed(bool b) { displayed_ = b; }
+
   virtual bool inside(const CPoint2D &p) const = 0;
 
   virtual void draw(CGnuPlotRenderer *renderer) const = 0;
@@ -41,6 +44,7 @@ class CGnuPlotObject {
 
  protected:
   CGnuPlot *plot_ { 0 };
+  bool      displayed_ { true };
 };
 
 //---
@@ -58,6 +62,9 @@ class CGnuPlotPlotObject {
   bool isModified() const { return modified_; }
   void setModified(bool b) { modified_ = b; }
 
+  bool isDisplayed() const { return displayed_; }
+  void setDisplayed(bool b) { displayed_ = b; }
+
   virtual bool inside(const CPoint2D &p) const = 0;
 
   virtual void draw(CGnuPlotRenderer *renderer) const = 0;
@@ -69,6 +76,7 @@ class CGnuPlotPlotObject {
  protected:
   CGnuPlotPlot *plot_     { 0 };
   bool          modified_ { false };
+  bool          displayed_ { true };
 };
 
 //---
@@ -86,6 +94,9 @@ class CGnuPlotGroupObject {
 
   CGnuPlotGroup *group() const { return group_; }
 
+  bool isDisplayed() const { return displayed_; }
+  void setDisplayed(bool b) { displayed_ = b; }
+
   virtual bool inside(const CPoint2D &p) const = 0;
 
   virtual void draw(CGnuPlotRenderer *renderer) const = 0;
@@ -96,6 +107,7 @@ class CGnuPlotGroupObject {
 
  protected:
   CGnuPlotGroup *group_ { 0 };
+  bool           displayed_ { true };
 };
 
 #endif

@@ -179,14 +179,14 @@ drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &
 
 void
 CGnuPlotRenderer::
-drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w)
+drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w, const COptPoint2D &o)
 {
-  CPoint2D o = rect.getCenter();
+  CPoint2D o1 = (o.isValid() ? o.getValue() : rect.getCenter());
 
-  CPoint2D p1 = rotatePoint(rect.getLL(), a, o);
-  CPoint2D p2 = rotatePoint(rect.getLR(), a, o);
-  CPoint2D p3 = rotatePoint(rect.getUR(), a, o);
-  CPoint2D p4 = rotatePoint(rect.getUL(), a, o);
+  CPoint2D p1 = rotatePoint(rect.getLL(), a, o1);
+  CPoint2D p2 = rotatePoint(rect.getLR(), a, o1);
+  CPoint2D p3 = rotatePoint(rect.getUR(), a, o1);
+  CPoint2D p4 = rotatePoint(rect.getUL(), a, o1);
 
   drawLine(p1, p2, w, c);
   drawLine(p2, p3, w, c);

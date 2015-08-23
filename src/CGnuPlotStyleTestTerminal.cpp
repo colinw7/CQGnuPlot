@@ -72,10 +72,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     double w = font->getStringWidth(str);
 
-    CRGBA                    c      = CGnuPlotStyleInst->indexColor(i - 1);
-    CGnuPlotPlot::SymbolType symbol = CGnuPlotStyleInst->indexSymbol(i - 1);
-    double                   width  = 1.0;
-    CLineDash                dash   = CGnuPlotStyleInst->indexDash(i - 1);
+    CRGBA                     c      = CGnuPlotStyleInst->indexColor(i - 1);
+    CGnuPlotTypes::SymbolType symbol = CGnuPlotStyleInst->indexSymbol(i - 1);
+    double                    width  = 1.0;
+    CLineDash                 dash   = CGnuPlotStyleInst->indexDash(i - 1);
 
     double x, y;
 

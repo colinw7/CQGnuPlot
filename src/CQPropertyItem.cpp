@@ -186,7 +186,7 @@ createEditor(QWidget *parent)
     widget_ = combo;
   }
   // bool - create toggle
-  // TODO: use button press (no need to editor) see CQCheckTree.cpp
+  // TODO: use button press (no need to edit) see CQCheckTree.cpp
   else if (typeName == "bool") {
     QCheckBox *check = new QCheckBox(parent);
 

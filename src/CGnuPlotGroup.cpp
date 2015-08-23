@@ -1490,18 +1490,11 @@ drawBorder(CGnuPlotRenderer *renderer)
   if (hasPlotStyle(PlotStyle::TEST_TERMINAL))
     return;
 
-  if (! axesData().getBorderSides())
-    return;
-
   uint sides = axesData().getBorderSides();
-
-  CRGBA c(0,0,0);
 
   CBBox2D bbox = getMappedDisplayRange(1, 1);
 
   renderer->setRange(bbox);
-
-  axisBBox_ = bbox;
 
   CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, 1, true);
   CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, 1, true);
@@ -1511,81 +1504,121 @@ drawBorder(CGnuPlotRenderer *renderer)
   double xmin1 = bbox.getLeft  (), ymin1 = bbox.getBottom();
   double xmax1 = bbox.getRight (), ymax1 = bbox.getTop   ();
 
-  double bw = axesData().getBorderWidth();
-
   if (is3D()) {
     double zmin1 = zaxis(1).min().getValue(-10);
     double zmax1 = zaxis(1).max().getValue( 10);
 
+    if (! axesData().getBorderSides())
+      return;
+
+    updateAxisBBox(CPoint3D(xmin1, ymin1, zmin1));
+    updateAxisBBox(CPoint3D(xmin1, ymin1, zmax1));
+    updateAxisBBox(CPoint3D(xmin1, ymax1, zmin1));
+    updateAxisBBox(CPoint3D(xmin1, ymax1, zmax1));
+    updateAxisBBox(CPoint3D(xmax1, ymin1, zmin1));
+    updateAxisBBox(CPoint3D(xmax1, ymin1, zmax1));
+    updateAxisBBox(CPoint3D(xmax1, ymax1, zmin1));
+    updateAxisBBox(CPoint3D(xmax1, ymax1, zmax1));
+
     // 1 : x front, bottom
     if (sides & (1<<0))
-      renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmax1, ymin1, zmin1), bw, c);
+      drawBorderLine(renderer, CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmax1, ymin1, zmin1));
 
     // 2 : y left, bottom
     if (sides & (1<<1))
-      renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmin1, ymax1, zmin1), bw, c);
+      drawBorderLine(renderer, CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmin1, ymax1, zmin1));
 
     // 4 : y right, bottom
     if (sides & (1<<2))
-      renderer->drawLine(CPoint3D(xmax1, ymin1, zmin1), CPoint3D(xmax1, ymax1, zmin1), bw, c);
+      drawBorderLine(renderer, CPoint3D(xmax1, ymin1, zmin1), CPoint3D(xmax1, ymax1, zmin1));
 
     // 8 : x back, bottom
     if (sides & (1<<3))
-      renderer->drawLine(CPoint3D(xmin1, ymax1, zmin1), CPoint3D(xmax1, ymax1, zmin1), bw, c);
+      drawBorderLine(renderer, CPoint3D(xmin1, ymax1, zmin1), CPoint3D(xmax1, ymax1, zmin1));
 
     //---
 
     // 16 : vertical, left, front
     if (sides & (1<<4))
-      renderer->drawLine(CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmin1, ymin1, zmax1), bw, c);
+      drawBorderLine(renderer, CPoint3D(xmin1, ymin1, zmin1), CPoint3D(xmin1, ymin1, zmax1));
 
     // 32 : vertical, left, back
     if (sides & (1<<5))
-      renderer->drawLine(CPoint3D(xmin1, ymax1, zmin1), CPoint3D(xmin1, ymax1, zmax1), bw, c);
+      drawBorderLine(renderer, CPoint3D(xmin1, ymax1, zmin1), CPoint3D(xmin1, ymax1, zmax1));
 
     // 64 : vertical, right, back
     if (sides & (1<<6))
-      renderer->drawLine(CPoint3D(xmax1, ymax1, zmin1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
+      drawBorderLine(renderer, CPoint3D(xmax1, ymax1, zmin1), CPoint3D(xmax1, ymax1, zmax1));
 
     // 128 : vertical, right, front
     if (sides & (1<<7))
-      renderer->drawLine(CPoint3D(xmax1, ymin1, zmin1), CPoint3D(xmax1, ymin1, zmax1), bw, c);
+      drawBorderLine(renderer, CPoint3D(xmax1, ymin1, zmin1), CPoint3D(xmax1, ymin1, zmax1));
 
     //---
 
     // 256: y left, top
     if (sides & (1<<8))
-      renderer->drawLine(CPoint3D(xmin1, ymin1, zmax1), CPoint3D(xmin1, ymax1, zmax1), bw, c);
+      drawBorderLine(renderer, CPoint3D(xmin1, ymin1, zmax1), CPoint3D(xmin1, ymax1, zmax1));
 
     // 512: x back, top
     if (sides & (1<<9))
-      renderer->drawLine(CPoint3D(xmin1, ymax1, zmax1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
+      drawBorderLine(renderer, CPoint3D(xmin1, ymax1, zmax1), CPoint3D(xmax1, ymax1, zmax1));
 
     // 1024: x front, top
     if (sides & (1<<10))
-      renderer->drawLine(CPoint3D(xmin1, ymin1, zmax1), CPoint3D(xmax1, ymin1, zmax1), bw, c);
+      drawBorderLine(renderer, CPoint3D(xmin1, ymin1, zmax1), CPoint3D(xmax1, ymin1, zmax1));
 
     // 2048: y right, top
     if (sides & (1<<11))
-      renderer->drawLine(CPoint3D(xmax1, ymin1, zmax1), CPoint3D(xmax1, ymax1, zmax1), bw, c);
+      drawBorderLine(renderer, CPoint3D(xmax1, ymin1, zmax1), CPoint3D(xmax1, ymax1, zmax1));
   }
   else {
+    if (! axesData().getBorderSides())
+      return;
+
+    updateAxisBBox(CPoint2D(xmin1, ymin1));
+    updateAxisBBox(CPoint2D(xmin1, ymax1));
+    updateAxisBBox(CPoint2D(xmax1, ymin1));
+    updateAxisBBox(CPoint2D(xmax1, ymax1));
+
     // 1 : x axis (bottom)
     if (sides & (1<<0))
-      renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmax1, ymin1), bw, c);
+      drawBorderLine(renderer, CPoint2D(xmin1, ymin1), CPoint2D(xmax1, ymin1));
 
     // 2 : y axis (left)
     if (sides & (1<<1))
-      renderer->drawLine(CPoint2D(xmin1, ymin1), CPoint2D(xmin1, ymax1), bw, c);
+      drawBorderLine(renderer, CPoint2D(xmin1, ymin1), CPoint2D(xmin1, ymax1));
 
     // 4 : x axis (top)
     if (sides & (1<<2))
-      renderer->drawLine(CPoint2D(xmin1, ymax1), CPoint2D(xmax1, ymax1), bw, c);
+      drawBorderLine(renderer, CPoint2D(xmin1, ymax1), CPoint2D(xmax1, ymax1));
 
     // 8 : y axis (right)
     if (sides & (1<<3))
-      renderer->drawLine(CPoint2D(xmax1, ymin1), CPoint2D(xmax1, ymax1), bw, c);
+      drawBorderLine(renderer, CPoint2D(xmax1, ymin1), CPoint2D(xmax1, ymax1));
   }
+}
+
+void
+CGnuPlotGroup::
+drawBorderLine(CGnuPlotRenderer *renderer, const CPoint3D &p1, const CPoint3D &p2)
+{
+  CRGBA c(0,0,0);
+
+  double bw = axesData().getBorderWidth();
+
+  renderer->drawLine(p1, p2, bw, c);
+}
+
+void
+CGnuPlotGroup::
+drawBorderLine(CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
+{
+  CRGBA c(0,0,0);
+
+  double bw = axesData().getBorderWidth();
+
+  renderer->drawLine(p1, p2, bw, c);
 }
 
 void
@@ -2029,7 +2062,7 @@ updateAxisBBox(const CPoint3D &p)
 
   CPoint2D p1 = renderer->transform(p);
 
-  axisBBox_.add(p1);
+  updateAxisBBox(p1);
 }
 
 #if 0

@@ -103,7 +103,7 @@ pixelXValue(CGnuPlotRenderer *renderer, double x) const
   else if (system_ == CGnuPlotTypes::CoordSys::SCREEN) {
     const CISize2D &s = renderer->window()->size();
 
-    return x*s.width;
+    return x*(s.width - 1);
   }
   else if (system_ == CGnuPlotTypes::CoordSys::CHARACTER)
     return x;
@@ -129,7 +129,7 @@ pixelYValue(CGnuPlotRenderer *renderer, double y) const
   else if (system_ == CGnuPlotTypes::CoordSys::SCREEN) {
     const CISize2D &s = renderer->window()->size();
 
-    return y*s.height;
+    return y*(s.height - 1);
   }
   else if (system_ == CGnuPlotTypes::CoordSys::CHARACTER)
     return y;

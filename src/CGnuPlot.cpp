@@ -3601,7 +3601,7 @@ parseAxisLabel(CParseLine &line, CGnuPlotAxisData &axis)
       if (parseFont(line, font))
         axis.setLabelFont(font);
     }
-    else if (arg == "textcolor") {
+    else if (arg == "textcolor" || arg == "tc") {
       CGnuPlotColorSpec c;
 
       if (parseColorSpec(line, c))
@@ -3640,8 +3640,10 @@ parseAxisLabel(CParseLine &line, CGnuPlotAxisData &axis)
 
       if (parseString(line, labelStr))
         axis.setText(labelStr);
-      else
+      else {
+        errorMsg("Invalid axes label arg '" + arg + "'");
         break;
+      }
     }
 
     pos = line.pos();
@@ -8389,7 +8391,7 @@ setCmd(const std::string &args)
         if (parseFont(line, font))
           timeStamp_.setFont(font);
       }
-      else if (arg == "textcolor") {
+      else if (arg == "textcolor" || arg == "tc") {
         CGnuPlotColorSpec c;
 
         if (parseColorSpec(line, c))

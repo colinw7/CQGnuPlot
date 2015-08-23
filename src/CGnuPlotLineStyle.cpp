@@ -114,7 +114,7 @@ calcColor(CGnuPlotGroup *group, const CRGBA &c) const
     return c;
 }
 
-CGnuPlotLineStyle::SymbolType
+CGnuPlotTypes::SymbolType
 CGnuPlotLineStyle::
 calcPointType(const SymbolType &t) const
 {

@@ -46,8 +46,9 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   const CFontPtr &getFont() const { return labelStyle_.font(); }
   void setFont(const CFontPtr &f) { labelStyle_.setFont(f); }
 
-  double getAngle() const { return angle_; }
+  const COptReal getAngle() const { return angle_; }
   void setAngle(double a) { angle_ = a; }
+  void resetAngle() { angle_.setInvalid(); }
 
   const COptPoint2D &getOffset() const { return labelStyle_.offset(); }
   void setOffset(const CPoint2D &o) { labelStyle_.setOffset(o); }
@@ -97,7 +98,7 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
   CGnuPlotText       text_;
   CGnuPlotPosition   pos_;
-  double             angle_      { -1 };
+  COptReal           angle_;
   bool               enhanced_   { true };
   CGnuPlotLabelStyle labelStyle_;
   CGnuPlotColorSpec  textColor_;

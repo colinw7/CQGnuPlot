@@ -23,8 +23,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  double                   pointSize = plot->pointSize();
-  CGnuPlotPlot::SymbolType pointType = plot->pointType();
+  double                    pointSize = plot->pointSize();
+  CGnuPlotTypes::SymbolType pointType = plot->pointType();
 
   uint pointNum = 0;
 
@@ -83,8 +83,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  double                   pointSize = plot->pointSize();
-  CGnuPlotPlot::SymbolType pointType = plot->pointType();
+  double                    pointSize = plot->pointSize();
+  CGnuPlotTypes::SymbolType pointType = plot->pointType();
 
   for (const auto &ip : plot->getPoints3D()) {
     for (const auto &point : ip.second) {
@@ -104,8 +104,8 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  double                   pointSize = plot->pointSize();
-  CGnuPlotPlot::SymbolType pointType = plot->pointType();
+  double                    pointSize = plot->pointSize();
+  CGnuPlotTypes::SymbolType pointType = plot->pointType();
 
   CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 

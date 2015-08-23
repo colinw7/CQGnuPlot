@@ -53,10 +53,32 @@ draw(CGnuPlotRenderer *renderer)
     // screen coords
     CPoint2D origin = this->origin().getPoint2D(renderer);
 
-    x1 = CGnuPlotUtil::map(origin.x, 0, 1, orbbox.getXMin(), orbbox.getXMax());
-    y1 = CGnuPlotUtil::map(origin.y, 0, 1, orbbox.getYMin(), orbbox.getYMax());
-    x2 = x1 + CGnuPlotUtil::map(size().width , 0, 1, 0, orbbox.getWidth ());
-    y2 = y1 + CGnuPlotUtil::map(size().height, 0, 1, 0, orbbox.getHeight());
+    if (group()->is3D()) {
+#if 0
+      // TODO: colorbox position in 3D ??
+      double aw = axbbox.getWidth (); double aw1 = 1.2*aw;
+      double ah = axbbox.getHeight(); double ah1 = 1.2*ah;
+
+      double ax1 = axbbox.getXMin() - aw/10; double ay1 = axbbox.getYMin() - ah/10;
+      double ax2 = axbbox.getXMax() + aw/10; double ay2 = axbbox.getYMax() + ah/10;
+
+      x1 = CGnuPlotUtil::map(origin.x, 0, 1, ax1, ax2);
+      y1 = CGnuPlotUtil::map(origin.y, 0, 1, ay1, ay2);
+      x2 = x1 + CGnuPlotUtil::map(size().width , 0, 1, 0, aw1);
+      y2 = y1 + CGnuPlotUtil::map(size().height, 0, 1, 0, ah1);
+#else
+      x1 = CGnuPlotUtil::map(origin.x, 0, 1, orbbox.getXMin(), orbbox.getXMax());
+      y1 = CGnuPlotUtil::map(origin.y, 0, 1, orbbox.getYMin(), orbbox.getYMax());
+      x2 = x1 + CGnuPlotUtil::map(size().width , 0, 1, 0, orbbox.getWidth ());
+      y2 = y1 + CGnuPlotUtil::map(size().height, 0, 1, 0, orbbox.getHeight());
+#endif
+    }
+    else {
+      x1 = CGnuPlotUtil::map(origin.x, 0, 1, orbbox.getXMin(), orbbox.getXMax());
+      y1 = CGnuPlotUtil::map(origin.y, 0, 1, orbbox.getYMin(), orbbox.getYMax());
+      x2 = x1 + CGnuPlotUtil::map(size().width , 0, 1, 0, orbbox.getWidth ());
+      y2 = y1 + CGnuPlotUtil::map(size().height, 0, 1, 0, orbbox.getHeight());
+    }
 
     if (isVertical()) {
       tx = x2 + bx;

@@ -150,6 +150,7 @@ CQComboSlider.cpp \
 CQSlider.cpp \
 CQAngleSpinBox.cpp \
 CQIntegerSpin.cpp \
+CQRealSpin.cpp \
 CQLineDash.cpp \
 CQPoint2DEdit.cpp \
 CQIconCombo.cpp \
@@ -326,6 +327,7 @@ CQComboSlider.h \
 CQSlider.h \
 CQAngleSpinBox.h \
 CQIntegerSpin.h \
+CQRealSpin.h \
 CQLineDash.h \
 CQPoint2DEdit.h \
 CQIconCombo.h \

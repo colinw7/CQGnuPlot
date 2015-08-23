@@ -1,4 +1,6 @@
 #include <CExprI.h>
+#include <boost/math/special_functions/erf.hpp>
+#include <CMathGen.h>
 #include <CInvNorm.h>
 #include <cmath>
 #include <complex.h>
@@ -12,7 +14,10 @@ namespace {
 
 double invnorm(double x) {
   //return sqrt(2)/erf(2*x - 1);
-  return CInvNorm::calc(x);
+  double y = CInvNorm::calc(x);
+  if (IsPosInf(y) || IsNegInf(y))
+    SetNaN(y);
+  return y;
 }
 
 double norm(double x)
@@ -21,6 +26,14 @@ double norm(double x)
   x = 0.5*erfc(-x);
 
   return x;
+}
+
+double inverf(double x) {
+  try {
+    return boost::math::erf_inv(x);
+  } catch (...) {
+    return CMathGen::getNaN();
+  }
 }
 
 // TODO
@@ -607,13 +620,14 @@ CEXPR_REALC_TO_REALC_FUNC(ATanH, std::atanh)
 CEXPR_REAL_TO_REAL_FUNC(BesJ0  , ::j0)
 CEXPR_REAL_TO_REAL_FUNC(BesJ1  , ::j1)
 
-CEXPR_REALC_TO_REAL_FUNC(Erf    , ::erf)
-CEXPR_REALC_TO_REAL_FUNC(ErfC   , ::erfc)
+CEXPR_REALC_TO_REAL_FUNC(Erf   , ::erf)
+CEXPR_REALC_TO_REAL_FUNC(ErfC  , ::erfc)
+CEXPR_REALC_TO_REAL_FUNC(InvErf, ::inverf)
 
 CEXPR_COMPLEX_TO_COMPLEX_FUNC(CErf , ::cerf)
 CEXPR_COMPLEX_TO_COMPLEX_FUNC(CErfC, ::cerfc)
 
-// TODO: inverf, invnorm, norm
+// TODO: invnorm, norm
 CEXPR_REALC_TO_REAL_FUNC(Gamma  , ::gamma)
 // TODO: igamma
 CEXPR_REALC_TO_REAL_FUNC(LGamma , ::lgamma)
@@ -648,6 +662,7 @@ builtinFns[] = {
   // besy0, besy1
   { "erf"    , "rc" , CExprFunctionErf     },
   { "erfc"   , "rc" , CExprFunctionErfC    },
+  { "inverf" , "rc" , CExprFunctionInvErf  },
   { "cerf"   , "c"  , CExprFunctionCErf    },
   { "cerfc"  , "c"  , CExprFunctionCErfC   },
   { "gamma"  , "r"  , CExprFunctionGamma   },

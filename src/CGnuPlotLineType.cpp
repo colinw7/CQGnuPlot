@@ -76,7 +76,7 @@ init(int ind)
   ind_ = ind;
 }
 
-CGnuPlotLineType::SymbolType
+CGnuPlotTypes::SymbolType
 CGnuPlotLineType::
 symbolType() const
 {

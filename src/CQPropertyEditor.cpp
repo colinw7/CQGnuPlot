@@ -5,6 +5,7 @@
 #include <CQPoint2DEdit.h>
 #include <CQLineDash.h>
 #include <CQAngleSpinBox.h>
+#include <CQRealSpin.h>
 #include <CQSlider.h>
 #include <CQComboSlider.h>
 #include <CQUtil.h>
@@ -32,6 +33,7 @@ CQPropertyEditorMgr()
   setEditor("QFont"    , new CQPropertyFontEditor    );
   setEditor("QPalette" , new CQPropertyPaletteEditor );
   setEditor("QPointF"  , new CQPropertyPointEditor   );
+  setEditor("QSizeF"   , new CQPropertySizeFEditor   );
 }
 
 void
@@ -125,7 +127,7 @@ QWidget *
 CQPropertyRealEditor::
 createEdit(QWidget *parent)
 {
-  if (type_ == Type::RealSlider) {
+  if      (type_ == Type::RealSlider) {
     CQRealSlider *slider = new CQRealSlider(parent);
 
     slider->setAutoFillBackground(true);
@@ -146,7 +148,7 @@ createEdit(QWidget *parent)
     return combo;
   }
   else {
-    QDoubleSpinBox *spin = new QDoubleSpinBox(parent);
+    CQRealSpin *spin = new CQRealSpin(parent);
 
     spin->setRange(min_, max_);
     spin->setSingleStep(step_);
@@ -173,7 +175,7 @@ connect(QWidget *w, QObject *obj, const char *method)
     QObject::connect(combo, SIGNAL(valueChanged(double)), obj, method);
   }
   else {
-    QDoubleSpinBox *spin = qobject_cast<QDoubleSpinBox *>(w);
+    CQRealSpin *spin = qobject_cast<CQRealSpin *>(w);
     assert(spin);
 
     QObject::connect(spin, SIGNAL(valueChanged(double)), obj, method);
@@ -197,7 +199,7 @@ getValue(QWidget *w)
     return QVariant(combo->value());
   }
   else {
-    QDoubleSpinBox *spin = qobject_cast<QDoubleSpinBox *>(w);
+    CQRealSpin *spin = qobject_cast<CQRealSpin *>(w);
     assert(spin);
 
     return QVariant(spin->value());
@@ -225,7 +227,7 @@ setValue(QWidget *w, const QVariant &var)
     combo->setValue(r);
   }
   else {
-    QDoubleSpinBox *spin = qobject_cast<QDoubleSpinBox *>(w);
+    CQRealSpin *spin = qobject_cast<CQRealSpin *>(w);
     assert(spin);
 
     double r = var.toDouble();
@@ -286,6 +288,62 @@ setValue(QWidget *w, const QVariant &var)
   QPointF p = var.toPointF();
 
   edit->setValue(p);
+}
+
+//------
+
+CQPropertySizeFEditor::
+CQPropertySizeFEditor(double max, double step) :
+ max_(max), step_(step)
+{
+}
+
+QWidget *
+CQPropertySizeFEditor::
+createEdit(QWidget *parent)
+{
+  CQPoint2DEdit *edit = new CQPoint2DEdit(parent);
+
+  edit->setSpin(true);
+  edit->setMinimum(CPoint2D(0, 0));
+  edit->setMaximum(CPoint2D(max_, max_));
+  edit->setStep(CPoint2D(step_, step_));
+
+  return edit;
+}
+
+void
+CQPropertySizeFEditor::
+connect(QWidget *w, QObject *obj, const char *method)
+{
+  CQPoint2DEdit *edit = qobject_cast<CQPoint2DEdit *>(w);
+  assert(edit);
+
+  QObject::connect(edit, SIGNAL(valueChanged()), obj, method);
+}
+
+QVariant
+CQPropertySizeFEditor::
+getValue(QWidget *w)
+{
+  CQPoint2DEdit *edit = qobject_cast<CQPoint2DEdit *>(w);
+  assert(edit);
+
+  QPointF p = edit->getQValue();
+
+  return QSize(p.x(), p.y());
+}
+
+void
+CQPropertySizeFEditor::
+setValue(QWidget *w, const QVariant &var)
+{
+  CQPoint2DEdit *edit = qobject_cast<CQPoint2DEdit *>(w);
+  assert(edit);
+
+  QSizeF s = var.toSizeF();
+
+  edit->setValue(QPointF(s.width(), s.height()));
 }
 
 //------

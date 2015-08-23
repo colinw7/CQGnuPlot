@@ -265,7 +265,7 @@ readBraceString(CParseLine &line, std::string &tstr)
 void
 CGnuPlotText::
 draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
-     const CRGBA &c, double a) const
+     const CRGBA &c, double a, const COptPoint2D &o) const
 {
   //renderer->drawRotatedRect(bbox, a, CRGBA(1,0,0), 1);
 
@@ -281,7 +281,7 @@ draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
 
   //---
 
-  CPoint2D origin = bbox.getCenter();
+  CPoint2D origin = (o.isValid() ? o.getValue() : bbox.getCenter());
 
   double dy = bbox.getTop();
 

@@ -17,31 +17,36 @@ void
 CGnuPlotLabel::
 draw(CGnuPlotRenderer *renderer) const
 {
+  if (! isDisplayed()) return;
+
   CHAlignType halign = getAlign();
-//CVAlignType valign = (getFront() ? CVALIGN_TYPE_TOP : CVALIGN_TYPE_CENTER);
-  CVAlignType valign = CVALIGN_TYPE_CENTER;
+  CVAlignType valign = CVALIGN_TYPE_BOTTOM;
+
+  double a = angle_.getValue(0);
 
   if (getFont().isValid())
     renderer->setFont(getFont());
   else
     renderer->setFont(defFont_);
 
+  double td = renderer->pixelHeightToWindowHeight(renderer->getFont()->getCharDescent());
+
   CPoint3D pos  = getPos().getPoint3D(renderer);
   CPoint2D pos1 = renderer->transform(pos);
 
-  if (isEnhanced())
-    bbox_ = text_.calcBBox(renderer).moveBy(pos1);
+  CBBox2D tbbox;
+
+  if (isEnhanced() || fabs(a) > 1E-6)
+    tbbox = text_.calcBBox(renderer);
   else
-    bbox_ = renderer->getHAlignedTextBBox(getText().text()).moveBy(pos1);
+    tbbox = renderer->getHAlignedTextBBox(getText().text());
+
+  double w = tbbox.getWidth ();
+  double h = tbbox.getHeight();
+
+  bbox_ = CBBox2D(pos1.x, pos1.y, pos1.x + w, pos1.y + h);
 
   CPoint2D d(0, 0);
-
-  double w = bbox_.getWidth ();
-  double h = bbox_.getHeight();
-
-  double dh = std::max(bbox_.getTop() - pos1.y, 0.0);
-
-  h -= dh;
 
   if      (halign == CHALIGN_TYPE_LEFT) {
   }
@@ -52,34 +57,40 @@ draw(CGnuPlotRenderer *renderer) const
     d.x -= w;
   }
 
-  if      (valign == CVALIGN_TYPE_TOP) {
+  if      (valign == CVALIGN_TYPE_BOTTOM) {
   }
   else if (valign == CVALIGN_TYPE_CENTER) {
-    d.y += h/2;
+    d.y -= h/2;
   }
-  else if (valign == CVALIGN_TYPE_BOTTOM) {
-    d.y += h;
+  else if (valign == CVALIGN_TYPE_TOP) {
+    d.y -= h;
   }
 
   bbox_.moveBy(d);
+  bbox_.moveBy(CPoint2D(0, -td));
 
-  pos1 += d;
+  CRGBA c;
+
+  if (textColor_.isPaletteZ())
+    c = textColor_.calcColor(group_, pos.z);
+  else
+    c = textColor_.color();
 
   if (showPoint()) {
     // TODO: show point
+    renderer->drawSymbol(pos1, CGnuPlotTypes::SymbolType::CROSS, 1, c, 1);
   }
 
-  CRGBA c = textColor_.color();
+  COptPoint2D o(CPoint2D(pos1.x, pos1.y));
+//renderer->drawSymbol(o.getValue(), CGnuPlotTypes::SymbolType::PLUS, 1, CRGBA(1,0,0), 1);
 
-  if (isEnhanced()) {
-    CBBox2D bbox = bbox_;
-
-    bbox.setYMax(pos1.y);
-
-    text_.draw(renderer, bbox, halign, c);
-  }
+  if (isEnhanced() || fabs(a) > 1E-6)
+    text_.draw(renderer, bbox_, halign, c, a, o);
   else
     renderer->drawHTextInBox(bbox_, getText().text(), halign, c);
+
+  if (hasBox())
+    renderer->drawRotatedRect(bbox_, a, c, 1, o);
 }
 
 bool
