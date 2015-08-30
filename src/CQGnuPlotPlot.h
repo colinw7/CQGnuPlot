@@ -5,6 +5,7 @@
 #include <CQGnuPlot.h>
 #include <CGnuPlotPlot.h>
 #include <CQGnuPlotObject.h>
+#include <CGnuPlotTipData.h>
 
 #include <QColor>
 #include <QRect>
@@ -71,7 +72,6 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   CQGnuPlotGroup *qgroup() const { return group_; }
 
   CQGnuPlotWindow *qwindow() const;
-  CQGnuPlotCanvas *canvas() const;
 
   int lineStyleId() const { return CGnuPlotPlot::lineStyleId().getValue(-1); }
 
@@ -100,7 +100,7 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   void mousePress(const CPoint2D &p, std::vector<CQGnuPlotObject *> &objects);
   void mouseMove (const CPoint2D &p);
-  bool mouseTip  (const CPoint2D &p, CQGnuPlot::TipRect &tip);
+  bool mouseTip  (const CPoint2D &p, CGnuPlotTipData &tip);
 
  public:
   CQGnuPlotGroup*    group_;

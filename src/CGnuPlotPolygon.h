@@ -48,9 +48,7 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
 
   bool inside(const CPoint2D &p) const override;
 
-  std::string tip() const { return ""; }
-
-  CBBox2D tipRect() const override { return CBBox2D(); }
+  CGnuPlotTipData tip() const { return CGnuPlotTipData(); }
 
   void print(std::ostream &) const;
 

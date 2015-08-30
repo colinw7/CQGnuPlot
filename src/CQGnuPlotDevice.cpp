@@ -48,7 +48,7 @@ createWindow()
 {
   CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
 
-  CQGnuPlotWindow *window = new CQGnuPlotWindow(qapp);
+  CQGnuPlotMainWindow *window = new CQGnuPlotMainWindow(qapp);
 
   const CISize2D &s = size();
 
@@ -364,7 +364,8 @@ void
 CQGnuPlotDevice::
 timeout()
 {
-  qApp->processEvents();
+  if (! qApp->activeModalWidget())
+    qApp->processEvents();
 }
 
 void

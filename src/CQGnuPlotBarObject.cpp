@@ -124,27 +124,33 @@ draw(CGnuPlotRenderer *renderer) const
 {
   CGnuPlotBarObject::draw(renderer);
 
-  if (isSelected()) {
+  if (isSelected() || isHighlighted()) {
     CGnuPlotBarObject bar1(*this);
 
-    bar1.setFillType   (CGnuPlotTypes::FillType   ::PATTERN);
-    bar1.setFillPattern(CGnuPlotTypes::FillPattern::HATCH);
+    if      (fillType() == CGnuPlotTypes::FillType::SOLID) {
+      CRGBA fc  = fillColor().getValue(CRGBA(1,1,1));
+      CRGBA fc1 = fc.getLightRGBA();
 
-    CRGBA fc(0,0,0);
+      bar1.setFillColor(fc1);
+    }
+    else if (fillType() == CGnuPlotTypes::FillType::PATTERN &&
+             fillPattern() != CGnuPlotTypes::FillPattern::NONE) {
+      bar1.setFillType   (CGnuPlotTypes::FillType   ::PATTERN);
+      bar1.setFillPattern(CGnuPlotTypes::FillPattern::HATCH);
 
-    if (fillType() == CGnuPlotTypes::FillType::SOLID ||
-        (fillType() == CGnuPlotTypes::FillType::PATTERN &&
-         fillPattern() != CGnuPlotTypes::FillPattern::NONE)) {
+      CRGBA fc(0,0,0);
+
       double g = fillColor().getValue(CRGBA(1,1,1)).getGray();
 
       if (g < 0.5)
         fc = CRGBA(1, 1, 1);
+
+      bar1.setFillColor(fc);
     }
-
-    bar1.setFillColor(fc);
-
-    bar1.setBorder   (true);
-    bar1.setLineColor(CRGBA(1,0,0));
+    else {
+      bar1.setBorder   (true);
+      bar1.setLineColor(CRGBA(1,0,0));
+    }
 
     bar1.draw(renderer);
   }

@@ -5,9 +5,9 @@
 
 namespace {
 
-bool evaluateExpression(const std::string &expr, CExprValueP &value, bool quiet=false) {
+bool evaluateExpression(const std::string &expr, CExprValuePtr &value, bool quiet=false) {
   if (! CExprInst->evaluateExpression(expr, value))
-    value = CExprValueP();
+    value = CExprValuePtr();
 
   if (! value.isValid() && ! quiet)
     std::cerr << "Eval failed: " << expr << std::endl;
@@ -176,7 +176,7 @@ decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
 
     const CGnuPlotUsingCol &col = getCol(i);
 
-    CExprValueP value = decodeValue(fieldValues, col, ns, ignore, params);
+    CExprValuePtr value = decodeValue(fieldValues, col, ns, ignore, params);
 
     if (! ignore) {
       if (! value.isValid()) bad = true;
@@ -198,7 +198,7 @@ decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
     if (! this->getTicLabel(type, ind1, str))
       continue;
 
-    CExprValueP value;
+    CExprValuePtr value;
 
     if (! evaluateExpression(str, value, true))
       continue;
@@ -210,7 +210,7 @@ decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
     if (! value.isValid() || ! value->getIntegerValue(icol))
       continue;
 
-    CExprValueP value1 = getFieldValue(fieldValues, icol, ns);
+    CExprValuePtr value1 = getFieldValue(fieldValues, icol, ns);
 
     if (! value1.isValid() || ! value1->getStringValue(str1))
       continue;
@@ -224,12 +224,12 @@ decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
   return ns;
 }
 
-CExprValueP
+CExprValuePtr
 CGnuPlotUsingCols::
 decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
             int &ns, bool &ignore, Params &params) const
 {
-  CExprValueP value;
+  CExprValuePtr value;
 
   ignore = false;
 
@@ -256,19 +256,27 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
 
       int ns1 = 0;
 
-      CExprValueP value1 = getFieldValue(fieldValues, icol, ns1);
+      CExprValuePtr value1 = getFieldValue(fieldValues, icol, ns1);
 
-      double x1;
+      if (value1.isValid()) {
+        double      x1;
+        std::string s1;
 
-      if (value1.isValid() && value1->getRealValue(x1)) {
-        std::string rstr = CStrUtil::toString(x1);
+        if (value1->getRealValue(x1)) {
+          std::string rstr = CStrUtil::toString(x1);
 
-        auto p = rstr.find('.');
+          auto p = rstr.find('.');
 
-        if (p == std::string::npos)
-          rstr += ".";
+          if (p == std::string::npos)
+            rstr += ".";
 
-        expr = expr.substr(0, pos - 1) + rstr + expr.substr(pos1);
+          expr = expr.substr(0, pos - 1) + rstr + expr.substr(pos1);
+        }
+        else if (value1->getStringValue(s1)) {
+          expr = expr.substr(0, pos - 1) + "\"" + s1 + "\"" + expr.substr(pos1);
+        }
+        else
+          expr = expr.substr(0, pos - 1) + "NaN" + expr.substr(pos1);
       }
       else
         expr = expr.substr(0, pos - 1) + "NaN" + expr.substr(pos1);
@@ -280,8 +288,6 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
     pos = expr.find('(');
 
     if (pos > 0 && pos != std::string::npos) {
-      bool valid = false;
-
       std::string name  = expr.substr(0, pos);
       std::string name1 = expr.substr(pos + 1);
 
@@ -291,7 +297,7 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
 
       for ( ; j < name1.size(); ++j) {
         if      (name1[j] == '(')
-          brackets++;
+          ++brackets;
         else if (name1[j] == ')') {
           --brackets;
 
@@ -303,16 +309,19 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
       if (j < name1.size())
         name1 = name1.substr(0, j);
 
-      CExprValueP value;
+      CExprValuePtr value;
 
       if (! evaluateExpression(name1, value, true))
-        value = CExprValueP();
+        value = CExprValuePtr();
+
+#if 0
+      bool valid = false;
 
       long        icol;
       std::string str1;
 
       if (value.isValid() && value->getIntegerValue(icol)) {
-        CExprValueP value1 = getFieldValue(fieldValues, icol, ns);
+        CExprValuePtr value1 = getFieldValue(fieldValues, icol, ns);
 
         if (value1.isValid() && value1->getStringValue(str1))
           valid = true;
@@ -320,6 +329,8 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
 
       if (valid)
         params[name] = str1;
+#endif
+      params[name] = value;
 
       ignore = true;
       expr   = "";
@@ -329,18 +340,18 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
 
     if (expr != "") {
       if (! evaluateExpression(expr, value, true))
-        value = CExprValueP();
+        value = CExprValuePtr();
     }
   }
 
   return value;
 }
 
-CExprValueP
+CExprValuePtr
 CGnuPlotUsingCols::
 getFieldValue(const Values &fieldValues, int icol, int &ns) const
 {
-  CExprValueP value;
+  CExprValuePtr value;
 
   int nf = fieldValues.size();
 
@@ -353,7 +364,7 @@ getFieldValue(const Values &fieldValues, int icol, int &ns) const
 
     if (! value.isValid()) {
       ++ns;
-      return CExprValueP();
+      return CExprValuePtr();
     }
   }
 

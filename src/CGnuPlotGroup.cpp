@@ -150,17 +150,30 @@ setTitleData(const CGnuPlotTitleData &t)
 
 void
 CGnuPlotGroup::
-addSubPlots(const Plots &plots)
+clearSubPlots()
 {
   plots_.clear();
+}
 
-  for (auto plot : plots) {
-    plot->setInd(plots_.size() + 1);
+void
+CGnuPlotGroup::
+addSubPlot(CGnuPlotPlot *plot)
+{
+  plot->setInd(plots_.size() + 1);
 
-    plots_.push_back(plot);
+  plots_.push_back(plot);
 
-    plot->setGroup(this);
-  }
+  plot->setGroup(this);
+}
+
+void
+CGnuPlotGroup::
+addSubPlots(const Plots &plots)
+{
+  clearSubPlots();
+
+  for (auto plot : plots)
+    addSubPlot(plot);
 }
 
 void
@@ -618,7 +631,7 @@ fit()
 
   axisBBox_ = CBBox2D();
 
-  drawAxes(&brenderer);
+  drawAxes(&brenderer, true);
 
   marginBBox_ = axisBBox_;
 
@@ -626,12 +639,14 @@ fit()
 
   drawTitle(&brenderer);
 
-  double lm = fabs(bbox.getLeft  () - marginBBox_.getLeft  ());
-  double bm = fabs(bbox.getBottom() - marginBBox_.getBottom());
-  double rm = fabs(bbox.getRight () - marginBBox_.getRight ());
-  double tm = fabs(bbox.getTop   () - marginBBox_.getTop   ());
+  if (marginBBox_.isSet()) {
+    double lm = fabs(bbox.getLeft  () - marginBBox_.getLeft  ());
+    double bm = fabs(bbox.getBottom() - marginBBox_.getBottom());
+    double rm = fabs(bbox.getRight () - marginBBox_.getRight ());
+    double tm = fabs(bbox.getTop   () - marginBBox_.getTop   ());
 
-  margin_.updateDefaultValues(&brenderer, lm, bm, rm, tm);
+    margin_.updateDefaultValues(&brenderer, lm, bm, rm, tm);
+  }
   }
 }
 
@@ -907,7 +922,7 @@ draw()
   // draw axes (underneath plot)
   axisBBox_ = CBBox2D();
 
-  drawAxes(renderer);
+  drawAxes(renderer, getBorderLayer() == CGnuPlotTypes::DrawLayer::FRONT);
 //renderer->drawRect(axisBBox_, CRGBA(1,0,0), 1);
 
 //CBBox2D bbox = getMappedDisplayRange(1, 1);
@@ -959,6 +974,9 @@ draw()
   }
 
   //---
+
+  if (getBorderLayer() == CGnuPlotTypes::DrawLayer::FRONT)
+    drawBorder(renderer);
 
   // draw grid
   drawGrid(renderer, CGnuPlotTypes::DrawLayer::FRONT);
@@ -1438,13 +1456,14 @@ calcHistogramRange(const Plots &plots, CBBox2D &bbox) const
 
 void
 CGnuPlotGroup::
-drawAxes(CGnuPlotRenderer *renderer)
+drawAxes(CGnuPlotRenderer *renderer, bool border)
 {
   if (hasPlotStyle(PlotStyle::TEST_TERMINAL))
     return;
 
   if (is3D()) {
-    drawBorder(renderer);
+    if (border)
+      drawBorder(renderer);
 
     drawXAxis(renderer, 1);
     drawYAxis(renderer, 1);
@@ -1465,7 +1484,8 @@ drawAxes(CGnuPlotRenderer *renderer)
 
     //---
 
-    drawBorder(renderer);
+    if (border)
+      drawBorder(renderer);
 
     if (! hasPlotStyle(PlotStyle::PARALLELAXES)) {
       for (int i = 1; i <= 2; ++i) {

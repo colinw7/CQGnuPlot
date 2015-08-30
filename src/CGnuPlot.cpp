@@ -97,7 +97,7 @@ class CGnuPlotAssertFn : public CGnuPlotFn {
  public:
   CGnuPlotAssertFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const Values &values) {
+  CExprValuePtr operator()(const Values &values) {
     long value = 0;
 
     if (! values[0]->getIntegerValue(value))
@@ -105,7 +105,7 @@ class CGnuPlotAssertFn : public CGnuPlotFn {
 
     assert(value);
 
-    return CExprValueP();
+    return CExprValuePtr();
   }
 };
 
@@ -113,7 +113,7 @@ class CGnuPlotColumnFn : public CGnuPlotFn {
  public:
   CGnuPlotColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const Values &values) {
+  CExprValuePtr operator()(const Values &values) {
     long icol = 0;
 
     if      (values[0]->isIntegerValue()) {
@@ -131,7 +131,7 @@ class CGnuPlotColumnFn : public CGnuPlotFn {
 
     //---
 
-    CExprValueP value;
+    CExprValuePtr value;
 
     if      (icol == 0)
       value = CExprInst->createRealValue(plot_->pointNum());
@@ -159,7 +159,7 @@ class CGnuPlotExistsFn : public CGnuPlotFn {
  public:
   CGnuPlotExistsFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const Values &values) {
+  CExprValuePtr operator()(const Values &values) {
     std::string name;
 
     if (! values[0]->getStringValue(name))
@@ -175,7 +175,7 @@ class CGnuPlotStringColumnFn : public CGnuPlotFn {
  public:
   CGnuPlotStringColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const Values &values) {
+  CExprValuePtr operator()(const Values &values) {
     assert(values.size() == 1);
 
     std::string str;
@@ -183,7 +183,7 @@ class CGnuPlotStringColumnFn : public CGnuPlotFn {
     long col = 0;
 
     if (values[0]->getIntegerValue(col)) {
-      CExprValueP value = plot_->fieldValue(col);
+      CExprValuePtr value = plot_->fieldValue(col);
 
       if (value->isStringValue())
         (void) value->getStringValue(str);
@@ -197,7 +197,7 @@ class CGnuPlotStringValidFn : public CGnuPlotFn {
  public:
   CGnuPlotStringValidFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const Values &values) {
+  CExprValuePtr operator()(const Values &values) {
     assert(values.size() == 1);
 
     std::string str;
@@ -207,7 +207,7 @@ class CGnuPlotStringValidFn : public CGnuPlotFn {
     long col = 0;
 
     if (values[0]->getIntegerValue(col)) {
-      CExprValueP value = plot_->fieldValue(col);
+      CExprValuePtr value = plot_->fieldValue(col);
 
       valid = value.isValid();
     }
@@ -220,16 +220,16 @@ class CGnuPlotValueFn : public CGnuPlotFn {
  public:
   CGnuPlotValueFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const Values &values) {
+  CExprValuePtr operator()(const Values &values) {
     std::string name;
 
     if (! values[0]->getStringValue(name))
-      return CExprValueP();
+      return CExprValuePtr();
 
     CExprVariablePtr var = CExprInst->getVariable(name);
 
     if (! var.isValid())
-      return CExprValueP();
+      return CExprValuePtr();
 
     return var->getValue();
   }
@@ -239,15 +239,15 @@ class CGnuPlotValueHSV2RGBFn : public CGnuPlotFn {
  public:
   CGnuPlotValueHSV2RGBFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const Values &values) {
-    if (values.size() != 3) return CExprValueP();
+  CExprValuePtr operator()(const Values &values) {
+    if (values.size() != 3) return CExprValuePtr();
 
     double h, s, v;
 
     if (! values[0]->getRealValue(h) ||
         ! values[1]->getRealValue(s) ||
         ! values[2]->getRealValue(v))
-      return CExprValueP();
+      return CExprValuePtr();
 
     CHSV hsv(h*360, s, v);
 
@@ -261,15 +261,15 @@ class CGnuPlotValueStrFTime : public CGnuPlotFn {
  public:
   CGnuPlotValueStrFTime(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const Values &values) {
-    if (values.size() != 2) return CExprValueP();
+  CExprValuePtr operator()(const Values &values) {
+    if (values.size() != 2) return CExprValuePtr();
 
     std::string s;
     long        i;
 
     if (! values[0]->getStringValue (s) ||
         ! values[1]->getIntegerValue(i))
-      return CExprValueP();
+      return CExprValuePtr();
 
     time_t t = i;
 
@@ -287,13 +287,13 @@ class CGnuPlotValueStrPTime : public CGnuPlotFn {
  public:
   CGnuPlotValueStrPTime(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const Values &values) {
-    if (values.size() != 2) return CExprValueP();
+  CExprValuePtr operator()(const Values &values) {
+    if (values.size() != 2) return CExprValuePtr();
 
     std::string s1, s2;
 
     if (! values[0]->getStringValue(s1) || ! values[1]->getStringValue(s2))
-      return CExprValueP();
+      return CExprValuePtr();
 
     struct tm tm1;
 
@@ -317,13 +317,13 @@ class CGnuPlotValueTmValue : public CGnuPlotFn {
    CGnuPlotFn(plot), value_(value) {
   }
 
-  CExprValueP operator()(const Values &values) {
-    if (values.size() != 1) return CExprValueP();
+  CExprValuePtr operator()(const Values &values) {
+    if (values.size() != 1) return CExprValuePtr();
 
     long i;
 
     if (! values[0]->getIntegerValue(i))
-      return CExprValueP();
+      return CExprValuePtr();
 
     time_t t = i;
 
@@ -351,8 +351,8 @@ class CGnuPlotValueTime : public CGnuPlotFn {
  public:
   CGnuPlotValueTime(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValueP operator()(const Values &values) {
-    if (values.size() != 1) return CExprValueP();
+  CExprValuePtr operator()(const Values &values) {
+    if (values.size() != 1) return CExprValuePtr();
 
     time_t t = time(0);
 
@@ -1173,10 +1173,10 @@ parseStatement(int &i, const Statements &statements)
       if (p != std::string::npos)
         expr = expr.substr(0, p);
 
-      CExprValueP value;
+      CExprValuePtr value;
 
       if (! evaluateExpression(expr, value))
-        value = CExprValueP();
+        value = CExprValuePtr();
 
       if (! value.isValid())
         return false;
@@ -1386,7 +1386,7 @@ printCmd(const std::string &args)
     CExprValueType lastType = CEXPR_VALUE_STRING;
 
     while (line.isValid()) {
-      CExprValueP value;
+      CExprValuePtr value;
 
       if (! parseValue(line, value, "Invalid Value"))
         return;
@@ -1953,12 +1953,12 @@ plotCmd(const std::string &args)
 
     group->addSubPlots(plots);
 
-    group->fit();
-
     window->addGroup(group);
 
     for (auto plot : plots)
       plot->smooth();
+
+    group->fit();
 
     for (auto plot : plots) {
       if (plot->tableFile().isEnabled())
@@ -4006,12 +4006,12 @@ splotCmd(const std::string &args)
 
     group->addSubPlots(plots);
 
-    group->fit();
-
     window->addGroup(group);
 
     for (auto plot : plots)
       plot->smooth();
+
+    group->fit();
 
     for (auto plot : plots) {
       if (plot->tableFile().isEnabled())
@@ -9966,7 +9966,7 @@ showVariables(std::ostream &os, const StringArray &args)
 
       os << var->name() << " = ";
 
-      CExprValueP value = var->value();
+      CExprValuePtr value = var->value();
 
       CExprValueType type = (value.isValid() ? value->getType() : CEXPR_VALUE_NONE);
 
@@ -11445,7 +11445,7 @@ parseEvery(CParseLine &line, int &everyPointStart, int &everyPointEnd, int &ever
     var = def;
 
     if (int(inds.size()) > i) {
-      CExprValueP value;
+      CExprValuePtr value;
 
       var = def;
 
@@ -11980,10 +11980,10 @@ processAssignFunction(const std::string &str)
     if (! line.skipSpaceAndChar('='))
       return false;
 
-    CExprValueP value;
+    CExprValuePtr value;
 
     if (! evaluateExpression(line.substr(), value))
-      value = CExprValueP();
+      value = CExprValuePtr();
 
     if (! value.isValid())
       return false;
@@ -12059,7 +12059,7 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
       for (auto x1 : RRange::range(xmin1).step(dx1).limit(nx + 1)) {
         double x = xaxis(xind_).unmapLogValue(x1);
 
-        plot->addPoint2D(x, CExprValueP());
+        plot->addPoint2D(x, CExprValuePtr());
       }
     }
     else {
@@ -12070,12 +12070,12 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 
         xvar->setRealValue(x);
 
-        CExprValueP value;
+        CExprValuePtr value;
 
         if (! CExprInst->executeCTokenStack(cstack, value)) {
           errorMsg("Failed to eval \'" + functions[0] + "\' for " + varName1 + "=" +
                    CStrUtil::toString(x));
-          value = CExprValueP(); // TODO
+          value = CExprValuePtr(); // TODO
         }
 
         double y = 0.0;
@@ -12102,7 +12102,7 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 
     if (functions[0] == "NaN") {
       for (auto a : RRange::range(tmin).step(da).limit(nx + 1))
-        plot->addPoint2D(a, CExprValueP());
+        plot->addPoint2D(a, CExprValuePtr());
     }
     else {
       CExprTokenStack cstack = compileExpression(functions[0]);
@@ -12113,12 +12113,12 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 
         tvar->setRealValue(a);
 
-        CExprValueP value;
+        CExprValuePtr value;
 
         if (! CExprInst->executeCTokenStack(cstack, value)) {
           errorMsg("Failed to eval " + functions[0] + " for " + varName + "=" +
                    CStrUtil::toString(a));
-          value = CExprValueP();
+          value = CExprValuePtr();
         }
 
         double r = 0.0;
@@ -12171,12 +12171,12 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
       //---
 
       if (f1) {
-        CExprValueP value;
+        CExprValuePtr value;
 
         if (! CExprInst->executeCTokenStack(cstack1, value)) {
           errorMsg("Failed to eval " + functions[0] + " for " + varName1 + "=" +
                    CStrUtil::toString(t));
-          value = CExprValueP();
+          value = CExprValuePtr();
         }
 
         if (! value.isValid() || ! value->getRealValue(x))
@@ -12188,12 +12188,12 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
       //---
 
       if (f2) {
-        CExprValueP value;
+        CExprValuePtr value;
 
         if (! CExprInst->executeCTokenStack(cstack2, value)) {
           errorMsg("Failed to eval " + functions[1] + " for " + varName2 + "=" +
                    CStrUtil::toString(t));
-          value = CExprValueP();
+          value = CExprValuePtr();
         }
 
         if (! value.isValid() || ! value->getRealValue(y))
@@ -12286,7 +12286,7 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 
       for (auto y : RRange::range(ymin).step(dy).limit(ny + 1)) {
         for (auto x : RRange::range(xmin).step(dx).limit(nx + 1)) {
-          plot->addPoint3D(iy, x, y, CExprValueP());
+          plot->addPoint3D(iy, x, y, CExprValuePtr());
         }
 
         ++iy;
@@ -12303,12 +12303,12 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
         for (auto x : RRange::range(xmin).step(dx).limit(nx + 1)) {
           xvar->setRealValue(x);
 
-          CExprValueP value;
+          CExprValuePtr value;
 
           if (! CExprInst->executeCTokenStack(cstack, value)) {
             errorMsg("Failed to eval " + functions[0] + " for " + varName1 + "=" +
                      CStrUtil::toString(x) + ", " + varName2 + "=" + CStrUtil::toString(y));
-            value = CExprValueP(); // TODO
+            value = CExprValuePtr(); // TODO
           }
 
           double z = 0.0;
@@ -12370,12 +12370,12 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
         double r1 = 0.0;
 
         if (f1) {
-          CExprValueP value1;
+          CExprValuePtr value1;
 
           if (! CExprInst->executeCTokenStack(cstack1, value1)) {
             errorMsg("Failed to eval " + functions[0] + " for a1=" + CStrUtil::toString(a1) +
                      " a2=" + CStrUtil::toString(a2));
-            value1 = CExprValueP();
+            value1 = CExprValuePtr();
           }
 
           if (! value1.isValid() || ! value1->getRealValue(r1))
@@ -12389,12 +12389,12 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
         double r2 = 0.0;
 
         if (f2) {
-          CExprValueP value2;
+          CExprValuePtr value2;
 
           if (! CExprInst->executeCTokenStack(cstack2, value2)) {
             errorMsg("Failed to eval " + functions[1] + " for a1=" + CStrUtil::toString(a1) +
                      " a2=" + CStrUtil::toString(a2));
-            value2 = CExprValueP();
+            value2 = CExprValuePtr();
           }
 
           if (! value2.isValid() || ! value2->getRealValue(r2))
@@ -12465,12 +12465,12 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
         //---
 
         if (f1) {
-          CExprValueP value;
+          CExprValuePtr value;
 
           if (! CExprInst->executeCTokenStack(cstack1, value)) {
             errorMsg("Failed to eval " + functions[0] + " for " + varName1 + "=" +
                      CStrUtil::toString(u) + " " + varName2 + "=" + CStrUtil::toString(v));
-            value = CExprValueP();
+            value = CExprValuePtr();
           }
 
           if (! value.isValid() || ! value->getRealValue(x))
@@ -12482,12 +12482,12 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
         //---
 
         if (f2) {
-          CExprValueP value;
+          CExprValuePtr value;
 
           if (! CExprInst->executeCTokenStack(cstack2, value)) {
             errorMsg("Failed to eval " + functions[1] + " for " + varName1 + "=" +
                      CStrUtil::toString(u) + " " + varName2 + "=" + CStrUtil::toString(v));
-            value = CExprValueP();
+            value = CExprValuePtr();
           }
 
           if (! value.isValid() || ! value->getRealValue(y))
@@ -12499,12 +12499,12 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
         //---
 
         if (f3) {
-          CExprValueP value;
+          CExprValuePtr value;
 
           if (! CExprInst->executeCTokenStack(cstack3, value)) {
             errorMsg("Failed to eval " + functions[2] + " for " + varName1 + "=" +
                      CStrUtil::toString(u) + " " + varName2 + "=" + CStrUtil::toString(v));
-            value = CExprValueP();
+            value = CExprValuePtr();
           }
 
           if (! value.isValid() || ! value->getRealValue(z))
@@ -12574,7 +12574,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     double dx = (xmax - xmin)/nx;
 
     for (int ix = 0; ix <= nx; ++ix, x += dx) {
-      CExprValueP xval = CExprInst->createRealValue(x);
+      CExprValuePtr xval = CExprInst->createRealValue(x);
 
       xvar->setValue(xval);
 
@@ -12637,14 +12637,14 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     double y = ymin;
 
     for (int iy = 0; iy <= ny; ++iy, y += dy) {
-      CExprValueP yval = CExprInst->createRealValue(y);
+      CExprValuePtr yval = CExprInst->createRealValue(y);
 
       yvar->setValue(yval);
 
       double x = xmin;
 
       for (int ix = 0; ix <= nx; ++ix, x += dx) {
-        CExprValueP xval = CExprInst->createRealValue(x);
+        CExprValuePtr xval = CExprInst->createRealValue(x);
 
         xvar->setValue(xval);
 
@@ -12790,7 +12790,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         int nf = 0;
 
         for (const auto &field : fields) {
-          CExprValueP value = fieldToValue(nf, field);
+          CExprValuePtr value = fieldToValue(nf, field);
 
           fieldValues_.push_back(value);
 
@@ -12833,7 +12833,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
             // one value then auto add the point number
             if (values.size() == 1) {
-              CExprValueP value1 = CExprInst->createRealValue(pointNum());
+              CExprValuePtr value1 = CExprInst->createRealValue(pointNum());
 
               values.push_back(value1);
 
@@ -13057,7 +13057,7 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
       fieldValues_.clear();
 
       for (const auto &j : IRange::range(0, nv)) {
-        CExprValueP val = CExprInst->createRealValue(vals[i + j]);
+        CExprValuePtr val = CExprInst->createRealValue(vals[i + j]);
 
         fieldValues_.push_back(val);
       }
@@ -13134,7 +13134,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     double dx = (xmax - xmin)/nx;
 
     for (int ix = 0; ix <= nx; ++ix, x += dx) {
-      CExprValueP xval = CExprInst->createRealValue(x);
+      CExprValuePtr xval = CExprInst->createRealValue(x);
 
       xvar->setValue(xval);
 
@@ -13242,14 +13242,14 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     double y = ymin;
 
     for (int iy = 0; iy <= ny; ++iy, y += dy) {
-      CExprValueP yval = CExprInst->createRealValue(y);
+      CExprValuePtr yval = CExprInst->createRealValue(y);
 
       yvar->setValue(yval);
 
       double x = xmin;
 
       for (int ix = 0; ix <= nx; ++ix, x += dx) {
-        CExprValueP xval = CExprInst->createRealValue(x);
+        CExprValuePtr xval = CExprInst->createRealValue(x);
 
         xvar->setValue(xval);
 
@@ -13389,7 +13389,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         int nf = 0;
 
         for (const auto &field : fields) {
-          CExprValueP value = fieldToValue(nf, field);
+          CExprValuePtr value = fieldToValue(nf, field);
 
           fieldValues_.push_back(value);
 
@@ -13425,8 +13425,8 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
             // one value then auto add the point and set number
             if (values.size() == 1) {
-              CExprValueP value1 = CExprInst->createRealValue(lineNum);
-              CExprValueP value2 = CExprInst->createRealValue(subSetNum);
+              CExprValuePtr value1 = CExprInst->createRealValue(lineNum);
+              CExprValuePtr value2 = CExprInst->createRealValue(subSetNum);
 
               if (value1.isValid() && value2.isValid()) {
                 values.push_back(value1);
@@ -13687,18 +13687,18 @@ timeToValue(const std::string &str, double &t)
   return true;
 }
 
-CExprValueP
+CExprValuePtr
 CGnuPlot::
 fieldToValue(int nf, const std::string &field)
 {
-  CExprValueP value;
+  CExprValuePtr value;
 
   auto len = field.size();
 
   double r;
 
   if      (field == dataFile_.getMissingStr())
-    value = CExprValueP();
+    value = CExprValuePtr();
   else if ((nf == 0 && xaxis(1).isTime()) ||
            (nf == 1 && yaxis(1).isTime())) {
     double r;
@@ -14572,7 +14572,7 @@ parseAssignment(CParseLine &line)
       return false;
     }
 
-    CExprValueP value;
+    CExprValuePtr value;
 
     if (! evaluateExpression(expr, value)) {
       line.setPos(pos);
@@ -14658,7 +14658,7 @@ parseString(CParseLine &line, std::string &str, const std::string &msg, bool con
 
 bool
 CGnuPlot::
-parseValue(CParseLine &line, CExprValueP &value, const std::string &msg) const
+parseValue(CParseLine &line, CExprValuePtr &value, const std::string &msg) const
 {
   int pos = line.pos();
 
@@ -15271,10 +15271,10 @@ sphericalMap(const CPoint2D &p) const
 
 bool
 CGnuPlot::
-evaluateExpression(const std::string &expr, CExprValueP &value, bool quiet) const
+evaluateExpression(const std::string &expr, CExprValuePtr &value, bool quiet) const
 {
   if (! CExprInst->evaluateExpression(expr, value))
-    value = CExprValueP();
+    value = CExprValuePtr();
 
   if (! value.isValid() && ! quiet)
     errorMsg("Eval failed: '" + expr + "'");
@@ -15286,7 +15286,7 @@ bool
 CGnuPlot::
 exprToInteger(const std::string &expr, int &i, bool quiet) const
 {
-  CExprValueP value;
+  CExprValuePtr value;
 
   if (! evaluateExpression(expr, value, quiet))
     return false;
@@ -15305,7 +15305,7 @@ bool
 CGnuPlot::
 exprToReal(const std::string &expr, double &r, bool quiet) const
 {
-  CExprValueP value;
+  CExprValuePtr value;
 
   if (! evaluateExpression(expr, value, quiet))
     return false;
@@ -15324,7 +15324,7 @@ bool
 CGnuPlot::
 exprToString(const std::string &expr, std::string &s, bool quiet, bool conv) const
 {
-  CExprValueP value;
+  CExprValuePtr value;
 
   if (! evaluateExpression(expr, value, quiet))
     return false;

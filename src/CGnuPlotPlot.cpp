@@ -183,7 +183,7 @@ addPoint2D(const std::vector<double> &rvals)
 {
   assert(! is3D());
 
-  std::vector<CExprValueP> values;
+  std::vector<CExprValuePtr> values;
 
   for (auto r : rvals)
     values.push_back(CExprInst->createRealValue(r));
@@ -193,11 +193,11 @@ addPoint2D(const std::vector<double> &rvals)
 
 int
 CGnuPlotPlot::
-addPoint2D(double x, CExprValueP y)
+addPoint2D(double x, CExprValuePtr y)
 {
   assert(! is3D());
 
-  std::vector<CExprValueP> values;
+  std::vector<CExprValuePtr> values;
 
   values.push_back(CExprInst->createRealValue(x));
   values.push_back(y);
@@ -234,7 +234,7 @@ addPoint3D(int iy, double x, double y, double z)
 {
   assert(is3D());
 
-  std::vector<CExprValueP> values;
+  std::vector<CExprValuePtr> values;
 
   values.push_back(CExprInst->createRealValue(x));
   values.push_back(CExprInst->createRealValue(y));
@@ -245,11 +245,11 @@ addPoint3D(int iy, double x, double y, double z)
 
 int
 CGnuPlotPlot::
-addPoint3D(int iy, double x, double y, CExprValueP z)
+addPoint3D(int iy, double x, double y, CExprValuePtr z)
 {
   assert(is3D());
 
-  std::vector<CExprValueP> values;
+  std::vector<CExprValuePtr> values;
 
   values.push_back(CExprInst->createRealValue(x));
   values.push_back(CExprInst->createRealValue(y));
@@ -302,21 +302,15 @@ void
 CGnuPlotPlot::
 smooth()
 {
+  if (smooth_ == Smooth::NONE)
+    return;
+
   if (! is3D()) {
-    if (smooth_ == Smooth::UNIQUE) {
-      typedef std::vector<double>     Values;
-      typedef std::map<double,Values> Points;
+    if      (smooth_ == Smooth::UNIQUE) {
+      // sorted points (no duplicates)
+      MappedPoints points;
 
-      Points points;
-
-      for (uint i = 0; i < numPoints2D(); ++i) {
-        double x, y;
-
-        points2D_[i].getX(x);
-        points2D_[i].getY(y);
-
-        points[x].push_back(y);
-      }
+      mapPoints(points);
 
       clearPoints();
 
@@ -324,14 +318,49 @@ smooth()
         double x = p.first;
         double y = 0.0;
 
-        for (const auto &p1 : p.second)
-          y += p1;
+        for (const auto &y1 : p.second)
+          y += y1;
 
         y /= p.second.size();
 
         (void) addPoint2D(x, y);
       }
     }
+    else if (smooth_ == Smooth::FREQUENCY) {
+      // sorted points (summed y)
+      MappedPoints points;
+
+      mapPoints(points);
+
+      clearPoints();
+
+      for (const auto &p : points) {
+        double x = p.first;
+        double y = 0.0;
+
+        for (const auto &y1 : p.second)
+          y += y1;
+
+        (void) addPoint2D(x, y);
+      }
+    }
+    else {
+      group_->app()->errorMsg("Unsupported smooth");
+    }
+  }
+}
+
+void
+CGnuPlotPlot::
+mapPoints(MappedPoints &points)
+{
+  for (uint i = 0; i < numPoints2D(); ++i) {
+    double x, y;
+
+    points2D_[i].getX(x);
+    points2D_[i].getY(y);
+
+    points[x].push_back(y);
   }
 }
 
@@ -901,10 +930,21 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
   int i = 0;
 
   for (const auto &point : getPoints2D()) {
-    double y;
+    double x, y;
 
-    if (! point.getY(y))
+    if      (! point.getX(x)) {
+      x = i;
       y = 0.0;
+    }
+    else if (! point.getY(y)) {
+      y = x;
+      x = i;
+    }
+
+    CRGBA fc1 = fc;
+
+    if (point.hasParam("fillcolor"))
+      fc1 = point.getParamColor("fillcolor");
 
     double xl = drawData.x2 + drawData.i*drawData.w + i*drawData.d;
 
@@ -913,22 +953,43 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
     if (! renderer->isPseudo()) {
       CGnuPlotBarObject *bar = barObjects()[i];
 
-      bar->setBBox (bbox);
-      bar->setValue(y);
+      CGnuPlotAxis *plotXAxis = group_->getPlotAxis(CGnuPlotTypes::AxisType::X, 1);
+
+      if (plotXAxis && plotXAxis->hasMajorTicLabels()) {
+        const CGnuPlotAxisData::RTicLabels &labels = plotXAxis->getMajorTicLabels();
+
+        auto pl = labels.find(x);
+
+        if (pl != labels.end())
+          bar->setXValueStr((*pl).second);
+      }
+
+      bar->setBBox  (bbox);
+      bar->setValues(x, y);
 
       if (! bar->isInitialized()) {
         bar->setFillType   (fillType());
         bar->setFillPattern(fillPattern());
-        bar->setFillColor  (fc);
+        bar->setFillColor  (fc1);
 
-        bar->setBorder   (true);
-        bar->setLineColor(lc);
+        if (fillStyle().hasBorder()) {
+          bar->setBorder(true);
+
+          CRGBA lc1 = lc;
+
+          fillStyle().calcColor(group_, lc1);
+
+          bar->setLineColor(lc1);
+        }
+        else
+          bar->setBorder(false);
 
         bar->setInitialized(true);
       }
     }
-    else
+    else {
       renderer->drawRect(bbox, lc, 1);
+    }
 
     ++i;
   }
@@ -983,8 +1044,8 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
     if (! renderer->isPseudo()) {
       CGnuPlotBarObject *bar = barObjects()[i];
 
-      bar->setBBox (bbox);
-      bar->setValue(y);
+      bar->setBBox  (bbox);
+      bar->setValues(i, y);
 
       if (! bar->isInitialized()) {
         bar->setFillType   (fillType());
@@ -1034,8 +1095,8 @@ drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox)
   if (! renderer->isPseudo()) {
     CGnuPlotBarObject *bar = barObjects()[i];
 
-    bar->setBBox (bbox);
-    bar->setValue(y);
+    bar->setBBox  (bbox);
+    bar->setValues(i, y);
 
     if (! bar->isInitialized()) {
       bar->setFillType   (fillType());

@@ -3,6 +3,7 @@
 
 #include <CQGnuPlot.h>
 #include <CGnuPlotWindow.h>
+#include <CGnuPlotTipData.h>
 
 #include <QMainWindow>
 
@@ -20,7 +21,47 @@ class CQZoomRegion;
 class QLabel;
 class QTimer;
 
-class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
+class CQGnuPlotWindow : public CGnuPlotWindow {
+ public:
+  CQGnuPlotWindow(CQGnuPlot *plot=0);
+
+  void setApp(CQGnuPlot *plot);
+  CQGnuPlot *qapp() const { return plot_; }
+
+  virtual void redraw() { }
+
+  virtual void selectObjects(const std::vector<CQGnuPlotObject *> &) { }
+
+  void highlightObject(CQGnuPlotObject *obj);
+
+  virtual void paint(QPainter *) { }
+
+  virtual int pixelWidth () const { return 100; }
+  virtual int pixelHeight() const { return 100; }
+
+  virtual void updateProperties() { }
+
+  virtual CQGnuPlotGroup *getGroupAt(const QPoint &) { return 0; }
+
+  virtual void setCurrentGroup(CQGnuPlotGroup *) { }
+
+  virtual void mousePress  (const QPoint &) { }
+  virtual void mouseMove   (const QPoint &, bool) { }
+  virtual void mouseRelease(const QPoint &) { }
+
+  virtual void keyPress(int, Qt::KeyboardModifiers) { }
+
+  virtual bool mouseTip(const QPoint &, CGnuPlotTipData &) { return false; }
+
+  virtual void showPos(const QString &, double, double, double, double) { }
+
+ protected:
+  CQGnuPlot* plot_ { 0 };
+};
+
+//---
+
+class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   Q_OBJECT
 
   Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor)
@@ -32,10 +73,8 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
   };
 
  public:
-  CQGnuPlotWindow(CQGnuPlot *plot);
- ~CQGnuPlotWindow() override;
-
-  CQGnuPlot *qapp() const { return plot_; }
+  CQGnuPlotMainWindow(CQGnuPlot *plot);
+ ~CQGnuPlotMainWindow() override;
 
   CQGnuPlotCanvas *canvas() const { return canvas_; }
 
@@ -46,6 +85,9 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
   void addPlotProperties(CGnuPlotPlot *plot);
 
   void paint(QPainter *p);
+
+  int pixelWidth () const;
+  int pixelHeight() const;
 
   void showPos(const QString &name, double px, double py, double wx, double wy);
 
@@ -66,7 +108,7 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
 
   void keyPress(int key, Qt::KeyboardModifiers modifiers);
 
-  bool mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip);
+  bool mouseTip(const QPoint &qp, CGnuPlotTipData &tip);
 
   void selectObject(const QObject *);
 
@@ -115,7 +157,6 @@ class CQGnuPlotWindow : public QMainWindow, public CGnuPlotWindow {
   static uint lastId;
 
   uint               id_           { 0 };
-  CQGnuPlot*         plot_         { 0 };
   CQGnuPlotRenderer* renderer_     { 0 };
   CQGnuPlotCanvas*   canvas_       { 0 };
   CQPropertyTree*    tree_         { 0 };

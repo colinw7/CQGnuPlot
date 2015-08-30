@@ -16,12 +16,6 @@ class CQGnuPlot : public QObject, public CGnuPlot {
   Q_OBJECT
 
  public:
-  struct TipRect {
-    QString str;
-    QRectF  rect;
-  };
-
- public:
   CQGnuPlot();
  ~CQGnuPlot() override;
 

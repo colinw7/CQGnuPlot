@@ -1,4 +1,6 @@
 #include <CGnuPlotPoint.h>
+#include <CGnuPlotStyle.h>
+#include <CRGBName.h>
 
 CGnuPlotPoint::
 CGnuPlotPoint(const Values &values, bool discontinuity, const Params &params) :
@@ -100,6 +102,50 @@ getValue(int n, std::string &str) const
     return false;
 
   return values_[n - 1]->getStringValue(str);
+}
+
+std::string
+CGnuPlotPoint::
+getParamString(const std::string &name) const
+{
+  std::string str;
+
+  CExprValuePtr value = getParam(name);
+
+  if (! value.isValid())
+    return str;
+
+  if (value->isStringValue())
+    (void) value->getStringValue(str);
+
+  return str;
+}
+
+CRGBA
+CGnuPlotPoint::
+getParamColor(const std::string &name) const
+{
+  CRGBA c(0,0,0);
+
+  CExprValuePtr value = getParam(name);
+
+  if (! value.isValid())
+    return c;
+
+  if (value->isStringValue()) {
+    std::string str;
+
+    if (value->getStringValue(str))
+      c = CRGBName::toRGBA(str);
+  }
+  else if (value->isIntegerValue() || value->isRealValue()) {
+    long i;
+
+    if (value->getIntegerValue(i))
+      c = CGnuPlotStyleInst->indexColor(i);
+  }
+
+  return c;
 }
 
 int

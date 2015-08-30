@@ -145,6 +145,7 @@ CQPropertyTree.cpp \
 CQPaletteChooser.cpp \
 CQPaletteDialog.cpp \
 \
+CQToolTip.cpp \
 CQRotatedText.cpp \
 CQComboSlider.cpp \
 CQSlider.cpp \
@@ -322,6 +323,7 @@ CQPropertyTree.h \
 CQPaletteChooser.h \
 CQPaletteDialog.h \
 \
+CQToolTip.h \
 CQRotatedText.h \
 CQComboSlider.h \
 CQSlider.h \

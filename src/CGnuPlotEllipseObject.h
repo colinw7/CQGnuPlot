@@ -47,9 +47,9 @@ class CGnuPlotEllipseObject : public CGnuPlotPlotObject {
 
   bool inside(const CPoint2D &p) const override;
 
-  std::string tip() const override { return (tipText_ == "" ? text_ : tipText_); }
-
-  CBBox2D tipRect() const { return rect_; }
+  CGnuPlotTipData tip() const override {
+    return CGnuPlotTipData(tipText_ == "" ? text_ : tipText_, rect_);
+  }
 
   void draw(CGnuPlotRenderer *renderer) const override;
 

@@ -36,9 +36,13 @@ class CGnuPlotBubbleObject : public CGnuPlotPlotObject {
 
   bool inside(const CPoint2D &p) const override;
 
-  std::string tip() const override { return name_; }
+  CGnuPlotTipData tip() const override {
+    CPoint2D d(xr_, yr_);
 
-  CBBox2D tipRect() const { CPoint2D d(xr_, yr_); return CBBox2D(c_ - d, c_ + d); }
+    CBBox2D rect(c_ - d, c_ + d);
+
+    return CGnuPlotTipData(name_, rect);
+  }
 
   void draw(CGnuPlotRenderer *renderer) const override;
 

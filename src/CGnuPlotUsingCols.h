@@ -9,8 +9,6 @@
 #include <CExpr.h>
 #include <CGnuPlotTicLabel.h>
 
-typedef CRefPtr<CExprValue> CExprValueP;
-
 class CGnuPlot;
 
 //---
@@ -34,8 +32,8 @@ struct CGnuPlotUsingCol {
 class CGnuPlotUsingCols {
  public:
   typedef std::vector<std::string>                   StringArray;
-  typedef std::map<std::string,std::string>          Params;
-  typedef std::vector<CExprValueP>                   Values;
+  typedef std::map<std::string,CExprValuePtr>        Params;
+  typedef std::vector<CExprValuePtr>                 Values;
   typedef std::map<int,std::string>                  TicLabel;
   typedef std::map<CGnuPlotTypes::AxisType,TicLabel> AxisTicLabel;
 
@@ -83,10 +81,10 @@ class CGnuPlotUsingCols {
   int decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
                    Values &values, Params &params) const;
 
-  CExprValueP decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
-                          int &ns, bool &ignore, Params &params) const;
+  CExprValuePtr decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
+                            int &ns, bool &ignore, Params &params) const;
 
-  CExprValueP getFieldValue(const Values &fieldValues, int ival, int &ns) const;
+  CExprValuePtr getFieldValue(const Values &fieldValues, int ival, int &ns) const;
 
   std::string toString() const;
 

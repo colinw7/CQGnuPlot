@@ -171,6 +171,7 @@ SOURCES       = CQGnuPlot.cpp \
 		CQPropertyTree.cpp \
 		CQPaletteChooser.cpp \
 		CQPaletteDialog.cpp \
+		CQToolTip.cpp \
 		CQRotatedText.cpp \
 		CQComboSlider.cpp \
 		CQSlider.cpp \
@@ -235,10 +236,12 @@ SOURCES       = CQGnuPlot.cpp \
 		moc_CQGnuPlotTitle.cpp \
 		moc_CQGnuPlotToolBar.cpp \
 		moc_CQGnuPlotWindow.cpp \
+		moc_CQPropertyDelegate.cpp \
 		moc_CQPropertyItem.cpp \
 		moc_CQPropertyTree.cpp \
 		moc_CQPaletteChooser.cpp \
 		moc_CQPaletteDialog.cpp \
+		moc_CQToolTip.cpp \
 		moc_CQComboSlider.cpp \
 		moc_CQSlider.cpp \
 		moc_CQAngleSpinBox.cpp \
@@ -373,6 +376,7 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/CQPropertyTree.o \
 		../obj/CQPaletteChooser.o \
 		../obj/CQPaletteDialog.o \
+		../obj/CQToolTip.o \
 		../obj/CQRotatedText.o \
 		../obj/CQComboSlider.o \
 		../obj/CQSlider.o \
@@ -438,10 +442,12 @@ OBJECTS       = ../obj/CQGnuPlot.o \
 		../obj/moc_CQGnuPlotTitle.o \
 		../obj/moc_CQGnuPlotToolBar.o \
 		../obj/moc_CQGnuPlotWindow.o \
+		../obj/moc_CQPropertyDelegate.o \
 		../obj/moc_CQPropertyItem.o \
 		../obj/moc_CQPropertyTree.o \
 		../obj/moc_CQPaletteChooser.o \
 		../obj/moc_CQPaletteDialog.o \
+		../obj/moc_CQToolTip.o \
 		../obj/moc_CQComboSlider.o \
 		../obj/moc_CQSlider.o \
 		../obj/moc_CQAngleSpinBox.o \
@@ -709,7 +715,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d ../obj/CQGnuPlot1.0.0 || mkdir -p ../obj/CQGnuPlot1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBarObject.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEnum.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPm3D.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBarObject.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CQRotatedText.h CQComboSlider.h CQSlider.h CQAngleSpinBox.h CQIntegerSpin.h CQRealSpin.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBarObject.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotEnum.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPm3D.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBarObject.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotMargin.cpp CGnuPlotPalette.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStyle.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CQRotatedText.cpp CQComboSlider.cpp CQSlider.cpp CQAngleSpinBox.cpp CQIntegerSpin.cpp CQRealSpin.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CMathGeom2D.cpp CInvNorm.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCompile.cpp Expr/CExprCValue.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprToken.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotAxis.h CQGnuPlotBarObject.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEnum.h CQGnuPlotGroup.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLineStyle.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPm3D.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotUtil.h CQGnuPlotWindow.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBarObject.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotFile.h CGnuPlotFillStyle.h CGnuPlotGroup.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPoint.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotText.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CQPropertyDelegate.h CQPropertyEditor.h CQPropertyItem.h CQPropertyTree.h CQPaletteChooser.h CQPaletteDialog.h CQToolTip.h CQRotatedText.h CQComboSlider.h CQSlider.h CQAngleSpinBox.h CQIntegerSpin.h CQRealSpin.h CQLineDash.h CQPoint2DEdit.h CQIconCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotAxis.cpp CQGnuPlotBarObject.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotEnum.cpp CQGnuPlotGroup.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLineStyle.cpp CQGnuPlotPalette.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPm3D.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CGnuPlot.cpp CGnuPlotArrow.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBarObject.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotFile.cpp CGnuPlotFillStyle.cpp CGnuPlotGroup.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotMargin.cpp CGnuPlotPalette.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPoint.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStyle.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotText.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CQPropertyDelegate.cpp CQPropertyEditor.cpp CQPropertyItem.cpp CQPropertyTree.cpp CQPaletteChooser.cpp CQPaletteDialog.cpp CQToolTip.cpp CQRotatedText.cpp CQComboSlider.cpp CQSlider.cpp CQAngleSpinBox.cpp CQIntegerSpin.cpp CQRealSpin.cpp CQLineDash.cpp CQPoint2DEdit.cpp CQIconCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CMathGeom2D.cpp CInvNorm.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCompile.cpp Expr/CExprCValue.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprToken.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
 
 
 clean:compiler_clean 
@@ -732,9 +738,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotEllipseObject.cpp moc_CQGnuPlotEnum.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPm3D.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotPolygonObject.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTimeStamp.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotToolBar.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQComboSlider.cpp moc_CQSlider.cpp moc_CQAngleSpinBox.cpp moc_CQIntegerSpin.cpp moc_CQRealSpin.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
+compiler_moc_header_make_all: moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotEllipseObject.cpp moc_CQGnuPlotEnum.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPm3D.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotPolygonObject.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTimeStamp.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotToolBar.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyDelegate.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQToolTip.cpp moc_CQComboSlider.cpp moc_CQSlider.cpp moc_CQAngleSpinBox.cpp moc_CQIntegerSpin.cpp moc_CQRealSpin.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotEllipseObject.cpp moc_CQGnuPlotEnum.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPm3D.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotPolygonObject.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTimeStamp.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotToolBar.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQComboSlider.cpp moc_CQSlider.cpp moc_CQAngleSpinBox.cpp moc_CQIntegerSpin.cpp moc_CQRealSpin.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
+	-$(DEL_FILE) moc_CQGnuPlot.cpp moc_CQGnuPlotAnnotation.cpp moc_CQGnuPlotArrow.cpp moc_CQGnuPlotAxis.cpp moc_CQGnuPlotBarObject.cpp moc_CQGnuPlotBubbleObject.cpp moc_CQGnuPlotCamera.cpp moc_CQGnuPlotCanvas.cpp moc_CQGnuPlotCircle.cpp moc_CQGnuPlotColorBox.cpp moc_CQGnuPlotEllipse.cpp moc_CQGnuPlotEllipseObject.cpp moc_CQGnuPlotEnum.cpp moc_CQGnuPlotGroup.cpp moc_CQGnuPlotKey.cpp moc_CQGnuPlotLabel.cpp moc_CQGnuPlotLineStyle.cpp moc_CQGnuPlotObject.cpp moc_CQGnuPlotPalette.cpp moc_CQGnuPlotPieObject.cpp moc_CQGnuPlotPlot.cpp moc_CQGnuPlotPm3D.cpp moc_CQGnuPlotPolygon.cpp moc_CQGnuPlotPolygonObject.cpp moc_CQGnuPlotRectangle.cpp moc_CQGnuPlotRectObject.cpp moc_CQGnuPlotTimeStamp.cpp moc_CQGnuPlotTitle.cpp moc_CQGnuPlotToolBar.cpp moc_CQGnuPlotWindow.cpp moc_CQPropertyDelegate.cpp moc_CQPropertyItem.cpp moc_CQPropertyTree.cpp moc_CQPaletteChooser.cpp moc_CQPaletteDialog.cpp moc_CQToolTip.cpp moc_CQComboSlider.cpp moc_CQSlider.cpp moc_CQAngleSpinBox.cpp moc_CQIntegerSpin.cpp moc_CQRealSpin.cpp moc_CQLineDash.cpp moc_CQPoint2DEdit.cpp moc_CQIconCombo.cpp
 moc_CQGnuPlot.cpp: CGnuPlot.h \
 		Expr/CExpr.h \
 		../../CUtil/include/CRefPtr.h \
@@ -804,6 +810,7 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -1014,6 +1021,7 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -1214,6 +1222,7 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -1451,6 +1460,7 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -1625,6 +1635,7 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -1826,6 +1837,7 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -2213,6 +2225,7 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -2451,6 +2464,7 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -2613,6 +2627,7 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -2815,6 +2830,7 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -3079,6 +3095,7 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -3335,6 +3352,7 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -3498,6 +3516,7 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -3751,6 +3770,7 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -4001,6 +4021,7 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -4156,6 +4177,7 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -4392,6 +4414,7 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -4657,6 +4680,7 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -4858,6 +4882,7 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -5058,6 +5083,7 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -5260,6 +5286,7 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -5594,6 +5621,7 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -5854,6 +5882,7 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -6025,6 +6054,133 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		/usr/include/qt5/QtGui/qicon.h \
 		CQGnuPlotWindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotWindow.h -o moc_CQGnuPlotWindow.cpp
+
+moc_CQPropertyDelegate.cpp: /usr/include/qt5/QtWidgets/QItemDelegate \
+		/usr/include/qt5/QtWidgets/qitemdelegate.h \
+		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtWidgets/qstyleoption.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qstyle.h \
+		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
+		/usr/include/qt5/QtWidgets/qrubberband.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h \
+		../../CMath/include/CAngle.h \
+		CQPropertyDelegate.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPropertyDelegate.h -o moc_CQPropertyDelegate.cpp
 
 moc_CQPropertyItem.cpp: /usr/include/qt5/QtWidgets/QTreeWidgetItem \
 		/usr/include/qt5/QtWidgets/qtreewidget.h \
@@ -6512,6 +6668,120 @@ moc_CQPaletteDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtGui/QPalette \
 		CQPaletteDialog.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPaletteDialog.h -o moc_CQPaletteDialog.cpp
+
+moc_CQToolTip.cpp: /usr/include/qt5/QtWidgets/QWidget \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtCore/QPointer \
+		/usr/include/qt5/QtCore/qpointer.h \
+		/usr/include/qt5/QtCore/QMap \
+		CQToolTip.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQToolTip.h -o moc_CQToolTip.cpp
 
 moc_CQComboSlider.cpp: /usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -7540,6 +7810,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -7661,26 +7932,43 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CQGnuPlotPNGDevice.h \
-		CQGnuPlotWindow.h \
-		CGnuPlotWindow.h \
-		/usr/include/qt5/QtWidgets/QMainWindow \
-		/usr/include/qt5/QtWidgets/qmainwindow.h \
+		CQPropertyEditor.h \
+		/usr/include/qt5/QtCore/QVariant \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		../../CQUtil/include/CQUtil.h \
+		/usr/include/qt5/QtCore/Qt \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/QEvent \
+		/usr/include/qt5/QtWidgets/QTableWidget \
+		/usr/include/qt5/QtWidgets/qtablewidget.h \
+		/usr/include/qt5/QtWidgets/qtableview.h \
+		/usr/include/qt5/QtWidgets/qabstractitemview.h \
+		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
 		/usr/include/qt5/QtGui/qwindowdefs.h \
 		/usr/include/qt5/QtGui/qwindowdefs_win.h \
 		/usr/include/qt5/QtCore/qmargins.h \
 		/usr/include/qt5/QtGui/qpaintdevice.h \
 		/usr/include/qt5/QtGui/qpalette.h \
-		/usr/include/qt5/QtGui/qcolor.h \
-		/usr/include/qt5/QtGui/qrgb.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
 		/usr/include/qt5/QtGui/qbrush.h \
-		/usr/include/qt5/QtCore/qvector.h \
 		/usr/include/qt5/QtGui/qmatrix.h \
 		/usr/include/qt5/QtGui/qpolygon.h \
 		/usr/include/qt5/QtGui/qregion.h \
@@ -7690,9 +7978,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qimage.h \
 		/usr/include/qt5/QtGui/qpixmap.h \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
 		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
-		/usr/include/qt5/QtCore/qhash.h \
 		/usr/include/qt5/QtGui/qfont.h \
 		/usr/include/qt5/QtGui/qfontmetrics.h \
 		/usr/include/qt5/QtGui/qfontinfo.h \
@@ -7700,55 +7986,12 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qcursor.h \
 		/usr/include/qt5/QtGui/qkeysequence.h \
 		/usr/include/qt5/QtGui/qevent.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
 		/usr/include/qt5/QtCore/qurl.h \
 		/usr/include/qt5/QtCore/qurlquery.h \
 		/usr/include/qt5/QtCore/qfile.h \
 		/usr/include/qt5/QtCore/qfiledevice.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
-		/usr/include/qt5/QtWidgets/qtabwidget.h \
-		/usr/include/qt5/QtGui/qicon.h \
-		CQGnuPlotGroup.h \
-		CGnuPlotGroup.h \
-		CGnuPlotKey.h \
-		CGnuPlotTimeStamp.h \
-		CGnuPlotPm3D.h \
-		CQGnuPlotObject.h \
-		CQGnuPlotPlot.h \
-		CGnuPlotPlot.h \
-		CGnuPlotContour.h \
-		../../CMath/include/CLine3D.h \
-		CGnuPlotPoint.h \
-		CGnuPlotCache.h \
-		/usr/include/qt5/QtGui/QColor \
-		CQGnuPlotLineStyle.h \
-		CQGnuPlotAnnotation.h \
-		CQPropertyEditor.h \
-		/usr/include/qt5/QtCore/QVariant \
-		../../CQUtil/include/CQApp.h \
-		/usr/include/qt5/QtWidgets/QApplication \
-		/usr/include/qt5/QtWidgets/qapplication.h \
-		/usr/include/qt5/QtCore/qcoreapplication.h \
-		/usr/include/qt5/QtCore/qeventloop.h \
-		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
-		/usr/include/qt5/QtGui/qguiapplication.h \
-		/usr/include/qt5/QtGui/qinputmethod.h \
-		../../CQUtil/include/CQUtil.h \
-		/usr/include/qt5/QtCore/Qt \
-		/usr/include/qt5/QtCore/QEvent \
-		/usr/include/qt5/QtWidgets/QTableWidget \
-		/usr/include/qt5/QtWidgets/qtablewidget.h \
-		/usr/include/qt5/QtWidgets/qtableview.h \
-		/usr/include/qt5/QtWidgets/qabstractitemview.h \
-		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
-		/usr/include/qt5/QtWidgets/qframe.h \
 		/usr/include/qt5/QtCore/qabstractitemmodel.h \
 		/usr/include/qt5/QtCore/qitemselectionmodel.h \
 		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
@@ -7756,10 +7999,12 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
 		/usr/include/qt5/QtGui/qvalidator.h \
 		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtGui/qicon.h \
 		/usr/include/qt5/QtWidgets/qslider.h \
 		/usr/include/qt5/QtWidgets/qabstractslider.h \
 		/usr/include/qt5/QtWidgets/qstyle.h \
 		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		/usr/include/qt5/QtWidgets/qrubberband.h \
 		/usr/include/qt5/QtGui/QPen \
 		/usr/include/qt5/QtGui/qpen.h \
@@ -7872,6 +8117,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -8168,6 +8414,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -8500,6 +8747,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -8762,6 +9010,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -8973,6 +9222,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -9227,6 +9477,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -9467,6 +9718,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -9546,12 +9798,52 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/QColor \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h \
+		CQToolTip.h \
+		/usr/include/qt5/QtCore/QPointer \
+		/usr/include/qt5/QtCore/qpointer.h \
+		/usr/include/qt5/QtCore/QMap \
+		../../CQUtil/include/CQUtil.h \
+		/usr/include/qt5/QtCore/Qt \
+		/usr/include/qt5/QtCore/QEvent \
+		/usr/include/qt5/QtCore/QVariant \
+		/usr/include/qt5/QtWidgets/QTableWidget \
+		/usr/include/qt5/QtWidgets/qtablewidget.h \
+		/usr/include/qt5/QtWidgets/qtableview.h \
+		/usr/include/qt5/QtWidgets/qabstractitemview.h \
+		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h \
+		/usr/include/qt5/QtCore/qitemselectionmodel.h \
+		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
+		/usr/include/qt5/QtWidgets/qstyleoption.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qstyle.h \
+		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qrubberband.h \
+		/usr/include/qt5/QtGui/QPen \
+		/usr/include/qt5/QtGui/qpen.h \
+		../../CUtil/include/CEvent.h \
+		../../CUtil/include/CKeyType.h \
+		../../CImageLib/include/CImageLib.h \
+		../../CFile/include/CFile.h \
+		../../CFile/include/CFileBase.h \
+		../../CFile/include/CFileType.h \
+		../../CImageLib/include/CImageState.h \
+		../../CImageLib/include/CImage.h \
+		../../CMath/include/CIBBox2D.h \
+		../../CMath/include/CIVector2D.h \
+		../../CImageLib/include/CImagePtr.h \
+		../../CImageLib/include/CImageMgr.h \
+		../../CImageLib/include/CImageAnim.h \
+		../../CImageLib/include/CImageFile.h \
+		../../CMath/include/CMatrix2D.h \
 		/usr/include/qt5/QtGui/QPainter \
 		/usr/include/qt5/QtGui/qpainter.h \
 		/usr/include/qt5/QtGui/qtextoption.h \
-		/usr/include/qt5/QtGui/qpen.h \
-		/usr/include/qt5/QtWidgets/QToolTip \
-		/usr/include/qt5/QtWidgets/qtooltip.h \
 		/usr/include/qt5/QtGui/QMouseEvent \
 		/usr/include/qt5/QtGui/QKeyEvent
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotCanvas.o CQGnuPlotCanvas.cpp
@@ -9649,6 +9941,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -9976,6 +10269,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -10216,6 +10510,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -10533,6 +10828,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -10824,6 +11120,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -11099,6 +11396,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -11427,6 +11725,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -11685,6 +11984,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -12028,6 +12328,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -12309,6 +12610,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -12487,6 +12789,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -12733,6 +13036,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -13048,6 +13352,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -13187,6 +13492,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -13417,6 +13723,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -13635,6 +13942,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -13844,6 +14152,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -14054,6 +14363,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -14352,6 +14662,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -14539,6 +14850,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -14906,6 +15218,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -15101,6 +15414,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -15473,6 +15787,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -15681,6 +15996,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -16035,6 +16351,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -16203,6 +16520,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotArrowStyle.h \
 		CGnuPlotCoordValue.h \
@@ -16376,6 +16694,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -16502,6 +16821,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -16637,6 +16957,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -16733,6 +17054,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
@@ -16901,6 +17223,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -17035,6 +17358,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
@@ -17210,6 +17534,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -17298,6 +17623,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotCoordValue.h \
@@ -17465,6 +17791,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCoordValue.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -17595,6 +17922,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -17732,6 +18060,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -17867,6 +18196,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -17992,6 +18322,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -18120,6 +18451,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -18226,6 +18558,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotRenderer.h \
@@ -18357,6 +18690,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
@@ -18539,6 +18873,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -18670,6 +19005,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -18812,6 +19148,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -18953,6 +19290,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotLabelStyle.h \
 		../../CFont/include/CFont.h \
@@ -19119,6 +19457,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -19256,6 +19595,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -19387,6 +19727,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -19510,6 +19851,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
@@ -19678,6 +20020,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -19787,7 +20130,30 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CMathGen.h \
-		../../COS/include/NaN.h
+		../../COS/include/NaN.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		CGnuPlotStyle.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		CGnuPlotPalette.h \
+		../../CUtil/include/CColor.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPoint.o CGnuPlotPoint.cpp
 
 ../obj/CGnuPlotPolygon.o: CGnuPlotPolygon.cpp CGnuPlotPolygon.h \
@@ -19825,6 +20191,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotRenderer.h \
@@ -19957,6 +20324,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
@@ -20132,6 +20500,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20257,6 +20626,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20346,6 +20716,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotGroup.h \
@@ -20478,6 +20849,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
@@ -20646,6 +21018,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20813,6 +21186,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -20943,6 +21317,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21069,6 +21444,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21208,6 +21584,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21343,6 +21720,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21479,6 +21857,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21619,6 +21998,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21754,6 +22134,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -21900,6 +22281,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22039,6 +22421,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22174,6 +22557,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22310,6 +22694,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22455,6 +22840,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22589,6 +22975,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22723,6 +23110,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -22857,6 +23245,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23004,6 +23393,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23142,6 +23532,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23287,6 +23678,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23425,6 +23817,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23565,6 +23958,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23703,6 +24097,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23842,6 +24237,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -23981,6 +24377,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -24121,6 +24518,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -24259,6 +24657,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -24393,6 +24792,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -24532,6 +24932,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -24666,6 +25067,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -24806,6 +25208,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -24944,6 +25347,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -25080,6 +25484,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -25221,6 +25626,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -25355,6 +25761,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -25489,6 +25896,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -25623,6 +26031,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -25757,6 +26166,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -25891,6 +26301,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -26025,6 +26436,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -26161,6 +26573,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -26297,6 +26710,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -26428,6 +26842,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -26554,6 +26969,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -26688,6 +27104,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
@@ -26820,6 +27237,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
 		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
 		CGnuPlotArrow.h \
@@ -27980,6 +28398,161 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qframe.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQPaletteDialog.o CQPaletteDialog.cpp
 
+../obj/CQToolTip.o: CQToolTip.cpp CQToolTip.h \
+		/usr/include/qt5/QtWidgets/QWidget \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtCore/QPointer \
+		/usr/include/qt5/QtCore/qpointer.h \
+		/usr/include/qt5/QtCore/QMap \
+		/usr/include/qt5/QtWidgets/QApplication \
+		/usr/include/qt5/QtWidgets/qapplication.h \
+		/usr/include/qt5/QtCore/qcoreapplication.h \
+		/usr/include/qt5/QtCore/qeventloop.h \
+		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtGui/qguiapplication.h \
+		/usr/include/qt5/QtGui/qinputmethod.h \
+		/usr/include/qt5/QtWidgets/QDesktopWidget \
+		/usr/include/qt5/QtWidgets/QVBoxLayout \
+		/usr/include/qt5/QtWidgets/qboxlayout.h \
+		/usr/include/qt5/QtWidgets/qlayout.h \
+		/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		/usr/include/qt5/QtWidgets/qgridlayout.h \
+		/usr/include/qt5/QtGui/QCursor \
+		/usr/include/qt5/QtGui/QKeyEvent \
+		/usr/include/qt5/QtGui/QHelpEvent \
+		/usr/include/qt5/QtWidgets/QToolTip \
+		/usr/include/qt5/QtWidgets/qtooltip.h \
+		/usr/include/qt5/QtCore/QTimer \
+		/usr/include/qt5/QtCore/qtimer.h \
+		/usr/include/qt5/QtCore/qbasictimer.h \
+		/usr/include/qt5/QtWidgets/QStyle \
+		/usr/include/qt5/QtWidgets/qstyle.h \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtWidgets/QStylePainter \
+		/usr/include/qt5/QtWidgets/qstylepainter.h \
+		/usr/include/qt5/QtGui/qpainter.h \
+		/usr/include/qt5/QtGui/qtextoption.h \
+		/usr/include/qt5/QtGui/qpen.h \
+		/usr/include/qt5/QtWidgets/QStyleOptionFrame \
+		/usr/include/qt5/QtWidgets/qstyleoption.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
+		/usr/include/qt5/QtWidgets/qrubberband.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQToolTip.o CQToolTip.cpp
+
 ../obj/CQRotatedText.o: CQRotatedText.cpp CQRotatedText.h \
 		/usr/include/qt5/QtGui/QPainter \
 		/usr/include/qt5/QtGui/qpainter.h \
@@ -29024,8 +29597,8 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qgridlayout.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
-		../../CStrUtil/include/CStrUtil.h \
-		/usr/include/qt5/QtGui/QDoubleValidator
+		CQRealSpin.h \
+		../../CStrUtil/include/CStrUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQPoint2DEdit.o CQPoint2DEdit.cpp
 
 ../obj/CQIconCombo.o: CQIconCombo.cpp CQIconCombo.h \
@@ -29800,6 +30373,9 @@ compiler_clean: compiler_moc_header_clean
 ../obj/moc_CQGnuPlotWindow.o: moc_CQGnuPlotWindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotWindow.o moc_CQGnuPlotWindow.cpp
 
+../obj/moc_CQPropertyDelegate.o: moc_CQPropertyDelegate.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPropertyDelegate.o moc_CQPropertyDelegate.cpp
+
 ../obj/moc_CQPropertyItem.o: moc_CQPropertyItem.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPropertyItem.o moc_CQPropertyItem.cpp
 
@@ -29811,6 +30387,9 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/moc_CQPaletteDialog.o: moc_CQPaletteDialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPaletteDialog.o moc_CQPaletteDialog.cpp
+
+../obj/moc_CQToolTip.o: moc_CQToolTip.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQToolTip.o moc_CQToolTip.cpp
 
 ../obj/moc_CQComboSlider.o: moc_CQComboSlider.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQComboSlider.o moc_CQComboSlider.cpp

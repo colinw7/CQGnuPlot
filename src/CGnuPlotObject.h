@@ -4,6 +4,7 @@
 #include <CGnuPlotColorSpec.h>
 #include <CGnuPlotPosition.h>
 #include <CGnuPlotSize.h>
+#include <CGnuPlotTipData.h>
 
 #include <CRGBA.h>
 #include <CBBox2D.h>
@@ -38,9 +39,7 @@ class CGnuPlotObject {
 
   virtual void draw(CGnuPlotRenderer *renderer) const = 0;
 
-  virtual std::string tip() const = 0;
-
-  virtual CBBox2D tipRect() const = 0;
+  virtual CGnuPlotTipData tip() const = 0;
 
  protected:
   CGnuPlot *plot_ { 0 };
@@ -69,9 +68,7 @@ class CGnuPlotPlotObject {
 
   virtual void draw(CGnuPlotRenderer *renderer) const = 0;
 
-  virtual std::string tip() const = 0;
-
-  virtual CBBox2D tipRect() const = 0;
+  virtual CGnuPlotTipData tip() const = 0;
 
  protected:
   CGnuPlotPlot *plot_     { 0 };
@@ -101,9 +98,7 @@ class CGnuPlotGroupObject {
 
   virtual void draw(CGnuPlotRenderer *renderer) const = 0;
 
-  virtual std::string tip() const = 0;
-
-  virtual CBBox2D tipRect() const = 0;
+  virtual CGnuPlotTipData tip() const = 0;
 
  protected:
   CGnuPlotGroup *group_ { 0 };

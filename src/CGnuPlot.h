@@ -38,7 +38,6 @@ class CGnuPlotPm3D;
 class CUnixFile;
 class CParseLine;
 
-typedef CRefPtr<CExprValue>             CExprValueP;
 typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 
 //------
@@ -54,6 +53,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotPosition.h>
 #include <CGnuPlotSize.h>
 #include <CGnuPlotAxisData.h>
+#include <CGnuPlotTipData.h>
 #include <CGnuPlotTitle.h>
 #include <CGnuPlotObject.h>
 #include <CGnuPlotArrow.h>
@@ -119,8 +119,8 @@ class CGnuPlot {
   typedef std::map<PlotStyle,CGnuPlotStyleBase*> PlotStyles;
   typedef std::map<int,CGnuPlotLineStyleP>       LineStyles;
   typedef std::map<int,CGnuPlotLineTypeP>        LineTypes;
-  typedef std::vector<CExprValueP>               Values;
-  typedef std::map<std::string,std::string>      Params;
+  typedef std::vector<CExprValuePtr>             Values;
+  typedef std::map<std::string,CExprValuePtr>    Params;
   typedef CGnuPlotTypes::AxisTypeId              AxisTypeId;
   typedef std::set<AxisTypeId>                   AxisTypeIdSet;
 
@@ -742,8 +742,8 @@ class CGnuPlot {
 
   int numFieldValues() const { return fieldValues_.size(); }
 
-  CExprValueP fieldValue(int i) const {
-    if (i < 1 || i > int(fieldValues_.size())) return CExprValueP();
+  CExprValuePtr fieldValue(int i) const {
+    if (i < 1 || i > int(fieldValues_.size())) return CExprValuePtr();
     return fieldValues_[i - 1];
   }
 
@@ -759,7 +759,7 @@ class CGnuPlot {
 
   int getColumnIndex(const std::string &str) const;
 
-  CExprValueP fieldToValue(int nf, const std::string &field);
+  CExprValuePtr fieldToValue(int nf, const std::string &field);
 
   bool timeToValue(const std::string &str, double &t);
 
@@ -1000,7 +1000,7 @@ class CGnuPlot {
   bool parseReal   (CParseLine &line, double &r) const;
   bool parseString (CParseLine &line, std::string &str,
                     const std::string &msg="", bool conv=true) const;
-  bool parseValue  (CParseLine &line, CExprValueP &value, const std::string &msg="") const;
+  bool parseValue  (CParseLine &line, CExprValuePtr &value, const std::string &msg="") const;
 
   bool skipExpression(const char *id, CParseLine &line, std::string &expr) const;
 
@@ -1077,7 +1077,7 @@ class CGnuPlot {
     varPrefs_[name]->print(os);
   }
 
-  bool evaluateExpression(const std::string &expr, CExprValueP &value, bool quiet=false) const;
+  bool evaluateExpression(const std::string &expr, CExprValuePtr &value, bool quiet=false) const;
 
   bool exprToInteger(const std::string &expr, int &i, bool quiet=false) const;
   bool exprToReal   (const std::string &expr, double &r, bool quiet=false) const;

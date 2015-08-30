@@ -9,6 +9,8 @@ class QTreeWidgetItem;
 
 // Tree Widget Item Delegate class to handle custom editing of tree widget items
 class CQPropertyDelegate : public QItemDelegate {
+  Q_OBJECT
+
  public:
   CQPropertyDelegate(QTreeWidget *tree);
 
@@ -30,9 +32,6 @@ class CQPropertyDelegate : public QItemDelegate {
   QTreeWidgetItem *getModelItem(const QModelIndex &index) const;
 
   QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index ) const;
-
-  bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option,
-                   const QModelIndex &index);
 
   QWidget *createEdit(QWidget *parent, const QString &text) const;
 

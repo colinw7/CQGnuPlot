@@ -184,7 +184,7 @@ mouseRelease(const QPoint &)
 
 bool
 CQGnuPlotGroup::
-mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
+mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
 {
   if (! inside(qp)) return false;
 
@@ -235,10 +235,8 @@ bool
 CQGnuPlotGroup::
 inside(const QPoint &qp) const
 {
-  CQGnuPlotCanvas *canvas = qwindow()->canvas();
-
-  double xr = CGnuPlotUtil::map(qp.x(), 0, canvas->width () - 1, 0, 1);
-  double yr = CGnuPlotUtil::map(qp.y(), 0, canvas->height() - 1, 1, 0);
+  double xr = CGnuPlotUtil::map(qp.x(), 0, qwindow()->pixelWidth () - 1, 0, 1);
+  double yr = CGnuPlotUtil::map(qp.y(), 0, qwindow()->pixelHeight() - 1, 1, 0);
 
   return region().inside(CPoint2D(xr, yr));
 }

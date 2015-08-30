@@ -71,11 +71,43 @@ namespace {
 
 static const int TreeWidth = 250;
 
-uint CQGnuPlotWindow::lastId;
-
 CQGnuPlotWindow::
 CQGnuPlotWindow(CQGnuPlot *plot) :
- QMainWindow(), CGnuPlotWindow(plot), id_(++lastId), plot_(plot), mode_(Mode::SELECT)
+ CGnuPlotWindow(plot), plot_(plot)
+{
+}
+
+void
+CQGnuPlotWindow::
+setApp(CQGnuPlot *plot)
+{
+  plot_ = plot;
+
+  CGnuPlotWindow::setApp(plot);
+}
+
+void
+CQGnuPlotWindow::
+highlightObject(CQGnuPlotObject *obj)
+{
+  CQGnuPlotDevice *qdevice = qapp()->qdevice();
+
+  for (auto qobject : qdevice->objects())
+    qobject->setHighlighted(false);
+
+  if (obj)
+    obj->setHighlighted(true);
+
+  redraw();
+}
+
+//------
+
+uint CQGnuPlotMainWindow::lastId;
+
+CQGnuPlotMainWindow::
+CQGnuPlotMainWindow(CQGnuPlot *plot) :
+ QMainWindow(), CQGnuPlotWindow(plot), id_(++lastId), mode_(Mode::SELECT)
 {
   setObjectName("window");
 
@@ -243,20 +275,20 @@ CQGnuPlotWindow(CQGnuPlot *plot) :
   zoomRegion_ = new CQZoomRegion(canvas_);
 }
 
-CQGnuPlotWindow::
-~CQGnuPlotWindow()
+CQGnuPlotMainWindow::
+~CQGnuPlotMainWindow()
 {
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 setSize(const CISize2D &s)
 {
   resize(s.width + TreeWidth, s.height);
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 updateProperties()
 {
   if (! propTimer_) {
@@ -270,7 +302,7 @@ updateProperties()
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 addProperties()
 {
   tree_->clear();
@@ -308,7 +340,7 @@ addProperties()
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 addGroupProperties(CGnuPlotGroup *group)
 {
   CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
@@ -630,7 +662,7 @@ addGroupProperties(CGnuPlotGroup *group)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 addPlotProperties(CGnuPlotPlot *plot)
 {
   CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
@@ -709,7 +741,8 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
-      tree_->addProperty(barName, qbar, "value");
+      tree_->addProperty(barName, qbar, "x");
+      tree_->addProperty(barName, qbar, "y");
       tree_->addProperty(barName, qbar, "fillType");
       tree_->addProperty(barName, qbar, "fillPattern");
       tree_->addProperty(barName, qbar, "fillColor");
@@ -802,7 +835,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 selectObject(const QObject *obj)
 {
   tree_->clearSelection();
@@ -811,7 +844,7 @@ selectObject(const QObject *obj)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 selectObjects(const std::vector<CQGnuPlotObject *> &objs)
 {
   disconnect(tree_, SIGNAL(itemSelected(QObject *, const QString &)),
@@ -834,35 +867,35 @@ selectObjects(const std::vector<CQGnuPlotObject *> &objs)
 }
 
 QColor
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 backgroundColor() const
 {
   return toQColor(CGnuPlotWindow::backgroundColor());
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 setBackgroundColor(const QColor &c)
 {
   CGnuPlotWindow::setBackgroundColor(fromQColor(c));
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 redraw()
 {
   canvas_->update();
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 setCursor(QCursor cursor)
 {
   canvas_->setCursor(cursor);
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 saveSVG()
 {
   app()->pushDevice();
@@ -894,7 +927,7 @@ saveSVG()
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 savePNG()
 {
   app()->pushDevice();
@@ -926,7 +959,7 @@ savePNG()
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 xAxisSlot(bool b)
 {
   for (auto group : groups())
@@ -936,7 +969,7 @@ xAxisSlot(bool b)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 yAxisSlot(bool b)
 {
   for (auto group : groups())
@@ -946,7 +979,7 @@ yAxisSlot(bool b)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 gridSlot(bool b)
 {
   for (auto group : groups()) {
@@ -958,14 +991,14 @@ gridSlot(bool b)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 pixelSlot(bool b)
 {
   setShowPixels(b);
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 selectMode(bool)
 {
   mode_ = Mode::SELECT;
@@ -975,7 +1008,7 @@ selectMode(bool)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 zoomMode(bool)
 {
   mode_ = Mode::ZOOM;
@@ -985,7 +1018,7 @@ zoomMode(bool)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 setCurrentGroup(CQGnuPlotGroup *group)
 {
   if (group != currentGroup_) {
@@ -994,7 +1027,7 @@ setCurrentGroup(CQGnuPlotGroup *group)
 }
 
 CQGnuPlotGroup *
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 getGroupAt(const QPoint &pos)
 {
   for (auto group : groups()) {
@@ -1008,7 +1041,7 @@ getGroupAt(const QPoint &pos)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 mousePress(const QPoint &qp)
 {
   escape_ = false;
@@ -1028,7 +1061,7 @@ mousePress(const QPoint &qp)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 mouseMove(const QPoint &qp, bool pressed)
 {
   if (mode_ == Mode::SELECT) {
@@ -1071,7 +1104,7 @@ mouseMove(const QPoint &qp, bool pressed)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 mouseRelease(const QPoint &)
 {
   if (mode_ == Mode::SELECT) {
@@ -1098,7 +1131,7 @@ mouseRelease(const QPoint &)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
 {
   CQGnuPlotGroup *group = currentGroup();
@@ -1202,8 +1235,8 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
 }
 
 bool
-CQGnuPlotWindow::
-mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
+CQGnuPlotMainWindow::
+mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
 {
   for (auto group : groups()) {
     CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
@@ -1212,11 +1245,13 @@ mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip)
       return true;
   }
 
+  highlightObject(0);
+
   return false;
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 paint(QPainter *p)
 {
   CQGnuPlotRenderer *qrenderer = qapp()->qrenderer();
@@ -1244,8 +1279,22 @@ paint(QPainter *p)
   draw();
 }
 
+int
+CQGnuPlotMainWindow::
+pixelWidth () const
+{
+  return canvas_->width ();
+}
+
+int
+CQGnuPlotMainWindow::
+pixelHeight() const
+{
+  return canvas_->height();
+}
+
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 showPos(const QString &name, double px, double py, double wx, double wy)
 {
   std::string xstr, ystr;
@@ -1277,14 +1326,14 @@ showPos(const QString &name, double px, double py, double wx, double wy)
 
 // mouse mode (unused ?)
 QPointF
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 pixelToWindow(const QPoint &p)
 {
   return QPointF(p.x(), p.y());
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 pixelToWindow(double px, double py, double *wx, double *wy)
 {
   *wx = px/(canvas_->width () - 1);
@@ -1292,7 +1341,7 @@ pixelToWindow(double px, double py, double *wx, double *wy)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 itemSelectedSlot(QObject *obj, const QString & /*path*/)
 {
   CQGnuPlotObject *qobject = dynamic_cast<CQGnuPlotObject *>(obj);
@@ -1308,7 +1357,7 @@ itemSelectedSlot(QObject *obj, const QString & /*path*/)
 }
 
 void
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 deselectAllObjects()
 {
   CQGnuPlotDevice *qdevice = qapp()->qdevice();
@@ -1318,7 +1367,7 @@ deselectAllObjects()
 }
 
 CQPropertyRealEditor *
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 realEdit(const std::string &str)
 {
   auto p = redits_.find(str);
@@ -1343,7 +1392,7 @@ realEdit(const std::string &str)
 }
 
 CQPropertyIntegerEditor *
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 integerEdit(const std::string &str)
 {
   auto p = iedits_.find(str);
@@ -1368,7 +1417,7 @@ integerEdit(const std::string &str)
 }
 
 CQPropertyRealEditor *
-CQGnuPlotWindow::
+CQGnuPlotMainWindow::
 realSlider(const std::string &str)
 {
   auto p = rsliders_.find(str);

@@ -26,8 +26,6 @@ class CGnuPlotPolygonObject;
 class CGnuPlotRectObject;
 class CGnuPlotBBoxRenderer;
 
-typedef CRefPtr<CExprValue> CExprValueP;
-
 //------
 
 template<>
@@ -112,18 +110,18 @@ class CGnuPlotCacheFactory<CGnuPlotPolygonObject> {
 
 class CGnuPlotPlot {
  public:
-  typedef CGnuPlotTypes::PlotStyle          PlotStyle;
-  typedef CGnuPlotTypes::BoxWidthType       BoxWidthType;
-  typedef CGnuPlotTypes::FillType           FillType;
-  typedef CGnuPlotTypes::FillPattern        FillPattern;
-  typedef CGnuPlotTypes::Smooth             Smooth;
-  typedef CGnuPlotTypes::SymbolType         SymbolType;
-  typedef CGnuPlot::Bars                    Bars;
-  typedef std::vector<CExprValueP>          Values;
-  typedef std::map<std::string,std::string> Params;
-  typedef std::vector<CGnuPlotPoint>        Points2D;
-  typedef std::map<int,Points2D>            Points3D;
-  typedef std::vector<CRGBA>                ImageData;
+  typedef CGnuPlotTypes::PlotStyle            PlotStyle;
+  typedef CGnuPlotTypes::BoxWidthType         BoxWidthType;
+  typedef CGnuPlotTypes::FillType             FillType;
+  typedef CGnuPlotTypes::FillPattern          FillPattern;
+  typedef CGnuPlotTypes::Smooth               Smooth;
+  typedef CGnuPlotTypes::SymbolType           SymbolType;
+  typedef CGnuPlot::Bars                      Bars;
+  typedef std::vector<CExprValuePtr>          Values;
+  typedef std::map<std::string,CExprValuePtr> Params;
+  typedef std::vector<CGnuPlotPoint>          Points2D;
+  typedef std::map<int,Points2D>              Points3D;
+  typedef std::vector<CRGBA>                  ImageData;
 
   typedef CGnuPlotCache<CGnuPlotBarObject>     BarCache;
   typedef CGnuPlotCache<CGnuPlotBubbleObject>  BubbleCache;
@@ -137,6 +135,8 @@ class CGnuPlotPlot {
   typedef std::vector<CGnuPlotPieObject *>     PieObjects;
   typedef std::vector<CGnuPlotPolygonObject *> PolygonObjects;
   typedef std::vector<CGnuPlotRectObject *>    RectObjects;
+  typedef std::vector<double>                  DoubleVector;
+  typedef std::map<double,DoubleVector>        MappedPoints;
 
  public:
   CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle plotStyle);
@@ -369,11 +369,11 @@ class CGnuPlotPlot {
 
   int addPoint2D(double x, double y);
   int addPoint2D(const std::vector<double> &rvals);
-  int addPoint2D(double x, CExprValueP y);
+  int addPoint2D(double x, CExprValuePtr y);
   int addPoint2D(const Values &values, bool discontinuity=false, const Params &params=Params());
 
   int addPoint3D(int iy, double x, double y, double z);
-  int addPoint3D(int iy, double x, double y, CExprValueP z);
+  int addPoint3D(int iy, double x, double y, CExprValuePtr z);
   int addPoint3D(int iy, const Values &values, bool discontinuity=false);
 
   //---
@@ -381,6 +381,8 @@ class CGnuPlotPlot {
   void reset3D();
 
   void smooth();
+
+  void mapPoints(MappedPoints &points);
 
   void calcXRange(double *xmin, double *xmax) const;
   void calcYRange(double *ymin, double *ymax) const;

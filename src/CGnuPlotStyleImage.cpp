@@ -414,10 +414,10 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
         expr = expr.substr(1, expr.size() - 2);
       }
 
-      CExprValueP value;
+      CExprValuePtr value;
 
       if (! CExprInst->evaluateExpression(expr, value))
-        value = CExprValueP();
+        value = CExprValuePtr();
 
       if (! lookup) {
         double r;
@@ -426,10 +426,10 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
           return r;
       }
       else {
-        CExprValueP value;
+        CExprValuePtr value;
 
         if (! CExprInst->evaluateExpression(expr, value))
-          value = CExprValueP();
+          value = CExprValuePtr();
 
         long l;
 

@@ -5,11 +5,12 @@
 #include <CPoint2D.h>
 #include <CPoint3D.h>
 #include <CMathGen.h>
+#include <CRGBA.h>
 
 class CGnuPlotPoint {
  public:
-  typedef std::vector<CExprValuePtr>        Values;
-  typedef std::map<std::string,std::string> Params;
+  typedef std::vector<CExprValuePtr>          Values;
+  typedef std::map<std::string,CExprValuePtr> Params;
 
  public:
   CGnuPlotPoint(const Values &values=Values(), bool discontinuity=false,
@@ -96,11 +97,15 @@ class CGnuPlotPoint {
     return (params_.find(name) != params_.end());
   }
 
-  const std::string &getParam(const std::string &name) const {
+  CExprValuePtr getParam(const std::string &name) const {
     auto p = params_.find(name);
 
     return (*p).second;
   }
+
+  std::string getParamString(const std::string &name) const;
+
+  CRGBA getParamColor(const std::string &name) const;
 
   int cmp(const CGnuPlotPoint &p) const;
 

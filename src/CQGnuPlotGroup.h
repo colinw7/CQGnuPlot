@@ -4,6 +4,7 @@
 #include <CQGnuPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CQGnuPlotObject.h>
+#include <CGnuPlotTipData.h>
 
 class CQGnuPlotWindow;
 class QPainter;
@@ -76,7 +77,7 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   void mouseMove   (const QPoint &qp);
   void mouseRelease(const QPoint &qp);
 
-  bool mouseTip(const QPoint &qp, CQGnuPlot::TipRect &tip);
+  bool mouseTip(const QPoint &qp, CGnuPlotTipData &tip);
 
   void redraw();
 

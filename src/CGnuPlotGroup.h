@@ -43,6 +43,11 @@ class CGnuPlotGroup {
   void setTitleData(const CGnuPlotTitleData &t);
 
   const Plots &plots() const { return plots_; }
+
+  void clearSubPlots();
+
+  void addSubPlot(CGnuPlotPlot *plot);
+
   void addSubPlots(const Plots &plots);
 
   //---
@@ -285,7 +290,7 @@ class CGnuPlotGroup {
   void drawRowStackedHistograms   (CGnuPlotRenderer *renderer, const Plots &plots);
   void drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots);
 
-  void drawAxes(CGnuPlotRenderer *renderer);
+  void drawAxes(CGnuPlotRenderer *renderer, bool border);
 
   void drawBorder(CGnuPlotRenderer *renderer);
 
@@ -307,7 +312,7 @@ class CGnuPlotGroup {
 
   CGnuPlotPlot *getSingleStylePlot() const;
 
-  CGnuPlotAxis *getPlotAxis(AxisType type, int ind, bool create) const;
+  CGnuPlotAxis *getPlotAxis(AxisType type, int ind, bool create=false) const;
 
   //-----
 

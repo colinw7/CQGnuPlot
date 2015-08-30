@@ -97,10 +97,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       chord.setValue(ix, iy, reals[ix]);
 
     if (point.hasParam("name"))
-      chord.setName(iy, point.getParam("name"));
+      chord.setName(iy, point.getParamString("name"));
 
     if (point.hasParam("color"))
-      chord.setColor(iy, CRGBName::toRGBA(point.getParam("color")));
+      chord.setColor(iy, point.getParamColor("color"));
 
     ++iy;
   }

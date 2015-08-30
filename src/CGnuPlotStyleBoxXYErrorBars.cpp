@@ -79,8 +79,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (! renderer->isPseudo()) {
       CGnuPlotBarObject *bar = plot->barObjects()[i];
 
-      bar->setBBox (bbox);
-      bar->setValue(y);
+      bar->setBBox(bbox);
+
+      bar->setValues(x, y);
 
       if (! bar->isInitialized()) {
         bar->setFillType   (plot->fillType());

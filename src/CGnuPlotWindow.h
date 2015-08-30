@@ -10,11 +10,13 @@ class CGnuPlotWindow {
   typedef std::vector<CGnuPlotGroup *> Groups;
 
  public:
-  CGnuPlotWindow(CGnuPlot *plot);
+  CGnuPlotWindow(CGnuPlot *plot=0);
 
   virtual ~CGnuPlotWindow();
 
   CGnuPlot *app() const { return plot_; }
+
+  void setApp(CGnuPlot *app);
 
   void clear();
 

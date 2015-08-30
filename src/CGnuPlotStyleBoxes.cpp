@@ -102,7 +102,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       bar->setBBox(bbox);
 
       if (! bar->isInitialized()) {
-        bar->setValue(y);
+        bar->setValues(x, y);
 
         bar->setWidth      (lw);
         bar->setFillType   (plot->fillType());

@@ -14,6 +14,10 @@ class CGnuPlotStyleChordDiagram : public CGnuPlotStyleBase {
   CBBox2D fit(CGnuPlotPlot *plot) override;
 
   bool isSingleType() const override { return true; }
+
+  void drawAxes(CGnuPlotPlot *, CGnuPlotRenderer *) override { }
+
+  void drawKey(CGnuPlotPlot *, CGnuPlotRenderer *) override { }
 };
 
 #endif

@@ -169,7 +169,7 @@ draw(ChordDiagramRenderer *renderer)
 
   double xc = 0.0;
   double yc = 0.0;
-  double r1 = 1.00 - dr;
+  double r1 = std::max(1.00 - dr, 0.0);
   double r2 = r1*0.9;
 
   //---

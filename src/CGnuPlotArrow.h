@@ -133,9 +133,7 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
 
   bool inside(const CPoint2D &p) const override;
 
-  std::string tip() const override { return ""; }
-
-  CBBox2D tipRect() const override { return CBBox2D(); }
+  CGnuPlotTipData tip() const override { return CGnuPlotTipData(); }
 
   void print(std::ostream &os) const;
 

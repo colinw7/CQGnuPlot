@@ -24,8 +24,12 @@ class CGnuPlotBarObject : public CGnuPlotPlotObject {
   const CBBox2D &bbox() const { return bbox_; }
   void setBBox(const CBBox2D &b) { bbox_ = b; }
 
-  double value() const { return value_; }
-  void setValue(double r) { value_ = r; }
+  double xvalue() const { return x_; }
+  double yvalue() const { return y_; }
+  void setValues(double x, double y) { x_ = x; y_ = y; }
+
+  void setXValueStr(const std::string &s) { x_str_ = s; }
+  void setYValueStr(const std::string &s) { y_str_ = s; }
 
   bool isInitialized() const { return initialized_; }
   void setInitialized(bool b) { initialized_ = b; }
@@ -52,15 +56,16 @@ class CGnuPlotBarObject : public CGnuPlotPlotObject {
 
   bool inside(const CPoint2D &p) const override;
 
-  std::string tip() const override;
-
-  CBBox2D tipRect() const { return bbox_; }
+  CGnuPlotTipData tip() const override;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
  protected:
   CBBox2D         bbox_        { 0, 0, 1, 1 };
-  double          value_       { 0.0 }; // associated value
+  double          x_           { 0.0 }; // associated x value
+  double          y_           { 0.0 }; // associated y value
+  std::string     x_str_;
+  std::string     y_str_;
   bool            initialized_ { false };
   FillType        fillType_    { FillType::EMPTY };
   FillPattern     fillPattern_ { FillPattern::NONE };

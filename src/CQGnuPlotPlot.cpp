@@ -30,13 +30,6 @@ qwindow() const
   return qgroup()->qwindow();
 }
 
-CQGnuPlotCanvas *
-CQGnuPlotPlot::
-canvas() const
-{
-  return qwindow()->canvas();
-}
-
 QColor
 CQGnuPlotPlot::
 lineColor() const
@@ -205,7 +198,7 @@ mouseMove(const CPoint2D &)
 
 bool
 CQGnuPlotPlot::
-mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
+mouseTip(const CPoint2D &p, CGnuPlotTipData &tip)
 {
   selectedPos_.setInvalid();
 
@@ -213,8 +206,11 @@ mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
     if (! bar->inside(p))
       continue;
 
-    tip.str  = bar->tip().c_str();
-    tip.rect = CQUtil::toQRect(bar->tipRect());
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+
+    qwindow()->highlightObject(qbar);
+
+    tip = bar->tip();
 
     return true;
   }
@@ -223,8 +219,11 @@ mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
     if (! bubble->inside(p))
       continue;
 
-    tip.str  = bubble->tip().c_str();
-    tip.rect = CQUtil::toQRect(bubble->tipRect());
+    CQGnuPlotBubbleObject *qbubble = static_cast<CQGnuPlotBubbleObject *>(bubble);
+
+    qwindow()->highlightObject(qbubble);
+
+    tip = bubble->tip();
 
     return true;
   }
@@ -233,8 +232,11 @@ mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
     if (! pie->inside(p))
       continue;
 
-    tip.str  = pie->tip().c_str();
-    tip.rect = CQUtil::toQRect(pie->tipRect());
+    CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
+
+    qwindow()->highlightObject(qpie);
+
+    tip = pie->tip();
 
     return true;
   }
@@ -243,8 +245,11 @@ mouseTip(const CPoint2D &p, CQGnuPlot::TipRect &tip)
     if (! rect->inside(p))
       continue;
 
-    tip.str  = rect->tip().c_str();
-    tip.rect = CQUtil::toQRect(rect->tipRect());
+    CQGnuPlotRectObject *qrect = static_cast<CQGnuPlotRectObject *>(rect);
+
+    qwindow()->highlightObject(qrect);
+
+    tip = rect->tip();
 
     return true;
   }

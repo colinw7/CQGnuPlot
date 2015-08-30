@@ -16,11 +16,33 @@ inside(const CPoint2D &p) const
   return bbox_.inside(p);
 }
 
-std::string
+CGnuPlotTipData
 CGnuPlotBarObject::
 tip() const
 {
-  return CStrUtil::toString(value_);
+  CGnuPlotTipData tip;
+
+  if (x_str_ != "")
+    tip.setXStr(x_str_);
+  else
+    tip.setXStr(CStrUtil::strprintf("%g", x_));
+
+  if (y_str_ != "")
+    tip.setYStr(y_str_);
+  else
+    tip.setYStr(CStrUtil::strprintf("%g", y_));
+
+  tip.setRect(bbox_);
+
+  tip.setXColor(CRGBA(0,0,0));
+  tip.setYColor(CRGBA(0,0,0));
+
+  if (fillType_ == FillType::SOLID) {
+    tip.setBorderColor(fillColor_.getValue(CRGBA(1,0,0)));
+    tip.setXColor     (fillColor_.getValue(CRGBA(1,0,0)));
+  }
+
+  return tip;
 }
 
 void

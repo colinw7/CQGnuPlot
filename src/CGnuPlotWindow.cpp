@@ -6,15 +6,24 @@
 
 CGnuPlotWindow::
 CGnuPlotWindow(CGnuPlot *plot) :
- plot_(plot), size_(640, 480)
+ plot_(0), size_(640, 480)
 {
-  if (plot->device())
-    size_ = plot_->device()->size();
+  setApp(plot);
 }
 
 CGnuPlotWindow::
 ~CGnuPlotWindow()
 {
+}
+
+void
+CGnuPlotWindow::
+setApp(CGnuPlot *plot)
+{
+  plot_ = plot;
+
+  if (plot_ && plot_->device())
+    size_ = plot_->device()->size();
 }
 
 void
