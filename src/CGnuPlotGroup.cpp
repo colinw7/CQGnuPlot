@@ -629,7 +629,8 @@ fit()
 
   CGnuPlotBBoxRenderer brenderer(app()->renderer());
 
-  axisBBox_ = CBBox2D();
+  //axisBBox_ = CBBox2D();
+  axisBBox_ = bbox;
 
   drawAxes(&brenderer, true);
 
@@ -1510,7 +1511,12 @@ drawBorder(CGnuPlotRenderer *renderer)
   if (hasPlotStyle(PlotStyle::TEST_TERMINAL))
     return;
 
-  uint sides = axesData().getBorderSides();
+  int defSides = 31;
+
+  if (hasPlotStyle(PlotStyle::PIECHART))
+    defSides = 0;
+
+  int sides = axesData().getBorderSides(defSides);
 
   CBBox2D bbox = getMappedDisplayRange(1, 1);
 
@@ -1805,6 +1811,15 @@ drawKey()
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
+  // TODO: key drawn in own coord system
+  // TODO: always fill background, opaque draws on top of plots
+  CBBox2D bbox = getMappedDisplayRange(1, 1);
+
+  renderer->setRange(bbox);
+  renderer->setReverse(false, false);
+
+  //---
+
   CGnuPlotPlot *singlePlot = getSingleStylePlot();
 
   if (singlePlot) {
@@ -1814,13 +1829,6 @@ drawKey()
 
     return;
   }
-
-  // TODO: key drawn in own coord system
-  // TODO: always fill background, opaque draws on top of plots
-  CBBox2D bbox = getMappedDisplayRange(1, 1);
-
-  renderer->setRange(bbox);
-  renderer->setReverse(false, false);
 
   key_->draw(renderer);
 }
@@ -2049,6 +2057,18 @@ getPlotsOfStyle(Plots &plots, PlotStyle style) const
     if (plot->getStyle() == style)
       plots.push_back(plot);
   }
+}
+
+CGnuPlotPlot *
+CGnuPlotGroup::
+getPlotForId(int id) const
+{
+  for (auto plot : plots_) {
+    if (plot->id() == id)
+      return plot;
+  }
+
+  return 0;
 }
 
 CBBox2D

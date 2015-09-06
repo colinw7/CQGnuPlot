@@ -70,3 +70,19 @@ draw(CGnuPlotRenderer *renderer)
     renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);
   }
 }
+
+void
+CQGnuPlotKey::
+mousePress(const QPoint &qp)
+{
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  CPoint2D p;
+
+  renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
+
+  CGnuPlotPlot *plot = group()->getPlotForId(CGnuPlotKey::plotAtPos(p));
+  if (! plot) return;
+
+  plot->setDisplayed(! plot->isDisplayed());
+}

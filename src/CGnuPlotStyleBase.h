@@ -6,6 +6,7 @@
 
 class CGnuPlotPlot;
 class CGnuPlotRenderer;
+class CGnuPlotTipData;
 
 class CGnuPlotStyleBase {
  public:
@@ -45,6 +46,8 @@ class CGnuPlotStyleBase {
   }
 
   virtual CBBox2D fit(CGnuPlotPlot *plot) = 0;
+
+  virtual bool mouseTip(CGnuPlotPlot *, const CPoint2D &, CGnuPlotTipData &) { return false; }
 
  protected:
   CGnuPlotTypes::PlotStyle style_;

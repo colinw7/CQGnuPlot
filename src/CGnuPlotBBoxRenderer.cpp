@@ -64,9 +64,12 @@ drawPoint(const CPoint2D &point, const CRGBA &)
 
 void
 CGnuPlotBBoxRenderer::
-drawSymbol(const CPoint2D &point, SymbolType, double, const CRGBA &, double)
+drawSymbol(const CPoint2D &point, SymbolType, double size, const CRGBA &, double)
 {
-  bbox_.add(point);
+  CPoint2D d(size/2, size/2);
+
+  bbox_.add(point - d);
+  bbox_.add(point + d);
 }
 
 void

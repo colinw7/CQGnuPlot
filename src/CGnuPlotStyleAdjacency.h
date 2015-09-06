@@ -3,6 +3,8 @@
 
 #include <CGnuPlotStyleBase.h>
 
+class CGnuPlotStyleAdjacencyRenderer;
+
 class CGnuPlotStyleAdjacency : public CGnuPlotStyleBase {
  public:
   CGnuPlotStyleAdjacency();
@@ -11,9 +13,15 @@ class CGnuPlotStyleAdjacency : public CGnuPlotStyleBase {
 
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
+  void drawKey(CGnuPlotPlot *, CGnuPlotRenderer *) override { }
+
+  void drawAxes(CGnuPlotPlot *, CGnuPlotRenderer *) override { }
+
   CBBox2D fit(CGnuPlotPlot *plot) override;
 
   bool isSingleType() const override { return true; }
+
+  bool mouseTip(CGnuPlotPlot *plot, const CPoint2D &p, CGnuPlotTipData &tipData) override;
 };
 
 #endif

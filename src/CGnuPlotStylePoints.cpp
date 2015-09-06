@@ -2,6 +2,7 @@
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotPointObject.h>
 
 CGnuPlotStylePoints::
 CGnuPlotStylePoints() :
@@ -13,15 +14,24 @@ void
 CGnuPlotStylePoints::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
 
   double lw = lineStyle.calcWidth();
 
-  //---
+  //------
+
+  uint np = plot->numPoints2D();
+
+  if (! renderer->isPseudo() && lineStyle.isTipPoints())
+    plot->updatePointCacheSize(np);
+
+  //------
 
   double                    pointSize = plot->pointSize();
   CGnuPlotTypes::SymbolType pointType = plot->pointType();
@@ -49,7 +59,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (renderer->isPseudo() && ! renderer->isInside(p))
       continue;
 
-    p = plot->group()->mapLogPoint(plot->xind(), plot->yind(), 1, p);
+    p = group->mapLogPoint(plot->xind(), plot->yind(), 1, p);
 
     double size1 = pointSize;
 
@@ -65,7 +75,37 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       c1 = lineStyle.calcColor(plot, x);
     }
 
-    renderer->drawSymbol(p, pointType, size1, c1, lw);
+    if (! renderer->isPseudo() && lineStyle.isTipPoints()) {
+      CGnuPlotPointObject *point = plot->pointObjects()[pointNum];
+
+      point->setPoint(p);
+
+      if (! point->testAndSetUsed()) {
+        point->setPointType  (pointType);
+        point->setColor      (c1);
+        point->setLineWidth  (lw);
+        point->setPointString(plot->pointTypeStr());
+
+        if (size1 > 0)
+          point->setSize(size1);
+        else
+          point->resetSize();
+      }
+    }
+    else {
+      if (pointType == CGnuPlotTypes::SymbolType::STRING)
+        renderer->drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
+                                   plot->pointTypeStr(), c1);
+      else
+        renderer->drawSymbol(p, pointType, size1, c1, lw);
+    }
+
+    ++pointNum;
+  }
+
+  if (! renderer->isPseudo()) {
+    for (const auto &point : plot->pointObjects())
+      point->draw(renderer);
   }
 }
 

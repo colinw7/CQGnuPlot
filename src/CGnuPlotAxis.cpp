@@ -1308,6 +1308,7 @@ drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
     CGnuPlotText text(str);
 
     bbox = text.calcBBox(renderer_);
+    if (! bbox.isSet()) return;
 
     double dx = 0.0, dy = 0.0;
 

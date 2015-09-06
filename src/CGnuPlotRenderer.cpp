@@ -227,6 +227,20 @@ drawEllipse(const CPoint3D &pos, double dx, double ry, double angle, const CRGBA
 
 void
 CGnuPlotRenderer::
+fillEllipse(const CBBox2D &rect, const CRGBA &c)
+{
+  fillEllipse(rect.getCenter(), rect.getWidth()/2, rect.getHeight()/2, 0, c);
+}
+
+void
+CGnuPlotRenderer::
+drawEllipse(const CBBox2D &rect, const CRGBA &c, double w, const CLineDash &dash)
+{
+  drawEllipse(rect.getCenter(), rect.getWidth()/2, rect.getHeight()/2, 0, c, w, dash);
+}
+
+void
+CGnuPlotRenderer::
 drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
                  CVAlignType valign, double y_offset, const std::string &str,
                  const CRGBA &c, double a)

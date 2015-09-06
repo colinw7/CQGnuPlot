@@ -35,6 +35,7 @@ class CGnuPlotEllipseObject;
 class CGnuPlotPieObject;
 class CGnuPlotPolygonObject;
 class CGnuPlotRectObject;
+class CGnuPlotPointObject;
 
 class CGnuPlotRenderer;
 class CGnuPlotTitle;
@@ -139,6 +140,7 @@ class CGnuPlotDevice {
   virtual CGnuPlotPieObject     *createPieObject    (CGnuPlotPlot *plot);
   virtual CGnuPlotPolygonObject *createPolygonObject(CGnuPlotPlot *plot);
   virtual CGnuPlotRectObject    *createRectObject   (CGnuPlotPlot *plot);
+  virtual CGnuPlotPointObject   *createPointObject  (CGnuPlotPlot *plot);
 
   virtual void timeout() { }
 

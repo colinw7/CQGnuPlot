@@ -14,6 +14,7 @@ CONFIG += debug
 
 # Input
 SOURCES += \
+CQGnuPlotTest.cpp \
 CQGnuPlot.cpp \
 CQGnuPlotAnnotation.cpp \
 CQGnuPlotArrow.cpp \
@@ -38,6 +39,7 @@ CQGnuPlotPlot.cpp \
 CQGnuPlotPm3D.cpp \
 CQGnuPlotPNGDevice.cpp \
 CQGnuPlotPNGRenderer.cpp \
+CQGnuPlotPointObject.cpp \
 CQGnuPlotPolygon.cpp \
 CQGnuPlotPolygonObject.cpp \
 CQGnuPlotRectangle.cpp \
@@ -82,6 +84,7 @@ CGnuPlotPalette.cpp \
 CGnuPlotPieObject.cpp \
 CGnuPlotPlot.cpp \
 CGnuPlotPoint.cpp \
+CGnuPlotPointObject.cpp \
 CGnuPlotPolygon.cpp \
 CGnuPlotPolygonObject.cpp \
 CGnuPlotPosition.cpp \
@@ -155,6 +158,7 @@ CQRealSpin.cpp \
 CQLineDash.cpp \
 CQPoint2DEdit.cpp \
 CQIconCombo.cpp \
+CQCursor.cpp \
 \
 CAdjacency.cpp \
 CDelaunay.cpp \
@@ -211,6 +215,7 @@ CQGnuPlotPlot.h \
 CQGnuPlotPm3D.h \
 CQGnuPlotPNGDevice.h \
 CQGnuPlotPNGRenderer.h \
+CQGnuPlotPointObject.h \
 CQGnuPlotPolygon.h \
 CQGnuPlotPolygonObject.h \
 CQGnuPlotRectangle.h \
@@ -255,6 +260,7 @@ CGnuPlotPalette.h \
 CGnuPlotPieObject.h \
 CGnuPlotPlot.h \
 CGnuPlotPoint.h \
+CGnuPlotPointObject.h \
 CGnuPlotPointStyle.h \
 CGnuPlotPolygon.h \
 CGnuPlotPolygonObject.h \
@@ -333,6 +339,7 @@ CQRealSpin.h \
 CQLineDash.h \
 CQPoint2DEdit.h \
 CQIconCombo.h \
+CQCursor.h \
 \
 CAdjacency.h \
 CDelaunay.h \

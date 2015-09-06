@@ -10,10 +10,10 @@ updateDefaultValues(CGnuPlotRenderer *renderer, double lm, double bm, double rm,
     CFontPtr font = renderer->getFont();
 
     double pw = font->getStringWidth("X");
-    double ph = font->getCharHeight();
+    double w  = renderer->pixelWidthToWindowWidthNoMargin  (pw);
 
-    double w = renderer->pixelWidthToWindowWidthNoMargin  (pw);
-    double h = renderer->pixelHeightToWindowHeightNoMargin(ph);
+    double ph = font->getCharHeight();
+    double h  = renderer->pixelHeightToWindowHeightNoMargin(ph);
 
     if (! lmargin_.value().isValid()) {
       lmargin_.setDefValue(lm/w + 1); lmargin_.setScreen(false);

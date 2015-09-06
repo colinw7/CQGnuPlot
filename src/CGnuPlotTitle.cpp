@@ -17,6 +17,8 @@ draw(CGnuPlotRenderer *renderer) const
 {
   if (text().empty()) return;
 
+  CFontPtr saveFont = renderer->getFont();
+
   if (font().isValid())
     renderer->setFont(font());
 
@@ -25,10 +27,23 @@ draw(CGnuPlotRenderer *renderer) const
   if (! group_->is3D() || group_->pm3D()->isEnabled()) {
     CBBox2D bbox = group_->getAxisBBox();
 
-    xmin = bbox.getXMin();
-    xmax = bbox.getXMax();
-  //ymin = bbox.getYMin();
-    ymax = bbox.getYMax();
+    if (bbox.isSet()) {
+      xmin = bbox.getXMin();
+      xmax = bbox.getXMax();
+    //ymin = bbox.getYMin();
+      ymax = bbox.getYMax();
+    }
+    else {
+      bbox = group_->getMappedDisplayRange(1, 1);
+
+      double w = bbox.getWidth ();
+      double h = bbox.getHeight();
+
+      xmin = bbox.getXMin() - w/10;
+      xmax = bbox.getXMax() + w/10;
+    //ymin = bbox.getYMin() - h/10;
+      ymax = bbox.getYMax() + h/10;
+    }
   }
   else {
     const CBBox2D &region = group_->region();
@@ -73,4 +88,7 @@ draw(CGnuPlotRenderer *renderer) const
   //renderer->drawRect(bbox_, CRGBA(1,0,0), 1);
 
   group_->updateMarginBBox(bbox_);
+
+  if (font().isValid())
+    renderer->setFont(saveFont);
 }

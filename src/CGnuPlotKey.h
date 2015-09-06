@@ -111,14 +111,22 @@ class CGnuPlotKey {
   const Columns &columns() const { return keyData_.columns(); }
   void setColumns(const Columns &c) { keyData_.setColumns(c); }
 
+  void clearPlotRects() { prects_.clear(); }
+
+  void addPlotRect(CGnuPlotPlot *plot, const CBBox2D &rect);
+
   virtual void draw(CGnuPlotRenderer *renderer);
 
- private:
-  typedef std::vector<double> TickSpaces;
+  int plotAtPos(const CPoint2D &pos) const;
 
-  CGnuPlotGroup*  group_ { 0 };
-  CGnuPlotKeyData keyData_;
-  CBBox2D         bbox_ { 0, 0, 1, 1};
+ private:
+  typedef std::vector<double>   TickSpaces;
+  typedef std::map<int,CBBox2D> PlotRects;
+
+  CGnuPlotGroup*    group_ { 0 };
+  CGnuPlotKeyData   keyData_;
+  CBBox2D           bbox_ { 0, 0, 1, 1};
+  mutable PlotRects prects_;
 };
 
 typedef std::unique_ptr<CGnuPlotKey> CGnuPlotKeyP;

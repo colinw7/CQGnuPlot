@@ -107,3 +107,15 @@
  + Pm3D virtual class
  + Filled curves pattern fill
  + add factorial to expression eval
+
+### 8/30/2015
+ + support per bar color for barchart plot
+ + improve tooltip on barchart
+ + fix margin for chord diagram
+
+### 9/6/2015
+ + improve adjacency caching and tip
+ + improve piechart customization (inner radius, label radius) and tip
+ + add inline styles in comments
+ + add interactive support for "-" plot file
+ + improve tootip widget and experimental cursor support

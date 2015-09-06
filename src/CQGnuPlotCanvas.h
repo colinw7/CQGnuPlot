@@ -4,16 +4,16 @@
 #include <QWidget>
 #include <CPoint2D.h>
 
-class CQGnuPlotWindow;
+class CQGnuPlotMainWindow;
 
 class CQGnuPlotCanvas : public QWidget {
   Q_OBJECT
 
  public:
-  CQGnuPlotCanvas(CQGnuPlotWindow *window);
+  CQGnuPlotCanvas(CQGnuPlotMainWindow *window);
  ~CQGnuPlotCanvas();
 
-  CQGnuPlotWindow *qwindow() const { return window_; }
+  CQGnuPlotMainWindow *qwindow() const { return window_; }
 
  private:
   void paintEvent(QPaintEvent *);
@@ -29,8 +29,8 @@ class CQGnuPlotCanvas : public QWidget {
   bool event(QEvent *e);
 
  private:
-  CQGnuPlotWindow *window_;
-  bool             pressed_;
+  CQGnuPlotMainWindow *window_;
+  bool                 pressed_;
 };
 
 #endif

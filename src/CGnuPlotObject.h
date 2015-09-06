@@ -58,6 +58,10 @@ class CGnuPlotPlotObject {
 
   CGnuPlotPlot *plot() const { return plot_; }
 
+  bool isUsed() const { return used_; }
+  void setUsed(bool b) { used_ = b; }
+  bool testAndSetUsed() { if (used_) return true; used_ = true; return false; }
+
   bool isModified() const { return modified_; }
   void setModified(bool b) { modified_ = b; }
 
@@ -71,8 +75,9 @@ class CGnuPlotPlotObject {
   virtual CGnuPlotTipData tip() const = 0;
 
  protected:
-  CGnuPlotPlot *plot_     { 0 };
-  bool          modified_ { false };
+  CGnuPlotPlot *plot_      { 0 };
+  bool          used_      { false };
+  bool          modified_  { false };
   bool          displayed_ { true };
 };
 

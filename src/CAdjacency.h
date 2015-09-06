@@ -110,6 +110,8 @@ class CAdjacency {
  public:
   CAdjacency();
 
+  void addDefaultColors();
+
   void addNode(int id, const std::string &name, int group);
 
   void connectNodes(int source, int target, int value);
@@ -120,9 +122,16 @@ class CAdjacency {
 
   void nodeAtPoint(double x, double y);
 
+  CRGBA nodeColor(CAdjacencyNode *node1, CAdjacencyNode *node2) const;
+
+  const CRGBA &getColor(int i) const;
+
+  CRGBA blendColors(const CRGBA &c1, const CRGBA &c2, int value) const;
+
  private:
   typedef std::map<int,CAdjacencyNode *> NodeMap;
   typedef std::vector<CAdjacencyNode *>  NodeArray;
+  typedef std::vector<CRGBA>             Colors;
 
   NodeMap   nodes_;
   NodeArray sortedNodes_;
@@ -132,6 +141,8 @@ class CAdjacency {
   int       ix_;
   int       iy_;
   int       maxValue_;
+  Colors    colors_;
+  double    grey_;
 };
 
 class CAdjacencyRenderer {
@@ -150,7 +161,9 @@ class CAdjacencyRenderer {
   virtual int charDescent() = 0;
 
   virtual void fillRect(const CBBox2D &r, const CRGBA &c) = 0;
-  virtual void drawRect(const CBBox2D &r, const CRGBA &c) = 0;
+
+  virtual void drawNodeRect(const CBBox2D &r, const CRGBA &c, int value,
+                            CAdjacencyNode *node1, CAdjacencyNode *node2) = 0;
 
   virtual void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) = 0;
 

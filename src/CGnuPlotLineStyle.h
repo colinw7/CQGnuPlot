@@ -67,6 +67,9 @@ class CGnuPlotLineStyle {
   bool palette() const { return palette_; }
   void setPalette(bool b) { palette_ = b; }
 
+  bool isTipPoints() const { return tippoints_; }
+  void setTipPoints(bool b) { tippoints_ = b; }
+
   //---
 
   double calcWidth(double w=1) const;
@@ -107,6 +110,7 @@ class CGnuPlotLineStyle {
   COptReal     pointSize_;
   COptInt      pointInterval_;
   bool         palette_ { false };
+  bool         tippoints_ { false };
 };
 
 typedef CRefPtr<CGnuPlotLineStyle> CGnuPlotLineStyleP;

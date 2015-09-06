@@ -40,6 +40,38 @@ inside(const CPoint2D &p) const
   return false;
 }
 
+bool
+CGnuPlotPieObject::
+keyInside(const CPoint2D &p) const
+{
+  return keyRect_.inside(p);
+}
+
+CGnuPlotTipData
+CGnuPlotPieObject::
+tip() const
+{
+  CGnuPlotTipData tip;
+
+  tip.setXStr(name_);
+  tip.setYStr(CStrUtil::strprintf("%g", value_));
+
+  CPoint2D d(r_, r_);
+
+  CBBox2D rect(c_ - d, c_ + d);
+
+  if (fillColor_.isValid()) {
+    CRGBA c = fillColor();
+
+    tip.setBorderColor(c);
+    tip.setXColor(c);
+  }
+
+  tip.setRect(rect);
+
+  return tip;
+}
+
 void
 CGnuPlotPieObject::
 draw(CGnuPlotRenderer *renderer) const
@@ -56,15 +88,25 @@ draw(CGnuPlotRenderer *renderer) const
     c.y += y;
   }
 
-  renderer->fillPieSlice(c, 0, r_, angle1_, angle2_, fillColor_.getValue(CRGBA(1,0,0)));
-  renderer->drawPieSlice(c, 0, r_, angle1_, angle2_, 0, lineColor_.getValue(CRGBA(1,0,0)));
+  double ir = innerRadius_*r_;
+
+  renderer->fillPieSlice(c, ir, r_, angle1_, angle2_, fillColor_.getValue(CRGBA(1,0,0)));
+  renderer->drawPieSlice(c, ir, r_, angle1_, angle2_, 0, lineColor_.getValue(CRGBA(1,0,0)));
 
   double tangle = CAngle::Deg2Rad((angle1_ + angle2_)/2.0);
 
-  double x = c.x + 0.5*r_*cos(tangle);
-  double y = c.y + 0.5*r_*sin(tangle);
+  double lr = labelRadius_*r_;
+
+  if (lr < 0.01)
+    lr = 0.01;
+
+  double x = c.x + lr*cos(tangle);
+  double y = c.y + lr*sin(tangle);
+
+  CPoint2D tp(x, y);
+
+  CRGBA tc(0,0,0);
 
   // aligned ?
-  renderer->drawHAlignedText(CPoint2D(x, y), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
-                             name_, CRGBA(0,0,0));
+  renderer->drawHAlignedText(tp, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0, name_, tc);
 }

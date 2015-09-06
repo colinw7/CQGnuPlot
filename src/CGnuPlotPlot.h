@@ -24,7 +24,11 @@ class CGnuPlotEllipseObject;
 class CGnuPlotPieObject;
 class CGnuPlotPolygonObject;
 class CGnuPlotRectObject;
+class CGnuPlotPointObject;
 class CGnuPlotBBoxRenderer;
+
+class CGnuPlotStyleAdjacencyRenderer;
+class CAdjacency;
 
 //------
 
@@ -94,6 +98,19 @@ class CGnuPlotCacheFactory<CGnuPlotRectObject> {
 };
 
 template<>
+class CGnuPlotCacheFactory<CGnuPlotPointObject> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotPointObject *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+template<>
 class CGnuPlotCacheFactory<CGnuPlotPolygonObject> {
  public:
   CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
@@ -104,6 +121,22 @@ class CGnuPlotCacheFactory<CGnuPlotPolygonObject> {
 
  private:
   CGnuPlotPlot *plot_;
+};
+
+class CGnuPlotAdjacencyData {
+ public:
+  CGnuPlotAdjacencyData() { }
+ ~CGnuPlotAdjacencyData();
+
+  CAdjacency *adjacency() const { return adjacency_; }
+  void setAdjacency(CAdjacency *a) { adjacency_ = a; }
+
+  CGnuPlotStyleAdjacencyRenderer *renderer() const { return renderer_; }
+  void setRenderer(CGnuPlotStyleAdjacencyRenderer *r) { renderer_ = r; }
+
+ private:
+  CAdjacency                     *adjacency_ { 0 };
+  CGnuPlotStyleAdjacencyRenderer *renderer_  { 0 };
 };
 
 //------
@@ -129,12 +162,14 @@ class CGnuPlotPlot {
   typedef CGnuPlotCache<CGnuPlotPieObject>     PieCache;
   typedef CGnuPlotCache<CGnuPlotPolygonObject> PolygonCache;
   typedef CGnuPlotCache<CGnuPlotRectObject>    RectCache;
+  typedef CGnuPlotCache<CGnuPlotPointObject>   PointCache;
   typedef std::vector<CGnuPlotBarObject *>     BarObjects;
   typedef std::vector<CGnuPlotBubbleObject *>  BubbleObjects;
   typedef std::vector<CGnuPlotEllipseObject *> EllipseObjects;
   typedef std::vector<CGnuPlotPieObject *>     PieObjects;
   typedef std::vector<CGnuPlotPolygonObject *> PolygonObjects;
   typedef std::vector<CGnuPlotRectObject *>    RectObjects;
+  typedef std::vector<CGnuPlotPointObject *>   PointObjects;
   typedef std::vector<double>                  DoubleVector;
   typedef std::map<double,DoubleVector>        MappedPoints;
 
@@ -278,7 +313,7 @@ class CGnuPlotPlot {
 
   std::string pointTypeStr() const { return lineStyle().pointTypeStr(); }
 
-  double pointSize() const { return lineStyle().calcPointSize(); }
+  double pointSize(double s=1) const { return lineStyle().calcPointSize(s); }
   void setPointSize(double s) { lineStyle_.setPointSize(s); }
 
   const CGnuPlotPointStyle &pointStyle() const { return pointStyle_; }
@@ -308,6 +343,11 @@ class CGnuPlotPlot {
 
   const CGnuPlotLabelStyle &labelStyle() const { return labelStyle_; }
   void setLabelStyle(const CGnuPlotLabelStyle &s) { labelStyle_ = s; }
+
+  //---
+
+  const CGnuPlotPieStyle &pieStyle() const { return pieStyle_; }
+  void setPieStyle(const CGnuPlotPieStyle &s) { pieStyle_ = s; }
 
   //---
 
@@ -429,6 +469,7 @@ class CGnuPlotPlot {
   void updatePieCacheSize    (int n);
   void updatePolygonCacheSize(int n);
   void updateRectCacheSize   (int n);
+  void updatePointCacheSize  (int n);
 
   const BarObjects     &barObjects    () const { return barCache_    .objects(); }
   const BubbleObjects  &bubbleObjects () const { return bubbleCache_ .objects(); }
@@ -436,6 +477,7 @@ class CGnuPlotPlot {
   const PieObjects     &pieObjects    () const { return pieCache_    .objects(); }
   const PolygonObjects &polygonObjects() const { return polygonCache_.objects(); }
   const RectObjects    &rectObjects   () const { return rectCache_   .objects(); }
+  const PointObjects   &pointObjects  () const { return pointCache_  .objects(); }
 
   //---
 
@@ -491,6 +533,7 @@ class CGnuPlotPlot {
   CGnuPlotPieObject     *createPieObject    () const;
   CGnuPlotPolygonObject *createPolygonObject() const;
   CGnuPlotRectObject    *createRectObject   () const;
+  CGnuPlotPointObject   *createPointObject  () const;
 
   bool mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const;
 
@@ -533,6 +576,18 @@ class CGnuPlotPlot {
 
   //------
 
+  virtual bool mouseTip(const CPoint2D &p, CGnuPlotTipData &tipData);
+
+  //------
+
+  const CGnuPlotAdjacencyData &adjacencyData() const { return adjacencyData_; }
+
+  void setAdjacency(CAdjacency *a) { adjacencyData_.setAdjacency(a); }
+
+  void setAdjacencyRenderer(CGnuPlotStyleAdjacencyRenderer *r) { adjacencyData_.setRenderer(r); }
+
+  //------
+
  private:
   bool renderBBox(CGnuPlotBBoxRenderer &brenderer) const;
 
@@ -571,6 +626,7 @@ class CGnuPlotPlot {
   CGnuPlotEllipseStyle   ellipseStyle_;                     // ellipse style
   CGnuPlotTextStyle      textStyle_;                        // text style
   CGnuPlotLabelStyle     labelStyle_;                       // label style
+  CGnuPlotPieStyle       pieStyle_;                         // pie style
   CGnuPlotKeyTitle       keyTitle_;                         // title on key
   int                    xind_ { 1 };                       // xaxis index
   int                    yind_ { 1 };                       // yaxis index
@@ -598,12 +654,17 @@ class CGnuPlotPlot {
   PieCache               pieCache_;
   PolygonCache           polygonCache_;
   RectCache              rectCache_;
+  PointCache             pointCache_;
   StyleValues            styleValues_;
   bool                   parametric_ { false };
   CGnuPlotTypes::Mapping mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
   CGnuPlotSurfaceData    surfaceData_;
   CGnuPlotContourData    contourData_;
   CGnuPlotPrintFile      tableFile_;
+  CGnuPlotAdjacencyData  adjacencyData_;
+
+ private:
+  CGnuPlotStyleAdjacencyRenderer *arenderer_;
 };
 
 //------
@@ -648,6 +709,13 @@ CGnuPlotCacheFactory<CGnuPlotRectObject>::
 make()
 {
   return plot_->createRectObject();
+}
+
+inline CGnuPlotPointObject *
+CGnuPlotCacheFactory<CGnuPlotPointObject>::
+make()
+{
+  return plot_->createPointObject();
 }
 
 #endif

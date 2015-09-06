@@ -17,6 +17,7 @@ class CQPropertyTree;
 class CQPropertyRealEditor;
 class CQPropertyIntegerEditor;
 class CQZoomRegion;
+class CQCursor;
 
 class QLabel;
 class QTimer;
@@ -64,6 +65,8 @@ class CQGnuPlotWindow : public CGnuPlotWindow {
 class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   Q_OBJECT
 
+  Q_PROPERTY(int    cursorSize      READ cursorSize      WRITE setCursorSize)
+  Q_PROPERTY(bool   tipOutside      READ isTipOutside    WRITE setTipOutside)
   Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor)
 
  public:
@@ -90,6 +93,12 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   int pixelHeight() const;
 
   void showPos(const QString &name, double px, double py, double wx, double wy);
+
+  int cursorSize() const;
+  void setCursorSize(int s);
+
+  bool isTipOutside() const { return tipOutside_; }
+  void setTipOutside(bool b) { tipOutside_ = b; }
 
   QColor backgroundColor() const;
   void setBackgroundColor(const QColor &c);
@@ -175,6 +184,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   QPoint             zoomPress_    { 0, 0 };
   QPoint             zoomRelease_  { 0, 0 };
   CQGnuPlotGroup*    zoomGroup_    { 0 };
+  CQCursor*          cursor_       { 0 };
+  bool               tipOutside_   { false };
   mutable bool       escape_       { false };
 };
 

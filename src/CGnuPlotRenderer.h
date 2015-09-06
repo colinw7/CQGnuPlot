@@ -92,9 +92,9 @@ class CGnuPlotRenderer {
                               CGnuPlotTypes::FillPattern pattern,
                               const CRGBA &fg, const CRGBA &bg) = 0;
 
-  virtual void drawEllipse(const CPoint2D &p, double dx, double ry, double a,
+  virtual void drawEllipse(const CPoint2D &p, double rx, double ry, double a,
                            const CRGBA &c, double w, const CLineDash &dash=CLineDash()) = 0;
-  virtual void fillEllipse(const CPoint2D &p, double dx, double ry, double a,
+  virtual void fillEllipse(const CPoint2D &p, double rx, double ry, double a,
                            const CRGBA &c) = 0;
 
   virtual void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3,
@@ -158,6 +158,10 @@ class CGnuPlotRenderer {
 
   void drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w,
                        const COptPoint2D &o=COptPoint2D());
+
+  void fillEllipse(const CBBox2D &rect, const CRGBA &c);
+  void drawEllipse(const CBBox2D &rect, const CRGBA &c, double w,
+                   const CLineDash &dash=CLineDash());
 
   void fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c);
   void drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c);

@@ -5,6 +5,7 @@
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotKey.h>
 #include <CSunburst.h>
+#include <CFontMgr.h>
 
 namespace {
 
@@ -153,6 +154,9 @@ void
 CGnuPlotStyleSunburst::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CFontPtr font = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 6);
+  renderer->setFont(font);
+
   typedef std::map<std::string, CSunburst::HierNode *> GroupMap;
 
   if (renderer->isPseudo())

@@ -55,6 +55,7 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
   CGnuPlotPieObject     *createPieObject    (CGnuPlotPlot *plot) override;
   CGnuPlotPolygonObject *createPolygonObject(CGnuPlotPlot *plot) override;
   CGnuPlotRectObject    *createRectObject   (CGnuPlotPlot *plot) override;
+  CGnuPlotPointObject   *createPointObject  (CGnuPlotPlot *plot) override;
 
   const Objects &objects() const { return objects_; }
 

@@ -229,6 +229,10 @@ processLines()
           if (pline.isChars(comment)) {
             line1 = CStrUtil::stripSpaces(pline.substr(0, pline.pos()));
 
+            std::string cstr = CStrUtil::stripSpaces(pline.substr(pline.pos() + comment.length()));
+
+            commentStrs_[setNum][subSetNum][lineNum] = cstr;
+
             commentFound = true;
 
             break;

@@ -7,6 +7,7 @@
 #include <CQGnuPlotPieObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
+#include <CQGnuPlotPointObject.h>
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
@@ -16,6 +17,8 @@ CQGnuPlotPlot(CQGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style) :
  CGnuPlotPlot(group, style), group_(group)
 {
   setObjectName("plot");
+
+  pieObjects_ = new CQGnuPlotPlotPieObjects(this);
 }
 
 CQGnuPlotPlot::
@@ -163,12 +166,11 @@ mousePress(const CPoint2D &p, std::vector<CQGnuPlotObject *> &objects)
   }
 
   for (auto &pie : pieObjects()) {
-    if (! pie->inside(p))
-      continue;
+    if (pie->inside(p) || pie->keyInside(p)) {
+      CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
 
-    CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
-
-    objects.push_back(qpie);
+      objects.push_back(qpie);
+    }
   }
 
   for (auto &polygon : polygonObjects()) {
@@ -187,6 +189,15 @@ mousePress(const CPoint2D &p, std::vector<CQGnuPlotObject *> &objects)
     CQGnuPlotRectObject *qrect = static_cast<CQGnuPlotRectObject *>(rect);
 
     objects.push_back(qrect);
+  }
+
+  for (auto &point : pointObjects()) {
+    if (! point->inside(p))
+      continue;
+
+    CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
+
+    objects.push_back(qpoint);
   }
 }
 
@@ -254,5 +265,56 @@ mouseTip(const CPoint2D &p, CGnuPlotTipData &tip)
     return true;
   }
 
-  return false;
+  for (auto &point : pointObjects()) {
+    if (! point->inside(p))
+      continue;
+
+    CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
+
+    qwindow()->highlightObject(qpoint);
+
+    tip = point->tip();
+
+    return true;
+  }
+
+  return CGnuPlotPlot::mouseTip(p, tip);
+}
+
+//------
+
+double
+CQGnuPlotPlotPieObjects::
+innerRadius() const
+{
+  if (! plot_->pieObjects().empty())
+    return plot_->pieObjects()[0]->innerRadius();
+
+  return 0.0;
+}
+
+void
+CQGnuPlotPlotPieObjects::
+setInnerRadius(double r)
+{
+  for (auto &pie : plot_->pieObjects())
+    pie->setInnerRadius(r);
+}
+
+double
+CQGnuPlotPlotPieObjects::
+labelRadius() const
+{
+  if (! plot_->pieObjects().empty())
+    return plot_->pieObjects()[0]->labelRadius();
+
+  return 0.0;
+}
+
+void
+CQGnuPlotPlotPieObjects::
+setLabelRadius(double r)
+{
+  for (auto &pie : plot_->pieObjects())
+    pie->setLabelRadius(r);
 }

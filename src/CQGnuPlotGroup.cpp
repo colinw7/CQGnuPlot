@@ -5,6 +5,7 @@
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
 #include <CQGnuPlotLabel.h>
+#include <CQGnuPlotKey.h>
 #include <CQGnuPlotRenderer.h>
 #include <CGnuPlotObject.h>
 
@@ -146,6 +147,10 @@ mousePress(const QPoint &qp)
   }
 
   qwindow()->selectObjects(objects);
+
+  CQGnuPlotKey *qkey = dynamic_cast<CQGnuPlotKey *>(key().get());
+
+  qkey->mousePress(qp);
 }
 
 void

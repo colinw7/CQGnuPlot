@@ -28,9 +28,9 @@ class CGnuPlotTipData {
  private:
   std::string xstr_;
   std::string ystr_;
-  CRGBA       xcolor_;
-  CRGBA       ycolor_;
-  CRGBA       borderColor_;
+  CRGBA       xcolor_      { CRGBA(0,0,0) };
+  CRGBA       ycolor_      { CRGBA(0,0,0) };
+  CRGBA       borderColor_ { CRGBA(0,0,0) };
   CBBox2D     rect_;
 };
 

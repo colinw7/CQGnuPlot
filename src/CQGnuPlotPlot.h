@@ -14,6 +14,7 @@ class CQGnuPlotWindow;
 class CQGnuPlotGroup;
 class CQGnuPlotCanvas;
 class CQGnuPlotRenderer;
+class CQGnuPlotPlotPieObjects;
 
 class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_OBJECT
@@ -96,6 +97,8 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   bool syncBars() const { return syncBars_; }
   void setSyncBars(bool b) { syncBars_ = b; }
 
+  CQGnuPlotPlotPieObjects *pieObjectsObj() const { return pieObjects_; }
+
   void draw();
 
   void mousePress(const CPoint2D &p, std::vector<CQGnuPlotObject *> &objects);
@@ -103,9 +106,31 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   bool mouseTip  (const CPoint2D &p, CGnuPlotTipData &tip);
 
  public:
-  CQGnuPlotGroup*    group_;
-  COptValT<CPoint2D> selectedPos_;
-  bool               syncBars_;
+  CQGnuPlotGroup*          group_;
+  COptValT<CPoint2D>       selectedPos_;
+  bool                     syncBars_;
+  CQGnuPlotPlotPieObjects* pieObjects_;
+};
+
+class CQGnuPlotPlotPieObjects : public QObject {
+  Q_OBJECT
+
+  Q_PROPERTY(double innerRadius READ innerRadius WRITE setInnerRadius)
+  Q_PROPERTY(double labelRadius READ labelRadius WRITE setLabelRadius)
+
+ public:
+  CQGnuPlotPlotPieObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  double innerRadius() const;
+  void   setInnerRadius(double r);
+
+  double labelRadius() const;
+  void   setLabelRadius(double r);
+
+ private:
+  CQGnuPlotPlot *plot_;
 };
 
 #endif

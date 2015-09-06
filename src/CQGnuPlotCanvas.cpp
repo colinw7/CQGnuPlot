@@ -31,9 +31,15 @@ class CQGnuPlotCanvasTipLabel : public QWidget {
 
     QRectF r(rect());
 
-    path.addRoundedRect(r.adjusted(1,1,-1,-1), r.width()/6.0, r.height()/6.0);
+    double rr = r.height()/6.0;
 
-    painter.fillPath(path, QColor(255,255,255,127));
+    path.addRoundedRect(r.adjusted(1,1,-1,-1), rr, rr);
+
+    QColor bg = palette().color(QPalette::ToolTipBase);
+
+    bg.setAlpha(180);
+
+    painter.fillPath(path, bg);
 
     QString text;
 
@@ -117,6 +123,8 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
     if (! canvas_->qwindow()->mouseTip(canvas_->mapFromGlobal(pos), tip_))
       return false;
 
+    label_->resize(label_->sizeHint());
+
     label_->setTip(tip_);
 
     return true;
@@ -128,6 +136,15 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
 
   bool isTransparent() const { return true; }
 
+  bool outside() const { return canvas_->qwindow()->isTipOutside(); }
+
+  Qt::Alignment alignment() const {
+    if (outside())
+      return Qt::AlignLeft | Qt::AlignBottom;
+    else
+      return Qt::AlignHCenter | Qt::AlignBottom;
+  }
+
  private:
   CQGnuPlotCanvas         *canvas_;
   CQGnuPlotCanvasTipLabel *label_;
@@ -137,7 +154,7 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
 //----
 
 CQGnuPlotCanvas::
-CQGnuPlotCanvas(CQGnuPlotWindow *window) :
+CQGnuPlotCanvas(CQGnuPlotMainWindow *window) :
  QWidget(0), window_(window), pressed_(false)
 {
   setObjectName("canvas");
@@ -173,8 +190,7 @@ mousePressEvent(QMouseEvent *e)
 
   window_->setCurrentGroup(group);
 
-  if (group)
-    group->mousePress(e->pos());
+  //if (group) group->mousePress(e->pos());
 
   window_->mousePress(e->pos());
 }

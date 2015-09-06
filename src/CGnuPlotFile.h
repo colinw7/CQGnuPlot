@@ -10,8 +10,11 @@
 
 class CGnuPlotFile {
  public:
-  typedef std::vector<std::string> Lines;
-  typedef std::vector<std::string> Fields;
+  typedef std::vector<std::string>   Lines;
+  typedef std::vector<std::string>   Fields;
+  typedef std::map<int,std::string>  LineString;
+  typedef std::map<int,LineString>   SubSetString;
+  typedef std::map<int,SubSetString> SetString;
 
   //---
 
@@ -162,6 +165,21 @@ class CGnuPlotFile {
   bool isCsv() const { return csv_; }
   void setCsv(bool b) { csv_ = b; }
 
+  bool commentStr(int setNum, int subSetNum, int lineNum, std::string &str) {
+    auto p1 = commentStrs_.find(setNum);
+    if (p1 == commentStrs_.end()) return false;
+
+    auto p2 = (*p1).second.find(subSetNum);
+    if (p2 == (*p1).second.end()) return false;
+
+    auto p3 = (*p2).second.find(lineNum);
+    if (p3 == (*p2).second.end()) return false;
+
+    str = (*p3).second;
+
+    return true;
+  }
+
   void unset();
 
   void show(std::ostream &os, std::map<std::string,bool> &show, bool verbose);
@@ -187,6 +205,7 @@ class CGnuPlotFile {
   Every       every_;
   Lines       lines_;
   Sets        sets_;
+  SetString   commentStrs_;
   int         maxNumFields_ { 0 };
   bool        fortran_      { false };
   bool        fpeTrap_      { true };

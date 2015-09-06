@@ -513,6 +513,9 @@ calcBBox(CGnuPlotRenderer *renderer) const
       }
     }
 
+    if (! lbbox.isSet())
+      continue;
+
     double y = lbbox.getYMin();
 
     lbbox.moveBy(CPoint2D(0, pos.y));

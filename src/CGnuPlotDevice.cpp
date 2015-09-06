@@ -8,6 +8,7 @@
 #include <CGnuPlotPieObject.h>
 #include <CGnuPlotPolygonObject.h>
 #include <CGnuPlotRectObject.h>
+#include <CGnuPlotPointObject.h>
 #include <CFontMgr.h>
 
 CGnuPlotDevice::
@@ -184,6 +185,13 @@ CGnuPlotDevice::
 createRectObject(CGnuPlotPlot *plot)
 {
   return new CGnuPlotRectObject(plot);
+}
+
+CGnuPlotPointObject *
+CGnuPlotDevice::
+createPointObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotPointObject(plot);
 }
 
 bool

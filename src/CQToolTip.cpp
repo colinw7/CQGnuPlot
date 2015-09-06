@@ -11,6 +11,7 @@
 #include <QStyle>
 #include <QStylePainter>
 #include <QStyleOptionFrame>
+#include <QBitmap>
 
 #include <cassert>
 
@@ -101,6 +102,29 @@ show(const QPoint &pos, CQToolTipIFace *tooltip, QWidget *parent)
 
 void
 CQToolTip::
+updateSize()
+{
+  resize(sizeHint());
+}
+
+QSize
+CQToolTip::
+sizeHint() const
+{
+  QSize s = tooltip_->sizeHint();
+
+  CQToolTipIFace *tooltip = getToolTip(parent_);
+
+  int m = margin_;
+
+  if (tooltip && tooltip->margin() >= 0)
+    m = tooltip->margin();
+
+  return QSize(s.width() + 2*m, s.height() + 2*m);
+}
+
+void
+CQToolTip::
 updateOpacity(CQToolTipIFace *tooltip)
 {
   double o = opacity_;
@@ -117,16 +141,82 @@ void
 CQToolTip::
 showAtPos(const QPoint &pos)
 {
-  //QSize size = w_->cursor().bitmap()->size();
-  QSize size(6,16);
+  QCursor c = parent_->cursor();
+
+  CQToolTipIFace *tooltip = getToolTip(parent_);
+
+  //---
+
+  // cursor size and hotspot
+  QSize size(16, 16);
+
+  const QBitmap *bm = c.bitmap();
+
+  if (bm)
+    size = bm->size();
 
   int cw = size.width ();
   int ch = size.height();
 
-  int x = pos.x() + cw;
-  int y = pos.y() + ch;
+  QPoint hs = c.hotSpot();
 
-  QPoint pos1 = QPoint(x, y);
+  //---
+
+  // tip rect size
+
+  QSize ts = sizeHint();
+
+  int tw = ts.width ();
+  int th = ts.height();
+
+  //---
+
+  Qt::Alignment align = tooltip->alignment();
+
+  QPoint pos1;
+
+  if (! tooltip->outside()) {
+    int dx = -hs.x();
+    int dy = -hs.y();
+
+    if      (align & Qt::AlignLeft)
+      dx += cw;
+    else if (align & Qt::AlignRight)
+      dx -= tw;
+    else
+      dx -= tw/2;
+
+    if      (align & Qt::AlignTop)
+      dy += ch;
+    else if (align & Qt::AlignBottom)
+      dy -= th;
+    else
+      dy -= th/2;
+
+    int x = pos.x() + dx;
+    int y = pos.y() + dy;
+
+    pos1 = QPoint(x, y);
+  }
+  else {
+    int x, y;
+
+    if      (align & Qt::AlignLeft)
+      x = 0;
+    else if (align & Qt::AlignLeft)
+      x = parent_->width() - 1 - tw;
+    else
+      x = parent_->width()/2 - tw/2;
+
+    if      (align & Qt::AlignTop)
+      y = 0;
+    else if (align & Qt::AlignBottom)
+      y = parent_->height() - 1 - th;
+    else
+      y = parent_->height()/2 - th/2;
+
+    pos1 = parent_->mapToGlobal(QPoint(x, y));
+  }
 
   move(pos1);
 
@@ -203,6 +293,8 @@ eventFilter(QObject *o, QEvent *e)
             //hideLater();
             return false;
           }
+
+          updateSize();
 
           updateOpacity(tooltip);
 

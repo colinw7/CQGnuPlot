@@ -364,6 +364,8 @@ class CGnuPlotGroup {
 
   //-----
 
+  CGnuPlotPlot *getPlotForId(int id) const;
+
  protected:
   static int nextId_;
 

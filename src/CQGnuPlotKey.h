@@ -39,6 +39,8 @@ class CQGnuPlotKey : public CQGnuPlotObject, public CGnuPlotKey {
   void setFont(const QFont &f);
 
   void draw(CGnuPlotRenderer *renderer) override;
+
+  void mousePress(const QPoint &qp);
 };
 
 #endif

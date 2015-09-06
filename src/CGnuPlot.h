@@ -97,6 +97,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotKeyTitle.h>
 #include <CGnuPlotMargin.h>
 #include <CGnuPlotLineProp.h>
+#include <CGnuPlotPieStyle.h>
 
 //------
 
@@ -126,9 +127,11 @@ class CGnuPlot {
 
   struct StyleData {
     CGnuPlotArrowStyle   arrow;
+    CGnuPlotTextBoxStyle textBox;
     CGnuPlotEllipseStyle ellipse;
     CGnuPlotTextStyle    text;
     CGnuPlotLabelStyle   label;
+    CGnuPlotPieStyle     pie;
   };
 
   //---
@@ -845,6 +848,10 @@ class CGnuPlot {
 
   bool parseFor(CParseLine &line, ForCmd &forCmd, std::string &cmd);
 
+  void addPlotWithStyle(CGnuPlotPlot *plot, Plots &plots, const CGnuPlotLineStyle &lineStyle,
+                        const CGnuPlotFillStyle &fillStyle, const StyleData &styleData,
+                        const CGnuPlotKeyTitle &keyTitle);
+
   bool setCmd     (const std::string &args);
   bool getCmd     (const std::string &args);
   bool showCmd    (const std::string &args);
@@ -904,10 +911,16 @@ class CGnuPlot {
   CGnuPlotPlot *addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style,
                               const SampleVar &sampleX, const SampleVar &sampleY);
 
-  Plots addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-                  const CGnuPlotUsingCols &usingCols, const SampleVar &sampleX);
+  void addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename,
+                 PlotStyle style, const CGnuPlotUsingCols &usingCols,
+                 const SampleVar &sampleX, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
+                 StyleData &styleData, CGnuPlotKeyTitle &keyTitle);
+
   Plots addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
                   const CGnuPlotUsingCols &usingCols, const SampleVar &sampleX);
+
+  void parseCommentStyle(CParseLine &line, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
+                         StyleData &styleData, CGnuPlotKeyTitle &keyTitle);
 
   CGnuPlotPlot *addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
                            const CGnuPlotUsingCols &usingCols);
@@ -1016,6 +1029,8 @@ class CGnuPlot {
   bool getRealVariable   (const std::string &name, double &value) const;
   bool getStringVariable (const std::string &name, std::string &value) const;
 
+  bool isColumnHeader(CParseLine &line, COptInt &col);
+
   bool parsePosition(CParseLine &line, CGnuPlotPosition &pos);
   bool parseCoordValue(CParseLine &line, CGnuPlotCoordValue &v);
   bool parseOffset(CParseLine &line, CPoint2D &point);
@@ -1039,6 +1054,8 @@ class CGnuPlot {
   std::string readNonSpaceNonChar(CParseLine &line, char c);
   std::string readNonSpaceNonChar(CParseLine &line, const std::string &c);
   std::string readName(CParseLine &line);
+
+  void readFileLines();
 
   bool fileReadLine(std::string &line);
 
@@ -1144,7 +1161,6 @@ class CGnuPlot {
   CGnuPlotCircleStyle    circleStyle_;
   CGnuPlotRectStyle      rectStyle_;
   StyleData              styleData_;
-  CGnuPlotTextBoxStyle   textBoxStyle_;
 
   LineDashes             lineDashes_;
   bool                   binary_ { false };

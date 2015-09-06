@@ -14,10 +14,13 @@ class CQGnuPlotPlot;
 class CQGnuPlotPieObject : public CQGnuPlotObject, public CGnuPlotPieObject {
   Q_OBJECT
 
-  Q_PROPERTY(QString name      READ getName      WRITE setName     )
-  Q_PROPERTY(QColor  lineColor READ getLineColor WRITE setLineColor)
-  Q_PROPERTY(QColor  fillColor READ getFillColor WRITE setFillColor)
-  Q_PROPERTY(bool    exploded  READ isExploded   WRITE setExploded )
+  Q_PROPERTY(QString name        READ getName      WRITE setName       )
+  Q_PROPERTY(double  value       READ value        WRITE setValue      )
+  Q_PROPERTY(double  innerRadius READ innerRadius  WRITE setInnerRadius)
+  Q_PROPERTY(double  labelRadius READ labelRadius  WRITE setLabelRadius)
+  Q_PROPERTY(QColor  lineColor   READ getLineColor WRITE setLineColor  )
+  Q_PROPERTY(QColor  fillColor   READ getFillColor WRITE setFillColor  )
+  Q_PROPERTY(bool    exploded    READ isExploded   WRITE setExploded   )
 
  public:
   CQGnuPlotPieObject(CQGnuPlotPlot *plot);

@@ -29,6 +29,10 @@ class CQToolTipIFace {
   virtual double opacity() const { return -1; }
 
   virtual bool isTransparent() const { return false; }
+
+  virtual Qt::Alignment alignment() const { return Qt::AlignLeft | Qt::AlignTop; }
+
+  virtual bool outside() const { return false; }
 };
 
 class CQToolTipWidgetIFace : public CQToolTipIFace {
@@ -79,7 +83,11 @@ class CQToolTip : public QWidget {
 
   void startHideTimer();
 
+  void updateSize();
+
   void updateOpacity(CQToolTipIFace *tooltip);
+
+  QSize sizeHint() const;
 
  private slots:
   void hideSlot();

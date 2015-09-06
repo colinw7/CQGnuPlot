@@ -75,11 +75,13 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
   //---
 
+  bool hasHypertext() const { return labelStyle_.hasHypertext(); }
+  void setHypertext(bool b) { labelStyle_.setHypertext(b); }
+
+  //---
+
   bool hasBox() const { return box_; }
   void setBox(bool b) { box_ = b; }
-
-  bool hasHypertext() const { return hypertext_; }
-  void setHypertext(bool b) { hypertext_ = b; }
 
   const CBBox2D &getBBox() const { return bbox_; }
 

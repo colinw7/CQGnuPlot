@@ -19,9 +19,12 @@ class CQSymbol2DRenderer : public CSymbol2DRenderer {
  public:
   CQSymbol2DRenderer(CQGnuPlotRenderer *r, const CPoint2D &p, double size=1.0) :
    r_(r) {
+    double ss = sqrt(size);
+
     r_->windowToPixel(p.x, p.y, &px_, &py_);
 
-    ss_ = 4*size;
+    sw_ = r_->windowWidthToPixelWidth  (ss)/2.0;
+    sh_ = r_->windowHeightToPixelHeight(ss)/2.0;
   }
 
   void drawSymbolType(SymbolType type) {
@@ -30,11 +33,11 @@ class CQSymbol2DRenderer : public CSymbol2DRenderer {
       r_->painter()->drawPoint(QPointF(px_, py_));
     }
     else if (type == SymbolType::CIRCLE) {
-      path_.addEllipse(QRectF(px_ - ss_, py_ - ss_, 2*ss_, 2*ss_));
+      path_.addEllipse(QRectF(px_ - sw_, py_ - sh_, 2*sw_, 2*sh_));
       r_->painter()->strokePath(path_, pen_);
     }
     else if (type == SymbolType::FILLED_CIRCLE) {
-      path_.addEllipse(QRectF(px_ - ss_, py_ - ss_, 2*ss_, 2*ss_));
+      path_.addEllipse(QRectF(px_ - sw_, py_ - sh_, 2*sw_, 2*sh_));
       r_->painter()->fillPath(path_, brush_);
     }
   }
@@ -45,11 +48,11 @@ class CQSymbol2DRenderer : public CSymbol2DRenderer {
   void setLineWidth(double w) { pen_.setWidthF(w); }
 
   void moveTo(double x, double y) {
-    path_.moveTo(QPointF(px_ + ss_*x, py_ + ss_*y));
+    path_.moveTo(QPointF(px_ + sw_*x, py_ + sh_*y));
   }
 
   void lineTo(double x, double y) {
-    path_.lineTo(QPointF(px_ + ss_*x, py_ + ss_*y));
+    path_.lineTo(QPointF(px_ + sw_*x, py_ + sh_*y));
   }
 
   void closePath() {
@@ -71,7 +74,8 @@ class CQSymbol2DRenderer : public CSymbol2DRenderer {
   CQGnuPlotRenderer *r_;
   double             px_     { 0.0 };
   double             py_     { 0.0 };
-  double             ss_     { 1.0 };
+  double             sw_     { 1.0 };
+  double             sh_     { 1.0 };
   QPainterPath       path_;
   QPen               pen_;
   QBrush             brush_;
@@ -143,7 +147,9 @@ void
 CQGnuPlotRenderer::
 drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c, double lw)
 {
-  CQSymbol2DRenderer r(this, point, size);
+  double size1 = (size > 0 ? size : 1);
+
+  CQSymbol2DRenderer r(this, point, size1);
 
   QPen   pen  (toQColor(c));
   QBrush brush(toQColor(c));

@@ -69,21 +69,21 @@ class CGnuPlotAxesData {
 
   //---
 
-  int getBorderSides() const { return border_.sides; }
-  void setBorderSides(int b) { border_.sides = b; }
-  void resetBorderSides() { border_.sides = 31; }
+  int getBorderSides(int defSides=31) const { return border_.sides().getValue(defSides); }
+  void setBorderSides(int s) { border_.setSides(s); }
+  void resetBorderSides() { border_.resetSides(); }
 
-  const DrawLayer &getBorderLayer() const { return border_.layer; }
-  void setBorderLayer(const DrawLayer &l) { border_.layer = l; }
+  const DrawLayer &getBorderLayer() const { return border_.layer(); }
+  void setBorderLayer(const DrawLayer &l) { border_.setLayer(l); }
 
-  double getBorderWidth() const { return border_.lineWidth; }
-  void setBorderWidth(double w) { border_.lineWidth = w; }
+  double getBorderWidth() const { return border_.lineWidth(); }
+  void setBorderWidth(double w) { border_.setLineWidth(w); }
 
-  int getBorderStyle() const { return border_.lineStyle.getValue(-1); }
-  void setBorderStyle(int ls) { border_.lineStyle = ls; }
+  int getBorderStyle() const { return border_.lineStyle().getValue(-1); }
+  void setBorderStyle(int ls) { border_.setLineStyle(ls); }
 
-  int getBorderType() const { return border_.lineType.getValue(-1); }
-  void setBorderType(int lt) { border_.lineType = lt; }
+  int getBorderType() const { return border_.lineType().getValue(-1); }
+  void setBorderType(int lt) { border_.setLineType(lt); }
 
   void unsetBorder() { border_.unset(); }
 

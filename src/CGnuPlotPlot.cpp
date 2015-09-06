@@ -8,12 +8,14 @@
 #include <CGnuPlotBubbleObject.h>
 #include <CGnuPlotEllipseObject.h>
 #include <CGnuPlotPieObject.h>
-#include <CGnuPlotRectObject.h>
 #include <CGnuPlotPolygonObject.h>
+#include <CGnuPlotRectObject.h>
+#include <CGnuPlotPointObject.h>
 #include <CGnuPlotDevice.h>
 #include <CGnuPlotBBoxRenderer.h>
 #include <CGnuPlotStyleBase.h>
 #include <CGnuPlotUtil.h>
+#include <CGnuPlotStyleAdjacencyRenderer.h>
 
 #include <CExpr.h>
 #include <CRGBName.h>
@@ -25,7 +27,7 @@ CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
  group_(group), style_(style), id_(nextId_++), lineStyle_(app()),
  contour_(this), barCache_(this), bubbleCache_(this), ellipseCache_(this), pieCache_(this),
- polygonCache_(this), rectCache_(this), tableFile_(group->app())
+ polygonCache_(this), rectCache_(this), pointCache_(this), tableFile_(group->app())
 {
   setSmooth (app()->getSmooth());
   setBoxPlot(app()->getBoxPlot());
@@ -585,6 +587,13 @@ CGnuPlotPlot::
 updateRectCacheSize(int n)
 {
   rectCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
+updatePointCacheSize(int n)
+{
+  pointCache_.updateSize(n);
 }
 
 void
@@ -1183,6 +1192,13 @@ createPieObject() const
   return app()->device()->createPieObject(const_cast<CGnuPlotPlot *>(this));
 }
 
+CGnuPlotPolygonObject *
+CGnuPlotPlot::
+createPolygonObject() const
+{
+  return app()->device()->createPolygonObject(const_cast<CGnuPlotPlot *>(this));
+}
+
 CGnuPlotRectObject *
 CGnuPlotPlot::
 createRectObject() const
@@ -1190,11 +1206,11 @@ createRectObject() const
   return app()->device()->createRectObject(const_cast<CGnuPlotPlot *>(this));
 }
 
-CGnuPlotPolygonObject *
+CGnuPlotPointObject *
 CGnuPlotPlot::
-createPolygonObject() const
+createPointObject() const
 {
-  return app()->device()->createPolygonObject(const_cast<CGnuPlotPlot *>(this));
+  return app()->device()->createPointObject(const_cast<CGnuPlotPlot *>(this));
 }
 
 void
@@ -1429,6 +1445,16 @@ renderBBox(CGnuPlotBBoxRenderer &brenderer) const
   return true;
 }
 
+bool
+CGnuPlotPlot::
+mouseTip(const CPoint2D &p, CGnuPlotTipData &tipData)
+{
+  CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
+  if (! style) return false;
+
+  return style->mouseTip(this, p, tipData);
+}
+
 void
 CGnuPlotPlot::
 recalcBoundedYRange(double *ymin, double *ymax) const
@@ -1582,4 +1608,13 @@ styleValue(const std::string &name) const
     return 0;
 
   return (*p).second;
+}
+
+//------
+
+CGnuPlotAdjacencyData::
+~CGnuPlotAdjacencyData()
+{
+  delete adjacency_;
+  delete renderer_;
 }

@@ -2116,17 +2116,7 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     }
     // special filename '-' (read lines from stdin)
     else if (filename == "-") {
-      CGnuPlotFile::Lines lines;
-
-      std::string line;
-
-      while (fileReadLine(line)) {
-        if (line == "e") break;
-
-        lines.push_back(line);
-      }
-
-      dataFile_.setLines(lines);
+      readFileLines();
     }
     // special filename '+' (expression file)
     else if (filename == "+") {
@@ -2305,8 +2295,11 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
 
       parsePlotTitle_ = true;
 
-      if      (line.isOneOf({"col", "columnhead", "columnheader", "columnheaders"})) {
-        setKeyColumnHeadNum(0);
+      COptInt col;
+
+      if      (isColumnHeader(line, col)) {
+    //if      (line.isOneOf({"col", "columnhead", "columnheader", "columnheaders"})) {
+        setKeyColumnHeadNum(col.getValue(0));
 
         (void) readNonSpaceNonComma(line);
       }
@@ -2538,48 +2531,31 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
 
   //---
 
-  Plots plots1;
-
   if      (! filename.empty()) {
     if (isBinary()) {
       if (isImageStyle(style)) {
         CGnuPlotPlot *plot = addImage2D(group, filename, style, usingCols);
 
         if (plot)
-          plots1.push_back(plot);
+          addPlotWithStyle(plot, plots, lineStyle, fillStyle, styleData, keyTitle);
       }
       else {
         CGnuPlotPlot *plot = addBinary2D(group, filename, style, usingCols);
 
         if (plot)
-          plots1.push_back(plot);
+          addPlotWithStyle(plot, plots, lineStyle, fillStyle, styleData, keyTitle);
       }
     }
-    else
-      plots1 = addFile2D(group, filename, style, usingCols, sampleX);
+    else {
+      addFile2D(plots, group, filename, style, usingCols, sampleX,
+                lineStyle, fillStyle, styleData, keyTitle);
+    }
   }
   else if (! functions.empty()) {
     CGnuPlotPlot *plot = addFunction2D(group, functions, style, sampleX);
 
     if (plot)
-      plots1.push_back(plot);
-  }
-
-  for (const auto &plot1 : plots1) {
-    plot1->setKeyTitleEnabled(keyTitle.enabled);
-
-    if (keyTitle.str != "")
-      plot1->setKeyTitleString(keyTitle.str);
-
-    plot1->setLineStyle   (lineStyle);
-    plot1->setFillStyle   (fillStyle);
-    plot1->setArrowStyle  (styleData.arrow);
-    plot1->setTextBoxStyle(textBoxStyle_);
-    plot1->setTextStyle   (styleData.text);
-    plot1->setEllipseStyle(styleData.ellipse);
-    plot1->setLabelStyle  (styleData.label);
-
-    plots.push_back(plot1);
+      addPlotWithStyle(plot, plots, lineStyle, fillStyle, styleData, keyTitle);
   }
 
   //---
@@ -2597,6 +2573,29 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
       break;
     }
   }
+}
+
+void
+CGnuPlot::
+addPlotWithStyle(CGnuPlotPlot *plot, Plots &plots, const CGnuPlotLineStyle &lineStyle,
+                 const CGnuPlotFillStyle &fillStyle, const StyleData &styleData,
+                 const CGnuPlotKeyTitle &keyTitle)
+{
+  plot->setKeyTitleEnabled(keyTitle.enabled);
+
+  if (keyTitle.str != "")
+    plot->setKeyTitleString(keyTitle.str);
+
+  plot->setLineStyle   (lineStyle);
+  plot->setFillStyle   (fillStyle);
+  plot->setArrowStyle  (styleData.arrow);
+  plot->setTextBoxStyle(styleData.textBox);
+  plot->setTextStyle   (styleData.text);
+  plot->setEllipseStyle(styleData.ellipse);
+  plot->setLabelStyle  (styleData.label);
+  plot->setPieStyle    (styleData.pie);
+
+  plots.push_back(plot);
 }
 
 void
@@ -2975,6 +2974,8 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       }
       else if (parseString(line, ptstr))
         lineStyle.setPointTypeStr(ptstr);
+      else
+        errorMsg("Invalid pointtype");
 
       found = true;
     }
@@ -3131,6 +3132,43 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
         styleData.text .setHAlign(halign); // TODO: remove
         styleData.label.setAlign (halign);
+
+        found = true;
+      }
+      else if (line.isString("hypertext")) {
+        styleData.label.setHypertext(true);
+      }
+      else
+        modifiers = false;
+    }
+    else if (style == CGnuPlotTypes::PlotStyle::PIECHART) {
+      if      (line.isString("startangle")) {
+        line.skipNonSpace();
+
+        double a;
+
+        if (parseReal(line, a))
+          styleData.pie.setStartAngle(a);
+
+        found = true;
+      }
+      else if (line.isString("innerradius")) {
+        line.skipNonSpace();
+
+        double r;
+
+        if (parseReal(line, r))
+          styleData.pie.setInnerRadius(r);
+
+        found = true;
+      }
+      else if (line.isString("labelradius")) {
+        line.skipNonSpace();
+
+        double r;
+
+        if (parseReal(line, r))
+          styleData.pie.setLabelRadius(r);
 
         found = true;
       }
@@ -4157,17 +4195,7 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
     }
     // special filename '-' (read lines from stdin)
     else if (filename == "-") {
-      CGnuPlotFile::Lines lines;
-
-      std::string line;
-
-      while (fileReadLine(line)) {
-        if (line == "e") break;
-
-        lines.push_back(line);
-      }
-
-      dataFile_.setLines(lines);
+      readFileLines();
     }
     // special filename '+' (expression file)
     else if (filename == "+") {
@@ -4305,8 +4333,13 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
       std::string titleStr;
       int         columnNum;
 
-      if      (line.isOneOf({"col", "columnhead", "columnheader", "columnheaders"})) {
-        setKeyColumnHeadNum(0);
+      parsePlotTitle_ = true;
+
+      COptInt col;
+
+      if      (isColumnHeader(line, col)) {
+    //if      (line.isOneOf({"col", "columnhead", "columnheader", "columnheaders"})) {
+        setKeyColumnHeadNum(col.getValue(0));
 
         (void) readNonSpaceNonComma(line);
       }
@@ -4320,6 +4353,8 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
       else if (parseInteger(line, columnNum)) {
         setKeyColumnHeadNum(columnNum);
       }
+
+      parsePlotTitle_ = false;
 
       line.skipSpace();
     }
@@ -4572,10 +4607,11 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
     plot1->setLineStyle   (lineStyle);
     plot1->setFillStyle   (fillStyle);
     plot1->setArrowStyle  (styleData.arrow);
-    plot1->setTextBoxStyle(textBoxStyle_);
+    plot1->setTextBoxStyle(styleData.textBox);
     plot1->setTextStyle   (styleData.text);
     plot1->setEllipseStyle(styleData.ellipse);
     plot1->setLabelStyle  (styleData.label);
+    plot1->setPieStyle    (styleData.pie);
 
     plots.push_back(plot1);
   }
@@ -4659,7 +4695,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       CGnuPlotColorSpec c;
 
       if (parseColorSpec(line, c))
-        lineStyle.setLineColor(c); // text color ?
+        lineStyle.setLineColor(c); // set text color ?
 
       found = true;
     }
@@ -4677,6 +4713,8 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       }
       else if (parseString(line, ptstr))
         lineStyle.setPointTypeStr(ptstr);
+      else
+        errorMsg("Invalid pointtype");
 
       found = true;
     }
@@ -6277,6 +6315,8 @@ setCmd(const std::string &args)
 
           if (parseInteger(line, pt))
             label->setPointType(pt);
+          else
+            errorMsg("Invalid pointtype");
         }
         else if (arg1 == "pointsize" || arg1 == "ps") {
           double ps = 0;
@@ -6386,6 +6426,8 @@ setCmd(const std::string &args)
             lineType->setPointType(pt);
           else if (parseString(line, ptstr))
             lineType->setPointType(ptstr);
+          else
+            errorMsg("Invalid pointtype");
         }
         else if (arg == "pointsize" || arg == "ps") {
           double ps;
@@ -7820,6 +7862,8 @@ setCmd(const std::string &args)
 
           if (parseInteger(line, pt))
             boxPlot_.setPointType(pt);
+          else
+            errorMsg("Invalid pointtype");
         }
         // candlesticks
         else if (arg == "candlesticks") {
@@ -7955,6 +7999,8 @@ setCmd(const std::string &args)
             lineStyle->setPointType(pt);
           else if (parseString(line, ptstr))
             lineStyle->setPointTypeStr(ptstr);
+          else
+            errorMsg("Invalid pointtype");
         }
         else if (arg == "pointsize" || arg == "ps") {
           double ps;
@@ -8156,10 +8202,10 @@ setCmd(const std::string &args)
 
       while (arg != "") {
         if      (arg == "opaque" || arg == "transparent") {
-          textBoxStyle_.setTransparent(arg == "transparent");
+          styleData_.textBox.setTransparent(arg == "transparent");
         }
         else if (arg == "border" || arg == "noborder") {
-          textBoxStyle_.setBorder(arg == "border");
+          styleData_.textBox.setBorder(arg == "border");
         }
         else {
           errorMsg("Invalid arg '" + arg + "'");
@@ -9567,7 +9613,7 @@ showCmd(const std::string &args)
     }
     // show style textbox
     else if (show.empty() || show.find("textbox") != show.end()) {
-      textBoxStyle_.show(std::cout);
+      styleData_.textBox.show(std::cout);
     }
   }
   // show surface
@@ -10603,7 +10649,7 @@ unsetCmd(const std::string &args)
     }
     // unset style textbox
     else if (unset.empty() || unset.find("textbox") != unset.end()) {
-      textBoxStyle_.unset();
+      styleData_.textBox.unset();
     }
   }
   // unset surface
@@ -12527,15 +12573,13 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
   return plot;
 }
 
-CGnuPlot::Plots
+void
 CGnuPlot::
-addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-          const CGnuPlotUsingCols &usingCols, const SampleVar &sampleX)
+addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
+          const CGnuPlotUsingCols &usingCols, const SampleVar &sampleX,
+          CGnuPlotLineStyle &lineStyle, CGnuPlotFillStyle &fillStyle,
+          StyleData &styleData, CGnuPlotKeyTitle &keyTitle)
 {
-  Plots plots;
-
-  //---
-
   // gen file lines (one dimension)
   if      (filename == "+") {
     int nx, ny;
@@ -12557,7 +12601,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
     plot->init();
 
-    plots.push_back(plot);
+    addPlotWithStyle(plot, plots, lineStyle, fillStyle, styleData, keyTitle);
 
     //---
 
@@ -12597,8 +12641,6 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
       plot->addPoint2D(values, false, params);
     }
-
-    return plots;
   }
   // gen file lines (two dimensions)
   else if (filename == "++") {
@@ -12620,7 +12662,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
     plot->init();
 
-    plots.push_back(plot);
+    addPlotWithStyle(plot, plots, lineStyle, fillStyle, styleData, keyTitle);
 
     //---
 
@@ -12669,8 +12711,6 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         plot->addPoint2D(values, false, params);
       }
     }
-
-    return plots;
   }
 
   //---
@@ -12708,7 +12748,7 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     CUnixFile file(filename);
 
     if (! file.open())
-      return plots;
+      return;
 
     CGnuPlotFile::Lines lines;
 
@@ -12740,8 +12780,6 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     if (isPolar())
       plot->setPolar(true);
 
-    plots.push_back(plot);
-
     //---
 
     pointNum_ = 0;
@@ -12749,6 +12787,18 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     // add fields (discontinuity per subset)
     for (int subSetNum = 0; subSetNum < dataFile_.numSubSets(setNum_); ++subSetNum) {
       int lineNum = 0;
+
+      std::string cstr;
+
+      if (dataFile_.commentStr(setNum_, subSetNum, 0, cstr)) {
+        CParseLine line1(cstr);
+
+        if (line1.isString("--style--")) {
+          line1.skipNonSpace();
+
+          parseCommentStyle(line1, lineStyle, fillStyle, styleData, keyTitle);
+        }
+      }
 
       // use first line for columnheaders if option enabled
       if (subSetNum == 0 && keyData_.columnHead()) {
@@ -12855,9 +12905,52 @@ addFile2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         //if (ticLabel_.valid) plot->setPoint2DLabel(pointNum, ticLabel_.str);
       }
     }
-  }
 
-  return plots;
+    addPlotWithStyle(plot, plots, lineStyle, fillStyle, styleData, keyTitle);
+  }
+}
+
+void
+CGnuPlot::
+parseCommentStyle(CParseLine &line, CGnuPlotLineStyle &lineStyle, CGnuPlotFillStyle &,
+                  StyleData &, CGnuPlotKeyTitle &)
+{
+//std::cerr << "parseCommentStyle: " << line.substr() << std::endl;
+  while (line.isValid()) {
+    std::string arg = readNonSpace(line);
+
+    if      (arg == "linecolor" || arg == "lc") {
+      CGnuPlotColorSpec lc;
+
+      if (parseColorSpec(line, lc))
+        lineStyle.setLineColor(lc);
+    }
+    else if (arg == "pointtype" || arg == "pt") {
+      int         pt = 1;
+      std::string ptstr;
+
+      if      (parseInteger(line, pt))
+        lineStyle.setPointType(pt);
+      else if (parseString(line, ptstr))
+        lineStyle.setPointTypeStr(ptstr);
+      else
+        errorMsg("Invalid pointtype");
+    }
+    else if (arg == "pointsize" || arg == "ps") {
+      double s;
+
+      if (parseReal(line, s))
+        lineStyle.setPointSize(s);
+      else
+        errorMsg("Invalid pointsize");
+    }
+    else if (arg == "tippoints") {
+      lineStyle.setTipPoints(true);
+    }
+    else {
+      errorMsg("Invalid arg : '" + arg + "'");
+    }
+  }
 }
 
 CGnuPlotPlot *
@@ -14792,6 +14885,62 @@ getStringVariable(const std::string &name, std::string &value) const
   return true;
 }
 
+bool
+CGnuPlot::
+isColumnHeader(CParseLine &line, COptInt &col)
+{
+  int pos = line.pos();
+
+  std::string name = readName(line);
+
+  bool found = false;
+
+  for (const auto &n : {"col", "columnhead", "columnheader", "columnheaders"}) {
+    if (n == name) {
+      found = true;
+      break;
+    }
+  }
+
+  if (! found) {
+    line.setPos(pos);
+    return false;
+  }
+
+  line.skipSpace();
+
+  if (line.isChar('(')) {
+    line.skipChar();
+
+    int pos1 = line.pos();
+
+    while (line.isValid() && ! line.isChar(')'))
+      line.skipChar();
+
+    if (! line.isValid()) {
+      line.setPos(pos);
+      return false;
+    }
+
+    int pos2 = line.pos();
+
+    std::string istr = line.substr(pos1, pos2 - pos1);
+
+    line.skipChar();
+
+    int col1;
+
+    if (! exprToInteger(istr, col1, true)) {
+      line.setPos(pos);
+      return false;
+    }
+
+    col = col1;
+  }
+
+  return true;
+}
+
 // <system> <x>, <system> <y>
 bool
 CGnuPlot::
@@ -15199,10 +15348,54 @@ readName(CParseLine &line)
 
   std::string str;
 
-  while (line.isValid() && ! line.isAlpha())
+  if (line.isValid() && line.isAlpha())
+    str += line.getChar();
+
+  while (line.isValid() && line.isAlNum())
     str += line.getChar();
 
   return str;
+}
+
+void
+CGnuPlot::
+readFileLines()
+{
+  CGnuPlotFile::Lines lines;
+
+  bool endFlag = false;
+
+  std::string line;
+
+  while (fileReadLine(line)) {
+    if (line == "e") {
+      endFlag = true;
+      break;
+    }
+
+    lines.push_back(line);
+  }
+
+  if (! endFlag) {
+    initReadLine();
+
+    readLine_->setPrompt("input data ('e' ends) > ");
+
+    for (;;) {
+      auto line = readLine_->readLine();
+
+      if (line == "e") {
+        endFlag = true;
+        break;
+      }
+
+      lines.push_back(line);
+    }
+
+    readLine_->setPrompt("> ");
+  }
+
+  dataFile_.setLines(lines);
 }
 
 bool

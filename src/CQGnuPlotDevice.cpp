@@ -25,6 +25,7 @@
 #include <CQGnuPlotPieObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
+#include <CQGnuPlotPointObject.h>
 
 #include <QApplication>
 
@@ -352,6 +353,21 @@ createRectObject(CGnuPlotPlot *plot)
   CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
   CQGnuPlotRectObject *rect = new CQGnuPlotRectObject(qplot);
+
+  objects_.push_back(rect);
+
+  qplot->qwindow()->updateProperties();
+
+  return rect;
+}
+
+CGnuPlotPointObject *
+CQGnuPlotDevice::
+createPointObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotPointObject *rect = new CQGnuPlotPointObject(qplot);
 
   objects_.push_back(rect);
 

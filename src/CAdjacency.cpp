@@ -1,25 +1,13 @@
 #include <CAdjacency.h>
 #include <algorithm>
 
-// TODO: set group colors
-static CRGBA colors[] = {
-  CRGBA(0x88/255.0,0x88/255.0,0x88/255.0),
-  CRGBA(0xFF/255.0,0x7F/255.0,0x0E/255.0),
-  CRGBA(0x2C/255.0,0xA0/255.0,0x2C/255.0),
-  CRGBA(0xD6/255.0,0x27/255.0,0x28/255.0),
-  CRGBA(0x94/255.0,0x67/255.0,0xBD/255.0),
-  CRGBA(0x8C/255.0,0x56/255.0,0x4B/255.0),
-  CRGBA(0xEA/255.0,0xCF/255.0,0xE2/255.0),
-  CRGBA(0xD1/255.0,0xD1/255.0,0xD1/255.0),
-  CRGBA(0xBC/255.0,0xBD/255.0,0x22/255.0),
-  CRGBA(0x4C/255.0,0xDA/255.0,0xD6/255.0),
-  CRGBA(0x1F/255.0,0x77/255.0,0xB4/255.0),
-};
-
 CAdjacency::
 CAdjacency() :
  nodes_(), sort_(SORT_NAME), ts_(0), cs_(0), ix_(-1), iy_(-1), maxValue_(0)
 {
+  addDefaultColors();
+
+  grey_ = 0xEE/255.0;
 }
 
 void
@@ -172,33 +160,13 @@ draw(CAdjacencyRenderer *renderer)
     for (auto node2 : sortedNodes_) {
       int value = node1->nodeValue(node2);
 
-      double grey = 0xEE/255.0;
-
-      CRGBA bc = CRGBA(grey,grey,grey);
-
-      if      (node1 == node2)
-        bc = colors[node1->group()];
-      else if (value) {
-        CRGBA c1 = colors[node1->group()];
-        CRGBA c2 = colors[node2->group()];
-
-        double s = (1.0*maxValue_ - value)/maxValue_;
-
-        double r = (c1.getRed  () + c2.getRed  () + s*grey)/3;
-        double g = (c1.getGreen() + c2.getGreen() + s*grey)/3;
-        double b = (c1.getBlue () + c2.getBlue () + s*grey)/3;
-
-        bc = CRGBA(r, g, b);
-      }
-
-      CRGBA pc = bc.getLightRGBA();
+      CRGBA bc = nodeColor(node1, node2);
 
       CBBox2D r(px, py, px + cs_, py + cs_);
 
       pixelRectToWindow(r);
 
-      renderer->fillRect(r, bc);
-      renderer->drawRect(r, pc);
+      renderer->drawNodeRect(r, bc, value, node1, node2);
 
       px += cs_;
     }
@@ -232,4 +200,67 @@ nodeAtPoint(double x, double y)
     ix_ = -1;
     iy_ = -1;
   }
+}
+
+void
+CAdjacency::
+addDefaultColors()
+{
+  // TODO: set group colors
+  for (const auto &c : {
+   CRGBA(0x88/255.0,0x88/255.0,0x88/255.0),
+   CRGBA(0xFF/255.0,0x7F/255.0,0x0E/255.0),
+   CRGBA(0x2C/255.0,0xA0/255.0,0x2C/255.0),
+   CRGBA(0xD6/255.0,0x27/255.0,0x28/255.0),
+   CRGBA(0x94/255.0,0x67/255.0,0xBD/255.0),
+   CRGBA(0x8C/255.0,0x56/255.0,0x4B/255.0),
+   CRGBA(0xEA/255.0,0xCF/255.0,0xE2/255.0),
+   CRGBA(0xD1/255.0,0xD1/255.0,0xD1/255.0),
+   CRGBA(0xBC/255.0,0xBD/255.0,0x22/255.0),
+   CRGBA(0x4C/255.0,0xDA/255.0,0xD6/255.0),
+   CRGBA(0x1F/255.0,0x77/255.0,0xB4/255.0) }) {
+    colors_.push_back(c);
+  }
+}
+
+CRGBA
+CAdjacency::
+nodeColor(CAdjacencyNode *node1, CAdjacencyNode *node2) const
+{
+  int value = node1->nodeValue(node2);
+
+  CRGBA c(grey_, grey_, grey_);
+
+  if      (node1 == node2)
+    c = getColor(node1->group());
+  else if (value) {
+    CRGBA c1 = getColor(node1->group());
+    CRGBA c2 = getColor(node2->group());
+
+    c = blendColors(c1, c2, value);
+  }
+
+  return c;
+}
+
+const CRGBA &
+CAdjacency::
+getColor(int i) const
+{
+  int i1 = i % colors_.size();
+
+  return colors_[i1];
+}
+
+CRGBA
+CAdjacency::
+blendColors(const CRGBA &c1, const CRGBA &c2, int value) const
+{
+  double s = (1.0*maxValue_ - value)/maxValue_;
+
+  double r = (c1.getRed  () + c2.getRed  () + s*grey_)/3;
+  double g = (c1.getGreen() + c2.getGreen() + s*grey_)/3;
+  double b = (c1.getBlue () + c2.getBlue () + s*grey_)/3;
+
+  return CRGBA(r, g, b);
 }

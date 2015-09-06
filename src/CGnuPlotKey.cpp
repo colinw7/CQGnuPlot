@@ -172,6 +172,8 @@ draw(CGnuPlotRenderer *renderer)
     y -= font_size*ph;
   }
 
+  clearPlotRects();
+
   for (auto plot : group_->plots()) {
     if (! plot->isKeyTitleEnabled()) continue;
 
@@ -180,6 +182,8 @@ draw(CGnuPlotRenderer *renderer)
     CGnuPlotStyleBase *style = app()->getPlotStyle(plotStyle);
 
     const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+
+    double yp1 = y;
 
     std::vector<CGnuPlotKeyLabel> labels;
 
@@ -230,6 +234,9 @@ draw(CGnuPlotRenderer *renderer)
       else if (isRGBTextColor())
         tc = textColorRGB();
 
+      if (! plot->isDisplayed())
+        tc.setAlpha(0.5);
+
       if (isReverse())
         renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), CHALIGN_TYPE_LEFT, 0,
                                    CVALIGN_TYPE_TOP, 0, l.text(), tc);
@@ -239,5 +246,30 @@ draw(CGnuPlotRenderer *renderer)
 
       y -= font_size*ph;
     }
+
+    double yp2 = y;
+
+    addPlotRect(plot, CBBox2D(x1, yp1, x2, yp2));
+
+    //renderer->drawRect(bbox, CRGBA(1,0,0), 1);
   }
+}
+
+int
+CGnuPlotKey::
+plotAtPos(const CPoint2D &pos) const
+{
+  for (const auto &p : prects_) {
+    if (p.second.inside(pos))
+      return p.first;
+  }
+
+  return -1;
+}
+
+void
+CGnuPlotKey::
+addPlotRect(CGnuPlotPlot *plot, const CBBox2D &rect)
+{
+  prects_[plot->id()] = rect;
 }

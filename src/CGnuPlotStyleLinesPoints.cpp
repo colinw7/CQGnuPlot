@@ -3,6 +3,7 @@
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotPointObject.h>
 
 CGnuPlotStyleLinesPoints::
 CGnuPlotStyleLinesPoints() :
@@ -35,6 +36,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //------
 
   uint np = plot->numPoints2D();
+
+  if (! renderer->isPseudo() && lineStyle.isTipPoints())
+    plot->updatePointCacheSize(np);
+
+  //------
 
   CPoint2D p1;
 
@@ -152,25 +158,45 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       c1 = lineStyle.calcColor(plot, x);
     }
 
-    if (pi1 == 0) {
-      if (erasePoint) {
-        double pw = renderer->pixelWidthToWindowWidth  (8*size1);
-        double ph = renderer->pixelHeightToWindowHeight(8*size1);
+    if (! renderer->isPseudo() && lineStyle.isTipPoints()) {
+      CGnuPlotPointObject *point = plot->pointObjects()[pointNum];
 
-        renderer->fillRect(CBBox2D(p - CPoint2D(pw/2, ph/2), p + CPoint2D(pw/2, ph/2)), bg);
+      point->setPoint      (p);
+      point->setPointType  (pointType);
+      point->setSize       (size1);
+      point->setColor      (c1);
+      point->setLineWidth  (lw);
+      point->setPointString(plot->pointTypeStr());
+      point->setErasePoint (erasePoint);
+    }
+    else {
+      if (pi1 == 0) {
+        if (erasePoint) {
+          double pw = renderer->pixelWidthToWindowWidth  (8*size1);
+          double ph = renderer->pixelHeightToWindowHeight(8*size1);
+
+          renderer->fillRect(CBBox2D(p - CPoint2D(pw/2, ph/2), p + CPoint2D(pw/2, ph/2)), bg);
+        }
+
+        if (pointType == CGnuPlotTypes::SymbolType::STRING)
+          renderer->drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
+                                     plot->pointTypeStr(), c1);
+        else
+          renderer->drawSymbol(p, pointType, size1, c1, lw);
+
+        pi1 = abs(pi);
       }
 
-      if (pointType == CGnuPlotTypes::SymbolType::STRING)
-        renderer->drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
-                                   plot->pointTypeStr(), c1);
-      else
-        renderer->drawSymbol(p, pointType, size1, c1, lw);
-
-      pi1 = abs(pi);
+      if (pi1 > 0)
+        --pi1;
     }
 
-    if (pi1 > 0)
-      --pi1;
+    ++pointNum;
+  }
+
+  if (! renderer->isPseudo()) {
+    for (const auto &point : plot->pointObjects())
+      point->draw(renderer);
   }
 }
 
@@ -276,6 +302,9 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   double lw = lineStyle.calcWidth();
 
   CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+
+  if (! plot->isDisplayed())
+    c.setAlpha(0.5);
 
   renderer->drawLine(p1, p2, lw, c);
 

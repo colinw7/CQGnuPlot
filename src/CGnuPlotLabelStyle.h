@@ -45,6 +45,11 @@ class CGnuPlotLabelStyle {
     return SymbolType(pointType_);
   }
 
+  //---
+
+  bool hasHypertext() const { return hypertext_; }
+  void setHypertext(bool b) { hypertext_ = b; }
+
  protected:
   COptPoint2D offset_;
   CHAlignType align_     { CHALIGN_TYPE_LEFT };
@@ -53,6 +58,7 @@ class CGnuPlotLabelStyle {
   int         pointType_ { -1 };
   double      pointSize_ { -1 };
   double      lineWidth_ { 1 };
+  bool        hypertext_ { false };
 };
 
 #endif

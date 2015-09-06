@@ -1,3 +1,6 @@
+// TODO: draw labels last
+// TODO: label style (font, color, ...)
+
 #include <CGnuPlotStylePieChart.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
@@ -7,28 +10,54 @@
 #include <CGnuPlotPieObject.h>
 
 namespace {
-  typedef std::pair<std::string,double> NameValue;
-  typedef std::vector<NameValue>        NameValues;
+  typedef std::pair<CRGBA,CRGBA>            LineFillColor;
+  typedef std::pair<double,LineFillColor>   ValueColor;
+  typedef std::pair<std::string,ValueColor> NameValueColor;
 
-  NameValues nameValues(CGnuPlotPlot *plot) {
-    NameValues values;
-
-    for (const auto &point : plot->getPoints2D()) {
-      std::string name;
-      double      value;
-
-      if (point.getValue(1, name) && point.getValue(2, value))
-        values.push_back(NameValue(name, value));
-    }
-
-    return values;
-  }
+  typedef std::vector<NameValueColor> NameValueColors;
 
   void getPointsColor(int pi, CRGBA &lc, CRGBA &fc) {
     lc = CGnuPlotStyleInst->indexColor("subtle", pi + 1);
     fc = lc;
 
     fc.setAlpha(0.5);
+  }
+
+  NameValueColors nameValueColors(CGnuPlotPlot *plot) {
+    NameValueColors values;
+
+    int i = 0;
+
+    for (const auto &point : plot->getPoints2D()) {
+      std::string name;
+      double      value;
+
+      if (! point.getValue(1, name))
+        continue;
+
+      if (! point.getValue(2, value))
+        continue;
+
+      CRGBA lc, fc;
+
+      getPointsColor(i, lc, fc);
+
+      if (point.hasParam("linecolor"))
+        lc = point.getParamColor("linecolor");
+
+      if (point.hasParam("fillcolor"))
+        fc = point.getParamColor("fillcolor");
+
+      LineFillColor  lfc(lc   , fc );
+      ValueColor     vc (value, lfc);
+      NameValueColor nvc(name , vc );
+
+      values.push_back(nvc);
+
+      ++i;
+    }
+
+    return values;
   }
 }
 
@@ -49,26 +78,37 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   CPoint2D pc = bbox.getCenter();
   double   r  = bbox.getWidth()/2;
 
-  NameValues values = nameValues(plot);
+  NameValueColors values = nameValueColors(plot);
+
+  const CGnuPlotPieStyle &pieStyle = plot->pieStyle();
 
   //---
 
   double sum = 0;
 
-  for (const auto &v : values)
-    sum += v.second;
+  for (const auto &v : values) {
+    const ValueColor &vc = v.second;
+
+    sum += vc.first;
+  }
 
   //---
 
   if (! renderer->isPseudo())
     plot->updatePieCacheSize(values.size());
 
+  double ir = pieStyle.innerRadius().getValue(0.0);
+  double lr = pieStyle.labelRadius().getValue(0.5);
+
   int    i      = 0;
-  double angle1 = 90.0;
+  double angle1 = pieStyle.startAngle ().getValue(90.0);
 
   for (const auto &v : values) {
-    const std::string &name  = v.first;
-    double             value = v.second;
+    const std::string   &name = v .first;
+    const ValueColor    &vc   = v .second;
+    const LineFillColor &lfc  = vc.second;
+
+    double value = vc.first;
 
     double dangle = 360.0*value/sum;
     double angle2 = angle1 - dangle;
@@ -80,16 +120,17 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       pie->setRadius(r);
       pie->setAngle1(angle1);
       pie->setAngle2(angle2);
-      pie->setName(name);
 
-      CRGBA lc, fc;
+      CRGBA fc = lfc.second;
 
-      getPointsColor(i, lc, fc);
+      if (! pie->testAndSetUsed()) {
+        pie->setName(name);
+        pie->setValue(value);
 
-      fc.setAlpha(0.5);
+        pie->setInnerRadius(ir);
+        pie->setLabelRadius(lr);
 
-      if (! pie->hasColor()) {
-        pie->setLineColor(lc);
+        pie->setLineColor(lfc.first);
         pie->setFillColor(fc);
       }
     }
@@ -151,7 +192,7 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       textHeight += font_size*ph;
   }
 
-  NameValues values = nameValues(plot);
+  NameValueColors values = nameValueColors(plot);
 
   for (const auto &v : values) {
     std::string label = v.first;
@@ -214,32 +255,45 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   int pi = 0;
 
   for (const auto &v : values) {
+    CGnuPlotPieObject *pieObject = 0;
+
+    if (! renderer->isPseudo())
+      pieObject = plot->pieObjects()[pi];
+
+    //---
+
+    const std::string   &name = v .first;
+    const ValueColor    &vc   = v .second;
+    const LineFillColor &lfc  = vc.second;
+
     double xx = (key->isReverse() ? x1 + bx : x2 - bw*pw - bx);
     double yy = y - font_size*ph/2;
 
     CPoint2D p1(xx, yy - bw*ph/2), p2(xx + bw*pw, yy + bw*ph/2);
 
-    CRGBA lc, fc;
-
-    getPointsColor(pi, lc, fc);
-
     CBBox2D bbox(p1, p2);
 
-    renderer->fillRect(bbox, fc);
-    renderer->drawRect(bbox, lc, 1);
+    renderer->fillEllipse(bbox, lfc.second);
+    renderer->drawEllipse(bbox, lfc.first, 1);
 
-    std::string label = v.first;
-
-    //double lw = font->getStringWidth(label);
+    //double lw = font->getStringWidth(name);
 
     CRGBA tc = CRGBA(0,0,0);
 
     if (key->isReverse())
       renderer->drawHAlignedText(CPoint2D(xx + bw*pw + bx, y), CHALIGN_TYPE_LEFT, 0,
-                                 CVALIGN_TYPE_TOP, 0, label, tc);
+                                 CVALIGN_TYPE_TOP, 0, name, tc);
     else
       renderer->drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
-                                 CVALIGN_TYPE_TOP, 0, label, tc);
+                                 CVALIGN_TYPE_TOP, 0, name, tc);
+
+    if (pieObject) {
+      CBBox2D keyRect(x1, y - font_size*ph, x2, y);
+
+      pieObject->setKeyRect(keyRect);
+
+      //renderer->drawRect(keyRect, lfc.second, 1);
+    }
 
     y -= font_size*ph;
 

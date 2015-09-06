@@ -27,10 +27,12 @@
 #include <CQGnuPlotPieObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
+#include <CQGnuPlotPointObject.h>
 #include <CQGnuPlotToolBar.h>
 #include <CQGnuPlotPNGRenderer.h>
 #include <CGnuPlotSVGRenderer.h>
 #include <CQZoomRegion.h>
+#include <CQCursor.h>
 
 #include <CQPropertyTree.h>
 #include <CQPropertyItem.h>
@@ -273,6 +275,12 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   //zoomRegion_ = new QRubberBand(QRubberBand::Rectangle, canvas_);
   zoomRegion_ = new CQZoomRegion(canvas_);
+
+  //---
+
+  cursor_ = CQCursorMgrInst->createCursor("info_cursor.svg", 2, 2);
+
+  canvas_->setCursor(cursor_->cursor());
 }
 
 CQGnuPlotMainWindow::
@@ -285,6 +293,22 @@ CQGnuPlotMainWindow::
 setSize(const CISize2D &s)
 {
   resize(s.width + TreeWidth, s.height);
+}
+
+int
+CQGnuPlotMainWindow::
+cursorSize() const
+{
+  return CQCursorMgrInst->size();
+}
+
+void
+CQGnuPlotMainWindow::
+setCursorSize(int s)
+{
+  CQCursorMgrInst->setSize(s);
+
+  canvas_->setCursor(cursor_->cursor());
 }
 
 void
@@ -307,6 +331,8 @@ addProperties()
 {
   tree_->clear();
 
+  tree_->addProperty("", this, "cursorSize");
+  tree_->addProperty("", this, "tipOutside");
   tree_->addProperty("", this, "backgroundColor");
 
   const CGnuPlot::LineStyles &lineStyles = plot_->lineStyles();
@@ -787,15 +813,25 @@ addPlotProperties(CGnuPlotPlot *plot)
   if (! plot->pieObjects().empty()) {
     int i = 0;
 
+    QString allPieName = QString("%1/Pies").arg(plotName);
+
+    CQGnuPlotPlotPieObjects *qpieObjects = qplot->pieObjectsObj();
+
+    tree_->addProperty(allPieName, qpieObjects, "innerRadius");
+    tree_->addProperty(allPieName, qpieObjects, "labelRadius");
+
     for (const auto &pie : plot->pieObjects()) {
       QString pieName = QString("%1/Pies/Pie%2").arg(plotName).arg(i + 1);
 
       CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
 
-      tree_->addProperty(pieName, qpie, "name"     );
-      tree_->addProperty(pieName, qpie, "lineColor");
-      tree_->addProperty(pieName, qpie, "fillColor");
-      tree_->addProperty(pieName, qpie, "exploded" );
+      tree_->addProperty(pieName, qpie, "name"       );
+      tree_->addProperty(pieName, qpie, "value"      );
+      tree_->addProperty(pieName, qpie, "innerRadius");
+      tree_->addProperty(pieName, qpie, "labelRadius");
+      tree_->addProperty(pieName, qpie, "lineColor"  );
+      tree_->addProperty(pieName, qpie, "fillColor"  );
+      tree_->addProperty(pieName, qpie, "exploded"   );
 
       ++i;
     }
@@ -828,6 +864,26 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(rectName, qrect, "text"     );
       tree_->addProperty(rectName, qrect, "fillColor");
       tree_->addProperty(rectName, qrect, "lineColor");
+
+      ++i;
+    }
+  }
+
+  if (! plot->pointObjects().empty()) {
+    int i = 0;
+
+    for (const auto &point : plot->pointObjects()) {
+      QString pointName = QString("%1/Points/Point%2").arg(plotName).arg(i + 1);
+
+      CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
+
+      tree_->addProperty(pointName, qpoint, "point");
+      tree_->addProperty(pointName, qpoint, "pointType");
+      tree_->addProperty(pointName, qpoint, "size");
+      tree_->addProperty(pointName, qpoint, "color");
+      tree_->addProperty(pointName, qpoint, "lineWidth");
+      tree_->addProperty(pointName, qpoint, "pointString");
+      tree_->addProperty(pointName, qpoint, "erasePoint");
 
       ++i;
     }
