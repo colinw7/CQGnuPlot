@@ -80,10 +80,10 @@ CGnuPlotTypes::SymbolType
 CGnuPlotLineType::
 symbolType() const
 {
-  if (pointType_ < 0 || pointType_ > int(SymbolType::LAST))
-    return SymbolType::PLUS;
+  if (pointType_ >= 0 && pointType_ <= int(SymbolType::LAST))
+    return SymbolType(pointType_);
 
-  return SymbolType(pointType_);
+  return CGnuPlotStyleInst->indexSymbol(ind_);
 }
 
 void

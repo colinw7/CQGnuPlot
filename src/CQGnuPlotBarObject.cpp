@@ -27,17 +27,7 @@ setFillType(const CQGnuPlotEnum::FillType &t)
 {
   CGnuPlotTypes::FillType fillType = CQGnuPlotUtil::fillTypeConv(t);
 
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot_);
-
-  if (qplot->syncBars()) {
-    for (const auto &bar : qplot->barObjects()) {
-      CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
-
-      qbar->CGnuPlotBarObject::setFillType(fillType);
-    }
-  }
-  else
-    CGnuPlotBarObject::setFillType(fillType);
+  CGnuPlotBarObject::setFillType(fillType);
 }
 
 CQGnuPlotEnum::FillPattern
@@ -53,17 +43,7 @@ setFillPattern(const CQGnuPlotEnum::FillPattern &p)
 {
   CGnuPlotTypes::FillPattern pattern = CQGnuPlotUtil::fillPatternConv(p);
 
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot_);
-
-  if (qplot->syncBars()) {
-    for (const auto &bar : qplot->barObjects()) {
-      CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
-
-      qbar->CGnuPlotBarObject::setFillPattern(pattern);
-    }
-  }
-  else
-    CGnuPlotBarObject::setFillPattern(pattern);
+  CGnuPlotBarObject::setFillPattern(pattern);
 }
 
 QColor
@@ -79,17 +59,7 @@ setFillColor(const QColor &color)
 {
   CRGBA c = fromQColor(color);
 
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot_);
-
-  if (qplot->syncBars()) {
-    for (const auto &bar : qplot->barObjects()) {
-      CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
-
-      qbar->CGnuPlotBarObject::setFillColor(c);
-    }
-  }
-  else
-    CGnuPlotBarObject::setFillColor(c);
+  CGnuPlotBarObject::setFillColor(c);
 }
 
 QColor
@@ -105,17 +75,7 @@ setLineColor(const QColor &color)
 {
   CRGBA c = fromQColor(color);
 
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot_);
-
-  if (qplot->syncBars()) {
-    for (const auto &bar : qplot->barObjects()) {
-      CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
-
-      qbar->CGnuPlotBarObject::setLineColor(c);
-    }
-  }
-  else
-    CGnuPlotBarObject::setLineColor(c);
+  CGnuPlotBarObject::setLineColor(c);
 }
 
 void

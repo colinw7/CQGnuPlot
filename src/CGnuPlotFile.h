@@ -176,6 +176,7 @@ class CGnuPlotFile {
     if (p3 == (*p2).second.end()) return false;
 
     str = (*p3).second;
+    if (str == "") return false;
 
     return true;
   }

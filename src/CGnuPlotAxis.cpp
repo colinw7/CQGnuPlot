@@ -1307,9 +1307,14 @@ drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
   if (isEnhanced() && ! group_->is3D()) {
     CGnuPlotText text(str);
 
+    //---
+
     bbox = text.calcBBox(renderer_);
     if (! bbox.isSet()) return;
 
+    CBBox2D bbox1;
+
+    {
     double dx = 0.0, dy = 0.0;
 
     if      (halign == CHALIGN_TYPE_LEFT  ) dx = 0;
@@ -1322,13 +1327,41 @@ drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
 
     //dy -= renderer_->pixelHeightToWindowHeight(font->getCharAscent());
 
-    CBBox2D bbox1 = bbox.moveBy(CPoint2D(pos.x, pos.y) + CPoint2D(dx, dy));
+    bbox1 = bbox.moveBy(CPoint2D(pos.x, pos.y) + CPoint2D(dx, dy));
 
     bbox1.setYMax(pos.y + dy);
+    }
+
+    //---
+
+#if 0
+    {
+    CBBox2D rbbox = text.renderBBox(renderer_, CPoint2D(pos.x, pos.y), angle);
+
+    double dx = 0.0, dy = 0.0;
+
+    if      (halign == CHALIGN_TYPE_LEFT  ) dx = 0;
+    else if (halign == CHALIGN_TYPE_CENTER) dx = -rbbox.getWidth()/2;
+    else if (halign == CHALIGN_TYPE_RIGHT ) dx = -rbbox.getWidth();
+
+    if      (valign == CVALIGN_TYPE_BOTTOM) dy = 0;
+    else if (valign == CVALIGN_TYPE_CENTER) dy = -rbbox.getHeight()/2;
+    else if (valign == CVALIGN_TYPE_TOP   ) dy = -rbbox.getHeight();
+
+    CBBox2D rbbox1 = rbbox.moveBy(CPoint2D(dx, dy));
+
+renderer_->drawRect(rbbox1, CRGBA(1,0,0), 1);
+
+    //bbox1 = rbbox1;
+    }
+#endif
+
+    //---
 
     text.draw(renderer_, bbox1, CHALIGN_TYPE_CENTER, c, angle);
 
     group_->updateAxisBBox(bbox1);
+//renderer_->drawRect(bbox1, CRGBA(1,0,0), 1);
   }
   else {
     CFontPtr font = renderer_->getFont();

@@ -10,43 +10,75 @@
 #include <CGnuPlotTicLabel.h>
 
 class CGnuPlot;
+class CParseLine;
 
 //---
 
-struct CGnuPlotUsingCol {
+class CGnuPlotUsingCol {
+ public:
   CGnuPlotUsingCol(int i);
 
   CGnuPlotUsingCol(const std::string &str1);
 
-  std::string str;
-  bool        isInt { true };
-  int         ival  { 0 };
+  const std::string &str() const { return str_; }
 
-  CGnuPlotTicLabel ticLabel;
+  bool isInt() const { return isInt_; }
+  bool isStr() const { return isStr_; }
 
-  bool parseString();
+  int ival() const { return ival_; }
+
+  void updateColumnStr(CGnuPlot *plot) const;
+
+ private:
+  bool parseString(CParseLine &line);
+
+ private:
+  std::string str_;
+  bool        isInt_  { true };
+  bool        isStr_  { false };
+  int         ival_   { 0 };
+
+  CGnuPlotTicLabel ticLabel_;
+};
+
+//---
+
+struct CGnuPlotUsingColData {
+  void reset() {
+    usingStr   = "";
+    isExpr     = false;
+    isFunc     = false;
+    identifier = "";
+    value      = "";
+  }
+
+  std::string             usingStr;
+  bool                    isExpr = false;
+  bool                    isFunc = false;
+  std::string             identifier;
+  std::string             value;
+  CGnuPlotTypes::AxisType ticId = CGnuPlotTypes::AxisType::X;
+  int                     ticInd = 0;
 };
 
 //---
 
 class CGnuPlotUsingCols {
  public:
-  typedef std::vector<std::string>                   StringArray;
   typedef std::map<std::string,CExprValuePtr>        Params;
   typedef std::vector<CExprValuePtr>                 Values;
   typedef std::map<int,std::string>                  TicLabel;
   typedef std::map<CGnuPlotTypes::AxisType,TicLabel> AxisTicLabel;
+  typedef std::vector<std::string>                   StringArray;
 
  public:
-  CGnuPlotUsingCols();
+  CGnuPlotUsingCols(CGnuPlot *plot=0);
 
   void init(const std::string &str);
 
   uint numCols() const { return cols_.size(); }
 
-  void addCol(const std::string &str) {
-    cols_.push_back(CGnuPlotUsingCol(str));
-  }
+  void addCol(const std::string &str);
 
   void setTicLabel(CGnuPlotTypes::AxisType type, int ind, const std::string &value) {
     axisTicLabel_[type][ind] = value;
@@ -70,13 +102,15 @@ class CGnuPlotUsingCols {
 
   bool isColIntInRange(int col, int low, int high) const {
     const CGnuPlotUsingCol &usingCol = getCol(col);
-    if (! usingCol.isInt) return false;
+    if (! usingCol.isInt()) return false;
 
-    return (usingCol.ival >= low && usingCol.ival <= high);
+    return (usingCol.ival() >= low && usingCol.ival() <= high);
   }
 
   const std::string &format() const { return format_; }
   void setFormat(const std::string &format) { format_ = format; }
+
+  std::string columnTitle(const std::vector<std::string> &columns) const;
 
   int decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
                    Values &values, Params &params) const;
@@ -91,12 +125,16 @@ class CGnuPlotUsingCols {
   void print(std::ostream &os) const;
 
  private:
+  void processUsingStr(CGnuPlotUsingColData &usingData, StringArray &usingStrs);
+
+ private:
   typedef std::vector<CGnuPlotUsingCol> Cols;
 
   Cols              cols_;
   AxisTicLabel      axisTicLabel_;
   std::string       format_;
-  mutable CGnuPlot *plot_;
+  std::string       keyLabel_;
+  mutable CGnuPlot *plot_ { 0 };
 };
 
 #endif

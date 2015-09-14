@@ -1,5 +1,5 @@
 #include <CGnuPlotText.h>
-#include <CGnuPlotRenderer.h>
+#include <CGnuPlotBBoxRenderer.h>
 #include <CParseLine.h>
 #include <CMathGeom2D.h>
 #include <CUtf8.h>
@@ -528,6 +528,60 @@ calcBBox(CGnuPlotRenderer *renderer) const
   renderer->setFont(origFont);
 
   return bbox;
+}
+
+CBBox2D
+CGnuPlotText::
+renderBBox(CGnuPlotRenderer *renderer, const CPoint2D &pos, double a) const
+{
+  CGnuPlotBBoxRenderer brenderer(renderer);
+
+  brenderer.setFont(renderer->getFont());
+
+  CGnuPlotRenderer *rrenderer = brenderer.renderer();
+
+  CPoint2D ppos;
+
+  rrenderer->windowToPixel(pos, ppos);
+
+  brenderer. setMapping(false);
+  rrenderer->setMapping(false);
+
+  CBBox2D bbox(ppos.x, ppos.y, ppos.x, ppos.y);
+
+  draw(&brenderer, bbox, CHALIGN_TYPE_LEFT, CRGBA(0,0,0), 0.0);
+
+  brenderer. setMapping(true);
+  rrenderer->setMapping(true);
+
+  CBBox2D prbbox = brenderer.bbox();
+
+  CPoint2D pp1(prbbox.getXMin(), ppos.y);
+  CPoint2D pp2(prbbox.getXMax(), ppos.y - prbbox.getHeight());
+
+  CBBox2D prbbox1(pp1, pp2);
+
+  double   a1 = CAngle::Deg2Rad(-a);
+  CPoint2D o  = prbbox1.getCenter();
+
+  CPoint2D rp1 = CMathGeom2D::RotatePoint(prbbox1.getLL(), a1, o);
+  CPoint2D rp2 = CMathGeom2D::RotatePoint(prbbox1.getLR(), a1, o);
+  CPoint2D rp3 = CMathGeom2D::RotatePoint(prbbox1.getUR(), a1, o);
+  CPoint2D rp4 = CMathGeom2D::RotatePoint(prbbox1.getUL(), a1, o);
+
+  CPoint2D p1, p2, p3, p4;
+
+  rrenderer->pixelToWindow(rp1, p1);
+  rrenderer->pixelToWindow(rp2, p2);
+  rrenderer->pixelToWindow(rp3, p3);
+  rrenderer->pixelToWindow(rp4, p4);
+
+  CBBox2D bbox1(p1, p2);
+
+  bbox1.add(p3);
+  bbox1.add(p4);
+
+  return bbox1;
 }
 
 void

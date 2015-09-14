@@ -150,14 +150,9 @@
 
 ## histograms2.dem
   + bad range
-  + Failed to eval lt for x=-10
 
 ## histograms.dem
-  + Invalid Function 'columnheader'
-  + bad range
-  + Failed to eval lt for x=-10
-  + Invalid arg 'rotatescale'
-  + Invalid histogram style 'gap'
+  + no newhistogram support
 
 ## hypertext.dem
   + some bad chars from file

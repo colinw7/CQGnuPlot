@@ -7,7 +7,10 @@ CGnuPlotBBoxRenderer::
 CGnuPlotBBoxRenderer(CGnuPlotRenderer *renderer) :
  renderer_(renderer), bbox_()
 {
-  assert(! renderer_->isPseudo());
+  while (renderer_ && renderer_->isPseudo())
+    renderer_ = dynamic_cast<CGnuPlotBBoxRenderer *>(renderer_)->renderer();
+
+  assert(renderer_);
 
   xmin_ = -std::numeric_limits<double>::max();
   xmax_ =  std::numeric_limits<double>::max();
@@ -17,8 +20,6 @@ CGnuPlotBBoxRenderer(CGnuPlotRenderer *renderer) :
   mapping_ = true;
   region_  = CBBox2D(0, 0, 1, 1);
   range_   = CBBox2D(-1, -1, 1, 1);
-
-  // font_ = renderer_->font();
 }
 
 CGnuPlotBBoxRenderer::
@@ -64,12 +65,16 @@ drawPoint(const CPoint2D &point, const CRGBA &)
 
 void
 CGnuPlotBBoxRenderer::
-drawSymbol(const CPoint2D &point, SymbolType, double size, const CRGBA &, double)
+drawSymbol(const CPoint2D &point, SymbolType, double size, const CRGBA &, double, bool pixelSize)
 {
-  CPoint2D d(size/2, size/2);
+  if (! pixelSize) {
+    CPoint2D d(size/2, size/2);
 
-  bbox_.add(point - d);
-  bbox_.add(point + d);
+    bbox_.add(point - d);
+    bbox_.add(point + d);
+  }
+  else
+    bbox_.add(point);
 }
 
 void
@@ -178,17 +183,39 @@ fillEllipse(const CPoint2D &center, double rx, double ry, double angle, const CR
 
 void
 CGnuPlotBBoxRenderer::
-drawText(const CPoint2D &point, const std::string &, const CRGBA &)
+drawText(const CPoint2D &point, const std::string &str, const CRGBA &)
 {
-  bbox_.add(point);
+  if (! renderer_->mapping()) {
+    double w  = renderer_->getFont()->getStringWidth(str);
+    double fa = renderer_->getFont()->getCharAscent ();
+    double fd = renderer_->getFont()->getCharDescent();
+
+    bbox_.add(CPoint2D(point.x    , point.y - fd));
+    bbox_.add(CPoint2D(point.x + w, point.y + fa));
+  }
+  else
+    bbox_.add(point);
 }
 
 void
 CGnuPlotBBoxRenderer::
-drawRotatedText(const CPoint2D &p, const std::string &text, double /*ta*/,
-                CHAlignType /*hlaign*/, CVAlignType /*vlaign*/, const CRGBA &c)
+drawRotatedText(const CPoint2D &point, const std::string &str, double /*ta*/,
+                CHAlignType /*halign*/, CVAlignType /*valign*/, const CRGBA &)
 {
-  drawText(p, text, c);
+  if (! renderer_->mapping()) {
+    double w  = renderer_->getFont()->getStringWidth(str);
+    double fa = renderer_->getFont()->getCharAscent ();
+    double fd = renderer_->getFont()->getCharDescent();
+
+    CBBox2D bbox;
+
+    bbox.add(CPoint2D(point.x    , point.y - fd));
+    bbox.add(CPoint2D(point.x + w, point.y + fa));
+
+    bbox_.add(bbox);
+  }
+  else
+    bbox_.add(point);
 }
 
 void

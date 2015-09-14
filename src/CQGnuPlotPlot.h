@@ -14,6 +14,7 @@ class CQGnuPlotWindow;
 class CQGnuPlotGroup;
 class CQGnuPlotCanvas;
 class CQGnuPlotRenderer;
+class CQGnuPlotPlotBarObjects;
 class CQGnuPlotPlotPieObjects;
 
 class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
@@ -49,8 +50,8 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_PROPERTY(double barsSize  READ barsSize  WRITE setBarsSize )
   Q_PROPERTY(bool   barsFront READ barsFront WRITE setBarsFront)
 
-  Q_PROPERTY(double boxWidthValue  READ getBoxWidthValue WRITE setBoxWidthValue)
-  Q_PROPERTY(bool   boxWidthCalc   READ getBoxWidthCalc  WRITE setBoxWidthCalc )
+  Q_PROPERTY(double boxWidthValue READ getBoxWidthValue WRITE setBoxWidthValue)
+  Q_PROPERTY(bool   boxWidthCalc  READ getBoxWidthCalc  WRITE setBoxWidthCalc )
 
   Q_PROPERTY(CQGnuPlotEnum::BoxWidthType boxWidthType READ getBoxWidthType WRITE setBoxWidthType)
 
@@ -62,8 +63,6 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_PROPERTY(int trianglePattern3D READ trianglePattern3D WRITE setTrianglePattern3D)
 
   Q_PROPERTY(double imageAngle READ imageAngle WRITE setImageAngle)
-
-  Q_PROPERTY(bool syncBars READ syncBars WRITE setSyncBars)
 
  public:
   CQGnuPlotPlot(CQGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style);
@@ -94,9 +93,7 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   CQGnuPlotEnum::BoxWidthType getBoxWidthType() const;
   void setBoxWidthType(const CQGnuPlotEnum::BoxWidthType &type);
 
-  bool syncBars() const { return syncBars_; }
-  void setSyncBars(bool b) { syncBars_ = b; }
-
+  CQGnuPlotPlotBarObjects *barObjectsObj() const { return barObjects_; }
   CQGnuPlotPlotPieObjects *pieObjectsObj() const { return pieObjects_; }
 
   void draw();
@@ -108,9 +105,47 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
  public:
   CQGnuPlotGroup*          group_;
   COptValT<CPoint2D>       selectedPos_;
-  bool                     syncBars_;
+  CQGnuPlotPlotBarObjects* barObjects_;
   CQGnuPlotPlotPieObjects* pieObjects_;
 };
+
+//------
+
+class CQGnuPlotPlotBarObjects : public QObject {
+  Q_OBJECT
+
+  Q_PROPERTY(QColor fillColor   READ fillColor WRITE setFillColor)
+  Q_PROPERTY(bool   border      READ hasBorder WRITE setBorder   )
+  Q_PROPERTY(QColor lineColor   READ lineColor WRITE setLineColor)
+
+  Q_PROPERTY(CQGnuPlotEnum::FillType    fillType    READ getFillType    WRITE setFillType   )
+  Q_PROPERTY(CQGnuPlotEnum::FillPattern fillPattern READ getFillPattern WRITE setFillPattern)
+
+ public:
+  CQGnuPlotPlotBarObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  QColor fillColor() const;
+  void setFillColor(const QColor &c);
+
+  QColor lineColor() const;
+  void setLineColor(const QColor &c);
+
+  bool hasBorder() const;
+  void setBorder(bool b);
+
+  CQGnuPlotEnum::FillType getFillType() const;
+  void setFillType(const CQGnuPlotEnum::FillType &t);
+
+  CQGnuPlotEnum::FillPattern getFillPattern() const;
+  void setFillPattern(const CQGnuPlotEnum::FillPattern &p);
+
+ private:
+  CQGnuPlotPlot *plot_;
+};
+
+//------
 
 class CQGnuPlotPlotPieObjects : public QObject {
   Q_OBJECT

@@ -18,13 +18,117 @@ bool evaluateExpression(const std::string &expr, CExprValuePtr &value, bool quie
 }
 
 CGnuPlotUsingCols::
-CGnuPlotUsingCols()
+CGnuPlotUsingCols(CGnuPlot *plot) :
+ plot_(plot)
 {
 }
 
 void
 CGnuPlotUsingCols::
 init(const std::string &str)
+{
+  CParseLine line(str);
+
+  CGnuPlotUsingColData usingData;
+  StringArray          usingStrs;
+
+  int rbrackets = 0;
+
+  while (line.isValid()) {
+    if (rbrackets == 0) {
+      if      (line.isChar(':')) {
+        line.skipChar();
+
+        usingData.usingStr = CStrUtil::stripSpaces(usingData.usingStr);
+
+        if (! usingData.usingStr.empty())
+          processUsingStr(usingData, usingStrs);
+
+        usingData.reset();
+      }
+      else if (line.isChar('"')) {
+        int pos = line.pos();
+
+        line.skipChar();
+
+        while (line.isValid()) {
+          if      (line.isChar('\\')) {
+            line.skipChar();
+
+            if (line.isValid())
+              line.skipChar();
+          }
+          else if (line.isChar('\"')) {
+            line.skipChar();
+
+            break;
+          }
+          else
+            line.skipChar();
+        }
+
+        usingData.usingStr += line.substr(pos, line.pos() - pos);
+        usingData.value    += line.substr(pos, line.pos() - pos);
+
+        line.skipSpace();
+      }
+      else {
+        if (line.isChar('(')) {
+          usingData.identifier = usingData.usingStr;
+
+          ++rbrackets;
+
+          if (usingData.usingStr.empty()) {
+            line.skipChar();
+
+            usingData.isExpr = true;
+          }
+          else {
+            usingData.usingStr += line.getChar();
+
+            usingData.isFunc = true;
+          }
+        }
+        else
+          usingData.usingStr += line.getChar();
+      }
+    }
+    else {
+      if      (line.isChar('('))
+        ++rbrackets;
+      else if (line.isChar(')'))
+        --rbrackets;
+
+      if (rbrackets == 0) {
+        if (usingData.isExpr)
+          line.skipChar();
+        else
+          usingData.usingStr += line.getChar();
+      }
+      else {
+        char c = line.getChar();
+
+        usingData.usingStr += c;
+        usingData.value    += c;
+      }
+    }
+  }
+
+  if (! usingData.usingStr.empty())
+    processUsingStr(usingData, usingStrs);
+
+  for (auto &str : usingStrs)
+    str = CStrUtil::stripSpaces(str);
+
+  line.skipSpace();
+
+  for (const auto &usingStr : usingStrs)
+    addCol(usingStr);
+}
+
+void
+CGnuPlotUsingCols::
+processUsingStr(CGnuPlotUsingColData &usingData, StringArray &usingStrs)
 {
   // split using string into integer range
   auto splitUsingFn = [] (const std::string &usingStr, StringArray &usingStrs) -> bool {
@@ -50,114 +154,26 @@ init(const std::string &str)
 
   //---
 
-  CParseLine line(str);
+  if      (usingData.isExpr)
+    usingData.usingStr = "(" + usingData.usingStr + ")";
+  else if (usingData.isFunc &&
+           CGnuPlotTicLabel::isTicLabel(usingData.identifier, usingData.ticId, usingData.ticInd)) {
+    setTicLabel(usingData.ticId, usingData.ticInd, usingData.value);
 
-  std::string             usingStr;
-  StringArray             usingStrs;
-  bool                    isExpr = false;
-  bool                    isFunc = false;
-  std::string             identifier, value;
-  CGnuPlotTypes::AxisType ticId;
-  int                     ticInd;
+    usingData.usingStr = "";
+  }
+  else if (usingData.isFunc && usingData.identifier == "key") {
+    keyLabel_ = usingData.value;
 
-  int rbrackets = 0;
-
-  while (line.isValid()) {
-    if (rbrackets == 0) {
-      if (line.isChar(':')) {
-        line.skipChar();
-
-        usingStr = CStrUtil::stripSpaces(usingStr);
-
-        if (! usingStr.empty()) {
-          if      (isExpr)
-            usingStr = "(" + usingStr + ")";
-          else if (isFunc && CGnuPlotTicLabel::isTicLabel(identifier, ticId, ticInd)) {
-            setTicLabel(ticId, ticInd, value);
-
-            usingStr = "";
-          }
-          else {
-            if (splitUsingFn(usingStr, usingStrs))
-              usingStr = "";
-          }
-
-          if (! usingStr.empty())
-            usingStrs.push_back(usingStr);
-        }
-
-        usingStr   = "";
-        isExpr     = false;
-        isFunc     = false;
-        identifier = "";
-        value      = "";
-      }
-      else {
-        if (line.isChar('(')) {
-          identifier = usingStr;
-
-          ++rbrackets;
-
-          if (usingStr.empty()) {
-            line.skipChar();
-
-            isExpr = true;
-          }
-          else {
-            usingStr += line.getChar();
-
-            isFunc = true;
-          }
-        }
-        else
-          usingStr += line.getChar();
-      }
-    }
-    else {
-      if      (line.isChar('('))
-        ++rbrackets;
-      else if (line.isChar(')'))
-        --rbrackets;
-
-      if (rbrackets == 0) {
-        if (isExpr)
-          line.skipChar();
-        else
-          usingStr += line.getChar();
-      }
-      else {
-        char c = line.getChar();
-
-        usingStr += c;
-        value    += c;
-      }
-    }
+    usingData.usingStr = "";
+  }
+  else {
+    if (splitUsingFn(usingData.usingStr, usingStrs))
+      usingData.usingStr = "";
   }
 
-  if (! usingStr.empty()) {
-    if      (isExpr)
-      usingStr = "(" + usingStr + ")";
-    else if (isFunc && CGnuPlotTicLabel::isTicLabel(identifier, ticId, ticInd)) {
-      setTicLabel(ticId, ticInd, value);
-
-      usingStr = "";
-    }
-    else {
-      if (splitUsingFn(usingStr, usingStrs))
-        usingStr = "";
-    }
-
-    if (! usingStr.empty())
-      usingStrs.push_back(usingStr);
-  }
-
-  for (auto &str : usingStrs)
-    str = CStrUtil::stripSpaces(str);
-
-  line.skipSpace();
-
-  for (const auto &str : usingStrs)
-    addCol(str);
+  if (! usingData.usingStr.empty())
+    usingStrs.push_back(usingData.usingStr);
 }
 
 int
@@ -179,7 +195,8 @@ decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
     CExprValuePtr value = decodeValue(fieldValues, col, ns, ignore, params);
 
     if (! ignore) {
-      if (! value.isValid()) bad = true;
+      if (! value.isValid())
+        bad = true;
 
       values.push_back(value);
     }
@@ -187,6 +204,7 @@ decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
 
   //---
 
+  // set plot axis labels
   for (int ind = 0; ind < 4; ++ind) {
     CGnuPlotTypes::AxisType type =
       (ind == 0 || ind == 2 ? CGnuPlotTypes::AxisType::X : CGnuPlotTypes::AxisType::Y);
@@ -215,13 +233,59 @@ decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
     if (! value1.isValid() || ! value1->getStringValue(str1))
       continue;
 
-    if (type == CGnuPlotTypes::AxisType::X)
-      plot->xaxis(ind1).setTicLabel(pointNum, str1, 0);
-    else
-      plot->yaxis(ind1).setTicLabel(pointNum, str1, 0);
+    if (type == CGnuPlotTypes::AxisType::X) {
+      int x = plot->histogramPointOffset() + pointNum;
+
+      plot->xaxis(ind1).setTicLabel(x, str1, 0);
+    }
+    else {
+      int y = pointNum;
+
+      plot->yaxis(ind1).setTicLabel(y, str1, 0);
+    }
+  }
+
+  // set key label
+  if (keyLabel_ != "") {
+    CExprValuePtr value;
+
+    if (evaluateExpression(keyLabel_, value, true)) {
+      int         ns;
+      long        icol;
+      std::string str1;
+
+      if (value.isValid() && value->getIntegerValue(icol)) {
+        CExprValuePtr value1 = getFieldValue(fieldValues, icol, ns);
+
+        if (value1.isValid() && value1->getStringValue(str1))
+          plot->setKeyPointLabel(pointNum, str1);
+      }
+    }
   }
 
   return ns;
+}
+
+std::string
+CGnuPlotUsingCols::
+columnTitle(const std::vector<std::string> &columns) const
+{
+  for (uint i = 0; i < numCols(); ++i) {
+    const CGnuPlotUsingCol &col = getCol(i);
+
+    if (col.isStr())
+      return col.str().substr(1, col.str().size() - 2);
+
+    if (col.isInt())
+      return columns[col.ival() - 1];
+  }
+
+  if      (columns.size() > 1)
+    return columns[1];
+  else if (columns.size() > 0)
+    return columns[0];
+
+  return "";
 }
 
 CExprValuePtr
@@ -229,14 +293,16 @@ CGnuPlotUsingCols::
 decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
             int &ns, bool &ignore, Params &params) const
 {
+  col.updateColumnStr(plot_);
+
   CExprValuePtr value;
 
   ignore = false;
 
-  if (col.isInt)
-    value = getFieldValue(fieldValues, col.ival, ns);
+  if (col.isInt())
+    value = getFieldValue(fieldValues, col.ival(), ns);
   else {
-    std::string expr = col.str;
+    std::string expr = col.str();
 
     // replace $N variables
     // TODO: easier to define $1 variables
@@ -371,6 +437,13 @@ getFieldValue(const Values &fieldValues, int icol, int &ns) const
   return value;
 }
 
+void
+CGnuPlotUsingCols::
+addCol(const std::string &str)
+{
+  cols_.push_back(CGnuPlotUsingCol(str));
+}
+
 std::string
 CGnuPlotUsingCols::
 toString() const
@@ -393,10 +466,10 @@ print(std::ostream &os) const
   for (const auto &col : cols_) {
     if (i > 0) os << ":";
 
-    if (col.isInt)
-      os << col.ival;
+    if (col.isInt())
+      os << col.ival();
     else
-      os << col.str;
+      os << col.str();
 
     ++i;
   }
@@ -408,26 +481,70 @@ print(std::ostream &os) const
 
 CGnuPlotUsingCol::
 CGnuPlotUsingCol(int i) :
- str(""), isInt(true), ival(i)
+ str_(""), isInt_(true), ival_(i)
 {
 }
 
 CGnuPlotUsingCol::
-CGnuPlotUsingCol(const std::string &str1) :
- str(str1), isInt(false), ival(-1)
+CGnuPlotUsingCol(const std::string &str) :
+ str_(str), isInt_(false), ival_(-1)
 {
-  isInt = CStrUtil::toInteger(str1, &ival);
+  CExprValuePtr value;
 
-  if (! isInt)
-    parseString();
+  //isInt = CStrUtil::toInteger(str, &ival_);
+  bool oldQuiet = CExprInst->getQuiet();
+
+  CExprInst->setQuiet(true);
+
+  long i;
+
+  if (CExprInst->evaluateExpression(str, value) &&
+      value.isValid() && value->getIntegerValue(i)) {
+    ival_  = i;
+    isInt_ = true;
+  }
+  else {
+    CParseLine line(str);
+
+    line.skipSpace();
+
+    if (line.isChar('"'))
+      isStr_ = true;
+    else
+      parseString(line);
+  }
+
+  CExprInst->setQuiet(oldQuiet);
+}
+
+void
+CGnuPlotUsingCol::
+updateColumnStr(CGnuPlot *plot) const
+{
+  if (! isStr_) return;
+
+  CGnuPlotUsingCol *th = const_cast<CGnuPlotUsingCol *>(this);
+
+  const CGnuPlotKeyData &keyData = plot->keyData();
+
+  const CGnuPlotKeyData::Columns &cols = keyData.columns();
+
+  for (uint i = 0; i < cols.size(); ++i) {
+    std::string str = "\"" + cols[i] + "\"";
+
+    if (str == th->str_) {
+      th->isInt_ = true;
+      th->ival_  = i + 1;
+      th->isStr_ = false;
+      return;
+    }
+  }
 }
 
 bool
 CGnuPlotUsingCol::
-parseString()
+parseString(CParseLine &line)
 {
-  CParseLine line(str);
-
   if (! line.isAlpha())
     return false;
 
@@ -453,5 +570,5 @@ parseString()
 
   line.skipChar();
 
-  return ticLabel.setTicLabel(identifier, value);
+  return ticLabel_.setTicLabel(identifier, value);
 }

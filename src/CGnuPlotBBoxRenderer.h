@@ -11,6 +11,8 @@ class CGnuPlotBBoxRenderer : public CGnuPlotRenderer {
   CGnuPlotBBoxRenderer(CGnuPlotRenderer *renderer);
  ~CGnuPlotBBoxRenderer() override;
 
+  CGnuPlotRenderer *renderer() const { return renderer_; }
+
   const CBBox2D &bbox() const { return bbox_; }
 
   bool isPseudo() const override { return true; }
@@ -28,7 +30,7 @@ class CGnuPlotBBoxRenderer : public CGnuPlotRenderer {
 
   void drawPoint  (const CPoint2D &p, const CRGBA &c) override;
   void drawSymbol (const CPoint2D &p, SymbolType type, double size,
-                   const CRGBA &c, double lw) override;
+                   const CRGBA &c, double lw, bool pixelSize) override;
   void drawPath   (const std::vector<CPoint2D> &points, double w, const CRGBA &c,
                    const CLineDash &dash) override;
   void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,

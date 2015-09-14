@@ -100,7 +100,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (labelStyle.showPoint()) {
       CGnuPlotTypes::SymbolType pt = labelStyle.symbolType();
 
-      renderer->drawSymbol(p, pt, labelStyle.pointSize(), lc1, labelStyle.lineWidth());
+      renderer->drawSymbol(p, pt, labelStyle.pointSize(), lc1, labelStyle.lineWidth(), true);
     }
   }
 }
@@ -196,7 +196,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (labelStyle.showPoint()) {
         CGnuPlotTypes::SymbolType pt = (CGnuPlotTypes::SymbolType) labelStyle.pointType();
 
-        renderer->drawSymbol(p1, pt, labelStyle.pointSize(), lc1, labelStyle.lineWidth());
+        renderer->drawSymbol(p1, pt, labelStyle.pointSize(), lc1, labelStyle.lineWidth(), true);
       }
     }
   }

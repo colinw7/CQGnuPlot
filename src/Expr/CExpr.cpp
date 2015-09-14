@@ -15,7 +15,7 @@ instance()
 
 CExpr::
 CExpr() :
- debug_(false), trace_(false), degrees_(false)
+ quiet_(false), debug_(false), trace_(false), degrees_(false)
 {
   parse_   = new CExprParse;
   interp_  = new CExprInterp;
@@ -363,5 +363,6 @@ void
 CExpr::
 errorMsg(const std::string &msg) const
 {
-  std::cerr << msg << std::endl;
+  if (! getQuiet())
+    std::cerr << msg << std::endl;
 }

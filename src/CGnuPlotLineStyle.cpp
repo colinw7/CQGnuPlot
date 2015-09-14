@@ -128,7 +128,9 @@ calcPointType(const SymbolType &t) const
     return SymbolType::STRING;
   }
   else if (lineType_.isValid()) {
-    CGnuPlotLineTypeP lineType = plot_->getLineTypeInd(lineType_.getValue());
+    int lt = lineType_.getValue();
+
+    CGnuPlotLineTypeP lineType = plot_->getLineTypeInd(lt);
 
     if (lineType.isValid())
       return lineType->symbolType();

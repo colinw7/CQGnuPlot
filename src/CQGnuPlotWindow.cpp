@@ -433,6 +433,8 @@ addGroupProperties(CGnuPlotGroup *group)
 
   tree_->addProperty(groupName, qgroup, "histogramStyle");
 
+  tree_->addProperty(groupName, qgroup, "histogramGap");
+
   //---
 
   CQGnuPlotTitle *qtitle = static_cast<CQGnuPlotTitle *>(group->title().get());
@@ -531,6 +533,7 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(keyName, qkey, "displayed");
   tree_->addProperty(keyName, qkey, "drawBox");
   tree_->addProperty(keyName, qkey, "fillBox");
+  tree_->addProperty(keyName, qkey, "boxLineStyle");
   tree_->addProperty(keyName, qkey, "reverse");
   tree_->addProperty(keyName, qkey, "outside");
   tree_->addProperty(keyName, qkey, "halign");
@@ -756,11 +759,17 @@ addPlotProperties(CGnuPlotPlot *plot)
     setLabel("calc");
 
   if (! plot->barObjects().empty()) {
-    int i = 0;
-
     QString barsName = QString("%1/Bars").arg(plotName);
 
-    tree_->addProperty(barsName, qplot, "syncBars")->setLabel("sync");
+    CQGnuPlotPlotBarObjects *qbarObjects = qplot->barObjectsObj();
+
+    tree_->addProperty(barsName, qbarObjects, "fillType");
+    tree_->addProperty(barsName, qbarObjects, "fillPattern");
+    tree_->addProperty(barsName, qbarObjects, "fillColor");
+    tree_->addProperty(barsName, qbarObjects, "border");
+    tree_->addProperty(barsName, qbarObjects, "lineColor");
+
+    int i = 0;
 
     for (const auto &bar : plot->barObjects()) {
       QString barName = QString("%1/Bar%2").arg(barsName).arg(i + 1);
@@ -811,17 +820,17 @@ addPlotProperties(CGnuPlotPlot *plot)
   }
 
   if (! plot->pieObjects().empty()) {
-    int i = 0;
-
-    QString allPieName = QString("%1/Pies").arg(plotName);
+    QString piesName = QString("%1/Pies").arg(plotName);
 
     CQGnuPlotPlotPieObjects *qpieObjects = qplot->pieObjectsObj();
 
-    tree_->addProperty(allPieName, qpieObjects, "innerRadius");
-    tree_->addProperty(allPieName, qpieObjects, "labelRadius");
+    tree_->addProperty(piesName, qpieObjects, "innerRadius");
+    tree_->addProperty(piesName, qpieObjects, "labelRadius");
+
+    int i = 0;
 
     for (const auto &pie : plot->pieObjects()) {
-      QString pieName = QString("%1/Pies/Pie%2").arg(plotName).arg(i + 1);
+      QString pieName = QString("%1/Pie%2").arg(piesName).arg(i + 1);
 
       CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
 

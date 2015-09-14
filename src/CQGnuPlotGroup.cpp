@@ -146,11 +146,25 @@ mousePress(const QPoint &qp)
     }
   }
 
-  qwindow()->selectObjects(objects);
+  if (! objects.empty()) {
+    qwindow()->selectObjects(objects);
+    return;
+  }
 
   CQGnuPlotKey *qkey = dynamic_cast<CQGnuPlotKey *>(key().get());
 
-  qkey->mousePress(qp);
+  if (qkey) {
+    CPoint2D p;
+
+    renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
+
+    if (qkey->inside(p)) {
+      if (! qkey->mousePress(qp))
+        objects.push_back(qkey);
+    }
+  }
+
+  qwindow()->selectObjects(objects);
 }
 
 void

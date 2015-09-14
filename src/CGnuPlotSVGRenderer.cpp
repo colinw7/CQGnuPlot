@@ -64,11 +64,21 @@ class CSymbol2DSVGRenderer : public CSymbol2DRenderer {
   typedef CGnuPlotTypes::SymbolType SymbolType;
 
  public:
-  CSymbol2DSVGRenderer(CGnuPlotSVGRenderer *r, const CPoint2D &p, double size=1.0) :
+  CSymbol2DSVGRenderer(CGnuPlotSVGRenderer *r, const CPoint2D &p,
+                       double size=1.0, bool pixelSize=true) :
    r_(r) {
     r_->windowToPixel(p, p_);
 
-    ss_ = 4*size;
+    if (! pixelSize) {
+      double ss = sqrt(size);
+
+      sw_ = r_->windowWidthToPixelWidth  (ss)/2.0;
+      sh_ = r_->windowHeightToPixelHeight(ss)/2.0;
+    }
+    else {
+      sw_ = 4*size;
+      sh_ = sw_;
+    }
   }
 
   void drawSymbolType(SymbolType type) {
@@ -78,12 +88,12 @@ class CSymbol2DSVGRenderer : public CSymbol2DRenderer {
     }
     else if (type == SymbolType::CIRCLE) {
       r_->os() << "<ellipse cx=\"" << p_.x << "\" cy=\"" << p_.y <<
-                  "\" rx=\"" << ss_ << "\" ry=\"" << ss_ << "\" " <<
+                  "\" rx=\"" << sw_ << "\" ry=\"" << sh_ << "\" " <<
                   "style=\"" << strokeColor(lc_) << " " << fillNone() << "\"/>\n";
     }
     else if (type == SymbolType::FILLED_CIRCLE) {
       r_->os() << "<ellipse cx=\"" << p_.x << "\" cy=\"" << p_.y <<
-                  "\" rx=\"" << ss_ << "\" ry=\"" << ss_ << "\" " <<
+                  "\" rx=\"" << sw_ << "\" ry=\"" << sh_ << "\" " <<
                   "style=\"" << strokeNone() << "; " << fillColor(fc_) << "\"/>\n";
     }
   }
@@ -139,7 +149,8 @@ class CSymbol2DSVGRenderer : public CSymbol2DRenderer {
   double               lw_     { 0 };
   bool                 stroke_ { false };
   bool                 fill_   { false };
-  double               ss_     { 1.0 };
+  double               sw_     { 1.0 };
+  double               sh_     { 1.0 };
 };
 
 //-----
@@ -183,9 +194,10 @@ drawPoint(const CPoint2D &point, const CRGBA &c)
 
 void
 CGnuPlotSVGRenderer::
-drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c, double lw)
+drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c,
+           double lw, bool pixelSize)
 {
-  CSymbol2DSVGRenderer r(this, point, size);
+  CSymbol2DSVGRenderer r(this, point, size, pixelSize);
 
   r.setLineWidth(lw);
 

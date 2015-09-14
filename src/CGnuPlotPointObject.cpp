@@ -76,5 +76,5 @@ draw(CGnuPlotRenderer *renderer) const
     renderer->drawHAlignedText(point_, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
                                pointString_, color_);
   else
-    renderer->drawSymbol(point_, pointType_, size, color_, lineWidth_);
+    renderer->drawSymbol(point_, pointType_, size, color_, lineWidth_, false);
 }

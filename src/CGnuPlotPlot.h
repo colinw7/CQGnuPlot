@@ -172,6 +172,7 @@ class CGnuPlotPlot {
   typedef std::vector<CGnuPlotPointObject *>   PointObjects;
   typedef std::vector<double>                  DoubleVector;
   typedef std::map<double,DoubleVector>        MappedPoints;
+  typedef std::vector<CGnuPlotKeyLabel>        KeyLabels;
 
  public:
   CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle plotStyle);
@@ -321,33 +322,33 @@ class CGnuPlotPlot {
 
   //---
 
-  const CGnuPlotArrowStyle &arrowStyle() const { return arrowStyle_; }
-  void setArrowStyle(const CGnuPlotArrowStyle &as) { arrowStyle_ = as; }
+  const CGnuPlotArrowStyle &arrowStyle() const { return styleData_.arrow; }
+  void setArrowStyle(const CGnuPlotArrowStyle &as) { styleData_.arrow = as; }
 
   //---
 
-  const CGnuPlotTextBoxStyle &textBoxStyle() const { return textBoxStyle_; }
-  void setTextBoxStyle(const CGnuPlotTextBoxStyle &ts) { textBoxStyle_ = ts; }
+  const CGnuPlotTextBoxStyle &textBoxStyle() const { return styleData_.textBox; }
+  void setTextBoxStyle(const CGnuPlotTextBoxStyle &ts) { styleData_.textBox = ts; }
 
   //---
 
-  const CGnuPlotTextStyle &textStyle() const { return textStyle_; }
-  void setTextStyle(const CGnuPlotTextStyle &ts) { textStyle_ = ts; }
+  const CGnuPlotTextStyle &textStyle() const { return styleData_.text; }
+  void setTextStyle(const CGnuPlotTextStyle &ts) { styleData_.text = ts; }
 
   //---
 
-  const CGnuPlotEllipseStyle &ellipseStyle() const { return ellipseStyle_; }
-  void setEllipseStyle(const CGnuPlotEllipseStyle &es) { ellipseStyle_ = es; }
+  const CGnuPlotEllipseStyle &ellipseStyle() const { return styleData_.ellipse; }
+  void setEllipseStyle(const CGnuPlotEllipseStyle &es) { styleData_.ellipse = es; }
 
   //---
 
-  const CGnuPlotLabelStyle &labelStyle() const { return labelStyle_; }
-  void setLabelStyle(const CGnuPlotLabelStyle &s) { labelStyle_ = s; }
+  const CGnuPlotLabelStyle &labelStyle() const { return styleData_.label; }
+  void setLabelStyle(const CGnuPlotLabelStyle &s) { styleData_.label = s; }
 
   //---
 
-  const CGnuPlotPieStyle &pieStyle() const { return pieStyle_; }
-  void setPieStyle(const CGnuPlotPieStyle &s) { pieStyle_ = s; }
+  const CGnuPlotPieStyle &pieStyle() const { return styleData_.pie; }
+  void setPieStyle(const CGnuPlotPieStyle &s) { styleData_.pie = s; }
 
   //---
 
@@ -361,7 +362,7 @@ class CGnuPlotPlot {
 
   //---
 
-  void getKeyLabels(std::vector<CGnuPlotKeyLabel> &labels) const;
+  void getKeyLabels(KeyLabels &labels) const;
 
   //---
 
@@ -389,9 +390,17 @@ class CGnuPlotPlot {
 
   uint numPoints2D() const { return points2D_.size(); }
 
-  const CGnuPlotPoint &getPoint2D(int i) const { return points2D_[i]; }
+  const CGnuPlotPoint &getPoint2D(int i) const {
+    assert(i >= 0 && i < int(points2D_.size()));
 
-  void setPoint2DLabel(int i, std::string &str) { points2D_[i].setLabel(str); }
+    return points2D_[i];
+  }
+
+  void setPoint2DLabel(int i, std::string &str) {
+    assert(i >= 0 && i < int(points2D_.size()));
+
+    points2D_[i].setLabel(str);
+  }
 
   //---
 
@@ -410,11 +419,12 @@ class CGnuPlotPlot {
   int addPoint2D(double x, double y);
   int addPoint2D(const std::vector<double> &rvals);
   int addPoint2D(double x, CExprValuePtr y);
-  int addPoint2D(const Values &values, bool discontinuity=false, const Params &params=Params());
+  int addPoint2D(const Values &values, bool discontinuity=false, bool bad=false,
+                 const Params &params=Params());
 
   int addPoint3D(int iy, double x, double y, double z);
   int addPoint3D(int iy, double x, double y, CExprValuePtr z);
-  int addPoint3D(int iy, const Values &values, bool discontinuity=false);
+  int addPoint3D(int iy, const Values &values, bool discontinuity=false, bool bad=false);
 
   //---
 
@@ -490,13 +500,14 @@ class CGnuPlotPlot {
   //---
 
   struct DrawHistogramData {
-    double x2 { 0.0 }; // start x
-    double y2 { 0.0 }; // start y
-    double d  { 1.0 }; // delta
-    double w  { 1.0 }; // width
-    int    np { 1 };   // num plots
-    int    i  { 1 };   // plot index
-    double xb { 1.0 }; // border
+    double x2         { 0.0 };   // start x
+    double y2         { 0.0 };   // start y
+    double d          { 1.0 };   // delta
+    double w          { 1.0 };   // width
+    int    np         { 1 };     // num plots
+    int    i          { 1 };     // plot index
+    double xb         { 1.0 };   // border
+    bool   horizontal { false }; // horizontal
   };
 
   //---
@@ -521,7 +532,9 @@ class CGnuPlotPlot {
 
   void drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
   void drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
-  void drawStackedHistogram  (CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox);
+
+  void drawStackedHistogram(CGnuPlotRenderer *renderer, int i,
+                            const CBBox2D &bbox, bool isColumn);
 
   void drawBars(CGnuPlotRenderer *renderer);
 
@@ -588,6 +601,9 @@ class CGnuPlotPlot {
 
   //------
 
+  int newHistogramId() const { return newHistogramId_; }
+  void setNewHistogramId(int i) { newHistogramId_ = i; }
+
  private:
   bool renderBBox(CGnuPlotBBoxRenderer &brenderer) const;
 
@@ -621,12 +637,7 @@ class CGnuPlotPlot {
   CGnuPlotFillStyle      fillStyle_;                        // fill style
   CGnuPlotLineStyle      lineStyle_;                        // line style
   CGnuPlotPointStyle     pointStyle_;                       // point style
-  CGnuPlotArrowStyle     arrowStyle_;                       // arrow style
-  CGnuPlotTextBoxStyle   textBoxStyle_;                     // text box style
-  CGnuPlotEllipseStyle   ellipseStyle_;                     // ellipse style
-  CGnuPlotTextStyle      textStyle_;                        // text style
-  CGnuPlotLabelStyle     labelStyle_;                       // label style
-  CGnuPlotPieStyle       pieStyle_;                         // pie style
+  CGnuPlotStyleData      styleData_;                        // style data
   CGnuPlotKeyTitle       keyTitle_;                         // title on key
   int                    xind_ { 1 };                       // xaxis index
   int                    yind_ { 1 };                       // yaxis index
@@ -662,6 +673,7 @@ class CGnuPlotPlot {
   CGnuPlotContourData    contourData_;
   CGnuPlotPrintFile      tableFile_;
   CGnuPlotAdjacencyData  adjacencyData_;
+  int                    newHistogramId_ { -1 };
 
  private:
   CGnuPlotStyleAdjacencyRenderer *arenderer_;

@@ -123,7 +123,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       CPoint2D p;
 
       if (point.getPoint(p))
-        renderer->drawSymbol(p, CGnuPlotTypes::SymbolType::FILLED_BOX, 1.0, c);
+        renderer->drawSymbol(p, CGnuPlotTypes::SymbolType::FILLED_BOX, 1.0, c, 1, true);
     }
   }
 #endif

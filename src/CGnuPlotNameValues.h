@@ -75,6 +75,7 @@ namespace CStrUniqueMatch {
                           {"cplane"          , CGnuPlotTypes::VariableName::CPLANE},
                           {"dashtype"        , CGnuPlotTypes::VariableName::DASHTYPE},
                           {"datablock"       , CGnuPlotTypes::VariableName::DATABLOCK},
+                          {"datafile"        , CGnuPlotTypes::VariableName::DATAFILE},
                           {"debug"           , CGnuPlotTypes::VariableName::DEBUG},
                           {"decimalsign"     , CGnuPlotTypes::VariableName::DECIMALSIGN},
                           {"dgrid3d"         , CGnuPlotTypes::VariableName::DGRID3D},

@@ -6,7 +6,6 @@
 class CGnuPlotHistogramData {
  public:
   typedef CGnuPlotTypes::HistogramStyle HistogramStyle;
-  typedef std::pair<int,std::string>    NewTitle;
 
  public:
   CGnuPlotHistogramData() { }
@@ -14,8 +13,9 @@ class CGnuPlotHistogramData {
   HistogramStyle style() const { return style_; }
   void setStyle(HistogramStyle s) { style_ = s; }
 
-  double gap() const { return gap_; }
+  const COptReal &gap() const { return gap_; }
   void setGap(double g) { gap_ = g; }
+  void resetGap() { gap_.setInvalid(); }
 
   double lineWidth() const { return lineWidth_; }
   void setLineWidth(double w) { lineWidth_ = w; }
@@ -29,20 +29,47 @@ class CGnuPlotHistogramData {
   const CFontPtr &titleFont() const { return titleFont_; }
   void setTitleFont(const CFontPtr &f) { titleFont_ = f; }
 
-  void addNewTitle(int i, const std::string &title) {
-    newTitles_.push_back(NewTitle(i, title));
-  }
+  bool isHorizontal() const { return horizontal_; }
+  void setHorizontal(bool b) { horizontal_ = b; }
 
  private:
-  typedef std::vector<NewTitle> NewTitles;
-
   HistogramStyle style_       { HistogramStyle::CLUSTERED };
-  double         gap_         { 2 };
+  COptReal       gap_;
   double         lineWidth_   { 0 };
   bool           boxed_       { false };
   CPoint2D       titleOffset_ { 0, 0 };
   CFontPtr       titleFont_;
-  NewTitles      newTitles_;
+  bool           horizontal_  { false };
 };
+
+class CGnuPlotNewHistogramData {
+ public:
+  CGnuPlotNewHistogramData() { }
+
+  int ind() const { return ind_; }
+  void setInd(int i) { ind_ = i; }
+
+  const std::string &title() const { return title_; }
+  void setTitle(const std::string &v) { title_ = v; }
+
+  int lineType() const { return lineType_; }
+  void setLineType(int i) { lineType_ = i; }
+
+  const CGnuPlotFillStyle &fillStyle() const { return fillStyle_; }
+  void setFillStyle(const CGnuPlotFillStyle &v) { fillStyle_ = v; }
+
+  const COptReal &x() const { return x_; }
+  void setX(double r) { x_ = r; }
+  void resetX() { x_.setInvalid(); }
+
+ private:
+  int               ind_      { 0 };
+  std::string       title_;
+  int               lineType_ { -1 };
+  CGnuPlotFillStyle fillStyle_;
+  COptReal          x_;
+};
+
+typedef std::vector<CGnuPlotNewHistogramData> CGnuPlotNewHistogramDatas;
 
 #endif

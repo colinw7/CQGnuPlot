@@ -43,6 +43,8 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   Q_PROPERTY(CQGnuPlotEnum::HistogramStyle histogramStyle
                READ histogramStyle WRITE setHistogramStyle)
 
+  Q_PROPERTY(double histogramGap READ histogramGap WRITE setHistogramGap)
+
   Q_PROPERTY(bool hidden3D READ hidden3D WRITE setHidden3D)
 
  public:

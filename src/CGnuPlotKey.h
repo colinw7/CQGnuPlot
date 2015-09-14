@@ -78,11 +78,29 @@ class CGnuPlotKey {
 
   std::string getTitle() const { return keyData_.title().getValue(""); }
 
+  //---
+
   bool getFillBox() const { return keyData_.opaque(); }
   void setFillBox(bool b) { keyData_.setOpaque(b); }
 
   bool getDrawBox() const { return keyData_.hasBox(); }
   void setDrawBox(bool b) { keyData_.setBox(b); }
+
+  const COptInt &boxLineType() const { return keyData_.boxLineType(); }
+  void setBoxLineType(int lt) { keyData_.setBoxLineType(lt); }
+  void resetBoxLineType() { keyData_.resetBoxLineType(); }
+
+  const COptInt &boxLineStyle() const { return keyData_.boxLineStyle(); }
+  void setBoxLineStyle(int lt) { keyData_.setBoxLineStyle(lt); }
+  void resetBoxLineStyle() { keyData_.resetBoxLineStyle(); }
+
+  double boxLineWidth() const { return keyData_.boxLineWidth(); }
+  void setBoxLineWidth(double w) { keyData_.setBoxLineWidth(w); }
+
+  const CGnuPlotFillStyle &boxFillStyle() const { return keyData_.boxFillStyle(); }
+  void setBoxFillStyle(const CGnuPlotFillStyle &fs) { keyData_.setBoxFillStyle(fs); }
+
+  //---
 
   bool hasLineType() const { return keyData_.boxLineType().isValid(); }
   int getLineType() const { return keyData_.boxLineType().getValue(-1); }
@@ -103,6 +121,9 @@ class CGnuPlotKey {
   CVAlignType getVAlign() const { return keyData_.valign(); }
   void setVAlign(CVAlignType a) { keyData_.setVAlign(a); }
 
+  bool vertical() const { return keyData_.vertical(); }
+  void setVertical(bool b) { keyData_.setVertical(b); }
+
   const CBBox2D &getBBox() const { return bbox_; }
 
   const CFontPtr &getFont() const { return keyData_.font(); }
@@ -118,6 +139,17 @@ class CGnuPlotKey {
   virtual void draw(CGnuPlotRenderer *renderer);
 
   int plotAtPos(const CPoint2D &pos) const;
+
+  bool inside(const CPoint2D &p) const { return bbox_.inside(p); }
+
+ private:
+  void drawClustered(CGnuPlotRenderer *renderer);
+
+  void drawColumnStacked(CGnuPlotRenderer *renderer);
+
+  void drawBox(CGnuPlotRenderer *renderer);
+
+  void calcBBox(CGnuPlotRenderer *renderer, const CSize2D &size);
 
  private:
   typedef std::vector<double>   TickSpaces;

@@ -15,6 +15,13 @@ CQGnuPlotKey::
 {
 }
 
+int
+CQGnuPlotKey::
+boxLineStyle() const
+{
+  return CGnuPlotKey::boxLineStyle().getValue(-1);
+}
+
 CQGnuPlotEnum::HAlignType
 CQGnuPlotKey::
 halign() const
@@ -71,7 +78,7 @@ draw(CGnuPlotRenderer *renderer)
   }
 }
 
-void
+bool
 CQGnuPlotKey::
 mousePress(const QPoint &qp)
 {
@@ -82,7 +89,9 @@ mousePress(const QPoint &qp)
   renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
 
   CGnuPlotPlot *plot = group()->getPlotForId(CGnuPlotKey::plotAtPos(p));
-  if (! plot) return;
+  if (! plot) return false;
 
   plot->setDisplayed(! plot->isDisplayed());
+
+  return true;
 }

@@ -17,14 +17,21 @@ class CQSymbol2DRenderer : public CSymbol2DRenderer {
   typedef CGnuPlotTypes::SymbolType SymbolType;
 
  public:
-  CQSymbol2DRenderer(CQGnuPlotRenderer *r, const CPoint2D &p, double size=1.0) :
+  CQSymbol2DRenderer(CQGnuPlotRenderer *r, const CPoint2D &p,
+                     double size=1.0, bool pixelSize=true) :
    r_(r) {
-    double ss = sqrt(size);
-
     r_->windowToPixel(p.x, p.y, &px_, &py_);
 
-    sw_ = r_->windowWidthToPixelWidth  (ss)/2.0;
-    sh_ = r_->windowHeightToPixelHeight(ss)/2.0;
+    if (! pixelSize) {
+      double ss = sqrt(size);
+
+      sw_ = r_->windowWidthToPixelWidth  (ss)/2.0;
+      sh_ = r_->windowHeightToPixelHeight(ss)/2.0;
+    }
+    else {
+      sw_ = 4*size;
+      sh_ = sw_;
+    }
   }
 
   void drawSymbolType(SymbolType type) {
@@ -145,11 +152,12 @@ drawPoint(const CPoint2D &point, const CRGBA &c)
 
 void
 CQGnuPlotRenderer::
-drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c, double lw)
+drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c,
+           double lw, bool pixelSize)
 {
   double size1 = (size > 0 ? size : 1);
 
-  CQSymbol2DRenderer r(this, point, size1);
+  CQSymbol2DRenderer r(this, point, size1, pixelSize);
 
   QPen   pen  (toQColor(c));
   QBrush brush(toQColor(c));

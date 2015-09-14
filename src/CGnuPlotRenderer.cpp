@@ -604,9 +604,10 @@ drawClippedPath(const std::vector<CPoint3D> &points, double width, const CRGBA &
 
 void
 CGnuPlotRenderer::
-drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c, double lw)
+drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c,
+           double lw, bool pixelSize)
 {
-  drawSymbol(transform(p), type, size, c, lw);
+  drawSymbol(transform(p), type, size, c, lw, pixelSize);
 }
 
 void
@@ -619,7 +620,7 @@ drawPixelLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA 
   windowToPixel(p1.x, p1.y, &wx1, &wy1);
   windowToPixel(p2.x, p2.y, &wx2, &wy2);
 
-   drawLine(CPoint2D(wx1, wy1), CPoint2D(wx2, wy2), width, c, dash);
+  drawLine(CPoint2D(wx1, wy1), CPoint2D(wx2, wy2), width, c, dash);
 }
 
 void
@@ -646,7 +647,7 @@ pixelWidthToWindowWidth(double w)
   pixelToWindow(0, 0, &wx1, &wy1);
   pixelToWindow(w, w, &wx2, &wy2);
 
-  return wx2 - wx1;
+  return CGnuPlotUtil::sign(w)*fabs(wx2 - wx1);
 }
 
 double
@@ -658,7 +659,7 @@ pixelHeightToWindowHeight(double h)
   pixelToWindow(0, 0, &wx1, &wy1);
   pixelToWindow(h, h, &wx2, &wy2);
 
-  return wy1 - wy2;
+  return CGnuPlotUtil::sign(h)*fabs(wy1 - wy2);
 }
 
 double
@@ -670,7 +671,7 @@ pixelWidthToWindowWidthNoMargin(double w)
   pixelToWindowNoMargin(0, 0, &wx1, &wy1);
   pixelToWindowNoMargin(w, w, &wx2, &wy2);
 
-  return wx2 - wx1;
+  return CGnuPlotUtil::sign(w)*fabs(wx2 - wx1);
 }
 
 double
@@ -682,7 +683,7 @@ pixelHeightToWindowHeightNoMargin(double h)
   pixelToWindowNoMargin(0, 0, &wx1, &wy1);
   pixelToWindowNoMargin(h, h, &wx2, &wy2);
 
-  return wy1 - wy2;
+  return CGnuPlotUtil::sign(h)*fabs(wy1 - wy2);
 }
 
 double
@@ -694,7 +695,7 @@ windowWidthToPixelWidth(double w)
   windowToPixel(0, 0, &wx1, &wy1);
   windowToPixel(w, w, &wx2, &wy2);
 
-  return fabs(wx2 - wx1);
+  return CGnuPlotUtil::sign(w)*fabs(wx2 - wx1);
 }
 
 double
@@ -706,7 +707,7 @@ windowHeightToPixelHeight(double h)
   windowToPixel(0, 0, &wx1, &wy1);
   windowToPixel(h, h, &wx2, &wy2);
 
-  return fabs(wy2 - wy1);
+  return CGnuPlotUtil::sign(h)*fabs(wy2 - wy1);
 }
 
 void
@@ -727,7 +728,7 @@ void
 CGnuPlotRenderer::
 windowToPixel(double wx, double wy, double *px, double *py)
 {
-  if (! mapping_) {
+  if (! mapping_ || ! region_.isSet()) {
     *px = wx;
     *py = wy;
     return;
@@ -808,7 +809,7 @@ void
 CGnuPlotRenderer::
 pixelToWindowI(double px, double py, double *wx, double *wy, bool margin)
 {
-  if (! mapping_) {
+  if (! mapping_ || ! region_.isSet()) {
     *wx = px;
     *wy = py;
     return;

@@ -143,12 +143,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     if (boxPlot.outliers()) {
       for (const auto &o : whisker.outliers())
-        renderer->drawSymbol(CPoint2D(ix, whisker.value(o)), outlierSymbol, ps, lc);
+        renderer->drawSymbol(CPoint2D(ix, whisker.value(o)), outlierSymbol, ps, lc, 1, true);
     }
 
     if (renderer->isPseudo()) {
-      renderer->drawSymbol(CPoint2D(ix - 1, 0), outlierSymbol, ps, lc);
-      renderer->drawSymbol(CPoint2D(ix + 1, 0), outlierSymbol, ps, lc);
+      renderer->drawSymbol(CPoint2D(ix - 1, 0), outlierSymbol, ps, lc, 1, true);
+      renderer->drawSymbol(CPoint2D(ix + 1, 0), outlierSymbol, ps, lc, 1, true);
     }
 
     std::string s = xaxis->getValueStr(ix, ix);
@@ -206,12 +206,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     if (boxPlot.outliers()) {
       for (const auto &o : whisker.outliers())
-        renderer->drawSymbol(CPoint2D(ix, whisker.value(o)), outlierSymbol, ps, lc);
+        renderer->drawSymbol(CPoint2D(ix, whisker.value(o)), outlierSymbol, ps, lc, 1, true);
     }
 
     if (renderer->isPseudo()) {
-      renderer->drawSymbol(CPoint2D(ix - 1, 0), outlierSymbol, ps, lc);
-      renderer->drawSymbol(CPoint2D(ix + 1, 0), outlierSymbol, ps, lc);
+      renderer->drawSymbol(CPoint2D(ix - 1, 0), outlierSymbol, ps, lc, 1, true);
+      renderer->drawSymbol(CPoint2D(ix + 1, 0), outlierSymbol, ps, lc, 1, true);
     }
 
     renderer->drawHAlignedText(CPoint2D(ix, ypos), CHALIGN_TYPE_CENTER, 0,

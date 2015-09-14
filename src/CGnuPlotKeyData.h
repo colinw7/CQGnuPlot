@@ -3,6 +3,7 @@
 
 #include <CGnuPlotColorSpec.h>
 #include <CGnuPlotPosition.h>
+#include <CGnuPlotFillStyle.h>
 #include <CAlignType.h>
 #include <COptVal.h>
 #include <CFont.h>
@@ -11,6 +12,7 @@ class CGnuPlotKeyData {
  public:
   typedef std::vector<std::string>   Columns;
   typedef COptValT<CGnuPlotPosition> OptPos;
+  typedef std::map<int,std::string>  PointLabels;
 
  public:
   CGnuPlotKeyData();
@@ -97,6 +99,9 @@ class CGnuPlotKeyData {
   double boxLineWidth() const { return boxLineWidth_; }
   void setBoxLineWidth(double w) { boxLineWidth_ = w; }
 
+  const CGnuPlotFillStyle &boxFillStyle() const { return boxFillStyle_; }
+  void setBoxFillStyle(const CGnuPlotFillStyle &fs) { boxFillStyle_ = fs; }
+
   //---
 
   bool columnHead() const { return columnhead_; }
@@ -119,6 +124,17 @@ class CGnuPlotKeyData {
   const COptInt &maxRows() const { return maxRows_; }
   void setMaxRows(int i) { maxRows_ = i; }
   void resetMaxRows() { maxRows_.setInvalid(); }
+
+  void setPointLabel(int pointNum, const std::string &label) {
+    pointLabels_[pointNum] = label;
+  }
+
+  std::string pointLabel(int pointNum) const {
+    auto p = pointLabels_.find(pointNum);
+    if (p == pointLabels_.end()) return "";
+
+    return (*p).second;
+  }
 
   //---
 
@@ -168,6 +184,7 @@ class CGnuPlotKeyData {
     textColor_       = CGnuPlotColorSpec();
     maxCols_         = COptInt();
     maxRows_         = COptInt();
+    pointLabels_     = PointLabels();
   }
 
   void show(std::ostream &os) const;
@@ -200,12 +217,14 @@ class CGnuPlotKeyData {
   COptInt           boxLineType_;
   COptInt           boxLineStyle_;
   double            boxLineWidth_ { 1 };
+  CGnuPlotFillStyle boxFillStyle_;
   bool              columnhead_ { false };
   COptInt           columnNum_;
   Columns           columns_;
   CGnuPlotColorSpec textColor_;
   COptInt           maxCols_;
   COptInt           maxRows_;
+  PointLabels       pointLabels_;
 };
 
 #endif

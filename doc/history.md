@@ -119,3 +119,9 @@
  + add inline styles in comments
  + add interactive support for "-" plot file
  + improve tootip widget and experimental cursor support
+
+### 9/13/2015
+ + add newhistogram support
+ + add fill color option for key
+ + add multiple object property edit for bars, pies
+ + add more control for histogram properties (gap)

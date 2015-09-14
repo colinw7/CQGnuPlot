@@ -19,12 +19,12 @@ class CGnuPlotBoxWidth {
   bool isCalc() const { return calc_; }
   void setCalc(bool b) { calc_ = b; }
 
-  bool isAutoWidth() const { return (width_ == -2); }
+  bool isAutoWidth() const { return (width() == -2); }
 
   double getSpacing(double s) const {
-    if      (type_ == BoxWidthType::ABSOLUTE) return width_;
-    else if (type_ == BoxWidthType::RELATIVE) return width_*s;
-    else                                      return s;
+    if      (type() == BoxWidthType::ABSOLUTE) return width();
+    else if (type() == BoxWidthType::RELATIVE) return width()*s;
+    else                                       return s;
   }
 
   void unset() {
@@ -32,19 +32,19 @@ class CGnuPlotBoxWidth {
   }
 
   void show(std::ostream &os) {
-    if (type_ == BoxWidthType::AUTO)
+    if (type() == BoxWidthType::AUTO)
       os << "boxwidth is auto" << std::endl;
     else
-      os << "boxwidth is " << width_ << " " <<
-            (type_ == BoxWidthType::ABSOLUTE ? "absolute" : "relative") << std::endl;
+      os << "boxwidth is " << width() << " " <<
+            (type() == BoxWidthType::ABSOLUTE ? "absolute" : "relative") << std::endl;
   }
 
   void save(std::ostream &os) {
-    if (type_ == BoxWidthType::AUTO)
+    if (type() == BoxWidthType::AUTO)
       os << "set boxwidth" << std::endl;
     else
-      os << "set boxwidth " << width_ << " " <<
-            (type_ == BoxWidthType::ABSOLUTE ? "absolute" : "relative") << std::endl;
+      os << "set boxwidth " << width() << " " <<
+            (type() == BoxWidthType::ABSOLUTE ? "absolute" : "relative") << std::endl;
   }
 
  private:

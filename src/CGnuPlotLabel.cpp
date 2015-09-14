@@ -78,11 +78,11 @@ draw(CGnuPlotRenderer *renderer) const
 
   if (showPoint()) {
     // TODO: show point
-    renderer->drawSymbol(pos1, CGnuPlotTypes::SymbolType::CROSS, 1, c, 1);
+    renderer->drawSymbol(pos1, CGnuPlotTypes::SymbolType::CROSS, 1, c, 1, true);
   }
 
   COptPoint2D o(CPoint2D(pos1.x, pos1.y));
-//renderer->drawSymbol(o.getValue(), CGnuPlotTypes::SymbolType::PLUS, 1, CRGBA(1,0,0), 1);
+//renderer->drawSymbol(o.getValue(), CGnuPlotTypes::SymbolType::PLUS, 1, CRGBA(1,0,0), 1, true);
 
   if (isEnhanced() || fabs(a) > 1E-6)
     text_.draw(renderer, bbox_, halign, c, a, o);

@@ -61,7 +61,7 @@ is3D() const
 
 void
 CGnuPlotPlot::
-getKeyLabels(std::vector<CGnuPlotKeyLabel> &labels) const
+getKeyLabels(CGnuPlotPlot::KeyLabels &labels) const
 {
   labels.push_back(CGnuPlotKeyLabel(keyTitleString()));
 
@@ -109,6 +109,8 @@ init()
   setEnhanced(plot->device()->isEnhanced());
 
   setTableFile(plot->tableFile());
+
+  setNewHistogramId(plot->newHistogramId());
 }
 
 void
@@ -209,7 +211,7 @@ addPoint2D(double x, CExprValuePtr y)
 
 int
 CGnuPlotPlot::
-addPoint2D(const Values &values, bool discontinuity, const Params &params)
+addPoint2D(const Values &values, bool discontinuity, bool bad, const Params &params)
 {
   assert(! is3D());
 
@@ -225,7 +227,7 @@ addPoint2D(const Values &values, bool discontinuity, const Params &params)
     std::cerr << ")" << std::endl;
   }
 
-  points2D_.push_back(CGnuPlotPoint(values, discontinuity, params));
+  points2D_.push_back(CGnuPlotPoint(values, discontinuity, bad, params));
 
   return int(points2D_.size()) - 1;
 }
@@ -262,7 +264,7 @@ addPoint3D(int iy, double x, double y, CExprValuePtr z)
 
 int
 CGnuPlotPlot::
-addPoint3D(int iy, const Values &values, bool discontinuity)
+addPoint3D(int iy, const Values &values, bool discontinuity, bool bad)
 {
   assert(is3D());
 
@@ -278,7 +280,7 @@ addPoint3D(int iy, const Values &values, bool discontinuity)
     std::cerr << ")" << std::endl;
   }
 
-  points3D_[iy].push_back(CGnuPlotPoint(values, discontinuity));
+  points3D_[iy].push_back(CGnuPlotPoint(values, discontinuity, bad));
 
   reset3D();
 
@@ -926,6 +928,10 @@ void
 CGnuPlotPlot::
 drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &drawData)
 {
+  if (! isDisplayed()) return;
+
+  //---
+
   CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
   CRGBA lc = lineStyle().calcColor(group_, c);
@@ -957,7 +963,12 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
 
     double xl = drawData.x2 + drawData.i*drawData.w + i*drawData.d;
 
-    CBBox2D bbox(xl + drawData.xb, drawData.y2, xl + drawData.w - drawData.xb, y);
+    CBBox2D bbox;
+
+    if (! drawData.horizontal)
+      bbox = CBBox2D(xl + drawData.xb, drawData.y2, xl + drawData.w - drawData.xb, y);
+    else
+      bbox = CBBox2D(drawData.y2, xl + drawData.xb, y, xl + drawData.w - drawData.xb);
 
     if (! renderer->isPseudo()) {
       CGnuPlotBarObject *bar = barObjects()[i];
@@ -1011,6 +1022,10 @@ void
 CGnuPlotPlot::
 drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &drawData)
 {
+  if (! isDisplayed()) return;
+
+  //---
+
   CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
   CRGBA lc = lineStyle().calcColor(group_, c);
@@ -1085,19 +1100,33 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
 
 void
 CGnuPlotPlot::
-drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox)
+drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox, bool isColumn)
 {
+  if (! isDisplayed()) return;
+
+  //---
+
+  CRGBA lc, fc;
+
+  if (! isColumn) {
+    CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
+
+    lc = lineStyle().calcColor(group_, c);
+    fc = lineStyle().calcColor(group_, CRGBA(0,0,0));
+  }
+  else {
+    lc = CRGBA(0,0,0);
+    fc = CGnuPlotStyleInst->indexColor(i + 1);
+  }
+
+  //---
+
   const CGnuPlotPoint &point = getPoint2D(i);
 
   double y;
 
   if (! point.getY(y))
     return;
-
-  CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
-
-  CRGBA lc = lineStyle().calcColor(group_, c);
-  CRGBA fc = lineStyle().calcColor(group_, CRGBA(0,0,0));
 
   //---
 
@@ -1112,8 +1141,17 @@ drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox)
       bar->setFillPattern(fillPattern());
       bar->setFillColor  (fc);
 
-      bar->setBorder   (true);
-      bar->setLineColor(lc);
+      if (fillStyle().hasBorder()) {
+        bar->setBorder(true);
+
+        CRGBA lc1 = lc;
+
+        fillStyle().calcColor(group_, lc1);
+
+        bar->setLineColor(lc1);
+      }
+      else
+        bar->setBorder(false);
 
       bar->setInitialized(true);
     }

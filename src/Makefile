@@ -854,8 +854,6 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -874,6 +872,9 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -1103,8 +1104,6 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -1123,6 +1122,9 @@ moc_CQGnuPlotAnnotation.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -1305,8 +1307,6 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -1325,6 +1325,9 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -1507,8 +1510,6 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -1527,6 +1528,9 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -1720,8 +1724,6 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -1740,6 +1742,9 @@ moc_CQGnuPlotBarObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -1923,8 +1928,6 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -1943,6 +1946,9 @@ moc_CQGnuPlotBubbleObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -2312,8 +2318,6 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -2332,6 +2336,9 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -2514,8 +2521,6 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -2534,6 +2539,9 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -2716,8 +2724,6 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -2736,6 +2742,9 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -2920,8 +2929,6 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -2940,6 +2947,9 @@ moc_CQGnuPlotEllipseObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -3149,8 +3159,6 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -3169,6 +3177,9 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -3334,6 +3345,7 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
+		CGnuPlotFillStyle.h \
 		../../CUtil/include/CAlignType.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
@@ -3366,7 +3378,6 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
-		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotSize.h \
@@ -3407,8 +3418,6 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -3427,6 +3436,9 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -3609,8 +3621,6 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -3629,6 +3639,9 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -3827,8 +3840,6 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -3847,6 +3858,9 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -4079,8 +4093,6 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -4099,6 +4111,9 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -4273,8 +4288,6 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -4293,6 +4306,9 @@ moc_CQGnuPlotPieObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -4474,8 +4490,6 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -4494,6 +4508,9 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -4779,8 +4796,6 @@ moc_CQGnuPlotPointObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -4799,6 +4814,9 @@ moc_CQGnuPlotPointObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -4981,8 +4999,6 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -5001,6 +5017,9 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -5184,8 +5203,6 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -5204,6 +5221,9 @@ moc_CQGnuPlotPolygonObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -5386,8 +5406,6 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -5406,6 +5424,9 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -5590,8 +5611,6 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -5610,6 +5629,9 @@ moc_CQGnuPlotRectObject.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -5888,8 +5910,6 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -5908,6 +5928,9 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -6151,8 +6174,6 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -6171,6 +6192,9 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -8080,8 +8104,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -8100,6 +8122,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -8326,8 +8351,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -8346,6 +8369,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -8671,8 +8697,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -8691,6 +8715,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -8969,8 +8996,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -8989,6 +9014,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -9266,8 +9294,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -9286,6 +9312,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -9567,8 +9596,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -9587,6 +9614,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -9780,8 +9810,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -9800,6 +9828,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -9992,8 +10023,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -10012,6 +10041,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -10241,8 +10273,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -10261,6 +10291,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -10502,8 +10535,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -10522,6 +10553,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -10793,8 +10827,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -10813,6 +10845,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -11036,8 +11071,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -11056,6 +11089,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
@@ -11394,8 +11430,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -11414,6 +11448,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -11687,8 +11724,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -11707,6 +11742,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -11927,8 +11965,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -11947,6 +11983,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -12185,6 +12224,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
+		CGnuPlotFillStyle.h \
 		../../CUtil/include/CAlignType.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
@@ -12217,7 +12257,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
-		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotSize.h \
@@ -12258,8 +12297,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -12278,6 +12315,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -12555,8 +12595,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -12575,6 +12613,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -12863,8 +12904,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -12883,6 +12922,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -13146,8 +13188,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -13166,6 +13206,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -13363,8 +13406,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -13383,6 +13424,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -13574,8 +13618,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -13594,6 +13636,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -13893,8 +13938,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -13911,6 +13954,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -14034,8 +14080,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -14054,6 +14098,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
@@ -14266,8 +14313,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -14286,6 +14331,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
@@ -14524,8 +14572,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -14544,6 +14590,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -14817,8 +14866,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -14837,6 +14884,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -15028,8 +15078,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -15048,6 +15096,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -15240,8 +15291,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -15260,6 +15309,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -15540,8 +15592,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -15560,6 +15610,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -15692,8 +15745,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -15712,6 +15763,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotRenderer.h \
 		/usr/include/qt5/QtGui/QColor \
@@ -16061,8 +16115,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
@@ -16080,6 +16132,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -16257,8 +16312,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -16277,6 +16330,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
@@ -16632,8 +16688,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -16652,6 +16706,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -16842,8 +16899,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -16862,6 +16917,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -17203,8 +17261,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -17223,6 +17279,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
@@ -17408,8 +17467,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -17428,6 +17485,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -17547,8 +17607,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -17567,6 +17625,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotArrowStyle.o CGnuPlotArrowStyle.cpp
 
@@ -17676,8 +17737,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -17696,6 +17755,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
@@ -17813,8 +17875,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -17833,6 +17893,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -17948,8 +18011,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -17968,6 +18029,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -18081,8 +18145,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -18101,6 +18163,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotRenderer.h \
 		CSymbol2D.h \
@@ -18254,8 +18319,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -18274,6 +18337,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -18387,8 +18453,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -18407,6 +18471,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -18519,8 +18586,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -18539,6 +18604,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -18652,8 +18720,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -18672,6 +18738,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -18785,8 +18854,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -18805,6 +18872,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -18924,8 +18994,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -18944,6 +19012,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -19061,8 +19132,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -19081,6 +19150,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotWindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotCoordValue.o CGnuPlotCoordValue.cpp
@@ -19188,8 +19260,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -19208,6 +19278,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotDash.o CGnuPlotDash.cpp
 
@@ -19318,8 +19391,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -19338,6 +19409,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
@@ -19462,8 +19536,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -19482,6 +19554,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -19597,8 +19672,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -19617,6 +19690,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -19744,8 +19820,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -19764,6 +19838,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -19877,8 +19954,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -19897,6 +19972,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -19948,6 +20026,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
+		CGnuPlotFillStyle.h \
 		../../CUtil/include/CAlignType.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
@@ -19980,7 +20059,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
-		CGnuPlotFillStyle.h \
 		CGnuPlotPointStyle.h \
 		CGnuPlotCoordValue.h \
 		CGnuPlotSize.h \
@@ -20021,8 +20099,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -20041,6 +20117,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -20087,6 +20166,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
+		CGnuPlotFillStyle.h \
 		../../CUtil/include/CAlignType.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
@@ -20199,8 +20279,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -20219,6 +20297,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -20332,8 +20413,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -20352,6 +20431,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
@@ -20471,8 +20553,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -20491,6 +20571,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -20604,8 +20687,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -20623,6 +20704,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotFitData.h \
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotMargin.o CGnuPlotMargin.cpp
 
@@ -20766,8 +20850,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -20786,6 +20868,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -20899,8 +20984,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -20919,6 +21002,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -21111,8 +21197,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -21131,6 +21215,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -21249,8 +21336,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -21269,6 +21354,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -21385,8 +21473,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -21405,6 +21491,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -21525,8 +21614,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -21545,6 +21632,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPosition.o CGnuPlotPosition.cpp
 
@@ -21652,8 +21742,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -21671,6 +21759,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPrintFile.o CGnuPlotPrintFile.cpp
 
@@ -21778,8 +21869,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -21798,6 +21887,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -21914,8 +22006,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -21934,6 +22024,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -22047,8 +22140,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -22067,6 +22158,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotWindow.h \
 		../../CFont/include/CFontMgr.h \
@@ -22216,8 +22310,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
 		CGnuPlotBinaryFormat.h \
@@ -22235,6 +22327,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -22346,8 +22441,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -22366,6 +22459,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CParseLine.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotUsingCols.o CGnuPlotUsingCols.cpp
@@ -22476,8 +22572,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -22496,6 +22590,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -22618,8 +22715,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -22638,6 +22733,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -22755,8 +22853,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -22775,6 +22871,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
@@ -22893,8 +22992,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -22913,6 +23010,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -23035,8 +23135,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -23055,6 +23153,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -23172,8 +23273,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -23192,6 +23291,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -23320,8 +23422,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -23340,6 +23440,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -23461,8 +23564,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -23481,6 +23582,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -23598,8 +23702,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -23618,6 +23720,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -23736,8 +23841,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -23756,6 +23859,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -23883,8 +23989,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -23903,6 +24007,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -24019,8 +24126,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -24039,6 +24144,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -24155,8 +24263,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -24175,6 +24281,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -24291,8 +24400,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -24311,6 +24418,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -24440,8 +24550,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -24460,6 +24568,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -24580,8 +24691,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -24600,6 +24709,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -24727,8 +24839,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -24747,6 +24857,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -24867,8 +24980,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -24887,6 +24998,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -25009,8 +25123,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -25029,6 +25141,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -25149,8 +25264,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -25169,6 +25282,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -25291,8 +25407,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -25311,6 +25425,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -25432,8 +25549,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -25452,6 +25567,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -25574,8 +25692,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -25594,6 +25710,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -25715,8 +25834,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -25735,6 +25852,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -25851,8 +25971,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -25871,6 +25989,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -25992,8 +26113,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -26012,6 +26131,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -26128,8 +26250,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -26148,6 +26268,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -26271,8 +26394,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -26291,6 +26412,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -26411,8 +26535,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -26431,6 +26553,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -26549,8 +26674,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -26569,6 +26692,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -26692,8 +26818,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -26712,6 +26836,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -26828,8 +26955,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -26848,6 +26973,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -26964,8 +27092,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -26984,6 +27110,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -27100,8 +27229,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -27120,6 +27247,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -27236,8 +27366,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -27256,6 +27384,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -27372,8 +27503,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -27392,6 +27521,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -27508,8 +27640,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -27528,6 +27658,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -27646,8 +27779,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -27666,6 +27797,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotWindow.h \
@@ -27784,8 +27918,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -27804,6 +27936,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotSVGDevice.h \
@@ -27917,8 +28052,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -27937,6 +28070,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotSize.o CGnuPlotSize.cpp
 
@@ -27972,7 +28108,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
-		CGnuPlotRenderer.h \
+		CGnuPlotBBoxRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -28044,8 +28180,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -28064,7 +28198,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
+		CGnuPlotRenderer.h \
 		CParseLine.h \
 		CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
@@ -28180,8 +28318,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -28200,6 +28336,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -28315,8 +28454,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCircleStyle.h \
 		CGnuPlotEllipseStyle.h \
 		CGnuPlotRectStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTimeStampData.h \
 		CGnuPlotMouseData.h \
 		CGnuPlotClip.h \
@@ -28335,6 +28472,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotHidden3DData.h \
 		CGnuPlotKeyTitle.h \
 		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
 		CGnuPlotPieStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \

@@ -42,7 +42,7 @@ init()
   setRegion(plot->region());
   setMargin(plot->margin());
 
-  setHistogramData(plot->histogramData());
+  setHistogramDatas(plot->histogramData(), plot->newHistogramDatas());
 
   key_->setKeyData(plot->keyData());
 
@@ -109,9 +109,10 @@ init()
 
 void
 CGnuPlotGroup::
-setHistogramData(const CGnuPlotHistogramData &data)
+setHistogramDatas(const CGnuPlotHistogramData &data, const CGnuPlotNewHistogramDatas &newDatas)
 {
-  histogramData_ = data;
+  histogramData_     = data;
+  newHistogramDatas_ = newDatas;
 
   if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
     xaxis(1).resetMin(); xaxis(1).resetMax();
@@ -157,6 +158,16 @@ clearSubPlots()
 
 void
 CGnuPlotGroup::
+addSubPlots(const Plots &plots)
+{
+  clearSubPlots();
+
+  for (auto plot : plots)
+    addSubPlot(plot);
+}
+
+void
+CGnuPlotGroup::
 addSubPlot(CGnuPlotPlot *plot)
 {
   plot->setInd(plots_.size() + 1);
@@ -164,16 +175,6 @@ addSubPlot(CGnuPlotPlot *plot)
   plots_.push_back(plot);
 
   plot->setGroup(this);
-}
-
-void
-CGnuPlotGroup::
-addSubPlots(const Plots &plots)
-{
-  clearSubPlots();
-
-  for (auto plot : plots)
-    addSubPlot(plot);
 }
 
 void
@@ -233,102 +234,18 @@ fit()
   double dx = 0.0, dy = 0.0, dz = 0.0;
 
   if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
-    Plots plots;
+    fitHistograms(xmin1, ymin1, xmax1, ymax1);
 
-    getPlotsOfStyle(plots, PlotStyle::HISTOGRAMS);
-
-    CGnuPlotBBoxRenderer brenderer(app()->renderer());
-
-    HistogramStyle hstyle = getHistogramData().style();
-
-    CGnuPlotPlot::DrawHistogramData drawData;
-
-    drawData.i  = 0;
-    drawData.np = plots.size();
-    drawData.xb = 0;
-
-    drawData.w = 1.0/std::max(drawData.np, 1);
-    drawData.d = 1.0;
-
-    drawData.x2 = -drawData.np*drawData.w/2.0;
-
-    if      (hstyle == HistogramStyle::CLUSTERED) {
-      for (auto plot : plots) {
-        plot->drawClusteredHistogram(&brenderer, drawData);
-
-        drawData.x2 += drawData.w;
-
-        ++drawData.i;
-      }
-    }
-    else if (hstyle == HistogramStyle::ERRORBARS) {
-      for (auto plot : plots) {
-        plot->drawErrorBarsHistogram(&brenderer, drawData);
-
-        drawData.x2 += drawData.w;
-
-        ++drawData.i;
-      }
-    }
-    else if (hstyle == HistogramStyle::ROWSTACKED) {
-      drawRowStackedHistograms(&brenderer, plots);
-    }
-    else if (hstyle == HistogramStyle::COLUMNSTACKED) {
-      drawColumnStackedHistograms(&brenderer, plots);
-    }
-
-    xmin1.updateMin(brenderer.bbox().getLeft  ());
-    ymin1.updateMin(brenderer.bbox().getBottom());
-    xmax1.updateMax(brenderer.bbox().getRight ());
-    ymax1.updateMax(brenderer.bbox().getTop   ());
-
-    dx = 1.0;
-
-    CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
-    CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
-
-    plotXAxis1->setDataRange(brenderer.bbox().getLeft  (), brenderer.bbox().getRight());
-    plotYAxis1->setDataRange(brenderer.bbox().getBottom(), brenderer.bbox().getTop  ());
+    if (! getHistogramData().isHorizontal())
+      dx = 1.0;
+    else
+      dy = 1.0;
   }
   else if (singlePlot) {
-    CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->getStyle());
-
-    CBBox2D rect = singleStyle->fit(singlePlot);
-
-    xmin1 = rect.getXMin(); ymin1 = rect.getYMin();
-    xmax1 = rect.getXMax(); ymax1 = rect.getYMax();
-
-    CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
-    CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
-
-    plotXAxis1->setDataRange(xmin1.getValue(), xmax1.getValue());
-    plotYAxis1->setDataRange(ymin1.getValue(), ymax1.getValue());
+    fitSinglePlot(singlePlot, xmin1, ymin1, xmax1, ymax1);
   }
   else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
-    int nc = 0;
-
-    for (auto plot : plots_) {
-      const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-
-      int nc1 = 0;
-
-      for (const auto &p : plot->getPoints2D())
-        nc1 = std::max(nc, p.getNumValues());
-
-      if (lineStyle.lineColor().isValid() && lineStyle.lineColor().getValue().isCalc())
-        --nc1;
-
-      nc = std::max(nc, nc1);
-    }
-
-    xmin1 = 1; xmax1 = nc;
-    ymin1 = 0; ymax1 = 1;
-
-    CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
-    CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
-
-    plotXAxis1->setDataRange(xmin1.getValue(), xmax1.getValue());
-    plotYAxis1->setDataRange(ymin1.getValue(), ymax1.getValue());
+    fitParallelAxes(xmin1, ymin1, xmax1, ymax1);
   }
 #if 0
   else if (hasImageStyle()) {
@@ -624,31 +541,180 @@ fit()
   //---
 
   {
-  // fit axes
-  CBBox2D bbox = getMappedDisplayRange(1, 1);
+    // fit axes
+    CBBox2D bbox = getMappedDisplayRange(1, 1);
+
+    CGnuPlotBBoxRenderer brenderer(app()->renderer());
+
+    //axisBBox_ = CBBox2D();
+    axisBBox_ = bbox;
+
+    drawAxes(&brenderer, true);
+
+    keyBBox_ = axisBBox_;
+
+    drawKey(&brenderer);
+
+    marginBBox_ = keyBBox_;
+
+    drawColorBox(&brenderer);
+
+    drawTitle(&brenderer);
+
+    if (marginBBox_.isSet()) {
+      double lm = fabs(bbox.getLeft  () - marginBBox_.getLeft  ());
+      double bm = fabs(bbox.getBottom() - marginBBox_.getBottom());
+      double rm = fabs(bbox.getRight () - marginBBox_.getRight ());
+      double tm = fabs(bbox.getTop   () - marginBBox_.getTop   ());
+
+      margin_.updateDefaultValues(&brenderer, lm, bm, rm, tm);
+    }
+  }
+}
+
+void
+CGnuPlotGroup::
+fitHistograms(COptReal &xmin1, COptReal &ymin1, COptReal &xmax1, COptReal &ymax1)
+{
+  Plots plots;
+
+  getPlotsOfStyle(plots, PlotStyle::HISTOGRAMS);
+
+  std::map<int,Plots> nplots;
+
+  for (auto plot : plots)
+    nplots[plot->newHistogramId()].push_back(plot);
 
   CGnuPlotBBoxRenderer brenderer(app()->renderer());
 
-  //axisBBox_ = CBBox2D();
-  axisBBox_ = bbox;
+  CGnuPlotPlot::DrawHistogramData drawData;
 
-  drawAxes(&brenderer, true);
+  HistogramStyle hstyle = getHistogramData().style();
+  double         gap    = getHistogramData().gap().getValue(0);
 
-  marginBBox_ = axisBBox_;
+  double xp = 0;
 
-  drawColorBox(&brenderer);
+  for (auto nplot : nplots) {
+    const Plots &plots1 = nplot.second;
 
-  drawTitle(&brenderer);
+    drawData.i  = 0;
+    drawData.np = plots1.size();
+    drawData.xb = 0;
 
-  if (marginBBox_.isSet()) {
-    double lm = fabs(bbox.getLeft  () - marginBBox_.getLeft  ());
-    double bm = fabs(bbox.getBottom() - marginBBox_.getBottom());
-    double rm = fabs(bbox.getRight () - marginBBox_.getRight ());
-    double tm = fabs(bbox.getTop   () - marginBBox_.getTop   ());
+  //drawData.w = 1.0/std::max(drawData.np, 1); // TODO: bbox width
+    drawData.w = 1.0/(std::max(drawData.np, 1) + gap/2);
+  //drawData.d = drawData.w*gap + 1;
+    drawData.d = 1;
 
-    margin_.updateDefaultValues(&brenderer, lm, bm, rm, tm);
+    drawData.x2 = xp - drawData.np*drawData.w/2.0;
+
+    drawData.horizontal = getHistogramData().isHorizontal();
+
+    if      (hstyle == HistogramStyle::CLUSTERED) {
+      int npts = 0;
+
+      for (auto plot : plots1)
+        npts = std::max(npts, int(plot->numPoints2D()));
+
+      for (auto plot : plots1) {
+        plot->drawClusteredHistogram(&brenderer, drawData);
+
+        drawData.x2 += drawData.w;
+
+        ++drawData.i;
+      }
+
+      xp += npts;
+    }
+    else if (hstyle == HistogramStyle::ERRORBARS) {
+      for (auto plot : plots1) {
+        plot->drawErrorBarsHistogram(&brenderer, drawData);
+
+        drawData.x2 += drawData.w;
+
+        ++drawData.i;
+      }
+
+      xp += drawData.np;
+    }
+    else if (hstyle == HistogramStyle::ROWSTACKED) {
+      CGnuPlotPlot *plot1 = (! plots1.empty() ? plots1[0] : 0);
+
+      drawRowStackedHistograms(&brenderer, xp, plots1);
+
+      if (plot1)
+        xp += plot1->numPoints2D();
+    }
+    else if (hstyle == HistogramStyle::COLUMNSTACKED) {
+      drawColumnStackedHistograms(&brenderer, plots1);
+
+      xp += drawData.np;
+    }
   }
+
+  if (brenderer.bbox().isSet()) {
+    xmin1.updateMin(brenderer.bbox().getLeft  ());
+    ymin1.updateMin(brenderer.bbox().getBottom());
+    xmax1.updateMax(brenderer.bbox().getRight ());
+    ymax1.updateMax(brenderer.bbox().getTop   ());
   }
+
+  CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
+  CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
+
+  if (brenderer.bbox().isSet()) {
+    plotXAxis1->setDataRange(brenderer.bbox().getLeft  (), brenderer.bbox().getRight());
+    plotYAxis1->setDataRange(brenderer.bbox().getBottom(), brenderer.bbox().getTop  ());
+  }
+}
+
+void
+CGnuPlotGroup::
+fitSinglePlot(CGnuPlotPlot *singlePlot, COptReal &xmin1, COptReal &ymin1,
+              COptReal &xmax1, COptReal &ymax1)
+{
+  CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->getStyle());
+
+  CBBox2D rect = singleStyle->fit(singlePlot);
+
+  xmin1 = rect.getXMin(); ymin1 = rect.getYMin();
+  xmax1 = rect.getXMax(); ymax1 = rect.getYMax();
+
+  CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
+  CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
+
+  plotXAxis1->setDataRange(xmin1.getValue(), xmax1.getValue());
+  plotYAxis1->setDataRange(ymin1.getValue(), ymax1.getValue());
+}
+
+void
+CGnuPlotGroup::
+fitParallelAxes(COptReal &xmin1, COptReal &ymin1, COptReal &xmax1, COptReal &ymax1)
+{
+  int nc = 0;
+
+  for (auto plot : plots_) {
+    const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+
+    int nc1 = 0;
+
+    for (const auto &p : plot->getPoints2D())
+      nc1 = std::max(nc, p.getNumValues());
+
+    if (lineStyle.lineColor().isValid() && lineStyle.lineColor().getValue().isCalc())
+      --nc1;
+
+    nc = std::max(nc, nc1);
+  }
+
+  xmin1 = 1; xmax1 = nc;
+  ymin1 = 0; ymax1 = 1;
+
+  CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
+  CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
+
+  plotXAxis1->setDataRange(xmin1.getValue(), xmax1.getValue());
+  plotYAxis1->setDataRange(ymin1.getValue(), ymax1.getValue());
 }
 
 void
@@ -910,8 +976,8 @@ draw()
   else
     renderer->unsetRatio();
 
-  drawAnnotations(DrawLayer::BEHIND);
-  drawAnnotations(DrawLayer::BACK);
+  drawAnnotations(renderer, DrawLayer::BEHIND);
+  drawAnnotations(renderer, DrawLayer::BACK);
 
   //---
 
@@ -964,7 +1030,7 @@ draw()
 
     getPlotsOfStyle(hplots, PlotStyle::HISTOGRAMS);
 
-    drawHistogram(hplots);
+    drawHistogram(renderer, hplots);
   }
   else {
     for (auto plot : plots_) {
@@ -984,7 +1050,7 @@ draw()
 
   //---
 
-  drawKey();
+  drawKey(renderer);
 
   if (colorBox_->isFront())
     drawColorBox(renderer);
@@ -992,7 +1058,7 @@ draw()
   //---
 
   // draw front
-  drawAnnotations(DrawLayer::FRONT);
+  drawAnnotations(renderer, DrawLayer::FRONT);
 }
 
 void
@@ -1062,7 +1128,8 @@ getPlotAxis(AxisType type, int ind, bool create) const
 
     if      (type == AxisType::X) {
       if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
-        axis->setMajorIncrement(1);
+        if (! histogramData_.isHorizontal())
+          axis->setMajorIncrement(1);
       }
       else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
         axis->setMajorIncrement(1);
@@ -1076,6 +1143,10 @@ getPlotAxis(AxisType type, int ind, bool create) const
       }
     }
     else if (type == AxisType::Y) {
+      if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
+        if (histogramData_.isHorizontal())
+          axis->setMajorIncrement(1);
+      }
     }
     else if (type == AxisType::Z) {
     }
@@ -1183,10 +1254,8 @@ drawTitle(CGnuPlotRenderer *renderer)
 
 void
 CGnuPlotGroup::
-drawHistogram(const Plots &plots)
+drawHistogram(CGnuPlotRenderer *renderer, const Plots &plots)
 {
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   CBBox2D bbox = getMappedDisplayRange(1, 1);
 
   renderer->setRange(bbox);
@@ -1194,96 +1263,158 @@ drawHistogram(const Plots &plots)
 
   //---
 
-  HistogramStyle hstyle = getHistogramData().style();
+  std::map<int,Plots> nplots;
+
+  for (auto plot : plots)
+    nplots[plot->newHistogramId()].push_back(plot);
 
   CGnuPlotPlot::DrawHistogramData drawData;
 
-  drawData.i  = 0;
-  drawData.np = plots.size();
-  drawData.xb = renderer->pixelWidthToWindowWidth(2);
+  HistogramStyle hstyle = getHistogramData().style();
+  double         gap    = getHistogramData().gap().getValue(0);
 
-  drawData.w = 1.0/std::max(drawData.np, 1); // TODO: bbox width
-  drawData.d = 1.0;
+  double xp = 0;
 
-  drawData.x2 = -drawData.np*drawData.w/2.0;
-  drawData.y2 = std::max(0.0, bbox.getBottom());
+  for (auto nplot : nplots) {
+    //int ind = nplot.first;
 
-  if      (hstyle == HistogramStyle::CLUSTERED) {
-    CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, 1, true);
-    CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, 1, true);
+    const Plots &plots1 = nplot.second;
 
-    renderer->setReverse(plotXAxis->isReverse(), plotYAxis->isReverse());
+    drawData.i  = 0;
+    drawData.np = plots1.size();
+  //drawData.xb = renderer->pixelWidthToWindowWidth(2);
+    drawData.xb = 0;
 
-    for (auto plot : plots) {
-      plot->drawClusteredHistogram(renderer, drawData);
+  //drawData.w = 1.0/std::max(drawData.np, 1); // TODO: bbox width
+    drawData.w = 1.0/(std::max(drawData.np, 1) + gap/2);
+  //drawData.d = drawData.w*gap + 1;
+    drawData.d = 1;
 
-      ++drawData.i;
+    drawData.x2 = xp - drawData.np*drawData.w/2.0;
+    drawData.y2 = std::max(0.0, bbox.getBottom());
+
+    drawData.horizontal = histogramData_.isHorizontal();
+
+    if      (hstyle == HistogramStyle::CLUSTERED) {
+      int npts = 0;
+
+      for (auto plot : plots1)
+        npts = std::max(npts, int(plot->numPoints2D()));
+
+      CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, 1, true);
+      CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, 1, true);
+
+      renderer->setReverse(plotXAxis->isReverse(), plotYAxis->isReverse());
+
+      for (auto plot : plots1) {
+        drawData.xb = (1 - plot->boxWidth().width())/2;
+
+        plot->drawClusteredHistogram(renderer, drawData);
+
+        ++drawData.i;
+      }
+
+      xp += npts;
     }
-  }
-  else if (hstyle == HistogramStyle::ERRORBARS) {
-    CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, 1, true);
-    CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, 1, true);
+    else if (hstyle == HistogramStyle::ERRORBARS) {
+      CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, 1, true);
+      CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, 1, true);
 
-    renderer->setReverse(plotXAxis->isReverse(), plotYAxis->isReverse());
+      renderer->setReverse(plotXAxis->isReverse(), plotYAxis->isReverse());
 
-    for (auto plot : plots) {
-      plot->drawErrorBarsHistogram(renderer, drawData);
+      for (auto plot : plots1) {
+        drawData.xb = (1 - plot->boxWidth().width())/2;
 
-      ++drawData.i;
+        plot->drawErrorBarsHistogram(renderer, drawData);
+
+        ++drawData.i;
+      }
+
+      xp += drawData.np;
     }
-  }
-  else if (hstyle == HistogramStyle::ROWSTACKED) {
-    drawRowStackedHistograms(renderer, plots);
-  }
-  else if (hstyle == HistogramStyle::COLUMNSTACKED) {
-    drawColumnStackedHistograms(renderer, plots);
-  }
-  else {
-    app()->errorMsg("Unsupported histogram style");
+    else if (hstyle == HistogramStyle::ROWSTACKED) {
+      CGnuPlotPlot *plot1 = (! plots1.empty() ? plots1[0] : 0);
+
+      drawRowStackedHistograms(renderer, xp, plots1);
+
+      if (plot1)
+        xp += plot1->numPoints2D();
+    }
+    else if (hstyle == HistogramStyle::COLUMNSTACKED) {
+      drawColumnStackedHistograms(renderer, plots1);
+
+      xp += drawData.np;
+    }
+    else {
+      app()->errorMsg("Unsupported histogram style");
+    }
   }
 }
 
 void
 CGnuPlotGroup::
-drawRowStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
+drawRowStackedHistograms(CGnuPlotRenderer *renderer, double xp, const Plots &plots)
 {
   uint numPoints = 0;
 
-  for (auto plot : plots)
+  for (auto plot : plots) {
+    if (! plot->isDisplayed())
+      continue;
+
     numPoints = std::max(numPoints, plot->numPoints2D());
+  }
 
   if (numPoints == 0)
     return;
 
+  //---
+
   if (! renderer->isPseudo()) {
-    for (auto plot : plots)
+    for (auto plot : plots) {
+      if (! plot->isDisplayed())
+        continue;
+
       plot->updateBarCacheSize(numPoints);
+    }
   }
 
   //---
 
-  double xb = 0;
-
-  if (! renderer->isPseudo())
-    xb = renderer->pixelWidthToWindowWidth(2);
-
-  double w = 1.0 - 2*xb;
-  double x = 0.5 + xb;
+  double x = xp - 0.5;
 
   for (uint i = 0; i < numPoints; ++i) {
     double h = 0;
 
     for (auto plot : plots) {
+      if (! plot->isDisplayed())
+        continue;
+
+      if (i >= plot->numPoints2D())
+        continue;
+
       const CGnuPlotPoint &point = plot->getPoint2D(i);
+
+      //---
+
+      double xb = 0;
+
+      if (! renderer->isPseudo())
+        xb = (1 - plot->boxWidth().width())/2;
+
+      double w = 1.0 - 2*xb;
+
+      double x1 = x + xb;
+
+      //---
 
       double y;
 
       if (! point.getY(y))
         y = 0.0;
 
-      CBBox2D bbox1(x, h, x + w, h + y);
+      CBBox2D bbox1(x1, h, x1 + w, h + y);
 
-      plot->drawStackedHistogram(renderer, i, bbox1);
+      plot->drawStackedHistogram(renderer, i, bbox1, false);
 
       h += y;
     }
@@ -1291,8 +1422,12 @@ drawRowStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
     x += 1.0;
   }
 
-  for (auto plot : plots)
+  for (auto plot : plots) {
+    if (! plot->isDisplayed())
+      continue;
+
     plot->drawBars(renderer);
+  }
 }
 
 void
@@ -1300,23 +1435,39 @@ CGnuPlotGroup::
 drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
 {
   if (! renderer->isPseudo()) {
-    for (auto plot : plots)
+    for (auto plot : plots) {
+      if (! plot->isDisplayed())
+        continue;
+
       plot->updateBarCacheSize(plot->numPoints2D());
+    }
   }
 
   //---
 
-  double xb = 0;
-
-  if (! renderer->isPseudo())
-    xb = renderer->pixelWidthToWindowWidth(2);
-
-  double w = 1.0 - 2*xb;
-  double x = 0.5 + xb;
-
-  //---
+  double x = -0.5;
 
   for (auto plot : plots) {
+    if (! plot->isDisplayed())
+      continue;
+
+    //---
+
+    double xb = 0;
+
+    if (! renderer->isPseudo())
+      xb = (1 - plot->boxWidth().width())/2;
+
+    double w = 1.0 - 2*xb;
+
+    double x1 = x + xb;
+
+    //---
+
+    axesData_.xaxis(1).setTicLabel(x + 0.5, plot->keyTitle().str, 0);
+
+    //---
+
     double h1 = 0, h2 = 0;
 
     for (uint i = 0; i < plot->numPoints2D(); ++i) {
@@ -1328,16 +1479,16 @@ drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
         y = 0.0;
 
       if (y >= 0) {
-        CBBox2D bbox1(x, h1, x + w, h1 + y);
+        CBBox2D bbox1(x1, h1, x1 + w, h1 + y);
 
-        plot->drawStackedHistogram(renderer, i, bbox1);
+        plot->drawStackedHistogram(renderer, i, bbox1, true);
 
         h1 += y;
       }
       else {
-        CBBox2D bbox1(x, h2, x + w, h2 + y);
+        CBBox2D bbox1(x1, h2, x1 + w, h2 + y);
 
-        plot->drawStackedHistogram(renderer, i, bbox1);
+        plot->drawStackedHistogram(renderer, i, bbox1, true);
 
         h2 += y;
       }
@@ -1346,8 +1497,12 @@ drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
     x += 1.0;
   }
 
-  for (auto plot : plots)
+  for (auto plot : plots) {
+    if (! plot->isDisplayed())
+      continue;
+
     plot->drawBars(renderer);
+  }
 }
 
 #if 0
@@ -1804,12 +1959,10 @@ drawGrid(CGnuPlotRenderer *renderer, const CGnuPlotTypes::DrawLayer &layer)
 
 void
 CGnuPlotGroup::
-drawKey()
+drawKey(CGnuPlotRenderer *renderer)
 {
   if (hasPlotStyle(PlotStyle::TEST_TERMINAL))
     return;
-
-  CGnuPlotRenderer *renderer = app()->renderer();
 
   // TODO: key drawn in own coord system
   // TODO: always fill background, opaque draws on top of plots
@@ -1865,14 +2018,12 @@ drawColorBox(CGnuPlotRenderer *renderer)
 
 void
 CGnuPlotGroup::
-drawAnnotations(DrawLayer layer)
+drawAnnotations(CGnuPlotRenderer *renderer, DrawLayer layer)
 {
   if (hasPlotStyle(PlotStyle::TEST_TERMINAL))
     return;
 
   // draw labels last
-  CGnuPlotRenderer *renderer = app()->renderer();
-
   renderer->setRange(getMappedDisplayRange(1, 1));
 
   renderer->setReverse(xaxis(1).isReverse(), yaxis(1).isReverse());

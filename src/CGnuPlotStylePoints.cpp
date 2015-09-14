@@ -97,7 +97,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         renderer->drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
                                    plot->pointTypeStr(), c1);
       else
-        renderer->drawSymbol(p, pointType, size1, c1, lw);
+        renderer->drawSymbol(p, pointType, size1, c1, lw, true);
     }
 
     ++pointNum;
@@ -133,7 +133,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       (void) plot->mapPoint3D(point, p, ind);
 
-      renderer->drawSymbol(p, pointType, pointSize, c, lw);
+      renderer->drawSymbol(p, pointType, pointSize, c, lw, true);
     }
   }
 }
@@ -153,7 +153,7 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   CPoint2D pm = (p1 + p2)/2;
 
-  renderer->drawSymbol(pm, pointType, pointSize, c, lw);
+  renderer->drawSymbol(pm, pointType, pointSize, c, lw, true);
 }
 
 CBBox2D

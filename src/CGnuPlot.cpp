@@ -1838,6 +1838,10 @@ plotCmd(const std::string &args)
 
   clearRect_.setInvalid();
 
+  clearNewHistogramDatas();
+
+  setHistogramPointOffset(0);
+
   //---
 
   // TODO: update local line style copy
@@ -1932,8 +1936,6 @@ plotCmd(const std::string &args)
   CGnuPlotAxesData axesData = axesData_;
 
   for (const auto &cmd : cmds) {
-    incLineStyle();
-
     plotCmd1(cmd, group, plots, sample, first);
 
     first = false;
@@ -1991,8 +1993,6 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
   line.skipSpace();
 
   if (line.isString("for")) {
-    resetLineStyle();
-
     ForCmd      forCmd;
     std::string cmd;
 
@@ -2010,27 +2010,75 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
 
   std::swap(first, first1);
 
-  //bool newhistogram = false;
-
+  // newhistogram {"<title>"} {lt <linetype>} {fs <fillstyle>} {at <x-coord>}
   if (line.isString("newhistogram")) {
+    CGnuPlotNewHistogramData newHistogramData;
+
     line.skipNonSpace();
 
     std::string histTitle;
 
-    if (! parseString(line, histTitle))
-      histTitle = "";
+    if (parseString(line, histTitle))
+      newHistogramData.setTitle(histTitle);
 
-    histogramData_.addNewTitle(plots.size(), histTitle);
+    line.skipSpace();
 
-    (void) line.skipSpaceAndChar(',');
+    if      (line.isString("lt")) {
+      int lt;
+
+      if (parseLineType(line, lt))
+        newHistogramData.setLineType(lt);
+    }
+    else if (line.isString("fs")) {
+      CGnuPlotFillStyle fillStyle;
+
+      if (parseFillStyle(line, fillStyle))
+        newHistogramData.setFillStyle(fillStyle);
+    }
+    else if (line.isString("at")) {
+      double x;
+
+      if (parseReal(line, x))
+        newHistogramData.setX(x);
+    }
+
+    newHistogramData.setInd(newHistogramDatas_.size());
+
+    newHistogramDatas_.push_back(newHistogramData);
+
+    //---
+
+    int histId = newHistogramId();
+
+    if (histId > 0) {
+      std::map<int,int> histNumPoints;
+
+      for (const auto &plot : plots)
+        histNumPoints[plot->newHistogramId()] = plot->numPoints2D();
+
+      int np = 0;
+
+      for (const auto &hnp : histNumPoints) {
+        if (hnp.first < histId)
+          np += hnp.second;
+      }
+
+      setHistogramPointOffset(np);
+    }
+
+    return;
   }
+
+  //----
+
+  incLineStyle();
 
   //----
 
   // get local copy of next line style
   CGnuPlotLineStyle lineStyle = *this->lineStyle();
   CGnuPlotFillStyle fillStyle = this->fillStyle();
-  StyleData         styleData = this->styleData();
+  CGnuPlotStyleData styleData = this->styleData();
 
   //----
 
@@ -2196,7 +2244,7 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
 
   //---
 
-  CGnuPlotUsingCols usingCols;
+  CGnuPlotUsingCols usingCols(this);
 
   dataFile_.resetIndices();
   dataFile_.resetEvery  ();
@@ -2298,7 +2346,7 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
       COptInt col;
 
       if      (isColumnHeader(line, col)) {
-    //if      (line.isOneOf({"col", "columnhead", "columnheader", "columnheaders"})) {
+    //if      (line.isOneOf({"col", "columnhead", "columnheader", "columnheaders"}))
         setKeyColumnHeadNum(col.getValue(0));
 
         (void) readNonSpaceNonComma(line);
@@ -2578,7 +2626,7 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
 void
 CGnuPlot::
 addPlotWithStyle(CGnuPlotPlot *plot, Plots &plots, const CGnuPlotLineStyle &lineStyle,
-                 const CGnuPlotFillStyle &fillStyle, const StyleData &styleData,
+                 const CGnuPlotFillStyle &fillStyle, const CGnuPlotStyleData &styleData,
                  const CGnuPlotKeyTitle &keyTitle)
 {
   plot->setKeyTitleEnabled(keyTitle.enabled);
@@ -2897,7 +2945,7 @@ parseFilledCurve(CParseLine &line, CGnuPlotFilledCurve &filledCurve)
 bool
 CGnuPlot::
 parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle,
-                 CGnuPlotFillStyle &fillStyle, StyleData &styleData,
+                 CGnuPlotFillStyle &fillStyle, CGnuPlotStyleData &styleData,
                  CGnuPlotKeyTitle &keyTitle)
 {
   bool modifiers = true;
@@ -3221,8 +3269,6 @@ plotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroup *group, 
     CStrUtil::addWords(forCmd.start, words);
 
     for (const auto &w : words) {
-      incLineStyle();
-
       CExprInst->createStringVariable(forCmd.var, w);
 
       plotCmd1(args, group, plots, sample, first);
@@ -3255,8 +3301,6 @@ plotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroup *group, 
       return;
 
     while (i1 <= i2) {
-      incLineStyle();
-
       CExprInst->createIntegerVariable(forCmd.var, i1);
 
       plotCmd1(args, group, plots, sample, first);
@@ -3278,8 +3322,6 @@ splotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroup *group,
     CStrUtil::addWords(forCmd.start, words);
 
     for (const auto &w : words) {
-      incLineStyle();
-
       CExprInst->createStringVariable(forCmd.var, w);
 
       splotCmd1(args, group, plots, sample, first);
@@ -3312,8 +3354,6 @@ splotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroup *group,
       return;
 
     while (i1 <= i2) {
-      incLineStyle();
-
       CExprInst->createIntegerVariable(forCmd.var, i1);
 
       splotCmd1(args, group, plots, sample, first);
@@ -3390,10 +3430,9 @@ parseFor(CParseLine &line, ForCmd &forCmd, std::string &cmd)
   return true;
 }
 
-// {empty |
-//  {transparent} solid {density} |
-//  {transparent} pattern {id}}}
-//  {border {<linetype> | {lc <colorspec>} | noborder}
+// {empty}
+// {{transparent} solid {density} | pattern {id}}
+// {border {<linetype> | {lc <colorspec>}} | noborder}
 bool
 CGnuPlot::
 parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle)
@@ -4025,8 +4064,6 @@ splotCmd(const std::string &args)
   bool  sample = false, first = true;
 
   for (const auto &cmd : cmds) {
-    incLineStyle();
-
     splotCmd1(cmd, group, plots, sample, first);
   }
 
@@ -4078,8 +4115,6 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
   line.skipSpace();
 
   if (line.isString("for")) {
-    resetLineStyle();
-
     ForCmd      forCmd;
     std::string cmd;
 
@@ -4097,16 +4132,22 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
 
   std::swap(first, first1);
 
-  // get local copy of next line style
-  CGnuPlotLineStyle lineStyle = *this->lineStyle();
-  CGnuPlotFillStyle fillStyle = this->fillStyle();
-  StyleData         styleData = this->styleData();
+  //----
+
+  incLineStyle();
 
   //----
 
+  // get local copy of next line style
+  CGnuPlotLineStyle lineStyle = *this->lineStyle();
+  CGnuPlotFillStyle fillStyle = this->fillStyle();
+  CGnuPlotStyleData styleData = this->styleData();
+
+  //----
+
+  // Get global range (all plots)
   if (first1) {
-    // Get global range (all plots)
-    if (isParametric()) {
+    if      (isParametric()) {
       // Get Range
       //  [TMIN:TMAX][XMIN:XMAX][YMIN:YMAX][ZMIN:ZMAX]
       parseAxisRange(line, taxis(1    ), false);
@@ -4251,7 +4292,7 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
 
   //---
 
-  CGnuPlotUsingCols usingCols;
+  CGnuPlotUsingCols usingCols(this);
 
   dataFile_.resetIndices();
   dataFile_.resetEvery  ();
@@ -4636,7 +4677,7 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
 bool
 CGnuPlot::
 parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle,
-                 CGnuPlotFillStyle &fillStyle, StyleData &styleData,
+                 CGnuPlotFillStyle &fillStyle, CGnuPlotStyleData &styleData,
                  CGnuPlotKeyTitle &keyTitle)
 {
   bool modifiers = true;
@@ -5973,13 +6014,14 @@ setCmd(const std::string &args)
   //         {{no}autotitle {columnheader}}
   //         {title "<text>"} {{no}enhanced}
   //         {font "<face>,<size>"} {textcolor <colorspec>}
-  //         {{no}box { {linestyle | ls <line_style>} } }
+  //         {{no}box { {linestyle | ls <line_style>} } { {fillstyle | fc <fill_style} } }
   //         {maxcols { <n> | auto }}
   //         {maxrows { <n> | auto }}
   else if (var == VariableName::KEY) {
     keyData_.setDisplayed(true);
 
-    bool hSet = false;
+    bool hSet         = false;
+    bool directionSet = false;
 
     while (line.isValid()) {
       std::string arg = readNonSpace(line);
@@ -6042,6 +6084,7 @@ setCmd(const std::string &args)
       else if (arg == "vertical"   || arg == "vert" ||
                arg == "horizontal" || arg == "horiz") {
         keyData_.setVertical(arg == "vertical" || arg == "vert");
+        directionSet = true;
       }
       else if (arg == "Left" || arg == "Right") {
         keyData_.setJustify(arg == "Left" ? CHALIGN_TYPE_LEFT : CHALIGN_TYPE_RIGHT);
@@ -6140,6 +6183,12 @@ setCmd(const std::string &args)
           if (parseReal(line, lw))
             keyData_.setBoxLineWidth(lw);
         }
+        else if (arg == "fillstyle" || arg == "fs") {
+          CGnuPlotFillStyle fs;
+
+          if (parseFillStyle(line, fs))
+            keyData_.setBoxFillStyle(fs);
+        }
         else
           line.setPos(pos);
       }
@@ -6150,15 +6199,21 @@ setCmd(const std::string &args)
         keyData_.setTMargin(true);
         keyData_.setBMargin(true);
 
-        keyData_.setHAlign(CHALIGN_TYPE_CENTER);
-        keyData_.setVertical(false);
+        if (! hSet)
+          keyData_.setHAlign(CHALIGN_TYPE_CENTER);
+
+        if (! directionSet)
+          keyData_.setVertical(false);
       }
       else if (arg == "below" || arg == "under") {
         keyData_.setTMargin(false);
         keyData_.setBMargin(true);
 
-        keyData_.setHAlign(CHALIGN_TYPE_CENTER);
-        keyData_.setVertical(false);
+        if (! hSet)
+          keyData_.setHAlign(CHALIGN_TYPE_CENTER);
+
+        if (! directionSet)
+          keyData_.setVertical(false);
       }
       else if (arg == "maxcols") {
         int n = 0;
@@ -8218,11 +8273,12 @@ setCmd(const std::string &args)
     // set style histogram [ clustered [ gap {gap} ] |
     //                       errorbars [ gap {gap} ] [ linewidth|lw {width} ] |
     //                       rowstacked |
-    //                       columnstacked
+    //                       columnstacked ]
+    //                     horizontal
     else if (var1 == StyleVar::HISTOGRAM) {
       HistogramStyle style;
 
-      if (parseOptionValue(this, line, style, "histogram style"))
+      if (parseOptionValue(this, line, style, ""))
         histogramData_.setStyle(style);
 
       std::string arg = readNonSpace(line);
@@ -8240,6 +8296,7 @@ setCmd(const std::string &args)
           if (parseReal(line, lw))
             histogramData_.setLineWidth(lw);
         }
+        // TODO: standard modifiers ?
         else if (arg == "title") {
           // TODO
         }
@@ -8257,6 +8314,9 @@ setCmd(const std::string &args)
         }
         else if (arg == "boxed") {
           histogramData_.setBoxed(true);
+        }
+        else if (arg == "horizontal") {
+          histogramData_.setHorizontal(true);
         }
         else
           errorMsg("Invalid histogram style '" + arg + "'");
@@ -12578,7 +12638,7 @@ CGnuPlot::
 addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
           const CGnuPlotUsingCols &usingCols, const SampleVar &sampleX,
           CGnuPlotLineStyle &lineStyle, CGnuPlotFillStyle &fillStyle,
-          StyleData &styleData, CGnuPlotKeyTitle &keyTitle)
+          CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle)
 {
   // gen file lines (one dimension)
   if      (filename == "+") {
@@ -12639,7 +12699,7 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
 
       usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
-      plot->addPoint2D(values, false, params);
+      plot->addPoint2D(values, false, bad, params);
     }
   }
   // gen file lines (two dimensions)
@@ -12708,7 +12768,7 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
 
         usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
-        plot->addPoint2D(values, false, params);
+        plot->addPoint2D(values, false, bad, params);
       }
     }
   }
@@ -12809,12 +12869,10 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
         if (plot->isKeyTitleEnabled() && plot->keyTitleString() == "" && keyData_.columnHead()) {
           std::string title;
 
-          if      (keyData_.isColumnNumValid())
+          if (keyData_.isColumnNumValid())
             title = keyData_.columnNumValue();
-          else if (keyData_.columns().size() > 1)
-            title = keyData_.columns()[1];
-          else if (keyData_.columns().size() > 0)
-            title = keyData_.columns()[0];
+          else
+            title = usingCols.columnTitle(keyData_.columns());
 
           plot->setKeyTitleString(title);
         }
@@ -12847,6 +12905,8 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
           ++nf;
         }
 
+        bool bad = false;
+
         Values values;
         Params params;
 
@@ -12857,7 +12917,6 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
         }
         else {
           int  nskip = 0;
-          bool bad   = false;
 
           // no columns specified so use default number of columns for style
           if (usingCols.numCols() == 0) {
@@ -12893,14 +12952,14 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
 
           if      (nskip)
             discontinuity = true;
-          else if (bad)
-            continue;
+        //else if (bad)
+        //  continue;
         }
 
         //---
 
         // add values
-        /*int pointNum=*/ plot->addPoint2D(values, discontinuity, params);
+        /*int pointNum=*/ plot->addPoint2D(values, discontinuity, bad, params);
 
         //if (ticLabel_.valid) plot->setPoint2DLabel(pointNum, ticLabel_.str);
       }
@@ -12913,7 +12972,7 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
 void
 CGnuPlot::
 parseCommentStyle(CParseLine &line, CGnuPlotLineStyle &lineStyle, CGnuPlotFillStyle &,
-                  StyleData &, CGnuPlotKeyTitle &)
+                  CGnuPlotStyleData &, CGnuPlotKeyTitle &)
 {
 //std::cerr << "parseCommentStyle: " << line.substr() << std::endl;
   while (line.isValid()) {
@@ -13168,10 +13227,10 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
         usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
-        plot->addPoint2D(values, false, params);
+        plot->addPoint2D(values, false, bad, params);
       }
       else
-        plot->addPoint2D(fieldValues_, false, params);
+        plot->addPoint2D(fieldValues_, false, false, params);
     }
   }
 
@@ -13248,7 +13307,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
       usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
-      plot->addPoint3D(0, values, false);
+      plot->addPoint3D(0, values, false, bad);
     }
 
     for (auto &plot : plots) {
@@ -13364,7 +13423,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
         usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
-        plot->addPoint3D(iy, values, false);
+        plot->addPoint3D(iy, values, false, bad);
       }
     }
 
@@ -13430,10 +13489,10 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     if (plot->isKeyTitleEnabled() && plot->keyTitleString() == "") {
       std::string title;
 
-      if      (keyData_.columnHead() && usingCols.numCols() > 1 && usingCols.getCol(1).isInt &&
-               usingCols.getCol(1).ival >= 1 &&
-               usingCols.getCol(1).ival <= int(keyData_.columns().size()))
-        title = keyData_.columns()[usingCols.getCol(1).ival - 1];
+      if      (keyData_.columnHead() && usingCols.numCols() > 1 && usingCols.getCol(1).isInt() &&
+               usingCols.getCol(1).ival() >= 1 &&
+               usingCols.getCol(1).ival() <= int(keyData_.columns().size()))
+        title = keyData_.columns()[usingCols.getCol(1).ival() - 1];
       else if (keyData_.columnNum().isValid() && keyData_.columnNum().getValue() >= 1 &&
                keyData_.columnNum().getValue() <= int(keyData_.columns().size()))
         title = keyData_.columns()[keyData_.columnNum().getValue()];
@@ -13489,6 +13548,8 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
           ++nf;
         }
 
+        bool bad = false;
+
         Values values;
         Params params;
 
@@ -13499,7 +13560,6 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         }
         else {
           int  nskip = 0;
-          bool bad   = false;
 
           // no columns specified so use all columns
           if (usingCols.numCols() == 0) {
@@ -13534,8 +13594,8 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
           if      (nskip)
             discontinuity = true;
-          else if (bad)
-            continue;
+        //else if (bad)
+        //  continue;
         }
 
         //---
@@ -13554,13 +13614,13 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
             values1.push_back(value2);
             values1.push_back(value);
 
-            plot->addPoint3D(lineNum, values1, discontinuity);
+            plot->addPoint3D(lineNum, values1, discontinuity, bad);
 
             ++x;
           }
         }
         else
-          plot->addPoint3D(subSetNum, values, discontinuity);
+          plot->addPoint3D(subSetNum, values, discontinuity, bad);
       }
     }
   }
@@ -13836,12 +13896,12 @@ fieldToReal(const std::string &str, double &r) const
   if (p1 == p2)
     return false;
 
-  // allow for extra chars after number
-
+  // allow for extra chars after number (optional)
+  // what characters allowed ?
   while (*p1 != 0 && ::isspace(*p1))
     ++p1;
 
-  //if (*p1 != '\0') return false;
+  if (*p1 != '\0') return false;
 
   return true;
 }

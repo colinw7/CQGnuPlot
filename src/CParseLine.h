@@ -168,7 +168,8 @@ class CParseLine {
       return false;
 
     // check next character is end of string or space
-    if (pos_ + n  + 1 > len_) return true;
+    if (pos_ + n  + 1 > len_)
+      return true;
 
     char c = str_[pos_ + n];
 

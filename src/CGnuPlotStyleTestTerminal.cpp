@@ -91,7 +91,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     renderer->pixelToWindow(px2 - sw/2, py2 + font->getCharAscent()/2, &x1, &y1);
 
-    renderer->drawSymbol(CPoint2D(x1, y1 - i*dy), symbol, width, c);
+    renderer->drawSymbol(CPoint2D(x1, y1 - i*dy), symbol, width, c, 1, true);
   }
 
   //---

@@ -81,7 +81,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CRGBA c(1,0,0);
 
-    renderer->drawSymbol(p, plot->pointType(), size, c);
+    renderer->drawSymbol(p, plot->pointType(), size, c, 1, true);
   }
 
   //---

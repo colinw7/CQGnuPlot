@@ -61,6 +61,13 @@ class CGnuPlotGroup {
 
   void fit();
 
+  void fitHistograms(COptReal &xmin1, COptReal &xmax1, COptReal &ymin1, COptReal &ymax1);
+
+  void fitSinglePlot(CGnuPlotPlot *singlePlot, COptReal &xmin1, COptReal &xmax1,
+                     COptReal &ymin1, COptReal &ymax1);
+
+  void fitParallelAxes(COptReal &xmin1, COptReal &xmax1, COptReal &ymin1, COptReal &ymax1);
+
   //---
 
   const CGnuPlotAxesData &axesData() const { return axesData_; }
@@ -255,7 +262,18 @@ class CGnuPlotGroup {
   //-----
 
   const CGnuPlotHistogramData &getHistogramData() const { return histogramData_; }
-  void setHistogramData(const CGnuPlotHistogramData &data);
+  void setHistogramData(const CGnuPlotHistogramData &data) { histogramData_ = data; }
+
+  const CGnuPlotNewHistogramDatas &newHistogramDatas() const { return newHistogramDatas_; }
+  void setNewHistogramDatas(const CGnuPlotNewHistogramDatas &v) { newHistogramDatas_ = v; }
+
+  const CGnuPlotNewHistogramData &newHistogramData(int i) const { return newHistogramDatas_[i]; }
+
+  void setHistogramDatas(const CGnuPlotHistogramData &data,
+                         const CGnuPlotNewHistogramDatas &newDatas);
+
+  double histogramGap() const { return getHistogramData().gap().getValue(0); }
+  void setHistogramGap(double g) { histogramData_.setGap(g); }
 
   //-----
 
@@ -285,9 +303,10 @@ class CGnuPlotGroup {
 
   void drawTitle(CGnuPlotRenderer *renderer);
 
-  void drawHistogram(const Plots &plots);
+  void drawHistogram(CGnuPlotRenderer *renderer, const Plots &plots);
 
-  void drawRowStackedHistograms   (CGnuPlotRenderer *renderer, const Plots &plots);
+  void drawRowStackedHistograms(CGnuPlotRenderer *renderer, double xp, const Plots &plots);
+
   void drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots);
 
   void drawAxes(CGnuPlotRenderer *renderer, bool border);
@@ -305,10 +324,11 @@ class CGnuPlotGroup {
 
   void drawGrid(CGnuPlotRenderer *renderer, const CGnuPlot::DrawLayer &layer);
 
-  void drawKey();
+  void drawKey(CGnuPlotRenderer *renderer);
+
   void drawColorBox(CGnuPlotRenderer *renderer);
 
-  void drawAnnotations(DrawLayer layer);
+  void drawAnnotations(CGnuPlotRenderer *renderer, DrawLayer layer);
 
   CGnuPlotPlot *getSingleStylePlot() const;
 
@@ -337,11 +357,14 @@ class CGnuPlotGroup {
 
   const CBBox2D &getBBox     () const { return bbox_      ; }
   const CBBox2D &getAxisBBox () const { return axisBBox_  ; }
+  const CBBox2D &getKeyBBox  () const { return keyBBox_   ; }
   const CBBox2D &getMarginBox() const { return marginBBox_; }
 
   void updateAxisBBox(const CPoint3D &p);
   void updateAxisBBox(const CPoint2D &p) { axisBBox_.add(p); }
   void updateAxisBBox(const CBBox2D &box) { axisBBox_.add(box); }
+
+  void updateKeyBBox(const CBBox2D &box) { keyBBox_.add(box); }
 
   void updateMarginBBox(const CBBox2D &box) { marginBBox_.add(box); }
 
@@ -369,34 +392,36 @@ class CGnuPlotGroup {
  protected:
   static int nextId_;
 
-  CGnuPlotWindow*       window_;                    // parent window
-  int                   id_   { 0 };                // unique id
-  int                   ind_  { 0 };                // group index in window
-  bool                  is3D_ { false };            // plots are 3D
-  bool                  polar_ { false };           // is polar
-  CGnuPlotTitleP        title_;                     // plot title
-  Plots                 plots_;                     // plots
-  CBBox2D               region_ {0,0,1,1};          // region of window
-  CGnuPlotMargin        margin_;                    // margin around plots
-  CBBox2D               bbox_       { 0, 0, 1, 1 }; // bounding box
-  CBBox2D               axisBBox_   { 0, 0, 1, 1 }; // bounding box
-  CBBox2D               marginBBox_ { 0, 0, 1, 1 }; // bounding box
-  CGnuPlotClip          clip_;                      // clip
-  COptBBox2D            clearRect_;                 // optional clear rectangle
-  CGnuPlotPlotSize      plotSize_;                  // plot size
-  CGnuPlotHistogramData histogramData_;             // histogram style
-  CGnuPlotKeyP          key_;                       // key
-  CGnuPlotColorBoxP     colorBox_;                  // color box
-  CGnuPlotPaletteP      palette_;                   // palette
-  CGnuPlotAxesData      axesData_;                  // axes data
-  Annotations           annotations_;               // annotations
-  Axes                  axes_;                      // axes
-  CGnuPlotCameraP       camera_;                    // view camera
-  bool                  hidden3D_ { false };        // hidden 3d
-  CGnuPlotPm3DP         pm3D_;                      // pm3d data
-  CGnuPlotTimeStampP    timeStamp_;                 // time stamp
-  CRGBA                 backgroundColor_;           // background color
-  mutable CBBox2D       saveRange_;                 // save range
+  CGnuPlotWindow*           window_;                    // parent window
+  int                       id_   { 0 };                // unique id
+  int                       ind_  { 0 };                // group index in window
+  bool                      is3D_ { false };            // plots are 3D
+  bool                      polar_ { false };           // is polar
+  CGnuPlotTitleP            title_;                     // plot title
+  Plots                     plots_;                     // plots
+  CBBox2D                   region_ {0,0,1,1};          // region of window
+  CGnuPlotMargin            margin_;                    // margin around plots
+  CBBox2D                   bbox_       { 0, 0, 1, 1 }; // bounding box
+  CBBox2D                   axisBBox_   { 0, 0, 1, 1 }; // axis bounding box
+  CBBox2D                   keyBBox_    { 0, 0, 1, 1 }; // key bounding box
+  CBBox2D                   marginBBox_ { 0, 0, 1, 1 }; // margin bounding box
+  CGnuPlotClip              clip_;                      // clip
+  COptBBox2D                clearRect_;                 // optional clear rectangle
+  CGnuPlotPlotSize          plotSize_;                  // plot size
+  CGnuPlotHistogramData     histogramData_;             // histogram data
+  CGnuPlotNewHistogramDatas newHistogramDatas_;         // new histogram datas
+  CGnuPlotKeyP              key_;                       // key
+  CGnuPlotColorBoxP         colorBox_;                  // color box
+  CGnuPlotPaletteP          palette_;                   // palette
+  CGnuPlotAxesData          axesData_;                  // axes data
+  Annotations               annotations_;               // annotations
+  Axes                      axes_;                      // axes
+  CGnuPlotCameraP           camera_;                    // view camera
+  bool                      hidden3D_ { false };        // hidden 3d
+  CGnuPlotPm3DP             pm3D_;                      // pm3d data
+  CGnuPlotTimeStampP        timeStamp_;                 // time stamp
+  CRGBA                     backgroundColor_;           // background color
+  mutable CBBox2D           saveRange_;                 // save range
 };
 
 #endif

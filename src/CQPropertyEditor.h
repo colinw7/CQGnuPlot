@@ -55,7 +55,7 @@ class CQPropertyRealEditor : public CQPropertyEditorFactory {
   };
 
  public:
-  CQPropertyRealEditor(double min=0.0, double max=9999.9, double step=1.0);
+  CQPropertyRealEditor(double min=0.0, double max=1E50, double step=1.0);
 
   const Type &type() const { return type_; }
   void setType(const Type &v) { type_ = v; }
@@ -78,7 +78,7 @@ class CQPropertyRealEditor : public CQPropertyEditorFactory {
 
 class CQPropertyPointEditor : public CQPropertyEditorFactory {
  public:
-  CQPropertyPointEditor(double min=0.0, double max=9999.9, double step=1.0);
+  CQPropertyPointEditor(double min=0.0, double max=1E50, double step=1.0);
 
   QWidget *createEdit(QWidget *parent);
 

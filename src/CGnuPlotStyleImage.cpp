@@ -376,12 +376,12 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
   int nc = imageStyle.usingCols.numCols();
 
   if (col < nc) {
-    if (imageStyle.usingCols.getCol(col).isInt)
-      col = imageStyle.usingCols.getCol(col).ival;
+    if (imageStyle.usingCols.getCol(col).isInt())
+      col = imageStyle.usingCols.getCol(col).ival();
     else {
       bool lookup = true;
 
-      std::string expr = imageStyle.usingCols.getCol(col).str;
+      std::string expr = imageStyle.usingCols.getCol(col).str();
 
       // replace $N variables
       // TODO: easier to define $1 variables

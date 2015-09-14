@@ -18,6 +18,7 @@ CQGnuPlotPlot(CQGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style) :
 {
   setObjectName("plot");
 
+  barObjects_ = new CQGnuPlotPlotBarObjects(this);
   pieObjects_ = new CQGnuPlotPlotPieObjects(this);
 }
 
@@ -279,6 +280,128 @@ mouseTip(const CPoint2D &p, CGnuPlotTipData &tip)
   }
 
   return CGnuPlotPlot::mouseTip(p, tip);
+}
+
+//------
+
+QColor
+CQGnuPlotPlotBarObjects::
+fillColor() const
+{
+  if (! plot_->barObjects().empty()) {
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
+
+    return qbar->getFillColor();
+  }
+
+  return QColor();
+}
+
+void
+CQGnuPlotPlotBarObjects::
+setFillColor(const QColor &c)
+{
+  for (auto &bar : plot_->barObjects()) {
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+
+    qbar->setFillColor(c);
+  }
+}
+
+bool
+CQGnuPlotPlotBarObjects::
+hasBorder() const
+{
+  if (! plot_->barObjects().empty()) {
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
+
+    return qbar->hasBorder();
+  }
+
+  return false;
+}
+
+void
+CQGnuPlotPlotBarObjects::
+setBorder(bool b)
+{
+  for (auto &bar : plot_->barObjects()) {
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+
+    qbar->setBorder(b);
+  }
+}
+
+QColor
+CQGnuPlotPlotBarObjects::
+lineColor() const
+{
+  if (! plot_->barObjects().empty()) {
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
+
+    return qbar->getLineColor();
+  }
+
+  return QColor();
+}
+
+void
+CQGnuPlotPlotBarObjects::
+setLineColor(const QColor &c)
+{
+  for (auto &bar : plot_->barObjects()) {
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+
+    qbar->setLineColor(c);
+  }
+}
+
+CQGnuPlotEnum::FillType
+CQGnuPlotPlotBarObjects::
+getFillType() const
+{
+  if (! plot_->barObjects().empty()) {
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
+
+    return qbar->getFillType();
+  }
+
+  return CQGnuPlotEnum::FillType::FillNone;
+}
+
+void
+CQGnuPlotPlotBarObjects::
+setFillType(const CQGnuPlotEnum::FillType &t)
+{
+  for (auto &bar : plot_->barObjects()) {
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+
+    qbar->setFillType(t);
+  }
+}
+
+CQGnuPlotEnum::FillPattern
+CQGnuPlotPlotBarObjects::
+getFillPattern() const
+{
+  if (! plot_->barObjects().empty()) {
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
+
+    return qbar->getFillPattern();
+  }
+
+  return CQGnuPlotEnum::FillPattern::PatternNone;
+}
+
+void
+CQGnuPlotPlotBarObjects::
+setFillPattern(const CQGnuPlotEnum::FillPattern &p)
+{
+  for (auto &bar : plot_->barObjects()) {
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+
+    qbar->setFillPattern(p);
+  }
 }
 
 //------

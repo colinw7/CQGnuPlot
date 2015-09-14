@@ -14,7 +14,7 @@ class CGnuPlotPoint {
 
  public:
   CGnuPlotPoint(const Values &values=Values(), bool discontinuity=false,
-                const Params &params=Params());
+                bool bad=false, const Params &params=Params());
  ~CGnuPlotPoint();
 
   friend std::ostream &operator<<(std::ostream &os, const CGnuPlotPoint &p) {
@@ -93,6 +93,8 @@ class CGnuPlotPoint {
 
   bool isDiscontinuity() const { return discontinuity_; }
 
+  bool isBad() const { return bad_; }
+
   bool hasParam(const std::string &name) const {
     return (params_.find(name) != params_.end());
   }
@@ -124,6 +126,7 @@ class CGnuPlotPoint {
   Values      values_;
   std::string label_;
   bool        discontinuity_;
+  bool        bad_;
   Params      params_;
 };
 

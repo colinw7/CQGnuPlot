@@ -3,8 +3,8 @@
 #include <CRGBName.h>
 
 CGnuPlotPoint::
-CGnuPlotPoint(const Values &values, bool discontinuity, const Params &params) :
- values_(values), discontinuity_(discontinuity), params_(params)
+CGnuPlotPoint(const Values &values, bool discontinuity, bool bad, const Params &params) :
+ values_(values), discontinuity_(discontinuity), bad_(bad), params_(params)
 {
 }
 

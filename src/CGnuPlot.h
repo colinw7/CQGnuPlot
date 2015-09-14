@@ -78,8 +78,6 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotCircleStyle.h>
 #include <CGnuPlotEllipseStyle.h>
 #include <CGnuPlotRectStyle.h>
-#include <CGnuPlotTextStyle.h>
-#include <CGnuPlotTextBoxStyle.h>
 #include <CGnuPlotTimeStampData.h>
 #include <CGnuPlotMouseData.h>
 #include <CGnuPlotClip.h>
@@ -97,7 +95,7 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotKeyTitle.h>
 #include <CGnuPlotMargin.h>
 #include <CGnuPlotLineProp.h>
-#include <CGnuPlotPieStyle.h>
+#include <CGnuPlotStyleData.h>
 
 //------
 
@@ -124,15 +122,6 @@ class CGnuPlot {
   typedef std::map<std::string,CExprValuePtr>    Params;
   typedef CGnuPlotTypes::AxisTypeId              AxisTypeId;
   typedef std::set<AxisTypeId>                   AxisTypeIdSet;
-
-  struct StyleData {
-    CGnuPlotArrowStyle   arrow;
-    CGnuPlotTextBoxStyle textBox;
-    CGnuPlotEllipseStyle ellipse;
-    CGnuPlotTextStyle    text;
-    CGnuPlotLabelStyle   label;
-    CGnuPlotPieStyle     pie;
-  };
 
   //---
 
@@ -412,14 +401,27 @@ class CGnuPlot {
   const CGnuPlotPointStyle &pointStyle() const { return pointStyle_; }
   void setPointStyle(const CGnuPlotPointStyle &s) { pointStyle_ = s; }
 
+  //---
+
   const CGnuPlotHistogramData &histogramData() { return histogramData_; }
   void setHistogramData(const CGnuPlotHistogramData &data) { histogramData_ = data; }
+
+  const CGnuPlotNewHistogramDatas &newHistogramDatas() const { return newHistogramDatas_; }
+  void setNewHistogramDatas(const CGnuPlotNewHistogramDatas &v) { newHistogramDatas_ = v; }
+  void clearNewHistogramDatas() { newHistogramDatas_.clear(); }
+
+  int newHistogramId() const { return newHistogramDatas_.size() - 1; }
+
+  int histogramPointOffset() const { return histogramPointOffset_; }
+  void setHistogramPointOffset(int i) { histogramPointOffset_ = i; }
+
+  //---
 
   const CGnuPlotArrowStyle &arrowStyle() const { return styleData_.arrow; }
   void setArrowStyle(const CGnuPlotArrowStyle &as) { styleData_.arrow = as; }
 
-  const StyleData &styleData() const { return styleData_; }
-  void setStyleData(const StyleData &d) { styleData_ = d; }
+  const CGnuPlotStyleData &styleData() const { return styleData_; }
+  void setStyleData(const CGnuPlotStyleData &d) { styleData_ = d; }
 
   const CGnuPlotKeyData &keyData() const { return keyData_; }
   void setKeyData(const CGnuPlotKeyData &k) { keyData_ = k; }
@@ -432,6 +434,10 @@ class CGnuPlot {
   void setKeyAutoColumnHeadNum() {
     keyData_.setColumnHead (true);
     keyData_.resetColumnNum();
+  }
+
+  void setKeyPointLabel(int pointNum, const std::string &str) {
+    keyData_.setPointLabel(pointNum, str);
   }
 
   const CBBox2D &region() const { return region_; }
@@ -842,14 +848,16 @@ class CGnuPlot {
   void parseFilledCurve(CParseLine &line, CGnuPlotFilledCurve &filledCurve);
 
   bool parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
-                        CGnuPlotFillStyle &fs, StyleData &styleData, CGnuPlotKeyTitle &keyTitle);
+                        CGnuPlotFillStyle &fs, CGnuPlotStyleData &styleData,
+                        CGnuPlotKeyTitle &keyTitle);
   bool parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &ls,
-                        CGnuPlotFillStyle &fs, StyleData &styleData, CGnuPlotKeyTitle &keyTitle);
+                        CGnuPlotFillStyle &fs, CGnuPlotStyleData &styleData,
+                        CGnuPlotKeyTitle &keyTitle);
 
   bool parseFor(CParseLine &line, ForCmd &forCmd, std::string &cmd);
 
   void addPlotWithStyle(CGnuPlotPlot *plot, Plots &plots, const CGnuPlotLineStyle &lineStyle,
-                        const CGnuPlotFillStyle &fillStyle, const StyleData &styleData,
+                        const CGnuPlotFillStyle &fillStyle, const CGnuPlotStyleData &styleData,
                         const CGnuPlotKeyTitle &keyTitle);
 
   bool setCmd     (const std::string &args);
@@ -914,13 +922,13 @@ class CGnuPlot {
   void addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename,
                  PlotStyle style, const CGnuPlotUsingCols &usingCols,
                  const SampleVar &sampleX, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
-                 StyleData &styleData, CGnuPlotKeyTitle &keyTitle);
+                 CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle);
 
   Plots addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
                   const CGnuPlotUsingCols &usingCols, const SampleVar &sampleX);
 
   void parseCommentStyle(CParseLine &line, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
-                         StyleData &styleData, CGnuPlotKeyTitle &keyTitle);
+                         CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle);
 
   CGnuPlotPlot *addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
                            const CGnuPlotUsingCols &usingCols);
@@ -1111,40 +1119,42 @@ class CGnuPlot {
   typedef std::vector<std::string>               PathList;
   typedef std::map<std::string,CGnuPlotBlock *>  Blocks;
 
-  bool                   debug_  { false };
-  bool                   edebug_ { false };
-  bool                   autoContinue_ { false };
-  CGnuPlotSVGDevice*     svgDevice_ { 0 };
-  CGnuPlotDevice*        device_ { 0 };
-  Devices                devices_;
-  DeviceStack            deviceStack_;
-  PlotStyles             plotStyles_;
-  FileData               fileData_;
-  FileDataArray          fileDataArray_;
-  CGnuPlotFile           dataFile_;
-  CGnuPlotBoxWidth       boxWidth_;
-  Bars                   bars_;
-  std::string            outputFile_;
-  CGnuPlotPrintFile      printFile_;
-  std::string            lastPlotCmd_;
-  std::string            lastSPlotCmd_;
-  std::string            lastFilename_;
-  CGnuPlotPrintFile      tableFile_;
-  Smooth                 smooth_ { Smooth::NONE };
-  CGnuPlotHistogramData  histogramData_;
-  CGnuPlotLineStyleP     lineStyle_;
-  CGnuPlotPointStyle     pointStyle_;
-  CGnuPlotTitleData      title_;
-  VarPrefs               varPrefs_;
-  CGnuPlotAxesData       axesData_;
-  CGnuPlotKeyData        keyData_;
-  CBBox2D                region_ { 0, 0, 1, 1 };
-  CGnuPlotMargin         margin_;
-  CRGBA                  backgroundColor_ { 1, 1, 1};
-  std::string            colorSequence_ { "default" };
-  int                    xind_ { 1 };
-  int                    yind_ { 1 };
-  int                    zind_ { 1 };
+  bool                      debug_  { false };
+  bool                      edebug_ { false };
+  bool                      autoContinue_ { false };
+  CGnuPlotSVGDevice*        svgDevice_ { 0 };
+  CGnuPlotDevice*           device_ { 0 };
+  Devices                   devices_;
+  DeviceStack               deviceStack_;
+  PlotStyles                plotStyles_;
+  FileData                  fileData_;
+  FileDataArray             fileDataArray_;
+  CGnuPlotFile              dataFile_;
+  CGnuPlotBoxWidth          boxWidth_;
+  Bars                      bars_;
+  std::string               outputFile_;
+  CGnuPlotPrintFile         printFile_;
+  std::string               lastPlotCmd_;
+  std::string               lastSPlotCmd_;
+  std::string               lastFilename_;
+  CGnuPlotPrintFile         tableFile_;
+  Smooth                    smooth_ { Smooth::NONE };
+  CGnuPlotHistogramData     histogramData_;
+  CGnuPlotNewHistogramDatas newHistogramDatas_;
+  int                       histogramPointOffset_ { 0 };
+  CGnuPlotLineStyleP        lineStyle_;
+  CGnuPlotPointStyle        pointStyle_;
+  CGnuPlotTitleData         title_;
+  VarPrefs                  varPrefs_;
+  CGnuPlotAxesData          axesData_;
+  CGnuPlotKeyData           keyData_;
+  CBBox2D                   region_ { 0, 0, 1, 1 };
+  CGnuPlotMargin            margin_;
+  CRGBA                     backgroundColor_ { 1, 1, 1};
+  std::string               colorSequence_ { "default" };
+  int                       xind_ { 1 };
+  int                       yind_ { 1 };
+  int                       zind_ { 1 };
 
   // styles
   ArrowStyles            arrowStyles_;
@@ -1160,7 +1170,7 @@ class CGnuPlot {
   CGnuPlotLineTypeP      bgndLineType_;
   CGnuPlotCircleStyle    circleStyle_;
   CGnuPlotRectStyle      rectStyle_;
-  StyleData              styleData_;
+  CGnuPlotStyleData      styleData_;
 
   LineDashes             lineDashes_;
   bool                   binary_ { false };

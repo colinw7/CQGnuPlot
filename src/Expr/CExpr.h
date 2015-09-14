@@ -193,6 +193,9 @@ class CExpr {
 
  ~CExpr() { }
 
+  bool getQuiet() const { return quiet_; }
+  void setQuiet(bool b) { quiet_ = b; }
+
   bool getDebug() const { return debug_; }
   void setDebug(bool b) { debug_ = b; }
 
@@ -258,6 +261,7 @@ class CExpr {
   typedef std::vector<CExprCompile *> Compiles;
   typedef std::vector<CExprExecute *> Executes;
 
+  bool                       quiet_;
   bool                       debug_;
   bool                       trace_;
   bool                       degrees_;

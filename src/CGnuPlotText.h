@@ -73,6 +73,8 @@ class CGnuPlotText {
 
   CBBox2D calcBBox(CGnuPlotRenderer *renderer) const;
 
+  CBBox2D renderBBox(CGnuPlotRenderer *renderer, const CPoint2D &pos, double a=0) const;
+
   void print(std::ostream &os=std::cout) const;
 
  private:
