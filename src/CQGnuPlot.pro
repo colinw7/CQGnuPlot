@@ -137,9 +137,11 @@ CGnuPlotStyleYErrorLines.cpp \
 CGnuPlotSVGDevice.cpp \
 CGnuPlotSVGRenderer.cpp \
 CGnuPlotSize.cpp \
-CGnuPlotText.cpp \
 CGnuPlotTitle.cpp \
 CGnuPlotWindow.cpp \
+\
+CGnuPlotText.cpp \
+CGnuPlotTextRenderer.cpp \
 \
 CQPropertyDelegate.cpp \
 CQPropertyEditor.cpp \
@@ -316,11 +318,13 @@ CGnuPlotStyleXYErrorLines.h \
 CGnuPlotStyleYErrorBars.h \
 CGnuPlotStyleYErrorLines.h \
 \
-CGnuPlotText.h \
 CGnuPlotTitle.h \
 CGnuPlotTypes.h \
 CGnuPlotUtil.h \
 CGnuPlotWindow.h \
+\
+CGnuPlotText.h \
+CGnuPlotTextRenderer.h \
 \
 CQPropertyDelegate.h \
 CQPropertyEditor.h \

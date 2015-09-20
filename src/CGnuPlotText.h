@@ -1,8 +1,8 @@
 #ifndef CGnuPlotText_H
 #define CGnuPlotText_H
 
-#include <CGnuPlotTypes.h>
 #include <CBBox2D.h>
+#include <COptVal.h>
 #include <CAlignType.h>
 #include <CRGBA.h>
 #include <CFont.h>
@@ -13,7 +13,9 @@
 
 class CParseLine;
 class CGnuPlotTextPart;
-class CGnuPlotRenderer;
+class CGnuPlotTextRenderer;
+
+typedef COptValT<CPoint2D> COptPoint2D;
 
 enum class CGnuPlotCharType {
   SUPERSCRIPT,
@@ -48,14 +50,14 @@ struct CGnuPlotTextLine {
 struct CGnuPlotTextState {
   typedef std::vector<CGnuPlotTextLine> Lines;
 
-  CGnuPlotTextState(CGnuPlotRenderer *r) :
+  CGnuPlotTextState(CGnuPlotTextRenderer *r) :
    renderer(r) {
   }
 
-  CGnuPlotRenderer *renderer;
-  CFontPtr          font;
-  CPoint2D          pos { 0, 0 };
-  Lines             lines;
+  CGnuPlotTextRenderer *renderer;
+  CFontPtr              font;
+  CPoint2D              pos { 0, 0 };
+  Lines                 lines;
 };
 
 class CGnuPlotText {
@@ -68,12 +70,22 @@ class CGnuPlotText {
 
   const std::string &etext() const { return estr_; }
 
-  void draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
+  CBBox2D drawAtPoint(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, CHAlignType halign,
+                      CVAlignType valign, const CRGBA &c, double a) const;
+
+  void draw(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, const CRGBA &c, double a) const;
+
+  void draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
             const CRGBA &c=CRGBA(0,0,0), double a=0, const COptPoint2D &o=COptPoint2D()) const;
 
-  CBBox2D calcBBox(CGnuPlotRenderer *renderer) const;
+  CBBox2D calcBBox(CGnuPlotTextRenderer *renderer, const CPoint2D &pos) const;
 
-  CBBox2D renderBBox(CGnuPlotRenderer *renderer, const CPoint2D &pos, double a=0) const;
+  CBBox2D calcBBox(CGnuPlotTextRenderer *renderer) const;
+
+  CBBox2D renderBBox(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox,
+                     CHAlignType halign, double a) const;
+
+  CBBox2D renderBBox(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, double a=0) const;
 
   void print(std::ostream &os=std::cout) const;
 

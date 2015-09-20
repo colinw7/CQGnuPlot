@@ -10,6 +10,7 @@ CQPropertyTree(QWidget *parent) :
  QTreeWidget(parent)
 {
   setObjectName("propertyTree");
+
   setColumnCount(2);
 
   setHeaderLabels(QStringList() << "Name" << "Value");

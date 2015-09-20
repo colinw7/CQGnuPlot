@@ -1,8 +1,24 @@
 #include <CGnuPlotText.h>
-#include <CGnuPlotBBoxRenderer.h>
+#include <CGnuPlotTextRenderer.h>
 #include <CParseLine.h>
+#include <CStrUtil.h>
 #include <CMathGeom2D.h>
+#include <CAngle.h>
 #include <CUtf8.h>
+
+namespace {
+  CPoint2D rotatePoint(const CPoint2D &point, double c, double s, const CPoint2D &o) {
+    double x1 = point.x - o.x;
+    double y1 = point.y - o.y;
+
+    double x2 = x1*c - y1*s;
+    double y2 = x1*s + y1*c;
+
+    return CPoint2D(x2 + o.x, y2 + o.y);
+  }
+}
+
+//------
 
 CGnuPlotText::
 CGnuPlotText(const std::string &str) :
@@ -262,9 +278,71 @@ readBraceString(CParseLine &line, std::string &tstr)
   return true;
 }
 
+CBBox2D
+CGnuPlotText::
+drawAtPoint(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, CHAlignType halign,
+            CVAlignType valign, const CRGBA &c, double a) const
+{
+  // calc unrotated bbox
+  CBBox2D bbox = calcBBox(renderer, pos);
+  if (! bbox.isSet()) return CBBox2D();
+
+  // calc rotated bbox
+  CBBox2D rbbox = renderBBox(renderer, pos, a);
+  if (! rbbox.isSet()) return CBBox2D();
+
+  //---
+
+  // align to rotated bbox
+  CBBox2D rbbox1;
+
+  double dx = 0.0, dy = 0.0;
+
+  // align to rotated bbox width (TODO: align to pos.x)
+  //if      (halign == CHALIGN_TYPE_LEFT  ) dx = 0;
+  //else if (halign == CHALIGN_TYPE_CENTER) dx = -rbbox.getWidth()/2;
+  //else if (halign == CHALIGN_TYPE_RIGHT ) dx = -rbbox.getWidth();
+  if      (halign == CHALIGN_TYPE_LEFT  ) dx = pos.x - rbbox.getXMin();
+  else if (halign == CHALIGN_TYPE_CENTER) dx = pos.x - rbbox.getXMid();
+  else if (halign == CHALIGN_TYPE_RIGHT ) dx = pos.x - rbbox.getXMax();
+
+  // align pos.y to rotated bbox y
+  if      (valign == CVALIGN_TYPE_BOTTOM) dy = pos.y - rbbox.getYMin();
+  else if (valign == CVALIGN_TYPE_CENTER) dy = pos.y - rbbox.getYMid();
+  else if (valign == CVALIGN_TYPE_TOP   ) dy = pos.y - rbbox.getYMax();
+
+  rbbox1 = rbbox.moveBy(CPoint2D(dx, dy));
+//renderer->drawRect(rbbox1, CRGBA(1,0,0), 1);
+
+  //---
+
+  // use unrotated rotated bbox for draw (draw center aligned inside unrotated bbox
+  // at rotated box center)
+  CPoint2D rc = rbbox1.getCenter();
+
+  CBBox2D bbox1(CPoint2D(rc.x - bbox.getWidth()/2, rc.y - bbox.getHeight()/2),
+                CPoint2D(rc.x + bbox.getWidth()/2, rc.y + bbox.getHeight()/2));
+//renderer->drawRect(bbox1, CRGBA(1,0,0), 1);
+
+  draw(renderer, bbox1, CHALIGN_TYPE_CENTER, c, a);
+
+  //---
+
+  return rbbox1;
+}
+
 void
 CGnuPlotText::
-draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
+draw(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, const CRGBA &c, double a) const
+{
+  CBBox2D bbox = renderBBox(renderer, pos, 0);
+
+  draw(renderer, bbox, CHALIGN_TYPE_LEFT, c, a);
+}
+
+void
+CGnuPlotText::
+draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
      const CRGBA &c, double a, const COptPoint2D &o) const
 {
   //renderer->drawRotatedRect(bbox, a, CRGBA(1,0,0), 1);
@@ -283,7 +361,8 @@ draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
 
   CPoint2D origin = (o.isValid() ? o.getValue() : bbox.getCenter());
 
-  double dy = bbox.getTop();
+  double dx = bbox.getXMin();
+  double dy = bbox.getYMax();
 
   for (const auto &l : state.lines) {
     // calc line bbox
@@ -292,11 +371,12 @@ draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
     for (const auto &ch : l.chars) {
       double w  = renderer->pixelWidthToWindowWidth  (ch.font->getStringWidth(ch.str));
     //double fa = renderer->pixelHeightToWindowHeight(ch.font->getCharAscent ());
+    //double fd = renderer->pixelHeightToWindowHeight(ch.font->getCharDescent());
       double fa = l.ascent;
-      double fd = renderer->pixelHeightToWindowHeight(ch.font->getCharDescent());
+      double fd = l.descent;
 
-      CPoint2D p1(ch.pos.x    , ch.pos.y - fd);
-      CPoint2D p2(ch.pos.x + w, ch.pos.y + fa);
+      CPoint2D p1(ch.pos.x + dx    , ch.pos.y + dy - fd);
+      CPoint2D p2(ch.pos.x + dx + w, ch.pos.y + dy + fa);
 
       if (ch.type != CGnuPlotCharType::SUPERSCRIPT && ch.type != CGnuPlotCharType::SUBSCRIPT) {
         lbbox.add(p1);
@@ -304,16 +384,19 @@ draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
       }
     }
 
-    double dx;
+    if (! lbbox.isSet())
+      continue;
+
+    double dx1;
 
     if      (halign == CHALIGN_TYPE_LEFT)
-      dx = bbox.getXMin();
-    else if (halign == CHALIGN_TYPE_CENTER)
-      dx = bbox.getXMid() - lbbox.getWidth()/2;
+      dx1 = bbox.getXMin();
     else if (halign == CHALIGN_TYPE_RIGHT)
-      dx = bbox.getXMax() - lbbox.getWidth();
+      dx1 = bbox.getXMax() - lbbox.getWidth();
+    else
+      dx1 = bbox.getXMid() - lbbox.getWidth()/2;
 
-    //CBBox2D lbbox1 = lbbox.moveBy(CPoint2D(dx, dy));
+    //CBBox2D lbbox1 = lbbox.moveBy(CPoint2D(dx1 - dx, 0));
     //renderer->drawRotatedRect(lbbox1, a, CRGBA(0,1,0), 1);
 
     //---
@@ -322,7 +405,12 @@ draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
     for (const auto &ch : l.chars) {
       renderer->setFont(ch.font);
 
-      CPoint2D p1 = ch.pos + CPoint2D(dx, dy);
+      CPoint2D p1 = ch.pos + CPoint2D(dx1, dy);
+
+      if (renderer->isPseudo()) {
+        if (ch.type == CGnuPlotCharType::SUPERSCRIPT || ch.type == CGnuPlotCharType::SUBSCRIPT)
+          continue;
+      }
 
       if (fabs(a) < 1E-6)
         renderer->drawText(p1, ch.str, c);
@@ -333,7 +421,7 @@ draw(CGnuPlotRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
       }
     }
 
-    dy += lbbox.getYMin();
+    dy = lbbox.getYMin();
   }
 
   renderer->setFont(origFont);
@@ -343,7 +431,7 @@ void
 CGnuPlotText::
 placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
 {
-  CGnuPlotRenderer *renderer = state.renderer;
+  CGnuPlotTextRenderer *renderer = state.renderer;
 
   CFontPtr origFont = renderer->getFont();
 
@@ -474,7 +562,19 @@ placePartChars(CGnuPlotTextState &state, int i, CGnuPlotCharType type) const
 
 CBBox2D
 CGnuPlotText::
-calcBBox(CGnuPlotRenderer *renderer) const
+calcBBox(CGnuPlotTextRenderer *renderer, const CPoint2D &pos) const
+{
+  CBBox2D bbox = calcBBox(renderer);
+
+  if (bbox.isSet())
+    bbox.moveBy(pos);
+
+  return bbox;
+}
+
+CBBox2D
+CGnuPlotText::
+calcBBox(CGnuPlotTextRenderer *renderer) const
 {
   CFontPtr origFont = renderer->getFont();
 
@@ -501,8 +601,9 @@ calcBBox(CGnuPlotRenderer *renderer) const
     for (const auto &ch : l.chars) {
       double w  = renderer->pixelWidthToWindowWidth  (ch.font->getStringWidth(ch.str));
     //double fa = renderer->pixelHeightToWindowHeight(ch.font->getCharAscent ());
+    //double fd = renderer->pixelHeightToWindowHeight(ch.font->getCharDescent());
       double fa = l.ascent;
-      double fd = renderer->pixelHeightToWindowHeight(ch.font->getCharDescent());
+      double fd = l.descent;
 
       CPoint2D p1(ch.pos.x    , ch.pos.y - fd);
       CPoint2D p2(ch.pos.x + w, ch.pos.y + fa);
@@ -532,54 +633,81 @@ calcBBox(CGnuPlotRenderer *renderer) const
 
 CBBox2D
 CGnuPlotText::
-renderBBox(CGnuPlotRenderer *renderer, const CPoint2D &pos, double a) const
+renderBBox(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign, double a) const
 {
-  CGnuPlotBBoxRenderer brenderer(renderer);
+  // calc width when drawn unrotated at top left
+  CPoint2D pos = bbox.getUL();
 
-  brenderer.setFont(renderer->getFont());
+  CBBox2D bbox1 = renderBBox(renderer, pos, 0);
 
-  CGnuPlotRenderer *rrenderer = brenderer.renderer();
+  // offset text in supplied bbox by alignment
+  double w1 = 0;
 
-  CPoint2D ppos;
+  if      (halign == CHALIGN_TYPE_LEFT)
+    w1 = 0;
+  else if (halign == CHALIGN_TYPE_RIGHT)
+    w1 = bbox.getWidth() - bbox1.getWidth();
+  else
+    w1 = (bbox.getWidth() - bbox1.getWidth())/2;
 
-  rrenderer->windowToPixel(pos, ppos);
+  bbox1.moveBy(CPoint2D(w1, 0));
 
-  brenderer. setMapping(false);
-  rrenderer->setMapping(false);
+  // rotate bbox corners by angle
+  CPoint2D o = bbox.getCenter();
 
-  CBBox2D bbox(ppos.x, ppos.y, ppos.x, ppos.y);
+  double a1 = M_PI*a/180.0;
+
+  double c = cos(a1);
+  double s = sin(a1);
+
+  CPoint2D pr1 = rotatePoint(bbox1.getLL(), c, s, o);
+  CPoint2D pr2 = rotatePoint(bbox1.getLR(), c, s, o);
+  CPoint2D pr3 = rotatePoint(bbox1.getUR(), c, s, o);
+  CPoint2D pr4 = rotatePoint(bbox1.getUL(), c, s, o);
+
+  //renderer->drawLine(pr1, pr2, CRGBA(0,1,0));
+  //renderer->drawLine(pr2, pr3, CRGBA(0,1,0));
+  //renderer->drawLine(pr3, pr4, CRGBA(0,1,0));
+  //renderer->drawLine(pr4, pr1, CRGBA(0,1,0));
+
+  CBBox2D bbox2(pr1, pr2);
+
+  bbox2.add(pr3);
+  bbox2.add(pr4);
+
+  return bbox2;
+}
+
+CBBox2D
+CGnuPlotText::
+renderBBox(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, double a) const
+{
+  CGnuPlotBBoxTextRenderer brenderer(renderer);
+
+  CBBox2D bbox(pos.x, pos.y, pos.x, pos.y);
 
   draw(&brenderer, bbox, CHALIGN_TYPE_LEFT, CRGBA(0,0,0), 0.0);
 
-  brenderer. setMapping(true);
-  rrenderer->setMapping(true);
+  CBBox2D rbbox = brenderer.bbox();
 
-  CBBox2D prbbox = brenderer.bbox();
+  if (! rbbox.isSet())
+    return CBBox2D();
 
-  CPoint2D pp1(prbbox.getXMin(), ppos.y);
-  CPoint2D pp2(prbbox.getXMax(), ppos.y - prbbox.getHeight());
-
-  CBBox2D prbbox1(pp1, pp2);
+  //double fa = renderer->pixelHeightToWindowHeight(brenderer.getFont()->getCharAscent());
+  //rbbox.moveBy(CPoint2D(0, fa));
 
   double   a1 = CAngle::Deg2Rad(-a);
-  CPoint2D o  = prbbox1.getCenter();
+  CPoint2D o  = rbbox.getCenter();
 
-  CPoint2D rp1 = CMathGeom2D::RotatePoint(prbbox1.getLL(), a1, o);
-  CPoint2D rp2 = CMathGeom2D::RotatePoint(prbbox1.getLR(), a1, o);
-  CPoint2D rp3 = CMathGeom2D::RotatePoint(prbbox1.getUR(), a1, o);
-  CPoint2D rp4 = CMathGeom2D::RotatePoint(prbbox1.getUL(), a1, o);
+  CPoint2D rp1 = CMathGeom2D::RotatePoint(rbbox.getLL(), a1, o);
+  CPoint2D rp2 = CMathGeom2D::RotatePoint(rbbox.getLR(), a1, o);
+  CPoint2D rp3 = CMathGeom2D::RotatePoint(rbbox.getUR(), a1, o);
+  CPoint2D rp4 = CMathGeom2D::RotatePoint(rbbox.getUL(), a1, o);
 
-  CPoint2D p1, p2, p3, p4;
+  CBBox2D bbox1(rp1, rp2);
 
-  rrenderer->pixelToWindow(rp1, p1);
-  rrenderer->pixelToWindow(rp2, p2);
-  rrenderer->pixelToWindow(rp3, p3);
-  rrenderer->pixelToWindow(rp4, p4);
-
-  CBBox2D bbox1(p1, p2);
-
-  bbox1.add(p3);
-  bbox1.add(p4);
+  bbox1.add(rp3);
+  bbox1.add(rp4);
 
   return bbox1;
 }
@@ -614,7 +742,7 @@ void
 CGnuPlotTextPart::
 placeChars(CGnuPlotTextState &state) const
 {
-  CGnuPlotRenderer *renderer = state.renderer;
+  CGnuPlotTextRenderer *renderer = state.renderer;
 
   state.font = renderer->getFont();
 

@@ -889,6 +889,22 @@ regionToPixel(const CPoint2D &r, CPoint2D &p)
   p = CPoint2D(r.x*(width() - 1), (1 - r.y)*(height() - 1));
 }
 
+void
+CGnuPlotRenderer::
+windowToRegion(double wx, double wy, double *rx, double *ry)
+{
+  *rx = CGnuPlotUtil::map(wx, range_.getXMin(), range_.getXMax(), 0, 1);
+  *ry = CGnuPlotUtil::map(wy, range_.getYMin(), range_.getYMax(), 0, 1);
+}
+
+void
+CGnuPlotRenderer::
+regionToWindow(double rx, double ry, double *wx, double *wy)
+{
+  *wx = CGnuPlotUtil::map(rx, 0, 1, range_.getXMin(), range_.getXMax());
+  *wy = CGnuPlotUtil::map(ry, 0, 1, range_.getYMin(), range_.getYMax());
+}
+
 CPoint2D
 CGnuPlotRenderer::
 transform(const CPoint3D &p) const

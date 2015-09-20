@@ -1302,66 +1302,33 @@ CGnuPlotAxis::
 drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
                  const std::string &str, const CRGBA &c, double angle)
 {
-  CBBox2D bbox;
-
   if (isEnhanced() && ! group_->is3D()) {
     CGnuPlotText text(str);
 
     //---
 
-    bbox = text.calcBBox(renderer_);
-    if (! bbox.isSet()) return;
+    CPoint2D pos1;
 
-    CBBox2D bbox1;
+    renderer_->windowToRegion(pos.x, pos.y, &pos1.x, &pos1.y);
 
-    {
-    double dx = 0.0, dy = 0.0;
+    CBBox2D range = renderer_->range();
 
-    if      (halign == CHALIGN_TYPE_LEFT  ) dx = 0;
-    else if (halign == CHALIGN_TYPE_CENTER) dx = -bbox.getWidth()/2;
-    else if (halign == CHALIGN_TYPE_RIGHT ) dx = -bbox.getWidth();
+    renderer_->setRange(CBBox2D(0, 0, 1, 1));
 
-    if      (valign == CVALIGN_TYPE_BOTTOM) dy = bbox.getHeight();
-    else if (valign == CVALIGN_TYPE_CENTER) dy = bbox.getHeight()/2;
-    else if (valign == CVALIGN_TYPE_TOP   ) dy = 0;
+    CBBox2D rbbox1 = text.drawAtPoint(renderer_, pos1, halign, valign, c, angle);
 
-    //dy -= renderer_->pixelHeightToWindowHeight(font->getCharAscent());
+    renderer_->setRange(range);
 
-    bbox1 = bbox.moveBy(CPoint2D(pos.x, pos.y) + CPoint2D(dx, dy));
+    CPoint2D rpos1, rpos2;
 
-    bbox1.setYMax(pos.y + dy);
-    }
+    renderer_->regionToWindow(rbbox1.getXMin(), rbbox1.getYMin(), &rpos1.x, &rpos1.y);
+    renderer_->regionToWindow(rbbox1.getXMax(), rbbox1.getYMax(), &rpos2.x, &rpos2.y);
 
-    //---
+    CBBox2D rbbox2(rpos1, rpos2);
 
-#if 0
-    {
-    CBBox2D rbbox = text.renderBBox(renderer_, CPoint2D(pos.x, pos.y), angle);
+    maxH_ = std::max(maxH_, renderer_->windowHeightToPixelHeight(rbbox2.getHeight()));
 
-    double dx = 0.0, dy = 0.0;
-
-    if      (halign == CHALIGN_TYPE_LEFT  ) dx = 0;
-    else if (halign == CHALIGN_TYPE_CENTER) dx = -rbbox.getWidth()/2;
-    else if (halign == CHALIGN_TYPE_RIGHT ) dx = -rbbox.getWidth();
-
-    if      (valign == CVALIGN_TYPE_BOTTOM) dy = 0;
-    else if (valign == CVALIGN_TYPE_CENTER) dy = -rbbox.getHeight()/2;
-    else if (valign == CVALIGN_TYPE_TOP   ) dy = -rbbox.getHeight();
-
-    CBBox2D rbbox1 = rbbox.moveBy(CPoint2D(dx, dy));
-
-renderer_->drawRect(rbbox1, CRGBA(1,0,0), 1);
-
-    //bbox1 = rbbox1;
-    }
-#endif
-
-    //---
-
-    text.draw(renderer_, bbox1, CHALIGN_TYPE_CENTER, c, angle);
-
-    group_->updateAxisBBox(bbox1);
-//renderer_->drawRect(bbox1, CRGBA(1,0,0), 1);
+    group_->updateAxisBBox(rbbox2);
   }
   else {
     CFontPtr font = renderer_->getFont();
@@ -1372,7 +1339,7 @@ renderer_->drawRect(rbbox1, CRGBA(1,0,0), 1);
 
     CPoint2D pos1 = renderer_->transform(pos);
 
-    bbox = CBBox2D(CPoint2D(pos1.x, pos1.y - td), CPoint2D(pos1.x + tw, pos1.y + ta));
+    CBBox2D bbox(CPoint2D(pos1.x, pos1.y - td), CPoint2D(pos1.x + tw, pos1.y + ta));
 
     double dx = 0.0, dy = 0.0;
 
@@ -1389,7 +1356,7 @@ renderer_->drawRect(rbbox1, CRGBA(1,0,0), 1);
     renderer_->drawHAlignedText(pos, halign, 0, valign, 0, str, c, angle);
 
     group_->updateAxisBBox(bbox1);
-  //renderer_->drawRect(bbox1, CRGBA(1,0,0), 1);
+//renderer_->drawRect(bbox1, CRGBA(1,0,0), 1);
   }
 }
 

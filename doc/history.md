@@ -125,3 +125,6 @@
  + add fill color option for key
  + add multiple object property edit for bars, pies
  + add more control for histogram properties (gap)
+
+### 9/20/2015
+ + improve axis label alignment when rotated

@@ -2,13 +2,14 @@
 #define CGnuPlotRenderer_H
 
 #include <CGnuPlot.h>
+#include <CGnuPlotTextRenderer.h>
 #include <CLineDash.h>
 #include <CBBox2D.h>
 #include <CFont.h>
 
 class CGnuPlotWindow;
 
-class CGnuPlotRenderer {
+class CGnuPlotRenderer : public CGnuPlotTextRenderer {
  public:
   typedef CGnuPlotTypes::SymbolType SymbolType;
 
@@ -35,6 +36,7 @@ class CGnuPlotRenderer {
 
   const CGnuPlotMargin &margin() const { return margin_; }
   void setMargin(const CGnuPlotMargin &m) { margin_ = m; }
+  void resetMargin() { margin_.reset(); }
 
   const CBBox2D &range() const { return range_; }
   void setRange(const CBBox2D &r) { range_ = r; }
@@ -144,7 +146,7 @@ class CGnuPlotRenderer {
   void windowToPixel(const CPoint2D &w, CPoint2D &p);
   void pixelToWindow(const CPoint2D &p, CPoint2D &w);
 
-  void windowToPixel(double x, double y, double *px, double *py);
+  void windowToPixel(double wx, double wy, double *px, double *py);
   void pixelToWindow(double px, double py, double *wx, double *wy);
 
   void pixelToWindowNoMargin(double px, double py, double *wx, double *wy);
@@ -210,6 +212,9 @@ class CGnuPlotRenderer {
   double windowHeightToPixelHeight(double w);
 
   void regionToPixel(const CPoint2D &r, CPoint2D &p);
+
+  void windowToRegion(double wx, double wy, double *rx, double *ry);
+  void regionToWindow(double rx, double ry, double *wx, double *wy);
 
   CPoint2D transform(const CPoint3D &p) const;
 
