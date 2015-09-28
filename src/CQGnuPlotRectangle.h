@@ -10,6 +10,9 @@
 class CQGnuPlotRectangle : public CQGnuPlotAnnotation, public CGnuPlotRectangle {
   Q_OBJECT
 
+  Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
+  Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
+
   Q_PROPERTY(QPointF from      READ getFrom      WRITE setFrom     )
   Q_PROPERTY(QPointF to        READ getTo        WRITE setTo       )
   Q_PROPERTY(double  lineWidth READ getLineWidth WRITE setLineWidth)

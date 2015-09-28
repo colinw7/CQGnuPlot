@@ -1,7 +1,6 @@
 #ifndef CQGnuPlotAnnotation_H
 #define CQGnuPlotAnnotation_H
 
-#include <CQGnuPlotObject.h>
 #include <CGnuPlotObject.h>
 #include <CQGnuPlot.h>
 
@@ -9,7 +8,7 @@
 
 class CQGnuPlotGroup;
 
-class CQGnuPlotAnnotation : public CQGnuPlotObject {
+class CQGnuPlotAnnotation : public QObject {
   Q_OBJECT
 
   Q_PROPERTY(QColor strokeColor READ getStrokeColor WRITE setStrokeColor)
@@ -22,7 +21,10 @@ class CQGnuPlotAnnotation : public CQGnuPlotObject {
   typedef CQGnuPlotEnum::DrawLayerType DrawLayerType;
 
  public:
-  CQGnuPlotAnnotation(CGnuPlotGroupAnnotation *obj);
+  CQGnuPlotAnnotation(CQGnuPlotGroup *group, CGnuPlotGroupAnnotation *obj);
+
+  const CQGnuPlotGroup *qgroup() const { return qgroup_; }
+  void setQGroup(CQGnuPlotGroup *p) { qgroup_ = p; }
 
   QColor getStrokeColor() const;
   void setStrokeColor(const QColor &c);
@@ -33,7 +35,10 @@ class CQGnuPlotAnnotation : public CQGnuPlotObject {
   DrawLayerType getDrawLayer() const;
   void setDrawLayer(const DrawLayerType &layer);
 
+  bool mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip);
+
  private:
+  CQGnuPlotGroup          *qgroup_;
   CGnuPlotGroupAnnotation *obj_;
 };
 

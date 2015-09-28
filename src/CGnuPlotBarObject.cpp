@@ -11,9 +11,9 @@ CGnuPlotBarObject(CGnuPlotPlot *plot) :
 
 bool
 CGnuPlotBarObject::
-inside(const CPoint2D &p) const
+inside(const CGnuPlotTypes::InsideData &data) const
 {
-  return bbox_.inside(p);
+  return bbox_.inside(data.window);
 }
 
 CGnuPlotTipData
@@ -51,11 +51,40 @@ draw(CGnuPlotRenderer *renderer) const
 {
   if (! isInitialized()) return;
 
-  if      (fillType_ == FillType::PATTERN)
-    renderer->patternRect(bbox_, fillPattern_, fillColor_.getValue(CRGBA(1,0,0)), CRGBA(1,1,1));
-  else if (fillType_ == FillType::SOLID)
-    renderer->fillRect(bbox_, fillColor_.getValue(CRGBA(1,0,0)));
+  bool highlighted = (isHighlighted() || isSelected());
 
-  if (border_)
-    renderer->drawRect(bbox_, lineColor_.getValue(CRGBA(0,0,0)), width_);
+  if      (fillType_ == FillType::PATTERN) {
+    CRGBA fc = fillColor_.getValue(CRGBA(1,0,0));
+
+    if (highlighted) {
+      double g = fc.getGray();
+
+      if (g < 0.5)
+        fc = CRGBA(1, 1, 1);
+      else
+        fc = CRGBA(0, 0, 0);
+    }
+
+    renderer->patternRect(bbox_, fillPattern_, fc, CRGBA(1,1,1));
+  }
+  else if (fillType_ == FillType::SOLID) {
+    CRGBA fc  = fillColor().getValue(CRGBA(1,1,1));
+
+    if (highlighted)
+      fc = fc.getLightRGBA();
+
+    renderer->fillRect(bbox_, fc);
+  }
+
+  if (border_) {
+    CRGBA  lc = lineColor_.getValue(CRGBA(0,0,0));
+    double lw = width_;
+
+    if (highlighted) {
+      lc = CRGBA(1,0,0);
+      lw = 2;
+    }
+
+    renderer->drawRect(bbox_, lc, lw);
+  }
 }

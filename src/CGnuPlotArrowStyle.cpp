@@ -10,7 +10,7 @@ lineWidth(CGnuPlot *plot) const
   if (lineWidth_.isValid())
    return lineWidth_.getValue();
 
-  if (lineStyle_.isValid()) {
+  if (plot && lineStyle_.isValid()) {
     CGnuPlotLineStyleP ls = plot->lineStyle(lineStyle_.getValue());
 
     return (ls.isValid() ? ls->calcWidth() : 1);

@@ -1,12 +1,13 @@
 #include <CQGnuPlotAnnotation.h>
+#include <CQGnuPlotWindow.h>
 #include <CQGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
 
 CQGnuPlotAnnotation::
-CQGnuPlotAnnotation(CGnuPlotGroupAnnotation *obj) :
- obj_(obj)
+CQGnuPlotAnnotation(CQGnuPlotGroup *qgroup, CGnuPlotGroupAnnotation *obj) :
+ qgroup_(qgroup), obj_(obj)
 {
 }
 
@@ -54,4 +55,20 @@ CQGnuPlotAnnotation::
 setDrawLayer(const DrawLayerType &layer)
 {
   obj_->setLayer(CQGnuPlotUtil::drawLayerTypeConv(layer));
+}
+
+bool
+CQGnuPlotAnnotation::
+mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip)
+{
+  CGnuPlotTypes::InsideData insideData(window, pixel);
+
+  if (! obj_->inside(insideData))
+    return false;
+
+  qgroup()->qwindow()->highlightObject(this);
+
+  tip = obj_->tip();
+
+  return true;
 }

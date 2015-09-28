@@ -1,7 +1,6 @@
 #ifndef CQGnuPlotBarObject_H
 #define CQGnuPlotBarObject_H
 
-#include <CQGnuPlotObject.h>
 #include <CGnuPlotBarObject.h>
 #include <CQGnuPlot.h>
 
@@ -9,8 +8,11 @@
 
 class CQGnuPlotPlot;
 
-class CQGnuPlotBarObject : public CQGnuPlotObject, public CGnuPlotBarObject {
+class CQGnuPlotBarObject : public QObject, public CGnuPlotBarObject {
   Q_OBJECT
+
+  Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
+  Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
   Q_PROPERTY(double x           READ xvalue                         )
   Q_PROPERTY(double y           READ yvalue                         )

@@ -11,6 +11,9 @@ class CQGnuPlotGroup;
 class CQGnuPlotArrow : public CQGnuPlotAnnotation, public CGnuPlotArrow {
   Q_OBJECT
 
+  Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
+  Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
+
   Q_PROPERTY(CQGnuPlotEnum::ArrowCoordType coordType READ getCoordType WRITE setCoordType)
 
   Q_PROPERTY(QPointF   from          READ getFrom          WRITE setFrom         )
@@ -25,7 +28,7 @@ class CQGnuPlotArrow : public CQGnuPlotAnnotation, public CGnuPlotArrow {
   Q_PROPERTY(bool      headFilled    READ getHeadFilled    WRITE setHeadFilled   )
   Q_PROPERTY(bool      headEmpty     READ getHeadEmpty     WRITE setHeadEmpty    )
   Q_PROPERTY(int       lineType      READ getLineStyle     WRITE setLineStyle    )
-  Q_PROPERTY(double    lineWidth     READ getLineWidth     WRITE setLineWidth    )
+  Q_PROPERTY(double    lineWidth     READ calcLineWidth    WRITE setLineWidth    )
   Q_PROPERTY(CLineDash lineDash      READ getDash          WRITE setDash         )
 
  public:
@@ -50,9 +53,6 @@ class CQGnuPlotArrow : public CQGnuPlotAnnotation, public CGnuPlotArrow {
   void setDash(const CLineDash &dash);
 
   void draw(CGnuPlotRenderer *renderer) const override;
-
- private:
-  QPointF qfrom_, qto_;
 };
 
 #endif

@@ -26,6 +26,7 @@
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
 #include <CQGnuPlotPointObject.h>
+#include <CQGnuPlotArrowObject.h>
 
 #include <QApplication>
 
@@ -368,6 +369,21 @@ createPointObject(CGnuPlotPlot *plot)
   CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
   CQGnuPlotPointObject *rect = new CQGnuPlotPointObject(qplot);
+
+  objects_.push_back(rect);
+
+  qplot->qwindow()->updateProperties();
+
+  return rect;
+}
+
+CGnuPlotArrowObject *
+CQGnuPlotDevice::
+createArrowObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotArrowObject *rect = new CQGnuPlotArrowObject(qplot);
 
   objects_.push_back(rect);
 

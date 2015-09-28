@@ -6,6 +6,7 @@
 #include <CGnuPlotContour.h>
 #include <CGnuPlotStyle.h>
 #include <CGnuPlotSVGDevice.h>
+#include <CGnuPlotLogDevice.h>
 #include <CGnuPlotUtil.h>
 #include <CGnuPlotNameValues.h>
 
@@ -494,8 +495,10 @@ CGnuPlot() :
   CExprInst->createStringVariable("GPVAL_COMPILE_OPTIONS", "+GD_PNG");
 
   svgDevice_ = new CGnuPlotSVGDevice();
+  logDevice_ = new CGnuPlotLogDevice();
 
   addDevice("svg", svgDevice_);
+  addDevice("log", logDevice_);
 
   for (const auto &i : IRange(0, 8))
     paxis(i).unset();
@@ -12701,6 +12704,8 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
 
       plot->addPoint2D(values, false, bad, params);
     }
+
+    return;
   }
   // gen file lines (two dimensions)
   else if (filename == "++") {
@@ -12771,6 +12776,8 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
         plot->addPoint2D(values, false, bad, params);
       }
     }
+
+    return;
   }
 
   //---
@@ -15526,11 +15533,17 @@ bool
 CGnuPlot::
 evaluateExpression(const std::string &expr, CExprValuePtr &value, bool quiet) const
 {
+  bool oldQuiet = CExprInst->getQuiet();
+
+  CExprInst->setQuiet(quiet);
+
   if (! CExprInst->evaluateExpression(expr, value))
     value = CExprValuePtr();
 
   if (! value.isValid() && ! quiet)
     errorMsg("Eval failed: '" + expr + "'");
+
+  CExprInst->setQuiet(oldQuiet);
 
   return true;
 }

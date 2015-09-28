@@ -1538,12 +1538,15 @@ void
 CExprInterpImpl::
 printTrackBack(std::ostream &os)
 {
+  if (CExprInst->getQuiet())
+    return;
+
   std::string error_message = errorData_.getLastError();
 
   if (error_message != "")
-    os << error_message << std::endl;
+    CExprInst->errorMsg(error_message);
   else
-    os << "Syntax Error" << std::endl;
+    CExprInst->errorMsg("Syntax Error");
 
   uint size = itokenStack_.getNumTokens();
 

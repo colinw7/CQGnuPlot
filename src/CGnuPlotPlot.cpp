@@ -11,6 +11,7 @@
 #include <CGnuPlotPolygonObject.h>
 #include <CGnuPlotRectObject.h>
 #include <CGnuPlotPointObject.h>
+#include <CGnuPlotArrowObject.h>
 #include <CGnuPlotDevice.h>
 #include <CGnuPlotBBoxRenderer.h>
 #include <CGnuPlotStyleBase.h>
@@ -27,7 +28,8 @@ CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
  group_(group), style_(style), id_(nextId_++), lineStyle_(app()),
  contour_(this), barCache_(this), bubbleCache_(this), ellipseCache_(this), pieCache_(this),
- polygonCache_(this), rectCache_(this), pointCache_(this), tableFile_(group->app())
+ polygonCache_(this), rectCache_(this), pointCache_(this), arrowCache_(this),
+ tableFile_(group->app())
 {
   setSmooth (app()->getSmooth());
   setBoxPlot(app()->getBoxPlot());
@@ -600,6 +602,13 @@ updatePointCacheSize(int n)
 
 void
 CGnuPlotPlot::
+updateArrowCacheSize(int n)
+{
+  arrowCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
 initRenderer(CGnuPlotRenderer *renderer)
 {
   renderer->setRange(group_->getMappedDisplayRange(xind(), yind()));
@@ -815,7 +824,7 @@ drawSurface(CGnuPlotRenderer *renderer)
           const PointsColor &pc = poly.second;
 
           renderer->fillPolygon(pc.first, fc);
-          renderer->drawPolygon(pc.first, 0, c);
+          renderer->drawPolygon(pc.first, 0, c, CLineDash());
         }
       }
     }
@@ -1249,6 +1258,13 @@ CGnuPlotPlot::
 createPointObject() const
 {
   return app()->device()->createPointObject(const_cast<CGnuPlotPlot *>(this));
+}
+
+CGnuPlotArrowObject *
+CGnuPlotPlot::
+createArrowObject() const
+{
+  return app()->device()->createArrowObject(const_cast<CGnuPlotPlot *>(this));
 }
 
 void

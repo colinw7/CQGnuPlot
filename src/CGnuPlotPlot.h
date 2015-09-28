@@ -25,6 +25,7 @@ class CGnuPlotPieObject;
 class CGnuPlotPolygonObject;
 class CGnuPlotRectObject;
 class CGnuPlotPointObject;
+class CGnuPlotArrowObject;
 class CGnuPlotBBoxRenderer;
 
 class CGnuPlotStyleAdjacencyRenderer;
@@ -111,6 +112,19 @@ class CGnuPlotCacheFactory<CGnuPlotPointObject> {
 };
 
 template<>
+class CGnuPlotCacheFactory<CGnuPlotArrowObject> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotArrowObject *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+template<>
 class CGnuPlotCacheFactory<CGnuPlotPolygonObject> {
  public:
   CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
@@ -163,6 +177,7 @@ class CGnuPlotPlot {
   typedef CGnuPlotCache<CGnuPlotPolygonObject> PolygonCache;
   typedef CGnuPlotCache<CGnuPlotRectObject>    RectCache;
   typedef CGnuPlotCache<CGnuPlotPointObject>   PointCache;
+  typedef CGnuPlotCache<CGnuPlotArrowObject>   ArrowCache;
   typedef std::vector<CGnuPlotBarObject *>     BarObjects;
   typedef std::vector<CGnuPlotBubbleObject *>  BubbleObjects;
   typedef std::vector<CGnuPlotEllipseObject *> EllipseObjects;
@@ -170,6 +185,7 @@ class CGnuPlotPlot {
   typedef std::vector<CGnuPlotPolygonObject *> PolygonObjects;
   typedef std::vector<CGnuPlotRectObject *>    RectObjects;
   typedef std::vector<CGnuPlotPointObject *>   PointObjects;
+  typedef std::vector<CGnuPlotArrowObject *>   ArrowObjects;
   typedef std::vector<double>                  DoubleVector;
   typedef std::map<double,DoubleVector>        MappedPoints;
   typedef std::vector<CGnuPlotKeyLabel>        KeyLabels;
@@ -480,6 +496,7 @@ class CGnuPlotPlot {
   void updatePolygonCacheSize(int n);
   void updateRectCacheSize   (int n);
   void updatePointCacheSize  (int n);
+  void updateArrowCacheSize  (int n);
 
   const BarObjects     &barObjects    () const { return barCache_    .objects(); }
   const BubbleObjects  &bubbleObjects () const { return bubbleCache_ .objects(); }
@@ -488,6 +505,7 @@ class CGnuPlotPlot {
   const PolygonObjects &polygonObjects() const { return polygonCache_.objects(); }
   const RectObjects    &rectObjects   () const { return rectCache_   .objects(); }
   const PointObjects   &pointObjects  () const { return pointCache_  .objects(); }
+  const ArrowObjects   &arrowObjects  () const { return arrowCache_  .objects(); }
 
   //---
 
@@ -547,6 +565,7 @@ class CGnuPlotPlot {
   CGnuPlotPolygonObject *createPolygonObject() const;
   CGnuPlotRectObject    *createRectObject   () const;
   CGnuPlotPointObject   *createPointObject  () const;
+  CGnuPlotArrowObject   *createArrowObject  () const;
 
   bool mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const;
 
@@ -666,6 +685,7 @@ class CGnuPlotPlot {
   PolygonCache           polygonCache_;
   RectCache              rectCache_;
   PointCache             pointCache_;
+  ArrowCache             arrowCache_;
   StyleValues            styleValues_;
   bool                   parametric_ { false };
   CGnuPlotTypes::Mapping mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
@@ -728,6 +748,13 @@ CGnuPlotCacheFactory<CGnuPlotPointObject>::
 make()
 {
   return plot_->createPointObject();
+}
+
+inline CGnuPlotArrowObject *
+CGnuPlotCacheFactory<CGnuPlotArrowObject>::
+make()
+{
+  return plot_->createArrowObject();
 }
 
 #endif

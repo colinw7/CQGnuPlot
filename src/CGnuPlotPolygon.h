@@ -46,9 +46,9 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
-  bool inside(const CPoint2D &p) const override;
+  bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
-  CGnuPlotTipData tip() const { return CGnuPlotTipData(); }
+  CGnuPlotTipData tip() const override;
 
   void print(std::ostream &) const;
 
@@ -58,6 +58,8 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
   COptInt           lt_;
   COptReal          lw_;
   mutable CBBox2D   bbox_;
+  mutable CRGBA     fc_;
+  mutable CRGBA     lc_;
 };
 
 typedef std::shared_ptr<CGnuPlotPolygon> CGnuPlotPolygonP;

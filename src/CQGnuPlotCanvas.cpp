@@ -112,6 +112,8 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
   }
 
   void hideWidget() {
+    canvas_->qwindow()->highlightObject(0);
+
     delete label_;
 
     label_ = 0;

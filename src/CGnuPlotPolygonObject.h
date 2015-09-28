@@ -54,14 +54,9 @@ class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
   const std::string &text() const { return text_; }
   void setText(const std::string &s) { text_ = s; }
 
-  const std::string &tipText() const { return tipText_; }
-  void setTipText(const std::string &v) { tipText_ = v; }
+  bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
-  bool inside(const CPoint2D &p) const override;
-
-  CGnuPlotTipData tip() const override {
-    return CGnuPlotTipData(tipText_ == "" ? text_ : tipText_, rect_);
-  }
+  CGnuPlotTipData tip() const override;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
@@ -74,9 +69,9 @@ class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
   double           lineWidth_ { 0 };
   bool             clipped_ { false };
   std::string      text_ { "" };
-  std::string      tipText_ { "" };
-  mutable CBBox2D  rect_;
-  mutable CPoint2D c_;
+  mutable CBBox2D  bbox_;
+  mutable CPoint2D center_;
+  mutable CRGBA    lc_;
 };
 
 #endif

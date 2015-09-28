@@ -1,7 +1,6 @@
 #ifndef CQGnuPlotEllipseObject_H
 #define CQGnuPlotEllipseObject_H
 
-#include <CQGnuPlotObject.h>
 #include <CGnuPlotEllipseObject.h>
 #include <CQGnuPlot.h>
 
@@ -9,8 +8,11 @@
 
 class CQGnuPlotPlot;
 
-class CQGnuPlotEllipseObject : public CQGnuPlotObject, public CGnuPlotEllipseObject {
+class CQGnuPlotEllipseObject : public QObject, public CGnuPlotEllipseObject {
   Q_OBJECT
+
+  Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
+  Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
   Q_PROPERTY(QString text      READ getText      WRITE setText     )
   Q_PROPERTY(QColor  fillColor READ getFillColor WRITE setFillColor)

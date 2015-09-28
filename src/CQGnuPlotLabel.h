@@ -10,6 +10,9 @@
 class CQGnuPlotLabel : public CQGnuPlotAnnotation, public CGnuPlotLabel {
   Q_OBJECT
 
+  Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
+  Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
+
   Q_PROPERTY(bool    displayed READ isDisplayed  WRITE setDisplayed)
   Q_PROPERTY(QString text      READ getText      WRITE setText     )
   Q_PROPERTY(QPointF pos       READ getPos       WRITE setPos      )

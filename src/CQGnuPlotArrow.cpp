@@ -5,7 +5,7 @@
 
 CQGnuPlotArrow::
 CQGnuPlotArrow(CQGnuPlotGroup *group) :
- CQGnuPlotAnnotation(this), CGnuPlotArrow(group)
+ CQGnuPlotAnnotation(group, this), CGnuPlotArrow(group)
 {
   setObjectName("arrow");
 }
@@ -106,18 +106,5 @@ void
 CQGnuPlotArrow::
 draw(CGnuPlotRenderer *renderer) const
 {
-  CQGnuPlotArrow *th = const_cast<CQGnuPlotArrow *>(this);
-
-  th->qfrom_ = CQUtil::toQPoint(CGnuPlotArrow::getFrom().getPoint2D(renderer));
-  th->qto_   = CQUtil::toQPoint(CGnuPlotArrow::getTo  ().getPoint2D(renderer));
-
-  CRGBA c = getLineColor();
-
-  if (isSelected())
-    th->setLineColor(CRGBA(1,0,0), true);
-
   CGnuPlotArrow::draw(renderer);
-
-  if (isSelected())
-    th->setLineColor(CRGBA(1,0,0), false);
 }

@@ -1,7 +1,6 @@
 #ifndef CQGnuPlotRectObject_H
 #define CQGnuPlotRectObject_H
 
-#include <CQGnuPlotObject.h>
 #include <CGnuPlotRectObject.h>
 #include <CQGnuPlot.h>
 
@@ -9,8 +8,11 @@
 
 class CQGnuPlotPlot;
 
-class CQGnuPlotRectObject : public CQGnuPlotObject, public CGnuPlotRectObject {
+class CQGnuPlotRectObject : public QObject, public CGnuPlotRectObject {
   Q_OBJECT
+
+  Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
+  Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
   Q_PROPERTY(QString text      READ getText      WRITE setText     )
   Q_PROPERTY(QColor  fillColor READ getFillColor WRITE setFillColor)

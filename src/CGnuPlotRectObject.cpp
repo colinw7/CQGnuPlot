@@ -10,23 +10,75 @@ CGnuPlotRectObject(CGnuPlotPlot *plot) :
 
 bool
 CGnuPlotRectObject::
-inside(const CPoint2D &p) const
+inside(const CGnuPlotTypes::InsideData &data) const
 {
-  return rect_.inside(p);
+  return rect_.inside(data.window);
+}
+
+CGnuPlotTipData
+CGnuPlotRectObject::
+tip() const
+{
+  CGnuPlotTipData tip;
+
+  tip.setXStr(CStrUtil::strprintf("%g, %g -> %g, %g",
+                rect_.getXMin(), rect_.getYMin(), rect_.getXMax(), rect_.getYMax()));
+
+  if      (tipText_ != "")
+    tip.setYStr(tipText_);
+  else if (text_ != "")
+    tip.setYStr(text_);
+
+  tip.setBorderColor(lc_);
+  tip.setXColor(lc_);
+
+  tip.setRect(rect_);
+
+  return tip;
 }
 
 void
 CGnuPlotRectObject::
 draw(CGnuPlotRenderer *renderer) const
 {
-  if (fillColor_.isValid())
-    renderer->fillRect(rect_, fillColor_.getValue());
+  bool highlighted = (isHighlighted() || isSelected());
 
-  if (lineColor_.isValid())
-    renderer->drawRect(rect_, lineColor_.getValue(), lineWidth_);
+  if (fillColor_.isValid()) {
+    CRGBA fc = fillColor_.getValue();
 
-  double tw = renderer->pixelWidthToWindowWidth  (renderer->getFont()->getStringWidth(text_));
-  double th = renderer->pixelHeightToWindowHeight(renderer->getFont()->getCharAscent());
+    lc_ = fc;
 
-  renderer->drawText(rect_.getCenter() - CPoint2D(tw/2, th/2), text_, CRGBA(0,0,0));
+    if (highlighted) {
+      fc = CRGBA(1,0,0);
+    }
+
+    renderer->fillRect(rect_, fc);
+  }
+
+  if (lineColor_.isValid()) {
+    CRGBA  lc = lineColor_.getValue();
+    double lw = lineWidth_;
+
+    lc_ = lc;
+
+    if (highlighted) {
+      lc = CRGBA(1,0,0);
+      lw = 2;
+    }
+
+    renderer->drawRect(rect_, lc, lw);
+  }
+
+  if (text_ != "") {
+    double tw = renderer->pixelWidthToWindowWidth  (renderer->getFont()->getStringWidth(text_));
+    double th = renderer->pixelHeightToWindowHeight(renderer->getFont()->getCharAscent());
+
+    CRGBA tc = CRGBA(0,0,0);
+
+    if (highlighted) {
+      tc = CRGBA(1,0,0);
+    }
+
+    renderer->drawText(rect_.getCenter() - CPoint2D(tw/2, th/2), text_, tc);
+  }
 }

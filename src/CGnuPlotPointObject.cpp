@@ -13,9 +13,9 @@ CGnuPlotPointObject(CGnuPlotPlot *plot) :
 
 bool
 CGnuPlotPointObject::
-inside(const CPoint2D &p) const
+inside(const CGnuPlotTypes::InsideData &data) const
 {
-  double r = p.distanceTo(point_);
+  double r = data.window.distanceTo(point_);
 
   if (r > pw_)
     return false;
@@ -52,17 +52,27 @@ void
 CGnuPlotPointObject::
 draw(CGnuPlotRenderer *renderer) const
 {
+  bool highlighted = (isHighlighted() || isSelected());
+
   double size = size_.getValue(1);
 
   if (size <= 0)
     size = 1;
+
+  if (highlighted)
+    size = 1.5*size;
 
   double ss = sqrt(size);
 
   pw_ = ss/2;
   ph_ = ss/2;
 
-  if (isErasePoint()) {
+  bool erasePoint = isErasePoint();
+
+  if (highlighted)
+    erasePoint = true;
+
+  if (erasePoint) {
     CGnuPlotGroup *group = plot()->group();
 
     CRGBA bg = group->window()->backgroundColor();

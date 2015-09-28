@@ -12,7 +12,6 @@ class CQGnuPlotGroup;
 class CQGnuPlotPlot;
 class CQGnuPlotCanvas;
 class CQGnuPlotRenderer;
-class CQGnuPlotObject;
 class CQPropertyTree;
 class CQPropertyRealEditor;
 class CQPropertyIntegerEditor;
@@ -24,6 +23,9 @@ class QTimer;
 
 class CQGnuPlotWindow : public CGnuPlotWindow {
  public:
+  typedef std::vector<QObject *> Objects;
+
+ public:
   CQGnuPlotWindow(CQGnuPlot *plot=0);
 
   void setApp(CQGnuPlot *plot);
@@ -31,9 +33,9 @@ class CQGnuPlotWindow : public CGnuPlotWindow {
 
   virtual void redraw() { }
 
-  virtual void selectObjects(const std::vector<CQGnuPlotObject *> &) { }
+  virtual void selectObjects(const Objects &) { }
 
-  void highlightObject(CQGnuPlotObject *obj);
+  void highlightObject(QObject *obj);
 
   virtual void paint(QPainter *) { }
 
@@ -121,7 +123,7 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
 
   void selectObject(const QObject *);
 
-  void selectObjects(const std::vector<CQGnuPlotObject *> &objs);
+  void selectObjects(const Objects &objs);
 
   void deselectAllObjects();
 

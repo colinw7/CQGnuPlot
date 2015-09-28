@@ -6,7 +6,7 @@
 
 CQGnuPlotLabel::
 CQGnuPlotLabel(CQGnuPlotGroup *group) :
- CQGnuPlotAnnotation(this), CGnuPlotLabel(group)
+ CQGnuPlotAnnotation(group, this), CGnuPlotLabel(group)
 {
   setObjectName("label");
 }
@@ -109,21 +109,5 @@ void
 CQGnuPlotLabel::
 draw(CGnuPlotRenderer *renderer) const
 {
-  if (isSelected()) {
-    CQGnuPlotLabel *th = const_cast<CQGnuPlotLabel *>(this);
-
-    CRGBA c = CGnuPlotLabel::getStrokeColor().getValue(CRGBA(0,0,0));
-
-    th->CGnuPlotLabel::setStrokeColor(CRGBA(1,0,0));
-
-    CGnuPlotLabel::draw(renderer);
-
-    th->CGnuPlotLabel::setStrokeColor(c);
-
-    CBBox2D bbox = getBBox();
-
-    renderer->drawRect(bbox, CRGBA(1,0,0), 2);
-  }
-  else
-    CGnuPlotLabel::draw(renderer);
+  CGnuPlotLabel::draw(renderer);
 }

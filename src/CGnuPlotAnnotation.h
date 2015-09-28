@@ -36,7 +36,7 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
   const DrawLayer &getLayer() const { return layer_; }
   void setLayer(const DrawLayer &l) { layer_ = l; }
 
-  virtual bool inside(const CPoint2D &p) const = 0;
+  virtual bool inside(const CGnuPlotTypes::InsideData &p) const = 0;
 
   virtual void print(std::ostream &os) const = 0;
 

@@ -379,7 +379,7 @@ drawBezier(const CPoint2D &point1, const CPoint2D &point2,
 
 void
 CGnuPlotSVGRenderer::
-drawPolygon(const std::vector<CPoint2D> &points, double width, const CRGBA &c)
+drawPolygon(const std::vector<CPoint2D> &points, double width, const CRGBA &c, const CLineDash &)
 {
   if (points.empty()) return;
 
@@ -595,7 +595,7 @@ drawChord(const CPoint2D &, double, double, double, const CRGBA &)
 
 void
 CGnuPlotSVGRenderer::
-drawChord(const CPoint2D &, double, double, double, double, double, const CRGBA &)
+drawComplexChord(const CPoint2D &, double, double, double, double, double, const CRGBA &)
 {
   // TODO
 }

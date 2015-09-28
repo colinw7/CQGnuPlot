@@ -30,9 +30,9 @@ class CGnuPlotStyleChordDiagramRenderer : public ChordDiagramRenderer {
     renderer_->drawChord(p, r, a1, a2, c);
   }
 
-  void drawChord(const CPoint2D &p, double r, double a11, double a12,
-                 double a21, double a22, const CRGBA &c) {
-    renderer_->drawChord(p, r, a11, a12, a21, a22, c);
+  void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
+                        double a21, double a22, const CRGBA &c) {
+    renderer_->drawComplexChord(p, r, a11, a12, a21, a22, c);
   }
 
  private:

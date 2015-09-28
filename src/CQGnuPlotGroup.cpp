@@ -108,38 +108,49 @@ mousePress(const QPoint &qp)
 
   renderer->setRegion(region());
 
-  typedef std::vector<CQGnuPlotObject *> Objects;
+  typedef std::vector<QObject *> Objects;
 
   Objects objects;
 
   for (auto &plot : plots()) {
     plot->initRenderer(renderer);
 
-    CPoint2D p;
+    CPoint2D pixel(qp.x(), qp.y());
+    CPoint2D window;
 
-    renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
+    renderer->pixelToWindow(pixel, window);
 
     double z = 0;
 
-    unmapLogPoint(1, 1, 1, &p.x, &p.y, &z);
+    unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-    qplot->mousePress(p, objects);
+    qplot->mousePress(pixel, window, objects);
   }
 
   renderer->setRange(getMappedDisplayRange(1, 1));
 
-  for (auto &annotation : annotations()) {
-    CPoint2D p;
+  //---
 
-    renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
+  CPoint2D pixel(qp.x(), qp.y());
+  CPoint2D window;
+
+  renderer->pixelToWindow(pixel, window);
+
+  CGnuPlotTypes::InsideData insideData(window, pixel);
+
+  //---
+
+  for (auto &annotation : annotations()) {
+    if (annotation->getLayer() == CGnuPlotTypes::DrawLayer::BEHIND)
+      continue;
 
     double z = 0;
 
-    unmapLogPoint(1, 1, 1, &p.x, &p.y, &z);
+    unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
 
-    if (annotation->inside(p)) {
+    if (annotation->inside(insideData)) {
       CQGnuPlotLabel *qann = static_cast<CQGnuPlotLabel *>(annotation.get());
 
       objects.push_back(qann);
@@ -154,11 +165,7 @@ mousePress(const QPoint &qp)
   CQGnuPlotKey *qkey = dynamic_cast<CQGnuPlotKey *>(key().get());
 
   if (qkey) {
-    CPoint2D p;
-
-    renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
-
-    if (qkey->inside(p)) {
+    if (qkey->inside(insideData)) {
       if (! qkey->mousePress(qp))
         objects.push_back(qkey);
     }
@@ -180,17 +187,18 @@ mouseMove(const QPoint &qp)
   for (auto &plot : plots()) {
     plot->initRenderer(renderer);
 
-    CPoint2D p;
+    CPoint2D pixel(qp.x(), qp.y());
+    CPoint2D window;
 
-    renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
+    renderer->pixelToWindow(pixel, window);
 
     double z = 0;
 
-    unmapLogPoint(1, 1, 1, &p.x, &p.y, &z);
+    unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-    qplot->mouseMove(p);
+    qplot->mouseMove(pixel, window);
   }
 }
 
@@ -207,6 +215,8 @@ mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
 {
   if (! inside(qp)) return false;
 
+  CPoint2D pixel(qp.x(), qp.y());
+
   CGnuPlotRenderer *renderer = app()->renderer();
 
   renderer->setRegion(region());
@@ -214,19 +224,43 @@ mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
   for (auto &plot : plots()) {
     plot->initRenderer(renderer);
 
-    CPoint2D p;
+    CPoint2D window;
 
-    renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
+    renderer->pixelToWindow(pixel, window);
 
     double z = 0;
 
-    unmapLogPoint(1, 1, 1, &p.x, &p.y, &z);
+    unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-    if (qplot->mouseTip(p, tip))
+    if (qplot->mouseTip(pixel, window, tip))
       return true;
   }
+
+  renderer->setRange(getMappedDisplayRange(1, 1));
+
+  //---
+
+  CPoint2D window;
+
+  renderer->pixelToWindow(pixel, window);
+
+  for (auto &annotation : annotations()) {
+    if (annotation->getLayer() == CGnuPlotTypes::DrawLayer::BEHIND)
+      continue;
+
+    double z = 0;
+
+    unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
+
+    CQGnuPlotAnnotation *qann = dynamic_cast<CQGnuPlotAnnotation *>(annotation.get());
+
+    if (qann->mouseTip(pixel, window, tip))
+      return true;
+  }
+
+  //---
 
   return false;
 }

@@ -9,6 +9,7 @@
 #include <CGnuPlotPolygonObject.h>
 #include <CGnuPlotRectObject.h>
 #include <CGnuPlotPointObject.h>
+#include <CGnuPlotArrowObject.h>
 #include <CFontMgr.h>
 
 CGnuPlotDevice::
@@ -192,6 +193,13 @@ CGnuPlotDevice::
 createPointObject(CGnuPlotPlot *plot)
 {
   return new CGnuPlotPointObject(plot);
+}
+
+CGnuPlotArrowObject *
+CGnuPlotDevice::
+createArrowObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotArrowObject(plot);
 }
 
 bool

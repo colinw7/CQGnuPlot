@@ -255,7 +255,7 @@ draw(ChordDiagramRenderer *renderer)
         double angle21 = angle2 + dangle21;
         double angle22 = angle2 + dangle22;
 
-        renderer->drawChord(CPoint2D(xc, yc), r2, angle11, angle12, angle21, angle22, fc);
+        renderer->drawComplexChord(CPoint2D(xc, yc), r2, angle11, angle12, angle21, angle22, fc);
       }
     }
   }

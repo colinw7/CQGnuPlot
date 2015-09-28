@@ -60,26 +60,5 @@ void
 CQGnuPlotPieObject::
 draw(CGnuPlotRenderer *renderer) const
 {
-  CQGnuPlotPieObject *th = const_cast<CQGnuPlotPieObject *>(this);
-
-  CRGBA fc = fillColor();
-  bool  e  = isExploded();
-
-  if (isHighlighted() || isSelected()) {
-    CRGBA fc1 = fc.getLightRGBA();
-
-    th->CGnuPlotPieObject::setFillColor(fc1);
-
-    if (isSelected())
-      th->CGnuPlotPieObject::setExploded(true);
-  }
-
   CGnuPlotPieObject::draw(renderer);
-
-  if (isHighlighted() || isSelected()) {
-    th->CGnuPlotPieObject::setFillColor(fc);
-
-    if (isSelected())
-      th->CGnuPlotPieObject::setExploded(e);
-  }
 }

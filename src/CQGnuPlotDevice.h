@@ -2,14 +2,16 @@
 #define CQGnuPlotDevice_H
 
 #include <CGnuPlotDevice.h>
+#include <QObject>
 #include <vector>
 
 class CQGnuPlotRenderer;
-class CQGnuPlotObject;
 
-class CQGnuPlotDevice : public CGnuPlotDevice {
+class CQGnuPlotDevice : public QObject, public CGnuPlotDevice {
+  Q_OBJECT
+
  public:
-  typedef std::vector<CQGnuPlotObject *> Objects;
+  typedef std::vector<QObject *> Objects;
 
  public:
   CQGnuPlotDevice();
@@ -56,6 +58,7 @@ class CQGnuPlotDevice : public CGnuPlotDevice {
   CGnuPlotPolygonObject *createPolygonObject(CGnuPlotPlot *plot) override;
   CGnuPlotRectObject    *createRectObject   (CGnuPlotPlot *plot) override;
   CGnuPlotPointObject   *createPointObject  (CGnuPlotPlot *plot) override;
+  CGnuPlotArrowObject   *createArrowObject  (CGnuPlotPlot *plot) override;
 
   const Objects &objects() const { return objects_; }
 

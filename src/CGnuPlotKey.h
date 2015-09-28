@@ -140,7 +140,7 @@ class CGnuPlotKey {
 
   int plotAtPos(const CPoint2D &pos) const;
 
-  bool inside(const CPoint2D &p) const { return bbox_.inside(p); }
+  bool inside(const CGnuPlotTypes::InsideData &p) const;
 
  private:
   void drawClustered(CGnuPlotRenderer *renderer);

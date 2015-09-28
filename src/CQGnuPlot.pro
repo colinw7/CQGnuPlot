@@ -18,6 +18,7 @@ CQGnuPlotTest.cpp \
 CQGnuPlot.cpp \
 CQGnuPlotAnnotation.cpp \
 CQGnuPlotArrow.cpp \
+CQGnuPlotArrowObject.cpp \
 CQGnuPlotAxis.cpp \
 CQGnuPlotBarObject.cpp \
 CQGnuPlotBubbleObject.cpp \
@@ -53,6 +54,8 @@ CQGnuPlotWindow.cpp \
 \
 CGnuPlot.cpp \
 CGnuPlotArrow.cpp \
+CGnuPlotArrowData.cpp \
+CGnuPlotArrowObject.cpp \
 CGnuPlotArrowStyle.cpp \
 CGnuPlotAxis.cpp \
 CGnuPlotAxisData.cpp \
@@ -79,7 +82,10 @@ CGnuPlotKeyData.cpp \
 CGnuPlotLabel.cpp \
 CGnuPlotLineStyle.cpp \
 CGnuPlotLineType.cpp \
+CGnuPlotLogDevice.cpp \
+CGnuPlotLogRenderer.cpp \
 CGnuPlotMargin.cpp \
+CGnuPlotObject.cpp \
 CGnuPlotPalette.cpp \
 CGnuPlotPieObject.cpp \
 CGnuPlotPlot.cpp \
@@ -195,6 +201,7 @@ HEADERS += \
 CQGnuPlot.h \
 CQGnuPlotAnnotation.h \
 CQGnuPlotArrow.h \
+CQGnuPlotArrowObject.h \
 CQGnuPlotAxis.h \
 CQGnuPlotBarObject.h \
 CQGnuPlotBubbleObject.h \
@@ -231,6 +238,8 @@ CQGnuPlotWindow.h \
 \
 CGnuPlot.h \
 CGnuPlotArrow.h \
+CGnuPlotArrowData.h \
+CGnuPlotArrowObject.h \
 CGnuPlotArrowStyle.h \
 CGnuPlotAxis.h \
 CGnuPlotAxisData.h \
@@ -256,6 +265,8 @@ CGnuPlotKeyData.h \
 CGnuPlotLabel.h \
 CGnuPlotLineStyle.h \
 CGnuPlotLineType.h \
+CGnuPlotLogDevice.h \
+CGnuPlotLogRenderer.h \
 CGnuPlotNameValues.h \
 CGnuPlotObject.h \
 CGnuPlotPalette.h \

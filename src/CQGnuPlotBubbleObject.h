@@ -1,7 +1,6 @@
 #ifndef CQGnuPlotBubbleObject_H
 #define CQGnuPlotBubbleObject_H
 
-#include <CQGnuPlotObject.h>
 #include <CGnuPlotBubbleObject.h>
 #include <CQGnuPlot.h>
 
@@ -9,8 +8,11 @@
 
 class CQGnuPlotPlot;
 
-class CQGnuPlotBubbleObject : public CQGnuPlotObject, public CGnuPlotBubbleObject {
+class CQGnuPlotBubbleObject : public QObject, public CGnuPlotBubbleObject {
   Q_OBJECT
+
+  Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
+  Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
   Q_PROPERTY(QString name  READ getName  WRITE setName )
   Q_PROPERTY(QColor  color READ getColor WRITE setColor)

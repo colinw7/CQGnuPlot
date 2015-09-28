@@ -54,7 +54,7 @@ class CGnuPlotBarObject : public CGnuPlotPlotObject {
   double width() const { return width_; }
   void setWidth(double r) { width_ = r; }
 
-  bool inside(const CPoint2D &p) const override;
+  bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
   CGnuPlotTipData tip() const override;
 

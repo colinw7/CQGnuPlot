@@ -4,7 +4,7 @@
 
 CQGnuPlotPolygon::
 CQGnuPlotPolygon(CQGnuPlotGroup *group) :
- CQGnuPlotAnnotation(this), CGnuPlotPolygon(group)
+ CQGnuPlotAnnotation(group, this), CGnuPlotPolygon(group)
 {
   setObjectName("polygon");
 }
@@ -21,7 +21,4 @@ CQGnuPlotPolygon::
 draw(CGnuPlotRenderer *renderer) const
 {
   CGnuPlotPolygon::draw(renderer);
-
-  if (isSelected())
-    renderer->drawPolygon(getPoints(), 2.0, CRGBA(1,0,0));
 }

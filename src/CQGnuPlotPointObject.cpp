@@ -89,27 +89,5 @@ void
 CQGnuPlotPointObject::
 draw(CGnuPlotRenderer *renderer) const
 {
-  CQGnuPlotPointObject *th = const_cast<CQGnuPlotPointObject *>(this);
-
-//CRGBA  c = color();
-  double s = size().getValue(-1);
-
-  if (s < 0)
-    s =  1;
-
-  bool e = isErasePoint();
-
-  if (isSelected() || isHighlighted()) {
-    //th->CGnuPlotPointObject::setColor(CRGBA(1,0,0));
-    th->CGnuPlotPointObject::setSize      (1.5*s);
-    th->CGnuPlotPointObject::setErasePoint(true);
-  }
-
   CGnuPlotPointObject::draw(renderer);
-
-  if (isSelected() || isHighlighted()) {
-    //th->CGnuPlotPointObject::setColor(c);
-    th->CGnuPlotPointObject::setSize      (s);
-    th->CGnuPlotPointObject::setErasePoint(e);
-  }
 }

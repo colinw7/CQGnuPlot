@@ -80,7 +80,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   // draw border
-  renderer->drawPolygon(points, 0, CRGBA(0,0,0));
+  renderer->drawPolygon(points, 0, CRGBA(0,0,0), CLineDash());
 
   //---
 
@@ -131,7 +131,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     while (ra < v) {
       std::vector<CPoint2D> points1 = radarPoints(pc, ra, np);
 
-      renderer->drawPolygon(points1, 0, CRGBA(0.5,0.5,0.5,0.5));
+      renderer->drawPolygon(points1, 0, CRGBA(0.5,0.5,0.5,0.5), CLineDash());
 
       ra += dr;
     }
@@ -168,7 +168,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     renderer->fillPolygon(points1, fc);
 
-    renderer->drawPolygon(points1, 2, lc);
+    renderer->drawPolygon(points1, 2, lc, CLineDash());
 
     ++pi;
   }

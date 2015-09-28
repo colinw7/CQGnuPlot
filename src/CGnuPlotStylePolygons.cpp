@@ -44,7 +44,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
 
     renderer->fillPolygon(points, fc);
-    renderer->drawPolygon(points, 1, lc);
+    renderer->drawPolygon(points, 1, lc, CLineDash());
   }
 }
 

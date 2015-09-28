@@ -38,32 +38,68 @@ void
 CGnuPlotPolygon::
 draw(CGnuPlotRenderer *renderer) const
 {
+  bool highlighted = (isHighlighted() || isSelected());
+
   // clip if enabled and does not use screen coordinates
   //CBBox2D bbox = calcBBox();
 
   //renderer->setClip(group_->getClip());
 
-  const CGnuPlotPolygon *poly = this;
+  fc_ = CRGBA();
 
-  if (poly->getFillColor().isRGB()) {
-    CRGBA fc = getFillColor().color();
+  if (this->getFillColor().isRGB()) {
+    fc_ = getFillColor().color();
 
-    fc.setAlpha(getFillStyle().density());
+    fc_.setAlpha(getFillStyle().density());
 
-    if (getFillColor().isRGB())
-      renderer->fillPolygon(poly->getPoints(), fc);
+    if (getFillColor().isRGB()) {
+      CRGBA fc = fc_;
+
+      if (highlighted) {
+        fc = fc.getLightRGBA();
+      }
+
+      renderer->fillPolygon(this->getPoints(), fc);
+    }
   }
 
-  CRGBA lc = poly->getStrokeColor().getValue(CRGBA(0,0,0));
+  //---
 
-  renderer->drawPolygon(poly->getPoints(), getLineWidth().getValue(0), lc);
+  lc_ = this->getStrokeColor().getValue(CRGBA(0,0,0));
+
+  CRGBA  lc = lc_;
+  double lw = getLineWidth().getValue(0);
+
+  if (highlighted) {
+    lc = CRGBA(1,0,0);
+    lw = 2;
+  }
+
+  renderer->drawPolygon(this->getPoints(), lw, lc_, CLineDash());
 }
 
 bool
 CGnuPlotPolygon::
-inside(const CPoint2D &p) const
+inside(const CGnuPlotTypes::InsideData &data) const
 {
-  return bbox_.inside(p);
+  return bbox_.inside(data.window);
+}
+
+CGnuPlotTipData
+CGnuPlotPolygon::
+tip() const
+{
+  CGnuPlotTipData tip;
+
+  tip.setXStr(CStrUtil::strprintf("%n", points_.size()));
+  tip.setYStr("");
+
+  tip.setBorderColor(lc_);
+  tip.setXColor(lc_);
+
+  tip.setRect(bbox_);
+
+  return tip;
 }
 
 void

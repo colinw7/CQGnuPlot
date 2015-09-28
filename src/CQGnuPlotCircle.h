@@ -9,6 +9,9 @@
 class CQGnuPlotCircle : public CQGnuPlotAnnotation, public CGnuPlotCircle {
   Q_OBJECT
 
+  Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
+  Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
+
   Q_PROPERTY(QPointF center READ getCenter WRITE setCenter)
   Q_PROPERTY(double  radius READ getRadius WRITE setRadius)
 

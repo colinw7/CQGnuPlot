@@ -60,15 +60,5 @@ void
 CQGnuPlotRectObject::
 draw(CGnuPlotRenderer *renderer) const
 {
-  CQGnuPlotRectObject *th = const_cast<CQGnuPlotRectObject *>(this);
-
-  CRGBA c = lineColor();
-
-  if (isSelected())
-    th->CGnuPlotRectObject::setLineColor(CRGBA(1,0,0));
-
   CGnuPlotRectObject::draw(renderer);
-
-  if (isSelected())
-    th->CGnuPlotRectObject::setLineColor(c);
 }

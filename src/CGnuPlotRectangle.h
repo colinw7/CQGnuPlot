@@ -60,9 +60,9 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
-  bool inside(const CPoint2D &p) const override;
+  bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
-  CGnuPlotTipData tip() const override { return CGnuPlotTipData(); }
+  CGnuPlotTipData tip() const override;
 
   void print(std::ostream &os) const;
 
@@ -76,6 +76,7 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
   COptInt           lt_;
   COptReal          lw_;
   mutable CBBox2D   bbox_;
+  mutable CRGBA     lc_;
 };
 
 typedef std::shared_ptr<CGnuPlotRectangle> CGnuPlotRectangleP;

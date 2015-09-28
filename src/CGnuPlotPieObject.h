@@ -55,7 +55,7 @@ class CGnuPlotPieObject : public CGnuPlotPlotObject {
   const CBBox2D &keyRect() const { return keyRect_; }
   void setKeyRect(const CBBox2D &r) { keyRect_ = r; }
 
-  bool inside(const CPoint2D &p) const override;
+  bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
   bool keyInside(const CPoint2D &p) const;
 

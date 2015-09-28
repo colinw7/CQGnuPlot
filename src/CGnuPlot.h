@@ -30,6 +30,7 @@ class CGnuPlotKey;
 class CGnuPlotPlot;
 class CGnuPlotReadLine;
 class CGnuPlotSVGDevice;
+class CGnuPlotLogDevice;
 class CGnuPlotWindow;
 class CGnuPlotTimeStamp;
 class CGnuPlotStyleBase;
@@ -122,8 +123,6 @@ class CGnuPlot {
   typedef std::map<std::string,CExprValuePtr>    Params;
   typedef CGnuPlotTypes::AxisTypeId              AxisTypeId;
   typedef std::set<AxisTypeId>                   AxisTypeIdSet;
-
-  //---
 
   class Bars {
    public:
@@ -1123,6 +1122,7 @@ class CGnuPlot {
   bool                      edebug_ { false };
   bool                      autoContinue_ { false };
   CGnuPlotSVGDevice*        svgDevice_ { 0 };
+  CGnuPlotLogDevice*        logDevice_ { 0 };
   CGnuPlotDevice*           device_ { 0 };
   Devices                   devices_;
   DeviceStack               deviceStack_;

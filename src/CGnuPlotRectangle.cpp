@@ -70,38 +70,75 @@ calcBBox() const
   return bbox_;
 }
 
+CGnuPlotTipData
+CGnuPlotRectangle::
+tip() const
+{
+  CGnuPlotTipData tip;
+
+  tip.setXStr(CStrUtil::strprintf("%g, %g -> %g, %g",
+                bbox_.getXMin(), bbox_.getYMin(), bbox_.getXMax(), bbox_.getYMax()));
+
+  tip.setBorderColor(lc_);
+  tip.setXColor(lc_);
+
+  tip.setRect(bbox_);
+
+  return tip;
+}
+
 void
 CGnuPlotRectangle::
 draw(CGnuPlotRenderer *renderer) const
 {
+  bool highlighted = (isHighlighted() || isSelected());
+
   // clip if enabled and does not use screen coordinates
   CBBox2D bbox = calcBBox();
 
   renderer->setClip(group_->getClip());
 
-  CRGBA lc = getStrokeColor().getValue(CRGBA(0,0,0));
+  lc_ = getStrokeColor().getValue(CRGBA(0,0,0));
+
+  CRGBA  lc = lc_;
+  double lw = getLineWidth().getValue(0);;
+
+  if (highlighted) {
+    lc = CRGBA(1,0,0);
+    lw = 2;
+  }
 
   if      (getFillStyle().style() == CGnuPlotTypes::FillType::SOLID) {
     CRGBA fc = getFillColor().color();
 
     fc.setAlpha(getFillStyle().density());
 
+    if (highlighted) {
+      fc = CRGBA(1,0,0);
+    }
+
     if (getFillColor().isRGB())
       renderer->fillClippedRect(bbox, fc);
   }
   else if (getFillStyle().style() == CGnuPlotTypes::FillType::PATTERN) {
+    CRGBA fc = getFillColor().color();
+
+    if (highlighted) {
+      fc = CRGBA(1,0,0);
+    }
+
     if (getFillColor().isRGB())
-      renderer->patternRect(bbox, getFillStyle().pattern(), getFillColor().color(), lc);
+      renderer->patternRect(bbox, getFillStyle().pattern(), fc, lc);
   }
 
-  renderer->drawClippedRect(bbox, lc, getLineWidth().getValue(0));
+  renderer->drawClippedRect(bbox, lc, lw);
 }
 
 bool
 CGnuPlotRectangle::
-inside(const CPoint2D &p) const
+inside(const CGnuPlotTypes::InsideData &data) const
 {
-  return bbox_.inside(p);
+  return bbox_.inside(data.window);
 }
 
 void

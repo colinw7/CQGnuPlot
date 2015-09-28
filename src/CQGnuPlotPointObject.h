@@ -1,7 +1,6 @@
 #ifndef CQGnuPlotPointObject_H
 #define CQGnuPlotPointObject_H
 
-#include <CQGnuPlotObject.h>
 #include <CGnuPlotPointObject.h>
 #include <CQGnuPlot.h>
 
@@ -11,8 +10,11 @@ using std::string;
 
 class CQGnuPlotPlot;
 
-class CQGnuPlotPointObject : public CQGnuPlotObject, public CGnuPlotPointObject {
+class CQGnuPlotPointObject : public QObject, public CGnuPlotPointObject {
   Q_OBJECT
+
+  Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
+  Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
   Q_PROPERTY(QPointF                   point       READ getPoint       WRITE setPoint      )
   Q_PROPERTY(CQGnuPlotEnum::SymbolType pointType   READ pointType      WRITE setPointType  )

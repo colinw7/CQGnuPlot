@@ -2,16 +2,11 @@
 #define CGnuPlotArrow_H
 
 #include <CGnuPlotAnnotation.h>
-#include <CGnuPlotArrowStyle.h>
-#include <CAngle.h>
+#include <CGnuPlotArrowData.h>
 
 class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
  public:
-  enum class CoordType {
-    FROM_TO,
-    FROM_RTO,
-    FROM_ANGLE
-  };
+  typedef CGnuPlotArrowData::CoordType CoordType;
 
  public:
   static const char *getName() { return "arrow"; }
@@ -25,13 +20,7 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
   CGnuPlotArrow *setData(const CGnuPlotArrow *arrow) {
     (void) CGnuPlotGroupAnnotation::setData(arrow);
 
-    coordType_ = arrow->coordType_;
-    from_      = arrow->from_;
-    to_        = arrow->to_;
-    length_    = arrow->length_;
-    angle_     = arrow->angle_;
-    style_     = arrow->style_;
-    lineColor_ = arrow->lineColor_;
+    data_ = arrow->data_;
 
     return this;
   }
@@ -40,111 +29,100 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
 
   CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::ARROW; }
 
-  CoordType coordType() const { return coordType_; }
-  void setCoordType(CoordType type) { coordType_ = type; }
+  CoordType coordType() const { return data_.coordType(); }
+  void setCoordType(CoordType type) { data_.setCoordType(type); }
+
+  const CGnuPlotPosition &getFrom() const { return data_.getFrom(); }
+  void setFrom(const CGnuPlotPosition &p) { data_.setFrom(p); }
+
+  const CGnuPlotPosition &getTo() const { return data_.getTo(); }
+  void setTo(const CGnuPlotPosition &p) { data_.setTo(p); }
+
+  const CGnuPlotCoordValue &getLength() const { return data_.getLength(); }
+  void setLength(const CGnuPlotCoordValue &l) { data_.setLength(l); }
+
+  const CAngle &getAngle() const { return data_.getAngle(); }
+  void setAngle(const CAngle &a) { data_.setAngle(a); }
+
+  const CGnuPlotArrowStyle &style() const { return data_.style(); }
+  void setStyle(const CGnuPlotArrowStyle &s) { data_.setStyle(s); }
 
   void setFromTo(const CGnuPlotPosition &from, const CGnuPlotPosition &to) {
-    coordType_ = CoordType::FROM_TO;
-    from_      = from;
-    to_        = to;
-    length_    = CGnuPlotCoordValue();
-    angle_     = CAngle();
+    setCoordType(CoordType::FROM_TO);
+    setFrom     (from);
+    setTo       (to);
+    setLength   (CGnuPlotCoordValue());
+    setAngle    (CAngle());
   }
 
   void setFromRTo(const CGnuPlotPosition &from, const CGnuPlotPosition &rto) {
-    coordType_ = CoordType::FROM_RTO;
-    from_      = from;
-    to_        = rto;
-    length_    = CGnuPlotCoordValue();
-    angle_     = CAngle();
+    setCoordType(CoordType::FROM_RTO);
+    setFrom     (from);
+    setTo       (rto);
+    setLength   (CGnuPlotCoordValue());
+    setAngle    (CAngle());
   }
 
   void setFromAngle(const CGnuPlotPosition &from, const CGnuPlotCoordValue &length,
                     const CAngle &angle) {
-    coordType_ = CoordType::FROM_ANGLE;
-    from_      = from;
-    length_    = length;
-    angle_     = angle;
+    setCoordType(CoordType::FROM_ANGLE);
+    setFrom     (from);
+    setLength   (length);
+    setAngle    (angle);
   }
 
-  const CGnuPlotPosition &getFrom() const { return from_; }
-  void setFrom(const CGnuPlotPosition &p) { from_ = p; }
+  bool getFHead() const { return data_.getFHead(); }
+  void setFHead(bool b) { data_.setFHead(b); }
 
-  const CGnuPlotPosition &getTo() const { return to_; }
-  void setTo(const CGnuPlotPosition &p) { to_ = p; }
+  bool getTHead() const { return data_.getTHead(); }
+  void setTHead(bool b) { data_.setTHead(b); }
 
-  const CGnuPlotCoordValue &getLength() const { return length_; }
-  void setLength(const CGnuPlotCoordValue &l) { length_ = l; }
+  const CGnuPlotCoordValue &getHeadLength() const { return data_.getHeadLength(); }
+  void setHeadLength(const CGnuPlotCoordValue &l) { data_.setHeadLength(l); }
 
-  const CAngle &getAngle() const { return angle_; }
-  void setAngle(const CAngle &a) { angle_ = a; }
+  double getHeadAngle() const { return data_.getHeadAngle(); }
+  void setHeadAngle(double a) { data_.setHeadAngle(a); }
 
-  const CGnuPlotArrowStyle &style() const { return style_; }
-  void setStyle(const CGnuPlotArrowStyle &s) { style_ = s; }
+  double getHeadBackAngle() const { return data_.getHeadBackAngle(); }
+  void setHeadBackAngle(double a) { data_.setHeadBackAngle(a); }
 
-  bool getFHead() const { return style_.fhead(); }
-  void setFHead(bool b) { style_.setFHead(b); }
+  bool getHeadFilled() const { return data_.getHeadFilled(); }
+  void setHeadFilled(bool b) { data_.setHeadFilled(b); }
 
-  bool getTHead() const { return style_.thead(); }
-  void setTHead(bool b) { style_.setTHead(b); }
+  bool getHeadEmpty() const { return data_.getHeadEmpty(); }
+  void setHeadEmpty(bool b) { data_.setHeadEmpty(b); }
 
-  const CGnuPlotCoordValue &getHeadLength() const { return style_.length(); }
-  void setHeadLength(const CGnuPlotCoordValue &l) { style_.setLength(l); }
+  void setLineWidth(double w) { data_.setLineWidth(w); }
+  double calcLineWidth() const { return data_.calcLineWidth(group_); }
 
-  double getHeadAngle() const { return style_.angle(); }
-  void setHeadAngle(double a) { style_.setAngle(a); }
+  int getLineStyle() const { return data_.getLineStyle(); }
+  void setLineStyle(int t) { data_.setLineStyle(t); }
 
-  double getHeadBackAngle() const { return style_.backAngle(); }
-  void setHeadBackAngle(double a) { style_.setBackAngle(a); }
+  const CGnuPlotDash &getDash() const { return data_.getDash(); }
+  void setDash(const CGnuPlotDash &dash) { data_.setDash(dash); }
 
-  bool getHeadFilled() const { return style_.filled(); }
-  void setHeadFilled(bool b) { style_.setFilled(b); }
+  bool isVariable() const { return data_.isVariable(); }
+  void setVariable(bool b) { data_.setVariable(b); }
 
-  bool getHeadEmpty() const { return style_.empty(); }
-  void setHeadEmpty(bool b) { style_.setEmpty(b); }
+  double getVarValue() const { return data_.getVarValue(); }
+  void setVarValue(double r) { data_.setVarValue(r); }
 
-  double getLineWidth() const;
-  void setLineWidth(double w) { style_.setLineWidth(w); }
-
-  int getLineStyle() const { return style_.lineStyle().getValue(-1); }
-  void setLineStyle(int t) { style_.setLineStyle(t); }
-
-  const CGnuPlotDash &getDash() const { return style_.dash(); }
-  void setDash(const CGnuPlotDash &dash) { style_.setDash(dash); }
-
-  bool isVariable() const { return style_.isVariable(); }
-  void setVariable(bool b) { style_.setVariable(b); }
-
-  double getVarValue() const { return style_.varValue().getValue(0); }
-  void setVarValue(double r) { style_.setVarValue(r); }
-
-  CRGBA getLineColor() const;
-
-  void setLineColor(const CRGBA &c, bool set=true) {
-    if (set)
-      lineColor_.setValue(c);
-    else
-      lineColor_.setInvalid();
-  }
+  void setLineColor(const CRGBA &c) { data_.setLineColor(c); }
+  void resetLineColor() { data_.resetLineColor(); }
 
   void setLineColor(const CGnuPlotColorSpec &c);
+  CRGBA calcLineColor() const { return data_.calcLineColor(group_); }
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
-  bool inside(const CPoint2D &p) const override;
+  bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
-  CGnuPlotTipData tip() const override { return CGnuPlotTipData(); }
+  CGnuPlotTipData tip() const override;
 
   void print(std::ostream &os) const;
 
  protected:
-  CoordType          coordType_ { CoordType::FROM_TO };
-  CGnuPlotPosition   from_;
-  CGnuPlotPosition   to_;
-  CGnuPlotCoordValue length_;
-  CAngle             angle_;
-  CGnuPlotArrowStyle style_;
-  COptRGBA           lineColor_;
+  CGnuPlotArrowData data_;
 };
 
 typedef std::shared_ptr<CGnuPlotArrow> CGnuPlotArrowP;

@@ -1,7 +1,6 @@
 #ifndef CQGnuPlotPolygonObject_H
 #define CQGnuPlotPolygonObject_H
 
-#include <CQGnuPlotObject.h>
 #include <CGnuPlotPolygonObject.h>
 #include <CQGnuPlot.h>
 
@@ -9,8 +8,11 @@
 
 class CQGnuPlotPlot;
 
-class CQGnuPlotPolygonObject : public CQGnuPlotObject, public CGnuPlotPolygonObject {
+class CQGnuPlotPolygonObject : public QObject, public CGnuPlotPolygonObject {
   Q_OBJECT
+
+  Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
+  Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
   Q_PROPERTY(QString text      READ getText      WRITE setText     )
   Q_PROPERTY(QColor  fillColor READ getFillColor WRITE setFillColor)

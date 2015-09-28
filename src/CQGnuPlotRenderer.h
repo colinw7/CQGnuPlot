@@ -55,7 +55,8 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3, const CPoint2D &p4,
                   double width, const CRGBA &c) override;
 
-  void drawPolygon   (const std::vector<CPoint2D> &points, double w, const CRGBA &c) override;
+  void drawPolygon   (const std::vector<CPoint2D> &points, double w, const CRGBA &c,
+                      const CLineDash &dash) override;
   void fillPolygon   (const std::vector<CPoint2D> &points, const CRGBA &c) override;
   void patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern pattern,
                       const CRGBA &fg, const CRGBA &bg) override;
@@ -75,8 +76,9 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
 
   void drawChord(const CPoint2D &p, double r, double a1, double a2,
                  const CRGBA &c) override;
-  void drawChord(const CPoint2D &p, double r, double a11, double a12,
-                 double a21, double a22, const CRGBA &c) override;
+
+  void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
+                        double a21, double a22, const CRGBA &c) override;
 
   void setFont(CFontPtr font);
 

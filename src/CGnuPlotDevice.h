@@ -36,6 +36,7 @@ class CGnuPlotPieObject;
 class CGnuPlotPolygonObject;
 class CGnuPlotRectObject;
 class CGnuPlotPointObject;
+class CGnuPlotArrowObject;
 
 class CGnuPlotRenderer;
 class CGnuPlotTitle;
@@ -141,6 +142,7 @@ class CGnuPlotDevice {
   virtual CGnuPlotPolygonObject *createPolygonObject(CGnuPlotPlot *plot);
   virtual CGnuPlotRectObject    *createRectObject   (CGnuPlotPlot *plot);
   virtual CGnuPlotPointObject   *createPointObject  (CGnuPlotPlot *plot);
+  virtual CGnuPlotArrowObject   *createArrowObject  (CGnuPlotPlot *plot);
 
   virtual void timeout() { }
 

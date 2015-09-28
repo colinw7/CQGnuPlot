@@ -5,7 +5,7 @@
 
 CQGnuPlotCircle::
 CQGnuPlotCircle(CQGnuPlotGroup *group) :
- CQGnuPlotAnnotation(this), CGnuPlotCircle(group)
+ CQGnuPlotAnnotation(group, this), CGnuPlotCircle(group)
 {
   setObjectName("circle");
 }
@@ -47,19 +47,4 @@ CQGnuPlotCircle::
 draw(CGnuPlotRenderer *renderer) const
 {
   CGnuPlotCircle::draw(renderer);
-
-  if (isSelected()) {
-    CPoint2D center = CGnuPlotCircle::getCenter().getPoint2D(renderer);
-
-    double xr = CGnuPlotCircle::getRadius().getXDistance(renderer);
-    double yr = CGnuPlotCircle::getRadius().getYDistance(renderer);
-
-    double a1 = CGnuPlotCircle::arcStart().getValue(0);
-    double a2 = CGnuPlotCircle::arcEnd  ().getValue(360);
-
-    if (CGnuPlotCircle::arcStart().isValid() || CGnuPlotCircle::arcEnd().isValid())
-      renderer->drawPieSlice(center, 0, xr, a1, a2, 2, CRGBA(1,0,0));
-    else
-      renderer->drawEllipse(center, xr, yr, 0, CRGBA(1,0,0), 2);
-  }
 }

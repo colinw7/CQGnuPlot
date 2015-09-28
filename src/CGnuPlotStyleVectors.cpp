@@ -1,4 +1,5 @@
 #include <CGnuPlotStyleVectors.h>
+#include <CGnuPlotArrowObject.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
 
@@ -22,6 +23,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   if (isCalcColor) ++numExtra;
   if (isVarArrow ) ++numExtra;
+
+  typedef std::vector<CGnuPlotArrowData> ArrowDatas;
+
+  ArrowDatas arrowDatas;
 
   CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
@@ -70,7 +75,19 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     if (to == from) continue;
 
-    if (! renderer->isPseudo()) {
+    if      (! renderer->isPseudo() && plot->isCacheActive()) {
+      CGnuPlotArrowData arrowData;
+
+      arrowData.setStyle(as);
+
+      arrowData.setLineColor(lc1);
+
+      arrowData.setFrom(CPoint3D(from.x, from.y, 0));
+      arrowData.setTo  (CPoint3D(to  .x, to  .y, 0));
+
+      arrowDatas.push_back(arrowData);
+    }
+    else if (! renderer->isPseudo()) {
       CGnuPlotArrow arrow(plot->group());
 
       arrow.setStyle(as);
@@ -86,6 +103,33 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       renderer->drawPoint(from, lc1);
       renderer->drawPoint(to  , lc1);
     }
+  }
+
+  if (! renderer->isPseudo() && plot->isCacheActive()) {
+    plot->updateArrowCacheSize(arrowDatas.size());
+
+    int i = 0;
+
+    for (const auto &arrowData : arrowDatas) {
+      CGnuPlotArrowObject *arrow = plot->arrowObjects()[i];
+
+      if (! arrow->isModified()) {
+        arrow->setData(arrowData);
+
+        arrow->setModified(true);
+      }
+      else {
+        arrow->setFrom(arrowData.getFrom());
+        arrow->setTo  (arrowData.getTo  ());
+      }
+
+      ++i;
+    }
+  }
+
+  if (! renderer->isPseudo() && plot->isCacheActive()) {
+    for (const auto &arrow : plot->arrowObjects())
+      arrow->draw(renderer);
   }
 }
 

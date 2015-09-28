@@ -128,3 +128,9 @@
 
 ### 9/20/2015
  + improve axis label alignment when rotated
+
+### 9/27/2105
+ + add info tip support for all objects and annotations
+ + better highlight/selected drawing
+ + add object cache for arrow objects and use in vector plot for selectable info tip arrows
+ + add log device to be used for regressions

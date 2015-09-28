@@ -491,30 +491,34 @@ CGnuPlotUsingCol(const std::string &str) :
 {
   CExprValuePtr value;
 
-  //isInt = CStrUtil::toInteger(str, &ival_);
-  bool oldQuiet = CExprInst->getQuiet();
+  bool isExpr = (str.size() && str[0] == '(' && str[str.size() - 1] == ')');
 
-  CExprInst->setQuiet(true);
+  if (! isExpr) {
+    //isInt = CStrUtil::toInteger(str, &ival_);
+    bool oldQuiet = CExprInst->getQuiet();
 
-  long i;
+    CExprInst->setQuiet(true);
 
-  if (CExprInst->evaluateExpression(str, value) &&
-      value.isValid() && value->getIntegerValue(i)) {
-    ival_  = i;
-    isInt_ = true;
+    long i;
+
+    if (CExprInst->evaluateExpression(str, value) &&
+        value.isValid() && value->getIntegerValue(i)) {
+      ival_  = i;
+      isInt_ = true;
+    }
+    else {
+      CParseLine line(str);
+
+      line.skipSpace();
+
+      if (line.isChar('"'))
+        isStr_ = true;
+      else
+        parseString(line);
+    }
+
+    CExprInst->setQuiet(oldQuiet);
   }
-  else {
-    CParseLine line(str);
-
-    line.skipSpace();
-
-    if (line.isChar('"'))
-      isStr_ = true;
-    else
-      parseString(line);
-  }
-
-  CExprInst->setQuiet(oldQuiet);
 }
 
 void

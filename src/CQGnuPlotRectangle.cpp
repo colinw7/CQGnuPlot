@@ -6,7 +6,7 @@
 
 CQGnuPlotRectangle::
 CQGnuPlotRectangle(CQGnuPlotGroup *group) :
- CQGnuPlotAnnotation(this), CGnuPlotRectangle(group)
+ CQGnuPlotAnnotation(group, this), CGnuPlotRectangle(group)
 {
   setObjectName("rectangle");
 }
@@ -77,7 +77,4 @@ CQGnuPlotRectangle::
 draw(CGnuPlotRenderer *renderer) const
 {
   CGnuPlotRectangle::draw(renderer);
-
-  if (isSelected())
-    renderer->drawRect(bbox_, CRGBA(1,0,0), 2);
 }

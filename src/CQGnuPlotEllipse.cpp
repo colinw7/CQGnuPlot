@@ -5,7 +5,7 @@
 
 CQGnuPlotEllipse::
 CQGnuPlotEllipse(CQGnuPlotGroup *group) :
- CQGnuPlotAnnotation(this), CGnuPlotEllipse(group)
+ CQGnuPlotAnnotation(group, this), CGnuPlotEllipse(group)
 {
   setObjectName("ellipse");
 }
@@ -33,10 +33,4 @@ CQGnuPlotEllipse::
 draw(CGnuPlotRenderer *renderer) const
 {
   CGnuPlotEllipse::draw(renderer);
-
-  if (isSelected()) {
-    CPoint2D center = CGnuPlotEllipse::getCenter().getPoint2D(renderer);
-
-    renderer->drawEllipse(center, getRX(), getRY(), 0, CRGBA(1,0,0), 2);
-  }
 }

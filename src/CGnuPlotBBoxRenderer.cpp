@@ -130,7 +130,8 @@ drawBezier(const CPoint2D &point1, const CPoint2D &point2,
 
 void
 CGnuPlotBBoxRenderer::
-drawPolygon(const std::vector<CPoint2D> &points, double /*width*/, const CRGBA &)
+drawPolygon(const std::vector<CPoint2D> &points, double /*width*/, const CRGBA &,
+            const CLineDash &)
 {
   for (uint i = 1; i < points.size(); ++i)
     bbox_.add(points[i]);
@@ -274,8 +275,8 @@ drawChord(const CPoint2D &p, double r, double a1, double a2, const CRGBA &)
 
 void
 CGnuPlotBBoxRenderer::
-drawChord(const CPoint2D &p, double r, double a11, double a12,
-          double a21, double a22, const CRGBA &)
+drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
+                 double a21, double a22, const CRGBA &)
 {
   bbox_.add(p);
 

@@ -46,15 +46,5 @@ void
 CQGnuPlotBubbleObject::
 draw(CGnuPlotRenderer *renderer) const
 {
-  CQGnuPlotBubbleObject *th = const_cast<CQGnuPlotBubbleObject *>(this);
-
-  CRGBA c = color();
-
-  if (isSelected())
-    th->CGnuPlotBubbleObject::setColor(CRGBA(1,0,0));
-
   CGnuPlotBubbleObject::draw(renderer);
-
-  if (isSelected())
-    th->CGnuPlotBubbleObject::setColor(c);
 }

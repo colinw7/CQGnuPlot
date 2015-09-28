@@ -88,8 +88,10 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   virtual void patternRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
                            const CRGBA &fg, const CRGBA &bg) = 0;
 
-  virtual void drawPolygon   (const std::vector<CPoint2D> &points, double w, const CRGBA &c) = 0;
-  virtual void fillPolygon   (const std::vector<CPoint2D> &points, const CRGBA &c) = 0;
+  virtual void drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c,
+                           const CLineDash &d) = 0;
+  virtual void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c) = 0;
+
   virtual void patternPolygon(const std::vector<CPoint2D> &points,
                               CGnuPlotTypes::FillPattern pattern,
                               const CRGBA &fg, const CRGBA &bg) = 0;
@@ -117,8 +119,9 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   virtual void drawChord(const CPoint2D &p, double r, double a1, double a2,
                          const CRGBA &c) = 0;
-  virtual void drawChord(const CPoint2D &p, double r, double a11, double a12,
-                         double a21, double a22, const CRGBA &c) = 0;
+
+  virtual void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
+                                double a21, double a22, const CRGBA &c) = 0;
 
   //---
 
@@ -166,10 +169,13 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
                    const CLineDash &dash=CLineDash());
 
   void fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c);
-  void drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c);
+  void drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c,
+                   const CLineDash &dash);
 
-  void drawClippedPolygon   (const std::vector<CPoint2D> &points, double w, const CRGBA &c);
-  void fillClippedPolygon   (const std::vector<CPoint2D> &points, const CRGBA &c);
+  void drawClippedPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c,
+                          const CLineDash &dash);
+  void fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c);
+
   void patternClippedPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern pat,
                              const CRGBA &fg, const CRGBA &bg);
 

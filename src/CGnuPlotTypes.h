@@ -483,6 +483,17 @@ namespace CGnuPlotTypes {
   };
 
   typedef std::pair<AxisType, int> AxisTypeId;
+
+  //---
+
+  struct InsideData {
+    CPoint2D window;
+    CPoint2D pixel;
+
+    InsideData(const CPoint2D &w, const CPoint2D &p) :
+     window(w), pixel(p) {
+    }
+  };
 }
 
 #endif

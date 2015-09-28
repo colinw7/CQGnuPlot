@@ -436,6 +436,8 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &point
         polygon->setFillPattern   (fillStyle.pattern());
         polygon->setFillColor     (fc);
         polygon->setFillBackground(bg);
+
+        polygon->setModified(true);
       }
     }
     else if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID) {
@@ -444,8 +446,11 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &point
       if (fillStyle.isTransparent())
         fc.setAlpha(fillStyle.density());
 
-      if (! polygon->isModified())
+      if (! polygon->isModified()) {
         polygon->setFillColor(fc);
+
+        polygon->setModified(true);
+      }
     }
 
     if (fillStyle.hasBorder()) {
@@ -458,6 +463,8 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &point
       if (! polygon->isModified()) {
         polygon->setLineWidth(lineStyle.calcWidth());
         polygon->setLineColor(lc);
+
+        polygon->setModified(true);
       }
     }
 
@@ -498,7 +505,7 @@ drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &point
 
       double lw = lineStyle.calcWidth();
 
-      renderer->drawClippedPolygon(points, lw, lc);
+      renderer->drawClippedPolygon(points, lw, lc, CLineDash());
     }
   }
 }

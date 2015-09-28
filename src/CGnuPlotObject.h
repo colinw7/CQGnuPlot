@@ -24,35 +24,62 @@ class CGnuPlotRenderer;
 
 class CGnuPlotObject {
  public:
-  CGnuPlotObject(CGnuPlot *plot) :
-   plot_(plot) {
+  CGnuPlotObject(CGnuPlot *app) :
+   app_(app) {
   }
 
   virtual ~CGnuPlotObject() { }
 
-  CGnuPlot *plot() const { return plot_; }
+  CGnuPlot *app() const { return app_; }
 
   bool isDisplayed() const { return displayed_; }
   void setDisplayed(bool b) { displayed_ = b; }
 
-  virtual bool inside(const CPoint2D &p) const = 0;
+  bool isSelected() const { return selected_; }
+  void setSelected(bool b) { selected_ = b; }
+
+  bool isHighlighted() const { return highlighted_; }
+  void setHighlighted(bool b) { highlighted_ = b; }
+
+  const std::string &tipText() const { return tipText_; }
+  void setTipText(const std::string &v) { tipText_ = v; }
+
+  virtual bool inside(const CGnuPlotTypes::InsideData &p) const = 0;
 
   virtual void draw(CGnuPlotRenderer *renderer) const = 0;
 
   virtual CGnuPlotTipData tip() const = 0;
 
  protected:
-  CGnuPlot *plot_ { 0 };
-  bool      displayed_ { true };
+  CGnuPlot    *app_         { 0     };
+  bool         displayed_   { true  };
+  bool         selected_    { false };
+  bool         highlighted_ { false };
+  std::string  tipText_     { ""    };
 };
 
 //---
 
-class CGnuPlotPlotObject {
+class CGnuPlotGroupObject : public CGnuPlotObject {
  public:
-  CGnuPlotPlotObject(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
+  typedef CGnuPlotTypes::DrawLayer DrawLayer;
+
+ public:
+  CGnuPlotGroupObject(CGnuPlotGroup *group);
+
+  virtual ~CGnuPlotGroupObject() { }
+
+  CGnuPlotGroup *group() const { return group_; }
+
+ protected:
+  CGnuPlotGroup *group_ { 0 };
+};
+
+//---
+
+class CGnuPlotPlotObject : public CGnuPlotObject {
+ public:
+  CGnuPlotPlotObject(CGnuPlotPlot *plot);
 
   virtual ~CGnuPlotPlotObject() { }
 
@@ -65,49 +92,10 @@ class CGnuPlotPlotObject {
   bool isModified() const { return modified_; }
   void setModified(bool b) { modified_ = b; }
 
-  bool isDisplayed() const { return displayed_; }
-  void setDisplayed(bool b) { displayed_ = b; }
-
-  virtual bool inside(const CPoint2D &p) const = 0;
-
-  virtual void draw(CGnuPlotRenderer *renderer) const = 0;
-
-  virtual CGnuPlotTipData tip() const = 0;
-
  protected:
-  CGnuPlotPlot *plot_      { 0 };
-  bool          used_      { false };
-  bool          modified_  { false };
-  bool          displayed_ { true };
-};
-
-//---
-
-class CGnuPlotGroupObject {
- public:
-  typedef CGnuPlotTypes::DrawLayer DrawLayer;
-
- public:
-  CGnuPlotGroupObject(CGnuPlotGroup *group) :
-   group_(group) {
-  }
-
-  virtual ~CGnuPlotGroupObject() { }
-
-  CGnuPlotGroup *group() const { return group_; }
-
-  bool isDisplayed() const { return displayed_; }
-  void setDisplayed(bool b) { displayed_ = b; }
-
-  virtual bool inside(const CPoint2D &p) const = 0;
-
-  virtual void draw(CGnuPlotRenderer *renderer) const = 0;
-
-  virtual CGnuPlotTipData tip() const = 0;
-
- protected:
-  CGnuPlotGroup *group_ { 0 };
-  bool           displayed_ { true };
+  CGnuPlotPlot *plot_     { 0 };
+  bool          used_     { false };
+  bool          modified_ { false };
 };
 
 #endif

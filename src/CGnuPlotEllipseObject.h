@@ -42,14 +42,9 @@ class CGnuPlotEllipseObject : public CGnuPlotPlotObject {
   const std::string &text() const { return text_; }
   void setText(const std::string &s) { text_ = s; }
 
-  const std::string &tipText() const { return tipText_; }
-  void setTipText(const std::string &v) { tipText_ = v; }
+  bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
-  bool inside(const CPoint2D &p) const override;
-
-  CGnuPlotTipData tip() const override {
-    return CGnuPlotTipData(tipText_ == "" ? text_ : tipText_, rect_);
-  }
+  CGnuPlotTipData tip() const override;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
@@ -57,15 +52,14 @@ class CGnuPlotEllipseObject : public CGnuPlotPlotObject {
   void update();
 
  private:
-  CPoint2D         center_;
-  CSize2D          size_;
-  COptRGBA         lineColor_;
-  COptRGBA         fillColor_;
-  double           lineWidth_ { 0 };
-  std::string      text_ { "" };
-  std::string      tipText_ { "" };
-  mutable CBBox2D  rect_;
-  mutable CPoint2D c_;
+  CPoint2D        center_;
+  CSize2D         size_;
+  COptRGBA        lineColor_;
+  COptRGBA        fillColor_;
+  double          lineWidth_ { 0 };
+  std::string     text_ { "" };
+  mutable CBBox2D rect_;
+  mutable CRGBA   lc_;
 };
 
 #endif

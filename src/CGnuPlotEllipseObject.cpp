@@ -42,32 +42,91 @@ update()
 
 bool
 CGnuPlotEllipseObject::
-inside(const CPoint2D &p) const
+inside(const CGnuPlotTypes::InsideData &data) const
 {
-  if (! rect_.inside(p))
+  if (! rect_.inside(data.window))
     return false;
 
   // inside ellipse
   return true;
 }
 
+CGnuPlotTipData
+CGnuPlotEllipseObject::
+tip() const
+{
+  CGnuPlotTipData tip;
+
+  double w = size_.getWidth ();
+  double h = size_.getHeight();
+
+  tip.setXStr(CStrUtil::strprintf("%g, %g", center_.x, center_.y));
+  tip.setYStr(CStrUtil::strprintf("%g, %g", w, h));
+
+  if      (tipText_ != "")
+    tip.setYStr(tipText_);
+  else if (text_ != "")
+    tip.setYStr(text_);
+
+  tip.setBorderColor(lc_);
+  tip.setXColor(lc_);
+
+  tip.setRect(rect_);
+
+  return tip;
+}
+
 void
 CGnuPlotEllipseObject::
 draw(CGnuPlotRenderer *renderer) const
 {
+  bool highlighted = (isHighlighted() || isSelected());
+
   double w = size_.getWidth ();
   double h = size_.getHeight();
 
-  if (fillColor_.isValid())
-    renderer->fillEllipse(center_, w, h, 0, fillColor_.getValue());
+  if (fillColor_.isValid()) {
+    CRGBA fc = fillColor_.getValue();
 
-  if (lineColor_.isValid())
-    renderer->drawEllipse(center_, w, h, 0, lineColor_.getValue(), lineWidth_);
+    if (highlighted) {
+      fc = fc.getLightRGBA();
+    }
+
+    renderer->fillEllipse(center_, w, h, 0, fc);
+  }
+
+  lc_ = CRGBA(0,0,0);
+
+  if      (lineColor_.isValid()) {
+    CRGBA  lc = lineColor_.getValue();
+    double lw = lineWidth_;
+
+    lc_ = lc;
+
+    if (highlighted) {
+      lc = CRGBA(1,0,0);
+      lw = 2;
+    }
+
+    renderer->drawEllipse(center_, w, h, 0, lc, lw);
+  }
+  else if (highlighted) {
+    CRGBA  lc = CRGBA(1,0,0);
+    double lw = 2;
+
+    renderer->drawEllipse(center_, w, h, 0, lc, lw);
+  }
 
   if (text_ != "") {
+    CRGBA tc(0,0,0);
+
+    if (highlighted) {
+      tc = CRGBA(1,0,0);
+    }
+
     double tw = renderer->pixelWidthToWindowWidth  (renderer->getFont()->getStringWidth(text_));
     double th = renderer->pixelHeightToWindowHeight(renderer->getFont()->getCharAscent());
 
-    renderer->drawText(center_ - CPoint2D(tw/2, th/2), text_, CRGBA(0,0,0));
+    renderer->drawText(center_ - CPoint2D(tw/2, th/2), text_, tc);
   }
 }

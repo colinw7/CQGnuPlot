@@ -9,6 +9,9 @@
 class CQGnuPlotEllipse : public CQGnuPlotAnnotation, public CGnuPlotEllipse {
   Q_OBJECT
 
+  Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
+  Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
+
   Q_PROPERTY(QPointF center READ getCenter WRITE setCenter)
   Q_PROPERTY(double  rx     READ getRX     WRITE setRX    )
   Q_PROPERTY(double  ry     READ getRY     WRITE setRY    )

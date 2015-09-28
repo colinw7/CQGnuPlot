@@ -1302,6 +1302,9 @@ CGnuPlotAxis::
 drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
                  const std::string &str, const CRGBA &c, double angle)
 {
+  if (str == "")
+    return;
+
   if (isEnhanced() && ! group_->is3D()) {
     CGnuPlotText text(str);
 

@@ -65,6 +65,9 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_PROPERTY(double imageAngle READ imageAngle WRITE setImageAngle)
 
  public:
+  typedef std::vector<QObject *> Objects;
+
+ public:
   CQGnuPlotPlot(CQGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style);
 
  ~CQGnuPlotPlot() override;
@@ -98,9 +101,9 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   void draw();
 
-  void mousePress(const CPoint2D &p, std::vector<CQGnuPlotObject *> &objects);
-  void mouseMove (const CPoint2D &p);
-  bool mouseTip  (const CPoint2D &p, CGnuPlotTipData &tip);
+  void mousePress(const CPoint2D &pixel, const CPoint2D &window, Objects &objects);
+  void mouseMove (const CPoint2D &pixel, const CPoint2D &window);
+  bool mouseTip  (const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip);
 
  public:
   CQGnuPlotGroup*          group_;

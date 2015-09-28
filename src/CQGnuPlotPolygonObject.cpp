@@ -72,24 +72,5 @@ void
 CQGnuPlotPolygonObject::
 draw(CGnuPlotRenderer *renderer) const
 {
-  CQGnuPlotPolygonObject *th = const_cast<CQGnuPlotPolygonObject *>(this);
-
-  bool hasLineColor = th->CGnuPlotPolygonObject::hasLineColor();
-
-  CRGBA c;
-
-  if (hasLineColor)
-    c = lineColor();
-
-  if (isSelected())
-    th->CGnuPlotPolygonObject::setLineColor(CRGBA(1,0,0));
-
   CGnuPlotPolygonObject::draw(renderer);
-
-  if (isSelected()) {
-    if (hasLineColor)
-      th->CGnuPlotPolygonObject::setLineColor(c);
-    else
-      th->CGnuPlotPolygonObject::resetLineColor();
-  }
 }

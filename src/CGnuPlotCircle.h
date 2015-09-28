@@ -46,9 +46,9 @@ class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
-  bool inside(const CPoint2D &p) const override;
+  bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
-  CGnuPlotTipData tip() const override { return CGnuPlotTipData(); }
+  CGnuPlotTipData tip() const override;
 
   void print(std::ostream &os) const;
 
@@ -58,8 +58,10 @@ class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
   COptReal           arcStart_;
   COptReal           arcEnd_;
   CGnuPlotFillStyle  fs_;
-  mutable CPoint2D   c_;
+  mutable CPoint2D   center_;
   mutable double     xr_, yr_;
+  mutable CRGBA      c_;
+  mutable CBBox2D    bbox_;
 };
 
 typedef std::shared_ptr<CGnuPlotCircle> CGnuPlotCircleP;

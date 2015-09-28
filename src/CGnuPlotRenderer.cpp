@@ -54,7 +54,7 @@ fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c)
 
 void
 CGnuPlotRenderer::
-drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c)
+drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c, const CLineDash &dash)
 {
   std::vector<CPoint2D> points1;
 
@@ -64,21 +64,22 @@ drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c)
     points1.push_back(p1);
   }
 
-  drawPolygon(points1, lw, c);
+  drawPolygon(points1, lw, c, dash);
 }
 
 void
 CGnuPlotRenderer::
-drawClippedPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c)
+drawClippedPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c,
+                   const CLineDash &dash)
 {
   if (! isPseudo()) {
     std::vector<CPoint2D> ipoints;
 
     if (CMathGeom2D::IntersectPolygon(points, clip(), ipoints))
-      drawPolygon(ipoints, w, c);
+      drawPolygon(ipoints, w, c, dash);
   }
   else
-    drawPolygon(points, w, c);
+    drawPolygon(points, w, c, dash);
 }
 
 void

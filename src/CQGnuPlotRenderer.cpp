@@ -392,7 +392,7 @@ drawBezier(const CPoint2D &point1, const CPoint2D &point2,
 
 void
 CQGnuPlotRenderer::
-drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c)
+drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c, const CLineDash &dash)
 {
   if (points.empty()) return;
 
@@ -415,6 +415,8 @@ drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c)
   QPen pen(toQColor(c));
 
   pen.setWidthF(w);
+
+  CQUtil::penSetLineDash(pen, dash);
 
   painter_->strokePath(path, pen);
 }
@@ -799,8 +801,8 @@ drawChord(const CPoint2D &p, double r, double a1, double a2, const CRGBA &c)
 
 void
 CQGnuPlotRenderer::
-drawChord(const CPoint2D &p, double r, double a11, double a12,
-          double a21, double a22, const CRGBA &c)
+drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
+                 double a21, double a22, const CRGBA &c)
 {
   double px1, py1, px2, py2;
 

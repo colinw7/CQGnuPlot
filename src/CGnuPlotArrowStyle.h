@@ -48,7 +48,7 @@ class CGnuPlotArrowStyle {
   bool front() const { return front_; }
   void setFront(bool b) { front_ = b; }
 
-  double lineWidth(CGnuPlot *plot) const;
+  double lineWidth(CGnuPlot *plot=0) const;
   void setLineWidth(double w) { lineWidth_ = w; }
 
   const COptRGBA &lineColor() const { return lineColor_; }

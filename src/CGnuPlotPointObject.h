@@ -1,5 +1,5 @@
-#ifndef CGnuPlotPointObject_
-#define CGnuPlotPointObject_
+#ifndef CGnuPlotPointObject_H
+#define CGnuPlotPointObject_H
 
 #include <COptVal.h>
 #include <CPoint2D.h>
@@ -42,7 +42,7 @@ class CGnuPlotPointObject : public CGnuPlotPlotObject {
   bool isErasePoint() const { return erasePoint_; }
   void setErasePoint(bool b) { erasePoint_ = b; }
 
-  bool inside(const CPoint2D &p) const override;
+  bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
   CGnuPlotTipData tip() const override;
 

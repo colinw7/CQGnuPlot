@@ -778,3 +778,11 @@ addPlotRect(CGnuPlotPlot *plot, const CBBox2D &rect)
 {
   prects_[plot->id()] = rect;
 }
+
+bool
+CGnuPlotKey::
+inside(const CGnuPlotTypes::InsideData &data) const
+{
+  return bbox_.inside(data.window);
+}
+

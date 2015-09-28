@@ -2,10 +2,10 @@
   + No issues
 
 ## animate2.dem
-  + No issues
+  + Bad surface
 
 ## animate.dem
-  + No issues
+  + Bad scaling
 
 ## approximate.dem
   + no issues
@@ -21,6 +21,7 @@
 
 ## binary.dem
   + Bad fill color (top/bottom sides)
+  + Bad enhanced title (3D)
 
 ## bivariat.dem
   + expr crash on user func (x>=-d*.1) ? 0 : (int1b(x+d,d)+(f(x+d)+4*f(x+d*.5)+f(x))*d/6.)
@@ -33,7 +34,7 @@
   + key not needed
 
 ## boxplot.dem
-  + candlesticks wrong :
+  + candlesticks wrong
 
 ## callargs.dem
   + No issues

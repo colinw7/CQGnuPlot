@@ -19,6 +19,8 @@ draw(CGnuPlotRenderer *renderer) const
 {
   if (! isDisplayed()) return;
 
+  bool highlighted = (isHighlighted() || isSelected());
+
   CHAlignType halign = getAlign();
   CVAlignType valign = CVALIGN_TYPE_BOTTOM;
 
@@ -31,8 +33,9 @@ draw(CGnuPlotRenderer *renderer) const
 
   double td = renderer->pixelHeightToWindowHeight(renderer->getFont()->getCharDescent());
 
-  CPoint3D pos  = getPos().getPoint3D(renderer);
-  CPoint2D pos1 = renderer->transform(pos);
+  CPoint3D pos = getPos().getPoint3D(renderer);
+
+  drawPos_ = renderer->transform(pos);
 
   CBBox2D tbbox;
 
@@ -44,7 +47,7 @@ draw(CGnuPlotRenderer *renderer) const
   double w = tbbox.getWidth ();
   double h = tbbox.getHeight();
 
-  bbox_ = CBBox2D(pos1.x, pos1.y, pos1.x + w, pos1.y + h);
+  bbox_ = CBBox2D(drawPos_.x, drawPos_.y, drawPos_.x + w, drawPos_.y + h);
 
   CPoint2D d(0, 0);
 
@@ -69,19 +72,22 @@ draw(CGnuPlotRenderer *renderer) const
   bbox_.moveBy(d);
   bbox_.moveBy(CPoint2D(0, -td));
 
-  CRGBA c;
-
   if (textColor_.isPaletteZ())
-    c = textColor_.calcColor(group_, pos.z);
+    drawColor_ = textColor_.calcColor(group_, pos.z);
   else
-    c = textColor_.color();
+    drawColor_ = textColor_.color();
+
+  CRGBA c = drawColor_;
+
+  if (highlighted)
+    c = CRGBA(1,0,0);
 
   if (showPoint()) {
     // TODO: show point
-    renderer->drawSymbol(pos1, CGnuPlotTypes::SymbolType::CROSS, 1, c, 1, true);
+    renderer->drawSymbol(drawPos_, CGnuPlotTypes::SymbolType::CROSS, 1, c, 1, true);
   }
 
-  COptPoint2D o(CPoint2D(pos1.x, pos1.y));
+  COptPoint2D o(CPoint2D(drawPos_.x, drawPos_.y));
 //renderer->drawSymbol(o.getValue(), CGnuPlotTypes::SymbolType::PLUS, 1, CRGBA(1,0,0), 1, true);
 
   if (isEnhanced() || fabs(a) > 1E-6)
@@ -95,9 +101,28 @@ draw(CGnuPlotRenderer *renderer) const
 
 bool
 CGnuPlotLabel::
-inside(const CPoint2D &p) const
+inside(const CGnuPlotTypes::InsideData &data) const
 {
-  return bbox_.inside(p);
+  return bbox_.inside(data.window);
+}
+
+CGnuPlotTipData
+CGnuPlotLabel::
+tip() const
+{
+  CGnuPlotTipData tip;
+
+  tip.setXStr(CStrUtil::strprintf("%g, %g", drawPos_.x, drawPos_.y));
+  tip.setYStr(CStrUtil::strprintf("%s", getText().text().c_str()));
+
+  CRGBA c = this->drawColor();
+
+  tip.setBorderColor(c);
+  tip.setXColor(c);
+
+  tip.setRect(bbox_);
+
+  return tip;
 }
 
 void
@@ -158,4 +183,3 @@ print(std::ostream &os) const
   if (box_)
    os << " boxed";
 }
-

@@ -60,22 +60,5 @@ void
 CQGnuPlotEllipseObject::
 draw(CGnuPlotRenderer *renderer) const
 {
-  CQGnuPlotEllipseObject *th = const_cast<CQGnuPlotEllipseObject *>(this);
-
-  COptRGBA c;
-
-  if (hasLineColor())
-    c = lineColor();
-
-  if (isSelected())
-    th->CGnuPlotEllipseObject::setLineColor(CRGBA(1,0,0));
-
   CGnuPlotEllipseObject::draw(renderer);
-
-  if (isSelected()) {
-    if (c.isValid())
-      th->CGnuPlotEllipseObject::setLineColor(c.getValue());
-    else
-      th->CGnuPlotEllipseObject::resetLineColor();
-  }
 }
