@@ -1,5 +1,6 @@
 #include <CGnuPlotPalette.h>
 #include <CGnuPlotUtil.h>
+#include <CExpr.h>
 #include <CUnixFile.h>
 #include <CStrUtil.h>
 #include <CAngle.h>
@@ -8,7 +9,7 @@ CColor
 CGnuPlotPalette::
 getColor(double x) const
 {
-  if (colorType() == ColorType::DEFINED) {
+  if      (colorType() == ColorType::DEFINED) {
     if (colors_.empty()) {
       CGnuPlotPalette *th = const_cast<CGnuPlotPalette *>(this);
 
@@ -42,7 +43,7 @@ getColor(double x) const
 
     return c1;
   }
-  else {
+  else if (colorType() == ColorType::MODEL) {
     if (isNegative())
       x = 1.0 - x;
 
@@ -58,6 +59,54 @@ getColor(double x) const
 
       return CColor(CRGBA(r, g, b));
     }
+  }
+  else if (colorType() == ColorType::FUNCTIONS) {
+    (void) CExprInst->createRealVariable("gray", x);
+
+    bool oldQuiet = CExprInst->getQuiet();
+
+    CExprInst->setQuiet(true);
+
+    double r, g, b;
+
+    CExprValuePtr value;
+
+    if (! CExprInst->evaluateExpression(rf_, value) ||
+        ! value.isValid() || ! value->getRealValue(r))
+      r = 0.0;
+
+    if (! CExprInst->evaluateExpression(gf_, value) ||
+        ! value.isValid() || ! value->getRealValue(g))
+      g = 0.0;
+
+    if (! CExprInst->evaluateExpression(bf_, value) ||
+        ! value.isValid() || ! value->getRealValue(b))
+      b = 0.0;
+
+    CColor c;
+
+    if      (colorModel_ == ColorModel::RGB)
+      c = CColor(CRGBA(r, g, b));
+    else if (colorModel_ == ColorModel::HSV)
+      c = CColor(CHSV (360*r, g, b));
+    else if (colorModel_ == ColorModel::CMY)
+      c = CColor(CHSV (r, g, b)); // TODO
+    else if (colorModel_ == ColorModel::YIQ)
+      c = CColor(CHSV (r, g, b)); // TODO
+    else if (colorModel_ == ColorModel::XYZ)
+      c = CColor(CHSV (r, g, b)); // TODO
+    else
+      c = CColor(CRGBA(r, g, b));
+
+    CExprInst->setQuiet(oldQuiet);
+
+    return c;
+  }
+  else if (colorType() == ColorType::CUBEHELIX) {
+    return CColor(CRGBA(0, 0, 0));
+  }
+  else {
+    return CColor(CRGBA(0, 0, 0));
   }
 }
 

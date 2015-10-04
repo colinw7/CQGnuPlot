@@ -7,16 +7,19 @@
 
 class BubbleNode : public CircleNode {
  public:
-  BubbleNode(const std::string &name, double r, int id) :
-   CircleNode(r), name_(name), id_(id) {
+  BubbleNode(const std::string &name, double value, int id) :
+   CircleNode(sqrt(value/M_PI)), name_(name), value_(value), id_(id) {
   }
 
   const std::string &name() const { return name_; }
 
   int id() const { return id_; }
 
+  double value() const { return value_; }
+
  private:
   std::string name_;
+  double      value_;
   int         id_;
 };
 
@@ -108,6 +111,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       bubble->setXRadius((x2 - x1)/2);
       bubble->setYRadius((y2 - y1)/2);
       bubble->setName(n->name());
+      bubble->setValue(n->value());
 
       CRGBA c1 = (n->id() > 0 ? CGnuPlotStyleInst->indexColor("subtle", n->id()) : c);
 

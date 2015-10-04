@@ -47,9 +47,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       xh = reals[3];
 
       if (isCalcColor) {
-        double x = reals[4];
+        double z = reals[4];
 
-        lc1 = lineStyle.calcColor(plot, x);
+        if (renderer->isPseudo())
+          renderer->setCBValue(z);
+        else
+          lc1 = lineStyle.calcColor(plot, z);
       }
     }
     // x y xdelta
@@ -60,9 +63,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       xh = x + dx;
 
       if (isCalcColor) {
-        double x = reals[3];
+        double z = reals[3];
 
-        lc1 = lineStyle.calcColor(plot, x);
+        if (renderer->isPseudo())
+          renderer->setCBValue(z);
+        else
+          lc1 = lineStyle.calcColor(plot, z);
       }
     }
 

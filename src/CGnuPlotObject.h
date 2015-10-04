@@ -89,13 +89,9 @@ class CGnuPlotPlotObject : public CGnuPlotObject {
   void setUsed(bool b) { used_ = b; }
   bool testAndSetUsed() { if (used_) return true; used_ = true; return false; }
 
-  bool isModified() const { return modified_; }
-  void setModified(bool b) { modified_ = b; }
-
  protected:
-  CGnuPlotPlot *plot_     { 0 };
-  bool          used_     { false };
-  bool          modified_ { false };
+  CGnuPlotPlot *plot_ { 0 };
+  bool          used_ { false };
 };
 
 #endif

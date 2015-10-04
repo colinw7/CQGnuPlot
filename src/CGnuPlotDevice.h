@@ -29,14 +29,15 @@ class CGnuPlotPolygon;
 class CGnuPlotRectangle;
 class CGnuPlotTimeStamp;
 
+class CGnuPlotArrowObject;
 class CGnuPlotBarObject;
 class CGnuPlotBubbleObject;
 class CGnuPlotEllipseObject;
+class CGnuPlotLabelObject;
 class CGnuPlotPieObject;
+class CGnuPlotPointObject;
 class CGnuPlotPolygonObject;
 class CGnuPlotRectObject;
-class CGnuPlotPointObject;
-class CGnuPlotArrowObject;
 
 class CGnuPlotRenderer;
 class CGnuPlotTitle;
@@ -135,14 +136,15 @@ class CGnuPlotDevice {
 
   virtual CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group);
 
+  virtual CGnuPlotArrowObject   *createArrowObject  (CGnuPlotPlot *plot);
   virtual CGnuPlotBarObject     *createBarObject    (CGnuPlotPlot *plot);
   virtual CGnuPlotBubbleObject  *createBubbleObject (CGnuPlotPlot *plot);
   virtual CGnuPlotEllipseObject *createEllipseObject(CGnuPlotPlot *plot);
+  virtual CGnuPlotLabelObject   *createLabelObject  (CGnuPlotPlot *plot);
   virtual CGnuPlotPieObject     *createPieObject    (CGnuPlotPlot *plot);
+  virtual CGnuPlotPointObject   *createPointObject  (CGnuPlotPlot *plot);
   virtual CGnuPlotPolygonObject *createPolygonObject(CGnuPlotPlot *plot);
   virtual CGnuPlotRectObject    *createRectObject   (CGnuPlotPlot *plot);
-  virtual CGnuPlotPointObject   *createPointObject  (CGnuPlotPlot *plot);
-  virtual CGnuPlotArrowObject   *createArrowObject  (CGnuPlotPlot *plot);
 
   virtual void timeout() { }
 

@@ -31,10 +31,16 @@ void
 CGnuPlotText::
 setText(const std::string &str)
 {
-  str_  = str;
-  estr_ = "";
+  str_ = str;
 
-  parts_.clear();
+  init();
+}
+
+void
+CGnuPlotText::
+setEnhanced(bool b)
+{
+  enhanced_ = b;
 
   init();
 }
@@ -43,114 +49,137 @@ void
 CGnuPlotText::
 init()
 {
+  estr_ = "";
+
+  parts_.clear();
+
   CParseLine line(str_);
 
   while (line.isValid()) {
     char c = line.getChar();
 
-    if      (c == '^') {
-      CGnuPlotText text;
+    if (isEnhanced()) {
+      if      (c == '^') {
+        CGnuPlotText text;
 
-      (void) readPartText(line, text);
+        (void) readPartText(line, text);
 
-      addPart(new CGnuPlotTextPart(CGnuPlotCharType::SUPERSCRIPT, text));
-    }
-    else if (c == '_') {
-      CGnuPlotText text;
+        addPart(new CGnuPlotTextPart(CGnuPlotCharType::SUPERSCRIPT, text));
+      }
+      else if (c == '_') {
+        CGnuPlotText text;
 
-      (void) readPartText(line, text);
+        (void) readPartText(line, text);
 
-      addPart(new CGnuPlotTextPart(CGnuPlotCharType::SUBSCRIPT, text));
-    }
-    else if (c == '@') {
-      CGnuPlotTextPart *part1;
-      CGnuPlotTextPart *part2;
+        addPart(new CGnuPlotTextPart(CGnuPlotCharType::SUBSCRIPT, text));
+      }
+      else if (c == '@') {
+        CGnuPlotTextPart *part1;
+        CGnuPlotTextPart *part2;
 
-      (void) readPart(line, &part1);
-      (void) readPart(line, &part2);
+        (void) readPart(line, &part1);
+        (void) readPart(line, &part2);
 
-      CGnuPlotText text;
+        CGnuPlotText text;
 
-      if (part1) text.addPart(part1);
-      if (part2) text.addPart(part2);
+        if (part1) text.addPart(part1);
+        if (part2) text.addPart(part2);
 
-      addPart(new CGnuPlotTextPart(CGnuPlotCharType::BOX, text));
-    }
-    else if (c == '&') {
-      CGnuPlotText text;
+        addPart(new CGnuPlotTextPart(CGnuPlotCharType::BOX, text));
+      }
+      else if (c == '&') {
+        CGnuPlotText text;
 
-      (void) readPartText(line, text);
+        (void) readPartText(line, text);
 
-      addPart(new CGnuPlotTextPart(CGnuPlotCharType::SPACE, text));
-    }
-    else if (c == '~') {
-      CGnuPlotText text, text1;
+        addPart(new CGnuPlotTextPart(CGnuPlotCharType::SPACE, text));
+      }
+      else if (c == '~') {
+        CGnuPlotText text, text1;
 
-      (void) readPartText(line, text);
-      (void) readPartText(line, text1);
+        (void) readPartText(line, text);
+        (void) readPartText(line, text1);
 
-      addPart(new CGnuPlotTextPart(CGnuPlotCharType::OVERPRINT, text, text1));
-    }
-    else if (c == '{') {
-      std::string tstr;
+        addPart(new CGnuPlotTextPart(CGnuPlotCharType::OVERPRINT, text, text1));
+      }
+      else if (c == '{') {
+        std::string tstr;
 
-      if (! readBraceString(line, tstr))
-        continue;
+        if (! readBraceString(line, tstr))
+          continue;
 
-      CGnuPlotText text(tstr);
+        CGnuPlotText text(tstr);
 
-      addPart(new CGnuPlotTextPart(CGnuPlotCharType::TEXT, text));
-    }
-    else if (c == '}') {
-      break;
-    }
-    else if (c == '\\') {
-      char c1 = '0', c2 = '0', c3 = '0';
+        addPart(new CGnuPlotTextPart(CGnuPlotCharType::TEXT, text));
+      }
+      else if (c == '}') {
+        break;
+      }
+      else if (c == '\\') {
+        char c1 = '0', c2 = '0', c3 = '0';
 
-      c1 = line.lookChar();
+        c1 = line.lookChar();
 
-      if      (isdigit(c1)) {
-        line.skipChar();
-
-        c2 = line.lookChar();
-
-        if (isdigit(c2)) {
+        if      (isdigit(c1)) {
           line.skipChar();
 
-          c3 = line.lookChar();
+          c2 = line.lookChar();
 
-          if (isdigit(c3))
+          if (isdigit(c2)) {
             line.skipChar();
+
+            c3 = line.lookChar();
+
+            if (isdigit(c3))
+              line.skipChar();
+          }
+
+          int i1 = c1 - '0';
+          int i2 = c2 - '0';
+          int i3 = c3 - '0';
+
+          int i = i1*64 + i2*8 + i3;
+
+          estr_.push_back(char(i & 0xff));
         }
+        else if (c1 != '\0') {
+          line.skipChar();
 
-        int i1 = c1 - '0';
-        int i2 = c2 - '0';
-        int i3 = c3 - '0';
-
-        int i = i1*64 + i2*8 + i3;
-
-        estr_.push_back(char(i & 0xff));
+          estr_.push_back(c1);
+        }
       }
-      else if (c1 != '\0') {
-        line.skipChar();
-
-        estr_.push_back(c1);
+      else if (c == '\n') {
+        addPart(new CGnuPlotTextPart(CGnuPlotCharType::NEWLINE));
       }
-    }
-    else if (c == '\n') {
-      addPart(new CGnuPlotTextPart(CGnuPlotCharType::NEWLINE));
+      else {
+        line.ungetChar();
+
+        int pos = line.pos();
+
+        (void) CUtf8::readNextChar(line.str(), pos);
+
+        int n = pos - line.pos();
+
+        for (int i = 0; i < n; ++i)
+          estr_.push_back(line.getChar());
+      }
     }
     else {
-      line.ungetChar();
+      if (c == '\n') {
+        addPart(new CGnuPlotTextPart(CGnuPlotCharType::NEWLINE));
+      }
+      else {
+        line.ungetChar();
 
-      int pos = line.pos();
+        int pos = line.pos();
 
-      (void) CUtf8::readNextChar(line.str(), pos);
+        (void) CUtf8::readNextChar(line.str(), pos);
 
-      int n = pos - line.pos();
+        int n = pos - line.pos();
 
-      for (int i = 0; i < n; ++i)
-        estr_.push_back(line.getChar());
+        for (int i = 0; i < n; ++i)
+          estr_.push_back(line.getChar());
+      }
     }
   }
 }
@@ -278,57 +307,62 @@ readBraceString(CParseLine &line, std::string &tstr)
   return true;
 }
 
-CBBox2D
+void
 CGnuPlotText::
 drawAtPoint(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, CHAlignType halign,
             CVAlignType valign, const CRGBA &c, double a) const
 {
+  // calc bbox and rotated bbox
+  CBBox2D bbox, rbbox;
+
+  calcRectAtPoint(renderer, pos, halign, valign, a, bbox, rbbox);
+//renderer->drawRect(rbbox, CRGBA(1,0,0), 1);
+
+//renderer->drawRect(bbox, CRGBA(1,0,0), 1);
+
+  draw(renderer, bbox, CHALIGN_TYPE_CENTER, c, a);
+}
+
+void
+CGnuPlotText::
+calcRectAtPoint(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, CHAlignType halign,
+                CVAlignType valign, double a, CBBox2D &bbox, CBBox2D &rbbox) const
+{
   // calc unrotated bbox
-  CBBox2D bbox = calcBBox(renderer, pos);
-  if (! bbox.isSet()) return CBBox2D();
+  bbox = calcBBox(renderer, pos);
 
   // calc rotated bbox
-  CBBox2D rbbox = renderBBox(renderer, pos, a);
-  if (! rbbox.isSet()) return CBBox2D();
+  rbbox = renderBBox(renderer, pos, a);
 
   //---
 
   // align to rotated bbox
-  CBBox2D rbbox1;
+  if (rbbox.isSet()) {
+    double dx = 0.0, dy = 0.0;
 
-  double dx = 0.0, dy = 0.0;
+    // align pos.x to rotated bbox x
+    if      (halign == CHALIGN_TYPE_LEFT  ) dx = pos.x - rbbox.getXMin();
+    else if (halign == CHALIGN_TYPE_CENTER) dx = pos.x - rbbox.getXMid();
+    else if (halign == CHALIGN_TYPE_RIGHT ) dx = pos.x - rbbox.getXMax();
 
-  // align to rotated bbox width (TODO: align to pos.x)
-  //if      (halign == CHALIGN_TYPE_LEFT  ) dx = 0;
-  //else if (halign == CHALIGN_TYPE_CENTER) dx = -rbbox.getWidth()/2;
-  //else if (halign == CHALIGN_TYPE_RIGHT ) dx = -rbbox.getWidth();
-  if      (halign == CHALIGN_TYPE_LEFT  ) dx = pos.x - rbbox.getXMin();
-  else if (halign == CHALIGN_TYPE_CENTER) dx = pos.x - rbbox.getXMid();
-  else if (halign == CHALIGN_TYPE_RIGHT ) dx = pos.x - rbbox.getXMax();
+    // align pos.y to rotated bbox y
+    if      (valign == CVALIGN_TYPE_BOTTOM) dy = pos.y - rbbox.getYMin();
+    else if (valign == CVALIGN_TYPE_CENTER) dy = pos.y - rbbox.getYMid();
+    else if (valign == CVALIGN_TYPE_TOP   ) dy = pos.y - rbbox.getYMax();
 
-  // align pos.y to rotated bbox y
-  if      (valign == CVALIGN_TYPE_BOTTOM) dy = pos.y - rbbox.getYMin();
-  else if (valign == CVALIGN_TYPE_CENTER) dy = pos.y - rbbox.getYMid();
-  else if (valign == CVALIGN_TYPE_TOP   ) dy = pos.y - rbbox.getYMax();
+    CBBox2D rbbox1 = rbbox.moveBy(CPoint2D(dx, dy));
 
-  rbbox1 = rbbox.moveBy(CPoint2D(dx, dy));
-//renderer->drawRect(rbbox1, CRGBA(1,0,0), 1);
-
-  //---
+    rbbox = rbbox1;
+  }
 
   // use unrotated rotated bbox for draw (draw center aligned inside unrotated bbox
   // at rotated box center)
-  CPoint2D rc = rbbox1.getCenter();
+  CPoint2D rc = rbbox.getCenter();
 
   CBBox2D bbox1(CPoint2D(rc.x - bbox.getWidth()/2, rc.y - bbox.getHeight()/2),
                 CPoint2D(rc.x + bbox.getWidth()/2, rc.y + bbox.getHeight()/2));
-//renderer->drawRect(bbox1, CRGBA(1,0,0), 1);
 
-  draw(renderer, bbox1, CHALIGN_TYPE_CENTER, c, a);
-
-  //---
-
-  return rbbox1;
+  bbox = bbox1;
 }
 
 void
@@ -369,11 +403,13 @@ draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
     CBBox2D lbbox;
 
     for (const auto &ch : l.chars) {
+      renderer->setFont(ch.font);
+
       double w  = renderer->pixelWidthToWindowWidth  (ch.font->getStringWidth(ch.str));
-    //double fa = renderer->pixelHeightToWindowHeight(ch.font->getCharAscent ());
-    //double fd = renderer->pixelHeightToWindowHeight(ch.font->getCharDescent());
-      double fa = l.ascent;
-      double fd = l.descent;
+      double fa = renderer->pixelHeightToWindowHeight(ch.font->getCharAscent ());
+      double fd = renderer->pixelHeightToWindowHeight(ch.font->getCharDescent());
+    //double fa = l.ascent;
+    //double fd = l.descent;
 
       CPoint2D p1(ch.pos.x + dx    , ch.pos.y + dy - fd);
       CPoint2D p2(ch.pos.x + dx + w, ch.pos.y + dy + fa);
@@ -485,6 +521,8 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
     state.font = font1;
   }
 
+  renderer->setFont(state.font);
+
   double dy = 0.0;
 
   if (type == CGnuPlotCharType::OVERPRINT) {
@@ -494,9 +532,12 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
       CStrUtil::readReal(estr_, &i, &s);
 
     //double o = state.font->getCharAscent()*s;
-    CGnuPlotTextLine &line = state.lines.back();
+  //CGnuPlotTextLine &line = state.lines.back();
 
-    double o = line.ascent*s;
+    double ascent = renderer->pixelHeightToWindowHeight(state.font->getCharAscent());
+  //double ascent = line.ascent;
+
+    double o = ascent*s;
 
     dy = renderer->pixelHeightToWindowHeight(o);
   }
@@ -515,7 +556,8 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
       line.descent = renderer->pixelHeightToWindowHeight(state.font->getCharDescent());
     }
 
-    double fa = line.ascent;
+    double fa = renderer->pixelHeightToWindowHeight(state.font->getCharAscent());
+    //double fa = line.ascent;
 
     int i1 = i;
 
@@ -599,11 +641,13 @@ calcBBox(CGnuPlotTextRenderer *renderer) const
     CBBox2D lbbox;
 
     for (const auto &ch : l.chars) {
+      renderer->setFont(ch.font);
+
       double w  = renderer->pixelWidthToWindowWidth  (ch.font->getStringWidth(ch.str));
-    //double fa = renderer->pixelHeightToWindowHeight(ch.font->getCharAscent ());
-    //double fd = renderer->pixelHeightToWindowHeight(ch.font->getCharDescent());
-      double fa = l.ascent;
-      double fd = l.descent;
+      double fa = renderer->pixelHeightToWindowHeight(ch.font->getCharAscent ());
+      double fd = renderer->pixelHeightToWindowHeight(ch.font->getCharDescent());
+    //double fa = l.ascent;
+    //double fd = l.descent;
 
       CPoint2D p1(ch.pos.x    , ch.pos.y - fd);
       CPoint2D p2(ch.pos.x + w, ch.pos.y + fa);
@@ -745,6 +789,8 @@ placeChars(CGnuPlotTextState &state) const
   CGnuPlotTextRenderer *renderer = state.renderer;
 
   state.font = renderer->getFont();
+
+  renderer->setFont(state.font);
 
   if      (type_ == CGnuPlotCharType::SUPERSCRIPT) {
     double h = renderer->pixelHeightToWindowHeight(state.font->getCharHeight()/2);

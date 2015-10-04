@@ -333,8 +333,8 @@ valueToColor(double x) const
 {
   const CGnuPlotAxisData &cbaxis = group_->colorBox()->axis();
 
-  double cbmin = cbaxis.min().getValue(0);
-  double cbmax = cbaxis.max().getValue(1);
+  double cbmin = cbaxis.min().getValue(group_->zaxis(1).min().getValue(0));
+  double cbmax = cbaxis.max().getValue(group_->zaxis(1).max().getValue(1));
 
   double z = CGnuPlotUtil::map(x, cbmin, cbmax, 0, 1);
 

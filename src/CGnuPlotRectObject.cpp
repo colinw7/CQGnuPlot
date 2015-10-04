@@ -21,13 +21,16 @@ tip() const
 {
   CGnuPlotTipData tip;
 
-  tip.setXStr(CStrUtil::strprintf("%g, %g -> %g, %g",
-                rect_.getXMin(), rect_.getYMin(), rect_.getXMax(), rect_.getYMax()));
+  if      (tipText_ != "") {
+    tip.setXStr(tipText_);
+  }
+  else {
+    tip.setXStr(CStrUtil::strprintf("%g, %g -> %g, %g",
+                  rect_.getXMin(), rect_.getYMin(), rect_.getXMax(), rect_.getYMax()));
 
-  if      (tipText_ != "")
-    tip.setYStr(tipText_);
-  else if (text_ != "")
-    tip.setYStr(text_);
+    if (text_ != "")
+      tip.setYStr(text_);
+  }
 
   tip.setBorderColor(lc_);
   tip.setXColor(lc_);
@@ -49,7 +52,7 @@ draw(CGnuPlotRenderer *renderer) const
     lc_ = fc;
 
     if (highlighted) {
-      fc = CRGBA(1,0,0);
+      fc = fc.getLightRGBA();
     }
 
     renderer->fillRect(rect_, fc);

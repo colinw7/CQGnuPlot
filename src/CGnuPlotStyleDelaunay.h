@@ -13,6 +13,8 @@ class CGnuPlotStyleDelaunay : public CGnuPlotStyleBase {
 
   void drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
+  void drawAxes(CGnuPlotPlot *, CGnuPlotRenderer *) override { }
+
   CBBox2D fit(CGnuPlotPlot *plot) override;
 
   bool isSingleType() const override { return true; }

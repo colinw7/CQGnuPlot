@@ -33,6 +33,7 @@ CQGnuPlotEnum.cpp \
 CQGnuPlotGroup.cpp \
 CQGnuPlotKey.cpp \
 CQGnuPlotLabel.cpp \
+CQGnuPlotLabelObject.cpp \
 CQGnuPlotLineStyle.cpp \
 CQGnuPlotPalette.cpp \
 CQGnuPlotPieObject.cpp \
@@ -75,11 +76,14 @@ CGnuPlotDevice.cpp \
 CGnuPlotEllipse.cpp \
 CGnuPlotEllipseObject.cpp \
 CGnuPlotFile.cpp \
+CGnuPlotFill.cpp \
 CGnuPlotFillStyle.cpp \
 CGnuPlotGroup.cpp \
 CGnuPlotKey.cpp \
 CGnuPlotKeyData.cpp \
 CGnuPlotLabel.cpp \
+CGnuPlotLabelData.cpp \
+CGnuPlotLabelObject.cpp \
 CGnuPlotLineStyle.cpp \
 CGnuPlotLineType.cpp \
 CGnuPlotLogDevice.cpp \
@@ -98,6 +102,7 @@ CGnuPlotPrintFile.cpp \
 CGnuPlotRectangle.cpp \
 CGnuPlotRectObject.cpp \
 CGnuPlotRenderer.cpp \
+CGnuPlotStroke.cpp \
 CGnuPlotStyle.cpp \
 CGnuPlotTimeStamp.cpp \
 CGnuPlotUsingCols.cpp \
@@ -216,6 +221,7 @@ CQGnuPlotEnum.h \
 CQGnuPlotGroup.h \
 CQGnuPlotKey.h \
 CQGnuPlotLabel.h \
+CQGnuPlotLabelObject.h \
 CQGnuPlotLineStyle.h \
 CQGnuPlotObject.h \
 CQGnuPlotPalette.h \
@@ -258,11 +264,14 @@ CGnuPlotDevice.h \
 CGnuPlotEllipse.h \
 CGnuPlotEllipseObject.h \
 CGnuPlotFile.h \
+CGnuPlotFill.h \
 CGnuPlotFillStyle.h \
 CGnuPlotGroup.h \
 CGnuPlotKey.h \
 CGnuPlotKeyData.h \
 CGnuPlotLabel.h \
+CGnuPlotLabelData.h \
+CGnuPlotLabelObject.h \
 CGnuPlotLineStyle.h \
 CGnuPlotLineType.h \
 CGnuPlotLogDevice.h \
@@ -286,6 +295,7 @@ CGnuPlotRenderer.h \
 CGnuPlotSVGDevice.h \
 CGnuPlotSVGRenderer.h \
 CGnuPlotSize.h \
+CGnuPlotStroke.h \
 CGnuPlotTimeStamp.h \
 CGnuPlotUsingCols.h \
 \

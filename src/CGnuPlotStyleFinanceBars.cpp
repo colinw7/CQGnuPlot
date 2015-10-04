@@ -47,9 +47,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CRGBA lc1 = lc;
 
     if (isCalcColor) {
-      double x = reals[5];
+      double z = reals[5];
 
-      lc1 = lineStyle.calcColor(plot, x);
+      if (renderer->isPseudo())
+        renderer->setCBValue(z);
+      else
+        lc1 = lineStyle.calcColor(plot, z);
     }
 
     CPoint2D p1(date, low );

@@ -19,6 +19,10 @@ CQPropertyTree(QWidget *parent) :
 
   header()->setStretchLastSection(true);
 
+  header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+  setAlternatingRowColors(true);
+
   setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
 
   CQPropertyDelegate *delegate = new CQPropertyDelegate(this);
@@ -127,6 +131,92 @@ selectObject(QTreeWidgetItem *item, const QObject *obj)
   }
 
   return false;
+}
+
+void
+CQPropertyTree::
+expandSelected()
+{
+  QList<QTreeWidgetItem *> items = this->selectedItems();
+
+  for (int i = 0; i < items.length(); ++i) {
+    QTreeWidgetItem *item = items[i];
+
+    expandItemTree(item);
+  }
+
+  resizeColumnToContents(0);
+  resizeColumnToContents(1);
+
+  for (int i = 0; i < items.length(); ++i) {
+    QTreeWidgetItem *item = items[i];
+
+    scrollToItem(item);
+  }
+}
+
+void
+CQPropertyTree::
+search(const QString &text)
+{
+  Items items;
+
+  int n = topLevelItemCount();
+
+  for (int i = 0; i < n; ++i) {
+    QTreeWidgetItem *item = topLevelItem(i);
+
+    searchItemTree(item, text, items);
+  }
+
+  for (uint i = 0; i < items.size(); ++i) {
+    QTreeWidgetItem *item = items[i];
+
+    expandItemTree(item);
+  }
+
+  resizeColumnToContents(0);
+  resizeColumnToContents(1);
+
+  for (uint i = 0; i < items.size(); ++i) {
+    QTreeWidgetItem *item = items[i];
+
+    scrollToItem(item);
+  }
+}
+
+void
+CQPropertyTree::
+searchItemTree(QTreeWidgetItem *item, const QString &text, Items &items)
+{
+  QString itemText = item->text(0);
+
+  if (itemText.indexOf(text) >= 0) {
+    item->setSelected(true);
+
+    items.push_back(item);
+  }
+  else
+    item->setSelected(false);
+
+  int n = item->childCount();
+
+  for (int i = 0; i < n; ++i) {
+    QTreeWidgetItem *item1 = item->child(i);
+
+    searchItemTree(item1, text, items);
+  }
+}
+
+void
+CQPropertyTree::
+expandItemTree(QTreeWidgetItem *item)
+{
+  while (item) {
+    expandItem(item);
+
+    item = item->parent();
+  }
 }
 
 void

@@ -981,23 +981,21 @@ draw()
 
   //---
 
-  if (! colorBox_->isFront())
-    drawColorBox(renderer);
-
-  //---
-
   // draw axes (underneath plot)
-  axisBBox_ = CBBox2D();
+  //axisBBox_ = CBBox2D();
+  axisBBox_ = bbox_;
 
   drawAxes(renderer, getBorderLayer() == CGnuPlotTypes::DrawLayer::FRONT);
 //renderer->drawRect(axisBBox_, CRGBA(1,0,0), 1);
 
-//CBBox2D bbox = getMappedDisplayRange(1, 1);
-//renderer->setRange(bbox);
+  keyBBox_ = axisBBox_;
 
-  marginBBox_ = axisBBox_;
+  drawKey(renderer);
 
-  //---
+  marginBBox_ = keyBBox_;
+
+  if (! colorBox_->isFront())
+    drawColorBox(renderer);
 
   // draw title (TODO: order)
   drawTitle(renderer);
@@ -1049,8 +1047,6 @@ draw()
   drawGrid(renderer, CGnuPlotTypes::DrawLayer::FRONT);
 
   //---
-
-  drawKey(renderer);
 
   if (colorBox_->isFront())
     drawColorBox(renderer);

@@ -1,14 +1,17 @@
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotWindow.h>
 #include <CQGnuPlotGroup.h>
+
+#include <CQGnuPlotArrowObject.h>
 #include <CQGnuPlotBarObject.h>
 #include <CQGnuPlotBubbleObject.h>
 #include <CQGnuPlotEllipseObject.h>
+#include <CQGnuPlotLabelObject.h>
 #include <CQGnuPlotPieObject.h>
+#include <CQGnuPlotPointObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
-#include <CQGnuPlotPointObject.h>
-#include <CQGnuPlotArrowObject.h>
+
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
@@ -19,6 +22,7 @@ CQGnuPlotPlot(CQGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style) :
 {
   setObjectName("plot");
 
+  // QObject to set properties for collections of bar and pieobjects
   barObjects_ = new CQGnuPlotPlotBarObjects(this);
   pieObjects_ = new CQGnuPlotPlotPieObjects(this);
 }
@@ -144,6 +148,15 @@ mousePress(const CPoint2D &pixel, const CPoint2D &window, Objects &objects)
 
   //---
 
+  for (auto &arrow : arrowObjects()) {
+    if (! arrow->inside(insideData))
+      continue;
+
+    CQGnuPlotArrowObject *qarrow = static_cast<CQGnuPlotArrowObject *>(arrow);
+
+    objects.push_back(qarrow);
+  }
+
   for (auto &bar : barObjects()) {
     if (! bar->inside(insideData))
       continue;
@@ -171,12 +184,30 @@ mousePress(const CPoint2D &pixel, const CPoint2D &window, Objects &objects)
     objects.push_back(qellipse);
   }
 
+  for (auto &label : labelObjects()) {
+    if (! label->inside(insideData))
+      continue;
+
+    CQGnuPlotLabelObject *qlabel = static_cast<CQGnuPlotLabelObject *>(label);
+
+    objects.push_back(qlabel);
+  }
+
   for (auto &pie : pieObjects()) {
     if (pie->inside(insideData) || pie->keyInside(window)) {
       CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
 
       objects.push_back(qpie);
     }
+  }
+
+  for (auto &point : pointObjects()) {
+    if (! point->inside(insideData))
+      continue;
+
+    CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
+
+    objects.push_back(qpoint);
   }
 
   for (auto &polygon : polygonObjects()) {
@@ -196,24 +227,6 @@ mousePress(const CPoint2D &pixel, const CPoint2D &window, Objects &objects)
 
     objects.push_back(qrect);
   }
-
-  for (auto &point : pointObjects()) {
-    if (! point->inside(insideData))
-      continue;
-
-    CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
-
-    objects.push_back(qpoint);
-  }
-
-  for (auto &arrow : arrowObjects()) {
-    if (! arrow->inside(insideData))
-      continue;
-
-    CQGnuPlotArrowObject *qarrow = static_cast<CQGnuPlotArrowObject *>(arrow);
-
-    objects.push_back(qarrow);
-  }
 }
 
 void
@@ -231,6 +244,19 @@ mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip)
   //---
 
   selectedPos_.setInvalid();
+
+  for (auto &arrow : arrowObjects()) {
+    if (! arrow->inside(insideData))
+      continue;
+
+    CQGnuPlotArrowObject *qarrow = static_cast<CQGnuPlotArrowObject *>(arrow);
+
+    qwindow()->highlightObject(qarrow);
+
+    tip = arrow->tip();
+
+    return true;
+  }
 
   for (auto &bar : barObjects()) {
     if (! bar->inside(insideData))
@@ -271,6 +297,19 @@ mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip)
     return true;
   }
 
+  for (auto &label : labelObjects()) {
+    if (! label->inside(insideData))
+      continue;
+
+    CQGnuPlotLabelObject *qlabel = static_cast<CQGnuPlotLabelObject *>(label);
+
+    qwindow()->highlightObject(qlabel);
+
+    tip = label->tip();
+
+    return true;
+  }
+
   for (auto &pie : pieObjects()) {
     if (! pie->inside(insideData))
       continue;
@@ -280,6 +319,19 @@ mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip)
     qwindow()->highlightObject(qpie);
 
     tip = pie->tip();
+
+    return true;
+  }
+
+  for (auto &point : pointObjects()) {
+    if (! point->inside(insideData))
+      continue;
+
+    CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
+
+    qwindow()->highlightObject(qpoint);
+
+    tip = point->tip();
 
     return true;
   }
@@ -306,32 +358,6 @@ mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip)
     qwindow()->highlightObject(qrect);
 
     tip = rect->tip();
-
-    return true;
-  }
-
-  for (auto &point : pointObjects()) {
-    if (! point->inside(insideData))
-      continue;
-
-    CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
-
-    qwindow()->highlightObject(qpoint);
-
-    tip = point->tip();
-
-    return true;
-  }
-
-  for (auto &arrow : arrowObjects()) {
-    if (! arrow->inside(insideData))
-      continue;
-
-    CQGnuPlotArrowObject *qarrow = static_cast<CQGnuPlotArrowObject *>(arrow);
-
-    qwindow()->highlightObject(qarrow);
-
-    tip = arrow->tip();
 
     return true;
   }

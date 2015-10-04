@@ -18,20 +18,36 @@ typedef unsigned char uchar;
 
 class CGnuPlotWindow;
 class CGnuPlotGroup;
+
+class CGnuPlotArrowObject;
 class CGnuPlotBarObject;
 class CGnuPlotBubbleObject;
 class CGnuPlotEllipseObject;
+class CGnuPlotLabelObject;
 class CGnuPlotPieObject;
+class CGnuPlotPointObject;
 class CGnuPlotPolygonObject;
 class CGnuPlotRectObject;
-class CGnuPlotPointObject;
-class CGnuPlotArrowObject;
-class CGnuPlotBBoxRenderer;
 
+class CGnuPlotBBoxRenderer;
 class CGnuPlotStyleAdjacencyRenderer;
+
 class CAdjacency;
 
 //------
+
+template<>
+class CGnuPlotCacheFactory<CGnuPlotArrowObject> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotArrowObject *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
 
 template<>
 class CGnuPlotCacheFactory<CGnuPlotBarObject> {
@@ -73,6 +89,19 @@ class CGnuPlotCacheFactory<CGnuPlotEllipseObject> {
 };
 
 template<>
+class CGnuPlotCacheFactory<CGnuPlotLabelObject> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotLabelObject *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+template<>
 class CGnuPlotCacheFactory<CGnuPlotPieObject> {
  public:
   CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
@@ -80,19 +109,6 @@ class CGnuPlotCacheFactory<CGnuPlotPieObject> {
   }
 
   CGnuPlotPieObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotRectObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotRectObject *make();
 
  private:
   CGnuPlotPlot *plot_;
@@ -112,19 +128,6 @@ class CGnuPlotCacheFactory<CGnuPlotPointObject> {
 };
 
 template<>
-class CGnuPlotCacheFactory<CGnuPlotArrowObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotArrowObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
 class CGnuPlotCacheFactory<CGnuPlotPolygonObject> {
  public:
   CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
@@ -136,6 +139,21 @@ class CGnuPlotCacheFactory<CGnuPlotPolygonObject> {
  private:
   CGnuPlotPlot *plot_;
 };
+
+template<>
+class CGnuPlotCacheFactory<CGnuPlotRectObject> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotRectObject *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+//------
 
 class CGnuPlotAdjacencyData {
  public:
@@ -170,22 +188,24 @@ class CGnuPlotPlot {
   typedef std::map<int,Points2D>              Points3D;
   typedef std::vector<CRGBA>                  ImageData;
 
+  typedef CGnuPlotCache<CGnuPlotArrowObject>   ArrowCache;
   typedef CGnuPlotCache<CGnuPlotBarObject>     BarCache;
   typedef CGnuPlotCache<CGnuPlotBubbleObject>  BubbleCache;
   typedef CGnuPlotCache<CGnuPlotEllipseObject> EllipseCache;
+  typedef CGnuPlotCache<CGnuPlotLabelObject>   LabelCache;
   typedef CGnuPlotCache<CGnuPlotPieObject>     PieCache;
+  typedef CGnuPlotCache<CGnuPlotPointObject>   PointCache;
   typedef CGnuPlotCache<CGnuPlotPolygonObject> PolygonCache;
   typedef CGnuPlotCache<CGnuPlotRectObject>    RectCache;
-  typedef CGnuPlotCache<CGnuPlotPointObject>   PointCache;
-  typedef CGnuPlotCache<CGnuPlotArrowObject>   ArrowCache;
+  typedef std::vector<CGnuPlotArrowObject *>   ArrowObjects;
   typedef std::vector<CGnuPlotBarObject *>     BarObjects;
   typedef std::vector<CGnuPlotBubbleObject *>  BubbleObjects;
   typedef std::vector<CGnuPlotEllipseObject *> EllipseObjects;
+  typedef std::vector<CGnuPlotLabelObject *>   LabelObjects;
   typedef std::vector<CGnuPlotPieObject *>     PieObjects;
+  typedef std::vector<CGnuPlotPointObject *>   PointObjects;
   typedef std::vector<CGnuPlotPolygonObject *> PolygonObjects;
   typedef std::vector<CGnuPlotRectObject *>    RectObjects;
-  typedef std::vector<CGnuPlotPointObject *>   PointObjects;
-  typedef std::vector<CGnuPlotArrowObject *>   ArrowObjects;
   typedef std::vector<double>                  DoubleVector;
   typedef std::map<double,DoubleVector>        MappedPoints;
   typedef std::vector<CGnuPlotKeyLabel>        KeyLabels;
@@ -489,23 +509,25 @@ class CGnuPlotPlot {
   bool isCacheActive() const { return cacheActive_; }
   void setCacheActive(bool b) { cacheActive_ = b; }
 
+  void updateArrowCacheSize  (int n);
   void updateBarCacheSize    (int n);
   void updateBubbleCacheSize (int n);
   void updateEllipseCacheSize(int n);
+  void updateLabelCacheSize  (int n);
   void updatePieCacheSize    (int n);
+  void updatePointCacheSize  (int n);
   void updatePolygonCacheSize(int n);
   void updateRectCacheSize   (int n);
-  void updatePointCacheSize  (int n);
-  void updateArrowCacheSize  (int n);
 
+  const ArrowObjects   &arrowObjects  () const { return arrowCache_  .objects(); }
   const BarObjects     &barObjects    () const { return barCache_    .objects(); }
   const BubbleObjects  &bubbleObjects () const { return bubbleCache_ .objects(); }
   const EllipseObjects &ellipseObjects() const { return ellipseCache_.objects(); }
+  const LabelObjects   &labelObjects  () const { return labelCache_  .objects(); }
   const PieObjects     &pieObjects    () const { return pieCache_    .objects(); }
+  const PointObjects   &pointObjects  () const { return pointCache_  .objects(); }
   const PolygonObjects &polygonObjects() const { return polygonCache_.objects(); }
   const RectObjects    &rectObjects   () const { return rectCache_   .objects(); }
-  const PointObjects   &pointObjects  () const { return pointCache_  .objects(); }
-  const ArrowObjects   &arrowObjects  () const { return arrowCache_  .objects(); }
 
   //---
 
@@ -558,14 +580,15 @@ class CGnuPlotPlot {
 
   double getXSpacing() const;
 
+  CGnuPlotArrowObject   *createArrowObject  () const;
   CGnuPlotBarObject     *createBarObject    () const;
   CGnuPlotBubbleObject  *createBubbleObject () const;
   CGnuPlotEllipseObject *createEllipseObject() const;
+  CGnuPlotLabelObject   *createLabelObject  () const;
   CGnuPlotPieObject     *createPieObject    () const;
+  CGnuPlotPointObject   *createPointObject  () const;
   CGnuPlotPolygonObject *createPolygonObject() const;
   CGnuPlotRectObject    *createRectObject   () const;
-  CGnuPlotPointObject   *createPointObject  () const;
-  CGnuPlotArrowObject   *createArrowObject  () const;
 
   bool mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const;
 
@@ -678,14 +701,15 @@ class CGnuPlotPlot {
   CGnuPlotHidden3DData   hidden3D_;
   double                 whiskerBars_ { 0 };                // whisker bar data
   bool                   cacheActive_ { true };
+  ArrowCache             arrowCache_;
   BarCache               barCache_;
   BubbleCache            bubbleCache_;
   EllipseCache           ellipseCache_;
+  LabelCache             labelCache_;
   PieCache               pieCache_;
+  PointCache             pointCache_;
   PolygonCache           polygonCache_;
   RectCache              rectCache_;
-  PointCache             pointCache_;
-  ArrowCache             arrowCache_;
   StyleValues            styleValues_;
   bool                   parametric_ { false };
   CGnuPlotTypes::Mapping mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
@@ -700,6 +724,13 @@ class CGnuPlotPlot {
 };
 
 //------
+
+inline CGnuPlotArrowObject *
+CGnuPlotCacheFactory<CGnuPlotArrowObject>::
+make()
+{
+  return plot_->createArrowObject();
+}
 
 inline CGnuPlotBarObject *
 CGnuPlotCacheFactory<CGnuPlotBarObject>::
@@ -722,11 +753,25 @@ make()
   return plot_->createEllipseObject();
 }
 
+inline CGnuPlotLabelObject *
+CGnuPlotCacheFactory<CGnuPlotLabelObject>::
+make()
+{
+  return plot_->createLabelObject();
+}
+
 inline CGnuPlotPieObject *
 CGnuPlotCacheFactory<CGnuPlotPieObject>::
 make()
 {
   return plot_->createPieObject();
+}
+
+inline CGnuPlotPointObject *
+CGnuPlotCacheFactory<CGnuPlotPointObject>::
+make()
+{
+  return plot_->createPointObject();
 }
 
 inline CGnuPlotPolygonObject *
@@ -741,20 +786,6 @@ CGnuPlotCacheFactory<CGnuPlotRectObject>::
 make()
 {
   return plot_->createRectObject();
-}
-
-inline CGnuPlotPointObject *
-CGnuPlotCacheFactory<CGnuPlotPointObject>::
-make()
-{
-  return plot_->createPointObject();
-}
-
-inline CGnuPlotArrowObject *
-CGnuPlotCacheFactory<CGnuPlotArrowObject>::
-make()
-{
-  return plot_->createArrowObject();
 }
 
 #endif

@@ -30,10 +30,14 @@ void
 CGnuPlotStyleDelaunay::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  const CGnuPlotClip &clip = plot->group()->clip();
+  CGnuPlotGroup *group = plot->group();
+
+  const CGnuPlotClip &clip = group->clip();
 
   CGnuPlotStyleDelaunayValue *value =
     dynamic_cast<CGnuPlotStyleDelaunayValue *>(plot->styleValue("delaunay"));
+
+  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   CDelaunay *delaunay;
 
@@ -71,7 +75,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  double size = plot->pointSize();
+  double pointSize = plot->pointSize();
+
+  CGnuPlotTypes::SymbolType pointType = lineStyle.calcPointType();
+
+  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
   for (CHull3D::VertexIterator pv = delaunay->verticesBegin();
          pv != delaunay->verticesEnd(); ++pv) {
@@ -79,9 +87,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CPoint2D p(v->x(), v->y());
 
-    CRGBA c(1,0,0);
-
-    renderer->drawSymbol(p, plot->pointType(), size, c, 1, true);
+    renderer->drawSymbol(p, pointType, pointSize, c, 1, true);
   }
 
   //---
@@ -107,6 +113,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     renderer->drawPolygon(points, 1, c);
   }
 #endif
+  // TODO: calc line color
+  CRGBA lc(0,0,0.8);
+
   for (CHull3D::EdgeIterator pve = delaunay->voronoiEdgesBegin();
          pve != delaunay->voronoiEdgesEnd(); ++pve) {
     const CHull3D::Edge *e = *pve;
@@ -114,9 +123,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     auto *v1 = e->start();
     auto *v2 = e->end  ();
 
-    CRGBA c(0,0,0.8);
-
-    renderer->drawLine(CPoint2D(v1->x(), v1->y()), CPoint2D(v2->x(), v2->y()), 1, c);
+    renderer->drawLine(CPoint2D(v1->x(), v1->y()), CPoint2D(v2->x(), v2->y()), 1, lc);
   }
 }
 

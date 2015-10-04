@@ -1,26 +1,16 @@
-#ifndef CGnuPlotLabel_H
-#define CGnuPlotLabel_H
+#ifndef CGnuPlotLabelObject_H
+#define CGnuPlotLabelObject_H
 
-#include <CGnuPlotAnnotation.h>
+#include <CGnuPlotObject.h>
 #include <CGnuPlotLabelData.h>
 
-class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
+class CGnuPlotPlot;
+
+class CGnuPlotLabelObject : public CGnuPlotPlotObject {
  public:
-  static const char *getName() { return "label"; }
+  CGnuPlotLabelObject(CGnuPlotPlot *plot);
 
-  CGnuPlotLabel(CGnuPlotGroup *group);
-
-  virtual ~CGnuPlotLabel() { }
-
-  CGnuPlotLabel *setData(const CGnuPlotLabel *label) {
-    (void) CGnuPlotGroupAnnotation::setData(label);
-
-    data_  = label->data_;
-
-    return this;
-  }
-
-  CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::LABEL; }
+  virtual ~CGnuPlotLabelObject() { }
 
   const CGnuPlotLabelData &data() const { return data_; }
   void setData(const CGnuPlotLabelData &data) { data_ = data; }
@@ -43,7 +33,7 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
   bool isEnhanced() const { return data_.isEnhanced(); }
   void setEnhanced(bool b) { data_.setEnhanced(b); }
 
-  //---
+  //--
 
   const CHAlignType &getAlign() const { return data_.getAlign(); }
   void setAlign(const CHAlignType &a) { data_.setAlign(a); }
@@ -103,12 +93,8 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
-  void print(std::ostream &os) const;
-
- protected:
+ private:
   CGnuPlotLabelData data_;
 };
-
-typedef std::shared_ptr<CGnuPlotLabel> CGnuPlotLabelP;
 
 #endif

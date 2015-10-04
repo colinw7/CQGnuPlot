@@ -1,14 +1,18 @@
-#ifndef CQGnuPlotLabel_H
-#define CQGnuPlotLabel_H
+#ifndef CQGnuPlotLabelObject_H
+#define CQGnuPlotLabelObject_H
 
-#include <CQGnuPlotAnnotation.h>
-#include <CGnuPlotLabel.h>
+#include <CGnuPlotLabelObject.h>
+#include <CQGnuPlot.h>
 
 #include <QPointF>
 #include <QFont>
 #include <QColor>
 
-class CQGnuPlotLabel : public CQGnuPlotAnnotation, public CGnuPlotLabel {
+using std::string;
+
+class CQGnuPlotPlot;
+
+class CQGnuPlotLabelObject : public QObject, public CGnuPlotLabelObject {
   Q_OBJECT
 
   Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
@@ -37,7 +41,8 @@ class CQGnuPlotLabel : public CQGnuPlotAnnotation, public CGnuPlotLabel {
   Q_PROPERTY(CQGnuPlotEnum::HAlignType align READ getAlign WRITE setAlign)
 
  public:
-  CQGnuPlotLabel(CQGnuPlotGroup *group);
+  CQGnuPlotLabelObject(CQGnuPlotPlot *plot);
+ ~CQGnuPlotLabelObject();
 
   QString getText() const;
   void setText(const QString &s);
@@ -54,7 +59,7 @@ class CQGnuPlotLabel : public CQGnuPlotAnnotation, public CGnuPlotLabel {
   QPointF getOffset() const;
   void setOffset(const QPointF &p);
 
-  double getAngle() const { return CGnuPlotLabel::getAngle().getValue(0); }
+  double getAngle() const { return CGnuPlotLabelObject::getAngle().getValue(0); }
 
   QColor color() const;
   void setColor(const QColor &c);

@@ -2,14 +2,17 @@
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
+
+#include <CGnuPlotArrowObject.h>
 #include <CGnuPlotBarObject.h>
 #include <CGnuPlotBubbleObject.h>
 #include <CGnuPlotEllipseObject.h>
+#include <CGnuPlotLabelObject.h>
 #include <CGnuPlotPieObject.h>
+#include <CGnuPlotPointObject.h>
 #include <CGnuPlotPolygonObject.h>
 #include <CGnuPlotRectObject.h>
-#include <CGnuPlotPointObject.h>
-#include <CGnuPlotArrowObject.h>
+
 #include <CFontMgr.h>
 
 CGnuPlotDevice::
@@ -146,6 +149,15 @@ createTimeStamp(CGnuPlotGroup *group)
   return new CGnuPlotTimeStamp(group);
 }
 
+//---
+
+CGnuPlotArrowObject *
+CGnuPlotDevice::
+createArrowObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotArrowObject(plot);
+}
+
 CGnuPlotBarObject *
 CGnuPlotDevice::
 createBarObject(CGnuPlotPlot *plot)
@@ -167,11 +179,25 @@ createEllipseObject(CGnuPlotPlot *plot)
   return new CGnuPlotEllipseObject(plot);
 }
 
+CGnuPlotLabelObject *
+CGnuPlotDevice::
+createLabelObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotLabelObject(plot);
+}
+
 CGnuPlotPieObject *
 CGnuPlotDevice::
 createPieObject(CGnuPlotPlot *plot)
 {
   return new CGnuPlotPieObject(plot);
+}
+
+CGnuPlotPointObject *
+CGnuPlotDevice::
+createPointObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotPointObject(plot);
 }
 
 CGnuPlotPolygonObject *
@@ -188,19 +214,7 @@ createRectObject(CGnuPlotPlot *plot)
   return new CGnuPlotRectObject(plot);
 }
 
-CGnuPlotPointObject *
-CGnuPlotDevice::
-createPointObject(CGnuPlotPlot *plot)
-{
-  return new CGnuPlotPointObject(plot);
-}
-
-CGnuPlotArrowObject *
-CGnuPlotDevice::
-createArrowObject(CGnuPlotPlot *plot)
-{
-  return new CGnuPlotArrowObject(plot);
-}
+//---
 
 bool
 CGnuPlotDevice::

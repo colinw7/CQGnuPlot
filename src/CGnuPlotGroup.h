@@ -267,7 +267,10 @@ class CGnuPlotGroup {
   const CGnuPlotNewHistogramDatas &newHistogramDatas() const { return newHistogramDatas_; }
   void setNewHistogramDatas(const CGnuPlotNewHistogramDatas &v) { newHistogramDatas_ = v; }
 
-  const CGnuPlotNewHistogramData &newHistogramData(int i) const { return newHistogramDatas_[i]; }
+  const CGnuPlotNewHistogramData &newHistogramData(int i) const {
+    assert(i >= 0 && i < int(newHistogramDatas_.size()));
+    return newHistogramDatas_[i];
+  }
 
   void setHistogramDatas(const CGnuPlotHistogramData &data,
                          const CGnuPlotNewHistogramDatas &newDatas);

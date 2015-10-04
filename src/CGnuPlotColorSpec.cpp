@@ -81,16 +81,12 @@ calcColor(CGnuPlotGroup *group, double x) const
     return c.rgba();
   }
   else if (isPaletteVariable()) {
-#if 0
-    double x1 = CGnuPlotUtil::map(x, group->getBBox().getXMin(), group->getBBox().getXMax(), 0, 1);
-
-    return group->palette()->getColor(x1);
-#else
-    //return CGnuPlotStyleInst->indexColor(int(x) + 1);
     const CGnuPlotColorBoxP &cb = group->colorBox();
 
     return cb->valueToColor(x).rgba();
-#endif
+  }
+  else if (isRGB()) {
+    return c_;
   }
   else
     return CRGBA(0,0,0);

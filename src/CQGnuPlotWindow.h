@@ -20,6 +20,7 @@ class CQCursor;
 
 class QLabel;
 class QTimer;
+class QLineEdit;
 
 class CQGnuPlotWindow : public CGnuPlotWindow {
  public:
@@ -132,6 +133,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
  public slots:
   void addProperties();
 
+  void searchProperties();
+
  private:
   void paintPlot(CGnuPlotPlot *plot);
 
@@ -171,6 +174,7 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   CQGnuPlotRenderer* renderer_     { 0 };
   CQGnuPlotCanvas*   canvas_       { 0 };
   CQPropertyTree*    tree_         { 0 };
+  QLineEdit*         edit_         { 0 };
   RealEdits          redits_;
   IntegerEdits       iedits_;
   RealSliders        rsliders_;

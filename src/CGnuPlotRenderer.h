@@ -3,11 +3,16 @@
 
 #include <CGnuPlot.h>
 #include <CGnuPlotTextRenderer.h>
+#include <CGnuPlotFill.h>
+#include <CGnuPlotStroke.h>
+#include <CGnuPlotTextRenderer.h>
 #include <CLineDash.h>
 #include <CBBox2D.h>
 #include <CFont.h>
 
 class CGnuPlotWindow;
+class CGnuPlotFill;
+class CGnuPlotStroke;
 
 class CGnuPlotRenderer : public CGnuPlotTextRenderer {
  public:
@@ -55,7 +60,7 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   bool reverseY() const { return reverseY_; }
   void setReverse(bool reverseX, bool reverseY) { reverseX_ = reverseX; reverseY_ = reverseY; }
 
-  virtual bool isPseudo() const { return false; }
+  virtual bool isPseudo() const override { return false; }
 
   virtual bool isInside(const CPoint2D &) const { return true; }
 
@@ -63,8 +68,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   //---
 
-  virtual CFontPtr getFont() const { return font_; }
-  virtual void setFont(CFontPtr font);
+  virtual CFontPtr getFont() const override { return font_; }
+  virtual void setFont(const CFontPtr &font) override;
 
   virtual double fontSize() const;
   virtual void setFontSize(double s);
@@ -104,10 +109,10 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   virtual void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3,
                           const CPoint2D &p4, double width, const CRGBA &c) = 0;
 
-  virtual void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) = 0;
+  virtual void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) override = 0;
 
   virtual void drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
-                               CHAlignType halign, CVAlignType valign, const CRGBA &c) = 0;
+                               CHAlignType halign, CVAlignType valign, const CRGBA &c) override = 0;
 
   virtual void drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
                             double angle2, double width, const CRGBA &c) = 0;
@@ -149,10 +154,28 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void windowToPixel(const CPoint2D &w, CPoint2D &p);
   void pixelToWindow(const CPoint2D &p, CPoint2D &w);
 
-  void windowToPixel(double wx, double wy, double *px, double *py);
-  void pixelToWindow(double px, double py, double *wx, double *wy);
+  void windowToPixel(double wx, double wy, double *px, double *py) override;
+  void pixelToWindow(double px, double py, double *wx, double *wy) override;
 
   void pixelToWindowNoMargin(double px, double py, double *wx, double *wy);
+
+  //---
+
+  void fillClippedPolygon(const std::vector<CPoint3D> &points, const CGnuPlotFill &fill);
+  void fillClippedPolygon(const std::vector<CPoint2D> &points, const CGnuPlotFill &fill);
+  void fillPolygon(const std::vector<CPoint3D> &points, const CGnuPlotFill &fill);
+  void fillPolygon(const std::vector<CPoint2D> &points, const CGnuPlotFill &fill);
+
+  void fillRect(const CBBox2D &rect, const CGnuPlotFill &fill);
+
+  //---
+
+  void strokeClippedPolygon(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke);
+  void strokeClippedPolygon(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke);
+  void strokePolygon(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke);
+  void strokePolygon(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke);
+
+void strokeRect(const CBBox2D &rect, const CGnuPlotStroke &stroke);
 
   //---
 
@@ -163,18 +186,20 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   void drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w,
                        const COptPoint2D &o=COptPoint2D());
+  void fillRotatedRect(const CBBox2D &rect, double a, const CRGBA &c,
+                       const COptPoint2D &o=COptPoint2D());
 
   void fillEllipse(const CBBox2D &rect, const CRGBA &c);
   void drawEllipse(const CBBox2D &rect, const CRGBA &c, double w,
                    const CLineDash &dash=CLineDash());
 
+  void fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c);
   void fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c);
-  void drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c,
-                   const CLineDash &dash);
 
   void drawClippedPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c,
                           const CLineDash &dash);
-  void fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c);
+  void drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c,
+                   const CLineDash &dash);
 
   void patternClippedPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern pat,
                              const CRGBA &fg, const CRGBA &bg);
@@ -186,6 +211,13 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   void drawEllipse(const CPoint3D &p, double dx, double ry, double a,
                    const CRGBA &c, double w, const CLineDash &dash=CLineDash());
+
+  void calcTextRectAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced,
+                           CHAlignType halign, CVAlignType valign, double a,
+                           CBBox2D &bbox, CBBox2D &rbbox);
+
+  void drawTextAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced,
+                       CHAlignType halign, CVAlignType valign, const CRGBA &c, double a);
 
   void drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
                         CVAlignType valign, double y_offset, const std::string &str,

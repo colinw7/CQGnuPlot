@@ -28,7 +28,8 @@ getPoint(CGnuPlotRenderer *renderer, double x, double y, double z) const
   else if (systemX_ == CGnuPlotTypes::CoordSys::GRAPH) {
     const CBBox2D &range = renderer->range();
 
-    x = CGnuPlotUtil::map(x, 0, 1, range.getXMin(), range.getXMax());
+    if (range.isSet())
+      x = CGnuPlotUtil::map(x, 0, 1, range.getXMin(), range.getXMax());
   }
   else if (systemX_ == CGnuPlotTypes::CoordSys::SCREEN) {
     double px1, py1, px2, py2;
@@ -50,7 +51,8 @@ getPoint(CGnuPlotRenderer *renderer, double x, double y, double z) const
   else if (systemY_ == CGnuPlotTypes::CoordSys::GRAPH) {
     const CBBox2D &range = renderer->range();
 
-    y = CGnuPlotUtil::map(y, 0, 1, range.getYMin(), range.getYMax());
+    if (range.isSet())
+      y = CGnuPlotUtil::map(y, 0, 1, range.getYMin(), range.getYMax());
   }
   else if (systemY_ == CGnuPlotTypes::CoordSys::SCREEN) {
     double px1, py1, px2, py2;

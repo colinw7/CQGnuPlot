@@ -155,9 +155,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CRGBA c1 = c;
 
     if (isCalcColor && valueNum < reals.size()) {
-      double x = reals[valueNum++];
+      double z = reals[valueNum++];
 
-      c1 = lineStyle.calcColor(plot, x);
+      if (renderer->isPseudo())
+        renderer->setCBValue(z);
+      else
+        c1 = lineStyle.calcColor(plot, z);
     }
 
     if (! renderer->isPseudo() && lineStyle.isTipPoints()) {

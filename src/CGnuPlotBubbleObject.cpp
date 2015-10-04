@@ -25,11 +25,23 @@ CGnuPlotTipData
 CGnuPlotBubbleObject::
 tip() const
 {
+  CGnuPlotTipData tip;
+
+  tip.setXStr(name_);
+  tip.setYStr(CStrUtil::strprintf("%g", value_));
+
   CPoint2D d(xr_, yr_);
 
   CBBox2D rect(c_ - d, c_ + d);
 
-  return CGnuPlotTipData(name_, rect);
+  tip.setRect(rect);
+
+  CRGBA c = color_.getValue(CRGBA(0,0,0));
+
+  tip.setBorderColor(c);
+  tip.setXColor(c);
+
+  return tip;
 }
 
 void
@@ -41,7 +53,7 @@ draw(CGnuPlotRenderer *renderer) const
   CRGBA fc = color_.getValue(CRGBA(1,1,1));
 
   if (highlighted)
-    fc = CRGBA(1,0,0);
+    fc = fc.getLightRGBA();
 
   renderer->fillEllipse(c_, xr_, yr_, 0, fc);
 
@@ -52,7 +64,7 @@ draw(CGnuPlotRenderer *renderer) const
   CRGBA tc(0, 0, 0);
 
   if (highlighted)
-    tc = CRGBA(1,0,0);
+    tc = CRGBA(1, 1, 1);
 
   renderer->drawHAlignedText(c_, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0, name_, tc);
 

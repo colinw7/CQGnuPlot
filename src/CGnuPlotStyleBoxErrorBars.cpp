@@ -13,6 +13,8 @@ void
 CGnuPlotStyleBoxErrorBars::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
   const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
@@ -24,7 +26,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   double y2 = std::max(0.0, ymin);
 
-  //CRGBA lc = CRGBA(0,0,0);
+  CRGBA lc = lineStyle.calcColor(group, CRGBA(1,0,0));
   CRGBA fc = (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
   if (! renderer->isPseudo())
@@ -84,17 +86,25 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       dx = reals[4];
     }
 
-    CRGBA fc1 = fc;
+    CRGBA lc1 = lc;
 
     if (colorVal.isValid()) {
-      fc1 = lineStyle.calcColor(plot, colorVal.getValue());
+      if (renderer->isPseudo())
+        renderer->setCBValue(colorVal.getValue());
+      else
+        lc1 = lineStyle.calcColor(plot, colorVal.getValue());
     }
 
     CBBox2D bbox(x - dx/2, y2, x + dx/2, y);
 
-    CRGBA fc2 = fc1;
+    CRGBA fc1 = fc;
 
-    fc2.setAlpha(0.5); // ???
+    //fc1.setAlpha(0.5); // ???
+
+    CPoint2D p1(x, yl);
+    CPoint2D p2(x, yh);
+
+    double lw = lineStyle.calcWidth();
 
     if (! renderer->isPseudo()) {
       CGnuPlotBarObject *bar = plot->barObjects()[i];
@@ -103,28 +113,39 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       bar->setValues(x, y);
 
+      CGnuPlotBarObject::EndBar endBar(p1, p2);
+
+      endBar.setStartLine(true);
+      endBar.setEndLine  (true);
+      endBar.setLineWidth(lw);
+      endBar.setLineColor(lc1);
+      endBar.setEndWidth (dx/2);
+
+      bar->clearEndBars();
+
+      bar->addEndBar(endBar);
+
       if (! bar->isInitialized()) {
         bar->setFillType   (fillStyle.style());
         bar->setFillPattern(fillStyle.pattern());
-        bar->setFillColor  (fc2);
+        bar->setFillColor  (fc1);
 
         bar->setBorder   (fillStyle.hasBorder());
-        bar->setLineColor(fc1);
+        bar->setLineColor(lc1);
 
         bar->setInitialized(true);
       }
     }
-    else
-      renderer->drawRect(bbox, fc1, 1);
+    else {
+      renderer->drawRect(bbox, lc1, 1);
 
-    double lw = lineStyle.calcWidth();
+      renderer->drawClipLine(p1, p2, lw, lc1);
 
-    renderer->drawClipLine(CPoint2D(x, yl), CPoint2D(x, yh), lw, fc1);
+      double w = dx/2;
 
-    double w = dx/2;
-
-    renderer->drawClipLine(CPoint2D(x - w/2, yl), CPoint2D(x + w/2, yl), lw, fc1);
-    renderer->drawClipLine(CPoint2D(x - w/2, yh), CPoint2D(x + w/2, yh), lw, fc1);
+      renderer->drawClipLine(p1 - CPoint2D(w/2, 0), p1 + CPoint2D(w/2, 0), lw, lc1);
+      renderer->drawClipLine(p2 - CPoint2D(w/2, 0), p2 + CPoint2D(w/2, 0), lw, lc1);
+    }
 
     ++i;
   }
@@ -133,6 +154,33 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     for (const auto &bar : plot->barObjects())
       bar->draw(renderer);
   }
+}
+
+void
+CGnuPlotStyleBoxErrorBars::
+drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
+{
+  CGnuPlotGroup *group = plot->group();
+
+  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+
+  CFontPtr font = renderer->getFont();
+
+  double font_size = font->getCharAscent() + font->getCharDescent();
+
+  double h = renderer->pixelHeightToWindowHeight(font_size - 4);
+
+  CBBox2D hbbox(p1.x, p1.y - h/2, p2.x, p1.y + h/2);
+
+  const CRGBA &lc = lineStyle.calcColor(group, CRGBA(0,0,0));
+  double       lw = 1;
+
+  if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
+    renderer->patternRect(hbbox, plot->fillStyle().pattern(), lc, CRGBA(1,1,1));
+  else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
+    renderer->fillRect(hbbox, lineStyle.calcColor(group, CRGBA(1,1,1)));
+
+  renderer->drawRect(hbbox, lc, lw);
 }
 
 CBBox2D

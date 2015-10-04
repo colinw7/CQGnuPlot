@@ -28,20 +28,21 @@ updateDefaultValues(CGnuPlotRenderer *renderer, double lm, double bm, double rm,
       tmargin_.setDefValue(tm/h + 1); tmargin_.setScreen(false);
     }
   }
+
+  CFontPtr font = renderer->getFont();
+
+  fw_ = font->getStringWidth("X");
+  fh_ = font->getCharHeight();
 }
 
 //------
 
 double
 CGnuPlotMarginValue::
-xValue(CGnuPlotRenderer *renderer) const
+xValue(CGnuPlotRenderer *renderer, const CGnuPlotMargin &margin) const
 {
   if (! isScreen()) {
-    CFontPtr font = renderer->getFont();
-
-    double w = font->getStringWidth("X");
-
-    return value().getValue(defValue())*w;
+    return value().getValue(defValue())*margin.fontWidth();
   }
   else {
     double px1, py1, px2, py2;
@@ -55,14 +56,10 @@ xValue(CGnuPlotRenderer *renderer) const
 
 double
 CGnuPlotMarginValue::
-yValue(CGnuPlotRenderer *renderer) const
+yValue(CGnuPlotRenderer *renderer, const CGnuPlotMargin &margin) const
 {
   if (! isScreen()) {
-    CFontPtr font = renderer->getFont();
-
-    double h = font->getCharHeight();
-
-    return value().getValue(defValue())*h;
+    return value().getValue(defValue())*margin.fontHeight();
   }
   else {
     double px1, py1, px2, py2;

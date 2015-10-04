@@ -836,7 +836,7 @@ drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
 
 void
 CQGnuPlotRenderer::
-setFont(CFontPtr font)
+setFont(const CFontPtr &font)
 {
   CGnuPlotRenderer::setFont(font);
 

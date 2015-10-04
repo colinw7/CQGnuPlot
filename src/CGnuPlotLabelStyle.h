@@ -2,11 +2,13 @@
 #define CGnuPlotLabelStyle_H
 
 #include <CGnuPlotTypes.h>
+#include <CGnuPlotColorSpec.h>
 #include <CFont.h>
 
 class CGnuPlotLabelStyle {
  public:
-  typedef CGnuPlotTypes::SymbolType SymbolType;
+  typedef CGnuPlotTypes::SymbolType   SymbolType;
+  typedef COptValT<CGnuPlotColorSpec> OptColorSpec;
 
  public:
   CGnuPlotLabelStyle() { }
@@ -47,18 +49,25 @@ class CGnuPlotLabelStyle {
 
   //---
 
+  const OptColorSpec &textColor() const { return textColor_; }
+  void setTextColor(const CGnuPlotColorSpec &c) { textColor_ = c; }
+  void unsetTextColor() { textColor_.setInvalid(); }
+
+  //---
+
   bool hasHypertext() const { return hypertext_; }
   void setHypertext(bool b) { hypertext_ = b; }
 
  protected:
-  COptPoint2D offset_;
-  CHAlignType align_     { CHALIGN_TYPE_LEFT };
-  CFontPtr    font_;
-  bool        showPoint_ { false };
-  int         pointType_ { -1 };
-  double      pointSize_ { -1 };
-  double      lineWidth_ { 1 };
-  bool        hypertext_ { false };
+  COptPoint2D  offset_;
+  CHAlignType  align_     { CHALIGN_TYPE_CENTER };
+  CFontPtr     font_;
+  bool         showPoint_ { false };
+  int          pointType_ { -1 };
+  double       pointSize_ { -1 };
+  double       lineWidth_ { 1 };
+  OptColorSpec textColor_;
+  bool         hypertext_ { false };
 };
 
 #endif

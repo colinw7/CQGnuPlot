@@ -12,9 +12,11 @@ void
 CGnuPlotStyleErrorBars::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
 
   typedef std::map<std::string,int> IndexMap;
 
@@ -68,10 +70,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       (void) point.getValue(6, yh);
 
       if (point.getNumValues() >= 6) {
-        double x;
+        double z;
 
-        if (point.getValue(7, x))
-          c = lineStyle.calcColor(plot, x);
+        if (point.getValue(7, z)) {
+          if (renderer->isPseudo())
+            renderer->setCBValue(z);
+          else
+            c = lineStyle.calcColor(plot, z);
+        }
       }
     }
     // x y xdelta ydelta
@@ -88,10 +94,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       yh = y + dy;
 
       if (point.getNumValues() >= 4) {
-        double x;
+        double z;
 
-        if (point.getValue(5, x))
-          c = lineStyle.calcColor(plot, x);
+        if (point.getValue(5, z)) {
+          if (renderer->isPseudo())
+            renderer->setCBValue(z);
+          else
+            c = lineStyle.calcColor(plot, z);
+        }
       }
     }
     // x y delta
@@ -117,6 +127,26 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     renderer->drawClipLine(CPoint2D(x - pw, yl), CPoint2D(x + pw, yl), 1.0, c);
     renderer->drawClipLine(CPoint2D(x - pw, yh), CPoint2D(x + pw, yh), 1.0, c);
   }
+}
+
+void
+CGnuPlotStyleErrorBars::
+drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
+{
+  CGnuPlotGroup *group = plot->group();
+
+  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+
+  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
+
+  renderer->drawLine(p1, p2, lineStyle.calcWidth(), c, lineStyle.calcDash());
+
+  double ph = renderer->pixelHeightToWindowHeight(4);
+
+  CPoint2D d1(0, -ph), d2(0, ph);
+
+  renderer->drawLine(p1 + d1, p1 + d2, lineStyle.calcWidth(), c, lineStyle.calcDash());
+  renderer->drawLine(p2 + d1, p2 + d2, lineStyle.calcWidth(), c, lineStyle.calcDash());
 }
 
 CBBox2D

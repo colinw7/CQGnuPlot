@@ -1,6 +1,8 @@
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotUtil.h>
+#include <CGnuPlotFill.h>
+#include <CGnuPlotStroke.h>
 
 #include <CFontMgr.h>
 #include <CMathGeom2D.h>
@@ -18,7 +20,7 @@ CGnuPlotRenderer::
 
 void
 CGnuPlotRenderer::
-setFont(CFontPtr font)
+setFont(const CFontPtr &font)
 {
   font_ = font;
 }
@@ -37,6 +39,78 @@ setFontSize(double s)
   font_ = font_->dup(font_->getFamily(), font_->getStyle(), s);
 }
 
+//---
+
+void
+CGnuPlotRenderer::
+fillClippedPolygon(const std::vector<CPoint3D> &points, const CGnuPlotFill &fill)
+{
+  std::vector<CPoint2D> points1;
+
+  for (const auto &p : points) {
+    CPoint2D p1 = transform(p);
+
+    points1.push_back(p1);
+  }
+
+  fillClippedPolygon(points1, fill);
+}
+
+void
+CGnuPlotRenderer::
+fillClippedPolygon(const std::vector<CPoint2D> &points, const CGnuPlotFill &fill)
+{
+  if (! isPseudo()) {
+    std::vector<CPoint2D> ipoints;
+
+    if (CMathGeom2D::IntersectPolygon(points, clip(), ipoints))
+      fillPolygon(ipoints, fill);
+  }
+  else
+    fillPolygon(points, fill);
+}
+
+void
+CGnuPlotRenderer::
+fillPolygon(const std::vector<CPoint3D> &points, const CGnuPlotFill &fill)
+{
+  std::vector<CPoint2D> points1;
+
+  for (const auto &p : points) {
+    CPoint2D p1 = transform(p);
+
+    points1.push_back(p1);
+  }
+
+  fillPolygon(points1, fill);
+}
+
+void
+CGnuPlotRenderer::
+fillPolygon(const std::vector<CPoint2D> &points, const CGnuPlotFill &fill)
+{
+  if      (fill.type() == CGnuPlotTypes::FillType::PATTERN) {
+    patternPolygon(points, fill.pattern(), fill.color(), fill.background());
+  }
+  else if (fill.type() == CGnuPlotTypes::FillType::SOLID) {
+    fillPolygon(points, fill.color());
+  }
+}
+
+void
+CGnuPlotRenderer::
+fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
+{
+  if (! isPseudo()) {
+    std::vector<CPoint2D> ipoints;
+
+    if (CMathGeom2D::IntersectPolygon(points, clip(), ipoints))
+      fillPolygon(ipoints, c);
+  }
+  else
+    fillPolygon(points, c);
+}
+
 void
 CGnuPlotRenderer::
 fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c)
@@ -52,9 +126,11 @@ fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c)
   fillPolygon(points1, c);
 }
 
+//---
+
 void
 CGnuPlotRenderer::
-drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c, const CLineDash &dash)
+strokeClippedPolygon(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke)
 {
   std::vector<CPoint2D> points1;
 
@@ -64,7 +140,44 @@ drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c, cons
     points1.push_back(p1);
   }
 
-  drawPolygon(points1, lw, c, dash);
+  strokeClippedPolygon(points1, stroke);
+}
+
+void
+CGnuPlotRenderer::
+strokeClippedPolygon(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
+{
+  if (! isPseudo()) {
+    std::vector<CPoint2D> ipoints;
+
+    if (CMathGeom2D::IntersectPolygon(points, clip(), ipoints))
+      strokePolygon(ipoints, stroke);
+  }
+  else
+    strokePolygon(points, stroke);
+}
+
+void
+CGnuPlotRenderer::
+strokePolygon(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke)
+{
+  std::vector<CPoint2D> points1;
+
+  for (const auto &p : points) {
+    CPoint2D p1 = transform(p);
+
+    points1.push_back(p1);
+  }
+
+  strokePolygon(points1, stroke);
+}
+
+void
+CGnuPlotRenderer::
+strokePolygon(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
+{
+  if (stroke.isEnabled())
+    drawPolygon(points, stroke.width(), stroke.color(), stroke.lineDash());
 }
 
 void
@@ -84,16 +197,17 @@ drawClippedPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c
 
 void
 CGnuPlotRenderer::
-fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
+drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c, const CLineDash &dash)
 {
-  if (! isPseudo()) {
-    std::vector<CPoint2D> ipoints;
+  std::vector<CPoint2D> points1;
 
-    if (CMathGeom2D::IntersectPolygon(points, clip(), ipoints))
-      fillPolygon(ipoints, c);
+  for (const auto &p : points) {
+    CPoint2D p1 = transform(p);
+
+    points1.push_back(p1);
   }
-  else
-    fillPolygon(points, c);
+
+  drawPolygon(points1, lw, c, dash);
 }
 
 void
@@ -129,6 +243,20 @@ drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w)
     drawRect(rect, c, w);
 }
 
+//----
+
+void
+CGnuPlotRenderer::
+fillRect(const CBBox2D &rect, const CGnuPlotFill &fill)
+{
+  if      (fill.type() == CGnuPlotTypes::FillType::PATTERN) {
+    patternRect(rect, fill.pattern(), fill.color(), fill.background());
+  }
+  else if (fill.type() == CGnuPlotTypes::FillType::SOLID) {
+    fillRect(rect, fill.color());
+  }
+}
+
 void
 CGnuPlotRenderer::
 fillClippedRect(const CBBox2D &rect, const CRGBA &c)
@@ -162,6 +290,19 @@ patternClippedRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
     patternRect(rect, pattern, fg, bg);
 }
 
+//---
+
+void
+CGnuPlotRenderer::
+strokeRect(const CBBox2D &rect, const CGnuPlotStroke &stroke)
+{
+  if (stroke.isEnabled()) {
+    drawRect(rect, stroke.color(), stroke.width());
+  }
+}
+
+//---
+
 void
 CGnuPlotRenderer::
 drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,
@@ -193,6 +334,22 @@ drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w, const C
   drawLine(p2, p3, w, c);
   drawLine(p3, p4, w, c);
   drawLine(p4, p1, w, c);
+}
+
+void
+CGnuPlotRenderer::
+fillRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, const COptPoint2D &o)
+{
+  CPoint2D o1 = (o.isValid() ? o.getValue() : rect.getCenter());
+
+  CPoint2D p1 = rotatePoint(rect.getLL(), a, o1);
+  CPoint2D p2 = rotatePoint(rect.getLR(), a, o1);
+  CPoint2D p3 = rotatePoint(rect.getUR(), a, o1);
+  CPoint2D p4 = rotatePoint(rect.getUL(), a, o1);
+
+  std::vector<CPoint2D> points({p1, p2, p3, p4});
+
+  fillPolygon(points, c);
 }
 
 bool
@@ -249,6 +406,89 @@ drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
   CPoint2D pos1 = transform(pos);
 
   drawHAlignedText(pos1, halign, x_offset, valign, y_offset, str, c, a);
+}
+
+void
+CGnuPlotRenderer::
+calcTextRectAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced, CHAlignType halign,
+                    CVAlignType valign, double a, CBBox2D &bbox, CBBox2D &rbbox)
+{
+  if (str == "")
+    return;
+
+  //---
+
+  CPoint2D pos1;
+
+  windowToRegion(pos.x, pos.y, &pos1.x, &pos1.y);
+
+  //---
+
+  CBBox2D        range  = this->range();
+//CGnuPlotMargin margin = this->margin();
+
+  this->setRange(CBBox2D(0, 0, 1, 1));
+//this->resetMargin();
+
+  CGnuPlotText text(str);
+
+  text.setEnhanced(enhanced);
+
+  text.calcRectAtPoint(this, pos1, halign, valign, a, bbox, rbbox);
+
+  this->setRange (range);
+//this->setMargin(margin);
+
+  //---
+
+  CPoint2D rpos1, rpos2;
+
+  regionToWindow(bbox.getXMin(), bbox.getYMin(), &rpos1.x, &rpos1.y);
+  regionToWindow(bbox.getXMax(), bbox.getYMax(), &rpos2.x, &rpos2.y);
+
+  bbox = CBBox2D(rpos1, rpos2);
+
+  regionToWindow(rbbox.getXMin(), rbbox.getYMin(), &rpos1.x, &rpos1.y);
+  regionToWindow(rbbox.getXMax(), rbbox.getYMax(), &rpos2.x, &rpos2.y);
+
+  rbbox = CBBox2D(rpos1, rpos2);
+}
+
+void
+CGnuPlotRenderer::
+drawTextAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced, CHAlignType halign,
+                CVAlignType valign, const CRGBA &c, double angle)
+{
+  if (isPseudo()) {
+    drawPoint(pos, c);
+    return;
+  }
+
+  if (str == "")
+    return;
+
+  //---
+
+  CPoint2D pos1;
+
+  windowToRegion(pos.x, pos.y, &pos1.x, &pos1.y);
+
+  //---
+
+  CBBox2D        range  = this->range();
+//CGnuPlotMargin margin = this->margin();
+
+  this->setRange(CBBox2D(0, 0, 1, 1));
+//this->resetMargin();
+
+  CGnuPlotText text(str);
+
+  text.setEnhanced(enhanced);
+
+  text.drawAtPoint(this, pos1, halign, valign, c, angle);
+
+  this->setRange (range);
+//this->setMargin(margin);
 }
 
 void
@@ -748,10 +988,10 @@ windowToPixel(double wx, double wy, double *px, double *py)
   double ph = pymax - pymin;
 
   // add margin
-  double lmargin = margin_.left  ().xValue(this);
-  double rmargin = margin_.right ().xValue(this);
-  double tmargin = margin_.top   ().yValue(this);
-  double bmargin = margin_.bottom().yValue(this);
+  double lmargin = margin_.left  ().xValue(this, margin_);
+  double rmargin = margin_.right ().xValue(this, margin_);
+  double tmargin = margin_.top   ().yValue(this, margin_);
+  double bmargin = margin_.bottom().yValue(this, margin_);
 
   pxmin += lmargin; pxmax -= rmargin;
   pymin += tmargin; pymax -= bmargin;
@@ -832,10 +1072,10 @@ pixelToWindowI(double px, double py, double *wx, double *wy, bool margin)
   double lmargin, rmargin, tmargin, bmargin;
 
   if (margin) {
-    lmargin = margin_.left  ().xValue(this);
-    rmargin = margin_.right ().xValue(this);
-    tmargin = margin_.top   ().yValue(this);
-    bmargin = margin_.bottom().yValue(this);
+    lmargin = margin_.left  ().xValue(this, margin_);
+    rmargin = margin_.right ().xValue(this, margin_);
+    tmargin = margin_.top   ().yValue(this, margin_);
+    bmargin = margin_.bottom().yValue(this, margin_);
   }
   else {
     lmargin = 0;

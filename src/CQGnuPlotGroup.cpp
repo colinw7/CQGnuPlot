@@ -171,7 +171,10 @@ mousePress(const QPoint &qp)
     }
   }
 
-  qwindow()->selectObjects(objects);
+  if (! objects.empty()) {
+    qwindow()->selectObjects(objects);
+    return;
+  }
 }
 
 void

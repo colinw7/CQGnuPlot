@@ -51,14 +51,15 @@ class CQGnuPlotDevice : public QObject, public CGnuPlotDevice {
 
   CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group) override;
 
+  CGnuPlotArrowObject   *createArrowObject  (CGnuPlotPlot *plot) override;
   CGnuPlotBarObject     *createBarObject    (CGnuPlotPlot *plot) override;
   CGnuPlotBubbleObject  *createBubbleObject (CGnuPlotPlot *plot) override;
   CGnuPlotEllipseObject *createEllipseObject(CGnuPlotPlot *plot) override;
+  CGnuPlotLabelObject   *createLabelObject  (CGnuPlotPlot *plot) override;
   CGnuPlotPieObject     *createPieObject    (CGnuPlotPlot *plot) override;
   CGnuPlotPolygonObject *createPolygonObject(CGnuPlotPlot *plot) override;
   CGnuPlotRectObject    *createRectObject   (CGnuPlotPlot *plot) override;
   CGnuPlotPointObject   *createPointObject  (CGnuPlotPlot *plot) override;
-  CGnuPlotArrowObject   *createArrowObject  (CGnuPlotPlot *plot) override;
 
   const Objects &objects() const { return objects_; }
 

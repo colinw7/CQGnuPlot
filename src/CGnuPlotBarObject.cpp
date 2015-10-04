@@ -9,6 +9,20 @@ CGnuPlotBarObject(CGnuPlotPlot *plot) :
 {
 }
 
+void
+CGnuPlotBarObject::
+clearEndBars()
+{
+  endBars_.clear();
+}
+
+void
+CGnuPlotBarObject::
+addEndBar(const EndBar &endBar)
+{
+  endBars_.push_back(endBar);
+}
+
 bool
 CGnuPlotBarObject::
 inside(const CGnuPlotTypes::InsideData &data) const
@@ -86,5 +100,29 @@ draw(CGnuPlotRenderer *renderer) const
     }
 
     renderer->drawRect(bbox_, lc, lw);
+  }
+
+  //---
+
+  for (const auto &endBar : endBars_) {
+    renderer->drawClipLine(endBar.start(), endBar.end(),
+                           endBar.lineWidth(), endBar.lineColor());
+
+    double dx = fabs(endBar.start().x - endBar.end().x);
+    double dy = fabs(endBar.start().y - endBar.end().y);
+
+    bool vertical = (dx < dy);
+
+    CPoint2D dp;
+
+    if (vertical)
+      dp = CPoint2D(endBar.endWidth()/2, 0);
+    else
+      dp = CPoint2D(0, endBar.endWidth()/2);
+
+    renderer->drawClipLine(endBar.start() - dp, endBar.start() + dp,
+                           endBar.lineWidth(), endBar.lineColor());
+    renderer->drawClipLine(endBar.end  () - dp, endBar.end  () + dp,
+                           endBar.lineWidth(), endBar.lineColor());
   }
 }

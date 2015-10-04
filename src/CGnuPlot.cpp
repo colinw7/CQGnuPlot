@@ -22,6 +22,7 @@
 #include <CGnuPlotStyleDelaunay.h>
 #include <CGnuPlotStyleDots.h>
 #include <CGnuPlotStyleEllipses.h>
+#include <CGnuPlotStyleErrorBars.h>
 #include <CGnuPlotStyleFilledCurves.h>
 #include <CGnuPlotStyleFinanceBars.h>
 #include <CGnuPlotStyleImage.h>
@@ -47,6 +48,7 @@
 #include <CGnuPlotStyleYErrorBars.h>
 #include <CGnuPlotStyleYErrorLines.h>
 
+#include <CUtf8.h>
 #include <CRange.h>
 #include <CImageLib.h>
 #include <CUnixFile.h>
@@ -526,6 +528,7 @@ addPlotStyles()
   addPlotStyle(PlotStyle::CIRCLES       , new CGnuPlotStyleCircles       );
   addPlotStyle(PlotStyle::DELAUNAY      , new CGnuPlotStyleDelaunay      );
   addPlotStyle(PlotStyle::DOTS          , new CGnuPlotStyleDots          );
+  addPlotStyle(PlotStyle::ERRORBARS     , new CGnuPlotStyleErrorBars     );
   addPlotStyle(PlotStyle::ELLIPSES      , new CGnuPlotStyleEllipses      );
   addPlotStyle(PlotStyle::FILLEDCURVES  , new CGnuPlotStyleFilledCurves  );
   addPlotStyle(PlotStyle::FILLSTEPS     , new CGnuPlotStyleFillSteps     );
@@ -551,10 +554,10 @@ addPlotStyles()
   addPlotStyle(PlotStyle::TREEMAP       , new CGnuPlotStyleTreeMap       );
   addPlotStyle(PlotStyle::VECTORS       , new CGnuPlotStyleVectors       );
   addPlotStyle(PlotStyle::XERRORBARS    , new CGnuPlotStyleXErrorBars    );
-  addPlotStyle(PlotStyle::XYERRORBARS   , new CGnuPlotStyleXYErrorBars   );
-  addPlotStyle(PlotStyle::YERRORBARS    , new CGnuPlotStyleYErrorBars    );
   addPlotStyle(PlotStyle::XERRORLINES   , new CGnuPlotStyleXErrorLines   );
+  addPlotStyle(PlotStyle::XYERRORBARS   , new CGnuPlotStyleXYErrorBars   );
   addPlotStyle(PlotStyle::XYERRORLINES  , new CGnuPlotStyleXYErrorLines  );
+  addPlotStyle(PlotStyle::YERRORBARS    , new CGnuPlotStyleYErrorBars    );
   addPlotStyle(PlotStyle::YERRORLINES   , new CGnuPlotStyleYErrorLines   );
 }
 
@@ -3001,16 +3004,6 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isOneOf({"textcolor", "tc"})) {
-      line.skipNonSpace();
-
-      CGnuPlotColorSpec c;
-
-      if (parseColorSpec(line, c))
-        lineStyle.setLineColor(c); // set text color ?
-
-      found = true;
-    }
     else if (line.isOneOf({"pointtype", "pt"})) {
       line.skipNonSpace();
 
@@ -3183,6 +3176,16 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
         styleData.text .setHAlign(halign); // TODO: remove
         styleData.label.setAlign (halign);
+
+        found = true;
+      }
+      else if (line.isOneOf({"textcolor", "tc"})) {
+        line.skipNonSpace();
+
+        CGnuPlotColorSpec c;
+
+        if (parseColorSpec(line, c))
+          styleData.label.setTextColor(c);
 
         found = true;
       }
@@ -3500,6 +3503,8 @@ parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle)
 
     line.skipSpace();
 
+    CGnuPlotColorSpec c;
+
     if      (line.isString("lt")) {
       if (lineStyle()->ind().isValid())
         fillStyle.setBorderLineType(lineStyle()->ind().getValue());
@@ -3510,8 +3515,6 @@ parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle)
       line.skipNonSpace();
       line.skipSpace();
 
-      CGnuPlotColorSpec c;
-
       if (parseColorSpec(line, c)) {
         fillStyle.unsetBorderLineType();
         fillStyle.setBorderColor(c);
@@ -3520,6 +3523,10 @@ parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle)
     else if (parseInteger(line, lt)) {
       fillStyle.setBorderLineType(lt);
       fillStyle.unsetBorderColor();
+    }
+    else if (parseColorSpec(line, c)) {
+      fillStyle.unsetBorderLineType();
+      fillStyle.setBorderColor(c);
     }
 
     pos = line.pos();
@@ -4733,16 +4740,6 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
-    else if (line.isOneOf({"textcolor", "tc"})) {
-      line.skipNonSpace();
-
-      CGnuPlotColorSpec c;
-
-      if (parseColorSpec(line, c))
-        lineStyle.setLineColor(c); // set text color ?
-
-      found = true;
-    }
     else if (line.isOneOf({"pointtype", "pt"})) {
       line.skipNonSpace();
 
@@ -4917,6 +4914,19 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
         styleData.label.setAlign (halign);
 
         found = true;
+      }
+      else if (line.isOneOf({"textcolor", "tc"})) {
+        line.skipNonSpace();
+
+        CGnuPlotColorSpec c;
+
+        if (parseColorSpec(line, c))
+          styleData.label.setTextColor(c);
+
+        found = true;
+      }
+      else if (line.isString("hypertext")) {
+        styleData.label.setHypertext(true);
       }
       else
         modifiers = false;
@@ -13566,7 +13576,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
           }
         }
         else {
-          int  nskip = 0;
+          int nskip = 0;
 
           // no columns specified so use all columns
           if (usingCols.numCols() == 0) {
@@ -13903,12 +13913,27 @@ fieldToReal(const std::string &str, double &r) const
   if (p1 == p2)
     return false;
 
+  // check for utf spaces
+  std::string cstr(p1);
+  int         pos = 0;
+
+  ulong c = CUtf8::readNextChar(cstr, pos);
+
+  while (c) {
+    if (! CUtf8::isSpace(c))
+      return false;
+
+    c = CUtf8::readNextChar(cstr, pos);
+  }
+
+#if 0
   // allow for extra chars after number (optional)
   // what characters allowed ?
   while (*p1 != 0 && ::isspace(*p1))
     ++p1;
 
   if (*p1 != '\0') return false;
+#endif
 
   return true;
 }

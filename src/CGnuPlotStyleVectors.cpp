@@ -57,9 +57,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CRGBA lc1 = lc;
 
     if (isCalcColor) {
-      double x = reals[pos++];
+      double z = reals[pos++];
 
-      lc1 = lineStyle.calcColor(plot, x);
+      if (renderer->isPseudo())
+        renderer->setCBValue(z);
+      else
+        lc1 = lineStyle.calcColor(plot, z);
     }
 
     CGnuPlotArrowStyle as = arrowStyle;
@@ -113,10 +116,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     for (const auto &arrowData : arrowDatas) {
       CGnuPlotArrowObject *arrow = plot->arrowObjects()[i];
 
-      if (! arrow->isModified()) {
+      if (! arrow->testAndSetUsed()) {
         arrow->setData(arrowData);
-
-        arrow->setModified(true);
       }
       else {
         arrow->setFrom(arrowData.getFrom());

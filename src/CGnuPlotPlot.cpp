@@ -4,14 +4,17 @@
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotAxis.h>
 #include <CGnuPlotStyle.h>
+
+#include <CGnuPlotArrowObject.h>
 #include <CGnuPlotBarObject.h>
 #include <CGnuPlotBubbleObject.h>
 #include <CGnuPlotEllipseObject.h>
+#include <CGnuPlotLabelObject.h>
 #include <CGnuPlotPieObject.h>
+#include <CGnuPlotPointObject.h>
 #include <CGnuPlotPolygonObject.h>
 #include <CGnuPlotRectObject.h>
-#include <CGnuPlotPointObject.h>
-#include <CGnuPlotArrowObject.h>
+
 #include <CGnuPlotDevice.h>
 #include <CGnuPlotBBoxRenderer.h>
 #include <CGnuPlotStyleBase.h>
@@ -26,9 +29,9 @@ int CGnuPlotPlot::nextId_ = 1;
 
 CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
- group_(group), style_(style), id_(nextId_++), lineStyle_(app()),
- contour_(this), barCache_(this), bubbleCache_(this), ellipseCache_(this), pieCache_(this),
- polygonCache_(this), rectCache_(this), pointCache_(this), arrowCache_(this),
+ group_(group), style_(style), id_(nextId_++), lineStyle_(app()), contour_(this),
+ arrowCache_(this), barCache_(this), bubbleCache_(this), ellipseCache_(this), labelCache_(this),
+ pieCache_(this), pointCache_(this), polygonCache_(this), rectCache_(this),
  tableFile_(group->app())
 {
   setSmooth (app()->getSmooth());
@@ -551,6 +554,15 @@ printContourValues() const
   }
 }
 
+//---
+
+void
+CGnuPlotPlot::
+updateArrowCacheSize(int n)
+{
+  arrowCache_.updateSize(n);
+}
+
 void
 CGnuPlotPlot::
 updateBarCacheSize(int n)
@@ -574,9 +586,23 @@ updateEllipseCacheSize(int n)
 
 void
 CGnuPlotPlot::
+updateLabelCacheSize(int n)
+{
+  labelCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
 updatePieCacheSize(int n)
 {
   pieCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
+updatePointCacheSize(int n)
+{
+  pointCache_.updateSize(n);
 }
 
 void
@@ -593,19 +619,7 @@ updateRectCacheSize(int n)
   rectCache_.updateSize(n);
 }
 
-void
-CGnuPlotPlot::
-updatePointCacheSize(int n)
-{
-  pointCache_.updateSize(n);
-}
-
-void
-CGnuPlotPlot::
-updateArrowCacheSize(int n)
-{
-  arrowCache_.updateSize(n);
-}
+//---
 
 void
 CGnuPlotPlot::
@@ -1211,6 +1225,15 @@ setLineStyleId(int ind)
     setLineStyle(*ls);
 }
 
+//-----
+
+CGnuPlotArrowObject *
+CGnuPlotPlot::
+createArrowObject() const
+{
+  return app()->device()->createArrowObject(const_cast<CGnuPlotPlot *>(this));
+}
+
 CGnuPlotBarObject *
 CGnuPlotPlot::
 createBarObject() const
@@ -1232,11 +1255,25 @@ createEllipseObject() const
   return app()->device()->createEllipseObject(const_cast<CGnuPlotPlot *>(this));
 }
 
+CGnuPlotLabelObject *
+CGnuPlotPlot::
+createLabelObject() const
+{
+  return app()->device()->createLabelObject(const_cast<CGnuPlotPlot *>(this));
+}
+
 CGnuPlotPieObject *
 CGnuPlotPlot::
 createPieObject() const
 {
   return app()->device()->createPieObject(const_cast<CGnuPlotPlot *>(this));
+}
+
+CGnuPlotPointObject *
+CGnuPlotPlot::
+createPointObject() const
+{
+  return app()->device()->createPointObject(const_cast<CGnuPlotPlot *>(this));
 }
 
 CGnuPlotPolygonObject *
@@ -1253,19 +1290,7 @@ createRectObject() const
   return app()->device()->createRectObject(const_cast<CGnuPlotPlot *>(this));
 }
 
-CGnuPlotPointObject *
-CGnuPlotPlot::
-createPointObject() const
-{
-  return app()->device()->createPointObject(const_cast<CGnuPlotPlot *>(this));
-}
-
-CGnuPlotArrowObject *
-CGnuPlotPlot::
-createArrowObject() const
-{
-  return app()->device()->createArrowObject(const_cast<CGnuPlotPlot *>(this));
-}
+//------
 
 void
 CGnuPlotPlot::
@@ -1298,8 +1323,10 @@ calcXRange(double *xmin, double *xmax) const
       if (renderBBox(brenderer)) {
         CBBox2D bbox = brenderer.bbox();
 
-        th->xmin_.updateMin(bbox.getLeft ());
-        th->xmax_.updateMax(bbox.getRight());
+        if (bbox.isSet()) {
+          th->xmin_.updateMin(bbox.getLeft ());
+          th->xmax_.updateMax(bbox.getRight());
+        }
 
         th->cbmin_.updateMin(brenderer.cbMin());
         th->cbmax_.updateMin(brenderer.cbMax());
@@ -1356,8 +1383,10 @@ calcYRange(double *ymin, double *ymax) const
       if (renderBBox(brenderer)) {
         CBBox2D bbox = brenderer.bbox();
 
-        th->ymin_.updateMin(bbox.getBottom());
-        th->ymax_.updateMax(bbox.getTop   ());
+        if (bbox.isSet()) {
+          th->ymin_.updateMin(bbox.getBottom());
+          th->ymax_.updateMax(bbox.getTop   ());
+        }
       }
       else {
         for (const auto &p : getPoints2D()) {
@@ -1454,8 +1483,10 @@ calcBoundedYRange(double *ymin, double *ymax) const
       if (renderBBox(brenderer)) {
         CBBox2D bbox = brenderer.bbox();
 
-        th->bymin_.updateMin(bbox.getBottom());
-        th->bymax_.updateMax(bbox.getTop   ());
+        if (bbox.isSet()) {
+          th->bymin_.updateMin(bbox.getBottom());
+          th->bymax_.updateMax(bbox.getTop   ());
+        }
       }
       else {
         for (const auto &p : getPoints2D()) {

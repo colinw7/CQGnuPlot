@@ -70,8 +70,14 @@ class CGnuPlotText {
 
   const std::string &etext() const { return estr_; }
 
-  CBBox2D drawAtPoint(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, CHAlignType halign,
-                      CVAlignType valign, const CRGBA &c, double a) const;
+  bool isEnhanced() const { return enhanced_; }
+  void setEnhanced(bool b);
+
+  void drawAtPoint(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, CHAlignType halign,
+                   CVAlignType valign, const CRGBA &c, double a) const;
+
+  void calcRectAtPoint(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, CHAlignType halign,
+                       CVAlignType valign, double a, CBBox2D &bbox, CBBox2D &rbbox) const;
 
   void draw(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, const CRGBA &c, double a) const;
 
@@ -112,6 +118,7 @@ class CGnuPlotText {
 
   std::string str_;
   std::string estr_;
+  bool        enhanced_ { true };
   PosParts    parts_;
 };
 

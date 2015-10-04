@@ -4,6 +4,7 @@
 #include <CGnuPlotTypes.h>
 
 class CGnuPlotRenderer;
+class CGnuPlotMargin;
 
 class CGnuPlotMarginValue {
  public:
@@ -25,8 +26,8 @@ class CGnuPlotMarginValue {
   double defValue() const { return defValue_; }
   void setDefValue(double r) { defValue_ = r; }
 
-  double xValue(CGnuPlotRenderer *renderer) const;
-  double yValue(CGnuPlotRenderer *renderer) const;
+  double xValue(CGnuPlotRenderer *renderer, const CGnuPlotMargin &margin) const;
+  double yValue(CGnuPlotRenderer *renderer, const CGnuPlotMargin &margin) const;
 
   void show(std::ostream &os, const std::string &id) {
     os << id << " is ";
@@ -86,11 +87,15 @@ class CGnuPlotMargin {
   void showRight (std::ostream &os) { rmargin_.show(os, "rmargin"); }
   void showTop   (std::ostream &os) { tmargin_.show(os, "tmargin"); }
 
+  double fontWidth () const { return fw_; }
+  double fontHeight() const { return fh_; }
+
  private:
   CGnuPlotMarginValue lmargin_;
   CGnuPlotMarginValue bmargin_;
   CGnuPlotMarginValue rmargin_;
   CGnuPlotMarginValue tmargin_;
+  double              fw_, fh_;
 };
 
 #endif

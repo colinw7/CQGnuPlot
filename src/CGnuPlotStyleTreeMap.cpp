@@ -109,7 +109,7 @@ class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
       rect->setLineColor(CRGBA(0,0,0));
       rect->setLineWidth(0);
       rect->setText     (text);
-      rect->setTipText  (text + "\n" + CStrUtil::toString(node->size()));
+      rect->setTipText  (text + " : " + CStrUtil::toString(node->size()));
 
       ++ind_;
     }
@@ -200,5 +200,5 @@ CBBox2D
 CGnuPlotStyleTreeMap::
 fit(CGnuPlotPlot *)
 {
-  return CBBox2D(-1, -1, 1, 1);
+  return CBBox2D(0, 0, 1, 1);
 }

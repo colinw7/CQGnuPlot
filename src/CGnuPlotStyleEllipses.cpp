@@ -12,19 +12,22 @@ void
 CGnuPlotStyleEllipses::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  const CGnuPlotEllipseStyle &ellipseStyle = plot->ellipseStyle();
+  CGnuPlotGroup *group = plot->group();
 
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  const CGnuPlotEllipseStyle &ellipseStyle = plot->ellipseStyle();
+  const CGnuPlotLineStyle    &lineStyle    = plot->lineStyle();
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(group, CRGBA(1,0,0));
   CRGBA fc = lc;
 
   if (plot->fillStyle().isTransparent())
     fc.setAlpha(plot->fillStyle().density());
 
   keyColor_[plot->id()] = lc;
+
+  //---
 
   for (const auto &point : plot->getPoints2D()) {
     std::vector<double> reals;
@@ -38,44 +41,20 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (renderer->isPseudo() && ! renderer->isInside(CPoint2D(x, y)))
       continue;
 
-    double w = ellipseStyle.size(0).getXDistance(renderer);
-    double h = ellipseStyle.size(1).getYDistance(renderer);
+    double w, h;
 
     double a = ellipseStyle.angle();
-    double z = 0;
 
     CRGBA lc1 = lc;
 
-    if      ((! isCalcColor && reals.size() == 2) || (isCalcColor && reals.size() == 3)) {
-      if (isCalcColor)
-        z = reals[2];
-    }
-    else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
-      w = reals[2];
-      h = w;
+    if (isCalcColor || reals.size() > 5) {
+      double z;
 
-      if (isCalcColor)
-        z = reals[3];
-    }
-    else if ((! isCalcColor && reals.size() == 4) || (isCalcColor && reals.size() == 5)) {
-      w = reals[2];
-      h = reals[3];
-
-      if (isCalcColor)
-        z = reals[4];
-    }
-    else if ((! isCalcColor && reals.size() == 5) || (isCalcColor && reals.size() == 6)) {
-      w = reals[2];
-      h = reals[3];
-      a = reals[4];
-
-      if (isCalcColor)
+      if (reals.size() <= 6)
+        z = reals[reals.size() - 1];
+      else
         z = reals[5];
-    }
-    else
-      continue;
 
-    if (isCalcColor) {
       if (renderer->isPseudo())
         renderer->setCBValue(z);
       else {
@@ -85,6 +64,36 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
     }
 
+    if      ((! isCalcColor && reals.size() == 2) || (isCalcColor && reals.size() == 3)) {
+      // TODO: get from set circle
+      w = ellipseStyle.size(0).getXDistance(renderer);
+      h = ellipseStyle.size(1).getYDistance(renderer);
+    }
+    else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
+      w = reals[2];
+      h = w;
+    }
+    else if ((! isCalcColor && reals.size() == 4) || (isCalcColor && reals.size() == 5)) {
+      w = reals[2];
+      h = reals[3];
+    }
+    else if ((! isCalcColor && reals.size() == 5) || (isCalcColor && reals.size() == 6)) {
+      w = reals[2];
+      h = reals[3];
+      a = reals[4];
+    }
+    else if (reals.size() == 6) {
+      w = reals[2];
+      h = reals[3];
+      a = reals[4];
+    }
+    else {
+      std::cerr << "Bad ellipse points" << std::endl;
+      continue;
+    }
+
+    //---
+
     double w1 = w;
     double h1 = h;
 
@@ -93,6 +102,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     if (ellipseStyle.isHeightX())
       h1 = renderer->pixelHeightToWindowHeight(renderer->windowWidthToPixelWidth(h1));
+
+    //---
+
+    // TODO: use ellipse cache
 
     CPoint2D c(x, y);
 

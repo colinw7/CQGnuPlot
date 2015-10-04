@@ -20,13 +20,15 @@
 #include <CQGnuPlotPm3D.h>
 #include <CQGnuPlotTimeStamp.h>
 #include <CQGnuPlotBubbleObject.h>
+
+#include <CQGnuPlotArrowObject.h>
 #include <CQGnuPlotBarObject.h>
 #include <CQGnuPlotEllipseObject.h>
+#include <CQGnuPlotLabelObject.h>
 #include <CQGnuPlotPieObject.h>
+#include <CQGnuPlotPointObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
-#include <CQGnuPlotPointObject.h>
-#include <CQGnuPlotArrowObject.h>
 
 #include <QApplication>
 
@@ -95,6 +97,8 @@ createLineStyle(CGnuPlot *plot)
 {
   return new CQGnuPlotLineStyle(plot);
 }
+
+//---
 
 CGnuPlotArrow *
 CQGnuPlotDevice::
@@ -173,6 +177,8 @@ createRectangle(CGnuPlotGroup *group)
 
   return rect;
 }
+
+//---
 
 CGnuPlotAxis *
 CQGnuPlotDevice::
@@ -272,6 +278,23 @@ createTimeStamp(CGnuPlotGroup *group)
   return timeStamp;
 }
 
+//---
+
+CGnuPlotArrowObject *
+CQGnuPlotDevice::
+createArrowObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotArrowObject *arrow = new CQGnuPlotArrowObject(qplot);
+
+  objects_.push_back(arrow);
+
+  qplot->qwindow()->updateProperties();
+
+  return arrow;
+}
+
 CGnuPlotBarObject *
 CQGnuPlotDevice::
 createBarObject(CGnuPlotPlot *plot)
@@ -317,6 +340,21 @@ createEllipseObject(CGnuPlotPlot *plot)
   return ellipse;
 }
 
+CGnuPlotLabelObject *
+CQGnuPlotDevice::
+createLabelObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotLabelObject *label = new CQGnuPlotLabelObject(qplot);
+
+  objects_.push_back(label);
+
+  qplot->qwindow()->updateProperties();
+
+  return label;
+}
+
 CGnuPlotPieObject *
 CQGnuPlotDevice::
 createPieObject(CGnuPlotPlot *plot)
@@ -330,6 +368,21 @@ createPieObject(CGnuPlotPlot *plot)
   qplot->qwindow()->updateProperties();
 
   return pie;
+}
+
+CGnuPlotPointObject *
+CQGnuPlotDevice::
+createPointObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotPointObject *point = new CQGnuPlotPointObject(qplot);
+
+  objects_.push_back(point);
+
+  qplot->qwindow()->updateProperties();
+
+  return point;
 }
 
 CGnuPlotPolygonObject *
@@ -362,35 +415,7 @@ createRectObject(CGnuPlotPlot *plot)
   return rect;
 }
 
-CGnuPlotPointObject *
-CQGnuPlotDevice::
-createPointObject(CGnuPlotPlot *plot)
-{
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
-
-  CQGnuPlotPointObject *rect = new CQGnuPlotPointObject(qplot);
-
-  objects_.push_back(rect);
-
-  qplot->qwindow()->updateProperties();
-
-  return rect;
-}
-
-CGnuPlotArrowObject *
-CQGnuPlotDevice::
-createArrowObject(CGnuPlotPlot *plot)
-{
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
-
-  CQGnuPlotArrowObject *rect = new CQGnuPlotArrowObject(qplot);
-
-  objects_.push_back(rect);
-
-  qplot->qwindow()->updateProperties();
-
-  return rect;
-}
+//---
 
 void
 CQGnuPlotDevice::

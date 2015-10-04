@@ -80,7 +80,7 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
                         double a21, double a22, const CRGBA &c) override;
 
-  void setFont(CFontPtr font);
+  void setFont(const CFontPtr &font);
 
  private:
   CQGnuPlotCanvas *canvas_;

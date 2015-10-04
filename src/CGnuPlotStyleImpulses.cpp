@@ -66,9 +66,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CRGBA lc1 = lc;
 
     if (reals.size() >= 3 && isCalcColor) {
-      double x = reals[2];
+      double z = reals[2];
 
-      lc1 = lineStyle.calcColor(plot, x);
+      if (renderer->isPseudo())
+        renderer->setCBValue(z);
+      else
+        lc1 = lineStyle.calcColor(plot, z);
     }
 
     renderer->drawClipLine(p1, p2, lw, lc1);

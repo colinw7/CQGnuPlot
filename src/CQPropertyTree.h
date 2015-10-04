@@ -1,9 +1,16 @@
+#ifndef CQPropertyTree_H
+#define CQPropertyTree_H
+
 #include <QTreeWidget>
+#include <vector>
 
 class CQPropertyItem;
 
 class CQPropertyTree : public QTreeWidget {
   Q_OBJECT
+
+ public:
+  typedef std::vector<QTreeWidgetItem *> Items;
 
  public:
   CQPropertyTree(QWidget *parent=0);
@@ -20,6 +27,11 @@ class CQPropertyTree : public QTreeWidget {
   void itemClicked( QObject *obj, const QString &path);
   void itemSelected(QObject *obj, const QString &path);
 
+ public slots:
+  void expandSelected();
+
+  void search(const QString &text);
+
  private slots:
   void itemClickedSlot(QTreeWidgetItem *item, int column);
 
@@ -29,4 +41,10 @@ class CQPropertyTree : public QTreeWidget {
   bool selectObject(QTreeWidgetItem *item, const QObject *obj);
 
   void getItemData(QTreeWidgetItem *item, QObject* &obj, QString &path);
+
+  void searchItemTree(QTreeWidgetItem *item, const QString &text, Items &items);
+
+  void expandItemTree(QTreeWidgetItem *item);
 };
+
+#endif

@@ -34,6 +34,9 @@ class CGnuPlotBubbleObject : public CGnuPlotPlotObject {
   const std::string &name() const { return name_; }
   void setName(const std::string &s) { name_ = s; }
 
+  double value() const { return value_; }
+  void setValue(double r) { value_ = r; }
+
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
   CGnuPlotTipData tip() const override;
@@ -41,11 +44,12 @@ class CGnuPlotBubbleObject : public CGnuPlotPlotObject {
   void draw(CGnuPlotRenderer *renderer) const override;
 
  private:
-  CPoint2D        c_    { 0, 0 };
-  double          xr_   { 1 };
-  double          yr_   { 1 };
-  COptRGBA        color_;
-  std::string     name_ { "" };
+  CPoint2D    c_     { 0, 0 };
+  double      xr_    { 1 };
+  double      yr_    { 1 };
+  COptRGBA    color_;
+  std::string name_  { "" };
+  double      value_ { 0 };
 };
 
 #endif

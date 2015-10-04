@@ -50,15 +50,20 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA lc = lineStyle.calcColor(group, CRGBA(1,0,0));
   CRGBA fc = lc;
 
-  if (plot->fillStyle().isTransparent())
-    fc.setAlpha(plot->fillStyle().density());
+  if (fillStyle.isTransparent())
+    fc.setAlpha(fillStyle.density());
+
+  //---
 
   for (const auto &point : plot->getPoints2D()) {
     std::vector<double> reals;
@@ -78,21 +83,30 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     bool is_angle = false;
 
-    if      ((! isCalcColor && reals.size() == 2) || (isCalcColor && reals.size() == 3)) {
-      r = 1; // TODO: get from set circle
+    if (isCalcColor || reals.size() > 5) {
+      double z;
 
-      if (isCalcColor) {
-        fc1 = lineStyle.calcColor(plot, reals[2]);
+      if (reals.size() <= 6)
+        z = reals[reals.size() - 1];
+      else
+        z = reals[5];
+
+      if (renderer->isPseudo())
+        renderer->setCBValue(z);
+      else {
+        fc1 = lineStyle.calcColor(plot, z);
         lc1 = fc1;
       }
     }
+
+    //---
+
+    if      ((! isCalcColor && reals.size() == 2) || (isCalcColor && reals.size() == 3)) {
+      // TODO: get from set circle
+      r = 1;
+    }
     else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
       r = reals[2];
-
-      if (isCalcColor) {
-        fc1 = lineStyle.calcColor(plot, reals[3]);
-        lc1 = fc1;
-      }
     }
     else if ((! isCalcColor && reals.size() == 5) || (isCalcColor && reals.size() == 6)) {
       is_angle = true;
@@ -100,11 +114,6 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       r  = reals[2];
       a1 = reals[3];
       a2 = reals[4];
-
-      if (isCalcColor) {
-        fc1 = lineStyle.calcColor(plot, reals[5]);
-        lc1 = fc1;
-      }
     }
     else if (reals.size() == 6) {
       is_angle = true;
@@ -112,14 +121,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       r  = reals[2];
       a1 = reals[3];
       a2 = reals[4];
-
-      fc1 = lineStyle.calcColor(plot, reals[5]);
-      lc1 = fc1;
     }
     else {
       std::cerr << "Bad circle points" << std::endl;
       continue;
     }
+
+    //---
 
     double w = r;
     double h = w;
@@ -134,29 +142,36 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         renderer->fillPieSlice(c, 0, r, a1, a2, fc1);
       }
       else {
-        if (plot->fillStyle().style() == CGnuPlotTypes::FillType::SOLID)
+        if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID)
           renderer->fillEllipse(c, w, h, 0, fc1);
 
-        if (plot->fillStyle().hasBorder())
-          renderer->drawEllipse(c, w, h, 0, lc1, 1);
+        if (fillStyle.hasBorder()) {
+          CRGBA bc = lc1;
+
+          if (fillStyle.borderColor().isValid())
+            bc = fillStyle.borderColor().getValue().calcColor(group);
+
+          renderer->drawEllipse(c, w, h, 0, bc, 1);
+        }
       }
     }
     else {
-      if (is_angle) {
-        COptRGBA fc2(fc1);
-        COptRGBA lc2(lc1);
+      COptRGBA lc2, fc2;
 
+      if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID)
+        fc2 = fc1;
+
+      if (fillStyle.hasBorder()) {
+        lc2 = lc1;
+
+        if (fillStyle.borderColor().isValid())
+          lc2 = fillStyle.borderColor().getValue().calcColor(group);
+      }
+
+      if (is_angle) {
         pieSlices.push_back(PieSlice(c, r, a1, a2, lc2, fc2));
       }
       else {
-        COptRGBA lc2, fc2;
-
-        if (plot->fillStyle().style() == CGnuPlotTypes::FillType::SOLID)
-          fc2 = fc1;
-
-        if (plot->fillStyle().hasBorder())
-          lc2 = lc1;
-
         ellipses.push_back(Ellipse(c, w, h, lc2, fc2));
       }
     }

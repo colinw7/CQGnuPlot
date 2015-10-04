@@ -14,20 +14,21 @@ class CGnuPlotTextBoxStyle {
   void setBorder(bool b) { border_ = b; }
 
   void unset() {
-    transparent_ = false;
+    transparent_ = true;
     border_      = true;
   }
 
   void show(std::ostream &os) const {
     os << "textboxes are ";
     os << (transparent_ ? "transparent" : "opaque");
+    // TODO:
     //os << "with margins ";
     os << " and " << (border_  ? "border": "no border");
     os << std::endl;
   }
 
  private:
-  bool transparent_ { false };
+  bool transparent_ { true };
   bool border_      { true };
 };
 

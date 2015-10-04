@@ -96,12 +96,23 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       ireals.push_back(ir);
     }
 
-    CRGBA c;
+    //---
+
+    double z;
 
     if (isCalcColor)
-      c = lineStyle.calcColor(plot, reals[nr]);
+      z = reals[nr];
     else
-      c = lineStyle.calcColor(plot, i);
+      z = i;
+
+    CRGBA c;
+
+    if (renderer->isPseudo())
+      renderer->setCBValue(z);
+    else
+      c = lineStyle.calcColor(plot, z);
+
+    //---
 
     for (uint j = 1; j < ireals.size(); ++j)
       renderer->drawClipLine(CPoint2D(j, ireals[j - 1]), CPoint2D(j + 1, ireals[j]), 1.0, c);

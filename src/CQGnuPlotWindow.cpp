@@ -21,14 +21,17 @@
 #include <CQGnuPlotTimeStamp.h>
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotDevice.h>
+
+#include <CQGnuPlotArrowObject.h>
 #include <CQGnuPlotBarObject.h>
 #include <CQGnuPlotBubbleObject.h>
 #include <CQGnuPlotEllipseObject.h>
+#include <CQGnuPlotLabelObject.h>
 #include <CQGnuPlotPieObject.h>
+#include <CQGnuPlotPointObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
-#include <CQGnuPlotPointObject.h>
-#include <CQGnuPlotArrowObject.h>
+
 #include <CQGnuPlotToolBar.h>
 #include <CQGnuPlotPNGRenderer.h>
 #include <CGnuPlotSVGRenderer.h>
@@ -50,6 +53,7 @@
 #include <QTimer>
 #include <QRubberBand>
 #include <QPushButton>
+#include <QLineEdit>
 
 //#include <xpm/select.xpm>
 //#include <xpm/zoom.xpm>
@@ -162,6 +166,12 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   QVBoxLayout *rlayout = new QVBoxLayout(rframe);
   rlayout->setMargin(2); rlayout->setSpacing(2);
 
+  edit_ = new QLineEdit;
+
+  connect(edit_, SIGNAL(returnPressed()), this, SLOT(searchProperties()));
+
+  rlayout->addWidget(edit_);
+
   tree_ = new CQPropertyTree;
 
   connect(tree_, SIGNAL(valueChanged(QObject *, const QString &)), canvas_, SLOT(update()));
@@ -182,6 +192,12 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   connect(reloadButton, SIGNAL(clicked()), this, SLOT(addProperties()));
 
   buttonLayout->addWidget(reloadButton);
+
+  QPushButton *expandButton = new QPushButton("Expand");
+
+  connect(expandButton, SIGNAL(clicked()), tree_, SLOT(expandSelected()));
+
+  buttonLayout->addWidget(expandButton);
 
   buttonLayout->addStretch(1);
 
@@ -280,9 +296,8 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   //---
 
-  cursor_ = CQCursorMgrInst->createCursor("info_cursor.svg", 2, 2);
-
-  canvas_->setCursor(cursor_->cursor());
+  //cursor_ = CQCursorMgrInst->createCursor("info_cursor.svg", 2, 2);
+  //canvas_->setCursor(cursor_->cursor());
 }
 
 CQGnuPlotMainWindow::
@@ -325,6 +340,15 @@ updateProperties()
 
   propTimer_->setSingleShot(true);
   propTimer_->start(250);
+}
+
+void
+CQGnuPlotMainWindow::
+searchProperties()
+{
+  QLineEdit *edit = qobject_cast<QLineEdit *>(sender());
+
+  tree_->search(edit->text());
 }
 
 void
@@ -653,17 +677,22 @@ addGroupProperties(CGnuPlotGroup *group)
       tree_->addProperty(labelName, qlabel, "drawLayer");
       tree_->addProperty(labelName, qlabel, "text");
       tree_->addProperty(labelName, qlabel, "pos");
-      tree_->addProperty(labelName, qlabel, "font");
-      tree_->addProperty(labelName, qlabel, "angle")->setEditorFactory(realSlider("0:360:1"));
-      tree_->addProperty(labelName, qlabel, "align");
-      tree_->addProperty(labelName, qlabel, "offset");
-      tree_->addProperty(labelName, qlabel, "enhanced");
       tree_->addProperty(labelName, qlabel, "color");
+      tree_->addProperty(labelName, qlabel, "angle")->setEditorFactory(realSlider("0:360:1"));
+      tree_->addProperty(labelName, qlabel, "enhanced");
+      tree_->addProperty(labelName, qlabel, "align");
+      tree_->addProperty(labelName, qlabel, "font");
+      tree_->addProperty(labelName, qlabel, "offset");
       tree_->addProperty(labelName, qlabel, "lineType");
+      tree_->addProperty(labelName, qlabel, "boxFill");
+      tree_->addProperty(labelName, qlabel, "boxFillColor");
+      tree_->addProperty(labelName, qlabel, "box");
+      tree_->addProperty(labelName, qlabel, "boxStrokeColor");
+      tree_->addProperty(labelName, qlabel, "boxStrokeWidth");
       tree_->addProperty(labelName, qlabel, "showPoint");
       tree_->addProperty(labelName, qlabel, "pointType");
       tree_->addProperty(labelName, qlabel, "pointSize");
-      tree_->addProperty(labelName, qlabel, "box");
+      tree_->addProperty(labelName, qlabel, "pointWidth");
       tree_->addProperty(labelName, qlabel, "hypertext");
     }
     else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann.get()))) {
@@ -763,6 +792,36 @@ addPlotProperties(CGnuPlotPlot *plot)
   tree_->addProperty(boxWidthName, qplot, "boxWidthCalc")->
     setLabel("calc");
 
+  //---
+
+  if (! plot->arrowObjects().empty()) {
+    int i = 0;
+
+    for (const auto &arrow : plot->arrowObjects()) {
+      QString arrowName = QString("%1/Arrows/Arrow%2").arg(plotName).arg(i + 1);
+
+      CQGnuPlotArrowObject *qarrow = static_cast<CQGnuPlotArrowObject *>(arrow);
+
+      tree_->addProperty(arrowName, qarrow, "coordType");
+      tree_->addProperty(arrowName, qarrow, "from");
+      tree_->addProperty(arrowName, qarrow, "to");
+      tree_->addProperty(arrowName, qarrow, "length");
+      tree_->addProperty(arrowName, qarrow, "angle");
+      tree_->addProperty(arrowName, qarrow, "headLength");
+      tree_->addProperty(arrowName, qarrow, "headAngle");
+      tree_->addProperty(arrowName, qarrow, "headBackAngle");
+      tree_->addProperty(arrowName, qarrow, "fhead");
+      tree_->addProperty(arrowName, qarrow, "thead");
+      tree_->addProperty(arrowName, qarrow, "headFilled");
+      tree_->addProperty(arrowName, qarrow, "headEmpty");
+      tree_->addProperty(arrowName, qarrow, "lineType");
+      tree_->addProperty(arrowName, qarrow, "lineWidth")->setEditorFactory(realEdit("0:50:1"));
+      tree_->addProperty(arrowName, qarrow, "lineDash");
+
+      ++i;
+    }
+  }
+
   if (! plot->barObjects().empty()) {
     QString barsName = QString("%1/Bars").arg(plotName);
 
@@ -824,6 +883,39 @@ addPlotProperties(CGnuPlotPlot *plot)
     }
   }
 
+  if (! plot->labelObjects().empty()) {
+    int i = 0;
+
+    for (const auto &label : plot->labelObjects()) {
+      QString labelName = QString("%1/Labels/Label%2").arg(plotName).arg(i + 1);
+
+      CQGnuPlotLabelObject *qlabel = static_cast<CQGnuPlotLabelObject *>(label);
+
+      tree_->addProperty(labelName, qlabel, "displayed");
+      tree_->addProperty(labelName, qlabel, "text");
+      tree_->addProperty(labelName, qlabel, "pos");
+      tree_->addProperty(labelName, qlabel, "color");
+      tree_->addProperty(labelName, qlabel, "angle")->setEditorFactory(realSlider("0:360:1"));
+      tree_->addProperty(labelName, qlabel, "enhanced");
+      tree_->addProperty(labelName, qlabel, "align");
+      tree_->addProperty(labelName, qlabel, "font");
+      tree_->addProperty(labelName, qlabel, "offset");
+      tree_->addProperty(labelName, qlabel, "lineType");
+      tree_->addProperty(labelName, qlabel, "boxFill");
+      tree_->addProperty(labelName, qlabel, "boxFillColor");
+      tree_->addProperty(labelName, qlabel, "box");
+      tree_->addProperty(labelName, qlabel, "boxStrokeColor");
+      tree_->addProperty(labelName, qlabel, "boxStrokeWidth");
+      tree_->addProperty(labelName, qlabel, "showPoint");
+      tree_->addProperty(labelName, qlabel, "pointType");
+      tree_->addProperty(labelName, qlabel, "pointSize");
+      tree_->addProperty(labelName, qlabel, "pointWidth");
+      tree_->addProperty(labelName, qlabel, "hypertext");
+
+      ++i;
+    }
+  }
+
   if (! plot->pieObjects().empty()) {
     QString piesName = QString("%1/Pies").arg(plotName);
 
@@ -846,6 +938,26 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(pieName, qpie, "lineColor"  );
       tree_->addProperty(pieName, qpie, "fillColor"  );
       tree_->addProperty(pieName, qpie, "exploded"   );
+
+      ++i;
+    }
+  }
+
+  if (! plot->pointObjects().empty()) {
+    int i = 0;
+
+    for (const auto &point : plot->pointObjects()) {
+      QString pointName = QString("%1/Points/Point%2").arg(plotName).arg(i + 1);
+
+      CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
+
+      tree_->addProperty(pointName, qpoint, "point");
+      tree_->addProperty(pointName, qpoint, "pointType");
+      tree_->addProperty(pointName, qpoint, "size");
+      tree_->addProperty(pointName, qpoint, "color");
+      tree_->addProperty(pointName, qpoint, "lineWidth");
+      tree_->addProperty(pointName, qpoint, "pointString");
+      tree_->addProperty(pointName, qpoint, "erasePoint");
 
       ++i;
     }
@@ -878,54 +990,6 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(rectName, qrect, "text"     );
       tree_->addProperty(rectName, qrect, "fillColor");
       tree_->addProperty(rectName, qrect, "lineColor");
-
-      ++i;
-    }
-  }
-
-  if (! plot->pointObjects().empty()) {
-    int i = 0;
-
-    for (const auto &point : plot->pointObjects()) {
-      QString pointName = QString("%1/Points/Point%2").arg(plotName).arg(i + 1);
-
-      CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
-
-      tree_->addProperty(pointName, qpoint, "point");
-      tree_->addProperty(pointName, qpoint, "pointType");
-      tree_->addProperty(pointName, qpoint, "size");
-      tree_->addProperty(pointName, qpoint, "color");
-      tree_->addProperty(pointName, qpoint, "lineWidth");
-      tree_->addProperty(pointName, qpoint, "pointString");
-      tree_->addProperty(pointName, qpoint, "erasePoint");
-
-      ++i;
-    }
-  }
-
-  if (! plot->arrowObjects().empty()) {
-    int i = 0;
-
-    for (const auto &arrow : plot->arrowObjects()) {
-      QString arrowName = QString("%1/Arrows/Arrow%2").arg(plotName).arg(i + 1);
-
-      CQGnuPlotArrowObject *qarrow = static_cast<CQGnuPlotArrowObject *>(arrow);
-
-      tree_->addProperty(arrowName, qarrow, "coordType");
-      tree_->addProperty(arrowName, qarrow, "from");
-      tree_->addProperty(arrowName, qarrow, "to");
-      tree_->addProperty(arrowName, qarrow, "length");
-      tree_->addProperty(arrowName, qarrow, "angle");
-      tree_->addProperty(arrowName, qarrow, "headLength");
-      tree_->addProperty(arrowName, qarrow, "headAngle");
-      tree_->addProperty(arrowName, qarrow, "headBackAngle");
-      tree_->addProperty(arrowName, qarrow, "fhead");
-      tree_->addProperty(arrowName, qarrow, "thead");
-      tree_->addProperty(arrowName, qarrow, "headFilled");
-      tree_->addProperty(arrowName, qarrow, "headEmpty");
-      tree_->addProperty(arrowName, qarrow, "lineType");
-      tree_->addProperty(arrowName, qarrow, "lineWidth")->setEditorFactory(realEdit("0:50:1"));
-      tree_->addProperty(arrowName, qarrow, "lineDash");
 
       ++i;
     }

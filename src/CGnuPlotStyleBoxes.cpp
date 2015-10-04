@@ -80,16 +80,20 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     double bw1 = bw;
 
     if (plot->boxWidth().isCalc()) {
-      if ((isCalcColor && reals.size() == 4) || (! isCalcColor && reals.size() == 3))
+      if ((isCalcColor && reals.size() == 4) || (! isCalcColor && reals.size() == 3)) {
         bw1 = reals[ind++];
+      }
     }
 
     CRGBA lc1 = lc;
 
     if (isCalcColor && ind < reals.size()) {
-      double x = reals[ind];
+      double z = reals[ind];
 
-      lc1 = lineStyle.calcColor(plot, x);
+      if (renderer->isPseudo())
+        renderer->setCBValue(z);
+      else
+        lc1 = lineStyle.calcColor(plot, z);
     }
 
     CBBox2D bbox(x - bw1/2, y2, x + bw1/2, y);

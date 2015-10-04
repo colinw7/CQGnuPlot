@@ -266,11 +266,15 @@ drawClustered(CGnuPlotRenderer *renderer)
     int                    id     = nplot.first;
     const CGnuPlot::Plots &plots1 = nplot.second;
 
-    const CGnuPlotNewHistogramData &hdata = group_->newHistogramData(id);
+    std::string title;
+
+    if (id >= 0) {
+      const CGnuPlotNewHistogramData &hdata = group_->newHistogramData(id);
+
+      title = hdata.title();
+    }
 
     double textWidth = 0.0, textHeight = 0.0;
-
-    std::string title = hdata.title();
 
     if (title != "") {
       textWidth = std::max(textWidth, font->getStringWidth(title)*pw);
@@ -320,7 +324,13 @@ drawClustered(CGnuPlotRenderer *renderer)
     int                    id     = nplot.first;
     const CGnuPlot::Plots &plots1 = nplot.second;
 
-    const CGnuPlotNewHistogramData &hdata = group_->newHistogramData(id);
+    std::string title;
+
+    if (id >= 0) {
+      const CGnuPlotNewHistogramData &hdata = group_->newHistogramData(id);
+
+      title = hdata.title();
+    }
 
     if (! isReverse())
       x2 = x1 + sizes[i].width;
@@ -328,8 +338,6 @@ drawClustered(CGnuPlotRenderer *renderer)
       x1 = x2 - sizes[i].width;
 
     double y = y2 - by;
-
-    std::string title = hdata.title();
 
     if (title != "") {
       renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), CHALIGN_TYPE_CENTER, 0,

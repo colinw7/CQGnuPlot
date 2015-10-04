@@ -129,8 +129,19 @@
 ### 9/20/2015
  + improve axis label alignment when rotated
 
-### 9/27/2105
+### 9/27/2015
  + add info tip support for all objects and annotations
  + better highlight/selected drawing
  + add object cache for arrow objects and use in vector plot for selectable info tip arrows
  + add log device to be used for regressions
+
+### 9/4/2015
+ + Improve text drawing for label style
+ + Add error lines for bar object
+ + Improve bubble plot highlight and tip
+ + Add support for Utf space characters (WIP)
+ + Add functions support for palette
+ + Add Fill, Stroke Classes to abstract fill and stroke data
+ + Add cbrange support to more plots
+ + Fix tree map range
+ + Add support for property tree search and expand

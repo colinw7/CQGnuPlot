@@ -15,7 +15,7 @@ QString
 CQGnuPlotLabel::
 getText() const
 {
-  return CGnuPlotLabel::getText().text().c_str();
+  return CGnuPlotLabel::getText().c_str();
 }
 
 void
@@ -103,6 +103,34 @@ setColor(const QColor &c)
   cs.setRGB(fromQColor(c));
 
   CGnuPlotLabel::setTextColor(cs);
+}
+
+QColor
+CQGnuPlotLabel::
+getBoxFillColor() const
+{
+  return toQColor(CGnuPlotLabel::getBoxFillColor());
+}
+
+void
+CQGnuPlotLabel::
+setBoxFillColor(const QColor &c)
+{
+  CGnuPlotLabel::setBoxFillColor(fromQColor(c));
+}
+
+QColor
+CQGnuPlotLabel::
+getBoxStrokeColor() const
+{
+  return toQColor(CGnuPlotLabel::getBoxStrokeColor());
+}
+
+void
+CQGnuPlotLabel::
+setBoxStrokeColor(const QColor &c)
+{
+  CGnuPlotLabel::setBoxStrokeColor(fromQColor(c));
 }
 
 void

@@ -35,7 +35,9 @@ class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
   void setFillColor(const CRGBA &c) { fillColor_ = c; }
   void resetFillColor() { fillColor_.setInvalid(); }
 
-  bool hasFillPattern() const { return fillPattern_.isValid(); }
+  bool hasFillPattern() const {
+    return fillPattern_.isValid() && fillPattern_.getValue() != CGnuPlotTypes::FillPattern::NONE;
+  }
   const FillPattern &fillPattern() const { return fillPattern_.getValue(); }
   void setFillPattern(const FillPattern &p) { fillPattern_ = p; }
   void resetFillPattern() { fillPattern_.setInvalid(); }

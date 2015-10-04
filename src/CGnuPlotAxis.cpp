@@ -1305,33 +1305,20 @@ drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
   if (str == "")
     return;
 
-  if (isEnhanced() && ! group_->is3D()) {
-    CGnuPlotText text(str);
+  CPoint2D pos1 = renderer_->transform(pos);
 
-    //---
+  if (! group_->is3D()) {
+    CBBox2D bbox, rbbox;
 
-    CPoint2D pos1;
+    renderer_->calcTextRectAtPoint(pos1, str, isEnhanced(), halign, valign, angle, bbox, rbbox);
 
-    renderer_->windowToRegion(pos.x, pos.y, &pos1.x, &pos1.y);
+    renderer_->drawTextAtPoint(pos1, str, isEnhanced(), halign, valign, c, angle);
 
-    CBBox2D range = renderer_->range();
+    if (bbox.isSet()) {
+      maxH_ = std::max(maxH_, renderer_->windowHeightToPixelHeight(bbox.getHeight()));
 
-    renderer_->setRange(CBBox2D(0, 0, 1, 1));
-
-    CBBox2D rbbox1 = text.drawAtPoint(renderer_, pos1, halign, valign, c, angle);
-
-    renderer_->setRange(range);
-
-    CPoint2D rpos1, rpos2;
-
-    renderer_->regionToWindow(rbbox1.getXMin(), rbbox1.getYMin(), &rpos1.x, &rpos1.y);
-    renderer_->regionToWindow(rbbox1.getXMax(), rbbox1.getYMax(), &rpos2.x, &rpos2.y);
-
-    CBBox2D rbbox2(rpos1, rpos2);
-
-    maxH_ = std::max(maxH_, renderer_->windowHeightToPixelHeight(rbbox2.getHeight()));
-
-    group_->updateAxisBBox(rbbox2);
+      group_->updateAxisBBox(rbbox);
+    }
   }
   else {
     CFontPtr font = renderer_->getFont();
@@ -1368,6 +1355,9 @@ CGnuPlotAxis::
 drawVAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
                  const std::string &str, const CRGBA &c, double angle)
 {
+  if (str == "")
+    return;
+
   renderer_->drawVAlignedText(pos, halign, 0, valign, 0, str, c, angle);
 
   CFontPtr font = renderer_->getFont();
