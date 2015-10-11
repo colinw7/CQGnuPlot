@@ -14,9 +14,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
+  CGnuPlotStroke stroke(plot);
+
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA lc = stroke.color();
 
   double pw = 0, ph = 0;
 
@@ -24,6 +26,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     pw = renderer->pixelWidthToWindowWidth  (4);
     ph = renderer->pixelHeightToWindowHeight(4);
   }
+
+  //---
 
   for (const auto &point : plot->getPoints2D()) {
     std::vector<double> reals;
@@ -93,11 +97,10 @@ void
 CGnuPlotStyleXYErrorBars::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  CGnuPlotStroke stroke(plot);
 
-  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
-
-  double lw = lineStyle.calcWidth();
+  CRGBA  c  = stroke.color();
+  double lw = stroke.width();
   double h  = renderer->pixelHeightToWindowHeight(3);
 
   renderer->drawLine(p1, p2, lw, c);

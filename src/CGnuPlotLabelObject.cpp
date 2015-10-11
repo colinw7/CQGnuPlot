@@ -9,20 +9,30 @@ CGnuPlotLabelObject::
 CGnuPlotLabelObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
+  data_ = new CGnuPlotLabelData(plot);
+}
+
+void
+CGnuPlotLabelObject::
+setData(CGnuPlotLabelData *data)
+{
+  delete data_;
+
+  data_ = data;
 }
 
 bool
 CGnuPlotLabelObject::
 inside(const CGnuPlotTypes::InsideData &data) const
 {
-  return data_.inside(data);
+  return data_->inside(data);
 }
 
 CGnuPlotTipData
 CGnuPlotLabelObject::
 tip() const
 {
-  return data_.tip();
+  return data_->tip();
 }
 
 void
@@ -33,5 +43,5 @@ draw(CGnuPlotRenderer *renderer) const
 
   bool highlighted = (isHighlighted() || isSelected());
 
-  data_.draw(renderer, plot()->group(), highlighted);
+  data_->draw(renderer, plot()->group(), highlighted);
 }

@@ -115,8 +115,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       CRGBA c1 = (n->id() > 0 ? CGnuPlotStyleInst->indexColor("subtle", n->id()) : c);
 
-      if (! bubble->hasColor())
-        bubble->setColor(c1);
+      if (! bubble->testAndSetUsed()) {
+        bubble->fill()->setType (CGnuPlotTypes::FillType::SOLID);
+        bubble->fill()->setColor(c1);
+
+        bubble->stroke()->setEnabled(false);
+      }
     }
     else
       renderer->drawEllipse(pc, (x2 - x1)/2, (y2 - y1)/2, 0, c, 1);

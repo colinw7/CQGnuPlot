@@ -8,6 +8,8 @@
 
 #include <CGnuPlotCache.h>
 #include <CGnuPlotObject.h>
+#include <CGnuPlotFill.h>
+#include <CGnuPlotStroke.h>
 
 class CGnuPlotPlot;
 
@@ -26,21 +28,14 @@ class CGnuPlotEllipseObject : public CGnuPlotPlotObject {
   const CSize2D &size() const { return size_; }
   void setSize(const CSize2D &size);
 
-  bool hasLineColor() const { return lineColor_.isValid(); }
-  const CRGBA &lineColor() const { return lineColor_.getValue(CRGBA(0,0,0)); }
-  void setLineColor(const CRGBA &c) { lineColor_ = c; }
-  void resetLineColor() { lineColor_.setInvalid(); }
-
-  bool hasFillColor() const { return fillColor_.isValid(); }
-  const CRGBA &fillColor() const { return fillColor_.getValue(CRGBA(1,1,1)); }
-  void setFillColor(const CRGBA &c) { fillColor_ = c; }
-  void resetFillColor() { fillColor_.setInvalid(); }
-
-  double lineWidth() const { return lineWidth_; }
-  void setLineWidth(double r) { lineWidth_ = r; }
-
   const std::string &text() const { return text_; }
   void setText(const std::string &s) { text_ = s; }
+
+  const CGnuPlotFillP &fill() const { return fill_; }
+  void setFill(const CGnuPlotFillP &f) { fill_ = f; }
+
+  const CGnuPlotStrokeP &stroke() const { return stroke_; }
+  void setStroke(const CGnuPlotStrokeP &s) { stroke_ = s; }
 
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
@@ -48,18 +43,16 @@ class CGnuPlotEllipseObject : public CGnuPlotPlotObject {
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
- private:
+ protected:
   void update();
 
- private:
+ protected:
   CPoint2D        center_;
   CSize2D         size_;
-  COptRGBA        lineColor_;
-  COptRGBA        fillColor_;
-  double          lineWidth_ { 0 };
   std::string     text_ { "" };
+  CGnuPlotFillP   fill_;
+  CGnuPlotStrokeP stroke_;
   mutable CBBox2D rect_;
-  mutable CRGBA   lc_;
 };
 
 #endif

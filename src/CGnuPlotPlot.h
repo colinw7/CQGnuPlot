@@ -21,13 +21,18 @@ class CGnuPlotGroup;
 
 class CGnuPlotArrowObject;
 class CGnuPlotBarObject;
+class CGnuPlotEndBar;
 class CGnuPlotBubbleObject;
 class CGnuPlotEllipseObject;
 class CGnuPlotLabelObject;
+class CGnuPlotPathObject;
 class CGnuPlotPieObject;
 class CGnuPlotPointObject;
 class CGnuPlotPolygonObject;
 class CGnuPlotRectObject;
+
+class CGnuPlotFill;
+class CGnuPlotStroke;
 
 class CGnuPlotBBoxRenderer;
 class CGnuPlotStyleAdjacencyRenderer;
@@ -96,6 +101,19 @@ class CGnuPlotCacheFactory<CGnuPlotLabelObject> {
   }
 
   CGnuPlotLabelObject *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+template<>
+class CGnuPlotCacheFactory<CGnuPlotPathObject> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotPathObject *make();
 
  private:
   CGnuPlotPlot *plot_;
@@ -193,6 +211,7 @@ class CGnuPlotPlot {
   typedef CGnuPlotCache<CGnuPlotBubbleObject>  BubbleCache;
   typedef CGnuPlotCache<CGnuPlotEllipseObject> EllipseCache;
   typedef CGnuPlotCache<CGnuPlotLabelObject>   LabelCache;
+  typedef CGnuPlotCache<CGnuPlotPathObject>    PathCache;
   typedef CGnuPlotCache<CGnuPlotPieObject>     PieCache;
   typedef CGnuPlotCache<CGnuPlotPointObject>   PointCache;
   typedef CGnuPlotCache<CGnuPlotPolygonObject> PolygonCache;
@@ -202,6 +221,7 @@ class CGnuPlotPlot {
   typedef std::vector<CGnuPlotBubbleObject *>  BubbleObjects;
   typedef std::vector<CGnuPlotEllipseObject *> EllipseObjects;
   typedef std::vector<CGnuPlotLabelObject *>   LabelObjects;
+  typedef std::vector<CGnuPlotPathObject *>    PathObjects;
   typedef std::vector<CGnuPlotPieObject *>     PieObjects;
   typedef std::vector<CGnuPlotPointObject *>   PointObjects;
   typedef std::vector<CGnuPlotPolygonObject *> PolygonObjects;
@@ -322,12 +342,6 @@ class CGnuPlotPlot {
 
   const CGnuPlotFillStyle &fillStyle() const { return fillStyle_; }
   void setFillStyle(const CGnuPlotFillStyle &f) { fillStyle_ = f; }
-
-  const FillType &fillType() const { return fillStyle_.style(); }
-  void setFillType(const FillType &f) { fillStyle_.setStyle(f); }
-
-  const FillPattern &fillPattern() const { return fillStyle_.pattern(); }
-  void setFillPattern(const FillPattern &f) { fillStyle_.setPattern(f); }
 
   //---
 
@@ -514,6 +528,7 @@ class CGnuPlotPlot {
   void updateBubbleCacheSize (int n);
   void updateEllipseCacheSize(int n);
   void updateLabelCacheSize  (int n);
+  void updatePathCacheSize   (int n);
   void updatePieCacheSize    (int n);
   void updatePointCacheSize  (int n);
   void updatePolygonCacheSize(int n);
@@ -524,6 +539,7 @@ class CGnuPlotPlot {
   const BubbleObjects  &bubbleObjects () const { return bubbleCache_ .objects(); }
   const EllipseObjects &ellipseObjects() const { return ellipseCache_.objects(); }
   const LabelObjects   &labelObjects  () const { return labelCache_  .objects(); }
+  const PathObjects    &pathObjects   () const { return pathCache_   .objects(); }
   const PieObjects     &pieObjects    () const { return pieCache_    .objects(); }
   const PointObjects   &pointObjects  () const { return pointCache_  .objects(); }
   const PolygonObjects &polygonObjects() const { return polygonCache_.objects(); }
@@ -582,13 +598,18 @@ class CGnuPlotPlot {
 
   CGnuPlotArrowObject   *createArrowObject  () const;
   CGnuPlotBarObject     *createBarObject    () const;
+  CGnuPlotEndBar        *createEndBar       () const;
   CGnuPlotBubbleObject  *createBubbleObject () const;
   CGnuPlotEllipseObject *createEllipseObject() const;
   CGnuPlotLabelObject   *createLabelObject  () const;
+  CGnuPlotPathObject    *createPathObject   () const;
   CGnuPlotPieObject     *createPieObject    () const;
   CGnuPlotPointObject   *createPointObject  () const;
   CGnuPlotPolygonObject *createPolygonObject() const;
   CGnuPlotRectObject    *createRectObject   () const;
+
+  CGnuPlotFill   *createFill  () const;
+  CGnuPlotStroke *createStroke() const;
 
   bool mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const;
 
@@ -706,6 +727,7 @@ class CGnuPlotPlot {
   BubbleCache            bubbleCache_;
   EllipseCache           ellipseCache_;
   LabelCache             labelCache_;
+  PathCache              pathCache_;
   PieCache               pieCache_;
   PointCache             pointCache_;
   PolygonCache           polygonCache_;
@@ -758,6 +780,13 @@ CGnuPlotCacheFactory<CGnuPlotLabelObject>::
 make()
 {
   return plot_->createLabelObject();
+}
+
+inline CGnuPlotPathObject *
+CGnuPlotCacheFactory<CGnuPlotPathObject>::
+make()
+{
+  return plot_->createPathObject();
 }
 
 inline CGnuPlotPieObject *

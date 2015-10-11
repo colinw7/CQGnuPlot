@@ -1,7 +1,9 @@
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotGroup.h>
-#include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
+#include <CQGnuPlotRenderer.h>
+#include <CQGnuPlotFill.h>
+#include <CQGnuPlotStroke.h>
 #include <CQUtil.h>
 
 CQGnuPlotLabel::
@@ -105,32 +107,18 @@ setColor(const QColor &c)
   CGnuPlotLabel::setTextColor(cs);
 }
 
-QColor
+CQGnuPlotFill *
 CQGnuPlotLabel::
-getBoxFillColor() const
+boxFill() const
 {
-  return toQColor(CGnuPlotLabel::getBoxFillColor());
+  return dynamic_cast<CQGnuPlotFill *>(CGnuPlotLabel::boxFill());
 }
 
-void
+CQGnuPlotStroke *
 CQGnuPlotLabel::
-setBoxFillColor(const QColor &c)
+boxStroke() const
 {
-  CGnuPlotLabel::setBoxFillColor(fromQColor(c));
-}
-
-QColor
-CQGnuPlotLabel::
-getBoxStrokeColor() const
-{
-  return toQColor(CGnuPlotLabel::getBoxStrokeColor());
-}
-
-void
-CQGnuPlotLabel::
-setBoxStrokeColor(const QColor &c)
-{
-  CGnuPlotLabel::setBoxStrokeColor(fromQColor(c));
+  return dynamic_cast<CQGnuPlotStroke *>(CGnuPlotLabel::boxStroke());
 }
 
 void

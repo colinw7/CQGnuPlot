@@ -48,9 +48,15 @@ calcColor(CGnuPlotGroup *group, CRGBA &c) const
   if      (borderColor_.isValid())
     c = borderColor_.getValue().calcColor(group);
   else if (borderLineType_.isValid()) {
-    CGnuPlotLineTypeP lineType = group->app()->getLineTypeInd(borderLineType_.getValue());
+    CGnuPlotLineTypeP lineType;
 
-    c = lineType->calcColor(group, c);
+    if (group)
+      lineType = group->app()->getLineTypeInd(borderLineType_.getValue());
+
+    if (lineType.isValid())
+      c = lineType->calcColor(group, c);
+    else
+      return false;
   }
   else
     return false;

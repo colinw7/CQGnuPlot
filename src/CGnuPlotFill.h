@@ -2,6 +2,7 @@
 #define CGnuPlotFill_H
 
 #include <CGnuPlotTypes.h>
+#include <CRefPtr.h>
 
 class CGnuPlotPlot;
 
@@ -12,6 +13,10 @@ class CGnuPlotFill {
 
  public:
   CGnuPlotFill(CGnuPlotPlot *plot=0);
+
+  virtual ~CGnuPlotFill() { }
+
+  virtual CGnuPlotFill *dup() const;
 
   void init(CGnuPlotPlot *plot);
 
@@ -27,11 +32,14 @@ class CGnuPlotFill {
   const FillPattern &pattern() const { return pattern_; }
   void setPattern(const FillPattern &p) { pattern_ = p; }
 
- private:
-  CRGBA       color_;
-  CRGBA       bg_;
-  FillType    type_    { FillType::EMPTY };
-  FillPattern pattern_ { FillPattern::NONE };
+ protected:
+  CGnuPlotPlot* plot_    { 0 };
+  CRGBA         color_;
+  CRGBA         bg_;
+  FillType      type_    { FillType::EMPTY };
+  FillPattern   pattern_ { FillPattern::NONE };
 };
+
+typedef CRefPtr<CGnuPlotFill> CGnuPlotFillP;
 
 #endif

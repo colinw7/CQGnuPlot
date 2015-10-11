@@ -549,6 +549,8 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
 
     state.pos -= CPoint2D(0, dy);
 
+    assert(! state.lines.empty());
+
     CGnuPlotTextLine &line = state.lines.back();
 
     if (line.ascent <= 0) {
@@ -557,7 +559,7 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
     }
 
     double fa = renderer->pixelHeightToWindowHeight(state.font->getCharAscent());
-    //double fa = line.ascent;
+  //double fa = line.ascent;
 
     int i1 = i;
 

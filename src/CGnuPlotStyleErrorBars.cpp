@@ -12,11 +12,11 @@ void
 CGnuPlotStyleErrorBars::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  CGnuPlotGroup *group = plot->group();
-
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
+  CGnuPlotStroke stroke(plot);
+
+  CRGBA c = stroke.color();
 
   typedef std::map<std::string,int> IndexMap;
 
@@ -133,20 +133,18 @@ void
 CGnuPlotStyleErrorBars::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
-  CGnuPlotGroup *group = plot->group();
+  CGnuPlotStroke stroke(plot);
 
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  CRGBA c = stroke.color();
 
-  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
-
-  renderer->drawLine(p1, p2, lineStyle.calcWidth(), c, lineStyle.calcDash());
+  renderer->drawLine(p1, p2, stroke.width(), c, stroke.lineDash());
 
   double ph = renderer->pixelHeightToWindowHeight(4);
 
   CPoint2D d1(0, -ph), d2(0, ph);
 
-  renderer->drawLine(p1 + d1, p1 + d2, lineStyle.calcWidth(), c, lineStyle.calcDash());
-  renderer->drawLine(p2 + d1, p2 + d2, lineStyle.calcWidth(), c, lineStyle.calcDash());
+  renderer->drawLine(p1 + d1, p1 + d2, stroke.width(), c, stroke.lineDash());
+  renderer->drawLine(p2 + d1, p2 + d2, stroke.width(), c, stroke.lineDash());
 }
 
 CBBox2D

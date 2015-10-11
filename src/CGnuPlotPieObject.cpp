@@ -7,6 +7,8 @@ CGnuPlotPieObject::
 CGnuPlotPieObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
+  fill_   = plot->createFill  ();
+  stroke_ = plot->createStroke();
 }
 
 bool
@@ -15,13 +17,13 @@ inside(const CGnuPlotTypes::InsideData &data) const
 {
   const CPoint2D &p = data.window;
 
-  double r = p.distanceTo(c_);
+  double r = p.distanceTo(center());
 
   if (r > r_)
     return false;
 
   // check angle
-  double a = CAngle::Rad2Deg(atan2(p.y - c_.y, p.x - c_.x)); while (a < 0) a += 360.0;
+  double a = CAngle::Rad2Deg(atan2(p.y - center().y, p.x - center().x)); while (a < 0) a += 360.0;
 
   double angle1 = angle1_; while (angle1 < 0) angle1 += 360.0;
   double angle2 = angle2_; while (angle2 < 0) angle2 += 360.0;
@@ -60,14 +62,10 @@ tip() const
 
   CPoint2D d(r_, r_);
 
-  CBBox2D rect(c_ - d, c_ + d);
+  CBBox2D rect(center() - d, center() + d);
 
-  if (fillColor_.isValid()) {
-    CRGBA c = fillColor();
-
-    tip.setBorderColor(c);
-    tip.setXColor(c);
-  }
+  tip.setBorderColor(fill_->color());
+  tip.setXColor     (fill_->color());
 
   tip.setRect(rect);
 
@@ -80,7 +78,20 @@ draw(CGnuPlotRenderer *renderer) const
 {
   bool highlighted = (isHighlighted() || isSelected());
 
-  CPoint2D c = c_;
+  CGnuPlotFillP   fill   = fill_;
+  CGnuPlotStrokeP stroke = stroke_;
+
+  if (highlighted) {
+    fill   = fill_  ->dup();
+    stroke = stroke_->dup();
+
+    fill->setColor(fill->color().getLightRGBA());
+
+    stroke->setColor(CRGBA(1,0,0));
+    stroke->setWidth(2);
+  }
+
+  CPoint2D c = center();
 
   bool exploded = exploded_;
 
@@ -101,25 +112,8 @@ draw(CGnuPlotRenderer *renderer) const
 
   double ir = innerRadius_*r_;
 
-  CRGBA fc = fillColor_.getValue(CRGBA(1,0,0));
-
-  if (highlighted) {
-    fc = fc.getLightRGBA();
-  }
-
-  renderer->fillPieSlice(c, ir, r_, angle1_, angle2_, fc);
-
-  //---
-
-  CRGBA  lc = lineColor_.getValue(CRGBA(1,0,0));
-  double lw = 0;
-
-  if (highlighted) {
-    lc = CRGBA(1,0,0);
-    lw = 2;
-  }
-
-  renderer->drawPieSlice(c, ir, r_, angle1_, angle2_, lw, lc);
+  renderer->fillPieSlice  (c, ir, r_, angle1_, angle2_, *fill  );
+  renderer->strokePieSlice(c, ir, r_, angle1_, angle2_, *stroke);
 
   //---
 
@@ -138,9 +132,8 @@ draw(CGnuPlotRenderer *renderer) const
 
     CRGBA tc(0,0,0);
 
-    if (highlighted) {
-      tc = CRGBA(1,0,0);
-    }
+    if (fill->type() == CGnuPlotTypes::FillType::SOLID)
+      tc = fill->color().bwContrast();
 
     // aligned ?
     renderer->drawHAlignedText(tp, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0, name_, tc);

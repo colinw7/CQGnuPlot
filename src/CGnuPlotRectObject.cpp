@@ -6,6 +6,8 @@ CGnuPlotRectObject::
 CGnuPlotRectObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
+  fill_   = plot->createFill  ();
+  stroke_ = plot->createStroke();
 }
 
 bool
@@ -32,8 +34,8 @@ tip() const
       tip.setYStr(text_);
   }
 
-  tip.setBorderColor(lc_);
-  tip.setXColor(lc_);
+  tip.setBorderColor(stroke_->color());
+  tip.setXColor     (stroke_->color());
 
   tip.setRect(rect_);
 
@@ -46,41 +48,31 @@ draw(CGnuPlotRenderer *renderer) const
 {
   bool highlighted = (isHighlighted() || isSelected());
 
-  if (fillColor_.isValid()) {
-    CRGBA fc = fillColor_.getValue();
+  CGnuPlotFillP   fill   = fill_;
+  CGnuPlotStrokeP stroke = stroke_;
 
-    lc_ = fc;
+  if (highlighted) {
+    fill   = fill_  ->dup();
+    stroke = stroke_->dup();
 
-    if (highlighted) {
-      fc = fc.getLightRGBA();
-    }
+    fill->setColor(fill->color().getLightRGBA());
 
-    renderer->fillRect(rect_, fc);
+    stroke->setEnabled(true);
+    stroke->setColor(CRGBA(1,0,0));
+    stroke->setWidth(2);
   }
 
-  if (lineColor_.isValid()) {
-    CRGBA  lc = lineColor_.getValue();
-    double lw = lineWidth_;
-
-    lc_ = lc;
-
-    if (highlighted) {
-      lc = CRGBA(1,0,0);
-      lw = 2;
-    }
-
-    renderer->drawRect(rect_, lc, lw);
-  }
+  renderer->fillRect  (rect_, *fill  );
+  renderer->strokeRect(rect_, *stroke);
 
   if (text_ != "") {
     double tw = renderer->pixelWidthToWindowWidth  (renderer->getFont()->getStringWidth(text_));
     double th = renderer->pixelHeightToWindowHeight(renderer->getFont()->getCharAscent());
 
-    CRGBA tc = CRGBA(0,0,0);
+    CRGBA tc(0,0,0);
 
-    if (highlighted) {
-      tc = CRGBA(1,0,0);
-    }
+    if (fill->type() == CGnuPlotTypes::FillType::SOLID)
+      tc = fill->color().bwContrast();
 
     renderer->drawText(rect_.getCenter() - CPoint2D(tw/2, th/2), text_, tc);
   }

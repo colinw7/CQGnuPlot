@@ -118,8 +118,7 @@ patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern p
                const CRGBA &fg, const CRGBA &bg)
 {
   log("patternPolygon " + logValues("points", points) + " " +
-      logValue("pattern", int(pattern)) + " " +
-      logValue("fg", fg) + " " + logValue("bg", bg));
+      logValue("pattern", int(pattern)) + " " + logValue("fg", fg) + " " + logValue("bg", bg));
 }
 
 void
@@ -138,6 +137,16 @@ fillEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA 
 {
   log("fillEllipse " + logValue("center", center) + " " + logValue("rx", rx) + " " +
       logValue("ry", ry) + " " + logValue("a", a) + " " + logValue("color", c));
+}
+
+void
+CGnuPlotLogRenderer::
+patternEllipse(const CPoint2D &center, double rx, double ry, double a,
+               CGnuPlotTypes::FillPattern pattern, const CRGBA &fg, const CRGBA &bg)
+{
+  log("patternEllipse " + logValue("center", center) + " " + logValue("rx", rx) + " " +
+      logValue("ry", ry) + " " + logValue("a", a) + " " +
+      logValue("pattern", int(pattern)) + " " + logValue("fg", fg) + " " + logValue("bg", bg));
 }
 
 void

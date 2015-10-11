@@ -42,6 +42,10 @@ class CGnuPlotWindow {
 
   //---
 
+  CRGBA getLightRGBA(const CRGBA &c) const;
+
+  //---
+
   void reset3D();
 
   void draw();

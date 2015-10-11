@@ -4,10 +4,18 @@
 #include <CGnuPlotPlot.h>
 
 CGnuPlotStroke::
-CGnuPlotStroke(CGnuPlotPlot *plot)
+CGnuPlotStroke(CGnuPlotPlot *plot) :
+ plot_(plot)
 {
   if (plot)
     init(plot);
+}
+
+CGnuPlotStroke *
+CGnuPlotStroke::
+dup() const
+{
+  return new CGnuPlotStroke(*this);
 }
 
 void
@@ -19,7 +27,10 @@ init(CGnuPlotPlot *plot)
 
   enabled_ = fillStyle.hasBorder();
 
-  color_ = lineStyle.calcColor(plot->group(), CRGBA(0, 0, 0));
+  //CRGBA c = (fillStyle.style() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
+  CRGBA c = CRGBA(0,0,0);
+
+  color_ = lineStyle.calcColor(plot->group(), c);
   width_ = lineStyle.calcWidth();
   dash_  = lineStyle.calcDash();
 

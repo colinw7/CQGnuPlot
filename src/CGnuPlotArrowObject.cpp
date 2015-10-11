@@ -9,20 +9,7 @@ CGnuPlotArrowObject::
 CGnuPlotArrowObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
-}
-
-double
-CGnuPlotArrowObject::
-calcLineWidth() const
-{
-  return data_.calcLineWidth(plot_->group());
-}
-
-CRGBA
-CGnuPlotArrowObject::
-calcLineColor() const
-{
-  return data_.calcLineColor(plot_->group());
+  stroke_ = plot->createStroke();
 }
 
 bool
@@ -45,5 +32,15 @@ draw(CGnuPlotRenderer *renderer) const
 {
   bool highlighted = (isHighlighted() || isSelected());
 
-  data_.draw(renderer, plot()->group(), highlighted);
+  CGnuPlotStrokeP stroke = stroke_;
+
+  if (highlighted) {
+    stroke = stroke_->dup();
+
+    stroke->setEnabled(true);
+    stroke->setColor(CRGBA(1,0,0));
+    stroke->setWidth(2);
+  }
+
+  data_.draw(renderer, *stroke);
 }

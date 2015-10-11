@@ -18,13 +18,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
+  CGnuPlotFill   fill  (plot);
+  CGnuPlotStroke stroke(plot);
+
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA c1 = (plot->fillType() == CGnuPlotTypes::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
-
-  CRGBA  lc = lineStyle.calcColor(group, CRGBA(0,0,0));
-  double lw = lineStyle.calcWidth();
-  CRGBA  fc = lineStyle.calcColor(group, c1);
+  CRGBA  lc = stroke.color();
+  double lw = stroke.width();
+  CRGBA  fc = fill  .color();
 
   double bw = plot->boxWidth().getSpacing(0.1);
 
@@ -90,12 +91,18 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CBBox2D bbox(x1, p2.y, x2, p3.y);
 
-    if      (plot->fillType() == CGnuPlotTypes::FillType::PATTERN)
-      renderer->patternRect(bbox, plot->fillPattern(), fc1, CRGBA(1,1,1));
-    else if (plot->fillType() == CGnuPlotTypes::FillType::SOLID)
-      renderer->fillClippedRect(bbox, fc1);
-    else if (bmin > bmax)
-      renderer->fillClippedRect(bbox, fc1);
+    if (fill.type() == CGnuPlotTypes::FillType::PATTERN ||
+        fill.type() == CGnuPlotTypes::FillType::SOLID) {
+      CGnuPlotFill fill1 = fill;
+
+      fill1.setColor(fc1);
+
+      renderer->fillRect(bbox, fill1);
+    }
+    else {
+      if (bmin > bmax)
+        renderer->fillClippedRect(bbox, fc1);
+    }
 
     renderer->drawClippedRect(bbox, lc1, 1);
   }
@@ -105,9 +112,8 @@ void
 CGnuPlotStyleCandlesticks::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
-  CGnuPlotGroup *group = plot->group();
-
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  CGnuPlotFill   fill  (plot);
+  CGnuPlotStroke stroke(plot);
 
   CFontPtr font = renderer->getFont();
 
@@ -117,13 +123,10 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   CBBox2D hbbox(p1.x, p1.y - h/2, p2.x, p1.y + h/2);
 
-  const CRGBA &lc = lineStyle.calcColor(group, CRGBA(0,0,0));
-  double       lw = 1;
+  CRGBA  lc = stroke.color();
+  double lw = stroke.width();
 
-  if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
-    renderer->patternRect(hbbox, plot->fillStyle().pattern(), lc, CRGBA(1,1,1));
-  else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
-    renderer->fillRect(hbbox, lineStyle.calcColor(group, CRGBA(1,1,1)));
+  renderer->fillRect(hbbox, fill);
 
   renderer->drawRect(hbbox, lc, lw);
 }

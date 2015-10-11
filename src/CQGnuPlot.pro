@@ -29,13 +29,16 @@ CQGnuPlotColorBox.cpp \
 CQGnuPlotDevice.cpp \
 CQGnuPlotEllipse.cpp \
 CQGnuPlotEllipseObject.cpp \
+CQGnuPlotEndBar.cpp \
 CQGnuPlotEnum.cpp \
+CQGnuPlotFill.cpp \
 CQGnuPlotGroup.cpp \
 CQGnuPlotKey.cpp \
 CQGnuPlotLabel.cpp \
 CQGnuPlotLabelObject.cpp \
 CQGnuPlotLineStyle.cpp \
 CQGnuPlotPalette.cpp \
+CQGnuPlotPathObject.cpp \
 CQGnuPlotPieObject.cpp \
 CQGnuPlotPlot.cpp \
 CQGnuPlotPm3D.cpp \
@@ -47,6 +50,7 @@ CQGnuPlotPolygonObject.cpp \
 CQGnuPlotRectangle.cpp \
 CQGnuPlotRectObject.cpp \
 CQGnuPlotRenderer.cpp \
+CQGnuPlotStroke.cpp \
 CQGnuPlotTimeStamp.cpp \
 CQGnuPlotTitle.cpp \
 CQGnuPlotToolBar.cpp \
@@ -91,6 +95,7 @@ CGnuPlotLogRenderer.cpp \
 CGnuPlotMargin.cpp \
 CGnuPlotObject.cpp \
 CGnuPlotPalette.cpp \
+CGnuPlotPathObject.cpp \
 CGnuPlotPieObject.cpp \
 CGnuPlotPlot.cpp \
 CGnuPlotPoint.cpp \
@@ -217,7 +222,9 @@ CQGnuPlotColorBox.h \
 CQGnuPlotDevice.h \
 CQGnuPlotEllipse.h \
 CQGnuPlotEllipseObject.h \
+CQGnuPlotEndBar.h \
 CQGnuPlotEnum.h \
+CQGnuPlotFill.h \
 CQGnuPlotGroup.h \
 CQGnuPlotKey.h \
 CQGnuPlotLabel.h \
@@ -225,6 +232,7 @@ CQGnuPlotLabelObject.h \
 CQGnuPlotLineStyle.h \
 CQGnuPlotObject.h \
 CQGnuPlotPalette.h \
+CQGnuPlotPathObject.h \
 CQGnuPlotPieObject.h \
 CQGnuPlotPlot.h \
 CQGnuPlotPm3D.h \
@@ -236,6 +244,7 @@ CQGnuPlotPolygonObject.h \
 CQGnuPlotRectangle.h \
 CQGnuPlotRectObject.h \
 CQGnuPlotRenderer.h \
+CQGnuPlotStroke.h \
 CQGnuPlotTimeStamp.h \
 CQGnuPlotTitle.h \
 CQGnuPlotToolBar.h \
@@ -279,6 +288,7 @@ CGnuPlotLogRenderer.h \
 CGnuPlotNameValues.h \
 CGnuPlotObject.h \
 CGnuPlotPalette.h \
+CGnuPlotPathObject.h \
 CGnuPlotPieObject.h \
 CGnuPlotPlot.h \
 CGnuPlotPoint.h \

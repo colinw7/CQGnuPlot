@@ -1,7 +1,7 @@
 #include <CQGnuPlotEllipseObject.h>
 #include <CQGnuPlotPlot.h>
-#include <CQGnuPlotUtil.h>
-#include <CQGnuPlotRenderer.h>
+#include <CQGnuPlotFill.h>
+#include <CQGnuPlotStroke.h>
 
 CQGnuPlotEllipseObject::
 CQGnuPlotEllipseObject(CQGnuPlotPlot *plot) :
@@ -28,32 +28,18 @@ setText(const QString &text)
   CGnuPlotEllipseObject::setText(text.toStdString());
 }
 
-QColor
+CQGnuPlotFill *
 CQGnuPlotEllipseObject::
-getFillColor() const
+fill() const
 {
-  return toQColor(CGnuPlotEllipseObject::fillColor());
+  return dynamic_cast<CQGnuPlotFill *>(fill_.get());
 }
 
-void
+CQGnuPlotStroke *
 CQGnuPlotEllipseObject::
-setFillColor(const QColor &color)
+stroke() const
 {
-  CGnuPlotEllipseObject::setFillColor(fromQColor(color));
-}
-
-QColor
-CQGnuPlotEllipseObject::
-getLineColor() const
-{
-  return toQColor(CGnuPlotEllipseObject::lineColor());
-}
-
-void
-CQGnuPlotEllipseObject::
-setLineColor(const QColor &color)
-{
-  CGnuPlotEllipseObject::setLineColor(fromQColor(color));
+  return dynamic_cast<CQGnuPlotStroke *>(stroke_.get());
 }
 
 void

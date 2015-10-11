@@ -188,6 +188,8 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   if (key->getFont().isValid())
     renderer->setFont(key->getFont());
 
+  CGnuPlotFill fill(plot);
+
   //---
 
   CBBox2D rbbox = (key->isOutside() ? group->getRegionBBox() : renderer->range());
@@ -253,9 +255,7 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   CBBox2D bbox(x1, y1, x2, y2);
 
   if (key->getFillBox()) {
-    CRGBA bg = group->window()->backgroundColor();
-
-    renderer->fillRect(bbox, bg);
+    renderer->fillRect(bbox, fill.background());
   }
 
   if (key->getDrawBox()) {

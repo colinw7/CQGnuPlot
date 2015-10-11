@@ -7,6 +7,8 @@ CGnuPlotPolygonObject::
 CGnuPlotPolygonObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
+  fill_   = plot->createFill  ();
+  stroke_ = plot->createStroke();
 }
 
 void
@@ -41,52 +43,30 @@ draw(CGnuPlotRenderer *renderer) const
 {
   bool highlighted = (isHighlighted() || isSelected());
 
-  if (hasFillPattern()) {
-    CRGBA bg = fillBackground_.getValue(CRGBA(1,1,1)); // background ?
-    CRGBA fg = fillColor_     .getValue(CRGBA(0,0,0));
+  CGnuPlotFillP   fill   = fill_;
+  CGnuPlotStrokeP stroke = stroke_;
 
-    if (highlighted) {
-      fg = fg.getLightRGBA();
-    }
+  if (highlighted) {
+    fill   = fill_  ->dup();
+    stroke = stroke_->dup();
 
-    if (isClipped())
-      renderer->patternClippedPolygon(points_, fillPattern(), fg, bg);
+    if (fill->type() == CGnuPlotTypes::FillType::PATTERN)
+      fill->setBackground(fill->background().getLightRGBA());
     else
-      renderer->patternPolygon(points_, fillPattern(), fg, bg);
-  }
-  else if (fillColor_.isValid()) {
-    CRGBA fc = fillColor();
+      fill->setColor(fill->color().getLightRGBA());
 
-    lc_ = fc;
-
-    if (highlighted) {
-      fc = fc.getLightRGBA();
-    }
-
-    if (isClipped())
-      renderer->fillClippedPolygon(points_, fc);
-    else
-      renderer->fillPolygon(points_, fc);
+    stroke->setEnabled(true);
+    stroke->setColor(CRGBA(1,0,0));
+    stroke->setWidth(2);
   }
 
-  if (highlighted || lineColor_.isValid()) {
-    if (lineColor_.isValid())
-      lc_ = lineColor();
-    else
-      lc_ = CRGBA(0,0,0);
-
-    CRGBA  lc = lc_;
-    double lw = lineWidth_;
-
-    if (highlighted) {
-      lc = CRGBA(1,0,0);
-      lw = 2;
-    }
-
-    if (isClipped())
-      renderer->drawClippedPolygon(points_, lw, lc, CLineDash());
-    else
-      renderer->drawPolygon(points_, lw, lc, CLineDash());
+  if (isClipped()) {
+    renderer->fillClippedPolygon  (points_, *fill  );
+    renderer->strokeClippedPolygon(points_, *stroke);
+  }
+  else {
+    renderer->fillPolygon  (points_, *fill  );
+    renderer->strokePolygon(points_, *stroke);
   }
 
   if (text_ != "") {
@@ -120,8 +100,8 @@ tip() const
   tip.setXStr(tipText);
   tip.setYStr("");
 
-  tip.setBorderColor(lc_);
-  tip.setXColor(lc_);
+  tip.setBorderColor(stroke_->color());
+  tip.setXColor     (stroke_->color());
 
   tip.setRect(bbox_);
 

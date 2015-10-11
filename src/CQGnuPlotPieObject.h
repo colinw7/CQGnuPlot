@@ -4,11 +4,9 @@
 #include <CGnuPlotPieObject.h>
 #include <CQGnuPlot.h>
 
-#include <QColor>
-
-using std::string;
-
 class CQGnuPlotPlot;
+class CQGnuPlotFill;
+class CQGnuPlotStroke;
 
 class CQGnuPlotPieObject : public QObject, public CGnuPlotPieObject {
   Q_OBJECT
@@ -20,8 +18,6 @@ class CQGnuPlotPieObject : public QObject, public CGnuPlotPieObject {
   Q_PROPERTY(double  value       READ value        WRITE setValue      )
   Q_PROPERTY(double  innerRadius READ innerRadius  WRITE setInnerRadius)
   Q_PROPERTY(double  labelRadius READ labelRadius  WRITE setLabelRadius)
-  Q_PROPERTY(QColor  lineColor   READ getLineColor WRITE setLineColor  )
-  Q_PROPERTY(QColor  fillColor   READ getFillColor WRITE setFillColor  )
   Q_PROPERTY(bool    exploded    READ isExploded   WRITE setExploded   )
 
  public:
@@ -31,11 +27,8 @@ class CQGnuPlotPieObject : public QObject, public CGnuPlotPieObject {
   QString getName() const;
   void setName(const QString &str);
 
-  QColor getLineColor() const;
-  void setLineColor(const QColor &c);
-
-  QColor getFillColor() const;
-  void setFillColor(const QColor &c);
+  CQGnuPlotFill   *fill  () const;
+  CQGnuPlotStroke *stroke() const;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 };

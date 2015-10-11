@@ -4,6 +4,29 @@ CGnuPlotLabel::
 CGnuPlotLabel(CGnuPlotGroup *group) :
  CGnuPlotGroupAnnotation(group)
 {
+  data_ = new CGnuPlotLabelData(group);
+
+  data_->setAlign(CHALIGN_TYPE_LEFT);
+}
+
+CGnuPlotLabel *
+CGnuPlotLabel::
+setData(const CGnuPlotLabel *label)
+{
+  (void) CGnuPlotGroupAnnotation::setData(label);
+
+  data_ = label->data_->dup();
+
+  return this;
+}
+
+void
+CGnuPlotLabel::
+setData(CGnuPlotLabelData *data)
+{
+  delete data_;
+
+  data_ = data;
 }
 
 void
@@ -14,21 +37,21 @@ draw(CGnuPlotRenderer *renderer) const
 
   bool highlighted = (isHighlighted() || isSelected());
 
-  data_.draw(renderer, group_, highlighted);
+  data_->draw(renderer, group_, highlighted);
 }
 
 bool
 CGnuPlotLabel::
 inside(const CGnuPlotTypes::InsideData &data) const
 {
-  return data_.inside(data);
+  return data_->inside(data);
 }
 
 CGnuPlotTipData
 CGnuPlotLabel::
 tip() const
 {
-  return data_.tip();
+  return data_->tip();
 }
 
 void
@@ -88,6 +111,6 @@ print(std::ostream &os) const
   if (getOffset().isValid())
     os << " offset " << getOffset().getValue();
 
-  if (hasBox())
+  if (boxStroke()->isEnabled())
    os << " boxed";
 }

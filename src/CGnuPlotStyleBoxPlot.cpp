@@ -19,16 +19,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   const CGnuPlotAxis *xaxis = group->getPlotAxis(CGnuPlotTypes::AxisType::X, 1, true);
 
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-  const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
+  CGnuPlotFill   fill  (plot);
+  CGnuPlotStroke stroke(plot);
 
-  CRGBA fc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
-  CRGBA lc = CRGBA(0,0,0);
-
-  if (fillStyle.isTransparent())
-    fc.setAlpha(fillStyle.density());
-  else
-    fc = fillStyle.density()*fc + group->backgroundColor()*(1 - fillStyle.density());
+  CRGBA fc = fill  .color();
+  CRGBA lc = stroke.color();
 
   double bw = plot->boxWidth().getSpacing(0.1);
 

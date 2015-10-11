@@ -68,6 +68,15 @@ fitGroups()
   }
 }
 
+CRGBA
+CGnuPlotWindow::
+getLightRGBA(const CRGBA &c) const
+{
+  double f = 0.7;
+
+  return f*c + (1 - f)*backgroundColor();
+}
+
 void
 CGnuPlotWindow::
 draw()

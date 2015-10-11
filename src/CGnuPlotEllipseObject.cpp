@@ -7,6 +7,8 @@ CGnuPlotEllipseObject::
 CGnuPlotEllipseObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
+  fill_   = plot->createFill  ();
+  stroke_ = plot->createStroke();
 }
 
 void
@@ -68,8 +70,8 @@ tip() const
   else if (text_ != "")
     tip.setYStr(text_);
 
-  tip.setBorderColor(lc_);
-  tip.setXColor(lc_);
+  tip.setBorderColor(stroke_->color());
+  tip.setXColor     (stroke_->color());
 
   tip.setRect(rect_);
 
@@ -82,47 +84,31 @@ draw(CGnuPlotRenderer *renderer) const
 {
   bool highlighted = (isHighlighted() || isSelected());
 
+  CGnuPlotFillP   fill   = fill_;
+  CGnuPlotStrokeP stroke = stroke_;
+
+  if (highlighted) {
+    fill   = fill_  ->dup();
+    stroke = stroke_->dup();
+
+    fill->setColor(fill->color().getLightRGBA());
+
+    stroke->setEnabled(true);
+    stroke->setColor  (CRGBA(1,0,0));
+    stroke->setWidth(2);
+  }
+
   double w = size_.getWidth ();
   double h = size_.getHeight();
 
-  if (fillColor_.isValid()) {
-    CRGBA fc = fillColor_.getValue();
-
-    if (highlighted) {
-      fc = fc.getLightRGBA();
-    }
-
-    renderer->fillEllipse(center_, w, h, 0, fc);
-  }
-
-  lc_ = CRGBA(0,0,0);
-
-  if      (lineColor_.isValid()) {
-    CRGBA  lc = lineColor_.getValue();
-    double lw = lineWidth_;
-
-    lc_ = lc;
-
-    if (highlighted) {
-      lc = CRGBA(1,0,0);
-      lw = 2;
-    }
-
-    renderer->drawEllipse(center_, w, h, 0, lc, lw);
-  }
-  else if (highlighted) {
-    CRGBA  lc = CRGBA(1,0,0);
-    double lw = 2;
-
-    renderer->drawEllipse(center_, w, h, 0, lc, lw);
-  }
+  renderer->fillEllipse  (center_, w, h, 0, *fill  );
+  renderer->strokeEllipse(center_, w, h, 0, *stroke);
 
   if (text_ != "") {
     CRGBA tc(0,0,0);
 
-    if (highlighted) {
-      tc = CRGBA(1,0,0);
-    }
+    if (fill->type() == CGnuPlotTypes::FillType::SOLID)
+      tc = fill->color().bwContrast();
 
     double tw = renderer->pixelWidthToWindowWidth  (renderer->getFont()->getStringWidth(text_));
     double th = renderer->pixelHeightToWindowHeight(renderer->getFont()->getCharAscent());

@@ -47,13 +47,17 @@ void
 CGnuPlotStyleStepsBase::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotStroke stroke(plot);
+
+  CRGBA c = stroke.color();
+
+  //---
+
   const CBBox2D &bbox = plot->getBBox();
 
   double ymin = bbox.getYMin();
 
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-
-  const CRGBA &c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  //---
 
   uint np = plot->numPoints2D();
 
@@ -63,7 +67,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CPoint2D p1, p2;
 
-    double lw = lineStyle.calcWidth();
+    double lw = stroke.width();
 
     if (point1.getPoint(p1) && point2.getPoint(p2)) {
       if      (plot->getStyle() == CGnuPlotTypes::PlotStyle::HISTEPS) {

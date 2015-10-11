@@ -4,9 +4,9 @@
 #include <CGnuPlotEllipseObject.h>
 #include <CQGnuPlot.h>
 
-#include <QColor>
-
 class CQGnuPlotPlot;
+class CQGnuPlotFill;
+class CQGnuPlotStroke;
 
 class CQGnuPlotEllipseObject : public QObject, public CGnuPlotEllipseObject {
   Q_OBJECT
@@ -14,9 +14,7 @@ class CQGnuPlotEllipseObject : public QObject, public CGnuPlotEllipseObject {
   Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
   Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
-  Q_PROPERTY(QString text      READ getText      WRITE setText     )
-  Q_PROPERTY(QColor  fillColor READ getFillColor WRITE setFillColor)
-  Q_PROPERTY(QColor  lineColor READ getLineColor WRITE setLineColor)
+  Q_PROPERTY(QString text READ getText WRITE setText)
 
  public:
   CQGnuPlotEllipseObject(CQGnuPlotPlot *plot);
@@ -25,11 +23,8 @@ class CQGnuPlotEllipseObject : public QObject, public CGnuPlotEllipseObject {
   QString getText() const;
   void setText(const QString &str);
 
-  QColor getFillColor() const;
-  void setFillColor(const QColor &c);
-
-  QColor getLineColor() const;
-  void setLineColor(const QColor &c);
+  CQGnuPlotFill   *fill  () const;
+  CQGnuPlotStroke *stroke() const;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 };

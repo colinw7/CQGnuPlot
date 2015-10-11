@@ -3,8 +3,8 @@
 
 #include <CGnuPlotBubbleObject.h>
 #include <CQGnuPlot.h>
-
-#include <QColor>
+#include <CQGnuPlotFill.h>
+#include <CQGnuPlotStroke.h>
 
 class CQGnuPlotPlot;
 
@@ -14,8 +14,8 @@ class CQGnuPlotBubbleObject : public QObject, public CGnuPlotBubbleObject {
   Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
   Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
-  Q_PROPERTY(QString name  READ getName  WRITE setName )
-  Q_PROPERTY(QColor  color READ getColor WRITE setColor)
+  Q_PROPERTY(QString name  READ getName WRITE setName )
+  Q_PROPERTY(double  value READ value   WRITE setValue)
 
  public:
   CQGnuPlotBubbleObject(CQGnuPlotPlot *plot);
@@ -24,8 +24,8 @@ class CQGnuPlotBubbleObject : public QObject, public CGnuPlotBubbleObject {
   QString getName() const;
   void setName(const QString &str);
 
-  QColor getColor() const;
-  void setColor(const QColor &c);
+  CQGnuPlotFill   *fill  () const;
+  CQGnuPlotStroke *stroke() const;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 };

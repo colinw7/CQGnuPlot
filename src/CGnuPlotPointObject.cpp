@@ -15,12 +15,9 @@ bool
 CGnuPlotPointObject::
 inside(const CGnuPlotTypes::InsideData &data) const
 {
-  double r = data.window.distanceTo(point_);
+  double r = data.pixel.distanceTo(pc_);
 
-  if (r > pw_)
-    return false;
-
-  return true;
+  return (r < 4);
 }
 
 CGnuPlotTipData
@@ -29,21 +26,17 @@ tip() const
 {
   CGnuPlotTipData tip;
 
-  tip.setXStr(CStrUtil::strprintf("%g", point_.x));
+  tip.setXStr(CStrUtil::strprintf("%g", point().x));
 
-  if (size_.isValid())
-    tip.setYStr(CStrUtil::strprintf("%g, %g", point_.y, size_.getValue()));
+  if (size().isValid())
+    tip.setYStr(CStrUtil::strprintf("%g, %g", point().y, size().getValue()));
   else
-    tip.setYStr(CStrUtil::strprintf("%g", point_.y));
+    tip.setYStr(CStrUtil::strprintf("%g", point().y));
 
-  CPoint2D d(pw_, ph_);
+  tip.setBorderColor(color());
+  tip.setXColor     (color());
 
-  CBBox2D rect(point_ - d, point_ + d);
-
-  tip.setBorderColor(color_);
-  tip.setXColor(color_);
-
-  tip.setRect(rect);
+  tip.setRect(bbox_);
 
   return tip;
 }
@@ -52,39 +45,74 @@ void
 CGnuPlotPointObject::
 draw(CGnuPlotRenderer *renderer) const
 {
+  if (! isVisible()) return;
+
   bool highlighted = (isHighlighted() || isSelected());
 
-  double size = size_.getValue(1);
+  double size = this->size().getValue(1);
 
   if (size <= 0)
     size = 1;
 
-  if (highlighted)
-    size = 1.5*size;
+  double wxsize, wysize;
 
-  double ss = sqrt(size);
+  if (isPixelSize()) {
+    pw_ = 8*size;
+    ph_ = 8*size;
 
-  pw_ = ss/2;
-  ph_ = ss/2;
+    wxsize = renderer->pixelWidthToWindowWidth  (pw_);
+    wysize = renderer->pixelHeightToWindowHeight(ph_);
+  }
+  else {
+    double size1 = sqrt(size);
+
+    pw_ = renderer->windowWidthToPixelWidth  (size1);
+    ph_ = renderer->windowHeightToPixelHeight(size1);
+
+    wxsize = size1;
+    wysize = size1;
+  }
+
+  CRGBA c = color();
+
+  double scale = 1;
+
+  if (highlighted) {
+    scale = 1.5;
+    c     = plot_->window()->getLightRGBA(c);
+  }
 
   bool erasePoint = isErasePoint();
 
   if (highlighted)
     erasePoint = true;
 
+  CPoint2D d(scale*wxsize/2, scale*wysize/2);
+
+  bbox_ = CBBox2D(point() - d, point() + d);
+
   if (erasePoint) {
     CGnuPlotGroup *group = plot()->group();
 
     CRGBA bg = group->window()->backgroundColor();
 
-    CPoint2D d(pw_, ph_);
+    CBBox2D ebbox(point() - 2*d, point() + 2*d);
 
-    renderer->fillEllipse(CBBox2D(point_ - 2*d, point_ + 2*d), bg);
+    renderer->fillEllipse(ebbox, bg);
   }
 
-  if (pointType_ == CGnuPlotTypes::SymbolType::STRING)
-    renderer->drawHAlignedText(point_, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
-                               pointString_, color_);
+  if (pointType() == CGnuPlotTypes::SymbolType::STRING)
+    renderer->drawHAlignedText(point(), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
+                               pointString(), c);
   else
-    renderer->drawSymbol(point_, pointType_, size, color_, lineWidth_, false);
+    renderer->drawSymbol(point(), pointType(), scale*pw_/8.0, c, lineWidth(), true);
+
+  //---
+
+  double px, py;
+
+  renderer->windowToPixel(point().x, point().y, &px, &py);
+
+  pc_ = CPoint2D(px, py);
+//renderer->drawRect(bbox_, CRGBA(1,0,0), 1);
 }

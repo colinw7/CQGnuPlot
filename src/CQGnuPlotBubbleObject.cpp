@@ -28,18 +28,18 @@ setName(const QString &name)
   CGnuPlotBubbleObject::setName(name.toStdString());
 }
 
-QColor
+CQGnuPlotFill *
 CQGnuPlotBubbleObject::
-getColor() const
+fill() const
 {
-  return toQColor(CGnuPlotBubbleObject::color());
+  return dynamic_cast<CQGnuPlotFill *>(fill_.get());
 }
 
-void
+CQGnuPlotStroke *
 CQGnuPlotBubbleObject::
-setColor(const QColor &color)
+stroke() const
 {
-  CGnuPlotBubbleObject::setColor(fromQColor(color));
+  return dynamic_cast<CQGnuPlotStroke *>(stroke_.get());
 }
 
 void

@@ -13,33 +13,6 @@ void
 CGnuPlotStylePolygons::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  CGnuPlotGroup *group = plot->group();
-
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-  const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
-
-  //---
-
-  // TODO: pattern fill
-  CRGBA fc = lineStyle.calcColor(group, CRGBA(0.5,0.5,0.5));
-
-  if (fillStyle.isTransparent())
-    fc.setAlpha(fillStyle.density());
-
-  CRGBA lc(0,0,0,0);
-
-  double lw = lineStyle.calcWidth();
-
-  if (fillStyle.hasBorder()) {
-    // border line type ?
-    lc = fc;
-
-    if (fillStyle.borderColor().isValid())
-      lc = fillStyle.borderColor().getValue().calcColor(group);
-  }
-
-  //---
-
   typedef std::vector<CPoint2D>    Points;
   typedef std::vector<Points>      PointsArray;
   typedef std::vector<std::string> Names;
@@ -96,9 +69,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       polygon->setText(name);
 
       if (! polygon->testAndSetUsed()) {
-        polygon->setFillColor(fc);
-        polygon->setLineColor(lc);
-        polygon->setLineWidth(lw);
+        CGnuPlotFillP   fill  (polygon->fill  ()->dup());
+        CGnuPlotStrokeP stroke(polygon->stroke()->dup());
+
+        polygon->setFill  (fill  );
+        polygon->setStroke(stroke);
       }
 
       ++i;
@@ -108,9 +83,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       polygon->draw(renderer);
   }
   else {
+    CGnuPlotFill   fill  (plot);
+    CGnuPlotStroke stroke(plot);
+
     for (const auto &points : pointsArray) {
-      renderer->fillPolygon(points, fc);
-      renderer->drawPolygon(points, lw, lc, CLineDash());
+      renderer->fillPolygon(points, fill.color());
+
+      if (stroke.isEnabled())
+        renderer->drawPolygon(points, stroke.width(), stroke.color(), stroke.lineDash());
     }
   }
 }

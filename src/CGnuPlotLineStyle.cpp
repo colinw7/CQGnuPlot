@@ -58,16 +58,18 @@ CRGBA
 CGnuPlotLineStyle::
 calcColor(CGnuPlotPlot *plot, double x) const
 {
+  CGnuPlotGroup *group = plot->group();
+
   if      (lineColor_.isValid())
-    return lineColor_.getValue().calcColor(plot->group(), x);
+    return lineColor_.getValue().calcColor(group, x);
   else if (lineType_.isValid()) {
     CGnuPlotLineTypeP lineType;
 
-    if (plot)
+    if (plot_)
       lineType = plot_->getLineTypeInd(lineType_.getValue());
 
     if (lineType.isValid())
-      return lineType->lineColor().calcColor(plot->group(), x);
+      return lineType->lineColor().calcColor(group, x);
     else
       return CRGBA(0,0,0);
   }

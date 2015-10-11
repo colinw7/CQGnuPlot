@@ -184,6 +184,14 @@ fillEllipse(const CPoint2D &center, double rx, double ry, double angle, const CR
 
 void
 CGnuPlotBBoxRenderer::
+patternEllipse(const CPoint2D &center, double rx, double ry, double angle,
+               CGnuPlotTypes::FillPattern, const CRGBA &, const CRGBA &)
+{
+  drawEllipse(center, rx, ry, angle, CRGBA(0,0,0), 0, CLineDash());
+}
+
+void
+CGnuPlotBBoxRenderer::
 drawText(const CPoint2D &point, const std::string &str, const CRGBA &)
 {
   if (! renderer_->mapping()) {

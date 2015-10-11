@@ -8,6 +8,7 @@
 #include <CGnuPlotBubbleObject.h>
 #include <CGnuPlotEllipseObject.h>
 #include <CGnuPlotLabelObject.h>
+#include <CGnuPlotPathObject.h>
 #include <CGnuPlotPieObject.h>
 #include <CGnuPlotPointObject.h>
 #include <CGnuPlotPolygonObject.h>
@@ -72,6 +73,7 @@ createEllipse(CGnuPlotGroup *group)
 {
   return new CGnuPlotEllipse(group);
 }
+
 CGnuPlotLabel *
 CGnuPlotDevice::
 createLabel(CGnuPlotGroup *group)
@@ -165,6 +167,13 @@ createBarObject(CGnuPlotPlot *plot)
   return new CGnuPlotBarObject(plot);
 }
 
+CGnuPlotEndBar *
+CGnuPlotDevice::
+createEndBar(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotEndBar(plot);
+}
+
 CGnuPlotBubbleObject *
 CGnuPlotDevice::
 createBubbleObject(CGnuPlotPlot *plot)
@@ -184,6 +193,13 @@ CGnuPlotDevice::
 createLabelObject(CGnuPlotPlot *plot)
 {
   return new CGnuPlotLabelObject(plot);
+}
+
+CGnuPlotPathObject *
+CGnuPlotDevice::
+createPathObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotPathObject(plot);
 }
 
 CGnuPlotPieObject *
@@ -212,6 +228,20 @@ CGnuPlotDevice::
 createRectObject(CGnuPlotPlot *plot)
 {
   return new CGnuPlotRectObject(plot);
+}
+
+CGnuPlotFill *
+CGnuPlotDevice::
+createFill(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotFill(plot);
+}
+
+CGnuPlotStroke *
+CGnuPlotDevice::
+createStroke(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotStroke(plot);
 }
 
 //---

@@ -3,6 +3,7 @@
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotUtil.h>
 #include <CQGnuPlotRenderer.h>
+#include <CQGnuPlotStroke.h>
 #include <CQUtil.h>
 
 CQGnuPlotArrowObject::
@@ -94,18 +95,11 @@ setHeadLength(double l)
   CGnuPlotArrowObject::setHeadLength(l);
 }
 
-CLineDash
+CQGnuPlotStroke *
 CQGnuPlotArrowObject::
-getDash() const
+stroke() const
 {
-  return CGnuPlotArrowObject::getDash().calcDash(plot_->group()->app(), CLineDash());
-}
-
-void
-CQGnuPlotArrowObject::
-setDash(const CLineDash &dash)
-{
-  CGnuPlotArrowObject::setDash(CGnuPlotDash(dash));
+  return dynamic_cast<CQGnuPlotStroke *>(stroke_.get());
 }
 
 void

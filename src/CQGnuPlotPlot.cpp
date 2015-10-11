@@ -7,10 +7,14 @@
 #include <CQGnuPlotBubbleObject.h>
 #include <CQGnuPlotEllipseObject.h>
 #include <CQGnuPlotLabelObject.h>
+#include <CQGnuPlotPathObject.h>
 #include <CQGnuPlotPieObject.h>
 #include <CQGnuPlotPointObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
+
+#include <CQGnuPlotFill.h>
+#include <CQGnuPlotStroke.h>
 
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
@@ -75,28 +79,28 @@ CQGnuPlotEnum::FillType
 CQGnuPlotPlot::
 fillType() const
 {
-  return CQGnuPlotUtil::fillTypeConv(CGnuPlotPlot::fillType());
+  return CQGnuPlotUtil::fillTypeConv(CGnuPlotPlot::fillStyle_.style());
 }
 
 void
 CQGnuPlotPlot::
 setFillType(const CQGnuPlotEnum::FillType &type)
 {
-  CGnuPlotPlot::setFillType(CQGnuPlotUtil::fillTypeConv(type));
+  CGnuPlotPlot::fillStyle_.setStyle(CQGnuPlotUtil::fillTypeConv(type));
 }
 
 CQGnuPlotEnum::FillPattern
 CQGnuPlotPlot::
 fillPattern() const
 {
-  return CQGnuPlotUtil::fillPatternConv(CGnuPlotPlot::fillPattern());
+  return CQGnuPlotUtil::fillPatternConv(CGnuPlotPlot::fillStyle_.pattern());
 }
 
 void
 CQGnuPlotPlot::
 setFillPattern(const CQGnuPlotEnum::FillPattern &pattern)
 {
-  CGnuPlotPlot::setFillPattern(CQGnuPlotUtil::fillPatternConv(pattern));
+  CGnuPlotPlot::fillStyle_.setPattern(CQGnuPlotUtil::fillPatternConv(pattern));
 }
 
 CQGnuPlotEnum::SymbolType
@@ -191,6 +195,14 @@ mousePress(const CPoint2D &pixel, const CPoint2D &window, Objects &objects)
     CQGnuPlotLabelObject *qlabel = static_cast<CQGnuPlotLabelObject *>(label);
 
     objects.push_back(qlabel);
+  }
+
+  for (auto &path : pathObjects()) {
+    if (path->inside(insideData)) {
+      CQGnuPlotPathObject *qpath = static_cast<CQGnuPlotPathObject *>(path);
+
+      objects.push_back(qpath);
+    }
   }
 
   for (auto &pie : pieObjects()) {
@@ -310,6 +322,19 @@ mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip)
     return true;
   }
 
+  for (auto &path : pathObjects()) {
+    if (! path->inside(insideData))
+      continue;
+
+    CQGnuPlotPathObject *qpath = static_cast<CQGnuPlotPathObject *>(path);
+
+    qwindow()->highlightObject(qpath);
+
+    tip = path->tip();
+
+    return true;
+  }
+
   for (auto &pie : pieObjects()) {
     if (! pie->inside(insideData))
       continue;
@@ -374,7 +399,7 @@ fillColor() const
   if (! plot_->barObjects().empty()) {
     CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
 
-    return qbar->getFillColor();
+    return qbar->fill()->color();
   }
 
   return QColor();
@@ -387,7 +412,7 @@ setFillColor(const QColor &c)
   for (auto &bar : plot_->barObjects()) {
     CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
-    qbar->setFillColor(c);
+    qbar->fill()->setColor(c);
   }
 }
 
@@ -398,7 +423,7 @@ hasBorder() const
   if (! plot_->barObjects().empty()) {
     CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
 
-    return qbar->hasBorder();
+    return qbar->stroke()->isEnabled();
   }
 
   return false;
@@ -411,7 +436,7 @@ setBorder(bool b)
   for (auto &bar : plot_->barObjects()) {
     CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
-    qbar->setBorder(b);
+    qbar->stroke()->setEnabled(b);
   }
 }
 
@@ -422,7 +447,7 @@ lineColor() const
   if (! plot_->barObjects().empty()) {
     CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
 
-    return qbar->getLineColor();
+    return qbar->stroke()->color();
   }
 
   return QColor();
@@ -435,7 +460,31 @@ setLineColor(const QColor &c)
   for (auto &bar : plot_->barObjects()) {
     CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
-    qbar->setLineColor(c);
+    qbar->stroke()->setColor(c);
+  }
+}
+
+double
+CQGnuPlotPlotBarObjects::
+lineWidth() const
+{
+  if (! plot_->barObjects().empty()) {
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
+
+    return qbar->stroke()->width();
+  }
+
+  return 0;
+}
+
+void
+CQGnuPlotPlotBarObjects::
+setLineWidth(double r)
+{
+  for (auto &bar : plot_->barObjects()) {
+    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+
+    qbar->stroke()->setWidth(r);
   }
 }
 
@@ -446,7 +495,7 @@ getFillType() const
   if (! plot_->barObjects().empty()) {
     CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
 
-    return qbar->getFillType();
+    return qbar->fill()->type();
   }
 
   return CQGnuPlotEnum::FillType::FillNone;
@@ -459,7 +508,7 @@ setFillType(const CQGnuPlotEnum::FillType &t)
   for (auto &bar : plot_->barObjects()) {
     CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
-    qbar->setFillType(t);
+    qbar->fill()->setType(t);
   }
 }
 
@@ -470,7 +519,7 @@ getFillPattern() const
   if (! plot_->barObjects().empty()) {
     CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
 
-    return qbar->getFillPattern();
+    return qbar->fill()->pattern();
   }
 
   return CQGnuPlotEnum::FillPattern::PatternNone;
@@ -483,7 +532,7 @@ setFillPattern(const CQGnuPlotEnum::FillPattern &p)
   for (auto &bar : plot_->barObjects()) {
     CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
 
-    qbar->setFillPattern(p);
+    qbar->fill()->setPattern(p);
   }
 }
 

@@ -14,10 +14,7 @@ void
 CGnuPlotStyleBoxes::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  CGnuPlotGroup *group = plot->group();
-
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-  const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
   bool isCalcColor = lineStyle.isCalcColor();
 
@@ -28,11 +25,6 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   double bw = plot->boxWidth().getSpacing(plot->getXSpacing());
 
   double y2 = std::max(0.0, ymin);
-
-  CRGBA ftc = (plot->fillType() == CGnuPlotTypes::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
-
-  const CRGBA &lc = lineStyle.calcColor(group, ftc);
-  const CRGBA &fc = lineStyle.calcColor(group, CRGBA(0,0,0));
 
   //---
 
@@ -85,7 +77,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
     }
 
-    CRGBA lc1 = lc;
+    //---
+
+    COptRGBA lc;
 
     if (isCalcColor && ind < reals.size()) {
       double z = reals[ind];
@@ -93,51 +87,39 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (renderer->isPseudo())
         renderer->setCBValue(z);
       else
-        lc1 = lineStyle.calcColor(plot, z);
+        lc = lineStyle.calcColor(plot, z);
     }
 
-    CBBox2D bbox(x - bw1/2, y2, x + bw1/2, y);
+    //---
 
-    double lw = lineStyle.calcWidth();
+    CBBox2D bbox(x - bw1/2, y2, x + bw1/2, y);
 
     if (! renderer->isPseudo()) {
       CGnuPlotBarObject *bar = plot->barObjects()[i];
 
       bar->setBBox(bbox);
 
-      if (! bar->isInitialized()) {
-        bar->setValues(x, y);
+      bar->setValues(x, y);
 
-        bar->setWidth      (lw);
-        bar->setFillType   (plot->fillType());
-        bar->setFillPattern(plot->fillPattern());
-        bar->setFillColor  (fc);
+      if (! bar->testAndSetUsed()) {
+        CGnuPlotFillP   fill  (bar->fill  ()->dup());
+        CGnuPlotStrokeP stroke(bar->stroke()->dup());
 
-        // border line type ?
-        if (fillStyle.hasBorder()) {
-          bar->setBorder(true);
+        if (lc.isValid())
+          stroke->setColor(lc.getValue());
 
-          CRGBA lc2 = lc1;
-
-          //if (fillStyle.calcColor(group, lc2))
-
-          bar->setLineColor(lc2);
-        }
-        else
-          bar->setBorder(false);
-
-        bar->setInitialized(true);
+        bar->setFill  (fill  );
+        bar->setStroke(stroke);
       }
     }
     else {
-      if (fillStyle.hasBorder()) {
-        // border line type ?
-        CRGBA lc2 = lc1;
+      //CGnuPlotFill   fill;
+      CGnuPlotStroke stroke;
 
-        //if (fillStyle.calcColor(group, lc2))
+      stroke.setEnabled(true);
 
-        renderer->drawRect(bbox, lc2, lw);
-      }
+      //renderer->fillRect  (bbox, fill  );
+      renderer->strokeRect(bbox, stroke);
     }
 
     ++i;
@@ -153,10 +135,8 @@ void
 CGnuPlotStyleBoxes::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
-  CGnuPlotGroup *group = plot->group();
-
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-  const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
+  CGnuPlotFill   fill  (plot);
+  CGnuPlotStroke stroke(plot);
 
   CFontPtr font = renderer->getFont();
 
@@ -166,31 +146,10 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   CBBox2D hbbox(p1.x, p1.y - h/2, p2.x, p1.y + h/2);
 
-  const CRGBA &lc = lineStyle.calcColor(group, CRGBA(0,0,0));
+  stroke.setWidth(1);
 
-  if      (fillStyle.style() == CGnuPlotPlot::FillType::PATTERN) {
-    CRGBA fg = lineStyle.calcColor(group, CRGBA(1,1,1));
-    CRGBA bg = plot->window()->backgroundColor();
-
-    renderer->patternRect(hbbox, fillStyle.pattern(), fg, bg);
-  }
-  else if (fillStyle.style() == CGnuPlotPlot::FillType::SOLID) {
-    CRGBA fc = lineStyle.calcColor(group, CRGBA(1,1,1));
-
-    if (fillStyle.isTransparent())
-      fc.setAlpha(fillStyle.density());
-
-    renderer->fillRect(hbbox, fc);
-  }
-
-  CRGBA lc1 = lc;
-
-  if (fillStyle.calcColor(group, lc1)) {
-    // border line type ?
-    double lw = lineStyle.calcWidth();
-
-    renderer->drawRect(hbbox, lc1, lw);
-  }
+  renderer->fillRect  (hbbox, fill  );
+  renderer->strokeRect(hbbox, stroke);
 }
 
 CBBox2D

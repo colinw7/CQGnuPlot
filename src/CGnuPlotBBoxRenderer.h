@@ -44,6 +44,9 @@ class CGnuPlotBBoxRenderer : public CGnuPlotRenderer {
   void drawEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c,
                    double width, const CLineDash &dash) override;
   void fillEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA &c) override;
+  void patternEllipse(const CPoint2D &center, double rx, double ry, double a,
+                      CGnuPlotTypes::FillPattern pattern,
+                      const CRGBA &fg, const CRGBA &bg) override;
 
   void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3, const CPoint2D &p4,
                   double width, const CRGBA &c) override;

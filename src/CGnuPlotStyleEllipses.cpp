@@ -12,18 +12,16 @@ void
 CGnuPlotStyleEllipses::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  CGnuPlotGroup *group = plot->group();
-
   const CGnuPlotEllipseStyle &ellipseStyle = plot->ellipseStyle();
   const CGnuPlotLineStyle    &lineStyle    = plot->lineStyle();
 
+  CGnuPlotFill   fill  (plot);
+  CGnuPlotStroke stroke(plot);
+
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = lineStyle.calcColor(group, CRGBA(1,0,0));
-  CRGBA fc = lc;
-
-  if (plot->fillStyle().isTransparent())
-    fc.setAlpha(plot->fillStyle().density());
+  CRGBA lc = stroke.color();
+  CRGBA fc = fill  .color();
 
   keyColor_[plot->id()] = lc;
 
@@ -109,10 +107,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CPoint2D c(x, y);
 
-    if (plot->fillStyle().style() == CGnuPlotTypes::FillType::SOLID)
+    if (fill.type() == CGnuPlotTypes::FillType::SOLID)
       renderer->fillEllipse(c, w1/2, h1/2, a, fc);
 
-    if (plot->fillStyle().hasBorder())
+    if (stroke.isEnabled())
       renderer->drawEllipse(c, w1/2, h1/2, a, lc1, 1);
   }
 }
@@ -121,11 +119,7 @@ void
 CGnuPlotStyleEllipses::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
-  //const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-
   CRGBA lc = keyColor_[plot->id()];
-
-  //double lw = lineStyle.calcWidth();
 
   double w = fabs(p2.x - p1.x);
 

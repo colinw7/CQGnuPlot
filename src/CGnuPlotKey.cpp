@@ -133,8 +133,13 @@ draw(CGnuPlotRenderer *renderer)
 
     CGnuPlotStyleBase *style = app()->getPlotStyle(plotStyle);
 
-    const CGnuPlotLineStyle       &lineStyle = plot->lineStyle();
-    const CGnuPlotTypes::FillType &fillType  = plot->fillType();
+    const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+    const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
+
+    CGnuPlotFill   fill  (plot);
+    CGnuPlotStroke stroke(plot);
+
+    //---
 
     double yp1 = y;
 
@@ -153,39 +158,32 @@ draw(CGnuPlotRenderer *renderer)
       if      (l.color().isValid()) {
         CRGBA c = l.color().getValue();
 
-        renderer->drawLine(p1, p2, lineStyle.calcWidth(), c, lineStyle.calcDash());
+        renderer->drawLine(p1, p2, stroke.width(), c, stroke.lineDash());
       }
       else if (style && style->hasKeyLine()) {
         style->drawKeyLine(plot, renderer, p1, p2);
       }
       else if (group_->hasPlotStyle(CGnuPlotTypes::PlotStyle::HISTOGRAMS)) {
-        CRGBA c = (fillType == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
-
-        CRGBA lc = lineStyle.calcColor(group_, c);
-        CRGBA fc = lineStyle.calcColor(group_, CRGBA(0,0,0));
-        CRGBA bg = group_->window()->backgroundColor();
+        CRGBA lc = stroke.color();
 
         double h = (font_size - 4)*ph;
 
         CBBox2D hbbox(xx, yy - h/2, xx + ll, yy + h/2);
 
-        if      (fillType == CGnuPlotPlot::FillType::PATTERN)
-          renderer->patternRect(hbbox, plot->fillStyle().pattern(), fc, bg);
-        else if (fillType == CGnuPlotPlot::FillType::SOLID)
-          renderer->fillRect(hbbox, fc);
+        renderer->fillRect(hbbox, fill);
 
-        if (plot->fillStyle().hasBorder()) {
+        if (stroke.isEnabled()) {
           CRGBA lc1 = lc;
 
-          plot->fillStyle().calcColor(group_, lc1);
+          fillStyle.calcColor(group_, lc1);
 
           renderer->drawRect(hbbox, lc1, 1);
         }
       }
       else {
-        CRGBA c = lineStyle.calcColor(group_, CRGBA(1,0,0));
+        CRGBA c = stroke.color();
 
-        renderer->drawLine(p1, p2, lineStyle.calcWidth(), c, lineStyle.calcDash());
+        renderer->drawLine(p1, p2, stroke.width(), c, stroke.lineDash());
       }
 
       // draw key text
@@ -347,8 +345,11 @@ drawClustered(CGnuPlotRenderer *renderer)
     }
 
     for (auto plot1 : plots1) {
-      const CGnuPlotLineStyle       &lineStyle = plot1->lineStyle();
-      const CGnuPlotTypes::FillType &fillType  = plot1->fillType();
+      const CGnuPlotLineStyle &lineStyle1 = plot1->lineStyle();
+      const CGnuPlotFillStyle &fillStyle1 = plot1->fillStyle();
+
+      CGnuPlotFill   fill1  (plot1);
+      CGnuPlotStroke stroke1(plot1);
 
       double yp1 = y;
 
@@ -363,25 +364,18 @@ drawClustered(CGnuPlotRenderer *renderer)
         CPoint2D p1(xx     , yy);
         CPoint2D p2(xx + ll, yy);
 
-        CRGBA c = (fillType == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
-
-        CRGBA lc = lineStyle.calcColor(group_, c);
-        CRGBA fc = lineStyle.calcColor(group_, CRGBA(0,0,0));
-        CRGBA bg = group_->window()->backgroundColor();
+        CRGBA lc = stroke1.color();
 
         double h = (font_size - 4)*ph;
 
         CBBox2D hbbox(xx, yy - h/2, xx + ll, yy + h/2);
 
-        if      (fillType == CGnuPlotPlot::FillType::PATTERN)
-          renderer->patternRect(hbbox, plot1->fillStyle().pattern(), fc, bg);
-        else if (fillType == CGnuPlotPlot::FillType::SOLID)
-          renderer->fillRect(hbbox, fc);
+        renderer->fillRect(hbbox, fill1);
 
-        if (plot1->fillStyle().hasBorder()) {
+        if (stroke1.isEnabled()) {
           CRGBA lc1 = lc;
 
-          plot1->fillStyle().calcColor(group_, lc1);
+          fillStyle1.calcColor(group_, lc1);
 
           renderer->drawRect(hbbox, lc1, 1);
         }
@@ -390,7 +384,7 @@ drawClustered(CGnuPlotRenderer *renderer)
         CRGBA tc = CRGBA(0,0,0);
 
         if      (isVariableTextColor())
-          tc = lineStyle.calcColor(group_, tc);
+          tc = lineStyle1.calcColor(group_, tc);
         else if (isIndexTextColor())
           tc = CGnuPlotStyleInst->indexColor(textColorIndex());
         else if (isRGBTextColor())
@@ -531,6 +525,10 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
 
     CGnuPlotPlot *plot = *plots1.begin();
 
+    const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
+
+    CGnuPlotStroke stroke(plot);
+
     //---
 
     double y = y2 - by;
@@ -550,7 +548,6 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
 
       CRGBA lc = CRGBA(0,0,0);
       CRGBA fc = CGnuPlotStyleInst->indexColor(i + 1);
-      CRGBA bg = group_->window()->backgroundColor();
 
       double h = (font_size - 4)*ph;
 
@@ -558,10 +555,10 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
 
       renderer->fillRect(hbbox, fc);
 
-      if (plot->fillStyle().hasBorder()) {
+      if (stroke.isEnabled()) {
         CRGBA lc1 = lc;
 
-        plot->fillStyle().calcColor(group_, lc1);
+        fillStyle.calcColor(group_, lc1);
 
         renderer->drawRect(hbbox, lc1, 1);
       }

@@ -9,6 +9,7 @@
 using std::string;
 
 class CQGnuPlotPlot;
+class CQGnuPlotStroke;
 
 class CQGnuPlotArrowObject : public QObject, public CGnuPlotArrowObject {
   Q_OBJECT
@@ -18,20 +19,17 @@ class CQGnuPlotArrowObject : public QObject, public CGnuPlotArrowObject {
 
   Q_PROPERTY(CQGnuPlotEnum::ArrowCoordType coordType READ getCoordType WRITE setCoordType)
 
-  Q_PROPERTY(QPointF   from          READ getFrom          WRITE setFrom         )
-  Q_PROPERTY(QPointF   to            READ getTo            WRITE setTo           )
-  Q_PROPERTY(double    length        READ getLength        WRITE setLength       )
-  Q_PROPERTY(CAngle    angle         READ getAngle         WRITE setAngle        )
-  Q_PROPERTY(double    headLength    READ getHeadLength    WRITE setHeadLength   )
-  Q_PROPERTY(double    headAngle     READ getHeadAngle     WRITE setHeadAngle    )
-  Q_PROPERTY(double    headBackAngle READ getHeadBackAngle WRITE setHeadBackAngle)
-  Q_PROPERTY(bool      fhead         READ getFHead         WRITE setFHead        )
-  Q_PROPERTY(bool      thead         READ getTHead         WRITE setTHead        )
-  Q_PROPERTY(bool      headFilled    READ getHeadFilled    WRITE setHeadFilled   )
-  Q_PROPERTY(bool      headEmpty     READ getHeadEmpty     WRITE setHeadEmpty    )
-  Q_PROPERTY(int       lineType      READ getLineStyle     WRITE setLineStyle    )
-  Q_PROPERTY(double    lineWidth     READ calcLineWidth    WRITE setLineWidth    )
-  Q_PROPERTY(CLineDash lineDash      READ getDash          WRITE setDash         )
+  Q_PROPERTY(QPointF from          READ getFrom          WRITE setFrom         )
+  Q_PROPERTY(QPointF to            READ getTo            WRITE setTo           )
+  Q_PROPERTY(double  length        READ getLength        WRITE setLength       )
+  Q_PROPERTY(CAngle  angle         READ getAngle         WRITE setAngle        )
+  Q_PROPERTY(double  headLength    READ getHeadLength    WRITE setHeadLength   )
+  Q_PROPERTY(double  headAngle     READ getHeadAngle     WRITE setHeadAngle    )
+  Q_PROPERTY(double  headBackAngle READ getHeadBackAngle WRITE setHeadBackAngle)
+  Q_PROPERTY(bool    fhead         READ getFHead         WRITE setFHead        )
+  Q_PROPERTY(bool    thead         READ getTHead         WRITE setTHead        )
+  Q_PROPERTY(bool    headFilled    READ getHeadFilled    WRITE setHeadFilled   )
+  Q_PROPERTY(bool    headEmpty     READ getHeadEmpty     WRITE setHeadEmpty    )
 
  public:
   CQGnuPlotArrowObject(CQGnuPlotPlot *plot);
@@ -52,8 +50,7 @@ class CQGnuPlotArrowObject : public QObject, public CGnuPlotArrowObject {
   double getHeadLength() const;
   void setHeadLength(double l);
 
-  CLineDash getDash() const;
-  void setDash(const CLineDash &dash);
+  CQGnuPlotStroke *stroke() const;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 };

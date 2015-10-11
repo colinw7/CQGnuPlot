@@ -110,7 +110,7 @@ class CGnuPlotLineStyle {
   COptReal     pointSize_;
   COptInt      pointInterval_;
   bool         palette_ { false };
-  bool         tippoints_ { false };
+  bool         tippoints_ { true };
 };
 
 typedef CRefPtr<CGnuPlotLineStyle> CGnuPlotLineStyleP;

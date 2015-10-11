@@ -1,8 +1,10 @@
 #include <CQGnuPlotLabelObject.h>
-#include <CQGnuPlotPlot.h>
 #include <CQGnuPlotGroup.h>
+#include <CQGnuPlotPlot.h>
 #include <CQGnuPlotUtil.h>
 #include <CQGnuPlotRenderer.h>
+#include <CQGnuPlotFill.h>
+#include <CQGnuPlotStroke.h>
 #include <CQUtil.h>
 
 CQGnuPlotLabelObject::
@@ -110,32 +112,18 @@ setColor(const QColor &c)
   CGnuPlotLabelObject::setTextColor(cs);
 }
 
-QColor
+CQGnuPlotFill *
 CQGnuPlotLabelObject::
-getBoxFillColor() const
+boxFill() const
 {
-  return toQColor(CGnuPlotLabelObject::getBoxFillColor());
+  return dynamic_cast<CQGnuPlotFill *>(CGnuPlotLabelObject::boxFill());
 }
 
-void
+CQGnuPlotStroke *
 CQGnuPlotLabelObject::
-setBoxFillColor(const QColor &c)
+boxStroke() const
 {
-  CGnuPlotLabelObject::setBoxFillColor(fromQColor(c));
-}
-
-QColor
-CQGnuPlotLabelObject::
-getBoxStrokeColor() const
-{
-  return toQColor(CGnuPlotLabelObject::getBoxStrokeColor());
-}
-
-void
-CQGnuPlotLabelObject::
-setBoxStrokeColor(const QColor &c)
-{
-  CGnuPlotLabelObject::setBoxStrokeColor(fromQColor(c));
+  return dynamic_cast<CQGnuPlotStroke *>(CGnuPlotLabelObject::boxStroke());
 }
 
 void

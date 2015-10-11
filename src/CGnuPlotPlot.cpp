@@ -10,6 +10,7 @@
 #include <CGnuPlotBubbleObject.h>
 #include <CGnuPlotEllipseObject.h>
 #include <CGnuPlotLabelObject.h>
+#include <CGnuPlotPathObject.h>
 #include <CGnuPlotPieObject.h>
 #include <CGnuPlotPointObject.h>
 #include <CGnuPlotPolygonObject.h>
@@ -31,7 +32,7 @@ CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
  group_(group), style_(style), id_(nextId_++), lineStyle_(app()), contour_(this),
  arrowCache_(this), barCache_(this), bubbleCache_(this), ellipseCache_(this), labelCache_(this),
- pieCache_(this), pointCache_(this), polygonCache_(this), rectCache_(this),
+ pathCache_(this), pieCache_(this), pointCache_(this), polygonCache_(this), rectCache_(this),
  tableFile_(group->app())
 {
   setSmooth (app()->getSmooth());
@@ -593,6 +594,13 @@ updateLabelCacheSize(int n)
 
 void
 CGnuPlotPlot::
+updatePathCacheSize(int n)
+{
+  pathCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
 updatePieCacheSize(int n)
 {
   pieCache_.updateSize(n);
@@ -731,7 +739,9 @@ drawSurface(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-  CRGBA c = lineStyle.calcColor(group_, CRGBA(0,0,0));
+  CGnuPlotStroke stroke(this);
+
+  CRGBA c = stroke.color();
 
   CGnuPlotCameraP camera = group()->camera();
 
@@ -923,7 +933,9 @@ draw2D(CGnuPlotRenderer *renderer)
   if (getSmooth() == Smooth::BEZIER) {
     const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-    const CRGBA &c = lineStyle.calcColor(group_, CRGBA(1,0,0));
+    CGnuPlotStroke stroke(this);
+
+    CRGBA c = stroke.color();
 
     uint np = numPoints2D();
 
@@ -955,10 +967,8 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
 
   //---
 
-  CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
-
-  CRGBA lc = lineStyle().calcColor(group_, c);
-  CRGBA fc = lineStyle().calcColor(group_, CRGBA(0,0,0));
+  CGnuPlotFill   fill  (this);
+  CGnuPlotStroke stroke(this);
 
   //---
 
@@ -979,10 +989,10 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
       x = i;
     }
 
-    CRGBA fc1 = fc;
+    COptRGBA fc;
 
     if (point.hasParam("fillcolor"))
-      fc1 = point.getParamColor("fillcolor");
+      fc = point.getParamColor("fillcolor");
 
     double xl = drawData.x2 + drawData.i*drawData.w + i*drawData.d;
 
@@ -1010,28 +1020,25 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
       bar->setBBox  (bbox);
       bar->setValues(x, y);
 
-      if (! bar->isInitialized()) {
-        bar->setFillType   (fillType());
-        bar->setFillPattern(fillPattern());
-        bar->setFillColor  (fc1);
+      if (! bar->testAndSetUsed()) {
+        CGnuPlotFillP   fill  (bar->fill  ()->dup());
+        CGnuPlotStrokeP stroke(bar->stroke()->dup());
 
-        if (fillStyle().hasBorder()) {
-          bar->setBorder(true);
+        if (fc.isValid())
+          fill->setColor(fc.getValue());
 
-          CRGBA lc1 = lc;
-
-          fillStyle().calcColor(group_, lc1);
-
-          bar->setLineColor(lc1);
-        }
-        else
-          bar->setBorder(false);
-
-        bar->setInitialized(true);
+        bar->setFill  (fill);
+        bar->setStroke(stroke);
       }
     }
     else {
-      renderer->drawRect(bbox, lc, 1);
+      //CGnuPlotFill   fill;
+      CGnuPlotStroke stroke;
+
+      stroke.setEnabled(true);
+
+      //renderer->fillRect  (bbox, fill);
+      renderer->strokeRect(bbox, stroke);
     }
 
     ++i;
@@ -1049,10 +1056,8 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
 
   //---
 
-  CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
-
-  CRGBA lc = lineStyle().calcColor(group_, c);
-  CRGBA fc = lineStyle().calcColor(group_, CRGBA(0,0,0));
+  CGnuPlotFill   fill  (this);
+  CGnuPlotStroke stroke(this);
 
   //---
 
@@ -1081,6 +1086,11 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
       yh = reals[2];
     }
 
+    COptRGBA fc;
+
+    if (point.hasParam("fillcolor"))
+      fc = point.getParamColor("fillcolor");
+
     double xl = drawData.x2 + drawData.i*drawData.w + i*drawData.d;
 
     double xlb = xl + drawData.xb;
@@ -1094,25 +1104,30 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
       bar->setBBox  (bbox);
       bar->setValues(i, y);
 
-      if (! bar->isInitialized()) {
-        bar->setFillType   (fillType());
-        bar->setFillPattern(fillPattern());
-        bar->setFillColor  (fc);
+      if (! bar->testAndSetUsed()) {
+        CGnuPlotFillP   fill  (new CGnuPlotFill  (this));
+        CGnuPlotStrokeP stroke(new CGnuPlotStroke(this));
 
-        bar->setBorder   (true);
-        bar->setLineColor(lc);
+        if (fc.isValid())
+          fill->setColor(fc.getValue());
 
-        bar->setInitialized(true);
+        bar->setFill  (fill  );
+        bar->setStroke(stroke);
       }
     }
-    else
-      renderer->drawRect(bbox, lc, 1);
+    else {
+      CGnuPlotFill   fill;
+      CGnuPlotStroke stroke;
+
+      renderer->fillRect  (bbox, fill);
+      renderer->strokeRect(bbox, stroke);
+    }
 
     double xm = (xlb + + xrb)/2;
 
-    renderer->drawClipLine(CPoint2D(xm , yl), CPoint2D(xm , yh), 1.0, lc);
-    renderer->drawClipLine(CPoint2D(xlb, yl), CPoint2D(xrb, yl), 1.0, lc);
-    renderer->drawClipLine(CPoint2D(xlb, yh), CPoint2D(xrb, yh), 1.0, lc);
+    renderer->strokeClipLine(CPoint2D(xm , yl), CPoint2D(xm , yh), stroke);
+    renderer->strokeClipLine(CPoint2D(xlb, yl), CPoint2D(xrb, yl), stroke);
+    renderer->strokeClipLine(CPoint2D(xlb, yh), CPoint2D(xrb, yh), stroke);
 
     ++i;
   }
@@ -1129,17 +1144,11 @@ drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox, boo
 
   //---
 
-  CRGBA lc, fc;
+  COptRGBA fc, lc;
 
-  if (! isColumn) {
-    CRGBA c = (fillType() == CGnuPlotPlot::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
-
-    lc = lineStyle().calcColor(group_, c);
-    fc = lineStyle().calcColor(group_, CRGBA(0,0,0));
-  }
-  else {
-    lc = CRGBA(0,0,0);
+  if (isColumn) {
     fc = CGnuPlotStyleInst->indexColor(i + 1);
+    lc = CRGBA(0,0,0);
   }
 
   //---
@@ -1159,28 +1168,27 @@ drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox, boo
     bar->setBBox  (bbox);
     bar->setValues(i, y);
 
-    if (! bar->isInitialized()) {
-      bar->setFillType   (fillType());
-      bar->setFillPattern(fillPattern());
-      bar->setFillColor  (fc);
+    if (! bar->testAndSetUsed()) {
+      CGnuPlotFillP   fill  (new CGnuPlotFill  (this));
+      CGnuPlotStrokeP stroke(new CGnuPlotStroke(this));
 
-      if (fillStyle().hasBorder()) {
-        bar->setBorder(true);
+      if (fc.isValid())
+        fill->setColor(fc.getValue());
 
-        CRGBA lc1 = lc;
+      if (lc.isValid())
+        stroke->setColor(lc.getValue());
 
-        fillStyle().calcColor(group_, lc1);
-
-        bar->setLineColor(lc1);
-      }
-      else
-        bar->setBorder(false);
-
-      bar->setInitialized(true);
+      bar->setFill  (fill  );
+      bar->setStroke(stroke);
     }
   }
-  else
-    renderer->drawRect(bbox, lc, 1);
+  else {
+    CGnuPlotFill   fill  (this);
+    CGnuPlotStroke stroke(this);
+
+    renderer->fillRect  (bbox, fill  );
+    renderer->strokeRect(bbox, stroke);
+  }
 }
 
 void
@@ -1241,6 +1249,13 @@ createBarObject() const
   return app()->device()->createBarObject(const_cast<CGnuPlotPlot *>(this));
 }
 
+CGnuPlotEndBar *
+CGnuPlotPlot::
+createEndBar() const
+{
+  return app()->device()->createEndBar(const_cast<CGnuPlotPlot *>(this));
+}
+
 CGnuPlotBubbleObject *
 CGnuPlotPlot::
 createBubbleObject() const
@@ -1260,6 +1275,13 @@ CGnuPlotPlot::
 createLabelObject() const
 {
   return app()->device()->createLabelObject(const_cast<CGnuPlotPlot *>(this));
+}
+
+CGnuPlotPathObject *
+CGnuPlotPlot::
+createPathObject() const
+{
+  return app()->device()->createPathObject(const_cast<CGnuPlotPlot *>(this));
 }
 
 CGnuPlotPieObject *
@@ -1288,6 +1310,20 @@ CGnuPlotPlot::
 createRectObject() const
 {
   return app()->device()->createRectObject(const_cast<CGnuPlotPlot *>(this));
+}
+
+CGnuPlotFill *
+CGnuPlotPlot::
+createFill() const
+{
+  return app()->device()->createFill(const_cast<CGnuPlotPlot *>(this));
+}
+
+CGnuPlotStroke *
+CGnuPlotPlot::
+createStroke() const
+{
+  return app()->device()->createStroke(const_cast<CGnuPlotPlot *>(this));
 }
 
 //------
@@ -1677,7 +1713,7 @@ setStyleValue(const std::string &name, StyleValue *value)
 {
   auto p = styleValues_.find(name);
 
-  if (p == styleValues_.end())
+  if (p != styleValues_.end())
     delete (*p).second;
 
   styleValues_[name] = value;

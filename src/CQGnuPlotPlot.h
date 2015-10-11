@@ -117,9 +117,10 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 class CQGnuPlotPlotBarObjects : public QObject {
   Q_OBJECT
 
-  Q_PROPERTY(QColor fillColor   READ fillColor WRITE setFillColor)
-  Q_PROPERTY(bool   border      READ hasBorder WRITE setBorder   )
-  Q_PROPERTY(QColor lineColor   READ lineColor WRITE setLineColor)
+  Q_PROPERTY(QColor fillColor READ fillColor WRITE setFillColor)
+  Q_PROPERTY(bool   border    READ hasBorder WRITE setBorder   )
+  Q_PROPERTY(QColor lineColor READ lineColor WRITE setLineColor)
+  Q_PROPERTY(double lineWidth READ lineWidth WRITE setLineWidth)
 
   Q_PROPERTY(CQGnuPlotEnum::FillType    fillType    READ getFillType    WRITE setFillType   )
   Q_PROPERTY(CQGnuPlotEnum::FillPattern fillPattern READ getFillPattern WRITE setFillPattern)
@@ -134,6 +135,9 @@ class CQGnuPlotPlotBarObjects : public QObject {
 
   QColor lineColor() const;
   void setLineColor(const QColor &c);
+
+  double lineWidth() const;
+  void setLineWidth(double r);
 
   bool hasBorder() const;
   void setBorder(bool b);

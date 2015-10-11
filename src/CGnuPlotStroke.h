@@ -5,12 +5,17 @@
 #include <CLineDash.h>
 #include <CLineCapType.h>
 #include <CLineJoinType.h>
+#include <CRefPtr.h>
 
 class CGnuPlotPlot;
 
 class CGnuPlotStroke {
  public:
-  CGnuPlotStroke(CGnuPlotPlot *plot);
+  CGnuPlotStroke(CGnuPlotPlot *plot=0);
+
+  virtual ~CGnuPlotStroke() { }
+
+  virtual CGnuPlotStroke *dup() const;
 
   void init(CGnuPlotPlot *plot);
 
@@ -35,8 +40,9 @@ class CGnuPlotStroke {
   double mitreLimit() const { return mlimit_; }
   void setMitreLimit(double mlimit) { mlimit_ = mlimit; }
 
- private:
-  bool          enabled_;
+ protected:
+  CGnuPlotPlot* plot_    { 0 };
+  bool          enabled_ { false };
   CRGBA         color_   { 0, 0, 0 };
   double        width_   { 1 };
   CLineDash     dash_;
@@ -44,5 +50,7 @@ class CGnuPlotStroke {
   CLineJoinType join_    { LINE_JOIN_TYPE_MITRE };
   double        mlimit_  { 3 };
 };
+
+typedef CRefPtr<CGnuPlotStroke> CGnuPlotStrokeP;
 
 #endif

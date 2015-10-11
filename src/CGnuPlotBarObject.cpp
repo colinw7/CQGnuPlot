@@ -7,6 +7,8 @@ CGnuPlotBarObject::
 CGnuPlotBarObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
+  fill_   = plot->createFill  ();
+  stroke_ = plot->createStroke();
 }
 
 void
@@ -16,11 +18,20 @@ clearEndBars()
   endBars_.clear();
 }
 
-void
+CGnuPlotEndBarP
 CGnuPlotBarObject::
-addEndBar(const EndBar &endBar)
+addEndBar(const CPoint2D &start, const CPoint2D &end)
 {
+  CGnuPlotEndBarP endBar(plot_->createEndBar());
+
+  endBar->setBarObject(this);
+
+  endBar->setStart(start);
+  endBar->setEnd  (end);
+
   endBars_.push_back(endBar);
+
+  return endBars_.back();
 }
 
 bool
@@ -51,9 +62,9 @@ tip() const
   tip.setXColor(CRGBA(0,0,0));
   tip.setYColor(CRGBA(0,0,0));
 
-  if (fillType_ == FillType::SOLID) {
-    tip.setBorderColor(fillColor_.getValue(CRGBA(1,0,0)));
-    tip.setXColor     (fillColor_.getValue(CRGBA(1,0,0)));
+  if (fill_->type() == CGnuPlotTypes::FillType::SOLID) {
+    tip.setBorderColor(fill_->color());
+    tip.setXColor     (fill_->color());
   }
 
   return tip;
@@ -63,66 +74,84 @@ void
 CGnuPlotBarObject::
 draw(CGnuPlotRenderer *renderer) const
 {
-  if (! isInitialized()) return;
+  if (! isUsed()) return;
 
   bool highlighted = (isHighlighted() || isSelected());
 
-  if      (fillType_ == FillType::PATTERN) {
-    CRGBA fc = fillColor_.getValue(CRGBA(1,0,0));
+  CGnuPlotFillP   fill   = fill_;
+  CGnuPlotStrokeP stroke = stroke_;
 
-    if (highlighted) {
+  if (highlighted) {
+    fill   = fill_  ->dup();
+    stroke = stroke_->dup();
+
+    if      (fill->type() == CGnuPlotTypes::FillType::PATTERN) {
+      CRGBA fc = fill->color();
+
       double g = fc.getGray();
 
       if (g < 0.5)
         fc = CRGBA(1, 1, 1);
       else
         fc = CRGBA(0, 0, 0);
+
+      fill->setColor(fc);
+    }
+    else if (fill->type() == CGnuPlotTypes::FillType::SOLID) {
+      fill->setColor(fill->color().getLightRGBA());
     }
 
-    renderer->patternRect(bbox_, fillPattern_, fc, CRGBA(1,1,1));
-  }
-  else if (fillType_ == FillType::SOLID) {
-    CRGBA fc  = fillColor().getValue(CRGBA(1,1,1));
-
-    if (highlighted)
-      fc = fc.getLightRGBA();
-
-    renderer->fillRect(bbox_, fc);
+    stroke->setEnabled(true);
+    stroke->setColor(CRGBA(1,0,0));
+    stroke->setWidth(2);
   }
 
-  if (border_) {
-    CRGBA  lc = lineColor_.getValue(CRGBA(0,0,0));
-    double lw = width_;
-
-    if (highlighted) {
-      lc = CRGBA(1,0,0);
-      lw = 2;
-    }
-
-    renderer->drawRect(bbox_, lc, lw);
-  }
+  renderer->fillRect  (bbox_, *fill  );
+  renderer->strokeRect(bbox_, *stroke);
 
   //---
 
-  for (const auto &endBar : endBars_) {
-    renderer->drawClipLine(endBar.start(), endBar.end(),
-                           endBar.lineWidth(), endBar.lineColor());
+  for (const auto &endBar : endBars_)
+    endBar->draw(renderer);
+}
 
-    double dx = fabs(endBar.start().x - endBar.end().x);
-    double dy = fabs(endBar.start().y - endBar.end().y);
+//---
 
-    bool vertical = (dx < dy);
+CGnuPlotEndBar::
+CGnuPlotEndBar(CGnuPlotPlot *plot) :
+ plot_(plot)
+{
+  stroke_ = plot->createStroke();
+}
 
-    CPoint2D dp;
+void
+CGnuPlotEndBar::
+draw(CGnuPlotRenderer *renderer) const
+{
+  bool highlighted = (bar_->isHighlighted() || bar_->isSelected());
 
-    if (vertical)
-      dp = CPoint2D(endBar.endWidth()/2, 0);
-    else
-      dp = CPoint2D(0, endBar.endWidth()/2);
+  CGnuPlotStrokeP stroke = stroke_;
 
-    renderer->drawClipLine(endBar.start() - dp, endBar.start() + dp,
-                           endBar.lineWidth(), endBar.lineColor());
-    renderer->drawClipLine(endBar.end  () - dp, endBar.end  () + dp,
-                           endBar.lineWidth(), endBar.lineColor());
+  if (highlighted) {
+    stroke = stroke_->dup();
+
+    stroke->setEnabled(true);
+    stroke->setColor(CRGBA(1,0,0));
+    stroke->setWidth(2);
   }
+
+  renderer->strokeClipLine(start(), end(), *stroke);
+
+  double dx = fabs(start().x - end().x);
+  double dy = fabs(start().y - end().y);
+
+  CPoint2D dp;
+
+  if (dx < dy)
+    dp = CPoint2D(endWidth()/2, 0);
+  else
+    dp = CPoint2D(0, endWidth()/2);
+
+  renderer->strokeClipLine(start() - dp, start() + dp, *stroke);
+  renderer->strokeClipLine(end  () - dp, end  () + dp, *stroke);
 }

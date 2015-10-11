@@ -8,6 +8,7 @@
 #include <CLine2D.h>
 
 class CGnuPlotGroup;
+class CGnuPlotStroke;
 
 class CGnuPlotArrowData {
  public:
@@ -83,6 +84,7 @@ class CGnuPlotArrowData {
   double calcLineWidth(CGnuPlotGroup *group) const;
 
   void draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted=false) const;
+  void draw(CGnuPlotRenderer *renderer, const CGnuPlotStroke &stroke) const;
 
   CGnuPlotTipData tip() const;
 

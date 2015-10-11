@@ -7,6 +7,8 @@ CGnuPlotBubbleObject::
 CGnuPlotBubbleObject(CGnuPlotPlot *plot) :
  CGnuPlotPlotObject(plot)
 {
+  fill_   = plot->createFill  ();
+  stroke_ = plot->createStroke();
 }
 
 bool
@@ -36,10 +38,8 @@ tip() const
 
   tip.setRect(rect);
 
-  CRGBA c = color_.getValue(CRGBA(0,0,0));
-
-  tip.setBorderColor(c);
-  tip.setXColor(c);
+  tip.setBorderColor(fill_->color());
+  tip.setXColor     (fill_->color());
 
   return tip;
 }
@@ -50,21 +50,34 @@ draw(CGnuPlotRenderer *renderer) const
 {
   bool highlighted = (isHighlighted() || isSelected());
 
-  CRGBA fc = color_.getValue(CRGBA(1,1,1));
+  CGnuPlotFillP   fill   = fill_;
+  CGnuPlotStrokeP stroke = stroke_;
 
-  if (highlighted)
-    fc = fc.getLightRGBA();
+  if (highlighted) {
+    fill   = fill_  ->dup();
+    stroke = stroke_->dup();
 
-  renderer->fillEllipse(c_, xr_, yr_, 0, fc);
+    if (fill->type() == CGnuPlotTypes::FillType::PATTERN)
+      fill->setBackground(fill->background().getLightRGBA());
+    else
+      fill->setColor(fill->color().getLightRGBA());
+
+    stroke->setEnabled(true);
+    stroke->setColor(CRGBA(1,0,0));
+    stroke->setWidth(2);
+  }
+
+  renderer->fillEllipse  (c_, xr_, yr_, 0, *fill  );
+  renderer->strokeEllipse(c_, xr_, yr_, 0, *stroke);
 
   double s = renderer->fontSize();
 
   renderer->setFontSize(6);
 
-  CRGBA tc(0, 0, 0);
+  CRGBA tc(0,0,0);
 
-  if (highlighted)
-    tc = CRGBA(1, 1, 1);
+  if (fill->type() == CGnuPlotTypes::FillType::SOLID)
+    tc = fill->color().bwContrast();
 
   renderer->drawHAlignedText(c_, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0, name_, tc);
 

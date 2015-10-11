@@ -15,14 +15,14 @@ class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
 
   virtual ~CGnuPlotCircle() { }
 
-  CGnuPlotCircle *setData(const CGnuPlotCircle *ellipse) {
-    (void) CGnuPlotGroupAnnotation::setData(ellipse);
+  CGnuPlotCircle *setData(const CGnuPlotCircle *circle) {
+    (void) CGnuPlotGroupAnnotation::setData(circle);
 
-    p_        = ellipse->p_;
-    r_        = ellipse->r_;
-    arcStart_ = ellipse->arcStart_;
-    arcEnd_   = ellipse->arcEnd_;
-    fs_       = ellipse->fs_;
+    p_        = circle->p_;
+    r_        = circle->r_;
+    arcStart_ = circle->arcStart_;
+    arcEnd_   = circle->arcEnd_;
+    fs_       = circle->fs_;
 
     return this;
   }

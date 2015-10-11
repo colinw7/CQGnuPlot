@@ -19,10 +19,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
+  CGnuPlotStroke stroke(plot);
+
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA  lc = lineStyle.calcColor(group, CRGBA(1,0,0));
-  double lw = lineStyle.calcWidth();
+  CRGBA  lc = stroke.color();
+  double lw = stroke.width();
+
+  //---
 
   double ymin = 0.0;
 
@@ -82,11 +86,12 @@ void
 CGnuPlotStyleImpulses::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  CGnuPlotStroke stroke(plot);
 
-  double lw = lineStyle.calcWidth();
+  CRGBA  c  = stroke.color();
+  double lw = stroke.width();
 
-  renderer->drawLine(p1, p2, lw, lineStyle.calcColor(plot->group(), CRGBA(1,0,0)));
+  renderer->drawLine(p1, p2, lw, c);
 }
 
 CBBox2D

@@ -24,6 +24,8 @@ class CGnuPlotGroup {
  public:
   CGnuPlotGroup(CGnuPlotWindow *window);
 
+  void initObjects();
+
   CGnuPlotWindow *window() const { return window_; }
 
   CGnuPlot *app() const;
@@ -57,7 +59,7 @@ class CGnuPlotGroup {
   void addObjects();
 
   const Annotations &annotations() const { return annotations_; }
-  void setAnnotations(const Annotations &annotations) { annotations_ = annotations; }
+  void setAnnotations(const Annotations &annotations);
 
   void fit();
 

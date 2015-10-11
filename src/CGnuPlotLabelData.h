@@ -6,10 +6,19 @@
 #include <CGnuPlotPosition.h>
 #include <CGnuPlotColorSpec.h>
 #include <CGnuPlotTipData.h>
+#include <CGnuPlotFill.h>
+#include <CGnuPlotStroke.h>
 
 class CGnuPlotLabelData {
  public:
-  CGnuPlotLabelData();
+  CGnuPlotLabelData(CGnuPlotGroup *group=0);
+  CGnuPlotLabelData(CGnuPlotPlot *plot);
+ ~CGnuPlotLabelData();
+
+  CGnuPlotLabelData(const CGnuPlotLabelData &) = delete;
+  CGnuPlotLabelData &operator=(const CGnuPlotLabelData &l) = delete;
+
+  CGnuPlotLabelData *dup() const;
 
   const std::string &getText() const { return text_; }
   void setText(const std::string &text) { text_ = text; }
@@ -43,22 +52,11 @@ class CGnuPlotLabelData {
 
   //---
 
-  bool isBoxFill() const { return boxFill_; }
-  void setBoxFill(bool b) { boxFill_ = b; }
+  CGnuPlotFill *boxFill() const { return boxFill_; }
+  void setBoxFill(const CGnuPlotFill &f) { *boxFill_ = f; }
 
-  const CRGBA &getBoxFillColor() const { return boxFillColor_; }
-  void setBoxFillColor(const CRGBA &c) { boxFillColor_ = c; }
-
-  //---
-
-  bool hasBox() const { return box_; }
-  void setBox(bool b) { box_ = b; }
-
-  const CRGBA &getBoxStrokeColor() const { return boxStrokeColor_; }
-  void setBoxStrokeColor(const CRGBA &v) { boxStrokeColor_ = v; }
-
-  double getBoxStrokeWidth() const { return boxStrokeWidth_; }
-  void setBoxStrokeWidth(double r) { boxStrokeWidth_ = r; }
+  CGnuPlotStroke *boxStroke() const { return boxStroke_; }
+  void setBoxStroke(const CGnuPlotStroke &s) { *boxStroke_ = s; }
 
   //---
 
@@ -96,21 +94,20 @@ class CGnuPlotLabelData {
  protected:
   static CFontPtr defFont_;
 
+  CGnuPlotGroup*     group_ { 0 };
+  CGnuPlotPlot*      plot_  { 0 };
   std::string        text_;
   CGnuPlotPosition   pos_;
   COptReal           angle_;
-  bool               enhanced_       { true };
+  bool               enhanced_   { true };
   CGnuPlotLabelStyle labelStyle_;
   CGnuPlotColorSpec  textColor_;
-  int                lineType_       { -1 };
-  bool               boxFill_        { false };
-  CRGBA              boxFillColor_;
-  bool               box_            { false };
-  CRGBA              boxStrokeColor_;
-  double             boxStrokeWidth_ { 1};
-  bool               hypertext_      { false };
-  double             pointSize_      { 1 };
-  double             pointWidth_     { 1 };
+  int                lineType_   { -1 };
+  CGnuPlotFill*      boxFill_    { 0 };
+  CGnuPlotStroke*    boxStroke_  { 0 };
+  bool               hypertext_  { false };
+  double             pointSize_  { 1 };
+  double             pointWidth_ { 1 };
   mutable CBBox2D    bbox_;
   mutable CRGBA      drawColor_;
   mutable CPoint2D   drawPos_;

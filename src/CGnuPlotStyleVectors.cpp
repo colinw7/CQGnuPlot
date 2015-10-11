@@ -13,8 +13,12 @@ void
 CGnuPlotStyleVectors::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle  &lineStyle  = plot->lineStyle();
   const CGnuPlotArrowStyle &arrowStyle = plot->arrowStyle();
+
+  CGnuPlotStroke stroke(plot);
 
   bool isCalcColor = lineStyle.isCalcColor();
   bool isVarArrow  = plot->arrowStyle().isVariable();
@@ -28,7 +32,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   ArrowDatas arrowDatas;
 
-  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA lc = stroke.color();
 
   for (const auto &point : plot->getPoints2D()) {
     std::vector<double> reals;
@@ -91,7 +95,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       arrowDatas.push_back(arrowData);
     }
     else if (! renderer->isPseudo()) {
-      CGnuPlotArrow arrow(plot->group());
+      CGnuPlotArrow arrow(group);
 
       arrow.setStyle(as);
 
@@ -118,6 +122,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       if (! arrow->testAndSetUsed()) {
         arrow->setData(arrowData);
+
+        arrow->stroke()->setColor   (arrowData.calcLineColor(group));
+        arrow->stroke()->setLineDash(arrowData.getDash().calcDash(plot->app()));
+        arrow->stroke()->setWidth   (arrowData.calcLineWidth(group));
       }
       else {
         arrow->setFrom(arrowData.getFrom());

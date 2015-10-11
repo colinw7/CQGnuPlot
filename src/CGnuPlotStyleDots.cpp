@@ -12,9 +12,9 @@ void
 CGnuPlotStyleDots::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  CGnuPlotStroke stroke(plot);
 
-  const CRGBA &c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA c = stroke.color();
 
   for (const auto &point : plot->getPoints2D()) {
     CPoint2D p;

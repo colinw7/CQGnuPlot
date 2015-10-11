@@ -1,6 +1,7 @@
 #include <CGnuPlotStyleLines.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
+#include <CGnuPlotPathObject.h>
 #include <CGnuPlotRenderer.h>
 
 CGnuPlotStyleLines::
@@ -15,9 +16,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   CGnuPlotGroup *group = plot->group();
 
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-
-  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
+  CGnuPlotStroke stroke(plot);
 
   //------
 
@@ -28,6 +27,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   uint i = 0;
 
   typedef std::vector<CPoint2D> Points;
+  typedef std::vector<Points>   PointsArray;
+
+  PointsArray pointsArray;
 
   while (i < np) {
     // get first point
@@ -83,22 +85,41 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
 
     // TODO: clip
-    double lw = lineStyle.calcWidth();
-
-    renderer->drawClippedPath(points, lw, c, lineStyle.calcDash());
+    pointsArray.push_back(points);
   }
 
-#if 0
-  for (uint i1 = 0, i2 = 1; i2 < np; i1 = i2++) {
-    const CGnuPlotPoint &point1 = getPoint2D(i1);
-    const CGnuPlotPoint &point2 = getPoint2D(i2);
+  if (! renderer->isPseudo() && plot->isCacheActive()) {
+    plot->updatePathCacheSize(pointsArray.size());
 
-    CPoint2D p1, p2;
+    int j = 0;
 
-    if (! point1.isDiscontinuity() && point1.getPoint(p1) && point2.getPoint(p2))
-      renderer->drawClipLine(p1, p2, lw, c), lineStyle.calcDash());
+    for (const auto &points : pointsArray) {
+      CGnuPlotPathObject *path = plot->pathObjects()[j];
+
+      path->setPoints(points);
+
+      if (! path->testAndSetUsed()) {
+        CGnuPlotStrokeP stroke1(path->stroke()->dup());
+
+        stroke1->setEnabled (true);
+        stroke1->setColor   (stroke.color());
+        stroke1->setWidth   (stroke.width());
+        stroke1->setLineDash(stroke.lineDash());
+
+        path->setStroke(stroke1);
+      }
+
+      ++j;
+    }
+
+    for (const auto &path : plot->pathObjects())
+      path->draw(renderer);
   }
-#endif
+  else {
+    for (const auto &points : pointsArray) {
+      renderer->strokeClippedPath(points, stroke);
+    }
+  }
 }
 
 void
@@ -107,9 +128,9 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   CGnuPlotGroup *group = plot->group();
 
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  CGnuPlotStroke stroke(plot);
 
-  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
+  CRGBA c = stroke.color();
 
   //---
 
@@ -170,9 +191,9 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
 
       // TODO: clip
-      double lw = lineStyle.calcWidth();
+      double lw = stroke.width();
 
-      renderer->drawClippedPath(points, lw, c, lineStyle.calcDash());
+      renderer->drawClippedPath(points, lw, c, stroke.lineDash());
 
       if (n < 0)
         n = points.size();
@@ -187,9 +208,9 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   if (grid) {
     for (const auto &ip : xpoints) {
       // TODO: clip
-      double lw = lineStyle.calcWidth();
+      double lw = stroke.width();
 
-      renderer->drawClippedPath(ip.second, lw, c, lineStyle.calcDash());
+      renderer->drawClippedPath(ip.second, lw, c, stroke.lineDash());
     }
   }
 }
@@ -198,15 +219,12 @@ void
 CGnuPlotStyleLines::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
-  CGnuPlotGroup *group = plot->group();
+  CGnuPlotStroke stroke(plot);
 
-  const CGnuPlotLineStyle &lineStyle= plot->lineStyle();
+  CRGBA  c  = stroke.color();
+  double lw = stroke.width();
 
-  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
-
-  double lw = lineStyle.calcWidth();
-
-  renderer->drawLine(p1, p2, lw, c, lineStyle.calcDash());
+  renderer->drawLine(p1, p2, lw, c, stroke.lineDash());
 }
 
 CBBox2D

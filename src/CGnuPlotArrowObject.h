@@ -9,6 +9,7 @@
 #include <CGnuPlotCache.h>
 #include <CGnuPlotObject.h>
 #include <CGnuPlotArrowData.h>
+#include <CGnuPlotStroke.h>
 
 class CGnuPlotPlot;
 
@@ -63,18 +64,8 @@ class CGnuPlotArrowObject : public CGnuPlotPlotObject {
   bool getHeadEmpty() const { return data_.getHeadEmpty(); }
   void setHeadEmpty(bool b) { data_.setHeadEmpty(b); }
 
-  void setLineWidth(double w) { data_.setLineWidth(w); }
-  double calcLineWidth() const;
-
-  int getLineStyle() const { return data_.getLineStyle(); }
-  void setLineStyle(int t) { data_.setLineStyle(t); }
-
-  const CGnuPlotDash &getDash() const { return data_.getDash(); }
-  void setDash(const CGnuPlotDash &dash) { data_.setDash(dash); }
-
-  void setLineColor(const CRGBA &c) { data_.setLineColor(c); }
-  void resetLineColor() { data_.resetLineColor(); }
-  CRGBA calcLineColor() const;
+  const CGnuPlotStrokeP &stroke() const { return stroke_; }
+  void setStroke(const CGnuPlotStrokeP &s) { stroke_ = s; }
 
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
@@ -82,8 +73,9 @@ class CGnuPlotArrowObject : public CGnuPlotPlotObject {
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
- private:
+ protected:
   CGnuPlotArrowData data_;
+  CGnuPlotStrokeP   stroke_;
 };
 
 #endif

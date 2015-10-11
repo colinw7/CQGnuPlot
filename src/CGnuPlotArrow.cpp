@@ -1,9 +1,6 @@
 #include <CGnuPlotArrow.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
-#include <CGnuPlotLineStyle.h>
-#include <CGnuPlotUtil.h>
-#include <CMathGeom2D.h>
 
 CGnuPlot *
 CGnuPlotArrow::

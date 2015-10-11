@@ -1,21 +1,81 @@
 #include <CGnuPlotLabelData.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotGroup.h>
+#include <CGnuPlotPlot.h>
+#include <CGnuPlotDevice.h>
 #include <CFontMgr.h>
 
 CFontPtr CGnuPlotLabelData::defFont_;
 
 CGnuPlotLabelData::
-CGnuPlotLabelData()
+CGnuPlotLabelData(CGnuPlotGroup *group) :
+ group_(group)
 {
   if (! defFont_.isValid())
     defFont_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
+
+  if (group) {
+    boxFill_   = group->app()->device()->createFill  (0);
+    boxStroke_ = group->app()->device()->createStroke(0);
+  }
+}
+
+CGnuPlotLabelData::
+CGnuPlotLabelData(CGnuPlotPlot *plot) :
+ plot_(plot)
+{
+  if (! defFont_.isValid())
+    defFont_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
+
+  boxFill_   = plot->createFill();
+  boxStroke_ = plot->createStroke();
+}
+
+CGnuPlotLabelData::
+~CGnuPlotLabelData()
+{
+  delete boxFill_;
+  delete boxStroke_;
+}
+
+CGnuPlotLabelData *
+CGnuPlotLabelData::
+dup() const
+{
+  CGnuPlotLabelData *data = new CGnuPlotLabelData();
+
+  data->plot_       =  plot_;
+  data->text_       =  text_;
+  data->pos_        =  pos_;
+  data->angle_      =  angle_;
+  data->enhanced_   =  enhanced_;
+  data->labelStyle_ =  labelStyle_;
+  data->textColor_  =  textColor_;
+  data->lineType_   =  lineType_;
+  data->boxFill_    =  (boxFill_   ? boxFill_  ->dup() : 0);
+  data->boxStroke_  =  (boxStroke_ ? boxStroke_->dup() : 0);
+  data->hypertext_  =  hypertext_;
+  data->pointSize_  =  pointSize_;
+  data->pointWidth_ =  pointWidth_;
+
+  return data;
 }
 
 void
 CGnuPlotLabelData::
 draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
 {
+  if (! group_ && ! plot_) {
+    CGnuPlotLabelData *th = const_cast<CGnuPlotLabelData *>(this);
+
+    th->boxFill_   = group->app()->device()->createFill  (0);
+    th->boxStroke_ = group->app()->device()->createStroke(0);
+
+    th->group_ = group;
+  }
+
+  assert(boxFill_ && boxStroke_);
+
   // get font, align and angle
   if (getFont().isValid())
     renderer->setFont(getFont());
@@ -63,17 +123,17 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
   //---
 
   // fill box background and border
-  if (isBoxFill()) {
-    renderer->fillRotatedRect(bbox, a, getBoxFillColor(), o);
+  if (boxStroke()->isEnabled()) {
+    renderer->fillRotatedRect(bbox, a, boxFill()->color(), o);
   }
 
   //---
 
-  if (hasBox() && bbox.isSet()) {
-    //renderer->drawRect(bbox, getBoxStrokeColor(), 1);
+  if (boxStroke()->isEnabled() && bbox.isSet()) {
+    //renderer->drawRect(bbox, boxStroke()->Color(), 1);
     //renderer->drawRotatedRect(bbox, a, c, 1, o);
 
-    renderer->drawRotatedRect(bbox, a, getBoxStrokeColor(), getBoxStrokeWidth(), o);
+    renderer->drawRotatedRect(bbox, a, boxStroke()->color(), boxStroke()->width(), o);
   }
 
   //---

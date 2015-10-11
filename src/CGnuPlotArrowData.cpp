@@ -36,6 +36,40 @@ void
 CGnuPlotArrowData::
 draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
 {
+  CGnuPlotStroke stroke;
+
+  lc_ = calcLineColor(group);
+
+  if (isVariable() && style().varValue().isValid())
+    lc_ = CGnuPlotStyleInst->indexColor(getVarValue());
+
+  CRGBA lc = lc_;
+
+  if (highlighted)
+    lc = CRGBA(1,0,0);
+
+  CLineDash dash = getDash().calcDash(group->app());
+
+  double w = (calcLineWidth(group) > 0 ? calcLineWidth(group) : 1);
+
+  stroke.setColor   (lc);
+  stroke.setWidth   (w);
+  stroke.setLineDash(dash);
+
+  //----
+
+  draw(renderer, stroke);
+}
+
+void
+CGnuPlotArrowData::
+draw(CGnuPlotRenderer *renderer, const CGnuPlotStroke &stroke) const
+{
+  CGnuPlotFill fill;
+
+  fill.setType (CGnuPlotTypes::FillType::SOLID);
+  fill.setColor(stroke.color());
+
   tol_ = renderer->pixelWidthToWindowWidth(4);
 
   CPoint2D from, to;
@@ -50,8 +84,6 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
   renderer->windowToPixel(to  .x, to  .y, &tx, &ty);
 
   pline_ = CLine2D(CPoint2D(fx, fy), CPoint2D(tx, ty));
-
-  double w = (calcLineWidth(group) > 0 ? calcLineWidth(group) : 1);
 
   double a = atan2(ty - fy, tx - fx);
 
@@ -82,8 +114,8 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
       y11 = y2;
     }
     else {
-      x11 = x1 + w*c;
-      y11 = y1 + w*s;
+      x11 = x1 + stroke.width()*c;
+      y11 = y1 + stroke.width()*s;
     }
   }
 
@@ -93,26 +125,14 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
       y41 = y3;
     }
     else {
-      x41 = x4 - w*c;
-      y41 = y4 - w*s;
+      x41 = x4 - stroke.width()*c;
+      y41 = y4 - stroke.width()*s;
     }
   }
 
   double ba = CAngle::Deg2Rad(getHeadBackAngle() > 0 ? getHeadBackAngle() : 90);
 
   renderer->setMapping(false);
-
-  lc_ = calcLineColor(group);
-
-  if (isVariable() && style().varValue().isValid())
-    lc_ = CGnuPlotStyleInst->indexColor(getVarValue());
-
-  CRGBA lc = lc_;
-
-  if (highlighted)
-    lc = CRGBA(1,0,0);
-
-  CLineDash dash = getDash().calcDash(group->app());
 
   if (getFHead()) {
     double a1 = a + aa;
@@ -129,8 +149,9 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
     double xf3 = x2, yf3 = y2;
 
     if (! getHeadFilled() && ! getHeadEmpty()) {
-      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf1, yf1), w, lc, dash);
-      renderer->drawLine(CPoint2D(x1, y1), CPoint2D(xf2, yf2), w, lc, dash);
+      std::vector<CPoint2D> points = {{CPoint2D(xf1, yf1), CPoint2D(x1, y1), CPoint2D(xf2, yf2)}};
+
+      renderer->strokePath(points, stroke);
     }
     else {
       if (ba > aa && ba < M_PI) {
@@ -152,9 +173,9 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
       points.push_back(CPoint2D(xf2, yf2));
 
       if (getHeadEmpty())
-        renderer->drawPolygon(points, w, lc, CLineDash());
+        renderer->strokePolygon(points, stroke);
       else
-        renderer->fillPolygon(points, lc);
+        renderer->fillPolygon(points, fill);
     }
   }
 
@@ -173,8 +194,9 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
     double xt3 = x3, yt3 = y3;
 
     if (! getHeadFilled() && ! getHeadEmpty()) {
-      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt1, yt1), w, lc, dash);
-      renderer->drawLine(CPoint2D(x4, y4), CPoint2D(xt2, yt2), w, lc, dash);
+      std::vector<CPoint2D> points = {{CPoint2D(xt1, yt1), CPoint2D(x4, y4), CPoint2D(xt2, yt2)}};
+
+      renderer->strokePath(points, stroke);
     }
     else {
       if (ba > aa && ba < M_PI) {
@@ -196,13 +218,15 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
       points.push_back(CPoint2D(xt2, yt2));
 
       if (getHeadEmpty())
-        renderer->drawPolygon(points, w, lc, CLineDash());
+        renderer->strokePolygon(points, stroke);
       else
-        renderer->fillPolygon(points, lc);
+        renderer->fillPolygon(points, fill);
     }
   }
 
-  renderer->drawLine(CPoint2D(x11, y11), CPoint2D(x41, y41), w, lc, dash);
+  std::vector<CPoint2D> points = {{CPoint2D(x11, y11), CPoint2D(x41, y41)}};
+
+  renderer->strokePath(points, stroke);
 
   renderer->setMapping(true);
 }

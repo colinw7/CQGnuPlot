@@ -481,6 +481,25 @@ fillEllipse(const CPoint2D &center, double rx, double ry, double a, const CRGBA 
 
 void
 CGnuPlotSVGRenderer::
+patternEllipse(const CPoint2D &center, double rx, double ry, double a,
+               CGnuPlotTypes::FillPattern, const CRGBA &fg, const CRGBA &)
+{
+  // TODO: pattern
+  double px1, py1, px2, py2;
+
+  windowToPixel(center.x - rx, center.y - ry, &px1, &py1);
+  windowToPixel(center.x + rx, center.y + ry, &px2, &py2);
+
+  CBBox2D rect1(std::min(px1, px2), std::min(py1, py2), std::max(px1, px2), std::max(py1, py2));
+
+  os() << "<ellipse cx=\"" << rect1.getCenter().x << "\" cy=\"" << rect1.getCenter().y << "\" " <<
+          "rx=\"" << rect1.getWidth()/2 << "\" ry=\"" << rect1.getHeight()/2 << "\" " <<
+          "transform=\"rotate(" << a << ")\" " <<
+          "style=\"" << strokeNone() << " " << fillColor(fg) << "\"/>\n";
+}
+
+void
+CGnuPlotSVGRenderer::
 drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 {
   double a = getFont()->getAngle();

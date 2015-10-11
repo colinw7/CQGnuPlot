@@ -25,6 +25,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   const CGnuPlotTextBoxStyle &textBoxStyle = plot->textBoxStyle();
   const CGnuPlotLabelStyle   &labelStyle   = plot->labelStyle();
 
+  CGnuPlotFill fill(plot);
+
   bool isCalcColor = lineStyle.isCalcColor();
 
   CRGBA tc(0, 0, 0);
@@ -35,7 +37,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //CFontPtr font = renderer->getFont();
   //double tw1 = renderer->pixelWidthToWindowWidth(font->getStringWidth("X"));
 
-  typedef std::vector<CGnuPlotLabelData> LabelDatas;
+  //---
+
+  typedef std::vector<CGnuPlotLabelData *> LabelDatas;
 
   LabelDatas labelDatas;
 
@@ -71,39 +75,40 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     //---
 
-    CGnuPlotLabelData labelData;
+    CGnuPlotLabelData *labelData = new CGnuPlotLabelData(plot);
 
-    labelData.setText(str);
-    labelData.setPos (pos);
+    labelData->setText(str);
+    labelData->setPos (pos);
 
     CGnuPlotColorSpec cs;
 
     cs.setRGB(tc1);
 
-    labelData.setTextColor(cs);
+    labelData->setTextColor(cs);
 
-    labelData.setAngle(0);
+    labelData->setAngle(0);
 
-    labelData.setEnhanced(enhanced);
+    labelData->setEnhanced(enhanced);
 
-    labelData.setAlign(labelStyle.align());
+    labelData->setAlign(labelStyle.align());
 
     if (labelStyle.font().isValid())
-      labelData.setFont(labelStyle.font());
+      labelData->setFont(labelStyle.font());
 
-    labelData.setOffset(textStyle.offset());
+    labelData->setOffset(textStyle.offset());
 
-    labelData.setBoxFill(! textBoxStyle.isTransparent());
-    labelData.setBoxFillColor(group->window()->backgroundColor());
+    labelData->boxFill()->setType(! textBoxStyle.isTransparent() ?
+      CGnuPlotTypes::FillType::SOLID : CGnuPlotTypes::FillType::EMPTY);
+    labelData->boxFill()->setColor(fill.background());
 
-    labelData.setBox(textStyle.isBoxed());
-    labelData.setBoxStrokeColor(CRGBA(0,0,0));
-    labelData.setBoxStrokeWidth(1);
+    labelData->boxStroke()->setEnabled(textStyle.isBoxed());
+    labelData->boxStroke()->setColor(CRGBA(0,0,0));
+    labelData->boxStroke()->setWidth(1);
 
-    labelData.setShowPoint (labelStyle.showPoint ());
-    labelData.setPointType ((int) labelStyle.symbolType());
-    labelData.setPointSize (labelStyle.pointSize());
-    labelData.setPointWidth(labelStyle.lineWidth());
+    labelData->setShowPoint (labelStyle.showPoint ());
+    labelData->setPointType ((int) labelStyle.symbolType());
+    labelData->setPointSize (labelStyle.pointSize());
+    labelData->setPointWidth(labelStyle.lineWidth());
 
     labelDatas.push_back(labelData);
 
@@ -133,7 +138,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     //---
 
     if (! textBoxStyle.isTransparent())
-      renderer->fillRect(bbox, group->window()->backgroundColor());
+      renderer->fillRect(bbox, fill.background());
 
     if (textStyle.isBoxed())
       renderer->drawRect(bbox, CRGBA(0,0,0), 1);
@@ -180,7 +185,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
     }
     else {
-      labelData.draw(renderer, group, false);
+      labelData->draw(renderer, group, false);
+
+      delete labelData;
     }
 
     ++i;
@@ -207,6 +214,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   const CGnuPlotTextBoxStyle &textBoxStyle = plot->textBoxStyle();
   const CGnuPlotLabelStyle   &labelStyle   = plot->labelStyle();
 
+  CGnuPlotFill fill(plot);
+
   bool isCalcColor = lineStyle.isCalcColor();
 
   CRGBA tc(0, 0, 0);
@@ -217,6 +226,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   CFontPtr font = renderer->getFont();
 
   double tw1 = renderer->pixelWidthToWindowWidth(font->getStringWidth("X"));
+
+  //---
 
   for (const auto &ip : plot->getPoints3D()) {
     for (const auto &point : ip.second) {
@@ -273,7 +284,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       bbox.moveBy(d + of);
 
       if (! textBoxStyle.isTransparent())
-        renderer->fillRect(bbox, group->window()->backgroundColor());
+        renderer->fillRect(bbox, fill.background());
 
       if (textStyle.isBoxed())
         renderer->drawRect(bbox, CRGBA(0,0,0), 1);

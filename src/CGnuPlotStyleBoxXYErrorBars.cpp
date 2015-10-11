@@ -15,10 +15,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
-  bool isCalcColor = lineStyle.isCalcColor();
+  CGnuPlotFill   fill  (plot);
+  CGnuPlotStroke stroke(plot);
 
-  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(0,0,0));
-  CRGBA fc = (plot->fillType() == CGnuPlotTypes::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
+  bool isCalcColor = lineStyle.isCalcColor();
 
   if (! renderer->isPseudo())
     plot->updateBarCacheSize(plot->getPoints2D().size());
@@ -40,7 +40,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     double yl = y;
     double yh = y;
 
-    CRGBA fc1 = fc;
+    COptRGBA fc;
 
     // x y xlow xhigh ylow yhigh
     if      ((! isCalcColor && reals.size() == 6) || (isCalcColor && reals.size() == 7)) {
@@ -55,7 +55,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         if (renderer->isPseudo())
           renderer->setCBValue(z);
         else
-          fc1 = lineStyle.calcColor(plot, z);
+          fc = lineStyle.calcColor(plot, z);
       }
     }
     // x y xdelta ydelta
@@ -74,13 +74,15 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         if (renderer->isPseudo())
           renderer->setCBValue(z);
         else
-          fc1 = lineStyle.calcColor(plot, z);
+          fc = lineStyle.calcColor(plot, z);
       }
     }
 
-    CBBox2D bbox(xl, yl, xh, yh);
+    //fc.setAlpha(0.5));
 
-    fc1.setAlpha(0.5);
+    //----
+
+    CBBox2D bbox(xl, yl, xh, yh);
 
     if (! renderer->isPseudo()) {
       CGnuPlotBarObject *bar = plot->barObjects()[i];
@@ -89,19 +91,26 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       bar->setValues(x, y);
 
-      if (! bar->isInitialized()) {
-        bar->setFillType   (plot->fillType());
-        bar->setFillPattern(plot->fillPattern());
-        bar->setFillColor  (fc1);
+      if (! bar->testAndSetUsed()) {
+        CGnuPlotFillP   fill  (bar->fill  ()->dup());
+        CGnuPlotStrokeP stroke(bar->stroke()->dup());
 
-        bar->setBorder   (true);
-        bar->setLineColor(lc);
+        if (fc.isValid())
+          fill->setColor(fc.getValue());
 
-        bar->setInitialized(true);
+        bar->setFill  (fill  );
+        bar->setStroke(stroke);
       }
     }
-    else
-      renderer->drawRect(bbox, lc, 1);
+    else {
+      //CGnuPlotFill   fill;
+      CGnuPlotStroke stroke;
+
+      stroke.setEnabled(true);
+
+      //renderer->fillRect  (bbox, fill  );
+      renderer->strokeRect(bbox, stroke);
+    }
 
     ++i;
   }

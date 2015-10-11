@@ -386,32 +386,26 @@ void
 CGnuPlotStyleFilledCurves::
 drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &points)
 {
-  CGnuPlotFill   fill(plot);
-  CGnuPlotStroke stroke(plot);
-
   if (! renderer->isPseudo() && plot->isCacheActive()) {
     CGnuPlotPolygonObject *polygon = plot->polygonObjects()[i];
 
     polygon->setPoints(points);
 
     if (! polygon->testAndSetUsed()) {
-      polygon->resetFillColor();
-      polygon->resetLineColor();
+      CGnuPlotFillP   fill  (polygon->fill  ()->dup());
+      CGnuPlotStrokeP stroke(polygon->stroke()->dup());
 
-      polygon->setFillPattern   (fill.pattern());
-      polygon->setFillColor     (fill.color());
-      polygon->setFillBackground(fill.background());
-
-      if (stroke.isEnabled()) {
-        polygon->setLineWidth(stroke.width());
-        polygon->setLineColor(stroke.color());
-      }
+      polygon->setFill  (fill  );
+      polygon->setStroke(stroke);
     }
 
     polygon->setClipped(true);
   }
   else {
     // fill and stroke polygon
+    CGnuPlotFill   fill  (plot);
+    CGnuPlotStroke stroke(plot);
+
     renderer->fillClippedPolygon  (points, fill);
     renderer->strokeClippedPolygon(points, stroke);
   }

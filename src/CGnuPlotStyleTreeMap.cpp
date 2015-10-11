@@ -104,12 +104,17 @@ class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
     if (! renderer_->isPseudo()) {
       CGnuPlotRectObject *rect = plot_->rectObjects()[ind_];
 
-      rect->setRect     (CBBox2D(x, y, x + w, y + h));
-      rect->setFillColor(c);
-      rect->setLineColor(CRGBA(0,0,0));
-      rect->setLineWidth(0);
-      rect->setText     (text);
-      rect->setTipText  (text + " : " + CStrUtil::toString(node->size()));
+      rect->setRect   (CBBox2D(x, y, x + w, y + h));
+      rect->setText   (text);
+      rect->setTipText(text + " : " + CStrUtil::toString(node->size()));
+
+      if (! rect->testAndSetUsed()) {
+        rect->fill()->setType (CGnuPlotTypes::FillType::SOLID);
+        rect->fill()->setColor(c);
+
+        rect->stroke()->setColor(CRGBA(0,0,0));
+        rect->stroke()->setWidth(0);
+      }
 
       ++ind_;
     }

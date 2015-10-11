@@ -53,13 +53,18 @@ class CQGnuPlotDevice : public QObject, public CGnuPlotDevice {
 
   CGnuPlotArrowObject   *createArrowObject  (CGnuPlotPlot *plot) override;
   CGnuPlotBarObject     *createBarObject    (CGnuPlotPlot *plot) override;
+  CGnuPlotEndBar        *createEndBar       (CGnuPlotPlot *plot) override;
   CGnuPlotBubbleObject  *createBubbleObject (CGnuPlotPlot *plot) override;
   CGnuPlotEllipseObject *createEllipseObject(CGnuPlotPlot *plot) override;
   CGnuPlotLabelObject   *createLabelObject  (CGnuPlotPlot *plot) override;
+  CGnuPlotPathObject    *createPathObject   (CGnuPlotPlot *plot) override;
   CGnuPlotPieObject     *createPieObject    (CGnuPlotPlot *plot) override;
+  CGnuPlotPointObject   *createPointObject  (CGnuPlotPlot *plot) override;
   CGnuPlotPolygonObject *createPolygonObject(CGnuPlotPlot *plot) override;
   CGnuPlotRectObject    *createRectObject   (CGnuPlotPlot *plot) override;
-  CGnuPlotPointObject   *createPointObject  (CGnuPlotPlot *plot) override;
+
+  CGnuPlotFill   *createFill  (CGnuPlotPlot *plot) override;
+  CGnuPlotStroke *createStroke(CGnuPlotPlot *plot) override;
 
   const Objects &objects() const { return objects_; }
 

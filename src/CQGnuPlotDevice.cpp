@@ -23,12 +23,17 @@
 
 #include <CQGnuPlotArrowObject.h>
 #include <CQGnuPlotBarObject.h>
+#include <CQGnuPlotEndBar.h>
 #include <CQGnuPlotEllipseObject.h>
 #include <CQGnuPlotLabelObject.h>
+#include <CQGnuPlotPathObject.h>
 #include <CQGnuPlotPieObject.h>
 #include <CQGnuPlotPointObject.h>
 #include <CQGnuPlotPolygonObject.h>
 #include <CQGnuPlotRectObject.h>
+
+#include <CQGnuPlotFill.h>
+#include <CQGnuPlotStroke.h>
 
 #include <QApplication>
 
@@ -50,7 +55,7 @@ CGnuPlotWindow *
 CQGnuPlotDevice::
 createWindow()
 {
-  CQGnuPlot *qapp = static_cast<CQGnuPlot *>(plot_);
+  CQGnuPlot *qapp = dynamic_cast<CQGnuPlot *>(plot_);
 
   CQGnuPlotMainWindow *window = new CQGnuPlotMainWindow(qapp);
 
@@ -67,7 +72,7 @@ CGnuPlotGroup *
 CQGnuPlotDevice::
 createGroup(CGnuPlotWindow *window)
 {
-  CQGnuPlotWindow *qwindow = static_cast<CQGnuPlotWindow *>(window);
+  CQGnuPlotWindow *qwindow = dynamic_cast<CQGnuPlotWindow *>(window);
 
   CQGnuPlotGroup *group = new CQGnuPlotGroup(qwindow);
 
@@ -80,7 +85,7 @@ CGnuPlotPlot *
 CQGnuPlotDevice::
 createPlot(CGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotPlot *plot = new CQGnuPlotPlot(qgroup, style);
 
@@ -104,7 +109,7 @@ CGnuPlotArrow *
 CQGnuPlotDevice::
 createArrow(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotArrow *arrow = new CQGnuPlotArrow(qgroup);
 
@@ -117,7 +122,7 @@ CGnuPlotCircle *
 CQGnuPlotDevice::
 createCircle(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotCircle *circle = new CQGnuPlotCircle(qgroup);
 
@@ -130,7 +135,7 @@ CGnuPlotEllipse *
 CQGnuPlotDevice::
 createEllipse(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotEllipse *ellipse = new CQGnuPlotEllipse(qgroup);
 
@@ -143,7 +148,7 @@ CGnuPlotLabel *
 CQGnuPlotDevice::
 createLabel(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotLabel *label = new CQGnuPlotLabel(qgroup);
 
@@ -156,7 +161,7 @@ CGnuPlotPolygon *
 CQGnuPlotDevice::
 createPolygon(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotPolygon *poly = new CQGnuPlotPolygon(qgroup);
 
@@ -169,7 +174,7 @@ CGnuPlotRectangle *
 CQGnuPlotDevice::
 createRectangle(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotRectangle *rect = new CQGnuPlotRectangle(qgroup);
 
@@ -184,7 +189,7 @@ CGnuPlotAxis *
 CQGnuPlotDevice::
 createAxis(CGnuPlotGroup *group, const CGnuPlotAxisData &data)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotAxis *axis = new CQGnuPlotAxis(qgroup, data);
 
@@ -197,7 +202,7 @@ CGnuPlotKey *
 CQGnuPlotDevice::
 createKey(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotKey *key = new CQGnuPlotKey(qgroup);
 
@@ -210,7 +215,7 @@ CGnuPlotColorBox *
 CQGnuPlotDevice::
 createColorBox(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotColorBox *colorBox = new CQGnuPlotColorBox(qgroup);
 
@@ -223,7 +228,7 @@ CGnuPlotPalette *
 CQGnuPlotDevice::
 createPalette(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotPalette *palette = new CQGnuPlotPalette(qgroup);
 
@@ -236,7 +241,7 @@ CGnuPlotTitle *
 CQGnuPlotDevice::
 createTitle(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotTitle *title = new CQGnuPlotTitle(qgroup);
 
@@ -249,7 +254,7 @@ CGnuPlotCamera *
 CQGnuPlotDevice::
 createCamera(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotCamera *camera = new CQGnuPlotCamera(qgroup);
 
@@ -260,7 +265,7 @@ CGnuPlotPm3D *
 CQGnuPlotDevice::
 createPm3D(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotPm3D *pm3d = new CQGnuPlotPm3D(qgroup);
 
@@ -271,7 +276,7 @@ CGnuPlotTimeStamp *
 CQGnuPlotDevice::
 createTimeStamp(CGnuPlotGroup *group)
 {
-  CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+  CQGnuPlotGroup *qgroup = dynamic_cast<CQGnuPlotGroup *>(group);
 
   CQGnuPlotTimeStamp *timeStamp = new CQGnuPlotTimeStamp(qgroup);
 
@@ -284,7 +289,7 @@ CGnuPlotArrowObject *
 CQGnuPlotDevice::
 createArrowObject(CGnuPlotPlot *plot)
 {
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
 
   CQGnuPlotArrowObject *arrow = new CQGnuPlotArrowObject(qplot);
 
@@ -299,7 +304,7 @@ CGnuPlotBarObject *
 CQGnuPlotDevice::
 createBarObject(CGnuPlotPlot *plot)
 {
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
 
   CQGnuPlotBarObject *bar = new CQGnuPlotBarObject(qplot);
 
@@ -310,11 +315,22 @@ createBarObject(CGnuPlotPlot *plot)
   return bar;
 }
 
+CGnuPlotEndBar *
+CQGnuPlotDevice::
+createEndBar(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotEndBar *bar = new CQGnuPlotEndBar(qplot);
+
+  return bar;
+}
+
 CGnuPlotBubbleObject *
 CQGnuPlotDevice::
 createBubbleObject(CGnuPlotPlot *plot)
 {
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
 
   CQGnuPlotBubbleObject *bubble = new CQGnuPlotBubbleObject(qplot);
 
@@ -329,7 +345,7 @@ CGnuPlotEllipseObject *
 CQGnuPlotDevice::
 createEllipseObject(CGnuPlotPlot *plot)
 {
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
 
   CQGnuPlotEllipseObject *ellipse = new CQGnuPlotEllipseObject(qplot);
 
@@ -344,7 +360,7 @@ CGnuPlotLabelObject *
 CQGnuPlotDevice::
 createLabelObject(CGnuPlotPlot *plot)
 {
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
 
   CQGnuPlotLabelObject *label = new CQGnuPlotLabelObject(qplot);
 
@@ -355,11 +371,26 @@ createLabelObject(CGnuPlotPlot *plot)
   return label;
 }
 
+CGnuPlotPathObject *
+CQGnuPlotDevice::
+createPathObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotPathObject *path = new CQGnuPlotPathObject(qplot);
+
+  objects_.push_back(path);
+
+  qplot->qwindow()->updateProperties();
+
+  return path;
+}
+
 CGnuPlotPieObject *
 CQGnuPlotDevice::
 createPieObject(CGnuPlotPlot *plot)
 {
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
 
   CQGnuPlotPieObject *pie = new CQGnuPlotPieObject(qplot);
 
@@ -374,7 +405,7 @@ CGnuPlotPointObject *
 CQGnuPlotDevice::
 createPointObject(CGnuPlotPlot *plot)
 {
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
 
   CQGnuPlotPointObject *point = new CQGnuPlotPointObject(qplot);
 
@@ -389,7 +420,7 @@ CGnuPlotPolygonObject *
 CQGnuPlotDevice::
 createPolygonObject(CGnuPlotPlot *plot)
 {
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
 
   CQGnuPlotPolygonObject *polygon = new CQGnuPlotPolygonObject(qplot);
 
@@ -404,7 +435,7 @@ CGnuPlotRectObject *
 CQGnuPlotDevice::
 createRectObject(CGnuPlotPlot *plot)
 {
-  CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
 
   CQGnuPlotRectObject *rect = new CQGnuPlotRectObject(qplot);
 
@@ -413,6 +444,28 @@ createRectObject(CGnuPlotPlot *plot)
   qplot->qwindow()->updateProperties();
 
   return rect;
+}
+
+CGnuPlotFill *
+CQGnuPlotDevice::
+createFill(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotFill *fill = new CQGnuPlotFill(qplot);
+
+  return fill;
+}
+
+CGnuPlotStroke *
+CQGnuPlotDevice::
+createStroke(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotStroke *stroke = new CQGnuPlotStroke(qplot);
+
+  return stroke;
 }
 
 //---
@@ -429,7 +482,7 @@ void
 CQGnuPlotDevice::
 stateChanged(CGnuPlotWindow *window, CGnuPlotTypes::ChangeState)
 {
-  CQGnuPlotWindow *qwindow = static_cast<CQGnuPlotWindow *>(window);
+  CQGnuPlotWindow *qwindow = dynamic_cast<CQGnuPlotWindow *>(window);
 
   qwindow->redraw();
 }
@@ -439,7 +492,7 @@ CQGnuPlotDevice::
 redraw()
 {
   for (auto &w : windows_) {
-    CQGnuPlotWindow *qwindow = static_cast<CQGnuPlotWindow *>(w.get());
+    CQGnuPlotWindow *qwindow = dynamic_cast<CQGnuPlotWindow *>(w.get());
 
     qwindow->redraw();
   }

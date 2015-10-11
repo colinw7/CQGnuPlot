@@ -3195,6 +3195,21 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       else
         modifiers = false;
     }
+    else if (style == CGnuPlotTypes::PlotStyle::POINTS ||
+             style == CGnuPlotTypes::PlotStyle::LINES_POINTS) {
+      if (line.isOneOf({"textcolor", "tc"})) {
+        line.skipNonSpace();
+
+        CGnuPlotColorSpec c;
+
+        if (parseColorSpec(line, c))
+          styleData.label.setTextColor(c);
+
+        found = true;
+      }
+      else
+        modifiers = false;
+    }
     else if (style == CGnuPlotTypes::PlotStyle::PIECHART) {
       if      (line.isString("startangle")) {
         line.skipNonSpace();
@@ -6406,7 +6421,7 @@ setCmd(const std::string &args)
           label->setOffset(o);
       }
       else if (arg == "boxed") {
-        label->setBox(true);
+        label->boxStroke()->setEnabled(true);
       }
       else if (arg == "hypertext") {
         label->setHypertext(true);
@@ -11949,7 +11964,11 @@ CGnuPlotGroup *
 CGnuPlot::
 createGroup(CGnuPlotWindow *window)
 {
-  return (device() ? device()->createGroup(window) : new CGnuPlotGroup(window));
+  CGnuPlotGroup *group = (device() ? device()->createGroup(window) : new CGnuPlotGroup(window));
+
+  group->initObjects();
+
+  return group;
 }
 
 CGnuPlotPlot *
@@ -13022,6 +13041,9 @@ parseCommentStyle(CParseLine &line, CGnuPlotLineStyle &lineStyle, CGnuPlotFillSt
     }
     else if (arg == "tippoints") {
       lineStyle.setTipPoints(true);
+    }
+    else if (arg == "notippoints") {
+      lineStyle.setTipPoints(false);
     }
     else {
       errorMsg("Invalid arg : '" + arg + "'");

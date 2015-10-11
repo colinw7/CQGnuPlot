@@ -13,10 +13,10 @@ void
 CGnuPlotStyleBoxErrorBars::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  CGnuPlotGroup *group = plot->group();
-
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-  const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
+
+  CGnuPlotFill   fill  (plot);
+  CGnuPlotStroke stroke(plot);
 
   bool isCalcColor = lineStyle.isCalcColor();
 
@@ -26,8 +26,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   double y2 = std::max(0.0, ymin);
 
-  CRGBA lc = lineStyle.calcColor(group, CRGBA(1,0,0));
-  CRGBA fc = (fillStyle.style() == CGnuPlotTypes::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
+  //---
 
   if (! renderer->isPseudo())
     plot->updateBarCacheSize(plot->getPoints2D().size());
@@ -86,25 +85,23 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       dx = reals[4];
     }
 
-    CRGBA lc1 = lc;
+    //---
+
+    COptRGBA lc;
 
     if (colorVal.isValid()) {
       if (renderer->isPseudo())
         renderer->setCBValue(colorVal.getValue());
       else
-        lc1 = lineStyle.calcColor(plot, colorVal.getValue());
+        lc = lineStyle.calcColor(plot, colorVal.getValue());
     }
+
+    //---
 
     CBBox2D bbox(x - dx/2, y2, x + dx/2, y);
 
-    CRGBA fc1 = fc;
-
-    //fc1.setAlpha(0.5); // ???
-
     CPoint2D p1(x, yl);
     CPoint2D p2(x, yh);
-
-    double lw = lineStyle.calcWidth();
 
     if (! renderer->isPseudo()) {
       CGnuPlotBarObject *bar = plot->barObjects()[i];
@@ -113,38 +110,41 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       bar->setValues(x, y);
 
-      CGnuPlotBarObject::EndBar endBar(p1, p2);
+      if (! bar->testAndSetUsed()) {
+        CGnuPlotFillP   fill  (bar->fill  ()->dup());
+        CGnuPlotStrokeP stroke(bar->stroke()->dup());
 
-      endBar.setStartLine(true);
-      endBar.setEndLine  (true);
-      endBar.setLineWidth(lw);
-      endBar.setLineColor(lc1);
-      endBar.setEndWidth (dx/2);
+        bar->setFill  (fill  );
+        bar->setStroke(stroke);
 
-      bar->clearEndBars();
+        //---
 
-      bar->addEndBar(endBar);
+        bar->clearEndBars();
 
-      if (! bar->isInitialized()) {
-        bar->setFillType   (fillStyle.style());
-        bar->setFillPattern(fillStyle.pattern());
-        bar->setFillColor  (fc1);
+        CGnuPlotEndBarP endBar = bar->addEndBar(p1, p2);
 
-        bar->setBorder   (fillStyle.hasBorder());
-        bar->setLineColor(lc1);
+        //endBar->setStartLine(true);
+        //endBar->setEndLine  (true);
+        endBar->setEndWidth (dx/2);
 
-        bar->setInitialized(true);
+        CGnuPlotStrokeP endStroke(endBar->stroke()->dup());
+
+        endBar->setStroke(endStroke);
       }
     }
     else {
-      renderer->drawRect(bbox, lc1, 1);
+      CGnuPlotStroke stroke;
 
-      renderer->drawClipLine(p1, p2, lw, lc1);
+      stroke.setEnabled(true);
+
+      renderer->strokeRect(bbox, stroke);
+
+      renderer->strokeClipLine(p1, p2, stroke);
 
       double w = dx/2;
 
-      renderer->drawClipLine(p1 - CPoint2D(w/2, 0), p1 + CPoint2D(w/2, 0), lw, lc1);
-      renderer->drawClipLine(p2 - CPoint2D(w/2, 0), p2 + CPoint2D(w/2, 0), lw, lc1);
+      renderer->strokeClipLine(p1 - CPoint2D(w/2, 0), p1 + CPoint2D(w/2, 0), stroke);
+      renderer->strokeClipLine(p2 - CPoint2D(w/2, 0), p2 + CPoint2D(w/2, 0), stroke);
     }
 
     ++i;
@@ -160,9 +160,8 @@ void
 CGnuPlotStyleBoxErrorBars::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
-  CGnuPlotGroup *group = plot->group();
-
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  CGnuPlotFill   fill  (plot);
+  CGnuPlotStroke stroke(plot);
 
   CFontPtr font = renderer->getFont();
 
@@ -172,15 +171,10 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   CBBox2D hbbox(p1.x, p1.y - h/2, p2.x, p1.y + h/2);
 
-  const CRGBA &lc = lineStyle.calcColor(group, CRGBA(0,0,0));
-  double       lw = 1;
+  stroke.setWidth(1);
 
-  if      (plot->fillStyle().style() == CGnuPlotPlot::FillType::PATTERN)
-    renderer->patternRect(hbbox, plot->fillStyle().pattern(), lc, CRGBA(1,1,1));
-  else if (plot->fillStyle().style() == CGnuPlotPlot::FillType::SOLID)
-    renderer->fillRect(hbbox, lineStyle.calcColor(group, CRGBA(1,1,1)));
-
-  renderer->drawRect(hbbox, lc, lw);
+  renderer->fillRect  (hbbox, fill  );
+  renderer->strokeRect(hbbox, stroke);
 }
 
 CBBox2D

@@ -1,7 +1,7 @@
 #include <CQGnuPlotRectObject.h>
 #include <CQGnuPlotPlot.h>
-#include <CQGnuPlotUtil.h>
-#include <CQGnuPlotRenderer.h>
+#include <CQGnuPlotFill.h>
+#include <CQGnuPlotStroke.h>
 
 CQGnuPlotRectObject::
 CQGnuPlotRectObject(CQGnuPlotPlot *plot) :
@@ -28,32 +28,18 @@ setText(const QString &text)
   CGnuPlotRectObject::setText(text.toStdString());
 }
 
-QColor
+CQGnuPlotFill *
 CQGnuPlotRectObject::
-getFillColor() const
+fill() const
 {
-  return toQColor(CGnuPlotRectObject::fillColor());
+  return dynamic_cast<CQGnuPlotFill *>(fill_.get());
 }
 
-void
+CQGnuPlotStroke *
 CQGnuPlotRectObject::
-setFillColor(const QColor &color)
+stroke() const
 {
-  CGnuPlotRectObject::setFillColor(fromQColor(color));
-}
-
-QColor
-CQGnuPlotRectObject::
-getLineColor() const
-{
-  return toQColor(CGnuPlotRectObject::lineColor());
-}
-
-void
-CQGnuPlotRectObject::
-setLineColor(const QColor &color)
-{
-  CGnuPlotRectObject::setLineColor(fromQColor(color));
+  return dynamic_cast<CQGnuPlotStroke *>(stroke_.get());
 }
 
 void

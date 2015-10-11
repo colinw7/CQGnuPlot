@@ -8,6 +8,8 @@
 
 #include <CGnuPlotCache.h>
 #include <CGnuPlotObject.h>
+#include <CGnuPlotFill.h>
+#include <CGnuPlotStroke.h>
 
 class CGnuPlotPlot;
 
@@ -26,16 +28,17 @@ class CGnuPlotBubbleObject : public CGnuPlotPlotObject {
   double yRadius() const { return yr_; }
   void setYRadius(double r) { yr_ = r; }
 
-  bool hasColor() const { return color_.isValid(); }
-
-  const CRGBA &color() const { return color_.getValue(); }
-  void setColor(const CRGBA &c) { color_ = c; }
-
   const std::string &name() const { return name_; }
   void setName(const std::string &s) { name_ = s; }
 
   double value() const { return value_; }
   void setValue(double r) { value_ = r; }
+
+  const CGnuPlotFillP &fill() const { return fill_; }
+  void setFill(const CGnuPlotFillP &f) { fill_ = f; }
+
+  const CGnuPlotStrokeP &stroke() const { return stroke_; }
+  void setStroke(const CGnuPlotStrokeP &s) { stroke_ = s; }
 
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
@@ -43,13 +46,14 @@ class CGnuPlotBubbleObject : public CGnuPlotPlotObject {
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
- private:
-  CPoint2D    c_     { 0, 0 };
-  double      xr_    { 1 };
-  double      yr_    { 1 };
-  COptRGBA    color_;
-  std::string name_  { "" };
-  double      value_ { 0 };
+ protected:
+  CPoint2D        c_      { 0, 0 };
+  double          xr_     { 1 };
+  double          yr_     { 1 };
+  std::string     name_   { "" };
+  double          value_  { 0 };
+  CGnuPlotFillP   fill_;
+  CGnuPlotStrokeP stroke_;
 };
 
 #endif

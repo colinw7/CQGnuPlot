@@ -105,6 +105,9 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
                            const CRGBA &c, double w, const CLineDash &dash=CLineDash()) = 0;
   virtual void fillEllipse(const CPoint2D &p, double rx, double ry, double a,
                            const CRGBA &c) = 0;
+  virtual void patternEllipse(const CPoint2D &p, double rx, double ry, double a,
+                              CGnuPlotTypes::FillPattern pattern,
+                              const CRGBA &fg, const CRGBA &bg) = 0;
 
   virtual void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3,
                           const CPoint2D &p4, double width, const CRGBA &c) = 0;
@@ -137,10 +140,15 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   void drawPoint(const CPoint3D &p, const CRGBA &c);
 
+  void strokeClippedPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke);
+
   void drawClippedPath(const std::vector<CPoint2D> &points, double width,
                        const CRGBA &c, const CLineDash &dash=CLineDash());
   void drawClippedPath(const std::vector<CPoint3D> &points, double width,
                        const CRGBA &c, const CLineDash &dash=CLineDash());
+
+  void strokePath(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke);
+  void strokePath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke);
 
   void drawPath  (const std::vector<CPoint3D> &points, double width,
                   const CRGBA &c, const CLineDash &dash=CLineDash());
@@ -166,6 +174,7 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void fillPolygon(const std::vector<CPoint3D> &points, const CGnuPlotFill &fill);
   void fillPolygon(const std::vector<CPoint2D> &points, const CGnuPlotFill &fill);
 
+  void fillClippedRect(const CBBox2D &rect, const CGnuPlotFill &fill);
   void fillRect(const CBBox2D &rect, const CGnuPlotFill &fill);
 
   //---
@@ -189,9 +198,16 @@ void strokeRect(const CBBox2D &rect, const CGnuPlotStroke &stroke);
   void fillRotatedRect(const CBBox2D &rect, double a, const CRGBA &c,
                        const COptPoint2D &o=COptPoint2D());
 
-  void fillEllipse(const CBBox2D &rect, const CRGBA &c);
+  void strokeEllipse(const CPoint2D &p, double rx, double ry, double a,
+                     const CGnuPlotStroke &stroke);
+
+  void drawEllipse(const CPoint3D &p, double dx, double ry, double a,
+                   const CRGBA &c, double w, const CLineDash &dash=CLineDash());
   void drawEllipse(const CBBox2D &rect, const CRGBA &c, double w,
                    const CLineDash &dash=CLineDash());
+
+  void fillEllipse(const CPoint2D &p, double rx, double ry, double a, const CGnuPlotFill &fill);
+  void fillEllipse(const CBBox2D &rect, const CRGBA &c);
 
   void fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c);
   void fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c);
@@ -204,13 +220,12 @@ void strokeRect(const CBBox2D &rect, const CGnuPlotStroke &stroke);
   void patternClippedPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern pat,
                              const CRGBA &fg, const CRGBA &bg);
 
+  void strokeClipLine(const CPoint2D &p1, const CPoint2D &p2, const CGnuPlotStroke &stroke);
+
   void drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width,
                     const CRGBA &c, const CLineDash &dash=CLineDash());
 
   bool clipLine(CPoint2D &p1, CPoint2D &p2);
-
-  void drawEllipse(const CPoint3D &p, double dx, double ry, double a,
-                   const CRGBA &c, double w, const CLineDash &dash=CLineDash());
 
   void calcTextRectAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced,
                            CHAlignType halign, CVAlignType valign, double a,
@@ -237,6 +252,11 @@ void strokeRect(const CBBox2D &rect, const CGnuPlotStroke &stroke);
                       CHAlignType halign, const CRGBA &c);
 
   CBBox2D getHAlignedTextBBox(const std::string &str);
+
+  void strokePieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
+                      const CGnuPlotStroke &stroke);
+  void fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
+                    double angle2, const CGnuPlotFill &fill);
 
   //---
 

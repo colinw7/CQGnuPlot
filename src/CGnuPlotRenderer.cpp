@@ -247,6 +247,18 @@ drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w)
 
 void
 CGnuPlotRenderer::
+fillClippedRect(const CBBox2D &rect, const CGnuPlotFill &fill)
+{
+  if      (fill.type() == CGnuPlotTypes::FillType::PATTERN) {
+    patternRect(rect, fill.pattern(), fill.color(), fill.background());
+  }
+  else if (fill.type() == CGnuPlotTypes::FillType::SOLID) {
+    fillClippedRect(rect, fill.color());
+  }
+}
+
+void
+CGnuPlotRenderer::
 fillRect(const CBBox2D &rect, const CGnuPlotFill &fill)
 {
   if      (fill.type() == CGnuPlotTypes::FillType::PATTERN) {
@@ -296,12 +308,19 @@ void
 CGnuPlotRenderer::
 strokeRect(const CBBox2D &rect, const CGnuPlotStroke &stroke)
 {
-  if (stroke.isEnabled()) {
+  if (stroke.isEnabled())
     drawRect(rect, stroke.color(), stroke.width());
-  }
 }
 
 //---
+
+void
+CGnuPlotRenderer::
+strokeClipLine(const CPoint2D &p1, const CPoint2D &p2, const CGnuPlotStroke &stroke)
+{
+  if (stroke.isEnabled())
+    drawClipLine(p1, p2, stroke.width(), stroke.color(), stroke.lineDash());
+}
 
 void
 CGnuPlotRenderer::
@@ -373,6 +392,37 @@ clipLine(CPoint2D &p1, CPoint2D &p2)
   return true;
 }
 
+//---
+
+void
+CGnuPlotRenderer::
+fillEllipse(const CPoint2D &p, double rx, double ry, double a, const CGnuPlotFill &fill)
+{
+  if      (fill.type() == CGnuPlotTypes::FillType::PATTERN) {
+    patternEllipse(p, rx, ry, a, fill.pattern(), fill.color(), fill.background());
+  }
+  else if (fill.type() == CGnuPlotTypes::FillType::SOLID) {
+    fillEllipse(p, rx, ry, a, fill.color());
+  }
+}
+
+void
+CGnuPlotRenderer::
+fillEllipse(const CBBox2D &rect, const CRGBA &c)
+{
+  fillEllipse(rect.getCenter(), rect.getWidth()/2, rect.getHeight()/2, 0, c);
+}
+
+//---
+
+ void
+CGnuPlotRenderer::
+strokeEllipse(const CPoint2D &p, double rx, double ry, double a, const CGnuPlotStroke &stroke)
+{
+  if (stroke.isEnabled())
+    drawEllipse(p, rx, ry, a, stroke.color(), stroke.width(), stroke.lineDash());
+}
+
 void
 CGnuPlotRenderer::
 drawEllipse(const CPoint3D &pos, double dx, double ry, double angle, const CRGBA &c,
@@ -385,17 +435,12 @@ drawEllipse(const CPoint3D &pos, double dx, double ry, double angle, const CRGBA
 
 void
 CGnuPlotRenderer::
-fillEllipse(const CBBox2D &rect, const CRGBA &c)
-{
-  fillEllipse(rect.getCenter(), rect.getWidth()/2, rect.getHeight()/2, 0, c);
-}
-
-void
-CGnuPlotRenderer::
 drawEllipse(const CBBox2D &rect, const CRGBA &c, double w, const CLineDash &dash)
 {
   drawEllipse(rect.getCenter(), rect.getWidth()/2, rect.getHeight()/2, 0, c, w, dash);
 }
+
+//---
 
 void
 CGnuPlotRenderer::
@@ -779,6 +824,25 @@ getHAlignedTextBBox(const std::string &str)
 
 void
 CGnuPlotRenderer::
+strokePath(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke)
+{
+  std::vector<CPoint2D> points1;
+
+  for (const auto &p : points)
+    points1.push_back(transform(p));
+
+  strokePath(points1, stroke);
+}
+
+void
+CGnuPlotRenderer::
+strokePath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
+{
+  drawPath(points, stroke.width(), stroke.color(), stroke.lineDash());
+}
+
+void
+CGnuPlotRenderer::
 drawPath(const std::vector<CPoint3D> &points, double width, const CRGBA &c,
          const CLineDash &dash)
 {
@@ -788,6 +852,14 @@ drawPath(const std::vector<CPoint3D> &points, double width, const CRGBA &c,
     points1.push_back(transform(p));
 
   drawPath(points1, width, c, dash);
+}
+
+void
+CGnuPlotRenderer::
+strokeClippedPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
+{
+  if (stroke.isEnabled())
+    drawClippedPath(points, stroke.width(), stroke.color(), stroke.lineDash());
 }
 
 void
@@ -849,6 +921,29 @@ drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c,
            double lw, bool pixelSize)
 {
   drawSymbol(transform(p), type, size, c, lw, pixelSize);
+}
+
+void
+CGnuPlotRenderer::
+strokePieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
+               double angle2, const CGnuPlotStroke &stroke)
+{
+  if (stroke.isEnabled())
+    drawPieSlice(pc, ri, ro, angle1, angle2, stroke.width(), stroke.color());
+}
+
+void
+CGnuPlotRenderer::
+fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
+             double angle2, const CGnuPlotFill &fill)
+{
+  if      (fill.type() == CGnuPlotTypes::FillType::PATTERN) {
+    // TODO: pattern ??
+    fillPieSlice(pc, ri, ro, angle1, angle2, fill.color());
+  }
+  else if (fill.type() == CGnuPlotTypes::FillType::SOLID) {
+    fillPieSlice(pc, ri, ro, angle1, angle2, fill.color());
+  }
 }
 
 void

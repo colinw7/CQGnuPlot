@@ -1,7 +1,7 @@
 #include <CQGnuPlotPieObject.h>
 #include <CQGnuPlotPlot.h>
-#include <CQGnuPlotUtil.h>
-#include <CQGnuPlotRenderer.h>
+#include <CQGnuPlotFill.h>
+#include <CQGnuPlotStroke.h>
 
 CQGnuPlotPieObject::
 CQGnuPlotPieObject(CQGnuPlotPlot *plot) :
@@ -28,32 +28,18 @@ setName(const QString &name)
   CGnuPlotPieObject::setName(name.toStdString());
 }
 
-QColor
+CQGnuPlotFill *
 CQGnuPlotPieObject::
-getLineColor() const
+fill() const
 {
-  return toQColor(CGnuPlotPieObject::lineColor());
+  return dynamic_cast<CQGnuPlotFill *>(fill_.get());
 }
 
-void
+CQGnuPlotStroke *
 CQGnuPlotPieObject::
-setLineColor(const QColor &color)
+stroke() const
 {
-  CGnuPlotPieObject::setLineColor(fromQColor(color));
-}
-
-QColor
-CQGnuPlotPieObject::
-getFillColor() const
-{
-  return toQColor(CGnuPlotPieObject::fillColor());
-}
-
-void
-CQGnuPlotPieObject::
-setFillColor(const QColor &color)
-{
-  CGnuPlotPieObject::setFillColor(fromQColor(color));
+  return dynamic_cast<CQGnuPlotStroke *>(stroke_.get());
 }
 
 void

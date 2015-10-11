@@ -50,18 +50,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  CGnuPlotGroup *group = plot->group();
-
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
-  const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = lineStyle.calcColor(group, CRGBA(1,0,0));
-  CRGBA fc = lc;
-
-  if (fillStyle.isTransparent())
-    fc.setAlpha(fillStyle.density());
+  CGnuPlotFill   fill(plot);
+  CGnuPlotStroke stroke(plot);
 
   //---
 
@@ -78,8 +72,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     double a1 = 0.0;
     double a2 = 360.0;
 
-    CRGBA lc1 = lc;
-    CRGBA fc1 = fc;
+    CRGBA lc1 = stroke.color();
+    CRGBA fc1 = fill  .color();
 
     bool is_angle = false;
 
@@ -142,31 +136,21 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         renderer->fillPieSlice(c, 0, r, a1, a2, fc1);
       }
       else {
-        if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID)
+        if (fill.type() == CGnuPlotTypes::FillType::SOLID)
           renderer->fillEllipse(c, w, h, 0, fc1);
 
-        if (fillStyle.hasBorder()) {
-          CRGBA bc = lc1;
-
-          if (fillStyle.borderColor().isValid())
-            bc = fillStyle.borderColor().getValue().calcColor(group);
-
-          renderer->drawEllipse(c, w, h, 0, bc, 1);
-        }
+        if (stroke.isEnabled())
+          renderer->drawEllipse(c, w, h, 0, lc1, 1);
       }
     }
     else {
       COptRGBA lc2, fc2;
 
-      if (fillStyle.style() == CGnuPlotTypes::FillType::SOLID)
+      if (fill.type() == CGnuPlotTypes::FillType::SOLID)
         fc2 = fc1;
 
-      if (fillStyle.hasBorder()) {
+      if (stroke.isEnabled())
         lc2 = lc1;
-
-        if (fillStyle.borderColor().isValid())
-          lc2 = fillStyle.borderColor().getValue().calcColor(group);
-      }
 
       if (is_angle) {
         pieSlices.push_back(PieSlice(c, r, a1, a2, lc2, fc2));
@@ -191,11 +175,19 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       pie->setAngle1(o.a1);
       pie->setAngle2(o.a2);
 
-      if (o.lc.isValid())
-        pie->setLineColor(o.lc.getValue());
+      if (! pie->testAndSetUsed()) {
+        CGnuPlotFillP   fill  (pie->fill  ()->dup());
+        CGnuPlotStrokeP stroke(pie->stroke()->dup());
 
-      if (o.fc.isValid())
-        pie->setFillColor(o.fc.getValue());
+        if (o.lc.isValid())
+          stroke->setColor(o.lc.getValue());
+
+        if (o.fc.isValid())
+          fill->setColor(o.fc.getValue());
+
+        pie->setFill  (fill  );
+        pie->setStroke(stroke);
+      }
 
       ++i;
     }
@@ -208,11 +200,19 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       ellipse->setCenter(o.c);
       ellipse->setSize  (CSize2D(o.w, o.h));
 
-      if (o.lc.isValid())
-        ellipse->setLineColor(o.lc.getValue());
+      if (! ellipse->testAndSetUsed()) {
+        CGnuPlotFillP   fill  (ellipse->fill  ()->dup());
+        CGnuPlotStrokeP stroke(ellipse->stroke()->dup());
 
-      if (o.fc.isValid())
-        ellipse->setFillColor(o.fc.getValue());
+        if (o.lc.isValid())
+          stroke->setColor(o.lc.getValue());
+
+        if (o.fc.isValid())
+          fill->setColor(o.fc.getValue());
+
+        ellipse->setFill  (fill  );
+        ellipse->setStroke(stroke);
+      }
 
       ++i;
     }

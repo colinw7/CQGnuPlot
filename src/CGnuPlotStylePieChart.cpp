@@ -124,14 +124,20 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       CRGBA fc = lfc.second;
 
       if (! pie->testAndSetUsed()) {
+        CGnuPlotFillP   fill  (pie->fill  ()->dup());
+        CGnuPlotStrokeP stroke(pie->stroke()->dup());
+
         pie->setName(name);
         pie->setValue(value);
 
         pie->setInnerRadius(ir);
         pie->setLabelRadius(lr);
 
-        pie->setLineColor(lfc.first);
-        pie->setFillColor(fc);
+        fill  ->setColor(fc);
+        stroke->setColor(lfc.first);
+
+        pie->setFill  (fill  );
+        pie->setStroke(stroke);
       }
     }
     else
@@ -161,6 +167,8 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   if (key->getFont().isValid())
     renderer->setFont(key->getFont());
+
+  CGnuPlotFill fill(plot);
 
   //---
 
@@ -229,9 +237,7 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   CBBox2D bbox(x1, y1, x2, y2);
 
   if (key->getFillBox()) {
-    CRGBA bg = group->window()->backgroundColor();
-
-    renderer->fillRect(bbox, bg);
+    renderer->fillRect(bbox, fill.background());
   }
 
   if (key->getDrawBox()) {

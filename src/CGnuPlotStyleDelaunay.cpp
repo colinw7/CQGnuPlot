@@ -39,6 +39,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
+  CGnuPlotStroke stroke(plot);
+
+  //---
+
   CDelaunay *delaunay;
 
   if (! value) {
@@ -79,7 +83,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CGnuPlotTypes::SymbolType pointType = lineStyle.calcPointType();
 
-  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA c = stroke.color();
 
   for (CHull3D::VertexIterator pv = delaunay->verticesBegin();
          pv != delaunay->verticesEnd(); ++pv) {

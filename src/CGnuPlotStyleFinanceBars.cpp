@@ -17,15 +17,21 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
+  CGnuPlotStroke stroke(plot);
+
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA  lc = lineStyle.calcColor(group, CRGBA(0,0,0));
-  double lw = lineStyle.calcWidth();
+  CRGBA  lc = stroke.color();
+  double lw = stroke.width();
+
+  //---
 
   double sl = 0;
 
   if (! renderer->isPseudo())
     sl = renderer->pixelWidthToWindowWidth(4);
+
+  //---
 
   for (const auto &point : plot->getPoints2D()) {
     std::vector<double> reals;

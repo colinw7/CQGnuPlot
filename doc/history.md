@@ -145,3 +145,8 @@
  + Add cbrange support to more plots
  + Fix tree map range
  + Add support for property tree search and expand
+
+### 9/11/2015
+ + Add fill and stroke object with editable properties
+ + Add path object
+ + Add object for error bar ends

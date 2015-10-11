@@ -3,6 +3,7 @@
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotPathObject.h>
 #include <CGnuPlotPointObject.h>
 
 CGnuPlotStyleLinesPoints::
@@ -17,38 +18,27 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   CGnuPlotGroup *group = plot->group();
 
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  const CGnuPlotLineStyle  &lineStyle  = plot->lineStyle();
+  const CGnuPlotLabelStyle &labelStyle = plot->labelStyle();
+
+  CGnuPlotFill   fill  (plot);
+  CGnuPlotStroke stroke(plot);
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA c = lineStyle.calcColor(group, CRGBA(1,0,0));
-
-  CRGBA bg = group->window()->backgroundColor();
-
-  int       pi = lineStyle.calcPointInterval();
-  double    lw = lineStyle.calcWidth();
-  CLineDash ld = lineStyle.calcDash();
-
-  bool erasePoint = (pi < 0);
-
-  int pi1 = abs(pi);
-
   //------
-
-  uint np = plot->numPoints2D();
-
-  if (! renderer->isPseudo() && lineStyle.isTipPoints())
-    plot->updatePointCacheSize(np);
-
-  //------
-
-  CPoint2D p1;
-
-  uint i = 0;
 
   typedef std::vector<CPoint2D> Points;
+  typedef std::vector<Points>   PointsArray;
+
+  PointsArray pointsArray;
+
+  uint i  = 0;
+  uint np = plot->numPoints2D();
 
   while (i < np) {
+    CPoint2D p1;
+
     // get first point
     for ( ; i < np; ++i) {
       const CGnuPlotPoint &point1 = plot->getPoint2D(i);
@@ -102,29 +92,54 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
 
     // TODO: clip
-    renderer->drawPath(points, lw, c, ld);
+    pointsArray.push_back(points);
   }
 
-#if 0
-  for (uint i1 = 0, i2 = 1; i2 < np; i1 = i2++) {
-    const CGnuPlotPoint &point1 = getPoint2D(i1);
-    const CGnuPlotPoint &point2 = getPoint2D(i2);
+  if (! renderer->isPseudo() && plot->isCacheActive()) {
+    plot->updatePathCacheSize(pointsArray.size());
 
-    CPoint2D p1, p2;
+    int j = 0;
 
-    if (! point1.isDiscontinuity() && point1.getPoint(p1) && point2.getPoint(p2))
-      renderer->drawClipLine(p1, p2, lw, c, ld));
+    for (const auto &points : pointsArray) {
+      CGnuPlotPathObject *path = plot->pathObjects()[j];
+
+      path->setPoints(points);
+
+      if (! path->testAndSetUsed()) {
+        CGnuPlotStrokeP stroke1(path->stroke()->dup());
+
+        stroke1->setEnabled (true);
+        stroke1->setColor   (stroke.color());
+        stroke1->setWidth   (stroke.width());
+        stroke1->setLineDash(stroke.lineDash());
+
+        path->setStroke(stroke1);
+      }
+
+      ++j;
+    }
+
+    for (const auto &path : plot->pathObjects())
+      path->draw(renderer);
   }
-#endif
+  else {
+    for (const auto &points : pointsArray) {
+      renderer->strokeClippedPath(points, stroke);
+    }
+  }
 
   //------
 
-  double pointSize = plot->pointSize();
+  typedef std::vector<CGnuPlotPointData> PointDatas;
 
-//CGnuPlotTypes::SymbolType pointType = plot->pointType();
+  PointDatas pointDatas;
+
+  int  pi         = lineStyle.calcPointInterval();
+  int  pi1        = abs(pi);
+  bool erasePoint = (pi < 0);
+
+  double                    pointSize = plot->pointSize();
   CGnuPlotTypes::SymbolType pointType = lineStyle.calcPointType();
-
-  uint pointNum = 0;
 
   for (const auto &point : plot->getPoints2D()) {
     std::vector<double> reals;
@@ -136,7 +151,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     uint valueNum = 0;
 
     if      (reals.size() == 1) {
-      p.x = pointNum;
+      p.x = pointDatas.size();
       p.y = reals[valueNum++];
     }
     else if (reals.size() >= 2) {
@@ -152,7 +167,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         (  isCalcColor && valueNum < reals.size() - 1))
       size1 = reals[valueNum++];
 
-    CRGBA c1 = c;
+    CRGBA c1 = stroke.color();
 
     if (isCalcColor && valueNum < reals.size()) {
       double z = reals[valueNum++];
@@ -163,43 +178,88 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         c1 = lineStyle.calcColor(plot, z);
     }
 
+    CRGBA tc = c1;
+
+    if (labelStyle.textColor().isValid())
+      tc = labelStyle.textColor().getValue().calcColor(group);
+
+    CGnuPlotPointData data;
+
+    data.setPoint      (p);
+    data.setPointType  (pointType);
+    data.setSize       (size1);
+    data.setLineWidth  (stroke.width());
+    data.setPointString(plot->pointTypeStr());
+    data.setErasePoint (erasePoint);
+
+    if (pointType == CGnuPlotTypes::SymbolType::STRING)
+      data.setColor(tc);
+    else
+      data.setColor(c1);
+
+    if (pi1 == 0) {
+      data.setVisible(true);
+
+      pi1 = abs(pi);
+    }
+    else
+      data.setVisible(false);
+
+    pointDatas.push_back(data);
+
+    if (pi1 > 0)
+      --pi1;
+  }
+
+  //----
+
+  CRGBA bg = fill.background();
+
+  if (! renderer->isPseudo() && lineStyle.isTipPoints())
+    plot->updatePointCacheSize(pointDatas.size());
+
+  int pointNum = 0;
+
+  for (const auto &data : pointDatas) {
     if (! renderer->isPseudo() && lineStyle.isTipPoints()) {
       CGnuPlotPointObject *point = plot->pointObjects()[pointNum];
 
-      point->setPoint      (p);
-      point->setPointType  (pointType);
-      point->setSize       (size1);
-      point->setColor      (c1);
-      point->setLineWidth  (lw);
-      point->setPointString(plot->pointTypeStr());
-      point->setErasePoint (erasePoint);
+      if (! point->testAndSetUsed()) {
+        point->setData(data);
+      }
+      else {
+        point->setPoint(data.point());
+      }
     }
     else {
-      if (pi1 == 0) {
-        if (erasePoint) {
-          double pw = renderer->pixelWidthToWindowWidth  (8*size1);
-          double ph = renderer->pixelHeightToWindowHeight(8*size1);
+      if (data.isVisible()) {
+        double s = data.size().getValue(1);
 
-          renderer->fillRect(CBBox2D(p - CPoint2D(pw/2, ph/2), p + CPoint2D(pw/2, ph/2)), bg);
+        if (data.isErasePoint()) {
+          double pw = renderer->pixelWidthToWindowWidth  (8*s);
+          double ph = renderer->pixelHeightToWindowHeight(8*s);
+
+          CPoint2D d(pw/2, ph/2);
+
+          renderer->fillEllipse(CBBox2D(data.point() - d, data.point() + d), bg);
         }
 
-        if (pointType == CGnuPlotTypes::SymbolType::STRING)
-          renderer->drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
-                                     plot->pointTypeStr(), c1);
+        if (data.pointType() == CGnuPlotTypes::SymbolType::STRING)
+          renderer->drawHAlignedText(data.point(), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
+                                     data.pointString(), data.color());
         else
-          renderer->drawSymbol(p, pointType, size1, c1, lw, true);
-
-        pi1 = abs(pi);
+          renderer->drawSymbol(data.point(), data.pointType(), s,
+                               data.color(), data.lineWidth(), /*pixelSize*/true);
       }
-
-      if (pi1 > 0)
-        --pi1;
     }
 
     ++pointNum;
   }
 
   if (! renderer->isPseudo()) {
+    for (const auto &path : plot->pathObjects())
+      path->draw(renderer);
+
     for (const auto &point : plot->pointObjects())
       point->draw(renderer);
   }
@@ -209,13 +269,11 @@ void
 CGnuPlotStyleLinesPoints::
 draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  //const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+
+  CGnuPlotStroke stroke(plot);
 
   //bool isCalcColor = lineStyle.color().isCalc();
-
-  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
-
-  double lw = lineStyle.calcWidth();
 
   //------
 
@@ -260,7 +318,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
 
       // TODO: clip
-      renderer->drawPath(points, lw, c, lineStyle.calcDash());
+      renderer->drawPath(points, stroke.width(), stroke.color(), stroke.lineDash());
     }
   }
 
@@ -291,7 +349,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         p.z = reals[valueNum++];
       }
 
-      renderer->drawSymbol(p, plot->pointType(), size, c, lw, true);
+      renderer->drawSymbol(p, plot->pointType(), size, stroke.color(), stroke.width(), true);
     }
   }
 }
@@ -300,20 +358,30 @@ void
 CGnuPlotStyleLinesPoints::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
-  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
+  CGnuPlotStroke stroke(plot);
 
   CPoint2D pm = (p1 + p2)/2;
 
-  double lw = lineStyle.calcWidth();
-
-  CRGBA c = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA lc = stroke.color();
 
   if (! plot->isDisplayed())
-    c.setAlpha(0.5);
+    lc.setAlpha(0.5);
 
-  renderer->drawLine(p1, p2, lw, c);
+  renderer->drawLine(p1, p2, stroke.width(), lc);
 
-  renderer->drawSymbol(pm, plot->pointType(), plot->pointSize(), c, lw, true);
+  if (plot->pointType() == CGnuPlotTypes::SymbolType::STRING) {
+    const CGnuPlotLabelStyle &labelStyle = plot->labelStyle();
+
+    CRGBA tc = lc;
+
+    if (labelStyle.textColor().isValid())
+      tc = labelStyle.textColor().getValue().calcColor(plot->group());
+
+    renderer->drawHAlignedText(pm, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
+                               plot->pointTypeStr(), tc);
+  }
+  else
+    renderer->drawSymbol(pm, plot->pointType(), plot->pointSize(), lc, stroke.width(), true);
 }
 
 CBBox2D

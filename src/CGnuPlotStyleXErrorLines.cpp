@@ -14,14 +14,20 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
+  CGnuPlotStroke stroke(plot);
+
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
+  CRGBA lc = stroke.color();
+
+  //---
 
   double ph = 0;
 
   if (! renderer->isPseudo())
     ph = renderer->pixelHeightToWindowHeight(4);
+
+  //---
 
   int      i = 0;
   CPoint2D p1(0,0);

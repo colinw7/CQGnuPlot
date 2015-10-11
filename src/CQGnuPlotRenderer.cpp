@@ -555,6 +555,46 @@ fillEllipse(const CPoint2D &center, double rx, double ry, double angle, const CR
 
 void
 CQGnuPlotRenderer::
+patternEllipse(const CPoint2D &center, double rx, double ry, double angle,
+               CGnuPlotTypes::FillPattern pattern, const CRGBA &fg, const CRGBA &bg)
+{
+  double px1, py1, px2, py2;
+
+  windowToPixel(center.x - rx, center.y - ry, &px1, &py1);
+  windowToPixel(center.x + rx, center.y + ry, &px2, &py2);
+
+  QRectF rect(std::min(px1, px2), std::min(py1, py2), fabs(px2 - px1), fabs(py2 - py1));
+
+  QPainterPath path;
+
+  path.addEllipse(rect);
+
+  QMatrix m = painter_->worldMatrix();
+
+  painter_->setWorldMatrix(QMatrix());
+
+  QTransform t1, t2, t3;
+
+  double px = (px1 + px2)/2.0;
+  double py = (py1 + py2)/2.0;
+
+  t1.translate(px, py); t2.rotate(-angle); t3.translate(-px, -py);
+
+  painter_->setWorldTransform(t3*t2*t1);
+
+  CRGBA c = (pattern == CGnuPlotTypes::FillPattern::BG ? bg : fg);
+
+  Qt::BrushStyle qpattern = CQGnuPlotUtil::fillPatternQtConv(pattern);
+
+  QBrush b(toQColor(c), qpattern);
+
+  painter_->fillPath(path, b);
+
+  painter_->setWorldMatrix(m);
+}
+
+void
+CQGnuPlotRenderer::
 drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 {
   CQFont *qfont = getFont().cast<CQFont>();

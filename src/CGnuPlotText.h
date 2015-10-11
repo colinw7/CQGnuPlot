@@ -43,7 +43,7 @@ struct CGnuPlotTextLine {
   typedef std::vector<CGnuPlotTextChar> Chars;
 
   Chars  chars;
-  double ascent { 0 };
+  double ascent  { 0 };
   double descent { 0 };
 };
 

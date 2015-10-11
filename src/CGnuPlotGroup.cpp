@@ -11,6 +11,12 @@ CGnuPlotGroup::
 CGnuPlotGroup(CGnuPlotWindow *window) :
  window_(window), id_(nextId_++)
 {
+}
+
+void
+CGnuPlotGroup::
+initObjects()
+{
   key_      = CGnuPlotKeyP     (app()->createKey     (this));
   colorBox_ = CGnuPlotColorBoxP(app()->createColorBox(this));
   palette_  = CGnuPlotPaletteP (app()->createPalette (this));
@@ -218,6 +224,13 @@ addObjects()
         CGnuPlotGroupAnnotationP(device->createRectangle(this)->setData(rect)));
     }
   }
+}
+
+void
+CGnuPlotGroup::
+setAnnotations(const Annotations &annotations)
+{
+  annotations_ = annotations;
 }
 
 void

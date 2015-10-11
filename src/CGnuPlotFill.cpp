@@ -6,10 +6,18 @@
 #include <CGnuPlotWindow.h>
 
 CGnuPlotFill::
-CGnuPlotFill(CGnuPlotPlot *plot)
+CGnuPlotFill(CGnuPlotPlot *plot) :
+ plot_(plot)
 {
   if (plot)
     init(plot);
+}
+
+CGnuPlotFill *
+CGnuPlotFill::
+dup() const
+{
+  return new CGnuPlotFill(*this);
 }
 
 void
@@ -19,12 +27,16 @@ init(CGnuPlotPlot *plot)
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
   const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
-  color_ = lineStyle.calcColor(plot->group(), CRGBA(1, 1, 1));
+  CRGBA fc = (type_ == CGnuPlotTypes::FillType::PATTERN ? CRGBA(0,0,0) : CRGBA(1,1,1));
 
-  if (fillStyle.isTransparent())
+  bg_    = plot->group()->window()->backgroundColor();
+  color_ = lineStyle.calcColor(plot->group(), fc);
+
+  if      (fillStyle.isTransparent())
     color_.setAlpha(fillStyle.density());
+  else if (fillStyle.density() < 1.0)
+    color_ = fillStyle.density()*color_ + bg_*(1 - fillStyle.density());
 
-  bg_      = plot->group()->window()->backgroundColor();
   type_    = fillStyle.style();
   pattern_ = fillStyle.pattern();
 }
