@@ -2577,9 +2577,13 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
         }
       }
     }
-    // whiskerbars [<fraction>]?
+    // whiskerbars [<fraction>]
     else if (plotVar == PlotVar::WHISKERBARS) {
-      setWhiskerBars(1);
+      double s = 1;
+
+      (void) parseReal(line, s);
+
+      setWhiskerBars(s);
     }
   }
 
@@ -6153,10 +6157,14 @@ setCmd(const std::string &args)
       else if (arg == "autotitle") {
         keyData_.setAutotitle(true);
 
+        int pos1 = line.pos();
+
         std::string arg1 = readNonSpace(line);
 
         if (arg1 == "columnhead" || arg1 == "columnheader" || arg1 == "columnheaders")
           setKeyAutoColumnHeadNum();
+        else
+          line.setPos(pos1);
       }
       else if (arg == "noautotitle") {
         keyData_.setAutotitle(false);
@@ -6189,36 +6197,46 @@ setCmd(const std::string &args)
       else if (arg == "box") {
         keyData_.setBox(true);
 
-        int pos = line.pos();
+        while (line.isValid()) {
+          int pos1 = line.pos();
 
-        std::string arg = readNonSpace(line);
+          std::string arg1 = readNonSpace(line);
 
-        if      (arg == "linetype" || arg == "lt") {
-          int lt;
+          if      (arg1 == "linetype" || arg1 == "lt") {
+            int lt;
 
-          if (parseLineType(line, lt))
-            keyData_.setBoxLineType(lt);
+            if (parseLineType(line, lt))
+              keyData_.setBoxLineType(lt);
+          }
+          else if (arg1 == "linestyle" || arg1 == "ls") {
+            int ls;
+
+            if (parseInteger(line, ls))
+              keyData_.setBoxLineStyle(ls);
+          }
+          else if (arg1 == "linewidth" || arg1 == "lw") {
+            double lw = 1.0;
+
+            if (parseReal(line, lw))
+              keyData_.setBoxLineWidth(lw);
+          }
+          else if (arg1 == "fillstyle" || arg1 == "fs") {
+            CGnuPlotFillStyle fs;
+
+            if (parseFillStyle(line, fs))
+              keyData_.setBoxFillStyle(fs);
+          }
+          else if (arg1 == "dashtype" || arg1 == "dt") {
+            CGnuPlotDash dash;
+
+            if (parseDash(line, dash))
+              keyData_.setBoxLineDash(dash);
+          }
+          else {
+            line.setPos(pos1);
+            break;
+          }
         }
-        else if (arg == "linestyle" || arg == "ls") {
-          int ls;
-
-          if (parseInteger(line, ls))
-            keyData_.setBoxLineStyle(ls);
-        }
-        else if (arg == "linewidth" || arg == "lw") {
-          double lw = 1.0;
-
-          if (parseReal(line, lw))
-            keyData_.setBoxLineWidth(lw);
-        }
-        else if (arg == "fillstyle" || arg == "fs") {
-          CGnuPlotFillStyle fs;
-
-          if (parseFillStyle(line, fs))
-            keyData_.setBoxFillStyle(fs);
-        }
-        else
-          line.setPos(pos);
       }
       else if (arg == "nobox") {
         keyData_.setBox(false);
@@ -14690,6 +14708,8 @@ bool
 CGnuPlot::
 parseDash(CParseLine &line, CGnuPlotDash &dash)
 {
+  line.skipSpace();
+
   int ind;
 
   if (parseInteger(line, ind)) {
@@ -14711,6 +14731,13 @@ bool
 CGnuPlot::
 parseDash(CParseLine &line, CLineDash &dash)
 {
+  if (line.isString("solid")) {
+    line.skipNonSpace();
+    return true;
+  }
+
+  //---
+
   std::vector<double> dashes;
   std::string         str;
 

@@ -150,3 +150,10 @@
  + Add fill and stroke object with editable properties
  + Add path object
  + Add object for error bar ends
+
+### 9/18/2015
+ + Add error bar and finance bar objects for errorbar and financebar plots
+ + Add smooth for plot points
+ + Add mark object for point properties
+ + Fix symbol draw a value for errorbar plots
+ + Add selection/highlight for chord diagram

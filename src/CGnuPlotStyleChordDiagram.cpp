@@ -1,43 +1,9 @@
 #include <CGnuPlotStyleChordDiagram.h>
+#include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
-#include <CGnuPlotRenderer.h>
+#include <CGnuPlotDevice.h>
 #include <ChordDiagram.h>
-
-class CGnuPlotStyleChordDiagramRenderer : public ChordDiagramRenderer {
- public:
-  CGnuPlotStyleChordDiagramRenderer(CGnuPlotRenderer *renderer) :
-   renderer_(renderer) {
-  }
-
-  double pixelLengthToWindowLength(double l) {
-    return renderer_->pixelWidthToWindowWidth(l);
-  }
-
-  void drawLine(double x1, double y1, double x2, double y2) {
-    renderer_->drawLine(CPoint2D(x1, y1), CPoint2D(x2, y2), 0, CRGBA(0,0,0));
-  }
-
-  void drawRotatedText(double x, double y, const std::string &text, double a,
-                       CHAlignType halign, CVAlignType valign) {
-    renderer_->drawRotatedText(CPoint2D(x, y), text, a, halign, valign, CRGBA(0,0,0));
-  }
-
-  void drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2, const CRGBA &c) {
-    renderer_->drawArc(p, r1, r2, a1, a2, c);
-  }
-
-  void drawChord(const CPoint2D &p, double r, double a1, double a2, const CRGBA &c) {
-    renderer_->drawChord(p, r, a1, a2, c);
-  }
-
-  void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
-                        double a21, double a22, const CRGBA &c) {
-    renderer_->drawComplexChord(p, r, a11, a12, a21, a22, c);
-  }
-
- private:
-  CGnuPlotRenderer *renderer_;
-};
+#include <CGnuPlotStyleChordDiagramRenderer.h>
 
 //------
 
@@ -51,63 +17,114 @@ void
 CGnuPlotStyleChordDiagram::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  ChordDiagram chord;
+  plot->group()->setMargin(CGnuPlotMargin(0, 0, 0, 0));
 
-  CGnuPlotStyleChordDiagramRenderer cr(renderer);
+  ChordDiagram *chord = plot->chordDiagramData().chordDiagram();
 
-  CRGBA fc(0.5,0.5,0.5,0.5);
-  CRGBA lc(0,0,0);
+  if (! chord) {
+    chord = new ChordDiagram;
 
-  int ny = 0;
-  int nx = -1;
+    CRGBA fc(0.5,0.5,0.5,0.5);
+    CRGBA lc(0,0,0);
 
-  for (const auto &point : plot->getPoints2D()) {
-    std::vector<double> reals;
+    int ny = 0;
+    int nx = -1;
 
-    if (! point.getReals(reals))
-      continue;
+    for (const auto &point : plot->getPoints2D()) {
+      std::vector<double> reals;
 
-    int np = reals.size();
+      if (! point.getReals(reals))
+        continue;
 
-    nx = (nx >= 0 ? std::min(nx, np) : np);
+      int np = reals.size();
 
-    ++ny;
+      nx = (nx >= 0 ? std::min(nx, np) : np);
+
+      ++ny;
+    }
+
+    int dim = std::min(nx, ny);
+
+    if (dim < 1)
+      return;
+
+    chord->setDimension(dim);
+
+    int iy = 0;
+
+    for (const auto &point : plot->getPoints2D()) {
+      std::vector<double> reals;
+
+      if (! point.getReals(reals))
+        continue;
+
+      if (ny > dim) break;
+
+      reals.resize(dim);
+
+      for (int ix = 0; ix < dim; ++ix)
+        chord->setValue(ix, iy, reals[ix]);
+
+      if (point.hasParam("name"))
+        chord->setName(iy, point.getParamString("name"));
+
+      if (point.hasParam("color"))
+        chord->setColor(iy, point.getParamColor("color"));
+
+      ++iy;
+    }
+
+    chord->init();
+
+    plot->setChordDiagram(chord);
   }
 
-  int dim = std::min(nx, ny);
+  //---
 
-  if (dim < 1)
-    return;
+  CGnuPlotStyleChordDiagramRenderer *cr = plot->chordDiagramData().renderer();
 
-  chord.setDimension(dim);
+  if (! cr) {
+    cr = new CGnuPlotStyleChordDiagramRenderer(renderer, chord);
 
-  int iy = 0;
-
-  for (const auto &point : plot->getPoints2D()) {
-    std::vector<double> reals;
-
-    if (! point.getReals(reals))
-      continue;
-
-    if (ny > dim) break;
-
-    reals.resize(dim);
-
-    for (int ix = 0; ix < dim; ++ix)
-      chord.setValue(ix, iy, reals[ix]);
-
-    if (point.hasParam("name"))
-      chord.setName(iy, point.getParamString("name"));
-
-    if (point.hasParam("color"))
-      chord.setColor(iy, point.getParamColor("color"));
-
-    ++iy;
+    plot->setChordDiagramRenderer(cr);
   }
+  else
+    cr->setRenderer(renderer);
 
-  chord.init();
+  chord->draw(cr);
+}
 
-  chord.draw(&cr);
+bool
+CGnuPlotStyleChordDiagram::
+mouseTip(CGnuPlotPlot *plot, const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tipData)
+{
+  CGnuPlotStyleChordDiagramRenderer *cr = plot->chordDiagramData().renderer();
+
+  std::string name;
+  CRGBA       c;
+
+  if (! cr->getValueAtPos(insideData.window, name, c))
+    return false;
+
+  tipData.setBorderColor(c);
+
+  tipData.setXStr(name);
+  tipData.setYStr("");
+
+  return true;
+}
+
+void
+CGnuPlotStyleChordDiagram::
+mousePress(CGnuPlotPlot *plot, const CGnuPlotTypes::InsideData &insideData)
+{
+  CGnuPlotStyleChordDiagramRenderer *cr = plot->chordDiagramData().renderer();
+
+  int ind = cr->getIndAtPos(insideData.window);
+
+  cr->setCurrentInd(ind);
+
+  plot->app()->device()->redraw();
 }
 
 CBBox2D

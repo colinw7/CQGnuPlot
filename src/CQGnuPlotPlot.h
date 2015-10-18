@@ -14,7 +14,7 @@ class CQGnuPlotWindow;
 class CQGnuPlotGroup;
 class CQGnuPlotCanvas;
 class CQGnuPlotRenderer;
-class CQGnuPlotPlotBarObjects;
+class CQGnuPlotPlotBoxBarObjects;
 class CQGnuPlotPlotPieObjects;
 
 class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
@@ -32,9 +32,11 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_PROPERTY(bool enhanced READ isEnhanced WRITE setEnhanced)
 
   Q_PROPERTY(double xmin READ getXMin)
-  Q_PROPERTY(double ymin READ getYMin)
   Q_PROPERTY(double xmax READ getXMax)
+  Q_PROPERTY(double ymin READ getYMin)
   Q_PROPERTY(double ymax READ getYMax)
+  Q_PROPERTY(double bymin READ getBYMin)
+  Q_PROPERTY(double bymax READ getBYMax)
 
   Q_PROPERTY(CQGnuPlotEnum::PlotStyle plotStyle READ plotStyle WRITE setPlotStyle)
 
@@ -96,25 +98,25 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   CQGnuPlotEnum::BoxWidthType getBoxWidthType() const;
   void setBoxWidthType(const CQGnuPlotEnum::BoxWidthType &type);
 
-  CQGnuPlotPlotBarObjects *barObjectsObj() const { return barObjects_; }
-  CQGnuPlotPlotPieObjects *pieObjectsObj() const { return pieObjects_; }
+  CQGnuPlotPlotBoxBarObjects *boxBarObjectsObj() const { return boxBarObjects_; }
+  CQGnuPlotPlotPieObjects    *pieObjectsObj   () const { return pieObjects_   ; }
 
   void draw();
 
-  void mousePress(const CPoint2D &pixel, const CPoint2D &window, Objects &objects);
-  void mouseMove (const CPoint2D &pixel, const CPoint2D &window);
-  bool mouseTip  (const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip);
+  void mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects);
+  void mouseMove (const CGnuPlotTypes::InsideData &insideData);
+  bool mouseTip  (const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip);
 
  public:
-  CQGnuPlotGroup*          group_;
-  COptValT<CPoint2D>       selectedPos_;
-  CQGnuPlotPlotBarObjects* barObjects_;
-  CQGnuPlotPlotPieObjects* pieObjects_;
+  CQGnuPlotGroup*             group_;
+  COptValT<CPoint2D>          selectedPos_;
+  CQGnuPlotPlotBoxBarObjects* boxBarObjects_;
+  CQGnuPlotPlotPieObjects*    pieObjects_;
 };
 
 //------
 
-class CQGnuPlotPlotBarObjects : public QObject {
+class CQGnuPlotPlotBoxBarObjects : public QObject {
   Q_OBJECT
 
   Q_PROPERTY(QColor fillColor READ fillColor WRITE setFillColor)
@@ -126,7 +128,7 @@ class CQGnuPlotPlotBarObjects : public QObject {
   Q_PROPERTY(CQGnuPlotEnum::FillPattern fillPattern READ getFillPattern WRITE setFillPattern)
 
  public:
-  CQGnuPlotPlotBarObjects(CQGnuPlotPlot *plot) :
+  CQGnuPlotPlotBoxBarObjects(CQGnuPlotPlot *plot) :
    plot_(plot) {
   }
 

@@ -3,6 +3,7 @@
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotBoxBarObject.h>
 
 CGnuPlotStyleCandlesticks::
 CGnuPlotStyleCandlesticks() :
@@ -23,19 +24,24 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA  lc = stroke.color();
-  double lw = stroke.width();
-  CRGBA  fc = fill  .color();
-
   double bw = plot->boxWidth().getSpacing(0.1);
+
+  //---
+
+  if (! renderer->isPseudo())
+    plot->updateBoxBarCacheSize(plot->getPoints2D().size());
+
+  int i = 0;
 
   for (const auto &point : plot->getPoints2D()) {
     std::vector<double> reals;
 
     (void) point.getReals(reals);
 
-    if ((! isCalcColor && reals.size() < 5) || (isCalcColor && reals.size() < 6))
-      continue;
+    uint minN = (isCalcColor ? 6 : 5);
+
+    while (reals.size() < minN)
+      reals.push_back(0);
 
     double x = reals[0];
 
@@ -54,8 +60,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if ((! isCalcColor && reals.size() > 5) || (isCalcColor && reals.size() > 6))
       bw1 = reals[++ind];
 
-    CRGBA lc1 = lc;
-    CRGBA fc1 = lc;
+    CRGBA lc1 = stroke.color();
+    CRGBA fc1 = fill  .color();
 
     if (isCalcColor) {
       double z = reals[ind];
@@ -68,6 +74,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
     }
 
+    //---
+
     CPoint2D p1(x, wmin);
     CPoint2D p2(x, bmin);
     CPoint2D p3(x, bmax);
@@ -78,33 +86,87 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     p3 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p3);
     p4 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p4);
 
-    renderer->drawClipLine(p1, p2, lw, lc1);
-    renderer->drawClipLine(p3, p4, lw, lc1);
-
     double x1 = p1.x - bw1/2;
     double x2 = p1.x + bw1/2;
 
-    if (plot->whiskerBars() > 0) {
-      renderer->drawClipLine(CPoint2D(x1, p1.y), CPoint2D(x2, p1.y), lw, lc1);
-      renderer->drawClipLine(CPoint2D(x1, p4.y), CPoint2D(x2, p4.y), lw, lc1);
-    }
-
     CBBox2D bbox(x1, p2.y, x2, p3.y);
 
-    if (fill.type() == CGnuPlotTypes::FillType::PATTERN ||
-        fill.type() == CGnuPlotTypes::FillType::SOLID) {
-      CGnuPlotFill fill1 = fill;
+    CGnuPlotTypes::FillType fillType = fill.type();
 
-      fill1.setColor(fc1);
+    if (fillType == CGnuPlotTypes::FillType::EMPTY) {
+      if (bmin > bmax)
+        fillType = CGnuPlotTypes::FillType::SOLID;
+    }
 
-      renderer->fillRect(bbox, fill1);
+    if (! renderer->isPseudo()) {
+      CGnuPlotBoxBarObject *bar = plot->boxBarObjects()[i];
+
+      bar->setBBox(bbox);
+
+      bar->setValues(p1.x, bmin);
+
+      if (! bar->testAndSetUsed()) {
+        CGnuPlotFillP   fill  (bar->fill  ()->dup());
+        CGnuPlotStrokeP stroke(bar->stroke()->dup());
+
+        fill  ->setType (fillType);
+        fill  ->setColor(fc1);
+        stroke->setColor(lc1);
+
+        bar->setFill  (fill  );
+        bar->setStroke(stroke);
+
+        //---
+
+        bar->clearEndBars();
+
+        CGnuPlotEndBarP endBar1 = bar->addEndBar(p1, p2);
+        CGnuPlotEndBarP endBar2 = bar->addEndBar(p3, p4);
+
+        bool hasBars = plot->whiskerBars().isValid();
+
+        endBar1->setStartLine(hasBars); endBar1->setEndLine(false  );
+        endBar2->setStartLine(false  ); endBar2->setEndLine(hasBars);
+
+        if (hasBars) {
+          endBar1->setEndWidth(bw1*plot->whiskerBars().getValue());
+          endBar2->setEndWidth(bw1*plot->whiskerBars().getValue());
+        }
+
+        CGnuPlotStrokeP endStroke1(bar->stroke()->dup());
+        CGnuPlotStrokeP endStroke2(bar->stroke()->dup());
+
+        endBar1->setStroke(endStroke1);
+        endBar2->setStroke(endStroke2);
+      }
     }
     else {
-      if (bmin > bmax)
-        renderer->fillClippedRect(bbox, fc1);
+      renderer->drawClipLine(p1, p2, stroke.width(), lc1);
+      renderer->drawClipLine(p3, p4, stroke.width(), lc1);
+
+      if (plot->whiskerBars() > 0) {
+        renderer->drawClipLine(CPoint2D(x1, p1.y), CPoint2D(x2, p1.y), stroke.width(), lc1);
+        renderer->drawClipLine(CPoint2D(x1, p4.y), CPoint2D(x2, p4.y), stroke.width(), lc1);
+      }
+
+      if (fillType != CGnuPlotTypes::FillType::EMPTY) {
+        CGnuPlotFill fill1 = fill;
+
+        fill1.setType (fillType);
+        fill1.setColor(fc1);
+
+        renderer->fillClippedRect(bbox, fill1);
+      }
+
+      renderer->drawClippedRect(bbox, lc1, 1);
     }
 
-    renderer->drawClippedRect(bbox, lc1, 1);
+    ++i;
+  }
+
+  if (! renderer->isPseudo()) {
+    for (const auto &bar : plot->boxBarObjects())
+      bar->draw(renderer);
   }
 }
 
@@ -123,12 +185,10 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   CBBox2D hbbox(p1.x, p1.y - h/2, p2.x, p1.y + h/2);
 
-  CRGBA  lc = stroke.color();
-  double lw = stroke.width();
+  stroke.setWidth(1);
 
-  renderer->fillRect(hbbox, fill);
-
-  renderer->drawRect(hbbox, lc, lw);
+  renderer->fillRect  (hbbox, fill  );
+  renderer->strokeRect(hbbox, stroke);
 }
 
 CBBox2D

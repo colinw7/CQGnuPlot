@@ -1,7 +1,7 @@
 #include <CGnuPlotStyleBoxErrorBars.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
-#include <CGnuPlotBarObject.h>
+#include <CGnuPlotBoxBarObject.h>
 
 CGnuPlotStyleBoxErrorBars::
 CGnuPlotStyleBoxErrorBars() :
@@ -29,7 +29,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   if (! renderer->isPseudo())
-    plot->updateBarCacheSize(plot->getPoints2D().size());
+    plot->updateBoxBarCacheSize(plot->getPoints2D().size());
 
   int i = 0;
 
@@ -104,7 +104,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CPoint2D p2(x, yh);
 
     if (! renderer->isPseudo()) {
-      CGnuPlotBarObject *bar = plot->barObjects()[i];
+      CGnuPlotBoxBarObject *bar = plot->boxBarObjects()[i];
 
       bar->setBBox(bbox);
 
@@ -123,11 +123,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
         CGnuPlotEndBarP endBar = bar->addEndBar(p1, p2);
 
-        //endBar->setStartLine(true);
-        //endBar->setEndLine  (true);
+        endBar->setStartLine(true);
+        endBar->setEndLine  (true);
         endBar->setEndWidth (dx/2);
 
-        CGnuPlotStrokeP endStroke(endBar->stroke()->dup());
+        CGnuPlotStrokeP endStroke(bar->stroke()->dup());
 
         endBar->setStroke(endStroke);
       }
@@ -151,7 +151,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo()) {
-    for (const auto &bar : plot->barObjects())
+    for (const auto &bar : plot->boxBarObjects())
       bar->draw(renderer);
   }
 }

@@ -917,6 +917,20 @@ drawClippedPath(const std::vector<CPoint3D> &points, double width, const CRGBA &
 
 void
 CGnuPlotRenderer::
+drawMark(const CPoint3D &p, const CGnuPlotMark &mark)
+{
+  drawMark(transform(p), mark);
+}
+
+void
+CGnuPlotRenderer::
+drawMark(const CPoint2D &p, const CGnuPlotMark &mark)
+{
+  drawSymbol(p, mark.type(), mark.size(), mark.color(), mark.width(), mark.isPixelSize());
+}
+
+void
+CGnuPlotRenderer::
 drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c,
            double lw, bool pixelSize)
 {

@@ -92,7 +92,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
 bool
 CGnuPlotStyleAdjacency::
-mouseTip(CGnuPlotPlot *plot, const CPoint2D &p, CGnuPlotTipData &tipData)
+mouseTip(CGnuPlotPlot *plot, const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tipData)
 {
   CGnuPlotStyleAdjacencyRenderer *arenderer = plot->adjacencyData().renderer();
 
@@ -100,7 +100,7 @@ mouseTip(CGnuPlotPlot *plot, const CPoint2D &p, CGnuPlotTipData &tipData)
   std::string name1, name2;
   CRGBA       c;
 
-  if (! arenderer->getValueAtPos(p, value, name1, name2, c))
+  if (! arenderer->getValueAtPos(insideData.window, value, name1, name2, c))
     return false;
 
   if (value <= 0)
@@ -118,6 +118,12 @@ mouseTip(CGnuPlotPlot *plot, const CPoint2D &p, CGnuPlotTipData &tipData)
   }
 
   return true;
+}
+
+void
+CGnuPlotStyleAdjacency::
+mousePress(CGnuPlotPlot *, const CGnuPlotTypes::InsideData &)
+{
 }
 
 CBBox2D

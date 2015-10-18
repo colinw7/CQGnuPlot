@@ -7,6 +7,7 @@
 #include <QComboBox>
 #include <QCheckBox>
 #include <QLineEdit>
+#include <QPainter>
 
 #include <iostream>
 
@@ -331,6 +332,18 @@ updateValue()
 
     setEditorData(text);
   }
+}
+
+bool
+CQPropertyItem::
+isWritable() const
+{
+   CQUtil::PropInfo propInfo;
+
+  if (CQUtil::getPropInfo(object_, name_, &propInfo))
+    return propInfo.isWritable();
+
+  return false;
 }
 
 bool

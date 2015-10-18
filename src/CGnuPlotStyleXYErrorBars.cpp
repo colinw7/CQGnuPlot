@@ -1,5 +1,8 @@
 #include <CGnuPlotStyleXYErrorBars.h>
 #include <CGnuPlotPlot.h>
+#include <CGnuPlotGroup.h>
+#include <CGnuPlotErrorBarObject.h>
+#include <CGnuPlotErrorBarData.h>
 #include <CGnuPlotRenderer.h>
 
 CGnuPlotStyleXYErrorBars::
@@ -12,22 +15,34 @@ void
 CGnuPlotStyleXYErrorBars::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   CGnuPlotStroke stroke(plot);
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CRGBA lc = stroke.color();
+  double                    pointSize = plot->pointSize();
+  CGnuPlotTypes::SymbolType pointType = plot->pointType();
 
-  double pw = 0, ph = 0;
+  //---
+
+  // calc bar size
+  double bs = plot->barsSize();
+
+  double bh = 0, bw = 0;
 
   if (! renderer->isPseudo()) {
-    pw = renderer->pixelWidthToWindowWidth  (4);
-    ph = renderer->pixelHeightToWindowHeight(4);
+    bw = renderer->pixelWidthToWindowWidth  (4*bs);
+    bh = renderer->pixelHeightToWindowHeight(4*bs);
   }
 
   //---
+
+  typedef std::vector<CGnuPlotErrorBarData> BarDatas;
+
+  BarDatas barDatas;
 
   for (const auto &point : plot->getPoints2D()) {
     std::vector<double> reals;
@@ -37,14 +52,17 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (reals.size() < 2)
       continue;
 
-    double x  = reals[0];
-    double y  = reals[1];
+    // TODO: index map (see CGnuPlotStyleErrorBars)
+
+    double x = reals[0];
+    double y = reals[1];
+
     double xl = x;
     double xh = x;
     double yl = y;
     double yh = y;
 
-    CRGBA lc1 = lc;
+    CRGBA lc = stroke.color();
 
     // x y xlow xhigh ylow yhigh
     if      ((! isCalcColor && reals.size() == 6) || (isCalcColor && reals.size() == 7)) {
@@ -59,7 +77,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         if (renderer->isPseudo())
           renderer->setCBValue(z);
         else
-          lc1 = lineStyle.calcColor(plot, z);
+          lc = lineStyle.calcColor(plot, z);
       }
     }
     // x y xdelta ydelta
@@ -78,18 +96,96 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         if (renderer->isPseudo())
           renderer->setCBValue(z);
         else
-          lc1 = lineStyle.calcColor(plot, z);
+          lc = lineStyle.calcColor(plot, z);
       }
     }
 
-    renderer->drawClipLine(CPoint2D(x, yl), CPoint2D(x, yh), 1.0, lc1);
-    renderer->drawClipLine(CPoint2D(xl, y), CPoint2D(xh, y), 1.0, lc1);
+    //---
 
-    renderer->drawClipLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, lc1);
-    renderer->drawClipLine(CPoint2D(xl, y - ph), CPoint2D(xl, y + ph), 1.0, lc1);
+    CPoint2D p  (x , y);
+    CPoint2D pxl(xl, y);
+    CPoint2D pxh(xh, y);
+    CPoint2D pyl(x, yl);
+    CPoint2D pyh(x, yh);
 
-    renderer->drawClipLine(CPoint2D(x - pw, yl), CPoint2D(x + pw, yl), 1.0, lc1);
-    renderer->drawClipLine(CPoint2D(x - pw, yh), CPoint2D(x + pw, yh), 1.0, lc1);
+    p   = group->mapLogPoint(plot->xind(), plot->yind(), 1, p  );
+    pxl = group->mapLogPoint(plot->xind(), plot->yind(), 1, pxl);
+    pxh = group->mapLogPoint(plot->xind(), plot->yind(), 1, pxh);
+    pyl = group->mapLogPoint(plot->xind(), plot->yind(), 1, pyl);
+    pyh = group->mapLogPoint(plot->xind(), plot->yind(), 1, pyh);
+
+    //---
+
+    CGnuPlotErrorBarData barData;
+
+    barData.setX(p.x);
+    barData.setY(p.y);
+
+    barData.setXDirection(true);
+    barData.setYDirection(true);
+
+    barData.setXLow (pxl.x);
+    barData.setXHigh(pxh.x);
+    barData.setYLow (pyl.y);
+    barData.setYHigh(pyh.y);
+
+    barData.setBarWidth (bw);
+    barData.setBarHeight(bh);
+    barData.setPointSize(pointSize);
+    barData.setPointType(pointType);
+    barData.setLineColor(lc);
+    barData.setLineWidth(1);
+
+    barDatas.push_back(barData);
+  }
+
+  if (! renderer->isPseudo())
+    plot->updateErrorBarCacheSize(barDatas.size());
+
+  int i = 0;
+
+  for (const auto &barData : barDatas) {
+    if (! renderer->isPseudo()) {
+      CGnuPlotErrorBarObject *bar = plot->errorBarObjects()[i];
+
+      bar->setX(barData.x());
+      bar->setY(barData.y());
+
+      bar->setXDirection(true);
+      bar->setYDirection(true);
+
+      bar->setXLow (barData.xLow ());
+      bar->setXHigh(barData.xHigh());
+      bar->setYLow (barData.yLow ());
+      bar->setYHigh(barData.yHigh());
+
+      if (! bar->testAndSetUsed()) {
+        bar->setBarWidth (barData.barWidth ());
+        bar->setBarHeight(barData.barHeight());
+
+        CGnuPlotStrokeP stroke(plot->createStroke());
+
+        stroke->setColor(barData.lineColor());
+        stroke->setWidth(barData.lineWidth());
+
+        CGnuPlotMarkP mark(plot->createMark());
+
+        mark->setType(barData.pointType());
+        mark->setSize(barData.pointSize());
+
+        bar->setStroke(stroke);
+      }
+    }
+    else {
+      barData.draw(renderer);
+    }
+
+    ++i;
+  }
+
+  if (! renderer->isPseudo()) {
+    for (const auto &bar : plot->errorBarObjects())
+      bar->draw(renderer);
   }
 }
 
@@ -99,16 +195,24 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 {
   CGnuPlotStroke stroke(plot);
 
-  CRGBA  c  = stroke.color();
-  double lw = stroke.width();
-  double h  = renderer->pixelHeightToWindowHeight(3);
+  double                    pointSize = plot->pointSize();
+  CGnuPlotTypes::SymbolType pointType = plot->pointType();
 
-  renderer->drawLine(p1, p2, lw, c);
+  //----
 
-  CPoint2D dy(0, h);
+  renderer->drawLine(p1, p2, stroke.width(), stroke.color(), stroke.lineDash());
 
-  renderer->drawLine(p1 - dy, p1 + dy, lw, c);
-  renderer->drawLine(p2 - dy, p2 + dy, lw, c);
+  double ph = renderer->pixelHeightToWindowHeight(3);
+
+  CPoint2D dy(0, ph);
+
+  renderer->drawLine(p1 - dy, p1 + dy, stroke.width(), stroke.color(), stroke.lineDash());
+  renderer->drawLine(p2 - dy, p2 + dy, stroke.width(), stroke.color(), stroke.lineDash());
+
+  CPoint2D pm = (p1 + p2)/2;
+
+  renderer->drawSymbol(pm, pointType, pointSize, stroke.color(),
+                       stroke.width(), /*pixelSize*/true);
 }
 
 CBBox2D

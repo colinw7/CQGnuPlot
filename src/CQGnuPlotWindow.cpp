@@ -23,10 +23,13 @@
 #include <CQGnuPlotDevice.h>
 
 #include <CQGnuPlotArrowObject.h>
-#include <CQGnuPlotBarObject.h>
+#include <CQGnuPlotBoxBarObject.h>
 #include <CQGnuPlotEndBar.h>
+#include <CQGnuPlotBoxObject.h>
 #include <CQGnuPlotBubbleObject.h>
 #include <CQGnuPlotEllipseObject.h>
+#include <CQGnuPlotErrorBarObject.h>
+#include <CQGnuPlotFinanceBarObject.h>
 #include <CQGnuPlotLabelObject.h>
 #include <CQGnuPlotPathObject.h>
 #include <CQGnuPlotPieObject.h>
@@ -36,6 +39,7 @@
 
 #include <CQGnuPlotFill.h>
 #include <CQGnuPlotStroke.h>
+#include <CQGnuPlotMark.h>
 
 #include <CQGnuPlotToolBar.h>
 #include <CQGnuPlotPNGRenderer.h>
@@ -752,10 +756,12 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   QString rangeName = plotName + "/range";
 
-  tree_->addProperty(rangeName, qplot, "xmin")->setEditorFactory(realEdit("-1000:1000:0.1"));
-  tree_->addProperty(rangeName, qplot, "ymin")->setEditorFactory(realEdit("-1000:1000:0.1"));
-  tree_->addProperty(rangeName, qplot, "xmax")->setEditorFactory(realEdit("-1000:1000:0.1"));
-  tree_->addProperty(rangeName, qplot, "ymax")->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(rangeName, qplot, "xmin");
+  tree_->addProperty(rangeName, qplot, "xmax");
+  tree_->addProperty(rangeName, qplot, "ymin");
+  tree_->addProperty(rangeName, qplot, "ymax");
+  tree_->addProperty(rangeName, qplot, "bymin");
+  tree_->addProperty(rangeName, qplot, "bymax");
 
   if (plot->window()->is3D()) {
     QString surfaceName = plotName + "/surface";
@@ -835,31 +841,31 @@ addPlotProperties(CGnuPlotPlot *plot)
     }
   }
 
-  if (! plot->barObjects().empty()) {
-    QString barsName = QString("%1/Bars").arg(plotName);
+  if (! plot->boxBarObjects().empty()) {
+    QString barsName = QString("%1/BoxBars").arg(plotName);
 
-    CQGnuPlotPlotBarObjects *qbarObjects = qplot->barObjectsObj();
+    CQGnuPlotPlotBoxBarObjects *qboxBarObjects = qplot->boxBarObjectsObj();
 
-    tree_->addProperty(barsName, qbarObjects, "fillType");
-    tree_->addProperty(barsName, qbarObjects, "fillPattern");
-    tree_->addProperty(barsName, qbarObjects, "fillColor");
-    tree_->addProperty(barsName, qbarObjects, "border");
-    tree_->addProperty(barsName, qbarObjects, "lineColor");
-    tree_->addProperty(barsName, qbarObjects, "lineWidth");
+    tree_->addProperty(barsName, qboxBarObjects, "fillType");
+    tree_->addProperty(barsName, qboxBarObjects, "fillPattern");
+    tree_->addProperty(barsName, qboxBarObjects, "fillColor");
+    tree_->addProperty(barsName, qboxBarObjects, "border");
+    tree_->addProperty(barsName, qboxBarObjects, "lineColor");
+    tree_->addProperty(barsName, qboxBarObjects, "lineWidth");
 
     int i = 0;
 
-    for (const auto &bar : plot->barObjects()) {
+    for (const auto &bar : plot->boxBarObjects()) {
       QString barName = QString("%1/Bar%2").arg(barsName).arg(i + 1);
 
-      CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+      CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
 
       tree_->addProperty(barName, qbar, "x");
       tree_->addProperty(barName, qbar, "y");
 
-      CQGnuPlotFill *qfill = qbar->fill  ();
+      CQGnuPlotFill *qfill = qbar->fill();
 
-      QString fillName = QString("%1/Fill"  ).arg(barName);
+      QString fillName = QString("%1/Fill").arg(barName);
 
       tree_->addProperty(fillName, qfill, "color");
       tree_->addProperty(fillName, qfill, "background");
@@ -883,7 +889,9 @@ addPlotProperties(CGnuPlotPlot *plot)
 
         QString endBarName = QString("%1/EndBar%2").arg(barName).arg(j + 1);
 
-        tree_->addProperty(endBarName, qendBar, "endWidth");
+        tree_->addProperty(endBarName, qendBar, "startLine");
+        tree_->addProperty(endBarName, qendBar, "endLine"  );
+        tree_->addProperty(endBarName, qendBar, "endWidth" );
 
         CQGnuPlotStroke *qbarStroke = qendBar->stroke();
 
@@ -902,6 +910,60 @@ addPlotProperties(CGnuPlotPlot *plot)
     }
   }
 
+  if (! plot->boxObjects().empty()) {
+    QString boxesName = QString("%1/Boxes").arg(plotName);
+
+    int i = 0;
+
+    for (const auto &box : plot->boxObjects()) {
+      QString boxName = QString("%1/Box%2").arg(boxesName).arg(i + 1);
+
+      CQGnuPlotBoxObject *qbox = static_cast<CQGnuPlotBoxObject *>(box);
+
+      tree_->addProperty(boxName, qbox, "x");
+      tree_->addProperty(boxName, qbox, "y");
+      tree_->addProperty(boxName, qbox, "lineWidth");
+      tree_->addProperty(boxName, qbox, "boxWidth");
+
+      tree_->addProperty(boxName, qbox, "minValue");
+      tree_->addProperty(boxName, qbox, "maxValue");
+      tree_->addProperty(boxName, qbox, "medianValue");
+      tree_->addProperty(boxName, qbox, "lowerValue");
+      tree_->addProperty(boxName, qbox, "upperValue");
+
+      CQGnuPlotFill *qfill = qbox->fill();
+
+      QString fillName = QString("%1/Fill").arg(boxName);
+
+      tree_->addProperty(fillName, qfill, "color");
+      tree_->addProperty(fillName, qfill, "background");
+      tree_->addProperty(fillName, qfill, "type");
+      tree_->addProperty(fillName, qfill, "pattern");
+
+      CQGnuPlotStroke *qstroke = qbox->stroke();
+
+      QString strokeName = QString("%1/Stroke").arg(boxName);
+
+      tree_->addProperty(strokeName, qstroke, "enabled");
+      tree_->addProperty(strokeName, qstroke, "color");
+      tree_->addProperty(strokeName, qstroke, "width");
+      tree_->addProperty(strokeName, qstroke, "lineDash");
+      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+
+      CQGnuPlotMark *qmark = qbox->outlierMark();
+
+      QString markName = QString("%1/Outlier").arg(boxName);
+
+      tree_->addProperty(markName, qmark, "type");
+      tree_->addProperty(markName, qmark, "size");
+      tree_->addProperty(markName, qmark, "color");
+      tree_->addProperty(markName, qmark, "width");
+      tree_->addProperty(markName, qmark, "pixelSize");
+
+      ++i;
+    }
+  }
+
   if (! plot->bubbleObjects().empty()) {
     int i = 0;
 
@@ -913,7 +975,7 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(bubbleName, qbubble, "name" );
       tree_->addProperty(bubbleName, qbubble, "value");
 
-      CQGnuPlotFill *qfill = qbubble->fill  ();
+      CQGnuPlotFill *qfill = qbubble->fill();
 
       QString fillName = QString("%1/Fill").arg(bubbleName);
 
@@ -944,9 +1006,10 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotEllipseObject *qellipse = static_cast<CQGnuPlotEllipseObject *>(ellipse);
 
+      tree_->addProperty(ellipseName, qellipse, "angle");
       tree_->addProperty(ellipseName, qellipse, "text");
 
-      CQGnuPlotFill *qfill = qellipse->fill  ();
+      CQGnuPlotFill *qfill = qellipse->fill();
 
       QString fillName = QString("%1/Fill").arg(ellipseName);
 
@@ -958,6 +1021,86 @@ addPlotProperties(CGnuPlotPlot *plot)
       CQGnuPlotStroke *qstroke = qellipse->stroke();
 
       QString strokeName = QString("%1/Stroke").arg(ellipseName);
+
+      tree_->addProperty(strokeName, qstroke, "enabled");
+      tree_->addProperty(strokeName, qstroke, "color");
+      tree_->addProperty(strokeName, qstroke, "width");
+      tree_->addProperty(strokeName, qstroke, "lineDash");
+      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+
+      ++i;
+    }
+  }
+
+  if (! plot->errorBarObjects().empty()) {
+    QString barsName = QString("%1/ErrorBars").arg(plotName);
+
+    int i = 0;
+
+    for (const auto &bar : plot->errorBarObjects()) {
+      QString barName = QString("%1/Bar%2").arg(barsName).arg(i + 1);
+
+      CQGnuPlotErrorBarObject *qbar = static_cast<CQGnuPlotErrorBarObject *>(bar);
+
+      tree_->addProperty(barName, qbar, "x");
+      tree_->addProperty(barName, qbar, "y");
+
+      if (qbar->isXDirection()) {
+        tree_->addProperty(barName, qbar, "xLow");
+        tree_->addProperty(barName, qbar, "xHigh");
+        tree_->addProperty(barName, qbar, "barHeight");
+      }
+
+      if (qbar->isYDirection()) {
+        tree_->addProperty(barName, qbar, "yLow");
+        tree_->addProperty(barName, qbar, "yHigh");
+        tree_->addProperty(barName, qbar, "barWidth");
+      }
+
+      CQGnuPlotStroke *qstroke = qbar->stroke();
+
+      QString strokeName = QString("%1/Stroke").arg(barName);
+
+      tree_->addProperty(strokeName, qstroke, "enabled");
+      tree_->addProperty(strokeName, qstroke, "color");
+      tree_->addProperty(strokeName, qstroke, "width");
+      tree_->addProperty(strokeName, qstroke, "lineDash");
+      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+
+      CQGnuPlotMark *qmark = qbar->mark();
+
+      QString markName = QString("%1/Mark").arg(barName);
+
+      tree_->addProperty(markName, qmark, "type");
+      tree_->addProperty(markName, qmark, "size");
+      tree_->addProperty(markName, qmark, "color");
+      tree_->addProperty(markName, qmark, "width");
+      tree_->addProperty(markName, qmark, "pixelSize");
+
+      ++i;
+    }
+  }
+
+  if (! plot->financeBarObjects().empty()) {
+    QString barsName = QString("%1/FinanceBars").arg(plotName);
+
+    int i = 0;
+
+    for (const auto &bar : plot->financeBarObjects()) {
+      QString barName = QString("%1/Bar%2").arg(barsName).arg(i + 1);
+
+      CQGnuPlotFinanceBarObject *qbar = static_cast<CQGnuPlotFinanceBarObject *>(bar);
+
+      tree_->addProperty(barName, qbar, "value");
+      tree_->addProperty(barName, qbar, "low");
+      tree_->addProperty(barName, qbar, "high");
+      tree_->addProperty(barName, qbar, "open");
+      tree_->addProperty(barName, qbar, "close");
+      tree_->addProperty(barName, qbar, "barWidth");
+
+      CQGnuPlotStroke *qstroke = qbar->stroke();
+
+      QString strokeName = QString("%1/Stroke").arg(barName);
 
       tree_->addProperty(strokeName, qstroke, "enabled");
       tree_->addProperty(strokeName, qstroke, "color");
@@ -1061,7 +1204,7 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(pieName, qpie, "labelRadius");
       tree_->addProperty(pieName, qpie, "exploded"   );
 
-      CQGnuPlotFill *qfill = qpie->fill  ();
+      CQGnuPlotFill *qfill = qpie->fill();
 
       QString fillName = QString("%1/Fill").arg(pieName);
 
@@ -1148,7 +1291,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       tree_->addProperty(rectName, qrect, "text");
 
-      CQGnuPlotFill *qfill = qrect->fill  ();
+      CQGnuPlotFill *qfill = qrect->fill();
 
       QString fillName = QString("%1/Fill").arg(rectName);
 

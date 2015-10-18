@@ -3,9 +3,12 @@
 #include <CQGnuPlotGroup.h>
 
 #include <CQGnuPlotArrowObject.h>
-#include <CQGnuPlotBarObject.h>
+#include <CQGnuPlotBoxBarObject.h>
+#include <CQGnuPlotBoxObject.h>
 #include <CQGnuPlotBubbleObject.h>
 #include <CQGnuPlotEllipseObject.h>
+#include <CQGnuPlotErrorBarObject.h>
+#include <CQGnuPlotFinanceBarObject.h>
 #include <CQGnuPlotLabelObject.h>
 #include <CQGnuPlotPathObject.h>
 #include <CQGnuPlotPieObject.h>
@@ -27,8 +30,8 @@ CQGnuPlotPlot(CQGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style) :
   setObjectName("plot");
 
   // QObject to set properties for collections of bar and pieobjects
-  barObjects_ = new CQGnuPlotPlotBarObjects(this);
-  pieObjects_ = new CQGnuPlotPlotPieObjects(this);
+  boxBarObjects_ = new CQGnuPlotPlotBoxBarObjects(this);
+  pieObjects_    = new CQGnuPlotPlotPieObjects(this);
 }
 
 CQGnuPlotPlot::
@@ -146,12 +149,8 @@ draw()
 
 void
 CQGnuPlotPlot::
-mousePress(const CPoint2D &pixel, const CPoint2D &window, Objects &objects)
+mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
 {
-  CGnuPlotTypes::InsideData insideData(window, pixel);
-
-  //---
-
   for (auto &arrow : arrowObjects()) {
     if (! arrow->inside(insideData))
       continue;
@@ -161,13 +160,22 @@ mousePress(const CPoint2D &pixel, const CPoint2D &window, Objects &objects)
     objects.push_back(qarrow);
   }
 
-  for (auto &bar : barObjects()) {
+  for (auto &bar : boxBarObjects()) {
     if (! bar->inside(insideData))
       continue;
 
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
 
     objects.push_back(qbar);
+  }
+
+  for (auto &box : boxObjects()) {
+    if (! box->inside(insideData))
+      continue;
+
+    CQGnuPlotBoxObject *qbox = static_cast<CQGnuPlotBoxObject *>(box);
+
+    objects.push_back(qbox);
   }
 
   for (auto &bubble : bubbleObjects()) {
@@ -188,6 +196,24 @@ mousePress(const CPoint2D &pixel, const CPoint2D &window, Objects &objects)
     objects.push_back(qellipse);
   }
 
+  for (auto &bar : errorBarObjects()) {
+    if (! bar->inside(insideData))
+      continue;
+
+    CQGnuPlotErrorBarObject *qbar = static_cast<CQGnuPlotErrorBarObject *>(bar);
+
+    objects.push_back(qbar);
+  }
+
+  for (auto &bar : financeBarObjects()) {
+    if (! bar->inside(insideData))
+      continue;
+
+    CQGnuPlotFinanceBarObject *qbar = static_cast<CQGnuPlotFinanceBarObject *>(bar);
+
+    objects.push_back(qbar);
+  }
+
   for (auto &label : labelObjects()) {
     if (! label->inside(insideData))
       continue;
@@ -206,7 +232,7 @@ mousePress(const CPoint2D &pixel, const CPoint2D &window, Objects &objects)
   }
 
   for (auto &pie : pieObjects()) {
-    if (pie->inside(insideData) || pie->keyInside(window)) {
+    if (pie->inside(insideData) || pie->keyInside(insideData.window)) {
       CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
 
       objects.push_back(qpie);
@@ -239,22 +265,20 @@ mousePress(const CPoint2D &pixel, const CPoint2D &window, Objects &objects)
 
     objects.push_back(qrect);
   }
+
+  CGnuPlotPlot::mousePress(insideData);
 }
 
 void
 CQGnuPlotPlot::
-mouseMove(const CPoint2D &, const CPoint2D &)
+mouseMove(const CGnuPlotTypes::InsideData &)
 {
 }
 
 bool
 CQGnuPlotPlot::
-mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip)
+mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
 {
-  CGnuPlotTypes::InsideData insideData(window, pixel);
-
-  //---
-
   selectedPos_.setInvalid();
 
   for (auto &arrow : arrowObjects()) {
@@ -270,15 +294,28 @@ mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip)
     return true;
   }
 
-  for (auto &bar : barObjects()) {
+  for (auto &bar : boxBarObjects()) {
     if (! bar->inside(insideData))
       continue;
 
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
 
     qwindow()->highlightObject(qbar);
 
     tip = bar->tip();
+
+    return true;
+  }
+
+  for (auto &box : boxObjects()) {
+    if (! box->inside(insideData))
+      continue;
+
+    CQGnuPlotBoxObject *qbox = static_cast<CQGnuPlotBoxObject *>(box);
+
+    qwindow()->highlightObject(qbox);
+
+    tip = box->tip();
 
     return true;
   }
@@ -305,6 +342,32 @@ mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip)
     qwindow()->highlightObject(qellipse);
 
     tip = ellipse->tip();
+
+    return true;
+  }
+
+  for (auto &bar : errorBarObjects()) {
+    if (! bar->inside(insideData))
+      continue;
+
+    CQGnuPlotErrorBarObject *qbar = static_cast<CQGnuPlotErrorBarObject *>(bar);
+
+    qwindow()->highlightObject(qbar);
+
+    tip = bar->tip();
+
+    return true;
+  }
+
+  for (auto &bar : financeBarObjects()) {
+    if (! bar->inside(insideData))
+      continue;
+
+    CQGnuPlotFinanceBarObject *qbar = static_cast<CQGnuPlotFinanceBarObject *>(bar);
+
+    qwindow()->highlightObject(qbar);
+
+    tip = bar->tip();
 
     return true;
   }
@@ -387,17 +450,17 @@ mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip)
     return true;
   }
 
-  return CGnuPlotPlot::mouseTip(window, tip);
+  return CGnuPlotPlot::mouseTip(insideData, tip);
 }
 
 //------
 
 QColor
-CQGnuPlotPlotBarObjects::
+CQGnuPlotPlotBoxBarObjects::
 fillColor() const
 {
-  if (! plot_->barObjects().empty()) {
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
+  if (! plot_->boxBarObjects().empty()) {
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(plot_->boxBarObjects()[0]);
 
     return qbar->fill()->color();
   }
@@ -406,22 +469,22 @@ fillColor() const
 }
 
 void
-CQGnuPlotPlotBarObjects::
+CQGnuPlotPlotBoxBarObjects::
 setFillColor(const QColor &c)
 {
-  for (auto &bar : plot_->barObjects()) {
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+  for (auto &bar : plot_->boxBarObjects()) {
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
 
     qbar->fill()->setColor(c);
   }
 }
 
 bool
-CQGnuPlotPlotBarObjects::
+CQGnuPlotPlotBoxBarObjects::
 hasBorder() const
 {
-  if (! plot_->barObjects().empty()) {
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
+  if (! plot_->boxBarObjects().empty()) {
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(plot_->boxBarObjects()[0]);
 
     return qbar->stroke()->isEnabled();
   }
@@ -430,22 +493,22 @@ hasBorder() const
 }
 
 void
-CQGnuPlotPlotBarObjects::
+CQGnuPlotPlotBoxBarObjects::
 setBorder(bool b)
 {
-  for (auto &bar : plot_->barObjects()) {
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+  for (auto &bar : plot_->boxBarObjects()) {
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
 
     qbar->stroke()->setEnabled(b);
   }
 }
 
 QColor
-CQGnuPlotPlotBarObjects::
+CQGnuPlotPlotBoxBarObjects::
 lineColor() const
 {
-  if (! plot_->barObjects().empty()) {
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
+  if (! plot_->boxBarObjects().empty()) {
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(plot_->boxBarObjects()[0]);
 
     return qbar->stroke()->color();
   }
@@ -454,22 +517,22 @@ lineColor() const
 }
 
 void
-CQGnuPlotPlotBarObjects::
+CQGnuPlotPlotBoxBarObjects::
 setLineColor(const QColor &c)
 {
-  for (auto &bar : plot_->barObjects()) {
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+  for (auto &bar : plot_->boxBarObjects()) {
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
 
     qbar->stroke()->setColor(c);
   }
 }
 
 double
-CQGnuPlotPlotBarObjects::
+CQGnuPlotPlotBoxBarObjects::
 lineWidth() const
 {
-  if (! plot_->barObjects().empty()) {
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
+  if (! plot_->boxBarObjects().empty()) {
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(plot_->boxBarObjects()[0]);
 
     return qbar->stroke()->width();
   }
@@ -478,22 +541,22 @@ lineWidth() const
 }
 
 void
-CQGnuPlotPlotBarObjects::
+CQGnuPlotPlotBoxBarObjects::
 setLineWidth(double r)
 {
-  for (auto &bar : plot_->barObjects()) {
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+  for (auto &bar : plot_->boxBarObjects()) {
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
 
     qbar->stroke()->setWidth(r);
   }
 }
 
 CQGnuPlotEnum::FillType
-CQGnuPlotPlotBarObjects::
+CQGnuPlotPlotBoxBarObjects::
 getFillType() const
 {
-  if (! plot_->barObjects().empty()) {
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
+  if (! plot_->boxBarObjects().empty()) {
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(plot_->boxBarObjects()[0]);
 
     return qbar->fill()->type();
   }
@@ -502,22 +565,22 @@ getFillType() const
 }
 
 void
-CQGnuPlotPlotBarObjects::
+CQGnuPlotPlotBoxBarObjects::
 setFillType(const CQGnuPlotEnum::FillType &t)
 {
-  for (auto &bar : plot_->barObjects()) {
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+  for (auto &bar : plot_->boxBarObjects()) {
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
 
     qbar->fill()->setType(t);
   }
 }
 
 CQGnuPlotEnum::FillPattern
-CQGnuPlotPlotBarObjects::
+CQGnuPlotPlotBoxBarObjects::
 getFillPattern() const
 {
-  if (! plot_->barObjects().empty()) {
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(plot_->barObjects()[0]);
+  if (! plot_->boxBarObjects().empty()) {
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(plot_->boxBarObjects()[0]);
 
     return qbar->fill()->pattern();
   }
@@ -526,11 +589,11 @@ getFillPattern() const
 }
 
 void
-CQGnuPlotPlotBarObjects::
+CQGnuPlotPlotBoxBarObjects::
 setFillPattern(const CQGnuPlotEnum::FillPattern &p)
 {
-  for (auto &bar : plot_->barObjects()) {
-    CQGnuPlotBarObject *qbar = static_cast<CQGnuPlotBarObject *>(bar);
+  for (auto &bar : plot_->boxBarObjects()) {
+    CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
 
     qbar->fill()->setPattern(p);
   }

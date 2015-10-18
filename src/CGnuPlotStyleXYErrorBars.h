@@ -7,7 +7,7 @@ class CGnuPlotStyleXYErrorBars : public CGnuPlotStyleBase {
  public:
   CGnuPlotStyleXYErrorBars();
 
-  int numUsing() const override { return 2; }
+  int numUsing() const override { return 4; }
 
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 

@@ -12,20 +12,6 @@ class ChordDiagramRenderer;
 
 class ChordDiagram {
  public:
-  ChordDiagram();
-
-  void init();
-
-  void setDimension(int n);
-
-  void setValue(int i, int j, double value);
-
-  void setName (int i, const std::string &name);
-  void setColor(int i, const CRGBA &c);
-
-  void draw(ChordDiagramRenderer *);
-
- public:
   class ValueSet {
    public:
     ValueSet() : name_(), color_(0.5,0.5,0.5), r1_(1), r2_(1), angle_(0), dangle_(90) { }
@@ -113,7 +99,7 @@ class ChordDiagram {
       return -1;
     }
 
-    bool pointInside(double x, double y) {
+    bool pointInside(double x, double y) const {
       double r = sqrt(x*x + y*y);
 
       if (r < r1_ || r > r2_) return false;
@@ -162,11 +148,32 @@ class ChordDiagram {
 
     std::vector<double> values_;
     std::string         name_;
-    CRGBA              color_;
+    CRGBA               color_;
     Inds                sortedInds_;
     double              r1_, r2_;
     double              angle_, dangle_;
   };
+
+ public:
+  ChordDiagram();
+
+  void init();
+
+  void setDimension(int n);
+
+  void setValue(int i, int j, double value);
+
+  void setName (int i, const std::string &name);
+  void setColor(int i, const CRGBA &c);
+
+  int currentInd() const { return currentInd_; }
+  void setCurrentInd(int i) { currentInd_ = i; }
+
+  void draw(ChordDiagramRenderer *);
+
+  ValueSet *getValueSetAtPos(double x, double y) const;
+
+  int getIndAtPos(double x, double y) const;
 
   typedef std::vector<ValueSet> ValueSets;
 
@@ -178,6 +185,8 @@ class ChordDiagram {
   double    valueToDegrees_ = 1.0;
   int       currentInd_ = -1;
 };
+
+//---
 
 class ChordDiagramRenderer {
  public:
@@ -196,10 +205,10 @@ class ChordDiagramRenderer {
                        const CRGBA &c) = 0;
 
   virtual void drawChord(const CPoint2D &p, double r, double a1, double a2,
-                         const CRGBA &c) = 0;
+                         const CRGBA &fc, const CRGBA &lc) = 0;
 
   virtual void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
-                                double a21, double a22, const CRGBA &c) = 0;
+                                double a21, double a22, const CRGBA &fc, const CRGBA &lc) = 0;
 };
 
 #endif

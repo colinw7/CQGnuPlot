@@ -28,6 +28,9 @@ class CGnuPlotEllipseObject : public CGnuPlotPlotObject {
   const CSize2D &size() const { return size_; }
   void setSize(const CSize2D &size);
 
+  double angle() const { return angle_; }
+  void setAngle(double r) { angle_ = r; }
+
   const std::string &text() const { return text_; }
   void setText(const std::string &s) { text_ = s; }
 
@@ -49,7 +52,8 @@ class CGnuPlotEllipseObject : public CGnuPlotPlotObject {
  protected:
   CPoint2D        center_;
   CSize2D         size_;
-  std::string     text_ { "" };
+  double          angle_ { 0 };
+  std::string     text_  { "" };
   CGnuPlotFillP   fill_;
   CGnuPlotStrokeP stroke_;
   mutable CBBox2D rect_;

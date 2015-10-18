@@ -811,7 +811,7 @@ drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2, const CRG
 
 void
 CQGnuPlotRenderer::
-drawChord(const CPoint2D &p, double r, double a1, double a2, const CRGBA &c)
+drawChord(const CPoint2D &p, double r, double a1, double a2, const CRGBA &fc, const CRGBA &lc)
 {
   double px1, py1, px2, py2;
 
@@ -833,8 +833,8 @@ drawChord(const CPoint2D &p, double r, double a1, double a2, const CRGBA &c)
 
   path.closeSubpath();
 
-  painter_->setPen  (QColor(0,0,0));
-  painter_->setBrush(toQColor(c));
+  painter_->setPen  (toQColor(lc));
+  painter_->setBrush(toQColor(fc));
 
   painter_->drawPath(path);
 }
@@ -842,7 +842,7 @@ drawChord(const CPoint2D &p, double r, double a1, double a2, const CRGBA &c)
 void
 CQGnuPlotRenderer::
 drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
-                 double a21, double a22, const CRGBA &c)
+                 double a21, double a22, const CRGBA &fc, const CRGBA &lc)
 {
   double px1, py1, px2, py2;
 
@@ -868,8 +868,8 @@ drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
 
   path.closeSubpath();
 
-  painter_->setPen  (QColor(0,0,0,128));
-  painter_->setBrush(toQColor(c));
+  painter_->setPen  (toQColor(lc));
+  painter_->setBrush(toQColor(fc));
 
   painter_->drawPath(path);
 }

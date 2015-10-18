@@ -47,7 +47,10 @@ class CGnuPlotStyleBase {
 
   virtual CBBox2D fit(CGnuPlotPlot *plot) = 0;
 
-  virtual bool mouseTip(CGnuPlotPlot *, const CPoint2D &, CGnuPlotTipData &) { return false; }
+  virtual bool mouseTip(CGnuPlotPlot *, const CGnuPlotTypes::InsideData &,
+                        CGnuPlotTipData &) { return false; }
+
+  virtual void mousePress(CGnuPlotPlot *, const CGnuPlotTypes::InsideData &) { }
 
  protected:
   CGnuPlotTypes::PlotStyle style_;

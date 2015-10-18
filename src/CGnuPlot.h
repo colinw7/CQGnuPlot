@@ -568,8 +568,9 @@ class CGnuPlot {
   const CGnuPlotFilledCurve &filledCurve() const { return filledCurve_; }
   void setFilledCurve(const CGnuPlotFilledCurve &c) { filledCurve_ = c; }
 
-  double whiskerBars() const { return whiskerBars_; }
+  const COptReal &whiskerBars() const { return whiskerBars_; }
   void setWhiskerBars(double w) { whiskerBars_ = w; }
+  void resetWhiskerBars() { whiskerBars_.setInvalid(); }
 
   const CGnuPlotCamera &camera() const { return camera_; }
 
@@ -799,6 +800,9 @@ class CGnuPlot {
 
   const CGnuPlotPrintFile &tableFile() const { return tableFile_; }
 
+  const Samples    &samples   () const { return samples_; }
+  const ISOSamples &isoSamples() const { return isoSamples_; }
+
  private:
   void addPlotStyles();
 
@@ -1000,9 +1004,6 @@ class CGnuPlot {
   void setDummyVars(const std::string &dummyVar1, const std::string &dummyVar2);
   void getDummyVars(std::string &dummyVar1, std::string &dummyVar2, bool is3D=false) const;
   void resetDummyVars();
-
-  const Samples    &samples   () const { return samples_; }
-  const ISOSamples &isoSamples() const { return isoSamples_; }
 
   bool parseLineType(CParseLine &line, int &lt);
 
@@ -1213,7 +1214,7 @@ class CGnuPlot {
   XYPlane                xyPlane_;
   CGnuPlotPm3DData       pm3D_;
   double                 pointIntervalBox_ { 1 };
-  double                 whiskerBars_ { 0 };
+  COptReal               whiskerBars_;
   ReadLineP              readLine_;
   Blocks                 blocks_;
 

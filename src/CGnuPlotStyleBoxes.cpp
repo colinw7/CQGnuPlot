@@ -2,7 +2,7 @@
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
-#include <CGnuPlotBarObject.h>
+#include <CGnuPlotBoxBarObject.h>
 
 CGnuPlotStyleBoxes::
 CGnuPlotStyleBoxes() :
@@ -47,7 +47,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo())
-    plot->updateBarCacheSize(n);
+    plot->updateBoxBarCacheSize(n);
 
   //---
 
@@ -95,7 +95,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CBBox2D bbox(x - bw1/2, y2, x + bw1/2, y);
 
     if (! renderer->isPseudo()) {
-      CGnuPlotBarObject *bar = plot->barObjects()[i];
+      CGnuPlotBoxBarObject *bar = plot->boxBarObjects()[i];
 
       bar->setBBox(bbox);
 
@@ -126,7 +126,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo()) {
-    for (const auto &bar : plot->barObjects())
+    for (const auto &bar : plot->boxBarObjects())
       bar->draw(renderer);
   }
 }

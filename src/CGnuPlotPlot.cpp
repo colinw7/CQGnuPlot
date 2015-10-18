@@ -6,9 +6,12 @@
 #include <CGnuPlotStyle.h>
 
 #include <CGnuPlotArrowObject.h>
-#include <CGnuPlotBarObject.h>
+#include <CGnuPlotBoxBarObject.h>
+#include <CGnuPlotBoxObject.h>
 #include <CGnuPlotBubbleObject.h>
 #include <CGnuPlotEllipseObject.h>
+#include <CGnuPlotErrorBarObject.h>
+#include <CGnuPlotFinanceBarObject.h>
 #include <CGnuPlotLabelObject.h>
 #include <CGnuPlotPathObject.h>
 #include <CGnuPlotPieObject.h>
@@ -21,18 +24,21 @@
 #include <CGnuPlotStyleBase.h>
 #include <CGnuPlotUtil.h>
 #include <CGnuPlotStyleAdjacencyRenderer.h>
+#include <CGnuPlotStyleChordDiagramRenderer.h>
 
 #include <CExpr.h>
 #include <CRGBName.h>
 #include <CMathGeom2D.h>
+#include <CSmooth.h>
 
 int CGnuPlotPlot::nextId_ = 1;
 
 CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
  group_(group), style_(style), id_(nextId_++), lineStyle_(app()), contour_(this),
- arrowCache_(this), barCache_(this), bubbleCache_(this), ellipseCache_(this), labelCache_(this),
- pathCache_(this), pieCache_(this), pointCache_(this), polygonCache_(this), rectCache_(this),
+ arrowCache_(this), boxBarCache_(this), boxCache_(this), bubbleCache_(this), ellipseCache_(this),
+ errorBarCache_(this), financeBarCache_(this), labelCache_(this), pathCache_(this),
+ pieCache_(this), pointCache_(this), polygonCache_(this), rectCache_(this),
  tableFile_(group->app())
 {
   setSmooth (app()->getSmooth());
@@ -102,7 +108,11 @@ init()
 
   setFilledCurve(plot->filledCurve());
   setHidden3D(plot->hidden3D());
-  setWhiskerBars(plot->whiskerBars());
+
+  if (plot->whiskerBars().isValid())
+    setWhiskerBars(plot->whiskerBars().getValue());
+  else
+    resetWhiskerBars();
 
   setBinary(plot->isBinary());
   setMatrix(plot->isMatrix());
@@ -354,6 +364,42 @@ smooth()
         (void) addPoint2D(x, y);
       }
     }
+    else if (smooth_ == Smooth::CSPLINES) {
+      MappedPoints mappedPoints;
+
+      mapPoints(mappedPoints);
+
+      Points points;
+
+      // smooth curve fit through points
+      for (const auto &p : mappedPoints) {
+        double x = p.first;
+
+        double y = 0.0;
+
+        for (const auto &y1 : p.second)
+          y += y1;
+
+        points.push_back(CPoint2D(x, y/p.second.size()));
+      }
+
+      CSmooth smooth(points);
+
+      int nx, ny;
+
+      app()->samples().get(nx, ny);
+
+      clearPoints();
+
+      double x1 = points.front().x;
+      double dx = (points.back().x - x1)/(nx - 1);
+
+      for (int i = 0; i < nx; ++i) {
+        double x = x1 + i*dx;
+
+        (void) addPoint2D(x, smooth.interp(x));
+      }
+    }
     else {
       group_->app()->errorMsg("Unsupported smooth");
     }
@@ -566,9 +612,16 @@ updateArrowCacheSize(int n)
 
 void
 CGnuPlotPlot::
-updateBarCacheSize(int n)
+updateBoxBarCacheSize(int n)
 {
-  barCache_.updateSize(n);
+  boxBarCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
+updateBoxCacheSize(int n)
+{
+  boxCache_.updateSize(n);
 }
 
 void
@@ -583,6 +636,20 @@ CGnuPlotPlot::
 updateEllipseCacheSize(int n)
 {
   ellipseCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
+updateErrorBarCacheSize(int n)
+{
+  errorBarCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
+updateFinanceBarCacheSize(int n)
+{
+  financeBarCache_.updateSize(n);
 }
 
 void
@@ -973,7 +1040,7 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
   //---
 
   if (! renderer->isPseudo())
-    updateBarCacheSize(getPoints2D().size());
+    updateBoxBarCacheSize(getPoints2D().size());
 
   int i = 0;
 
@@ -1004,7 +1071,7 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
       bbox = CBBox2D(drawData.y2, xl + drawData.xb, y, xl + drawData.w - drawData.xb);
 
     if (! renderer->isPseudo()) {
-      CGnuPlotBarObject *bar = barObjects()[i];
+      CGnuPlotBoxBarObject *bar = boxBarObjects()[i];
 
       CGnuPlotAxis *plotXAxis = group_->getPlotAxis(CGnuPlotTypes::AxisType::X, 1);
 
@@ -1062,7 +1129,7 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
   //---
 
   if (! renderer->isPseudo())
-    updateBarCacheSize(getPoints2D().size());
+    updateBoxBarCacheSize(getPoints2D().size());
 
   int i = 0;
 
@@ -1099,7 +1166,7 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
     CBBox2D bbox(xlb, drawData.y2, xrb, y);
 
     if (! renderer->isPseudo()) {
-      CGnuPlotBarObject *bar = barObjects()[i];
+      CGnuPlotBoxBarObject *bar = boxBarObjects()[i];
 
       bar->setBBox  (bbox);
       bar->setValues(i, y);
@@ -1163,7 +1230,7 @@ drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox, boo
   //---
 
   if (! renderer->isPseudo()) {
-    CGnuPlotBarObject *bar = barObjects()[i];
+    CGnuPlotBoxBarObject *bar = boxBarObjects()[i];
 
     bar->setBBox  (bbox);
     bar->setValues(i, y);
@@ -1195,7 +1262,7 @@ void
 CGnuPlotPlot::
 drawBars(CGnuPlotRenderer *renderer)
 {
-  for (const auto &bar : barObjects())
+  for (const auto &bar : boxBarObjects())
     bar->draw(renderer);
 }
 
@@ -1242,11 +1309,11 @@ createArrowObject() const
   return app()->device()->createArrowObject(const_cast<CGnuPlotPlot *>(this));
 }
 
-CGnuPlotBarObject *
+CGnuPlotBoxBarObject *
 CGnuPlotPlot::
-createBarObject() const
+createBoxBarObject() const
 {
-  return app()->device()->createBarObject(const_cast<CGnuPlotPlot *>(this));
+  return app()->device()->createBoxBarObject(const_cast<CGnuPlotPlot *>(this));
 }
 
 CGnuPlotEndBar *
@@ -1254,6 +1321,13 @@ CGnuPlotPlot::
 createEndBar() const
 {
   return app()->device()->createEndBar(const_cast<CGnuPlotPlot *>(this));
+}
+
+CGnuPlotBoxObject *
+CGnuPlotPlot::
+createBoxObject() const
+{
+  return app()->device()->createBoxObject(const_cast<CGnuPlotPlot *>(this));
 }
 
 CGnuPlotBubbleObject *
@@ -1268,6 +1342,20 @@ CGnuPlotPlot::
 createEllipseObject() const
 {
   return app()->device()->createEllipseObject(const_cast<CGnuPlotPlot *>(this));
+}
+
+CGnuPlotErrorBarObject *
+CGnuPlotPlot::
+createErrorBarObject() const
+{
+  return app()->device()->createErrorBarObject(const_cast<CGnuPlotPlot *>(this));
+}
+
+CGnuPlotFinanceBarObject *
+CGnuPlotPlot::
+createFinanceBarObject() const
+{
+  return app()->device()->createFinanceBarObject(const_cast<CGnuPlotPlot *>(this));
 }
 
 CGnuPlotLabelObject *
@@ -1324,6 +1412,13 @@ CGnuPlotPlot::
 createStroke() const
 {
   return app()->device()->createStroke(const_cast<CGnuPlotPlot *>(this));
+}
+
+CGnuPlotMark *
+CGnuPlotPlot::
+createMark() const
+{
+  return app()->device()->createMark(const_cast<CGnuPlotPlot *>(this));
 }
 
 //------
@@ -1568,12 +1663,22 @@ renderBBox(CGnuPlotBBoxRenderer &brenderer) const
 
 bool
 CGnuPlotPlot::
-mouseTip(const CPoint2D &p, CGnuPlotTipData &tipData)
+mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tipData)
 {
   CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
   if (! style) return false;
 
-  return style->mouseTip(this, p, tipData);
+  return style->mouseTip(this, insideData, tipData);
+}
+
+void
+CGnuPlotPlot::
+mousePress(const CGnuPlotTypes::InsideData &insideData)
+{
+  CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
+  if (! style) return;
+
+  style->mousePress(this, insideData);
 }
 
 void
@@ -1737,5 +1842,14 @@ CGnuPlotAdjacencyData::
 ~CGnuPlotAdjacencyData()
 {
   delete adjacency_;
+  delete renderer_;
+}
+
+//------
+
+CGnuPlotChordDiagramData::
+~CGnuPlotChordDiagramData()
+{
+  delete chord_;
   delete renderer_;
 }

@@ -30,10 +30,13 @@ class CGnuPlotRectangle;
 class CGnuPlotTimeStamp;
 
 class CGnuPlotArrowObject;
-class CGnuPlotBarObject;
+class CGnuPlotBoxBarObject;
 class CGnuPlotEndBar;
+class CGnuPlotBoxObject;
 class CGnuPlotBubbleObject;
 class CGnuPlotEllipseObject;
+class CGnuPlotErrorBarObject;
+class CGnuPlotFinanceBarObject;
 class CGnuPlotLabelObject;
 class CGnuPlotPathObject;
 class CGnuPlotPieObject;
@@ -43,6 +46,7 @@ class CGnuPlotRectObject;
 
 class CGnuPlotFill;
 class CGnuPlotStroke;
+class CGnuPlotMark;
 
 class CGnuPlotRenderer;
 class CGnuPlotTitle;
@@ -141,20 +145,24 @@ class CGnuPlotDevice {
 
   virtual CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group);
 
-  virtual CGnuPlotArrowObject   *createArrowObject  (CGnuPlotPlot *plot);
-  virtual CGnuPlotBarObject     *createBarObject    (CGnuPlotPlot *plot);
-  virtual CGnuPlotEndBar        *createEndBar       (CGnuPlotPlot *plot);
-  virtual CGnuPlotBubbleObject  *createBubbleObject (CGnuPlotPlot *plot);
-  virtual CGnuPlotEllipseObject *createEllipseObject(CGnuPlotPlot *plot);
-  virtual CGnuPlotLabelObject   *createLabelObject  (CGnuPlotPlot *plot);
-  virtual CGnuPlotPathObject    *createPathObject   (CGnuPlotPlot *plot);
-  virtual CGnuPlotPieObject     *createPieObject    (CGnuPlotPlot *plot);
-  virtual CGnuPlotPointObject   *createPointObject  (CGnuPlotPlot *plot);
-  virtual CGnuPlotPolygonObject *createPolygonObject(CGnuPlotPlot *plot);
-  virtual CGnuPlotRectObject    *createRectObject   (CGnuPlotPlot *plot);
+  virtual CGnuPlotArrowObject      *createArrowObject     (CGnuPlotPlot *plot);
+  virtual CGnuPlotBoxBarObject     *createBoxBarObject    (CGnuPlotPlot *plot);
+  virtual CGnuPlotEndBar           *createEndBar          (CGnuPlotPlot *plot);
+  virtual CGnuPlotBoxObject        *createBoxObject       (CGnuPlotPlot *plot);
+  virtual CGnuPlotBubbleObject     *createBubbleObject    (CGnuPlotPlot *plot);
+  virtual CGnuPlotEllipseObject    *createEllipseObject   (CGnuPlotPlot *plot);
+  virtual CGnuPlotErrorBarObject   *createErrorBarObject  (CGnuPlotPlot *plot);
+  virtual CGnuPlotFinanceBarObject *createFinanceBarObject(CGnuPlotPlot *plot);
+  virtual CGnuPlotLabelObject      *createLabelObject     (CGnuPlotPlot *plot);
+  virtual CGnuPlotPathObject       *createPathObject      (CGnuPlotPlot *plot);
+  virtual CGnuPlotPieObject        *createPieObject       (CGnuPlotPlot *plot);
+  virtual CGnuPlotPointObject      *createPointObject     (CGnuPlotPlot *plot);
+  virtual CGnuPlotPolygonObject    *createPolygonObject   (CGnuPlotPlot *plot);
+  virtual CGnuPlotRectObject       *createRectObject      (CGnuPlotPlot *plot);
 
   virtual CGnuPlotFill   *createFill  (CGnuPlotPlot *plot);
   virtual CGnuPlotStroke *createStroke(CGnuPlotPlot *plot);
+  virtual CGnuPlotMark   *createMark  (CGnuPlotPlot *plot);
 
   virtual void timeout() { }
 

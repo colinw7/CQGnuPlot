@@ -7,6 +7,8 @@ class CBoxWhisker {
   typedef std::vector<int>    Outliers;
 
  public:
+  CBoxWhisker() { }
+
   CBoxWhisker(const Values &values) :
    values_(values) {
     calc();
@@ -18,6 +20,12 @@ class CBoxWhisker {
 
   void addValue(double value) {
     values_.push_back(value);
+
+    calc();
+  }
+
+  void setValues(const Values &values) {
+    values_ = values;
 
     calc();
   }

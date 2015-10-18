@@ -22,9 +22,12 @@
 #include <CQGnuPlotBubbleObject.h>
 
 #include <CQGnuPlotArrowObject.h>
-#include <CQGnuPlotBarObject.h>
+#include <CQGnuPlotBoxBarObject.h>
+#include <CQGnuPlotBoxObject.h>
 #include <CQGnuPlotEndBar.h>
 #include <CQGnuPlotEllipseObject.h>
+#include <CQGnuPlotErrorBarObject.h>
+#include <CQGnuPlotFinanceBarObject.h>
 #include <CQGnuPlotLabelObject.h>
 #include <CQGnuPlotPathObject.h>
 #include <CQGnuPlotPieObject.h>
@@ -34,6 +37,7 @@
 
 #include <CQGnuPlotFill.h>
 #include <CQGnuPlotStroke.h>
+#include <CQGnuPlotMark.h>
 
 #include <QApplication>
 
@@ -300,13 +304,13 @@ createArrowObject(CGnuPlotPlot *plot)
   return arrow;
 }
 
-CGnuPlotBarObject *
+CGnuPlotBoxBarObject *
 CQGnuPlotDevice::
-createBarObject(CGnuPlotPlot *plot)
+createBoxBarObject(CGnuPlotPlot *plot)
 {
   CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
 
-  CQGnuPlotBarObject *bar = new CQGnuPlotBarObject(qplot);
+  CQGnuPlotBoxBarObject *bar = new CQGnuPlotBoxBarObject(qplot);
 
   objects_.push_back(bar);
 
@@ -324,6 +328,21 @@ createEndBar(CGnuPlotPlot *plot)
   CQGnuPlotEndBar *bar = new CQGnuPlotEndBar(qplot);
 
   return bar;
+}
+
+CGnuPlotBoxObject *
+CQGnuPlotDevice::
+createBoxObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotBoxObject *box = new CQGnuPlotBoxObject(qplot);
+
+  objects_.push_back(box);
+
+  qplot->qwindow()->updateProperties();
+
+  return box;
 }
 
 CGnuPlotBubbleObject *
@@ -354,6 +373,36 @@ createEllipseObject(CGnuPlotPlot *plot)
   qplot->qwindow()->updateProperties();
 
   return ellipse;
+}
+
+CGnuPlotErrorBarObject *
+CQGnuPlotDevice::
+createErrorBarObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotErrorBarObject *bar = new CQGnuPlotErrorBarObject(qplot);
+
+  objects_.push_back(bar);
+
+  qplot->qwindow()->updateProperties();
+
+  return bar;
+}
+
+CGnuPlotFinanceBarObject *
+CQGnuPlotDevice::
+createFinanceBarObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotFinanceBarObject *bar = new CQGnuPlotFinanceBarObject(qplot);
+
+  objects_.push_back(bar);
+
+  qplot->qwindow()->updateProperties();
+
+  return bar;
 }
 
 CGnuPlotLabelObject *
@@ -466,6 +515,17 @@ createStroke(CGnuPlotPlot *plot)
   CQGnuPlotStroke *stroke = new CQGnuPlotStroke(qplot);
 
   return stroke;
+}
+
+CGnuPlotMark *
+CQGnuPlotDevice::
+createMark(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotMark *mark = new CQGnuPlotMark(qplot);
+
+  return mark;
 }
 
 //---

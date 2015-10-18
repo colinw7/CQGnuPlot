@@ -21,7 +21,10 @@ class CGnuPlotStyleAdjacency : public CGnuPlotStyleBase {
 
   bool isSingleType() const override { return true; }
 
-  bool mouseTip(CGnuPlotPlot *plot, const CPoint2D &p, CGnuPlotTipData &tipData) override;
+  bool mouseTip(CGnuPlotPlot *plot, const CGnuPlotTypes::InsideData &insideData,
+                CGnuPlotTipData &tipData) override;
+
+  void mousePress(CGnuPlotPlot *plot, const CGnuPlotTypes::InsideData &insideData) override;
 };
 
 #endif

@@ -23,14 +23,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   bool isCalcColor = lineStyle.isCalcColor();
 
+  double                    pointSize = plot->pointSize();
+  CGnuPlotTypes::SymbolType pointType = plot->pointType();
+
   //------
 
   typedef std::vector<CGnuPlotPointData> PointDatas;
 
   PointDatas pointDatas;
-
-  double                    pointSize = plot->pointSize();
-  CGnuPlotTypes::SymbolType pointType = plot->pointType();
 
   for (const auto &point : plot->getPoints2D()) {
     std::vector<double> reals;

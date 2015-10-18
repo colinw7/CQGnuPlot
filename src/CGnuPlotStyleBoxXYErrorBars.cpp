@@ -1,7 +1,7 @@
 #include <CGnuPlotStyleBoxXYErrorBars.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
-#include <CGnuPlotBarObject.h>
+#include <CGnuPlotBoxBarObject.h>
 
 CGnuPlotStyleBoxXYErrorBars::
 CGnuPlotStyleBoxXYErrorBars() :
@@ -21,7 +21,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   bool isCalcColor = lineStyle.isCalcColor();
 
   if (! renderer->isPseudo())
-    plot->updateBarCacheSize(plot->getPoints2D().size());
+    plot->updateBoxBarCacheSize(plot->getPoints2D().size());
 
   int i = 0;
 
@@ -85,7 +85,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CBBox2D bbox(xl, yl, xh, yh);
 
     if (! renderer->isPseudo()) {
-      CGnuPlotBarObject *bar = plot->barObjects()[i];
+      CGnuPlotBoxBarObject *bar = plot->boxBarObjects()[i];
 
       bar->setBBox(bbox);
 
@@ -116,7 +116,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo()) {
-    for (const auto &bar : plot->barObjects())
+    for (const auto &bar : plot->boxBarObjects())
       bar->draw(renderer);
   }
 }

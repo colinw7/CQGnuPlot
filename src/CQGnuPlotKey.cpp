@@ -1,5 +1,6 @@
 #include <CQGnuPlotKey.h>
 #include <CQGnuPlotGroup.h>
+#include <CQGnuPlotWindow.h>
 #include <CQGnuPlotUtil.h>
 #include <CGnuPlotRenderer.h>
 #include <CQUtil.h>
@@ -92,6 +93,10 @@ mousePress(const QPoint &qp)
   if (! plot) return false;
 
   plot->setDisplayed(! plot->isDisplayed());
+
+  CQGnuPlotWindow *qwindow = dynamic_cast<CQGnuPlotWindow *>(group()->window());
+
+  qwindow->redraw();
 
   return true;
 }

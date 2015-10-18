@@ -57,6 +57,9 @@ class CQPropertyItem : public QObject, public QTreeWidgetItem {
   //! get editor widget text
   QVariant getEditorData() const;
 
+  //! is writable
+  bool isWritable() const;
+
   //! paint item
   bool paint(const CQPropertyDelegate *delegate, QPainter *painter,
              const QStyleOptionViewItem &option, const QModelIndex &index);

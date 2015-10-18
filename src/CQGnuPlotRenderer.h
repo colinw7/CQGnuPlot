@@ -78,10 +78,10 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
                const CRGBA &c) override;
 
   void drawChord(const CPoint2D &p, double r, double a1, double a2,
-                 const CRGBA &c) override;
+                 const CRGBA &fc, const CRGBA &lc) override;
 
   void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
-                        double a21, double a22, const CRGBA &c) override;
+                        double a21, double a22, const CRGBA &fc, const CRGBA &lc) override;
 
   void setFont(const CFontPtr &font);
 

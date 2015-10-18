@@ -60,7 +60,7 @@ void
 CGnuPlotBBoxRenderer::
 drawPoint(const CPoint2D &point, const CRGBA &)
 {
-  bbox_.add(point);
+  addPoint(point);
 }
 
 void
@@ -70,11 +70,11 @@ drawSymbol(const CPoint2D &point, SymbolType, double size, const CRGBA &, double
   if (! pixelSize) {
     CPoint2D d(size/2, size/2);
 
-    bbox_.add(point - d);
-    bbox_.add(point + d);
+    addPoint(point - d);
+    addPoint(point + d);
   }
   else
-    bbox_.add(point);
+    addPoint(point);
 }
 
 void
@@ -82,7 +82,7 @@ CGnuPlotBBoxRenderer::
 drawPath(const std::vector<CPoint2D> &points, double /*width*/, const CRGBA &, const CLineDash &)
 {
   for (uint i = 0; i < points.size(); ++i)
-    bbox_.add(points[i]);
+    addPoint(points[i]);
 }
 
 void
@@ -90,15 +90,15 @@ CGnuPlotBBoxRenderer::
 drawLine(const CPoint2D &point1, const CPoint2D &point2,
          double /*width*/, const CRGBA &, const CLineDash &)
 {
-  bbox_.add(point1);
-  bbox_.add(point2);
+  addPoint(point1);
+  addPoint(point2);
 }
 
 void
 CGnuPlotBBoxRenderer::
 drawRect(const CBBox2D &rect, const CRGBA &, double /*width*/)
 {
-  bbox_.add(rect);
+  addRect(rect);
 }
 
 void
@@ -106,14 +106,14 @@ CGnuPlotBBoxRenderer::
 patternRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern /*pattern*/,
             const CRGBA & /*fg*/, const CRGBA & /*bg*/)
 {
-  bbox_.add(rect);
+  addRect(rect);
 }
 
 void
 CGnuPlotBBoxRenderer::
 fillRect(const CBBox2D &rect, const CRGBA &)
 {
-  bbox_.add(rect);
+  addRect(rect);
 }
 
 void
@@ -122,10 +122,10 @@ drawBezier(const CPoint2D &point1, const CPoint2D &point2,
            const CPoint2D &point3, const CPoint2D &point4,
            double /*width*/, const CRGBA &)
 {
-  bbox_.add(point1);
-  bbox_.add(point2);
-  bbox_.add(point3);
-  bbox_.add(point4);
+  addPoint(point1);
+  addPoint(point2);
+  addPoint(point3);
+  addPoint(point4);
 }
 
 void
@@ -134,7 +134,7 @@ drawPolygon(const std::vector<CPoint2D> &points, double /*width*/, const CRGBA &
             const CLineDash &)
 {
   for (uint i = 1; i < points.size(); ++i)
-    bbox_.add(points[i]);
+    addPoint(points[i]);
 }
 
 void
@@ -142,7 +142,7 @@ CGnuPlotBBoxRenderer::
 fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &)
 {
   for (uint i = 1; i < points.size(); ++i)
-    bbox_.add(points[i]);
+    addPoint(points[i]);
 }
 
 void
@@ -151,7 +151,7 @@ patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern,
                const CRGBA &, const CRGBA &)
 {
   for (uint i = 1; i < points.size(); ++i)
-    bbox_.add(points[i]);
+    addPoint(points[i]);
 }
 
 void
@@ -169,10 +169,10 @@ drawEllipse(const CPoint2D &center, double rx, double ry, double angle,
   CPoint2D pr3 = CMathGeom2D::RotatePoint(p3, angle, center);
   CPoint2D pr4 = CMathGeom2D::RotatePoint(p4, angle, center);
 
-  bbox_.add(pr1);
-  bbox_.add(pr2);
-  bbox_.add(pr3);
-  bbox_.add(pr4);
+  addPoint(pr1);
+  addPoint(pr2);
+  addPoint(pr3);
+  addPoint(pr4);
 }
 
 void
@@ -199,11 +199,11 @@ drawText(const CPoint2D &point, const std::string &str, const CRGBA &)
     double fa = renderer_->getFont()->getCharAscent ();
     double fd = renderer_->getFont()->getCharDescent();
 
-    bbox_.add(CPoint2D(point.x    , point.y - fd));
-    bbox_.add(CPoint2D(point.x + w, point.y + fa));
+    addPoint(CPoint2D(point.x    , point.y - fd));
+    addPoint(CPoint2D(point.x + w, point.y + fa));
   }
   else
-    bbox_.add(point);
+    addPoint(point);
 }
 
 void
@@ -221,10 +221,10 @@ drawRotatedText(const CPoint2D &point, const std::string &str, double /*ta*/,
     bbox.add(CPoint2D(point.x    , point.y - fd));
     bbox.add(CPoint2D(point.x + w, point.y + fa));
 
-    bbox_.add(bbox);
+    addRect(bbox);
   }
   else
-    bbox_.add(point);
+    addPoint(point);
 }
 
 void
@@ -232,15 +232,15 @@ CGnuPlotBBoxRenderer::
 drawPieSlice(const CPoint2D &pc, double /*ri*/, double ro, double angle1, double angle2,
              double /*lw*/, const CRGBA &/*c*/)
 {
-  bbox_.add(pc);
+  addPoint(pc);
 
   double x1 = pc.x + ro*cos(angle1);
   double y1 = pc.y + ro*sin(angle1);
   double x2 = pc.x + ro*cos(angle2);
   double y2 = pc.y + ro*sin(angle2);
 
-  bbox_.add(CPoint2D(x1, y1));
-  bbox_.add(CPoint2D(x2, y2));
+  addPoint(CPoint2D(x1, y1));
+  addPoint(CPoint2D(x2, y2));
 }
 
 void
@@ -255,38 +255,38 @@ void
 CGnuPlotBBoxRenderer::
 drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2, const CRGBA &)
 {
-  bbox_.add(p);
+  addPoint(p);
 
   double x1 = p.x + r1*cos(a1);
   double y1 = p.y + r1*sin(a1);
   double x2 = p.x + r2*cos(a2);
   double y2 = p.y + r2*sin(a2);
 
-  bbox_.add(CPoint2D(x1, y1));
-  bbox_.add(CPoint2D(x2, y2));
+  addPoint(CPoint2D(x1, y1));
+  addPoint(CPoint2D(x2, y2));
 }
 
 void
 CGnuPlotBBoxRenderer::
-drawChord(const CPoint2D &p, double r, double a1, double a2, const CRGBA &)
+drawChord(const CPoint2D &p, double r, double a1, double a2, const CRGBA &, const CRGBA &)
 {
-  bbox_.add(p);
+  addPoint(p);
 
   double x1 = p.x + r*cos(a1);
   double y1 = p.y + r*sin(a1);
   double x2 = p.x + r*cos(a2);
   double y2 = p.y + r*sin(a2);
 
-  bbox_.add(CPoint2D(x1, y1));
-  bbox_.add(CPoint2D(x2, y2));
+  addPoint(CPoint2D(x1, y1));
+  addPoint(CPoint2D(x2, y2));
 }
 
 void
 CGnuPlotBBoxRenderer::
 drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
-                 double a21, double a22, const CRGBA &)
+                 double a21, double a22, const CRGBA &, const CRGBA &)
 {
-  bbox_.add(p);
+  addPoint(p);
 
   double x11 = p.x + r*cos(a11);
   double y11 = p.y + r*sin(a11);
@@ -297,8 +297,22 @@ drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
   double x22 = p.x + r*cos(a22);
   double y22 = p.y + r*sin(a22);
 
-  bbox_.add(CPoint2D(x11, y11));
-  bbox_.add(CPoint2D(x12, y12));
-  bbox_.add(CPoint2D(x21, y21));
-  bbox_.add(CPoint2D(x22, y22));
+  addPoint(CPoint2D(x11, y11));
+  addPoint(CPoint2D(x12, y12));
+  addPoint(CPoint2D(x21, y21));
+  addPoint(CPoint2D(x22, y22));
+}
+
+void
+CGnuPlotBBoxRenderer::
+addRect(const CBBox2D &b)
+{
+  bbox_.add(b);
+}
+
+void
+CGnuPlotBBoxRenderer::
+addPoint(const CPoint2D &p)
+{
+  bbox_.add(p);
 }

@@ -229,6 +229,10 @@ draw(ChordDiagramRenderer *renderer)
 
       fc.setAlpha(alpha/255.0);
 
+      CRGBA lc(0,0,0,alpha/255.0);
+
+      CPoint2D c(xc, yc);
+
       // connect arc i, value set_data[i][j] to arc j value set_data[j][i];
       if (j == j1) {
         double angle1 = values1.angle1();
@@ -239,7 +243,7 @@ draw(ChordDiagramRenderer *renderer)
         double angle2 = angle1 + dangle1;
         double angle3 = angle1 + dangle2;
 
-        renderer->drawChord(CPoint2D(xc, yc), r2, angle2, angle3, fc);
+        renderer->drawChord(c, r2, angle2, angle3, fc, lc);
       }
       else {
         double angle1 = values1.angle1();
@@ -255,8 +259,35 @@ draw(ChordDiagramRenderer *renderer)
         double angle21 = angle2 + dangle21;
         double angle22 = angle2 + dangle22;
 
-        renderer->drawComplexChord(CPoint2D(xc, yc), r2, angle11, angle12, angle21, angle22, fc);
+        renderer->drawComplexChord(c, r2, angle11, angle12, angle21, angle22, fc, lc);
       }
     }
   }
+}
+
+ChordDiagram::ValueSet *
+ChordDiagram::
+getValueSetAtPos(double x, double y) const
+{
+  int ind = getIndAtPos(x, y);
+
+  if (ind < 0) return 0;
+
+  return const_cast<ValueSet *>(&valueSets_[ind]);
+}
+
+int
+ChordDiagram::
+getIndAtPos(double x, double y) const
+{
+  int n = valueSets_.size();
+
+  for (int i = 0; i < n; ++i) {
+    const ValueSet &values = valueSets_[i];
+
+    if (values.pointInside(x, y))
+      return i;
+  }
+
+  return -1;
 }

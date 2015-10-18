@@ -59,10 +59,8 @@ setDrawLayer(const DrawLayerType &layer)
 
 bool
 CQGnuPlotAnnotation::
-mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip)
+mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
 {
-  CGnuPlotTypes::InsideData insideData(window, pixel);
-
   if (! obj_->inside(insideData))
     return false;
 

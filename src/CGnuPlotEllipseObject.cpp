@@ -101,8 +101,8 @@ draw(CGnuPlotRenderer *renderer) const
   double w = size_.getWidth ();
   double h = size_.getHeight();
 
-  renderer->fillEllipse  (center_, w, h, 0, *fill  );
-  renderer->strokeEllipse(center_, w, h, 0, *stroke);
+  renderer->fillEllipse  (center_, w, h, angle_, *fill  );
+  renderer->strokeEllipse(center_, w, h, angle_, *stroke);
 
   if (text_ != "") {
     CRGBA tc(0,0,0);

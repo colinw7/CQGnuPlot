@@ -20,10 +20,13 @@ class CGnuPlotWindow;
 class CGnuPlotGroup;
 
 class CGnuPlotArrowObject;
-class CGnuPlotBarObject;
+class CGnuPlotBoxBarObject;
 class CGnuPlotEndBar;
+class CGnuPlotBoxObject;
 class CGnuPlotBubbleObject;
 class CGnuPlotEllipseObject;
+class CGnuPlotErrorBarObject;
+class CGnuPlotFinanceBarObject;
 class CGnuPlotLabelObject;
 class CGnuPlotPathObject;
 class CGnuPlotPieObject;
@@ -33,11 +36,14 @@ class CGnuPlotRectObject;
 
 class CGnuPlotFill;
 class CGnuPlotStroke;
+class CGnuPlotMark;
 
 class CGnuPlotBBoxRenderer;
 class CGnuPlotStyleAdjacencyRenderer;
+class CGnuPlotStyleChordDiagramRenderer;
 
 class CAdjacency;
+class ChordDiagram;
 
 //------
 
@@ -55,13 +61,26 @@ class CGnuPlotCacheFactory<CGnuPlotArrowObject> {
 };
 
 template<>
-class CGnuPlotCacheFactory<CGnuPlotBarObject> {
+class CGnuPlotCacheFactory<CGnuPlotBoxBarObject> {
  public:
   CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
    plot_(plot) {
   }
 
-  CGnuPlotBarObject *make();
+  CGnuPlotBoxBarObject *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+template<>
+class CGnuPlotCacheFactory<CGnuPlotBoxObject> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotBoxObject *make();
 
  private:
   CGnuPlotPlot *plot_;
@@ -88,6 +107,32 @@ class CGnuPlotCacheFactory<CGnuPlotEllipseObject> {
   }
 
   CGnuPlotEllipseObject *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+template<>
+class CGnuPlotCacheFactory<CGnuPlotErrorBarObject> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotErrorBarObject *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+template<>
+class CGnuPlotCacheFactory<CGnuPlotFinanceBarObject> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotFinanceBarObject *make();
 
  private:
   CGnuPlotPlot *plot_;
@@ -191,6 +236,24 @@ class CGnuPlotAdjacencyData {
 
 //------
 
+class CGnuPlotChordDiagramData {
+ public:
+  CGnuPlotChordDiagramData() { }
+ ~CGnuPlotChordDiagramData();
+
+  ChordDiagram *chordDiagram() const { return chord_; }
+  void setChordDiagram(ChordDiagram *c) { chord_ = c; }
+
+  CGnuPlotStyleChordDiagramRenderer *renderer() const { return renderer_; }
+  void setRenderer(CGnuPlotStyleChordDiagramRenderer *r) { renderer_ = r; }
+
+ private:
+  ChordDiagram                      *chord_    { 0 };
+  CGnuPlotStyleChordDiagramRenderer *renderer_ { 0 };
+};
+
+//------
+
 class CGnuPlotPlot {
  public:
   typedef CGnuPlotTypes::PlotStyle            PlotStyle;
@@ -206,29 +269,37 @@ class CGnuPlotPlot {
   typedef std::map<int,Points2D>              Points3D;
   typedef std::vector<CRGBA>                  ImageData;
 
-  typedef CGnuPlotCache<CGnuPlotArrowObject>   ArrowCache;
-  typedef CGnuPlotCache<CGnuPlotBarObject>     BarCache;
-  typedef CGnuPlotCache<CGnuPlotBubbleObject>  BubbleCache;
-  typedef CGnuPlotCache<CGnuPlotEllipseObject> EllipseCache;
-  typedef CGnuPlotCache<CGnuPlotLabelObject>   LabelCache;
-  typedef CGnuPlotCache<CGnuPlotPathObject>    PathCache;
-  typedef CGnuPlotCache<CGnuPlotPieObject>     PieCache;
-  typedef CGnuPlotCache<CGnuPlotPointObject>   PointCache;
-  typedef CGnuPlotCache<CGnuPlotPolygonObject> PolygonCache;
-  typedef CGnuPlotCache<CGnuPlotRectObject>    RectCache;
-  typedef std::vector<CGnuPlotArrowObject *>   ArrowObjects;
-  typedef std::vector<CGnuPlotBarObject *>     BarObjects;
-  typedef std::vector<CGnuPlotBubbleObject *>  BubbleObjects;
-  typedef std::vector<CGnuPlotEllipseObject *> EllipseObjects;
-  typedef std::vector<CGnuPlotLabelObject *>   LabelObjects;
-  typedef std::vector<CGnuPlotPathObject *>    PathObjects;
-  typedef std::vector<CGnuPlotPieObject *>     PieObjects;
-  typedef std::vector<CGnuPlotPointObject *>   PointObjects;
-  typedef std::vector<CGnuPlotPolygonObject *> PolygonObjects;
-  typedef std::vector<CGnuPlotRectObject *>    RectObjects;
-  typedef std::vector<double>                  DoubleVector;
-  typedef std::map<double,DoubleVector>        MappedPoints;
-  typedef std::vector<CGnuPlotKeyLabel>        KeyLabels;
+  typedef CGnuPlotCache<CGnuPlotArrowObject>      ArrowCache;
+  typedef CGnuPlotCache<CGnuPlotBoxBarObject>     BoxBarCache;
+  typedef CGnuPlotCache<CGnuPlotBoxObject>        BoxCache;
+  typedef CGnuPlotCache<CGnuPlotBubbleObject>     BubbleCache;
+  typedef CGnuPlotCache<CGnuPlotEllipseObject>    EllipseCache;
+  typedef CGnuPlotCache<CGnuPlotErrorBarObject>   ErrorBarCache;
+  typedef CGnuPlotCache<CGnuPlotFinanceBarObject> FinanceBarCache;
+  typedef CGnuPlotCache<CGnuPlotLabelObject>      LabelCache;
+  typedef CGnuPlotCache<CGnuPlotPathObject>       PathCache;
+  typedef CGnuPlotCache<CGnuPlotPieObject>        PieCache;
+  typedef CGnuPlotCache<CGnuPlotPointObject>      PointCache;
+  typedef CGnuPlotCache<CGnuPlotPolygonObject>    PolygonCache;
+  typedef CGnuPlotCache<CGnuPlotRectObject>       RectCache;
+
+  typedef std::vector<CGnuPlotArrowObject *>      ArrowObjects;
+  typedef std::vector<CGnuPlotBoxBarObject *>     BoxBarObjects;
+  typedef std::vector<CGnuPlotBoxObject *>        BoxObjects;
+  typedef std::vector<CGnuPlotBubbleObject *>     BubbleObjects;
+  typedef std::vector<CGnuPlotEllipseObject *>    EllipseObjects;
+  typedef std::vector<CGnuPlotErrorBarObject *>   ErrorBarObjects;
+  typedef std::vector<CGnuPlotFinanceBarObject *> FinanceBarObjects;
+  typedef std::vector<CGnuPlotLabelObject *>      LabelObjects;
+  typedef std::vector<CGnuPlotPathObject *>       PathObjects;
+  typedef std::vector<CGnuPlotPieObject *>        PieObjects;
+  typedef std::vector<CGnuPlotPointObject *>      PointObjects;
+  typedef std::vector<CGnuPlotPolygonObject *>    PolygonObjects;
+  typedef std::vector<CGnuPlotRectObject *>       RectObjects;
+
+  typedef std::vector<double>           DoubleVector;
+  typedef std::map<double,DoubleVector> MappedPoints;
+  typedef std::vector<CGnuPlotKeyLabel> KeyLabels;
 
  public:
   CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle plotStyle);
@@ -419,8 +490,9 @@ class CGnuPlotPlot {
   const CGnuPlotFilledCurve &filledCurve() const { return filledCurve_; }
   void setFilledCurve(const CGnuPlotFilledCurve &c) { filledCurve_ = c; }
 
-  double whiskerBars() const { return whiskerBars_; }
+  const COptReal &whiskerBars() const { return whiskerBars_; }
   void setWhiskerBars(double w) { whiskerBars_ = w; }
+  void resetWhiskerBars() { whiskerBars_.setInvalid(); }
 
   //---
 
@@ -510,6 +582,9 @@ class CGnuPlotPlot {
   double getZMin() const { return zmin_.getValue(-10); }
   double getZMax() const { return zmax_.getValue( 10); }
 
+  double getBYMin() const { return bymin_.getValue(-10); }
+  double getBYMax() const { return bymax_.getValue( 10); }
+
   //void setXMin(const COptReal &x) { xmin_ = x; }
   //void setXMax(const COptReal &x) { xmax_ = x; }
   //void setYMin(const COptReal &y) { ymin_ = y; }
@@ -523,27 +598,33 @@ class CGnuPlotPlot {
   bool isCacheActive() const { return cacheActive_; }
   void setCacheActive(bool b) { cacheActive_ = b; }
 
-  void updateArrowCacheSize  (int n);
-  void updateBarCacheSize    (int n);
-  void updateBubbleCacheSize (int n);
-  void updateEllipseCacheSize(int n);
-  void updateLabelCacheSize  (int n);
-  void updatePathCacheSize   (int n);
-  void updatePieCacheSize    (int n);
-  void updatePointCacheSize  (int n);
-  void updatePolygonCacheSize(int n);
-  void updateRectCacheSize   (int n);
+  void updateArrowCacheSize     (int n);
+  void updateBoxBarCacheSize    (int n);
+  void updateBoxCacheSize       (int n);
+  void updateBubbleCacheSize    (int n);
+  void updateEllipseCacheSize   (int n);
+  void updateErrorBarCacheSize  (int n);
+  void updateFinanceBarCacheSize(int n);
+  void updateLabelCacheSize     (int n);
+  void updatePathCacheSize      (int n);
+  void updatePieCacheSize       (int n);
+  void updatePointCacheSize     (int n);
+  void updatePolygonCacheSize   (int n);
+  void updateRectCacheSize      (int n);
 
-  const ArrowObjects   &arrowObjects  () const { return arrowCache_  .objects(); }
-  const BarObjects     &barObjects    () const { return barCache_    .objects(); }
-  const BubbleObjects  &bubbleObjects () const { return bubbleCache_ .objects(); }
-  const EllipseObjects &ellipseObjects() const { return ellipseCache_.objects(); }
-  const LabelObjects   &labelObjects  () const { return labelCache_  .objects(); }
-  const PathObjects    &pathObjects   () const { return pathCache_   .objects(); }
-  const PieObjects     &pieObjects    () const { return pieCache_    .objects(); }
-  const PointObjects   &pointObjects  () const { return pointCache_  .objects(); }
-  const PolygonObjects &polygonObjects() const { return polygonCache_.objects(); }
-  const RectObjects    &rectObjects   () const { return rectCache_   .objects(); }
+  const ArrowObjects      &arrowObjects     () const { return arrowCache_     .objects(); }
+  const BoxBarObjects     &boxBarObjects    () const { return boxBarCache_    .objects(); }
+  const BoxObjects        &boxObjects       () const { return boxCache_       .objects(); }
+  const BubbleObjects     &bubbleObjects    () const { return bubbleCache_    .objects(); }
+  const EllipseObjects    &ellipseObjects   () const { return ellipseCache_   .objects(); }
+  const ErrorBarObjects   &errorBarObjects  () const { return errorBarCache_  .objects(); }
+  const FinanceBarObjects &financeBarObjects() const { return financeBarCache_.objects(); }
+  const LabelObjects      &labelObjects     () const { return labelCache_     .objects(); }
+  const PathObjects       &pathObjects      () const { return pathCache_      .objects(); }
+  const PieObjects        &pieObjects       () const { return pieCache_       .objects(); }
+  const PointObjects      &pointObjects     () const { return pointCache_     .objects(); }
+  const PolygonObjects    &polygonObjects   () const { return polygonCache_   .objects(); }
+  const RectObjects       &rectObjects      () const { return rectCache_      .objects(); }
 
   //---
 
@@ -596,20 +677,24 @@ class CGnuPlotPlot {
 
   double getXSpacing() const;
 
-  CGnuPlotArrowObject   *createArrowObject  () const;
-  CGnuPlotBarObject     *createBarObject    () const;
-  CGnuPlotEndBar        *createEndBar       () const;
-  CGnuPlotBubbleObject  *createBubbleObject () const;
-  CGnuPlotEllipseObject *createEllipseObject() const;
-  CGnuPlotLabelObject   *createLabelObject  () const;
-  CGnuPlotPathObject    *createPathObject   () const;
-  CGnuPlotPieObject     *createPieObject    () const;
-  CGnuPlotPointObject   *createPointObject  () const;
-  CGnuPlotPolygonObject *createPolygonObject() const;
-  CGnuPlotRectObject    *createRectObject   () const;
+  CGnuPlotArrowObject      *createArrowObject     () const;
+  CGnuPlotBoxBarObject     *createBoxBarObject    () const;
+  CGnuPlotEndBar           *createEndBar          () const;
+  CGnuPlotBoxObject        *createBoxObject       () const;
+  CGnuPlotBubbleObject     *createBubbleObject    () const;
+  CGnuPlotEllipseObject    *createEllipseObject   () const;
+  CGnuPlotErrorBarObject   *createErrorBarObject  () const;
+  CGnuPlotFinanceBarObject *createFinanceBarObject() const;
+  CGnuPlotLabelObject      *createLabelObject     () const;
+  CGnuPlotPathObject       *createPathObject      () const;
+  CGnuPlotPieObject        *createPieObject       () const;
+  CGnuPlotPointObject      *createPointObject     () const;
+  CGnuPlotPolygonObject    *createPolygonObject   () const;
+  CGnuPlotRectObject       *createRectObject      () const;
 
   CGnuPlotFill   *createFill  () const;
   CGnuPlotStroke *createStroke() const;
+  CGnuPlotMark   *createMark  () const;
 
   bool mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const;
 
@@ -652,7 +737,8 @@ class CGnuPlotPlot {
 
   //------
 
-  virtual bool mouseTip(const CPoint2D &p, CGnuPlotTipData &tipData);
+  virtual bool mouseTip  (const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tipData);
+  virtual void mousePress(const CGnuPlotTypes::InsideData &insideData);
 
   //------
 
@@ -661,6 +747,16 @@ class CGnuPlotPlot {
   void setAdjacency(CAdjacency *a) { adjacencyData_.setAdjacency(a); }
 
   void setAdjacencyRenderer(CGnuPlotStyleAdjacencyRenderer *r) { adjacencyData_.setRenderer(r); }
+
+  //------
+
+  const CGnuPlotChordDiagramData &chordDiagramData() const { return chordDiagramData_; }
+
+  void setChordDiagram(ChordDiagram *c) { chordDiagramData_.setChordDiagram(c); }
+
+  void setChordDiagramRenderer(CGnuPlotStyleChordDiagramRenderer *r) {
+    chordDiagramData_.setRenderer(r);
+  }
 
   //------
 
@@ -681,65 +777,69 @@ class CGnuPlotPlot {
 
   static int nextId_;
 
-  CGnuPlotGroup*         group_;                            // parent group
-  PlotStyle              style_ { PlotStyle::POINTS};       // plot style
-  int                    id_;                               // unique id
-  int                    ind_       { 0 };                  // axis index
-  bool                   displayed_ { true };               // is displayed
-  Points2D               points2D_;                         // 2D points
-  Points3D               points3D_;                         // 3D points
-  ImageData              imageData_;                        // image data
-  bool                   binary_ { false };
-  bool                   matrix_ { false };
-  bool                   polar_  { false };
-  bool                   enhanced_ { true };
-  CGnuPlotImageStyle     imageStyle_;
-  Bars                   bars_;
-  CGnuPlotBoxWidth       boxWidth_;                         // box widths
-  CGnuPlotFilledCurve    filledCurve_;                      // filled curve data
-  CGnuPlotFillStyle      fillStyle_;                        // fill style
-  CGnuPlotLineStyle      lineStyle_;                        // line style
-  CGnuPlotPointStyle     pointStyle_;                       // point style
-  CGnuPlotStyleData      styleData_;                        // style data
-  CGnuPlotKeyTitle       keyTitle_;                         // title on key
-  int                    xind_ { 1 };                       // xaxis index
-  int                    yind_ { 1 };                       // yaxis index
-  int                    zind_ { 1 };                       // yaxis index
-  COptReal               xmin_, xmax_;                      // calculated points x range
-  COptReal               ymin_, ymax_;                      // calculated points y range
-  COptReal               zmin_, zmax_;                      // calculated points z range
-  COptReal               bymin_, bymax_;                    // calculated points bounded y range
-  COptReal               cbmin_, cbmax_;                    // color box range
-  CBBox2D                bbox_ { 0, 0, 1, 1 };              // bounding box
-  Smooth                 smooth_ { Smooth::NONE };          // smooth data
-  CGnuPlotBoxPlot        boxPlot_;
-  CGnuPlotContour        contour_;                          // contour data
-  bool                   contourSet_ { false };
-  ZPolygons              surfaceZPolygons_;                 // surface data
-  IJPoints               surfaceIJPoints_;                  // surface data
-  bool                   surfaceSet_ { false };
-  COptReal               surfaceZMin_, surfaceZMax_;
-  CGnuPlotHidden3DData   hidden3D_;
-  double                 whiskerBars_ { 0 };                // whisker bar data
-  bool                   cacheActive_ { true };
-  ArrowCache             arrowCache_;
-  BarCache               barCache_;
-  BubbleCache            bubbleCache_;
-  EllipseCache           ellipseCache_;
-  LabelCache             labelCache_;
-  PathCache              pathCache_;
-  PieCache               pieCache_;
-  PointCache             pointCache_;
-  PolygonCache           polygonCache_;
-  RectCache              rectCache_;
-  StyleValues            styleValues_;
-  bool                   parametric_ { false };
-  CGnuPlotTypes::Mapping mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
-  CGnuPlotSurfaceData    surfaceData_;
-  CGnuPlotContourData    contourData_;
-  CGnuPlotPrintFile      tableFile_;
-  CGnuPlotAdjacencyData  adjacencyData_;
-  int                    newHistogramId_ { -1 };
+  CGnuPlotGroup*           group_;                            // parent group
+  PlotStyle                style_ { PlotStyle::POINTS};       // plot style
+  int                      id_;                               // unique id
+  int                      ind_       { 0 };                  // axis index
+  bool                     displayed_ { true };               // is displayed
+  Points2D                 points2D_;                         // 2D points
+  Points3D                 points3D_;                         // 3D points
+  ImageData                imageData_;                        // image data
+  bool                     binary_ { false };
+  bool                     matrix_ { false };
+  bool                     polar_  { false };
+  bool                     enhanced_ { true };
+  CGnuPlotImageStyle       imageStyle_;
+  Bars                     bars_;
+  CGnuPlotBoxWidth         boxWidth_;                         // box widths
+  CGnuPlotFilledCurve      filledCurve_;                      // filled curve data
+  CGnuPlotFillStyle        fillStyle_;                        // fill style
+  CGnuPlotLineStyle        lineStyle_;                        // line style
+  CGnuPlotPointStyle       pointStyle_;                       // point style
+  CGnuPlotStyleData        styleData_;                        // style data
+  CGnuPlotKeyTitle         keyTitle_;                         // title on key
+  int                      xind_ { 1 };                       // xaxis index
+  int                      yind_ { 1 };                       // yaxis index
+  int                      zind_ { 1 };                       // yaxis index
+  COptReal                 xmin_, xmax_;                      // calculated points x range
+  COptReal                 ymin_, ymax_;                      // calculated points y range
+  COptReal                 zmin_, zmax_;                      // calculated points z range
+  COptReal                 bymin_, bymax_;                    // calculated points bounded y range
+  COptReal                 cbmin_, cbmax_;                    // color box range
+  CBBox2D                  bbox_ { 0, 0, 1, 1 };              // bounding box
+  Smooth                   smooth_ { Smooth::NONE };          // smooth data
+  CGnuPlotBoxPlot          boxPlot_;
+  CGnuPlotContour          contour_;                          // contour data
+  bool                     contourSet_ { false };
+  ZPolygons                surfaceZPolygons_;                 // surface data
+  IJPoints                 surfaceIJPoints_;                  // surface data
+  bool                     surfaceSet_ { false };
+  COptReal                 surfaceZMin_, surfaceZMax_;
+  CGnuPlotHidden3DData     hidden3D_;
+  COptReal                 whiskerBars_;                      // whisker bar data
+  bool                     cacheActive_ { true };
+  ArrowCache               arrowCache_;
+  BoxBarCache              boxBarCache_;
+  BoxCache                 boxCache_;
+  BubbleCache              bubbleCache_;
+  EllipseCache             ellipseCache_;
+  ErrorBarCache            errorBarCache_;
+  FinanceBarCache          financeBarCache_;
+  LabelCache               labelCache_;
+  PathCache                pathCache_;
+  PieCache                 pieCache_;
+  PointCache               pointCache_;
+  PolygonCache             polygonCache_;
+  RectCache                rectCache_;
+  StyleValues              styleValues_;
+  bool                     parametric_ { false };
+  CGnuPlotTypes::Mapping   mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
+  CGnuPlotSurfaceData      surfaceData_;
+  CGnuPlotContourData      contourData_;
+  CGnuPlotPrintFile        tableFile_;
+  CGnuPlotAdjacencyData    adjacencyData_;
+  CGnuPlotChordDiagramData chordDiagramData_;
+  int                      newHistogramId_ { -1 };
 
  private:
   CGnuPlotStyleAdjacencyRenderer *arenderer_;
@@ -754,11 +854,18 @@ make()
   return plot_->createArrowObject();
 }
 
-inline CGnuPlotBarObject *
-CGnuPlotCacheFactory<CGnuPlotBarObject>::
+inline CGnuPlotBoxBarObject *
+CGnuPlotCacheFactory<CGnuPlotBoxBarObject>::
 make()
 {
-  return plot_->createBarObject();
+  return plot_->createBoxBarObject();
+}
+
+inline CGnuPlotBoxObject *
+CGnuPlotCacheFactory<CGnuPlotBoxObject>::
+make()
+{
+  return plot_->createBoxObject();
 }
 
 inline CGnuPlotBubbleObject *
@@ -773,6 +880,20 @@ CGnuPlotCacheFactory<CGnuPlotEllipseObject>::
 make()
 {
   return plot_->createEllipseObject();
+}
+
+inline CGnuPlotErrorBarObject *
+CGnuPlotCacheFactory<CGnuPlotErrorBarObject>::
+make()
+{
+  return plot_->createErrorBarObject();
+}
+
+inline CGnuPlotFinanceBarObject *
+CGnuPlotCacheFactory<CGnuPlotFinanceBarObject>::
+make()
+{
+  return plot_->createFinanceBarObject();
 }
 
 inline CGnuPlotLabelObject *

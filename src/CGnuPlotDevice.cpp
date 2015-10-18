@@ -4,9 +4,12 @@
 #include <CGnuPlotPlot.h>
 
 #include <CGnuPlotArrowObject.h>
-#include <CGnuPlotBarObject.h>
+#include <CGnuPlotBoxBarObject.h>
+#include <CGnuPlotBoxObject.h>
 #include <CGnuPlotBubbleObject.h>
 #include <CGnuPlotEllipseObject.h>
+#include <CGnuPlotErrorBarObject.h>
+#include <CGnuPlotFinanceBarObject.h>
 #include <CGnuPlotLabelObject.h>
 #include <CGnuPlotPathObject.h>
 #include <CGnuPlotPieObject.h>
@@ -160,11 +163,11 @@ createArrowObject(CGnuPlotPlot *plot)
   return new CGnuPlotArrowObject(plot);
 }
 
-CGnuPlotBarObject *
+CGnuPlotBoxBarObject *
 CGnuPlotDevice::
-createBarObject(CGnuPlotPlot *plot)
+createBoxBarObject(CGnuPlotPlot *plot)
 {
-  return new CGnuPlotBarObject(plot);
+  return new CGnuPlotBoxBarObject(plot);
 }
 
 CGnuPlotEndBar *
@@ -172,6 +175,13 @@ CGnuPlotDevice::
 createEndBar(CGnuPlotPlot *plot)
 {
   return new CGnuPlotEndBar(plot);
+}
+
+CGnuPlotBoxObject *
+CGnuPlotDevice::
+createBoxObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotBoxObject(plot);
 }
 
 CGnuPlotBubbleObject *
@@ -186,6 +196,20 @@ CGnuPlotDevice::
 createEllipseObject(CGnuPlotPlot *plot)
 {
   return new CGnuPlotEllipseObject(plot);
+}
+
+CGnuPlotErrorBarObject *
+CGnuPlotDevice::
+createErrorBarObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotErrorBarObject(plot);
+}
+
+CGnuPlotFinanceBarObject *
+CGnuPlotDevice::
+createFinanceBarObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotFinanceBarObject(plot);
 }
 
 CGnuPlotLabelObject *
@@ -242,6 +266,13 @@ CGnuPlotDevice::
 createStroke(CGnuPlotPlot *plot)
 {
   return new CGnuPlotStroke(plot);
+}
+
+CGnuPlotMark *
+CGnuPlotDevice::
+createMark(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotMark(plot);
 }
 
 //---

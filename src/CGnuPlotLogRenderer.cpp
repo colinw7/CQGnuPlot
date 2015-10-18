@@ -198,20 +198,23 @@ drawArc(const CPoint2D &center, double r1, double r2, double angle1, double angl
 
 void
 CGnuPlotLogRenderer::
-drawChord(const CPoint2D &center, double r, double angle1, double angle2, const CRGBA &c)
+drawChord(const CPoint2D &center, double r, double angle1, double angle2, const CRGBA &fc,
+          const CRGBA &lc)
 {
   log("drawChord " + logValue("center", center) + " " + logValue("r", r) + " " +
-      logValue("angle1", angle1) + " " + logValue("angle2", angle2) + " " + logValue("color", c));
+      logValue("angle1", angle1) + " " + logValue("angle2", angle2) + " " +
+      logValue("fillColor", fc) + " " + logValue("lineColor", lc));
 }
 
 void
 CGnuPlotLogRenderer::
 drawComplexChord(const CPoint2D &center, double r, double a11, double a12, double a21, double a22,
-                 const CRGBA &c)
+                 const CRGBA &fc, const CRGBA &lc)
 {
   log("drawComplexChord " + logValue("center", center) + " " + logValue("r", r) + " " +
       logValue("a11", a11) + " " + logValue("a12", a12) + " " +
-      logValue("a21", a21) + " " + logValue("a22", a22) + " " + logValue("color", c));
+      logValue("a21", a21) + " " + logValue("a22", a22) + " " +
+      logValue("fillColor", fc) + " " + logValue("lineColor", lc));
 }
 
 void

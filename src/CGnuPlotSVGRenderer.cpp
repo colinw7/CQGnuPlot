@@ -607,14 +607,15 @@ drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2, const CRG
 
 void
 CGnuPlotSVGRenderer::
-drawChord(const CPoint2D &, double, double, double, const CRGBA &)
+drawChord(const CPoint2D &, double, double, double, const CRGBA &, const CRGBA &)
 {
   // TODO
 }
 
 void
 CGnuPlotSVGRenderer::
-drawComplexChord(const CPoint2D &, double, double, double, double, double, const CRGBA &)
+drawComplexChord(const CPoint2D &, double, double, double, double, double,
+                 const CRGBA &, const CRGBA &)
 {
   // TODO
 }

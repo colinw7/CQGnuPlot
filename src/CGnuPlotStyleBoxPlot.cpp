@@ -2,8 +2,7 @@
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotBBoxRenderer.h>
-#include <CGnuPlotTypes.h>
-#include <CBoxWhisker.h>
+#include <CGnuPlotBoxObject.h>
 
 CGnuPlotStyleBoxPlot::
 CGnuPlotStyleBoxPlot() :
@@ -17,25 +16,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   CGnuPlotGroup *group = plot->group();
 
-  const CGnuPlotAxis *xaxis = group->getPlotAxis(CGnuPlotTypes::AxisType::X, 1, true);
-
-  CGnuPlotFill   fill  (plot);
-  CGnuPlotStroke stroke(plot);
-
-  CRGBA fc = fill  .color();
-  CRGBA lc = stroke.color();
-
-  double bw = plot->boxWidth().getSpacing(0.1);
-
-  double ww = bw;
-
-  if (plot->bars().size() < 0.0)
-    ww = bw;
-  else {
-    if (! renderer->isPseudo())
-      ww = renderer->pixelWidthToWindowWidth(12*plot->bars().size());
-  }
-
+  // get x value (first value of first set of values)
+  // (if 4 or more values then discreete values)
   double x        = 0;
   bool   discrete = false;
 
@@ -53,15 +35,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
   }
 
-  const CGnuPlotBoxPlot &boxPlot = plot->getBoxPlot();
-
-  CGnuPlotTypes::SymbolType outlierSymbol =
-    CGnuPlotTypes::SymbolType(boxPlot.pointType().getValue(7));
-
-  double ps = plot->pointSize();
-
   //----
 
+  // get sorted y values (discrete or single set)
   typedef std::vector<double>       YVals;
   typedef std::map<int,YVals>       IYVals;
   typedef std::map<std::string,int> SOrder;
@@ -79,6 +55,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         y = y1;
 
       if (discrete && point.getNumValues() >= 4) {
+        // add integer or string discrete values
         int         i;
         std::string s;
 
@@ -102,6 +79,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
+  // get ymin
   double ypos = 0;
 
   if (! renderer->isPseudo()) {
@@ -110,49 +88,33 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     ypos = bbox.getYMin();
   }
 
-  //---
+  //----
 
-  // always use index for x (ignore x value) ??
-  double ix = (syv.empty() && iyv.size() == 1 ? x : 1);
+  CGnuPlotFill   fill  (plot);
+  CGnuPlotStroke stroke(plot);
 
-  for (const auto &yv : iyv) {
-    CBoxWhisker whisker(yv.second);
+  CRGBA fc = fill  .color();
+  CRGBA lc = stroke.color();
 
-    double x11 = ix - ww/2;
-    double x21 = ix + ww/2;
+  double bw = plot->boxWidth().getSpacing(0.1);
 
-    renderer->drawClipLine(CPoint2D(ix, whisker.min()), CPoint2D(ix, whisker.max()), 1, lc);
+  double ww = bw;
 
-    renderer->drawClipLine(CPoint2D(x11, whisker.min()), CPoint2D(x21, whisker.min()), 1, lc);
-    renderer->drawClipLine(CPoint2D(x11, whisker.max()), CPoint2D(x21, whisker.max()), 1, lc);
-
-    double x12 = ix - bw/2;
-    double x22 = ix + bw/2;
-
-    CBBox2D bbox(x12, whisker.lower(), x22, whisker.upper());
-
-    renderer->fillRect(bbox, fc);
-    renderer->drawRect(bbox, lc, 1);
-
-    renderer->drawClipLine(CPoint2D(x12, whisker.median()), CPoint2D(x22, whisker.median()), 1, lc);
-
-    if (boxPlot.outliers()) {
-      for (const auto &o : whisker.outliers())
-        renderer->drawSymbol(CPoint2D(ix, whisker.value(o)), outlierSymbol, ps, lc, 1, true);
-    }
-
-    if (renderer->isPseudo()) {
-      renderer->drawSymbol(CPoint2D(ix - 1, 0), outlierSymbol, ps, lc, 1, true);
-      renderer->drawSymbol(CPoint2D(ix + 1, 0), outlierSymbol, ps, lc, 1, true);
-    }
-
-    std::string s = xaxis->getValueStr(ix, ix);
-
-    renderer->drawHAlignedText(CPoint2D(ix, ypos), CHALIGN_TYPE_CENTER, 0,
-                               CVALIGN_TYPE_TOP, -8, s, CRGBA(0,0,0));
-
-    ++ix;
+  if (plot->bars().size() < 0.0)
+    ww = bw;
+  else {
+    if (! renderer->isPseudo())
+      ww = renderer->pixelWidthToWindowWidth(12*plot->bars().size());
   }
+
+  const CGnuPlotBoxPlot &boxPlot = plot->getBoxPlot();
+
+  CGnuPlotTypes::SymbolType outlierSymbol =
+    CGnuPlotTypes::SymbolType(boxPlot.pointType().getValue(7));
+
+  double ps = plot->pointSize();
+
+  const CGnuPlotAxis *xaxis = group->getPlotAxis(CGnuPlotTypes::AxisType::X, 1, true);
 
   //---
 
@@ -167,7 +129,62 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       inds.push_back(yv.first);
   }
 
+  //---
+
+  CGnuPlotBoxObject *tempBoxObj = 0;
+
+  if (! renderer->isPseudo())
+    plot->updateBoxCacheSize(iyv.size() + inds.size());
+  else
+    tempBoxObj = new CGnuPlotBoxObject(plot);
+
+  //---
+
+  // always use index for x (ignore x value) ??
+  int    ic = 0;
+  double ix = (syv.empty() && iyv.size() == 1 ? x : 1);
+
+  for (const auto &yv : iyv) {
+    double ix1 = ix + ic;
+
+    std::string s = xaxis->getValueStr(ix1, ix1);
+
+    CGnuPlotBoxObject *boxObj;
+
+    if (! renderer->isPseudo())
+      boxObj = plot->boxObjects()[ic];
+    else
+      boxObj = tempBoxObj;
+
+    boxObj->setValues(yv.second);
+    boxObj->setX     (ix1);
+    boxObj->setY     (ypos);
+
+    if (renderer->isPseudo() || ! boxObj->testAndSetUsed()) {
+      boxObj->setLineWidth(ww);
+      boxObj->setBoxWidth (bw);
+      boxObj->setValueStr (s);
+
+      boxObj->outlierMark()->setType(outlierSymbol);
+      boxObj->outlierMark()->setSize(ps);
+
+      boxObj->stroke()->setWidth(1);
+      boxObj->stroke()->setColor(lc);
+
+      boxObj->fill()->setColor(fc);
+    }
+
+    if (renderer->isPseudo())
+      boxObj->draw(renderer);
+
+    ++ic;
+  }
+
+  //---
+
   for (const auto &i : inds) {
+    double ix1 = ix + ic;
+
     auto yv = syv[i];
 
     std::string s;
@@ -179,41 +196,43 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
     }
 
-    CBoxWhisker whisker(yv);
+    CGnuPlotBoxObject *boxObj;
 
-    double x11 = ix - ww/2;
-    double x21 = ix + ww/2;
+    if (! renderer->isPseudo())
+      boxObj = plot->boxObjects()[ic];
+    else
+      boxObj = tempBoxObj;
 
-    renderer->drawClipLine(CPoint2D(ix, whisker.min()), CPoint2D(ix, whisker.max()), 1, lc);
+    boxObj->setValues(yv);
+    boxObj->setX     (ix1);
+    boxObj->setY     (ypos);
 
-    renderer->drawClipLine(CPoint2D(x11, whisker.min()), CPoint2D(x21, whisker.min()), 1, lc);
-    renderer->drawClipLine(CPoint2D(x11, whisker.max()), CPoint2D(x21, whisker.max()), 1, lc);
+    if (renderer->isPseudo() || ! boxObj->testAndSetUsed()) {
+      boxObj->setLineWidth(ww);
+      boxObj->setBoxWidth (bw);
+      boxObj->setValueStr (s);
 
-    double x12 = ix - bw/2;
-    double x22 = ix + bw/2;
+      boxObj->outlierMark()->setType(outlierSymbol);
+      boxObj->outlierMark()->setSize(ps);
 
-    CBBox2D bbox(x12, whisker.lower(), x22, whisker.upper());
+      boxObj->stroke()->setWidth(1);
+      boxObj->stroke()->setColor(lc);
 
-    renderer->fillRect(bbox, fc);
-    renderer->drawRect(bbox, lc, 1);
-
-    renderer->drawClipLine(CPoint2D(x12, whisker.median()), CPoint2D(x22, whisker.median()), 1, lc);
-
-    if (boxPlot.outliers()) {
-      for (const auto &o : whisker.outliers())
-        renderer->drawSymbol(CPoint2D(ix, whisker.value(o)), outlierSymbol, ps, lc, 1, true);
+      boxObj->fill()->setColor(fc);
     }
 
-    if (renderer->isPseudo()) {
-      renderer->drawSymbol(CPoint2D(ix - 1, 0), outlierSymbol, ps, lc, 1, true);
-      renderer->drawSymbol(CPoint2D(ix + 1, 0), outlierSymbol, ps, lc, 1, true);
-    }
+    if (renderer->isPseudo())
+      boxObj->draw(renderer);
 
-    renderer->drawHAlignedText(CPoint2D(ix, ypos), CHALIGN_TYPE_CENTER, 0,
-                               CVALIGN_TYPE_TOP, 8, s, CRGBA(0,0,0));
-
-    ++ix;
+    ++ic;
   }
+
+  if (! renderer->isPseudo()) {
+    for (const auto &boxObj : plot->boxObjects())
+      boxObj->draw(renderer);
+  }
+
+  delete tempBoxObj;
 }
 
 CBBox2D

@@ -5,6 +5,7 @@
 #include <CGnuPlotTextRenderer.h>
 #include <CGnuPlotFill.h>
 #include <CGnuPlotStroke.h>
+#include <CGnuPlotMark.h>
 #include <CGnuPlotTextRenderer.h>
 #include <CLineDash.h>
 #include <CBBox2D.h>
@@ -126,10 +127,10 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
                        const CRGBA &c) = 0;
 
   virtual void drawChord(const CPoint2D &p, double r, double a1, double a2,
-                         const CRGBA &c) = 0;
+                         const CRGBA &fc, const CRGBA &lc) = 0;
 
   virtual void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
-                                double a21, double a22, const CRGBA &c) = 0;
+                                double a21, double a22, const CRGBA &fc, const CRGBA &lc) = 0;
 
   //---
 
@@ -150,12 +151,16 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void strokePath(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke);
   void strokePath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke);
 
-  void drawPath  (const std::vector<CPoint3D> &points, double width,
-                  const CRGBA &c, const CLineDash &dash=CLineDash());
+  void drawPath(const std::vector<CPoint3D> &points, double width,
+                const CRGBA &c, const CLineDash &dash=CLineDash());
+  void drawLine(const CPoint3D &p1, const CPoint3D &p2, double width,
+                const CRGBA &c, const CLineDash &dash=CLineDash());
+
+  void drawMark(const CPoint3D &p, const CGnuPlotMark &mark);
+  void drawMark(const CPoint2D &p, const CGnuPlotMark &mark);
+
   void drawSymbol(const CPoint3D &p, SymbolType type, double size,
                   const CRGBA &c, double lw, bool pixelSize);
-  void drawLine  (const CPoint3D &p1, const CPoint3D &p2, double width,
-                  const CRGBA &c, const CLineDash &dash=CLineDash());
 
   //---
 

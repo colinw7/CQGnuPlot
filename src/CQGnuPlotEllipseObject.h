@@ -14,7 +14,8 @@ class CQGnuPlotEllipseObject : public QObject, public CGnuPlotEllipseObject {
   Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
   Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
-  Q_PROPERTY(QString text READ getText WRITE setText)
+  Q_PROPERTY(double  angle READ angle   WRITE setAngle)
+  Q_PROPERTY(QString text  READ getText WRITE setText )
 
  public:
   CQGnuPlotEllipseObject(CQGnuPlotPlot *plot);

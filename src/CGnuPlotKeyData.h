@@ -4,6 +4,7 @@
 #include <CGnuPlotColorSpec.h>
 #include <CGnuPlotPosition.h>
 #include <CGnuPlotFillStyle.h>
+#include <CGnuPlotDash.h>
 #include <CAlignType.h>
 #include <COptVal.h>
 #include <CFont.h>
@@ -99,6 +100,9 @@ class CGnuPlotKeyData {
   double boxLineWidth() const { return boxLineWidth_; }
   void setBoxLineWidth(double w) { boxLineWidth_ = w; }
 
+  const CGnuPlotDash &boxLineDash() const { return boxLineDash_; }
+  void setBoxLineDash(const CGnuPlotDash &d) { boxLineDash_ = d; }
+
   const CGnuPlotFillStyle &boxFillStyle() const { return boxFillStyle_; }
   void setBoxFillStyle(const CGnuPlotFillStyle &fs) { boxFillStyle_ = fs; }
 
@@ -178,6 +182,7 @@ class CGnuPlotKeyData {
     boxLineType_     = COptInt();
     boxLineStyle_    = COptInt();
     boxLineWidth_    = 1;
+    boxLineDash_     = CGnuPlotDash();
     columnhead_      = false;
     columnNum_       = COptInt();
     columns_         = Columns();
@@ -217,6 +222,7 @@ class CGnuPlotKeyData {
   COptInt           boxLineType_;
   COptInt           boxLineStyle_;
   double            boxLineWidth_ { 1 };
+  CGnuPlotDash      boxLineDash_;
   CGnuPlotFillStyle boxFillStyle_;
   bool              columnhead_ { false };
   COptInt           columnNum_;

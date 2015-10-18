@@ -35,7 +35,7 @@ class CQGnuPlotAnnotation : public QObject {
   DrawLayerType getDrawLayer() const;
   void setDrawLayer(const DrawLayerType &layer);
 
-  bool mouseTip(const CPoint2D &pixel, const CPoint2D &window, CGnuPlotTipData &tip);
+  bool mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip);
 
  private:
   CQGnuPlotGroup          *qgroup_;

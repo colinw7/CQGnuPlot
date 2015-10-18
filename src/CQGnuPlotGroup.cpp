@@ -126,7 +126,9 @@ mousePress(const QPoint &qp)
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-    qplot->mousePress(pixel, window, objects);
+    CGnuPlotTypes::InsideData insideData(window, pixel);
+
+    qplot->mousePress(insideData, objects);
   }
 
   renderer->setRange(getMappedDisplayRange(1, 1));
@@ -201,7 +203,9 @@ mouseMove(const QPoint &qp)
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-    qplot->mouseMove(pixel, window);
+    CGnuPlotTypes::InsideData insideData(window, pixel);
+
+    qplot->mouseMove(insideData);
   }
 }
 
@@ -237,7 +241,9 @@ mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-    if (qplot->mouseTip(pixel, window, tip))
+    CGnuPlotTypes::InsideData insideData(window, pixel);
+
+    if (qplot->mouseTip(insideData, tip))
       return true;
   }
 
@@ -259,7 +265,9 @@ mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
 
     CQGnuPlotAnnotation *qann = dynamic_cast<CQGnuPlotAnnotation *>(annotation.get());
 
-    if (qann->mouseTip(pixel, window, tip))
+    CGnuPlotTypes::InsideData insideData(window, pixel);
+
+    if (qann->mouseTip(insideData, tip))
       return true;
   }
 

@@ -125,12 +125,19 @@ paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &
     CQPropertyItem *item1 = dynamic_cast<CQPropertyItem *>(item);
     assert(item1);
 
-    if (index.column() == 1) {
-      if (! item1->paint(this, painter, option, index))
-        QItemDelegate::paint(painter, option, index);
+    QStyleOptionViewItem option1 = option;
+
+    if (! item1->isWritable()) {
+      option1.font.setItalic(true);
     }
-    else
-      QItemDelegate::paint(painter, option, index);
+
+    if (index.column() == 1) {
+      if (! item1->paint(this, painter, option1, index))
+        QItemDelegate::paint(painter, option1, index);
+    }
+    else {
+      QItemDelegate::paint(painter, option1, index);
+    }
   }
   else
     QItemDelegate::paint(painter, option, index);

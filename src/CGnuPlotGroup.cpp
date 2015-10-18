@@ -1383,7 +1383,7 @@ drawRowStackedHistograms(CGnuPlotRenderer *renderer, double xp, const Plots &plo
       if (! plot->isDisplayed())
         continue;
 
-      plot->updateBarCacheSize(numPoints);
+      plot->updateBoxBarCacheSize(numPoints);
     }
   }
 
@@ -1448,7 +1448,7 @@ drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
       if (! plot->isDisplayed())
         continue;
 
-      plot->updateBarCacheSize(plot->numPoints2D());
+      plot->updateBoxBarCacheSize(plot->numPoints2D());
     }
   }
 

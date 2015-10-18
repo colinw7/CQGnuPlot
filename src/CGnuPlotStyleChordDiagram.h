@@ -11,13 +11,18 @@ class CGnuPlotStyleChordDiagram : public CGnuPlotStyleBase {
 
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
+  void drawKey(CGnuPlotPlot *, CGnuPlotRenderer *) override { }
+
+  void drawAxes(CGnuPlotPlot *, CGnuPlotRenderer *) override { }
+
   CBBox2D fit(CGnuPlotPlot *plot) override;
 
   bool isSingleType() const override { return true; }
 
-  void drawAxes(CGnuPlotPlot *, CGnuPlotRenderer *) override { }
+  bool mouseTip(CGnuPlotPlot *plot, const CGnuPlotTypes::InsideData &insideData,
+                CGnuPlotTipData &tipData) override;
 
-  void drawKey(CGnuPlotPlot *, CGnuPlotRenderer *) override { }
+  void mousePress(CGnuPlotPlot *plot, const CGnuPlotTypes::InsideData &insideData) override;
 };
 
 #endif
