@@ -18,6 +18,7 @@ class CGnuPlotStyleBase {
 
   CGnuPlotTypes::PlotStyle style() const { return style_; }
 
+  // if single type is true, must define dtawKey, draw Axis and fit
   virtual bool isSingleType() const { return false; }
 
   virtual bool has3D() const { return false; }
@@ -45,7 +46,7 @@ class CGnuPlotStyleBase {
     std::cerr << "drawAxes not implemented" << std::endl;
   }
 
-  virtual CBBox2D fit(CGnuPlotPlot *plot) = 0;
+  virtual CBBox2D fit(CGnuPlotPlot *) { return CBBox2D(); }
 
   virtual bool mouseTip(CGnuPlotPlot *, const CGnuPlotTypes::InsideData &,
                         CGnuPlotTipData &) { return false; }

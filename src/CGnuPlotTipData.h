@@ -3,8 +3,8 @@
 
 class CGnuPlotTipData {
  public:
-  explicit CGnuPlotTipData(const std::string &xstr="", const CBBox2D &rect=CBBox2D()) :
-   xstr_(xstr), rect_(rect) {
+  explicit CGnuPlotTipData(const std::string &xstr="", const CBBox2D &bbox=CBBox2D()) :
+   xstr_(xstr), bbox_(bbox) {
   }
 
   const std::string &xstr() const { return xstr_; }
@@ -22,8 +22,8 @@ class CGnuPlotTipData {
   const CRGBA &borderColor() const { return borderColor_; }
   void setBorderColor(const CRGBA &v) { borderColor_ = v; }
 
-  const CBBox2D &rect() const { return rect_; }
-  void setRect(const CBBox2D &r) { rect_ = r; }
+  const CBBox2D &bbox() const { return bbox_; }
+  void setBBox(const CBBox2D &r) { bbox_ = r; }
 
  private:
   std::string xstr_;
@@ -31,7 +31,7 @@ class CGnuPlotTipData {
   CRGBA       xcolor_      { CRGBA(0,0,0) };
   CRGBA       ycolor_      { CRGBA(0,0,0) };
   CRGBA       borderColor_ { CRGBA(0,0,0) };
-  CBBox2D     rect_;
+  CBBox2D     bbox_;
 };
 
 #endif

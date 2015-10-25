@@ -73,7 +73,7 @@ void
 CGnuPlotStylePieChart::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  const CBBox2D &bbox = plot->getBBox();
+  const CBBox2D &bbox = plot->bbox();
 
   CPoint2D pc = bbox.getCenter();
   double   r  = bbox.getWidth()/2;
@@ -193,8 +193,8 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   std::string header;
 
-  if (key->showTitle()) {
-    header = key->getTitle();
+  if (key->hasTitle()) {
+    header = key->title();
 
     if (header != "")
       textHeight += font_size*ph;

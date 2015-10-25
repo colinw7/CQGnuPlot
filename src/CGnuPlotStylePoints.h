@@ -18,8 +18,6 @@ class CGnuPlotStylePoints : public CGnuPlotStyleBase {
 
   void drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
                    const CPoint2D &p1, const CPoint2D &p2) override;
-
-  CBBox2D fit(CGnuPlotPlot *plot) override;
 };
 
 #endif

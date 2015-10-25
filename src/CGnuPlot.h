@@ -100,6 +100,38 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 
 //------
 
+class CGnuPlotMatrixData {
+ public:
+  CGnuPlotMatrixData() { }
+
+  bool isMatrix() const { return matrix_; }
+  void setMatrix(bool m) { matrix_ = m; }
+
+  bool isRowHeaders() const { return rowheaders_; }
+  void setRowHeaders(bool b) { rowheaders_ = b; }
+
+  bool isColumnHeaders() const { return columnheaders_; }
+  void setColumnHeaders(bool b) { columnheaders_ = b; }
+
+  bool isPixels() const { return pixels_; }
+  void setPixels(bool b) { pixels_ = b; }
+
+  void reset() {
+    matrix_        = false;
+    rowheaders_    = false;
+    columnheaders_ = false;
+    pixels_        = false;
+  }
+
+ private:
+  bool matrix_        { false };
+  bool rowheaders_    { false };
+  bool columnheaders_ { false };
+  bool pixels_        { false };
+};
+
+//------
+
 class CGnuPlot {
  public:
   typedef CGnuPlotTypes::CommandName             CommandName;
@@ -120,9 +152,11 @@ class CGnuPlot {
   typedef std::map<int,CGnuPlotLineStyleP>       LineStyles;
   typedef std::map<int,CGnuPlotLineTypeP>        LineTypes;
   typedef std::vector<CExprValuePtr>             Values;
+  typedef std::vector<Values>                    Matrix;
   typedef std::map<std::string,CExprValuePtr>    Params;
   typedef CGnuPlotTypes::AxisTypeId              AxisTypeId;
   typedef std::set<AxisTypeId>                   AxisTypeIdSet;
+  typedef std::vector<std::string>               StringArray;
 
   class Bars {
    public:
@@ -615,19 +649,24 @@ class CGnuPlot {
   const CGnuPlotBinaryFormat &binaryFormat() const { return binaryFormat_; }
   void setBinaryFormat(const CGnuPlotBinaryFormat &fmt) { binaryFormat_ = fmt; }
 
-  bool isMatrix() const { return matrix_; }
-  void setMatrix(bool m) { matrix_ = m; }
+  const CGnuPlotMatrixData &matrixData() const { return matrixData_; }
+  CGnuPlotMatrixData &matrixData() { return matrixData_; }
+  void setMatrixData(const CGnuPlotMatrixData &m) { matrixData_ = m; }
 
   const CGnuPlotImageStyle &imageStyle() const { return imageStyle_; }
   void setImageStyle(const CGnuPlotImageStyle &imageStyle) { imageStyle_ = imageStyle; }
+
+  //------
+
+  void setTimeFmt(const std::string &f) { timeFmt_ = f; }
+  const std::string &timeFmt() { return timeFmt_; }
+
+  //------
 
   bool isImageStyle(PlotStyle style) const {
     return (style == PlotStyle::IMAGE || style == PlotStyle::RGBIMAGE ||
             style == PlotStyle::RGBALPHA);
   }
-
-  void setTimeFmt(const std::string &f) { timeFmt_ = f; }
-  const std::string &timeFmt() { return timeFmt_; }
 
   //------
 
@@ -654,6 +693,8 @@ class CGnuPlot {
   void prompt(const std::string &msg);
 
   CGnuPlotWindow *createWindow();
+
+  CGnuPlotMultiplot *createMultiplot();
 
   CGnuPlotGroup *createGroup(CGnuPlotWindow *window);
 
@@ -803,6 +844,9 @@ class CGnuPlot {
   const Samples    &samples   () const { return samples_; }
   const ISOSamples &isoSamples() const { return isoSamples_; }
 
+  const CGnuPlotMultiplotP &multiplot() const { return multiplot_; }
+  void setMultiplot(const CGnuPlotMultiplotP &m) { multiplot_ = m; }
+
  private:
   void addPlotStyles();
 
@@ -846,7 +890,7 @@ class CGnuPlot {
   void setForCmd  (const ForCmd &forCmd, const std::string &args);
   void unsetForCmd(const ForCmd &forCmd, const std::string &args);
 
-  void splitPlotCmd(const std::string &cmd, std::vector<std::string> &cmds, bool is3D);
+  void splitPlotCmd(const std::string &cmd, StringArray &cmds, bool is3D);
 
   void parseFilledCurve(CParseLine &line, CGnuPlotFilledCurve &filledCurve);
 
@@ -1041,13 +1085,11 @@ class CGnuPlot {
 
   bool parsePosition(CParseLine &line, CGnuPlotPosition &pos);
   bool parseCoordValue(CParseLine &line, CGnuPlotCoordValue &v);
+  bool parseOffset(CParseLine &line, CPoint3D &point);
   bool parseOffset(CParseLine &line, CPoint2D &point);
   bool parsePoint(CParseLine &line, CPoint2D &point);
   bool parseSize(CParseLine &line, CGnuPlotSize &size);
   bool parseSize(CParseLine &line, CSize2D &size);
-
-  const CGnuPlotMultiplot &multiplot() const { return multiplot_; }
-  void setMultiplot(const CGnuPlotMultiplot &m) { multiplot_ = m; }
 
   //---
 
@@ -1176,7 +1218,7 @@ class CGnuPlot {
   LineDashes             lineDashes_;
   bool                   binary_ { false };
   CGnuPlotBinaryFormat   binaryFormat_;
-  bool                   matrix_ { false };
+  CGnuPlotMatrixData     matrixData_;
   CGnuPlotClip           clip_;
   bool                   parametric_ { false };
   bool                   polar_ { false };
@@ -1205,7 +1247,7 @@ class CGnuPlot {
   std::string            encoding_;
   std::string            locale_;
   CGnuPlotMouseData      mouseData_;
-  CGnuPlotMultiplot      multiplot_;
+  CGnuPlotMultiplotP     multiplot_;
   CGnuPlotTimeStampData  timeStamp_;
   COptBBox2D             clearRect_;
   CGnuPlotHidden3DData   hidden3D_;

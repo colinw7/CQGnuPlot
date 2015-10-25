@@ -69,6 +69,8 @@ class CGnuPlotArrowObject : public CGnuPlotPlotObject {
 
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
+  const CBBox2D &bbox() const override { return data_.bbox(); }
+
   CGnuPlotTipData tip() const override;
 
   void draw(CGnuPlotRenderer *renderer) const override;

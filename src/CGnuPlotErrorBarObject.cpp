@@ -27,7 +27,7 @@ tip() const
   tip.setXStr(CStrUtil::strprintf("%g", x_));
   tip.setYStr(CStrUtil::strprintf("%g", y_));
 
-  tip.setRect(bbox_);
+  tip.setBBox(bbox_);
 
   tip.setBorderColor(stroke_->color());
   tip.setXColor     (stroke_->color());

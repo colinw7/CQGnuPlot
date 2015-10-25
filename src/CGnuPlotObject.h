@@ -24,9 +24,7 @@ class CGnuPlotRenderer;
 
 class CGnuPlotObject {
  public:
-  CGnuPlotObject(CGnuPlot *app) :
-   app_(app) {
-  }
+  CGnuPlotObject(CGnuPlot *app);
 
   virtual ~CGnuPlotObject() { }
 
@@ -44,9 +42,12 @@ class CGnuPlotObject {
   const std::string &tipText() const { return tipText_; }
   void setTipText(const std::string &v) { tipText_ = v; }
 
-  virtual bool inside(const CGnuPlotTypes::InsideData &p) const = 0;
-
   virtual void draw(CGnuPlotRenderer *renderer) const = 0;
+
+  virtual const CBBox2D &bbox() const = 0;
+  virtual void setBBox(const CBBox2D &bbox);
+
+  virtual bool inside(const CGnuPlotTypes::InsideData &p) const;
 
   virtual CGnuPlotTipData tip() const = 0;
 

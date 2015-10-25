@@ -82,6 +82,8 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
+  const CBBox2D &bbox() const;
+
   CGnuPlotTipData tip() const override;
 
   void draw(CGnuPlotRenderer *renderer) const override;

@@ -78,6 +78,8 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   CQGnuPlotWindow *qwindow() const;
 
+  bool isMatrix() const { return CGnuPlotPlot::matrixData().isMatrix(); }
+
   int lineStyleId() const { return CGnuPlotPlot::lineStyleId().getValue(-1); }
 
   QColor lineColor() const;
@@ -106,6 +108,8 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   void mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects);
   void mouseMove (const CGnuPlotTypes::InsideData &insideData);
   bool mouseTip  (const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip);
+
+  void moveObjects(int key);
 
  public:
   CQGnuPlotGroup*             group_;

@@ -1003,7 +1003,7 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
       valign = (! isLabelInside() ? CVALIGN_TYPE_BOTTOM : CVALIGN_TYPE_TOP);
     }
 
-    drawHAlignedText(p1, CHALIGN_TYPE_CENTER, valign, str, c, labelRotate());
+    drawHAlignedText(p1, CHALIGN_TYPE_CENTER, valign, str, c, labelRotate().getValue(0));
   }
   else if (direction_ == AxisDirection::Y) {
     CPoint3D p1;
@@ -1036,7 +1036,7 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
       else
         valign = (! isLabelInside() ? CVALIGN_TYPE_BOTTOM : CVALIGN_TYPE_TOP);
 
-      drawHAlignedText(p1, CHALIGN_TYPE_CENTER, valign, str, c, labelRotate());
+      drawHAlignedText(p1, CHALIGN_TYPE_CENTER, valign, str, c, labelRotate().getValue(90));
     }
     else {
       CHAlignType halign;
@@ -1046,7 +1046,7 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
       else
         halign = (! isLabelInside() ? CHALIGN_TYPE_LEFT : CHALIGN_TYPE_RIGHT);
 
-      drawVAlignedText(p1, halign, CVALIGN_TYPE_CENTER, str, c, labelRotate());
+      drawVAlignedText(p1, halign, CVALIGN_TYPE_CENTER, str, c, labelRotate().getValue(90));
     }
   }
   else {
@@ -1062,7 +1062,7 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
       halign = (! isLabelInside() ? CHALIGN_TYPE_LEFT : CHALIGN_TYPE_RIGHT);
     }
 
-    drawVAlignedText(p1, halign, CVALIGN_TYPE_CENTER, str, c, labelRotate());
+    drawVAlignedText(p1, halign, CVALIGN_TYPE_CENTER, str, c, labelRotate().getValue(0));
   }
 }
 

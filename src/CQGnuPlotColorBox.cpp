@@ -47,6 +47,20 @@ setSize(const QSizeF &s)
   CGnuPlotColorBox::setSize(CQUtil::fromQSize(s));
 }
 
+QString
+CQGnuPlotColorBox::
+titleString() const
+{
+  return CGnuPlotColorBox::titleString().c_str();
+}
+
+void
+CQGnuPlotColorBox::
+setTitleString(const QString &s)
+{
+  CGnuPlotColorBox::setTitleString(s.toStdString());
+}
+
 double
 CQGnuPlotColorBox::
 getMin() const
@@ -85,5 +99,5 @@ draw(CGnuPlotRenderer *renderer)
   CGnuPlotColorBox::draw(renderer);
 
   if (isSelected())
-    renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);
+    renderer->drawRect(bbox(), CRGBA(1,0,0), 2);
 }

@@ -79,7 +79,7 @@ class CGnuPlotLabelData {
 
   //---
 
-  const CBBox2D &getBBox() const { return bbox_; }
+  const CBBox2D &bbox() const { return bbox_; }
 
   const CRGBA &drawColor() const { return drawColor_; }
 

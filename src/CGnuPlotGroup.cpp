@@ -968,7 +968,7 @@ draw()
 {
   bbox_ = getMappedDisplayRange(1, 1);
 
-  clip_.setRect(bbox_);
+  clip_.setBBox(bbox_);
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
@@ -1150,11 +1150,17 @@ getPlotAxis(AxisType type, int ind, bool create) const
         axis->setDrawTickLabel    (false);
         axis->setDrawMinorTickMark(false);
       }
+      else if (hasPlotStyle(PlotStyle::IMAGE)) {
+        axis->setMajorIncrement(1);
+      }
     }
     else if (type == AxisType::Y) {
       if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
         if (histogramData_.isHorizontal())
           axis->setMajorIncrement(1);
+      }
+      else if (hasPlotStyle(PlotStyle::IMAGE)) {
+        axis->setMajorIncrement(1);
       }
     }
     else if (type == AxisType::Z) {

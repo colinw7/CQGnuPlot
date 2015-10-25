@@ -74,9 +74,9 @@ class CGnuPlotKey {
 
   bool inMargin() const { return isLMargin() || isRMargin() || isTMargin() || isBMargin(); }
 
-  bool showTitle() const { return keyData_.title().isValid(); }
-
-  std::string getTitle() const { return keyData_.title().getValue(""); }
+  std::string title() const { return keyData_.title().getValue(""); }
+  void setTitle(const std::string &s) { return keyData_.setTitle(s); }
+  bool hasTitle() const { return keyData_.title().isValid(); }
 
   //---
 
@@ -124,7 +124,7 @@ class CGnuPlotKey {
   bool vertical() const { return keyData_.vertical(); }
   void setVertical(bool b) { keyData_.setVertical(b); }
 
-  const CBBox2D &getBBox() const { return bbox_; }
+  const CBBox2D &bbox() const { return bbox_; }
 
   const CFontPtr &getFont() const { return keyData_.font(); }
   void setFont(const CFontPtr &f) { keyData_.setFont(f); }
@@ -161,6 +161,6 @@ class CGnuPlotKey {
   mutable PlotRects prects_;
 };
 
-typedef std::unique_ptr<CGnuPlotKey> CGnuPlotKeyP;
+typedef CRefPtr<CGnuPlotKey> CGnuPlotKeyP;
 
 #endif

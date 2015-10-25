@@ -57,6 +57,8 @@ class CGnuPlotPieObject : public CGnuPlotPlotObject {
 
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
+  const CBBox2D &bbox() const override { return bbox_; }
+
   bool keyInside(const CPoint2D &p) const;
 
   CGnuPlotTipData tip() const override;
@@ -76,6 +78,7 @@ class CGnuPlotPieObject : public CGnuPlotPlotObject {
   CBBox2D         keyRect_;
   CGnuPlotFillP   fill_;
   CGnuPlotStrokeP stroke_;
+  mutable CBBox2D bbox_;
 };
 
 #endif

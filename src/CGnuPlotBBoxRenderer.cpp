@@ -305,6 +305,12 @@ drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
 
 void
 CGnuPlotBBoxRenderer::
+drawImage(const CPoint2D &, const CImagePtr &)
+{
+}
+
+void
+CGnuPlotBBoxRenderer::
 addRect(const CBBox2D &b)
 {
   bbox_.add(b);

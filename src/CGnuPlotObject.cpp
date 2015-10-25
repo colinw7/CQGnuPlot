@@ -8,8 +8,32 @@ CGnuPlotGroupObject(CGnuPlotGroup *group) :
 {
 }
 
+//---
+
 CGnuPlotPlotObject::
 CGnuPlotPlotObject(CGnuPlotPlot *plot) :
  CGnuPlotObject(plot ? plot->app() : 0), plot_(plot)
 {
+}
+
+//---
+
+CGnuPlotObject::
+CGnuPlotObject(CGnuPlot *app) :
+ app_(app)
+{
+}
+
+bool
+CGnuPlotObject::
+inside(const CGnuPlotTypes::InsideData &data) const
+{
+  return bbox().inside(data.window);
+}
+
+void
+CGnuPlotObject::
+setBBox(const CBBox2D &)
+{
+  std::cerr << "Not implemented" << std::endl;
 }

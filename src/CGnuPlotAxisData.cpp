@@ -130,7 +130,7 @@ unset()
   text_ = "";
 
   ticOffset_   = CPoint2D(0,0);
-  labelOffset_ = CPoint2D(0,0);
+  labelOffset_ = CPoint3D(0,0,0);
 }
 
 void
@@ -393,8 +393,8 @@ showTics(std::ostream &os, const std::string &prefix) const
     os << prefix << " tics: on axis" << std::endl;
     os << "  labels are justified automatically, format \"" <<
           format_ << "\" and are not rotated," << std::endl;
-    os << "  offset (character " <<
-             labelOffset_.x << ", " << labelOffset_.y << ", 0)" << std::endl;
+    os << "  offset (character " << labelOffset_.x << ", " <<
+          labelOffset_.y << ", " << labelOffset_.z << ")" << std::endl;
     os << "  intervals computed automatically" << std::endl;
   }
   else
@@ -445,6 +445,6 @@ CGnuPlotAxisData::
 printLabel(std::ostream &os, const std::string &prefix) const
 {
   os << prefix << "label is \"" << text_ << "\", " <<
-        "offset at ((character units) " <<
-        labelOffset_.x << ", " << labelOffset_.y << ", 0)" << std::endl;
+        "offset at ((character units) " << labelOffset_.x << ", " <<
+        labelOffset_.y << ", " << labelOffset_.z << ")" << std::endl;
 }

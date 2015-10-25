@@ -53,7 +53,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  const CBBox2D &bbox = plot->getBBox();
+  const CBBox2D &bbox = plot->bbox();
 
   double ymin = bbox.getYMin();
 
@@ -131,11 +131,4 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
   }
 #endif
-}
-
-CBBox2D
-CGnuPlotStyleStepsBase::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
 }

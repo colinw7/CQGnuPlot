@@ -2,6 +2,9 @@
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotImageObject.h>
+#include <CGnuPlotRectObject.h>
+#include <CGnuPlotPolygonObject.h>
 #include <CGnuPlotUtil.h>
 #include <CMathGeom2D.h>
 #include <CHSV.h>
@@ -61,7 +64,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   if (plot->isBinary())
     drawBinaryImage(plot, renderer);
   else
-    drawImage(plot, renderer);
+    drawImage2D(plot, renderer);
 }
 
 void
@@ -71,7 +74,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   if (plot->isBinary())
     drawBinaryImage(plot, renderer);
   else
-    drawImage(plot, renderer);
+    drawImage3D(plot, renderer);
 }
 
 //------
@@ -80,17 +83,17 @@ void
 CGnuPlotStyleImageBase::
 drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  bool is3D = plot->is3D();
+  //bool is3D = plot->is3D();
 
-  double pw = 1, ph = 1;
+  //double pw = 1, ph = 1;
 
-  if (! renderer->isPseudo()) {
-    pw = renderer->pixelWidthToWindowWidth  (1);
-    ph = renderer->pixelHeightToWindowHeight(1);
-  }
+  //if (! renderer->isPseudo()) {
+  //  pw = renderer->pixelWidthToWindowWidth  (1);
+  //  ph = renderer->pixelHeightToWindowHeight(1);
+  //}
 
-  int npx = (pw < 1 && pw > 0 ? int(1.0/pw + 0.5) : 1);
-  int npy = (ph < 1 && ph > 0 ? int(1.0/ph + 0.5) : 1);
+  //int npx = (pw < 1 && pw > 0 ? int(1.0/pw + 0.5) : 1);
+  //int npy = (ph < 1 && ph > 0 ? int(1.0/ph + 0.5) : 1);
 
   const CGnuPlotPlot::ImageData &imageData  = plot->imageData();
   const CGnuPlotImageStyle      &imageStyle = plot->imageStyle();
@@ -157,19 +160,17 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  bool   rotate = imageStyle.a.isValid();
-  double a      = -plot->imageAngle();
+//bool rotate = imageStyle.a.isValid();
 
-  double ra = CAngle::Deg2Rad(a);
+  double a  = -plot->imageAngle();
+//double ra = CAngle::Deg2Rad(a);
 
-  if (imageStyle.flipy) ra = -ra;
+  //if (imageStyle.flipy) ra = -ra;
 
-  CPoint2D po(cx - ww/2, cy + (imageStyle.flipy ? hh/2 : -hh/2));
-
-  renderer->setAntiAlias(false);
+  //CPoint2D po(cx - ww/2, cy + (imageStyle.flipy ? hh/2 : -hh/2));
+  CPoint2D po(cx - ww/2, cy + hh/2);
 
   //---
-
 
   double gmax = 0;
 
@@ -200,91 +201,130 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  int i = 0;
+  if (! renderer->isPseudo()) {
+    plot->updateImageCacheSize(1);
 
-  for (int iy = 0; iy < ny; ++iy) {
-    double y = po.y + (imageStyle.flipy ? -1 : 1)*(iy*idy + 0.5);
+    CGnuPlotImageObject *image = plot->imageObjects()[0];
 
-    for (int ix = 0; ix < nx; ++ix, ++i) {
-      double x = po.x + ix*idx + 0.5;
+    bool update = ! image->isUsed();
 
-      CRGBA rgba = imageData[i];
+    if (! update)
+      update = (image->size() != CISize2D(ww, hh));
 
-      if (imageStyle.usingCols.numCols() > 0) {
-        if (imageStyle.usingCols.numCols() > 1) {
-          double r = decodeImageUsingColor(plot, 0, rgba);
-          double g = decodeImageUsingColor(plot, 1, rgba);
-          double b = decodeImageUsingColor(plot, 2, rgba);
+    //---
 
-          rgba = CRGBA(r, g, b);
-        }
-        else {
-          double g = decodeImageUsingColor(plot, 0, rgba);
+    if (update) {
+      //renderer->setAntiAlias(false);
 
-          if (style_ == CGnuPlotTypes::PlotStyle::IMAGE)
-            rgba = group->palette()->getColor(g/gmax).rgba();
-          else
-            rgba = CRGBA(g, g, g);
-        }
-      }
+      image->setBBox (CBBox2D(po.x, po.y - hh, po.x + ww, po.y));
+      image->setSize (CISize2D(ww, hh));
+      image->setAngle(a);
+      image->setFlipY(imageStyle.flipy);
 
-      if (cbmin.isValid() && cbmax.isValid())
-        rgba = applyCbRange(rgba, cbmin.getValue(), cbmax.getValue());
+      int i = 0;
 
-      CPoint2D p(x, y);
+      for (int iy = 0; iy < ny; ++iy) {
+        //double y = po.y + (imageStyle.flipy ? -1 : 1)*(iy*idy + 0.5);
+        double y = po.y - iy*idy - 0.5;
 
-      if (rotate || is3D) {
-        CPoint2D p1 = (rotate ? CMathGeom2D::RotatePoint(p, ra, o) : p);
+        for (int ix = 0; ix < nx; ++ix, ++i) {
+          double x = po.x + ix*idx + 0.5;
 
-        if (! renderer->isPseudo() && (renderer->clip().isSet() && ! renderer->clip().inside(p1)))
-          continue;
+          CRGBA rgba = imageData[i];
 
-        for (int py = 0; py < npy; ++py) {
-          for (int px = 0; px < npx; ++px) {
-            CPoint2D p1(p.x + px*pw, p.y + py*ph);
+          if (imageStyle.usingCols.numCols() > 0) {
+            if (imageStyle.usingCols.numCols() > 1) {
+              double r = decodeImageUsingColor(plot, 0, rgba);
+              double g = decodeImageUsingColor(plot, 1, rgba);
+              double b = decodeImageUsingColor(plot, 2, rgba);
 
-            CPoint2D p2 = CMathGeom2D::RotatePoint(p1, ra, o);
-
-            if (is3D) {
-              CPoint3D p3(p2.x, p2.y, 0.0); // zmin ?
-
-              renderer->drawPoint(p3, rgba);
+              rgba = CRGBA(r, g, b);
             }
-            else
-              renderer->drawPoint(p2, rgba);
+            else {
+              double g = decodeImageUsingColor(plot, 0, rgba);
+
+              if (style_ == CGnuPlotTypes::PlotStyle::IMAGE)
+                rgba = group->palette()->getColor(g/gmax).rgba();
+              else
+                rgba = CRGBA(g, g, g);
+            }
           }
+
+          if (cbmin.isValid() && cbmax.isValid())
+            rgba = applyCbRange(rgba, cbmin.getValue(), cbmax.getValue());
+
+          CPoint2D p(x, y);
+
+          image->drawPoint(p, rgba);
+
+#if 0
+          if (is3D) {
+            //CPoint2D p1 = (rotate ? CMathGeom2D::RotatePoint(p, ra, o) : p);
+
+            //if (renderer->clip().isSet() && ! renderer->clip().inside(p1))
+            //  continue;
+
+            for (int py = 0; py < npy; ++py) {
+              for (int px = 0; px < npx; ++px) {
+                CPoint2D p1(p.x + px*pw, p.y + py*ph);
+
+                CPoint2D p2 = CMathGeom2D::RotatePoint(p1, ra, o);
+
+                CPoint3D p3(p2.x, p2.y, 0.0); // zmin ?
+
+                //renderer->drawPoint(p3, rgba);
+                image->drawPoint(renderer->transform(p3), rgba);
+                //renderer->drawPoint(p2, rgba);
+                //image->drawPoint(p2, rgba);
+              }
+            }
+          }
+          else {
+            //if (renderer->clip().isSet() && ! renderer->clip().inside(p))
+            //  continue;
+
+            CBBox2D bbox(p.x - idx/2.0, p.y - idy/2.0, p.x + idx/2.0, p.y + idy/2.0);
+
+            //renderer->fillRect(bbox, rgba);
+            if (rotate)
+              image->fillRotatedRect(bbox, o, a, rgba);
+            else
+              image->fillRect(bbox, rgba);
+          }
+#endif
         }
       }
-      else {
-        if (! renderer->isPseudo() && (renderer->clip().isSet() && ! renderer->clip().inside(p)))
-          continue;
 
-        CBBox2D bbox(p.x - idx/2.0, p.y - idy/2.0, p.x + idx/2.0, p.y + idy/2.0);
+      //renderer->setAntiAlias(true);
 
-        renderer->fillRect(bbox, rgba);
-      }
+      image->setUsed(true);
     }
-  }
 
-  renderer->setAntiAlias(true);
+    image->draw(renderer);
+  }
+  else {
+    renderer->fillRect(CBBox2D(po.x, po.y, po.x + ww, po.y + hh), CRGBA(0,0,0));
+  }
 }
 
 void
 CGnuPlotStyleImageBase::
-drawImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
+drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  double pw = 1, ph = 1;
+  //double pw = 1, ph = 1;
 
-  if (! renderer->isPseudo()) {
-    pw = renderer->pixelWidthToWindowWidth  (1);
-    ph = renderer->pixelHeightToWindowHeight(1);
-  }
+  //if (! renderer->isPseudo()) {
+  //  pw = renderer->pixelWidthToWindowWidth  (1);
+  //  ph = renderer->pixelHeightToWindowHeight(1);
+  //}
 
-  int npx = (pw < 1 && pw > 0 ? int(1.0/pw + 0.5) : 1);
-  int npy = (ph < 1 && ph > 0 ? int(1.0/ph + 0.5) : 1);
+  //int npx = (pw < 1 && pw > 0 ? int(1.0/pw + 0.5) : 1);
+  //int npy = (ph < 1 && ph > 0 ? int(1.0/ph + 0.5) : 1);
 
 //const CGnuPlotPlot::ImageData &imageData  = plot->imageData();
   const CGnuPlotImageStyle      &imageStyle = plot->imageStyle();
+
+  CGnuPlotGroup *group = plot->group();
 
   //---
 
@@ -306,64 +346,343 @@ drawImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   double xo = po.x;
   double yo = po.y;
 
-  bool   rotate = imageStyle.a.isValid();
-  double a      = -plot->imageAngle();
+//bool   rotate = imageStyle.a.isValid();
+//double a      = -plot->imageAngle();
 
-  double ra = CAngle::Deg2Rad(a);
+//double ra = CAngle::Deg2Rad(a);
 
-  if (imageStyle.flipy) ra = -ra;
+//if (imageStyle.flipy) ra = -ra;
 
   CPoint2D o(xo + dx, yo + dy);
 
-  int ny = plot->getPoints2D().size();
+  const CGnuPlotColorBoxP &cb = group->colorBox();
 
-  int y = 0;
+  //---
+
+  int numSets = 1;
 
   for (const auto &p : plot->getPoints2D()) {
-    double y1 = (imageStyle.flipy ? ny - 1 - y : y);
+    if (p.isDiscontinuity())
+      ++numSets;
+  }
 
-    std::vector<double> reals;
+  //---
 
-    (void) p.getReals(reals);
+  if (numSets == 1) {
+    int ny = plot->getPoints2D().size();
 
-    int x = 0;
+    if (! renderer->isPseudo()) {
+      // count number of rects
+      int n = 0;
 
-    for (const auto &v : reals) {
-      double x1 = x;
+      for (const auto &p : plot->getPoints2D()) {
+        std::vector<double> reals;
 
-      CRGBA rgba = CGnuPlotStyleInst->indexColor(int(v));
+        (void) p.getReals(reals);
 
-      CPoint2D p(x1 + dx, y1 + dy);
+        n += reals.size();
+      }
 
-      if (rotate) {
-        CPoint2D p1 = CMathGeom2D::RotatePoint(p, ra, o);
+      // udpate cache size
+      plot->updateRectCacheSize(n);
+    }
 
-        if (! renderer->isPseudo() && (renderer->clip().isSet() && ! renderer->clip().inside(p1)))
-          continue;
+    //---
 
-        for (int py = 0; py < npy; ++py) {
-          for (int px = 0; px < npx; ++px) {
-            CPoint2D p1(p.x + px*pw, p.y + py*ph);
+    int i = 0;
+    int y = 0;
 
-            CPoint2D p2 = CMathGeom2D::RotatePoint(p1, ra, o);
+    for (const auto &p : plot->getPoints2D()) {
+      double y1 = (imageStyle.flipy ? ny - 1 - y : y);
 
-            renderer->drawPoint(p2, rgba);
+      std::vector<double> reals;
+
+      (void) p.getReals(reals);
+
+      int x = 0;
+
+      for (const auto &v : reals) {
+        double x1 = x;
+
+        CRGBA rgba;
+
+        if (renderer->isPseudo())
+          renderer->setCBValue(v);
+        else {
+          rgba = cb->valueToColor(v).rgba();
+          //rgba = CGnuPlotStyleInst->indexColor(int(v));
+        }
+
+        CPoint2D p(x1 + dx, y1 + dy);
+
+  #if 0
+        if (rotate) {
+          CPoint2D p1 = CMathGeom2D::RotatePoint(p, ra, o);
+
+          if (! renderer->isPseudo() && (renderer->clip().isSet() && ! renderer->clip().inside(p1)))
+            continue;
+
+          for (int py = 0; py < npy; ++py) {
+            for (int px = 0; px < npx; ++px) {
+              CPoint2D p1(p.x + px*pw, p.y + py*ph);
+
+              CPoint2D p2 = CMathGeom2D::RotatePoint(p1, ra, o);
+
+              renderer->drawPoint(p2, rgba);
+            }
           }
         }
-      }
-      else {
-        if (! renderer->isPseudo() && (renderer->clip().isSet() && ! renderer->clip().inside(p)))
-          continue;
+  #endif
+
+        //if (! renderer->isPseudo() && (renderer->clip().isSet() && ! renderer->clip().inside(p)))
+        //  continue;
 
         CBBox2D bbox(p.x - 0.5, p.y - 0.5, p.x + 0.5, p.y + 0.5);
 
-        renderer->fillRect(bbox, rgba);
+        if (! renderer->isPseudo()) {
+          CGnuPlotRectObject *rect = plot->rectObjects()[i];
+
+          rect->setBBox(bbox);
+
+          if (! rect->testAndSetUsed()) {
+            rect->fill()->setType (CGnuPlotTypes::FillType::SOLID);
+            rect->fill()->setColor(rgba);
+
+            rect->stroke()->setEnabled(false);
+
+            rect->setTipText(CStrUtil::strprintf("%g", v));
+          }
+
+          ++i;
+        }
+        else
+          renderer->fillRect(bbox, rgba);
+
+        ++x;
       }
 
-      ++x;
+      ++y;
+    }
+  }
+  else {
+    int i = 0;
+
+    typedef std::vector<CPoint3D> Points;
+    typedef std::vector<Points>   PointsArray;
+
+    Points      points;
+    PointsArray pointsArray;
+
+    for (const auto &p : plot->getPoints2D()) {
+      if (p.isDiscontinuity()) {
+        if (! points.empty())
+          pointsArray.push_back(points);
+
+        points.clear();
+      }
+
+      CPoint3D p1;
+
+      if (p.getPoint(p1))
+        points.push_back(p1);
     }
 
-    ++y;
+    if (! points.empty())
+      pointsArray.push_back(points);
+
+    //---
+
+    if (! renderer->isPseudo()) {
+      // count number of rects
+      int n = 0;
+
+      for (const auto &points : pointsArray)
+        n += points.size();
+
+      // udpate cache size
+      plot->updateRectCacheSize(n);
+    }
+
+    //---
+
+    for (const auto &points : pointsArray) {
+      for (const auto &point : points) {
+        double x1 = point.x;
+        double y1 = point.y;
+
+        CRGBA rgba;
+
+        if (renderer->isPseudo())
+          renderer->setCBValue(point.z);
+        else
+          rgba = cb->valueToColor(point.z).rgba();
+
+        CPoint2D p(x1 + dx, y1 + dy);
+
+        CBBox2D bbox(p.x - 0.5, p.y - 0.5, p.x + 0.5, p.y + 0.5);
+
+        if (! renderer->isPseudo()) {
+          CGnuPlotRectObject *rect = plot->rectObjects()[i];
+
+          rect->setBBox(bbox);
+
+          if (! rect->testAndSetUsed()) {
+            rect->fill()->setType (CGnuPlotTypes::FillType::SOLID);
+            rect->fill()->setColor(rgba);
+
+            rect->stroke()->setEnabled(false);
+
+            rect->setTipText(CStrUtil::strprintf("%g", point.z));
+          }
+
+          ++i;
+        }
+        else
+          renderer->fillRect(bbox, rgba);
+      }
+    }
+  }
+
+  if (! renderer->isPseudo()) {
+    for (const auto &rect : plot->rectObjects())
+      rect->draw(renderer);
+  }
+}
+
+void
+CGnuPlotStyleImageBase::
+drawImage3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
+{
+  //double pw = 1, ph = 1;
+
+  //if (! renderer->isPseudo()) {
+  //  pw = renderer->pixelWidthToWindowWidth  (1);
+  //  ph = renderer->pixelHeightToWindowHeight(1);
+  //}
+
+  //int npx = (pw < 1 && pw > 0 ? int(1.0/pw + 0.5) : 1);
+  //int npy = (ph < 1 && ph > 0 ? int(1.0/ph + 0.5) : 1);
+
+//const CGnuPlotPlot::ImageData &imageData  = plot->imageData();
+  const CGnuPlotImageStyle      &imageStyle = plot->imageStyle();
+
+  CGnuPlotGroup *group = plot->group();
+
+  CGnuPlotCameraP camera = group->camera();
+
+  //---
+
+  // image size
+  int iw = imageStyle.w.getValue(1);
+  int ih = imageStyle.h.getValue(1);
+
+  //---
+
+  double dx = 0, dy = 0;
+
+  if (imageStyle.c.isValid()) {
+    dx = imageStyle.c.getValue().x - iw/2.0;
+    dy = imageStyle.c.getValue().y - ih/2.0;
+  }
+
+  CPoint2D po = imageStyle.o.getValue(CPoint2D(iw/2.0, ih/2.0));
+
+  double xo = po.x;
+  double yo = po.y;
+
+//bool   rotate = imageStyle.a.isValid();
+//double a      = -plot->imageAngle();
+
+//double ra = CAngle::Deg2Rad(a);
+
+//if (imageStyle.flipy) ra = -ra;
+
+  CPoint2D o(xo + dx, yo + dy);
+
+  //---
+
+  std::pair<int,int> np = plot->numPoints3D();
+
+  if (! renderer->isPseudo()) {
+    // count number of rects
+    int n = np.first*np.second;
+
+    // udpate cache size
+    plot->updatePolygonCacheSize(n);
+  }
+
+  //---
+
+  const CGnuPlotColorBoxP &cb = group->colorBox();
+
+  int i = 0;
+
+  for (int iy = 0; iy < np.second; ++iy) {
+    double y1 = (imageStyle.flipy ? np.second - 1 - iy : iy);
+
+    for (int ix = 0; ix < np.first; ++ix) {
+      double x1 = ix;
+
+      // get surface points
+      const CGnuPlotPoint &ppoint = plot->getPoint3D(ix, iy);
+
+      CPoint3D point;
+
+      ppoint.getPoint(point);
+
+      CRGBA c;
+
+      if (renderer->isPseudo())
+        renderer->setCBValue(point.z);
+      else
+        c = cb->valueToColor(point.z).rgba();
+
+      CPoint3D p(x1 + dx, y1 + dy, 0);
+
+      CPoint3D p1 = camera->transform(CPoint3D(p.x - 0.5, p.y - 0.5, 0));
+      CPoint3D p2 = camera->transform(CPoint3D(p.x + 0.5, p.y - 0.5, 0));
+      CPoint3D p3 = camera->transform(CPoint3D(p.x + 0.5, p.y + 0.5, 0));
+      CPoint3D p4 = camera->transform(CPoint3D(p.x - 0.5, p.y + 0.5, 0));
+
+      CPoint3D pt1 = camera->transform(p1);
+      CPoint3D pt2 = camera->transform(p2);
+      CPoint3D pt3 = camera->transform(p3);
+      CPoint3D pt4 = camera->transform(p4);
+
+      //---
+
+      // create polygon
+      std::vector<CPoint2D> poly;
+
+      poly.push_back(CPoint2D(pt1.x, pt1.y));
+      poly.push_back(CPoint2D(pt2.x, pt2.y));
+      poly.push_back(CPoint2D(pt3.x, pt3.y));
+      poly.push_back(CPoint2D(pt4.x, pt4.y));
+
+      if (! renderer->isPseudo()) {
+        CGnuPlotPolygonObject *polygon = plot->polygonObjects()[i];
+
+        polygon->setPoints(poly);
+
+        if (! polygon->testAndSetUsed()) {
+          polygon->fill()->setType (CGnuPlotTypes::FillType::SOLID);
+          polygon->fill()->setColor(c);
+
+          polygon->stroke()->setEnabled(false);
+
+          polygon->setTipText(CStrUtil::strprintf("%g", point.z));
+        }
+      }
+      else
+        renderer->fillPolygon(poly, c);
+
+      ++i;
+    }
+  }
+
+  if (! renderer->isPseudo()) {
+    for (const auto &polygon : plot->polygonObjects())
+      polygon->draw(renderer);
   }
 }
 
@@ -454,11 +773,4 @@ indexImageColor(int i, const CRGBA &rgba) const
     case 3 : return rgba.getBlue ();
     default: return 1;
   }
-}
-
-CBBox2D
-CGnuPlotStyleImageBase::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
 }

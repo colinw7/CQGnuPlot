@@ -23,10 +23,3 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       renderer->drawPoint(p, c);
   }
 }
-
-CBBox2D
-CGnuPlotStyleDots::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
-}

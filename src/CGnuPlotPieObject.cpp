@@ -67,7 +67,7 @@ tip() const
   tip.setBorderColor(fill_->color());
   tip.setXColor     (fill_->color());
 
-  tip.setRect(rect);
+  tip.setBBox(rect);
 
   return tip;
 }
@@ -138,4 +138,10 @@ draw(CGnuPlotRenderer *renderer) const
     // aligned ?
     renderer->drawHAlignedText(tp, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0, name_, tc);
   }
+
+  //---
+
+  CPoint2D pr(r_, r_);
+
+  bbox_ = CBBox2D(c - pr, c + pr);
 }

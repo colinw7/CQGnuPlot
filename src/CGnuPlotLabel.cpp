@@ -47,6 +47,13 @@ inside(const CGnuPlotTypes::InsideData &data) const
   return data_->inside(data);
 }
 
+const CBBox2D &
+CGnuPlotLabel::
+bbox() const
+{
+  return data_->bbox();
+}
+
 CGnuPlotTipData
 CGnuPlotLabel::
 tip() const

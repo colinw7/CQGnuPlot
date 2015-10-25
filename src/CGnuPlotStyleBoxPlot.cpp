@@ -235,6 +235,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   delete tempBoxObj;
 }
 
+#if 0
 CBBox2D
 CGnuPlotStyleBoxPlot::
 fit(CGnuPlotPlot *plot)
@@ -250,3 +251,4 @@ fit(CGnuPlotPlot *plot)
 
   return bbox;
 }
+#endif

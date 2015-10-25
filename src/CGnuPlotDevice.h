@@ -37,6 +37,7 @@ class CGnuPlotBubbleObject;
 class CGnuPlotEllipseObject;
 class CGnuPlotErrorBarObject;
 class CGnuPlotFinanceBarObject;
+class CGnuPlotImageObject;
 class CGnuPlotLabelObject;
 class CGnuPlotPathObject;
 class CGnuPlotPieObject;
@@ -51,6 +52,7 @@ class CGnuPlotMark;
 class CGnuPlotRenderer;
 class CGnuPlotTitle;
 class CGnuPlotWindow;
+class CGnuPlotMultiplot;
 
 typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 
@@ -116,6 +118,8 @@ class CGnuPlotDevice {
 
   virtual CGnuPlotWindow *createWindow();
 
+  virtual CGnuPlotMultiplot *createMultiplot();
+
   virtual CGnuPlotGroup *createGroup(CGnuPlotWindow *window);
 
   virtual CGnuPlotPlot *createPlot(CGnuPlotGroup *group, CGnuPlotTypes::PlotStyle plotStyle);
@@ -152,6 +156,7 @@ class CGnuPlotDevice {
   virtual CGnuPlotBubbleObject     *createBubbleObject    (CGnuPlotPlot *plot);
   virtual CGnuPlotEllipseObject    *createEllipseObject   (CGnuPlotPlot *plot);
   virtual CGnuPlotErrorBarObject   *createErrorBarObject  (CGnuPlotPlot *plot);
+  virtual CGnuPlotImageObject      *createImageObject     (CGnuPlotPlot *plot);
   virtual CGnuPlotFinanceBarObject *createFinanceBarObject(CGnuPlotPlot *plot);
   virtual CGnuPlotLabelObject      *createLabelObject     (CGnuPlotPlot *plot);
   virtual CGnuPlotPathObject       *createPathObject      (CGnuPlotPlot *plot);

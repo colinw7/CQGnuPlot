@@ -226,10 +226,3 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   renderer->drawLine(p1, p2, lw, c, stroke.lineDash());
 }
-
-CBBox2D
-CGnuPlotStyleLines::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
-}

@@ -11,13 +11,6 @@ CGnuPlotBoxObject(CGnuPlotPlot *plot) :
   outlierMark_ = plot->createMark  ();
 }
 
-bool
-CGnuPlotBoxObject::
-inside(const CGnuPlotTypes::InsideData &p) const
-{
-  return bbox_.inside(p.window);
-}
-
 CGnuPlotTipData
 CGnuPlotBoxObject::
 tip() const
@@ -30,7 +23,7 @@ tip() const
   tip.setBorderColor(fill_->color());
   tip.setXColor     (fill_->color());
 
-  tip.setRect(bbox_);
+  tip.setBBox(bbox_);
 
   return tip;
 }

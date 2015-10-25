@@ -16,6 +16,20 @@ CQGnuPlotKey::
 {
 }
 
+QString
+CQGnuPlotKey::
+title() const
+{
+  return CGnuPlotKey::title().c_str();
+}
+
+void
+CQGnuPlotKey::
+setTitle(const QString &s)
+{
+  CGnuPlotKey::setTitle(s.toStdString());
+}
+
 int
 CQGnuPlotKey::
 boxLineStyle() const
@@ -75,7 +89,7 @@ draw(CGnuPlotRenderer *renderer)
   CGnuPlotKey::draw(renderer);
 
   if (isSelected()) {
-    renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);
+    renderer->drawRect(bbox(), CRGBA(1,0,0), 2);
   }
 }
 

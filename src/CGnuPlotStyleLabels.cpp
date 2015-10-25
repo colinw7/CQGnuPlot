@@ -308,10 +308,3 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
   }
 }
-
-CBBox2D
-CGnuPlotStyleLabels::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
-}

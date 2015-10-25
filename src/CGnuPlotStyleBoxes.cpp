@@ -18,7 +18,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CBBox2D bbox = plot->getBBox();
+  CBBox2D bbox = plot->bbox();
 
   double ymin = bbox.getYMin();
 
@@ -150,11 +150,4 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   renderer->fillRect  (hbbox, fill  );
   renderer->strokeRect(hbbox, stroke);
-}
-
-CBBox2D
-CGnuPlotStyleBoxes::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
 }

@@ -33,7 +33,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   if (plot->isPolar())
     ymin = group->raxis().min().getValue(0);
   else
-    ymin = plot->getBBox().getYMin();
+    ymin = plot->bbox().getYMin();
 
   double y2 = std::max(0.0, ymin);
 
@@ -92,11 +92,4 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   double lw = stroke.width();
 
   renderer->drawLine(p1, p2, lw, c);
-}
-
-CBBox2D
-CGnuPlotStyleImpulses::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
 }

@@ -217,6 +217,7 @@ class CGnuPlotGroup {
   const CGnuPlotKeyP &key() const { return key_; }
 
   const CGnuPlotColorBoxP &colorBox() const { return colorBox_; }
+  CGnuPlotColorBoxP colorBox() { return colorBox_; }
 
   const CGnuPlotPaletteP &palette() const { return palette_; }
 
@@ -360,7 +361,8 @@ class CGnuPlotGroup {
 
   CBBox2D getRegionBBox() const;
 
-  const CBBox2D &getBBox     () const { return bbox_      ; }
+  const CBBox2D &bbox() const { return bbox_; }
+
   const CBBox2D &getAxisBBox () const { return axisBBox_  ; }
   const CBBox2D &getKeyBBox  () const { return keyBBox_   ; }
   const CBBox2D &getMarginBox() const { return marginBBox_; }

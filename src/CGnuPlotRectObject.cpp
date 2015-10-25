@@ -10,13 +10,6 @@ CGnuPlotRectObject(CGnuPlotPlot *plot) :
   stroke_ = plot->createStroke();
 }
 
-bool
-CGnuPlotRectObject::
-inside(const CGnuPlotTypes::InsideData &data) const
-{
-  return rect_.inside(data.window);
-}
-
 CGnuPlotTipData
 CGnuPlotRectObject::
 tip() const
@@ -28,7 +21,7 @@ tip() const
   }
   else {
     tip.setXStr(CStrUtil::strprintf("%g, %g -> %g, %g",
-                  rect_.getXMin(), rect_.getYMin(), rect_.getXMax(), rect_.getYMax()));
+                  bbox_.getXMin(), bbox_.getYMin(), bbox_.getXMax(), bbox_.getYMax()));
 
     if (text_ != "")
       tip.setYStr(text_);
@@ -37,7 +30,7 @@ tip() const
   tip.setBorderColor(stroke_->color());
   tip.setXColor     (stroke_->color());
 
-  tip.setRect(rect_);
+  tip.setBBox(bbox_);
 
   return tip;
 }
@@ -62,8 +55,8 @@ draw(CGnuPlotRenderer *renderer) const
     stroke->setWidth(2);
   }
 
-  renderer->fillRect  (rect_, *fill  );
-  renderer->strokeRect(rect_, *stroke);
+  renderer->fillRect  (bbox_, *fill  );
+  renderer->strokeRect(bbox_, *stroke);
 
   if (text_ != "") {
     double tw = renderer->pixelWidthToWindowWidth  (renderer->getFont()->getStringWidth(text_));
@@ -74,6 +67,6 @@ draw(CGnuPlotRenderer *renderer) const
     if (fill->type() == CGnuPlotTypes::FillType::SOLID)
       tc = fill->color().bwContrast();
 
-    renderer->drawText(rect_.getCenter() - CPoint2D(tw/2, th/2), text_, tc);
+    renderer->drawText(bbox_.getCenter() - CPoint2D(tw/2, th/2), text_, tc);
   }
 }

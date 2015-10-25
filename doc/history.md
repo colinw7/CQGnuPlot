@@ -157,3 +157,10 @@
  + Add mark object for point properties
  + Fix symbol draw a value for errorbar plots
  + Add selection/highlight for chord diagram
+
+### 9/25/2015
+ + Update image matrix handling
+ + Add image object support
+ + Add QObject for multiplot and properties
+ + Add image rowheaders, columnsheaders, pixels
+ + Add basic object editing (move)

@@ -190,10 +190,3 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   renderer->fillRect  (hbbox, fill  );
   renderer->strokeRect(hbbox, stroke);
 }
-
-CBBox2D
-CGnuPlotStyleCandlesticks::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
-}

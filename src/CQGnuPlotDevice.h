@@ -24,6 +24,8 @@ class CQGnuPlotDevice : public QObject, public CGnuPlotDevice {
 
   CGnuPlotWindow *createWindow() override;
 
+  CGnuPlotMultiplot *createMultiplot() override;
+
   CGnuPlotGroup *createGroup(CGnuPlotWindow *window) override;
 
   CGnuPlotPlot *createPlot(CGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style) override;
@@ -59,6 +61,7 @@ class CQGnuPlotDevice : public QObject, public CGnuPlotDevice {
   CGnuPlotEllipseObject    *createEllipseObject   (CGnuPlotPlot *plot) override;
   CGnuPlotErrorBarObject   *createErrorBarObject  (CGnuPlotPlot *plot) override;
   CGnuPlotFinanceBarObject *createFinanceBarObject(CGnuPlotPlot *plot) override;
+  CGnuPlotImageObject      *createImageObject     (CGnuPlotPlot *plot) override;
   CGnuPlotLabelObject      *createLabelObject     (CGnuPlotPlot *plot) override;
   CGnuPlotPathObject       *createPathObject      (CGnuPlotPlot *plot) override;
   CGnuPlotPieObject        *createPieObject       (CGnuPlotPlot *plot) override;

@@ -121,8 +121,9 @@ class CGnuPlotAxis {
   double ticsRotate() const { return data_.ticsRotate(); }
   void setTicsRotate(double a) { data_.setTicsRotate(a); }
 
-  double labelRotate() const { return data_.labelRotate(); }
+  COptReal labelRotate() const { return data_.labelRotate(); }
   void setLabelRotate(double a) { data_.setLabelRotate(a); }
+  void unsetLabelRotate() { data_.unsetLabelRotate(); }
 
   //---
 
@@ -288,7 +289,7 @@ class CGnuPlotAxis {
   void drawUpperLine(CGnuPlotRenderer *renderer, const CRGBA &c, double w, const CLineDash &dash);
   void drawZeroLine (CGnuPlotRenderer *renderer, const CRGBA &c, double w, const CLineDash &dash);
 
-  const CBBox2D &getBBox() const { return bbox_; }
+  const CBBox2D &bbox() const { return bbox_; }
 
   static bool calcTics(double start, double end, double &start1, double &end1,
                        int &numTicks1, int &numTicks2);

@@ -19,8 +19,8 @@ class CGnuPlotRectObject : public CGnuPlotPlotObject {
 
   virtual ~CGnuPlotRectObject() { }
 
-  const CBBox2D &rect() const { return rect_; }
-  void setRect(const CBBox2D &r) { rect_ = r; }
+  const CBBox2D &bbox() const override { return bbox_; }
+  void setBBox(const CBBox2D &r) override { bbox_ = r; }
 
   const std::string &text() const { return text_; }
   void setText(const std::string &s) { text_ = s; }
@@ -31,14 +31,12 @@ class CGnuPlotRectObject : public CGnuPlotPlotObject {
   const CGnuPlotStrokeP stroke() const { return stroke_; }
   void setStroke(const CGnuPlotStrokeP &s) { stroke_ = s; }
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const override;
-
   CGnuPlotTipData tip() const override;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
  protected:
-  CBBox2D         rect_ { 0, 0, 1, 1 };
+  CBBox2D         bbox_ { 0, 0, 1, 1 };
   std::string     text_ { "" };
   CGnuPlotFillP   fill_;
   CGnuPlotStrokeP stroke_;

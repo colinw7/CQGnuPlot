@@ -876,6 +876,17 @@ drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
 
 void
 CQGnuPlotRenderer::
+drawImage(const CPoint2D &p, const CImagePtr &image)
+{
+  double px, py;
+
+  windowToPixel(p.x, p.y, &px, &py);
+
+  painter_->drawImage(px, py, CQUtil::toQImage(image));
+}
+
+void
+CQGnuPlotRenderer::
 setFont(const CFontPtr &font)
 {
   CGnuPlotRenderer::setFont(font);

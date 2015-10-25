@@ -15,12 +15,11 @@ class CGnuPlotStyleImageBase : public CGnuPlotStyleBase {
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
   void draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
-  CBBox2D fit(CGnuPlotPlot *plot) override;
-
  protected:
   void drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer);
 
-  void drawImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer);
+  void drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer);
+  void drawImage3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer);
 
   double decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &c) const;
 

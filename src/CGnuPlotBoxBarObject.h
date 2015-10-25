@@ -24,7 +24,7 @@ class CGnuPlotBoxBarObject : public CGnuPlotPlotObject {
   const CGnuPlotBoxBarObject &operator=(const CGnuPlotBoxBarObject &) = delete;
 
   const CBBox2D &bbox() const { return bbox_; }
-  void setBBox(const CBBox2D &b) { bbox_ = b; }
+  void setBBox(const CBBox2D &b) override { bbox_ = b; }
 
   double xvalue() const { return x_; }
   double yvalue() const { return y_; }
@@ -44,8 +44,6 @@ class CGnuPlotBoxBarObject : public CGnuPlotPlotObject {
   CGnuPlotEndBarP addEndBar(const CPoint2D &start, const CPoint2D &end);
 
   const EndBars &endBars() const { return endBars_; }
-
-  bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
   CGnuPlotTipData tip() const override;
 

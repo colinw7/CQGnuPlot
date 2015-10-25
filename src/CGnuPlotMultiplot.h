@@ -1,9 +1,16 @@
 #ifndef CGnuPlotMultiplot_H
 #define CGnuPlotMultiplot_H
 
+#include <CFont.h>
+#include <CIPoint2D.h>
+
+class CGnuPlot;
+
 class CGnuPlotMultiplot {
  public:
-  CGnuPlotMultiplot() { }
+  CGnuPlotMultiplot(CGnuPlot *plot);
+
+  virtual ~CGnuPlotMultiplot();
 
   bool isEnabled() const { return enabled_; }
   void setEnabled(bool b) { enabled_ = b; }
@@ -38,6 +45,31 @@ class CGnuPlotMultiplot {
   double yOffset() const { return yoffset_; }
   void setYOffset(double r) { yoffset_ = r; }
 
+  double xSpacing() const { return xspacing_; }
+  void setXSpacing(double r) { xspacing_ = r; }
+
+  double ySpacing() const { return yspacing_; }
+  void setYSpacing(double r) { yspacing_ = r; }
+
+  void getSpacing(double &x, double &y) { x = xSpacing(); y = ySpacing(); }
+  void setSpacing(double x, double y) { setXSpacing(x); setYSpacing(y); }
+
+  double lmargin() const { return lmargin_; }
+  void setLMargin(double r) { lmargin_ = r; }
+  double rmargin() const { return rmargin_; }
+  void setRMargin(double r) { rmargin_ = r; }
+  double tmargin() const { return tmargin_; }
+  void setTMargin(double r) { tmargin_ = r; }
+  double bmargin() const { return bmargin_; }
+  void setBMargin(double r) { bmargin_ = r; }
+
+  void getMargins(double &l, double &r, double &t, double &b) {
+    l = lmargin(); r = rmargin(); t = tmargin(); b = bmargin();
+  }
+  void setMargins(double l, double r, double t, double b) {
+    setLMargin(l); setRMargin(r); setTMargin(t); setBMargin(b);
+  }
+
   const std::string &title() const { return title_; }
   void setTitle(const std::string &title) { title_ = title; }
 
@@ -47,27 +79,10 @@ class CGnuPlotMultiplot {
   double dx() const { return (cols_ > 0 ? 1.0/cols_ : 1.0); }
   double dy() const { return (rows_ > 0 ? 1.0/rows_ : 1.0); }
 
-  CIPoint2D pos(int n) {
-    int r = 0, c = 0;
-
-    if (cols_ > 0 && rows_ > 0) {
-      if (rowsFirst_) {
-        r = n % rows_;
-        c = n / rows_;
-      }
-      else {
-        c = n % cols_;
-        r = n / cols_;
-      }
-    }
-
-    if (downward_)
-      r = rows_ - 1 - r;
-
-    return CIPoint2D(c, r);
-  }
+  CIPoint2D pos(int n) const;
 
  private:
+  CGnuPlot*   plot_      { 0 };
   bool        enabled_   { false };
   bool        autoFit_   { true };
   bool        enhanced_  { false };
@@ -79,8 +94,16 @@ class CGnuPlotMultiplot {
   double      yscale_    { 1.0 };
   double      xoffset_   { 0.0 };
   double      yoffset_   { 0.0 };
+  double      lmargin_   { 0.0 };
+  double      rmargin_   { 0.0 };
+  double      tmargin_   { 0.0 };
+  double      bmargin_   { 0.0 };
+  double      xspacing_  { 0.0 };
+  double      yspacing_  { 0.0 };
   std::string title_;
   CFontPtr    titleFont_;
 };
+
+typedef CRefPtr<CGnuPlotMultiplot> CGnuPlotMultiplotP;
 
 #endif

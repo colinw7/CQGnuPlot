@@ -33,14 +33,18 @@ QPointF
 CQGnuPlotTitle::
 offset() const
 {
-  return CQUtil::toQPoint(CGnuPlotTitle::offset());
+  return CQUtil::toQPoint(CGnuPlotTitle::lastOffset());
 }
 
 void
 CQGnuPlotTitle::
 setOffset(const QPointF &p)
 {
-  CGnuPlotTitle::setOffset(CQUtil::fromQPoint(p));
+  CPoint2D p1 = CQUtil::fromQPoint(p);
+
+  CGnuPlotPosition pos(CPoint3D(p1.x, p1.y, 0));
+
+  CGnuPlotTitle::setOffset(pos);
 }
 
 QColor

@@ -114,6 +114,9 @@ double
 CGnuPlotPalette::
 interp(int ind, double x) const
 {
+  if (ind < 0)
+    return interp(-ind, 1 - x);
+
   switch (ind) {
     case  0: return 0;
     case  1: return 0.5;
@@ -271,7 +274,7 @@ show(std::ostream &os) const
     os << "all color formulae ARE NOT written into output postscript file" << std::endl;
 
   if (maxColors_ <= 0)
-    os << "allocating ALL remaining" << std::endl;
+    os << "allocating ALL remaining";
   else
     os << "allocating MAX " << maxColors_;
   os << " color positions for discrete palette terminals" << std::endl;

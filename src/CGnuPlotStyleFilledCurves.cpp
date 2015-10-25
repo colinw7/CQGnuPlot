@@ -308,7 +308,7 @@ addPolygons(CGnuPlotPlot *plot, const Points &points, PointsArray &pointsArray)
 {
   const CGnuPlotFilledCurve &filledCurve = plot->filledCurve();
 
-  const CBBox2D &bbox = plot->getBBox();
+  const CBBox2D &bbox = plot->bbox();
 
   COptReal x, y, r;
 
@@ -425,11 +425,4 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   // fill and stroke rectangle
   renderer->fillRect  (cbbox, fill);
   renderer->strokeRect(cbbox, stroke);
-}
-
-CBBox2D
-CGnuPlotStyleFilledCurves::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
 }

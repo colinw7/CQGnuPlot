@@ -76,6 +76,8 @@ class CGnuPlotBBoxRenderer : public CGnuPlotRenderer {
   void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
                         double a21, double a22, const CRGBA &fc, const CRGBA &lc) override;
 
+  void drawImage(const CPoint2D &, const CImagePtr &) override;
+
  private:
   void addRect (const CBBox2D  &b);
   void addPoint(const CPoint2D &p);

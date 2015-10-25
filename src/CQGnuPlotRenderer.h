@@ -83,6 +83,8 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
                         double a21, double a22, const CRGBA &fc, const CRGBA &lc) override;
 
+  void drawImage(const CPoint2D &p, const CImagePtr &image) override;
+
   void setFont(const CFontPtr &font);
 
  private:

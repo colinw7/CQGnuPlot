@@ -9,6 +9,7 @@
 #include <CQGnuPlotEllipseObject.h>
 #include <CQGnuPlotErrorBarObject.h>
 #include <CQGnuPlotFinanceBarObject.h>
+#include <CQGnuPlotImageObject.h>
 #include <CQGnuPlotLabelObject.h>
 #include <CQGnuPlotPathObject.h>
 #include <CQGnuPlotPieObject.h>
@@ -143,7 +144,7 @@ draw()
   if (isSelected()) {
     CGnuPlotRenderer *renderer = app()->renderer();
 
-    renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);
+    renderer->drawRect(bbox(), CRGBA(1,0,0), 2);
   }
 }
 
@@ -212,6 +213,15 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
     CQGnuPlotFinanceBarObject *qbar = static_cast<CQGnuPlotFinanceBarObject *>(bar);
 
     objects.push_back(qbar);
+  }
+
+  for (auto &image : imageObjects()) {
+    if (! image->inside(insideData))
+      continue;
+
+    CQGnuPlotImageObject *qimage = static_cast<CQGnuPlotImageObject *>(image);
+
+    objects.push_back(qimage);
   }
 
   for (auto &label : labelObjects()) {
@@ -372,6 +382,19 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
     return true;
   }
 
+  for (auto &image : imageObjects()) {
+    if (! image->inside(insideData))
+      continue;
+
+    CQGnuPlotImageObject *qimage = static_cast<CQGnuPlotImageObject *>(image);
+
+    qwindow()->highlightObject(qimage);
+
+    tip = image->tip();
+
+    return true;
+  }
+
   for (auto &label : labelObjects()) {
     if (! label->inside(insideData))
       continue;
@@ -451,6 +474,40 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   return CGnuPlotPlot::mouseTip(insideData, tip);
+}
+
+void
+CQGnuPlotPlot::
+moveObjects(int key)
+{
+  typedef std::vector<CGnuPlotPlotObject *> Objects;
+
+  Objects objects;
+
+  for (auto &image : imageObjects()) {
+    if (image->isSelected())
+      objects.push_back(image);
+  }
+
+  for (auto &rect : rectObjects()) {
+    if (rect->isSelected())
+      objects.push_back(rect);
+  }
+
+  for (const auto &obj : objects) {
+    CBBox2D bbox = obj->bbox();
+
+    if      (key == Qt::Key_Left)
+      bbox.moveBy(-CPoint2D(bbox.getWidth()/10, 0));
+    else if (key == Qt::Key_Right)
+      bbox.moveBy( CPoint2D(bbox.getWidth()/10, 0));
+    else if (key == Qt::Key_Down)
+      bbox.moveBy(-CPoint2D(0, bbox.getHeight()/10));
+    else if (key == Qt::Key_Up)
+      bbox.moveBy( CPoint2D(0, bbox.getHeight()/10));
+
+    obj->setBBox(bbox);
+  }
 }
 
 //------

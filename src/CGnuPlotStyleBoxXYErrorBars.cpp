@@ -120,10 +120,3 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       bar->draw(renderer);
   }
 }
-
-CBBox2D
-CGnuPlotStyleBoxXYErrorBars::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
-}

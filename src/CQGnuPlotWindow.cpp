@@ -1,4 +1,5 @@
 #include <CQGnuPlotWindow.h>
+#include <CQGnuPlotMultiplot.h>
 #include <CQGnuPlot.h>
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotPlot.h>
@@ -30,6 +31,7 @@
 #include <CQGnuPlotEllipseObject.h>
 #include <CQGnuPlotErrorBarObject.h>
 #include <CQGnuPlotFinanceBarObject.h>
+#include <CQGnuPlotImageObject.h>
 #include <CQGnuPlotLabelObject.h>
 #include <CQGnuPlotPathObject.h>
 #include <CQGnuPlotPieObject.h>
@@ -71,6 +73,7 @@
 //#include <xpm/yaxis.xpm>
 
 #include <svg/select_svg.h>
+#include <svg/move_svg.h>
 #include <svg/zoom_svg.h>
 #include <svg/grid_svg.h>
 #include <svg/xaxis_svg.h>
@@ -86,7 +89,7 @@ namespace {
   }
 }
 
-static const int TreeWidth = 250;
+static const int TreeWidth = 400;
 
 CQGnuPlotWindow::
 CQGnuPlotWindow(CQGnuPlot *plot) :
@@ -130,17 +133,18 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   //---
 
-//selectAction_ = new QAction(QIcon(QPixmap(select_data)), "Select", this);
   selectAction_ = new QAction(svgIcon(select_data, SELECT_DATA_LEN), "Select", this);
-//zoomAction_   = new QAction(QIcon(QPixmap(zoom_data  )), "Zoom"  , this);
+  moveAction_   = new QAction(svgIcon(move_data  , MOVE_DATA_LEN  ), "Move"  , this);
   zoomAction_   = new QAction(svgIcon(zoom_data  , ZOOM_DATA_LEN  ), "Zoom"  , this);
 
   selectAction_->setCheckable(true);
+  moveAction_  ->setCheckable(true);
   zoomAction_  ->setCheckable(true);
 
   selectAction_->setChecked(true);
 
   connect(selectAction_, SIGNAL(triggered(bool)), this, SLOT(selectMode(bool)));
+  connect(moveAction_  , SIGNAL(triggered(bool)), this, SLOT(moveMode  (bool)));
   connect(zoomAction_  , SIGNAL(triggered(bool)), this, SLOT(zoomMode  (bool)));
 
   //---
@@ -150,6 +154,7 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   addToolBar(toolbar);
 
   toolbar->addAction(selectAction_);
+  toolbar->addAction(moveAction_);
   toolbar->addAction(zoomAction_);
 
   //---
@@ -242,6 +247,7 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   QMenu *modeMenu = menuBar()->addMenu("&Mode");
 
   modeMenu->addAction(selectAction_);
+  modeMenu->addAction(moveAction_);
   modeMenu->addAction(zoomAction_);
 
   //------
@@ -390,6 +396,37 @@ addProperties()
     tree_->addProperty(lineStyleName, ls1, "palette"      );
   }
 
+  //---
+
+  CQGnuPlotMultiplot *qmultiplot = (plot_->multiplot().isValid() ?
+    static_cast<CQGnuPlotMultiplot *>(plot_->multiplot().getPtr()) : 0);
+
+  if (qmultiplot) {
+    QString multiplotName("Multiplot");
+
+    tree_->addProperty(multiplotName, qmultiplot, "enabled");
+    tree_->addProperty(multiplotName, qmultiplot, "autoFit");
+    tree_->addProperty(multiplotName, qmultiplot, "enhanced");
+    tree_->addProperty(multiplotName, qmultiplot, "rows");
+    tree_->addProperty(multiplotName, qmultiplot, "cols");
+    tree_->addProperty(multiplotName, qmultiplot, "rowsFirst");
+    tree_->addProperty(multiplotName, qmultiplot, "downward");
+    tree_->addProperty(multiplotName, qmultiplot, "xscale");
+    tree_->addProperty(multiplotName, qmultiplot, "yscale");
+    tree_->addProperty(multiplotName, qmultiplot, "xoffset");
+    tree_->addProperty(multiplotName, qmultiplot, "yoffset");
+    tree_->addProperty(multiplotName, qmultiplot, "xspacing");
+    tree_->addProperty(multiplotName, qmultiplot, "yspacing");
+    tree_->addProperty(multiplotName, qmultiplot, "lmargin");
+    tree_->addProperty(multiplotName, qmultiplot, "rmargin");
+    tree_->addProperty(multiplotName, qmultiplot, "tmargin");
+    tree_->addProperty(multiplotName, qmultiplot, "bmargin");
+    tree_->addProperty(multiplotName, qmultiplot, "title");
+    tree_->addProperty(multiplotName, qmultiplot, "titleFont");
+  }
+
+  //---
+
   for (auto group : groups()) {
     CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
@@ -440,6 +477,8 @@ addGroupProperties(CGnuPlotGroup *group)
     tree_->addProperty(pm3dName, qpm3d, "enabled");
     tree_->addProperty(pm3dName, qpm3d, "ftriangles");
     tree_->addProperty(pm3dName, qpm3d, "clipIn");
+    tree_->addProperty(pm3dName, qpm3d, "lineType");
+    tree_->addProperty(pm3dName, qpm3d, "implicit");
   }
 
   QString regionName = groupName + "/region";
@@ -569,6 +608,7 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(keyName, qkey, "drawBox");
   tree_->addProperty(keyName, qkey, "fillBox");
   tree_->addProperty(keyName, qkey, "boxLineStyle");
+  tree_->addProperty(keyName, qkey, "title");
   tree_->addProperty(keyName, qkey, "reverse");
   tree_->addProperty(keyName, qkey, "outside");
   tree_->addProperty(keyName, qkey, "halign");
@@ -593,6 +633,8 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(colorBoxName, qcolorBox, "borderStyle");
   tree_->addProperty(colorBoxName, qcolorBox, "origin");
   tree_->addProperty(colorBoxName, qcolorBox, "size");
+  tree_->addProperty(colorBoxName, qcolorBox, "title");
+  tree_->addProperty(colorBoxName, qcolorBox, "angle");
   tree_->addProperty(colorBoxName, qcolorBox, "min");
   tree_->addProperty(colorBoxName, qcolorBox, "max");
 
@@ -1112,6 +1154,23 @@ addPlotProperties(CGnuPlotPlot *plot)
     }
   }
 
+  if (! plot->imageObjects().empty()) {
+    int i = 0;
+
+    for (const auto &image : plot->imageObjects()) {
+      QString imageName = QString("%1/Images/Image%2").arg(plotName).arg(i + 1);
+
+      CQGnuPlotImageObject *qimage = static_cast<CQGnuPlotImageObject *>(image);
+
+      tree_->addProperty(imageName, qimage, "x");
+      tree_->addProperty(imageName, qimage, "y");
+      tree_->addProperty(imageName, qimage, "angle");
+      tree_->addProperty(imageName, qimage, "flipY");
+
+      ++i;
+    }
+  }
+
   if (! plot->labelObjects().empty()) {
     int i = 0;
 
@@ -1485,8 +1544,21 @@ selectMode(bool)
   mode_ = Mode::SELECT;
 
   selectAction_->setChecked(true);
+  moveAction_  ->setChecked(false);
   zoomAction_  ->setChecked(false);
 }
+
+void
+CQGnuPlotMainWindow::
+moveMode(bool)
+{
+  mode_ = Mode::MOVE;
+
+  selectAction_->setChecked(false);
+  moveAction_  ->setChecked(true);
+  zoomAction_  ->setChecked(false);
+}
+
 
 void
 CQGnuPlotMainWindow::
@@ -1495,6 +1567,7 @@ zoomMode(bool)
   mode_ = Mode::ZOOM;
 
   selectAction_->setChecked(false);
+  moveAction_  ->setChecked(false);
   zoomAction_  ->setChecked(true);
 }
 
@@ -1527,14 +1600,16 @@ mousePress(const QPoint &qp)
 {
   escape_ = false;
 
-  if (mode_ == Mode::SELECT) {
+  if      (mode_ == Mode::SELECT) {
     for (auto group : groups()) {
       CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
       qgroup->mousePress(qp);
     }
   }
-  else {
+  else if (mode_ == Mode::MOVE) {
+  }
+  else if (mode_ == Mode::ZOOM) {
     zoomPress_   = qp;
     zoomRelease_ = zoomPress_;
     zoomGroup_   = currentGroup();
@@ -1552,7 +1627,9 @@ mouseMove(const QPoint &qp, bool pressed)
       qgroup->mouseMove(qp);
     }
   }
-  else {
+  else if (mode_ == Mode::MOVE) {
+  }
+  else if (mode_ == Mode::ZOOM) {
     if (pressed) {
       zoomRelease_ = qp;
 
@@ -1588,9 +1665,11 @@ void
 CQGnuPlotMainWindow::
 mouseRelease(const QPoint &)
 {
-  if (mode_ == Mode::SELECT) {
+  if      (mode_ == Mode::SELECT) {
   }
-  else {
+  else if (mode_ == Mode::MOVE) {
+  }
+  else if (mode_ == Mode::ZOOM) {
     int dx = abs(zoomRelease_.x() - zoomPress_.x());
     int dy = abs(zoomRelease_.y() - zoomPress_.y());
 
@@ -1620,7 +1699,17 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
 
   CGnuPlotCameraP camera = group->camera();
 
-  if (mode_ == Mode::ZOOM) {
+  if      (mode_ == Mode::SELECT) {
+  }
+  else if (mode_ == Mode::MOVE) {
+    if (key == Qt::Key_Left || key == Qt::Key_Right ||
+        key == Qt::Key_Up   || key == Qt::Key_Down) {
+      group->moveObjects(key);
+
+      redraw();
+    }
+  }
+  else if (mode_ == Mode::ZOOM) {
     double xmin = group->getXMin(), ymin = group->getYMin();
     double xmax = group->getXMax(), ymax = group->getYMax();
 

@@ -19,6 +19,8 @@ class CQGnuPlotColorBox : public CQGnuPlotObject, public CGnuPlotColorBox {
   Q_PROPERTY(int     borderStyle READ borderStyle WRITE setBorderStyle)
   Q_PROPERTY(QPointF origin      READ origin      WRITE setOrigin     )
   Q_PROPERTY(QSizeF  size        READ size        WRITE setSize       )
+  Q_PROPERTY(QString title       READ titleString WRITE setTitleString)
+  Q_PROPERTY(double  angle       READ titleRotate WRITE setTitleRotate)
   Q_PROPERTY(double  min         READ getMin      WRITE setMin        )
   Q_PROPERTY(double  max         READ getMax      WRITE setMax        )
 
@@ -31,6 +33,9 @@ class CQGnuPlotColorBox : public CQGnuPlotObject, public CGnuPlotColorBox {
 
   QSizeF size() const;
   void setSize(const QSizeF &s);
+
+  QString titleString() const;
+  void setTitleString(const QString &s);
 
   double getMin() const;
   void setMin(double r);

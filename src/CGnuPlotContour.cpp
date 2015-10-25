@@ -79,17 +79,23 @@ reset()
   x_.clear();
   y_.clear();
   z_.clear();
+  c_.clear();
 
   levels_.clear();
 }
 
 void
 CGnuPlotContour::
-setData(double *x, double *y, double *z, int no_x, int no_y)
+setData(double *x, double *y, double *z, double *c, int no_x, int no_y, bool has_c)
 {
+  int no_z = no_x*no_y;
+
   x_ = std::vector<double>(&x[0], &x[no_x]);
   y_ = std::vector<double>(&y[0], &y[no_y]);
-  z_ = std::vector<double>(&z[0], &z[no_x*no_y]);
+  z_ = std::vector<double>(&z[0], &z[no_z]);
+
+  if (has_c)
+    c_ = std::vector<double>(&c[0], &c[no_z]);
 
   xmin_.setInvalid(); ymin_.setInvalid(); zmin_.setInvalid();
   xmax_.setInvalid(); ymax_.setInvalid(); zmax_.setInvalid();
@@ -97,6 +103,7 @@ setData(double *x, double *y, double *z, int no_x, int no_y)
   for (auto x : x_) { xmin_.updateMin(x); xmax_.updateMax(x); }
   for (auto y : y_) { ymin_.updateMin(y); ymax_.updateMax(y); }
   for (auto z : z_) { zmin_.updateMin(z); zmax_.updateMax(z); }
+  for (auto c : c_) { cmin_.updateMin(c); cmax_.updateMax(c); }
 
   calcContourLines();
 }
@@ -217,10 +224,20 @@ calcContourLines()
 
         //---
 
-        double z1 = z_[j1 + i], z2 = z_[j1 + i + 1];
-        double z3 = z_[j2 + i], z4 = z_[j2 + i + 1];
+        double z1, z2, z3, z4, zm;
 
-        double zm = CGnuPlotUtil::avg({z1, z2, z3, z4});
+        if (! c_.empty()) {
+          z1 = z_[j1 + i], z2 = z_[j1 + i + 1];
+          z3 = z_[j2 + i], z4 = z_[j2 + i + 1];
+
+          zm = CGnuPlotUtil::avg({z1, z2, z3, z4});
+        }
+        else {
+          z1 = c_[j1 + i], z2 = c_[j1 + i + 1];
+          z3 = c_[j2 + i], z4 = c_[j2 + i + 1];
+
+          zm = CGnuPlotUtil::avg({z1, z2, z3, z4});
+        }
 
         //---
 
@@ -375,8 +392,16 @@ drawContourSolid(CGnuPlotRenderer *renderer)
     for (uint j = 0; j < y_.size() - 1; ++j) {
       double y1 = y_[j + 0], y2 = y_[j + 1];
 
-      double z1 = z_[i1 + j    ], z2 = z_[i2 + j    ];
-      double z3 = z_[i1 + j + 1], z4 = z_[i2 + j + 1];
+      double z1, z2, z3, z4;
+
+      if (! c_.empty()) {
+        z1 = z_[i1 + j    ], z2 = z_[i2 + j    ];
+        z3 = z_[i1 + j + 1], z4 = z_[i2 + j + 1];
+      }
+      else {
+        z1 = c_[i1 + j    ], z2 = c_[i2 + j    ];
+        z3 = c_[i1 + j + 1], z4 = c_[i2 + j + 1];
+      }
 
       fillContourBox(renderer, x1, y1, x2, y2, z1, z2, z3, z4, levels);
     }
@@ -420,7 +445,12 @@ initLevels() const
 
     for (uint i = 0; i < x_.size(); ++i) {
       for (uint j = 0; j < y_.size(); ++j) {
-        double zm = z_[i*y_.size() + j];
+        double zm;
+
+        if (! c_.empty())
+          zm = z_[i*y_.size() + j];
+        else
+          zm = c_[i*y_.size() + j];
 
         z1.updateMin(zm);
         z2.updateMax(zm);
@@ -466,6 +496,7 @@ fillContourBox(CGnuPlotRenderer *renderer, double x1, double y1, double x2, doub
 
   //---
 
+#if 1
   // get consistent level for four values
   int l = 0;
 
@@ -523,6 +554,42 @@ fillContourBox(CGnuPlotRenderer *renderer, double x1, double y1, double x2, doub
 
     return;
   }
+#else
+  double zm = CGnuPlotUtil::avg({z1, z2, z3, z4});
+
+  double l;
+
+  if (! c_.empty())
+    l = CGnuPlotUtil::map(zm, zmin_.getValue(zm), zmax_.getValue(zm), 0, 1);
+  else
+    l = CGnuPlotUtil::map(zm, cmin_.getValue(zm), cmax_.getValue(zm), 0, 1);
+
+  CGnuPlotColorBoxP cb = plot_->group()->colorBox();
+
+  CRGBA c = cb->valueToColor(l).rgba();
+
+  std::vector<CPoint3D> points;
+
+  if (pos == CGnuPlotContourData::DrawPos::BASE ||
+      pos == CGnuPlotContourData::DrawPos::BOTH) {
+    points.push_back(CPoint3D(x1, y1, min_z_));
+    points.push_back(CPoint3D(x2, y1, min_z_));
+    points.push_back(CPoint3D(x2, y2, min_z_));
+    points.push_back(CPoint3D(x1, y2, min_z_));
+
+    renderer->fillPolygon(points, c);
+  }
+
+  if (pos == CGnuPlotContourData::DrawPos::SURFACE ||
+      pos == CGnuPlotContourData::DrawPos::BOTH) {
+    points.push_back(CPoint3D(x1, y1, z1));
+    points.push_back(CPoint3D(x2, y1, z2));
+    points.push_back(CPoint3D(x2, y2, z4));
+    points.push_back(CPoint3D(x1, y2, z3));
+
+    renderer->fillPolygon(points, c);
+  }
+#endif
 
   //---
 

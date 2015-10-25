@@ -194,10 +194,3 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   renderer->drawEllipse(c, w/2, h/2, 0, lc, 1);
 }
-
-CBBox2D
-CGnuPlotStyleEllipses::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
-}

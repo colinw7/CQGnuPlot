@@ -106,10 +106,3 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     ++i;
   }
 }
-
-CBBox2D
-CGnuPlotStyleXYErrorLines::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
-}

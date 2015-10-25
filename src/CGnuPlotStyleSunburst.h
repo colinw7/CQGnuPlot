@@ -11,13 +11,13 @@ class CGnuPlotStyleSunburst : public CGnuPlotStyleBase {
 
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
 
-  void drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
-
-  CBBox2D fit(CGnuPlotPlot *plot) override;
-
   bool isSingleType() const override { return true; }
 
+  void drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
+
   void drawAxes(CGnuPlotPlot *, CGnuPlotRenderer *) override { }
+
+  CBBox2D fit(CGnuPlotPlot *plot) override;
 };
 
 #endif

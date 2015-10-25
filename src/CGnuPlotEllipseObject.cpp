@@ -33,20 +33,20 @@ void
 CGnuPlotEllipseObject::
 update()
 {
-  rect_ = CBBox2D();
+  bbox_ = CBBox2D();
 
   double w = size_.getWidth ();
   double h = size_.getHeight();
 
-  rect_ += center_ - CPoint2D(w, h);
-  rect_ += center_ + CPoint2D(w, h);
+  bbox_ += center_ - CPoint2D(w, h);
+  bbox_ += center_ + CPoint2D(w, h);
 }
 
 bool
 CGnuPlotEllipseObject::
 inside(const CGnuPlotTypes::InsideData &data) const
 {
-  if (! rect_.inside(data.window))
+  if (! bbox_.inside(data.window))
     return false;
 
   // inside ellipse
@@ -73,7 +73,7 @@ tip() const
   tip.setBorderColor(stroke_->color());
   tip.setXColor     (stroke_->color());
 
-  tip.setRect(rect_);
+  tip.setBBox(bbox_);
 
   return tip;
 }

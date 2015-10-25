@@ -36,7 +36,7 @@ tip() const
   tip.setBorderColor(color());
   tip.setXColor     (color());
 
-  tip.setRect(bbox_);
+  tip.setBBox(bbox_);
 
   return tip;
 }

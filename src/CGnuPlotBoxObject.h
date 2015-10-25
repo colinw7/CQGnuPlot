@@ -65,7 +65,7 @@ class CGnuPlotBoxObject : public CGnuPlotPlotObject {
   const CGnuPlotMarkP &outlierMark() const { return outlierMark_; }
   void setOutlierMark(const CGnuPlotMarkP &m) { outlierMark_ = m; }
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const override;
+  const CBBox2D &bbox() const { return bbox_; }
 
   CGnuPlotTipData tip() const override;
 

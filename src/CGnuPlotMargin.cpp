@@ -29,10 +29,19 @@ updateDefaultValues(CGnuPlotRenderer *renderer, double lm, double bm, double rm,
     }
   }
 
+  updateFontSize(renderer);
+}
+
+void
+CGnuPlotMargin::
+updateFontSize(CGnuPlotRenderer *renderer) const
+{
   CFontPtr font = renderer->getFont();
 
-  fw_ = font->getStringWidth("X");
-  fh_ = font->getCharHeight();
+  CGnuPlotMargin *th = const_cast<CGnuPlotMargin *>(this);
+
+  th->fw_ = font->getStringWidth("X");
+  th->fh_ = font->getCharHeight();
 }
 
 //------
@@ -42,6 +51,9 @@ CGnuPlotMarginValue::
 xValue(CGnuPlotRenderer *renderer, const CGnuPlotMargin &margin) const
 {
   if (! isScreen()) {
+    if (! margin.hasFontSize())
+      margin.updateFontSize(renderer);
+
     return value().getValue(defValue())*margin.fontWidth();
   }
   else {
@@ -59,6 +71,9 @@ CGnuPlotMarginValue::
 yValue(CGnuPlotRenderer *renderer, const CGnuPlotMargin &margin) const
 {
   if (! isScreen()) {
+    if (! margin.hasFontSize())
+      margin.updateFontSize(renderer);
+
     return value().getValue(defValue())*margin.fontHeight();
   }
   else {

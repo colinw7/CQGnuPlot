@@ -2,7 +2,7 @@
 #define CGnuPlotTitle_H
 
 #include <CGnuPlotColorSpec.h>
-#include <CPoint2D.h>
+#include <CGnuPlotPosition.h>
 #include <CFont.h>
 
 class CGnuPlotGroup;
@@ -15,8 +15,8 @@ class CGnuPlotTitleData {
   const std::string &text() const { return text_; }
   void setText(const std::string &str) { text_ = str; }
 
-  const CPoint2D &offset() const { return offset_; }
-  void setOffset(const CPoint2D &o) { offset_ = o; }
+  const CGnuPlotPosition &offset() const { return offset_; }
+  void setOffset(const CGnuPlotPosition &o) { offset_ = o; }
 
   const CFontPtr &font() const { return font_; }
   void setFont(const CFontPtr &str) { font_ = str; }
@@ -42,7 +42,7 @@ class CGnuPlotTitleData {
 
   void show(std::ostream &os) const {
     os << "title is \"" << text() << "\"";
-    os << ", " << "offset at ((character units) " << offset().x << ", " << offset().y << ", 0)";
+    os << ", " << "offset at (" << offset() << ")";
 
     if (font().isValid())
       os << ", using font \"" << font() << "\"";
@@ -55,7 +55,7 @@ class CGnuPlotTitleData {
 
  private:
   std::string       text_;
-  CPoint2D          offset_ { 0, 0 };
+  CGnuPlotPosition  offset_;
   CFontPtr          font_;
   CGnuPlotColorSpec color_;
   bool              enhanced_ { true };
@@ -76,8 +76,8 @@ class CGnuPlotTitle {
   const std::string &text() const { return data_.text(); }
   void setText(const std::string &str) { data_.setText(str); }
 
-  const CPoint2D &offset() const { return data_.offset(); }
-  void setOffset(const CPoint2D &o) { data_.setOffset(o); }
+  const CGnuPlotPosition &offset() const { return data_.offset(); }
+  void setOffset(const CGnuPlotPosition &o) { data_.setOffset(o); }
 
   const CFontPtr &font() const { return data_.font(); }
   void setFont(const CFontPtr &f) { data_.setFont(f); }
@@ -88,12 +88,16 @@ class CGnuPlotTitle {
   bool isEnhanced() const { return data_.isEnhanced(); }
   void setEnhanced(bool b) { data_.setEnhanced(b); }
 
+  const CPoint2D &lastOffset() const { return lastOffset_; }
+  void setLastOffset(const CPoint2D &v) { lastOffset_ = v; }
+
   virtual void draw(CGnuPlotRenderer *renderer) const;
 
  private:
   CGnuPlotGroup*    group_ { 0 };
   CGnuPlotTitleData data_;
   mutable CBBox2D   bbox_;
+  mutable CPoint2D  lastOffset_;
 };
 
 typedef std::shared_ptr<CGnuPlotTitle> CGnuPlotTitleP;

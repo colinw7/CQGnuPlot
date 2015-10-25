@@ -26,8 +26,8 @@ struct Words {
     flush();
   }
 
-  void flush() {
-    if (force_ || word_ != "") {
+  void flush(bool force=false) {
+    if (force || force_ || word_ != "") {
       fields_.push_back(word_);
 
       force_ = false;
@@ -330,7 +330,7 @@ parseFileLine(const std::string &str, Fields &fields)
         line.skipSpace();
       }
       else if (line.isChar(separator_)) {
-        words.flush();
+        words.flush(true);
 
         while (line.isValid() && line.isChar(separator_))
           line.skipChar();

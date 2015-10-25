@@ -77,7 +77,7 @@ tip() const
   tip.setBorderColor(c_);
   tip.setXColor(c_);
 
-  tip.setRect(bbox_);
+  tip.setBBox(bbox_);
 
   return tip;
 }

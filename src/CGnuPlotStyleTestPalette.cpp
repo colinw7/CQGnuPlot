@@ -3,6 +3,7 @@
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotUtil.h>
+#include <CGnuPlotColorBox.h>
 
 CGnuPlotStyleTestPalette::
 CGnuPlotStyleTestPalette() :
@@ -14,6 +15,17 @@ void
 CGnuPlotStyleTestPalette::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  if (renderer->isPseudo()) {
+    renderer->drawRect(CBBox2D(0,0,1,1), CRGBA(0,0,0), 1);
+    return;
+  }
+
+  //---
+
+  CGnuPlotGroup *group = plot->group();
+
+  //---
+
   renderer->setRegion(CBBox2D(0, 0, 1, 1));
 
   double px1, py1, px2, py2;
@@ -21,10 +33,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   renderer->windowToPixel(0.0, 0.0, &px1, &py1);
   renderer->windowToPixel(1.0, 1.0, &px2, &py2);
 
-  double wx1, wy1, wx2, wy2;
+  //double wx1, wy1, wx2, wy2;
 
-  renderer->pixelToWindow(0, py1 + 32, &wx1, &wy1);
-  renderer->pixelToWindow(0, py1 + 64, &wx2, &wy2);
+  //renderer->pixelToWindow(0, py1 + 32, &wx1, &wy1);
+  //renderer->pixelToWindow(0, py1 + 64, &wx2, &wy2);
 
   bool   first = true;
   double r1, g1, b1, m1, x1;
@@ -34,11 +46,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     renderer->pixelToWindow(i, 0, &wx, &wy);
 
-    CColor c = plot->group()->palette()->getColor(wx);
+    CColor c = group->palette()->getColor(wx);
 
     CRGBA rgba = c.rgba();
 
-    renderer->drawLine(CPoint2D(wx, wy1), CPoint2D(wx, wy2), 0.0, rgba);
+    //renderer->drawLine(CPoint2D(wx, wy1), CPoint2D(wx, wy2), 0.0, rgba);
 
     //double x = (i - px1)/(px2 - px1);
 
@@ -64,23 +76,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     first = false;
   }
 
-  renderer->drawRect(CBBox2D(0.0, wy1, 1.0, wy2), CRGBA(0,0,0), 1);
+  //renderer->drawRect(CBBox2D(0.0, wy1, 1.0, wy2), CRGBA(0,0,0), 1);
 
 #if 0
-  CGnuPlotAxis *xaxis = group()->getPlotAxis(AxisType::X, 1);
-  CGnuPlotAxis *yaxis = group()->getPlotAxis(AxisType::Y, 1);
-
   xaxis->drawAxis(0.0);
   yaxis->drawAxis(0.0);
 
   xaxis->drawGrid(0.0, 1.0);
   yaxis->drawGrid(0.0, 1.0);
 #endif
-}
-
-CBBox2D
-CGnuPlotStyleTestPalette::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
 }

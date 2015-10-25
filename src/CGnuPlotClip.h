@@ -16,8 +16,8 @@ class CGnuPlotClip {
 
   bool isOn() const { return (points_ || one_ || two_); }
 
-  const CBBox2D &rect() const { return rect_; }
-  void setRect(const CBBox2D &r) { rect_ = r; }
+  const CBBox2D &bbox() const { return bbox_; }
+  void setBBox(const CBBox2D &r) { bbox_ = r; }
 
   void reset() {
     points_ = true;
@@ -49,7 +49,7 @@ class CGnuPlotClip {
   bool    points_ { false };
   bool    one_    { true  };
   bool    two_    { false };
-  CBBox2D rect_;
+  CBBox2D bbox_;
 };
 
 #endif

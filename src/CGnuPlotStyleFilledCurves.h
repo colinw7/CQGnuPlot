@@ -19,8 +19,6 @@ class CGnuPlotStyleFilledCurves : public CGnuPlotStyleBase {
   void drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
                    const CPoint2D &p1, const CPoint2D &p2) override;
 
-  CBBox2D fit(CGnuPlotPlot *plot) override;
-
  private:
   void addPolygons(CGnuPlotPlot *plot, const Points &points, PointsArray &pointsArray);
   void drawPolygon(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, int i, Points &points);

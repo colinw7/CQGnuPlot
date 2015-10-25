@@ -10,6 +10,7 @@
 #include <CGnuPlotEllipseObject.h>
 #include <CGnuPlotErrorBarObject.h>
 #include <CGnuPlotFinanceBarObject.h>
+#include <CGnuPlotImageObject.h>
 #include <CGnuPlotLabelObject.h>
 #include <CGnuPlotPathObject.h>
 #include <CGnuPlotPieObject.h>
@@ -33,6 +34,13 @@ CGnuPlotDevice::
 createWindow()
 {
   return new CGnuPlotWindow(plot_);
+}
+
+CGnuPlotMultiplot *
+CGnuPlotDevice::
+createMultiplot()
+{
+  return new CGnuPlotMultiplot(plot_);
 }
 
 CGnuPlotGroup *
@@ -210,6 +218,13 @@ CGnuPlotDevice::
 createFinanceBarObject(CGnuPlotPlot *plot)
 {
   return new CGnuPlotFinanceBarObject(plot);
+}
+
+CGnuPlotImageObject *
+CGnuPlotDevice::
+createImageObject(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotImageObject(plot);
 }
 
 CGnuPlotLabelObject *

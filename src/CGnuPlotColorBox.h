@@ -103,6 +103,12 @@ class CGnuPlotColorBox {
   const CSize2D &size() const { return data_.size(); }
   void setSize(const CSize2D &s) { data_.setSize(s); }
 
+  double titleRotate() const;
+  void setTitleRotate(double r);
+
+  const std::string &titleString() const;
+  void setTitleString(const std::string &v);
+
   const CGnuPlotAxisData &axis() const { return data_.axis(); }
   CGnuPlotAxisData &axis() { return data_.axis(); }
 
@@ -112,7 +118,7 @@ class CGnuPlotColorBox {
   const COptReal &max() const { return data_.max(); }
   void setMax(double r) { data_.setMax(r); }
 
-  const CBBox2D &getBBox() const { return bbox_; }
+  const CBBox2D &bbox() const { return bbox_; }
 
   CColor valueToColor(double x) const;
 
@@ -124,6 +130,6 @@ class CGnuPlotColorBox {
   mutable CBBox2D      bbox_;
 };
 
-typedef std::unique_ptr<CGnuPlotColorBox> CGnuPlotColorBoxP;
+typedef CRefPtr<CGnuPlotColorBox> CGnuPlotColorBoxP;
 
 #endif

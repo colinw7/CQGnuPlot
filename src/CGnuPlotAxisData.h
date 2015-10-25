@@ -191,8 +191,9 @@ class CGnuPlotAxisData {
   double ticsRotate() const { return ticsRotate_; }
   void setTicsRotate(double a) { ticsRotate_ = a; }
 
-  double labelRotate() const { return labelRotate_; }
+  COptReal labelRotate() const { return labelRotate_; }
   void setLabelRotate(double a) { labelRotate_ = a; }
+  void unsetLabelRotate() { labelRotate_.setInvalid(); }
 
   //------
 
@@ -240,8 +241,10 @@ class CGnuPlotAxisData {
   const CPoint2D &ticOffset() const { return ticOffset_; }
   void setTicOffset(const CPoint2D &o) { ticOffset_ = o; }
 
-  const CPoint2D &labelOffset() const { return labelOffset_; }
-  void setLabelOffset(const CPoint2D &o) { labelOffset_ = o; }
+  const CPoint3D &labelOffset() const { return labelOffset_; }
+  void setLabelOffset(const CPoint3D &o) { labelOffset_ = o; }
+
+  void setLabelOffset(const CPoint2D &o) { setLabelOffset(CPoint3D(o.x, o.y, 0)); }
 
   //---
 
@@ -394,10 +397,10 @@ class CGnuPlotAxisData {
   std::string       text_;
   ITicLabels        iticLabels_;
   LevelRTicLabels   rticLabels_;
-  CPoint2D          ticOffset_       { 0, 0  };
-  CPoint2D          labelOffset_     { 0, 0  };
+  CPoint2D          ticOffset_       { 0,0   };
+  CPoint3D          labelOffset_     { 0,0,0 };
   double            ticsRotate_      { 0.0   };
-  double            labelRotate_     { 0.0   };
+  COptReal          labelRotate_;
   std::string       format_          { "%g"  };
   Justify           ticJustify_      { Justify::CENTER };
   CFontPtr          ticFont_;

@@ -331,7 +331,7 @@ getValue(QWidget *w)
 
   QPointF p = edit->getQValue();
 
-  return QSize(p.x(), p.y());
+  return QSizeF(p.x(), p.y());
 }
 
 void

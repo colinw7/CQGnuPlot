@@ -13,8 +13,6 @@ class CGnuPlotStyleLabels : public CGnuPlotStyleBase {
 
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
   void draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
-
-  CBBox2D fit(CGnuPlotPlot *plot) override;
 };
 
 #endif

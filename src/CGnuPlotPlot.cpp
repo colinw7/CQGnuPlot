@@ -11,6 +11,7 @@
 #include <CGnuPlotBubbleObject.h>
 #include <CGnuPlotEllipseObject.h>
 #include <CGnuPlotErrorBarObject.h>
+#include <CGnuPlotImageObject.h>
 #include <CGnuPlotFinanceBarObject.h>
 #include <CGnuPlotLabelObject.h>
 #include <CGnuPlotPathObject.h>
@@ -37,8 +38,8 @@ CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
  group_(group), style_(style), id_(nextId_++), lineStyle_(app()), contour_(this),
  arrowCache_(this), boxBarCache_(this), boxCache_(this), bubbleCache_(this), ellipseCache_(this),
- errorBarCache_(this), financeBarCache_(this), labelCache_(this), pathCache_(this),
- pieCache_(this), pointCache_(this), polygonCache_(this), rectCache_(this),
+ errorBarCache_(this), financeBarCache_(this), imageCache_(this), labelCache_(this),
+ pathCache_(this), pieCache_(this), pointCache_(this), polygonCache_(this), rectCache_(this),
  tableFile_(group->app())
 {
   setSmooth (app()->getSmooth());
@@ -75,17 +76,25 @@ void
 CGnuPlotPlot::
 getKeyLabels(CGnuPlotPlot::KeyLabels &labels) const
 {
-  labels.push_back(CGnuPlotKeyLabel(keyTitleString()));
+  if (getStyle() == CGnuPlot::PlotStyle::TEST_PALETTE) {
+    labels.push_back(CGnuPlotKeyLabel("red"  , CRGBA(1,0,0)));
+    labels.push_back(CGnuPlotKeyLabel("green", CRGBA(0,1,0)));
+    labels.push_back(CGnuPlotKeyLabel("blue" , CRGBA(0,0,1)));
+    labels.push_back(CGnuPlotKeyLabel("NTSC" , CRGBA(0,0,0)));
+  }
+  else {
+    labels.push_back(CGnuPlotKeyLabel(keyTitleString()));
 
-  if (is3D() && isContourEnabled()) {
-    std::vector<CGnuPlotContour::LevelData> levelDatas;
+    if (is3D() && isContourEnabled()) {
+      std::vector<CGnuPlotContour::LevelData> levelDatas;
 
-    contour_.getLevelData(levelDatas);
+      contour_.getLevelData(levelDatas);
 
-    for (const auto &l : levelDatas) {
-      std::string str = CStrUtil::strprintf("%g", l.level);
+      for (const auto &l : levelDatas) {
+        std::string str = CStrUtil::strprintf("%g", l.level);
 
-      labels.push_back(CGnuPlotKeyLabel(str, l.c));
+        labels.push_back(CGnuPlotKeyLabel(str, l.c));
+      }
     }
   }
 }
@@ -115,7 +124,8 @@ init()
     resetWhiskerBars();
 
   setBinary(plot->isBinary());
-  setMatrix(plot->isMatrix());
+
+  setMatrixData(plot->matrixData());
 
   setMapping(plot->mapping());
 
@@ -654,6 +664,13 @@ updateFinanceBarCacheSize(int n)
 
 void
 CGnuPlotPlot::
+updateImageCacheSize(int n)
+{
+  imageCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
 updateLabelCacheSize(int n)
 {
   labelCache_.updateSize(n);
@@ -713,19 +730,24 @@ draw3D(CGnuPlotRenderer *renderer)
   if (isContourEnabled())
     drawContour(renderer);
 
-  if (isSurfaceData()) {
-    if (isSurfaceEnabled())
-      drawSurface(renderer);
+  CGnuPlotStyleBase *style = app()->getPlotStyle(getStyle());
+
+  if (style && style->has3D())
+    if (getStyle() == CGnuPlot::PlotStyle::IMAGE || getStyle() == CGnuPlot::PlotStyle::RGBIMAGE) {
+      style->draw3D(this, renderer);
+    }
+    else {
+      if (isSurfaceData()) {
+        if (isSurfaceEnabled())
+          drawSurface(renderer);
+      }
+      else {
+        style->draw3D(this, renderer);
+    }
   }
   else {
-    CGnuPlotStyleBase *style = app()->getPlotStyle(getStyle());
-
-    if (style && style->has3D())
-      style->draw3D(this, renderer);
-    else {
-      if (isSurfaceEnabled())
-        drawSurface(renderer);
-    }
+    if (isSurfaceEnabled())
+      drawSurface(renderer);
   }
 }
 
@@ -751,11 +773,14 @@ initContour() const
 
     th->contour_.reset();
 
-    std::vector<double> xc, yc, zc;
+    std::vector<double> xc, yc, zc, cc;
 
     xc.resize(np.first);
     yc.resize(np.second);
-    zc.resize(np.first*np.second);
+
+    int nz = np.first*np.second;
+
+    zc.resize(nz);
 
     for (int iy = 0; iy < np.second; ++iy) {
       for (int ix = 0; ix < np.first; ++ix) {
@@ -768,11 +793,22 @@ initContour() const
         xc[ix] = x;
         yc[iy] = y;
 
-        zc[iy*np.first + ix] = point.getZ();
+        int iz = iy*np.first + ix;
+
+        zc[iz] = point.getZ();
+
+        if (point.getNumValues() == 4) {
+          if (cc.empty())
+            cc.resize(nz);
+
+          cc[iz] = point.getReal(4);
+        }
       }
     }
 
-    th->contour_.setData(&xc[0], &yc[0], &zc[0], np.first, np.second);
+    bool has_c = ! cc.empty();
+
+    th->contour_.setData(&xc[0], &yc[0], &zc[0], &cc[0], np.first, np.second, has_c);
 
     th->contourSet_ = true;
   }
@@ -1356,6 +1392,13 @@ CGnuPlotPlot::
 createFinanceBarObject() const
 {
   return app()->device()->createFinanceBarObject(const_cast<CGnuPlotPlot *>(this));
+}
+
+CGnuPlotImageObject *
+CGnuPlotPlot::
+createImageObject() const
+{
+  return app()->device()->createImageObject(const_cast<CGnuPlotPlot *>(this));
 }
 
 CGnuPlotLabelObject *

@@ -619,3 +619,9 @@ drawComplexChord(const CPoint2D &, double, double, double, double, double,
 {
   // TODO
 }
+
+void
+CGnuPlotSVGRenderer::
+drawImage(const CPoint2D &, const CImagePtr &)
+{
+}

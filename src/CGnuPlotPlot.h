@@ -27,6 +27,7 @@ class CGnuPlotBubbleObject;
 class CGnuPlotEllipseObject;
 class CGnuPlotErrorBarObject;
 class CGnuPlotFinanceBarObject;
+class CGnuPlotImageObject;
 class CGnuPlotLabelObject;
 class CGnuPlotPathObject;
 class CGnuPlotPieObject;
@@ -133,6 +134,19 @@ class CGnuPlotCacheFactory<CGnuPlotFinanceBarObject> {
   }
 
   CGnuPlotFinanceBarObject *make();
+
+ private:
+  CGnuPlotPlot *plot_;
+};
+
+template<>
+class CGnuPlotCacheFactory<CGnuPlotImageObject> {
+ public:
+  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CGnuPlotImageObject *make();
 
  private:
   CGnuPlotPlot *plot_;
@@ -276,6 +290,7 @@ class CGnuPlotPlot {
   typedef CGnuPlotCache<CGnuPlotEllipseObject>    EllipseCache;
   typedef CGnuPlotCache<CGnuPlotErrorBarObject>   ErrorBarCache;
   typedef CGnuPlotCache<CGnuPlotFinanceBarObject> FinanceBarCache;
+  typedef CGnuPlotCache<CGnuPlotImageObject>      ImageCache;
   typedef CGnuPlotCache<CGnuPlotLabelObject>      LabelCache;
   typedef CGnuPlotCache<CGnuPlotPathObject>       PathCache;
   typedef CGnuPlotCache<CGnuPlotPieObject>        PieCache;
@@ -290,6 +305,7 @@ class CGnuPlotPlot {
   typedef std::vector<CGnuPlotEllipseObject *>    EllipseObjects;
   typedef std::vector<CGnuPlotErrorBarObject *>   ErrorBarObjects;
   typedef std::vector<CGnuPlotFinanceBarObject *> FinanceBarObjects;
+  typedef std::vector<CGnuPlotImageObject *>      ImageObjects;
   typedef std::vector<CGnuPlotLabelObject *>      LabelObjects;
   typedef std::vector<CGnuPlotPathObject *>       PathObjects;
   typedef std::vector<CGnuPlotPieObject *>        PieObjects;
@@ -338,8 +354,11 @@ class CGnuPlotPlot {
   bool isBinary() const { return binary_; }
   void setBinary(bool b) { binary_ = b; }
 
-  bool isMatrix() const { return matrix_; }
-  void setMatrix(bool b) { matrix_ = b; }
+  const CGnuPlotMatrixData &matrixData() const { return matrixData_; }
+  CGnuPlotMatrixData &matrixData() { return matrixData_; }
+  void setMatrixData(const CGnuPlotMatrixData &m) { matrixData_ = m; }
+
+  //---
 
   bool isPolar() const { return polar_; }
   void setPolar(bool b) { polar_ = b; }
@@ -571,7 +590,7 @@ class CGnuPlotPlot {
 
   void updateGroupRange();
 
-  const CBBox2D &getBBox() const { return bbox_; }
+  const CBBox2D &bbox() const { return bbox_; }
 
   //---
 
@@ -605,6 +624,7 @@ class CGnuPlotPlot {
   void updateEllipseCacheSize   (int n);
   void updateErrorBarCacheSize  (int n);
   void updateFinanceBarCacheSize(int n);
+  void updateImageCacheSize     (int n);
   void updateLabelCacheSize     (int n);
   void updatePathCacheSize      (int n);
   void updatePieCacheSize       (int n);
@@ -619,6 +639,7 @@ class CGnuPlotPlot {
   const EllipseObjects    &ellipseObjects   () const { return ellipseCache_   .objects(); }
   const ErrorBarObjects   &errorBarObjects  () const { return errorBarCache_  .objects(); }
   const FinanceBarObjects &financeBarObjects() const { return financeBarCache_.objects(); }
+  const ImageObjects      &imageObjects     () const { return imageCache_     .objects(); }
   const LabelObjects      &labelObjects     () const { return labelCache_     .objects(); }
   const PathObjects       &pathObjects      () const { return pathCache_      .objects(); }
   const PieObjects        &pieObjects       () const { return pieCache_       .objects(); }
@@ -685,6 +706,7 @@ class CGnuPlotPlot {
   CGnuPlotEllipseObject    *createEllipseObject   () const;
   CGnuPlotErrorBarObject   *createErrorBarObject  () const;
   CGnuPlotFinanceBarObject *createFinanceBarObject() const;
+  CGnuPlotImageObject      *createImageObject     () const;
   CGnuPlotLabelObject      *createLabelObject     () const;
   CGnuPlotPathObject       *createPathObject      () const;
   CGnuPlotPieObject        *createPieObject       () const;
@@ -786,7 +808,9 @@ class CGnuPlotPlot {
   Points3D                 points3D_;                         // 3D points
   ImageData                imageData_;                        // image data
   bool                     binary_ { false };
-  bool                     matrix_ { false };
+  CGnuPlotMatrixData       matrixData_;
+  bool                     rowheaders_ { false };
+  bool                     columnheaders_ { false };
   bool                     polar_  { false };
   bool                     enhanced_ { true };
   CGnuPlotImageStyle       imageStyle_;
@@ -825,6 +849,7 @@ class CGnuPlotPlot {
   EllipseCache             ellipseCache_;
   ErrorBarCache            errorBarCache_;
   FinanceBarCache          financeBarCache_;
+  ImageCache               imageCache_;
   LabelCache               labelCache_;
   PathCache                pathCache_;
   PieCache                 pieCache_;
@@ -894,6 +919,13 @@ CGnuPlotCacheFactory<CGnuPlotFinanceBarObject>::
 make()
 {
   return plot_->createFinanceBarObject();
+}
+
+inline CGnuPlotImageObject *
+CGnuPlotCacheFactory<CGnuPlotImageObject>::
+make()
+{
+  return plot_->createImageObject();
 }
 
 inline CGnuPlotLabelObject *

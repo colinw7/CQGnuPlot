@@ -8,13 +8,11 @@ class CGnuPlotGroup;
 
 class CGnuPlotPm3D {
  public:
-  CGnuPlotPm3D(CGnuPlotGroup *group) :
-   group_(group) {
-  }
+  CGnuPlotPm3D(CGnuPlotGroup *group);
 
-  void setData(const CGnuPlotPm3DData &data) {
-    data_= data;
-  }
+  virtual ~CGnuPlotPm3D() { }
+
+  void setData(const CGnuPlotPm3DData &data);
 
   bool isEnabled() const { return data_.isEnabled(); }
   void setEnabled(bool b) { return data_.setEnabled(b); }
@@ -24,6 +22,12 @@ class CGnuPlotPm3D {
 
   bool isClipIn() const { return data_.isClipIn(); }
   void setClipIn(bool b) { data_.setClipIn(b); }
+
+  int lineType() const { return data_.linetype(); }
+  void setLineType(int lt) { data_.setLineType(lt); }
+
+  bool isImplicit() { return data_.isImplicit(); }
+  void setImplicit(bool b) { data_.setImplicit(b); }
 
  private:
   CGnuPlotGroup    *group_;

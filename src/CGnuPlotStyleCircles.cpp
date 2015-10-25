@@ -226,10 +226,3 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       ellipse->draw(renderer);
   }
 }
-
-CBBox2D
-CGnuPlotStyleCircles::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
-}

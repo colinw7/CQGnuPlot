@@ -146,6 +146,6 @@ drawAxes(CGnuPlotRenderer *renderer)
   CGnuPlotAxis::drawAxes(renderer);
 
   if (isSelected()) {
-    renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);
+    renderer->drawRect(bbox(), CRGBA(1,0,0), 2);
   }
 }

@@ -99,6 +99,8 @@ class CGnuPlotArrowData {
 
   const CRGBA &drawColor() const { return lc_; }
 
+  const CBBox2D &bbox() const { return bbox_; }
+
  protected:
   CoordType          coordType_ { CoordType::FROM_TO };
   CGnuPlotPosition   from_;
@@ -111,6 +113,7 @@ class CGnuPlotArrowData {
   mutable CLine2D    pline_;
   mutable double     tol_;
   mutable CRGBA      lc_;
+  mutable CBBox2D    bbox_;
 };
 
 #endif

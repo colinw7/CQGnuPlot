@@ -214,10 +214,3 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   renderer->drawSymbol(pm, pointType, pointSize, stroke.color(),
                        stroke.width(), /*pixelSize*/true);
 }
-
-CBBox2D
-CGnuPlotStyleXYErrorBars::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
-}

@@ -69,6 +69,58 @@ getZ() const
 
 bool
 CGnuPlotPoint::
+getReals(std::vector<double> &reals) const
+{
+  reals.clear();
+
+  bool   b = true;
+  double r = 0.0;
+
+  for (uint i = 0; i < values_.size(); ++i) {
+    if (getValue(i + 1, r))
+      reals.push_back(r);
+    else {
+      reals.push_back(CMathGen::getNaN());
+      b = false;
+    }
+  }
+
+  return b;
+}
+
+bool
+CGnuPlotPoint::
+getPoint(CPoint2D &p, bool checkNaN) const
+{
+  double x, y;
+
+  if (! getXY(x, y))
+    return false;
+
+  if (checkNaN && (IsNaN(x) || IsNaN(y)))
+    return false;
+
+  p = CPoint2D(x, y);
+
+  return true;
+}
+
+bool
+CGnuPlotPoint::
+getPoint(CPoint3D &p) const
+{
+  double x, y, z;
+
+  if (! getXYZ(x, y, z))
+    return false;
+
+  p = CPoint3D(x, y, z);
+
+  return true;
+}
+
+bool
+CGnuPlotPoint::
 getValue(int n, double &r) const
 {
   if (int(values_.size()) < n || ! values_[n - 1].isValid())
@@ -102,6 +154,22 @@ getValue(int n, std::string &str) const
     return false;
 
   return values_[n - 1]->getStringValue(str);
+}
+
+bool
+CGnuPlotPoint::
+hasParam(const std::string &name) const
+{
+  return (params_.find(name) != params_.end());
+}
+
+CExprValuePtr
+CGnuPlotPoint::
+getParam(const std::string &name) const
+{
+  auto p = params_.find(name);
+
+  return (*p).second;
 }
 
 std::string

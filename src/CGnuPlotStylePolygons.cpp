@@ -94,10 +94,3 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
   }
 }
-
-CBBox2D
-CGnuPlotStylePolygons::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
-}

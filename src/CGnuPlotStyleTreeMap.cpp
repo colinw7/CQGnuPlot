@@ -104,7 +104,7 @@ class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
     if (! renderer_->isPseudo()) {
       CGnuPlotRectObject *rect = plot_->rectObjects()[ind_];
 
-      rect->setRect   (CBBox2D(x, y, x + w, y + h));
+      rect->setBBox   (CBBox2D(x, y, x + w, y + h));
       rect->setText   (text);
       rect->setTipText(text + " : " + CStrUtil::toString(node->size()));
 

@@ -73,8 +73,8 @@ draw(CGnuPlotRenderer *renderer)
 
   std::string header;
 
-  if (showTitle()) {
-    header = getTitle();
+  if (hasTitle()) {
+    header = this->title();
 
     if (header != "") {
       textWidth = std::max(textWidth, font->getStringWidth(header)*pw);
@@ -464,8 +464,8 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
 
   std::string header;
 
-  if (showTitle()) {
-    header = getTitle();
+  if (hasTitle()) {
+    header = this->title();
 
     if (header != "") {
       textWidth = std::max(textWidth, font->getStringWidth(header)*pw);

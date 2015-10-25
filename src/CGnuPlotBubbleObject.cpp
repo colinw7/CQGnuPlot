@@ -32,11 +32,7 @@ tip() const
   tip.setXStr(name_);
   tip.setYStr(CStrUtil::strprintf("%g", value_));
 
-  CPoint2D d(xr_, yr_);
-
-  CBBox2D rect(c_ - d, c_ + d);
-
-  tip.setRect(rect);
+  tip.setBBox(bbox_);
 
   tip.setBorderColor(fill_->color());
   tip.setXColor     (fill_->color());
@@ -82,4 +78,10 @@ draw(CGnuPlotRenderer *renderer) const
   renderer->drawHAlignedText(c_, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0, name_, tc);
 
   renderer->setFontSize(s);
+
+  //---
+
+  CPoint2D d(xr_, yr_);
+
+  bbox_ = CBBox2D(c_ - d, c_ + d);
 }

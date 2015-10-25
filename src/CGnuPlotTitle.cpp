@@ -59,7 +59,9 @@ draw(CGnuPlotRenderer *renderer) const
 
   CPoint2D p((xmin + xmax)/2, ymax);
 
-  p += offset(); // offset units ?
+  lastOffset_ = offset().getPoint2D(renderer);
+
+  p += lastOffset_; // offset units ?
 
   CRGBA c = color().color();
 

@@ -169,9 +169,11 @@ drawAxes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   plot->group()->drawXAxis(renderer, 1);
 }
 
+#if 0
 CBBox2D
 CGnuPlotStyleParallelAxes::
 fit(CGnuPlotPlot *)
 {
   return CBBox2D(-1, -1, 1, 1);
 }
+#endif

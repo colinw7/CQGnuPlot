@@ -1,14 +1,14 @@
-#ifndef CQGnuPlotBarObject_H
-#define CQGnuPlotBarObject_H
+#ifndef CQGnuPlotBoxBarObject_H
+#define CQGnuPlotBoxBarObject_H
 
-#include <CGnuPlotBarObject.h>
+#include <CGnuPlotBoxBarObject.h>
 #include <CQGnuPlot.h>
 
 class CQGnuPlotPlot;
 class CQGnuPlotFill;
 class CQGnuPlotStroke;
 
-class CQGnuPlotBarObject : public QObject, public CGnuPlotBarObject {
+class CQGnuPlotBoxBarObject : public QObject, public CGnuPlotBoxBarObject {
   Q_OBJECT
 
   Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
@@ -18,8 +18,8 @@ class CQGnuPlotBarObject : public QObject, public CGnuPlotBarObject {
   Q_PROPERTY(double y READ yvalue)
 
  public:
-  CQGnuPlotBarObject(CQGnuPlotPlot *plot);
- ~CQGnuPlotBarObject();
+  CQGnuPlotBoxBarObject(CQGnuPlotPlot *plot);
+ ~CQGnuPlotBoxBarObject();
 
   CQGnuPlotFill   *fill  () const;
   CQGnuPlotStroke *stroke() const;

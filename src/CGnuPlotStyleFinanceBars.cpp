@@ -164,13 +164,6 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 }
 
-CBBox2D
-CGnuPlotStyleFinanceBars::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
-}
-
 void
 CGnuPlotStyleFinanceData::
 draw(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) const

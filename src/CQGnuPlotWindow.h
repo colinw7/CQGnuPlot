@@ -75,6 +75,7 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
  public:
   enum class Mode {
     SELECT,
+    MOVE,
     ZOOM
   };
 
@@ -159,6 +160,7 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void pixelSlot(bool show);
 
   void selectMode(bool b);
+  void moveMode  (bool b);
   void zoomMode  (bool b);
 
   void itemSelectedSlot(QObject *obj, const QString &path);
@@ -185,6 +187,7 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   Mode               mode_         { Mode::SELECT };
   bool               showPixels_   { false };
   QAction*           selectAction_ { 0 };
+  QAction*           moveAction_   { 0 };
   QAction*           zoomAction_   { 0 };
   CQZoomRegion*      zoomRegion_   { 0 };
   QPoint             zoomPress_    { 0, 0 };

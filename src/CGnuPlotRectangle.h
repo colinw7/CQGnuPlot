@@ -62,6 +62,8 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
 
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
+  const CBBox2D &bbox() const { return bbox_; }
+
   CGnuPlotTipData tip() const override;
 
   void print(std::ostream &os) const;

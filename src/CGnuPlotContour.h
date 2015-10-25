@@ -37,7 +37,7 @@ class CGnuPlotContour {
 
   void reset();
 
-  void setData(double *x, double *y, double *z, int no_x, int no_y);
+  void setData(double *x, double *y, double *z, double *c, int no_x, int no_y, bool has_c);
 
   int nx() const { return x_.size(); }
   int ny() const { return y_.size(); }
@@ -46,6 +46,7 @@ class CGnuPlotContour {
   double y(int j) const { return y_[j]; }
 
   double z(int i, int j) const { return z_[j*x_.size() + i]; }
+  double c(int i, int j) const { return c_[j*x_.size() + i]; }
 
   void setContourLevels(const std::vector<double> &levels);
   void setContourColors(const std::vector<CRGBA> &colors);
@@ -76,11 +77,11 @@ class CGnuPlotContour {
  private:
   CGnuPlotPlot*       plot_;
   bool                solid_;
-  std::vector<double> x_, y_, z_;
+  std::vector<double> x_, y_, z_, c_;
   std::vector<double> levels_;
   std::vector<CRGBA>  colors_;
-  COptReal            xmin_, ymin_, zmin_;
-  COptReal            xmax_, ymax_, zmax_;
+  COptReal            xmin_, ymin_, zmin_, cmin_;
+  COptReal            xmax_, ymax_, zmax_, cmax_;
   double              min_x_, min_y_, min_z_;
   LevelLines          llines_;
 };

@@ -219,6 +219,12 @@ drawComplexChord(const CPoint2D &center, double r, double a11, double a12, doubl
 
 void
 CGnuPlotLogRenderer::
+drawImage(const CPoint2D &, const CImagePtr &)
+{
+}
+
+void
+CGnuPlotLogRenderer::
 log(const std::string &str)
 {
   os() << str << std::endl;

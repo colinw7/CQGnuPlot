@@ -94,7 +94,7 @@ draw()
   if (isSelected()) {
     CGnuPlotRenderer *renderer = app()->renderer();
 
-    renderer->drawRect(getBBox(), CRGBA(1,0,0), 2);
+    renderer->drawRect(bbox(), CRGBA(1,0,0), 2);
   }
 }
 
@@ -274,6 +274,17 @@ mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
   //---
 
   return false;
+}
+
+void
+CQGnuPlotGroup::
+moveObjects(int key)
+{
+  for (auto &plot : plots()) {
+    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+
+    qplot->moveObjects(key);
+  }
 }
 
 void

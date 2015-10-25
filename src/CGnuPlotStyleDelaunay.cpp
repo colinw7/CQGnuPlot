@@ -64,7 +64,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       CPoint2D p(reals[0], reals[1]);
 
-      if (clip.isOn() && ! clip.rect().inside(p))
+      if (clip.isOn() && ! clip.bbox().inside(p))
         continue;
 
       delaunay->addVertex(p.x, p.y);

@@ -42,6 +42,8 @@ class CGnuPlotBubbleObject : public CGnuPlotPlotObject {
 
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
+  const CBBox2D &bbox() const override { return bbox_; }
+
   CGnuPlotTipData tip() const override;
 
   void draw(CGnuPlotRenderer *renderer) const override;
@@ -54,6 +56,7 @@ class CGnuPlotBubbleObject : public CGnuPlotPlotObject {
   double          value_  { 0 };
   CGnuPlotFillP   fill_;
   CGnuPlotStrokeP stroke_;
+  mutable CBBox2D bbox_;
 };
 
 #endif

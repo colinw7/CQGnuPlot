@@ -10,6 +10,7 @@
 #include <CLineDash.h>
 #include <CBBox2D.h>
 #include <CFont.h>
+#include <CImagePtr.h>
 
 class CGnuPlotWindow;
 class CGnuPlotFill;
@@ -131,6 +132,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   virtual void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
                                 double a21, double a22, const CRGBA &fc, const CRGBA &lc) = 0;
+
+  virtual void drawImage(const CPoint2D &p, const CImagePtr &image) = 0;
 
   //---
 

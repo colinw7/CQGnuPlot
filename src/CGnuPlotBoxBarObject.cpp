@@ -33,13 +33,6 @@ addEndBar(const CPoint2D &start, const CPoint2D &end)
   return endBars_.back();
 }
 
-bool
-CGnuPlotBoxBarObject::
-inside(const CGnuPlotTypes::InsideData &data) const
-{
-  return bbox_.inside(data.window);
-}
-
 CGnuPlotTipData
 CGnuPlotBoxBarObject::
 tip() const
@@ -56,7 +49,7 @@ tip() const
   else
     tip.setYStr(CStrUtil::strprintf("%g", y_));
 
-  tip.setRect(bbox_);
+  tip.setBBox(bbox_);
 
   tip.setXColor(CRGBA(0,0,0));
   tip.setYColor(CRGBA(0,0,0));

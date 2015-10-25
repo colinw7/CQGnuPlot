@@ -42,6 +42,8 @@ class CGnuPlotEllipseObject : public CGnuPlotPlotObject {
 
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
+  const CBBox2D &bbox() const override { return bbox_; }
+
   CGnuPlotTipData tip() const override;
 
   void draw(CGnuPlotRenderer *renderer) const override;
@@ -56,7 +58,7 @@ class CGnuPlotEllipseObject : public CGnuPlotPlotObject {
   std::string     text_  { "" };
   CGnuPlotFillP   fill_;
   CGnuPlotStrokeP stroke_;
-  mutable CBBox2D rect_;
+  mutable CBBox2D bbox_;
 };
 
 #endif

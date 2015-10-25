@@ -41,6 +41,8 @@ class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
 
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
+  const CBBox2D &bbox() const override { return bbox_; }
+
   CGnuPlotTipData tip() const override;
 
   void draw(CGnuPlotRenderer *renderer) const override;

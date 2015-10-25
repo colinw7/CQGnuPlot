@@ -164,10 +164,3 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   arrow.draw(renderer);
 }
-
-CBBox2D
-CGnuPlotStyleVectors::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
-}

@@ -83,6 +83,8 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
 
   void redraw();
 
+  void moveObjects(int key);
+
   void pixelToWindow(const CPoint2D &p, CPoint2D &w);
 
   bool inside(const QPoint &qp) const;

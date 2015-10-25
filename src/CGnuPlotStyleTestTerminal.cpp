@@ -15,6 +15,13 @@ void
 CGnuPlotStyleTestTerminal::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  if (renderer->isPseudo()) {
+    renderer->drawRect(CBBox2D(0,0,1,1), CRGBA(0,0,0), 1);
+    return;
+  }
+
+  //---
+
   static double grid_dashes[]   = {1, 3};
   static uint   num_grid_dashes = 2;
 
@@ -292,11 +299,4 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   renderer->drawHAlignedText(p4, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP, 0,
                              "linewidth", CRGBA(0,0,0));
   }
-}
-
-CBBox2D
-CGnuPlotStyleTestTerminal::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D();
 }

@@ -72,11 +72,20 @@ draw(CGnuPlotRenderer *renderer, const CGnuPlotStroke &stroke) const
 
   tol_ = renderer->pixelWidthToWindowWidth(4);
 
+  //---
+
+  bbox_.reset();
+
   CPoint2D from, to;
 
   getLine(renderer, from, to);
 
   line_ = CLine2D(from, to);
+
+  bbox_.add(from);
+  bbox_.add(to);
+
+  //---
 
   double fx, fy, tx, ty;
 
@@ -249,7 +258,7 @@ tip() const
   tip.setBorderColor(c);
   tip.setXColor(c);
 
-  tip.setRect(rect);
+  tip.setBBox(rect);
 
   return tip;
 }

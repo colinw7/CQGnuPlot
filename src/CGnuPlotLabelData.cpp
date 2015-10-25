@@ -118,12 +118,13 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
 
   COptPoint2D o;
 
-  o = rbbox.getCenter();
+  if (rbbox.isSet())
+    o = rbbox.getCenter();
 
   //---
 
   // fill box background and border
-  if (boxStroke()->isEnabled()) {
+  if (boxStroke()->isEnabled() && bbox.isSet()) {
     renderer->fillRotatedRect(bbox, a, boxFill()->color(), o);
   }
 
@@ -157,6 +158,8 @@ bool
 CGnuPlotLabelData::
 inside(const CGnuPlotTypes::InsideData &data) const
 {
+  if (! bbox_.isSet()) return false;
+
   return bbox_.inside(data.window);
 }
 
@@ -174,7 +177,7 @@ tip() const
   tip.setBorderColor(c);
   tip.setXColor(c);
 
-  tip.setRect(bbox_);
+  tip.setBBox(bbox_);
 
   return tip;
 }

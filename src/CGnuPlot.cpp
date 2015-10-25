@@ -1855,7 +1855,7 @@ plotCmd(const std::string &args)
   CGnuPlotWindowP window;
   bool            newWindow = false;
 
-  if (multiplot_.isEnabled()) {
+  if (multiplot_.isValid() && multiplot_->isEnabled()) {
     // set multi-window if doesn't exist
     if (! device_->multiWindow()) {
       // create or reuse existing window
@@ -1882,10 +1882,10 @@ plotCmd(const std::string &args)
     // set region (default to multiplot grid cell)
     int n = window->numGroups();
 
-    double dx = multiplot_.dx();
-    double dy = multiplot_.dy();
+    double dx = multiplot_->dx();
+    double dy = multiplot_->dy();
 
-    CIPoint2D pos = multiplot_.pos(n);
+    CIPoint2D pos = multiplot_->pos(n);
 
     double x1 = plotSize_.xo.getValue(pos.x*dx);
     double y1 = plotSize_.yo.getValue(pos.y*dy);
@@ -2260,7 +2260,8 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
   setSmooth(Smooth::NONE);
 
   setBinary(false);
-  setMatrix(false);
+
+  matrixData().reset();
 
   // Read individual plot:
   //   <plot_data> [, <plot_data> ...]
@@ -2454,7 +2455,19 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     }
     // matrix
     else if (plotVar == PlotVar::MATRIX) {
-      setMatrix(true);
+      matrixData().setMatrix(true);
+    }
+    // pixels
+    else if (plotVar == PlotVar::PIXELS) {
+      matrixData().setPixels(true);
+    }
+    // rowheaders
+    else if (plotVar == PlotVar::ROWHEADERS) {
+      matrixData().setRowHeaders(true);
+    }
+    // columnheaders
+    else if (plotVar == PlotVar::COLUMNHEADERS) {
+      matrixData().setColumnHeaders(true);
     }
     // array
     else if (plotVar == PlotVar::ARRAY) {
@@ -3696,7 +3709,7 @@ parseAxisLabel(CParseLine &line, CGnuPlotAxisData &axis)
 
   while (arg != "") {
     if      (arg == "offset") {
-      CPoint2D o;
+      CPoint3D o;
 
       if (parseOffset(line, o))
         axis.setLabelOffset(o);
@@ -4009,7 +4022,7 @@ splotCmd(const std::string &args)
   CGnuPlotWindowP window;
   bool            newWindow = false;
 
-  if (multiplot_.isEnabled()) {
+  if (multiplot_.isValid() && multiplot_->isEnabled()) {
     // set multi-window if doesn't exist
     if (! device_->multiWindow()) {
       // create or reuse existing window
@@ -4036,10 +4049,10 @@ splotCmd(const std::string &args)
     // set region (default to multiplot grid cell)
     int n = window->numGroups();
 
-    double dx = multiplot_.dx();
-    double dy = multiplot_.dy();
+    double dx = multiplot_->dx();
+    double dy = multiplot_->dy();
 
-    CIPoint2D pos = multiplot_.pos(n);
+    CIPoint2D pos = multiplot_->pos(n);
 
     double x1 = plotSize_.xo.getValue(pos.x*dx);
     double y1 = plotSize_.yo.getValue(pos.y*dy);
@@ -4331,7 +4344,8 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
   setSmooth(Smooth::NONE);
 
   setBinary(false);
-  setMatrix(false);
+
+  matrixData().reset();
 
   // Read individual plot:
   //   <plot_data> [, <plot_data> ...]
@@ -4513,7 +4527,19 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
     }
     // matrix
     else if (plotVar == PlotVar::MATRIX) {
-      setMatrix(true);
+      matrixData().setMatrix(true);
+    }
+    // pixels
+    else if (plotVar == PlotVar::PIXELS) {
+      matrixData().setPixels(true);
+    }
+    // rowheaders
+    else if (plotVar == PlotVar::ROWHEADERS) {
+      matrixData().setRowHeaders(true);
+    }
+    // columnheaders
+    else if (plotVar == PlotVar::COLUMNHEADERS) {
+      matrixData().setColumnHeaders(true);
     }
     // array
     else if (plotVar == PlotVar::ARRAY) {
@@ -5613,9 +5639,9 @@ setCmd(const std::string &args)
   }
   // set datafile fortran
   // set datafile nofpe_trap
-  // set datafile missing ["<chars>"]
-  // set datafile separator ["<chars>"|whitespace]
-  // set datafile commentschar ["<chars>"]
+  // set datafile missing "<string>"
+  // set datafile separator {whitespace | tab | comma | "<chars>"}
+  // set datafile commentschar {"<string>"}
   // set datafile binary
   // set datafile csv
   else if (var == VariableName::DATAFILE) {
@@ -5645,7 +5671,7 @@ setCmd(const std::string &args)
       else
         dataFile_.setMissingStr("");
     }
-    // set datafile separator ["<chars>"|whitespace]
+    // set datafile separator {whitespace | tab | comma | "<chars>"}
     else if (var1 == DataFileVar::SEPARATOR) {
       if (line.isChar('"')) {
         std::string chars;
@@ -5662,10 +5688,16 @@ setCmd(const std::string &args)
       else {
         std::string sepStr = readNonSpace(line);
 
-        if (sepStr == "whitespace")
+        if      (sepStr == "whitespace")
+          dataFile_.resetSeparator();
+        else if (sepStr == "tab")
+          dataFile_.setSeparator('\t');
+        else if (sepStr == "comma")
+          dataFile_.setSeparator(',');
+        else if (sepStr == "")
           dataFile_.resetSeparator();
         else
-          errorMsg("Invalid separator type");
+          errorMsg("Invalid separator type '" + sepStr + "'");
       }
     }
     // set datafile commentschar ["<chars>"]
@@ -6812,11 +6844,18 @@ setCmd(const std::string &args)
     }
   }
   // set multiplot { title <page title> {font <fontspec>} {enhanced|noenhanced} }
-  //               { layout <rows>,<cols> {rowsfirst|columnsfirst} {downwards|upwards}
-  //                 {scale <xscale>{,<yscale>}} {offset <xoff>{,<yoff>}} }
+  //               { layout <rows>,<cols>
+  //                 {rowsfirst|columnsfirst} {downwards|upwards}
+  //                 {scale <xscale>{,<yscale>}} {offset <xoff>{,<yoff>}}
+  //                 {margins <left>,<right>,<bottom>,<top>}
+  //                 {spacing <xspacing>{,<yspacing>}}
+  //               }
   else if (var == VariableName::MULTIPLOT) {
-    multiplot_.setEnabled(true);
-    multiplot_.setAutoFit(true);
+    if (! multiplot_.isValid())
+      multiplot_ = createMultiplot();
+
+    multiplot_->setEnabled(true);
+    multiplot_->setAutoFit(true);
 
     std::string arg = readNonSpace(line);
 
@@ -6824,59 +6863,86 @@ setCmd(const std::string &args)
       if      (arg == "title") {
         std::string titleStr;
 
-        parseString(line, titleStr);
+        if (parseString(line, titleStr))
+          multiplot_->setTitle(titleStr);
       }
       else if (arg == "font") {
         CFontPtr font;
 
         if (parseFont(line, font))
-          multiplot_.setTitleFont(font);
+          multiplot_->setTitleFont(font);
       }
       else if (arg == "enhanced" || arg == "noenhanced") {
-        multiplot_.setEnhanced(arg == "enhanced");
+        multiplot_->setEnhanced(arg == "enhanced");
       }
       else if (arg == "layout") {
         int i;
 
         if (parseInteger(line, i))
-          multiplot_.setRows(i);
+          multiplot_->setRows(i);
 
         if (line.skipSpaceAndChar(',')) {
           if (parseInteger(line, i))
-            multiplot_.setCols(i);
+            multiplot_->setCols(i);
         }
 
-        multiplot_.setAutoFit(false);
+        multiplot_->setAutoFit(false);
       }
       else if (arg == "rowsfirst" || arg == "rows") {
-        multiplot_.setRowsFirst(true);
+        multiplot_->setRowsFirst(true);
       }
       else if (arg == "columnsfirst" || arg == "columns") {
-        multiplot_.setRowsFirst(false);
+        multiplot_->setRowsFirst(false);
       }
       else if (arg == "downwards" || arg == "down") {
-        multiplot_.setDownward(true);
+        multiplot_->setDownward(true);
       }
       else if (arg == "upwards" || arg == "up") {
-        multiplot_.setDownward(false);
+        multiplot_->setDownward(false);
       }
       else if (arg == "scale") {
         double r;
 
         if (parseReal(line, r))
-          multiplot_.setXScale(r);
+          multiplot_->setXScale(r);
 
         if (line.skipSpaceAndChar(',')) {
           if (parseReal(line, r))
-            multiplot_.setYScale(r);
+            multiplot_->setYScale(r);
         }
       }
       else if (arg == "offset") {
         CPoint2D o;
 
         if (parseOffset(line, o)) {
-          multiplot_.setXOffset(o.x);
-          multiplot_.setYOffset(o.y);
+          multiplot_->setXOffset(o.x);
+          multiplot_->setYOffset(o.y);
+        }
+      }
+      else if (arg == "margin" || arg == "margins") {
+        double l, r, t, b;
+
+        multiplot_->getMargins(l, r, t, b);
+
+        if (parseReal(line, l)) {
+          if (line.skipSpaceAndChar(',') && parseReal(line, r)) {
+            if (line.skipSpaceAndChar(',') && parseReal(line, t)) {
+              if (line.skipSpaceAndChar(',') && parseReal(line, b)) {
+                multiplot_->setMargins(l, r, t, b);
+              }
+            }
+          }
+        }
+      }
+      else if (arg == "spacing") {
+        double x, y;
+
+        multiplot_->getSpacing(x, y);
+
+        if (parseReal(line, x)) {
+          if (line.skipSpaceAndChar(',') && parseReal(line, y)) {
+            multiplot_->setSpacing(x, y);
+          }
         }
       }
       else {
@@ -7794,8 +7860,8 @@ setCmd(const std::string &args)
         else
           plotSize_.ysize = r;
 
-        if (multiplot_.isEnabled())
-          multiplot_.setAutoFit(false);
+        if (multiplot_.isValid() && multiplot_->isEnabled())
+          multiplot_->setAutoFit(false);
       }
       else {
         errorMsg("Bad arg \'" + arg + "\'");
@@ -8140,25 +8206,10 @@ setCmd(const std::string &args)
       while (arg != "") {
         if      (arg == "radius") {
           for (const auto &i : IRange::range(0, 3)) {
-            line.skipSpace();
+            CGnuPlotCoordValue c;
 
-            CGnuPlotTypes::CoordSys coordSys = CGnuPlotTypes::CoordSys::FIRST;
-
-            if (line.isOneOf({"screen", "graph"})) {
-              if      (line.isString("screen"))
-                coordSys = CGnuPlotTypes::CoordSys::SCREEN;
-              else if (line.isString("graph"))
-                coordSys = CGnuPlotTypes::CoordSys::GRAPH;
-
-              line.skipNonSpace();
-            }
-
-            double r;
-
-            if (! parseReal(line, r))
-              continue;
-
-            CGnuPlotCoordValue c(r, coordSys);
+            if (! parseCoordValue(line, c))
+              break;
 
             circleStyle_.setRadius(i, c);
 
@@ -8236,48 +8287,16 @@ setCmd(const std::string &args)
           }
         }
         else if (arg == "size") {
-          CGnuPlotTypes::CoordSys coordSys = CGnuPlotTypes::CoordSys::FIRST;
+          CGnuPlotCoordValue sac;
 
-          line.skipSpace();
-
-          if (line.isOneOf({"graph", "screen"})) {
-            if (line.isString("graph"))
-              coordSys = CGnuPlotTypes::CoordSys::GRAPH;
-            else
-              coordSys = CGnuPlotTypes::CoordSys::SCREEN;
-
-            arg = readNonSpace(line);
-          }
-
-          double sa;
-
-          if (parseReal(line, sa)) {
-            CGnuPlotCoordValue sac(sa, coordSys);
-
+          if (parseCoordValue(line, sac))
             styleData_.ellipse.setSize(0, sac);
-          }
 
           if (line.skipSpaceAndChar(',')) {
-            CGnuPlotTypes::CoordSys coordSys = CGnuPlotTypes::CoordSys::FIRST;
+            CGnuPlotCoordValue sbc;
 
-            line.skipSpace();
-
-            if (line.isOneOf({"graph", "screen"})) {
-              if (line.isString("graph"))
-                coordSys = CGnuPlotTypes::CoordSys::GRAPH;
-              else
-                coordSys = CGnuPlotTypes::CoordSys::SCREEN;
-
-              arg = readNonSpace(line);
-            }
-
-            double sb;
-
-            if (parseReal(line, sb)) {
-              CGnuPlotCoordValue sbc(sb, coordSys);
-
+            if (parseCoordValue(line, sbc))
               styleData_.ellipse.setSize(1, sbc);
-            }
           }
         }
         else if (arg == "angle") {
@@ -8589,9 +8608,9 @@ setCmd(const std::string &args)
 
     while (arg != "") {
       if      (arg == "offset") {
-        CPoint2D o(0, 0);
+        CGnuPlotPosition o;
 
-        if (parseOffset(line, o))
+        if (parsePosition(line, o))
           title_.setOffset(o);
       }
       else if (arg == "font") {
@@ -8953,18 +8972,26 @@ setCmd(const std::string &args)
   }
   // set cblabel "<label>"
   else if (var == VariableName::CBLABEL) {
+    colorBox_.setEnabled(true);
+
     parseAxisLabel(line, colorBox_.axis());
   }
   // set cbmtics
   else if (var == VariableName::CBMTICS) {
+    colorBox_.setEnabled(true);
+
     colorBox_.axis().setIsMonths(true);
   }
   // set cbrange { [{{<min>}:{<max>}}] {{no}reverse} {{no}writeback} {{no}extend} } | restore
   else if (var == VariableName::CBRANGE) {
+    colorBox_.setEnabled(true);
+
     parseAxisRange(line, colorBox_.axis());
   }
   // set cbtics
   else if (var == VariableName::CBTICS) {
+    colorBox_.setEnabled(true);
+
     parseAxesTics(line, colorBox_.axis());
   }
   // set debug
@@ -9493,7 +9520,7 @@ showCmd(const std::string &args)
   }
   // show multiplot
   else if (var == VariableName::MULTIPLOT) {
-    if (multiplot_.isEnabled())
+    if (multiplot_.isValid() && multiplot_->isEnabled())
       std::cout << "multiplot mode is on" << std::endl;
     else
       std::cout << "multiplot mode is off" << std::endl;
@@ -10587,10 +10614,10 @@ unsetCmd(const std::string &args)
   }
   // unset multiplot
   else if (var == VariableName::MULTIPLOT) {
-    if (device_->multiWindow() && multiplot_.isAutoFit())
+    if (device_->multiWindow() && multiplot_->isAutoFit())
       device_->multiWindow()->fitGroups();
 
-    multiplot_.setEnabled(false);
+    multiplot_->setEnabled(false);
 
     device_->resetMultiWindow();
   }
@@ -11171,13 +11198,33 @@ testCmd(const std::string &args)
 
   group->addSubPlots({plot});
 
-  if (arg == "palette" || arg == "pal") {
-    group->setMargin(CGnuPlotMargin(2, 2, 2, 2));
-    group->setRange(CBBox2D(0.0, 0.0, 1.0, 1.0));
+  group->fit();
+
+  if (plotStyle == PlotStyle::TEST_PALETTE) {
+    group->setBorderSides(0);
+
+    group->setMarginBottom(10);
+
+    CGnuPlotColorBoxP cb = group->colorBox();
+
+    cb->setEnabled (true);
+    cb->setVertical(false);
+    cb->setSize(CSize2D(1, 0.05));
+
+    CGnuPlotAxis *xaxis = group->getPlotAxis(CGnuPlotTypes::AxisType::X, 1);
+    CGnuPlotAxis *yaxis = group->getPlotAxis(CGnuPlotTypes::AxisType::Y, 1);
+
+    if (xaxis) xaxis->setGridMajor(true);
+    if (yaxis) yaxis->setGridMajor(true);
+
+    CGnuPlotKeyP key = group->key();
+
+    key->setTitle("R,G,B profiles of the current color palette");
+
+    //group->setMargin(CGnuPlotMargin(2, 2, 2, 2));
   }
   else {
-    group->setMargin(CGnuPlotMargin(0, 0, 0, 0));
-    group->setRange(CBBox2D(0.0, 0.0, 1.0, 1.0));
+    //group->setMargin(CGnuPlotMargin(0, 0, 0, 0));
   }
 
   window->addGroup(group);
@@ -11507,16 +11554,40 @@ readNamedBlock(const std::string &name, const std::string &eofStr)
 {
   CGnuPlotBlock *block = getBlock(name);
 
-  std::string line;
+  if (fileData_.file) {
+    std::string line;
 
-  while (fileReadLine(line)) {
-    if (line == eofStr)
-      return true;
+    while (fileReadLine(line)) {
+      if (line == eofStr)
+        return true;
 
-    block->addString(line + "\n");
+      block->addString(line + "\n");
+    }
+
+    return false;
   }
+  else {
+    bool endFlag = false;
 
-  return false;
+    initReadLine();
+
+    readLine_->setPrompt("");
+
+    for (;;) {
+      auto line = readLine_->readLine();
+
+      if (line == eofStr) {
+        endFlag = true;
+        break;
+      }
+
+      block->addString(line + "\n");
+    }
+
+    readLine_->setPrompt("> ");
+
+    return endFlag;
+  }
 }
 
 std::string
@@ -11976,6 +12047,13 @@ CGnuPlot::
 createWindow()
 {
   return (device() ? device()->createWindow() : new CGnuPlotWindow(this));
+}
+
+CGnuPlotMultiplot *
+CGnuPlot::
+createMultiplot()
+{
+  return (device() ? device()->createMultiplot() : new CGnuPlotMultiplot(this));
 }
 
 CGnuPlotGroup *
@@ -12690,6 +12768,8 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
           CGnuPlotLineStyle &lineStyle, CGnuPlotFillStyle &fillStyle,
           CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle)
 {
+  CGnuPlot *th = const_cast<CGnuPlot *>(this);
+
   // gen file lines (one dimension)
   if      (filename == "+") {
     int nx, ny;
@@ -12744,8 +12824,6 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
       bool   bad;
       Values values;
       Params params;
-
-      CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
       usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
@@ -12815,8 +12893,6 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
         bool   bad;
         Values values;
         Params params;
-
-        CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
         usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
@@ -12963,14 +13039,87 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
 
         Values values;
         Params params;
+        Matrix matrix;
 
-        if (isMatrix()) {
-          for (const auto &value : fieldValues_) {
-            values.push_back(value);
+        if (matrixData().isMatrix()) {
+          if (matrixData().isColumnHeaders() && lineNum == 0) {
+            StringArray strs;
+
+            for (const auto &value : fieldValues_) {
+              std::string str;
+
+              if (! value.isValid() || ! value->getStringValue(str))
+                str = "";
+
+              strs.push_back(str);
+            }
+
+            for (uint i = 0; i < strs.size(); ++i) {
+              if (i == 0 && matrixData().isRowHeaders())
+                continue;
+
+              int colNum = (matrixData().isRowHeaders() ? i - 1 : i);
+
+              //matrixData().setColumnHeader(colNum, strs[i]);
+              xaxis(1).setTicLabel(colNum, strs[i], 0);
+            }
+          }
+          else {
+            if (dataFile_.numSets() == 1) {
+              int i = 0;
+
+              for (const auto &value : fieldValues_) {
+                if (i == 0 && matrixData().isRowHeaders()) {
+                  int rowNum = (matrixData().isColumnHeaders() ? lineNum - 1 : lineNum);
+
+                  std::string str;
+
+                  if (! value.isValid() || ! value->getStringValue(str))
+                    str = "";
+
+                  //matrixData().setRowHeader(rowNum, str);
+                  yaxis(1).setTicLabel(rowNum, str, 0);
+                }
+                else {
+                  int x = (matrixData().isColumnHeaders() ? i         - 1 : i        );
+                  int y = (matrixData().isRowHeaders   () ? pointNum_ - 1 : pointNum_);
+
+                  CExprValuePtr xvalue = CExprInst->createRealValue(x);
+                  CExprValuePtr yvalue = CExprInst->createRealValue(y);
+
+                  values.push_back(xvalue);
+                  values.push_back(yvalue);
+                  values.push_back(value);
+
+                  if (usingCols.numCols() > 0) {
+                    Values values1;
+
+                    bool   bad1;
+                    Params params1;
+
+                    (void) usingCols.decodeValues(th, i, values, bad1, values1, params1);
+
+                    // TODO: error handling
+                    values = values1;
+                  }
+
+                  matrix.push_back(values);
+
+                  values.clear();
+                }
+
+                ++i;
+              }
+            }
+            else {
+              for (const auto &value : fieldValues_) {
+                values.push_back(value);
+              }
+            }
           }
         }
         else {
-          int  nskip = 0;
+          int nskip = 0;
 
           // no columns specified so use default number of columns for style
           if (usingCols.numCols() == 0) {
@@ -12990,8 +13139,6 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
           }
           // extract specified columns
           else {
-            CGnuPlot *th = const_cast<CGnuPlot *>(this);
-
             nskip = usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
             // one value then auto add the point number
@@ -13012,10 +13159,29 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
 
         //---
 
-        // add values
-        /*int pointNum=*/ plot->addPoint2D(values, discontinuity, bad, params);
+        if (matrixData().isMatrix()) {
+          int i = 0;
 
-        //if (ticLabel_.valid) plot->setPoint2DLabel(pointNum, ticLabel_.str);
+          for (const auto &values : matrix) {
+            bool discontinuity = (i == int(matrix.size() - 1));
+
+            if (lineNum == dataFile_.numLines(setNum_, subSetNum) - 1)
+              discontinuity = false;
+
+            // add values
+            /*int pointNum=*/ plot->addPoint2D(values, discontinuity, bad, params);
+
+            //if (ticLabel_.valid) plot->setPoint2DLabel(pointNum, ticLabel_.str);
+
+            ++i;
+          }
+        }
+        else {
+          // add values
+          /*int pointNum=*/ plot->addPoint2D(values, discontinuity, bad, params);
+
+          //if (ticLabel_.valid) plot->setPoint2DLabel(pointNum, ticLabel_.str);
+        }
       }
     }
 
@@ -13147,6 +13313,8 @@ CGnuPlot::
 addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
             const CGnuPlotUsingCols &usingCols)
 {
+  CGnuPlot *th = const_cast<CGnuPlot *>(this);
+
   // open file
   CUnixFile file(filename);
   if (! file.open()) return 0;
@@ -13270,8 +13438,6 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
         fieldValues_.push_back(val);
       }
-
-      CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
       Params params;
 
@@ -13610,7 +13776,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         Values values;
         Params params;
 
-        if (isMatrix()) {
+        if (matrixData().isMatrix()) {
           for (const auto &value : fieldValues_) {
             values.push_back(value);
           }
@@ -13658,7 +13824,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         //---
 
         // add values
-        if (isMatrix()) {
+        if (matrixData().isMatrix()) {
           int x = 0;
 
           for (const auto &value : fieldValues_) {
@@ -15150,6 +15316,30 @@ parseCoordValue(CParseLine &line, CGnuPlotCoordValue &v)
     return false;
 
   v.setValue(r);
+
+  return true;
+}
+
+bool
+CGnuPlot::
+parseOffset(CParseLine &line, CPoint3D &p)
+{
+  double x = 0, y = 0, z = 0;
+
+  if (! parseReal(line, x))
+    return false;
+
+  if (line.skipSpaceAndChar(',')) {
+    if (! parseReal(line, y))
+      return false;
+
+    if (line.skipSpaceAndChar(',')) {
+      if (! parseReal(line, z))
+        return false;
+    }
+  }
+
+  p = CPoint3D(x, y, z);
 
   return true;
 }

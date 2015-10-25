@@ -21,6 +21,42 @@ app() const
   return group_->app();
 }
 
+double
+CGnuPlotColorBox::
+titleRotate() const
+{
+  const CGnuPlotAxisData &cbaxis = group_->colorBox()->axis();
+
+  return cbaxis.labelRotate().getValue(0);
+}
+
+void
+CGnuPlotColorBox::
+setTitleRotate(double r)
+{
+  CGnuPlotAxisData &cbaxis = group_->colorBox()->axis();
+
+  cbaxis.setLabelRotate(r);
+}
+
+const std::string &
+CGnuPlotColorBox::
+titleString() const
+{
+  const CGnuPlotAxisData &cbaxis = group_->colorBox()->axis();
+
+  return cbaxis.text();
+}
+
+void
+CGnuPlotColorBox::
+setTitleString(const std::string &s)
+{
+  CGnuPlotAxisData &cbaxis = group_->colorBox()->axis();
+
+  cbaxis.setText(s);
+}
+
 void
 CGnuPlotColorBox::
 draw(CGnuPlotRenderer *renderer)
@@ -29,17 +65,28 @@ draw(CGnuPlotRenderer *renderer)
     return;
 
   CBBox2D irbbox = renderer->range();
-  CBBox2D orbbox = group_->getRegionBBox();
+  CBBox2D orbbox = (! renderer->isPseudo() ? group_->getRegionBBox() : irbbox);
   CBBox2D axbbox = group_->getAxisBBox();
 
-  double pw = renderer->pixelWidthToWindowWidth  (1);
-  double ph = renderer->pixelHeightToWindowHeight(1);
+  double pw = (! renderer->isPseudo() ? renderer->pixelWidthToWindowWidth  (1) : 1);
+  double ph = (! renderer->isPseudo() ? renderer->pixelHeightToWindowHeight(1) : 1);
 
   double bx = 4*pw;
   double by = 4*ph;
 
-  double dx = orbbox.getRight()  - irbbox.getRight () - 2*bx;
-  double dy = irbbox.getBottom() - orbbox.getBottom() - 2*by;
+  double dx, dy;
+
+  if (! renderer->isPseudo()) {
+    dx = orbbox.getRight()  - irbbox.getRight () - 2*bx;
+    dy = irbbox.getBottom() - orbbox.getBottom() - 2*by;
+  }
+  else {
+    dx = irbbox.getWidth ()/10;
+    dy = irbbox.getHeight()/10;
+
+    bx = irbbox.getWidth ()/100;
+    by = irbbox.getHeight()/100;
+  }
 
   const CGnuPlotAxisData &cbaxis = group_->colorBox()->axis();
 
@@ -114,159 +161,167 @@ draw(CGnuPlotRenderer *renderer)
     }
   }
 
-  CPoint2D p1, p2;
-
-  renderer->windowToPixel(CPoint2D(x1, y1), p1);
-  renderer->windowToPixel(CPoint2D(x2, y2), p2);
-
   //---
 
   // draw colors
-  if (isVertical()) {
-    double h  = fabs(p2.y - p1.y);
-    int    ih = int(h);
+  if (! renderer->isPseudo()) {
+    CPoint2D p1, p2;
 
-    for (int i = 0; i < ih; ++i) {
-      CPoint2D pl1(p1.x, p1.y - i);
-      CPoint2D pl2(p2.x, p1.y - i);
-
-      double z = CGnuPlotUtil::map(i, 0, ih - 1, 0, 1);
-
-      CColor c = group_->palette()->getColor(z);
-
-      renderer->drawPixelLine(pl1, pl2, 1, c.rgba());
+    if (! renderer->isPseudo()) {
+      renderer->windowToPixel(CPoint2D(x1, y1), p1);
+      renderer->windowToPixel(CPoint2D(x2, y2), p2);
     }
-  }
-  else {
-    double w  = fabs(p2.x - p1.x);
-    int    iw = int(w);
 
-    for (int i = 0; i < iw; ++i) {
-      CPoint2D pl1(p1.x + i, p1.y);
-      CPoint2D pl2(p1.x + i, p2.y);
+    //---
 
-      double z = CGnuPlotUtil::map(i, 0, iw - 1, 0, 1);
+    if (isVertical()) {
+      double h  = fabs(p2.y - p1.y);
+      int    ih = int(h);
 
-      CColor c = group_->palette()->getColor(z);
+      for (int i = 0; i < ih; ++i) {
+        CPoint2D pl1(p1.x, p1.y - i);
+        CPoint2D pl2(p2.x, p1.y - i);
 
-      renderer->drawPixelLine(pl1, pl2, 1, c.rgba());
+        double z = CGnuPlotUtil::map(i, 0, ih - 1, 0, 1);
+
+        CColor c = group_->palette()->getColor(z);
+
+        renderer->drawPixelLine(pl1, pl2, 1, c.rgba());
+      }
+    }
+    else {
+      double w  = fabs(p2.x - p1.x);
+      int    iw = int(w);
+
+      for (int i = 0; i < iw; ++i) {
+        CPoint2D pl1(p1.x + i, p1.y);
+        CPoint2D pl2(p1.x + i, p2.y);
+
+        double z = CGnuPlotUtil::map(i, 0, iw - 1, 0, 1);
+
+        CColor c = group_->palette()->getColor(z);
+
+        renderer->drawPixelLine(pl1, pl2, 1, c.rgba());
+      }
     }
   }
 
   //---
 
   // draw tics
-  if (! cbaxis.hasRTicLabels(0)) {
-    double cbmin1, cbmax1;
-    int    numTicks1, numTicks2;
+  if (cbaxis.isShowTics()) {
+    if (! cbaxis.hasRTicLabels(0)) {
+      double cbmin1, cbmax1;
+      int    numTicks1, numTicks2;
 
-    if (! CGnuPlotAxis::calcTics(cbmin, cbmax, cbmin1, cbmax1, numTicks1, numTicks2)) {
-      cbmin1 = cbmin;
-      cbmax1 = cbmax;
+      if (! CGnuPlotAxis::calcTics(cbmin, cbmax, cbmin1, cbmax1, numTicks1, numTicks2)) {
+        cbmin1 = cbmin;
+        cbmax1 = cbmax;
 
-      numTicks1 = 10;
-      numTicks2 = 0;
-    }
+        numTicks1 = 10;
+        numTicks2 = 0;
+      }
 
-    double dc = (cbmax1 - cbmin1)/numTicks1;
-    double c  = cbmin1;
+      double dc = (cbmax1 - cbmin1)/numTicks1;
+      double c  = cbmin1;
 
-    if (isVertical()) {
-      //double dy = (y2 - y1)/numTicks1;
+      if (isVertical()) {
+        //double dy = (y2 - y1)/numTicks1;
 
-      //double y = y1;
+        //double y = y1;
 
-      double w1 = cbaxis.getTicMajorScale()*6*pw;
+        double w1 = cbaxis.getTicMajorScale()*6*pw;
 
-      for (int i = 0; i <= numTicks1; ++i) {
-        double yy = CGnuPlotUtil::map(c, cbmin, cbmax, y1, y2);
+        for (int i = 0; i <= numTicks1; ++i) {
+          double yy = CGnuPlotUtil::map(c, cbmin, cbmax, y1, y2);
 
-        if (i != 0 && i != numTicks1) {
-          CPoint2D pl1(x1     , yy);
-          CPoint2D pl2(x1 + w1, yy);
+          if (i != 0 && i != numTicks1) {
+            CPoint2D pl1(x1     , yy);
+            CPoint2D pl2(x1 + w1, yy);
 
-          renderer->drawLine(pl1, pl2, 1, CRGBA(0,0,0));
+            renderer->drawLine(pl1, pl2, 1, CRGBA(0,0,0));
 
-          CPoint2D pl3(x2 - w1, yy);
-          CPoint2D pl4(x2     , yy);
+            CPoint2D pl3(x2 - w1, yy);
+            CPoint2D pl4(x2     , yy);
 
-          renderer->drawLine(pl3, pl4, 1, CRGBA(0,0,0));
+            renderer->drawLine(pl3, pl4, 1, CRGBA(0,0,0));
+          }
+
+          std::stringstream ss;
+
+          ss << c;
+
+          CPoint2D p(tx, yy);
+
+          renderer->drawHAlignedText(p, CHALIGN_TYPE_LEFT, 0, CVALIGN_TYPE_CENTER, 0,
+                                     ss.str(), CRGBA(0,0,0));
+
+          group_->updateMarginBBox(renderer->getHAlignedTextBBox(ss.str()).moveBy(p));
+
+          //y += dy;
+          c += dc;
         }
+      }
+      else {
+        //double dx = (x2 - x1)/numTicks1;
 
-        std::stringstream ss;
+        //double x = x1;
 
-        ss << c;
+        double h1 = cbaxis.getTicMajorScale()*6*ph;
 
-        CPoint2D p(tx, yy);
+        for (int i = 0; i <= numTicks1; ++i) {
+          double xx = CGnuPlotUtil::map(c, cbmin, cbmax, x1, x2);
 
-        renderer->drawHAlignedText(p, CHALIGN_TYPE_LEFT, 0, CVALIGN_TYPE_CENTER, 0,
-                                   ss.str(), CRGBA(0,0,0));
+          if (i != 0 && i != numTicks1) {
+            CPoint2D pl1(xx, y1     );
+            CPoint2D pl2(xx, y1 + h1);
 
-        group_->updateMarginBBox(renderer->getHAlignedTextBBox(ss.str()).moveBy(p));
+            renderer->drawLine(pl1, pl2, 1, CRGBA(0,0,0));
 
-        //y += dy;
-        c += dc;
+            CPoint2D pl3(xx, y2 - h1);
+            CPoint2D pl4(xx, y2     );
+
+            renderer->drawLine(pl3, pl4, 1, CRGBA(0,0,0));
+          }
+
+          std::stringstream ss;
+
+          ss << c;
+
+          CPoint2D p(xx, ty);
+
+          renderer->drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP, 0,
+                                     ss.str(), CRGBA(0,0,0));
+
+          group_->updateMarginBBox(renderer->getHAlignedTextBBox(ss.str()).moveBy(p));
+
+          //x += dx;
+          c += dc;
+        }
       }
     }
     else {
-      //double dx = (x2 - x1)/numTicks1;
+      const CGnuPlotAxisData::RTicLabels &ticLabels = cbaxis.rticLabels(0);
 
-      //double x = x1;
+      if (isVertical()) {
+        for (const auto &label : ticLabels) {
+          double      r = label.first;
+          std::string s = label.second;
 
-      double h1 = cbaxis.getTicMajorScale()*6*ph;
+          double y = CGnuPlotUtil::map(r, cbmin, cbmax, y1, y2);
 
-      for (int i = 0; i <= numTicks1; ++i) {
-        double xx = CGnuPlotUtil::map(c, cbmin, cbmax, x1, x2);
-
-        if (i != 0 && i != numTicks1) {
-          CPoint2D pl1(xx, y1     );
-          CPoint2D pl2(xx, y1 + h1);
-
-          renderer->drawLine(pl1, pl2, 1, CRGBA(0,0,0));
-
-          CPoint2D pl3(xx, y2 - h1);
-          CPoint2D pl4(xx, y2     );
-
-          renderer->drawLine(pl3, pl4, 1, CRGBA(0,0,0));
+          renderer->drawText(CPoint2D(tx, y), s, CRGBA(0,0,0));
         }
-
-        std::stringstream ss;
-
-        ss << c;
-
-        CPoint2D p(xx, ty);
-
-        renderer->drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP, 0,
-                                   ss.str(), CRGBA(0,0,0));
-
-        group_->updateMarginBBox(renderer->getHAlignedTextBBox(ss.str()).moveBy(p));
-
-        //x += dx;
-        c += dc;
       }
-    }
-  }
-  else {
-    const CGnuPlotAxisData::RTicLabels &ticLabels = cbaxis.rticLabels(0);
+      else {
+        for (const auto &label : ticLabels) {
+          double      r = label.first;
+          std::string s = label.second;
 
-    if (isVertical()) {
-      for (const auto &label : ticLabels) {
-        double      r = label.first;
-        std::string s = label.second;
+          double x = CGnuPlotUtil::map(r, cbmin, cbmax, x1, x2);
 
-        double y = CGnuPlotUtil::map(r, cbmin, cbmax, y1, y2);
-
-        renderer->drawText(CPoint2D(tx, y), s, CRGBA(0,0,0));
-      }
-    }
-    else {
-      for (const auto &label : ticLabels) {
-        double      r = label.first;
-        std::string s = label.second;
-
-        double x = CGnuPlotUtil::map(r, cbmin, cbmax, x1, x2);
-
-        renderer->drawText(CPoint2D(x, ty), s, CRGBA(0,0,0));
+          renderer->drawText(CPoint2D(x, ty), s, CRGBA(0,0,0));
+        }
       }
     }
   }
@@ -299,25 +354,29 @@ draw(CGnuPlotRenderer *renderer)
 
   // draw label
 
-  if (cbaxis.text() != "") {
+  if (titleString() != "") {
     CRGBA c(0,0,0);
 
-    double             a   = cbaxis.labelRotate();
-    const std::string &str = cbaxis.text();
+    const std::string &str = titleString();
 
+    double   a;
     CPoint2D p;
 
     if (isVertical()) {
+      a = cbaxis.labelRotate().getValue(90);
+
       double ym = (y1 + y2)/2;
 
-      p = CPoint2D(x2, ym);
+      p = CPoint2D(x2 + bx, ym);
 
       renderer->drawRotatedText(p, str, a, CHALIGN_TYPE_LEFT, CVALIGN_TYPE_CENTER, c);
     }
     else {
+      a = cbaxis.labelRotate().getValue(0);
+
       double xm = (x1 + x2)/2;
 
-       p = CPoint2D(xm, y1);
+       p = CPoint2D(xm, y1 - by);
 
       renderer->drawRotatedText(p, str, a, CHALIGN_TYPE_CENTER, CVALIGN_TYPE_TOP, c);
     }

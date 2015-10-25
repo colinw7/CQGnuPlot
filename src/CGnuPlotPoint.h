@@ -29,56 +29,15 @@ class CGnuPlotPoint {
   double getY() const;
   double getZ() const;
 
-  bool getXY(double &x, double &y) const {
-    return getX(x) && getY(y);
-  }
+  bool getXY(double &x, double &y) const { return getX(x) && getY(y); }
 
-  bool getXYZ(double &x, double &y, double &z) const {
-    return getX(x) && getY(y) && getZ(z);
-  }
+  bool getXYZ(double &x, double &y, double &z) const { return getX(x) && getY(y) && getZ(z); }
 
-  bool getReals(std::vector<double> &reals) const {
-    reals.clear();
+  bool getReals(std::vector<double> &reals) const;
 
-    bool   b = true;
-    double r = 0.0;
+  bool getPoint(CPoint2D &p, bool checkNaN=true) const;
 
-    for (uint i = 0; i < values_.size(); ++i) {
-      if (getValue(i + 1, r))
-        reals.push_back(r);
-      else {
-        reals.push_back(CMathGen::getNaN());
-        b = false;
-      }
-    }
-
-    return b;
-  }
-
-  bool getPoint(CPoint2D &p, bool checkNaN=true) const {
-    double x, y;
-
-    if (! getXY(x, y))
-      return false;
-
-    if (checkNaN && (IsNaN(x) || IsNaN(y)))
-      return false;
-
-    p = CPoint2D(x, y);
-
-    return true;
-  }
-
-  bool getPoint(CPoint3D &p) const {
-    double x, y, z;
-
-    if (! getXYZ(x, y, z))
-      return false;
-
-    p = CPoint3D(x, y, z);
-
-    return true;
-  }
+  bool getPoint(CPoint3D &p) const;
 
   int getNumValues() const { return values_.size(); }
 
@@ -92,18 +51,14 @@ class CGnuPlotPoint {
   void setLabel(const std::string &str) { label_ = str; }
 
   bool isDiscontinuity() const { return discontinuity_; }
+  void setDiscontinuity(bool b) { discontinuity_ = b; }
 
   bool isBad() const { return bad_; }
+  void setBad(bool b) { bad_ = b; }
 
-  bool hasParam(const std::string &name) const {
-    return (params_.find(name) != params_.end());
-  }
+  bool hasParam(const std::string &name) const;
 
-  CExprValuePtr getParam(const std::string &name) const {
-    auto p = params_.find(name);
-
-    return (*p).second;
-  }
+  CExprValuePtr getParam(const std::string &name) const;
 
   std::string getParamString(const std::string &name) const;
 

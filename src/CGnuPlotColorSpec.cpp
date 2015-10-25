@@ -66,7 +66,7 @@ calcColor(CGnuPlotGroup *group, double x) const
     double x1;
 
     if (! group->is3D()) {
-      const CBBox2D &bbox = group->getBBox();
+      const CBBox2D &bbox = group->bbox();
 
       x1 = CGnuPlotUtil::map(x, bbox.getXMin(), bbox.getXMax(), 0, 1);
     }

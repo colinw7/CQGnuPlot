@@ -141,7 +141,8 @@
   + Eval failed: strptime("%m","2")
 
 ## heatmaps.dem
-  + inline data not supported
+  + second, third plot not displayed
+  + surface/contour ranges wrong
 
 ## hidden2.dem
   + hidden not working

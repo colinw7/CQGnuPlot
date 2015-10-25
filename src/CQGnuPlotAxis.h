@@ -102,6 +102,8 @@ class CQGnuPlotAxis : public CQGnuPlotObject, public CGnuPlotAxis {
   QColor getTicColor() const;
   void setTicColor(const QColor &c);
 
+  double labelRotate() const { return CGnuPlotAxis::labelRotate().getValue(0); }
+
   QColor getLabelColor() const;
   void setLabelColor(const QColor &c);
 

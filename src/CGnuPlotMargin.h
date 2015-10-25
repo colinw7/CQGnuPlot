@@ -82,20 +82,25 @@ class CGnuPlotMargin {
 
   void updateDefaultValues(CGnuPlotRenderer *renderer, double lm, double bm, double rm, double tm);
 
+  bool hasFontSize() const { return fw_.isValid(); }
+
+  void updateFontSize(CGnuPlotRenderer *renderer) const;
+
   void showLeft  (std::ostream &os) { lmargin_.show(os, "lmargin"); }
   void showBottom(std::ostream &os) { bmargin_.show(os, "bmargin"); }
   void showRight (std::ostream &os) { rmargin_.show(os, "rmargin"); }
   void showTop   (std::ostream &os) { tmargin_.show(os, "tmargin"); }
 
-  double fontWidth () const { return fw_; }
-  double fontHeight() const { return fh_; }
+  double fontWidth () const { return fw_.getValue(1); }
+  double fontHeight() const { return fw_.getValue(1); }
 
  private:
   CGnuPlotMarginValue lmargin_;
   CGnuPlotMarginValue bmargin_;
   CGnuPlotMarginValue rmargin_;
   CGnuPlotMarginValue tmargin_;
-  double              fw_, fh_;
+  COptReal            fw_;
+  COptReal            fh_;
 };
 
 #endif

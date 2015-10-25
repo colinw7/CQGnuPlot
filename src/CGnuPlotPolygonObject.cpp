@@ -103,7 +103,7 @@ tip() const
   tip.setBorderColor(stroke_->color());
   tip.setXColor     (stroke_->color());
 
-  tip.setRect(bbox_);
+  tip.setBBox(bbox_);
 
   return tip;
 }

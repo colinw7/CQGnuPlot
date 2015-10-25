@@ -1,6 +1,7 @@
 #include <CQGnuPlotDevice.h>
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotWindow.h>
+#include <CQGnuPlotMultiplot.h>
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotLineStyle.h>
@@ -28,6 +29,7 @@
 #include <CQGnuPlotEllipseObject.h>
 #include <CQGnuPlotErrorBarObject.h>
 #include <CQGnuPlotFinanceBarObject.h>
+#include <CQGnuPlotImageObject.h>
 #include <CQGnuPlotLabelObject.h>
 #include <CQGnuPlotPathObject.h>
 #include <CQGnuPlotPieObject.h>
@@ -47,7 +49,7 @@ CQGnuPlotDevice() :
 {
   renderer_ = new CQGnuPlotRenderer;
 
-  setSize(CISize2D(800, 800));
+  setSize(CISize2D(1800, 1400));
 }
 
 CQGnuPlotDevice::
@@ -70,6 +72,17 @@ createWindow()
   window->show();
 
   return window;
+}
+
+CGnuPlotMultiplot *
+CQGnuPlotDevice::
+createMultiplot()
+{
+  CQGnuPlot *qapp = dynamic_cast<CQGnuPlot *>(plot_);
+
+  CQGnuPlotMultiplot *multiplot = new CQGnuPlotMultiplot(qapp);
+
+  return multiplot;
 }
 
 CGnuPlotGroup *
@@ -403,6 +416,21 @@ createFinanceBarObject(CGnuPlotPlot *plot)
   qplot->qwindow()->updateProperties();
 
   return bar;
+}
+
+CGnuPlotImageObject *
+CQGnuPlotDevice::
+createImageObject(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotImageObject *image = new CQGnuPlotImageObject(qplot);
+
+  objects_.push_back(image);
+
+  qplot->qwindow()->updateProperties();
+
+  return image;
 }
 
 CGnuPlotLabelObject *
