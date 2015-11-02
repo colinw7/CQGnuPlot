@@ -144,6 +144,8 @@ void closePoints(std::vector<CPoint2D> &points,
 
 }
 
+//------
+
 CGnuPlotStyleFilledCurves::
 CGnuPlotStyleFilledCurves() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::FILLEDCURVES)
@@ -243,8 +245,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
   else {
     // TODO: handle disconnected points ?
-    std::vector<CPoint2D> points1, points2;
-    bool                  inside = false;
+    typedef std::vector<CPoint2D> Polygon;
+    typedef std::vector<Polygon>  PolygonArray;
+
+    PolygonArray polygons;
+    Polygon      points1, points2;
+    bool        inside = false;
 
     for (const auto &point : plot->getPoints2D()) {
       double x, y1, y2;
@@ -279,7 +285,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
             for (auto p1 = points2.rbegin(), p2 = points2.rend(); p1 != p2; ++p1)
               points1.push_back(*p1);
 
-            renderer->fillClippedPolygon(points1, fill);
+            polygons.push_back(points1);
           }
 
           points1.clear();
@@ -297,7 +303,37 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       for (auto p1 = points2.rbegin(), p2 = points2.rend(); p1 != p2; ++p1)
         points1.push_back(*p1);
 
-      renderer->fillClippedPolygon(points1, fill);
+      polygons.push_back(points1);
+    }
+
+    if (! renderer->isPseudo() && plot->isCacheActive()) {
+      plot->updatePolygonCacheSize(polygons.size());
+
+      int pi = 0;
+
+      for (const auto &points : polygons) {
+        CGnuPlotPolygonObject *poly = plot->polygonObjects()[pi];
+
+        poly->setPoints(points);
+
+        if (! poly->testAndSetUsed()) {
+          CGnuPlotFillP fill1(plot->createFill());
+
+          *fill1 = fill;
+
+          poly->setFill(fill1);
+        }
+
+        ++pi;
+      }
+
+      for (const auto &poly : plot->polygonObjects())
+        poly->draw(renderer);
+    }
+    else {
+      for (const auto &points : polygons) {
+        renderer->fillClippedPolygon(points, fill);
+      }
     }
   }
 }

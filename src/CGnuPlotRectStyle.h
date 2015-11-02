@@ -19,11 +19,15 @@ class CGnuPlotRectStyle {
   const CGnuPlotFillStyle &fillStyle() const { return fs_; }
   void setFillStyle(const CGnuPlotFillStyle &v) { fs_ = v; }
 
+  bool clip() const { return clip_; }
+  void setClip (bool b) { clip_ = b; }
+
   void unset() {
     front_     = true;
     lineWidth_ = 1;
     fc_        = CGnuPlotColorSpec(); fc_.setBackground();
     fs_        = CGnuPlotFillStyle(); fs_.setStyle(CGnuPlotTypes::FillType::SOLID);
+    clip_      = false;
   }
 
   void show(std::ostream &os) const {
@@ -36,10 +40,11 @@ class CGnuPlotRectStyle {
   }
 
  private:
-  bool              front_ { true };
+  bool              front_     { true };
   double            lineWidth_ { 1 };
   CGnuPlotColorSpec fc_;
   CGnuPlotFillStyle fs_;
+  bool              clip_      { false };
 };
 
 #endif

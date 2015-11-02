@@ -283,7 +283,7 @@ skipExpression(const std::string &line, uint &i)
     lastOpType    = CEXPR_OP_UNKNOWN;
 
     if      (CExprOperator::isOperatorChar(line[i])) {
-      if (line[i] == ',' || line[i] == ')')
+      if (line[i] == ',' || line[i] == ')' || line[i] == ':')
         break;
 
       if (lastTokenType1 == CEXPR_TOKEN_OPERATOR && lastOpType1 != CEXPR_OP_UNKNOWN) {
@@ -367,6 +367,29 @@ skipExpression(const std::string &line, uint &i)
         }
         else if (lastTokenType == CEXPR_TOKEN_OPERATOR && lastOpType == CEXPR_OP_CLOSE_RBRACKET) {
           break;
+        }
+        else if (lastTokenType == CEXPR_TOKEN_OPERATOR && lastOpType == CEXPR_OP_QUESTION) {
+          if (! skipExpression(line, i)) {
+            i = i1; return false;
+          }
+
+          CStrUtil::skipSpace(line, &i);
+
+          if (i >= len1 || line[i] != ':') {
+            i = i1; return false;
+          }
+
+          ++i;
+
+          CStrUtil::skipSpace(line, &i);
+
+          if (! skipExpression(line, i)) {
+            i = i1; return false;
+          }
+
+          lastTokenType = CEXPR_TOKEN_VALUE;
+
+          continue;
         }
       }
     }

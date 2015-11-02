@@ -8,14 +8,19 @@ class CGnuPlotMargin;
 
 class CGnuPlotMarginValue {
  public:
-  CGnuPlotMarginValue() { }
+  CGnuPlotMarginValue(bool low) :
+   low_(low) {
+  }
 
-  CGnuPlotMarginValue(double v, bool s=false) { value_ = v; screen_ = s; }
+  CGnuPlotMarginValue(bool low, double v, bool s=false) :
+   low_(low), value_(v), screen_(s) {
+  }
+
+  bool isLow() const { return low_; }
+  void setLow(bool b) { low_ = b; }
 
   const COptReal &value() const { return value_; }
-
   void setValue(double v, bool b) { value_ = v; screen_ = b; }
-
   void resetValue() { value_.setInvalid(); screen_ = false; }
 
   double realValue() const { return value_.getValue(defValue_); }
@@ -45,10 +50,35 @@ class CGnuPlotMarginValue {
   }
 
  private:
+  bool     low_      { true };
   COptReal value_;
   double   defValue_ { 0 };
   bool     screen_   { false };
 };
+
+//---
+
+class CGnuPlotMarginLValue : public CGnuPlotMarginValue {
+ public:
+  CGnuPlotMarginLValue() : CGnuPlotMarginValue(true) { }
+
+  CGnuPlotMarginLValue(double v, bool s=false) :
+   CGnuPlotMarginValue(true, v, s) {
+  }
+};
+
+//---
+
+class CGnuPlotMarginHValue : public CGnuPlotMarginValue {
+ public:
+  CGnuPlotMarginHValue() : CGnuPlotMarginValue(false) { }
+
+  CGnuPlotMarginHValue(double v, bool s=false) :
+   CGnuPlotMarginValue(false, v, s) {
+  }
+};
+
+//---
 
 class CGnuPlotMargin {
  public:
@@ -95,12 +125,12 @@ class CGnuPlotMargin {
   double fontHeight() const { return fw_.getValue(1); }
 
  private:
-  CGnuPlotMarginValue lmargin_;
-  CGnuPlotMarginValue bmargin_;
-  CGnuPlotMarginValue rmargin_;
-  CGnuPlotMarginValue tmargin_;
-  COptReal            fw_;
-  COptReal            fh_;
+  CGnuPlotMarginLValue lmargin_;
+  CGnuPlotMarginLValue bmargin_;
+  CGnuPlotMarginHValue rmargin_;
+  CGnuPlotMarginHValue tmargin_;
+  COptReal             fw_;
+  COptReal             fh_;
 };
 
 #endif

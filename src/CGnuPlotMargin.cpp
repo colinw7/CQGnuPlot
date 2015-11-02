@@ -57,12 +57,16 @@ xValue(CGnuPlotRenderer *renderer, const CGnuPlotMargin &margin) const
     return value().getValue(defValue())*margin.fontWidth();
   }
   else {
-    double px1, py1, px2, py2;
+    //double px1, py1, px2, py2;
 
-    renderer->pixelToWindowNoMargin(                    0,                      0, &px1, &py1);
-    renderer->pixelToWindowNoMargin(renderer->width() - 1, renderer->height() - 1, &px2, &py2);
+    //renderer->pixelToWindowNoMargin(                    0,                      0, &px1, &py1);
+    //renderer->pixelToWindowNoMargin(renderer->width() - 1, renderer->height() - 1, &px2, &py2);
 
-    return CGnuPlotUtil::map(value().getValue(0.1), 0, 1, px1, px2);
+    //return CGnuPlotUtil::map(value().getValue(0.1), 0, 1, px1, px2);
+    if (low_)
+      return value().getValue(0.1)*renderer->width();
+    else
+      return (1.0 - value().getValue(0.1))*renderer->width();
   }
 }
 
@@ -77,11 +81,15 @@ yValue(CGnuPlotRenderer *renderer, const CGnuPlotMargin &margin) const
     return value().getValue(defValue())*margin.fontHeight();
   }
   else {
-    double px1, py1, px2, py2;
+    //double px1, py1, px2, py2;
 
-    renderer->pixelToWindowNoMargin(                    0,                      0, &px1, &py1);
-    renderer->pixelToWindowNoMargin(renderer->width() - 1, renderer->height() - 1, &px2, &py2);
+    //renderer->pixelToWindowNoMargin(                    0,                      0, &px1, &py1);
+    //renderer->pixelToWindowNoMargin(renderer->width() - 1, renderer->height() - 1, &px2, &py2);
 
-    return CGnuPlotUtil::map(value().getValue(0.1), 0, 1, py1, py2);
+    //return CGnuPlotUtil::map(value().getValue(0.1), 0, 1, py1, py2);
+    if (low_)
+      return value().getValue(0.1)*renderer->height();
+    else
+      return (1.0 - value().getValue(0.1))*renderer->height();
   }
 }

@@ -22,28 +22,69 @@ CGnuPlotPolygon(CGnuPlotGroup *group) :
   fillColor_.setRGB(bg);
 }
 
-CBBox2D
+CGnuPlotPolygon *
 CGnuPlotPolygon::
-calcBBox() const
+setData(const CGnuPlotPolygon *poly)
 {
-  bbox_ = CBBox2D();
+  (void) CGnuPlotGroupAnnotation::setData(poly);
 
-  for (const auto &p : points_)
-    bbox_.add(CPoint2D(p.x, p.y));
+  typePositions_ = poly->typePositions_;
+  fs_            = poly->fs_;
+  lt_            = poly->lt_;
+  lw_            = poly->lw_;
+  dash_          = poly->dash_;
+  bbox_          = poly->bbox_;
+  fc_            = poly->fc_;
+  lc_            = poly->lc_;
+  ppoints2D_     = poly->ppoints2D_;
+  ppoints3D_     = poly->ppoints3D_;
 
-  return bbox_;
+  return this;
+}
+
+void
+CGnuPlotPolygon::
+addPoint (const CGnuPlotPosition &p)
+{
+  typePositions_.push_back(TypePosition(PointType::ABSOLUTE, p));
+
+  ppoints3D_.clear();
+  ppoints2D_.clear();
+}
+
+void
+CGnuPlotPolygon::
+addRPoint(const CGnuPlotPosition &p)
+{
+  typePositions_.push_back(TypePosition(PointType::RELATIVE, p));
+
+  ppoints3D_.clear();
+  ppoints2D_.clear();
+}
+
+void
+CGnuPlotPolygon::
+initClip()
+{
+  if (! typePositions_.empty())
+    clip_ = ! typePositions_.front().second.isScreen();
 }
 
 void
 CGnuPlotPolygon::
 draw(CGnuPlotRenderer *renderer) const
 {
+  //if (ppoints2D_.empty())
+  calcPoints(renderer);
+
+  //---
+
   bool highlighted = (isHighlighted() || isSelected());
 
-  // clip if enabled and does not use screen coordinates
-  //CBBox2D bbox = calcBBox();
-
-  //renderer->setClip(group_->getClip());
+  if (isClip())
+    renderer->setClip(group_->getClip());
+  else
+    renderer->resetClip();
 
   fc_ = CRGBA();
 
@@ -59,7 +100,10 @@ draw(CGnuPlotRenderer *renderer) const
         fc = fc.getLightRGBA();
       }
 
-      renderer->fillPolygon(this->getPoints(), fc);
+      if (group_->is3D())
+        renderer->fillPolygon(ppoints3D_, fc);
+      else
+        renderer->fillPolygon(ppoints2D_, fc);
     }
   }
 
@@ -75,7 +119,67 @@ draw(CGnuPlotRenderer *renderer) const
     lw = 2;
   }
 
-  renderer->drawPolygon(this->getPoints(), lw, lc_, CLineDash());
+  if (group_->is3D())
+    renderer->drawPolygon(ppoints3D_, lw, lc, dash_);
+  else
+    renderer->drawPolygon(ppoints2D_, lw, lc, dash_);
+}
+
+void
+CGnuPlotPolygon::
+calcPoints(CGnuPlotRenderer *renderer) const
+{
+  ppoints3D_.clear();
+  ppoints2D_.clear();
+
+  bbox_.reset();
+
+  int i = 0;
+
+  if (group_->is3D()) {
+    CPoint3D lastp;
+
+    for (const auto &typePos : typePositions_) {
+      CPoint3D p;
+
+      if (i > 0 && typePos.first == PointType::RELATIVE)
+        p = lastp + typePos.second.getDistance3D(renderer);
+      else
+        p = typePos.second.getPoint3D(renderer);
+
+      CPoint2D p1 = renderer->transform(p);
+
+      ppoints3D_.push_back(p);
+      ppoints2D_.push_back(p1);
+
+      bbox_.add(p1);
+
+      lastp = p;
+
+      ++i;
+    }
+  }
+  else {
+    CPoint2D lastp;
+
+    for (const auto &typePos : typePositions_) {
+      CPoint2D p;
+
+      if (i > 0 && typePos.first == PointType::RELATIVE)
+        p = lastp + typePos.second.getDistance2D(renderer);
+      else
+        p = typePos.second.getPoint2D(renderer);
+
+      ppoints3D_.push_back(CPoint3D(p.x, p.y, 0));
+      ppoints2D_.push_back(p);
+
+      bbox_.add(p);
+
+      lastp = p;
+
+      ++i;
+    }
+  }
 }
 
 bool
@@ -91,7 +195,7 @@ tip() const
 {
   CGnuPlotTipData tip;
 
-  tip.setXStr(CStrUtil::strprintf("%n", points_.size()));
+  tip.setXStr(CStrUtil::strprintf("%d", typePositions_.size()));
   tip.setYStr("");
 
   tip.setBorderColor(lc_);
@@ -108,11 +212,17 @@ print(std::ostream &os) const
 {
   os << " polygon";
 
-  for (uint i = 0; i < points_.size(); ++i) {
-    if (i == 0)
-      os << " from " << points_[i];
+  int i = 0;
+
+  for (const auto &p : typePositions_) {
+    if      (i == 0)
+      os << " from " << p.second;
+    else if (p.first == PointType::ABSOLUTE)
+      os << " to " << p.second;
     else
-      os << " to " << points_[i];
+      os << " rto " << p.second;
+
+    ++i;
   }
 
   os << " " << CStrUniqueMatch::valueToString<CGnuPlotTypes::DrawLayer>(layer_);

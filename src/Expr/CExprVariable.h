@@ -38,7 +38,8 @@ class CExprVariable {
 
   void setValue(const CExprValuePtr &value);
 
-  void setRealValue(double x);
+  void setRealValue   (double r);
+  void setIntegerValue(int    i);
 
   const CExprValuePtr &getValue() const { return value_; }
 

@@ -105,6 +105,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       bar->setValues(p1.x, bmin);
 
+      bar->setVertical(true);
+
       if (! bar->testAndSetUsed()) {
         CGnuPlotFillP   fill  (bar->fill  ()->dup());
         CGnuPlotStrokeP stroke(bar->stroke()->dup());

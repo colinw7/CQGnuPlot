@@ -64,6 +64,7 @@ CQGnuPlotUtil.cpp \
 CQGnuPlotWindow.cpp \
 \
 CGnuPlot.cpp \
+CGnuPlotAnnotation.cpp \
 CGnuPlotArrow.cpp \
 CGnuPlotArrowData.cpp \
 CGnuPlotArrowObject.cpp \
@@ -124,6 +125,7 @@ CGnuPlotRectObject.cpp \
 CGnuPlotRenderer.cpp \
 CGnuPlotStroke.cpp \
 CGnuPlotStyle.cpp \
+CGnuPlotSurface.cpp \
 CGnuPlotTimeStamp.cpp \
 CGnuPlotUsingCols.cpp \
 \
@@ -336,6 +338,7 @@ CGnuPlotSVGDevice.h \
 CGnuPlotSVGRenderer.h \
 CGnuPlotSize.h \
 CGnuPlotStroke.h \
+CGnuPlotSurface.h \
 CGnuPlotTimeStamp.h \
 CGnuPlotUsingCols.h \
 \

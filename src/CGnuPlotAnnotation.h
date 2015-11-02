@@ -7,20 +7,11 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
  public:
   static const char *getName() { return "object"; }
 
-  CGnuPlotGroupAnnotation(CGnuPlotGroup *group) :
-   CGnuPlotGroupObject(group) {
-  }
+  CGnuPlotGroupAnnotation(CGnuPlotGroup *group);
 
   virtual ~CGnuPlotGroupAnnotation() { }
 
-  CGnuPlotGroupAnnotation *setData(const CGnuPlotGroupAnnotation *ann) {
-    ind_         = ann->ind_;
-    strokeColor_ = ann->strokeColor_;
-    fillColor_   = ann->fillColor_;
-    layer_       = ann->layer_;
-
-    return this;
-  }
+  CGnuPlotGroupAnnotation *setData(const CGnuPlotGroupAnnotation *ann);
 
   virtual CGnuPlotTypes::ObjectType type() const { return CGnuPlotTypes::ObjectType::NONE; }
 
@@ -36,6 +27,11 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
   const DrawLayer &getLayer() const { return layer_; }
   void setLayer(const DrawLayer &l) { layer_ = l; }
 
+  bool isClip() const { return clip_; }
+  void setClip(bool b) { clip_ = b; }
+
+  virtual void initClip() = 0;
+
   virtual bool inside(const CGnuPlotTypes::InsideData &p) const = 0;
 
   virtual void print(std::ostream &os) const = 0;
@@ -45,6 +41,7 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
   COptRGBA          strokeColor_;
   CGnuPlotColorSpec fillColor_;
   DrawLayer         layer_ { CGnuPlotTypes::DrawLayer::BACK };
+  bool              clip_ { true };
 };
 
 typedef std::shared_ptr<CGnuPlotGroupAnnotation> CGnuPlotGroupAnnotationP;

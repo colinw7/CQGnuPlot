@@ -6,6 +6,7 @@
 #include <map>
 #include <memory>
 
+class CGnuPlot;
 class CGnuPlotGroup;
 
 class CGnuPlotPalette {
@@ -101,7 +102,7 @@ class CGnuPlotPalette {
     cbSaturation_ = saturation;
   }
 
-  bool readFile(const std::string &filename);
+  bool readFile(CGnuPlot *plot, const std::string &filename);
 
   void unset();
 

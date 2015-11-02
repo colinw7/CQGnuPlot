@@ -8,7 +8,8 @@ class CGnuPlotPlot;
 
 class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
  public:
-  typedef std::vector<CPoint3D> Points;
+  typedef std::vector<CPoint3D> Points3D;
+  typedef std::vector<CPoint2D> Points2D;
 
  public:
   static const char *getName() { return "polygon"; }
@@ -17,22 +18,15 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
 
   virtual ~CGnuPlotPolygon() { }
 
-  CGnuPlotPolygon *setData(const CGnuPlotPolygon *poly) {
-    (void) CGnuPlotGroupAnnotation::setData(poly);
-
-    points_ = poly->points_;
-    fs_     = poly->fs_;
-    lw_     = poly->lw_;
-    bbox_   = poly->bbox_;
-
-    return this;
-  }
+  CGnuPlotPolygon *setData(const CGnuPlotPolygon *poly);
 
   CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::POLYGON; }
 
-  void addPoint(const CPoint3D &p) { points_.push_back(p); }
+  void addPoint (const CGnuPlotPosition &p);
+  void addRPoint(const CGnuPlotPosition &p);
 
-  const Points &getPoints() const { return points_; }
+  const Points3D &getPolyPoints3D() const { return ppoints3D_; }
+  const Points2D &getPolyPoints2D() const { return ppoints2D_; }
 
   const CGnuPlotFillStyle &getFillStyle() const { return fs_; }
   void setFillStyle(const CGnuPlotFillStyle &fs) { fs_ = fs; }
@@ -41,6 +35,9 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
 
   const COptReal &getLineWidth() const { return lw_; }
   void setLineWidth(double w) { lw_ = w; }
+
+  const CLineDash &dash() const { return dash_; }
+  void setDash(const CLineDash &v) { dash_ = v; }
 
   CBBox2D calcBBox() const;
 
@@ -52,16 +49,32 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
 
   CGnuPlotTipData tip() const override;
 
+  void initClip() override;
+
   void print(std::ostream &) const;
 
  protected:
-  Points            points_;
+  void calcPoints(CGnuPlotRenderer *renderer) const;
+
+ protected:
+  enum class PointType {
+    ABSOLUTE,
+    RELATIVE
+  };
+
+  typedef std::pair<PointType,CGnuPlotPosition> TypePosition;
+  typedef std::vector<TypePosition>             TypePositions;
+
+  TypePositions     typePositions_;
   CGnuPlotFillStyle fs_;
   COptInt           lt_;
   COptReal          lw_;
+  CLineDash         dash_;
   mutable CBBox2D   bbox_;
   mutable CRGBA     fc_;
   mutable CRGBA     lc_;
+  mutable Points3D  ppoints3D_;
+  mutable Points2D  ppoints2D_;
 };
 
 typedef std::shared_ptr<CGnuPlotPolygon> CGnuPlotPolygonP;

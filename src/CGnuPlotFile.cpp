@@ -289,6 +289,8 @@ parseFileLine(const std::string &str, Fields &fields)
     (void) CStrUtil::addFields(str, fields, ",");
   }
   else {
+    bool separator = false;
+
     Words words(fields);
 
     CParseLine line(str);
@@ -323,20 +325,29 @@ parseFileLine(const std::string &str, Fields &fields)
           line.skipChar();
 
         words.addWord("\"" + word + "\"");
+
+        separator = false;
       }
       else if (separator_ == '\0' && line.isSpace()) {
-        words.flush();
+        words.flush(false);
 
         line.skipSpace();
+
+        separator = true;
       }
       else if (line.isChar(separator_)) {
-        words.flush(true);
+        words.flush(separator);
 
+        // TODO: skip all generic separators ?
         while (line.isValid() && line.isChar(separator_))
           line.skipChar();
+
+        separator = true;
       }
       else {
         words.addChar(line.getChar());
+
+        separator = false;
       }
     }
   }

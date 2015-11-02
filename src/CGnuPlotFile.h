@@ -21,7 +21,7 @@ class CGnuPlotFile {
   struct Indices {
     Indices() { }
 
-    int start { 1 };
+    int start { 0 };
     int end   { std::numeric_limits<int>::max() };
     int step  { 1 };
 
@@ -114,11 +114,11 @@ class CGnuPlotFile {
     return sets_[setNum].subSets.size();
   }
 
-  int numLines(int subSetNum=0) {
+  int numLines(int subSetNum=0) const {
     return numLines(0, subSetNum);
   }
 
-  int numLines(int setNum, int subSetNum) {
+  int numLines(int setNum, int subSetNum) const {
     if (setNum < 0 || setNum >= numSets())
       return 0;
 
@@ -128,15 +128,15 @@ class CGnuPlotFile {
     return sets_[setNum].subSets[subSetNum].lines.size();
   }
 
-  const Fields &fields(int lineNum) {
+  const Fields &fields(int lineNum) const {
     return fields(0, 0, lineNum);
   }
 
-  const Fields &fields(int subSetNum, int lineNum) {
+  const Fields &fields(int subSetNum, int lineNum) const {
     return fields(0, subSetNum, lineNum);
   }
 
-  const Fields &fields(int setNum, int subSetNum, int lineNum) {
+  const Fields &fields(int setNum, int subSetNum, int lineNum) const {
     static Fields noFields;
 
     if (setNum < 0 || setNum >= numSets())
@@ -149,6 +149,21 @@ class CGnuPlotFile {
       return noFields;
 
     return sets_[setNum].subSets[subSetNum].lines[lineNum].fields;
+  }
+
+  int numFields(int setNum, int subSetNum, int lineNum) const {
+    return fields(setNum, subSetNum, lineNum).size();
+  }
+
+  const std::string field(int setNum, int subSetNum, int lineNum, int fieldNum) const {
+    static std::string noField;
+
+    const Fields &fields = this->fields(setNum, subSetNum, lineNum);
+
+    if (fieldNum < 0 || fieldNum >= int(fields.size()))
+      return noField;
+
+    return fields[fieldNum];
   }
 
   int maxNumFields() const { return maxNumFields_; }

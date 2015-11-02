@@ -82,12 +82,22 @@ setValue(const CExprValuePtr &value)
 
 void
 CExprVariable::
-setRealValue(double x)
+setRealValue(double r)
 {
   if (value_->isRealValue())
-    value_->setRealValue(x);
+    value_->setRealValue(r);
   else
-    value_ = CExprInst->createRealValue(x);
+    value_ = CExprInst->createRealValue(r);
+}
+
+void
+CExprVariable::
+setIntegerValue(int i)
+{
+  if (value_->isIntegerValue())
+    value_->setIntegerValue(i);
+  else
+    value_ = CExprInst->createIntegerValue(i);
 }
 
 CExprValueType

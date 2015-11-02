@@ -134,19 +134,20 @@ class CGnuPlotMatrixData {
 
 class CGnuPlot {
  public:
-  typedef CGnuPlotTypes::CommandName             CommandName;
-  typedef CGnuPlotTypes::VariableName            VariableName;
-  typedef CGnuPlotTypes::PlotStyle               PlotStyle;
-  typedef CGnuPlotTypes::DataFileVar             DataFileVar;
-  typedef CGnuPlotTypes::StyleVar                StyleVar;
-  typedef CGnuPlotTypes::PlotVar                 PlotVar;
-  typedef CGnuPlotTypes::StyleIncrementType      StyleIncrementType;
-  typedef CGnuPlotTypes::Smooth                  Smooth;
-  typedef CGnuPlotTypes::HistogramStyle          HistogramStyle;
   typedef CGnuPlotTypes::AngleType               AngleType;
-  typedef CGnuPlotTypes::DrawLayer               DrawLayer;
-  typedef CGnuPlotTypes::AxisType                AxisType;
   typedef CGnuPlotTypes::AxisDirection           AxisDirection;
+  typedef CGnuPlotTypes::AxisType                AxisType;
+  typedef CGnuPlotTypes::CommandName             CommandName;
+  typedef CGnuPlotTypes::CoordSys                CoordSys;
+  typedef CGnuPlotTypes::DataFileVar             DataFileVar;
+  typedef CGnuPlotTypes::DrawLayer               DrawLayer;
+  typedef CGnuPlotTypes::HistogramStyle          HistogramStyle;
+  typedef CGnuPlotTypes::PlotStyle               PlotStyle;
+  typedef CGnuPlotTypes::PlotVar                 PlotVar;
+  typedef CGnuPlotTypes::Smooth                  Smooth;
+  typedef CGnuPlotTypes::StyleIncrementType      StyleIncrementType;
+  typedef CGnuPlotTypes::StyleVar                StyleVar;
+  typedef CGnuPlotTypes::VariableName            VariableName;
 
   typedef std::map<PlotStyle,CGnuPlotStyleBase*> PlotStyles;
   typedef std::map<int,CGnuPlotLineStyleP>       LineStyles;
@@ -204,6 +205,7 @@ class CGnuPlot {
   typedef std::map<int,CGnuPlotArrowStyle>      ArrowStyles;
   typedef std::map<int,CLineDash>               LineDashes;
   typedef std::vector<CGnuPlotGroupAnnotationP> Annotations;
+  typedef std::map<VariableName,Annotations>    VarAnnotations;
 
   //---
 
@@ -674,8 +676,8 @@ class CGnuPlot {
 
   //------
 
-  const Annotations &annotations() const { return annotations_; }
-  void setAnnotations(const Annotations &annotations) { annotations_ = annotations; }
+  const VarAnnotations &annotations() const { return varAnnotations_; }
+  void setAnnotations(const VarAnnotations &annotations) { varAnnotations_ = annotations; }
 
   //------
 
@@ -686,7 +688,7 @@ class CGnuPlot {
 
   bool exec(const std::string &cmd);
 
-  void initReadLine();
+  void initReadLine() const;
 
   void loop();
 
@@ -723,28 +725,39 @@ class CGnuPlot {
   //----
 
   template<typename T>
-  T *getAnnotation(int ind) const {
-    for (auto &ann : annotations_)
+  T *getAnnotation(VariableName varName, int ind) const {
+    auto p = varAnnotations_.find(varName);
+
+    if (p == varAnnotations_.end())
+      return 0;
+
+    for (auto &ann : (*p).second) {
       if (ann->getInd() == ind && (dynamic_cast<T *>(ann.get()) != 0))
         return dynamic_cast<T *>(ann.get());
+    }
 
     return 0;
   }
 
   template<typename T>
-  T *lookupAnnotation(int ind) {
-    T *annotation = getAnnotation<T>(ind);
+  T *lookupAnnotation(VariableName varName, int ind, bool &created) {
+    T *annotation = getAnnotation<T>(varName, ind);
 
     if (! annotation) {
       // TODO: unique ind ?
-      if (ind <= 0)
-        ind = annotations_.size() + 1;
+      if (ind <= 0) {
+        auto p = varAnnotations_.find(varName);
+
+        ind = (*p).second.size() + 1;
+      }
 
       annotation = new T(0);
 
       annotation->setInd(ind);
 
-      annotations_.push_back(CGnuPlotGroupAnnotationP(annotation));
+      varAnnotations_[varName].push_back(CGnuPlotGroupAnnotationP(annotation));
+
+      created = true;
     }
 
     return annotation;
@@ -752,34 +765,40 @@ class CGnuPlot {
 
   template<typename T>
   void showAnnotations(std::ostream &os=std::cout, int ind=-1) {
-    for (const auto &ann : annotations_) {
-      const T *obj = dynamic_cast<const T *>(ann.get());
-      if (! obj) continue;
+    for (const auto &vann : varAnnotations_) {
+      for (auto &ann : vann.second) {
+        const T *obj = dynamic_cast<const T *>(ann.get());
+        if (! obj) continue;
 
-      if (ind != -1 && obj->getInd() != ind) continue;
+        if (ind != -1 && obj->getInd() != ind) continue;
 
-      os << T::getName() << " " << obj->getInd();
-      obj->print(os);
-      os << std::endl;
+        os << T::getName() << " " << obj->getInd();
+        obj->print(os);
+        os << std::endl;
+      }
     }
   }
 
   template<typename T>
   void clearAnnotations(int ind=-1) {
-    Annotations annotations;
+    VarAnnotations varAnnotations;
 
-    for (auto &ann : annotations_) {
-      T *obj = dynamic_cast<T *>(ann.get());
+    for (auto &vann : varAnnotations_) {
+      Annotations &annotations = vann.second;
 
-      if (obj) {
-        if (ind != -1 && obj->getInd() != ind)
+      for (auto &ann : annotations) {
+        T *obj = dynamic_cast<T *>(ann.get());
+
+        if (obj) {
+          if (ind != -1 && obj->getInd() != ind)
+            annotations.push_back(ann);
+        }
+        else
           annotations.push_back(ann);
       }
-      else
-        annotations.push_back(ann);
     }
 
-    annotations_ = annotations;
+    varAnnotations_ = varAnnotations;
   }
 
   //----
@@ -825,6 +844,8 @@ class CGnuPlot {
 
   void clearTicLabels();
 
+  bool isEOFStr(const std::string &line, const std::string &eofStr) const;
+
   void errorMsg(const std::string &msg) const;
   void debugMsg(const std::string &msg) const;
 
@@ -847,6 +868,8 @@ class CGnuPlot {
   const CGnuPlotMultiplotP &multiplot() const { return multiplot_; }
   void setMultiplot(const CGnuPlotMultiplotP &m) { multiplot_ = m; }
 
+  void readFileLines(StringArray &lines) const;
+
  private:
   void addPlotStyles();
 
@@ -857,9 +880,13 @@ class CGnuPlot {
   void replaceEmbeddedString(CParseLine &line, std::string &str) const;
   bool replaceEmbeddedCmd   (CParseLine &line, std::string &str) const;
 
+  bool replaceEscapeChar(CParseLine &line, std::string &str) const;
+
   bool execCmd(const std::string &cmd, StringArray &lines) const;
 
   bool parseStatement(int &i, const Statements &statements);
+
+  void getStatements(CParseLine &line, Statements &statements) const;
 
   void exitCmd   (const std::string &args);
   void helpCmd   (const std::string &args);
@@ -1105,9 +1132,9 @@ class CGnuPlot {
   std::string readNonSpaceNonChar(CParseLine &line, const std::string &c);
   std::string readName(CParseLine &line);
 
-  void readFileLines();
+  void readDataFileLines();
 
-  bool fileReadLine(std::string &line);
+  bool fileReadLine(std::string &line) const;
 
   bool fieldToReal(const std::string &field, double &r) const;
 
@@ -1145,11 +1172,14 @@ class CGnuPlot {
   }
 
   bool evaluateExpression(const std::string &expr, CExprValuePtr &value, bool quiet=false) const;
+  bool evaluateExpression(const std::string &expr, Values &values, bool quiet=false) const;
 
   bool exprToInteger(const std::string &expr, int &i, bool quiet=false) const;
   bool exprToReal   (const std::string &expr, double &r, bool quiet=false) const;
   bool exprToString (const std::string &expr, std::string &s,
                      bool quiet=false, bool conv=true) const;
+
+  std::string replaceSumInExpr(const std::string &expr) const;
 
  private:
   typedef std::map<std::string,CGnuPlotDevice*>  Devices;
@@ -1226,7 +1256,7 @@ class CGnuPlot {
   double                 zero_ { 1E-8 };
   HistoryData            historyData_;
   CGnuPlotImageStyle     imageStyle_;
-  Annotations            annotations_;
+  VarAnnotations         varAnnotations_;
   CGnuPlotCamera         camera_;
   CGnuPlotPalette        palette_;
   CGnuPlotColorBoxData   colorBox_;
@@ -1257,9 +1287,13 @@ class CGnuPlot {
   CGnuPlotPm3DData       pm3D_;
   double                 pointIntervalBox_ { 1 };
   COptReal               whiskerBars_;
-  ReadLineP              readLine_;
+  mutable ReadLineP      readLine_;
   Blocks                 blocks_;
+  SampleVar              sampleX_;
+  SampleVar              sampleY_;
+  SampleVar              sampleZ_;
 
+  mutable CoordSys       defSystem_ { CoordSys::FIRST };
   mutable Values         fieldValues_;
   bool                   parsePlotTitle_ { false };
   mutable int            setNum_;

@@ -260,6 +260,7 @@ namespace CGnuPlotTypes {
     NOTITLE,
     ORIGIN,
     PIXELS,
+    POINTINTERVAL,
     POINTSIZE,
     RECORD,
     ROTATION,
@@ -270,6 +271,7 @@ namespace CGnuPlotTypes {
     TITLE,
     TRANSPOSE,
     USING,
+    VOLATILE,
     WHISKERBARS,
     WITH
   };
@@ -328,10 +330,13 @@ namespace CGnuPlotTypes {
     NONE,
     UNIQUE,
     FREQUENCY,
-    BEZIER,
-    SBEZIER,
+    CUMULATIVE,
+    CNORMAL,
+    KDENSITY,
     CSPLINES,
-    ACSPLINES
+    ACSPLINES,
+    BEZIER,
+    SBEZIER
   };
 
   enum class FillType {

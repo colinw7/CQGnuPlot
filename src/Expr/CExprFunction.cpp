@@ -485,9 +485,34 @@ class CExprFunction##NAME : public CExprFunctionObj { \
   } \
 };
 
+class CExprFunctionInt : public CExprFunctionObj {
+ public:
+  CExprValuePtr operator()(const CExprValueArray &values) {
+    assert(values.size() == 1);
+    double r = 0.0;
+    if      (values[0]->isRealValue()) {
+      if (! values[0]->getRealValue(r)) return CExprValuePtr();
+    }
+    else if (values[0]->isIntegerValue()) {
+      long i = 0;
+      if (! values[0]->getIntegerValue(i)) return CExprValuePtr();
+      r = i;
+    }
+    else if (values[0]->isComplexValue()) {
+      std::complex<double> c;
+      if (! values[0]->getComplexValue(c)) return CExprValuePtr();
+      r = c.real();
+    }
+    else {
+      return CExprValuePtr();
+    }
+    int i1 = static_cast<int>(r);
+    return CExprInst->createIntegerValue(i1);
+  }
+};
+
 CEXPR_REALC_TO_REAL_FOBJ(Ceil , std::ceil)
 CEXPR_REALC_TO_REAL_FOBJ(Floor, std::floor)
-CEXPR_REALC_TO_REAL_FOBJ(Int  , static_cast<int>)
 CEXPR_REALC_TO_REAL_FOBJ(Real , static_cast<double>)
 
 #ifdef GNUPLOT_EXPR

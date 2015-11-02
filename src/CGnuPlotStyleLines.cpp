@@ -96,7 +96,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     for (const auto &points : pointsArray) {
       CGnuPlotPathObject *path = plot->pathObjects()[j];
 
-      path->setPoints(points);
+      path->setPoints2D(points);
 
       if (! path->testAndSetUsed()) {
         CGnuPlotStrokeP stroke1(path->stroke()->dup());

@@ -80,6 +80,8 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
   //---
 
+  void initClip() override;
+
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
 
   const CBBox2D &bbox() const;

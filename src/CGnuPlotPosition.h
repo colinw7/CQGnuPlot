@@ -27,10 +27,17 @@ class CGnuPlotPosition {
   CGnuPlotTypes::CoordSys systemZ() const { return systemZ_; }
   void setSystemZ(const CGnuPlotTypes::CoordSys &s) { systemZ_ = s; }
 
+  bool isScreen() const {
+    return (systemX_ == CoordSys::SCREEN ||
+            systemY_ == CoordSys::SCREEN ||
+            systemZ_ == CoordSys::SCREEN);
+  }
+
   CPoint3D getPoint3D(CGnuPlotRenderer *renderer) const;
   CPoint2D getPoint2D(CGnuPlotRenderer *renderer) const;
 
-  CPoint2D getDistance(CGnuPlotRenderer *renderer) const;
+  CPoint3D getDistance3D(CGnuPlotRenderer *renderer) const;
+  CPoint2D getDistance2D(CGnuPlotRenderer *renderer) const;
 
   void print(std::ostream &os) const {
     if (systemX_ == systemY_ && systemX_ == systemZ_) {

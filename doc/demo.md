@@ -1,8 +1,8 @@
 ## airfoil.dem
-  + No issues
+  + margin too small
 
 ## animate2.dem
-  + Bad surface
+  + Zoom in too much
 
 ## animate.dem
   + Bad scaling
@@ -24,8 +24,7 @@
   + Bad enhanced title (3D)
 
 ## bivariat.dem
-  + expr crash on user func (x>=-d*.1) ? 0 : (int1b(x+d,d)+(f(x+d)+4*f(x+d*.5)+f(x))*d/6.)
-  + infinite loop
+  + No issues
 
 ## bolditalic.dem
   + No issues
@@ -34,7 +33,7 @@
   + key not needed
 
 ## boxplot.dem
-  + candlesticks wrong
+  + different outlier definition
 
 ## callargs.dem
   + No issues
@@ -64,6 +63,8 @@
   + z axis should not be drawn
 
 ## contours.dem
+  + Invalid arg 'margins'
+  + Invalid arg 'cubic'
   + last multiplot should overlay
 
 ## controls.dem
@@ -85,10 +86,10 @@
   + No issues
 
 ## electron.dem
-  + No issues
+  + Margin issues with log plot
 
 ## ellipse.dem
-  + ellipse points in wrong position
+  + limit range axis not working
 
 ## ellipses_style.dem
   + No issues
@@ -108,8 +109,6 @@
   + Invalid arg 'standalone'
 
 ## fillbetween.dem
-  + Invalid arg '"%lf'
-  + Invalid arg 'filledcu'
   + runs ok, need to check output
 
 ## fillcvrs.dem
@@ -119,13 +118,13 @@
   + runs ok, need to check output
 
 ## finance.dem
-  + Invalid format string
   + runs ok, need to check output
 
 ## fit.dem
   + Invalid expression ' "  fit function:", GPFUN_l'
   + bad 3d
   + crash in CExprPrintF
+  + lots of issues as fit not really supported
 
 ## fitmulti.dem
   + bad results
@@ -137,14 +136,14 @@
   + postscript terminal not supported
 
 ## gantt.dem
-  + Invalid command name 'A', ... (inline data not supported)
-  + Eval failed: strptime("%m","2")
+  + timecolumn function needs testing
+  + can't handle range with spaces and () expressions
 
 ## heatmaps.dem
-  + second, third plot not displayed
-  + surface/contour ranges wrong
+  + runs ok, need to check output
 
 ## hidden2.dem
+  + Invalid arg 'front'
   + hidden not working
 
 ## hidden.dem
@@ -154,56 +153,52 @@
   + bad range
 
 ## histograms.dem
-  + no newhistogram support
+  + no issues
 
 ## hypertext.dem
-  + some bad chars from file
-  + Invalid arg 'hypertext', ...
+  + no issues
 
 ## image2.dem
-  + Unhandled binary plot
+  + Invalid comma ',50) format='%uchar%uchar%uchar' using ($1+$2+$3) with  image'
+  + Unhandled plot var 'transpose'
   + multiple bad plots
 
 ## image.dem
-  + gaps between image pixels - need to draw to separate image bitmap and scale ?
+  + bad placement of 2x2 plots
   + 3d plot initial range is bad
 
 ## imageNaN.dem
   + Invalid option name 'tic'
   + Invalid arg '0'
   + Invalid command name 'Junk'
+  + crash on (nan.) expression
 
 ## iterate.dem
   + bad key
 
 ## kdensity2d.dem
   + bad display
-  + Invalid Character "$random#$#random"
 
 ## key.dem
-  + No issues
+  + runs ok, need to check output
 
 ## layout.dem
-  + bad bottom chart
-  + Invalid arg 'margins'
+  + runs ok, need to check output
 
 ## lines_arrows.dem
   + No issues
 
 ## linkedaxes.dem
-  + Invalid option name 'ticslevel'
-  + Invalid arg 'volatile', ...
+  + no support for "< GET <web address>"
 
 ## macros.dem
-  + Missing plot style '@style1 title 'plot1', '1.dat' using 1:($2+1) with @style2 title 'plot2''
+  + runs ok, need to check output
 
 ## margins.dem
-  + Syntax Error >>*<<
-  + maybe bad display
+  + runs ok, need to check output
 
 ## mgr.dem
-  + bad display
-  + Invalid plot style 'xerr', 'yerr'
+  + Unsupported smooth
 
 ## molecule.dem
   + Bad display ?
@@ -222,24 +217,22 @@
   + Mouse click no handled
 
 ## multiaxis.dem
-  + bad plot ?
+  + no issues, check output
 
 ## multimsh.dem
-  + bad plot ?
+  + no issues, check output
 
 ## multipalette.dem
-  + Bad display
+  + no issues, check output
 
 ## multiplt.dem
-  + Invalid arg '-'
-  + bad axes
+  + no issues, check output
 
 ## named_var.dem
-  + bad plot
+  + no issues, check output
 
 ## nokey.dem
-  + Invalid separator type
-  + Invalid arg 'at' 'end'
+  + bad display
 
 ## orbits.dem
   + Invalid arg '(cy($2,$3,$4,$5,$6))'
@@ -248,31 +241,31 @@
   + second plot bad range
 
 ## param.dem
-  + bad plots
-  + Invalid arg 'cycle'
+  + bad sphere color
 
 ## piecewise.dem
-  + Failed to eval sample for x=-2, ...
+  + no issues, check output
 
 ## pm3dcolors.dem
-  + Invalid arg '.'
-  + Invalid arg 'rgb'
-  + bad 3d plots
+  + bad plots
+  + Unknown color 'dark-yellow'
+  + Invalid arg 'using' for set palette file
 
 ## pm3d.dem
-  + Invalid option name 'ticslevel'
-  + Invalid command name 'OK'
+  + bad plots
+  + Unhandled autoscale cb
+  + Invalid option name 'mcbtics'
+  + Invalid arg 'cb', 'nocb'
+  + Bad arg 'dx'
 
 ## pm3dgamma.dem
   + bad plots
 
 ## pointsize.dem
-  + Invalid arg ',-1.2'
+  + No issues
 
 ## polar.dem
   + check output
-  + Invalid arg 'r=2.5'
-  + Invalid arg 'notitle'
 
 ## poldat.dem
   + axis labels no spaced correctly
@@ -280,41 +273,41 @@
   + polar empty center circle
 
 ## prob2.dem
-  + Eval failed:  1.1 * binom(floor((n+1)*p), n, p)
-  + Eval failed: normal(mu, mu, sigma)
+  + No issues, check output
 
 ## prob.dem
-  + Eval failed:  (p < 1.0 || q < 1.0) ? 2.0 : 1.4 * beta((p - 1.0)/(p + q - 2.0), p, q)
+  + Syntax Error '>>=<< 0 ? 1 / 0 : chisq ( x , k )'
+  + Failed to eval 'cmaxwell(x, 1.0)'
+  + Failed to eval 'cnegbin(x, r, p)' for x=-1 (ibeta)
+  + Failed to eval 'cpoisson(x, mu)' (igamma)
+  + Failed to eval 'weibull(x, a, lambda)'
 
 ## rainbow.dem
-  + Invalid line modifier 'rgb'
-  + Invalid line modifier 'pal'
+  + check output
 
 ## random.dem
   + bad 3d plot
   + Invalid option name 'clabel'
-  + Invalid option name 'ticslevel'
 
 ## rectangle.dem
-  + no issues
+  + check output
+  + bad enhanced text (reverse)
 
 ## rgba_lines.dem
-  + Invalid arg 'lc'
-  + Invalid arg 'radius'
+  + No issues, check output
 
 ## rgbalpha.dem
-  + Invalid key arg "sample"
-  + Invalid key arg "1"
+  + no alpha for image
 
 ## rgb_variable.dem
-  + Invalid arg 'lc'
-  + Bad display
+  + Bad plots
+  + Eval failed: '(0 == int('0x01'))'
 
 ## rugplot.dem
-  + Eval failed: (!exist("$random")
+  + Bad plot (axes)
 
 ## running_avg.dem
-  + Invalid arg '.'
+  + Bat plot
 
 ## scatter.dem
   + some missing data on plots
@@ -327,28 +320,27 @@
   + No issues
 
 ## smooth.dem
-  + Invalid smooth type 'cumulative'
+  + check plots
+  + Unsupported smooth
 
 ## spline.dem
   + no issues
 
 ## stats.dem
   + No support
-  + Failed to eval A_mean for x=-10
 
 ## steps.dem
-  + bad plots
-  + Invalid Function 'norm'
-  + Invalid Function 'inverf'
+  + No issues, check output
 
 ## stringvar.dem
   + bad expression foo[5:] (no support of empty or '*' in array indices)
 
 ## surface1.dem
-  + Missing command name '$grid << EOD'
+  + Invalid arg 'fence'
+  + Invalid arg 'set'
 
 ## surface2.dem
-  + expression crash " n<=0 || abs(z)>100 ? 1:mand(z*z+a,a,n-1)+1"
+  + no issues, check output
 
 ## textcolor.dem
   + bad colors
@@ -357,10 +349,10 @@
   + bad text rotate
 
 ## tics.dem
-  + bad tics ?
+  + no issues, check output
 
 ## timedat.dem
-  + bad display
+  + no issues, check output
 
 ## transparent.dem
   + not filled to axis

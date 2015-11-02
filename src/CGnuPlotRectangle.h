@@ -16,20 +16,7 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
 
   virtual ~CGnuPlotRectangle() { }
 
-  CGnuPlotRectangle *setData(const CGnuPlotRectangle *rect) {
-    (void) CGnuPlotGroupAnnotation::setData(rect);
-
-    from_   = rect->from_;
-    to_     = rect->to_;
-    rto_    = rect->rto_;
-    center_ = rect->center_;
-    size_   = rect->size_;
-    fs_     = rect->fs_;
-    lw_     = rect->lw_;
-    bbox_   = rect->bbox_;
-
-    return this;
-  }
+  CGnuPlotRectangle *setData(const CGnuPlotRectangle *rect);
 
   CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::RECTANGLE; }
 
@@ -57,6 +44,8 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
   void setLineWidth(double w) { lw_ = w; }
 
   CBBox2D calcBBox() const;
+
+  void initClip() override;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 

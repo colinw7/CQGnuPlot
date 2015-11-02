@@ -9,23 +9,11 @@ class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
  public:
   static const char *getName() { return "circle"; }
 
-  CGnuPlotCircle(CGnuPlotGroup *group) :
-   CGnuPlotGroupAnnotation(group) {
-  }
+  CGnuPlotCircle(CGnuPlotGroup *group);
 
   virtual ~CGnuPlotCircle() { }
 
-  CGnuPlotCircle *setData(const CGnuPlotCircle *circle) {
-    (void) CGnuPlotGroupAnnotation::setData(circle);
-
-    p_        = circle->p_;
-    r_        = circle->r_;
-    arcStart_ = circle->arcStart_;
-    arcEnd_   = circle->arcEnd_;
-    fs_       = circle->fs_;
-
-    return this;
-  }
+  CGnuPlotCircle *setData(const CGnuPlotCircle *circle);
 
   CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::CIRCLE; }
 
@@ -44,6 +32,11 @@ class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
   const CGnuPlotFillStyle &getFillStyle() const { return fs_; }
   void setFillStyle(const CGnuPlotFillStyle &fs) { fs_ = fs; }
 
+  const COptReal &getLineWidth() const { return lw_; }
+  void setLineWidth(double w) { lw_ = w; }
+
+  void initClip();
+
   void draw(CGnuPlotRenderer *renderer) const override;
 
   bool inside(const CGnuPlotTypes::InsideData &p) const override;
@@ -60,6 +53,7 @@ class CGnuPlotCircle : public CGnuPlotGroupAnnotation {
   COptReal           arcStart_;
   COptReal           arcEnd_;
   CGnuPlotFillStyle  fs_;
+  COptReal           lw_;
   mutable CPoint2D   center_;
   mutable double     xr_, yr_;
   mutable CRGBA      c_;

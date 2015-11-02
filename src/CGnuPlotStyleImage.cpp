@@ -108,8 +108,8 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   // image size
-  int iw = imageStyle.w.getValue(1);
-//int ih = imageStyle.h.getValue(1);
+  int iw = imageStyle.width ().getValue(1);
+//int ih = imageStyle.height().getValue(1);
 
   int nd = imageData.size();
   int ny = nd/iw;
@@ -118,12 +118,8 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   // scale factor
-  double idx = 1, idy = 1;
-
-  if (imageStyle.dx.isValid())
-    idx = imageStyle.dx.getValue();
-  if (imageStyle.dy.isValid())
-    idy = imageStyle.dy.getValue();
+  double idx = imageStyle.dx().getValue(1);
+  double idy = imageStyle.dy().getValue(1);
 
   double ww = nx*idx;
   double hh = ny*idy;
@@ -133,9 +129,9 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   // center point
   double cx = 0, cy = 0;
 
-  if (imageStyle.c.isValid()) {
-    cx = imageStyle.c.getValue().x;
-    cy = imageStyle.c.getValue().y;
+  if (imageStyle.center().isValid()) {
+    cx = imageStyle.center().getValue().x;
+    cy = imageStyle.center().getValue().y;
   }
   else {
     cx = ww/2.0;
@@ -149,8 +145,8 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   // origin point
   CPoint2D o;
 
-  if (imageStyle.o.isValid()) {
-    o = imageStyle.o.getValue();
+  if (imageStyle.origin().isValid()) {
+    o = imageStyle.origin().getValue();
 
     cx = o.x + ww/2;
     cy = o.y + hh/2;
@@ -160,14 +156,14 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-//bool rotate = imageStyle.a.isValid();
+//bool rotate = imageStyle.angle().isValid();
 
   double a  = -plot->imageAngle();
 //double ra = CAngle::Deg2Rad(a);
 
-  //if (imageStyle.flipy) ra = -ra;
+  //if (imageStyle.isFlipY()) ra = -ra;
 
-  //CPoint2D po(cx - ww/2, cy + (imageStyle.flipy ? hh/2 : -hh/2));
+  //CPoint2D po(cx - ww/2, cy + (imageStyle.isFlipY() ? hh/2 : -hh/2));
   CPoint2D po(cx - ww/2, cy + hh/2);
 
   //---
@@ -181,8 +177,8 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       for (int ix = 0; ix < nx; ++ix, ++i) {
         CRGBA rgba = imageData[i];
 
-        if (imageStyle.usingCols.numCols() > 0) {
-          if (imageStyle.usingCols.numCols() > 1) {
+        if (imageStyle.usingCols().numCols() > 0) {
+          if (imageStyle.usingCols().numCols() > 1) {
             double r = decodeImageUsingColor(plot, 0, rgba);
             double g = decodeImageUsingColor(plot, 1, rgba);
             double b = decodeImageUsingColor(plot, 2, rgba);
@@ -201,6 +197,8 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
+  CBBox2D bbox(po.x, po.y - hh, po.x + ww, po.y);
+
   if (! renderer->isPseudo()) {
     plot->updateImageCacheSize(1);
 
@@ -216,24 +214,34 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (update) {
       //renderer->setAntiAlias(false);
 
-      image->setBBox (CBBox2D(po.x, po.y - hh, po.x + ww, po.y));
+      image->setBBox (bbox);
       image->setSize (CISize2D(ww, hh));
       image->setAngle(a);
-      image->setFlipY(imageStyle.flipy);
+      image->setFlipY(imageStyle.isFlipY());
+
+      image->setTipText(imageStyle.filename());
 
       int i = 0;
 
-      for (int iy = 0; iy < ny; ++iy) {
-        //double y = po.y + (imageStyle.flipy ? -1 : 1)*(iy*idy + 0.5);
-        double y = po.y - iy*idy - 0.5;
+      for (int iy = 0; iy < hh; ++iy) {
+        //double y = po.y + (imageStyle.isFlipY() ? -1 : 1)*(iy*idy + 0.5);
+        //double y = po.y - iy*idy - 0.5;
+        //double y = (ny - 1 - iy)*idy + 0.5;
 
-        for (int ix = 0; ix < nx; ++ix, ++i) {
-          double x = po.x + ix*idx + 0.5;
+        int iy1 = (hh - 1 - iy)/idy;
+
+        for (int ix = 0; ix < ww; ++ix, ++i) {
+          //double x = po.x + ix*idx + 0.5;
+          //double x = ix*idx + 0.5;
+
+          int ix1 = ix/idx;
+
+          int i = iy1*nx + ix1;
 
           CRGBA rgba = imageData[i];
 
-          if (imageStyle.usingCols.numCols() > 0) {
-            if (imageStyle.usingCols.numCols() > 1) {
+          if (imageStyle.usingCols().numCols() > 0) {
+            if (imageStyle.usingCols().numCols() > 1) {
               double r = decodeImageUsingColor(plot, 0, rgba);
               double g = decodeImageUsingColor(plot, 1, rgba);
               double b = decodeImageUsingColor(plot, 2, rgba);
@@ -253,7 +261,7 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
           if (cbmin.isValid() && cbmax.isValid())
             rgba = applyCbRange(rgba, cbmin.getValue(), cbmax.getValue());
 
-          CPoint2D p(x, y);
+          CPoint2D p(ix, iy);
 
           image->drawPoint(p, rgba);
 
@@ -303,7 +311,7 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     image->draw(renderer);
   }
   else {
-    renderer->fillRect(CBBox2D(po.x, po.y, po.x + ww, po.y + hh), CRGBA(0,0,0));
+    renderer->fillRect(bbox, CRGBA(0,0,0));
   }
 }
 
@@ -329,29 +337,29 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   // image size
-  int iw = imageStyle.w.getValue(1);
-  int ih = imageStyle.h.getValue(1);
+  int iw = imageStyle.width ().getValue(1);
+  int ih = imageStyle.height().getValue(1);
 
   //---
 
   double dx = 0, dy = 0;
 
-  if (imageStyle.c.isValid()) {
-    dx = imageStyle.c.getValue().x - iw/2.0;
-    dy = imageStyle.c.getValue().y - ih/2.0;
+  if (imageStyle.center().isValid()) {
+    dx = imageStyle.center().getValue().x - iw/2.0;
+    dy = imageStyle.center().getValue().y - ih/2.0;
   }
 
-  CPoint2D po = imageStyle.o.getValue(CPoint2D(iw/2.0, ih/2.0));
+  CPoint2D po = imageStyle.origin().getValue(CPoint2D(iw/2.0, ih/2.0));
 
   double xo = po.x;
   double yo = po.y;
 
-//bool   rotate = imageStyle.a.isValid();
+//bool   rotate = imageStyle.angle().isValid();
 //double a      = -plot->imageAngle();
 
 //double ra = CAngle::Deg2Rad(a);
 
-//if (imageStyle.flipy) ra = -ra;
+//if (imageStyle.isFlipY()) ra = -ra;
 
   CPoint2D o(xo + dx, yo + dy);
 
@@ -393,7 +401,7 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     int y = 0;
 
     for (const auto &p : plot->getPoints2D()) {
-      double y1 = (imageStyle.flipy ? ny - 1 - y : y);
+      double y1 = (imageStyle.isFlipY() ? ny - 1 - y : y);
 
       std::vector<double> reals;
 
@@ -573,29 +581,29 @@ drawImage3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   // image size
-  int iw = imageStyle.w.getValue(1);
-  int ih = imageStyle.h.getValue(1);
+  int iw = imageStyle.width ().getValue(1);
+  int ih = imageStyle.height().getValue(1);
 
   //---
 
   double dx = 0, dy = 0;
 
-  if (imageStyle.c.isValid()) {
-    dx = imageStyle.c.getValue().x - iw/2.0;
-    dy = imageStyle.c.getValue().y - ih/2.0;
+  if (imageStyle.center().isValid()) {
+    dx = imageStyle.center().getValue().x - iw/2.0;
+    dy = imageStyle.center().getValue().y - ih/2.0;
   }
 
-  CPoint2D po = imageStyle.o.getValue(CPoint2D(iw/2.0, ih/2.0));
+  CPoint2D po = imageStyle.origin().getValue(CPoint2D(iw/2.0, ih/2.0));
 
   double xo = po.x;
   double yo = po.y;
 
-//bool   rotate = imageStyle.a.isValid();
+//bool   rotate = imageStyle.angle().isValid();
 //double a      = -plot->imageAngle();
 
 //double ra = CAngle::Deg2Rad(a);
 
-//if (imageStyle.flipy) ra = -ra;
+//if (imageStyle.isFlipY()) ra = -ra;
 
   CPoint2D o(xo + dx, yo + dy);
 
@@ -618,7 +626,7 @@ drawImage3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   int i = 0;
 
   for (int iy = 0; iy < np.second; ++iy) {
-    double y1 = (imageStyle.flipy ? np.second - 1 - iy : iy);
+    double y1 = (imageStyle.isFlipY() ? np.second - 1 - iy : iy);
 
     for (int ix = 0; ix < np.first; ++ix) {
       double x1 = ix;
@@ -692,15 +700,15 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
 {
   const CGnuPlotImageStyle &imageStyle = plot->imageStyle();
 
-  int nc = imageStyle.usingCols.numCols();
+  int nc = imageStyle.usingCols().numCols();
 
   if (col < nc) {
-    if (imageStyle.usingCols.getCol(col).isInt())
-      col = imageStyle.usingCols.getCol(col).ival();
+    if (imageStyle.usingCols().getCol(col).isInt())
+      col = imageStyle.usingCols().getCol(col).ival();
     else {
       bool lookup = true;
 
-      std::string expr = imageStyle.usingCols.getCol(col).str();
+      std::string expr = imageStyle.usingCols().getCol(col).str();
 
       // replace $N variables
       // TODO: easier to define $1 variables

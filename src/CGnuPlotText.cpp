@@ -357,10 +357,13 @@ calcRectAtPoint(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, CHAlignType
 
   // use unrotated rotated bbox for draw (draw center aligned inside unrotated bbox
   // at rotated box center)
-  CPoint2D rc = rbbox.getCenter();
+  CPoint2D rc = (rbbox.isSet() ? rbbox.getCenter() : CPoint2D(0,0));
 
-  CBBox2D bbox1(CPoint2D(rc.x - bbox.getWidth()/2, rc.y - bbox.getHeight()/2),
-                CPoint2D(rc.x + bbox.getWidth()/2, rc.y + bbox.getHeight()/2));
+  CBBox2D bbox1;
+
+  if (bbox.isSet())
+    bbox1 = CBBox2D(CPoint2D(rc.x - bbox.getWidth()/2, rc.y - bbox.getHeight()/2),
+                    CPoint2D(rc.x + bbox.getWidth()/2, rc.y + bbox.getHeight()/2));
 
   bbox = bbox1;
 }
@@ -393,10 +396,15 @@ draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
 
   //---
 
-  CPoint2D origin = (o.isValid() ? o.getValue() : bbox.getCenter());
+  CPoint2D origin;
 
-  double dx = bbox.getXMin();
-  double dy = bbox.getYMax();
+  if      (o.isValid())
+    origin = o.getValue();
+  else if (bbox.isSet())
+    origin = bbox.getCenter();
+
+  double dx = (bbox.isSet() ? bbox.getXMin() : 0);
+  double dy = (bbox.isSet() ? bbox.getYMax() : 0);
 
   for (const auto &l : state.lines) {
     // calc line bbox

@@ -191,46 +191,48 @@ addObjects()
 
   CGnuPlotDevice *device = plot->device();
 
-  for (auto ann : plot->annotations()) {
-    CGnuPlotArrow     *arrow   = 0;
-    CGnuPlotCircle    *circle  = 0;
-    CGnuPlotEllipse   *ellipse = 0;
-    CGnuPlotLabel     *label   = 0;
-    CGnuPlotPolygon   *poly    = 0;
-    CGnuPlotRectangle *rect    = 0;
+  for (auto vann : plot->annotations()) {
+    for (auto ann : vann.second) {
+      CGnuPlotArrow     *arrow   = 0;
+      CGnuPlotCircle    *circle  = 0;
+      CGnuPlotEllipse   *ellipse = 0;
+      CGnuPlotLabel     *label   = 0;
+      CGnuPlotPolygon   *poly    = 0;
+      CGnuPlotRectangle *rect    = 0;
 
-    if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann.get()))) {
-      annotations_.push_back(
-        CGnuPlotGroupAnnotationP(device->createArrow(this)->setData(arrow)));
-    }
-    else if ((circle = dynamic_cast<CGnuPlotCircle *>(ann.get()))) {
-      annotations_.push_back(
-        CGnuPlotGroupAnnotationP(device->createCircle(this)->setData(circle)));
-    }
-    else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
-      annotations_.push_back(
-        CGnuPlotGroupAnnotationP(device->createEllipse(this)->setData(ellipse)));
-    }
-    else if ((label = dynamic_cast<CGnuPlotLabel *>(ann.get()))) {
-      annotations_.push_back(
-        CGnuPlotGroupAnnotationP(device->createLabel(this)->setData(label)));
-    }
-    else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann.get()))) {
-      annotations_.push_back(
-        CGnuPlotGroupAnnotationP(device->createPolygon(this)->setData(poly)));
-    }
-    else if ((rect = dynamic_cast<CGnuPlotRectangle *>(ann.get()))) {
-      annotations_.push_back(
-        CGnuPlotGroupAnnotationP(device->createRectangle(this)->setData(rect)));
+      if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann.get()))) {
+        varAnnotations_[VariableName::ARROW].push_back(
+          CGnuPlotGroupAnnotationP(device->createArrow(this)->setData(arrow)));
+      }
+      else if ((label = dynamic_cast<CGnuPlotLabel *>(ann.get()))) {
+        varAnnotations_[VariableName::LABEL].push_back(
+          CGnuPlotGroupAnnotationP(device->createLabel(this)->setData(label)));
+      }
+      else if ((circle = dynamic_cast<CGnuPlotCircle *>(ann.get()))) {
+        varAnnotations_[VariableName::OBJECT].push_back(
+          CGnuPlotGroupAnnotationP(device->createCircle(this)->setData(circle)));
+      }
+      else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
+        varAnnotations_[VariableName::OBJECT].push_back(
+          CGnuPlotGroupAnnotationP(device->createEllipse(this)->setData(ellipse)));
+      }
+      else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann.get()))) {
+        varAnnotations_[VariableName::OBJECT].push_back(
+          CGnuPlotGroupAnnotationP(device->createPolygon(this)->setData(poly)));
+      }
+      else if ((rect = dynamic_cast<CGnuPlotRectangle *>(ann.get()))) {
+        varAnnotations_[VariableName::OBJECT].push_back(
+          CGnuPlotGroupAnnotationP(device->createRectangle(this)->setData(rect)));
+      }
     }
   }
 }
 
 void
 CGnuPlotGroup::
-setAnnotations(const Annotations &annotations)
+setAnnotations(const VarAnnotations &annotations)
 {
-  annotations_ = annotations;
+  varAnnotations_ = annotations;
 }
 
 void
@@ -574,13 +576,34 @@ fit()
 
     drawTitle(&brenderer);
 
-    if (marginBBox_.isSet()) {
-      double lm = fabs(bbox.getLeft  () - marginBBox_.getLeft  ());
-      double bm = fabs(bbox.getBottom() - marginBBox_.getBottom());
-      double rm = fabs(bbox.getRight () - marginBBox_.getRight ());
-      double tm = fabs(bbox.getTop   () - marginBBox_.getTop   ());
+    if (! is3D()) {
+      if (marginBBox_.isSet()) {
+        double lm = fabs(bbox.getLeft  () - marginBBox_.getLeft  ());
+        double bm = fabs(bbox.getBottom() - marginBBox_.getBottom());
+        double rm = fabs(bbox.getRight () - marginBBox_.getRight ());
+        double tm = fabs(bbox.getTop   () - marginBBox_.getTop   ());
 
-      margin_.updateDefaultValues(&brenderer, lm, bm, rm, tm);
+        margin_.updateDefaultValues(&brenderer, lm, bm, rm, tm);
+      }
+
+      CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, 1, true);
+      CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, 1, true);
+
+      if (plotXAxis->isLogValue()) {
+        margin_.setLeft  (10);
+        margin_.setRight (10);
+      }
+
+      if (plotYAxis->isLogValue()) {
+        margin_.setTop   (10);
+        margin_.setBottom(10);
+      }
+    }
+    else {
+      margin_.setLeft  (10);
+      margin_.setRight (10);
+      margin_.setTop   (10);
+      margin_.setBottom(10);
     }
   }
 }
@@ -2043,9 +2066,12 @@ drawAnnotations(CGnuPlotRenderer *renderer, DrawLayer layer)
 
   renderer->setReverse(xaxis(1).isReverse(), yaxis(1).isReverse());
 
-  for (const auto &ann : annotations_)
-    if (ann->getLayer() == layer)
-      ann->draw(renderer);
+  for (const auto &vann : varAnnotations_) {
+    for (const auto &ann : vann.second) {
+      if (ann->getLayer() == layer)
+        ann->draw(renderer);
+    }
+  }
 }
 
 void
@@ -2414,13 +2440,23 @@ mapLogPoint(int xind, int yind, int zind, double *x, double *y, double *z) const
   CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, xind, true);
   CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, yind, true);
 
-  *x = plotXAxis->mapLogValue(*x);
-  *y = plotYAxis->mapLogValue(*y);
+  if (plotXAxis->isLogValue() && *x < 0)
+    *x = plotXAxis->mapLogValue(0.0);
+  else
+    *x = plotXAxis->mapLogValue(*x);
+
+  if (plotYAxis->isLogValue() && *y < 0)
+    *y = plotYAxis->mapLogValue(0.0);
+  else
+    *y = plotYAxis->mapLogValue(*y);
 
   if (is3D()) {
     CGnuPlotAxis *plotZAxis = getPlotAxis(AxisType::Z, zind, true);
 
-    *z = plotZAxis->mapLogValue(*z);
+    if (plotZAxis->isLogValue() && *z < 0)
+      *z = plotZAxis->mapLogValue(0.0);
+    else
+      *z = plotZAxis->mapLogValue(*z);
   }
 }
 

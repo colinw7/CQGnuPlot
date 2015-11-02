@@ -22,6 +22,24 @@ CGnuPlotRectangle(CGnuPlotGroup *group) :
   fillColor_.setRGB(bg);
 }
 
+CGnuPlotRectangle *
+CGnuPlotRectangle::
+setData(const CGnuPlotRectangle *rect)
+{
+  (void) CGnuPlotGroupAnnotation::setData(rect);
+
+  from_   = rect->from_;
+  to_     = rect->to_;
+  rto_    = rect->rto_;
+  center_ = rect->center_;
+  size_   = rect->size_;
+  fs_     = rect->fs_;
+  lw_     = rect->lw_;
+  bbox_   = rect->bbox_;
+
+  return this;
+}
+
 CBBox2D
 CGnuPlotRectangle::
 calcBBox() const
@@ -89,6 +107,14 @@ tip() const
 
 void
 CGnuPlotRectangle::
+initClip()
+{
+  if (getFrom().isValid())
+    clip_ = ! getFrom().getValue().isScreen();
+}
+
+void
+CGnuPlotRectangle::
 draw(CGnuPlotRenderer *renderer) const
 {
   bool highlighted = (isHighlighted() || isSelected());
@@ -96,7 +122,10 @@ draw(CGnuPlotRenderer *renderer) const
   // clip if enabled and does not use screen coordinates
   CBBox2D bbox = calcBBox();
 
-  renderer->setClip(group_->getClip());
+  if (isClip())
+    renderer->setClip(group_->getClip());
+  else
+    renderer->resetClip();
 
   lc_ = getStrokeColor().getValue(CRGBA(0,0,0));
 

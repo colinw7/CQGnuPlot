@@ -84,14 +84,23 @@ getPoint(CGnuPlotRenderer *renderer, double x, double y, double z) const
   return CPoint3D(x, y, z);
 }
 
-CPoint2D
+CPoint3D
 CGnuPlotPosition::
-getDistance(CGnuPlotRenderer *renderer) const
+getDistance3D(CGnuPlotRenderer *renderer) const
 {
-  CPoint3D p1 = getPoint(renderer, 0   , 0   , 0);
-  CPoint3D p2 = getPoint(renderer, p_.x, p_.y, 0);
+  CPoint3D p1 = getPoint(renderer, 0   , 0   , 0   );
+  CPoint3D p2 = getPoint(renderer, p_.x, p_.y, p_.z);
 
   CPoint3D d = p2 - p1;
+
+  return d;
+}
+
+CPoint2D
+CGnuPlotPosition::
+getDistance2D(CGnuPlotRenderer *renderer) const
+{
+  CPoint3D d = getDistance3D(renderer);
 
   return CPoint2D(d.x, d.y);
 }

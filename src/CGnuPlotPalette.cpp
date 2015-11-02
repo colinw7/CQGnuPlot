@@ -1,4 +1,5 @@
 #include <CGnuPlotPalette.h>
+#include <CGnuPlot.h>
 #include <CGnuPlotUtil.h>
 #include <CExpr.h>
 #include <CUnixFile.h>
@@ -168,24 +169,37 @@ interp(int ind, double x) const
 
 bool
 CGnuPlotPalette::
-readFile(const std::string &filename)
+readFile(CGnuPlot *plot, const std::string &filename)
 {
-  CUnixFile file(filename);
+  typedef std::vector<std::string> Lines;
 
-  if (! file.open()) {
-    std::cerr << "can't open file \"" << filename << "\"" << std::endl;
-    return false;
+  Lines lines;
+
+  if (filename == "-") {
+    plot->readFileLines(lines);
+  }
+  else {
+    CUnixFile file(filename);
+
+    if (! file.open()) {
+      std::cerr << "can't open file \"" << filename << "\"" << std::endl;
+      return false;
+    }
+
+    std::string line;
+
+    while (file.readLine(line)) {
+      lines.push_back(line);
+    }
   }
 
   setColorType(CGnuPlotPalette::ColorType::DEFINED);
 
   resetDefinedColors();
 
-  std::string line;
-
   int i = 0;
 
-  while (file.readLine(line)) {
+  for (const auto &line : lines) {
     if (line.empty()) continue;
 
     StringArray words;

@@ -31,6 +31,13 @@ setData(CGnuPlotLabelData *data)
 
 void
 CGnuPlotLabel::
+initClip()
+{
+  clip_ = ! getPos().isScreen();
+}
+
+void
+CGnuPlotLabel::
 draw(CGnuPlotRenderer *renderer) const
 {
   if (! isDisplayed()) return;
@@ -118,6 +125,6 @@ print(std::ostream &os) const
   if (getOffset().isValid())
     os << " offset " << getOffset().getValue();
 
-  if (boxStroke()->isEnabled())
+  if (boxStroke() && boxStroke()->isEnabled())
    os << " boxed";
 }

@@ -60,6 +60,9 @@ draw(CGnuPlotRenderer *renderer) const
     stroke->setWidth(2);
   }
 
+  if (! isAliased())
+    renderer->setAntiAlias(false);
+
   if (isClipped()) {
     renderer->fillClippedPolygon  (points_, *fill  );
     renderer->strokeClippedPolygon(points_, *stroke);
@@ -68,6 +71,9 @@ draw(CGnuPlotRenderer *renderer) const
     renderer->fillPolygon  (points_, *fill  );
     renderer->strokePolygon(points_, *stroke);
   }
+
+  if (! isAliased())
+    renderer->setAntiAlias(true);
 
   if (text_ != "") {
     CRGBA tc(0,0,0);

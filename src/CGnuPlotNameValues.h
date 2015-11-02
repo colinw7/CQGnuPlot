@@ -147,6 +147,7 @@ namespace CStrUniqueMatch {
                           {"timefmt"         , CGnuPlotTypes::VariableName::TIMEFMT},
                           {"timestamp"       , CGnuPlotTypes::VariableName::TIMESTAMP},
                           {"title"           , CGnuPlotTypes::VariableName::TITLE},
+                          {"t"               , CGnuPlotTypes::VariableName::TITLE},
                           {"tmargin"         , CGnuPlotTypes::VariableName::TMARGIN},
                           {"trange"          , CGnuPlotTypes::VariableName::TRANGE},
                           {"urange"          , CGnuPlotTypes::VariableName::URANGE},
@@ -254,6 +255,8 @@ namespace CStrUniqueMatch {
                           {"origin"       , CGnuPlotTypes::PlotVar::ORIGIN},
                           {"pixels"       , CGnuPlotTypes::PlotVar::PIXELS},
                           {"pointsize"    , CGnuPlotTypes::PlotVar::POINTSIZE},
+                          {"pointinterval", CGnuPlotTypes::PlotVar::POINTINTERVAL},
+                          {"pi"           , CGnuPlotTypes::PlotVar::POINTINTERVAL},
                           {"ps"           , CGnuPlotTypes::PlotVar::POINTSIZE},
                           {"record"       , CGnuPlotTypes::PlotVar::RECORD},
                           {"rotate"       , CGnuPlotTypes::PlotVar::ROTATION},
@@ -266,6 +269,7 @@ namespace CStrUniqueMatch {
                           {"t"            , CGnuPlotTypes::PlotVar::TITLE},
                           {"transpose"    , CGnuPlotTypes::PlotVar::TRANSPOSE},
                           {"using"        , CGnuPlotTypes::PlotVar::USING},
+                          {"volatile"     , CGnuPlotTypes::PlotVar::VOLATILE},
                           {"whiskerbars"  , CGnuPlotTypes::PlotVar::WHISKERBARS},
                           {"with"         , CGnuPlotTypes::PlotVar::WITH},
                           {"w"            , CGnuPlotTypes::PlotVar::WITH}});
@@ -325,12 +329,15 @@ namespace CStrUniqueMatch {
   }
 
   CStrUniqueMatchInitT(CGnuPlotTypes::Smooth) {
-    nameValues.addValues({{"unique"   , CGnuPlotTypes::Smooth::UNIQUE},
-                          {"frequency", CGnuPlotTypes::Smooth::FREQUENCY},
-                          {"bezier"   , CGnuPlotTypes::Smooth::BEZIER},
-                          {"sbezier"  , CGnuPlotTypes::Smooth::SBEZIER},
-                          {"csplines" , CGnuPlotTypes::Smooth::CSPLINES},
-                          {"acsplines", CGnuPlotTypes::Smooth::ACSPLINES}});
+    nameValues.addValues({{"unique"    , CGnuPlotTypes::Smooth::UNIQUE},
+                          {"frequency" , CGnuPlotTypes::Smooth::FREQUENCY},
+                          {"cumulative", CGnuPlotTypes::Smooth::CUMULATIVE},
+                          {"cnormal"   , CGnuPlotTypes::Smooth::CNORMAL},
+                          {"kdensity"  , CGnuPlotTypes::Smooth::KDENSITY},
+                          {"csplines"  , CGnuPlotTypes::Smooth::CSPLINES},
+                          {"acsplines" , CGnuPlotTypes::Smooth::ACSPLINES},
+                          {"bezier"    , CGnuPlotTypes::Smooth::BEZIER},
+                          {"sbezier"   , CGnuPlotTypes::Smooth::SBEZIER}});
   }
 
   CStrUniqueMatchInitT(CGnuPlotTypes::FillType) {

@@ -13,8 +13,7 @@ class CQGnuPlotEllipse : public CQGnuPlotAnnotation, public CGnuPlotEllipse {
   Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
   Q_PROPERTY(QPointF center READ getCenter WRITE setCenter)
-  Q_PROPERTY(double  rx     READ getRX     WRITE setRX    )
-  Q_PROPERTY(double  ry     READ getRY     WRITE setRY    )
+  Q_PROPERTY(QSizeF  size   READ getSize   WRITE setSize  )
   Q_PROPERTY(double  angle  READ getAngle  WRITE setAngle )
 
  public:
@@ -22,6 +21,9 @@ class CQGnuPlotEllipse : public CQGnuPlotAnnotation, public CGnuPlotEllipse {
 
   QPointF getCenter() const;
   void setCenter(const QPointF &p);
+
+  QSizeF getSize() const;
+  void setSize(const QSizeF &s);
 
   virtual void draw(CGnuPlotRenderer *renderer) const override;
 };

@@ -49,10 +49,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   for (const auto &point : plot->getPoints2D()) {
     if (point.getNumValues() >= 2) {
-      double y = 0, y1 = 0;
+      double y = 0;
 
-      if (point.getValue(2, y1))
-        y = y1;
+      // skip bad values
+      if (! point.getValue(2, y))
+        continue;
 
       if (discrete && point.getNumValues() >= 4) {
         // add integer or string discrete values

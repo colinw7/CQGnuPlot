@@ -41,14 +41,14 @@ class CGnuPlotEndBar {
   virtual void draw(CGnuPlotRenderer *renderer) const;
 
  protected:
-  CGnuPlotPlot*      plot_      { 0 };
+  CGnuPlotPlot*         plot_      { 0 };
   CGnuPlotBoxBarObject* bar_       { 0 };
-  CPoint2D           start_;
-  CPoint2D           end_;
-  bool               startLine_ { false };
-  bool               endLine_   { false };
-  double             endWidth_  { 0 };
-  CGnuPlotStrokeP    stroke_;
+  CPoint2D              start_;
+  CPoint2D              end_;
+  bool                  startLine_ { false };
+  bool                  endLine_   { false };
+  double                endWidth_  { 0 };
+  CGnuPlotStrokeP       stroke_;
 };
 
 typedef CRefPtr<CGnuPlotEndBar> CGnuPlotEndBarP;

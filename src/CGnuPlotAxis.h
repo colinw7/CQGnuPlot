@@ -79,13 +79,10 @@ class CGnuPlotAxis {
     return exp(x*log(base)) - logTol();
   }
 
-  double mapLogValue(double x) const {
-    return data_.mapLogValue(x);
-  }
+  double mapLogValue  (double x) const { return data_.mapLogValue  (x); }
+  double unmapLogValue(double x) const { return data_.unmapLogValue(x); }
 
-  double unmapLogValue(double x) const {
-    return data_.unmapLogValue(x);
-  }
+  bool isLogValue() const { return data_.isLogValue(); }
 
   bool mappedInside(double x) const { return data_.mappedInside(x); }
 

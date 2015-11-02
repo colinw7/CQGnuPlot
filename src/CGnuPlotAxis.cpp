@@ -814,7 +814,8 @@ drawAxisTick(double pos, bool first, bool large)
   //  mirror draw up/down
   CPoint3D p = valueToPoint(reverse_ ? end_ - (pos - start_) : pos, first, ! isBorderTics());
 
-  if (clip() && ! renderer_->clip().inside(CPoint2D(p.x, p.y)))
+  if (clip() && renderer_->clip().isValid() &&
+      ! renderer_->clip().getValue().inside(CPoint2D(p.x, p.y)))
     return;
 
   double psize = 6*(large ? getTicMajorScale() : getTicMinorScale());
@@ -899,7 +900,8 @@ drawTickLabel(double pos, const std::string &str, bool first)
 
   CPoint3D p = valueToPoint(reverse_ ? end_ - (pos - start_) : pos, first, ! isBorderTics());
 
-  if (clip() && ! renderer_->clip().inside(CPoint2D(p.x, p.y)))
+  if (clip() && renderer_->clip().isValid() &&
+      ! renderer_->clip().getValue().inside(CPoint2D(p.x, p.y)))
     return;
 
   CRGBA c = ticColor().color();

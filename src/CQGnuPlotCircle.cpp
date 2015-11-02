@@ -42,6 +42,20 @@ setRadius(double r)
   r_.setValue(r);
 }
 
+double
+CQGnuPlotCircle::
+getLineWidth() const
+{
+  return r_.value();
+}
+
+void
+CQGnuPlotCircle::
+setLineWidth(double r)
+{
+  r_.setValue(r);
+}
+
 void
 CQGnuPlotCircle::
 draw(CGnuPlotRenderer *renderer) const

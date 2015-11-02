@@ -656,122 +656,127 @@ addGroupProperties(CGnuPlotGroup *group)
 
   //---
 
-  for (auto &ann : group->annotations()) {
-    CGnuPlotArrow     *arrow   = 0;
-    CGnuPlotCircle    *circle  = 0;
-    CGnuPlotEllipse   *ellipse = 0;
-    CGnuPlotLabel     *label   = 0;
-    CGnuPlotPolygon   *poly    = 0;
-    CGnuPlotRectangle *rect    = 0;
+  for (auto &vann : group->annotations()) {
+    for (auto &ann : vann.second) {
+      CGnuPlotArrow     *arrow   = 0;
+      CGnuPlotCircle    *circle  = 0;
+      CGnuPlotEllipse   *ellipse = 0;
+      CGnuPlotLabel     *label   = 0;
+      CGnuPlotPolygon   *poly    = 0;
+      CGnuPlotRectangle *rect    = 0;
 
-    if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann.get()))) {
-      QString arrowName =
-        QString("%1/Arrows/%2_%3").arg(groupName).arg(arrow->getName()).arg(ann->getInd());
+      if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann.get()))) {
+        QString arrowName =
+          QString("%1/Arrows/%2_%3").arg(groupName).arg(arrow->getName()).arg(ann->getInd());
 
-      CQGnuPlotArrow *qarrow = static_cast<CQGnuPlotArrow *>(arrow);
+        CQGnuPlotArrow *qarrow = static_cast<CQGnuPlotArrow *>(arrow);
 
-      tree_->addProperty(arrowName, qarrow, "strokeColor");
-      tree_->addProperty(arrowName, qarrow, "fillColor");
-      tree_->addProperty(arrowName, qarrow, "drawLayer");
+        tree_->addProperty(arrowName, qarrow, "strokeColor");
+        tree_->addProperty(arrowName, qarrow, "fillColor");
+        tree_->addProperty(arrowName, qarrow, "drawLayer");
 
-      tree_->addProperty(arrowName, qarrow, "coordType");
-      tree_->addProperty(arrowName, qarrow, "from");
-      tree_->addProperty(arrowName, qarrow, "to");
-      tree_->addProperty(arrowName, qarrow, "length");
-      tree_->addProperty(arrowName, qarrow, "angle");
-      tree_->addProperty(arrowName, qarrow, "headLength");
-      tree_->addProperty(arrowName, qarrow, "headAngle");
-      tree_->addProperty(arrowName, qarrow, "headBackAngle");
-      tree_->addProperty(arrowName, qarrow, "fhead");
-      tree_->addProperty(arrowName, qarrow, "thead");
-      tree_->addProperty(arrowName, qarrow, "headFilled");
-      tree_->addProperty(arrowName, qarrow, "headEmpty");
+        tree_->addProperty(arrowName, qarrow, "coordType");
+        tree_->addProperty(arrowName, qarrow, "from");
+        tree_->addProperty(arrowName, qarrow, "to");
+        tree_->addProperty(arrowName, qarrow, "length");
+        tree_->addProperty(arrowName, qarrow, "angle");
+        tree_->addProperty(arrowName, qarrow, "headLength");
+        tree_->addProperty(arrowName, qarrow, "headAngle");
+        tree_->addProperty(arrowName, qarrow, "headBackAngle");
+        tree_->addProperty(arrowName, qarrow, "fhead");
+        tree_->addProperty(arrowName, qarrow, "thead");
+        tree_->addProperty(arrowName, qarrow, "headFilled");
+        tree_->addProperty(arrowName, qarrow, "headEmpty");
 
-      tree_->addProperty(arrowName, qarrow, "lineType");
-      tree_->addProperty(arrowName, qarrow, "lineWidth")->setEditorFactory(realEdit("0:50:1"));
-      tree_->addProperty(arrowName, qarrow, "lineDash");
-    }
-    else if ((circle = dynamic_cast<CGnuPlotCircle *>(ann.get()))) {
-      QString circleName =
-        QString("%1/Circles/%2_%3").arg(groupName).arg(circle->getName()).arg(ann->getInd());
+        tree_->addProperty(arrowName, qarrow, "lineType");
+        tree_->addProperty(arrowName, qarrow, "lineWidth")->setEditorFactory(realEdit("0:50:1"));
+        tree_->addProperty(arrowName, qarrow, "lineDash");
+      }
+      else if ((circle = dynamic_cast<CGnuPlotCircle *>(ann.get()))) {
+        QString circleName =
+          QString("%1/Circles/%2_%3").arg(groupName).arg(circle->getName()).arg(ann->getInd());
 
-      CQGnuPlotCircle *qcircle = static_cast<CQGnuPlotCircle *>(circle);
+        CQGnuPlotCircle *qcircle = static_cast<CQGnuPlotCircle *>(circle);
 
-      tree_->addProperty(circleName, qcircle, "strokeColor");
-      tree_->addProperty(circleName, qcircle, "fillColor");
-      tree_->addProperty(circleName, qcircle, "drawLayer");
+        tree_->addProperty(circleName, qcircle, "strokeColor");
+        tree_->addProperty(circleName, qcircle, "fillColor");
+        tree_->addProperty(circleName, qcircle, "clip");
+        tree_->addProperty(circleName, qcircle, "drawLayer");
 
-      tree_->addProperty(circleName, qcircle, "center");
-      tree_->addProperty(circleName, qcircle, "radius");
-    }
-    else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
-      QString ellipseName =
-        QString("%1/Ellipses/%2_%3").arg(groupName).arg(ellipse->getName()).arg(ann->getInd());
+        tree_->addProperty(circleName, qcircle, "center");
+        tree_->addProperty(circleName, qcircle, "radius");
+      }
+      else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
+        QString ellipseName =
+          QString("%1/Ellipses/%2_%3").arg(groupName).arg(ellipse->getName()).arg(ann->getInd());
 
-      CQGnuPlotEllipse *qellipse = static_cast<CQGnuPlotEllipse *>(ellipse);
+        CQGnuPlotEllipse *qellipse = static_cast<CQGnuPlotEllipse *>(ellipse);
 
-      tree_->addProperty(ellipseName, qellipse, "strokeColor");
-      tree_->addProperty(ellipseName, qellipse, "fillColor");
-      tree_->addProperty(ellipseName, qellipse, "drawLayer");
+        tree_->addProperty(ellipseName, qellipse, "strokeColor");
+        tree_->addProperty(ellipseName, qellipse, "fillColor");
+        tree_->addProperty(ellipseName, qellipse, "clip");
+        tree_->addProperty(ellipseName, qellipse, "drawLayer");
 
-      tree_->addProperty(ellipseName, qellipse, "center");
-      tree_->addProperty(ellipseName, qellipse, "rx");
-      tree_->addProperty(ellipseName, qellipse, "ry");
-      tree_->addProperty(ellipseName, qellipse, "angle");
-    }
-    else if ((label = dynamic_cast<CGnuPlotLabel *>(ann.get()))) {
-      QString labelName =
-        QString("%1/Labels/%2_%3").arg(groupName).arg(label->getName()).arg(ann->getInd());
+        tree_->addProperty(ellipseName, qellipse, "center");
+        tree_->addProperty(ellipseName, qellipse, "size");
+        tree_->addProperty(ellipseName, qellipse, "angle");
+      }
+      else if ((label = dynamic_cast<CGnuPlotLabel *>(ann.get()))) {
+        QString labelName =
+          QString("%1/Labels/%2_%3").arg(groupName).arg(label->getName()).arg(ann->getInd());
 
-      CQGnuPlotLabel *qlabel = static_cast<CQGnuPlotLabel *>(label);
+        CQGnuPlotLabel *qlabel = static_cast<CQGnuPlotLabel *>(label);
 
-      tree_->addProperty(labelName, qlabel, "displayed");
-      tree_->addProperty(labelName, qlabel, "drawLayer");
-      tree_->addProperty(labelName, qlabel, "text");
-      tree_->addProperty(labelName, qlabel, "pos");
-      tree_->addProperty(labelName, qlabel, "color");
-      tree_->addProperty(labelName, qlabel, "angle")->setEditorFactory(realSlider("0:360:1"));
-      tree_->addProperty(labelName, qlabel, "enhanced");
-      tree_->addProperty(labelName, qlabel, "align");
-      tree_->addProperty(labelName, qlabel, "font");
-      tree_->addProperty(labelName, qlabel, "offset");
-      tree_->addProperty(labelName, qlabel, "lineType");
-      tree_->addProperty(labelName, qlabel, "boxFill");
-      tree_->addProperty(labelName, qlabel, "boxFillColor");
-      tree_->addProperty(labelName, qlabel, "box");
-      tree_->addProperty(labelName, qlabel, "boxStrokeColor");
-      tree_->addProperty(labelName, qlabel, "boxStrokeWidth");
-      tree_->addProperty(labelName, qlabel, "showPoint");
-      tree_->addProperty(labelName, qlabel, "pointType");
-      tree_->addProperty(labelName, qlabel, "pointSize");
-      tree_->addProperty(labelName, qlabel, "pointWidth");
-      tree_->addProperty(labelName, qlabel, "hypertext");
-    }
-    else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann.get()))) {
-      QString polyName =
-        QString("%1/Polygons/%2_%3").arg(groupName).arg(poly->getName()).arg(ann->getInd());
+        tree_->addProperty(labelName, qlabel, "displayed");
+        tree_->addProperty(labelName, qlabel, "drawLayer");
+        tree_->addProperty(labelName, qlabel, "text");
+        tree_->addProperty(labelName, qlabel, "pos");
+        tree_->addProperty(labelName, qlabel, "color");
+        tree_->addProperty(labelName, qlabel, "angle")->setEditorFactory(realSlider("0:360:1"));
+        tree_->addProperty(labelName, qlabel, "enhanced");
+        tree_->addProperty(labelName, qlabel, "align");
+        tree_->addProperty(labelName, qlabel, "font");
+        tree_->addProperty(labelName, qlabel, "offset");
+        tree_->addProperty(labelName, qlabel, "lineType");
+        tree_->addProperty(labelName, qlabel, "boxFill");
+        tree_->addProperty(labelName, qlabel, "boxFillColor");
+        tree_->addProperty(labelName, qlabel, "box");
+        tree_->addProperty(labelName, qlabel, "boxStrokeColor");
+        tree_->addProperty(labelName, qlabel, "boxStrokeWidth");
+        tree_->addProperty(labelName, qlabel, "showPoint");
+        tree_->addProperty(labelName, qlabel, "pointType");
+        tree_->addProperty(labelName, qlabel, "pointSize");
+        tree_->addProperty(labelName, qlabel, "pointWidth");
+        tree_->addProperty(labelName, qlabel, "hypertext");
+      }
+      else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann.get()))) {
+        QString polyName =
+          QString("%1/Polygons/%2_%3").arg(groupName).arg(poly->getName()).arg(ann->getInd());
 
-      CQGnuPlotPolygon *qpoly = static_cast<CQGnuPlotPolygon *>(poly);
+        CQGnuPlotPolygon *qpoly = static_cast<CQGnuPlotPolygon *>(poly);
 
-      tree_->addProperty(polyName, qpoly, "strokeColor");
-      tree_->addProperty(polyName, qpoly, "fillColor");
-      tree_->addProperty(polyName, qpoly, "drawLayer");
-      tree_->addProperty(polyName, qpoly, "lineWidth");
-    }
-    else if ((rect = dynamic_cast<CGnuPlotRectangle *>(ann.get()))) {
-      QString rectName =
-        QString("%1/Rectangles/%2_%3").arg(groupName).arg(rect->getName()).arg(ann->getInd());
+        tree_->addProperty(polyName, qpoly, "strokeColor");
+        tree_->addProperty(polyName, qpoly, "fillColor");
+        tree_->addProperty(polyName, qpoly, "clip");
+        tree_->addProperty(polyName, qpoly, "drawLayer");
+        tree_->addProperty(polyName, qpoly, "lineWidth");
+      }
+      else if ((rect = dynamic_cast<CGnuPlotRectangle *>(ann.get()))) {
+        QString rectName =
+          QString("%1/Rectangles/%2_%3").arg(groupName).arg(rect->getName()).arg(ann->getInd());
 
-      CQGnuPlotRectangle *qrect = static_cast<CQGnuPlotRectangle *>(rect);
+        CQGnuPlotRectangle *qrect = static_cast<CQGnuPlotRectangle *>(rect);
 
-      tree_->addProperty(rectName, qrect, "strokeColor");
-      tree_->addProperty(rectName, qrect, "fillColor");
-      tree_->addProperty(rectName, qrect, "drawLayer");
+        tree_->addProperty(rectName, qrect, "strokeColor");
+        tree_->addProperty(rectName, qrect, "fillColor");
+        tree_->addProperty(rectName, qrect, "clip");
+        tree_->addProperty(rectName, qrect, "drawLayer");
 
-      tree_->addProperty(rectName, qrect, "from");
-      tree_->addProperty(rectName, qrect, "to");
-      tree_->addProperty(rectName, qrect, "fillType");
-      tree_->addProperty(rectName, qrect, "lineWidth");
+        tree_->addProperty(rectName, qrect, "from");
+        tree_->addProperty(rectName, qrect, "to");
+        tree_->addProperty(rectName, qrect, "fillType");
+        tree_->addProperty(rectName, qrect, "lineWidth");
+      }
     }
   }
 }
@@ -1307,7 +1312,9 @@ addPlotProperties(CGnuPlotPlot *plot)
     }
   }
 
-  if (! plot->polygonObjects().empty()) {
+  int np = plot->polygonObjects().size();
+
+  if (np > 0 && np < 1000) {// TODO: limits
     int i = 0;
 
     for (const auto &polygon : plot->polygonObjects()) {

@@ -30,6 +30,9 @@ class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
   bool isClipped() const { return clipped_; }
   void setClipped(bool b) { clipped_ = b; }
 
+  bool isAliased() const { return aliased_; }
+  void setAliased(bool b) { aliased_ = b; }
+
   const std::string &text() const { return text_; }
   void setText(const std::string &s) { text_ = s; }
 
@@ -50,6 +53,7 @@ class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
  protected:
   Points           points_;
   bool             clipped_ { false };
+  bool             aliased_ { true };
   std::string      text_    { "" };
   CGnuPlotFillP    fill_ ;
   CGnuPlotStrokeP  stroke_;

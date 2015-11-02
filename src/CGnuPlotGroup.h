@@ -12,14 +12,16 @@
 
 class CGnuPlotGroup {
  public:
-  typedef CGnuPlotTypes::HistogramStyle  HistogramStyle;
-  typedef CGnuPlotTypes::DrawLayer       DrawLayer;
-  typedef CGnuPlotTypes::PlotStyle       PlotStyle;
-  typedef CGnuPlotTypes::AxisType        AxisType;
-  typedef CGnuPlot::Annotations          Annotations;
-  typedef std::vector<CGnuPlotPlot *>    Plots;
-  typedef std::map<int, CGnuPlotAxis *>  IAxes;
-  typedef std::map<AxisType, IAxes>      Axes;
+  typedef CGnuPlotTypes::HistogramStyle      HistogramStyle;
+  typedef CGnuPlotTypes::DrawLayer           DrawLayer;
+  typedef CGnuPlotTypes::PlotStyle           PlotStyle;
+  typedef CGnuPlotTypes::AxisType            AxisType;
+  typedef CGnuPlotTypes::VariableName        VariableName;
+  typedef CGnuPlot::Annotations              Annotations;
+  typedef std::map<VariableName,Annotations> VarAnnotations;
+  typedef std::vector<CGnuPlotPlot *>        Plots;
+  typedef std::map<int, CGnuPlotAxis *>      IAxes;
+  typedef std::map<AxisType, IAxes>          Axes;
 
  public:
   CGnuPlotGroup(CGnuPlotWindow *window);
@@ -58,8 +60,8 @@ class CGnuPlotGroup {
 
   void addObjects();
 
-  const Annotations &annotations() const { return annotations_; }
-  void setAnnotations(const Annotations &annotations);
+  const VarAnnotations &annotations() const { return varAnnotations_; }
+  void setAnnotations(const VarAnnotations &annotations);
 
   void fit();
 
@@ -421,7 +423,7 @@ class CGnuPlotGroup {
   CGnuPlotColorBoxP         colorBox_;                  // color box
   CGnuPlotPaletteP          palette_;                   // palette
   CGnuPlotAxesData          axesData_;                  // axes data
-  Annotations               annotations_;               // annotations
+  VarAnnotations            varAnnotations_;            // annotations
   Axes                      axes_;                      // axes
   CGnuPlotCameraP           camera_;                    // view camera
   bool                      hidden3D_ { false };        // hidden 3d

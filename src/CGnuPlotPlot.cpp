@@ -36,7 +36,7 @@ int CGnuPlotPlot::nextId_ = 1;
 
 CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
- group_(group), style_(style), id_(nextId_++), lineStyle_(app()), contour_(this),
+ group_(group), style_(style), id_(nextId_++), lineStyle_(app()), contour_(this), surface_(this),
  arrowCache_(this), boxBarCache_(this), boxCache_(this), bubbleCache_(this), ellipseCache_(this),
  errorBarCache_(this), financeBarCache_(this), imageCache_(this), labelCache_(this),
  pathCache_(this), pieCache_(this), pointCache_(this), polygonCache_(this), rectCache_(this),
@@ -727,8 +727,12 @@ draw3D(CGnuPlotRenderer *renderer)
 {
   assert(is3D());
 
-  if (isContourEnabled())
-    drawContour(renderer);
+  bool pm3D = (style_ == PlotStyle::PM3D || group()->pm3D()->isEnabled());
+
+  if (! pm3D) {
+    if (isContourEnabled())
+      drawContour(renderer);
+  }
 
   CGnuPlotStyleBase *style = app()->getPlotStyle(getStyle());
 
@@ -748,6 +752,11 @@ draw3D(CGnuPlotRenderer *renderer)
   else {
     if (isSurfaceEnabled())
       drawSurface(renderer);
+  }
+
+  if (pm3D) {
+    if (isContourEnabled())
+      drawContour(renderer);
   }
 }
 
@@ -840,173 +849,164 @@ void
 CGnuPlotPlot::
 drawSurface(CGnuPlotRenderer *renderer)
 {
-  const CGnuPlotLineStyle &lineStyle = this->lineStyle();
-
-  CGnuPlotStroke stroke(this);
-
-  CRGBA c = stroke.color();
-
-  CGnuPlotCameraP camera = group()->camera();
-
-  bool isCalcColor = lineStyle.isCalcColor();
-
-  std::pair<int,int> np = numPoints3D();
-
-  //---
-
   bool pm3D = (style_ == PlotStyle::PM3D || group()->pm3D()->isEnabled());
 
   if (isSurfaceEnabled() || pm3D) {
-    if (! surfaceSet_) {
-      surfaceZPolygons_.clear();
-      surfaceIJPoints_ .clear();
-
-      surfaceZMin_.setInvalid();
-      surfaceZMax_.setInvalid();
-
-      for (int iy = 1; iy < np.second; ++iy) {
-        for (int ix = 1; ix < np.first; ++ix) {
-          // get surface points
-          const CGnuPlotPoint &ppoint1 = getPoint3D(ix - 1, iy - 1);
-          const CGnuPlotPoint &ppoint2 = getPoint3D(ix - 1, iy    );
-          const CGnuPlotPoint &ppoint3 = getPoint3D(ix    , iy    );
-          const CGnuPlotPoint &ppoint4 = getPoint3D(ix    , iy - 1);
-
-          CPoint3D p1, p2, p3, p4;
-
-          ppoint1.getPoint(p1);
-          ppoint2.getPoint(p2);
-          ppoint3.getPoint(p3);
-          ppoint4.getPoint(p4);
-
-          p1 = group_->mapLogPoint(xind(), yind(), 1, p1);
-          p2 = group_->mapLogPoint(xind(), yind(), 1, p2);
-          p3 = group_->mapLogPoint(xind(), yind(), 1, p3);
-          p4 = group_->mapLogPoint(xind(), yind(), 1, p4);
-
-          // average color
-          double za;
-          CRGBA  ca;
-
-          if (! isCalcColor) {
-            za = CGnuPlotUtil::avg({p1.z, p2.z, p3.z, p4.z});
-
-            surfaceZMin_.updateMin(za);
-            surfaceZMax_.updateMax(za);
-          }
-          else {
-            double z1 = (ppoint1.getNumValues() > 3 ? p1.z : 0);
-            double z2 = (ppoint2.getNumValues() > 3 ? p2.z : 0);
-            double z3 = (ppoint3.getNumValues() > 3 ? p3.z : 0);
-            double z4 = (ppoint4.getNumValues() > 3 ? p4.z : 0);
-
-            za = CGnuPlotUtil::avg({z1, z2, z3, z4});
-
-            int nc = ppoint1.getNumValues();
-
-            CRGBA rgba1 = lineStyle.calcColor(this, ppoint1.getReal(nc));
-            CRGBA rgba2 = lineStyle.calcColor(this, ppoint2.getReal(nc));
-            CRGBA rgba3 = lineStyle.calcColor(this, ppoint3.getReal(nc));
-            CRGBA rgba4 = lineStyle.calcColor(this, ppoint4.getReal(nc));
-
-            ca = CGnuPlotUtil::avgT<CRGBA>({rgba1, rgba2, rgba3, rgba4}, CRGBA(0,0,0,0));
-          }
-
-          //---
-
-          CPoint3D pt1 = camera->transform(p1);
-          CPoint3D pt2 = camera->transform(p2);
-          CPoint3D pt3 = camera->transform(p3);
-          CPoint3D pt4 = camera->transform(p4);
-
-          // average z
-          double zm = CGnuPlotUtil::avg({pt1.z, pt2.z, pt3.z, pt4.z});
-
-          //---
-
-          // create surface polygon
-          Points poly;
-
-          poly.push_back(CPoint2D(pt1.x, pt1.y));
-          poly.push_back(CPoint2D(pt2.x, pt2.y));
-          poly.push_back(CPoint2D(pt3.x, pt3.y));
-          poly.push_back(CPoint2D(pt4.x, pt4.y));
-
-          surfaceZPolygons_[-zm].push_back(ZPoints(za, PointsColor(poly, ca)));
-
-          surfaceIJPoints_[ix - 1][iy - 1] = poly;
-        }
-      }
-
-      surfaceSet_ = true;
-    }
+    initSurface();
   }
 
-  if (isSurfaceEnabled()) {
-    if (group()->hidden3D()) {
-      CRGBA fc(1,1,1);
+  //---
 
-      for (auto polys : surfaceZPolygons_) {
-        for (auto poly : polys.second) {
-          const PointsColor &pc = poly.second;
+  surface_.draw(renderer);
+}
 
-          renderer->fillPolygon(pc.first, fc);
-          renderer->drawPolygon(pc.first, 0, c, CLineDash());
-        }
-      }
-    }
-    else {
-      int pattern = hidden3D_.trianglePattern;
+void
+CGnuPlotPlot::
+initSurface() const
+{
+  CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
-      int nx = surfaceIJPoints_.size();
+  if (! th->surfaceSet_) {
+    const CGnuPlotLineStyle &lineStyle = this->lineStyle();
 
-      for (auto ijpoly : surfaceIJPoints_) {
-        int ix = ijpoly.first;
+    CGnuPlotCameraP camera = group()->camera();
 
-        int ny = ijpoly.second.size();
+    CGnuPlotColorBoxP cb = group()->colorBox();
 
-        for (auto ipoly : ijpoly.second) {
-          int iy = ipoly.first;
+    //---
 
-          const Points &points = ipoly.second;
+    std::pair<int,int> np = numPoints3D();
 
-          if (pattern & 1) renderer->drawLine(points[0], points[1], 1, c);
-          if (pattern & 2) renderer->drawLine(points[0], points[3], 1, c);
-          if (pattern & 4) renderer->drawLine(points[0], points[2], 1, c);
+    bool isCalcColor = lineStyle.isCalcColor();
+    bool isDataColor = false;
 
-          if (ix == nx - 1 || iy == ny - 1) {
-            if (pattern & 2) renderer->drawLine(points[2], points[1], 1, c);
+    COptReal cmin, cmax;
 
-            if (pattern & 1) renderer->drawLine(points[2], points[3], 1, c);
+    if (! isCalcColor) {
+      for (int iy = 0; iy < np.second; ++iy) {
+        for (int ix = 0; ix < np.first; ++ix) {
+          const CGnuPlotPoint &ppoint = getPoint3D(ix, iy);
+
+          if (ppoint.getNumValues() >= 4) {
+            double c = ppoint.getReal(4);
+
+            cmin.updateMin(c);
+            cmax.updateMax(c);
           }
         }
       }
-    }
-  }
 
-  if (pm3D) {
-    for (auto polys : surfaceZPolygons_) {
-      for (auto poly : polys.second) {
-        double z = poly.first;
+      isDataColor = cmin.isValid();
 
-        const PointsColor &pc = poly.second;
-
-        CRGBA rgba;
-
-        if (! isCalcColor) {
-          double r = (                      z - surfaceZMin_.getValue())/
-                     (surfaceZMax_.getValue() - surfaceZMin_.getValue());
-
-          CColor c = group_->palette()->getColor(r);
-
-          rgba = c.rgba();
-        }
-        else
-          rgba = pc.second;
-
-        renderer->fillPolygon(pc.first, rgba);
+      if (isDataColor) {
+        cb->axis().setMin(cmin.getValue());
+        cb->axis().setMax(cmax.getValue());
       }
     }
+
+    th->surface_.setCalcColor(isCalcColor);
+    th->surface_.setDataColor(isDataColor);
+
+    //---
+
+    CGnuPlotSurface::ZPolygons zpolygons;
+    CGnuPlotSurface::IJPoints  ijpoints;
+    COptReal                   zmin, zmax;
+
+    for (int iy = 1; iy < np.second; ++iy) {
+      for (int ix = 1; ix < np.first; ++ix) {
+        // get surface points
+        const CGnuPlotPoint &ppoint1 = getPoint3D(ix - 1, iy - 1);
+        const CGnuPlotPoint &ppoint2 = getPoint3D(ix - 1, iy    );
+        const CGnuPlotPoint &ppoint3 = getPoint3D(ix    , iy    );
+        const CGnuPlotPoint &ppoint4 = getPoint3D(ix    , iy - 1);
+
+        CPoint3D p1, p2, p3, p4;
+
+        ppoint1.getPoint(p1);
+        ppoint2.getPoint(p2);
+        ppoint3.getPoint(p3);
+        ppoint4.getPoint(p4);
+
+        p1 = group_->mapLogPoint(xind(), yind(), 1, p1);
+        p2 = group_->mapLogPoint(xind(), yind(), 1, p2);
+        p3 = group_->mapLogPoint(xind(), yind(), 1, p3);
+        p4 = group_->mapLogPoint(xind(), yind(), 1, p4);
+
+        // average color
+        double za;
+        CRGBA  ca;
+
+        if      (th->surface_.isCalcColor()) {
+          double z1 = (ppoint1.getNumValues() > 3 ? p1.z : 0);
+          double z2 = (ppoint2.getNumValues() > 3 ? p2.z : 0);
+          double z3 = (ppoint3.getNumValues() > 3 ? p3.z : 0);
+          double z4 = (ppoint4.getNumValues() > 3 ? p4.z : 0);
+
+          za = CGnuPlotUtil::avg({z1, z2, z3, z4});
+
+          zmin.updateMin(za);
+          zmax.updateMax(za);
+
+          int nc = ppoint1.getNumValues();
+
+          CRGBA rgba1 = lineStyle.calcColor(th, ppoint1.getReal(nc));
+          CRGBA rgba2 = lineStyle.calcColor(th, ppoint2.getReal(nc));
+          CRGBA rgba3 = lineStyle.calcColor(th, ppoint3.getReal(nc));
+          CRGBA rgba4 = lineStyle.calcColor(th, ppoint4.getReal(nc));
+
+          ca = CGnuPlotUtil::avgT<CRGBA>({rgba1, rgba2, rgba3, rgba4}, CRGBA(0,0,0,0));
+        }
+        else if (th->surface_.isDataColor()) {
+          za = CGnuPlotUtil::avg({p1.z, p2.z, p3.z, p4.z});
+
+          zmin.updateMin(za);
+          zmax.updateMax(za);
+
+          CRGBA rgba1 = cb->valueToColor(ppoint1.getReal(4)).rgba();
+          CRGBA rgba2 = cb->valueToColor(ppoint2.getReal(4)).rgba();
+          CRGBA rgba3 = cb->valueToColor(ppoint3.getReal(4)).rgba();
+          CRGBA rgba4 = cb->valueToColor(ppoint4.getReal(4)).rgba();
+
+          ca = CGnuPlotUtil::avgT<CRGBA>({rgba1, rgba2, rgba3, rgba4}, CRGBA(0,0,0,0));
+        }
+        else {
+          za = CGnuPlotUtil::avg({p1.z, p2.z, p3.z, p4.z});
+
+          zmin.updateMin(za);
+          zmax.updateMax(za);
+        }
+
+        //---
+
+        CPoint3D pt1 = camera->transform(p1);
+        CPoint3D pt2 = camera->transform(p2);
+        CPoint3D pt3 = camera->transform(p3);
+        CPoint3D pt4 = camera->transform(p4);
+
+        // average z
+        double zm = CGnuPlotUtil::avg({pt1.z, pt2.z, pt3.z, pt4.z});
+
+        //---
+
+        // create surface polygon
+        Points poly;
+
+        poly.push_back(CPoint2D(pt1.x, pt1.y));
+        poly.push_back(CPoint2D(pt2.x, pt2.y));
+        poly.push_back(CPoint2D(pt3.x, pt3.y));
+        poly.push_back(CPoint2D(pt4.x, pt4.y));
+
+        zpolygons[-zm].push_back(
+          CGnuPlotSurface::ZPoints(za, CGnuPlotSurface::PointsColor(poly, ca)));
+
+        ijpoints[ix - 1][iy - 1] = poly;
+      }
+    }
+
+    th->surface_.setData(zmin, zmax, zpolygons, ijpoints);
+
+    th->surfaceSet_ = true;
   }
 }
 
@@ -1208,8 +1208,8 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
       bar->setValues(i, y);
 
       if (! bar->testAndSetUsed()) {
-        CGnuPlotFillP   fill  (new CGnuPlotFill  (this));
-        CGnuPlotStrokeP stroke(new CGnuPlotStroke(this));
+        CGnuPlotFillP   fill   = bar->fill  ();
+        CGnuPlotStrokeP stroke = bar->stroke();
 
         if (fc.isValid())
           fill->setColor(fc.getValue());
@@ -1272,8 +1272,8 @@ drawStackedHistogram(CGnuPlotRenderer *renderer, int i, const CBBox2D &bbox, boo
     bar->setValues(i, y);
 
     if (! bar->testAndSetUsed()) {
-      CGnuPlotFillP   fill  (new CGnuPlotFill  (this));
-      CGnuPlotStrokeP stroke(new CGnuPlotStroke(this));
+      CGnuPlotFillP   fill   = bar->fill();
+      CGnuPlotStrokeP stroke = bar->stroke();
 
       if (fc.isValid())
         fill->setColor(fc.getValue());

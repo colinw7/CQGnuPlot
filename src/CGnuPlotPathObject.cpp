@@ -13,14 +13,26 @@ CGnuPlotPathObject(CGnuPlotPlot *plot) :
 
 void
 CGnuPlotPathObject::
-setPoints(const Points &points)
+setPoints2D(const Points2D &points)
 {
-  points_ = points;
+  points2D_ = points;
 
   bbox_ = CBBox2D();
 
-  for (const auto &p : points_)
+  for (const auto &p : points2D_)
     bbox_ += p;
+}
+
+void
+CGnuPlotPathObject::
+setPoints3D(const Points3D &points)
+{
+  points3D_ = points;
+
+  bbox_ = CBBox2D();
+
+  for (const auto &p : points3D_)
+    bbox_ += CPoint2D(p.x, p.y);
 }
 
 bool
@@ -65,21 +77,43 @@ draw(CGnuPlotRenderer *renderer) const
     stroke->setWidth(2);
   }
 
-  if (isClipped()) {
-    renderer->strokeClippedPath(points_, *stroke);
+  if (! points2D_.empty()) {
+    if (isClipped()) {
+      renderer->strokeClippedPath(points2D_, *stroke);
+    }
+    else {
+      renderer->strokePath(points2D_, *stroke);
+    }
+
+    ppoints_.resize(points2D_.size());
+
+    for (const auto &p : CIVector(points2D_)) {
+      double px, py;
+
+      renderer->windowToPixel(p.second.x, p.second.y, &px, &py);
+
+      ppoints_[p.first] = CPoint2D(px, py);
+    }
   }
   else {
-    renderer->strokePath(points_, *stroke);
-  }
+    if (isClipped()) {
+      renderer->strokeClippedPath(points3D_, *stroke);
+    }
+    else {
+      renderer->strokePath(points3D_, *stroke);
+    }
 
-  ppoints_.resize(points_.size());
+    ppoints_.resize(points3D_.size());
 
-  for (const auto &p : CIVector(points_)) {
-    double px, py;
+    for (const auto &p : CIVector(points3D_)) {
+      CPoint2D p1 = renderer->transform(p.second);
 
-    renderer->windowToPixel(p.second.x, p.second.y, &px, &py);
+      double px, py;
 
-    ppoints_[p.first] = CPoint2D(px, py);
+      renderer->windowToPixel(p1.x, p1.y, &px, &py);
+
+      ppoints_[p.first] = CPoint2D(px, py);
+    }
   }
 }
 
@@ -87,7 +121,12 @@ CGnuPlotTipData
 CGnuPlotPathObject::
 tip() const
 {
-  std::string tipText = CStrUtil::strprintf("%d Points", points_.size());
+  std::string tipText;
+
+  if (! points2D_.empty())
+    tipText = CStrUtil::strprintf("%d Points", points2D_.size());
+  else
+    tipText = CStrUtil::strprintf("%d Points", points3D_.size());
 
   CGnuPlotTipData tip;
 

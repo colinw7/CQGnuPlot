@@ -2,6 +2,23 @@
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
 
+CGnuPlotArrow::
+CGnuPlotArrow(CGnuPlotGroup *group) :
+ CGnuPlotGroupAnnotation(group)
+{
+}
+
+CGnuPlotArrow *
+CGnuPlotArrow::
+setData(const CGnuPlotArrow *arrow)
+{
+  (void) CGnuPlotGroupAnnotation::setData(arrow);
+
+  data_ = arrow->data_;
+
+  return this;
+}
+
 CGnuPlot *
 CGnuPlotArrow::
 app() const
@@ -14,6 +31,14 @@ CGnuPlotArrow::
 setLineColor(const CGnuPlotColorSpec &c)
 {
   setLineColor(c.color());
+}
+
+void
+CGnuPlotArrow::
+initClip()
+{
+  // TODO: more coords
+  clip_ = ! getFrom().isScreen();
 }
 
 bool

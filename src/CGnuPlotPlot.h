@@ -3,6 +3,7 @@
 
 #include <CGnuPlot.h>
 #include <CGnuPlotContour.h>
+#include <CGnuPlotSurface.h>
 #include <CGnuPlotObject.h>
 #include <CGnuPlotPoint.h>
 #include <CGnuPlotCache.h>
@@ -390,8 +391,8 @@ class CGnuPlotPlot {
             style_ == PlotStyle::RGBALPHA);
   }
 
-  double imageAngle() const { return imageStyle_.a.getValue(0.0); }
-  void setImageAngle(double a) { imageStyle_.a = a; }
+  double imageAngle() const { return imageStyle_.angle().getValue(0.0); }
+  void setImageAngle(double a) { imageStyle_.setAngle(a); }
 
   //---
 
@@ -673,8 +674,8 @@ class CGnuPlotPlot {
   void initRenderer(CGnuPlotRenderer *renderer);
 
   void printValues() const;
-  void printSurfaceValues() const;
   void printContourValues() const;
+  void printSurfaceValues() const;
 
   virtual void draw();
 
@@ -687,6 +688,7 @@ class CGnuPlotPlot {
   void drawSurface(CGnuPlotRenderer *renderer);
 
   void initContour() const;
+  void initSurface() const;
 
   void drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
   void drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &data);
@@ -789,13 +791,7 @@ class CGnuPlotPlot {
   bool renderBBox(CGnuPlotBBoxRenderer &brenderer) const;
 
  protected:
-  typedef std::vector<CPoint2D>         Points;
-  typedef std::pair<Points,CRGBA>       PointsColor;
-  typedef std::pair<double,PointsColor> ZPoints;
-  typedef std::vector<ZPoints>          ZPointsArray;
-  typedef std::map<double,ZPointsArray> ZPolygons;
-  typedef std::map<int,Points>          IPoints;
-  typedef std::map<int,IPoints>         IJPoints;
+  typedef std::vector<CPoint2D> Points;
 
   static int nextId_;
 
@@ -835,10 +831,8 @@ class CGnuPlotPlot {
   CGnuPlotBoxPlot          boxPlot_;
   CGnuPlotContour          contour_;                          // contour data
   bool                     contourSet_ { false };
-  ZPolygons                surfaceZPolygons_;                 // surface data
-  IJPoints                 surfaceIJPoints_;                  // surface data
+  CGnuPlotSurface          surface_;
   bool                     surfaceSet_ { false };
-  COptReal                 surfaceZMin_, surfaceZMax_;
   CGnuPlotHidden3DData     hidden3D_;
   COptReal                 whiskerBars_;                      // whisker bar data
   bool                     cacheActive_ { true };

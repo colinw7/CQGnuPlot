@@ -71,7 +71,8 @@ CGnuPlotPrintFile::
 print(const std::string &str) const
 {
   if      (! isBlock_ && filename_ != "") {
-    fprintf(fp_, "%s", str.c_str());
+    if (fp_)
+      fprintf(fp_, "%s", str.c_str());
   }
   else if (isBlock_ && filename_ != "") {
     plot_->getBlock(filename_)->addString(str);
@@ -92,7 +93,7 @@ open()
     if (append_)
       fp_ = fopen(filename_.c_str(), "a");
     else
-      fp_ = fopen(filename_.c_str(), "r");
+      fp_ = fopen(filename_.c_str(), "w");
   }
   else if (isBlock_ && filename_ != "") {
     plot_->getBlock(filename_)->clear();

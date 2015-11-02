@@ -1,10 +1,11 @@
 #include <CGnuPlotContour.h>
-#include <CGnuPlotRenderer.h>
-#include <CGnuPlotGroup.h>
+#include <CGnuPlot.h>
 #include <CGnuPlotWindow.h>
+#include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotUtil.h>
-#include <CGnuPlot.h>
+#include <CGnuPlotRenderer.h>
+#include <CGnuPlotPathObject.h>
 #include <CRGBName.h>
 
 static int contour_flags[] = {
@@ -169,6 +170,26 @@ drawContourLines(CGnuPlotRenderer *renderer)
 
   //---
 
+  if (! renderer->isPseudo()) {
+    int n = 0;
+
+    for (const auto &llines : llines_) {
+      const Lines &lines = llines.second;
+
+      Paths paths;
+
+      getPaths(lines, paths);
+
+      n += paths.size();
+    }
+
+    plot_->updatePathCacheSize(n);
+  }
+
+  //---
+
+  int i = 0;
+
   double width = lineStyle.calcWidth();
 
   for (const auto &llines : llines_) {
@@ -177,9 +198,36 @@ drawContourLines(CGnuPlotRenderer *renderer)
 
     CRGBA c = levelColor(l);
 
-    for (const auto &line : lines) {
-      renderer->drawLine(line.start(), line.end(), width, c);
+    if (! renderer->isPseudo()) {
+      Paths paths;
+
+      getPaths(lines, paths);
+
+      for (const auto &path : paths) {
+        CGnuPlotPathObject *pathObj = plot_->pathObjects()[i];
+
+        pathObj->setPoints3D(path);
+
+        if (! pathObj->testAndSetUsed()) {
+          CGnuPlotStrokeP stroke1(pathObj->stroke()->dup());
+
+          pathObj->stroke()->setEnabled(true);
+          pathObj->stroke()->setColor  (c);
+        }
+
+        ++i;
+      }
     }
+    else {
+      for (const auto &line : lines) {
+        renderer->drawLine(line.start(), line.end(), width, c);
+      }
+    }
+  }
+
+  if (! renderer->isPseudo()) {
+    for (const auto &path : plot_->pathObjects())
+      path->draw(renderer);
   }
 }
 
@@ -226,18 +274,19 @@ calcContourLines()
 
         double z1, z2, z3, z4, zm;
 
-        if (! c_.empty()) {
-          z1 = z_[j1 + i], z2 = z_[j1 + i + 1];
-          z3 = z_[j2 + i], z4 = z_[j2 + i + 1];
+        z1 = z_[j1 + i], z2 = z_[j1 + i + 1];
+        z3 = z_[j2 + i], z4 = z_[j2 + i + 1];
 
-          zm = CGnuPlotUtil::avg({z1, z2, z3, z4});
-        }
-        else {
+        zm = CGnuPlotUtil::avg({z1, z2, z3, z4});
+
+#if 0
+        if (! c_.empty()) {
           z1 = c_[j1 + i], z2 = c_[j1 + i + 1];
           z3 = c_[j2 + i], z4 = c_[j2 + i + 1];
 
           zm = CGnuPlotUtil::avg({z1, z2, z3, z4});
         }
+#endif
 
         //---
 
@@ -394,14 +443,15 @@ drawContourSolid(CGnuPlotRenderer *renderer)
 
       double z1, z2, z3, z4;
 
+      z1 = z_[i1 + j    ], z2 = z_[i2 + j    ];
+      z3 = z_[i1 + j + 1], z4 = z_[i2 + j + 1];
+
+#if 0
       if (! c_.empty()) {
-        z1 = z_[i1 + j    ], z2 = z_[i2 + j    ];
-        z3 = z_[i1 + j + 1], z4 = z_[i2 + j + 1];
-      }
-      else {
         z1 = c_[i1 + j    ], z2 = c_[i2 + j    ];
         z3 = c_[i1 + j + 1], z4 = c_[i2 + j + 1];
       }
+#endif
 
       fillContourBox(renderer, x1, y1, x2, y2, z1, z2, z3, z4, levels);
     }
@@ -447,10 +497,12 @@ initLevels() const
       for (uint j = 0; j < y_.size(); ++j) {
         double zm;
 
+        zm = z_[i*y_.size() + j];
+
+#if 0
         if (! c_.empty())
-          zm = z_[i*y_.size() + j];
-        else
           zm = c_[i*y_.size() + j];
+#endif
 
         z1.updateMin(zm);
         z2.updateMax(zm);
@@ -620,4 +672,27 @@ levelColor(int level) const
     c = colors_[level % colors_.size()];
 
   return c;
+}
+
+void
+CGnuPlotContour::
+getPaths(const Lines &lines, Paths &paths)
+{
+  Points points;
+
+  for (const auto &line : lines) {
+    if (! points.empty() && ! CPoint3D::isEqual(points.back(), line.start(), 1E-3)) {
+      paths.push_back(points);
+
+      points.clear();
+    }
+
+    if (points.empty())
+      points.push_back(line.start());
+
+    points.push_back(line.end());
+  }
+
+  if (! points.empty())
+    paths.push_back(points);
 }

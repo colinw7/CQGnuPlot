@@ -59,6 +59,20 @@ setDrawLayer(const DrawLayerType &layer)
 
 bool
 CQGnuPlotAnnotation::
+isClip() const
+{
+  return obj_->isClip();
+}
+
+void
+CQGnuPlotAnnotation::
+setClip(bool b)
+{
+  return obj_->setClip(b);
+}
+
+bool
+CQGnuPlotAnnotation::
 mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
 {
   if (! obj_->inside(insideData))

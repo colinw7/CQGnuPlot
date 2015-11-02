@@ -11,19 +11,11 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
  public:
   static const char *getName() { return "arrow"; }
 
-  CGnuPlotArrow(CGnuPlotGroup *group) :
-   CGnuPlotGroupAnnotation(group) {
-  }
+  CGnuPlotArrow(CGnuPlotGroup *group);
 
   virtual ~CGnuPlotArrow() { }
 
-  CGnuPlotArrow *setData(const CGnuPlotArrow *arrow) {
-    (void) CGnuPlotGroupAnnotation::setData(arrow);
-
-    data_ = arrow->data_;
-
-    return this;
-  }
+  CGnuPlotArrow *setData(const CGnuPlotArrow *arrow);
 
   CGnuPlot *app() const;
 
@@ -112,6 +104,8 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
 
   void setLineColor(const CGnuPlotColorSpec &c);
   CRGBA calcLineColor() const { return data_.calcLineColor(group_); }
+
+  void initClip() override;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 

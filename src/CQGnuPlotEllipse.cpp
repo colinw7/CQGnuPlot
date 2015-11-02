@@ -28,6 +28,20 @@ setCenter(const QPointF &p)
   CGnuPlotEllipse::setCenter(CPoint3D(p1.x, p1.y, 0));
 }
 
+QSizeF
+CQGnuPlotEllipse::
+getSize() const
+{
+  return QSizeF(CGnuPlotEllipse::xr_, CGnuPlotEllipse::yr_);
+}
+
+void
+CQGnuPlotEllipse::
+setSize(const QSizeF &s)
+{
+  CGnuPlotEllipse::setSize(CGnuPlotSize(CSize2D(s.width(), s.height())));
+}
+
 void
 CQGnuPlotEllipse::
 draw(CGnuPlotRenderer *renderer) const

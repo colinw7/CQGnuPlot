@@ -13,7 +13,7 @@ class CQGnuPlotAnnotation : public QObject {
 
   Q_PROPERTY(QColor strokeColor READ getStrokeColor WRITE setStrokeColor)
   Q_PROPERTY(QColor fillColor   READ getFillColor   WRITE setFillColor  )
-  Q_PROPERTY(QColor fillColor   READ getFillColor   WRITE setFillColor  )
+  Q_PROPERTY(bool   clip        READ isClip         WRITE setClip       )
 
   Q_PROPERTY(CQGnuPlotEnum::DrawLayerType drawLayer READ getDrawLayer WRITE setDrawLayer)
 
@@ -31,6 +31,9 @@ class CQGnuPlotAnnotation : public QObject {
 
   QColor getFillColor() const;
   void setFillColor(const QColor &c);
+
+  bool isClip() const;
+  void setClip(bool b);
 
   DrawLayerType getDrawLayer() const;
   void setDrawLayer(const DrawLayerType &layer);

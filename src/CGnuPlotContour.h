@@ -13,8 +13,10 @@ class CGnuPlotRenderer;
 
 class CGnuPlotContour {
  public:
-  typedef std::vector<CLine3D> Lines;
-  typedef std::map<int,Lines>  LevelLines;
+  typedef std::vector<CLine3D>  Lines;
+  typedef std::map<int,Lines>   LevelLines;
+  typedef std::vector<CPoint3D> Points;
+  typedef std::vector<Points>   Paths;
 
   struct LevelData {
     double level;
@@ -73,6 +75,8 @@ class CGnuPlotContour {
 
   void fillContourBox(CGnuPlotRenderer *renderer, double, double, double, double,
                       double, double, double, double, const std::vector<double> &);
+
+  static void getPaths(const Lines &lines, Paths &path);
 
  private:
   CGnuPlotPlot*       plot_;

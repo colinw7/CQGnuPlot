@@ -276,8 +276,14 @@ columnTitle(const std::vector<std::string> &columns) const
     if (col.isStr())
       return col.str().substr(1, col.str().size() - 2);
 
-    if (col.isInt())
-      return columns[col.ival() - 1];
+    if (col.isInt()) {
+      int icol = col.ival();
+
+      if (icol > 0 && icol <= int(columns.size()))
+        return columns[icol - 1];
+      else
+        return ""; // TODO: special values (0, -2) ?
+    }
   }
 
   if      (columns.size() > 1)

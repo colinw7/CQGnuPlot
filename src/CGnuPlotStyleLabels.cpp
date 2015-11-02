@@ -289,7 +289,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (textStyle.isBoxed())
         renderer->drawRect(bbox, CRGBA(0,0,0), 1);
 
-      renderer->setFont(labelStyle.font());
+      if (labelStyle.font().isValid())
+        renderer->setFont(labelStyle.font());
 
       if (enhanced)
         text.draw(renderer, bbox, labelStyle.align(), tc1);

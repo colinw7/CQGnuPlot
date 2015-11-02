@@ -6,7 +6,6 @@
 #include <CGnuPlotFill.h>
 #include <CGnuPlotStroke.h>
 #include <CGnuPlotMark.h>
-#include <CGnuPlotTextRenderer.h>
 #include <CLineDash.h>
 #include <CBBox2D.h>
 #include <CFont.h>
@@ -55,8 +54,9 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   bool mapping() const { return mapping_; }
   void setMapping(bool b) { mapping_ = b; }
 
-  const CBBox2D &clip() const { return clip_; }
+  const COptBBox2D &clip() const { return clip_; }
   void setClip(const CBBox2D &r) { clip_ = r; }
+  void resetClip() { clip_.setInvalid(); }
 
   bool reverseX() const { return reverseX_; }
   bool reverseY() const { return reverseY_; }
@@ -145,6 +145,7 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void drawPoint(const CPoint3D &p, const CRGBA &c);
 
   void strokeClippedPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke);
+  void strokeClippedPath(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke);
 
   void drawClippedPath(const std::vector<CPoint2D> &points, double width,
                        const CRGBA &c, const CLineDash &dash=CLineDash());
@@ -299,7 +300,7 @@ void strokeRect(const CBBox2D &rect, const CGnuPlotStroke &stroke);
   CGnuPlotMargin   margin_;           // margin for plot
   CBBox2D          range_;            // data range
   COptReal         ratio_;            // aspect ratio
-  CBBox2D          clip_;             // clip area
+  COptBBox2D       clip_;             // clip area
   CFontPtr         font_;             // font
   bool             reverseX_ { false };
   bool             reverseY_ { false };

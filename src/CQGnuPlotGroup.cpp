@@ -144,18 +144,20 @@ mousePress(const QPoint &qp)
 
   //---
 
-  for (auto &annotation : annotations()) {
-    if (annotation->getLayer() == CGnuPlotTypes::DrawLayer::BEHIND)
-      continue;
+  for (auto &vann : annotations()) {
+    for (auto &annotation : vann.second) {
+      if (annotation->getLayer() == CGnuPlotTypes::DrawLayer::BEHIND)
+        continue;
 
-    double z = 0;
+      double z = 0;
 
-    unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
+      unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
 
-    if (annotation->inside(insideData)) {
-      CQGnuPlotLabel *qann = static_cast<CQGnuPlotLabel *>(annotation.get());
+      if (annotation->inside(insideData)) {
+        CQGnuPlotLabel *qann = static_cast<CQGnuPlotLabel *>(annotation.get());
 
-      objects.push_back(qann);
+        objects.push_back(qann);
+      }
     }
   }
 
@@ -255,20 +257,22 @@ mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
 
   renderer->pixelToWindow(pixel, window);
 
-  for (auto &annotation : annotations()) {
-    if (annotation->getLayer() == CGnuPlotTypes::DrawLayer::BEHIND)
-      continue;
+  for (auto &vann : annotations()) {
+    for (auto &annotation : vann.second) {
+      if (annotation->getLayer() == CGnuPlotTypes::DrawLayer::BEHIND)
+        continue;
 
-    double z = 0;
+      double z = 0;
 
-    unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
+      unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
 
-    CQGnuPlotAnnotation *qann = dynamic_cast<CQGnuPlotAnnotation *>(annotation.get());
+      CQGnuPlotAnnotation *qann = dynamic_cast<CQGnuPlotAnnotation *>(annotation.get());
 
-    CGnuPlotTypes::InsideData insideData(window, pixel);
+      CGnuPlotTypes::InsideData insideData(window, pixel);
 
-    if (qann->mouseTip(insideData, tip))
-      return true;
+      if (qann->mouseTip(insideData, tip))
+        return true;
+    }
   }
 
   //---

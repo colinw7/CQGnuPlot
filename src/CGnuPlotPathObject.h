@@ -13,7 +13,8 @@ class CGnuPlotPlot;
 
 class CGnuPlotPathObject : public CGnuPlotPlotObject {
  public:
-  typedef std::vector<CPoint2D> Points;
+  typedef std::vector<CPoint2D> Points2D;
+  typedef std::vector<CPoint3D> Points3D;
 
  public:
   CGnuPlotPathObject(CGnuPlotPlot *plot);
@@ -23,8 +24,11 @@ class CGnuPlotPathObject : public CGnuPlotPlotObject {
   CGnuPlotPathObject(const CGnuPlotPathObject &) = delete;
   CGnuPlotPathObject &operator=(const CGnuPlotPathObject &) = delete;
 
-  const Points &points() const { return points_; }
-  void setPoints(const Points &points);
+  const Points2D &points2D() const { return points2D_; }
+  void setPoints2D(const Points2D &points);
+
+  const Points3D &points3D() const { return points3D_; }
+  void setPoints3D(const Points3D &points);
 
   bool isClipped() const { return clipped_; }
   void setClipped(bool b) { clipped_ = b; }
@@ -41,11 +45,12 @@ class CGnuPlotPathObject : public CGnuPlotPlotObject {
   void draw(CGnuPlotRenderer *renderer) const override;
 
  protected:
-  Points          points_;
-  bool            clipped_ { false };
-  CGnuPlotStrokeP stroke_;
-  mutable CBBox2D bbox_;
-  mutable Points  ppoints_;
+  Points2D         points2D_;
+  Points3D         points3D_;
+  bool             clipped_ { false };
+  CGnuPlotStrokeP  stroke_;
+  mutable CBBox2D  bbox_;
+  mutable Points2D ppoints_;
 };
 
 #endif

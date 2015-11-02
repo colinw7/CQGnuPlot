@@ -2,11 +2,45 @@
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotGroup.h>
 
+CGnuPlotCircle::
+CGnuPlotCircle(CGnuPlotGroup *group) :
+ CGnuPlotGroupAnnotation(group)
+{
+}
+
+CGnuPlotCircle *
+CGnuPlotCircle::
+setData(const CGnuPlotCircle *circle)
+{
+  (void) CGnuPlotGroupAnnotation::setData(circle);
+
+  p_        = circle->p_;
+  r_        = circle->r_;
+  arcStart_ = circle->arcStart_;
+  arcEnd_   = circle->arcEnd_;
+  fs_       = circle->fs_;
+  lw_       = circle->lw_;
+
+  return this;
+}
+
+void
+CGnuPlotCircle::
+initClip()
+{
+  clip_ = ! p_.isScreen();
+}
+
 void
 CGnuPlotCircle::
 draw(CGnuPlotRenderer *renderer) const
 {
   bool highlighted = (isHighlighted() || isSelected());
+
+  if (isClip())
+    renderer->setClip(group_->getClip());
+  else
+    renderer->resetClip();
 
   center_ = this->getCenter().getPoint2D(renderer);
 
@@ -33,7 +67,7 @@ draw(CGnuPlotRenderer *renderer) const
   c_ = this->getStrokeColor().getValue(CRGBA(0,0,0));
 
   CRGBA  c  = c_;
-  double lw = 1;
+  double lw = this->getLineWidth().getValue(1);
 
   if (highlighted) {
     c  = CRGBA(1,0,0);

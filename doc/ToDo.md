@@ -5,7 +5,6 @@
   + edit interface (move) for annotations
   + save cmd
   + user shared_ptr/unique_ptr instead of CRefPtr
-  + fit command
   + more color schemes (selectable)
   + don't recalc bar/bubble/pie on plot
   + consistent handling of position front,back,behind
@@ -17,7 +16,6 @@
   + axis data
   + use color box in test palette command
   + lookup box by id to avoid overwritting object values
-  + with label point/nopoint options
   + reset on loadCmd
 
   + zoom on mouse
@@ -67,6 +65,9 @@
   + . interactive selection
 
   + custom key for style
+
+  + single line/path for contours
+  + vertical line probe on line plots
 
 ### Plots
  + force directed

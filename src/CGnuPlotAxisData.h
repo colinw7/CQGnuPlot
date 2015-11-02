@@ -317,18 +317,20 @@ class CGnuPlotAxisData {
   }
 
   double mapLogValue(double x) const {
-    if (logBase_.isValid() && logBase_.getValue() > 1)
+    if (isLogValue())
       return logValue(x, logBase_.getValue());
     else
       return x;
   }
 
   double unmapLogValue(double x) const {
-    if (logBase_.isValid() && logBase_.getValue() > 1)
+    if (isLogValue())
       return expValue(x, logBase_.getValue());
     else
       return x;
   }
+
+  bool isLogValue() const { return (logBase_.isValid() && logBase_.getValue() > 1); }
 
   //---
 

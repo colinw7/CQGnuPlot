@@ -1,4 +1,5 @@
 #include <CGnuPlotImageObject.h>
+#include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
 #include <CImageLib.h>
@@ -35,7 +36,15 @@ draw(CGnuPlotRenderer *renderer) const
 {
   bool highlighted = (isHighlighted() || isSelected());
 
-  CPoint2D p(bbox_.getXMin(), bbox_.getYMax());
+  CPoint2D p1, p2;
+
+  renderer->windowToPixel(bbox_.getLL(), p1);
+  renderer->windowToPixel(bbox_.getUR(), p2);
+
+  CPoint2D p;
+
+  renderer->pixelToWindow(CPoint2D(std::min(p1.x, p2.x), std::min(p1.y, p2.y)), p);
+  //CPoint2D p(bbox_.getXMin(), bbox_.getYMax());
 
   double pw = renderer->pixelWidthToWindowWidth  (1);
   double ph = renderer->pixelHeightToWindowHeight(1);
@@ -84,6 +93,14 @@ updateImage2() const
   // x = (x1 - xo)*xscale
   // y = (y1 - yo)*yscale
 
+  CGnuPlotAxis *plotXAxis = plot_->group()->getPlotAxis(CGnuPlotTypes::AxisType::X, 1, true);
+  CGnuPlotAxis *plotYAxis = plot_->group()->getPlotAxis(CGnuPlotTypes::AxisType::Y, 1, true);
+
+  bool flipX = plotXAxis->isReverse();
+  bool flipY = plotYAxis->isReverse();
+
+  if (flipY2_) flipY = ! flipY;
+
   for (int y = 0; y < size2_.height; ++y) {
     double y1 = y/yscale + yo;
 
@@ -95,8 +112,8 @@ updateImage2() const
       CRGBA c;
 
       if (p1.x >= 0 && p1.x < size1_.width && p1.y >= 0 && p1.y < size1_.height) {
-        if (flipY2_)
-          p1.y = size1_.height - 1 - p1.y;
+        if (flipX) p1.x = size1_.width  - 1 - p1.x;
+        if (flipY) p1.y = size1_.height - 1 - p1.y;
 
         image1_->getRGBAPixel(p1.x, p1.y, c);
       }
@@ -114,7 +131,7 @@ tip() const
 {
   CGnuPlotTipData tip;
 
-  tip.setXStr("");
+  tip.setXStr(tipText());
   tip.setYStr("");
 
   tip.setBorderColor(CRGBA(0,0,0));

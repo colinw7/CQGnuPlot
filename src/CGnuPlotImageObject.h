@@ -4,7 +4,7 @@
 #include <COptVal.h>
 #include <CPoint2D.h>
 #include <CRGBA.h>
-#include <CImagePtr.h>
+#include <CImageLib.h>
 
 #include <CGnuPlotObject.h>
 #include <CGnuPlotFill.h>

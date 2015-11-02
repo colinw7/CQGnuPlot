@@ -33,6 +33,9 @@ class CGnuPlotBoxBarObject : public CGnuPlotPlotObject {
   void setXValueStr(const std::string &s) { x_str_ = s; }
   void setYValueStr(const std::string &s) { y_str_ = s; }
 
+  bool isVertical() const { return vertical_; }
+  void setVertical(bool b) { vertical_ = b; }
+
   const CGnuPlotFillP &fill() const { return fill_; }
   void setFill(const CGnuPlotFillP &f) { fill_ = f; }
 
@@ -50,9 +53,10 @@ class CGnuPlotBoxBarObject : public CGnuPlotPlotObject {
   void draw(CGnuPlotRenderer *renderer) const override;
 
  protected:
-  CBBox2D         bbox_  { 0, 0, 1, 1 };
-  double          x_     { 0.0 }; // associated x value
-  double          y_     { 0.0 }; // associated y value
+  CBBox2D         bbox_     { 0, 0, 1, 1 };
+  double          x_        { 0.0 }; // associated x value
+  double          y_        { 0.0 }; // associated y value
+  bool            vertical_ { true };
   std::string     x_str_;
   std::string     y_str_;
   CGnuPlotFillP   fill_;

@@ -433,12 +433,12 @@ fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
 
   windowToPixel(points[0].x, points[0].y, &px, &py);
 
-  path.moveTo(px, py);
+  path.moveTo(QPointF(px, py));
 
   for (uint i = 1; i < points.size(); ++i) {
     windowToPixel(points[i].x, points[i].y, &px, &py);
 
-    path.lineTo(px, py);
+    path.lineTo(QPointF(px, py));
   }
 
   path.closeSubpath();

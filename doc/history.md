@@ -164,3 +164,20 @@
  + Add QObject for multiplot and properties
  + Add image rowheaders, columnsheaders, pixels
  + Add basic object editing (move)
+
+### 10/01/2015
+ + Add annotation object clipping
+ + Fix polygon object points including rto support
+ + Allow label and generic object annotations ids to be shared
+ + Don't load more that 1000 objects into property tree
+ + Support sum range embedded function
+ + Allow inline files for palette
+ + Fix handling of inline { } statements for do command
+ + Auto set sample range from xrange
+ + Support flipped x/y axis in image drawing
+ + Support integer colors
+ + Allow spaces after EOF string for inline data
+ + Improve handling of screen margin coords
+ + better image scaling
+ + fix separator file handling for empty fields
+ + fix expression skip for ?: expressions

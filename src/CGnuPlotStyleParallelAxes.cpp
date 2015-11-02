@@ -121,7 +121,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //------
 
   // draw axes
-  CBBox2D clip  = renderer->clip();
+  CBBox2D clip  = renderer->clip().getValue();
   CBBox2D range = renderer->range();
 
   for (const auto &ir : irange) {

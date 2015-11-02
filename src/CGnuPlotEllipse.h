@@ -11,44 +11,33 @@ class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {
  public:
   static const char *getName() { return "ellipse"; }
 
-  CGnuPlotEllipse(CGnuPlotGroup *group) :
-   CGnuPlotGroupAnnotation(group) {
-  }
+  CGnuPlotEllipse(CGnuPlotGroup *group);
 
   virtual ~CGnuPlotEllipse() { }
 
-  CGnuPlotEllipse *setData(const CGnuPlotEllipse *ellipse) {
-    (void) CGnuPlotGroupAnnotation::setData(ellipse);
-
-    p_     = ellipse->p_;
-    rx_    = ellipse->rx_;
-    ry_    = ellipse->ry_;
-    angle_ = ellipse->angle_;
-    units_ = ellipse->units_;
-    fs_    = ellipse->fs_;
-
-    return this;
-  }
+  CGnuPlotEllipse *setData(const CGnuPlotEllipse *ellipse);
 
   CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::ELLIPSE; }
 
   const CGnuPlotPosition &getCenter() const { return p_; }
   void setCenter(const CGnuPlotPosition &p) { p_ = p; }
 
-  double getRX() const { return rx_; }
-  void setRX(double x) { rx_ = x; }
-
-  double getRY() const { return ry_; }
-  void setRY(double y) { ry_ = y; }
-
   double getAngle() const { return angle_; }
   void setAngle(double a) { angle_ = a; }
+
+  const CGnuPlotSize &getSize() const { return size_; }
+  void setSize(const CGnuPlotSize &s) { size_ = s; }
 
   const EllipseUnits &units() const { return units_; }
   void setUnits(const EllipseUnits &v) { units_ = v; }
 
   const CGnuPlotFillStyle &getFillStyle() const { return fs_; }
   void setFillStyle(const CGnuPlotFillStyle &fs) { fs_ = fs; }
+
+  const COptReal &getLineWidth() const { return lw_; }
+  void setLineWidth(double w) { lw_ = w; }
+
+  void initClip() override;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
@@ -62,11 +51,11 @@ class CGnuPlotEllipse : public CGnuPlotGroupAnnotation {
 
  protected:
   CGnuPlotPosition  p_;
-  double            rx_    { 1 };
-  double            ry_    { 1 };
   double            angle_ { 0 };
+  CGnuPlotSize      size_;
   EllipseUnits      units_ { EllipseUnits::XY };
   CGnuPlotFillStyle fs_;
+  COptReal          lw_;
   mutable CPoint2D  center_;
   mutable double    xr_, yr_;
   mutable CRGBA     c_;

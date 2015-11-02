@@ -28,12 +28,12 @@ draw(CGnuPlotRenderer *renderer) const
 
   renderer->strokeClipLine(start(), end(), *stroke);
 
-  double dx = fabs(start().x - end().x);
-  double dy = fabs(start().y - end().y);
+  //double dx = fabs(start().x - end().x);
+  //double dy = fabs(start().y - end().y);
 
   CPoint2D dp;
 
-  if (dx < dy)
+  if (bar_->isVertical())
     dp = CPoint2D(endWidth()/2, 0);
   else
     dp = CPoint2D(0, endWidth()/2);
