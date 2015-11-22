@@ -107,6 +107,12 @@ class CGnuPlotUsingCols {
     return (usingCol.ival() >= low && usingCol.ival() <= high);
   }
 
+  const COptInt &colMin() const { return colMin_; }
+  void setColMin(const COptInt &v) { colMin_ = v; }
+
+  const COptInt &colMax() const { return colMax_; }
+  void setColMax(const COptInt &v) { colMax_ = v; }
+
   const std::string &format() const { return format_; }
   void setFormat(const std::string &format) { format_ = format; }
 
@@ -131,6 +137,7 @@ class CGnuPlotUsingCols {
   typedef std::vector<CGnuPlotUsingCol> Cols;
 
   Cols              cols_;
+  COptInt           colMin_, colMax_;
   AxisTicLabel      axisTicLabel_;
   std::string       format_;
   std::string       keyLabel_;

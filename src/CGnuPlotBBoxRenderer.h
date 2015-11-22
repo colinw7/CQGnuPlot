@@ -26,7 +26,7 @@ class CGnuPlotBBoxRenderer : public CGnuPlotRenderer {
   const COptReal &cbMin() const { return cbmin_; }
   const COptReal &cbMax() const { return cbmax_; }
 
-  void clear(const CRGBA &c);
+  void clear(const CRGBA &c) override;
 
   void drawPoint  (const CPoint2D &p, const CRGBA &c) override;
   void drawSymbol (const CPoint2D &p, SymbolType type, double size,

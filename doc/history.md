@@ -181,3 +181,11 @@
  + better image scaling
  + fix separator file handling for empty fields
  + fix expression skip for ?: expressions
+
+### 11/22/2015
+ + Improve count of using and format values
+ + Support every value selection in more data types
+ + clip ellipse and polygon shapes
+ + improve binary data/image data handling
+ + add mouse variables
+ + support string slice expressions

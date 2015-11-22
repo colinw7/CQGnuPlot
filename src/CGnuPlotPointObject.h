@@ -99,7 +99,7 @@ class CGnuPlotPointObject : public CGnuPlotPlotObject {
   bool isVisible() const { return data_.isVisible(); }
   void setVisible(bool b) { data_.setVisible(b); }
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const override;
+  bool inside(const CGnuPlotMouseEvent &p) const override;
 
   const CBBox2D &bbox() const override { return bbox_; }
 

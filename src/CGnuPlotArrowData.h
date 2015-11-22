@@ -4,6 +4,7 @@
 #include <CGnuPlotArrowStyle.h>
 #include <CGnuPlotPosition.h>
 #include <CGnuPlotTipData.h>
+#include <CGnuPlotMouseEvent.h>
 #include <CAngle.h>
 #include <CLine2D.h>
 
@@ -90,7 +91,7 @@ class CGnuPlotArrowData {
 
   void getLine(CGnuPlotRenderer *renderer, CPoint2D &from, CPoint2D &to) const;
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const;
+  bool inside(const CGnuPlotMouseEvent &p) const;
 
   const CLine2D &drawLine     () const { return line_; }
   const CLine2D &drawPixelLine() const { return pline_; }

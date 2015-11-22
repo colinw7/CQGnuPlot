@@ -105,6 +105,7 @@ namespace CExprInterpUtil {
       case CEXPR_POSTFIX_EXPRESSION       : return "postfix_expression";
       case CEXPR_PRIMARY_EXPRESSION       : return "primary_expression";
       case CEXPR_ARGUMENT_EXPRESSION_LIST : return "argument_expression_list";
+      case CEXPR_DUMMY_EXPRESSION         : return "dummy_expression";
       case CEXPR_TOKEN_TYPE: {
         switch (type) {
           case CEXPR_TOKEN_IDENTIFIER     : return "identifier";
@@ -1103,7 +1104,7 @@ readPowerExpression()
 /*
  * <postfix_expression>:= <primary_expression>
 #ifdef GNUPLOT_EXPR
- * <postfix_expression>:= <identifier> [ <expression> ( : <expression> ) ]
+ * <postfix_expression>:= <primary_expression> [ <expression> ( : <expression> ) ]
 #endif
  * <postfix_expression>:= <identifier> ( <argument_expression_list>(opt) )
  * <postfix_expression>:= <postfix_expression> ++
@@ -1155,13 +1156,26 @@ readPostfixExpression()
         if (itoken3.isValid() || ! errorData_.isError()) {
           CExprITokenPtr itoken4 = unstackIToken();
 
-          if      (isOperatorIToken(itoken4, CEXPR_OP_CLOSE_SBRACKET)) {
-            itoken = CExprIToken::createIToken(CEXPR_POSTFIX_EXPRESSION);
+          if (isOperatorIToken(itoken4, CEXPR_OP_TIMES))
+            itoken4 = unstackIToken();
 
-            addITokenToType(itoken1, itoken);
-            addITokenToType(itoken2, itoken);
-            addITokenToType(itoken3, itoken);
-            addITokenToType(itoken4, itoken);
+          if      (isOperatorIToken(itoken4, CEXPR_OP_CLOSE_SBRACKET)) {
+            if (itoken3.isValid()) {
+              itoken = CExprIToken::createIToken(CEXPR_POSTFIX_EXPRESSION);
+
+              addITokenToType(itoken1, itoken);
+              addITokenToType(itoken2, itoken);
+              addITokenToType(itoken3, itoken);
+              addITokenToType(itoken4, itoken);
+            }
+            else {
+              errorData_.setLastError("Empty [] expression");
+
+              stackIToken(itoken4);
+              stackIToken(itoken3);
+              stackIToken(itoken2);
+              stackIToken(itoken1);
+            }
           }
           else if (isOperatorIToken(itoken4, CEXPR_OP_COLON)) {
             CExprITokenPtr itoken5 = readExpression();
@@ -1169,8 +1183,16 @@ readPostfixExpression()
             if (itoken5.isValid() || ! errorData_.isError()) {
               CExprITokenPtr itoken6 = unstackIToken();
 
+              if (isOperatorIToken(itoken6, CEXPR_OP_TIMES))
+                itoken6 = unstackIToken();
+
               if (isOperatorIToken(itoken6, CEXPR_OP_CLOSE_SBRACKET)) {
                 itoken = CExprIToken::createIToken(CEXPR_POSTFIX_EXPRESSION);
+
+                if (! itoken3.isValid())
+                  itoken3 = CExprIToken::createIToken(CEXPR_DUMMY_EXPRESSION);
+                if (! itoken5.isValid())
+                  itoken5 = CExprIToken::createIToken(CEXPR_DUMMY_EXPRESSION);
 
                 addITokenToType(itoken1, itoken);
                 addITokenToType(itoken2, itoken);
@@ -1226,6 +1248,95 @@ readPostfixExpression()
       itoken = CExprIToken::createIToken(CEXPR_POSTFIX_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
+    }
+  }
+
+  if (itoken.isValid()) {
+    CExprITokenPtr itoken2 = unstackIToken();
+
+    if (isOperatorIToken(itoken2, CEXPR_OP_OPEN_SBRACKET)) {
+      CExprITokenPtr itoken3 = readExpression();
+
+      if (itoken3.isValid() || ! errorData_.isError()) {
+        CExprITokenPtr itoken4 = unstackIToken();
+
+        if (isOperatorIToken(itoken4, CEXPR_OP_TIMES))
+          itoken4 = unstackIToken();
+
+        if      (isOperatorIToken(itoken4, CEXPR_OP_CLOSE_SBRACKET)) {
+          if (itoken3.isValid()) {
+            CExprITokenPtr itoken1 = collapseITokenToType(itoken, CEXPR_PRIMARY_EXPRESSION);
+
+            itoken = CExprIToken::createIToken(CEXPR_POSTFIX_EXPRESSION);
+
+            addITokenToType(itoken1, itoken);
+            addITokenToType(itoken2, itoken);
+            addITokenToType(itoken3, itoken);
+            addITokenToType(itoken4, itoken);
+          }
+          else {
+            errorData_.setLastError("Empty [] expression");
+
+            stackIToken(itoken4);
+            stackIToken(itoken3);
+            stackIToken(itoken2);
+          }
+        }
+        else if (isOperatorIToken(itoken4, CEXPR_OP_COLON)) {
+          CExprITokenPtr itoken5 = readExpression();
+
+          if (itoken5.isValid() || ! errorData_.isError()) {
+            CExprITokenPtr itoken6 = unstackIToken();
+
+            if (isOperatorIToken(itoken6, CEXPR_OP_TIMES))
+              itoken6 = unstackIToken();
+
+            if (isOperatorIToken(itoken6, CEXPR_OP_CLOSE_SBRACKET)) {
+              CExprITokenPtr itoken1 = collapseITokenToType(itoken, CEXPR_PRIMARY_EXPRESSION);
+
+              itoken = CExprIToken::createIToken(CEXPR_POSTFIX_EXPRESSION);
+
+              if (! itoken3.isValid())
+                itoken3 = CExprIToken::createIToken(CEXPR_DUMMY_EXPRESSION);
+              if (! itoken5.isValid())
+                itoken5 = CExprIToken::createIToken(CEXPR_DUMMY_EXPRESSION);
+
+              addITokenToType(itoken1, itoken);
+              addITokenToType(itoken2, itoken);
+              addITokenToType(itoken3, itoken);
+              addITokenToType(itoken4, itoken);
+              addITokenToType(itoken5, itoken);
+              addITokenToType(itoken6, itoken);
+            }
+            else {
+              errorData_.setLastError("Missing close square bracket");
+
+              stackIToken(itoken6);
+              stackIToken(itoken5);
+              stackIToken(itoken4);
+              stackIToken(itoken3);
+              stackIToken(itoken2);
+            }
+          }
+          else {
+            errorData_.setLastError("Missing expression after colon");
+
+            stackIToken(itoken4);
+            stackIToken(itoken3);
+            stackIToken(itoken2);
+          }
+        }
+        else {
+          errorData_.setLastError("Missing colon or close square bracket");
+
+          stackIToken(itoken4);
+          stackIToken(itoken3);
+          stackIToken(itoken2);
+        }
+      }
+    }
+    else {
+      stackIToken(itoken2);
     }
   }
 

@@ -156,11 +156,11 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
 
 bool
 CGnuPlotLabelData::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
   if (! bbox_.isSet()) return false;
 
-  return bbox_.inside(data.window);
+  return bbox_.inside(mouseEvent.window());
 }
 
 CGnuPlotTipData

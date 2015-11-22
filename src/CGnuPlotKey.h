@@ -2,6 +2,7 @@
 #define CGnuPlotKey_H
 
 #include <CGnuPlotKeyData.h>
+#include <CGnuPlotMouseEvent.h>
 #include <CDirectionType.h>
 #include <CPoint2D.h>
 #include <CBBox2D.h>
@@ -140,7 +141,7 @@ class CGnuPlotKey {
 
   int plotAtPos(const CPoint2D &pos) const;
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const;
+  bool inside(const CGnuPlotMouseEvent &p) const;
 
  private:
   void drawClustered(CGnuPlotRenderer *renderer);

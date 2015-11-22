@@ -8,6 +8,7 @@
 #include <CGnuPlotPoint.h>
 #include <CGnuPlotCache.h>
 #include <CGnuPlotKey.h>
+#include <CGnuPlotRotate.h>
 
 #include <CExpr.h>
 #include <CBBox2D.h>
@@ -282,7 +283,7 @@ class CGnuPlotPlot {
   typedef std::map<std::string,CExprValuePtr> Params;
   typedef std::vector<CGnuPlotPoint>          Points2D;
   typedef std::map<int,Points2D>              Points3D;
-  typedef std::vector<CRGBA>                  ImageData;
+  typedef std::vector<CPoint3D>               Point3DArray;
 
   typedef CGnuPlotCache<CGnuPlotArrowObject>      ArrowCache;
   typedef CGnuPlotCache<CGnuPlotBoxBarObject>     BoxBarCache;
@@ -314,9 +315,13 @@ class CGnuPlotPlot {
   typedef std::vector<CGnuPlotPolygonObject *>    PolygonObjects;
   typedef std::vector<CGnuPlotRectObject *>       RectObjects;
 
-  typedef std::vector<double>           DoubleVector;
-  typedef std::map<double,DoubleVector> MappedPoints;
+  typedef std::vector<CRGBA>            Colors;
+  typedef std::vector<double>           Reals;
+  typedef std::map<double,Reals>        MappedPoints;
   typedef std::vector<CGnuPlotKeyLabel> KeyLabels;
+  typedef std::map<int,CRGBA>           XColor;
+  typedef std::map<int,XColor>          YXColor;
+  typedef std::map<int,Reals>           RowValues;
 
  public:
   CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle plotStyle);
@@ -380,8 +385,14 @@ class CGnuPlotPlot {
 
   //---
 
-  const ImageData &imageData() const { return imageData_; }
-  void setImageData(const ImageData &imageData) { imageData_ = imageData; }
+  const CBBox2D &imageRange() const { return imageRange_; }
+  void setImageRange(const CBBox2D &r) { imageRange_ = r; }
+
+  const YXColor &imageColors() const { return imageColors_; }
+  void setImageColors(const YXColor &c) { imageColors_ = c; }
+
+  const RowValues &imageValues() const { return imageValues_; }
+  void setImageValues(const RowValues &r) { imageValues_ = r; }
 
   const CGnuPlotImageStyle &imageStyle() const { return imageStyle_; }
   void setImageStyle(const CGnuPlotImageStyle &imageStyle) { imageStyle_ = imageStyle; }
@@ -566,7 +577,9 @@ class CGnuPlotPlot {
 
   int addPoint3D(int iy, double x, double y, double z);
   int addPoint3D(int iy, double x, double y, CExprValuePtr z);
-  int addPoint3D(int iy, const Values &values, bool discontinuity=false, bool bad=false);
+  int addPoint3D(int iy, const CPoint3D &p);
+  int addPoint3D(int iy, const Values &values, bool discontinuity=false, bool bad=false,
+                 const Params &params=Params());
 
   //---
 
@@ -671,6 +684,19 @@ class CGnuPlotPlot {
 
   //---
 
+  struct Delta {
+    double dx { 1 };
+    double dy { 1 };
+    double dz { 1 };
+    double dt { 1 };
+
+    Delta(double dx1, double dy1, double dz1, double dt1) :
+     dx(dx1), dy(dy1), dz(dz1), dt(dt1) {
+    }
+  };
+
+  //---
+
   void initRenderer(CGnuPlotRenderer *renderer);
 
   void printValues() const;
@@ -761,8 +787,8 @@ class CGnuPlotPlot {
 
   //------
 
-  virtual bool mouseTip  (const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tipData);
-  virtual void mousePress(const CGnuPlotTypes::InsideData &insideData);
+  virtual bool mouseTip  (const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tipData);
+  virtual void mousePress(const CGnuPlotMouseEvent &mouseEvent);
 
   //------
 
@@ -787,6 +813,22 @@ class CGnuPlotPlot {
   int newHistogramId() const { return newHistogramId_; }
   void setNewHistogramId(int i) { newHistogramId_ = i; }
 
+  //------
+
+  const Delta &delta() const { return delta_; }
+  void setDelta(const Delta &v) { delta_ = v; }
+
+  const CGnuPlotRotate &rotate() const { return rotate_; }
+  void setRotate(const CGnuPlotRotate &v) { rotate_ = v; }
+
+  const COptPoint3D &center() const { return center_; }
+  void setCenter(const COptPoint3D &v) { center_ = v; }
+
+  const Point3DArray &originArray() const { return originArray_; }
+  void setOriginArray(const Point3DArray &o) { originArray_ = o; }
+
+  //------
+
  private:
   bool renderBBox(CGnuPlotBBoxRenderer &brenderer) const;
 
@@ -802,7 +844,9 @@ class CGnuPlotPlot {
   bool                     displayed_ { true };               // is displayed
   Points2D                 points2D_;                         // 2D points
   Points3D                 points3D_;                         // 3D points
-  ImageData                imageData_;                        // image data
+  CBBox2D                  imageRange_;                       // image range
+  YXColor                  imageColors_;                      // image colors
+  RowValues                imageValues_;                      // image values
   bool                     binary_ { false };
   CGnuPlotMatrixData       matrixData_;
   bool                     rowheaders_ { false };
@@ -859,6 +903,10 @@ class CGnuPlotPlot {
   CGnuPlotAdjacencyData    adjacencyData_;
   CGnuPlotChordDiagramData chordDiagramData_;
   int                      newHistogramId_ { -1 };
+  Delta                    delta_ { 1, 1, 1, 1 };
+  CGnuPlotRotate           rotate_;
+  COptPoint3D              center_;
+  Point3DArray             originArray_;
 
  private:
   CGnuPlotStyleAdjacencyRenderer *arenderer_;

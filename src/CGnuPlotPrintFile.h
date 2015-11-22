@@ -38,7 +38,7 @@ class CGnuPlotPrintFile {
   void show(std::ostream &os) const;
 
  private:
-  void open();
+  bool open();
 
   void close();
 
@@ -50,6 +50,7 @@ class CGnuPlotPrintFile {
   bool        isBlock_ { false };
   bool        append_  { false };
   FILE*       fp_      { 0 };
+  bool        valid_   { true };
 };
 
 #endif

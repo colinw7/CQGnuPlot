@@ -5,6 +5,7 @@
 #include <CGnuPlotGroup.h>
 #include <CQGnuPlotObject.h>
 #include <CGnuPlotTipData.h>
+#include <CGnuPlotMouseEvent.h>
 
 class CQGnuPlotWindow;
 class QPainter;
@@ -75,11 +76,13 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
 
   void draw() override;
 
-  void mousePress  (const QPoint &qp);
-  void mouseMove   (const QPoint &qp);
-  void mouseRelease(const QPoint &qp);
+  void mousePress  (const CGnuPlotMouseEvent &mouseEvent) override;
+  void mouseMove   (const CGnuPlotMouseEvent &mouseEvent);
+  void mouseRelease(const CGnuPlotMouseEvent &mouseEvent);
 
-  bool mouseTip(const QPoint &qp, CGnuPlotTipData &tip);
+  bool mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip);
+
+  void keyPress(const CGnuPlotKeyEvent &keyEvent) override;
 
   void redraw();
 
@@ -87,7 +90,7 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
 
   void pixelToWindow(const CPoint2D &p, CPoint2D &w);
 
-  bool inside(const QPoint &qp) const;
+  bool inside(const CGnuPlotMouseEvent &mouseEvent) const;
 
  private:
   CQGnuPlotWindow *window_;

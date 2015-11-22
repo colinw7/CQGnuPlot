@@ -85,7 +85,7 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
 
   void drawImage(const CPoint2D &p, const CImagePtr &image) override;
 
-  void setFont(const CFontPtr &font);
+  void setFont(const CFontPtr &font) override;
 
  private:
   CQGnuPlotCanvas *canvas_;

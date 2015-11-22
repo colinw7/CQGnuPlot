@@ -113,14 +113,15 @@ bool
 CQPropertyTree::
 selectObject(QTreeWidgetItem *item, const QObject *obj)
 {
-  QObject *obj1;
-  QString  path;
+  if (CQPropertyItem::isType(item->type())) {
+    CQPropertyItem *item1 = static_cast<CQPropertyItem *>(item);
 
-  getItemData(item, obj1, path);
+    QObject *obj1 = item1->getObject();
 
-  if (obj1 == obj) {
-    item->setSelected(true);
-    return true;
+    if (obj1 == obj) {
+      item->setSelected(true);
+      return true;
+    }
   }
 
   for (int i = 0; i < item->childCount(); ++i) {

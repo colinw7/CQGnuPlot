@@ -13,9 +13,9 @@ CGnuPlotBubbleObject(CGnuPlotPlot *plot) :
 
 bool
 CGnuPlotBubbleObject::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  double r = data.window.distanceTo(c_);
+  double r = mouseEvent.window().distanceTo(c_);
 
   if (r > xr_ || r > yr_)
     return false;

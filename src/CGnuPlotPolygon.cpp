@@ -101,9 +101,9 @@ draw(CGnuPlotRenderer *renderer) const
       }
 
       if (group_->is3D())
-        renderer->fillPolygon(ppoints3D_, fc);
+        renderer->fillClippedPolygon(ppoints3D_, fc);
       else
-        renderer->fillPolygon(ppoints2D_, fc);
+        renderer->fillClippedPolygon(ppoints2D_, fc);
     }
   }
 
@@ -120,9 +120,9 @@ draw(CGnuPlotRenderer *renderer) const
   }
 
   if (group_->is3D())
-    renderer->drawPolygon(ppoints3D_, lw, lc, dash_);
+    renderer->drawClippedPolygon(ppoints3D_, lw, lc, dash_);
   else
-    renderer->drawPolygon(ppoints2D_, lw, lc, dash_);
+    renderer->drawClippedPolygon(ppoints2D_, lw, lc, dash_);
 }
 
 void
@@ -184,9 +184,9 @@ calcPoints(CGnuPlotRenderer *renderer) const
 
 bool
 CGnuPlotPolygon::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  return bbox_.inside(data.window);
+  return bbox_.inside(mouseEvent.window());
 }
 
 CGnuPlotTipData

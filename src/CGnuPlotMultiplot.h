@@ -12,6 +12,28 @@ class CGnuPlotMultiplot {
 
   virtual ~CGnuPlotMultiplot();
 
+  void reset() {
+    enabled_   = false;
+    autoFit_   = true;
+    enhanced_  = false;
+    rows_      = 0;
+    cols_      = 0;
+    rowsFirst_ = true;
+    downward_  = true;
+    xscale_    = 1.0;
+    yscale_    = 1.0;
+    xoffset_   = 0.0;
+    yoffset_   = 0.0;
+    lmargin_   = 0.0;
+    rmargin_   = 0.0;
+    tmargin_   = 0.0;
+    bmargin_   = 0.0;
+    xspacing_  = 0.0;
+    yspacing_  = 0.0;
+    title_     = "";
+    titleFont_ = CFontPtr();
+  }
+
   bool isEnabled() const { return enabled_; }
   void setEnabled(bool b) { enabled_ = b; }
 

@@ -29,16 +29,22 @@ class CGnuPlotStyleImageBase : public CGnuPlotStyleBase {
 class CGnuPlotStyleImage : public CGnuPlotStyleImageBase {
  public:
   CGnuPlotStyleImage();
+
+  int numUsing() const override { return 2; }
 };
 
 class CGnuPlotStyleRGBImage : public CGnuPlotStyleImageBase {
  public:
   CGnuPlotStyleRGBImage();
+
+  int numUsing() const override { return 5; }
 };
 
 class CGnuPlotStyleRGBAlpha : public CGnuPlotStyleImageBase {
  public:
   CGnuPlotStyleRGBAlpha();
+
+  int numUsing() const override { return 6; }
 };
 
 #endif

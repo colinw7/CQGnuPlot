@@ -82,15 +82,15 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
   void initClip() override;
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const override;
+  bool inside(const CGnuPlotMouseEvent &p) const override;
 
-  const CBBox2D &bbox() const;
+  const CBBox2D &bbox() const override;
 
   CGnuPlotTipData tip() const override;
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
-  void print(std::ostream &os) const;
+  void print(std::ostream &os) const override;
 
  protected:
   CGnuPlotLabelData *data_;

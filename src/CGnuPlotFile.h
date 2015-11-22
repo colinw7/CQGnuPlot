@@ -89,6 +89,8 @@ class CGnuPlotFile {
   void setIndices(int indexStart, int indexEnd, int indexStep);
   void resetIndices() { setIndices(0, std::numeric_limits<int>::max(), 1); }
 
+  const Every &every() const { return every_; }
+
   void getEvery(int &everyPointStart, int &everyPointEnd, int &everyPointStep,
                 int &everyBlockStart, int &everyBlockEnd, int &everyBlockStep);
 
@@ -97,6 +99,14 @@ class CGnuPlotFile {
 
   void resetEvery() { setEvery(0, std::numeric_limits<int>::max(), 1,
                                0, std::numeric_limits<int>::max(), 1); }
+
+  int setBlankLines() const { return setBlankLines_; }
+  void setSetBlankLines(int i) { setBlankLines_ = i; }
+
+  int subSetBlankLines() const { return subSetBlankLines_; }
+  void setSubSetBlankLines(int i) { subSetBlankLines_ = i; }
+
+  void resetBlankLines() { setBlankLines_ = 2; subSetBlankLines_ = 1; }
 
   const Lines &lines() const { return lines_; }
   void setLines(const Lines &line);
@@ -222,11 +232,13 @@ class CGnuPlotFile {
   Lines       lines_;
   Sets        sets_;
   SetString   commentStrs_;
-  int         maxNumFields_ { 0 };
-  bool        fortran_      { false };
-  bool        fpeTrap_      { true };
-  bool        binary_       { false };
-  bool        csv_          { false };
+  int         maxNumFields_     { 0 };
+  int         setBlankLines_    { 2 };
+  int         subSetBlankLines_ { 1 };
+  bool        fortran_          { false };
+  bool        fpeTrap_          { true };
+  bool        binary_           { false };
+  bool        csv_              { false };
 };
 
 #endif

@@ -162,7 +162,7 @@ processLines()
     if (line.empty()) {
       ++bline;
 
-      if      (bline == 1) {
+      if      (bline == subSetBlankLines_) {
         lineNum = 0;
 
         ++subSetNum;
@@ -176,7 +176,7 @@ processLines()
           subSet.lines.clear();
         }
       }
-      else if (bline == 2) {
+      else if (bline == setBlankLines_) {
         lineNum   = 0;
         subSetNum = 0;
 

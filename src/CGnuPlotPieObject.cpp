@@ -13,9 +13,9 @@ CGnuPlotPieObject(CGnuPlotPlot *plot) :
 
 bool
 CGnuPlotPieObject::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  const CPoint2D &p = data.window;
+  const CPoint2D &p = mouseEvent.window();
 
   double r = p.distanceTo(center());
 

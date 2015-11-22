@@ -171,6 +171,8 @@ class CGnuPlotDevice {
 
   virtual void timeout() { }
 
+  virtual void waitForMouse(int) { }
+
   virtual void stateChanged(CGnuPlotWindow *, CGnuPlotTypes::ChangeState) { }
 
   virtual void drawInit(CGnuPlotWindow *) { }

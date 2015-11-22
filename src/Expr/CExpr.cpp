@@ -256,7 +256,12 @@ std::string
 CExpr::
 getOperatorName(CExprOpType type) const
 {
-  return operatorMgr_->getOperator(type)->getName();
+  CExprOperatorPtr op = operatorMgr_->getOperator(type);
+
+  if (op.isValid())
+    return op->getName();
+  else
+    return "<?>";
 }
 
 CExprValuePtr

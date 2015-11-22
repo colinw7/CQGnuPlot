@@ -87,17 +87,41 @@ CExprStringValue::
 subscript(const CExprValueArray &values) const
 {
 #ifdef GNUPLOT_EXPR
-  if      (values.size() == 2) {
-    long i1, i2;
+  if      (values.size() == 1) {
+    long i1 = 1;
 
-    if (! values[0]->getIntegerValue(i1)) return CExprValuePtr();
-    if (! values[1]->getIntegerValue(i2)) return CExprValuePtr();
+    if (values[0].isValid()) {
+      if (! values[0]->getIntegerValue(i1))
+        return CExprValuePtr();
 
-    if (i1 < 1               ) i1 = 1;
-    if (i1 > int(str_.size())) i1 = str_.size();
+      if (i1 < 1               ) i1 = 1;
+      if (i1 > int(str_.size())) i1 = str_.size();
+    }
 
-    if (i2 < 0               ) i2 = str_.size();
-    if (i2 > int(str_.size())) i2 = str_.size();
+    std::string str;
+
+    str += str_[i1 - 1];
+
+    return CExprInst->createStringValue(str);
+  }
+  else if (values.size() == 2) {
+    long i1 = 1, i2 = str_.size();
+
+    if (values[0].isValid()) {
+      if (! values[0]->getIntegerValue(i1))
+        return CExprValuePtr();
+
+      if (i1 < 1               ) i1 = 1;
+      if (i1 > int(str_.size())) i1 = str_.size();
+    }
+
+    if (values[1].isValid()) {
+      if (! values[1]->getIntegerValue(i2))
+        return CExprValuePtr();
+
+      if (i2 < 0               ) i2 = str_.size();
+      if (i2 > int(str_.size())) i2 = str_.size();
+    }
 
     std::string str;
 
@@ -106,21 +130,9 @@ subscript(const CExprValueArray &values) const
 
     return CExprInst->createStringValue(str);
   }
-  else if (values.size() == 1) {
-    long i;
-
-    if (! values[0]->getIntegerValue(i))
-      return CExprValuePtr();
-
-    if (i < 1               ) i = 1;
-    if (i > int(str_.size())) i = str_.size();
-
-    char c = str_[i - 1];
-
-    return CExprInst->createStringValue(std::string(&c, 1));
-  }
-  else
+  else {
     return CExprValuePtr();
+  }
 #else
   return CExprValuePtr();
 #endif

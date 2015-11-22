@@ -73,9 +73,9 @@ setClip(bool b)
 
 bool
 CQGnuPlotAnnotation::
-mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
+mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip)
 {
-  if (! obj_->inside(insideData))
+  if (! obj_->inside(mouseEvent))
     return false;
 
   qgroup()->qwindow()->highlightObject(this);

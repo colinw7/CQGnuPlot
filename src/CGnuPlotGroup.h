@@ -305,6 +305,13 @@ class CGnuPlotGroup {
 
   void reset3D();
 
+  //-----
+
+  virtual void mousePress(const CGnuPlotMouseEvent &mouseEvent);
+  virtual void keyPress  (const CGnuPlotKeyEvent   &keyEvent  );
+
+  //-----
+
   virtual void draw();
 
   void drawClearRect(CGnuPlotRenderer *renderer);

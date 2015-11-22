@@ -76,7 +76,7 @@ class CGnuPlotLabelObject : public CGnuPlotPlotObject {
 
   //---
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const override;
+  bool inside(const CGnuPlotMouseEvent &p) const override;
 
   const CBBox2D &bbox() const override { return data_->bbox(); }
 

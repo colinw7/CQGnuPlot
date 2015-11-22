@@ -19,6 +19,7 @@ setData(const CGnuPlotEllipse *ellipse)
   size_  = ellipse->size_;
   units_ = ellipse->units_;
   fs_    = ellipse->fs_;
+  lw_    = ellipse->lw_;
 
   return this;
 }
@@ -52,7 +53,7 @@ draw(CGnuPlotRenderer *renderer) const
       fc = fc.getLightRGBA();
     }
 
-    renderer->fillEllipse(center_, s.width/2, s.height/2, 0, fc);
+    renderer->fillClippedEllipse(center_, s.width/2, s.height/2, 0, fc);
   }
 
   CRGBA  c;
@@ -73,7 +74,7 @@ draw(CGnuPlotRenderer *renderer) const
       lw = 2;
     }
 
-    renderer->drawEllipse(center_, xr_, yr_, angle_, c, lw);
+    renderer->drawClippedEllipse(center_, xr_, yr_, angle_, c, lw);
   }
   else if (getFillStyle().calcColor(group_, c_)) {
     c = c_;
@@ -83,21 +84,21 @@ draw(CGnuPlotRenderer *renderer) const
       lw = 2;
     }
 
-    renderer->drawEllipse(center_, xr_, yr_, angle_, c, lw);
+    renderer->drawClippedEllipse(center_, xr_, yr_, angle_, c, lw);
   }
   else if (highlighted) {
     c  = CRGBA(1,0,0);
     lw = 2;
 
-    renderer->drawEllipse(center_, xr_, yr_, angle_, c, lw);
+    renderer->drawClippedEllipse(center_, xr_, yr_, angle_, c, lw);
   }
 }
 
 bool
 CGnuPlotEllipse::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  return bbox_.inside(data.window);
+  return bbox_.inside(mouseEvent.window());
 }
 
 CGnuPlotTipData

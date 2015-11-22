@@ -72,6 +72,21 @@ fillClippedPolygon(const std::vector<CPoint2D> &points, const CGnuPlotFill &fill
 
 void
 CGnuPlotRenderer::
+fillClippedPolygon(const std::vector<CPoint3D> &points, const CRGBA &c)
+{
+  std::vector<CPoint2D> points1;
+
+  for (const auto &p : points) {
+    CPoint2D p1 = transform(p);
+
+    points1.push_back(p1);
+  }
+
+  fillClippedPolygon(points1, c);
+}
+
+void
+CGnuPlotRenderer::
 fillPolygon(const std::vector<CPoint3D> &points, const CGnuPlotFill &fill)
 {
   std::vector<CPoint2D> points1;
@@ -182,6 +197,22 @@ strokePolygon(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
 
 void
 CGnuPlotRenderer::
+drawClippedPolygon(const std::vector<CPoint3D> &points, double w, const CRGBA &c,
+                   const CLineDash &dash)
+{
+  std::vector<CPoint2D> points1;
+
+  for (const auto &p : points) {
+    CPoint2D p1 = transform(p);
+
+    points1.push_back(p1);
+  }
+
+  drawClippedPolygon(points1, w, c, dash);
+}
+
+void
+CGnuPlotRenderer::
 drawClippedPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c,
                    const CLineDash &dash)
 {
@@ -223,6 +254,67 @@ patternClippedPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPa
   }
   else
     patternPolygon(points, pattern, fg, bg);
+}
+
+void
+CGnuPlotRenderer::
+drawClippedEllipse(const CPoint2D &p, double rx, double ry, double a,
+                   const CRGBA &c, double w, const CLineDash &dash)
+{
+  if (! isPseudo() && clip().isValid()) {
+    if (a == 0) {
+      int    na = 120;
+      double da = 2*M_PI/na;
+
+      std::vector<CPoint2D> points;
+
+      for (int i = 0; i < na; ++i) {
+        double a1 = i*da;
+
+        double x, y;
+
+        CMathGeom2D::EllipsePointAtAngle(p.x, p.y, rx, ry, a1, &x, &y);
+
+        points.push_back(CPoint2D(x, y));
+      }
+
+      drawClippedPolygon(points, w, c, dash);
+    }
+    else
+      drawEllipse(p, rx, ry, a, c, w, dash);
+  }
+  else
+    drawEllipse(p, rx, ry, a, c, w, dash);
+}
+
+void
+CGnuPlotRenderer::
+fillClippedEllipse(const CPoint2D &p, double rx, double ry, double a, const CRGBA &c)
+{
+  if (! isPseudo() && clip().isValid()) {
+    if (a == 0) {
+      int    na = 120;
+      double da = 2*M_PI/na;
+
+      std::vector<CPoint2D> points;
+
+      for (int i = 0; i < na; ++i) {
+        double a1 = i*da;
+
+        double x, y;
+
+        CMathGeom2D::EllipsePointAtAngle(p.x, p.y, rx, ry, a1, &x, &y);
+
+        points.push_back(CPoint2D(x, y));
+      }
+
+      fillClippedPolygon(points, c);
+    }
+    else
+      fillEllipse(p, rx, ry, a, c);
+  }
+  else
+    fillEllipse(p, rx, ry, a, c);
 }
 
 void

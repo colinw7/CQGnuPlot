@@ -3,6 +3,7 @@
 
 #include <CGnuPlotObject.h>
 #include <CQGnuPlot.h>
+#include <CGnuPlotMouseEvent.h>
 
 #include <QColor>
 
@@ -38,7 +39,7 @@ class CQGnuPlotAnnotation : public QObject {
   DrawLayerType getDrawLayer() const;
   void setDrawLayer(const DrawLayerType &layer);
 
-  bool mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip);
+  bool mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip);
 
  private:
   CQGnuPlotGroup          *qgroup_;

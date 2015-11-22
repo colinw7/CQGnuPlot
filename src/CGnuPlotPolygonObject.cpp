@@ -27,9 +27,9 @@ setPoints(const Points &points)
 
 bool
 CGnuPlotPolygonObject::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  const CPoint2D &p = data.window;
+  const CPoint2D &p = mouseEvent.window();
 
   if (! bbox_.inside(p))
     return false;

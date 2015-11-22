@@ -11,7 +11,7 @@ class CExprParseImpl {
   CExprTokenStack parseFile(CFile &file);
   CExprTokenStack parseLine(const std::string &str);
 
-  bool skipExpression(const std::string &str, uint &i);
+  bool skipExpression(const std::string &str, uint &i, const std::string &echars="");
 
  private:
   bool parseLine(CExprTokenStack &stack, const std::string &line);
@@ -58,7 +58,8 @@ class CExprParseImpl {
 
   std::string replaceEscapeCodes(const std::string &str);
 
-  bool isStringOp(CExprOpType op) const;
+  bool isStringOp (CExprOpType op) const;
+  bool isBooleanOp(CExprOpType op) const;
 
  private:
   CExprTokenStack tokenStack_;
@@ -264,7 +265,7 @@ parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
 
 bool
 CExprParseImpl::
-skipExpression(const std::string &line, uint &i)
+skipExpression(const std::string &line, uint &i, const std::string &echars)
 {
   CExprTokenType lastTokenType = CEXPR_TOKEN_UNKNOWN;
   CExprOpType    lastOpType    = CEXPR_OP_UNKNOWN;
@@ -283,8 +284,10 @@ skipExpression(const std::string &line, uint &i)
     lastOpType    = CEXPR_OP_UNKNOWN;
 
     if      (CExprOperator::isOperatorChar(line[i])) {
-      if (line[i] == ',' || line[i] == ')' || line[i] == ':')
+      if (line[i] == ',' || echars.find(line[i]) != std::string::npos)
         break;
+
+      int i2 = i;
 
       if (lastTokenType1 == CEXPR_TOKEN_OPERATOR && lastOpType1 != CEXPR_OP_UNKNOWN) {
         if ((line[i] == '-' || line[i] == '+') && i < len1 - 1 && isdigit(line[i + 1])) {
@@ -295,8 +298,6 @@ skipExpression(const std::string &line, uint &i)
           lastTokenType = CEXPR_TOKEN_REAL;
         }
         else {
-          int i2 = i;
-
           lastOpType = skipOperator(line, &i);
 
           if (lastOpType != CEXPR_OP_UNKNOWN) {
@@ -310,8 +311,6 @@ skipExpression(const std::string &line, uint &i)
         }
       }
       else {
-        int i2 = i;
-
         lastOpType = skipOperator(line, &i);
 
         if (lastOpType != CEXPR_OP_UNKNOWN) {
@@ -337,7 +336,7 @@ skipExpression(const std::string &line, uint &i)
       if (lastTokenType == CEXPR_TOKEN_OPERATOR) {
         if      (lastTokenType == CEXPR_TOKEN_OPERATOR && lastOpType == CEXPR_OP_OPEN_RBRACKET) {
           while (i < len1) {
-            if (! skipExpression(line, i)) {
+            if (! skipExpression(line, i, ",)")) {
               i = i1; return false;
             }
 
@@ -366,10 +365,45 @@ skipExpression(const std::string &line, uint &i)
           continue;
         }
         else if (lastTokenType == CEXPR_TOKEN_OPERATOR && lastOpType == CEXPR_OP_CLOSE_RBRACKET) {
+          i = i2;
+
+          break;
+        }
+        else if (lastTokenType == CEXPR_TOKEN_OPERATOR && lastOpType == CEXPR_OP_OPEN_SBRACKET) {
+          if (! skipExpression(line, i, ":]")) { // also ends on ',' ?
+            i = i1; return false;
+          }
+
+          // check for ':"
+          CStrUtil::skipSpace(line, &i);
+
+          if (i < len1 && line[i] == ':') {
+            ++i;
+
+            if (! skipExpression(line, i, "]")) { // also ends on ',' ?
+              i = i1; return false;
+            }
+          }
+
+          CStrUtil::skipSpace(line, &i);
+
+          if (i >= len1 || line[i] != ']') {
+            i = i1; return false;
+          }
+
+          lastTokenType = CEXPR_TOKEN_VALUE;
+
+          ++i;
+
+          continue;
+        }
+        else if (lastTokenType == CEXPR_TOKEN_OPERATOR && lastOpType == CEXPR_OP_CLOSE_SBRACKET) {
+          i = i2;
+
           break;
         }
         else if (lastTokenType == CEXPR_TOKEN_OPERATOR && lastOpType == CEXPR_OP_QUESTION) {
-          if (! skipExpression(line, i)) {
+          if (! skipExpression(line, i, ":")) {
             i = i1; return false;
           }
 
@@ -390,6 +424,11 @@ skipExpression(const std::string &line, uint &i)
           lastTokenType = CEXPR_TOKEN_VALUE;
 
           continue;
+        }
+        else if (lastTokenType == CEXPR_TOKEN_OPERATOR && lastOpType == CEXPR_OP_COLON) {
+          i = i2;
+
+          break;
         }
       }
     }
@@ -444,7 +483,10 @@ skipExpression(const std::string &line, uint &i)
         i = i1; return false;
       }
 
-      lastTokenType = CEXPR_TOKEN_STRING;
+      if (lastTokenType1 == CEXPR_TOKEN_OPERATOR && isBooleanOp(lastOpType1))
+        lastTokenType = CEXPR_TOKEN_INTEGER;
+      else
+        lastTokenType = CEXPR_TOKEN_STRING;
     }
 #ifdef GNUPLOT_EXPR
     else if (line[i] == '{') {
@@ -491,7 +533,18 @@ bool
 CExprParseImpl::
 isStringOp(CExprOpType op) const
 {
-  return (op == CEXPR_OP_STR_CONCAT || op == CEXPR_OP_STR_EQUAL || op == CEXPR_OP_STR_NOT_EQUAL);
+  return (op == CEXPR_OP_STR_CONCAT || op == CEXPR_OP_STR_EQUAL ||
+          op == CEXPR_OP_STR_NOT_EQUAL);
+}
+
+bool
+CExprParseImpl::
+isBooleanOp(CExprOpType op) const
+{
+  return (op == CEXPR_OP_LESS         || op == CEXPR_OP_LESS_EQUAL ||
+          op == CEXPR_OP_GREATER      || op == CEXPR_OP_GREATER_EQUAL ||
+          op == CEXPR_OP_EQUAL        || op == CEXPR_OP_NOT_EQUAL ||
+          op == CEXPR_OP_APPROX_EQUAL || op == CEXPR_OP_STR_EQUAL);
 }
 
 bool
@@ -587,10 +640,16 @@ readStringChars(const std::string &str, uint *i, bool process, std::string &str1
     uint j = *i;
 
     while (*i < str.size()) {
+#ifndef GNUPLOT_EXPR
       if      (str[*i] == '\\' && *i < str.size() - 1)
         (*i)++;
       else if (str[*i] == '\'')
         break;
+#else
+      // no escapes inside single quote for gnuplot
+      if (str[*i] == '\'')
+        break;
+#endif
 
       (*i)++;
     }

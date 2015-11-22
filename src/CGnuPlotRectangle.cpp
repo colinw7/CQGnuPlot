@@ -34,6 +34,7 @@ setData(const CGnuPlotRectangle *rect)
   center_ = rect->center_;
   size_   = rect->size_;
   fs_     = rect->fs_;
+  lt_     = rect->lt_;
   lw_     = rect->lw_;
   bbox_   = rect->bbox_;
 
@@ -143,7 +144,7 @@ draw(CGnuPlotRenderer *renderer) const
     fc.setAlpha(getFillStyle().density());
 
     if (highlighted) {
-      fc = CRGBA(1,0,0);
+      fc = fc.getLightRGBA();
     }
 
     if (getFillColor().isRGB())
@@ -153,7 +154,7 @@ draw(CGnuPlotRenderer *renderer) const
     CRGBA fc = getFillColor().color();
 
     if (highlighted) {
-      fc = CRGBA(1,0,0);
+      fc = fc.getLightRGBA();
     }
 
     if (getFillColor().isRGB())
@@ -165,9 +166,9 @@ draw(CGnuPlotRenderer *renderer) const
 
 bool
 CGnuPlotRectangle::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  return bbox_.inside(data.window);
+  return bbox_.inside(mouseEvent.window());
 }
 
 void

@@ -107,6 +107,27 @@ getPoint(CPoint2D &p, bool checkNaN) const
 
 bool
 CGnuPlotPoint::
+getPoint(double x, CPoint2D &p, bool checkNaN) const
+{
+  double x1, y1;
+
+  if (! getXY(x1, y1)) {
+    x1 = x;
+
+    if (! getX(y1))
+      return false;
+  }
+
+  if (checkNaN && (IsNaN(x1) || IsNaN(y1)))
+    return false;
+
+  p = CPoint2D(x1, y1);
+
+  return true;
+}
+
+bool
+CGnuPlotPoint::
 getPoint(CPoint3D &p) const
 {
   double x, y, z;

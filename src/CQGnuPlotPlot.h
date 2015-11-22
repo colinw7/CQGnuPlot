@@ -103,11 +103,11 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   CQGnuPlotPlotBoxBarObjects *boxBarObjectsObj() const { return boxBarObjects_; }
   CQGnuPlotPlotPieObjects    *pieObjectsObj   () const { return pieObjects_   ; }
 
-  void draw();
+  void draw() override;
 
-  void mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects);
-  void mouseMove (const CGnuPlotTypes::InsideData &insideData);
-  bool mouseTip  (const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip);
+  void mousePress(const CGnuPlotMouseEvent &mouseEvent, Objects &objects);
+  void mouseMove (const CGnuPlotMouseEvent &mouseEvent);
+  bool mouseTip  (const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip) override;
 
   void moveObjects(int key);
 

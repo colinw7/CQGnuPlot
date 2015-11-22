@@ -35,6 +35,8 @@ class CGnuPlotCamera {
     std::swap(group, group_);
   }
 
+  void reset();
+
   void setMap();
 
   double xmin() const { return xmin_; }

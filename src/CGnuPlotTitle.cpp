@@ -15,6 +15,8 @@ void
 CGnuPlotTitle::
 draw(CGnuPlotRenderer *renderer) const
 {
+  if (! isDisplayed()) return;
+
   if (text().empty()) return;
 
   CFontPtr saveFont = renderer->getFont();

@@ -13,9 +13,9 @@ CGnuPlotPointObject(CGnuPlotPlot *plot) :
 
 bool
 CGnuPlotPointObject::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  double r = data.pixel.distanceTo(pc_);
+  double r = mouseEvent.pixel().distanceTo(pc_);
 
   return (r < 4);
 }

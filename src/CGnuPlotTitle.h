@@ -88,6 +88,12 @@ class CGnuPlotTitle {
   bool isEnhanced() const { return data_.isEnhanced(); }
   void setEnhanced(bool b) { data_.setEnhanced(b); }
 
+  bool isDisplayed() const { return displayed_; }
+  void setDisplayed(bool b) { displayed_ = b; }
+
+  const CBBox2D &bbox() const { return bbox_; }
+  void setBBox(const CBBox2D &v) { bbox_ = v; }
+
   const CPoint2D &lastOffset() const { return lastOffset_; }
   void setLastOffset(const CPoint2D &v) { lastOffset_ = v; }
 
@@ -96,6 +102,7 @@ class CGnuPlotTitle {
  private:
   CGnuPlotGroup*    group_ { 0 };
   CGnuPlotTitleData data_;
+  bool              displayed_ { true };
   mutable CBBox2D   bbox_;
   mutable CPoint2D  lastOffset_;
 };

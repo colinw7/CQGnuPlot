@@ -150,10 +150,10 @@ draw()
 
 void
 CQGnuPlotPlot::
-mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
+mousePress(const CGnuPlotMouseEvent &mouseEvent, Objects &objects)
 {
   for (auto &arrow : arrowObjects()) {
-    if (! arrow->inside(insideData))
+    if (! arrow->inside(mouseEvent))
       continue;
 
     CQGnuPlotArrowObject *qarrow = static_cast<CQGnuPlotArrowObject *>(arrow);
@@ -162,7 +162,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &bar : boxBarObjects()) {
-    if (! bar->inside(insideData))
+    if (! bar->inside(mouseEvent))
       continue;
 
     CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
@@ -171,7 +171,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &box : boxObjects()) {
-    if (! box->inside(insideData))
+    if (! box->inside(mouseEvent))
       continue;
 
     CQGnuPlotBoxObject *qbox = static_cast<CQGnuPlotBoxObject *>(box);
@@ -180,7 +180,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &bubble : bubbleObjects()) {
-    if (! bubble->inside(insideData))
+    if (! bubble->inside(mouseEvent))
       continue;
 
     CQGnuPlotBubbleObject *qbubble = static_cast<CQGnuPlotBubbleObject *>(bubble);
@@ -189,7 +189,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &ellipse : ellipseObjects()) {
-    if (! ellipse->inside(insideData))
+    if (! ellipse->inside(mouseEvent))
       continue;
 
     CQGnuPlotEllipseObject *qellipse = static_cast<CQGnuPlotEllipseObject *>(ellipse);
@@ -198,7 +198,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &bar : errorBarObjects()) {
-    if (! bar->inside(insideData))
+    if (! bar->inside(mouseEvent))
       continue;
 
     CQGnuPlotErrorBarObject *qbar = static_cast<CQGnuPlotErrorBarObject *>(bar);
@@ -207,7 +207,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &bar : financeBarObjects()) {
-    if (! bar->inside(insideData))
+    if (! bar->inside(mouseEvent))
       continue;
 
     CQGnuPlotFinanceBarObject *qbar = static_cast<CQGnuPlotFinanceBarObject *>(bar);
@@ -216,7 +216,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &image : imageObjects()) {
-    if (! image->inside(insideData))
+    if (! image->inside(mouseEvent))
       continue;
 
     CQGnuPlotImageObject *qimage = static_cast<CQGnuPlotImageObject *>(image);
@@ -225,7 +225,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &label : labelObjects()) {
-    if (! label->inside(insideData))
+    if (! label->inside(mouseEvent))
       continue;
 
     CQGnuPlotLabelObject *qlabel = static_cast<CQGnuPlotLabelObject *>(label);
@@ -234,7 +234,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &path : pathObjects()) {
-    if (path->inside(insideData)) {
+    if (path->inside(mouseEvent)) {
       CQGnuPlotPathObject *qpath = static_cast<CQGnuPlotPathObject *>(path);
 
       objects.push_back(qpath);
@@ -242,7 +242,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &pie : pieObjects()) {
-    if (pie->inside(insideData) || pie->keyInside(insideData.window)) {
+    if (pie->inside(mouseEvent) || pie->keyInside(mouseEvent.window())) {
       CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
 
       objects.push_back(qpie);
@@ -250,7 +250,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &point : pointObjects()) {
-    if (! point->inside(insideData))
+    if (! point->inside(mouseEvent))
       continue;
 
     CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
@@ -259,7 +259,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &polygon : polygonObjects()) {
-    if (! polygon->inside(insideData))
+    if (! polygon->inside(mouseEvent))
       continue;
 
     CQGnuPlotPolygonObject *qpolygon = static_cast<CQGnuPlotPolygonObject *>(polygon);
@@ -268,7 +268,7 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
   }
 
   for (auto &rect : rectObjects()) {
-    if (! rect->inside(insideData))
+    if (! rect->inside(mouseEvent))
       continue;
 
     CQGnuPlotRectObject *qrect = static_cast<CQGnuPlotRectObject *>(rect);
@@ -276,23 +276,23 @@ mousePress(const CGnuPlotTypes::InsideData &insideData, Objects &objects)
     objects.push_back(qrect);
   }
 
-  CGnuPlotPlot::mousePress(insideData);
+  CGnuPlotPlot::mousePress(mouseEvent);
 }
 
 void
 CQGnuPlotPlot::
-mouseMove(const CGnuPlotTypes::InsideData &)
+mouseMove(const CGnuPlotMouseEvent &)
 {
 }
 
 bool
 CQGnuPlotPlot::
-mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
+mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip)
 {
   selectedPos_.setInvalid();
 
   for (auto &arrow : arrowObjects()) {
-    if (! arrow->inside(insideData))
+    if (! arrow->inside(mouseEvent))
       continue;
 
     CQGnuPlotArrowObject *qarrow = static_cast<CQGnuPlotArrowObject *>(arrow);
@@ -305,7 +305,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &bar : boxBarObjects()) {
-    if (! bar->inside(insideData))
+    if (! bar->inside(mouseEvent))
       continue;
 
     CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
@@ -318,7 +318,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &box : boxObjects()) {
-    if (! box->inside(insideData))
+    if (! box->inside(mouseEvent))
       continue;
 
     CQGnuPlotBoxObject *qbox = static_cast<CQGnuPlotBoxObject *>(box);
@@ -331,7 +331,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &bubble : bubbleObjects()) {
-    if (! bubble->inside(insideData))
+    if (! bubble->inside(mouseEvent))
       continue;
 
     CQGnuPlotBubbleObject *qbubble = static_cast<CQGnuPlotBubbleObject *>(bubble);
@@ -344,7 +344,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &ellipse : ellipseObjects()) {
-    if (! ellipse->inside(insideData))
+    if (! ellipse->inside(mouseEvent))
       continue;
 
     CQGnuPlotEllipseObject *qellipse = static_cast<CQGnuPlotEllipseObject *>(ellipse);
@@ -357,7 +357,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &bar : errorBarObjects()) {
-    if (! bar->inside(insideData))
+    if (! bar->inside(mouseEvent))
       continue;
 
     CQGnuPlotErrorBarObject *qbar = static_cast<CQGnuPlotErrorBarObject *>(bar);
@@ -370,7 +370,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &bar : financeBarObjects()) {
-    if (! bar->inside(insideData))
+    if (! bar->inside(mouseEvent))
       continue;
 
     CQGnuPlotFinanceBarObject *qbar = static_cast<CQGnuPlotFinanceBarObject *>(bar);
@@ -383,7 +383,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &image : imageObjects()) {
-    if (! image->inside(insideData))
+    if (! image->inside(mouseEvent))
       continue;
 
     CQGnuPlotImageObject *qimage = static_cast<CQGnuPlotImageObject *>(image);
@@ -396,7 +396,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &label : labelObjects()) {
-    if (! label->inside(insideData))
+    if (! label->inside(mouseEvent))
       continue;
 
     CQGnuPlotLabelObject *qlabel = static_cast<CQGnuPlotLabelObject *>(label);
@@ -409,7 +409,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &path : pathObjects()) {
-    if (! path->inside(insideData))
+    if (! path->inside(mouseEvent))
       continue;
 
     CQGnuPlotPathObject *qpath = static_cast<CQGnuPlotPathObject *>(path);
@@ -422,7 +422,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &pie : pieObjects()) {
-    if (! pie->inside(insideData))
+    if (! pie->inside(mouseEvent))
       continue;
 
     CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
@@ -435,7 +435,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &point : pointObjects()) {
-    if (! point->inside(insideData))
+    if (! point->inside(mouseEvent))
       continue;
 
     CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
@@ -448,7 +448,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &polygon : polygonObjects()) {
-    if (! polygon->inside(insideData))
+    if (! polygon->inside(mouseEvent))
       continue;
 
     CQGnuPlotPolygonObject *qpolygon = static_cast<CQGnuPlotPolygonObject *>(polygon);
@@ -461,7 +461,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
   }
 
   for (auto &rect : rectObjects()) {
-    if (! rect->inside(insideData))
+    if (! rect->inside(mouseEvent))
       continue;
 
     CQGnuPlotRectObject *qrect = static_cast<CQGnuPlotRectObject *>(rect);
@@ -473,7 +473,7 @@ mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tip)
     return true;
   }
 
-  return CGnuPlotPlot::mouseTip(insideData, tip);
+  return CGnuPlotPlot::mouseTip(mouseEvent, tip);
 }
 
 void

@@ -61,7 +61,7 @@ draw(CGnuPlotRenderer *renderer) const
     if (arcStart_.isValid() || arcEnd_.isValid())
       renderer->fillPieSlice(center_, 0, xr_, a1, a2, fc);
     else
-      renderer->fillEllipse(center_, xr_, yr_, 0, fc);
+      renderer->fillClippedEllipse(center_, xr_, yr_, 0, fc);
   }
 
   c_ = this->getStrokeColor().getValue(CRGBA(0,0,0));
@@ -79,14 +79,14 @@ draw(CGnuPlotRenderer *renderer) const
   if (arcStart_.isValid() || arcEnd_.isValid())
     renderer->drawPieSlice(center_, 0, xr_, a1, a2, lw, c);
   else
-    renderer->drawEllipse(center_, xr_, yr_, 0, c, lw);
+    renderer->drawClippedEllipse(center_, xr_, yr_, 0, c, lw);
 }
 
 bool
 CGnuPlotCircle::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  const CPoint2D &p = data.window;
+  const CPoint2D &p = mouseEvent.window();
 
   double x = p.x - center_.x;
   double y = p.y - center_.y;

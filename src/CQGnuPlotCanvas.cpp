@@ -98,7 +98,13 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
   bool canTip(const QPoint &pos) const {
     CGnuPlotTipData tip;
 
-    return canvas_->qwindow()->mouseTip(canvas_->mapFromGlobal(pos), tip);
+    QPoint p = canvas_->mapFromGlobal(pos);
+
+    CGnuPlotMouseEvent mouseEvent;
+
+    mouseEvent.setPixel(CPoint2D(p.x(), p.y()));
+
+    return canvas_->qwindow()->mouseTip(mouseEvent, tip);
   }
 
   QWidget *showWidget(const QPoint &pos) {
@@ -122,7 +128,13 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
   bool trackMouse() const { return true; }
 
   bool updateWidget(const QPoint &pos) {
-    if (! canvas_->qwindow()->mouseTip(canvas_->mapFromGlobal(pos), tip_))
+    QPoint p = canvas_->mapFromGlobal(pos);
+
+    CGnuPlotMouseEvent mouseEvent;
+
+    mouseEvent.setPixel(CPoint2D(p.x(), p.y()));
+
+    if (! canvas_->qwindow()->mouseTip(mouseEvent, tip_))
       return false;
 
     label_->resize(label_->sizeHint());
@@ -188,43 +200,63 @@ mousePressEvent(QMouseEvent *e)
 {
   pressed_ = true;
 
-  CQGnuPlotGroup *group = window_->getGroupAt(e->pos());
+  CGnuPlotMouseEvent mouseEvent;
+
+  mouseEvent.setPixel  (CPoint2D(e->pos().x(), e->pos().y()));
+  mouseEvent.setButton (e->button());
+  mouseEvent.setShift  (e->modifiers() & Qt::ShiftModifier  );
+  mouseEvent.setControl(e->modifiers() & Qt::ControlModifier);
+  mouseEvent.setAlt    (e->modifiers() & Qt::AltModifier    );
+
+  CQGnuPlotGroup *group = window_->getGroupAt(mouseEvent.pixel());
 
   window_->setCurrentGroup(group);
 
-  //if (group) group->mousePress(e->pos());
+  //if (group) group->mousePress(mouseEvent);
 
-  window_->mousePress(e->pos());
+  window_->mousePress(mouseEvent);
 }
 
 void
 CQGnuPlotCanvas::
 mouseMoveEvent(QMouseEvent *e)
 {
-  CQGnuPlotGroup *group = window_->getGroupAt(e->pos());
+  CGnuPlotMouseEvent mouseEvent;
+
+  mouseEvent.setPixel(CPoint2D(e->pos().x(), e->pos().y()));
+
+  CQGnuPlotGroup *group = window_->getGroupAt(mouseEvent.pixel());
 
   QString groupName = (group ? QString("Group%1").arg(group->id()) : QString(""));
 
   CPoint2D p;
 
-  if (pixelToWindow(CPoint2D(e->pos().x(), e->pos().y()), p))
+  if (pixelToWindow(mouseEvent.pixel(), p))
     window_->showPos(groupName, e->pos().x(), e->pos().y(), p.x, p.y);
 
-  window_->mouseMove(e->pos(), pressed_);
+  window_->mouseMove(mouseEvent, pressed_);
 }
 
 void
 CQGnuPlotCanvas::
 mouseReleaseEvent(QMouseEvent *e)
 {
-  CQGnuPlotGroup *group = window_->getGroupAt(e->pos());
+  CGnuPlotMouseEvent mouseEvent;
+
+  mouseEvent.setPixel  (CPoint2D(e->pos().x(), e->pos().y()));
+  mouseEvent.setButton (e->button());
+  mouseEvent.setShift  (e->modifiers() & Qt::ShiftModifier  );
+  mouseEvent.setControl(e->modifiers() & Qt::ControlModifier);
+  mouseEvent.setAlt    (e->modifiers() & Qt::AltModifier    );
+
+  CQGnuPlotGroup *group = window_->getGroupAt(mouseEvent.pixel());
 
   window_->setCurrentGroup(group);
 
   if (group)
-    group->mouseRelease(e->pos());
+    group->mouseRelease(mouseEvent);
 
-  window_->mouseRelease(e->pos());
+  window_->mouseRelease(mouseEvent);
 
   pressed_ = false;
 }
@@ -235,20 +267,33 @@ keyPressEvent(QKeyEvent *e)
 {
   QPoint pos = this->mapFromGlobal(QCursor::pos());
 
-  CQGnuPlotGroup *group = window_->getGroupAt(pos);
+  CGnuPlotMouseEvent mouseEvent;
+
+  mouseEvent.setPixel(CPoint2D(pos.x(), pos.y()));
+
+  CQGnuPlotGroup *group = window_->getGroupAt(mouseEvent.pixel());
 
   window_->setCurrentGroup(group);
 
-  window_->keyPress(e->key(), e->modifiers());
+  char c = CEvent::keyTypeChar(CQUtil::convertKey(e->key(), e->modifiers()));
+
+  CGnuPlotKeyEvent keyEvent;
+
+  keyEvent.setPixel  (CPoint2D(pos.x(), pos.y()));
+  keyEvent.setShift  (e->modifiers() & Qt::ShiftModifier  );
+  keyEvent.setControl(e->modifiers() & Qt::ControlModifier);
+  keyEvent.setAlt    (e->modifiers() & Qt::AltModifier    );
+  keyEvent.setKey    (c);
+  keyEvent.setText   (e->text().toStdString());
+
+  window_->keyPress(keyEvent);
 }
 
 bool
 CQGnuPlotCanvas::
 pixelToWindow(const CPoint2D &p, CPoint2D &w)
 {
-  QPoint pos(p.x, p.y);
-
-  CQGnuPlotGroup *group = window_->getGroupAt(pos);
+  CQGnuPlotGroup *group = window_->getGroupAt(p);
   if (! group) return false;
 
   CGnuPlotRenderer *renderer = group->app()->renderer();
@@ -274,10 +319,17 @@ event(QEvent *e)
   if (e->type() == QEvent::ToolTip) {
     QHelpEvent *helpEvent = static_cast<QHelpEvent *>(e);
 
+    QPoint p = helpEvent->pos();
+
+    CGnuPlotMouseEvent mouseEvent;
+
+    mouseEvent.setPixel(CPoint2D(p.x(), p.y()));
+
     CGnuPlotTipData tip;
 
-    if (window_->mouseTip(helpEvent->pos(), tip))
+    if (window_->mouseTip(mouseEvent, tip)) {
       QToolTip::showText(helpEvent->globalPos(), tip.str, this, tip.rect.toRect());
+    }
 
     return true;
   }

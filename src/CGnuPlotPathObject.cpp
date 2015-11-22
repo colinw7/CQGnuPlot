@@ -37,9 +37,9 @@ setPoints3D(const Points3D &points)
 
 bool
 CGnuPlotPathObject::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  if (! bbox_.inside(data.window))
+  if (! bbox_.inside(mouseEvent.window()))
     return false;
 
   CLine2D line;
@@ -51,7 +51,7 @@ inside(const CGnuPlotTypes::InsideData &data) const
     if (p.first) {
       double d;
 
-      CMathGeom2D::PointLineDistance(data.pixel, line, &d);
+      CMathGeom2D::PointLineDistance(mouseEvent.pixel(), line, &d);
 
       if (d < 4)
         return true;

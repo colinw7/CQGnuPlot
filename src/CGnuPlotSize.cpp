@@ -6,6 +6,7 @@ CSize2D
 CGnuPlotSize::
 getSize(CGnuPlotRenderer *renderer) const
 {
+#if 0
   double x = s_.width;
   double y = s_.height;
 
@@ -52,6 +53,13 @@ getSize(CGnuPlotRenderer *renderer) const
 
     y = renderer->pixelHeightToWindowHeight(font->getCharHeight()*s_.height);
   }
+#endif
+
+  CGnuPlotPosition p1(CPoint3D(s_.width, s_.height, 0), systemX_);
+  CGnuPlotPosition p2(CPoint3D(s_.width, s_.height, 0), systemY_);
+
+  double x = p1.getDistance2D(renderer).x;
+  double y = p2.getDistance2D(renderer).y;
 
   return CSize2D(x, y);
 }

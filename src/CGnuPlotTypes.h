@@ -6,6 +6,7 @@
 #include <COptVal.h>
 #include <CRGBA.h>
 #include <CPoint2D.h>
+#include <CPoint3D.h>
 #include <CBBox2D.h>
 #include <CBBox3D.h>
 #include <CLineDash.h>
@@ -13,6 +14,7 @@
 typedef std::vector<std::string> StringArray;
 typedef COptValT<CRGBA>          COptRGBA;
 typedef COptValT<CPoint2D>       COptPoint2D;
+typedef COptValT<CPoint3D>       COptPoint3D;
 typedef COptValT<CBBox2D>        COptBBox2D;
 typedef COptValT<CLineDash>      COptLineDash;
 
@@ -233,40 +235,27 @@ namespace CGnuPlotTypes {
   };
 
   enum class PlotVar {
-    ARRAY,
     ARROWSTYLE,
     AXES,
     BINARY,
-    CENTER,
     COLUMNHEADERS,
     DASHTYPE,
-    DX,
-    DY,
-    DZ,
-    ENDIAN,
     EVERY,
-    FILETYPE,
     FILLSTYLE,
-    FLIP,
     FLIPX,
     FLIPY,
     FLIPZ,
-    FORMAT,
     HEADS,
     INDEX,
     LINETYPE,
     LINEWIDTH,
     MATRIX,
     NOTITLE,
-    ORIGIN,
     PIXELS,
     POINTINTERVAL,
     POINTSIZE,
-    RECORD,
-    ROTATION,
     ROWHEADERS,
     SCAN,
-    SKIP,
     SMOOTH,
     TITLE,
     TRANSPOSE,
@@ -492,15 +481,19 @@ namespace CGnuPlotTypes {
 
   typedef std::pair<AxisType, int> AxisTypeId;
 
-  //---
+  enum class PauseMask {
+    KEY     = (1<<0),
+    BUTTON1 = (1<<1),
+    BUTTON2 = (1<<2),
+    BUTTON3 = (1<<3),
+    CLOSE   = (1<<4)
+  };
 
-  struct InsideData {
-    CPoint2D window;
-    CPoint2D pixel;
-
-    InsideData(const CPoint2D &w, const CPoint2D &p) :
-     window(w), pixel(p) {
-    }
+  enum class Endian {
+    LITTLE,
+    BIG,
+    DEFAULT,
+    SWAP
   };
 }
 

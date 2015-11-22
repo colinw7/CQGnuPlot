@@ -152,20 +152,34 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //bool isCalcColor = lineStyle.color().isCalc();
 
+  const CGnuPlotPlot::Point3DArray &originArray = plot->originArray();
+
   //---
 
   double                    pointSize = plot->pointSize();
   CGnuPlotTypes::SymbolType pointType = plot->pointType();
 
+  int k = 0;
+
   for (const auto &ip : plot->getPoints3D()) {
+    COptPoint3D op;
+
+    if (k < int(originArray.size()))
+      op = originArray[k];
+
     for (const auto &point : ip.second) {
       CPoint3D p;
       int      ind;
 
       (void) plot->mapPoint3D(point, p, ind);
 
+      if (op.isValid())
+        p += op.getValue();
+
       renderer->drawSymbol(p, pointType, pointSize, stroke.color(), stroke.width(), true);
     }
+
+    ++k;
   }
 }
 

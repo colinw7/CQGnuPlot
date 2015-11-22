@@ -786,8 +786,8 @@ addPlotRect(CGnuPlotPlot *plot, const CBBox2D &rect)
 
 bool
 CGnuPlotKey::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  return bbox_.inside(data.window);
+  return bbox_.inside(mouseEvent.window());
 }
 

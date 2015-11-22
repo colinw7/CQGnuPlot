@@ -18,6 +18,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CGnuPlotStroke stroke(plot);
 
+  double                            idx         = plot->delta().dx;
+  double                            idt         = plot->delta().dt;
+  const CGnuPlotRotate             &rotate      = plot->rotate();
+  const CGnuPlotPlot::Point3DArray &originArray = plot->originArray();
+
   //------
 
   uint np = plot->numPoints2D();
@@ -36,13 +41,27 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     for ( ; i < np; ++i) {
       const CGnuPlotPoint &point1 = plot->getPoint2D(i);
 
-      if (! point1.getPoint(p1))
-        continue;
+      if (plot->isPolar()) {
+        if (! point1.getPoint(i*idt, p1))
+          continue;
+      }
+      else {
+        if (! point1.getPoint(i*idx, p1))
+          continue;
+      }
 
       if (renderer->isPseudo() && ! renderer->isInside(p1))
         continue;
 
       break;
+    }
+
+    COptPoint2D op;
+
+    if (pointsArray.size() < originArray.size()) {
+      CPoint3D o = originArray[pointsArray.size()];
+
+      op = CPoint2D(o.x, o.y);
     }
 
     ++i;
@@ -53,6 +72,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       bool inside;
 
       p1 = group->convertPolarAxisPoint(p1, inside);
+    }
+    else {
+      p1 = rotate.apply(p1);
+
+      if (op.isValid())
+        p1 += op.getValue();
     }
 
     p1 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p1);
@@ -65,8 +90,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       const CGnuPlotPoint &point2 = plot->getPoint2D(i);
 
-      if (! point2.getPoint(p2) || point2.isDiscontinuity())
-        break;
+      if (plot->isPolar()) {
+        if (! point2.getPoint(i*idt, p2) || point2.isDiscontinuity())
+          break;
+      }
+      else {
+        if (! point2.getPoint(i*idx, p2) || point2.isDiscontinuity())
+          break;
+      }
 
       if (renderer->isPseudo() && ! renderer->isInside(p1))
         break;
@@ -75,6 +106,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         bool inside;
 
         p2 = group->convertPolarAxisPoint(p2, inside);
+      }
+      else {
+        p2 = rotate.apply(p2);
+
+        if (op.isValid())
+          p2 += op.getValue();
       }
 
       p2 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);

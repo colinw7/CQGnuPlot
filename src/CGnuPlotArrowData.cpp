@@ -289,11 +289,11 @@ getLine(CGnuPlotRenderer *renderer, CPoint2D &from, CPoint2D &to) const
 
 bool
 CGnuPlotArrowData::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
   double d;
 
-  CMathGeom2D::PointLineDistance(data.pixel, drawPixelLine(), &d);
+  CMathGeom2D::PointLineDistance(mouseEvent.pixel(), drawPixelLine(), &d);
 
   return (d < 4);
 }

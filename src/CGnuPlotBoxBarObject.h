@@ -23,7 +23,7 @@ class CGnuPlotBoxBarObject : public CGnuPlotPlotObject {
   CGnuPlotBoxBarObject(const CGnuPlotBoxBarObject &) = delete;
   const CGnuPlotBoxBarObject &operator=(const CGnuPlotBoxBarObject &) = delete;
 
-  const CBBox2D &bbox() const { return bbox_; }
+  const CBBox2D &bbox() const override { return bbox_; }
   void setBBox(const CBBox2D &b) override { bbox_ = b; }
 
   double xvalue() const { return x_; }

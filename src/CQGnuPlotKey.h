@@ -47,7 +47,7 @@ class CQGnuPlotKey : public CQGnuPlotObject, public CGnuPlotKey {
 
   void draw(CGnuPlotRenderer *renderer) override;
 
-  bool mousePress(const QPoint &qp);
+  bool mousePress(const CGnuPlotMouseEvent &mouseEvent);
 };
 
 #endif

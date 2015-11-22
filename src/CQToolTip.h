@@ -53,12 +53,12 @@ class CQToolTip : public QWidget {
   Q_OBJECT
 
  public:
+  static CQToolTipIFace *getToolTip(QWidget *w);
+
   static void setToolTip(QWidget *parent, QWidget *tooltip);
   static void setToolTip(QWidget *parent, CQToolTipIFace *tooltip);
 
   static void unsetToolTip(QWidget *parent);
-
-  CQToolTipIFace *getToolTip(QWidget *w) const;
 
  protected:
   static CQToolTip *getInstance();

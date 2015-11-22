@@ -30,6 +30,30 @@ init()
 
 void
 CGnuPlotCamera::
+reset()
+{
+  enabled_    = false;
+  xmin_       = -1;
+  ymin_       = -1;
+  xmax_       = 1;
+  ymax_       = 1;
+  near_       = 0.1;
+  far_        = 100;
+  rotateX_    = 60.0;
+  rotateY_    = 0.0;
+  rotateZ_    = 30.0;
+  scaleX_     = 1.0;
+  scaleY_     = 1.0;
+  scaleZ_     = 1.0;
+  axesScale_  = AxesScale::NONE;
+  coordFrame_ = CCoordFrame3D();
+  direction_  = CVector3D(0, 0, 1);
+  fov_        = 90;
+  projMatrix_ = CMatrix3DH();
+}
+
+void
+CGnuPlotCamera::
 setMap()
 {
   enabled_ = false;

@@ -11,38 +11,50 @@ typedef unsigned char uchar;
 class CUnixFile {
  public:
   explicit CUnixFile(const char *filename="") :
-   filename_(filename), fp_(0) {
+   filename_(filename), fp_(0), owner_(true) {
   }
 
   explicit CUnixFile(const std::string &filename) :
-   filename_(filename), fp_(0) {
+   filename_(filename), fp_(0), owner_(true) {
+  }
+
+  explicit CUnixFile(FILE *fp) :
+   filename_("-"), fp_(fp), owner_(false) {
   }
 
  ~CUnixFile() {
     close();
   }
 
+  const std::string &filename() const { return filename_; }
+
+  FILE *fp() const { return fp_; }
+
   bool isValid() const { return (fp_ != 0); }
 
   bool open() {
-    close();
+    if (owner_) {
+      close();
 
-    fp_ = fopen(filename_.c_str(), "r");
+      fp_ = fopen(filename_.c_str(), "r");
 
-    if (! fp_) {
-      std::cerr << "Failed to open '" << filename_ << "'" << std::endl;
-      return false;
+      if (! fp_) {
+        std::cerr << "Failed to open '" << filename_ << "'" << std::endl;
+        return false;
+      }
     }
 
     return true;
   }
 
   void close() {
-    if (! fp_) return;
+    if (owner_) {
+      if (! fp_) return;
 
-    fclose(fp_);
+      fclose(fp_);
 
-    fp_ = 0;
+      fp_ = 0;
+    }
   }
 
   bool readLine(std::string &line) {
@@ -102,7 +114,8 @@ class CUnixFile {
 
  private:
   std::string  filename_;
-  FILE        *fp_;
+  FILE        *fp_    { 0 };
+  bool         owner_ { true };
 };
 
 #endif

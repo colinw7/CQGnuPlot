@@ -70,24 +70,50 @@ addFormat(bool skip, int n, Format fmt)
   formats_.push_back(FmtData(skip, n, fmt));
 }
 
+int
+CGnuPlotBinaryFormat::
+numFormatValues() const
+{
+  int n = 0;
+
+  for (const auto &fmt : formats_) {
+    if (fmt.skip)
+      continue;
+
+    n += fmt.n;
+  }
+
+  return n;
+}
+
 bool
 CGnuPlotBinaryFormat::
-readValues(CUnixFile &file, std::vector<double> &values)
+readValues(CUnixFile &file, std::vector<double> &values, int n)
 {
   if (formats_.empty()) {
     double r;
 
-    while (readValue(file, Format::FLOAT, r))
+    while (int(values.size()) < n && readValue(file, Format::FLOAT, r))
       values.push_back(r);
   }
   else {
+    int  j     = 0;
     bool valid = true;
 
     while (valid) {
+      if (j >= n)
+        break;
+
       for (const auto &fmt : formats_) {
+        if (j >= n)
+          break;
+
         double r;
 
         for (auto i = 0; i < fmt.n; ++i) {
+          if (j >= n)
+            break;
+
           if (! readValue(file, fmt.fmt, r)) {
             valid = false;
             break;
@@ -95,6 +121,8 @@ readValues(CUnixFile &file, std::vector<double> &values)
 
           if (! fmt.skip)
             values.push_back(r);
+
+          ++j;
         }
 
         if (! valid)
@@ -195,6 +223,18 @@ readValue(CUnixFile &file, Format fmt, double &r)
   }
 
   return true;
+}
+
+CGnuPlotBinaryFormat::FmtData
+CGnuPlotBinaryFormat::
+indexFormat(int i) const
+{
+  if (i < 0 || formats_.empty())
+    return FmtData();
+
+  int i1 = (i % formats_.size());
+
+  return formats_[i1];
 }
 
 CGnuPlotBinaryFormat::Format

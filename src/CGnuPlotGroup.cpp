@@ -987,6 +987,75 @@ showYAxis(bool show)
 
 void
 CGnuPlotGroup::
+mousePress(const CGnuPlotMouseEvent &mouseEvent)
+{
+  app()->mousePress(mouseEvent);
+
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setRange(getMappedDisplayRange(1, 1));
+
+  CPoint2D p1;
+
+  renderer->pixelToWindow(mouseEvent.pixel(), p1);
+
+  renderer->setRange(getMappedDisplayRange(2, 2));
+
+  CPoint2D p2;
+
+  renderer->pixelToWindow(mouseEvent.pixel(), p2);
+
+  CExprInst->createRealVariable("MOUSE_X" , p1.x);
+  CExprInst->createRealVariable("MOUSE_Y" , p1.y);
+  CExprInst->createRealVariable("MOUSE_X2", p2.x);
+  CExprInst->createRealVariable("MOUSE_Y2", p2.y);
+
+  CExprInst->createIntegerVariable("MOUSE_BUTTON", mouseEvent.button());
+
+  CExprInst->createIntegerVariable("MOUSE_SHIFT", mouseEvent.isShift());
+  CExprInst->createIntegerVariable("MOUSE_ALT"  , mouseEvent.isAlt());
+  CExprInst->createIntegerVariable("MOUSE_CTRL" , mouseEvent.isControl());
+}
+
+void
+CGnuPlotGroup::
+keyPress(const CGnuPlotKeyEvent &keyEvent)
+{
+  app()->keyPress(keyEvent);
+
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setRange(getMappedDisplayRange(1, 1));
+
+  CPoint2D p1;
+
+  renderer->pixelToWindow(keyEvent.pixel(), p1);
+
+  renderer->setRange(getMappedDisplayRange(2, 2));
+
+  CPoint2D p2;
+
+  renderer->pixelToWindow(keyEvent.pixel(), p2);
+
+  CExprInst->createRealVariable("MOUSE_X" , p1.x);
+  CExprInst->createRealVariable("MOUSE_Y" , p1.y);
+  CExprInst->createRealVariable("MOUSE_X2", p2.x);
+  CExprInst->createRealVariable("MOUSE_Y2", p2.y);
+
+  CExprInst->createIntegerVariable("MOUSE_SHIFT", keyEvent.isShift());
+  CExprInst->createIntegerVariable("MOUSE_ALT"  , keyEvent.isAlt());
+  CExprInst->createIntegerVariable("MOUSE_CTRL" , keyEvent.isControl());
+
+  CExprInst->createIntegerVariable("MOUSE_KEY", keyEvent.key());
+
+  if (keyEvent.text() != "")
+    CExprInst->createStringVariable("MOUSE_CHAR", keyEvent.text().substr(0, 1));
+  else
+    CExprInst->createStringVariable("MOUSE_CHAR", "");
+}
+
+void
+CGnuPlotGroup::
 draw()
 {
   bbox_ = getMappedDisplayRange(1, 1);
@@ -1173,17 +1242,11 @@ getPlotAxis(AxisType type, int ind, bool create) const
         axis->setDrawTickLabel    (false);
         axis->setDrawMinorTickMark(false);
       }
-      else if (hasPlotStyle(PlotStyle::IMAGE)) {
-        axis->setMajorIncrement(1);
-      }
     }
     else if (type == AxisType::Y) {
       if      (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
         if (histogramData_.isHorizontal())
           axis->setMajorIncrement(1);
-      }
-      else if (hasPlotStyle(PlotStyle::IMAGE)) {
-        axis->setMajorIncrement(1);
       }
     }
     else if (type == AxisType::Z) {

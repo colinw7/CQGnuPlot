@@ -100,9 +100,9 @@ draw()
 
 void
 CQGnuPlotGroup::
-mousePress(const QPoint &qp)
+mousePress(const CGnuPlotMouseEvent &mouseEvent)
 {
-  if (! inside(qp)) return;
+  if (! inside(mouseEvent)) return;
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
@@ -115,10 +115,9 @@ mousePress(const QPoint &qp)
   for (auto &plot : plots()) {
     plot->initRenderer(renderer);
 
-    CPoint2D pixel(qp.x(), qp.y());
     CPoint2D window;
 
-    renderer->pixelToWindow(pixel, window);
+    renderer->pixelToWindow(mouseEvent.pixel(), window);
 
     double z = 0;
 
@@ -126,21 +125,24 @@ mousePress(const QPoint &qp)
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-    CGnuPlotTypes::InsideData insideData(window, pixel);
+    CGnuPlotMouseEvent mouseEvent2;
 
-    qplot->mousePress(insideData, objects);
+    mouseEvent2.setWindow(window);
+
+    qplot->mousePress(mouseEvent2, objects);
   }
 
   renderer->setRange(getMappedDisplayRange(1, 1));
 
   //---
 
-  CPoint2D pixel(qp.x(), qp.y());
+  CGnuPlotMouseEvent mouseEvent1 = mouseEvent;
+
   CPoint2D window;
 
-  renderer->pixelToWindow(pixel, window);
+  renderer->pixelToWindow(mouseEvent.pixel(), window);
 
-  CGnuPlotTypes::InsideData insideData(window, pixel);
+  mouseEvent1.setWindow(window);
 
   //---
 
@@ -153,7 +155,7 @@ mousePress(const QPoint &qp)
 
       unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
 
-      if (annotation->inside(insideData)) {
+      if (annotation->inside(mouseEvent1)) {
         CQGnuPlotLabel *qann = static_cast<CQGnuPlotLabel *>(annotation.get());
 
         objects.push_back(qann);
@@ -163,29 +165,31 @@ mousePress(const QPoint &qp)
 
   if (! objects.empty()) {
     qwindow()->selectObjects(objects);
-    return;
   }
+  else {
+    CQGnuPlotKey *qkey = dynamic_cast<CQGnuPlotKey *>(key().get());
 
-  CQGnuPlotKey *qkey = dynamic_cast<CQGnuPlotKey *>(key().get());
-
-  if (qkey) {
-    if (qkey->inside(insideData)) {
-      if (! qkey->mousePress(qp))
-        objects.push_back(qkey);
+    if (qkey) {
+      if (qkey->inside(mouseEvent1)) {
+        if (! qkey->mousePress(mouseEvent1))
+          objects.push_back(qkey);
+      }
     }
+
+    if (! objects.empty())
+      qwindow()->selectObjects(objects);
   }
 
-  if (! objects.empty()) {
-    qwindow()->selectObjects(objects);
-    return;
-  }
+  //---
+
+  CGnuPlotGroup::mousePress(mouseEvent1);
 }
 
 void
 CQGnuPlotGroup::
-mouseMove(const QPoint &qp)
+mouseMove(const CGnuPlotMouseEvent &mouseEvent)
 {
-  if (! inside(qp)) return;
+  if (! inside(mouseEvent)) return;
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
@@ -194,10 +198,9 @@ mouseMove(const QPoint &qp)
   for (auto &plot : plots()) {
     plot->initRenderer(renderer);
 
-    CPoint2D pixel(qp.x(), qp.y());
     CPoint2D window;
 
-    renderer->pixelToWindow(pixel, window);
+    renderer->pixelToWindow(mouseEvent.pixel(), window);
 
     double z = 0;
 
@@ -205,26 +208,26 @@ mouseMove(const QPoint &qp)
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-    CGnuPlotTypes::InsideData insideData(window, pixel);
+    CGnuPlotMouseEvent mouseEvent1 = mouseEvent;
 
-    qplot->mouseMove(insideData);
+    mouseEvent1.setWindow(window);
+
+    qplot->mouseMove(mouseEvent1);
   }
 }
 
 void
 CQGnuPlotGroup::
-mouseRelease(const QPoint &)
+mouseRelease(const CGnuPlotMouseEvent &)
 {
-  //if (! inside(qp)) return;
+  //if (! inside(mouseEvent)) return;
 }
 
 bool
 CQGnuPlotGroup::
-mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
+mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip)
 {
-  if (! inside(qp)) return false;
-
-  CPoint2D pixel(qp.x(), qp.y());
+  if (! inside(mouseEvent)) return false;
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
@@ -235,7 +238,7 @@ mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
 
     CPoint2D window;
 
-    renderer->pixelToWindow(pixel, window);
+    renderer->pixelToWindow(mouseEvent.pixel(), window);
 
     double z = 0;
 
@@ -243,9 +246,11 @@ mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
 
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
-    CGnuPlotTypes::InsideData insideData(window, pixel);
+    CGnuPlotMouseEvent mouseEvent1 = mouseEvent;
 
-    if (qplot->mouseTip(insideData, tip))
+    mouseEvent1.setWindow(window);
+
+    if (qplot->mouseTip(mouseEvent1, tip))
       return true;
   }
 
@@ -255,7 +260,7 @@ mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
 
   CPoint2D window;
 
-  renderer->pixelToWindow(pixel, window);
+  renderer->pixelToWindow(mouseEvent.pixel(), window);
 
   for (auto &vann : annotations()) {
     for (auto &annotation : vann.second) {
@@ -268,9 +273,11 @@ mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
 
       CQGnuPlotAnnotation *qann = dynamic_cast<CQGnuPlotAnnotation *>(annotation.get());
 
-      CGnuPlotTypes::InsideData insideData(window, pixel);
+      CGnuPlotMouseEvent mouseEvent1 = mouseEvent;
 
-      if (qann->mouseTip(insideData, tip))
+      mouseEvent1.setWindow(window);
+
+      if (qann->mouseTip(mouseEvent1, tip))
         return true;
     }
   }
@@ -278,6 +285,25 @@ mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
   //---
 
   return false;
+}
+
+void
+CQGnuPlotGroup::
+keyPress(const CGnuPlotKeyEvent &keyEvent)
+{
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setRegion(region());
+
+  CPoint2D window;
+
+  renderer->pixelToWindow(keyEvent.pixel(), window);
+
+  CGnuPlotKeyEvent keyEvent1 = keyEvent;
+
+  keyEvent1.setWindow(window);
+
+  CGnuPlotGroup::keyPress(keyEvent1);
 }
 
 void
@@ -312,10 +338,10 @@ pixelToWindow(const CPoint2D &p, CPoint2D &w)
 
 bool
 CQGnuPlotGroup::
-inside(const QPoint &qp) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  double xr = CGnuPlotUtil::map(qp.x(), 0, qwindow()->pixelWidth () - 1, 0, 1);
-  double yr = CGnuPlotUtil::map(qp.y(), 0, qwindow()->pixelHeight() - 1, 1, 0);
+  double xr = CGnuPlotUtil::map(mouseEvent.pixel().x, 0, qwindow()->pixelWidth () - 1, 0, 1);
+  double yr = CGnuPlotUtil::map(mouseEvent.pixel().y, 0, qwindow()->pixelHeight() - 1, 1, 0);
 
   return region().inside(CPoint2D(xr, yr));
 }

@@ -94,6 +94,7 @@ CGnuPlotFile.cpp \
 CGnuPlotFill.cpp \
 CGnuPlotFillStyle.cpp \
 CGnuPlotFinanceBarObject.cpp \
+CGnuPlotFunctions.cpp \
 CGnuPlotGroup.cpp \
 CGnuPlotImageObject.cpp \
 CGnuPlotKey.cpp \
@@ -303,6 +304,7 @@ CGnuPlotFile.h \
 CGnuPlotFill.h \
 CGnuPlotFillStyle.h \
 CGnuPlotFinanceBarObject.h \
+CGnuPlotFunctions.h \
 CGnuPlotGroup.h \
 CGnuPlotImageObject.h \
 CGnuPlotKey.h \

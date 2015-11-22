@@ -137,6 +137,28 @@ init()
   setTableFile(plot->tableFile());
 
   setNewHistogramId(plot->newHistogramId());
+
+  //---
+
+  const CGnuPlotImageStyle &imageStyle = plot->imageStyle();
+
+  double idx = imageStyle.dx().getValue(1);
+  double idy = imageStyle.dy().getValue(1);
+  double idz = 1;
+  double idt = imageStyle.dt().getValue(1);
+
+  setDelta(Delta(idx, idy, idz, idt));
+
+  if (imageStyle.origin().isValid() || imageStyle.angle().isValid()) {
+    CPoint3D o = imageStyle.origin().getValue(CPoint3D(0,0,0));
+
+    setRotate(CGnuPlotRotate(CPoint2D(o.x, o.y), imageStyle.angle().getValue(0)));
+  }
+
+  if (imageStyle.center().isValid())
+    setCenter(imageStyle.center());
+
+  setOriginArray(imageStyle.originArray());
 }
 
 void
@@ -290,7 +312,22 @@ addPoint3D(int iy, double x, double y, CExprValuePtr z)
 
 int
 CGnuPlotPlot::
-addPoint3D(int iy, const Values &values, bool discontinuity, bool bad)
+addPoint3D(int iy, const CPoint3D &p)
+{
+  assert(is3D());
+
+  std::vector<CExprValuePtr> values;
+
+  values.push_back(CExprInst->createRealValue(p.x));
+  values.push_back(CExprInst->createRealValue(p.y));
+  values.push_back(CExprInst->createRealValue(p.z));
+
+  return addPoint3D(iy, values, false);
+}
+
+int
+CGnuPlotPlot::
+addPoint3D(int iy, const Values &values, bool discontinuity, bool bad, const Params &)
 {
   assert(is3D());
 
@@ -873,6 +910,8 @@ initSurface() const
 
     CGnuPlotColorBoxP cb = group()->colorBox();
 
+    const COptPoint3D &center = this->center();
+
     //---
 
     std::pair<int,int> np = numPoints3D();
@@ -927,6 +966,13 @@ initSurface() const
         ppoint2.getPoint(p2);
         ppoint3.getPoint(p3);
         ppoint4.getPoint(p4);
+
+        if (center.isValid()) {
+          p1 += center.getValue();
+          p2 += center.getValue();
+          p3 += center.getValue();
+          p4 += center.getValue();
+        }
 
         p1 = group_->mapLogPoint(xind(), yind(), 1, p1);
         p2 = group_->mapLogPoint(xind(), yind(), 1, p2);
@@ -1474,7 +1520,7 @@ calcXRange(double *xmin, double *xmax) const
   if (! xmin_.isValid() || ! xmax_.isValid()) {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
-    if (is3D()) {
+    if (is3D() && ! isImageStyle()) {
       for (const auto &ip : getPoints3D()) {
         for (const auto &p : ip.second) {
           CPoint3D p1;
@@ -1534,7 +1580,7 @@ calcYRange(double *ymin, double *ymax) const
   if (! ymin_.isValid() || ! ymax_.isValid()) {
     CGnuPlotPlot *th = const_cast<CGnuPlotPlot *>(this);
 
-    if (is3D()) {
+    if (is3D() && ! isImageStyle()) {
       for (const auto &ip : getPoints3D()) {
         for (const auto &p : ip.second) {
           CPoint3D p1;
@@ -1629,7 +1675,7 @@ calcBoundedYRange(double *ymin, double *ymax) const
 
     CBBox2D bbox;
 
-    if (is3D()) {
+    if (is3D() && ! isImageStyle()) {
       for (const auto &ip : getPoints3D()) {
         for (const auto &p : ip.second) {
           CPoint3D p1;
@@ -1706,22 +1752,22 @@ renderBBox(CGnuPlotBBoxRenderer &brenderer) const
 
 bool
 CGnuPlotPlot::
-mouseTip(const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tipData)
+mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tipData)
 {
   CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
   if (! style) return false;
 
-  return style->mouseTip(this, insideData, tipData);
+  return style->mouseTip(this, mouseEvent, tipData);
 }
 
 void
 CGnuPlotPlot::
-mousePress(const CGnuPlotTypes::InsideData &insideData)
+mousePress(const CGnuPlotMouseEvent &mouseEvent)
 {
   CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
   if (! style) return;
 
-  style->mousePress(this, insideData);
+  style->mousePress(this, mouseEvent);
 }
 
 void
@@ -1761,7 +1807,7 @@ getPointsRange(CBBox2D &bbox) const
 {
   COptReal xmin, ymin, xmax, ymax;
 
-  if (is3D()) {
+  if (is3D() && ! isImageStyle()) {
     for (const auto &ip : getPoints3D()) {
       for (const auto &p : ip.second) {
         CPoint3D p1;

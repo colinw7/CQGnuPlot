@@ -6,6 +6,7 @@
 #include <CGnuPlotPosition.h>
 #include <CGnuPlotColorSpec.h>
 #include <CGnuPlotTipData.h>
+#include <CGnuPlotMouseEvent.h>
 #include <CGnuPlotFill.h>
 #include <CGnuPlotStroke.h>
 
@@ -87,7 +88,7 @@ class CGnuPlotLabelData {
 
   void draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const;
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const;
+  bool inside(const CGnuPlotMouseEvent &p) const;
 
   CGnuPlotTipData tip() const;
 

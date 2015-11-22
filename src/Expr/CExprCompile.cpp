@@ -785,7 +785,8 @@ compilePowerExpression(CExprITokenPtr itoken)
 /*
  * <postfix_expression>:= <primary_expression>
 #ifdef GNUPLOT_EXPR
- * <postfix_expression>:= <identifier> [ <expression> ]
+ * <postfix_expression>:= <primary_expression> [ <expression> ]
+ * <postfix_expression>:= <primary_expression> [ <expression> : <expression> ]
 #endif
  * <postfix_expression>:= <identifier> ( <argument_expression_list>(opt) )
  * <postfix_expression>:= <postfix_expression> ++
@@ -796,17 +797,56 @@ void
 CExprCompileImpl::
 compilePostfixExpression(CExprITokenPtr itoken)
 {
+  CExprITokenPtr itoken0 = itoken->getChild(0);
+
   uint num_children = itoken->getNumChildren();
 
   if (num_children == 1) {
-    compilePrimaryExpression(itoken->getChild(0));
-
+    compilePrimaryExpression(itoken0);
     return;
   }
 
   CExprITokenPtr itoken1 = itoken->getChild(1);
 
   CExprOpType op = itoken1->getOperator();
+
+  if      (num_children == 4 && itoken0->getIType() == CEXPR_PRIMARY_EXPRESSION &&
+           op == CEXPR_OP_OPEN_SBRACKET) {
+    compilePrimaryExpression(itoken0);
+
+    stackCToken(CExprInst->getOperator(CEXPR_OP_OPEN_SBRACKET));
+
+    if (itoken->getChild(2)->getIType() != CEXPR_DUMMY_EXPRESSION)
+      compileExpression(itoken->getChild(2));
+    else
+      stackCToken(CExprInst->getOperator(CEXPR_OP_UNKNOWN));
+
+    stackCToken(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
+
+    return;
+  }
+  else if (num_children == 6 && itoken0->getIType() == CEXPR_PRIMARY_EXPRESSION &&
+           op == CEXPR_OP_OPEN_SBRACKET) {
+    compilePrimaryExpression(itoken0);
+
+    stackCToken(CExprInst->getOperator(CEXPR_OP_OPEN_SBRACKET));
+
+    if (itoken->getChild(2)->getIType() != CEXPR_DUMMY_EXPRESSION)
+      compileExpression(itoken->getChild(2));
+    else
+      stackCToken(CExprInst->getOperator(CEXPR_OP_UNKNOWN));
+
+    if (itoken->getChild(4)->getIType() != CEXPR_DUMMY_EXPRESSION)
+      compileExpression(itoken->getChild(4));
+    else
+      stackCToken(CExprInst->getOperator(CEXPR_OP_UNKNOWN));
+
+    stackCToken(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
+
+    return;
+  }
+
+  //----
 
   if      (op == CEXPR_OP_OPEN_RBRACKET) {
     stackCToken(itoken1->base());
@@ -879,8 +919,15 @@ compilePostfixExpression(CExprITokenPtr itoken)
 
       stackCToken(itoken1->base());
 
-      compileExpression(itoken->getChild(2));
-      compileExpression(itoken->getChild(4));
+      if (itoken->getChild(2)->getIType() != CEXPR_DUMMY_EXPRESSION)
+        compileExpression(itoken->getChild(2));
+      else
+        stackCToken(CExprInst->getOperator(CEXPR_OP_UNKNOWN));
+
+      if (itoken->getChild(4)->getIType() != CEXPR_DUMMY_EXPRESSION)
+        compileExpression(itoken->getChild(4));
+      else
+        stackCToken(CExprInst->getOperator(CEXPR_OP_UNKNOWN));
 
       stackCToken(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
     }

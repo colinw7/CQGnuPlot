@@ -48,7 +48,7 @@
   + No issues
 
 ## circles.dem
-  + bad pie chart labels and colors
+  + No issues
 
 ## cities.dem
   + No issues
@@ -63,8 +63,7 @@
   + z axis should not be drawn
 
 ## contours.dem
-  + Invalid arg 'margins'
-  + Invalid arg 'cubic'
+  + no issues - check output
   + last multiplot should overlay
 
 ## controls.dem
@@ -121,10 +120,8 @@
   + runs ok, need to check output
 
 ## fit.dem
-  + Invalid expression ' "  fit function:", GPFUN_l'
   + bad 3d
-  + crash in CExprPrintF
-  + lots of issues as fit not really supported
+  + runs ok, need to check output
 
 ## fitmulti.dem
   + bad results
@@ -137,13 +134,12 @@
 
 ## gantt.dem
   + timecolumn function needs testing
-  + can't handle range with spaces and () expressions
+  + cannot handle range with spaces and () expressions
 
 ## heatmaps.dem
   + runs ok, need to check output
 
 ## hidden2.dem
-  + Invalid arg 'front'
   + hidden not working
 
 ## hidden.dem
@@ -159,13 +155,38 @@
   + no issues
 
 ## image2.dem
-  + Invalid comma ',50) format='%uchar%uchar%uchar' using ($1+$2+$3) with  image'
-  + Unhandled plot var 'transpose'
-  + multiple bad plots
+  1. ok
+  2. ok
+  3. ok
+  4. ok
+  5. ok
+  6. pixel gaps
+  7. pixel gaps, title pos
+  8. no rotation plane support
+  9. title pos
+  10. bad title pos
+  11. bad title pos
+  12. ok
+  13. z order hidden
+  14. ok
+  15. ok
+  16. edf format not supported
+  17. edf format not supported
+  18. bad display
+  19. ok
+  20. bad flip of some images
+  21. no rotation plane support
 
 ## image.dem
-  + bad placement of 2x2 plots
-  + 3d plot initial range is bad
+  1. ok
+  2. ok
+  3. ok
+  4. ok
+  5. bad range ? clip ?
+  6. ok
+  7. bad rotate
+  8. ok
+  9. bad 'Sultry evening' not dark no moon
 
 ## imageNaN.dem
   + Invalid option name 'tic'
@@ -203,18 +224,11 @@
 ## molecule.dem
   + Bad display ?
 
-## mouselab_1.dem
-  + Eval failed:  LID + 1
-  + sprintf(">>> READY FOR LABEL %d <<<",LID-100)
-
-## mouselab_2.dem
-  + Eval failed: (31 < MOUSE_KEY && MOUSE_KEY < 127)
-
 ## mouselabels.dem
-  + Eval failed:  MOUSE_CHAR
+  + runs ok, need to check output
 
 ## mousevariables.dem
-  + Mouse click no handled
+  + runs ok, need to check output
 
 ## multiaxis.dem
   + no issues, check output
@@ -333,11 +347,10 @@
   + No issues, check output
 
 ## stringvar.dem
-  + bad expression foo[5:] (no support of empty or '*' in array indices)
+  + No issues, check output
 
 ## surface1.dem
-  + Invalid arg 'fence'
-  + Invalid arg 'set'
+  + No issues, check output
 
 ## surface2.dem
   + no issues, check output

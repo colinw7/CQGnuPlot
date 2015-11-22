@@ -56,7 +56,7 @@ class CGnuPlotErrorBarObject : public CGnuPlotPlotObject {
   const CGnuPlotMarkP &mark() const { return mark_; }
   void setMark(const CGnuPlotMarkP &s) { mark_ = s; }
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const override;
+  bool inside(const CGnuPlotMouseEvent &p) const override;
 
   const CBBox2D &bbox() const override { return bbox_; }
 

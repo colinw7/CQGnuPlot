@@ -96,14 +96,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
 bool
 CGnuPlotStyleChordDiagram::
-mouseTip(CGnuPlotPlot *plot, const CGnuPlotTypes::InsideData &insideData, CGnuPlotTipData &tipData)
+mouseTip(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tipData)
 {
   CGnuPlotStyleChordDiagramRenderer *cr = plot->chordDiagramData().renderer();
 
   std::string name;
   CRGBA       c;
 
-  if (! cr->getValueAtPos(insideData.window, name, c))
+  if (! cr->getValueAtPos(mouseEvent.window(), name, c))
     return false;
 
   tipData.setBorderColor(c);
@@ -116,11 +116,11 @@ mouseTip(CGnuPlotPlot *plot, const CGnuPlotTypes::InsideData &insideData, CGnuPl
 
 void
 CGnuPlotStyleChordDiagram::
-mousePress(CGnuPlotPlot *plot, const CGnuPlotTypes::InsideData &insideData)
+mousePress(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent)
 {
   CGnuPlotStyleChordDiagramRenderer *cr = plot->chordDiagramData().renderer();
 
-  int ind = cr->getIndAtPos(insideData.window);
+  int ind = cr->getIndAtPos(mouseEvent.window());
 
   cr->setCurrentInd(ind);
 

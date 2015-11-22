@@ -12,10 +12,10 @@ CGnuPlotErrorBarObject(CGnuPlotPlot *plot) :
 
 bool
 CGnuPlotErrorBarObject::
-inside(const CGnuPlotTypes::InsideData &insideData) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
   // TODO: distance to lines
-  return bbox_.inside(insideData.window);
+  return bbox_.inside(mouseEvent.window());
 }
 
 CGnuPlotTipData

@@ -18,6 +18,8 @@ class CGnuPlotStroke;
 class CGnuPlotRenderer : public CGnuPlotTextRenderer {
  public:
   typedef CGnuPlotTypes::SymbolType SymbolType;
+  typedef std::vector<CPoint2D>     Points2D;
+  typedef std::vector<CPoint3D>     Points3D;
 
  public:
   CGnuPlotRenderer();
@@ -30,6 +32,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   const CGnuPlotCameraP &camera() const { return camera_; }
   void setCamera(const CGnuPlotCameraP &c) { camera_ = c; }
   void unsetCamera() { camera_ = CGnuPlotCameraP(); }
+
+  bool is3D() const { return camera_.isValid(); }
 
   int width() const { return width_; }
   void setWidth(int w) { width_ = w; }
@@ -87,7 +91,7 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   virtual void drawLine(const CPoint2D &p1, const CPoint2D &p2, double width,
                         const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
-  virtual void drawPath(const std::vector<CPoint2D> &points, double width,
+  virtual void drawPath(const Points2D &points, double width,
                         const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
 
   virtual void drawRect   (const CBBox2D &rect, const CRGBA &c, double w) = 0;
@@ -95,12 +99,11 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   virtual void patternRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
                            const CRGBA &fg, const CRGBA &bg) = 0;
 
-  virtual void drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c,
+  virtual void drawPolygon(const Points2D &points, double w, const CRGBA &c,
                            const CLineDash &d) = 0;
-  virtual void fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c) = 0;
+  virtual void fillPolygon(const Points2D &points, const CRGBA &c) = 0;
 
-  virtual void patternPolygon(const std::vector<CPoint2D> &points,
-                              CGnuPlotTypes::FillPattern pattern,
+  virtual void patternPolygon(const Points2D &points, CGnuPlotTypes::FillPattern pattern,
                               const CRGBA &fg, const CRGBA &bg) = 0;
 
   virtual void drawEllipse(const CPoint2D &p, double rx, double ry, double a,
@@ -144,18 +147,18 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   void drawPoint(const CPoint3D &p, const CRGBA &c);
 
-  void strokeClippedPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke);
-  void strokeClippedPath(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke);
+  void strokeClippedPath(const Points2D &points, const CGnuPlotStroke &stroke);
+  void strokeClippedPath(const Points3D &points, const CGnuPlotStroke &stroke);
 
-  void drawClippedPath(const std::vector<CPoint2D> &points, double width,
+  void drawClippedPath(const Points2D &points, double width,
                        const CRGBA &c, const CLineDash &dash=CLineDash());
-  void drawClippedPath(const std::vector<CPoint3D> &points, double width,
+  void drawClippedPath(const Points3D &points, double width,
                        const CRGBA &c, const CLineDash &dash=CLineDash());
 
-  void strokePath(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke);
-  void strokePath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke);
+  void strokePath(const Points3D &points, const CGnuPlotStroke &stroke);
+  void strokePath(const Points2D &points, const CGnuPlotStroke &stroke);
 
-  void drawPath(const std::vector<CPoint3D> &points, double width,
+  void drawPath(const Points3D &points, double width,
                 const CRGBA &c, const CLineDash &dash=CLineDash());
   void drawLine(const CPoint3D &p1, const CPoint3D &p2, double width,
                 const CRGBA &c, const CLineDash &dash=CLineDash());
@@ -178,22 +181,28 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   //---
 
-  void fillClippedPolygon(const std::vector<CPoint3D> &points, const CGnuPlotFill &fill);
-  void fillClippedPolygon(const std::vector<CPoint2D> &points, const CGnuPlotFill &fill);
-  void fillPolygon(const std::vector<CPoint3D> &points, const CGnuPlotFill &fill);
-  void fillPolygon(const std::vector<CPoint2D> &points, const CGnuPlotFill &fill);
+  void fillClippedPolygon(const Points3D &points, const CGnuPlotFill &fill);
+  void fillClippedPolygon(const Points2D &points, const CGnuPlotFill &fill);
+  void fillClippedPolygon(const Points3D &points, const CRGBA &c);
+
+  void fillPolygon(const Points3D &points, const CGnuPlotFill &fill);
+  void fillPolygon(const Points2D &points, const CGnuPlotFill &fill);
+
+  void drawClippedEllipse(const CPoint2D &p, double rx, double ry, double a,
+                          const CRGBA &c, double w, const CLineDash &dash=CLineDash());
+  void fillClippedEllipse(const CPoint2D &p, double rx, double ry, double a, const CRGBA &c);
 
   void fillClippedRect(const CBBox2D &rect, const CGnuPlotFill &fill);
   void fillRect(const CBBox2D &rect, const CGnuPlotFill &fill);
 
   //---
 
-  void strokeClippedPolygon(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke);
-  void strokeClippedPolygon(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke);
-  void strokePolygon(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke);
-  void strokePolygon(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke);
+  void strokeClippedPolygon(const Points3D &points, const CGnuPlotStroke &stroke);
+  void strokeClippedPolygon(const Points2D &points, const CGnuPlotStroke &stroke);
+  void strokePolygon(const Points3D &points, const CGnuPlotStroke &stroke);
+  void strokePolygon(const Points2D &points, const CGnuPlotStroke &stroke);
 
-void strokeRect(const CBBox2D &rect, const CGnuPlotStroke &stroke);
+  void strokeRect(const CBBox2D &rect, const CGnuPlotStroke &stroke);
 
   //---
 
@@ -218,15 +227,16 @@ void strokeRect(const CBBox2D &rect, const CGnuPlotStroke &stroke);
   void fillEllipse(const CPoint2D &p, double rx, double ry, double a, const CGnuPlotFill &fill);
   void fillEllipse(const CBBox2D &rect, const CRGBA &c);
 
-  void fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c);
-  void fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c);
+  void fillClippedPolygon(const Points2D &points, const CRGBA &c);
+  void fillPolygon(const Points3D &points, const CRGBA &c);
 
-  void drawClippedPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c,
+  void drawClippedPolygon(const Points3D &points, double w, const CRGBA &c,
                           const CLineDash &dash);
-  void drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c,
-                   const CLineDash &dash);
+  void drawClippedPolygon(const Points2D &points, double w, const CRGBA &c,
+                          const CLineDash &dash);
+  void drawPolygon(const Points3D &points, double lw, const CRGBA &c, const CLineDash &dash);
 
-  void patternClippedPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern pat,
+  void patternClippedPolygon(const Points2D &points, CGnuPlotTypes::FillPattern pat,
                              const CRGBA &fg, const CRGBA &bg);
 
   void strokeClipLine(const CPoint2D &p1, const CPoint2D &p2, const CGnuPlotStroke &stroke);

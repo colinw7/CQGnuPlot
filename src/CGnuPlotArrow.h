@@ -109,13 +109,13 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const override;
+  bool inside(const CGnuPlotMouseEvent &p) const override;
 
   const CBBox2D &bbox() const override { return data_.bbox(); }
 
   CGnuPlotTipData tip() const override;
 
-  void print(std::ostream &os) const;
+  void print(std::ostream &os) const override;
 
  protected:
   CGnuPlotArrowData data_;

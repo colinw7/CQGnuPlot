@@ -49,13 +49,13 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const override;
+  bool inside(const CGnuPlotMouseEvent &p) const override;
 
-  const CBBox2D &bbox() const { return bbox_; }
+  const CBBox2D &bbox() const override { return bbox_; }
 
   CGnuPlotTipData tip() const override;
 
-  void print(std::ostream &os) const;
+  void print(std::ostream &os) const override;
 
  protected:
   Position          from_;

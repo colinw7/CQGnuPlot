@@ -3,6 +3,7 @@
 
 #include <CBBox2D.h>
 #include <CGnuPlotTypes.h>
+#include <CGnuPlotMouseEvent.h>
 
 class CGnuPlotPlot;
 class CGnuPlotRenderer;
@@ -48,10 +49,10 @@ class CGnuPlotStyleBase {
 
   virtual CBBox2D fit(CGnuPlotPlot *) { return CBBox2D(); }
 
-  virtual bool mouseTip(CGnuPlotPlot *, const CGnuPlotTypes::InsideData &,
+  virtual bool mouseTip(CGnuPlotPlot *, const CGnuPlotMouseEvent &,
                         CGnuPlotTipData &) { return false; }
 
-  virtual void mousePress(CGnuPlotPlot *, const CGnuPlotTypes::InsideData &) { }
+  virtual void mousePress(CGnuPlotPlot *, const CGnuPlotMouseEvent &) { }
 
  protected:
   CGnuPlotTypes::PlotStyle style_;

@@ -26,9 +26,9 @@ CGnuPlotObject(CGnuPlot *app) :
 
 bool
 CGnuPlotObject::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  return bbox().inside(data.window);
+  return bbox().inside(mouseEvent.window());
 }
 
 void

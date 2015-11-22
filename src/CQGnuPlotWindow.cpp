@@ -515,11 +515,12 @@ addGroupProperties(CGnuPlotGroup *group)
 
   QString titleName = QString("%1/title").arg(groupName);
 
-  tree_->addProperty(titleName, qtitle, "text"    );
-  tree_->addProperty(titleName, qtitle, "offset"  );
-  tree_->addProperty(titleName, qtitle, "font"    );
-  tree_->addProperty(titleName, qtitle, "color"   );
-  tree_->addProperty(titleName, qtitle, "enhanced");
+  tree_->addProperty(titleName, qtitle, "displayed");
+  tree_->addProperty(titleName, qtitle, "text"     );
+  tree_->addProperty(titleName, qtitle, "offset"   );
+  tree_->addProperty(titleName, qtitle, "font"     );
+  tree_->addProperty(titleName, qtitle, "color"    );
+  tree_->addProperty(titleName, qtitle, "enhanced" );
 
   //---
 
@@ -861,6 +862,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotArrowObject *qarrow = static_cast<CQGnuPlotArrowObject *>(arrow);
 
+      tree_->addProperty(arrowName, qarrow, "displayed");
       tree_->addProperty(arrowName, qarrow, "coordType");
       tree_->addProperty(arrowName, qarrow, "from");
       tree_->addProperty(arrowName, qarrow, "to");
@@ -907,6 +909,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotBoxBarObject *qbar = static_cast<CQGnuPlotBoxBarObject *>(bar);
 
+      tree_->addProperty(barName, qbar, "displayed");
       tree_->addProperty(barName, qbar, "x");
       tree_->addProperty(barName, qbar, "y");
 
@@ -967,6 +970,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotBoxObject *qbox = static_cast<CQGnuPlotBoxObject *>(box);
 
+      tree_->addProperty(boxName, qbox, "displayed");
       tree_->addProperty(boxName, qbox, "x");
       tree_->addProperty(boxName, qbox, "y");
       tree_->addProperty(boxName, qbox, "lineWidth");
@@ -1019,6 +1023,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotBubbleObject *qbubble = static_cast<CQGnuPlotBubbleObject *>(bubble);
 
+      tree_->addProperty(bubbleName, qbubble, "displayed");
       tree_->addProperty(bubbleName, qbubble, "name" );
       tree_->addProperty(bubbleName, qbubble, "value");
 
@@ -1053,6 +1058,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotEllipseObject *qellipse = static_cast<CQGnuPlotEllipseObject *>(ellipse);
 
+      tree_->addProperty(ellipseName, qellipse, "displayed");
       tree_->addProperty(ellipseName, qellipse, "angle");
       tree_->addProperty(ellipseName, qellipse, "text");
 
@@ -1089,6 +1095,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotErrorBarObject *qbar = static_cast<CQGnuPlotErrorBarObject *>(bar);
 
+      tree_->addProperty(barName, qbar, "displayed");
       tree_->addProperty(barName, qbar, "x");
       tree_->addProperty(barName, qbar, "y");
 
@@ -1138,6 +1145,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotFinanceBarObject *qbar = static_cast<CQGnuPlotFinanceBarObject *>(bar);
 
+      tree_->addProperty(barName, qbar, "displayed");
       tree_->addProperty(barName, qbar, "value");
       tree_->addProperty(barName, qbar, "low");
       tree_->addProperty(barName, qbar, "high");
@@ -1167,10 +1175,18 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotImageObject *qimage = static_cast<CQGnuPlotImageObject *>(image);
 
+      tree_->addProperty(imageName, qimage, "displayed");
+      tree_->addProperty(imageName, qimage, "size");
+      tree_->addProperty(imageName, qimage, "origin");
+      tree_->addProperty(imageName, qimage, "center");
+      tree_->addProperty(imageName, qimage, "delta");
+      tree_->addProperty(imageName, qimage, "angle");
+      tree_->addProperty(imageName, qimage, "flipX");
+      tree_->addProperty(imageName, qimage, "flipY");
+      tree_->addProperty(imageName, qimage, "nearest");
+      tree_->addProperty(imageName, qimage, "original");
       tree_->addProperty(imageName, qimage, "x");
       tree_->addProperty(imageName, qimage, "y");
-      tree_->addProperty(imageName, qimage, "angle");
-      tree_->addProperty(imageName, qimage, "flipY");
 
       ++i;
     }
@@ -1231,6 +1247,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotPathObject *qpath = static_cast<CQGnuPlotPathObject *>(path);
 
+      tree_->addProperty(pathName, qpath, "displayed");
       tree_->addProperty(pathName, qpath, "clipped");
 
       CQGnuPlotStroke *qstroke = qpath->stroke();
@@ -1262,6 +1279,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
 
+      tree_->addProperty(pieName, qpie, "displayed");
       tree_->addProperty(pieName, qpie, "name"       );
       tree_->addProperty(pieName, qpie, "value"      );
       tree_->addProperty(pieName, qpie, "innerRadius");
@@ -1299,6 +1317,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
 
+      tree_->addProperty(pointName, qpoint, "displayed");
       tree_->addProperty(pointName, qpoint, "point");
       tree_->addProperty(pointName, qpoint, "pointType");
       tree_->addProperty(pointName, qpoint, "size");
@@ -1322,6 +1341,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotPolygonObject *qpolygon = static_cast<CQGnuPlotPolygonObject *>(polygon);
 
+      tree_->addProperty(polygonName, qpolygon, "displayed");
       tree_->addProperty(polygonName, qpolygon, "text");
 
       CQGnuPlotFill *qfill = qpolygon->fill();
@@ -1355,6 +1375,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotRectObject *qrect = static_cast<CQGnuPlotRectObject *>(rect);
 
+      tree_->addProperty(rectName, qrect, "displayed");
       tree_->addProperty(rectName, qrect, "text");
 
       CQGnuPlotFill *qfill = qrect->fill();
@@ -1589,12 +1610,16 @@ setCurrentGroup(CQGnuPlotGroup *group)
 
 CQGnuPlotGroup *
 CQGnuPlotMainWindow::
-getGroupAt(const QPoint &pos)
+getGroupAt(const CPoint2D &p)
 {
+  CGnuPlotMouseEvent mouseEvent;
+
+  mouseEvent.setPixel(p);
+
   for (auto group : groups()) {
     CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-    if (qgroup->inside(pos))
+    if (qgroup->inside(mouseEvent))
       return qgroup;
   }
 
@@ -1603,7 +1628,7 @@ getGroupAt(const QPoint &pos)
 
 void
 CQGnuPlotMainWindow::
-mousePress(const QPoint &qp)
+mousePress(const CGnuPlotMouseEvent &mouseEvent)
 {
   escape_ = false;
 
@@ -1611,13 +1636,13 @@ mousePress(const QPoint &qp)
     for (auto group : groups()) {
       CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-      qgroup->mousePress(qp);
+      qgroup->mousePress(mouseEvent);
     }
   }
   else if (mode_ == Mode::MOVE) {
   }
   else if (mode_ == Mode::ZOOM) {
-    zoomPress_   = qp;
+    zoomPress_   = mouseEvent.pixel();
     zoomRelease_ = zoomPress_;
     zoomGroup_   = currentGroup();
   }
@@ -1625,26 +1650,26 @@ mousePress(const QPoint &qp)
 
 void
 CQGnuPlotMainWindow::
-mouseMove(const QPoint &qp, bool pressed)
+mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
 {
   if (mode_ == Mode::SELECT) {
     for (auto group : groups()) {
       CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-      qgroup->mouseMove(qp);
+      qgroup->mouseMove(mouseEvent);
     }
   }
   else if (mode_ == Mode::MOVE) {
   }
   else if (mode_ == Mode::ZOOM) {
     if (pressed) {
-      zoomRelease_ = qp;
+      zoomRelease_ = mouseEvent.pixel();
 
-      int x = std::min(zoomPress_.x(), zoomRelease_.x());
-      int y = std::min(zoomPress_.y(), zoomRelease_.y());
+      int x = std::min(zoomPress_.x, zoomRelease_.x);
+      int y = std::min(zoomPress_.y, zoomRelease_.y);
 
-      int w = std::abs(zoomRelease_.x() - zoomPress_.x());
-      int h = std::abs(zoomRelease_.y() - zoomPress_.y());
+      int w = std::abs(zoomRelease_.x - zoomPress_.x);
+      int h = std::abs(zoomRelease_.y - zoomPress_.y);
 
       if (w > 0 && h > 0) {
         zoomRegion_->setGeometry(QRect(x, y, w, h));
@@ -1670,15 +1695,15 @@ mouseMove(const QPoint &qp, bool pressed)
 
 void
 CQGnuPlotMainWindow::
-mouseRelease(const QPoint &)
+mouseRelease(const CGnuPlotMouseEvent &)
 {
   if      (mode_ == Mode::SELECT) {
   }
   else if (mode_ == Mode::MOVE) {
   }
   else if (mode_ == Mode::ZOOM) {
-    int dx = abs(zoomRelease_.x() - zoomPress_.x());
-    int dy = abs(zoomRelease_.y() - zoomPress_.y());
+    double dx = fabs(zoomRelease_.x - zoomPress_.x);
+    double dy = fabs(zoomRelease_.y - zoomPress_.y);
 
     if (dx >= 4 && dy >= 4) {
       if (zoomGroup_ && ! escape_) {
@@ -1699,7 +1724,7 @@ mouseRelease(const QPoint &)
 
 void
 CQGnuPlotMainWindow::
-keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
+keyPress(const CGnuPlotKeyEvent &keyEvent)
 {
   CQGnuPlotGroup *group = currentGroup();
   if (! group) return;
@@ -1707,8 +1732,15 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
   CGnuPlotCameraP camera = group->camera();
 
   if      (mode_ == Mode::SELECT) {
+    for (auto group : groups()) {
+      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+
+      qgroup->keyPress(keyEvent);
+    }
   }
   else if (mode_ == Mode::MOVE) {
+    int key = keyEvent.key();
+
     if (key == Qt::Key_Left || key == Qt::Key_Right ||
         key == Qt::Key_Up   || key == Qt::Key_Down) {
       group->moveObjects(key);
@@ -1717,6 +1749,8 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
     }
   }
   else if (mode_ == Mode::ZOOM) {
+    int key = keyEvent.key();
+
     double xmin = group->getXMin(), ymin = group->getYMin();
     double xmax = group->getXMax(), ymax = group->getYMax();
 
@@ -1813,12 +1847,12 @@ keyPress(int key, Qt::KeyboardModifiers /*modifiers*/)
 
 bool
 CQGnuPlotMainWindow::
-mouseTip(const QPoint &qp, CGnuPlotTipData &tip)
+mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip)
 {
   for (auto group : groups()) {
     CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
 
-    if (qgroup->mouseTip(qp, tip))
+    if (qgroup->mouseTip(mouseEvent, tip))
       return true;
   }
 

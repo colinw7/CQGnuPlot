@@ -269,6 +269,9 @@ executeOperator(const CExprTokenBaseP &ctoken)
     case CEXPR_OP_START_BLOCK:
       stackBlock();
       break;
+    case CEXPR_OP_UNKNOWN:
+      stackEToken(ctoken);
+      break;
     default: {
       CExprInst->errorMsg("Invalid operator for 'executeOperator'");
       return false;
@@ -529,11 +532,16 @@ executeSubscriptOperator()
 
   CExprTokenBaseP etoken1 = unstackEToken();
 
-  while (etoken1.isValid() && etoken1->type() != CEXPR_TOKEN_OPERATOR) {
-    CExprValuePtr value1 = etokenToValue(etoken1);
+  while (etoken1.isValid()) {
+    CExprValuePtr value1;
 
-    if (! value1.isValid())
-      return;
+    if (etoken1->type() != CEXPR_TOKEN_OPERATOR) {
+      value1 = etokenToValue(etoken1);
+    }
+    else {
+      if (etoken1->getOperator() != CEXPR_OP_UNKNOWN)
+        break;
+    }
 
     values.push_front(value1);
 

@@ -447,7 +447,14 @@ void
 CGnuPlotUsingCols::
 addCol(const std::string &str)
 {
-  cols_.push_back(CGnuPlotUsingCol(str));
+  CGnuPlotUsingCol col(str);
+
+  cols_.push_back(col);
+
+  if (col.isInt()) {
+    colMin_.updateMin(col.ival());
+    colMax_.updateMax(col.ival());
+  }
 }
 
 std::string

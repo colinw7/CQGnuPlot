@@ -204,7 +204,7 @@ class CSunburst {
 
     bool isHier() const override { return true; }
 
-    double size() const {
+    double size() const override {
       double s = 0.0;
 
       for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
@@ -216,7 +216,7 @@ class CSunburst {
       return s;
     }
 
-    int depth() const {
+    int depth() const override {
       int depth = 1;
 
       for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
@@ -225,7 +225,7 @@ class CSunburst {
       return depth;
     }
 
-    int numNodes() const {
+    int numNodes() const override {
       int num = nodes_.size();
 
       for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)

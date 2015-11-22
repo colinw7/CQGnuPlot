@@ -75,6 +75,8 @@ typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 #include <CGnuPlotPrefValue.h>
 #include <CGnuPlotBoxWidth.h>
 #include <CGnuPlotTypes.h>
+#include <CGnuPlotMouseEvent.h>
+#include <CGnuPlotKeyEvent.h>
 #include <CGnuPlotBoxPlot.h>
 #include <CGnuPlotCircleStyle.h>
 #include <CGnuPlotEllipseStyle.h>
@@ -148,6 +150,7 @@ class CGnuPlot {
   typedef CGnuPlotTypes::StyleIncrementType      StyleIncrementType;
   typedef CGnuPlotTypes::StyleVar                StyleVar;
   typedef CGnuPlotTypes::VariableName            VariableName;
+  typedef CGnuPlotTypes::Endian                  Endian;
 
   typedef std::map<PlotStyle,CGnuPlotStyleBase*> PlotStyles;
   typedef std::map<int,CGnuPlotLineStyleP>       LineStyles;
@@ -158,6 +161,13 @@ class CGnuPlot {
   typedef CGnuPlotTypes::AxisTypeId              AxisTypeId;
   typedef std::set<AxisTypeId>                   AxisTypeIdSet;
   typedef std::vector<std::string>               StringArray;
+  typedef std::vector<CPoint2D>                  Points2D;
+  typedef std::vector<CPoint3D>                  Points3D;
+  typedef std::vector<CSize2D>                   Sizes;
+  typedef std::vector<CRGBA>                     Colors;
+  typedef std::vector<double>                    Reals;
+  typedef std::vector<float>                     Floats;
+  typedef std::vector<int>                       Integers;
 
   class Bars {
    public:
@@ -658,6 +668,12 @@ class CGnuPlot {
   const CGnuPlotImageStyle &imageStyle() const { return imageStyle_; }
   void setImageStyle(const CGnuPlotImageStyle &imageStyle) { imageStyle_ = imageStyle; }
 
+  const Endian &endian() const { return endian_; }
+  void setEndian(const Endian &v) { endian_ = v; }
+
+  const Integers &recordValues() const { return recordValues_; }
+  void setRecordValues(const Integers &s) { recordValues_ = s; }
+
   //------
 
   void setTimeFmt(const std::string &f) { timeFmt_ = f; }
@@ -693,6 +709,11 @@ class CGnuPlot {
   void loop();
 
   void prompt(const std::string &msg);
+
+  void waitForMouse(int mask, const std::string &msg);
+
+  void mousePress(const CGnuPlotMouseEvent &mouseEvent);
+  void keyPress  (const CGnuPlotKeyEvent   &keyEvent  );
 
   CGnuPlotWindow *createWindow();
 
@@ -826,6 +847,8 @@ class CGnuPlot {
   int pointNum() const { return pointNum_; }
   void setPointNum(int n) { pointNum_ = n; }
 
+  bool readEndianFloat(CUnixFile *file, Endian endian, float &f);
+
   int getColumnIndex(const std::string &str) const;
 
   CExprValuePtr fieldToValue(int nf, const std::string &field);
@@ -847,6 +870,7 @@ class CGnuPlot {
   bool isEOFStr(const std::string &line, const std::string &eofStr) const;
 
   void errorMsg(const std::string &msg) const;
+  void warnMsg (const std::string &msg) const;
   void debugMsg(const std::string &msg) const;
 
   CPoint3D sphericalMap(const CPoint2D &p) const;
@@ -887,6 +911,9 @@ class CGnuPlot {
   bool parseStatement(int &i, const Statements &statements);
 
   void getStatements(CParseLine &line, Statements &statements) const;
+
+  bool parseFunctionDef(const std::string &identifier, CParseLine &line);
+  bool parseVariableDef(const std::string &identifier, CParseLine &line);
 
   void exitCmd   (const std::string &args);
   void helpCmd   (const std::string &args);
@@ -1011,7 +1038,7 @@ class CGnuPlot {
 
   CGnuPlotPlot *addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
                             const CGnuPlotUsingCols &usingCols);
-  CGnuPlotPlot *addBinary3D(CGnuPlotGroup *group, const std::string &filename,
+  CGnuPlotPlot *addBinary3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
                             const CGnuPlotUsingCols &usingCols);
 
   void parseLineProp(CParseLine &line, CGnuPlotLineProp &lineProp);
@@ -1025,7 +1052,8 @@ class CGnuPlot {
 
   bool decodeRange(const StringArray &fields, CGnuPlotAxisData &axis);
 
-  void parseArrayValues(CParseLine &line, std::vector<CSize2D> &sizes);
+  void parseArrayValues(CParseLine &line, Sizes &sizes);
+  void parseArrayValues(CParseLine &line, Integers &values);
 
   CExprTokenStack compileExpression(const std::string &expr) const;
 
@@ -1114,6 +1142,7 @@ class CGnuPlot {
   bool parseCoordValue(CParseLine &line, CGnuPlotCoordValue &v);
   bool parseOffset(CParseLine &line, CPoint3D &point);
   bool parseOffset(CParseLine &line, CPoint2D &point);
+  bool parsePoint(CParseLine &line, CPoint3D &point);
   bool parsePoint(CParseLine &line, CPoint2D &point);
   bool parseSize(CParseLine &line, CGnuPlotSize &size);
   bool parseSize(CParseLine &line, CSize2D &size);
@@ -1180,6 +1209,8 @@ class CGnuPlot {
                      bool quiet=false, bool conv=true) const;
 
   std::string replaceSumInExpr(const std::string &expr) const;
+
+  double scaleColorComponent(double z) const;
 
  private:
   typedef std::map<std::string,CGnuPlotDevice*>  Devices;
@@ -1256,6 +1287,8 @@ class CGnuPlot {
   double                 zero_ { 1E-8 };
   HistoryData            historyData_;
   CGnuPlotImageStyle     imageStyle_;
+  Endian                 endian_ { CGnuPlotTypes::Endian::DEFAULT };
+  Integers               recordValues_;
   VarAnnotations         varAnnotations_;
   CGnuPlotCamera         camera_;
   CGnuPlotPalette        palette_;
@@ -1293,11 +1326,12 @@ class CGnuPlot {
   SampleVar              sampleY_;
   SampleVar              sampleZ_;
 
-  mutable CoordSys       defSystem_ { CoordSys::FIRST };
+  mutable CoordSys       defSystem_      { CoordSys::FIRST };
   mutable Values         fieldValues_;
   bool                   parsePlotTitle_ { false };
-  mutable int            setNum_;
-  mutable int            pointNum_;
+  mutable int            setNum_         { 0 };
+  mutable int            pointNum_       { 0 };
+  mutable int            interruptMask_  { 0 };
 };
 
 #endif

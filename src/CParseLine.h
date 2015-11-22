@@ -84,6 +84,11 @@ class CParseLine {
       ++pos_;
   }
 
+  void backSkipSpace() {
+    while (pos_ > 0 && backIsSpace())
+      --pos_;
+  }
+
   bool skipSpaceAndChar(char c) {
     skipSpace();
 
@@ -93,6 +98,13 @@ class CParseLine {
     skipChar();
 
     return true;
+  }
+
+  bool skipToChar(char c) {
+    while (pos_ < len_ && ! isChar(c))
+      ++pos_;
+
+    return (pos_ < len_);
   }
 
   void skipNonSpace() {
@@ -111,6 +123,10 @@ class CParseLine {
 
   bool isSpace() const {
     return (pos_ < len_ && isspace(str_[pos_]));
+  }
+
+  bool backIsSpace() const {
+    return (pos_ > 0 && isspace(str_[pos_ - 1]));
   }
 
   bool isDigit() const {

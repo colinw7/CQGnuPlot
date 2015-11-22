@@ -43,9 +43,9 @@ initClip()
 
 bool
 CGnuPlotArrow::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  return data_.inside(data);
+  return data_.inside(mouseEvent);
 }
 
 CGnuPlotTipData

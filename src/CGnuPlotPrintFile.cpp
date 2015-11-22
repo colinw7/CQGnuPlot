@@ -71,6 +71,12 @@ CGnuPlotPrintFile::
 print(const std::string &str) const
 {
   if      (! isBlock_ && filename_ != "") {
+    if (! fp_) {
+      CGnuPlotPrintFile *th = const_cast<CGnuPlotPrintFile *>(this);
+
+      th->valid_ = th->open();
+    }
+
     if (fp_)
       fprintf(fp_, "%s", str.c_str());
   }
@@ -85,19 +91,25 @@ print(const std::string &str) const
   }
 }
 
-void
+bool
 CGnuPlotPrintFile::
 open()
 {
   if (! fp_ && ! isBlock_ && filename_ != "") {
-    if (append_)
-      fp_ = fopen(filename_.c_str(), "a");
-    else
-      fp_ = fopen(filename_.c_str(), "w");
+    if (valid_) {
+      if (append_)
+        fp_ = fopen(filename_.c_str(), "a");
+      else
+        fp_ = fopen(filename_.c_str(), "w");
+    }
+
+    return (fp_ != 0);
   }
   else if (isBlock_ && filename_ != "") {
     plot_->getBlock(filename_)->clear();
   }
+
+  return true;
 }
 
 void
@@ -109,6 +121,8 @@ close()
 
     fp_ = 0;
   }
+
+  valid_ = true;
 }
 
 void

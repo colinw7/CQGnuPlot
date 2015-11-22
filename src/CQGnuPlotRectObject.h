@@ -11,6 +11,7 @@ class CQGnuPlotStroke;
 class CQGnuPlotRectObject : public QObject, public CGnuPlotRectObject {
   Q_OBJECT
 
+  Q_PROPERTY(bool displayed   READ isDisplayed   WRITE setDisplayed  )
   Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
   Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 

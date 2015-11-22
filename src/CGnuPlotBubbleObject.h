@@ -40,7 +40,7 @@ class CGnuPlotBubbleObject : public CGnuPlotPlotObject {
   const CGnuPlotStrokeP &stroke() const { return stroke_; }
   void setStroke(const CGnuPlotStrokeP &s) { stroke_ = s; }
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const override;
+  bool inside(const CGnuPlotMouseEvent &p) const override;
 
   const CBBox2D &bbox() const override { return bbox_; }
 

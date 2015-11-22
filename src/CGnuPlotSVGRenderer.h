@@ -13,7 +13,7 @@ class CGnuPlotSVGRenderer : public CGnuPlotRenderer {
 
   std::ostream &os();
 
-  void clear(const CRGBA &c);
+  void clear(const CRGBA &c) override;
 
   void drawPoint  (const CPoint2D &p, const CRGBA &c) override;
   void drawSymbol (const CPoint2D &p, SymbolType type, double size,

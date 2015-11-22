@@ -5,6 +5,7 @@
 #include <CGnuPlotPosition.h>
 #include <CGnuPlotSize.h>
 #include <CGnuPlotTipData.h>
+#include <CGnuPlotMouseEvent.h>
 
 #include <CRGBA.h>
 #include <CBBox2D.h>
@@ -47,7 +48,7 @@ class CGnuPlotObject {
   virtual const CBBox2D &bbox() const = 0;
   virtual void setBBox(const CBBox2D &bbox);
 
-  virtual bool inside(const CGnuPlotTypes::InsideData &p) const;
+  virtual bool inside(const CGnuPlotMouseEvent &p) const;
 
   virtual CGnuPlotTipData tip() const = 0;
 

@@ -45,17 +45,17 @@ class CQGnuPlotWindow : public CGnuPlotWindow {
 
   virtual void updateProperties() { }
 
-  virtual CQGnuPlotGroup *getGroupAt(const QPoint &) { return 0; }
+  virtual CQGnuPlotGroup *getGroupAt(const CPoint2D &) { return 0; }
 
   virtual void setCurrentGroup(CQGnuPlotGroup *) { }
 
-  virtual void mousePress  (const QPoint &) { }
-  virtual void mouseMove   (const QPoint &, bool) { }
-  virtual void mouseRelease(const QPoint &) { }
+  virtual void mousePress  (const CGnuPlotMouseEvent &) { }
+  virtual void mouseMove   (const CGnuPlotMouseEvent &, bool) { }
+  virtual void mouseRelease(const CGnuPlotMouseEvent &) { }
 
-  virtual void keyPress(int, Qt::KeyboardModifiers) { }
+  virtual bool mouseTip(const CGnuPlotMouseEvent &, CGnuPlotTipData &) { return false; }
 
-  virtual bool mouseTip(const QPoint &, CGnuPlotTipData &) { return false; }
+  virtual void keyPress(const CGnuPlotKeyEvent &) { }
 
   virtual void showPos(const QString &, double, double, double, double) { }
 
@@ -87,16 +87,16 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
 
   void setSize(const CISize2D &s);
 
-  void updateProperties();
+  void updateProperties() override;
   void addGroupProperties(CGnuPlotGroup *group);
   void addPlotProperties(CGnuPlotPlot *plot);
 
-  void paint(QPainter *p);
+  void paint(QPainter *p) override;
 
-  int pixelWidth () const;
-  int pixelHeight() const;
+  int pixelWidth () const override;
+  int pixelHeight() const override;
 
-  void showPos(const QString &name, double px, double py, double wx, double wy);
+  void showPos(const QString &name, double px, double py, double wx, double wy) override;
 
   int cursorSize() const;
   void setCursorSize(int s);
@@ -108,28 +108,28 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void setBackgroundColor(const QColor &c);
 
   CQGnuPlotGroup *currentGroup() const { return currentGroup_; }
-  void setCurrentGroup(CQGnuPlotGroup *group);
+  void setCurrentGroup(CQGnuPlotGroup *group) override;
 
-  CQGnuPlotGroup *getGroupAt(const QPoint &pos);
+  CQGnuPlotGroup *getGroupAt(const CPoint2D &pos) override;
 
   bool isShowPixels() const { return showPixels_; }
   void setShowPixels(bool b) { showPixels_ = b; }
 
-  void mousePress  (const QPoint &qp);
-  void mouseMove   (const QPoint &qp, bool pressed);
-  void mouseRelease(const QPoint &qp);
+  void mousePress  (const CGnuPlotMouseEvent &mouseEvent) override;
+  void mouseMove   (const CGnuPlotMouseEvent &mouseEvent, bool pressed) override;
+  void mouseRelease(const CGnuPlotMouseEvent &mouseEvent) override;
 
-  void keyPress(int key, Qt::KeyboardModifiers modifiers);
+  bool mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip) override;
 
-  bool mouseTip(const QPoint &qp, CGnuPlotTipData &tip);
+  void keyPress(const CGnuPlotKeyEvent &keyEvent) override;
 
   void selectObject(const QObject *);
 
-  void selectObjects(const Objects &objs);
+  void selectObjects(const Objects &objs) override;
 
   void deselectAllObjects();
 
-  void redraw();
+  void redraw() override;
 
  public slots:
   void addProperties();
@@ -190,8 +190,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   QAction*           moveAction_   { 0 };
   QAction*           zoomAction_   { 0 };
   CQZoomRegion*      zoomRegion_   { 0 };
-  QPoint             zoomPress_    { 0, 0 };
-  QPoint             zoomRelease_  { 0, 0 };
+  CPoint2D           zoomPress_    { 0, 0 };
+  CPoint2D           zoomRelease_  { 0, 0 };
   CQGnuPlotGroup*    zoomGroup_    { 0 };
   CQCursor*          cursor_       { 0 };
   bool               tipOutside_   { false };

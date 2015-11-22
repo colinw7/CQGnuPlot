@@ -386,6 +386,18 @@ hideSlot()
     tooltip->hideWidget();
 }
 
+CQToolTipIFace *
+CQToolTip::
+getToolTip(QWidget *parent)
+{
+  CQToolTip *inst = CQToolTip::getInstance();
+
+  if (! inst->tooltips_.contains(parent))
+    return 0;
+
+  return inst->tooltips_.value(parent);
+}
+
 void
 CQToolTip::
 setToolTip(QWidget *parent, QWidget *tooltip)
@@ -419,14 +431,4 @@ CQToolTip::
 unsetToolTip(QWidget *parent)
 {
   setToolTip(parent, (CQToolTipIFace *) 0);
-}
-
-CQToolTipIFace *
-CQToolTip::
-getToolTip(QWidget *parent) const
-{
-  if (! tooltips_.contains(parent))
-    return 0;
-
-  return tooltips_.value(parent);
 }

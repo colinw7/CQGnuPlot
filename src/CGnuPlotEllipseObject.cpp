@@ -44,9 +44,9 @@ update()
 
 bool
 CGnuPlotEllipseObject::
-inside(const CGnuPlotTypes::InsideData &data) const
+inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
-  if (! bbox_.inside(data.window))
+  if (! bbox_.inside(mouseEvent.window()))
     return false;
 
   // inside ellipse

@@ -13,7 +13,7 @@ class CGnuPlotLogRenderer : public CGnuPlotRenderer {
 
   std::ostream &os();
 
-  void clear(const CRGBA &c);
+  void clear(const CRGBA &c) override;
 
   void drawPoint  (const CPoint2D &p, const CRGBA &c) override;
   void drawSymbol (const CPoint2D &p, SymbolType type, double size,
@@ -63,7 +63,7 @@ class CGnuPlotLogRenderer : public CGnuPlotRenderer {
   void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
                         double a21, double a22, const CRGBA &fc, const CRGBA &lc) override;
 
-  void drawImage(const CPoint2D &, const CImagePtr &);
+  void drawImage(const CPoint2D &, const CImagePtr &) override;
 
  private:
   void log(const std::string &str);

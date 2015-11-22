@@ -95,13 +95,13 @@ draw(CGnuPlotRenderer *renderer)
 
 bool
 CQGnuPlotKey::
-mousePress(const QPoint &qp)
+mousePress(const CGnuPlotMouseEvent &mouseEvent)
 {
   CGnuPlotRenderer *renderer = app()->renderer();
 
   CPoint2D p;
 
-  renderer->pixelToWindow(CPoint2D(qp.x(), qp.y()), p);
+  renderer->pixelToWindow(mouseEvent.pixel(), p);
 
   CGnuPlotPlot *plot = group()->getPlotForId(CGnuPlotKey::plotAtPos(p));
   if (! plot) return false;

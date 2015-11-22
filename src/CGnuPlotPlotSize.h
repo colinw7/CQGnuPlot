@@ -4,6 +4,11 @@
 struct CGnuPlotPlotSize {
   CGnuPlotPlotSize() { }
 
+  void reset() {
+    unsetSize();
+    unsetOrigin();
+  }
+
   void unsetSize() {
     square = false;
 

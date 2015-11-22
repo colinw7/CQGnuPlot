@@ -36,6 +36,7 @@ class CGnuPlotPoint {
   bool getReals(std::vector<double> &reals) const;
 
   bool getPoint(CPoint2D &p, bool checkNaN=true) const;
+  bool getPoint(double x, CPoint2D &p, bool checkNaN=true) const;
 
   bool getPoint(CPoint3D &p) const;
 

@@ -21,10 +21,10 @@ class CGnuPlotStyleAdjacency : public CGnuPlotStyleBase {
 
   CBBox2D fit(CGnuPlotPlot *plot) override;
 
-  bool mouseTip(CGnuPlotPlot *plot, const CGnuPlotTypes::InsideData &insideData,
+  bool mouseTip(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent,
                 CGnuPlotTipData &tipData) override;
 
-  void mousePress(CGnuPlotPlot *plot, const CGnuPlotTypes::InsideData &insideData) override;
+  void mousePress(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent) override;
 };
 
 #endif

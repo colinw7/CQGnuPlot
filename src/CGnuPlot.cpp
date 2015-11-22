@@ -9,6 +9,8 @@
 #include <CGnuPlotLogDevice.h>
 #include <CGnuPlotUtil.h>
 #include <CGnuPlotNameValues.h>
+#include <CGnuPlotFunctions.h>
+#include <CGnuPlotUnixFile.h>
 
 #include <CGnuPlotStyleAdjacency.h>
 #include <CGnuPlotStyleBoxErrorBars.h>
@@ -60,6 +62,7 @@
 #include <CMathGeom2D.h>
 #include <CMathGen.h>
 #include <CFontMgr.h>
+#include <CAutoFree.h>
 
 #include <vector>
 #include <cmath>
@@ -81,384 +84,6 @@ class CGnuPlotReadLine : public CReadLine {
 
  private:
   CGnuPlot *plot_;
-};
-
-//------
-
-class CGnuPlotFn : public CExprFunctionObj {
- public:
-  typedef std::vector<CExprValuePtr> Values;
-
- public:
-  CGnuPlotFn(CGnuPlot *plot) : plot_(plot) { }
-
- protected:
-  CGnuPlot *plot_;
-};
-
-class CGnuPlotAssertFn : public CGnuPlotFn {
- public:
-  CGnuPlotAssertFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    long value = 0;
-
-    if (! values[0]->getIntegerValue(value))
-      assert(false);
-
-    assert(value);
-
-    return CExprValuePtr();
-  }
-};
-
-class CGnuPlotColumnFn : public CGnuPlotFn {
- public:
-  CGnuPlotColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    long icol = 0;
-
-    if      (values[0]->isIntegerValue()) {
-      (void) values[0]->getIntegerValue(icol);
-    }
-    else if (values[0]->isStringValue()) {
-      std::string str;
-
-      (void) values[0]->getStringValue(str);
-
-      icol = plot_->getColumnIndex(str);
-    }
-    else
-      return CExprInst->createRealValue(0.0);
-
-    //---
-
-    CExprValuePtr value;
-
-    if      (icol == 0)
-      value = CExprInst->createRealValue(plot_->pointNum());
-    else if (icol == -2)
-      value = CExprInst->createRealValue(plot_->setNum());
-    else {
-      if (plot_->isParsePlotTitle()) {
-        plot_->setKeyColumnHeadNum(icol);
-
-        value = CExprInst->createStringValue("");
-      }
-      else {
-        value = plot_->fieldValue(icol);
-
-        if (! value.isValid())
-          value = CExprInst->createStringValue("column(" + std::to_string(icol) + ")");
-      }
-    }
-
-    return value;
-  }
-};
-
-class CGnuPlotExistsFn : public CGnuPlotFn {
- public:
-  CGnuPlotExistsFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    std::string name;
-
-    if (! values[0]->getStringValue(name))
-      return CExprInst->createIntegerValue(0);
-
-    CExprVariablePtr var = CExprInst->getVariable(name);
-
-    return CExprInst->createIntegerValue(var.isValid() ? 1 : 0);
-  }
-};
-
-class CGnuPlotStringColumnFn : public CGnuPlotFn {
- public:
-  CGnuPlotStringColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    assert(values.size() == 1);
-
-    std::string str;
-
-    long col = 0;
-
-    if (values[0]->getIntegerValue(col)) {
-      CExprValuePtr value = plot_->fieldValue(col);
-
-      if (value->isStringValue())
-        (void) value->getStringValue(str);
-    }
-
-    return CExprInst->createStringValue(str);
-  }
-};
-
-class CGnuPlotStringValidFn : public CGnuPlotFn {
- public:
-  CGnuPlotStringValidFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    assert(values.size() == 1);
-
-    std::string str;
-
-    bool valid = false;
-
-    long col = 0;
-
-    if (values[0]->getIntegerValue(col)) {
-      CExprValuePtr value = plot_->fieldValue(col);
-
-      valid = value.isValid();
-    }
-
-    return CExprInst->createIntegerValue(valid ? 0 : 1);
-  }
-};
-
-class CGnuPlotValueFn : public CGnuPlotFn {
- public:
-  CGnuPlotValueFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    std::string name;
-
-    if (! values[0]->getStringValue(name))
-      return CExprValuePtr();
-
-    CExprVariablePtr var = CExprInst->getVariable(name);
-
-    if (! var.isValid())
-      return CExprValuePtr();
-
-    return var->getValue();
-  }
-};
-
-class CGnuPlotValueHSV2RGBFn : public CGnuPlotFn {
- public:
-  CGnuPlotValueHSV2RGBFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    if (values.size() != 3) return CExprValuePtr();
-
-    double h, s, v;
-
-    if (! values[0]->getRealValue(h) ||
-        ! values[1]->getRealValue(s) ||
-        ! values[2]->getRealValue(v))
-      return CExprValuePtr();
-
-    CHSV hsv(h*360, s, v);
-
-    CRGB rgb = CRGBUtil::HSVtoRGB(hsv).clamp();
-
-    return CExprInst->createIntegerValue(rgb.encodeRGB());
-  }
-};
-
-class CGnuPlotValueStrFTime : public CGnuPlotFn {
- public:
-  CGnuPlotValueStrFTime(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    if (values.size() != 2) return CExprValuePtr();
-
-    std::string s;
-    long        i;
-
-    if (! values[0]->getStringValue (s) ||
-        ! values[1]->getIntegerValue(i))
-      return CExprValuePtr();
-
-    time_t t = i;
-
-    struct tm *tm1 = localtime(&t);
-
-    static char buffer[256];
-
-    strftime(buffer, 256, s.c_str(), tm1);
-
-    return CExprInst->createStringValue(buffer);
-  }
-};
-
-class CGnuPlotValueStrPTime : public CGnuPlotFn {
- public:
-  CGnuPlotValueStrPTime(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    if (values.size() != 2) return CExprValuePtr();
-
-    std::string s1, s2;
-
-    if (! values[0]->getStringValue(s1) || ! values[1]->getStringValue(s2))
-      return CExprValuePtr();
-
-    struct tm tm1;
-
-    memset(&tm1, 0, sizeof(tm));
-
-    /*char *p =*/ strptime(s2.c_str(), s1.c_str(), &tm1);
-
-    time_t t1 = mktime(&tm1);
-
-    memset(&tm1, 0, sizeof(tm));
-
-    time_t t2 = mktime(&tm1);
-
-    return CExprInst->createIntegerValue(difftime(t1, t2));
-  }
-};
-
-class CGnuPlotValueTmValue : public CGnuPlotFn {
- public:
-  CGnuPlotValueTmValue(CGnuPlot *plot, const std::string &value) :
-   CGnuPlotFn(plot), value_(value) {
-  }
-
-  CExprValuePtr operator()(const Values &values) {
-    if (values.size() != 1) return CExprValuePtr();
-
-    long i;
-
-    if (! values[0]->getIntegerValue(i))
-      return CExprValuePtr();
-
-    time_t t = i;
-
-    struct tm *tm1 = localtime(&t);
-
-    int value = 0;
-
-    if      (value_ == "sec" ) value = tm1->tm_sec;
-    else if (value_ == "min" ) value = tm1->tm_min;
-    else if (value_ == "hour") value = tm1->tm_hour;
-    else if (value_ == "mday") value = tm1->tm_mday;
-    else if (value_ == "mon" ) value = tm1->tm_mon;
-    else if (value_ == "year") value = tm1->tm_year + 1900;
-    else if (value_ == "wday") value = tm1->tm_wday;
-    else if (value_ == "yday") value = tm1->tm_yday;
-
-    return CExprInst->createIntegerValue(value);
-  }
-
- private:
-  std::string value_;
-};
-
-class CGnuPlotValueTime : public CGnuPlotFn {
- public:
-  CGnuPlotValueTime(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    if (values.size() != 1) return CExprValuePtr();
-
-    time_t t = time(0);
-
-    return CExprInst->createIntegerValue(t);
-  }
-};
-
-class CGnuPlotTimeColumnFn : public CGnuPlotFn {
- public:
-  CGnuPlotTimeColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    assert(values.size() == 2);
-
-    std::string str;
-    std::string fmt;
-
-    long col = 0;
-
-    if (values[0]->getIntegerValue(col) && values[1]->getStringValue(fmt)) {
-      CExprValuePtr value = plot_->fieldValue(col);
-
-      if (value->isStringValue())
-        (void) value->getStringValue(str);
-    }
-
-    return CExprInst->createStringValue(str);
-  }
-};
-
-class CGnuPlotSumRangeFn : public CGnuPlotFn {
- public:
-  CGnuPlotSumRangeFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    if (values.size() != 4) return CExprValuePtr();
-
-    std::string var;
-
-    if (! values[0]->getStringValue(var))
-      return CExprValuePtr();
-
-    long start = 0;
-
-    if (! values[1]->getIntegerValue(start))
-      return CExprValuePtr();
-
-    long end = start;
-
-    if (! values[2]->getIntegerValue(end))
-      return CExprValuePtr();
-
-    std::string expr;
-
-    if (! values[3]->getStringValue(expr))
-      return CExprValuePtr();
-
-    //---
-
-    CExprInst->saveCompileState();
-
-    if (expr_ != expr) {
-      expr_ = expr;
-
-      CExprTokenStack pstack = CExprInst->parseLine(expr_);
-      CExprITokenPtr  itoken = CExprInst->interpPTokenStack(pstack);
-
-      if (itoken.isValid())
-        cstack_ = CExprInst->compileIToken(itoken);
-      else
-        cstack_ = CExprTokenStack();
-    }
-
-    //---
-
-    CExprVariablePtr varPtr = CExprInst->createIntegerVariable(var, 0);
-
-    double sum = 0;
-
-    for (int i = start; i <= end; ++i) {
-      varPtr->setIntegerValue(i);
-
-      CExprValuePtr rvalue;
-
-      if (! CExprInst->executeCTokenStack(cstack_, rvalue))
-        continue;
-
-      double r = 0;
-
-      if (! rvalue.isValid() || ! rvalue->getRealValue(r))
-        continue;
-
-      sum += r;
-    }
-
-    CExprInst->restoreCompileState();
-
-    return CExprInst->createRealValue(sum);
-  }
-
- private:
-  mutable CExprTokenStack cstack_;
-  mutable std::string     expr_;
 };
 
 //------
@@ -533,55 +158,8 @@ CGnuPlot() :
   varPrefs_[VariableName::ANGLES] =
     new CGnuPlotPrefValue<AngleType>("Angle Type", "angles", AngleType::RADIANS);
 
-  CExprInst->createRealVariable("pi", M_PI);
-
-  CExprInst->addFunction("assert", "i", new CGnuPlotAssertFn(this))->setBuiltin(true);
-
-  CExprInst->addFunction("column"      , "is",
-                         new CGnuPlotColumnFn(this))->setBuiltin(true);
-  CExprInst->addFunction("exists"      , "s" ,
-                         new CGnuPlotExistsFn(this))->setBuiltin(true);
-  CExprInst->addFunction("stringcolumn", "i" ,
-                         new CGnuPlotStringColumnFn(this))->setBuiltin(true);
-  CExprInst->addFunction("strcol"      , "i" ,
-                         new CGnuPlotStringColumnFn(this))->setBuiltin(true);
-  CExprInst->addFunction("valid"       , "i" ,
-                         new CGnuPlotStringValidFn(this))->setBuiltin(true);
-  CExprInst->addFunction("value"       , "s" ,
-                         new CGnuPlotValueFn(this))->setBuiltin(true);
-
-  CExprInst->addFunction("hsv2rgb", "r,r,r",
-                         new CGnuPlotValueHSV2RGBFn(this))->setBuiltin(true);
-
-  CExprInst->addFunction("strftime", "s,i",
-                         new CGnuPlotValueStrFTime(this))->setBuiltin(true);
-  CExprInst->addFunction("strptime", "s,s",
-                         new CGnuPlotValueStrPTime(this))->setBuiltin(true);
-  CExprInst->addFunction("tm_hour" , "i"  ,
-                         new CGnuPlotValueTmValue(this, "hour"))->setBuiltin(true);
-  CExprInst->addFunction("tm_mday" , "i"  ,
-                         new CGnuPlotValueTmValue(this, "mday"))->setBuiltin(true);
-  CExprInst->addFunction("tm_min"  , "i"  ,
-                         new CGnuPlotValueTmValue(this, "min" ))->setBuiltin(true);
-  CExprInst->addFunction("tm_mon"  , "i"  ,
-                         new CGnuPlotValueTmValue(this, "mon" ))->setBuiltin(true);
-  CExprInst->addFunction("tm_sec"  , "i"  ,
-                         new CGnuPlotValueTmValue(this, "sec" ))->setBuiltin(true);
-  CExprInst->addFunction("tm_wday" , "i"  ,
-                         new CGnuPlotValueTmValue(this, "wday"))->setBuiltin(true);
-  CExprInst->addFunction("tm_yday" , "i"  ,
-                         new CGnuPlotValueTmValue(this, "yday"))->setBuiltin(true);
-  CExprInst->addFunction("tm_year" , "i"  ,
-                         new CGnuPlotValueTmValue(this, "year"))->setBuiltin(true);
-  CExprInst->addFunction("time"    , "irs",
-                         new CGnuPlotValueTime(this))->setBuiltin(true);
-
-  CExprInst->addFunction("timecolumn", "i,s" ,
-                         new CGnuPlotTimeColumnFn(this))->setBuiltin(true);
-
-  CExprInst->addFunction("sum_range", "s,i,i,s", new CGnuPlotSumRangeFn(this))->setBuiltin(true);
-
-  // timecolumn
+  CExprInst->createRealVariable("pi" , M_PI);
+  CExprInst->createRealVariable("NaN", CMathGen::getNaN());
 
   CExprInst->createIntegerVariable("ARGC", 0);
   CExprInst->createStringVariable ("ARG0", "");
@@ -598,6 +176,8 @@ CGnuPlot() :
   CExprInst->createRealVariable  ("GPVAL_NaN"      , CMathGen::getNaN());
 
   CExprInst->createStringVariable("GPVAL_COMPILE_OPTIONS", "+GD_PNG");
+
+  CGnuPlotFunctions::init(this);
 
   svgDevice_ = new CGnuPlotSVGDevice();
   logDevice_ = new CGnuPlotLogDevice();
@@ -802,10 +382,10 @@ load(const std::string &filename, const StringArray &args)
   // open file
   CUnixFile *file = new CUnixFile(filename);
 
-  if (! file->open()) {
-    delete file;
+  CAutoFree<CUnixFile> freeFile(file);
+
+  if (! file->open())
     return false;
-  }
 
   fileDataArray_.push_back(fileData_);
 
@@ -831,8 +411,6 @@ load(const std::string &filename, const StringArray &args)
 
     parseLine(line);
   }
-
-  delete fileData_.file;
 
   fileData_.file = 0;
 
@@ -903,19 +481,66 @@ prompt(const std::string &msg)
   readLine_->setPrompt("> ");
 }
 
+void
+CGnuPlot::
+waitForMouse(int mask, const std::string &msg)
+{
+  initReadLine();
+
+  readLine_->setPrompt(msg);
+
+  interruptMask_ = mask;
+
+  (void) readLine_->readLineInterruptable();
+}
+
+void
+CGnuPlot::
+mousePress(const CGnuPlotMouseEvent &mouseEvent)
+{
+  if (! readLine_->isInterruptable())
+    return;
+
+  bool interrupt = false;
+
+  if ((interruptMask_ & int(CGnuPlotTypes::PauseMask::BUTTON1)) && mouseEvent.button() == 1)
+    interrupt = true;
+
+  if ((interruptMask_ & int(CGnuPlotTypes::PauseMask::BUTTON2)) && mouseEvent.button() == 2)
+    interrupt = true;
+
+  if ((interruptMask_ & int(CGnuPlotTypes::PauseMask::BUTTON3)) && mouseEvent.button() == 3)
+    interrupt = true;
+
+  if (! interrupt)
+    return;
+
+  readLine_->doInterrupt();
+}
+
+void
+CGnuPlot::
+keyPress(const CGnuPlotKeyEvent &)
+{
+  if (! readLine_->isInterruptable())
+    return;
+
+  bool interrupt = false;
+
+  if (interruptMask_ & int(CGnuPlotTypes::PauseMask::KEY))
+    interrupt = true;
+
+  if (! interrupt)
+    return;
+
+  readLine_->doInterrupt();
+}
+
 bool
 CGnuPlot::
 parseLine(const std::string &str)
 {
   CParseLine line(str);
-
-  line.skipSpace();
-
-  if (line.isChar('#')) { // comments char ?
-    return true;
-  }
-
-  //----
 
   std::string str1 = replaceEmbedded(str);
 
@@ -1063,6 +688,10 @@ replaceEmbedded(const std::string &str) const
         str1 += replaceEmbedded(str3);
       else
         str1 = "@" + str2;
+    }
+    else if (c == '#') {
+      // TODO: custom comment char
+      break;
     }
     else
       str1 += c;
@@ -1297,58 +926,19 @@ parseStatement(int &i, const Statements &statements)
   //---
 
   if (! keyword) {
+    int pos = line.pos();
+
     // function definition
     if      (line.skipSpaceAndChar('(')) {
-      StringArray args;
+      if (parseFunctionDef(identifier, line))
+        return true;
 
-      std::string arg;
-
-      if (! readIdentifier(line, arg))
-        return false;
-
-      args.push_back(arg);
-
-      while (line.skipSpaceAndChar(',')) {
-        std::string arg1;
-
-        if (! readIdentifier(line, arg1))
-          return false;
-
-        args.push_back(arg1);
-      }
-
-      if (! line.skipSpaceAndChar(')'))
-        return false;
-
-      if (! line.skipSpaceAndChar('='))
-        return false;
-
-      std::string expr = replaceSumInExpr(line.substr());
-
-      CExprInst->addFunction(identifier, args, expr);
-
-      return true;
+      line.setPos(pos);
     }
     // variable assignment
     else if (line.skipSpaceAndChar('=')) {
-      auto expr = line.substr();
-
-      auto p = expr.find('#');
-
-      if (p != std::string::npos)
-        expr = expr.substr(0, p);
-
-      CExprValuePtr value;
-
-      if (! evaluateExpression(expr, value))
-        value = CExprValuePtr();
-
-      if (! value.isValid())
-        return false;
-
-      CExprInst->createVariable(identifier, value);
-
-      return true;
+      if (parseVariableDef(identifier, line))
+        return true;
     }
   }
 
@@ -1415,6 +1005,81 @@ parseStatement(int &i, const Statements &statements)
   return true;
 }
 
+bool
+CGnuPlot::
+parseFunctionDef(const std::string &identifier, CParseLine &line)
+{
+  StringArray args;
+
+  std::string arg;
+
+  if (! readIdentifier(line, arg))
+    return false;
+
+  args.push_back(arg);
+
+  while (line.skipSpaceAndChar(',')) {
+    std::string arg1;
+
+    if (! readIdentifier(line, arg1))
+      return false;
+
+    args.push_back(arg1);
+  }
+
+  if (! line.skipSpaceAndChar(')'))
+    return false;
+
+  if (! line.skipSpaceAndChar('='))
+    return false;
+
+  std::string expr = replaceSumInExpr(line.substr());
+
+  CExprInst->addFunction(identifier, args, expr);
+
+  std::string gvar = "GPFUN_" + identifier;
+
+  std::string gargs = "";
+
+  for (const auto &arg : args) {
+    if (gargs != "") gargs += ",";
+    gargs + arg;
+  }
+
+  std::string gfunc = identifier + "(" + gargs + ") = " + expr;
+
+  CExprInst->createStringVariable(gvar, gfunc);
+
+  return true;
+}
+
+bool
+CGnuPlot::
+parseVariableDef(const std::string &identifier, CParseLine &line)
+{
+  auto expr = line.substr();
+
+#if 0
+  // TODO: comment should already be stripped
+  auto p = expr.find('#');
+
+  if (p != std::string::npos)
+    expr = expr.substr(0, p);
+#endif
+
+  CExprValuePtr value;
+
+  if (! evaluateExpression(expr, value))
+    value = CExprValuePtr();
+
+  if (! value.isValid())
+    return false;
+
+  CExprInst->createVariable(identifier, value);
+
+  return true;
+}
+
 // exit
 void
 CGnuPlot::
@@ -1470,7 +1135,7 @@ helpCmd(const std::string &args)
       std::cout << std::endl;
   }
   else if (arg == "variables") {
-    std::vector<std::string> names;
+    StringArray names;
 
     CExprInst->getVariableNames(names);
 
@@ -1485,7 +1150,7 @@ helpCmd(const std::string &args)
     std::cout << str << std::endl;
   }
   else if (arg == "functions") {
-    std::vector<std::string> names;
+    StringArray names;
 
     CExprInst->getFunctionNames(names);
 
@@ -2084,7 +1749,7 @@ plotCmd(const std::string &args)
 
   //----
 
-  std::vector<std::string> cmds;
+  StringArray cmds;
 
   splitPlotCmd(args, cmds, false);
 
@@ -2327,7 +1992,6 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     }
     // special filename '-' (read lines from stdin)
     else if (filename == "-") {
-      readDataFileLines();
     }
     // special filename '+' (expression file)
     else if (filename == "+") {
@@ -2412,7 +2076,10 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
   dataFile_.resetIndices();
   dataFile_.resetEvery  ();
 
-  imageStyle_.reset();
+  dataFile_.resetBlankLines();
+
+  imageStyle_  .reset();
+  binaryFormat_.clear();
 
   setSmooth(Smooth::NONE);
 
@@ -2429,6 +2096,16 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     PlotVar plotVar;
 
     if (! parseOptionValue(this, line, plotVar)) {
+      if (! parseModifiers2D(style, line, lineStyle, fillStyle, styleData, keyTitle))
+        break;
+
+      continue;
+    }
+
+    // TODO: hack - fix me
+    if (plotVar == PlotVar::DASHTYPE && line.isChar('=')) {
+      line.setPos(pos);
+
       if (! parseModifiers2D(style, line, lineStyle, fillStyle, styleData, keyTitle))
         break;
 
@@ -2625,6 +2302,11 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     else if (plotVar == PlotVar::BINARY) {
       setBinary(true);
     }
+    // transpose
+    else if (plotVar == PlotVar::TRANSPOSE) {
+      // TODO
+      //setTranspose(true);
+    }
     // matrix
     else if (plotVar == PlotVar::MATRIX) {
       matrixData().setMatrix(true);
@@ -2641,126 +2323,9 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     else if (plotVar == PlotVar::COLUMNHEADERS) {
       matrixData().setColumnHeaders(true);
     }
-    // array
-    else if (plotVar == PlotVar::ARRAY) {
-      std::vector<CSize2D> sizes;
-
-      parseArrayValues(line, sizes);
-
-      if (! sizes.empty()) {
-        imageStyle_.setWidth (sizes[0].getWidth ());
-        imageStyle_.setHeight(sizes[0].getHeight());
-      }
-    }
-    // record
-    else if (plotVar == PlotVar::RECORD) {
-      std::vector<CSize2D> sizes;
-
-      parseArrayValues(line, sizes);
-
-      if (! sizes.empty()) {
-        imageStyle_.setWidth (sizes[0].getWidth ());
-        imageStyle_.setHeight(sizes[0].getHeight());
-      }
-    }
-    // endian
-    else if (plotVar == PlotVar::ENDIAN) {
-      if (line.skipSpaceAndChar('=')) {
-        //std::string arg = line.readNonSpace();
-        line.readNonSpace();
-      }
-    }
-    // flip
-    else if (plotVar == PlotVar::FLIP) {
-      if (line.skipSpaceAndChar('=')) {
-        std::string arg = line.readNonSpace();
-
-        if (arg == "y")
-          imageStyle_.setFlipY(true);
-      }
-    }
     // flipy
     else if (plotVar == PlotVar::FLIPY) {
       imageStyle_.setFlipY(true);
-    }
-    // format
-    else if (plotVar == PlotVar::FORMAT) {
-      if (line.skipSpaceAndChar('=')) {
-        std::string str;
-
-        (void) parseString(line, str, "Invalid format");
-
-        setBinaryFormat(str);
-      }
-    }
-    // filetype
-    else if (plotVar == PlotVar::FILETYPE) {
-      if (line.skipSpaceAndChar('=')) {
-        std::string arg = readNonSpace(line);
-
-        CGnuPlotTypes::ImageType imageType;
-
-        if (CStrUniqueMatch::stringToValue(arg, imageType))
-          imageStyle_.setFileType(imageType);
-      }
-    }
-    // origin
-    else if (plotVar == PlotVar::ORIGIN) {
-      if (line.skipSpaceAndChar('=')) {
-        if (line.skipSpaceAndChar('(')) {
-          CPoint2D o;
-
-          if (parsePoint(line, o))
-            imageStyle_.setOrigin(o);
-
-          (void) line.skipSpaceAndChar(')');
-        }
-      }
-    }
-    // center
-    else if (plotVar == PlotVar::CENTER) {
-      if (line.skipSpaceAndChar('=')) {
-        if (line.skipSpaceAndChar('(')) {
-          CPoint2D c;
-
-          if (parsePoint(line, c))
-            imageStyle_.setCenter(c);
-
-          (void) line.skipSpaceAndChar(')');
-        }
-      }
-    }
-    // dx, dy
-    else if (plotVar == PlotVar::DX || plotVar == PlotVar::DY) {
-      if (line.skipSpaceAndChar('=')) {
-        double r;
-
-        if (parseReal(line, r)) {
-          if (plotVar == PlotVar::DX) {
-            imageStyle_.setDX(r);
-            imageStyle_.setDY(r);
-          }
-          else
-            imageStyle_.setDY(r);
-        }
-      }
-    }
-    // rotation
-    else if (plotVar == PlotVar::ROTATION) {
-      if (line.skipSpaceAndChar('=')) {
-        double a;
-
-        if (parseReal(line, a)) {
-          std::string arg = (! line.isSpace() ? line.readNonSpace() : "");
-
-          if      (arg == "deg" || arg == "d")
-            imageStyle_.setAngle(a);
-          else if (arg == "pi")
-            imageStyle_.setAngle(CAngle::Rad2Deg(a*M_PI));
-          else
-            imageStyle_.setAngle(CAngle::Rad2Deg(a));
-        }
-      }
     }
     // whiskerbars [<fraction>]
     else if (plotVar == PlotVar::WHISKERBARS) {
@@ -2781,6 +2346,11 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     }
     else {
       errorMsg("Unhandled plot var '" + CStrUniqueMatch::valueToString(plotVar) + "'");
+
+      line.setPos(pos);
+
+      if (! parseModifiers2D(style, line, lineStyle, fillStyle, styleData, keyTitle))
+        break;
     }
   }
 
@@ -2855,7 +2425,7 @@ addPlotWithStyle(CGnuPlotPlot *plot, Plots &plots, const CGnuPlotLineStyle &line
 
 void
 CGnuPlot::
-splitPlotCmd(const std::string &cmd, std::vector<std::string> &cmds, bool is3D)
+splitPlotCmd(const std::string &cmd, StringArray &cmds, bool is3D)
 {
   int nf = (isParametric() ? (is3D ? 3 : 2) : 1);
 
@@ -3330,6 +2900,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
+    // font
     else if (line.isString("font")) {
       line.skipNonSpace();
 
@@ -3340,6 +2911,230 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       if (style == CGnuPlotTypes::PlotStyle::LABELS)
         styleData.label.setFont(font);
+
+      found = true;
+    }
+    // format=
+    else if (line.isChars("format=")) {
+      line.skipChars(7);
+
+      std::string str;
+
+      (void) parseString(line, str, "Invalid format");
+
+      setBinaryFormat(str);
+
+      found = true;
+    }
+    // array=
+    else if (line.isChars("array=")) {
+      line.skipChars(6);
+
+      Sizes sizes;
+
+      parseArrayValues(line, sizes);
+
+      if (! sizes.empty()) {
+        imageStyle_.setWidth (sizes[0].getWidth ());
+        imageStyle_.setHeight(sizes[0].getHeight());
+      }
+
+      found = true;
+    }
+    // record=
+    else if (line.isChars("record=")) {
+      line.skipChars(7);
+
+      Integers values;
+
+      parseArrayValues(line, values);
+
+      setRecordValues(values);
+
+      found = true;
+    }
+    // filetype=
+    else if (line.isChars("filetype=")) {
+      line.skipChars(9);
+
+      std::string arg = readNonSpace(line);
+
+      CGnuPlotTypes::ImageType imageType;
+
+      if (CStrUniqueMatch::stringToValue(arg, imageType))
+        imageStyle_.setFileType(imageType);
+
+      found = true;
+    }
+    // origin=
+    else if (line.isChars("origin=")) {
+      line.skipChars(7);
+
+      typedef std::vector<CPoint3D> Points3D;
+
+      Points3D originArray;
+
+      do {
+        if (line.skipSpaceAndChar('(')) {
+          CPoint2D origin;
+
+          if (parsePoint(line, origin)) {
+            CPoint3D origin1(origin.x, origin.y, 0);
+
+            originArray.push_back(origin1);
+          }
+
+          (void) line.skipSpaceAndChar(')');
+        }
+      }
+      while (line.skipSpaceAndChar(':'));
+
+      imageStyle_.setOriginArray(originArray);
+
+      found = true;
+    }
+    // center=
+    else if (line.isChars("center")) {
+      int pos = line.pos();
+
+      line.skipChars(6);
+
+      if (line.skipSpaceAndChar('=')) {
+        if (line.skipSpaceAndChar('(')) {
+          CPoint2D c;
+
+          if (parsePoint(line, c)) {
+            CPoint3D c1(c.x, c.y, 0);
+
+            imageStyle_.setCenter(c1);
+          }
+
+          (void) line.skipSpaceAndChar(')');
+        }
+
+        found = true;
+      }
+      else
+        line.setPos(pos);
+    }
+    // skip=
+    else if (line.isChars("skip=")) {
+      int pos = line.pos();
+
+      line.skipChars(4);
+
+      if (line.skipSpaceAndChar('=')) {
+        Reals reals;
+
+        do {
+          double r;
+
+          if (parseReal(line, r))
+            reals.push_back(r);
+        }
+        while (line.skipSpaceAndChar(':'));
+
+        imageStyle_.setSkip(reals);
+
+        found = true;
+      }
+      else
+        line.setPos(pos);
+    }
+    // dx=, dy=
+    else if (line.isChars("dx=") || line.isChars("dy=")) {
+      bool isDX = line.isChars("dx=");
+
+      line.skipChars(3);
+
+      double r;
+
+      if (parseReal(line, r)) {
+        if (isDX) {
+          imageStyle_.setDX(r);
+          imageStyle_.setDY(r);
+        }
+        else
+          imageStyle_.setDY(r);
+      }
+
+      found = true;
+    }
+    // dt=
+    else if (line.isChars("dt=")) {
+      line.skipChars(3);
+
+      double r;
+
+      if (parseReal(line, r))
+        imageStyle_.setDT(r);
+
+      found = true;
+    }
+    // rotation=
+    else if (line.isChars("rot=") || line.isChars("rotate=") || line.isChars("rotation=")) {
+      if (line.skipToChar('=')) line.skipChar();
+
+      double a;
+
+      if (parseReal(line, a)) {
+        line.backSkipSpace();
+
+        std::string arg = (! line.isSpace() ? line.readNonSpace() : "");
+
+        if      (arg == "deg" || arg == "d")
+          imageStyle_.setAngle(a);
+        else if (arg == "pi")
+          imageStyle_.setAngle(CAngle::Rad2Deg(a*M_PI));
+        else
+          imageStyle_.setAngle(CAngle::Rad2Deg(a));
+      }
+
+      found = true;
+    }
+    // endian=
+    else if (line.isChars("endian=")) {
+      line.skipChars(7);
+
+      std::string arg = line.readNonSpace();
+
+      if      (arg == "little")
+        setEndian(Endian::LITTLE);
+      else if (arg == "big")
+        setEndian(Endian::BIG);
+      else if (arg == "default")
+        setEndian(Endian::DEFAULT);
+      else if (arg == "swap")
+        setEndian(Endian::SWAP);
+      else
+        errorMsg("Invalid endian \'" + arg + "'");
+
+      line.readNonSpace();
+
+      found = true;
+    }
+    // flip=
+    else if (line.isChars("flip=")) {
+      line.skipChars(5);
+
+      std::string arg = line.readNonSpace();
+
+      if (arg == "y")
+        imageStyle_.setFlipY(true);
+
+      found = true;
+    }
+    // scan=
+    else if (line.isChars("scan=")) {
+      line.skipChars(5);
+
+      line.readNonSpace();
+
+      //std::string arg = line.readNonSpace();
+
+      //if      (arg == "xy") imageStyle_.setScanXY();
+      //else if (arg == "yx") imageStyle_.setScanXY();
+      //else if (arg == "xyz") imageStyle_.setScanXY();
 
       found = true;
     }
@@ -3463,7 +3258,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
         else if (arg == "yy")
           styleData.ellipse.setUnits(CGnuPlotTypes::EllipseUnits::YY);
         else
-          errorMsg("Invalid ellips style \'" + arg + "'");
+          errorMsg("Invalid ellipse style \'" + arg + "'");
 
         found = true;
       }
@@ -3488,7 +3283,7 @@ plotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroup *group, 
   bool sample = false, first = true;
 
   if (forCmd.isIn) {
-    std::vector<std::string> words;
+    StringArray words;
 
     CStrUtil::addWords(forCmd.start, words);
 
@@ -3541,7 +3336,7 @@ splotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroup *group,
   bool sample = false, first = true;
 
   if (forCmd.isIn) {
-    std::vector<std::string> words;
+    StringArray words;
 
     CStrUtil::addWords(forCmd.start, words);
 
@@ -4115,39 +3910,57 @@ decodeRange(const StringArray &fields, CGnuPlotAxisData &axis)
 
 void
 CGnuPlot::
-parseArrayValues(CParseLine &line, std::vector<CSize2D> &sizes)
+parseArrayValues(CParseLine &line, Integers &values)
 {
-  if (line.skipSpaceAndChar('=')) {
-    if (line.skipSpaceAndChar('(')) {
-      int w = 1, h = 1;
+  std::string arg = line.readNonSpace();
 
-      if (! parseInteger(line, w))
-        w = 1;
+  StringArray fields;
 
-      if (line.skipSpaceAndChar(',')) {
-        if (! parseInteger(line, h))
-          h = 1;
-      }
+  CStrUtil::addFields(arg, fields, ":");
 
-      (void) line.skipSpaceAndChar(')');
+  for (const auto &f : fields) {
+    int i;
 
-      sizes.push_back(CSize2D(w, h));
+    if (! CStrUtil::toInteger(f, &i))
+      continue;
+
+    values.push_back(i);
+  }
+}
+
+void
+CGnuPlot::
+parseArrayValues(CParseLine &line, Sizes &sizes)
+{
+  if (line.skipSpaceAndChar('(')) {
+    int w = 1, h = 1;
+
+    if (! parseInteger(line, w))
+      w = 1;
+
+    if (line.skipSpaceAndChar(',')) {
+      if (! parseInteger(line, h))
+        h = 1;
     }
-    else {
-      std::string arg = line.readNonSpace();
 
-      StringArray fields;
+    (void) line.skipSpaceAndChar(')');
 
-      CStrUtil::addFields(arg, fields, ":");
+    sizes.push_back(CSize2D(w, h));
+  }
+  else {
+    std::string arg = line.readNonSpace();
 
-      for (const auto &f : fields) {
-        int w;
+    StringArray fields;
 
-        if (! CStrUtil::toInteger(f, &w))
-          continue;
+    CStrUtil::addFields(arg, fields, ":");
 
-        sizes.push_back(CSize2D(w, 1));
-      }
+    for (const auto &f : fields) {
+      int w;
+
+      if (! CStrUtil::toInteger(f, &w))
+        continue;
+
+      sizes.push_back(CSize2D(w, 1));
     }
   }
 }
@@ -4278,7 +4091,7 @@ splotCmd(const std::string &args)
 
   //---
 
-  std::vector<std::string> cmds;
+  StringArray cmds;
 
   splitPlotCmd(args, cmds, true);
 
@@ -4462,7 +4275,6 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
     }
     // special filename '-' (read lines from stdin)
     else if (filename == "-") {
-      readDataFileLines();
     }
     // special filename '+' (expression file)
     else if (filename == "+") {
@@ -4523,7 +4335,10 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
   dataFile_.resetIndices();
   dataFile_.resetEvery  ();
 
-  imageStyle_.reset();
+  dataFile_.resetBlankLines();
+
+  imageStyle_  .reset();
+  binaryFormat_.clear();
 
   setSmooth(Smooth::NONE);
 
@@ -4535,6 +4350,8 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
   //   <plot_data> [, <plot_data> ...]
   // TODO: using must come before title and with
   while (line.isValid() && ! line.isChar(',')) {
+    int pos = line.pos();
+
     PlotVar plotVar;
 
     if (! parseOptionValue(this, line, plotVar)) {
@@ -4555,6 +4372,11 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
 
       if (isDebug())
         usingCols.print(std::cerr);
+
+      std::string format;
+
+      if (parseString(line, format))
+        usingCols.setFormat(format);
     }
     // read index range
     // index <start>[:<end>[:<step>]]
@@ -4606,7 +4428,7 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
       COptInt col;
 
       if      (isColumnHeader(line, col)) {
-    //if      (line.isOneOf({"col", "columnhead", "columnheader", "columnheaders"})) {
+    //if      (line.isOneOf({"col", "columnhead", "columnheader", "columnheaders"}))
         setKeyColumnHeadNum(col.getValue(0));
 
         //(void) readNonSpaceNonComma(line);
@@ -4725,126 +4547,17 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
     else if (plotVar == PlotVar::COLUMNHEADERS) {
       matrixData().setColumnHeaders(true);
     }
-    // array
-    else if (plotVar == PlotVar::ARRAY) {
-      std::vector<CSize2D> sizes;
-
-      parseArrayValues(line, sizes);
-
-      if (! sizes.empty()) {
-        imageStyle_.setWidth (sizes[0].getWidth ());
-        imageStyle_.setHeight(sizes[0].getHeight());
-      }
-    }
-    // record
-    else if (plotVar == PlotVar::RECORD) {
-      std::vector<CSize2D> sizes;
-
-      parseArrayValues(line, sizes);
-
-      if (! sizes.empty()) {
-        imageStyle_.setWidth (sizes[0].getWidth ());
-        imageStyle_.setHeight(sizes[0].getHeight());
-      }
-    }
-    // endian
-    else if (plotVar == PlotVar::ENDIAN) {
-      if (line.skipSpaceAndChar('=')) {
-        //std::string arg = line.readNonSpace();
-        line.readNonSpace();
-      }
-    }
-    // flip
-    else if (plotVar == PlotVar::FLIP) {
-      if (line.skipSpaceAndChar('=')) {
-        std::string arg = line.readNonSpace();
-
-        if (arg == "y")
-          imageStyle_.setFlipY(true);
-      }
-    }
     // flipy
     else if (plotVar == PlotVar::FLIPY) {
       imageStyle_.setFlipY(true);
     }
-    // format
-    else if (plotVar == PlotVar::FORMAT) {
-      if (line.skipSpaceAndChar('=')) {
-        std::string str;
+    else {
+      errorMsg("Unhandled plot var '" + CStrUniqueMatch::valueToString(plotVar) + "'");
 
-        (void) parseString(line, str, "Invalid format");
+      line.setPos(pos);
 
-        setBinaryFormat(str);
-      }
-    }
-    // filetype
-    else if (plotVar == PlotVar::FILETYPE) {
-      if (line.skipSpaceAndChar('=')) {
-        std::string arg = readNonSpace(line);
-
-        CGnuPlotTypes::ImageType imageType;
-
-        if (CStrUniqueMatch::stringToValue(arg, imageType))
-          imageStyle_.setFileType(imageType);
-      }
-    }
-    // origin
-    else if (plotVar == PlotVar::ORIGIN) {
-      if (line.skipSpaceAndChar('=')) {
-        if (line.skipSpaceAndChar('(')) {
-          CPoint2D o;
-
-          if (parsePoint(line, o))
-            imageStyle_.setOrigin(o);
-
-          (void) line.skipSpaceAndChar(')');
-        }
-      }
-    }
-    // center
-    else if (plotVar == PlotVar::CENTER) {
-      if (line.skipSpaceAndChar('=')) {
-        if (line.skipSpaceAndChar('(')) {
-          CPoint2D c;
-
-          if (parsePoint(line, c))
-            imageStyle_.setCenter(c);
-
-          (void) line.skipSpaceAndChar(')');
-        }
-      }
-    }
-    // dx, dy
-    else if (plotVar == PlotVar::DX || plotVar == PlotVar::DY) {
-      if (line.skipSpaceAndChar('=')) {
-        double r;
-
-        if (parseReal(line, r)) {
-          if (plotVar == PlotVar::DX) {
-            imageStyle_.setDX(r);
-            imageStyle_.setDY(r);
-          }
-          else
-            imageStyle_.setDY(r);
-        }
-      }
-    }
-    // rotation
-    else if (plotVar == PlotVar::ROTATION) {
-      if (line.skipSpaceAndChar('=')) {
-        double a;
-
-        if (parseReal(line, a)) {
-          std::string arg = (! line.isSpace() ? line.readNonSpace() : "");
-
-          if      (arg == "deg" || arg == "d")
-            imageStyle_.setAngle(a);
-          else if (arg == "pi")
-            imageStyle_.setAngle(CAngle::Rad2Deg(a*M_PI));
-          else
-            imageStyle_.setAngle(CAngle::Rad2Deg(a));
-        }
-      }
+      if (! parseModifiers3D(style, line, lineStyle, fillStyle, styleData, keyTitle))
+        break;
     }
   }
 
@@ -4861,14 +4574,15 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
           plots1.push_back(plot);
       }
       else {
-        CGnuPlotPlot *plot = addBinary3D(group, filename, usingCols);
+        CGnuPlotPlot *plot = addBinary3D(group, filename, style, usingCols);
 
         if (plot)
           plots1.push_back(plot);
       }
     }
-    else
+    else {
       plots1 = addFile3D(group, filename, style, usingCols, sampleX_);
+    }
   }
   else if (! functions.empty()) {
     CGnuPlotPlot *plot =
@@ -5094,6 +4808,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       found = true;
     }
+    // font
     else if (line.isString("font")) {
       line.skipNonSpace();
 
@@ -5104,6 +4819,234 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       if (style == CGnuPlotTypes::PlotStyle::LABELS)
         styleData.label.setFont(font);
+
+      found = true;
+    }
+    // format=
+    else if (line.isChars("format=")) {
+      line.skipChars(7);
+
+      std::string str;
+
+      (void) parseString(line, str, "Invalid format");
+
+      setBinaryFormat(str);
+
+      found = true;
+    }
+    // array=
+    else if (line.isChars("array=")) {
+      line.skipChars(6);
+
+      Sizes sizes;
+
+      parseArrayValues(line, sizes);
+
+      if (! sizes.empty()) {
+        imageStyle_.setWidth (sizes[0].getWidth ());
+        imageStyle_.setHeight(sizes[0].getHeight());
+      }
+
+      found = true;
+    }
+    // record=
+    else if (line.isChars("record=")) {
+      line.skipChars(7);
+
+      Integers values;
+
+      parseArrayValues(line, values);
+
+      setRecordValues(values);
+
+      found = true;
+    }
+    // filetype=
+    else if (line.isChars("filetype=")) {
+      line.skipChars(9);
+
+      std::string arg = readNonSpace(line);
+
+      CGnuPlotTypes::ImageType imageType;
+
+      if (CStrUniqueMatch::stringToValue(arg, imageType))
+        imageStyle_.setFileType(imageType);
+
+      found = true;
+    }
+    // origin=
+    else if (line.isChars("origin=")) {
+      line.skipChars(7);
+
+      typedef std::vector<CPoint3D> Points3D;
+
+      Points3D originArray;
+
+      do {
+        if (line.skipSpaceAndChar('(')) {
+          CPoint3D origin;
+
+          if (parsePoint(line, origin)) {
+            originArray.push_back(origin);
+          }
+
+          (void) line.skipSpaceAndChar(')');
+        }
+      }
+      while (line.skipSpaceAndChar(':'));
+
+      imageStyle_.setOriginArray(originArray);
+
+      found = true;
+    }
+    // center=
+    else if (line.isChars("center")) {
+      int pos = line.pos();
+
+      line.skipChars(6);
+
+      if (line.skipSpaceAndChar('=')) {
+        if (line.skipSpaceAndChar('(')) {
+          CPoint3D c;
+
+          if (parsePoint(line, c))
+            imageStyle_.setCenter(c);
+
+          (void) line.skipSpaceAndChar(')');
+        }
+
+        found = true;
+      }
+      else
+        line.setPos(pos);
+    }
+    // perp=
+    else if (line.isChars("perp")) {
+      int pos = line.pos();
+
+      line.skipChars(4);
+
+      if (line.skipSpaceAndChar('=')) {
+        if (line.skipSpaceAndChar('(')) {
+          CPoint3D p;
+
+          if (parsePoint(line, p))
+            imageStyle_.setPerpendicular(p);
+
+          (void) line.skipSpaceAndChar(')');
+        }
+        else
+          errorMsg("missing value for perp=");
+
+        found = true;
+      }
+      else
+        line.setPos(pos);
+    }
+    // skip=
+    else if (line.isChars("skip=")) {
+      int pos = line.pos();
+
+      line.skipChars(4);
+
+      if (line.skipSpaceAndChar('=')) {
+        Reals reals;
+
+        do {
+          double r;
+
+          if (parseReal(line, r))
+            reals.push_back(r);
+        }
+        while (line.skipSpaceAndChar(':'));
+
+        imageStyle_.setSkip(reals);
+
+        found = true;
+      }
+      else
+        line.setPos(pos);
+    }
+    // dx=, dy=
+    else if (line.isChars("dx=") || line.isChars("dy=")) {
+      bool isDX = line.isChars("dx=");
+
+      line.skipChars(3);
+
+      double r;
+
+      if (parseReal(line, r)) {
+        if (isDX) {
+          imageStyle_.setDX(r);
+          imageStyle_.setDY(r);
+        }
+        else
+          imageStyle_.setDY(r);
+      }
+
+      found = true;
+    }
+    // dt=
+    else if (line.isChars("dt=")) {
+      line.skipChars(3);
+
+      double r;
+
+      if (parseReal(line, r))
+        imageStyle_.setDT(r);
+
+      found = true;
+    }
+    // rotation=
+    else if (line.isChars("rot=") || line.isChars("rotate=") || line.isChars("rotation=")) {
+      if (line.skipToChar('=')) line.skipChar();
+
+      double a;
+
+      if (parseReal(line, a)) {
+        line.backSkipSpace();
+
+        std::string arg = (! line.isSpace() ? line.readNonSpace() : "");
+
+        if      (arg == "deg" || arg == "d")
+          imageStyle_.setAngle(a);
+        else if (arg == "pi")
+          imageStyle_.setAngle(CAngle::Rad2Deg(a*M_PI));
+        else
+          imageStyle_.setAngle(CAngle::Rad2Deg(a));
+      }
+
+      found = true;
+    }
+    // endian=
+    else if (line.isChars("endian=")) {
+      line.skipChars(7);
+
+      std::string arg = line.readNonSpace();
+
+      if      (arg == "little")
+        setEndian(Endian::LITTLE);
+      else if (arg == "big")
+        setEndian(Endian::BIG);
+      else if (arg == "default")
+        setEndian(Endian::DEFAULT);
+      else if (arg == "swap")
+        setEndian(Endian::SWAP);
+      else
+        errorMsg("Invalid endian \'" + arg + "'");
+
+      line.readNonSpace();
+
+      found = true;
+    }
+    // flip=
+    else if (line.isChars("flip=")) {
+      line.skipChars(5);
+
+      std::string arg = line.readNonSpace();
+
+      if (arg == "y")
+        imageStyle_.setFlipY(true);
 
       found = true;
     }
@@ -5633,7 +5576,7 @@ setCmd(const std::string &args)
       if      (arg == "linear") {
         contourData_.setStyle(CGnuPlotContourData::Style::LINEAR);
       }
-      else if (arg == "cubicspline") {
+      else if (arg == "cubic" || arg == "cubicspline") {
         contourData_.setStyle(CGnuPlotContourData::Style::CUBICSPLINE);
       }
       else if (arg == "bspline") {
@@ -5664,8 +5607,8 @@ setCmd(const std::string &args)
               contourData_.setAutoLevels(n);
           }
           else if (arg1 == "disc" || arg1 == "discrete") {
-            std::vector<double> z;
-            double              z1;
+            Reals  z;
+            double z1;
 
             if (parseReal(line, z1))
               z.push_back(z1);
@@ -6098,6 +6041,8 @@ setCmd(const std::string &args)
         else if (arg == "nomcbtics" || arg == "nomcb") colorBox_.axis().setGridMinor(false);
 
         else if (arg == "polar") {
+          raxis().setGridMajor(true);
+
           double r = 0;
 
           if (parseReal(line, r))
@@ -6170,7 +6115,7 @@ setCmd(const std::string &args)
     std::string arg = readNonSpace(line);
 
     while (arg != "") {
-      if      (arg == "front" && arg == "back") {
+      if      (arg == "front" || arg == "back") {
         if      (arg == "front" ) hidden3D_.layer = DrawLayer::FRONT;
         else if (arg == "back"  ) hidden3D_.layer = DrawLayer::BACK;
       }
@@ -8601,7 +8546,7 @@ setCmd(const std::string &args)
         arg = readNonSpace(line);
       }
     }
-    // set style textbox {opaque|transparent}{{no}border}
+    // set style textbox {opaque|transparent} {{no}border} {margins {x,y}}
     else if (var1 == StyleVar::TEXTBOX) {
       std::string arg = readNonSpace(line);
 
@@ -8611,6 +8556,16 @@ setCmd(const std::string &args)
         }
         else if (arg == "border" || arg == "noborder") {
           styleData_.textBox.setBorder(arg == "border");
+        }
+        else if (arg == "margins") {
+          double mx = 0.0, my = 0.0;
+
+          if (parseReal(line, mx)) {
+            if (line.skipSpaceAndChar(',')) {
+              if (parseReal(line, my))
+                styleData_.textBox.setMargins(CSize2D(mx, my));
+            }
+          }
         }
         else {
           errorMsg("Invalid arg '" + arg + "'");
@@ -9305,7 +9260,7 @@ CGnuPlot::
 setForCmd(const ForCmd &forCmd, const std::string &args)
 {
   if (forCmd.isIn) {
-    std::vector<std::string> words;
+    StringArray words;
 
     CStrUtil::addWords(forCmd.start, words);
 
@@ -10501,6 +10456,8 @@ resetCmd(const std::string &args)
   // TODO: do not reset terminal and output
   resetAngleType();
 
+  setPolar(false);
+
   clearAnnotations<CGnuPlotGroupAnnotation>();
 
   fillStyle_.unset();
@@ -10515,10 +10472,16 @@ resetCmd(const std::string &args)
 
   clearLineStyles();
 
-  camera_.unsetView();
+  camera_.reset();
 
   surfaceData_.setEnabled(true);
   contourData_.setEnabled(false);
+
+  multiplot_.reset();
+
+  region_ = CBBox2D(0, 0, 1, 1);
+
+  plotSize_.reset();
 }
 
 void
@@ -11343,7 +11306,7 @@ CGnuPlot::
 unsetForCmd(const ForCmd &forCmd, const std::string &args)
 {
   if (forCmd.isIn) {
-    std::vector<std::string> words;
+    StringArray words;
 
     CStrUtil::addWords(forCmd.start, words);
 
@@ -12286,18 +12249,75 @@ pauseCmd(const std::string &args)
 
   CParseLine line(args);
 
-  int secs;
+  line.skipSpace();
 
-  if (! parseInteger(line, secs))
-    secs = -1;
+  if (line.isString("mouse")) {
+    int mask = 0;
 
-  std::string msg;
+    while (true) {
+      if (line.isString("key") || line.isString("keypress")) {
+        if (line.isString("key")) line.skipChars(3);
+        else                      line.skipChars(8);
 
-  if (! parseString(line, msg))
-    msg = "press return to continue";
+        mask |= int(CGnuPlotTypes::PauseMask::KEY);
+      }
+      else if (line.isString("button1")) {
+        line.skipChars(7);
 
-  if (! isAutoContinue())
-    prompt(msg);
+        mask |= int(CGnuPlotTypes::PauseMask::BUTTON1);
+      }
+      else if (line.isString("button2")) {
+        line.skipChars(7);
+
+        mask |= int(CGnuPlotTypes::PauseMask::BUTTON2);
+      }
+      else if (line.isString("button3")) {
+        line.skipChars(7);
+
+        mask |= int(CGnuPlotTypes::PauseMask::BUTTON3);
+      }
+      else if (line.isString("close")) {
+        line.skipChars(5);
+
+        mask |= int(CGnuPlotTypes::PauseMask::CLOSE);
+      }
+      else if (line.isString("any")) {
+        line.skipChars(3);
+
+        mask = 0xFF;
+      }
+      else
+        break;
+
+      if (! line.skipSpaceAndChar(','))
+        break;
+    }
+
+    if (mask == 0)
+      mask = 0xFF;
+
+    std::string msg;
+
+    if (! parseString(line, msg))
+      msg = "";
+
+    if (! isAutoContinue())
+      waitForMouse(mask, msg);
+  }
+  else {
+    int secs;
+
+    if (! parseInteger(line, secs))
+      secs = -1;
+
+    std::string msg;
+
+    if (! parseString(line, msg))
+      msg = "press return to continue";
+
+    if (! isAutoContinue())
+      prompt(msg);
+  }
 }
 
 // reread
@@ -12490,48 +12510,16 @@ processAssignFunction(const std::string &str)
 
   // function definition
   if      (line.skipSpaceAndChar('(')) {
-    StringArray args;
-
-    std::string arg;
-
-    if (! readIdentifier(line, arg))
+    if (! parseFunctionDef(identifier, line))
       return false;
-
-    args.push_back(arg);
-
-    while (line.skipSpaceAndChar(',')) {
-      std::string arg1;
-
-      if (! readIdentifier(line, arg1))
-        return false;
-
-      args.push_back(arg1);
-    }
-
-    if (! line.skipSpaceAndChar(')'))
-      return false;
-
-    if (! line.skipSpaceAndChar('='))
-      return false;
-
-    std::string expr = replaceSumInExpr(line.substr());
-
-    CExprInst->addFunction(identifier, args, expr);
   }
   // variable assignment
   else {
     if (! line.skipSpaceAndChar('='))
       return false;
 
-    CExprValuePtr value;
-
-    if (! evaluateExpression(line.substr(), value))
-      value = CExprValuePtr();
-
-    if (! value.isValid())
+    if (! parseVariableDef(identifier, line))
       return false;
-
-    CExprInst->createVariable(identifier, value);
   }
 
   return true;
@@ -13258,10 +13246,19 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
 
     dataFile_.setLines(lines);
   }
+  else if (filename == "-") {
+    readDataFileLines();
+  }
 
   //---
 
   dataFile_.processLines();
+
+  if (dataFile_.numSets() == 0) {
+    errorMsg("no data in file");
+  }
+
+  //---
 
   // plot per set
   for (setNum_ = 0; setNum_ < dataFile_.numSets(); ++setNum_) {
@@ -13549,15 +13546,25 @@ CGnuPlot::
 addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
            const CGnuPlotUsingCols &usingCols)
 {
+  CGnuPlot *th = const_cast<CGnuPlot *>(this);
+
   CGnuPlotImageStyle istyle = imageStyle();
 
   istyle.setFilename(filename);
 
   istyle.setUsingCols(usingCols);
 
-  std::vector<CRGBA> data;
+  CGnuPlotPlot::YXColor   rowColors;
+  CGnuPlotPlot::RowValues rowValues;
+
+  COptReal xmin, ymin, xmax, ymax;
 
   if (imageStyle_.fileType() == CGnuPlotTypes::ImageType::PNG) {
+    if (filename == "-") {
+      errorMsg("no \"-\" filename support for PNG");
+      return 0;
+    }
+
     CImageFileSrc src(filename);
 
     CImagePtr image = CImageMgrInst->createImage(src);
@@ -13566,36 +13573,261 @@ addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     istyle.setWidth (image->getWidth ());
     istyle.setHeight(image->getHeight());
 
-    for (auto y : IRange::range(0, istyle.height().getValue())) {
-      for (auto x : IRange::range(0, istyle.width().getValue())) {
+    for (auto iy : IRange::range(0, istyle.height().getValue())) {
+      ymin.updateMin(iy); ymax.updateMax(iy);
+
+      for (auto ix : IRange::range(0, istyle.width().getValue())) {
         CRGBA rgba;
 
-        image->getRGBAPixel(x, y, rgba);
+        image->getRGBAPixel(ix, iy, rgba);
 
-        data.push_back(rgba);
+        xmin.updateMin(ix); xmax.updateMax(ix);
+
+        rowColors[iy][ix] = rgba;
       }
     }
 
     istyle.setFlipY(true);
   }
   else {
-    // open file
-    CUnixFile file(filename);
-    if (! file.open()) return 0;
+    CGnuPlotUnixFile unixFile;
 
-    uchar c;
-    uchar rgb[3];
-    int   i = 0;
+    if (filename == "-") {
+      if (fileData_.file)
+        unixFile.init(fileData_.file);
+      else
+        unixFile.init(stdin);
+    }
+    else
+      unixFile.init(filename);
 
-    while (file.readChar(c)) {
-      rgb[i++] = c;
+    if (! unixFile.isValid())
+      return 0;
 
-      if (i == 3) {
-        CRGBA rgba(rgb[0]/255.0, rgb[1]/255.0, rgb[2]/255.0);
+    CUnixFile *file = unixFile.file();
 
-        data.push_back(rgba);
+    //---
 
-        i = 0;
+    if (binaryFormat().fmt() == "") {
+      int iw = -1, ih = -1;
+
+      if (imageStyle_.width().isValid() && imageStyle_.height().isValid()) {
+        iw = imageStyle_.width ().getValue();
+        ih = imageStyle_.height().getValue();
+      }
+
+      if (style == PlotStyle::IMAGE) {
+        std::vector<uchar> chars;
+
+        uchar c;
+
+        while (file->readChar(c))
+          chars.push_back(c);
+
+        // how set image size ???
+        int nv = chars.size();
+
+        iw = int(sqrt(nv));
+        ih = nv/iw;
+
+        for (int i = 0; i < nv; ++i) {
+          int ix = i % iw;
+          int iy = i / iw;
+
+          xmin.updateMin(ix); xmax.updateMax(ix);
+          ymin.updateMin(iy); ymax.updateMax(iy);
+
+          rowValues[iy].push_back(chars[i]);
+        }
+      }
+      else {
+        uchar              c;
+        std::vector<uchar> chars;
+
+        int n = std::numeric_limits<int>::max();
+
+        if (imageStyle_.width().isValid() && imageStyle_.height().isValid())
+          n = 3*imageStyle_.width().getValue()*imageStyle_.height().getValue();
+
+        // read from current input source
+        while (int(chars.size()) < n && file->readChar(c))
+          chars.push_back(c);
+
+        if (iw < 0 || ih < 0) {
+          int nv = chars.size();
+
+          iw = int(sqrt(nv));
+          ih = nv/iw;
+        }
+
+        //---
+
+        std::vector<uchar> rgb;
+
+        rgb.resize(3);
+
+        for (uint i = 0, j = 0, k = 0; i < chars.size(); ++i) {
+          rgb[j++] = chars[i];
+
+          if (j == 3) {
+            int ix = k % iw;
+            int iy = k / iw;
+
+            CRGBA rgba(rgb[0]/255.0, rgb[1]/255.0, rgb[2]/255.0);
+
+            xmin.updateMin(ix); xmax.updateMax(ix);
+            ymin.updateMin(iy); ymax.updateMax(iy);
+
+            rowColors[iy][ix] = rgba;
+
+            j = 0;
+
+            ++k;
+          }
+        }
+      }
+    }
+    else {
+      //int nc = usingCols.numCols();
+
+      typedef std::vector<Reals> RealsArray;
+
+      RealsArray valuesArray;
+
+      int iw, ih;
+
+      if (imageStyle_.width().isValid() && imageStyle_.height().isValid()) {
+        iw = imageStyle_.width ().getValue();
+        ih = imageStyle_.height().getValue();
+
+        int n = iw*ih;
+
+        for (int i = 0; i < n; ++i) {
+          Reals values;
+
+          binaryFormat_.readValues(*file, values, 3);
+
+          valuesArray.push_back(values);
+        }
+      }
+      else {
+        // read all values
+        Reals values;
+
+        binaryFormat_.readValues(*file, values);
+
+        int nv = values.size()/3;
+
+        valuesArray.resize(nv);
+
+        for (int i = 0, j = 0; i < nv; ++i, j += 3)
+          valuesArray[i] = Reals({values[j], values[j + 1], values[j + 2]});
+
+        // how set image size ???
+        iw = int(sqrt(nv));
+        ih = nv/iw;
+      }
+
+      //---
+
+      for (uint i = 0; i < valuesArray.size(); ++i) {
+        int ix = (i % iw);
+        int iy = (i / iw);
+
+        if (! dataFile_.every().validPointIndex(ix) || ! dataFile_.every().validBlockIndex(iy))
+          continue;
+
+        xmin.updateMin(ix); xmax.updateMax(ix);
+        ymin.updateMin(iy); ymax.updateMax(iy);
+
+        const Reals &values = valuesArray[i];
+
+        if (usingCols.numCols() > 0) {
+          Values fieldValues;
+
+          for (const auto &v : values) {
+            CExprValuePtr val = CExprInst->createRealValue(v);
+
+            fieldValues.push_back(val);
+          }
+
+          Params params;
+
+          bool   bad;
+          Values values;
+
+          setNum_   = 0;
+          pointNum_ = i;
+
+          usingCols.decodeValues(th, pointNum_, fieldValues, bad, values, params);
+
+          if (style == PlotStyle::IMAGE) { // palette
+            double r = 0;
+
+            if (values.size() > 0 && values[0].isValid()) values[0]->getRealValue(r);
+
+            rowValues[iy].push_back(r);
+          }
+          else {
+            double r = 0, g = 0, b = 0;
+
+            if (values.size() > 0 && values[0].isValid()) {
+              values[0]->getRealValue(r);
+              if (! binaryFormat_.indexFormat(0).isReal())
+                r = scaleColorComponent(r);
+            }
+
+            if (values.size() > 1 && values[1].isValid()) {
+              values[1]->getRealValue(g);
+              if (! binaryFormat_.indexFormat(1).isReal())
+                g = scaleColorComponent(g);
+            }
+
+            if (values.size() > 2 && values[2].isValid()) {
+              values[2]->getRealValue(b);
+              if (! binaryFormat_.indexFormat(2).isReal())
+                b = scaleColorComponent(b);
+            }
+
+            CRGBA rgba(r, g, b);
+
+            rowColors[iy][ix] = rgba;
+          }
+        }
+        else {
+          int nv = values.size();
+
+          if (style == PlotStyle::IMAGE) { // palette
+            double r = (nv > 0 ? values[0] : 0);
+
+            rowValues[iy].push_back(r);
+          }
+          else {
+            double r = 0, g = 0, b = 0;
+
+            r = (nv > 0 ? values[0] : 0);
+            g = (nv > 1 ? values[1] : 0);
+            b = (nv > 2 ? values[2] : 0);
+
+            CRGBA rgba(r/255.0, g/255.0, b/255.0);
+
+            rowColors[iy][ix] = rgba;
+          }
+        }
+      }
+
+      if (imageStyle_.width().isValid() && imageStyle_.height().isValid()) {
+        if (style == PlotStyle::IMAGE) {
+          int nx = 0;
+
+          for (const auto &d : rowValues)
+            nx = std::max(nx, int(d.second.size()));
+
+          for (auto &d : rowValues) {
+            while (int(d.second.size()) < nx)
+              d.second.push_back(0);
+          }
+        }
       }
     }
   }
@@ -13612,7 +13844,14 @@ addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     plot->setKeyTitleString(title);
   }
 
-  plot->setImageData(data);
+  CBBox2D ibbox(xmin.getValue(0), ymin.getValue(0), xmax.getValue(1), ymax.getValue(1));
+
+  plot->setImageRange(ibbox);
+
+  if (style == PlotStyle::IMAGE)
+    plot->setImageValues(rowValues);
+  else
+    plot->setImageColors(rowColors);
 
   plot->setImageStyle(istyle);
 
@@ -13626,20 +13865,33 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 {
   CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
-  // open file
-  CUnixFile file(filename);
-  if (! file.open()) return 0;
+  // init input file
+  CGnuPlotUnixFile unixFile;
+
+  if (filename == "-") {
+    if (fileData_.file)
+      unixFile.init(fileData_.file);
+    else
+      unixFile.init(stdin);
+  }
+  else
+    unixFile.init(filename);
+
+  if (! unixFile.isValid())
+    return 0;
+
+  CUnixFile *file = unixFile.file();
 
   //---
 
-  CGnuPlotPlot *plot;
+  CGnuPlotPlot *plot = 0;
 
   // matrix format
   if (binaryFormat().fmt() == "") {
     // read number of columns
     float fn;
 
-    if (! file.readData<float>(fn))
+    if (! file->readData<float>(fn))
       return 0;
 
     int nx = fn;
@@ -13648,35 +13900,35 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
       return 0;
 
     // read x values
-    std::vector<float> xvals;
+    Floats xvals;
 
     for (int i = 0; i < nx; ++i) {
       float x;
 
-      if (file.readData<float>(x))
+      if (file->readData<float>(x))
         xvals.push_back(x);
     }
 
     if (int(xvals.size()) != nx)
       return 0;
 
-    std::vector<float>              yvals;
-    std::vector<std::vector<float>> data;
+    Floats              yvals;
+    std::vector<Floats> data;
 
     while (true) {
       float y;
 
-      if (! file.readData<float>(y))
+      if (! file->readData<float>(y))
         break;
 
       yvals.push_back(y);
 
-      std::vector<float> data1;
+      Floats data1;
 
       for (int i = 0; i < nx; ++i) {
         float d;
 
-        if (file.readData<float>(d))
+        if (file->readData<float>(d))
           data1.push_back(d);
       }
 
@@ -13697,6 +13949,17 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
     plot->init();
 
+    if (isPolar())
+      plot->setPolar(true);
+
+    //---
+
+    if (plot->isKeyTitleEnabled() && plot->keyTitleString() == "") {
+      std::string title = "\"" + filename + "\"";
+
+      plot->setKeyTitleString(title);
+    }
+
     //---
 
     for (const auto &iy : IRange::range(0, ny)) {
@@ -13706,20 +13969,36 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         float x = xvals[ix];
         float z = data[iy][ix];
 
-        std::vector<double> rvals = {{x, y, z}};
+        Reals rvals = {{x, y, z}};
 
         plot->addPoint2D(rvals);
       }
     }
+  }
+  else {
+    CGnuPlotStyleBase *plotStyle = getPlotStyle(style);
+
+    // get plots style expected number of values
+    int nv = (plotStyle ? plotStyle->numUsing() : 2);
+
+    // get max using column
+    if      (usingCols.colMax().isValid())
+      nv = usingCols.colMax().getValue();
+    else if (binaryFormat_.numFormats() > 0)
+      nv = binaryFormat_.numFormatValues();
 
     //---
 
-    return plot;
-  }
-  else {
-    std::vector<double> vals;
+    Reals vals;
 
-    binaryFormat_.readValues(file, vals);
+    if (! recordValues().empty()) {
+      for (const auto &n : recordValues()) {
+        binaryFormat_.readValues(*file, vals, nv*n);
+      }
+    }
+    else {
+      binaryFormat_.readValues(*file, vals);
+    }
 
     //---
 
@@ -13727,19 +14006,18 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
     plot->init();
 
+    if (isPolar())
+      plot->setPolar(true);
+
     //---
 
     // add values
-    CGnuPlotStyleBase *plotStyle = getPlotStyle(style);
-
-    int nv = (plotStyle ? plotStyle->numUsing() : 2);
-
-    if (int(usingCols.numCols()) > nv)
-      nv = usingCols.numCols();
-
-    //---
-
     int n = vals.size();
+
+    if (n < nv) {
+      errorMsg("Missing values for binary plot");
+      return 0;
+    }
 
     for (const auto &i : IRange::range(0, n, nv)) {
       fieldValues_.clear();
@@ -14012,10 +14290,24 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
     dataFile_.setLines(lines);
   }
+  else if (filename == "-") {
+    readDataFileLines();
+  }
 
   //---
 
+  if (matrixData().isMatrix()) {
+    dataFile_.setSetBlankLines(1);
+    dataFile_.setSubSetBlankLines(-1); // disable
+  }
+
   dataFile_.processLines();
+
+  if (dataFile_.numSets() == 0) {
+    errorMsg("no data in file");
+  }
+
+  //---
 
   // plot per set
   for (setNum_ = 0; setNum_ < dataFile_.numSets(); ++setNum_) {
@@ -14169,15 +14461,25 @@ CGnuPlot::
 addImage3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
            const CGnuPlotUsingCols &usingCols)
 {
+  CGnuPlot *th = const_cast<CGnuPlot *>(this);
+
   CGnuPlotImageStyle istyle = imageStyle();
 
   istyle.setFilename(filename);
 
   istyle.setUsingCols(usingCols);
 
-  std::vector<CRGBA> data;
+  CGnuPlotPlot::YXColor   rowColors;
+  CGnuPlotPlot::RowValues rowValues;
+
+  COptReal xmin, ymin, xmax, ymax;
 
   if (imageStyle_.fileType() == CGnuPlotTypes::ImageType::PNG) {
+    if (filename == "-") {
+      errorMsg("no \"-\" filename support for PNG");
+      return 0;
+    }
+
     CImageFileSrc src(filename);
 
     CImagePtr image = CImageMgrInst->createImage(src);
@@ -14186,36 +14488,258 @@ addImage3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     istyle.setWidth (image->getWidth ());
     istyle.setHeight(image->getHeight());
 
-    for (auto y : IRange::range(0, istyle.height().getValue())) {
-      for (auto x : IRange::range(0, istyle.width().getValue())) {
+    for (auto iy : IRange::range(0, istyle.height().getValue())) {
+      ymin.updateMin(iy); ymax.updateMax(iy);
+
+      for (auto ix : IRange::range(0, istyle.width().getValue())) {
         CRGBA rgba;
 
-        image->getRGBAPixel(x, y, rgba);
+        image->getRGBAPixel(ix, iy, rgba);
 
-        data.push_back(rgba);
+        xmin.updateMin(ix); xmax.updateMax(ix);
+
+        rowColors[iy][ix] = rgba;
       }
     }
 
     istyle.setFlipY(true);
   }
   else {
-    // open file
-    CUnixFile file(filename);
-    if (! file.open()) return 0;
+    CGnuPlotUnixFile unixFile;
 
-    uchar c;
-    uchar rgb[3];
-    int   i = 0;
+    if (filename == "-") {
+      if (fileData_.file)
+        unixFile.init(fileData_.file);
+      else
+        unixFile.init(stdin);
+    }
+    else
+      unixFile.init(filename);
 
-    while (file.readChar(c)) {
-      rgb[i++] = c;
+    if (! unixFile.isValid())
+      return 0;
 
-      if (i == 3) {
-        CRGBA rgba(rgb[0]/255.0, rgb[1]/255.0, rgb[2]/255.0);
+    CUnixFile *file = unixFile.file();
 
-        data.push_back(rgba);
+    //---
 
-        i = 0;
+    if (binaryFormat().fmt() == "") {
+      int iw = -1, ih = -1;
+
+      if (imageStyle_.width().isValid() && imageStyle_.height().isValid()) {
+        iw = imageStyle_.width ().getValue();
+        ih = imageStyle_.height().getValue();
+      }
+
+      if (style == PlotStyle::IMAGE) {
+        std::vector<uchar> chars;
+
+        uchar c;
+
+        while (file->readChar(c))
+          chars.push_back(c);
+
+        // how set image size ???
+        int nv = chars.size();
+
+        iw = int(sqrt(nv));
+        ih = nv/iw;
+
+        for (int i = 0; i < nv; ++i) {
+          int ix = i % iw;
+          int iy = i / iw;
+
+          xmin.updateMin(ix); xmax.updateMax(ix);
+          ymin.updateMin(iy); ymax.updateMax(iy);
+
+          rowValues[iy].push_back(chars[i]);
+        }
+      }
+      else {
+        uchar              c;
+        std::vector<uchar> chars;
+
+        int n = std::numeric_limits<int>::max();
+
+        if (imageStyle_.width().isValid() && imageStyle_.height().isValid())
+          n = 3*imageStyle_.width().getValue()*imageStyle_.height().getValue();
+
+        // read from current input source
+        while (int(chars.size()) < n && file->readChar(c))
+          chars.push_back(c);
+
+        if (iw < 0 || ih < 0) {
+          int nv = chars.size();
+
+          iw = int(sqrt(nv));
+          ih = nv/iw;
+        }
+
+        //---
+
+        std::vector<uchar> rgb;
+
+        rgb.resize(3);
+
+        for (uint i = 0, j = 0, k = 0; i < chars.size(); ++i) {
+          rgb[j++] = chars[i];
+
+          if (j == 3) {
+            int ix = k % iw;
+            int iy = k / iw;
+
+            CRGBA rgba(rgb[0]/255.0, rgb[1]/255.0, rgb[2]/255.0);
+
+            xmin.updateMin(ix); xmax.updateMax(ix);
+            ymin.updateMin(iy); ymax.updateMax(iy);
+
+            rowColors[iy][ix] = rgba;
+
+            j = 0;
+
+            ++k;
+          }
+        }
+      }
+    }
+    else {
+      //int nc = usingCols.numCols();
+
+      typedef std::vector<Reals> RealsArray;
+
+      RealsArray valuesArray;
+
+      int iw, ih;
+
+      if (imageStyle_.width().isValid() && imageStyle_.height().isValid()) {
+        iw = imageStyle_.width ().getValue();
+        ih = imageStyle_.height().getValue();
+
+        int n = iw*ih;
+
+        for (int i = 0; i < n; ++i) {
+          Reals values;
+
+          binaryFormat_.readValues(*file, values, 3);
+
+          valuesArray.push_back(values);
+        }
+      }
+      else {
+        // read all values
+        Reals values;
+
+        binaryFormat_.readValues(*file, values);
+
+        int nv = values.size()/3;
+
+        valuesArray.resize(nv);
+
+        for (int i = 0, j = 0; i < nv; ++i, j += 3)
+          valuesArray[i] = Reals({values[j], values[j + 1], values[j + 2]});
+
+        // how set image size ???
+        iw = int(sqrt(nv));
+        ih = nv/iw;
+      }
+
+      //---
+
+      for (uint i = 0; i < valuesArray.size(); ++i) {
+        int ix = (i % iw);
+        int iy = (i / iw);
+
+        if (! dataFile_.every().validPointIndex(ix) || ! dataFile_.every().validBlockIndex(iy))
+          continue;
+
+        xmin.updateMin(ix); xmax.updateMax(ix);
+        ymin.updateMin(iy); ymax.updateMax(iy);
+
+        const Reals &values = valuesArray[i];
+
+        if (usingCols.numCols() > 0) {
+          Values fieldValues;
+
+          for (const auto &v : values) {
+            CExprValuePtr val = CExprInst->createRealValue(v);
+
+            fieldValues.push_back(val);
+          }
+
+          Params params;
+
+          bool   bad;
+          Values values;
+
+          setNum_   = 0;
+          pointNum_ = i;
+
+          usingCols.decodeValues(th, pointNum_, fieldValues, bad, values, params);
+
+          if (style == PlotStyle::IMAGE) { // palette
+            double r = 0;
+
+            if (values.size() > 0 && values[0].isValid()) values[0]->getRealValue(r);
+
+            rowValues[iy].push_back(r);
+          }
+          else {
+            double r = 0, g = 0, b = 0;
+
+            if (values.size() > 0 && values[0].isValid()) {
+              values[0]->getRealValue(r);
+              if (! binaryFormat_.indexFormat(0).isReal()) r /= 255.0;
+            }
+
+            if (values.size() > 1 && values[1].isValid()) {
+              values[1]->getRealValue(g);
+              if (! binaryFormat_.indexFormat(1).isReal()) g /= 255.0;
+            }
+
+            if (values.size() > 2 && values[2].isValid()) {
+              values[2]->getRealValue(b);
+              if (! binaryFormat_.indexFormat(2).isReal()) b /= 255.0;
+            }
+
+            CRGBA rgba(r, g, b);
+
+            rowColors[iy][ix] = rgba;
+          }
+        }
+        else {
+          int nv = values.size();
+
+          if (style == PlotStyle::IMAGE) { // palette
+            double r = (nv > 0 ? values[0] : 0);
+
+            rowValues[iy].push_back(r);
+          }
+          else {
+            double r = 0, g = 0, b = 0;
+
+            r = (nv > 0 ? values[0] : 0);
+            g = (nv > 1 ? values[1] : 0);
+            b = (nv > 2 ? values[2] : 0);
+
+            CRGBA rgba(r/255.0, g/255.0, b/255.0);
+
+            rowColors[iy][ix] = rgba;
+          }
+        }
+      }
+
+      if (imageStyle_.width().isValid() && imageStyle_.height().isValid()) {
+        if (style == PlotStyle::IMAGE) {
+          int nx = 0;
+
+          for (const auto &d : rowValues)
+            nx = std::max(nx, int(d.second.size()));
+
+          for (auto &d : rowValues) {
+            while (int(d.second.size()) < nx)
+              d.second.push_back(0);
+          }
+        }
       }
     }
   }
@@ -14232,7 +14756,14 @@ addImage3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     plot->setKeyTitleString(title);
   }
 
-  plot->setImageData(data);
+  CBBox2D ibbox(xmin.getValue(0), ymin.getValue(0), xmax.getValue(1), ymax.getValue(1));
+
+  plot->setImageRange(ibbox);
+
+  if (style == PlotStyle::IMAGE)
+    plot->setImageValues(rowValues);
+  else
+    plot->setImageColors(rowColors);
 
   plot->setImageStyle(istyle);
 
@@ -14241,96 +14772,333 @@ addImage3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
 CGnuPlotPlot *
 CGnuPlot::
-addBinary3D(CGnuPlotGroup *group, const std::string &filename, const CGnuPlotUsingCols &)
+addBinary3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
+            const CGnuPlotUsingCols &usingCols)
 {
-  // open file
-  CUnixFile file(filename);
-  if (! file.open()) return 0;
+  CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
-  // read number of columns
-  float fn;
+  // init input file
+  CGnuPlotUnixFile unixFile;
 
-  if (! file.readData<float>(fn))
-    return 0;
-
-  int nx = fn;
-
-  if (nx <= 0)
-    return 0;
-
-  // read x values
-  std::vector<float> xvals;
-
-  for (int i = 0; i < nx; ++i) {
-    float x;
-
-    if (file.readData<float>(x))
-      xvals.push_back(x);
+  if (filename == "-") {
+    if (fileData_.file)
+      unixFile.init(fileData_.file);
+    else
+      unixFile.init(stdin);
   }
+  else
+    unixFile.init(filename);
 
-  if (int(xvals.size()) != nx)
+  if (! unixFile.isValid())
     return 0;
 
-  std::vector<float>              yvals;
-  std::vector<std::vector<float>> data;
+  CUnixFile *file = unixFile.file();
 
-  while (true) {
-    float y;
+  //---
 
-    if (! file.readData<float>(y))
-      break;
+  CGnuPlotPlot *plot = 0;
 
-    yvals.push_back(y);
+  // matrix format
+  if (binaryFormat().fmt() == "") {
+    if (recordValues_.empty()) {
+      // read number of columns
+      float fn;
 
-    std::vector<float> data1;
+      if (! file->readData<float>(fn))
+        return 0;
 
-    for (int i = 0; i < nx; ++i) {
-      float d;
+      int nx = fn;
 
-      if (file.readData<float>(d))
-        data1.push_back(d);
+      if (nx <= 0)
+        return 0;
+
+      // read x values
+      Floats xvals;
+
+      for (int i = 0; i < nx; ++i) {
+        float x;
+
+        if (file->readData<float>(x))
+          xvals.push_back(x);
+      }
+
+      if (int(xvals.size()) != nx)
+        return 0;
+
+      Floats              yvals;
+      std::vector<Floats> data;
+
+      while (true) {
+        float y;
+
+        if (! file->readData<float>(y))
+          break;
+
+        yvals.push_back(y);
+
+        Floats data1;
+
+        for (int i = 0; i < nx; ++i) {
+          float d;
+
+          if (file->readData<float>(d))
+            data1.push_back(d);
+        }
+
+        if (int(data1.size()) != nx)
+          return 0;
+
+        data.push_back(data1);
+      }
+
+      if (data.empty())
+        return 0;
+
+      int ny = data[0].size();
+
+      //---
+
+      plot = createPlot(group, PlotStyle::SURFACE);
+
+      plot->init();
+
+      //---
+
+      if (plot->isKeyTitleEnabled() && plot->keyTitleString() == "") {
+        std::string title = "\"" + filename + "\"";
+
+        plot->setKeyTitleString(title);
+      }
+
+      //---
+
+      int iy1 = 0;
+
+      for (const auto &iy : IRange::range(0, ny)) {
+        float y = yvals[iy];
+
+        bool found = false;
+
+        for (const auto &ix : IRange::range(0, nx)) {
+          float x = xvals[ix];
+
+          if (! dataFile_.every().validPointIndex(ix) || ! dataFile_.every().validBlockIndex(iy))
+            continue;
+
+          float z = data[iy][ix];
+
+          plot->addPoint3D(iy1, x, y, z);
+
+          found = true;
+        }
+
+        if (found)
+          ++iy1;
+      }
+    }
+    else {
+      // read n points for each record
+      std::vector<Points3D> data;
+
+      for (const auto &n : recordValues_) {
+        Points3D points;
+
+        for (int i = 0; i < n; ++i) {
+          float x, y, z;
+
+          CPoint3D point;
+
+          if (readEndianFloat(file, endian_, x) &&
+              readEndianFloat(file, endian_, y) &&
+              readEndianFloat(file, endian_, z))
+            point = CPoint3D(x, y, z);
+
+          if (usingCols.numCols() > 0) {
+            Values values;
+
+            values.push_back(CExprInst->createRealValue(point.x));
+            values.push_back(CExprInst->createRealValue(point.y));
+            values.push_back(CExprInst->createRealValue(point.z));
+
+            bool   bad;
+            Values values1;
+            Params params;
+
+            usingCols.decodeValues(th, i, values, bad, values1, params);
+
+            // one value then auto add the point and set number
+            CPoint3D point1;
+
+            if (values1.size() > 0) values1[0]->getRealValue(point1.x);
+            if (values1.size() > 1) values1[1]->getRealValue(point1.y);
+            if (values1.size() > 2) values1[2]->getRealValue(point1.z);
+
+            point = point1;
+          }
+
+          points.push_back(point);
+        }
+
+        data.push_back(points);
+      }
+
+      //---
+
+      plot = createPlot(group, style);
+
+      plot->init();
+
+      //---
+
+      if (plot->isKeyTitleEnabled() && plot->keyTitleString() == "") {
+        std::string title = "\"" + filename + "\"";
+
+        plot->setKeyTitleString(title);
+      }
+
+      //---
+
+      int iy = 0;
+
+      for (const auto &points : data) {
+        int ix = 0;
+
+        for (const auto &p : points) {
+          if (dataFile_.every().validPointIndex(ix) &&
+              dataFile_.every().validBlockIndex(iy))
+            plot->addPoint3D(iy, p);
+
+          ++ix;
+        }
+
+        ++iy;
+      }
+    }
+  }
+  else {
+    CGnuPlotStyleBase *plotStyle = getPlotStyle(style);
+
+    // get plots style expected number of values
+    int nv = (plotStyle ? plotStyle->numUsing() : 3);
+
+    // get max using column
+    if      (usingCols.colMax().isValid())
+      nv = usingCols.colMax().getValue();
+    else if (binaryFormat_.numFormats() > 0)
+      nv = binaryFormat_.numFormatValues();
+
+    //---
+
+    std::vector<Reals> realsArray;
+
+    if (! recordValues().empty()) {
+      for (const auto &n : recordValues()) {
+        Reals reals;
+
+        binaryFormat_.readValues(*file, reals, nv*n);
+
+        realsArray.push_back(reals);
+      }
+    }
+    else {
+      Reals reals;
+
+      binaryFormat_.readValues(*file, reals);
+
+      realsArray.push_back(reals);
     }
 
-    if (int(data1.size()) != nx)
-      return 0;
+    //---
 
-    data.push_back(data1);
-  }
+    plot = createPlot(group, style);
 
-  if (data.empty())
-    return 0;
+    plot->init();
 
-  int ny = data[0].size();
+    //---
 
-  //---
+    // add values
+    int iy = 0;
 
-  CGnuPlotPlot *plot = createPlot(group, PlotStyle::SURFACE);
+    for (const auto &reals : realsArray) {
+      int n = reals.size();
 
-  plot->init();
+      if (n < nv)
+        warnMsg("Missing values for binary 3d plot");
 
-  if (plot->isKeyTitleEnabled() && plot->keyTitleString() == "") {
-    std::string title = "\"" + filename + "\"";
+      for (const auto &i : IRange::range(0, n, nv)) {
+        fieldValues_.clear();
 
-    plot->setKeyTitleString(title);
-  }
+        for (const auto &j : IRange::range(0, nv)) {
+          CExprValuePtr val = CExprInst->createRealValue(reals[i + j]);
 
-  //---
+          fieldValues_.push_back(val);
+        }
 
-  for (const auto &iy : IRange::range(0, ny)) {
-    float y = yvals[iy];
+        pointNum_ = i/nv;
 
-    for (const auto &ix : IRange::range(0, nx)) {
-      float x = xvals[ix];
+        if (dataFile_.every().validPointIndex(pointNum_) &&
+            dataFile_.every().validBlockIndex(iy)) {
+          Params params;
 
-      float z = data[iy][ix];
+          if (usingCols.numCols()) {
+            bool   bad;
+            Values values;
 
-      plot->addPoint3D(iy, x, y, z);
+            setNum_ = 0;
+
+            usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
+
+            plot->addPoint3D(iy, values, false, bad, params);
+          }
+          else
+            plot->addPoint3D(iy, fieldValues_, false, false, params);
+        }
+      }
+
+      ++iy;
     }
   }
-
-  //---
 
   return plot;
+}
+
+bool
+CGnuPlot::
+readEndianFloat(CUnixFile *file, Endian endian, float &f)
+{
+  if (endian == Endian::DEFAULT || endian == Endian::SWAP) {
+    if (! file->readData<float>(f))
+      return false;
+
+    if (endian == Endian::SWAP) {
+      uchar *data = (uchar *) &f;
+
+      // swap the bytes into a temporary buffer
+      std::swap(data[0], data[3]);
+      std::swap(data[1], data[2]);
+    }
+  }
+  else {
+    uchar buffer[sizeof(float)];
+
+    for (size_t i = 0; i < sizeof(float); ++i) {
+      if (! file->readChar(buffer[i]))
+        return false;
+    }
+
+    uchar *data = (uchar *) &f;
+
+    if (endian == Endian::LITTLE) {
+      for (size_t i = 0; i < sizeof(float); ++i)
+        data[i] = buffer[i];
+    }
+    else {
+      for (size_t i = 0; i < sizeof(float); ++i)
+        data[sizeof(float) - 1 - i] = buffer[i];
+    }
+  }
+
+  return true;
 }
 
 int
@@ -15229,8 +15997,8 @@ parseDash(CParseLine &line, CLineDash &dash)
 
   //---
 
-  std::vector<double> dashes;
-  std::string         str;
+  Reals       dashes;
+  std::string str;
 
   if      (line.skipSpaceAndChar('(')) {
     double l;
@@ -15702,6 +16470,36 @@ parseOffset(CParseLine &line, CPoint2D &p)
 
 bool
 CGnuPlot::
+parsePoint(CParseLine &line, CPoint3D &p)
+{
+  int pos = line.pos();
+
+  double x = 0.0, y = 0.0, z = 0.0;
+
+  if (parseReal(line, x)) {
+    if (line.skipSpaceAndChar(',')) {
+      if (parseReal(line, y)) {
+        if (line.skipSpaceAndChar(',')) {
+          if (parseReal(line, z)) {
+            p = CPoint3D(x, y, z);
+            return true;
+          }
+        }
+        else {
+          p = CPoint3D(x, y, z);
+          return true;
+        }
+      }
+    }
+  }
+
+  line.setPos(pos);
+
+  return false;
+}
+
+bool
+CGnuPlot::
 parsePoint(CParseLine &line, CPoint2D &p)
 {
   int pos = line.pos();
@@ -16035,11 +16833,34 @@ void
 CGnuPlot::
 readDataFileLines()
 {
-  CGnuPlotFile::Lines lines;
+  // open file
+  if (isBinary()) {
+    // TODO: buffered lines ?
 
-  readFileLines(lines);
+    std::vector<uchar> chars;
 
-  dataFile_.setLines(lines);
+    if (fileData_.file) {
+      uchar c;
+
+      while (fileData_.file->readChar(c)) {
+        chars.push_back(c);
+      }
+    }
+    else {
+      char c;
+
+      while ((c = fgetc(stdin)) != EOF) {
+        chars.push_back(c);
+      }
+    }
+  }
+  else {
+    CGnuPlotFile::Lines lines;
+
+    readFileLines(lines);
+
+    dataFile_.setLines(lines);
+  }
 }
 
 void
@@ -16133,6 +16954,13 @@ errorMsg(const std::string &msg) const
   std::cerr << msg << std::endl;
 
   CExprInst->createStringVariable("GPVAL_ERRMSG" , msg);
+}
+
+void
+CGnuPlot::
+warnMsg(const std::string &msg) const
+{
+  std::cerr << msg << std::endl;
 }
 
 void
@@ -16369,4 +17197,14 @@ getBlock(const std::string &name)
   }
 
   return (*p).second;
+}
+
+double
+CGnuPlot::
+scaleColorComponent(double z) const
+{
+  double cbmin = colorBox_.min().getValue(0);
+  double cbmax = colorBox_.max().getValue(255);
+
+  return CGnuPlotUtil::map(z, cbmin, cbmax, 0, 1);
 }

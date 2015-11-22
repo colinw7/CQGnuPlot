@@ -43,15 +43,15 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
 
   void draw(CGnuPlotRenderer *renderer) const override;
 
-  bool inside(const CGnuPlotTypes::InsideData &p) const override;
+  bool inside(const CGnuPlotMouseEvent &p) const override;
 
-  const CBBox2D &bbox() const { return bbox_; }
+  const CBBox2D &bbox() const override { return bbox_; }
 
   CGnuPlotTipData tip() const override;
 
   void initClip() override;
 
-  void print(std::ostream &) const;
+  void print(std::ostream &) const override;
 
  protected:
   void calcPoints(CGnuPlotRenderer *renderer) const;

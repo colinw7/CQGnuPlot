@@ -63,17 +63,18 @@ indexColor(const std::string &name, int i) const
 {
   static CRGBA noColor   (0,0,0,0);
   static CRGBA blackColor(0,0,0);
+  static CRGBA whiteColor(1,1,1);
   static CRGBA grayColor (0.6,0.6,0.6);
 
   initColors();
 
-  // 0: gray, -1: black, -2, transparent, -3 background (TODO ?)
+  // 0: gray, -1: black, -2: transparent, -3: background (TODO ?)
   if      (i == 0)
     return grayColor;
   else if (i == -1)
     return blackColor;
   else if (i == -2)
-    return noColor;
+    return whiteColor;
   else if (i < 0)
     return blackColor;
 
