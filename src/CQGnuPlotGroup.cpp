@@ -94,7 +94,10 @@ draw()
   if (isSelected()) {
     CGnuPlotRenderer *renderer = app()->renderer();
 
-    renderer->drawRect(bbox(), CRGBA(1,0,0), 2);
+    if (! is3D())
+      renderer->drawRect(bbox2D(), CRGBA(1,0,0), 2);
+    else
+      renderer->drawRect(bbox3D(), CRGBA(1,0,0), 2);
   }
 }
 
@@ -334,6 +337,27 @@ pixelToWindow(const CPoint2D &p, CPoint2D &w)
   double z = 0;
 
   unmapLogPoint(1, 1, 1, &w.x, &w.y, &z);
+}
+
+void
+CQGnuPlotGroup::
+windowToPixel(const CPoint2D &w, CPoint2D &p)
+{
+  QPointF pos(w.x, w.y);
+
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setRegion(region());
+
+  renderer->setRange(getMappedDisplayRange(1, 1));
+
+  CPoint2D w1 = w;
+
+  double z = 0;
+
+  mapLogPoint(1, 1, 1, &w1.x, &w1.y, &z);
+
+  renderer->windowToPixel(w1, p);
 }
 
 bool

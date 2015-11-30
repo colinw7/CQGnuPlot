@@ -136,7 +136,8 @@ draw(CGnuPlotRenderer *renderer) const
       tc = fill->color().bwContrast();
 
     // aligned ?
-    renderer->drawHAlignedText(tp, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0, name_, tc);
+    renderer->drawHAlignedText(tp, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                               VAlignPos(CVALIGN_TYPE_CENTER, 0), name_, tc);
   }
 
   //---

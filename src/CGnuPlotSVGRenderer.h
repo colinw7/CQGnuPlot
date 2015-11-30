@@ -48,7 +48,8 @@ class CGnuPlotSVGRenderer : public CGnuPlotRenderer {
   void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) override;
 
   void drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
-                       CHAlignType halign, CVAlignType valign, const CRGBA &c) override;
+                       const HAlignPos &halignPos, const VAlignPos &valignPos,
+                       const CRGBA &c) override;
 
   void drawPieSlice(const CPoint2D &pc, double ro, double ri, double angle1, double angle2,
                     double width, const CRGBA &c) override;

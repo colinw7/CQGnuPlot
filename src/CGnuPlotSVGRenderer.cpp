@@ -520,7 +520,7 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 void
 CGnuPlotSVGRenderer::
 drawRotatedText(const CPoint2D &p, const std::string &text, double /*ta*/,
-                CHAlignType, CVAlignType, const CRGBA &c)
+                const HAlignPos &, const VAlignPos &, const CRGBA &c)
 {
   drawText(p, text, c);
 }

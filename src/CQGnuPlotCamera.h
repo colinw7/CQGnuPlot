@@ -21,6 +21,9 @@ class CQGnuPlotCamera : public CQGnuPlotObject, public CGnuPlotCamera {
   Q_PROPERTY(double near READ near WRITE setNear)
   Q_PROPERTY(double far  READ far  WRITE setFar )
 
+  Q_PROPERTY(double planeZ        READ planeZ          WRITE setPlaneZ       )
+  Q_PROPERTY(bool   planeRelative READ isPlaneRelative WRITE setPlaneRelative)
+
  public:
   CQGnuPlotCamera(CQGnuPlotGroup *group);
 };

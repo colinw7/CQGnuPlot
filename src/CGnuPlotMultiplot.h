@@ -14,7 +14,7 @@ class CGnuPlotMultiplot {
 
   void reset() {
     enabled_   = false;
-    autoFit_   = true;
+    autoFit_   = false;
     enhanced_  = false;
     rows_      = 0;
     cols_      = 0;
@@ -106,7 +106,7 @@ class CGnuPlotMultiplot {
  private:
   CGnuPlot*   plot_      { 0 };
   bool        enabled_   { false };
-  bool        autoFit_   { true };
+  bool        autoFit_   { false };
   bool        enhanced_  { false };
   int         rows_      { 0 };
   int         cols_      { 0 };

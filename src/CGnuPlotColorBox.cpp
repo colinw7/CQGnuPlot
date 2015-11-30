@@ -66,7 +66,7 @@ draw(CGnuPlotRenderer *renderer)
 
   CBBox2D irbbox = renderer->range();
   CBBox2D orbbox = (! renderer->isPseudo() ? group_->getRegionBBox() : irbbox);
-  CBBox2D axbbox = group_->getAxisBBox();
+  CBBox2D axbbox = group_->axisBBox2D();
 
   double pw = (! renderer->isPseudo() ? renderer->pixelWidthToWindowWidth  (1) : 1);
   double ph = (! renderer->isPseudo() ? renderer->pixelHeightToWindowHeight(1) : 1);
@@ -253,8 +253,8 @@ draw(CGnuPlotRenderer *renderer)
 
           CPoint2D p(tx, yy);
 
-          renderer->drawHAlignedText(p, CHALIGN_TYPE_LEFT, 0, CVALIGN_TYPE_CENTER, 0,
-                                     ss.str(), CRGBA(0,0,0));
+          renderer->drawHAlignedText(p, HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                                     VAlignPos(CVALIGN_TYPE_CENTER, 0), ss.str(), CRGBA(0,0,0));
 
           group_->updateMarginBBox(renderer->getHAlignedTextBBox(ss.str()).moveBy(p));
 
@@ -290,8 +290,8 @@ draw(CGnuPlotRenderer *renderer)
 
           CPoint2D p(xx, ty);
 
-          renderer->drawHAlignedText(p, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP, 0,
-                                     ss.str(), CRGBA(0,0,0));
+          renderer->drawHAlignedText(p, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                                     VAlignPos(CVALIGN_TYPE_TOP, 0), ss.str(), CRGBA(0,0,0));
 
           group_->updateMarginBBox(renderer->getHAlignedTextBBox(ss.str()).moveBy(p));
 
@@ -369,7 +369,8 @@ draw(CGnuPlotRenderer *renderer)
 
       p = CPoint2D(x2 + bx, ym);
 
-      renderer->drawRotatedText(p, str, a, CHALIGN_TYPE_LEFT, CVALIGN_TYPE_CENTER, c);
+      renderer->drawRotatedText(p, str, a, HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                                VAlignPos(CVALIGN_TYPE_CENTER, 0), c);
     }
     else {
       a = cbaxis.labelRotate().getValue(0);
@@ -378,7 +379,8 @@ draw(CGnuPlotRenderer *renderer)
 
        p = CPoint2D(xm, y1 - by);
 
-      renderer->drawRotatedText(p, str, a, CHALIGN_TYPE_CENTER, CVALIGN_TYPE_TOP, c);
+      renderer->drawRotatedText(p, str, a, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                                VAlignPos(CVALIGN_TYPE_TOP, 0), c);
     }
 
     if (fabs(a) < 1E-6)

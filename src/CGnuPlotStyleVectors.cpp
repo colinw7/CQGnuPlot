@@ -123,6 +123,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (! arrow->testAndSetUsed()) {
         arrow->setData(arrowData);
 
+        arrow->stroke()->setEnabled (true);
         arrow->stroke()->setColor   (arrowData.calcLineColor(group));
         arrow->stroke()->setLineDash(arrowData.getDash().calcDash(plot->app()));
         arrow->stroke()->setWidth   (arrowData.calcLineWidth(group));

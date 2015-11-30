@@ -446,6 +446,11 @@ fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
   QBrush brush(toQColor(c));
 
   painter_->fillPath(path, brush);
+
+  // TODO: why need extra border to overwrite aliased edge
+  QPen pen(toQColor(c));
+
+  painter_->strokePath(path, pen);
 }
 
 void
@@ -627,7 +632,7 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 void
 CQGnuPlotRenderer::
 drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
-                CHAlignType halign, CVAlignType valign, const CRGBA &tc)
+                const HAlignPos &halignPos, const VAlignPos &valignPos, const CRGBA &tc)
 {
   CQFont *qfont = getFont().cast<CQFont>();
 
@@ -637,7 +642,7 @@ drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
 
   windowToPixel(p.x, p.y, &px, &py);
 
-  Qt::Alignment qalign = CQUtil::toQAlign(halign) | CQUtil::toQAlign(valign);
+  Qt::Alignment qalign = CQUtil::toQAlign(halignPos.first) | CQUtil::toQAlign(valignPos.first);
 
   painter_->setPen(toQColor(tc));
 

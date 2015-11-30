@@ -2,10 +2,10 @@
   + margin too small
 
 ## animate2.dem
-  + Zoom in too much
+  + Slow
 
 ## animate.dem
-  + Bad scaling
+  + no issues
 
 ## approximate.dem
   + no issues
@@ -20,8 +20,7 @@
   + No issues
 
 ## binary.dem
-  + Bad fill color (top/bottom sides)
-  + Bad enhanced title (3D)
+  + Improve fill color clipping (top/bottom sides)
 
 ## bivariat.dem
   + No issues
@@ -63,8 +62,9 @@
   + z axis should not be drawn
 
 ## contours.dem
-  + no issues - check output
+  + contour drawn at zmin (adjusted)
   + last multiplot should overlay
+  + globlet no contour
 
 ## controls.dem
   + No issues
@@ -155,19 +155,19 @@
   + no issues
 
 ## image2.dem
-  1. ok
-  2. ok
-  3. ok
-  4. ok
-  5. ok
-  6. pixel gaps
-  7. pixel gaps, title pos
-  8. no rotation plane support
-  9. title pos
+   1. ok
+   2. ok
+   3. ok
+   4. ok
+   5. ok
+   6. pixel gaps
+   7. pixel gaps, title pos
+   8. no rotation plane support
+   9. title pos
   10. bad title pos
   11. bad title pos
   12. ok
-  13. z order hidden
+  13. ok
   14. ok
   15. ok
   16. edf format not supported

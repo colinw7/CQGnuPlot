@@ -102,8 +102,8 @@ draw(CGnuPlotRenderer *renderer) const
   }
 
   if (pointType() == CGnuPlotTypes::SymbolType::STRING)
-    renderer->drawHAlignedText(point(), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
-                               pointString(), c);
+    renderer->drawHAlignedText(point(), HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                               VAlignPos(CVALIGN_TYPE_CENTER, 0), pointString(), c);
   else
     renderer->drawSymbol(point(), pointType(), scale*pw_/8.0, c, lineWidth(), true);
 

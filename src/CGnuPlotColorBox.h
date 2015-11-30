@@ -67,6 +67,10 @@ class CGnuPlotColorBoxData {
 
 class CGnuPlotColorBox {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   CGnuPlotColorBox(CGnuPlotGroup *group=0);
 
   virtual ~CGnuPlotColorBox();

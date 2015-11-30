@@ -4,8 +4,11 @@
 #include <CRGBA.h>
 #include <COptVal.h>
 #include <CLine3D.h>
+#include <CAlignType.h>
 #include <vector>
 #include <map>
+
+#include <CGnuPlotContourData.h>
 
 class CGnuPlot;
 class CGnuPlotPlot;
@@ -13,10 +16,15 @@ class CGnuPlotRenderer;
 
 class CGnuPlotContour {
  public:
-  typedef std::vector<CLine3D>  Lines;
-  typedef std::map<int,Lines>   LevelLines;
-  typedef std::vector<CPoint3D> Points;
-  typedef std::vector<Points>   Paths;
+  typedef std::vector<double>           Reals;
+  typedef std::vector<CRGBA>            Colors;
+  typedef std::vector<CLine3D>          Lines;
+  typedef std::map<int,Lines>           LevelLines;
+  typedef std::vector<CPoint3D>         Points;
+  typedef std::vector<Points>           Paths;
+  typedef CGnuPlotContourData::DrawPos  DrawPos;
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
 
   struct LevelData {
     double level;
@@ -79,15 +87,16 @@ class CGnuPlotContour {
   static void getPaths(const Lines &lines, Paths &path);
 
  private:
-  CGnuPlotPlot*       plot_;
-  bool                solid_;
-  std::vector<double> x_, y_, z_, c_;
-  std::vector<double> levels_;
-  std::vector<CRGBA>  colors_;
-  COptReal            xmin_, ymin_, zmin_, cmin_;
-  COptReal            xmax_, ymax_, zmax_, cmax_;
-  double              min_x_, min_y_, min_z_;
-  LevelLines          llines_;
+  CGnuPlotPlot* plot_  { 0 };
+  bool          solid_ { false };
+  Reals         x_, y_, z_, c_;
+  Reals         levels_;
+  Colors        colors_;
+  COptReal      xmin_, ymin_, zmin_, cmin_;
+  COptReal      xmax_, ymax_, zmax_, cmax_;
+  double        min_x_ { 0 }, min_y_ { 0 }, min_z_ { 0 };
+  DrawPos       pos_ { DrawPos::BASE };
+  LevelLines    llines_;
 };
 
 #endif

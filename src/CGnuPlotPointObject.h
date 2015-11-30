@@ -62,7 +62,9 @@ class CGnuPlotPointData {
 
 class CGnuPlotPointObject : public CGnuPlotPlotObject {
  public:
-  typedef CGnuPlotTypes::SymbolType PointType;
+  typedef CGnuPlotTypes::SymbolType     PointType;
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
 
  public:
   CGnuPlotPointObject(CGnuPlotPlot *plot);

@@ -41,6 +41,10 @@ class CGnuPlotKeyLabel {
 
 class CGnuPlotKey {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   typedef CGnuPlotKeyData::Columns Columns;
 
  public:

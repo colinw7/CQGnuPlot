@@ -71,7 +71,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (plot->isPolar()) {
       bool inside;
 
-      p1 = group->convertPolarAxisPoint(p1, inside);
+      p1 = plot->convertPolarAxisPoint(p1, inside);
     }
     else {
       p1 = rotate.apply(p1);
@@ -105,7 +105,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (plot->isPolar()) {
         bool inside;
 
-        p2 = group->convertPolarAxisPoint(p2, inside);
+        p2 = plot->convertPolarAxisPoint(p2, inside);
       }
       else {
         p2 = rotate.apply(p2);
@@ -230,7 +230,10 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       // TODO: clip
       double lw = stroke.width();
 
-      renderer->drawClippedPath(points, lw, c, stroke.lineDash());
+      if (group->isHidden3D())
+        renderer->drawHiddenClippedPath(points, lw, c, stroke.lineDash());
+      else
+        renderer->drawClippedPath(points, lw, c, stroke.lineDash());
 
       if (n < 0)
         n = points.size();
@@ -247,7 +250,10 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       // TODO: clip
       double lw = stroke.width();
 
-      renderer->drawClippedPath(ip.second, lw, c, stroke.lineDash());
+      if (group->isHidden3D())
+        renderer->drawHiddenClippedPath(ip.second, lw, c, stroke.lineDash());
+      else
+        renderer->drawClippedPath(ip.second, lw, c, stroke.lineDash());
     }
   }
 }
@@ -262,4 +268,53 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   double lw = stroke.width();
 
   renderer->drawLine(p1, p2, lw, c, stroke.lineDash());
+}
+
+bool
+CGnuPlotStyleLines::
+mouseProbe(CGnuPlotPlot *plot, CGnuPlotProbeEvent &probeEvent)
+{
+  if (! plot->is2D()) return false;
+
+  //---
+
+  double minX = 1E50;
+  int    minI = -1;
+
+  int i = 0;
+
+  for (const auto &point : plot->getPoints2D()) {
+    CPoint2D p;
+
+    if (! point.getPoint(p))
+      continue;
+
+    double dx = fabs(p.x - probeEvent.x());
+
+    if (minI < 0 || dx < minX) {
+      minX = dx;
+      minI = i;
+    }
+
+    ++i;
+  }
+
+  if (minI < 0)
+    return false;
+
+  const CGnuPlotPoint &point = plot->getPoint2D(minI);
+
+  CPoint2D p;
+
+  if (! point.getPoint(p))
+    return false;
+
+  if (probeEvent.isNearest())
+    probeEvent.setX(p.x);
+
+  probeEvent.setY(p.y);
+
+  probeEvent.setTip(CStrUtil::strprintf("X=%g, Y=%g", p.x, p.y));
+
+  return true;
 }

@@ -209,7 +209,7 @@ drawText(const CPoint2D &point, const std::string &str, const CRGBA &)
 void
 CGnuPlotBBoxRenderer::
 drawRotatedText(const CPoint2D &point, const std::string &str, double /*ta*/,
-                CHAlignType /*halign*/, CVAlignType /*valign*/, const CRGBA &)
+                const HAlignPos &/*halignPos*/, const VAlignPos &/*valignPos*/, const CRGBA &)
 {
   if (! renderer_->mapping()) {
     double w  = renderer_->getFont()->getStringWidth(str);

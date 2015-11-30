@@ -160,11 +160,11 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 void
 CGnuPlotLogRenderer::
 drawRotatedText(const CPoint2D &point, const std::string &text, double angle,
-                CHAlignType halign, CVAlignType valign, const CRGBA &c)
+                const HAlignPos &halignPos, const VAlignPos &valignPos, const CRGBA &c)
 {
   log("drawRotatedText " + logValue("point", point) + " " + logValue("text", text) + " " +
-      logValue("angle", angle) + " " + logValue("halign", halign) + " " +
-      logValue("valign", valign) + " " + logValue("color", c));
+      logValue("angle", angle) + " " + logValue("halign", halignPos.first) + " " +
+      logValue("valign", valignPos.first) + " " + logValue("color", c));
 }
 
 void

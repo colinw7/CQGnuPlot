@@ -23,3 +23,19 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       renderer->drawPoint(p, c);
   }
 }
+
+void
+CGnuPlotStyleDots::
+draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
+{
+  CGnuPlotStroke stroke(plot);
+
+  CRGBA c = stroke.color();
+
+  for (const auto &point : plot->getPoints2D()) {
+    CPoint3D p;
+
+    if (point.getPoint(p))
+      renderer->drawPoint(p, c);
+  }
+}

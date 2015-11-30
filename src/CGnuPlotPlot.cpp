@@ -67,6 +67,13 @@ window() const
 
 bool
 CGnuPlotPlot::
+is2D() const
+{
+  return ! is3D();
+}
+
+bool
+CGnuPlotPlot::
 is3D() const
 {
   return group_->is3D();
@@ -112,6 +119,8 @@ init()
   setPointStyle(plot->pointStyle());
   setArrowStyle(plot->arrowStyle());
 
+  setAngleType(plot->angleType());
+
   xind_ = plot->xind();
   yind_ = plot->yind();
 
@@ -152,7 +161,7 @@ init()
   if (imageStyle.origin().isValid() || imageStyle.angle().isValid()) {
     CPoint3D o = imageStyle.origin().getValue(CPoint3D(0,0,0));
 
-    setRotate(CGnuPlotRotate(CPoint2D(o.x, o.y), imageStyle.angle().getValue(0)));
+    setRotate(CGnuPlotRotate(o.toPoint2D(), imageStyle.angle().getValue(0)));
   }
 
   if (imageStyle.center().isValid())
@@ -475,18 +484,37 @@ draw()
 
   //---
 
-  const CGnuPlotAxisData &xaxis = group_->xaxis(xind_);
-  const CGnuPlotAxisData &yaxis = group_->yaxis(yind_);
+  if (! is3D()) {
+    const CGnuPlotAxisData &xaxis = group_->xaxis(xind());
+    const CGnuPlotAxisData &yaxis = group_->yaxis(yind());
 
-  double xmin = xaxis.min().getValue(0.0);
-  double ymin = yaxis.min().getValue(0.0);
-  double xmax = xaxis.max().getValue(1.0);
-  double ymax = yaxis.max().getValue(1.0);
+    double xmin = xaxis.min().getValue(0.0);
+    double ymin = yaxis.min().getValue(0.0);
+    double xmax = xaxis.max().getValue(1.0);
+    double ymax = yaxis.max().getValue(1.0);
 
-  CPoint2D p1 = group_->mapLogPoint(xind(), yind(), 1, CPoint2D(xmin, ymin));
-  CPoint2D p2 = group_->mapLogPoint(xind(), yind(), 1, CPoint2D(xmax, ymax));
+    CPoint2D p1 = group_->mapLogPoint(xind(), yind(), zind(), CPoint2D(xmin, ymin));
+    CPoint2D p2 = group_->mapLogPoint(xind(), yind(), zind(), CPoint2D(xmax, ymax));
 
-  bbox_ = CBBox2D(p1, p2);
+    bbox2D_ = CBBox2D(p1, p2);
+  }
+  else {
+    const CGnuPlotAxisData &xaxis = group_->xaxis(xind());
+    const CGnuPlotAxisData &yaxis = group_->yaxis(yind());
+    const CGnuPlotAxisData &zaxis = group_->zaxis(zind());
+
+    double xmin = xaxis.min().getValue(0.0);
+    double ymin = yaxis.min().getValue(0.0);
+    double zmin = zaxis.min().getValue(0.0);
+    double xmax = xaxis.max().getValue(1.0);
+    double ymax = yaxis.max().getValue(1.0);
+    double zmax = zaxis.max().getValue(1.0);
+
+    CPoint3D p1 = group_->mapLogPoint(xind(), yind(), zind(), CPoint3D(xmin, ymin, zmin));
+    CPoint3D p2 = group_->mapLogPoint(xind(), yind(), zind(), CPoint3D(xmax, ymax, zmax));
+
+    bbox3D_ = CBBox3D(p1, p2);
+  }
 
   //---
 
@@ -535,7 +563,7 @@ printValues() const
   }
   else {
     if (isSurfaceData()) {
-      if (isSurfaceEnabled())
+      if (surfaceData_.isEnabled())
         printSurfaceValues();
     }
     else {
@@ -544,7 +572,7 @@ printValues() const
       if (style && style->has3D())
         printSurfaceValues(); // TODO: different format ?
       else {
-        if (isSurfaceEnabled())
+        if (surfaceData_.isEnabled())
           printSurfaceValues();
       }
     }
@@ -774,12 +802,15 @@ draw3D(CGnuPlotRenderer *renderer)
   CGnuPlotStyleBase *style = app()->getPlotStyle(getStyle());
 
   if (style && style->has3D())
-    if (getStyle() == CGnuPlot::PlotStyle::IMAGE || getStyle() == CGnuPlot::PlotStyle::RGBIMAGE) {
+    if (getStyle() == CGnuPlot::PlotStyle::IMAGE    ||
+        getStyle() == CGnuPlot::PlotStyle::RGBIMAGE ||
+        getStyle() == CGnuPlot::PlotStyle::POINTS   ||
+        getStyle() == CGnuPlot::PlotStyle::DOTS) {
       style->draw3D(this, renderer);
     }
     else {
       if (isSurfaceData()) {
-        if (isSurfaceEnabled())
+        if (surfaceData_.isEnabled())
           drawSurface(renderer);
       }
       else {
@@ -787,7 +818,7 @@ draw3D(CGnuPlotRenderer *renderer)
     }
   }
   else {
-    if (isSurfaceEnabled())
+    if (surfaceData_.isEnabled())
       drawSurface(renderer);
   }
 
@@ -888,7 +919,7 @@ drawSurface(CGnuPlotRenderer *renderer)
 {
   bool pm3D = (style_ == PlotStyle::PM3D || group()->pm3D()->isEnabled());
 
-  if (isSurfaceEnabled() || pm3D) {
+  if (surfaceData_.isEnabled() || pm3D) {
     initSurface();
   }
 
@@ -951,6 +982,8 @@ initSurface() const
     CGnuPlotSurface::ZPolygons zpolygons;
     CGnuPlotSurface::IJPoints  ijpoints;
     COptReal                   zmin, zmax;
+
+    int ind = 0;
 
     for (int iy = 1; iy < np.second; ++iy) {
       for (int ix = 1; ix < np.first; ++ix) {
@@ -1036,17 +1069,18 @@ initSurface() const
         //---
 
         // create surface polygon
-        Points poly;
+        Points poly({pt1.toPoint2D(), pt2.toPoint2D(), pt3.toPoint2D(), pt4.toPoint2D()});
 
-        poly.push_back(CPoint2D(pt1.x, pt1.y));
-        poly.push_back(CPoint2D(pt2.x, pt2.y));
-        poly.push_back(CPoint2D(pt3.x, pt3.y));
-        poly.push_back(CPoint2D(pt4.x, pt4.y));
+        if (CGnuPlotUtil::isNaN(poly))
+          poly.clear();
 
-        zpolygons[-zm].push_back(
-          CGnuPlotSurface::ZPoints(za, CGnuPlotSurface::PointsColor(poly, ca)));
+        CGnuPlotSurface::PointsIndColor pointsIndColor(CGnuPlotSurface::PointsInd(poly, ind), ca);
+
+        zpolygons[zm].push_back(CGnuPlotSurface::ZPoints(za, pointsIndColor));
 
         ijpoints[ix - 1][iy - 1] = poly;
+
+        ++ind;
       }
     }
 
@@ -1064,7 +1098,7 @@ draw2D(CGnuPlotRenderer *renderer)
 
   //---
 
-  renderer->setClip(bbox_);
+  renderer->setClip(bbox2D_);
 
   //---
 
@@ -1770,6 +1804,16 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
   style->mousePress(this, mouseEvent);
 }
 
+bool
+CGnuPlotPlot::
+mouseProbe(CGnuPlotProbeEvent &probeEvent)
+{
+  CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
+  if (! style) return false;
+
+  return style->mouseProbe(this, probeEvent);
+}
+
 void
 CGnuPlotPlot::
 recalcBoundedYRange(double *ymin, double *ymax) const
@@ -1788,14 +1832,14 @@ getGroupXRange(double *xmin, double *xmax) const
 {
   calcXRange(xmin, xmax);
 
-  CGnuPlotAxisData &xaxis = group_->xaxis(xind_);
+  CGnuPlotAxisData &xaxis = group_->xaxis(xind());
 
   if (xaxis.min().isValid())
     *xmin = xaxis.min().getValue();
   if (xaxis.max().isValid())
     *xmax = xaxis.max().getValue();
 
-  //CGnuPlotAxisData &yaxis = group_->yaxis(yind_);
+  //CGnuPlotAxisData &yaxis = group_->yaxis(yind());
 
   //if (yaxis.min().isValid()) ymin_ = yaxis.min().getValue();
   //if (yaxis.max().isValid()) ymax_ = yaxis.max().getValue();
@@ -1857,15 +1901,15 @@ mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const
 {
   std::vector<double> reals;
 
-  (void) p.getReals(reals);
+  (void) p.getReals(reals, /*force*/true);
 
   if      (mapping() == CGnuPlotTypes::Mapping::SPHERICAL_MAPPING) {
     double theta = (reals.size() > 0 ? reals[0] : 0.0);
     double phi   = (reals.size() > 1 ? reals[1] : 0.0);
     double r     = (reals.size() > 2 ? reals[2] : 1.0);
 
-    double theta1 = app()->angleToRad(theta);
-    double phi1   = app()->angleToRad(phi);
+    double theta1 = angleToRad(theta);
+    double phi1   = angleToRad(phi);
 
     //p1 = app()->sphericalMap(p2);
 
@@ -1882,7 +1926,7 @@ mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const
     double z     = (reals.size() > 1 ? reals[1] : 0.0);
     double r     = (reals.size() > 2 ? reals[2] : 1.0);
 
-    double theta1 = app()->angleToRad(theta);
+    double theta1 = angleToRad(theta);
 
     double x = r*cos(theta1);
     double y = r*sin(theta1);
@@ -1892,13 +1936,91 @@ mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const
     ind = (reals.size() > 3 ? 3 : reals.size());
   }
   else {
-    if (! p.getPoint(p1))
+    if (! p.getPoint(p1, /*force*/true))
       return false;
 
     ind = 3;
   }
 
   return true;
+}
+
+#if 0
+CPoint3D
+CGnuPlotPlot::
+sphericalMap(const CPoint2D &p) const
+{
+  static double rad = 6378137.0;          // Radius of the Earth (in meters)
+  static double f   = 1.0/298.257223563;  // Flattening factor WGS84 Model
+
+  double alt = 0.0; // altitude
+
+  double cosLon = cos(angleToRad(p.x));
+  double sinLon = sin(angleToRad(p.x));
+  double cosLat = cos(angleToRad(p.y));
+  double sinLat = sin(angleToRad(p.y));
+
+  double ff = (1.0 - f)*(1.0 - f);
+  double c  = 1.0/sqrt(cosLat*cosLat + ff*sinLat*sinLat);
+  double s  = c*ff;
+
+  double x = (rad*c + alt)*cosLat*cosLon;
+  double y = (rad*c + alt)*cosLat*sinLon;
+  double z = (rad*s + alt)*sinLat;
+
+  return CPoint3D(x, y, z);
+}
+#endif
+
+CPoint2D
+CGnuPlotPlot::
+convertPolarAxisPoint(const CPoint2D &p, bool &inside) const
+{
+  CGnuPlotAxis *plotTAxis = group_->getPlotAxis(CGnuPlotTypes::AxisType::T, 1, true);
+  CGnuPlotAxis *plotRAxis = group_->getPlotAxis(CGnuPlotTypes::AxisType::R, 1, true);
+
+  CPoint2D p1 = p;
+
+  inside = plotTAxis->mappedInside(p1.x) && plotRAxis->mappedInside(p1.y);
+
+  if (! plotRAxis->logBase().isValid()) {
+    double rmin = plotRAxis->getStart();
+    double rmax = plotRAxis->getEnd  ();
+    double s    = rmax - rmin;
+
+    p1.y = CGnuPlotUtil::map(p1.y, rmin, rmax, 0, s);
+  }
+
+  p1 = convertPolarPoint(p1);
+
+  return p1;
+}
+
+CPoint2D
+CGnuPlotPlot::
+convertPolarPoint(const CPoint2D &p) const
+{
+  double a = angleToRad(p.x);
+  double r = p.y;
+
+  double x = r*cos(a);
+  double y = r*sin(a);
+
+  return CPoint2D(x, y);
+}
+
+double
+CGnuPlotPlot::
+angleToRad(double a) const
+{
+  return (isAngleDegrees() ? CAngle::Deg2Rad(a) : a);
+}
+
+double
+CGnuPlotPlot::
+angleToDeg(double a) const
+{
+  return (! isAngleDegrees() ? CAngle::Rad2Deg(a) : a);
 }
 
 void

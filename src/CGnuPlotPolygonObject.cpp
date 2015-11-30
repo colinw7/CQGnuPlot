@@ -1,4 +1,5 @@
 #include <CGnuPlotPolygonObject.h>
+#include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
 #include <CMathGeom2D.h>
@@ -41,6 +42,10 @@ void
 CGnuPlotPolygonObject::
 draw(CGnuPlotRenderer *renderer) const
 {
+  if (! isDisplayed()) return;
+
+  CGnuPlotGroup *group = plot_->group();
+
   bool highlighted = (isHighlighted() || isSelected());
 
   CGnuPlotFillP   fill   = fill_;
@@ -64,12 +69,24 @@ draw(CGnuPlotRenderer *renderer) const
     renderer->setAntiAlias(false);
 
   if (isClipped()) {
-    renderer->fillClippedPolygon  (points_, *fill  );
-    renderer->strokeClippedPolygon(points_, *stroke);
+    if (plot_->is3D() && group->isHidden3D()) {
+      renderer->fillHiddenPolygon  (points_, z(), *fill  );
+      renderer->strokeHiddenPolygon(points_, z(), *stroke);
+    }
+    else {
+      renderer->fillClippedPolygon  (points_, *fill  );
+      renderer->strokeClippedPolygon(points_, *stroke);
+    }
   }
   else {
-    renderer->fillPolygon  (points_, *fill  );
-    renderer->strokePolygon(points_, *stroke);
+    if (plot_->is3D() && group->isHidden3D()) {
+      renderer->fillHiddenPolygon  (points_, z(), *fill  );
+      renderer->strokeHiddenPolygon(points_, z(), *stroke);
+    }
+    else {
+      renderer->fillPolygon  (points_, *fill  );
+      renderer->strokePolygon(points_, *stroke);
+    }
   }
 
   if (! isAliased())
@@ -82,10 +99,18 @@ draw(CGnuPlotRenderer *renderer) const
       tc = CRGBA(1,0,0);
     }
 
-    double tw = renderer->pixelWidthToWindowWidth  (renderer->getFont()->getStringWidth(text_));
-    double th = renderer->pixelHeightToWindowHeight(renderer->getFont()->getCharAscent());
+    CFontPtr font = renderer->getFont();
 
-    renderer->drawText(center_ - CPoint2D(tw/2, th/2), text_, tc);
+    double tw = renderer->pixelWidthToWindowWidth  (font->getStringWidth(text_));
+    double th = renderer->pixelHeightToWindowHeight(font->getCharAscent());
+
+    if (plot_->is3D() && group->isHidden3D())
+      renderer->drawHiddenHAlignedText(center_ - CPoint2D(tw/2, th/2), z(),
+                                       HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                                       VAlignPos(CVALIGN_TYPE_CENTER, 0), text_,
+                                       font, tc, 0.0);
+    else
+      renderer->drawText(center_ - CPoint2D(tw/2, th/2), text_, tc);
   }
 }
 

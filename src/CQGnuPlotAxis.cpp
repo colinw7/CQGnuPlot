@@ -146,6 +146,9 @@ drawAxes(CGnuPlotRenderer *renderer)
   CGnuPlotAxis::drawAxes(renderer);
 
   if (isSelected()) {
-    renderer->drawRect(bbox(), CRGBA(1,0,0), 2);
+    if (! group()->is3D())
+      renderer->drawRect(bbox2D(), CRGBA(1,0,0), 2);
+    else
+      renderer->drawRect(bbox3D(), CRGBA(1,0,0), 2);
   }
 }

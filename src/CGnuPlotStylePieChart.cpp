@@ -73,7 +73,7 @@ void
 CGnuPlotStylePieChart::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  const CBBox2D &bbox = plot->bbox();
+  const CBBox2D &bbox = plot->bbox2D();
 
   CPoint2D pc = bbox.getCenter();
   double   r  = bbox.getWidth()/2;
@@ -252,8 +252,8 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   double y = y2 - by;
 
   if (header != "") {
-    renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), CHALIGN_TYPE_CENTER, 0,
-                               CVALIGN_TYPE_TOP, 0, header, CRGBA(0,0,0));
+    renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                               VAlignPos(CVALIGN_TYPE_TOP, 0), header, CRGBA(0,0,0));
 
     y -= font_size*ph;
   }
@@ -287,11 +287,11 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CRGBA tc = CRGBA(0,0,0);
 
     if (key->isReverse())
-      renderer->drawHAlignedText(CPoint2D(xx + bw*pw + bx, y), CHALIGN_TYPE_LEFT, 0,
-                                 CVALIGN_TYPE_TOP, 0, name, tc);
+      renderer->drawHAlignedText(CPoint2D(xx + bw*pw + bx, y), HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                                 VAlignPos(CVALIGN_TYPE_TOP, 0), name, tc);
     else
-      renderer->drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
-                                 CVALIGN_TYPE_TOP, 0, name, tc);
+      renderer->drawHAlignedText(CPoint2D(xx - bx, y), HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+                                 VAlignPos(CVALIGN_TYPE_TOP, 0), name, tc);
 
     if (pieObject) {
       CBBox2D keyRect(x1, y - font_size*ph, x2, y);

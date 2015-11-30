@@ -213,6 +213,12 @@ draw3D(CGnuPlotRenderer *renderer) const
 {
   if (! isDisplayed()) return;
 
+  //---
+
+  CGnuPlotGroup *group = plot_->group();
+
+  bool highlighted = (isHighlighted() || isSelected());
+
   CPoint2D o(origin_.x, origin_.y);
 
   double ra = CAngle::Deg2Rad(angle_);
@@ -229,6 +235,10 @@ draw3D(CGnuPlotRenderer *renderer) const
   double z = 0;
 
   //renderer->setAntiAlias(false);
+
+  bbox_  = CBBox2D();
+
+  CBBox3D bbox3d;
 
   int i = 0;
 
@@ -247,34 +257,49 @@ draw3D(CGnuPlotRenderer *renderer) const
       double x2 = x1 + delta_.width;
       double y2 = y1 + delta_.height;
 
-      CPoint2D pr1 = CMathGeom2D::RotatePoint(CPoint2D(x1, y1), ra, o);
-      CPoint2D pr2 = CMathGeom2D::RotatePoint(CPoint2D(x2, y1), ra, o);
-      CPoint2D pr3 = CMathGeom2D::RotatePoint(CPoint2D(x2, y2), ra, o);
-      CPoint2D pr4 = CMathGeom2D::RotatePoint(CPoint2D(x1, y2), ra, o);
+      CPoint3D pr1(CMathGeom2D::RotatePoint(CPoint2D(x1, y1), ra, o), z);
+      CPoint3D pr2(CMathGeom2D::RotatePoint(CPoint2D(x2, y1), ra, o), z);
+      CPoint3D pr3(CMathGeom2D::RotatePoint(CPoint2D(x2, y2), ra, o), z);
+      CPoint3D pr4(CMathGeom2D::RotatePoint(CPoint2D(x1, y2), ra, o), z);
+
+      bbox3d += pr1;
+      bbox3d += pr2;
+      bbox3d += pr3;
+      bbox3d += pr4;
 
       CGnuPlotRenderer::Points2D poly({
-        renderer->transform(CPoint3D(pr1.x, pr1.y, z)),
-        renderer->transform(CPoint3D(pr2.x, pr2.y, z)),
-        renderer->transform(CPoint3D(pr3.x, pr3.y, z)),
-        renderer->transform(CPoint3D(pr4.x, pr4.y, z))
+        renderer->transform2D(CPoint3D(pr1.x, pr1.y, z)),
+        renderer->transform2D(CPoint3D(pr2.x, pr2.y, z)),
+        renderer->transform2D(CPoint3D(pr3.x, pr3.y, z)),
+        renderer->transform2D(CPoint3D(pr4.x, pr4.y, z))
       });
 
-      renderer->fillPolygon(poly, rgba);
+      for (const auto &p : poly)
+        bbox_.add(p);
+
+      if (group->isHidden3D())
+        renderer->fillHiddenPolygon(z, poly, rgba);
+      else
+        renderer->fillPolygon(poly, rgba);
     }
   }
 
   //renderer->setAntiAlias(true);
 
-  bbox_  = CBBox2D(0, 0, 1, 1);
-  rbbox_ = CBBox2D(0, 0, 1, 1);
+  rbbox_ = bbox_;
+
+  if (highlighted)
+    renderer->drawRect(bbox3d, CRGBA(255,0,0), 2);
 }
 
 void
 CGnuPlotImageObject::
 updateImage2() const
 {
-  CGnuPlotAxis *plotXAxis = plot_->group()->getPlotAxis(CGnuPlotTypes::AxisType::X, 1, true);
-  CGnuPlotAxis *plotYAxis = plot_->group()->getPlotAxis(CGnuPlotTypes::AxisType::Y, 1, true);
+  CGnuPlotGroup *group = plot_->group();
+
+  CGnuPlotAxis *plotXAxis = group->getPlotAxis(CGnuPlotTypes::AxisType::X, 1, true);
+  CGnuPlotAxis *plotYAxis = group->getPlotAxis(CGnuPlotTypes::AxisType::Y, 1, true);
 
   bool flipX = plotXAxis->isReverse();
   bool flipY = plotYAxis->isReverse();

@@ -134,8 +134,8 @@ draw(CAdjacencyRenderer *renderer)
 
     pixelPointToWindow(p);
 
-    renderer->drawRotatedText(p, node->name(), 90,
-                              CHALIGN_TYPE_LEFT, CVALIGN_TYPE_BOTTOM, CRGBA(0,0,0));
+    renderer->drawRotatedText(p, node->name(), 90, HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                             VAlignPos(CVALIGN_TYPE_BOTTOM, 0), CRGBA(0,0,0));
 
     px += cs_;
   }

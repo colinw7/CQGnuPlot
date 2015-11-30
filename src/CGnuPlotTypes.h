@@ -10,6 +10,7 @@
 #include <CBBox2D.h>
 #include <CBBox3D.h>
 #include <CLineDash.h>
+#include <CAlignType.h>
 
 typedef std::vector<std::string> StringArray;
 typedef COptValT<CRGBA>          COptRGBA;
@@ -495,6 +496,9 @@ namespace CGnuPlotTypes {
     DEFAULT,
     SWAP
   };
+
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
 }
 
 #endif

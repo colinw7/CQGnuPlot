@@ -5,6 +5,10 @@
 
 class CGnuPlotStyleSunburst : public CGnuPlotStyleBase {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   CGnuPlotStyleSunburst();
 
   int numUsing() const override { return 2; }

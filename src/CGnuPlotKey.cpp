@@ -118,8 +118,8 @@ draw(CGnuPlotRenderer *renderer)
   double y = y2 - by;
 
   if (header != "") {
-    renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), CHALIGN_TYPE_CENTER, 0,
-                               CVALIGN_TYPE_TOP, 0, header, CRGBA(0,0,0));
+    renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                               VAlignPos(CVALIGN_TYPE_TOP, 0), header, CRGBA(0,0,0));
 
     y -= font_size*ph;
   }
@@ -200,11 +200,11 @@ draw(CGnuPlotRenderer *renderer)
         tc.setAlpha(0.5);
 
       if (isReverse())
-        renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), CHALIGN_TYPE_LEFT, 0,
-                                   CVALIGN_TYPE_TOP, 0, l.text(), tc);
+        renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                                   VAlignPos(CVALIGN_TYPE_TOP, 0), l.text(), tc);
       else
-        renderer->drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
-                                   CVALIGN_TYPE_TOP, 0, l.text(), tc);
+        renderer->drawHAlignedText(CPoint2D(xx - bx, y), HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+                                   VAlignPos(CVALIGN_TYPE_TOP, 0), l.text(), tc);
 
       y -= font_size*ph;
     }
@@ -338,8 +338,8 @@ drawClustered(CGnuPlotRenderer *renderer)
     double y = y2 - by;
 
     if (title != "") {
-      renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), CHALIGN_TYPE_CENTER, 0,
-                                 CVALIGN_TYPE_TOP, 0, title, CRGBA(0,0,0));
+      renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                                 VAlignPos(CVALIGN_TYPE_TOP, 0), title, CRGBA(0,0,0));
 
       y -= font_size*ph;
     }
@@ -394,11 +394,11 @@ drawClustered(CGnuPlotRenderer *renderer)
           tc.setAlpha(0.5);
 
         if (isReverse())
-          renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), CHALIGN_TYPE_LEFT, 0,
-                                     CVALIGN_TYPE_TOP, 0, l.text(), tc);
+          renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                                     VAlignPos(CVALIGN_TYPE_TOP, 0), l.text(), tc);
         else
-          renderer->drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
-                                     CVALIGN_TYPE_TOP, 0, l.text(), tc);
+          renderer->drawHAlignedText(CPoint2D(xx - bx, y), HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+                                     VAlignPos(CVALIGN_TYPE_TOP, 0), l.text(), tc);
 
         y -= font_size*ph;
       }
@@ -512,8 +512,8 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
   double y = y2 - by;
 
   if (header != "") {
-    renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), CHALIGN_TYPE_CENTER, 0,
-                               CVALIGN_TYPE_TOP, 0, header, CRGBA(0,0,0));
+    renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                               VAlignPos(CVALIGN_TYPE_TOP, 0), header, CRGBA(0,0,0));
 
     y2 -= font_size*ph;
   }
@@ -567,11 +567,11 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
       CRGBA tc = CRGBA(0,0,0);
 
       if (isReverse())
-        renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), CHALIGN_TYPE_LEFT, 0,
-                                   CVALIGN_TYPE_TOP, 0, pointStr, tc);
+        renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                                   VAlignPos(CVALIGN_TYPE_TOP, 0), pointStr, tc);
       else
-        renderer->drawHAlignedText(CPoint2D(xx - bx, y), CHALIGN_TYPE_RIGHT, 0,
-                                   CVALIGN_TYPE_TOP, 0, pointStr, tc);
+        renderer->drawHAlignedText(CPoint2D(xx - bx, y), HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+                                   VAlignPos(CVALIGN_TYPE_TOP, 0), pointStr, tc);
 
       y -= font_size*ph;
     }
@@ -679,7 +679,7 @@ calcBBox(CGnuPlotRenderer *renderer, const CSize2D &size)
         x1 = (rbbox.getXMin() + rbbox.getXMax())/2 - size.width/2;
     }
 #else
-    CBBox2D rbbox = group_->getAxisBBox();
+    CBBox2D rbbox = group_->axisBBox2D();
 
     if (isLMargin() || isRMargin()) {
       x1 = (isLMargin() ? rbbox.getXMin() - size.width - bx : rbbox.getXMax() + bx);
@@ -722,7 +722,7 @@ calcBBox(CGnuPlotRenderer *renderer, const CSize2D &size)
         y1 = rbbox.getYMid() - size.height/2;
     }
     else {
-      CBBox2D rbbox = group_->getAxisBBox();
+      CBBox2D rbbox = group_->axisBBox2D();
 
       // vertical: place outside left/right
       if (vertical()) {

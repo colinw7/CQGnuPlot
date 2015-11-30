@@ -63,6 +63,10 @@ class CGnuPlotTitleData {
 
 class CGnuPlotTitle {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   CGnuPlotTitle(CGnuPlotGroup *group=0);
 
   virtual ~CGnuPlotTitle() { }

@@ -2,6 +2,7 @@
 #define CGnuPlotContourData_H
 
 #include <CGnuPlotUtil.h>
+#include <CFont.h>
 #include <iostream>
 
 class CGnuPlotContourData {

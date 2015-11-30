@@ -57,7 +57,8 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   Q_PROPERTY(CQGnuPlotEnum::BoxWidthType boxWidthType READ getBoxWidthType WRITE setBoxWidthType)
 
-  Q_PROPERTY(bool surfaceEnabled READ isSurfaceEnabled WRITE setSurfaceEnabled)
+  Q_PROPERTY(bool   surfaceEnabled READ isSurfaceEnabled WRITE setSurfaceEnabled)
+  Q_PROPERTY(QColor surfaceColor   READ surfaceColor     WRITE setSurfaceColor  )
 
   Q_PROPERTY(bool contourEnabled READ isContourEnabled WRITE setContourEnabled)
   Q_PROPERTY(int  contourLevels  READ getContourLevels WRITE setContourLevels)
@@ -84,6 +85,12 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   QColor lineColor() const;
   void setLineColor(const QColor &c);
+
+  bool isSurfaceEnabled() const;
+  void setSurfaceEnabled(bool b);
+
+  QColor surfaceColor() const;
+  void setSurfaceColor(const QColor &c);
 
   CQGnuPlotEnum::PlotStyle plotStyle() const;
   void setPlotStyle(const CQGnuPlotEnum::PlotStyle &s);

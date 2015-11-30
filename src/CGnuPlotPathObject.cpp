@@ -106,7 +106,7 @@ draw(CGnuPlotRenderer *renderer) const
     ppoints_.resize(points3D_.size());
 
     for (const auto &p : CIVector(points3D_)) {
-      CPoint2D p1 = renderer->transform(p.second);
+      CPoint2D p1 = renderer->transform2D(p.second);
 
       double px, py;
 

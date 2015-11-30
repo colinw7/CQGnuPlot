@@ -10,16 +10,215 @@
 #include <CBBox2D.h>
 #include <CFont.h>
 #include <CImagePtr.h>
+#include <CRefPtr.h>
 
 class CGnuPlotWindow;
 class CGnuPlotFill;
 class CGnuPlotStroke;
+class CGnuPlotRenderer;
+
+class CGnuPlotHiddenObject {
+ public:
+  typedef std::vector<CPoint2D> Points2D;
+
+ public:
+  CGnuPlotHiddenObject(const CRGBA &c=CRGBA(0,0,0)) :
+   c_(c) {
+  }
+
+  virtual ~CGnuPlotHiddenObject() { }
+
+  int mapping() const { return mapping_; }
+  void setMapping(int i) { mapping_ = i; }
+
+  virtual void draw(CGnuPlotRenderer *renderer) = 0;
+
+  CRGBA scaledColor(CGnuPlotRenderer *renderer);
+
+ protected:
+  CRGBA c_;
+  bool  mapping_ { true };
+};
+
+class CGnuPlotHiddenPatternPolygon : public CGnuPlotHiddenObject {
+ public:
+  typedef CGnuPlotTypes::FillPattern FillPattern;
+
+ public:
+  CGnuPlotHiddenPatternPolygon(const Points2D &points, FillPattern pattern,
+                               const CRGBA &fg, const CRGBA &bg) :
+   CGnuPlotHiddenObject(), points_(points), pattern_(pattern), fg_(fg), bg_(bg) {
+  }
+
+  void draw(CGnuPlotRenderer *renderer) override;
+
+ private:
+  Points2D    points_;
+  FillPattern pattern_;
+  CRGBA       fg_;
+  CRGBA       bg_;
+};
+
+class CGnuPlotHiddenFillPolygon : public CGnuPlotHiddenObject {
+ public:
+  CGnuPlotHiddenFillPolygon(const Points2D &points, const CRGBA &c) :
+   CGnuPlotHiddenObject(c), points_(points) {
+  }
+
+  void draw(CGnuPlotRenderer *renderer) override;
+
+ private:
+  Points2D points_;
+};
+
+class CGnuPlotHiddenDrawPolygon : public CGnuPlotHiddenObject {
+ public:
+  CGnuPlotHiddenDrawPolygon(const Points2D &points, double w, const CRGBA &c, const CLineDash &d) :
+   CGnuPlotHiddenObject(c), points_(points), w_(w), d_(d) {
+  }
+
+  void draw(CGnuPlotRenderer *renderer) override;
+
+ private:
+  Points2D  points_;
+  double    w_;
+  CLineDash d_;
+};
+
+class CGnuPlotHiddenLine : public CGnuPlotHiddenObject {
+ public:
+  CGnuPlotHiddenLine(const CPoint2D &p1, const CPoint2D &p2, double w, const CRGBA &c,
+                     const CLineDash &d) :
+   CGnuPlotHiddenObject(c), p1_(p1), p2_(p2), w_(w), d_(d) {
+  }
+
+  void draw(CGnuPlotRenderer *renderer) override;
+
+ private:
+  CPoint2D  p1_, p2_;
+  double    w_;
+  CLineDash d_;
+};
+
+class CGnuPlotHiddenPath : public CGnuPlotHiddenObject {
+ public:
+  CGnuPlotHiddenPath(const Points2D &points, double w, const CRGBA &c, const CLineDash &d) :
+   CGnuPlotHiddenObject(c), points_(points), w_(w), d_(d) {
+  }
+
+  void draw(CGnuPlotRenderer *renderer) override;
+
+ private:
+  Points2D  points_;
+  double    w_;
+  CLineDash d_;
+};
+
+class CGnuPlotHiddenHAlignedText : public CGnuPlotHiddenObject {
+ public:
+  typedef CGnuPlotTypes::HAlignPos HAlignPos;
+  typedef CGnuPlotTypes::VAlignPos VAlignPos;
+
+ public:
+  CGnuPlotHiddenHAlignedText(const CPoint2D &pos, const HAlignPos &halignPos,
+                             const VAlignPos &valignPos, const std::string &str,
+                             const CFontPtr &font, const CRGBA &c, double a) :
+   CGnuPlotHiddenObject(c), pos_(pos), halignPos_(halignPos), valignPos_(valignPos),
+   str_(str), font_(font), a_(a) {
+  }
+
+  void draw(CGnuPlotRenderer *renderer) override;
+
+ private:
+  CPoint2D    pos_;
+  HAlignPos   halignPos_;
+  VAlignPos   valignPos_;
+  std::string str_;
+  CFontPtr    font_;
+  double      a_;
+};
+
+class CGnuPlotHiddenSymbol : public CGnuPlotHiddenObject {
+ public:
+  typedef CGnuPlotTypes::SymbolType SymbolType;
+
+ public:
+  CGnuPlotHiddenSymbol(const CPoint2D &p, SymbolType type, double size, const CRGBA &c,
+                       double lw, bool pixelSize) :
+   CGnuPlotHiddenObject(c), p_(p), type_(type), size_(size), lw_(lw), pixelSize_(pixelSize) {
+  }
+
+  void draw(CGnuPlotRenderer *renderer) override;
+
+ private:
+  CPoint2D   p_;
+  SymbolType type_;
+  double     size_;
+  double     lw_;
+  bool       pixelSize_;
+};
+
+class CGnuPlotHiddenTextAtPoint : public CGnuPlotHiddenObject {
+ public:
+  typedef CGnuPlotTypes::HAlignPos HAlignPos;
+  typedef CGnuPlotTypes::VAlignPos VAlignPos;
+
+ public:
+  CGnuPlotHiddenTextAtPoint(const CPoint2D &p, const std::string &str, bool enhanced,
+                            const HAlignPos &halignPos, const VAlignPos &valignPos,
+                            const CFontPtr &font, const CRGBA &c, double angle) :
+   CGnuPlotHiddenObject(c), p_(p), str_(str), enhanced_(enhanced), halignPos_(halignPos),
+   valignPos_(valignPos), font_(font), angle_(angle) {
+  }
+
+  void draw(CGnuPlotRenderer *renderer) override;
+
+ private:
+  CPoint2D    p_;
+  std::string str_;
+  bool        enhanced_;
+  HAlignPos   halignPos_;
+  VAlignPos   valignPos_;
+  CFontPtr    font_;
+  double      angle_;
+};
+
+class CGnuPlotHiddenEnhancedText : public CGnuPlotHiddenObject {
+ public:
+  typedef CGnuPlotTypes::HAlignPos HAlignPos;
+
+ public:
+  CGnuPlotHiddenEnhancedText(const CBBox2D &bbox, const std::string &str,
+                             const HAlignPos &halignPos, const CFontPtr &font, const CRGBA &c) :
+   CGnuPlotHiddenObject(c), bbox_(bbox), str_(str), halignPos_(halignPos), font_(font) {
+  }
+
+  void draw(CGnuPlotRenderer *renderer) override;
+
+ private:
+  CBBox2D     bbox_;
+  std::string str_;
+  HAlignPos   halignPos_;
+  CFontPtr    font_;
+};
+
+typedef CRefPtr<CGnuPlotHiddenObject> CGnuPlotHiddenObjectP;
+
+//------
 
 class CGnuPlotRenderer : public CGnuPlotTextRenderer {
  public:
-  typedef CGnuPlotTypes::SymbolType SymbolType;
-  typedef std::vector<CPoint2D>     Points2D;
-  typedef std::vector<CPoint3D>     Points3D;
+  typedef CGnuPlotTypes::SymbolType  SymbolType;
+  typedef CGnuPlotTypes::FillPattern FillPattern;
+  typedef CGnuPlotTypes::HAlignPos   HAlignPos;
+  typedef CGnuPlotTypes::VAlignPos   VAlignPos;
+  typedef std::vector<CPoint2D>      Points2D;
+  typedef std::vector<CPoint3D>      Points3D;
+
+ public:
+  typedef CGnuPlotHiddenObjectP           HiddenObjP;
+  typedef std::vector<HiddenObjP>         HiddenObjects;
+  typedef std::map<double, HiddenObjects> ZHiddenObjects;
 
  public:
   CGnuPlotRenderer();
@@ -72,6 +271,44 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   virtual void setCBValue(double) { }
 
+  double hiddenZ() const { return hiddenZ_; }
+
+  //---
+
+  HiddenObjP fillHiddenPolygon(const Points2D &points, double z, const CGnuPlotFill &fill);
+  HiddenObjP fillHiddenPolygon(double z, const Points2D &points, const CRGBA &c);
+
+  HiddenObjP patternHiddenPolygon(const Points2D &points, double z, FillPattern pattern,
+                                  const CRGBA &fg, const CRGBA &bg);
+
+  HiddenObjP drawHiddenPolygon(double z, const Points2D &points, double w,
+                               const CRGBA &c, const CLineDash &d);
+
+  HiddenObjP drawHiddenLine(const CPoint3D &p1, const CPoint3D &p2, double w,
+                            const CRGBA &c, const CLineDash &d);
+
+  HiddenObjP drawHiddenLine(const CPoint2D &p1, const CPoint2D &p2,
+                            double z, double w, const CRGBA &c, const CLineDash &d);
+
+  CBBox2D drawTextBox(const CPoint2D &p, const std::string &str, bool enhanced,
+                      const CPoint2D &offset, const CRGBA &bg, const CRGBA &fg, double w);
+
+  HiddenObjP drawHiddenEnhancedText(const CBBox2D &bbox, double z, const HAlignPos &halignPos,
+                                    const std::string &str, const CFontPtr &font,
+                                    const CRGBA &c);
+  void drawEnhancedText(const CBBox2D &bbox, const HAlignPos &halignPos, const std::string &str,
+                        const CFontPtr &font, const CRGBA &c);
+
+  HiddenObjP drawHiddenHAlignedText(const CPoint3D &pos, const HAlignPos &halignPos,
+                                    const VAlignPos &valignPos, const std::string &str,
+                                    const CFontPtr &font, const CRGBA &c, double a);
+  HiddenObjP drawHiddenHAlignedText(const CPoint2D &pos, double z, const HAlignPos &halignPos,
+                                    const VAlignPos &valignPos, const std::string &str,
+                                    const CFontPtr &font, const CRGBA &c, double a);
+
+  void initHidden();
+  void drawHidden(bool grayDepth);
+
   //---
 
   virtual CFontPtr getFont() const override { return font_; }
@@ -96,14 +333,14 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   virtual void drawRect   (const CBBox2D &rect, const CRGBA &c, double w) = 0;
   virtual void fillRect   (const CBBox2D &rect, const CRGBA &c) = 0;
-  virtual void patternRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
+  virtual void patternRect(const CBBox2D &rect, FillPattern pattern,
                            const CRGBA &fg, const CRGBA &bg) = 0;
 
   virtual void drawPolygon(const Points2D &points, double w, const CRGBA &c,
                            const CLineDash &d) = 0;
   virtual void fillPolygon(const Points2D &points, const CRGBA &c) = 0;
 
-  virtual void patternPolygon(const Points2D &points, CGnuPlotTypes::FillPattern pattern,
+  virtual void patternPolygon(const Points2D &points, FillPattern pattern,
                               const CRGBA &fg, const CRGBA &bg) = 0;
 
   virtual void drawEllipse(const CPoint2D &p, double rx, double ry, double a,
@@ -111,8 +348,7 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   virtual void fillEllipse(const CPoint2D &p, double rx, double ry, double a,
                            const CRGBA &c) = 0;
   virtual void patternEllipse(const CPoint2D &p, double rx, double ry, double a,
-                              CGnuPlotTypes::FillPattern pattern,
-                              const CRGBA &fg, const CRGBA &bg) = 0;
+                              FillPattern pattern, const CRGBA &fg, const CRGBA &bg) = 0;
 
   virtual void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3,
                           const CPoint2D &p4, double width, const CRGBA &c) = 0;
@@ -120,7 +356,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   virtual void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) override = 0;
 
   virtual void drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
-                               CHAlignType halign, CVAlignType valign, const CRGBA &c) override = 0;
+                               const HAlignPos &halignPos, const VAlignPos &valignPos,
+                               const CRGBA &c) override = 0;
 
   virtual void drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
                             double angle2, double width, const CRGBA &c) = 0;
@@ -150,10 +387,18 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void strokeClippedPath(const Points2D &points, const CGnuPlotStroke &stroke);
   void strokeClippedPath(const Points3D &points, const CGnuPlotStroke &stroke);
 
-  void drawClippedPath(const Points2D &points, double width,
-                       const CRGBA &c, const CLineDash &dash=CLineDash());
+  void drawHiddenClippedPath(const Points3D &points, double width,
+                             const CRGBA &c, const CLineDash &dash=CLineDash());
+
+  HiddenObjP drawHiddenPath(const Points2D &points, double z, double width,
+                            const CRGBA &c, const CLineDash &dash=CLineDash());
+
   void drawClippedPath(const Points3D &points, double width,
                        const CRGBA &c, const CLineDash &dash=CLineDash());
+  void drawClippedPath(const Points2D &points, double width,
+                       const CRGBA &c, const CLineDash &dash=CLineDash());
+
+  HiddenObjP strokeHiddenPath(const Points2D &points, double z, const CGnuPlotStroke &stroke);
 
   void strokePath(const Points3D &points, const CGnuPlotStroke &stroke);
   void strokePath(const Points2D &points, const CGnuPlotStroke &stroke);
@@ -165,6 +410,11 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   void drawMark(const CPoint3D &p, const CGnuPlotMark &mark);
   void drawMark(const CPoint2D &p, const CGnuPlotMark &mark);
+
+  HiddenObjP drawHiddenSymbol(const CPoint3D &p, SymbolType type, double size,
+                              const CRGBA &c, double lw, bool pixelSize);
+  HiddenObjP drawHiddenSymbol(const CPoint2D &p, double z, SymbolType type, double size,
+                              const CRGBA &c, double lw, bool pixelSize);
 
   void drawSymbol(const CPoint3D &p, SymbolType type, double size,
                   const CRGBA &c, double lw, bool pixelSize);
@@ -197,8 +447,11 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   //---
 
+  HiddenObjP strokeHiddenPolygon(const Points2D &points, double z, const CGnuPlotStroke &stroke);
+
   void strokeClippedPolygon(const Points3D &points, const CGnuPlotStroke &stroke);
   void strokeClippedPolygon(const Points2D &points, const CGnuPlotStroke &stroke);
+
   void strokePolygon(const Points3D &points, const CGnuPlotStroke &stroke);
   void strokePolygon(const Points2D &points, const CGnuPlotStroke &stroke);
 
@@ -206,9 +459,11 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   //---
 
+  void drawRect(const CBBox3D &rect, const CRGBA &c, double w);
+
   void drawClippedRect   (const CBBox2D &rect, const CRGBA &c, double w);
   void fillClippedRect   (const CBBox2D &rect, const CRGBA &c);
-  void patternClippedRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
+  void patternClippedRect(const CBBox2D &rect, FillPattern pattern,
                           const CRGBA &fg, const CRGBA &bg);
 
   void drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w,
@@ -236,8 +491,11 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
                           const CLineDash &dash);
   void drawPolygon(const Points3D &points, double lw, const CRGBA &c, const CLineDash &dash);
 
-  void patternClippedPolygon(const Points2D &points, CGnuPlotTypes::FillPattern pat,
+  void patternClippedPolygon(const Points2D &points, FillPattern pat,
                              const CRGBA &fg, const CRGBA &bg);
+
+  HiddenObjP strokeHiddenLine(const CPoint2D &p1, const CPoint2D &p2, double z,
+                              const CGnuPlotStroke &stroke);
 
   void strokeClipLine(const CPoint2D &p1, const CPoint2D &p2, const CGnuPlotStroke &stroke);
 
@@ -247,28 +505,40 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   bool clipLine(CPoint2D &p1, CPoint2D &p2);
 
   void calcTextRectAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced,
-                           CHAlignType halign, CVAlignType valign, double a,
+                           const HAlignPos &halignPos, const VAlignPos &valignPos, double a,
                            CBBox2D &bbox, CBBox2D &rbbox);
 
+  HiddenObjP drawHiddenTextAtPoint(const CPoint3D &p, const std::string &str, bool enhanced,
+                                   const HAlignPos &halignPos, const VAlignPos &valignPos,
+                                   const CFontPtr &font, const CRGBA &c, double angle);
+  HiddenObjP drawHiddenTextAtPoint(const CPoint2D &p, double z, const std::string &str,
+                                   bool enhanced, const HAlignPos &halignPos,
+                                   const VAlignPos &valignPos, const CFontPtr &font,
+                                   const CRGBA &c, double angle);
+
+  void drawTextAtPoint(const CPoint3D &pos, const std::string &str, bool enhanced,
+                       const HAlignPos &halignPos, const VAlignPos &valignPos,
+                       const CRGBA &c, double a);
   void drawTextAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced,
-                       CHAlignType halign, CVAlignType valign, const CRGBA &c, double a);
+                       const HAlignPos &halignPos, const VAlignPos &valignPos,
+                       const CRGBA &c, double a);
 
-  void drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
-                        CVAlignType valign, double y_offset, const std::string &str,
+  void drawHAlignedText(const CPoint3D &pos, const HAlignPos &halignPos,
+                        const VAlignPos &valignPos, const std::string &str,
                         const CRGBA &c, double a=0);
-  void drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
-                        CVAlignType valign, double y_offset, const std::string &str,
+  void drawHAlignedText(const CPoint2D &pos, const HAlignPos &halignPos,
+                        const VAlignPos &valignPos, const std::string &str,
                         const CRGBA &c, double a=0);
 
-  void drawVAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
-                        CVAlignType valign, double y_offset, const std::string &str,
+  void drawVAlignedText(const CPoint3D &pos, const HAlignPos &halignPos,
+                        const VAlignPos &valignPos, const std::string &str,
                         const CRGBA &c, double a=0);
-  void drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
-                        CVAlignType valign, double y_offset, const std::string &str,
+  void drawVAlignedText(const CPoint2D &pos, const HAlignPos &halignPos,
+                        const VAlignPos &valignPos, const std::string &str,
                         const CRGBA &c, double a=0);
 
   void drawHTextInBox(const CBBox2D &bbox, const std::string &str,
-                      CHAlignType halign, const CRGBA &c);
+                      const HAlignPos &halignPos, const CRGBA &c);
 
   CBBox2D getHAlignedTextBBox(const std::string &str);
 
@@ -293,7 +563,9 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void windowToRegion(double wx, double wy, double *rx, double *ry);
   void regionToWindow(double rx, double ry, double *wx, double *wy);
 
-  CPoint2D transform(const CPoint3D &p) const;
+  CPoint3D transform(const CPoint3D &p) const;
+
+  CPoint2D transform2D(const CPoint3D &p) const;
 
   CPoint2D rotatePoint(const CPoint2D &p, double a, const CPoint2D &o);
 
@@ -314,6 +586,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   CFontPtr         font_;             // font
   bool             reverseX_ { false };
   bool             reverseY_ { false };
+  ZHiddenObjects   hiddenObjects_;
+  double           hiddenZ_ { 1.0 };
 };
 
 #endif

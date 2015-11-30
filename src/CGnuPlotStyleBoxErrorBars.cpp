@@ -20,7 +20,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  CBBox2D bbox = plot->bbox();
+  CBBox2D bbox = plot->bbox2D();
 
   double ymin = bbox.getYMin();
 

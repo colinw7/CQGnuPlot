@@ -9,6 +9,10 @@
 
 class CGnuPlotTextRenderer {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   CGnuPlotTextRenderer();
 
   virtual CFontPtr getFont() const { return font_; }
@@ -31,7 +35,8 @@ class CGnuPlotTextRenderer {
   virtual void drawText(const CPoint2D &p, const std::string &str, const CRGBA &c) = 0;
 
   virtual void drawRotatedText(const CPoint2D &p, const std::string &str, double a,
-                               CHAlignType halign, CVAlignType valign, const CRGBA &c) = 0;
+                               const HAlignPos &halignPos, const VAlignPos &valignPos,
+                               const CRGBA &c) = 0;
 
   CPoint2D rotatePoint(const CPoint2D &p, double a, const CPoint2D &o);
 
@@ -57,7 +62,7 @@ class CGnuPlotBBoxTextRenderer : public CGnuPlotTextRenderer {
   void drawText(const CPoint2D &p, const std::string &str, const CRGBA &c);
 
   void drawRotatedText(const CPoint2D &p, const std::string &str, double a,
-                       CHAlignType halign, CVAlignType valign, const CRGBA &c);
+                       const HAlignPos &halignPos, const VAlignPos &valignPos, const CRGBA &c);
 
  protected:
   CGnuPlotTextRenderer *renderer_;

@@ -51,7 +51,7 @@
 #include <CGnuPlotStyleYErrorLines.h>
 
 #include <CUtf8.h>
-#include <CRange.h>
+#include <RangeItr.h>
 #include <CImageLib.h>
 #include <CUnixFile.h>
 #include <CParseLine.h>
@@ -185,7 +185,7 @@ CGnuPlot() :
   addDevice("svg", svgDevice_);
   addDevice("log", logDevice_);
 
-  for (const auto &i : IRange(0, 8))
+  for (const auto &i : IRangeItr(0, 8))
     paxis(i).unset();
 
   addPlotStyles();
@@ -358,7 +358,7 @@ load(const std::string &filename, const StringArray &args)
   if (! args.empty()) {
     CExprInst->createIntegerVariable("ARGC", args.size());
 
-    for (const auto &i : IRange::range(0, 9)) {
+    for (const auto &i : IRangeItr::range(0, 9)) {
       std::string argName = CStrUtil::strprintf("ARG%d", i + 1);
 
       if (i < int(args.size()))
@@ -370,7 +370,7 @@ load(const std::string &filename, const StringArray &args)
   else {
     CExprInst->createIntegerVariable("ARGC", 0);
 
-    for (const auto &i : IRange::rangeClosed(1, 9)) {
+    for (const auto &i : IRangeItr::rangeClosed(1, 9)) {
       std::string argName = CStrUtil::strprintf("ARG%d", i);
 
       CExprInst->removeVariable(argName);
@@ -498,7 +498,7 @@ void
 CGnuPlot::
 mousePress(const CGnuPlotMouseEvent &mouseEvent)
 {
-  if (! readLine_->isInterruptable())
+  if (readLine_.isValid() && ! readLine_->isInterruptable())
     return;
 
   bool interrupt = false;
@@ -515,14 +515,15 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
   if (! interrupt)
     return;
 
-  readLine_->doInterrupt();
+  if (readLine_.isValid())
+    readLine_->doInterrupt();
 }
 
 void
 CGnuPlot::
 keyPress(const CGnuPlotKeyEvent &)
 {
-  if (! readLine_->isInterruptable())
+  if (readLine_.isValid() && ! readLine_->isInterruptable())
     return;
 
   bool interrupt = false;
@@ -533,7 +534,8 @@ keyPress(const CGnuPlotKeyEvent &)
   if (! interrupt)
     return;
 
-  readLine_->doInterrupt();
+  if (readLine_.isValid())
+    readLine_->doInterrupt();
 }
 
 bool
@@ -1660,6 +1662,8 @@ plotCmd(const std::string &args)
   yind_ = 1;
   zind_ = 1;
 
+  saveAxisData();
+
   //---
 
   resetLineStyle();
@@ -1763,8 +1767,6 @@ plotCmd(const std::string &args)
   Plots plots;
   bool  sample = false, first = true;
 
-  CGnuPlotAxesData axesData = axesData_;
-
   for (const auto &cmd : cmds) {
     plotCmd1(cmd, group, plots, sample, first);
 
@@ -1811,7 +1813,23 @@ plotCmd(const std::string &args)
 
   //---
 
-  axesData_ = axesData;
+  restoreAxisData();
+}
+
+void
+CGnuPlot::
+saveAxisData()
+{
+  saveAxesData_   = axesData_;
+  saveSampleVars_ = sampleVars_;
+}
+
+void
+CGnuPlot::
+restoreAxisData()
+{
+  axesData_   = saveAxesData_;
+  sampleVars_ = saveSampleVars_;
 }
 
 void
@@ -1951,17 +1969,17 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     CGnuPlotAxisData sampleXAxis;
 
     if (parseAxisRange(line, sampleXAxis, false)) {
-      sampleX_.var = sampleXAxis.getDummyVar();
-      sampleX_.min = sampleXAxis.min();
-      sampleX_.max = sampleXAxis.max();
+      sampleVars_.x.var = sampleXAxis.getDummyVar();
+      sampleVars_.x.min = sampleXAxis.min();
+      sampleVars_.x.max = sampleXAxis.max();
     }
 
     CGnuPlotAxisData sampleYAxis;
 
     if (parseAxisRange(line, sampleYAxis, false)) {
-      sampleY_.var = sampleYAxis.getDummyVar();
-      sampleY_.min = sampleYAxis.min();
-      sampleY_.max = sampleYAxis.max();
+      sampleVars_.y.var = sampleYAxis.getDummyVar();
+      sampleVars_.y.min = sampleYAxis.min();
+      sampleVars_.y.max = sampleYAxis.max();
     }
   }
 
@@ -2372,12 +2390,12 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
       }
     }
     else {
-      addFile2D(plots, group, filename, style, usingCols, sampleX_,
+      addFile2D(plots, group, filename, style, usingCols, sampleVars_,
                 lineStyle, fillStyle, styleData, keyTitle);
     }
   }
   else if (! functions.empty()) {
-    CGnuPlotPlot *plot = addFunction2D(group, functions, style, sampleX_);
+    CGnuPlotPlot *plot = addFunction2D(group, functions, style, sampleVars_);
 
     if (plot)
       addPlotWithStyle(plot, plots, lineStyle, fillStyle, styleData, keyTitle);
@@ -3974,10 +3992,22 @@ replotCmd(const std::string &args)
 
   device_->redraw();
 
-  if      (lastPlotCmd_ != "")
-    plotCmd(lastPlotCmd_);
-  else if (lastSPlotCmd_ != "")
-    splotCmd(lastSPlotCmd_);
+  CParseLine line(args);
+
+  line.skipSpace();
+
+  if (line.isValid()) {
+    if      (lastPlotCmd_ != "")
+      plotCmd(lastPlotCmd_ + ", " + line.str());
+    else if (lastSPlotCmd_ != "")
+      splotCmd(lastSPlotCmd_ + ", " + line.str());
+  }
+  else {
+    if      (lastPlotCmd_ != "")
+      plotCmd(lastPlotCmd_);
+    else if (lastSPlotCmd_ != "")
+      splotCmd(lastSPlotCmd_);
+  }
 }
 
 // refresh
@@ -4005,6 +4035,8 @@ splotCmd(const std::string &args)
   lastSPlotCmd_ = args;
   lastPlotCmd_  = "";
   lastFilename_ = "";
+
+  saveAxisData();
 
   //----
 
@@ -4145,6 +4177,8 @@ splotCmd(const std::string &args)
     if (device())
       stateChanged(window.get(), CGnuPlotTypes::ChangeState::PLOT_ADDED);
   }
+
+  restoreAxisData();
 }
 
 void
@@ -4189,26 +4223,60 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
   // Get global range (all plots)
   if (first1) {
     if      (isParametric()) {
+#if 0
       // Get Range
       //  [TMIN:TMAX][XMIN:XMAX][YMIN:YMAX][ZMIN:ZMAX]
-      parseAxisRange(line, taxis(1    ), false);
-      parseAxisRange(line, xaxis(xind_), false);
+      parseAxisRange(line, taxis(1), false);
+
+      if (parseAxisRange(line, xaxis(xind_), false)) {
+        sampleVars_.x.min = xaxis(xind_).min();
+        sampleVars_.x.max = xaxis(xind_).max();
+      }
+
       parseAxisRange(line, yaxis(yind_), false);
       parseAxisRange(line, zaxis(zind_), false);
+#else
+      parseAxisRange(line, uaxis(), false);
+      parseAxisRange(line, vaxis(), false);
+#endif
     }
     else if (isPolar()) {
+#if 0
       // Get Range
       //  [TMIN:TMAX][XMIN:XMAX][YMIN:YMAX][ZMIN:ZMAX]
-      parseAxisRange(line, taxis(1    ), false);
-      parseAxisRange(line, xaxis(xind_), false);
+      parseAxisRange(line, taxis(1), false);
+
+      if (parseAxisRange(line, xaxis(xind_), false)) {
+        sampleVars_.x.min = xaxis(xind_).min();
+        sampleVars_.x.max = xaxis(xind_).max();
+      }
+
       parseAxisRange(line, yaxis(yind_), false);
       parseAxisRange(line, zaxis(zind_), false);
+#else
+      parseAxisRange(line, uaxis(), false);
+      parseAxisRange(line, vaxis(), false);
+#endif
     }
     else {
       // Get Range
       //  [XMIN:XMAX][YMIN:YMAX][ZMIN:ZMAX]
-      parseAxisRange(line, xaxis(xind_), false);
-      parseAxisRange(line, yaxis(yind_), false);
+      if (parseAxisRange(line, xaxis(xind_), false)) {
+        if (sampleVars_.x.var != "")
+          dummyVars_["x"] = sampleVars_.x.var;
+
+        sampleVars_.x.min = xaxis(xind_).min();
+        sampleVars_.x.max = xaxis(xind_).max();
+      }
+
+      if (parseAxisRange(line, yaxis(yind_), false)) {
+        if (sampleVars_.y.var != "")
+          dummyVars_["y"] = sampleVars_.y.var;
+
+        sampleVars_.y.min = yaxis(yind_).min();
+        sampleVars_.y.max = yaxis(yind_).max();
+      }
+
       parseAxisRange(line, zaxis(zind_), false);
     }
 
@@ -4222,31 +4290,31 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
     }
   }
 
-  //---
+  //----
 
   if (! first1 || sample) {
     CGnuPlotAxisData sampleXAxis;
 
     if (parseAxisRange(line, sampleXAxis, false)) {
-      sampleX_.var = sampleXAxis.getDummyVar();
-      sampleX_.min = sampleXAxis.min();
-      sampleX_.max = sampleXAxis.max();
+      sampleVars_.x.var = sampleXAxis.getDummyVar();
+      sampleVars_.x.min = sampleXAxis.min();
+      sampleVars_.x.max = sampleXAxis.max();
     }
 
     CGnuPlotAxisData sampleYAxis;
 
     if (parseAxisRange(line, sampleYAxis, false)) {
-      sampleY_.var = sampleYAxis.getDummyVar();
-      sampleY_.min = sampleYAxis.min();
-      sampleY_.max = sampleYAxis.max();
+      sampleVars_.y.var = sampleYAxis.getDummyVar();
+      sampleVars_.y.min = sampleYAxis.min();
+      sampleVars_.y.max = sampleYAxis.max();
     }
 
     CGnuPlotAxisData sampleZAxis;
 
     if (parseAxisRange(line, sampleZAxis, false)) {
-      sampleZ_.var = sampleZAxis.getDummyVar();
-      sampleZ_.min = sampleZAxis.min();
-      sampleZ_.max = sampleZAxis.max();
+      sampleVars_.z.var = sampleZAxis.getDummyVar();
+      sampleVars_.z.min = sampleZAxis.min();
+      sampleVars_.z.max = sampleZAxis.max();
     }
   }
 
@@ -4563,51 +4631,31 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
 
   //---
 
-  Plots plots1;
-
   if      (! filename.empty()) {
     if (isBinary()) {
       if (isImageStyle(style)) {
         CGnuPlotPlot *plot = addImage3D(group, filename, style, usingCols);
 
         if (plot)
-          plots1.push_back(plot);
+          addPlotWithStyle(plot, plots, lineStyle, fillStyle, styleData, keyTitle);
       }
       else {
         CGnuPlotPlot *plot = addBinary3D(group, filename, style, usingCols);
 
         if (plot)
-          plots1.push_back(plot);
+          addPlotWithStyle(plot, plots, lineStyle, fillStyle, styleData, keyTitle);
       }
     }
     else {
-      plots1 = addFile3D(group, filename, style, usingCols, sampleX_);
+      addFile3D(plots, group, filename, style, usingCols, sampleVars_,
+                lineStyle, fillStyle, styleData, keyTitle);
     }
   }
   else if (! functions.empty()) {
-    CGnuPlotPlot *plot =
-      addFunction3D(group, functions, style, sampleX_, sampleY_);
+    CGnuPlotPlot *plot = addFunction3D(group, functions, style, sampleVars_);
 
     if (plot)
-      plots1.push_back(plot);
-  }
-
-  for (const auto &plot1 : plots1) {
-    plot1->setKeyTitleEnabled(keyTitle.enabled);
-
-    if (keyTitle.enabled && keyTitle.str != "")
-      plot1->setKeyTitleString(keyTitle.str);
-
-    plot1->setLineStyle   (lineStyle);
-    plot1->setFillStyle   (fillStyle);
-    plot1->setArrowStyle  (styleData.arrow);
-    plot1->setTextBoxStyle(styleData.textBox);
-    plot1->setTextStyle   (styleData.text);
-    plot1->setEllipseStyle(styleData.ellipse);
-    plot1->setLabelStyle  (styleData.label);
-    plot1->setPieStyle    (styleData.pie);
-
-    plots.push_back(plot1);
+      addPlotWithStyle(plot, plots, lineStyle, fillStyle, styleData, keyTitle);
   }
 
   //---
@@ -5317,19 +5365,24 @@ setCmd(const std::string &args)
     std::string arg = readNonSpace(line);
 
     if      (arg == "") {
-      for (const auto &i : IRange::rangeClosed(1, 2)) {
+      for (const auto &i : IRangeItr::rangeClosed(1, 2)) {
         xaxis(i).setAutoScale(true); xaxis(i).unsetRange();
         yaxis(i).setAutoScale(true); yaxis(i).unsetRange();
 
         xaxis(i).setAutoScaleFix(false);
         yaxis(i).setAutoScaleFix(false);
       }
+
+      zaxis(1).setAutoScale(true); zaxis(1).unsetRange();
+      zaxis(1).setAutoScaleFix(false);
     }
     else if (arg == "noextend") {
-      for (const auto &i : IRange::rangeClosed(1, 2)) {
+      for (const auto &i : IRangeItr::rangeClosed(1, 2)) {
         xaxis(i).setAutoScaleFix(true);
         yaxis(i).setAutoScaleFix(true);
       }
+
+      zaxis(1).setAutoScaleFix(false);
     }
     else if (arg == "x") {
       xaxis(1).setAutoScale(true); xaxis(1).unsetRange();
@@ -6043,10 +6096,13 @@ setCmd(const std::string &args)
         else if (arg == "polar") {
           raxis().setGridMajor(true);
 
-          double r = 0;
+          double a = 0;
 
-          if (parseReal(line, r))
-            axesData_.setGridPolarAngle(angleToDeg(r));
+          if (parseReal(line, a)) {
+            double a1 = (! isAngleDegrees() ? CAngle::Rad2Deg(a) : a);
+
+            axesData_.setGridPolarAngle(a1);
+          }
         }
         else if (arg == "front" || arg == "back" || arg == "layerdefault") {
           if      (arg == "front"       ) axesData_.setGridLayer(DrawLayer::FRONT);
@@ -6192,24 +6248,22 @@ setCmd(const std::string &args)
       arg = readNonSpace(line);
     }
   }
-  // set isosamples <iso_1> {,<iso_2>}
+  // set isosamples <iso_1> [,<iso_2>]
   else if (var == VariableName::ISOSAMPLES) {
     int isamples1, isamples2;
 
     isoSamples_.get(isamples1, isamples2);
 
-    if (line.isValid()) {
-      int i;
+    int i;
 
-      if (parseInteger(line, i)) {
-        isamples1 = i;
+    if (parseInteger(line, i)) {
+      isamples1 = i;
+      isamples2 = i;
+    }
+
+    if (line.skipSpaceAndChar(',')) {
+      if (parseInteger(line, i))
         isamples2 = i;
-      }
-
-      if (line.skipSpaceAndChar(',')) {
-        if (parseInteger(line, i))
-          isamples2 = i;
-      }
     }
 
     isoSamples_.set(isamples1, isamples2);
@@ -7010,7 +7064,7 @@ setCmd(const std::string &args)
       multiplot_ = createMultiplot();
 
     multiplot_->setEnabled(true);
-    multiplot_->setAutoFit(true);
+    //multiplot_->setAutoFit(true);
 
     std::string arg = readNonSpace(line);
 
@@ -7099,6 +7153,15 @@ setCmd(const std::string &args)
             multiplot_->setSpacing(x, y);
           }
         }
+      }
+      else if (arg == "autofit") {
+        multiplot_->setAutoFit(true);
+      }
+      else if (arg == "next") {
+        // TODO
+      }
+      else if (arg == "prev" || arg == "previous") {
+        // TODO
       }
       else {
         errorMsg("Invalid arg '" + arg + "'");
@@ -7589,6 +7652,9 @@ setCmd(const std::string &args)
   // set parametric
   else if (var == VariableName::PARAMETRIC) {
     setParametric(true);
+
+    resetDummyVars();
+
     // TODO: dummy variable is t for curves, u/v for surfaces
   }
   // set paxis <no> {range <range-options> | {tics <tic-options>}}
@@ -7947,6 +8013,9 @@ setCmd(const std::string &args)
   // set polar
   else if (var == VariableName::POLAR) {
     setPolar(true);
+
+    resetDummyVars();
+
     // TODO: dummy variable is t for curves
   }
   // set print ["<filename>"] [append]
@@ -8025,7 +8094,7 @@ setCmd(const std::string &args)
   else if (var == VariableName::RTICS) {
     parseAxesTics(line, raxis());
   }
-  // set samples {samples1:i} [, {samples2:i} ]
+  // set samples <samples_1> [,<samples_2> ]
   else if (var == VariableName::SAMPLES) {
     int isamples1, isamples2;
 
@@ -8033,8 +8102,10 @@ setCmd(const std::string &args)
 
     int i;
 
-    if (parseInteger(line, i))
+    if (parseInteger(line, i)) {
       isamples1 = i;
+      isamples2 = i;
+    }
 
     if (line.skipSpaceAndChar(',')) {
       if (parseInteger(line, i))
@@ -8430,7 +8501,7 @@ setCmd(const std::string &args)
 
       while (arg != "") {
         if      (arg == "radius") {
-          for (const auto &i : IRange::range(0, 3)) {
+          for (const auto &i : IRangeItr::range(0, 3)) {
             CGnuPlotCoordValue c;
 
             if (! parseCoordValue(line, c))
@@ -9047,8 +9118,8 @@ setCmd(const std::string &args)
   else if (var == VariableName::XRANGE) {
     parseAxisRange(line, xaxis(1));
 
-    sampleX_.min = xaxis(1).min();
-    sampleX_.max = xaxis(1).max();
+    sampleVars_.x.min = xaxis(1).min();
+    sampleVars_.x.max = xaxis(1).max();
   }
   // set xtics ...
   else if (var == VariableName::XTICS) {
@@ -9063,13 +9134,13 @@ setCmd(const std::string &args)
       double z;
 
       if (parseReal(line, z))
-        xyPlane_.setZ(z, false);
+        camera_.setXYPlane(CGnuPlotXYPlane(z, false));
     }
     else if (arg == "relative") {
       double z;
 
       if (parseReal(line, z))
-        xyPlane_.setZ(z, true);
+        camera_.setXYPlane(CGnuPlotXYPlane(z, true));
     }
   }
   // set ticslevel <frac>
@@ -9077,7 +9148,7 @@ setCmd(const std::string &args)
     double z;
 
     if (parseReal(line, z))
-      xyPlane_.setZ(z, true);
+      camera_.setXYPlane(CGnuPlotXYPlane(z, true));
   }
   // set xzeroaxis
   else if (var == VariableName::XZEROAXIS) {
@@ -9647,7 +9718,7 @@ showCmd(const std::string &args)
     }
     else {
       // TODO: just defined ?
-      for (const auto &i : IRange::rangeClosed(1, 8)) {
+      for (const auto &i : IRangeItr::rangeClosed(1, 8)) {
         CGnuPlotLineTypeP lineType = getLineTypeInd(i);
 
         std::cout << "linetype " << i << ", ";
@@ -10131,8 +10202,8 @@ showCmd(const std::string &args)
   }
   // show xyplane
   else if (var == VariableName::XYPLANE) {
-    std::cout << "xyplane at " << xyPlane_.z() <<
-      (xyPlane_.isRelative() ? " relative" : "") << std::endl;
+    std::cout << "xyplane at " << camera_.xyPlane().z() <<
+      (camera_.xyPlane().isRelative() ? " relative" : "") << std::endl;
   }
   // show xzeroaxis
   else if (var == VariableName::XZEROAXIS) {
@@ -10293,7 +10364,7 @@ showColorNames()
 
   int n = CRGBName::numColorNames();
 
-  for (const auto &i : IRange::range(0, n)) {
+  for (const auto &i : IRangeItr::range(0, n)) {
     std::string name = CRGBName::colorName(i);
     CRGB        rgb  = CRGBName::colorRGBA(i).getRGB();
 
@@ -10456,7 +10527,10 @@ resetCmd(const std::string &args)
   // TODO: do not reset terminal and output
   resetAngleType();
 
-  setPolar(false);
+  setParametric(false);
+  setPolar     (false);
+
+  resetDummyVars();
 
   clearAnnotations<CGnuPlotGroupAnnotation>();
 
@@ -10492,13 +10566,13 @@ resetPlotData()
   yind_ = 1;
   zind_ = 1;
 
-  for (const auto &i : IRange::rangeClosed(1, 2)) {
+  for (const auto &i : IRangeItr::rangeClosed(1, 2)) {
     xaxis(i).reset();
     yaxis(i).reset();
     zaxis(i).reset();
   }
 
-  for (const auto &i : IRange::range(0, 8))
+  for (const auto &i : IRangeItr::range(0, 8))
     paxis(i).reset();
 
   taxis(1).reset();
@@ -10606,7 +10680,7 @@ unsetCmd(const std::string &args)
     std::string arg = readNonSpace(line);
 
     if      (arg == "") {
-      for (const auto &i : IRange::rangeClosed(1, 2)) {
+      for (const auto &i : IRangeItr::rangeClosed(1, 2)) {
         xaxis(i).setAutoScale(false);
         yaxis(i).setAutoScale(false);
       }
@@ -10790,7 +10864,7 @@ unsetCmd(const std::string &args)
       lineType->unset();
     }
     else {
-      for (const auto &i : IRange::rangeClosed(1, 8)) {
+      for (const auto &i : IRangeItr::rangeClosed(1, 8)) {
         CGnuPlotLineTypeP lineType = getLineTypeInd(i);
 
         lineType->unset();
@@ -10922,6 +10996,9 @@ unsetCmd(const std::string &args)
   // unset parametric
   else if (var == VariableName::PARAMETRIC) {
     setParametric(false);
+
+    resetDummyVars();
+
     // TODO: dummy variable is x for curves, x/y for surfaces
   }
   // unset paxis
@@ -10954,8 +11031,11 @@ unsetCmd(const std::string &args)
   }
   // unset polar
   else if (var == VariableName::POLAR) {
-    // TODO: dummy variable is x for curves
     setPolar(false);
+
+    resetDummyVars();
+
+    // TODO: dummy variable is x for curves
   }
   // unset print
   else if (var == VariableName::PRINT) {
@@ -11146,7 +11226,7 @@ unsetCmd(const std::string &args)
   }
   // unset xyplane
   else if (var == VariableName::XYPLANE) {
-    xyPlane_.setZ(0, false);
+    camera_.setXYPlane(CGnuPlotXYPlane(0, false));
   }
   // unset xzeroaxis
   else if (var == VariableName::XZEROAXIS) {
@@ -12528,7 +12608,7 @@ processAssignFunction(const std::string &str)
 CGnuPlotPlot *
 CGnuPlot::
 addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style,
-              const SampleVar &sampleX)
+              const SampleVars &samples)
 {
   CGnuPlotPlot *plot = 0;
 
@@ -12564,8 +12644,8 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 
     getXRange(&xmin, &xmax);
 
-    if (sampleX.min.isValid()) xmin = sampleX.min.getValue();
-    if (sampleX.max.isValid()) xmax = sampleX.max.getValue();
+    if (samples.x.min.isValid()) xmin = samples.x.min.getValue();
+    if (samples.x.max.isValid()) xmax = samples.x.max.getValue();
 
     double xmin1 = xaxis(xind_).mapLogValue(xmin);
     double xmax1 = xaxis(xind_).mapLogValue(xmax);
@@ -12579,15 +12659,15 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     if (xaxis(xind_).getDummyVar() != "")
       varName1 = xaxis(xind_).getDummyVar();
 
-    if (sampleX.var != "")
-      varName1 = sampleX.var;
+    if (samples.x.var != "")
+      varName1 = samples.x.var;
 
     CExprVariablePtr xvar = CExprInst->createRealVariable(varName1, 0.0);
 
     double dx1 = (nx > 1 ? (xmax1 - xmin1)/(nx - 1) : 0);
 
     if (functions[0] == "NaN") {
-      for (auto x1 : RRange::range(xmin1).step(dx1).limit(nx)) {
+      for (auto x1 : RRangeItr::range(xmin1).step(dx1).limit(nx)) {
         double x = xaxis(xind_).unmapLogValue(x1);
 
         plot->addPoint2D(x, CExprValuePtr());
@@ -12596,7 +12676,7 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     else {
       CExprTokenStack cstack = compileExpression(functions[0]);
 
-      for (auto x1 : RRange::range(xmin1).step(dx1).limit(nx)) {
+      for (auto x1 : RRangeItr::range(xmin1).step(dx1).limit(nx)) {
         double x = xaxis(xind_).unmapLogValue(x1);
 
         xvar->setRealValue(x);
@@ -12632,13 +12712,13 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     double da = (nx > 1 ? (tmax - tmin)/(nx - 1) : 0);
 
     if (functions[0] == "NaN") {
-      for (auto a : RRange::range(tmin).step(da).limit(nx))
+      for (auto a : RRangeItr::range(tmin).step(da).limit(nx))
         plot->addPoint2D(a, CExprValuePtr());
     }
     else {
       CExprTokenStack cstack = compileExpression(functions[0]);
 
-      for (auto a : RRange::range(tmin).step(da).limit(nx)) {
+      for (auto a : RRangeItr::range(tmin).step(da).limit(nx)) {
         double c = cos(a);
         double s = sin(a);
 
@@ -12667,8 +12747,10 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     plot->setMapping(CGnuPlotTypes::Mapping::CARTESIAN_MAPPING);
     plot->setParametric(true);
 
-    if (functions.size() < 2)
+    if (functions.size() < 2) {
+      errorMsg("Too few functions");
       return 0;
+    }
 
     //------
 
@@ -12694,7 +12776,7 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     if (f1) cstack1 = compileExpression(functions[0]);
     if (f2) cstack2 = compileExpression(functions[1]);
 
-    for (auto t : RRange::range(tmin).step(dt).limit(nx)) {
+    for (auto t : RRangeItr::range(tmin).step(dt).limit(nx)) {
       tvar->setRealValue(t);
 
       double x, y;
@@ -12749,7 +12831,7 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 CGnuPlotPlot *
 CGnuPlot::
 addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style,
-              const SampleVar &sampleX, const SampleVar &sampleY)
+              const SampleVars &samples)
 {
   CGnuPlotPlot *plot = 0;
 
@@ -12775,7 +12857,8 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 
   int nx, ny;
 
-  isoSamples_.get(nx, ny);
+  //isoSamples_.get(nx, ny);
+  samples_.get(nx, ny);
 
   if (! isPolar() && ! isParametric()) {
     double xmin, ymin, xmax, ymax;
@@ -12783,10 +12866,10 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     getXRange(&xmin, &xmax);
     getYRange(&ymin, &ymax);
 
-    if (sampleX.min.isValid()) xmin = sampleX.min.getValue();
-    if (sampleX.max.isValid()) xmax = sampleX.max.getValue();
-    if (sampleY.min.isValid()) ymin = sampleY.min.getValue();
-    if (sampleY.max.isValid()) ymax = sampleY.max.getValue();
+    if (samples.x.min.isValid()) xmin = samples.x.min.getValue();
+    if (samples.x.max.isValid()) xmax = samples.x.max.getValue();
+    if (samples.y.min.isValid()) ymin = samples.y.min.getValue();
+    if (samples.y.max.isValid()) ymax = samples.y.max.getValue();
 
     //---
 
@@ -12797,14 +12880,14 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     if (xaxis(xind_).getDummyVar() != "")
       varName1 = xaxis(xind_).getDummyVar();
 
-    if (sampleX.var != "")
-      varName1 = sampleX.var;
+    if (samples.x.var != "")
+      varName1 = samples.x.var;
 
     if (yaxis(yind_).getDummyVar() != "")
       varName2 = yaxis(yind_).getDummyVar();
 
-    if (sampleY.var != "")
-      varName2 = sampleY.var;
+    if (samples.y.var != "")
+      varName2 = samples.y.var;
 
     CExprVariablePtr xvar = CExprInst->createRealVariable(varName1, 0.0);
     CExprVariablePtr yvar = CExprInst->createRealVariable(varName2, 0.0);
@@ -12815,8 +12898,8 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     if (functions[0] == "NaN") {
       int iy = 0;
 
-      for (auto y : RRange::range(ymin).step(dy).limit(ny + 1)) {
-        for (auto x : RRange::range(xmin).step(dx).limit(nx + 1)) {
+      for (auto y : RRangeItr::range(ymin).step(dy).limit(ny + 1)) {
+        for (auto x : RRangeItr::range(xmin).step(dx).limit(nx + 1)) {
           plot->addPoint3D(iy, x, y, CExprValuePtr());
         }
 
@@ -12828,10 +12911,10 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 
       int iy = 0;
 
-      for (auto y : RRange::range(ymin).step(dy).limit(ny)) {
+      for (auto y : RRangeItr::range(ymin).step(dy).limit(ny)) {
         yvar->setRealValue(y);
 
-        for (auto x : RRange::range(xmin).step(dx).limit(nx)) {
+        for (auto x : RRangeItr::range(xmin).step(dx).limit(nx)) {
           xvar->setRealValue(x);
 
           CExprValuePtr value;
@@ -12871,8 +12954,8 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     CExprVariablePtr uvar = CExprInst->createRealVariable(varName1, 0.0);
     CExprVariablePtr vvar = CExprInst->createRealVariable(varName2, 0.0);
 
-    double da1 = (umax - umin)/nx;
-    double da2 = (vmax - vmin)/ny;
+    double da1 = (nx > 0 ? (umax - umin)/nx : 0);
+    double da2 = (ny > 0 ? (vmax - vmin)/ny : 0);
 
     bool f1 = (functions[0] != "NaN");
     bool f2 = (functions[1] != "NaN");
@@ -12948,8 +13031,10 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
     plot->setMapping(CGnuPlotTypes::Mapping::CARTESIAN_MAPPING);
     plot->setParametric(true);
 
-    if (functions.size() < 3)
+    if (functions.size() < 3) {
+      errorMsg("Too few functions");
       return 0;
+    }
 
     //------
 
@@ -13061,7 +13146,7 @@ addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 void
 CGnuPlot::
 addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-          const CGnuPlotUsingCols &usingCols, const SampleVar &sampleX,
+          const CGnuPlotUsingCols &usingCols, const SampleVars &samples,
           CGnuPlotLineStyle &lineStyle, CGnuPlotFillStyle &fillStyle,
           CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle)
 {
@@ -13079,8 +13164,8 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
 
     getXRange(&xmin, &xmax);
 
-    if (sampleX.min.isValid()) xmin = sampleX.min.getValue();
-    if (sampleX.max.isValid()) xmax = sampleX.max.getValue();
+    if (samples.x.min.isValid()) xmin = samples.x.min.getValue();
+    if (samples.x.max.isValid()) xmax = samples.x.max.getValue();
 
     //---
 
@@ -13096,8 +13181,8 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
 
     getDummyVars(varName1, varName2, false);
 
-    if (sampleX.var != "")
-      varName1 = sampleX.var;
+    if (samples.x.var != "")
+      varName1 = samples.x.var;
 
     CExprVariablePtr xvar = CExprInst->createRealVariable(varName1, 0.0);
 
@@ -13436,7 +13521,7 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
             if (plotStyle)
               nv = std::min(nv, plotStyle->numUsing());
 
-            for (const auto &i : IRange::range(0, nv)) {
+            for (const auto &i : IRangeItr::range(0, nv)) {
               if (! fieldValues_[i].isValid())
                 bad = true;
 
@@ -13573,10 +13658,10 @@ addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     istyle.setWidth (image->getWidth ());
     istyle.setHeight(image->getHeight());
 
-    for (auto iy : IRange::range(0, istyle.height().getValue())) {
+    for (auto iy : IRangeItr::range(0, istyle.height().getValue())) {
       ymin.updateMin(iy); ymax.updateMax(iy);
 
-      for (auto ix : IRange::range(0, istyle.width().getValue())) {
+      for (auto ix : IRangeItr::range(0, istyle.width().getValue())) {
         CRGBA rgba;
 
         image->getRGBAPixel(ix, iy, rgba);
@@ -13962,10 +14047,10 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
     //---
 
-    for (const auto &iy : IRange::range(0, ny)) {
+    for (const auto &iy : IRangeItr::range(0, ny)) {
       float y = yvals[iy];
 
-      for (const auto &ix : IRange::range(0, nx)) {
+      for (const auto &ix : IRangeItr::range(0, nx)) {
         float x = xvals[ix];
         float z = data[iy][ix];
 
@@ -14019,10 +14104,10 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
       return 0;
     }
 
-    for (const auto &i : IRange::range(0, n, nv)) {
+    for (const auto &i : IRangeItr::range(0, n, nv)) {
       fieldValues_.clear();
 
-      for (const auto &j : IRange::range(0, nv)) {
+      for (const auto &j : IRangeItr::range(0, nv)) {
         CExprValuePtr val = CExprInst->createRealValue(vals[i + j]);
 
         fieldValues_.push_back(val);
@@ -14051,14 +14136,14 @@ addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
   return plot;
 }
 
-CGnuPlot::Plots
+void
 CGnuPlot::
-addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-          const CGnuPlotUsingCols &usingCols, const SampleVar &sampleX)
+addFile3D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
+          const CGnuPlotUsingCols &usingCols, const SampleVars &samples,
+          CGnuPlotLineStyle &lineStyle, CGnuPlotFillStyle &fillStyle,
+          CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle)
 {
-  Plots plots;
-
-  //---
+  CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
   // gen file lines (one dimension)
   if      (filename == "+") {
@@ -14073,8 +14158,8 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
     getXRange(&xmin, &xmax);
 
-    if (sampleX.min.isValid()) xmin = sampleX.min.getValue();
-    if (sampleX.max.isValid()) xmax = sampleX.max.getValue();
+    if (samples.x.min.isValid()) xmin = samples.x.min.getValue();
+    if (samples.x.max.isValid()) xmax = samples.x.max.getValue();
 
     //---
 
@@ -14082,7 +14167,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
     plot->init();
 
-    plots.push_back(plot);
+    addPlotWithStyle(plot, plots, lineStyle, fillStyle, styleData, keyTitle);
 
     //---
 
@@ -14090,8 +14175,8 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
     getDummyVars(varName1, varName2, true);
 
-    if (sampleX.var != "")
-      varName1 = sampleX.var;
+    if (samples.x.var != "")
+      varName1 = samples.x.var;
 
     CExprVariablePtr xvar = CExprInst->createRealVariable(varName1, 0.0);
 
@@ -14116,29 +14201,28 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
       Values values;
       Params params;
 
-      CGnuPlot *th = const_cast<CGnuPlot *>(this);
-
       usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
       plot->addPoint3D(0, values, false, bad);
     }
 
+#if 0
     for (auto &plot : plots) {
       if (plot->isKeyTitleEnabled() && plot->keyTitleString() == "") {
         std::string title;
 
-        if (sampleX.var != "") {
-          title += "[" + sampleX.var + "=";
+        if (samples.x.var != "") {
+          title += "[" + samples.x.var + "=";
 
-          if (sampleX.min.isValid())
-            title += CStrUtil::strprintf("%g", sampleX.min.getValue());
+          if (samples.x.min.isValid())
+            title += CStrUtil::strprintf("%g", samples.x.min.getValue());
           else
             title += "*";
 
           title += ":";
 
-          if (sampleX.max.isValid())
-            title += CStrUtil::strprintf("%g", sampleX.max.getValue());
+          if (samples.x.max.isValid())
+            title += CStrUtil::strprintf("%g", samples.x.max.getValue());
           else
             title += "*";
 
@@ -14150,10 +14234,9 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         plot->setKeyTitleString(title);
       }
     }
+#endif
 
-    //---
-
-    return plots;
+    return;
   }
   // gen file lines (two dimensions)
   else if (filename == "++") {
@@ -14233,15 +14316,13 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
         Values values;
         Params params;
 
-        CGnuPlot *th = const_cast<CGnuPlot *>(this);
-
         usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
         plot->addPoint3D(iy, values, false, bad);
       }
     }
 
-    return plots;
+    return;
   }
 
   //---
@@ -14279,7 +14360,7 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     CUnixFile file(filename);
 
     if (! file.open())
-      return plots;
+      return;
 
     CGnuPlotFile::Lines lines;
 
@@ -14332,7 +14413,8 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
     plot->init();
 
-    plots.push_back(plot);
+    if (isPolar())
+      plot->setPolar(true);
 
     //---
 
@@ -14400,8 +14482,6 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
           }
           // extract specified columns
           else {
-            CGnuPlot *th = const_cast<CGnuPlot *>(this);
-
             usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
 
             // one value then auto add the point and set number
@@ -14447,13 +14527,14 @@ addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
             ++x;
           }
         }
-        else
+        else {
           plot->addPoint3D(subSetNum, values, discontinuity, bad);
+        }
       }
     }
-  }
 
-  return plots;
+    addPlotWithStyle(plot, plots, lineStyle, fillStyle, styleData, keyTitle);
+  }
 }
 
 CGnuPlotPlot *
@@ -14488,10 +14569,10 @@ addImage3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
     istyle.setWidth (image->getWidth ());
     istyle.setHeight(image->getHeight());
 
-    for (auto iy : IRange::range(0, istyle.height().getValue())) {
+    for (auto iy : IRangeItr::range(0, istyle.height().getValue())) {
       ymin.updateMin(iy); ymax.updateMax(iy);
 
-      for (auto ix : IRange::range(0, istyle.width().getValue())) {
+      for (auto ix : IRangeItr::range(0, istyle.width().getValue())) {
         CRGBA rgba;
 
         image->getRGBAPixel(ix, iy, rgba);
@@ -14874,12 +14955,12 @@ addBinary3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
 
       int iy1 = 0;
 
-      for (const auto &iy : IRange::range(0, ny)) {
+      for (const auto &iy : IRangeItr::range(0, ny)) {
         float y = yvals[iy];
 
         bool found = false;
 
-        for (const auto &ix : IRange::range(0, nx)) {
+        for (const auto &ix : IRangeItr::range(0, nx)) {
           float x = xvals[ix];
 
           if (! dataFile_.every().validPointIndex(ix) || ! dataFile_.every().validBlockIndex(iy))
@@ -15025,10 +15106,10 @@ addBinary3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
       if (n < nv)
         warnMsg("Missing values for binary 3d plot");
 
-      for (const auto &i : IRange::range(0, n, nv)) {
+      for (const auto &i : IRangeItr::range(0, n, nv)) {
         fieldValues_.clear();
 
-        for (const auto &j : IRange::range(0, nv)) {
+        for (const auto &j : IRangeItr::range(0, nv)) {
           CExprValuePtr val = CExprInst->createRealValue(reals[i + j]);
 
           fieldValues_.push_back(val);
@@ -15107,7 +15188,7 @@ getColumnIndex(const std::string &str) const
 {
   const CGnuPlotKeyData::Columns &columns = keyData_.columns();
 
-  for (const auto &c : SRange::ofPair(columns))
+  for (const auto &c : SRangeItr::ofPair(columns))
     if (c.second == str)
       return c.first;
 
@@ -15409,33 +15490,6 @@ setAngleType(AngleType type)
   setPrefValue<AngleType>(VariableName::ANGLES, type);
 
   CExprInst->setDegrees(type == AngleType::DEGREES);
-}
-
-CPoint2D
-CGnuPlot::
-convertPolarPoint(const CPoint2D &p) const
-{
-  double a = angleToRad(p.x);
-  double r = p.y;
-
-  double x = r*cos(a);
-  double y = r*sin(a);
-
-  return CPoint2D(x, y);
-}
-
-double
-CGnuPlot::
-angleToRad(double a) const
-{
-  return (isAngleDegrees() ? CAngle::Deg2Rad(a) : a);
-}
-
-double
-CGnuPlot::
-angleToDeg(double a) const
-{
-  return (! isAngleDegrees() ? CAngle::Rad2Deg(a) : a);
 }
 
 void
@@ -16611,7 +16665,7 @@ parseFunction(CParseLine &line, FunctionData &functionData)
 
   auto p = str.find('=');
 
-  if (p != std::string::npos) {
+  if (p != std::string::npos && (p >= str.size() - 1 || str[p + 1] != '=')) {
     functionData.isAssign = true;
 
     functionData.assign = str;
@@ -16968,31 +17022,6 @@ CGnuPlot::
 debugMsg(const std::string &msg) const
 {
   std::cerr << msg << std::endl;
-}
-
-CPoint3D
-CGnuPlot::
-sphericalMap(const CPoint2D &p) const
-{
-  static double rad = 6378137.0;          // Radius of the Earth (in meters)
-  static double f   = 1.0/298.257223563;  // Flattening factor WGS84 Model
-
-  double alt = 0.0; // altitude
-
-  double cosLon = cos(angleToRad(p.x));
-  double sinLon = sin(angleToRad(p.x));
-  double cosLat = cos(angleToRad(p.y));
-  double sinLat = sin(angleToRad(p.y));
-
-  double ff = (1.0 - f)*(1.0 - f);
-  double c  = 1.0/sqrt(cosLat*cosLat + ff*sinLat*sinLat);
-  double s  = c*ff;
-
-  double x = (rad*c + alt)*cosLat*cosLon;
-  double y = (rad*c + alt)*cosLat*sinLon;
-  double z = (rad*s + alt)*sinLat;
-
-  return CPoint3D(x, y, z);
 }
 
 bool

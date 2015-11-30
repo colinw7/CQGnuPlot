@@ -15,23 +15,32 @@ CGnuPlotPoint::
 
 bool
 CGnuPlotPoint::
-getX(double &x) const
+getX(double &x, bool force) const
 {
-  return getValue(1, x);
+  if (! force)
+    return getValue(1, x);
+  else
+    return getForceReal(1, x);
 }
 
 bool
 CGnuPlotPoint::
-getY(double &y) const
+getY(double &y, bool force) const
 {
-  return getValue(2, y);
+  if (! force)
+    return getValue(2, y);
+  else
+    return getForceReal(2, y);
 }
 
 bool
 CGnuPlotPoint::
-getZ(double &z) const
+getZ(double &z, bool force) const
 {
-  return getValue(3, z);
+  if (! force)
+    return getValue(3, z);
+  else
+    return getForceReal(3, z);
 }
 
 double
@@ -69,7 +78,7 @@ getZ() const
 
 bool
 CGnuPlotPoint::
-getReals(std::vector<double> &reals) const
+getReals(std::vector<double> &reals, bool force) const
 {
   reals.clear();
 
@@ -77,15 +86,63 @@ getReals(std::vector<double> &reals) const
   double r = 0.0;
 
   for (uint i = 0; i < values_.size(); ++i) {
-    if (getValue(i + 1, r))
-      reals.push_back(r);
-    else {
-      reals.push_back(CMathGen::getNaN());
-      b = false;
+    if (! force) {
+      if (getValue(i + 1, r)) {
+        reals.push_back(r);
+        continue;
+      }
     }
+    else {
+      if (getForceReal(i + 1, r)) {
+        reals.push_back(r);
+        continue;
+      }
+    }
+
+    reals.push_back(CMathGen::getNaN());
+
+    b = false;
   }
 
   return b;
+}
+
+bool
+CGnuPlotPoint::
+getForceReal(int n, double &r) const
+{
+  if (getValue(n, r))
+    return true;
+
+  std::string str;
+
+  if (! getValue(n, str))
+    return false;
+
+  const char *c_str = str.c_str();
+
+  int i = 0;
+
+  while (c_str[i] != 0 && ::isspace(c_str[i]))
+    ++i;
+
+  if (c_str[i] == '\0')
+    return false;
+
+  const char *p1 = &c_str[i];
+  const char *p2 = p1;
+
+  errno = 0;
+
+  r = strtod(&c_str[i], (char **) &p1);
+
+  if (errno == ERANGE)
+    return false;
+
+  if (p1 == p2)
+    return false;
+
+  return true;
 }
 
 bool
@@ -128,11 +185,11 @@ getPoint(double x, CPoint2D &p, bool checkNaN) const
 
 bool
 CGnuPlotPoint::
-getPoint(CPoint3D &p) const
+getPoint(CPoint3D &p, bool force) const
 {
   double x, y, z;
 
-  if (! getXYZ(x, y, z))
+  if (! getXYZ(x, y, z, force))
     return false;
 
   p = CPoint3D(x, y, z);

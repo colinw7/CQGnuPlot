@@ -263,6 +263,13 @@ mouseReleaseEvent(QMouseEvent *e)
 
 void
 CQGnuPlotCanvas::
+wheelEvent(QWheelEvent *e)
+{
+  window_->mouseWheel(e->delta());
+}
+
+void
+CQGnuPlotCanvas::
 keyPressEvent(QKeyEvent *e)
 {
   QPoint pos = this->mapFromGlobal(QCursor::pos());
@@ -275,15 +282,15 @@ keyPressEvent(QKeyEvent *e)
 
   window_->setCurrentGroup(group);
 
-  char c = CEvent::keyTypeChar(CQUtil::convertKey(e->key(), e->modifiers()));
-
   CGnuPlotKeyEvent keyEvent;
 
   keyEvent.setPixel  (CPoint2D(pos.x(), pos.y()));
   keyEvent.setShift  (e->modifiers() & Qt::ShiftModifier  );
   keyEvent.setControl(e->modifiers() & Qt::ControlModifier);
   keyEvent.setAlt    (e->modifiers() & Qt::AltModifier    );
-  keyEvent.setKey    (c);
+  keyEvent.setType   (CQUtil::convertKey(e->key(), e->modifiers()));
+  keyEvent.setKey    (e->key());
+  keyEvent.setChar   (CEvent::keyTypeChar(keyEvent.type()));
   keyEvent.setText   (e->text().toStdString());
 
   window_->keyPress(keyEvent);

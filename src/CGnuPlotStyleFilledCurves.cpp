@@ -344,7 +344,7 @@ addPolygons(CGnuPlotPlot *plot, const Points &points, PointsArray &pointsArray)
 {
   const CGnuPlotFilledCurve &filledCurve = plot->filledCurve();
 
-  const CBBox2D &bbox = plot->bbox();
+  const CBBox2D &bbox = plot->bbox2D();
 
   COptReal x, y, r;
 

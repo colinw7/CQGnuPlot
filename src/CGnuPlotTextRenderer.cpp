@@ -154,7 +154,7 @@ drawText(const CPoint2D &p, const std::string &str, const CRGBA &)
 void
 CGnuPlotBBoxTextRenderer::
 drawRotatedText(const CPoint2D &p, const std::string &str, double /*a*/,
-                CHAlignType, CVAlignType, const CRGBA &)
+                const HAlignPos &, const VAlignPos &, const CRGBA &)
 {
   CFontPtr font = renderer_->getFont();
 

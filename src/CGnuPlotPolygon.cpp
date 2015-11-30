@@ -147,7 +147,7 @@ calcPoints(CGnuPlotRenderer *renderer) const
       else
         p = typePos.second.getPoint3D(renderer);
 
-      CPoint2D p1 = renderer->transform(p);
+      CPoint2D p1 = renderer->transform2D(p);
 
       ppoints3D_.push_back(p);
       ppoints2D_.push_back(p1);

@@ -14,7 +14,9 @@ class CGnuPlotPlot;
 
 class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
  public:
-  typedef std::vector<CPoint2D> Points;
+  typedef std::vector<CPoint2D>         Points;
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
 
  public:
   CGnuPlotPolygonObject(CGnuPlotPlot *plot);

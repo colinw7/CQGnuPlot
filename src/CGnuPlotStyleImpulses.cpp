@@ -33,7 +33,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   if (plot->isPolar())
     ymin = group->raxis().min().getValue(0);
   else
-    ymin = plot->bbox().getYMin();
+    ymin = plot->bbox2D().getYMin();
 
   double y2 = std::max(0.0, ymin);
 
@@ -60,8 +60,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       p1.y = raxis->mapLogValue(p1.y);
       p2.y = raxis->mapLogValue(p2.y);
 
-      p1 = group->convertPolarAxisPoint(p1, inside1);
-      p2 = group->convertPolarAxisPoint(p2, inside2);
+      p1 = plot->convertPolarAxisPoint(p1, inside1);
+      p2 = plot->convertPolarAxisPoint(p2, inside2);
 
       if (! inside1 && ! inside2)
         continue;

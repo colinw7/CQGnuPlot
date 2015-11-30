@@ -534,20 +534,36 @@ setBoundingBox()
   double px = renderer_->pixelWidthToWindowWidth  (2);
   double py = renderer_->pixelHeightToWindowHeight(2);
 
-  if      (direction_ == AxisDirection::X) {
-    if (type() == AxisType::R)
-      bbox_ = CBBox2D(renderer_->transform(p1) - CPoint2D(0, py/2),
-                      renderer_->transform(p2) + CPoint2D(0, py/2));
-    else
-      bbox_ = CBBox2D(renderer_->transform(p1) - CPoint2D(0, py/2),
-                      renderer_->transform(p2) + CPoint2D(0, py/2));
+  if (! group_->is3D()) {
+    CPoint2D pt1 = renderer_->transform2D(p1);
+    CPoint2D pt2 = renderer_->transform2D(p2);
+
+    if      (direction_ == AxisDirection::X) {
+      CPoint2D d(0, py/2);
+
+      if (type() == AxisType::R)
+        bbox2D_ = CBBox2D(pt1 - d, pt2 + d);
+      else
+        bbox2D_ = CBBox2D(pt1 - d, pt2 + d);
+    }
+    else if (direction_ == AxisDirection::Y) {
+      CPoint2D d(px/2, 0);
+
+      bbox2D_ = CBBox2D(pt1 - d, pt2 + d);
+    }
+    else if (direction_ == AxisDirection::Z) {
+      CPoint2D d(0, py/2);
+
+      bbox2D_ = CBBox2D(pt1 - d, pt2 + d);
+    }
   }
-  else if (direction_ == AxisDirection::Y)
-    bbox_ = CBBox2D(renderer_->transform(p1) - CPoint2D(px/2, 0),
-                    renderer_->transform(p2) + CPoint2D(px/2, 0));
-  else if (direction_ == AxisDirection::Z)
-    bbox_ = CBBox2D(renderer_->transform(p1) - CPoint2D(0, py/2),
-                    renderer_->transform(p2) + CPoint2D(0, py/2));
+  else {
+    double pz = px;
+
+    CPoint3D d(px/2, py/2, pz/2);
+
+    bbox3D_ = CBBox3D(p1 - d, p2 + d);
+  }
 }
 
 void
@@ -927,7 +943,8 @@ drawTickLabel(double pos, const std::string &str, bool first)
       valign = (! isLabelInside() ? CVALIGN_TYPE_BOTTOM : CVALIGN_TYPE_TOP);
     }
 
-    drawHAlignedText(p1, CHALIGN_TYPE_CENTER, valign, str, c, ticsRotate());
+    drawHAlignedText(p1, HAlignPos(CHALIGN_TYPE_CENTER, 0), VAlignPos(valign, 0),
+                     str, c, ticsRotate());
   }
   else if (direction_ == AxisDirection::Y) {
     CHAlignType halign;
@@ -945,7 +962,8 @@ drawTickLabel(double pos, const std::string &str, bool first)
       else
         p1 = perpPoint(p, (! isLabelInside() ? ysize : -ysize));
 
-      drawVAlignedText(p1, halign, CVALIGN_TYPE_CENTER, str, c, ticsRotate());
+      drawVAlignedText(p1, HAlignPos(halign, 0), VAlignPos(CVALIGN_TYPE_CENTER, 0),
+                       str, c, ticsRotate());
     }
     else {
       CPoint3D p1;
@@ -955,7 +973,8 @@ drawTickLabel(double pos, const std::string &str, bool first)
       else
         p1 = perpPoint(p, (! isLabelInside() ? xsize : -xsize));
 
-      drawHAlignedText(p1, halign, CVALIGN_TYPE_CENTER, str, c, ticsRotate());
+      drawHAlignedText(p1, HAlignPos(halign, 0), VAlignPos(CVALIGN_TYPE_CENTER, 0),
+                       str, c, ticsRotate());
     }
   }
   else {
@@ -971,7 +990,8 @@ drawTickLabel(double pos, const std::string &str, bool first)
       halign = (! isLabelInside() ? CHALIGN_TYPE_LEFT : CHALIGN_TYPE_RIGHT);
     }
 
-    drawHAlignedText(p1, halign, CVALIGN_TYPE_CENTER, str, c, ticsRotate());
+    drawHAlignedText(p1, HAlignPos(halign, 0), VAlignPos(CVALIGN_TYPE_CENTER, 0),
+                     str, c, ticsRotate());
   }
 }
 
@@ -1005,7 +1025,8 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
       valign = (! isLabelInside() ? CVALIGN_TYPE_BOTTOM : CVALIGN_TYPE_TOP);
     }
 
-    drawHAlignedText(p1, CHALIGN_TYPE_CENTER, valign, str, c, labelRotate().getValue(0));
+    drawHAlignedText(p1, HAlignPos(CHALIGN_TYPE_CENTER, 0), VAlignPos(valign, 0),
+                     str, c, labelRotate().getValue(0));
   }
   else if (direction_ == AxisDirection::Y) {
     CPoint3D p1;
@@ -1014,18 +1035,18 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
 
     if (first) {
       if (! isLabelInside()) {
-        p.x = group_->getAxisBBox().getXMin();
+        p.x = group_->axisBBox2D().getXMin();
 
         p1 = perpPoint(p, -dx);
       }
       else {
-        p.x = group_->getAxisBBox().getXMax();
+        p.x = group_->axisBBox2D().getXMax();
 
         p1 = perpPoint(p, dx);
       }
     }
     else {
-      p.x = group_->getAxisBBox().getXMax();
+      p.x = group_->axisBBox2D().getXMax();
 
       p1 = perpPoint(p, (! isLabelInside() ? dx : -dx));
     }
@@ -1038,7 +1059,8 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
       else
         valign = (! isLabelInside() ? CVALIGN_TYPE_BOTTOM : CVALIGN_TYPE_TOP);
 
-      drawHAlignedText(p1, CHALIGN_TYPE_CENTER, valign, str, c, labelRotate().getValue(90));
+      drawHAlignedText(p1, HAlignPos(CHALIGN_TYPE_CENTER, 0), VAlignPos(valign, 0),
+                       str, c, labelRotate().getValue(90));
     }
     else {
       CHAlignType halign;
@@ -1048,7 +1070,8 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
       else
         halign = (! isLabelInside() ? CHALIGN_TYPE_LEFT : CHALIGN_TYPE_RIGHT);
 
-      drawVAlignedText(p1, halign, CVALIGN_TYPE_CENTER, str, c, labelRotate().getValue(90));
+      drawVAlignedText(p1, HAlignPos(halign, 0), VAlignPos(CVALIGN_TYPE_CENTER, 0),
+                       str, c, labelRotate().getValue(90));
     }
   }
   else {
@@ -1064,7 +1087,8 @@ drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
       halign = (! isLabelInside() ? CHALIGN_TYPE_LEFT : CHALIGN_TYPE_RIGHT);
     }
 
-    drawVAlignedText(p1, halign, CVALIGN_TYPE_CENTER, str, c, labelRotate().getValue(0));
+    drawVAlignedText(p1, HAlignPos(halign, 0), VAlignPos(CVALIGN_TYPE_CENTER, 0),
+                     str, c, labelRotate().getValue(0));
   }
 }
 
@@ -1296,25 +1320,33 @@ CGnuPlotAxis::
 drawLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c,
          double w, const CLineDash &lineDash)
 {
-  renderer_->drawLine(p1, p2, w, c, lineDash);
+  if (! renderer_->isPseudo() && group_->isHidden3D())
+    renderer_->drawHiddenLine(p1, p2, w, c, lineDash);
+  else
+    renderer_->drawLine(p1, p2, w, c, lineDash);
 }
 
 void
 CGnuPlotAxis::
-drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
+drawHAlignedText(const CPoint3D &pos, const HAlignPos &halignPos, const VAlignPos &valignPos,
                  const std::string &str, const CRGBA &c, double angle)
 {
   if (str == "")
     return;
 
-  CPoint2D pos1 = renderer_->transform(pos);
+  CPoint2D pos1 = renderer_->transform2D(pos);
 
   if (! group_->is3D()) {
     CBBox2D bbox, rbbox;
 
-    renderer_->calcTextRectAtPoint(pos1, str, isEnhanced(), halign, valign, angle, bbox, rbbox);
+    renderer_->calcTextRectAtPoint(pos1, str, isEnhanced(), halignPos, valignPos,
+                                   angle, bbox, rbbox);
 
-    renderer_->drawTextAtPoint(pos1, str, isEnhanced(), halign, valign, c, angle);
+    if (group_->isHidden3D())
+      renderer_->drawHiddenTextAtPoint(pos, str, isEnhanced(), halignPos, valignPos,
+                                       renderer_->getFont(), c, angle);
+    else
+      renderer_->drawTextAtPoint(pos, str, isEnhanced(), halignPos, valignPos, c, angle);
 
     if (bbox.isSet()) {
       maxH_ = std::max(maxH_, renderer_->windowHeightToPixelHeight(bbox.getHeight()));
@@ -1329,23 +1361,26 @@ drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
     double ta = renderer_->pixelHeightToWindowHeight(font->getCharAscent ());
     double td = renderer_->pixelHeightToWindowHeight(font->getCharDescent());
 
-    CPoint2D pos1 = renderer_->transform(pos);
+    CPoint2D pos1 = renderer_->transform2D(pos);
 
     CBBox2D bbox(CPoint2D(pos1.x, pos1.y - td), CPoint2D(pos1.x + tw, pos1.y + ta));
 
     double dx = 0.0, dy = 0.0;
 
-    if      (halign == CHALIGN_TYPE_LEFT  ) dx = 0;
-    else if (halign == CHALIGN_TYPE_CENTER) dx = -bbox.getWidth()/2;
-    else if (halign == CHALIGN_TYPE_RIGHT ) dx = -bbox.getWidth();
+    if      (halignPos.first == CHALIGN_TYPE_LEFT  ) dx = 0;
+    else if (halignPos.first == CHALIGN_TYPE_CENTER) dx = -bbox.getWidth()/2;
+    else if (halignPos.first == CHALIGN_TYPE_RIGHT ) dx = -bbox.getWidth();
 
-    if      (valign == CVALIGN_TYPE_BOTTOM) dy = bbox.getHeight();
-    else if (valign == CVALIGN_TYPE_CENTER) dy = bbox.getHeight()/2;
-    else if (valign == CVALIGN_TYPE_TOP   ) dy = 0;
+    if      (valignPos.first == CVALIGN_TYPE_BOTTOM) dy = bbox.getHeight();
+    else if (valignPos.first == CVALIGN_TYPE_CENTER) dy = bbox.getHeight()/2;
+    else if (valignPos.first == CVALIGN_TYPE_TOP   ) dy = 0;
 
     CBBox2D bbox1 = bbox.moveBy(CPoint2D(dx, dy));
 
-    renderer_->drawHAlignedText(pos, halign, 0, valign, 0, str, c, angle);
+    if (! renderer_->isPseudo() && group_->isHidden3D())
+      renderer_->drawHiddenHAlignedText(pos, halignPos, valignPos, str, font, c, angle);
+    else
+      renderer_->drawHAlignedText(pos, halignPos, valignPos, str, c, angle);
 
     group_->updateAxisBBox(bbox1);
 //renderer_->drawRect(bbox1, CRGBA(1,0,0), 1);
@@ -1354,19 +1389,19 @@ drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
 
 void
 CGnuPlotAxis::
-drawVAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
+drawVAlignedText(const CPoint3D &pos, const HAlignPos &halignPos, const VAlignPos &valignPos,
                  const std::string &str, const CRGBA &c, double angle)
 {
   if (str == "")
     return;
 
-  renderer_->drawVAlignedText(pos, halign, 0, valign, 0, str, c, angle);
+  renderer_->drawVAlignedText(pos, halignPos, valignPos, str, c, angle);
 
   CFontPtr font = renderer_->getFont();
 
   double px = renderer_->pixelWidthToWindowWidth(font->getCharAscent());
 
-  group_->updateAxisBBox(renderer_->transform(pos) - CPoint2D(px, 0));
+  group_->updateAxisBBox(renderer_->transform2D(pos) - CPoint2D(px, 0));
 }
 
 CPoint3D

@@ -26,10 +26,10 @@ pos(int n) const
       c = n % cols_;
       r = n / cols_;
     }
-  }
 
-  if (downward_)
-    r = rows_ - 1 - r;
+    if (downward_)
+      r = rows_ - 1 - r;
+  }
 
   return CIPoint2D(c, r);
 }

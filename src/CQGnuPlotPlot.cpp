@@ -65,6 +65,44 @@ setLineColor(const QColor &c)
   CGnuPlotPlot::setLineColor(cs);
 }
 
+bool
+CQGnuPlotPlot::
+isSurfaceEnabled() const
+{
+  return CGnuPlotPlot::surfaceData().isEnabled();
+}
+
+void
+CQGnuPlotPlot::
+setSurfaceEnabled(bool b)
+{
+  CGnuPlotSurfaceData surfaceData = CGnuPlotPlot::surfaceData();
+
+  surfaceData.setEnabled(b);
+
+  CGnuPlotPlot::setSurfaceData(surfaceData);
+}
+
+QColor
+CQGnuPlotPlot::
+surfaceColor() const
+{
+  const CGnuPlotSurfaceData &surfaceData = CGnuPlotPlot::surfaceData();
+
+  return toQColor(surfaceData.color());
+}
+
+void
+CQGnuPlotPlot::
+setSurfaceColor(const QColor &c)
+{
+  CGnuPlotSurfaceData surfaceData = CGnuPlotPlot::surfaceData();
+
+  surfaceData.setColor(fromQColor(c));
+
+  CGnuPlotPlot::setSurfaceData(surfaceData);
+}
+
 CQGnuPlotEnum::PlotStyle
 CQGnuPlotPlot::
 plotStyle() const
@@ -144,7 +182,10 @@ draw()
   if (isSelected()) {
     CGnuPlotRenderer *renderer = app()->renderer();
 
-    renderer->drawRect(bbox(), CRGBA(1,0,0), 2);
+    if (! is3D())
+      renderer->drawRect(bbox2D(), CRGBA(1,0,0), 2);
+    else
+      renderer->drawRect(bbox3D(), CRGBA(1,0,0), 2);
   }
 }
 

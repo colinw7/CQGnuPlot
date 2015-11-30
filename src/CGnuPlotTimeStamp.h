@@ -8,6 +8,10 @@ class CGnuPlotRenderer;
 
 class CGnuPlotTimeStamp {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   CGnuPlotTimeStamp(CGnuPlotGroup *group);
 
   virtual ~CGnuPlotTimeStamp();

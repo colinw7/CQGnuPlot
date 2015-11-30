@@ -15,6 +15,10 @@ class CGnuPlotPlot;
 
 class CGnuPlotBubbleObject : public CGnuPlotPlotObject {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   CGnuPlotBubbleObject(CGnuPlotPlot *plot);
 
   virtual ~CGnuPlotBubbleObject() { }

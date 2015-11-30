@@ -43,6 +43,9 @@ class CGnuPlotObject {
   const std::string &tipText() const { return tipText_; }
   void setTipText(const std::string &v) { tipText_ = v; }
 
+  double z() const { return z_; }
+  void setZ(double r) { z_ = r; }
+
   virtual void draw(CGnuPlotRenderer *renderer) const = 0;
 
   virtual const CBBox2D &bbox() const = 0;
@@ -58,6 +61,7 @@ class CGnuPlotObject {
   bool         selected_    { false };
   bool         highlighted_ { false };
   std::string  tipText_     { ""    };
+  double       z_           { 0 };
 };
 
 //---

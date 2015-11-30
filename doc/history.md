@@ -169,7 +169,7 @@
  + Add annotation object clipping
  + Fix polygon object points including rto support
  + Allow label and generic object annotations ids to be shared
- + Don't load more that 1000 objects into property tree
+ + Do not load more that 1000 objects into property tree
  + Support sum range embedded function
  + Allow inline files for palette
  + Fix handling of inline { } statements for do command
@@ -189,3 +189,16 @@
  + improve binary data/image data handling
  + add mouse variables
  + support string slice expressions
+
+### 11/29/2015
+ + Improve hidden drawing using z order for move graphical objects
+ + Allow gray coloring bty z in hidden 3d
+ + add zoom in/out on wheel for 3d
+ + improve plot range for 3d
+ + Support 3D bbox select
+ + add plane min z adjustement
+ + Draw contour at z min (after z adjustment)
+ + Add contour label support
+ + Update dummy vars on style change (polar, parametric, cartesian)
+ + store radian/degree angle type state per plot
+ + add basic mouse probe per plot

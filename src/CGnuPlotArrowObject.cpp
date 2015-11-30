@@ -42,5 +42,5 @@ draw(CGnuPlotRenderer *renderer) const
     stroke->setWidth(2);
   }
 
-  data_.draw(renderer, *stroke);
+  data_.draw(renderer, plot_->group(), *stroke);
 }

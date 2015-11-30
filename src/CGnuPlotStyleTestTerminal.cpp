@@ -62,7 +62,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CRGBA c(0, 0, 0);
 
-  renderer->drawHAlignedText(p1, CHALIGN_TYPE_LEFT, 0, CVALIGN_TYPE_TOP, 0, terminalStr, c);
+  renderer->drawHAlignedText(p1, HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                             VAlignPos(CVALIGN_TYPE_TOP, 0), terminalStr, c);
   }
 
   //---
@@ -111,21 +112,22 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   renderer->pixelToWindow(CPoint2D(pxm, pym - 4*font_size), p2);
   renderer->pixelToWindow(CPoint2D(pxm, pym - 3*font_size), p3);
 
-  renderer->drawHAlignedText(p1, CHALIGN_TYPE_LEFT  , 0, CVALIGN_TYPE_CENTER, 0,
-                             "left justified", CRGBA(0,0,0));
-  renderer->drawHAlignedText(p2, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
-                             "centre+d text", CRGBA(0,0,0));
-  renderer->drawHAlignedText(p3, CHALIGN_TYPE_RIGHT , 0, CVALIGN_TYPE_CENTER, 0,
-                             "right justified", CRGBA(0,0,0));
+  renderer->drawHAlignedText(p1, HAlignPos(CHALIGN_TYPE_LEFT  , 0),
+                             VAlignPos(CVALIGN_TYPE_CENTER, 0), "left justified", CRGBA(0,0,0));
+  renderer->drawHAlignedText(p2, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                             VAlignPos(CVALIGN_TYPE_CENTER, 0), "centre+d text", CRGBA(0,0,0));
+  renderer->drawHAlignedText(p3, HAlignPos(CHALIGN_TYPE_RIGHT , 0),
+                             VAlignPos(CVALIGN_TYPE_CENTER, 0), "right justified", CRGBA(0,0,0));
 
   CPoint2D p4;
 
   renderer->pixelToWindow(CPoint2D(pxm, pym - font_size), p4);
 
-  renderer->drawHAlignedText(p4, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
+  renderer->drawHAlignedText(p4, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                             VAlignPos(CVALIGN_TYPE_CENTER, 0),
                              "test of character width", CGnuPlotStyleInst->indexColor(4));
-  renderer->drawHAlignedText(CPoint2D(0.5, 0.5),
-                             CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
+  renderer->drawHAlignedText(CPoint2D(0.5, 0.5), HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                             VAlignPos(CVALIGN_TYPE_CENTER, 0),
                              "12345678901234567890", CGnuPlotStyleInst->indexColor(4));
 
   double w = font->getStringWidth("12345678901234567890");
@@ -148,13 +150,16 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   renderer->pixelToWindow(CPoint2D(px1 + 2*font_size, pym), p2);
   renderer->pixelToWindow(CPoint2D(px1 + 3*font_size, pym), p3);
 
-  renderer->drawVAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
+  renderer->drawVAlignedText(p1, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                             VAlignPos(CVALIGN_TYPE_CENTER, 0),
                              "rotated ce+ntered text", CRGBA(0,1,0));
 
   renderer->drawRotatedText(p2, "rotated by +45 deg",  45,
-                            CHALIGN_TYPE_LEFT, CVALIGN_TYPE_BOTTOM, CRGBA(0,1,0));
+                            HAlignPos(CHALIGN_TYPE_LEFT  , 0),
+                            VAlignPos(CVALIGN_TYPE_BOTTOM, 0), CRGBA(0,1,0));
   renderer->drawRotatedText(p3, "rotated by -45 deg", -45,
-                            CHALIGN_TYPE_LEFT, CVALIGN_TYPE_BOTTOM, CRGBA(0,1,0));
+                            HAlignPos(CHALIGN_TYPE_LEFT  , 0),
+                            VAlignPos(CVALIGN_TYPE_BOTTOM, 0), CRGBA(0,1,0));
   }
 
   //---
@@ -170,7 +175,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   renderer->pixelToWindow(pp1 - CPoint2D(0, pl), p1);
 
-  renderer->drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, 0,
+  renderer->drawHAlignedText(p1, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                             VAlignPos(CVALIGN_TYPE_BOTTOM, 0),
                              "filled polygons:", CRGBA(0,0,0));
 
   std::vector<CPoint2D> points1, points2;
@@ -256,7 +262,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     renderer->pixelToWindow(CPoint2D(px + ptw/2, py1 - pth), p3);
 
-    renderer->drawHAlignedText(p3, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, 0,
+    renderer->drawHAlignedText(p3, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                               VAlignPos(CVALIGN_TYPE_BOTTOM, 0),
                                CStrUtil::strprintf("%d", i), CRGBA(0,0,0));
   }
 
@@ -264,7 +271,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   renderer->pixelToWindow(CPoint2D(pxm + 4*(ptw + ptb), py1 - pth - font_size), p4);
 
-  renderer->drawHAlignedText(p4, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_BOTTOM, 0,
+  renderer->drawHAlignedText(p4, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                             VAlignPos(CVALIGN_TYPE_BOTTOM, 0),
                              "pattern fill", CRGBA(0,0,0));
   }
 
@@ -288,7 +296,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     renderer->pixelToWindow(CPoint2D(px1 + lb1 + lb2 + ll, py1 - i*font_size), p3);
 
-    renderer->drawHAlignedText(p3, CHALIGN_TYPE_LEFT, 0, CVALIGN_TYPE_CENTER, 0,
+    renderer->drawHAlignedText(p3, HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                               VAlignPos(CVALIGN_TYPE_CENTER, 0),
                                CStrUtil::strprintf("lw %d", i), CRGBA(0,0,0));
   }
 
@@ -296,7 +305,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   renderer->pixelToWindow(CPoint2D(px1 + lb1 + ll/2, py1 - 7*font_size - 4), p4);
 
-  renderer->drawHAlignedText(p4, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_TOP, 0,
+  renderer->drawHAlignedText(p4, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                             VAlignPos(CVALIGN_TYPE_TOP, 0),
                              "linewidth", CRGBA(0,0,0));
   }
 }

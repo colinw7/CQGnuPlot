@@ -12,6 +12,11 @@
 
 class CGnuPlotLabelData {
  public:
+  typedef CGnuPlotTypes::SymbolType     SymbolType;
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   CGnuPlotLabelData(CGnuPlotGroup *group=0);
   CGnuPlotLabelData(CGnuPlotPlot *plot);
  ~CGnuPlotLabelData();
@@ -77,6 +82,8 @@ class CGnuPlotLabelData {
 
   bool hasHypertext() const { return labelStyle_.hasHypertext(); }
   void setHypertext(bool b) { labelStyle_.setHypertext(b); }
+
+  SymbolType symbolType() const { return (SymbolType) pointType(); }
 
   //---
 

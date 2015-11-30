@@ -185,6 +185,7 @@ CQPaletteChooser.cpp \
 CQPaletteDialog.cpp \
 \
 CQToolTip.cpp \
+CQFloatLabel.cpp \
 CQRotatedText.cpp \
 CQComboSlider.cpp \
 CQSlider.cpp \
@@ -400,6 +401,7 @@ CQPaletteChooser.h \
 CQPaletteDialog.h \
 \
 CQToolTip.h \
+CQFloatLabel.h \
 CQRotatedText.h \
 CQComboSlider.h \
 CQSlider.h \

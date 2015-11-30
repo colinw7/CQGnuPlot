@@ -23,6 +23,10 @@ int set_data[num_sets][num_sets] = {
 
 class Axis {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   Axis(double start_value, double end_value, double minor_delta_value, double major_delta_value,
        double radius, double start_angle, double end_angle) :
    start_value_(start_value), end_value_(end_value), minor_delta_value_(minor_delta_value),
@@ -82,10 +86,12 @@ class Axis {
 
       if (c >= 0)
         renderer->drawRotatedText(x2, y2, buffer, angle,
-                                  CHALIGN_TYPE_LEFT, CVALIGN_TYPE_CENTER);
+                                  HAlignPos(CHALIGN_TYPE_LEFT  , 0),
+                                  VAlignPos(CVALIGN_TYPE_CENTER, 0));
       else
         renderer->drawRotatedText(x2, y2, buffer, 180.0 + angle,
-                                  CHALIGN_TYPE_RIGHT, CVALIGN_TYPE_CENTER);
+                                  HAlignPos(CHALIGN_TYPE_RIGHT , 0),
+                                  VAlignPos(CVALIGN_TYPE_CENTER, 0));
     }
   }
 

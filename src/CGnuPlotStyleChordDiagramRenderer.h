@@ -22,8 +22,8 @@ class CGnuPlotStyleChordDiagramRenderer : public ChordDiagramRenderer {
   }
 
   void drawRotatedText(double x, double y, const std::string &text, double a,
-                       CHAlignType halign, CVAlignType valign) {
-    renderer_->drawRotatedText(CPoint2D(x, y), text, a, halign, valign, CRGBA(0,0,0));
+                       const HAlignPos &halignPos, const VAlignPos &valignPos) {
+    renderer_->drawRotatedText(CPoint2D(x, y), text, a, halignPos, valignPos, CRGBA(0,0,0));
   }
 
   void drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2, const CRGBA &c) {

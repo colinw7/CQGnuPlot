@@ -107,6 +107,9 @@ class CAdjacency {
     SORT_COUNT
   };
 
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
  public:
   CAdjacency();
 
@@ -147,6 +150,10 @@ class CAdjacency {
 
 class CAdjacencyRenderer {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   CAdjacencyRenderer() { }
 
   virtual ~CAdjacencyRenderer() { }
@@ -168,7 +175,8 @@ class CAdjacencyRenderer {
   virtual void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) = 0;
 
   virtual void drawRotatedText(const CPoint2D &p, const std::string &text, double a,
-                               CHAlignType halign, CVAlignType valign, const CRGBA &c) = 0;
+                               const HAlignPos &halignPos, const VAlignPos &valignPos,
+                               const CRGBA &c) = 0;
 };
 
 #endif

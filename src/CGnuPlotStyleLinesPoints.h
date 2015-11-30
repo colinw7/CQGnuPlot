@@ -5,6 +5,10 @@
 
 class CGnuPlotStyleLinesPoints : public CGnuPlotStyleBase {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   CGnuPlotStyleLinesPoints();
 
   int numUsing() const override { return 2; }

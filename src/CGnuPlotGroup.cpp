@@ -239,6 +239,11 @@ void
 CGnuPlotGroup::
 fit()
 {
+  xrange_.clear();
+  yrange_.clear();
+
+  //---
+
   CGnuPlotPlot *singlePlot = getSingleStylePlot();
 
   // data range (ind == 1)
@@ -262,37 +267,6 @@ fit()
   else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
     fitParallelAxes(xmin1, ymin1, xmax1, ymax1);
   }
-#if 0
-  else if (hasImageStyle()) {
-    for (auto plot : plots_) {
-      const CGnuPlotImageStyle imageStyle = plot->imageStyle();
-
-      double xmin = 0, xmax = 1;
-      double ymin = 0, ymax = 1;
-
-      if (! imageStyle.w.isValid() || ! imageStyle.h.isValid()) {
-        int nx = 1, ny = 1;
-
-        if (! is3D()) {
-          if (! plot->getPoints2D().empty()) {
-            ny = int(plot->getPoints2D().size());
-            nx = int(plot->getPoints2D()[0].getNumValues());
-          }
-        }
-
-        xmin = -1; xmax = nx;
-        ymin = -1; ymax = ny;
-      }
-      else {
-        xmax = imageStyle.w.getValue() - 1;
-        ymax = imageStyle.h.getValue() - 1;
-      }
-
-      xmin1.updateMin(xmin); xmax1.updateMax(xmax);
-      ymin1.updateMin(ymin); ymax1.updateMax(ymax);
-    }
-  }
-#endif
   else {
     CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
     CGnuPlotAxis *plotXAxis2 = getPlotAxis(AxisType::X, 2, true);
@@ -484,6 +458,9 @@ fit()
     xmax1 =  s; ymax1 =  s;
   }
 
+  //---
+
+  // normalize axis ranges
   if (! xaxis(1).min().isValid() || ! xaxis(1).max().isValid()) {
     double xmin = xmin1.getValue();
     double xmax = xmax1.getValue();
@@ -518,6 +495,8 @@ fit()
       zaxis(1).setMax(zmax);
     }
   }
+
+  //---
 
   updatePlotAxisRange(AxisType::X, 1);
   updatePlotAxisRange(AxisType::Y, 1);
@@ -557,16 +536,17 @@ fit()
 
   {
     // fit axes
-    CBBox2D bbox = getMappedDisplayRange(1, 1);
+    CBBox2D bbox2D = getMappedDisplayRange(1, 1);
+    CBBox3D bbox3D = getMappedDisplayRange3D();
 
     CGnuPlotBBoxRenderer brenderer(app()->renderer());
 
-    //axisBBox_ = CBBox2D();
-    axisBBox_ = bbox;
+    axisBBox2D_ = bbox2D;
+    axisBBox3D_ = bbox3D;
 
     drawAxes(&brenderer, true);
 
-    keyBBox_ = axisBBox_;
+    keyBBox_ = axisBBox2D_;
 
     drawKey(&brenderer);
 
@@ -578,10 +558,10 @@ fit()
 
     if (! is3D()) {
       if (marginBBox_.isSet()) {
-        double lm = fabs(bbox.getLeft  () - marginBBox_.getLeft  ());
-        double bm = fabs(bbox.getBottom() - marginBBox_.getBottom());
-        double rm = fabs(bbox.getRight () - marginBBox_.getRight ());
-        double tm = fabs(bbox.getTop   () - marginBBox_.getTop   ());
+        double lm = fabs(bbox2D.getLeft  () - marginBBox_.getLeft  ());
+        double bm = fabs(bbox2D.getBottom() - marginBBox_.getBottom());
+        double rm = fabs(bbox2D.getRight () - marginBBox_.getRight ());
+        double tm = fabs(bbox2D.getTop   () - marginBBox_.getTop   ());
 
         margin_.updateDefaultValues(&brenderer, lm, bm, rm, tm);
       }
@@ -600,6 +580,14 @@ fit()
       }
     }
     else {
+      double w = xrange_[1].length();
+      double h = yrange_[1].length();
+
+      double f = (sqrt(2) - 1)/2;
+
+      xrange_[1].expand(w*f);
+      yrange_[1].expand(h*f);
+
       margin_.setLeft  (10);
       margin_.setRight (10);
       margin_.setTop   (10);
@@ -792,7 +780,7 @@ void
 CGnuPlotGroup::
 saveRange()
 {
-  saveRange_ = CBBox2D(getXMin(), getYMin(), getXMax(), getYMax());
+  saveRange_ = CBBox3D(getXMin(), getYMin(), getZMin(), getXMax(), getYMax(), getZMax());
 }
 
 void
@@ -801,6 +789,7 @@ restoreRange()
 {
   setAxisRange(AxisType::X, 1, saveRange_.getXMin(), saveRange_.getXMax());
   setAxisRange(AxisType::Y, 1, saveRange_.getYMin(), saveRange_.getYMax());
+  setAxisRange(AxisType::Z, 1, saveRange_.getZMin(), saveRange_.getZMax());
 }
 
 void
@@ -891,6 +880,17 @@ setCameraFar(double z)
   camera_->setFar(z);
 
   reset3D();
+}
+
+double
+CGnuPlotGroup::
+cameraPlaneZMin() const
+{
+  double zmin, zmax;
+
+  camera_->planeZRange(zmin, zmax);
+
+  return zmin;
 }
 
 void
@@ -1017,6 +1017,18 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
   CExprInst->createIntegerVariable("MOUSE_CTRL" , mouseEvent.isControl());
 }
 
+bool
+CGnuPlotGroup::
+mouseProbe(CGnuPlotProbeEvent &probeEvent)
+{
+  for (auto plot : plots_) {
+    if (plot->mouseProbe(probeEvent))
+      return true;
+  }
+
+  return false;
+}
+
 void
 CGnuPlotGroup::
 keyPress(const CGnuPlotKeyEvent &keyEvent)
@@ -1058,9 +1070,30 @@ void
 CGnuPlotGroup::
 draw()
 {
-  bbox_ = getMappedDisplayRange(1, 1);
+  if (! is3D()) {
+    bbox2D_ = getMappedDisplayRange(1, 1);
 
-  clip_.setBBox(bbox_);
+    clip_.setBBox(bbox2D_);
+  }
+  else {
+    const CGnuPlotAxisData &xaxis = this->xaxis(1);
+    const CGnuPlotAxisData &yaxis = this->yaxis(1);
+    const CGnuPlotAxisData &zaxis = this->zaxis(1);
+
+    double xmin = xaxis.min().getValue(0.0);
+    double ymin = yaxis.min().getValue(0.0);
+    double zmin = zaxis.min().getValue(0.0);
+    double xmax = xaxis.max().getValue(1.0);
+    double ymax = yaxis.max().getValue(1.0);
+    double zmax = zaxis.max().getValue(1.0);
+
+    CPoint3D p1 = this->mapLogPoint(1, 1, 1, CPoint3D(xmin, ymin, zmin));
+    CPoint3D p2 = this->mapLogPoint(1, 1, 1, CPoint3D(xmax, ymax, zmax));
+
+    bbox3D_ = CBBox3D(p1, p2);
+  }
+
+  //---
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
@@ -1068,6 +1101,22 @@ draw()
     renderer->setCamera(camera_);
   else
     renderer->unsetCamera();
+
+  //---
+
+  CBBox2D bbox = getMappedDisplayRange(1, 1);
+
+  if (is3D()) {
+    double w = bbox.getWidth ()*sqrt(2.0);
+    double h = bbox.getHeight()*sqrt(2.0);
+
+    bbox.setXMin(bbox.getXMin() - w/2);
+    bbox.setXMax(bbox.getXMax() + w/2);
+    bbox.setYMin(bbox.getYMin() - h/2);
+    bbox.setYMax(bbox.getYMax() + h/2);
+  }
+
+  //---
 
   drawClearRect(renderer);
 
@@ -1081,19 +1130,25 @@ draw()
   else
     renderer->unsetRatio();
 
+  //---
+
+  renderer->initHidden();
+
+  //---
+
   drawAnnotations(renderer, DrawLayer::BEHIND);
   drawAnnotations(renderer, DrawLayer::BACK);
 
   //---
 
   // draw axes (underneath plot)
-  //axisBBox_ = CBBox2D();
-  axisBBox_ = bbox_;
+  //axisBBox2D_ = CBBox2D();
+  axisBBox2D_ = bbox2D_;
 
   drawAxes(renderer, getBorderLayer() == CGnuPlotTypes::DrawLayer::FRONT);
-//renderer->drawRect(axisBBox_, CRGBA(1,0,0), 1);
+//renderer->drawRect(axisBBox2D_, CRGBA(1,0,0), 1);
 
-  keyBBox_ = axisBBox_;
+  keyBBox_ = axisBBox2D_;
 
   drawKey(renderer);
 
@@ -1111,10 +1166,10 @@ draw()
   //---
 
 #if 0
-  double lm = fabs(bbox_.getLeft  () - marginBBox_.getLeft  ());
-  double bm = fabs(bbox_.getBottom() - marginBBox_.getBottom());
-  double rm = fabs(bbox_.getRight () - marginBBox_.getRight ());
-  double tm = fabs(bbox_.getTop   () - marginBBox_.getTop   ());
+  double lm = fabs(bbox2D_.getLeft  () - marginBBox_.getLeft  ());
+  double bm = fabs(bbox2D_.getBottom() - marginBBox_.getBottom());
+  double rm = fabs(bbox2D_.getRight () - marginBBox_.getRight ());
+  double tm = fabs(bbox2D_.getTop   () - marginBBox_.getTop   ());
 
   margin_.updateDefaultValues(renderer, lm, bm, rm, tm);
 #endif
@@ -1126,7 +1181,7 @@ draw()
 
   //---
 
-  // draw plot
+  // draw plots
 
   if (hasPlotStyle(PlotStyle::HISTOGRAMS)) {
     Plots hplots;
@@ -1160,6 +1215,10 @@ draw()
 
   // draw front
   drawAnnotations(renderer, DrawLayer::FRONT);
+
+  //---
+
+  renderer->drawHidden(isHiddenGrayScale());
 }
 
 void
@@ -1360,7 +1419,7 @@ drawHistogram(CGnuPlotRenderer *renderer, const Plots &plots)
   CBBox2D bbox = getMappedDisplayRange(1, 1);
 
   renderer->setRange(bbox);
-  renderer->setClip(bbox);
+  renderer->setClip (bbox);
 
   //---
 
@@ -1606,111 +1665,6 @@ drawColumnStackedHistograms(CGnuPlotRenderer *renderer, const Plots &plots)
   }
 }
 
-#if 0
-void
-CGnuPlotGroup::
-calcHistogramRange(const Plots &plots, CBBox2D &bbox) const
-{
-  uint numPoints = 0;
-
-  for (auto plot : plots)
-    numPoints = std::max(numPoints, plot->numPoints2D());
-
-  //---
-
-  double xmin = 0, xmax = 1;
-  double ymin = 0, ymax = 1;
-
-  HistogramStyle hstyle = getHistogramData().style();
-
-  if      (hstyle == HistogramStyle::CLUSTERED) {
-    xmin = 0;
-    xmax = plots.size()*numPoints + 1;
-
-    COptReal ymin1, ymax1;
-
-    for (auto plot : plots) {
-      CBBox2D bbox;
-
-      plot->getPointsRange(bbox);
-
-      ymin1.updateMin(bbox.getYMin());
-      ymax1.updateMax(bbox.getYMax());
-    }
-
-    ymin = ymin1.getValue(0);
-    ymax = ymax1.getValue(1);
-  }
-  else if (hstyle == HistogramStyle::ERRORBARS) {
-    xmin = 0;
-    xmax = plots.size()*numPoints + 1;
-
-    COptReal ymin1, ymax1;
-
-    for (auto plot : plots) {
-      CBBox2D bbox;
-
-      plot->getPointsRange(bbox);
-
-      ymin1.updateMin(bbox.getYMin());
-      ymax1.updateMax(bbox.getYMax());
-    }
-
-    ymin = ymin1.getValue(0);
-    ymax = ymax1.getValue(1);
-  }
-  else if (hstyle == HistogramStyle::ROWSTACKED) {
-    xmin = 0;
-    xmax = numPoints + 1;
-
-    ymin = 0;
-    ymax = 0;
-
-    for (auto plot : plots) {
-      CBBox2D bbox;
-
-      plot->getPointsRange(bbox);
-
-      if (bbox.getYMin() < 0)
-        ymin += bbox.getYMin();
-
-      if (bbox.getYMax() > 0)
-        ymax += bbox.getYMax();
-    }
-  }
-  else if (hstyle == HistogramStyle::COLUMNSTACKED) {
-    xmin = 0;
-    xmax = plots.size() + 1;
-
-    ymin = 0;
-    ymax = 0;
-
-    for (auto plot : plots) {
-      double ymin1 = 0, ymax1 = 0;
-
-      for (uint i = 0; i < plot->numPoints2D(); ++i) {
-        const CGnuPlotPoint &point = plot->getPoint2D(i);
-
-        double y;
-
-        if (! point.getY(y))
-          y = 0.0;
-
-        if (y >= 0)
-          ymax1 += y;
-        else
-          ymin1 += y;
-      }
-
-      ymin = std::min(ymin, ymin1);
-      ymax = std::max(ymax, ymax1);
-    }
-  }
-
-  bbox = CBBox2D(xmin, ymin, xmax, ymax);
-}
-#endif
-
 void
 CGnuPlotGroup::
 drawAxes(CGnuPlotRenderer *renderer, bool border)
@@ -1783,15 +1737,14 @@ drawBorder(CGnuPlotRenderer *renderer)
 
   renderer->setReverse(plotXAxis->isReverse(), plotYAxis->isReverse());
 
-  double xmin1 = bbox.getLeft  (), ymin1 = bbox.getBottom();
-  double xmax1 = bbox.getRight (), ymax1 = bbox.getTop   ();
-
   if (is3D()) {
-    double zmin1 = zaxis(1).min().getValue(-10);
-    double zmax1 = zaxis(1).max().getValue( 10);
+    CBBox3D bbox = getPlotBorderBox(1, 1, 1);
 
     if (! axesData().getBorderSides())
       return;
+
+    double xmin1 = bbox.getXMin(), ymin1 = bbox.getYMin(), zmin1 = bbox.getZMin();
+    double xmax1 = bbox.getXMax(), ymax1 = bbox.getYMax(), zmax1 = bbox.getZMax();
 
     updateAxisBBox(CPoint3D(xmin1, ymin1, zmin1));
     updateAxisBBox(CPoint3D(xmin1, ymin1, zmax1));
@@ -1858,6 +1811,9 @@ drawBorder(CGnuPlotRenderer *renderer)
     if (! axesData().getBorderSides())
       return;
 
+    double xmin1 = bbox.getLeft  (), ymin1 = bbox.getBottom();
+    double xmax1 = bbox.getRight (), ymax1 = bbox.getTop   ();
+
     updateAxisBBox(CPoint2D(xmin1, ymin1));
     updateAxisBBox(CPoint2D(xmin1, ymax1));
     updateAxisBBox(CPoint2D(xmax1, ymin1));
@@ -1889,7 +1845,10 @@ drawBorderLine(CGnuPlotRenderer *renderer, const CPoint3D &p1, const CPoint3D &p
 
   double bw = axesData().getBorderWidth();
 
-  renderer->drawLine(p1, p2, bw, c);
+  if (! renderer->isPseudo() && isHidden3D())
+    renderer->drawHiddenLine(p1, p2, bw, c, CLineDash());
+  else
+    renderer->drawLine(p1, p2, bw, c);
 }
 
 void
@@ -2125,7 +2084,9 @@ drawAnnotations(CGnuPlotRenderer *renderer, DrawLayer layer)
     return;
 
   // draw labels last
-  renderer->setRange(getMappedDisplayRange(1, 1));
+  CBBox2D bbox = getMappedDisplayRange(1, 1);
+
+  renderer->setRange(bbox);
 
   renderer->setReverse(xaxis(1).isReverse(), yaxis(1).isReverse());
 
@@ -2181,6 +2142,8 @@ CBBox3D
 CGnuPlotGroup::
 getPlotBorderBox(int xind, int yind, int zind) const
 {
+  double zmin = -10, zmax = 10;
+
   if (is3D()) {
     if (! xaxis(xind).min().isValid() || ! xaxis(xind).max().isValid() ||
         ! yaxis(yind).min().isValid() || ! yaxis(yind).max().isValid() ||
@@ -2189,6 +2152,8 @@ getPlotBorderBox(int xind, int yind, int zind) const
 
       th->fit();
     }
+
+    camera_->planeZRange(zmin, zmax);
   }
   else {
     if (! xaxis(xind).min().isValid() || ! xaxis(xind).max().isValid() ||
@@ -2201,10 +2166,8 @@ getPlotBorderBox(int xind, int yind, int zind) const
 
   double xmin = xaxis(xind).min().getValue(-10);
   double ymin = yaxis(yind).min().getValue(-10);
-  double zmin = zaxis(zind).min().getValue(-10);
   double xmax = xaxis(xind).max().getValue( 10);
   double ymax = yaxis(yind).max().getValue( 10);
-  double zmax = zaxis(zind).max().getValue( 10);
 
   CPoint3D p1 = mapLogPoint(xind, yind, zind, CPoint3D(xmin, ymin, zmin));
   CPoint3D p2 = mapLogPoint(xind, yind, zind, CPoint3D(xmax, ymax, zmax));
@@ -2216,10 +2179,23 @@ CBBox2D
 CGnuPlotGroup::
 getMappedDisplayRange(int xind, int yind) const
 {
+  const CRange &xrange = this->xrange(xind);
+  const CRange &yrange = this->yrange(xind);
+
+  if (xrange.isSet() && yrange.isSet())
+    return CBBox2D(xrange.low(), yrange.low(), xrange.high(), yrange.high());
+
+  //---
+
   CBBox2D bbox = getDisplayRange(xind, yind);
 
   CPoint2D p1 = mapLogPoint(xind, yind, 1, bbox.getMin());
   CPoint2D p2 = mapLogPoint(xind, yind, 1, bbox.getMax());
+
+  CGnuPlotGroup *th = const_cast<CGnuPlotGroup *>(this);
+
+  th->xrange_[xind].set(p1.x, p2.x);
+  th->yrange_[yind].set(p1.y, p2.y);
 
   return CBBox2D(p1, p2);
 }
@@ -2241,6 +2217,27 @@ getDisplayRange(int xind, int yind) const
   double ymax = yaxis(yind).max().getValue( 10);
 
   return CBBox2D(xmin, ymin, xmax, ymax);
+}
+
+CBBox3D
+CGnuPlotGroup::
+getMappedDisplayRange3D() const
+{
+  const CGnuPlotAxisData &xaxis = this->xaxis(1);
+  const CGnuPlotAxisData &yaxis = this->yaxis(1);
+  const CGnuPlotAxisData &zaxis = this->zaxis(1);
+
+  double xmin = xaxis.min().getValue(0.0);
+  double ymin = yaxis.min().getValue(0.0);
+  double zmin = zaxis.min().getValue(0.0);
+  double xmax = xaxis.max().getValue(1.0);
+  double ymax = yaxis.max().getValue(1.0);
+  double zmax = zaxis.max().getValue(1.0);
+
+  CPoint3D p1 = this->mapLogPoint(1, 1, 1, CPoint3D(xmin, ymin, zmin));
+  CPoint3D p2 = this->mapLogPoint(1, 1, 1, CPoint3D(xmax, ymax, zmax));
+
+  return CBBox3D(p1, p2);
 }
 
 #if 0
@@ -2353,11 +2350,27 @@ void
 CGnuPlotGroup::
 updateAxisBBox(const CPoint3D &p)
 {
+  axisBBox3D_.add(p);
+
   CGnuPlotRenderer *renderer = app()->renderer();
 
-  CPoint2D p1 = renderer->transform(p);
+  CPoint2D p1 = renderer->transform2D(p);
 
   updateAxisBBox(p1);
+}
+
+void
+CGnuPlotGroup::
+updateAxisBBox(const CPoint2D &p)
+{
+  axisBBox2D_.add(p);
+}
+
+void
+CGnuPlotGroup::
+updateAxisBBox(const CBBox2D &box)
+{
+  axisBBox2D_.add(box);
 }
 
 #if 0
@@ -2425,32 +2438,6 @@ pixelHeightToWindowHeight(double h) const
   return w1.y - w2.y;
 }
 #endif
-
-CPoint2D
-CGnuPlotGroup::
-convertPolarAxisPoint(const CPoint2D &p, bool &inside) const
-{
-  CGnuPlotGroup *th = const_cast<CGnuPlotGroup *>(this);
-
-  CGnuPlotAxis *plotTAxis = th->getPlotAxis(AxisType::T, 1, true);
-  CGnuPlotAxis *plotRAxis = th->getPlotAxis(AxisType::R, 1, true);
-
-  CPoint2D p1 = p;
-
-  inside = plotTAxis->mappedInside(p1.x) && plotRAxis->mappedInside(p1.y);
-
-  if (! plotRAxis->logBase().isValid()) {
-    double rmin = plotRAxis->getStart();
-    double rmax = plotRAxis->getEnd  ();
-    double s    = rmax - rmin;
-
-    p1.y = CGnuPlotUtil::map(p1.y, rmin, rmax, 0, s);
-  }
-
-  p1 = app()->convertPolarPoint(p1);
-
-  return p1;
-}
 
 CPoint2D
 CGnuPlotGroup::

@@ -15,6 +15,10 @@ class CGnuPlotPlot;
 
 class CGnuPlotPieObject : public CGnuPlotPlotObject {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   CGnuPlotPieObject(CGnuPlotPlot *plot);
 
   virtual ~CGnuPlotPieObject() { }

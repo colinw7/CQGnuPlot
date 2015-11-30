@@ -12,13 +12,14 @@ class CGnuPlotPlot;
 
 class CGnuPlotSurface {
  public:
-  typedef std::vector<CPoint2D>         Points;
-  typedef std::map<int,Points>          IPoints;
-  typedef std::map<int,IPoints>         IJPoints;
-  typedef std::pair<Points,CRGBA>       PointsColor;
-  typedef std::pair<double,PointsColor> ZPoints;
-  typedef std::vector<ZPoints>          ZPointsArray;
-  typedef std::map<double,ZPointsArray> ZPolygons;
+  typedef std::vector<CPoint2D>            Points;
+  typedef std::map<int,Points>             IPoints;
+  typedef std::map<int,IPoints>            IJPoints;
+  typedef std::pair<Points,int>            PointsInd;
+  typedef std::pair<PointsInd,CRGBA>       PointsIndColor;
+  typedef std::pair<double,PointsIndColor> ZPoints;
+  typedef std::vector<ZPoints>             ZPointsArray;
+  typedef std::map<double,ZPointsArray>    ZPolygons;
 
  public:
   CGnuPlotSurface(CGnuPlotPlot *plot);

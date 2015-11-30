@@ -16,7 +16,6 @@
 #include <COptVal.h>
 #include <CPoint2D.h>
 #include <CBBox2D.h>
-#include <CRange2D.h>
 #include <CRGBA.h>
 #include <CColor.h>
 #include <CAlignType.h>
@@ -298,6 +297,12 @@ class CGnuPlot {
     COptReal    max;
   };
 
+  struct SampleVars {
+    SampleVar x;
+    SampleVar y;
+    SampleVar z;
+  };
+
   struct DecimalSign {
     void setChar(char c1) { c = c1; }
 
@@ -328,26 +333,6 @@ class CGnuPlot {
 
    private:
     CGnuPlotCoordValue l_, r_, t_, b_;
-  };
-
-  //---
-
-  class XYPlane {
-   public:
-    XYPlane() { }
-
-    double z() const { return z_; }
-
-    bool isRelative() const { return relative_; }
-
-    void setZ(double z, bool rel=false) {
-      z_        = z;
-      relative_ = rel;
-    }
-
-   private:
-    double z_        { 0.0   };
-    bool   relative_ { false };
   };
 
   //---
@@ -769,7 +754,10 @@ class CGnuPlot {
       if (ind <= 0) {
         auto p = varAnnotations_.find(varName);
 
-        ind = (*p).second.size() + 1;
+        if (p != varAnnotations_.end())
+          ind = (*p).second.size() + 1;
+        else
+          ind = 1;
       }
 
       annotation = new T(0);
@@ -873,15 +861,6 @@ class CGnuPlot {
   void warnMsg (const std::string &msg) const;
   void debugMsg(const std::string &msg) const;
 
-  CPoint3D sphericalMap(const CPoint2D &p) const;
-
-  CPoint2D convertPolarPoint(const CPoint2D &p) const;
-
-  bool isAngleDegrees() const { return (getAngleType() == CGnuPlotTypes::AngleType::DEGREES); }
-
-  double angleToRad(double a) const;
-  double angleToDeg(double a) const;
-
   CGnuPlotBlock *getBlock(const std::string &name);
 
   const CGnuPlotPrintFile &tableFile() const { return tableFile_; }
@@ -891,6 +870,10 @@ class CGnuPlot {
 
   const CGnuPlotMultiplotP &multiplot() const { return multiplot_; }
   void setMultiplot(const CGnuPlotMultiplotP &m) { multiplot_ = m; }
+
+  AngleType angleType() const { return getPrefValue<AngleType>(VariableName::ANGLES); }
+  void setAngleType(AngleType type);
+  void resetAngleType() { resetPrefValue(VariableName::ANGLES); }
 
   void readFileLines(StringArray &lines) const;
 
@@ -936,6 +919,9 @@ class CGnuPlot {
   void splotCmd  (const std::string &args);
   void splotCmd1 (const std::string &args, CGnuPlotGroup *group, Plots &plots,
                   bool &sample, bool &first);
+
+  void saveAxisData();
+  void restoreAxisData();
 
   void plotForCmd (const ForCmd &forCmd, const std::string &args,
                    CGnuPlotGroup *group, Plots &plots);
@@ -1016,17 +1002,19 @@ class CGnuPlot {
   bool parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle);
 
   CGnuPlotPlot *addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style,
-                              const SampleVar &sampleX);
+                              const SampleVars &samples);
   CGnuPlotPlot *addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style,
-                              const SampleVar &sampleX, const SampleVar &sampleY);
+                              const SampleVars &samples);
 
   void addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename,
                  PlotStyle style, const CGnuPlotUsingCols &usingCols,
-                 const SampleVar &sampleX, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
+                 const SampleVars &samples, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
                  CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle);
 
-  Plots addFile3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
-                  const CGnuPlotUsingCols &usingCols, const SampleVar &sampleX);
+  void addFile3D(Plots &plots, CGnuPlotGroup *group, const std::string &filename,
+                 PlotStyle style, const CGnuPlotUsingCols &usingCols,
+                 const SampleVars &samples, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
+                 CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle);
 
   void parseCommentStyle(CParseLine &line, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
                          CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle);
@@ -1081,16 +1069,14 @@ class CGnuPlot {
 
   //---
 
-  void setAngleType(AngleType type);
-  AngleType getAngleType() const { return getPrefValue<AngleType>(VariableName::ANGLES); }
-  void resetAngleType() { resetPrefValue(VariableName::ANGLES); }
-
   void printAngleType(std::ostream &os) { printPrefValue(os, VariableName::ANGLES); }
   void showAngleType(std::ostream &os) { showPrefValue(os, VariableName::ANGLES); }
 
   std::string getAngleTypeString() const {
     return getPrefValueString<AngleType>(VariableName::ANGLES);
   }
+
+  bool isAngleDegrees() const { return (angleType() == CGnuPlotTypes::AngleType::DEGREES); }
 
   //---
 
@@ -1251,6 +1237,7 @@ class CGnuPlot {
   CGnuPlotTitleData         title_;
   VarPrefs                  varPrefs_;
   CGnuPlotAxesData          axesData_;
+  CGnuPlotAxesData          saveAxesData_;
   CGnuPlotKeyData           keyData_;
   CBBox2D                   region_ { 0, 0, 1, 1 };
   CGnuPlotMargin            margin_;
@@ -1316,15 +1303,13 @@ class CGnuPlot {
   CGnuPlotHidden3DData   hidden3D_;
   CGnuPlotSurfaceData    surfaceData_;
   CGnuPlotContourData    contourData_;
-  XYPlane                xyPlane_;
   CGnuPlotPm3DData       pm3D_;
   double                 pointIntervalBox_ { 1 };
   COptReal               whiskerBars_;
   mutable ReadLineP      readLine_;
   Blocks                 blocks_;
-  SampleVar              sampleX_;
-  SampleVar              sampleY_;
-  SampleVar              sampleZ_;
+  SampleVars             sampleVars_;
+  SampleVars             saveSampleVars_;
 
   mutable CoordSys       defSystem_      { CoordSys::FIRST };
   mutable Values         fieldValues_;

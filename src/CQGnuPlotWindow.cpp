@@ -53,6 +53,7 @@
 #include <CQPropertyTree.h>
 #include <CQPropertyItem.h>
 #include <CQPropertyEditor.h>
+#include <CQFloatLabel.h>
 
 #include <QPainter>
 #include <QHBoxLayout>
@@ -78,6 +79,7 @@
 #include <svg/grid_svg.h>
 #include <svg/xaxis_svg.h>
 #include <svg/yaxis_svg.h>
+#include <svg/probe_svg.h>
 
 namespace {
   QIcon svgIcon(const uchar *data, int len) {
@@ -136,16 +138,19 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   selectAction_ = new QAction(svgIcon(select_data, SELECT_DATA_LEN), "Select", this);
   moveAction_   = new QAction(svgIcon(move_data  , MOVE_DATA_LEN  ), "Move"  , this);
   zoomAction_   = new QAction(svgIcon(zoom_data  , ZOOM_DATA_LEN  ), "Zoom"  , this);
+  probeAction_  = new QAction(svgIcon(probe_data , PROBE_DATA_LEN ), "&Probe", this);
 
   selectAction_->setCheckable(true);
   moveAction_  ->setCheckable(true);
   zoomAction_  ->setCheckable(true);
+  probeAction_ ->setCheckable(true);
 
   selectAction_->setChecked(true);
 
   connect(selectAction_, SIGNAL(triggered(bool)), this, SLOT(selectMode(bool)));
   connect(moveAction_  , SIGNAL(triggered(bool)), this, SLOT(moveMode  (bool)));
   connect(zoomAction_  , SIGNAL(triggered(bool)), this, SLOT(zoomMode  (bool)));
+  connect(probeAction_ , SIGNAL(triggered(bool)), this, SLOT(probeMode (bool)));
 
   //---
 
@@ -156,6 +161,7 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   toolbar->addAction(selectAction_);
   toolbar->addAction(moveAction_);
   toolbar->addAction(zoomAction_);
+  toolbar->addAction(probeAction_);
 
   //---
 
@@ -249,6 +255,7 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   modeMenu->addAction(selectAction_);
   modeMenu->addAction(moveAction_);
   modeMenu->addAction(zoomAction_);
+  modeMenu->addAction(probeAction_);
 
   //------
 
@@ -466,7 +473,11 @@ addGroupProperties(CGnuPlotGroup *group)
     tree_->addProperty(cameraName, qcamera, "near")->setEditorFactory(realEdit("-1000:1000:0.1"));
     tree_->addProperty(cameraName, qcamera, "far" )->setEditorFactory(realEdit("-1000:1000:0.1"));
 
+    tree_->addProperty(cameraName, qcamera, "planeZ");
+    tree_->addProperty(cameraName, qcamera, "planeRelative");
+
     tree_->addProperty(groupName, qgroup, "hidden3D");
+    tree_->addProperty(groupName, qgroup, "hiddenGrayScale");
 
     //---
 
@@ -484,24 +495,35 @@ addGroupProperties(CGnuPlotGroup *group)
   QString regionName = groupName + "/region";
 
   tree_->addProperty(regionName, qgroup, "regionLeft"  )->
-   setLabel("left")->setEditorFactory(realEdit("-1000:1000:0.1"));
+   setLabel("left"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
   tree_->addProperty(regionName, qgroup, "regionBottom")->
    setLabel("bottom")->setEditorFactory(realEdit("-1000:1000:0.1"));
   tree_->addProperty(regionName, qgroup, "regionRight" )->
-   setLabel("right")->setEditorFactory(realEdit("-1000:1000:0.1"));
+   setLabel("right" )->setEditorFactory(realEdit("-1000:1000:0.1"));
   tree_->addProperty(regionName, qgroup, "regionTop"   )->
-   setLabel("top")->setEditorFactory(realEdit("-1000:1000:0.1"));
+   setLabel("top"   )->setEditorFactory(realEdit("-1000:1000:0.1"));
 
   QString marginName = groupName + "/margin";
 
   tree_->addProperty(marginName, qgroup, "marginLeft"  )->
-   setLabel("left")->setEditorFactory(realEdit("0:50:1"));
-  tree_->addProperty(marginName, qgroup, "marginRight" )->
-   setLabel("right")->setEditorFactory(realEdit("0:50:1"));
-  tree_->addProperty(marginName, qgroup, "marginTop"   )->
-   setLabel("top")->setEditorFactory(realEdit("0:50:1"));
+   setLabel("left"  )->setEditorFactory(realEdit("0:50:1"));
   tree_->addProperty(marginName, qgroup, "marginBottom")->
    setLabel("bottom")->setEditorFactory(realEdit("0:50:1"));
+  tree_->addProperty(marginName, qgroup, "marginRight" )->
+   setLabel("right" )->setEditorFactory(realEdit("0:50:1"));
+  tree_->addProperty(marginName, qgroup, "marginTop"   )->
+   setLabel("top"   )->setEditorFactory(realEdit("0:50:1"));
+
+  QString rangeName = groupName + "/range";
+
+  tree_->addProperty(rangeName, qgroup, "rangeLeft"  )->
+   setLabel("left"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(rangeName, qgroup, "rangeBottom")->
+   setLabel("bottom")->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(rangeName, qgroup, "rangeRight" )->
+   setLabel("right" )->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(rangeName, qgroup, "rangeTop"   )->
+   setLabel("top"   )->setEditorFactory(realEdit("-1000:1000:0.1"));
 
   tree_->addProperty(groupName, qgroup, "ratio")->setEditorFactory(realEdit("-1000:1000:0.1"));
 
@@ -815,6 +837,7 @@ addPlotProperties(CGnuPlotPlot *plot)
     QString surfaceName = plotName + "/surface";
 
     tree_->addProperty(surfaceName, qplot, "surfaceEnabled");
+    tree_->addProperty(surfaceName, qplot, "surfaceColor");
 
     QString contourName = plotName + "/contour";
 
@@ -1571,9 +1594,7 @@ selectMode(bool)
 {
   mode_ = Mode::SELECT;
 
-  selectAction_->setChecked(true);
-  moveAction_  ->setChecked(false);
-  zoomAction_  ->setChecked(false);
+  updateMode();
 }
 
 void
@@ -1582,9 +1603,7 @@ moveMode(bool)
 {
   mode_ = Mode::MOVE;
 
-  selectAction_->setChecked(false);
-  moveAction_  ->setChecked(true);
-  zoomAction_  ->setChecked(false);
+  updateMode();
 }
 
 
@@ -1594,9 +1613,31 @@ zoomMode(bool)
 {
   mode_ = Mode::ZOOM;
 
-  selectAction_->setChecked(false);
-  moveAction_  ->setChecked(false);
-  zoomAction_  ->setChecked(true);
+  updateMode();
+}
+
+void
+CQGnuPlotMainWindow::
+probeMode(bool)
+{
+  mode_ = Mode::PROBE;
+
+  updateMode();
+}
+
+void
+CQGnuPlotMainWindow::
+updateMode()
+{
+  selectAction_->setChecked(mode_ == Mode::SELECT);
+  moveAction_  ->setChecked(mode_ == Mode::MOVE);
+  zoomAction_  ->setChecked(mode_ == Mode::ZOOM);
+  probeAction_ ->setChecked(mode_ == Mode::PROBE);
+
+  if (probeLine_) {
+    probeLine_->setVisible(mode_ == Mode::PROBE);
+    probeTip_ ->setVisible(mode_ == Mode::PROBE);
+  }
 }
 
 void
@@ -1665,30 +1706,102 @@ mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
     if (pressed) {
       zoomRelease_ = mouseEvent.pixel();
 
-      int x = std::min(zoomPress_.x, zoomRelease_.x);
-      int y = std::min(zoomPress_.y, zoomRelease_.y);
+      if (! zoomGroup_->is3D()) {
+        int x = std::min(zoomPress_.x, zoomRelease_.x);
+        int y = std::min(zoomPress_.y, zoomRelease_.y);
 
-      int w = std::abs(zoomRelease_.x - zoomPress_.x);
-      int h = std::abs(zoomRelease_.y - zoomPress_.y);
+        int w = std::abs(zoomRelease_.x - zoomPress_.x);
+        int h = std::abs(zoomRelease_.y - zoomPress_.y);
 
-      if (w > 0 && h > 0) {
-        zoomRegion_->setGeometry(QRect(x, y, w, h));
+        if (w > 0 && h > 0) {
+          zoomRegion_->setGeometry(QRect(x, y, w, h));
 
-        CPoint2D start, end;
+          CPoint2D start, end;
 
-        if (zoomGroup_) {
-          zoomGroup_->pixelToWindow(CPoint2D(x    , y    ), start);
-          zoomGroup_->pixelToWindow(CPoint2D(x + w, y + h), end  );
+          if (zoomGroup_) {
+            zoomGroup_->pixelToWindow(CPoint2D(x    , y    ), start);
+            zoomGroup_->pixelToWindow(CPoint2D(x + w, y + h), end  );
+          }
+
+          zoomRegion_->setStart(QPointF(start.x, start.y));
+          zoomRegion_->setEnd  (QPointF(end  .x, end  .y));
+
+          zoomRegion_->show();
         }
-
-        zoomRegion_->setStart(QPointF(start.x, start.y));
-        zoomRegion_->setEnd  (QPointF(end  .x, end  .y));
-
-        zoomRegion_->show();
+        else {
+          zoomRegion_->hide();
+        }
       }
       else {
-        zoomRegion_->hide();
+        CGnuPlotCameraP camera = zoomGroup_->camera();
+
+        double dx = zoomRelease_.x - zoomPress_.x;
+        double dy = zoomRelease_.y - zoomPress_.y;
+
+        zoomGroup_->setCameraRotateZ(camera->rotateZ() - dx/10);
+        zoomGroup_->setCameraRotateX(camera->rotateX() - dy/10);
+
+        zoomPress_ = zoomRelease_;
+
+        redraw();
       }
+    }
+  }
+  else if (mode_ == Mode::PROBE) {
+    CQGnuPlotGroup *group = currentGroup();
+    if (! group) return;
+
+    CPoint2D start;
+
+    group->pixelToWindow(CPoint2D(mouseEvent.pixel().x, 0                ), start);
+  //group->pixelToWindow(CPoint2D(mouseEvent.pixel().x, canvas_->height()), end  );
+
+    if (! probeLine_) {
+      probeLine_ = new QRubberBand(QRubberBand::Line, canvas_);
+      probeTip_  = new CQFloatLabel(canvas_);
+    }
+
+    CPoint2D pp(mouseEvent.pixel().x, 0);
+
+    probeLine_->show();
+
+    CGnuPlotProbeEvent probeEvent;
+
+    probeEvent.setX      (start.x);
+    probeEvent.setNearest(true);
+
+    if (group->mouseProbe(probeEvent)) {
+      group->windowToPixel(CPoint2D(probeEvent.x(), probeEvent.y()), pp);
+    }
+
+    probeLine_->setGeometry(QRect(pp.x, pp.y, 1, canvas_->height() - pp.y));
+
+    probeTip_->setHtml(probeEvent.tip().c_str());
+
+    QPoint gp = canvas_->mapToGlobal(QPoint(pp.x, pp.y));
+
+    probeTip_->show(gp);
+  }
+}
+
+void
+CQGnuPlotMainWindow::
+mouseWheel(double d)
+{
+  if (mode_ == Mode::ZOOM) {
+    zoomGroup_ = currentGroup();
+
+    if (zoomGroup_ && zoomGroup_->is3D()) {
+      CGnuPlotCameraP camera = zoomGroup_->camera();
+
+      if (d > 0)
+        camera->zoomIn();
+      else
+        camera->zoomOut();
+
+      zoomGroup_->reset3D();
+
+      redraw();
     }
   }
 }
@@ -1702,23 +1815,25 @@ mouseRelease(const CGnuPlotMouseEvent &)
   else if (mode_ == Mode::MOVE) {
   }
   else if (mode_ == Mode::ZOOM) {
-    double dx = fabs(zoomRelease_.x - zoomPress_.x);
-    double dy = fabs(zoomRelease_.y - zoomPress_.y);
+    if (! zoomGroup_->is3D()) {
+      double dx = fabs(zoomRelease_.x - zoomPress_.x);
+      double dy = fabs(zoomRelease_.y - zoomPress_.y);
 
-    if (dx >= 4 && dy >= 4) {
-      if (zoomGroup_ && ! escape_) {
-        if (! zoomGroup_->is3D()) {
-          zoomGroup_->setAxisRange(CGnuPlotTypes::AxisType::X, 1,
-                                   zoomRegion_->start().x(), zoomRegion_->end().x());
-          zoomGroup_->setAxisRange(CGnuPlotTypes::AxisType::Y, 1,
-                                   zoomRegion_->start().y(), zoomRegion_->end().y());
+      if (dx >= 4 && dy >= 4) {
+        if (zoomGroup_ && ! escape_) {
+          if (! zoomGroup_->is3D()) {
+            zoomGroup_->setAxisRange(CGnuPlotTypes::AxisType::X, 1,
+                                     zoomRegion_->start().x(), zoomRegion_->end().x());
+            zoomGroup_->setAxisRange(CGnuPlotTypes::AxisType::Y, 1,
+                                     zoomRegion_->start().y(), zoomRegion_->end().y());
+          }
+
+          redraw();
         }
-
-        redraw();
       }
-    }
 
-    zoomRegion_->hide();
+      zoomRegion_->hide();
+    }
   }
 }
 
@@ -1836,7 +1951,13 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
       redraw();
     }
     else if (key == Qt::Key_Home) {
-      group->restoreRange();
+      if (! group->is3D())
+        group->restoreRange();
+      else {
+        camera->resetZoom();
+
+        group->reset3D();
+      }
 
       redraw();
     }

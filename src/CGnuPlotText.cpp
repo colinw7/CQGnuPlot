@@ -461,7 +461,8 @@ draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
       else {
         CPoint2D pr1 = renderer->rotatePoint(p1, a, origin);
 
-        renderer->drawRotatedText(pr1, ch.str, a, CHALIGN_TYPE_LEFT, CVALIGN_TYPE_BOTTOM, c);
+        renderer->drawRotatedText(pr1, ch.str, a, HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                                  VAlignPos(CVALIGN_TYPE_BOTTOM, 0), c);
       }
     }
 

@@ -4,6 +4,7 @@
 #include <CBBox2D.h>
 #include <CGnuPlotTypes.h>
 #include <CGnuPlotMouseEvent.h>
+#include <CGnuPlotProbeEvent.h>
 
 class CGnuPlotPlot;
 class CGnuPlotRenderer;
@@ -53,6 +54,8 @@ class CGnuPlotStyleBase {
                         CGnuPlotTipData &) { return false; }
 
   virtual void mousePress(CGnuPlotPlot *, const CGnuPlotMouseEvent &) { }
+
+  virtual bool mouseProbe(CGnuPlotPlot *, CGnuPlotProbeEvent &) { return false; }
 
  protected:
   CGnuPlotTypes::PlotStyle style_;

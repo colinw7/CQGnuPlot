@@ -49,8 +49,8 @@ class CGnuPlotStyleAdjacencyRenderer : public CAdjacencyRenderer {
   }
 
   void drawRotatedText(const CPoint2D &p, const std::string &text, double a,
-                       CHAlignType halign, CVAlignType valign, const CRGBA &c) {
-    renderer_->drawRotatedText(p, text, a, halign, valign, c);
+                       const HAlignPos &halignPos, const VAlignPos &valignPos, const CRGBA &c) {
+    renderer_->drawRotatedText(p, text, a, halignPos, valignPos, c);
   }
 
   bool getValueAtPos(const CPoint2D &p, int &value, std::string &name1,

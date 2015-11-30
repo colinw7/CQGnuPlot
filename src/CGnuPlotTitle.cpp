@@ -27,7 +27,7 @@ draw(CGnuPlotRenderer *renderer) const
   double xmin, xmax, ymax;
 
   if (! group_->is3D() || group_->pm3D()->isEnabled()) {
-    CBBox2D bbox = group_->getAxisBBox();
+    CBBox2D bbox = group_->axisBBox2D();
 
     if (bbox.isSet()) {
       xmin = bbox.getXMin();
@@ -83,8 +83,8 @@ draw(CGnuPlotRenderer *renderer) const
   else {
     CPoint2D p1(p.x, p.y - 8*ph);
 
-    renderer->drawHAlignedText(p1, CHALIGN_TYPE_CENTER, 0,
-                               CVALIGN_TYPE_BOTTOM, 0, this->text(), c);
+    renderer->drawHAlignedText(p1, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                               VAlignPos(CVALIGN_TYPE_BOTTOM, 0), this->text(), c);
 
     bbox_ = renderer->getHAlignedTextBBox(this->text()).moveBy(p1);
   }

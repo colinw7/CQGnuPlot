@@ -41,6 +41,19 @@ namespace CGnuPlotUtil {
   inline bool realEq(double r1, double r2) {
     return (fabs(r2 - r1) < 1E-6);
   }
+
+  inline bool isNaN(const CPoint2D &p) {
+    return IsNaN(p.x) || IsNaN(p.y);
+  }
+
+  inline bool isNaN(const std::vector<CPoint2D> &points) {
+    for (const auto &p : points) {
+      if (isNaN(p))
+        return true;
+    }
+
+    return false;
+  }
 }
 
 #endif

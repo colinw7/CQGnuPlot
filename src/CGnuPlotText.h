@@ -62,6 +62,10 @@ struct CGnuPlotTextState {
 
 class CGnuPlotText {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   CGnuPlotText(const std::string &str="");
 
   void setText(const std::string &str);

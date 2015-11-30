@@ -85,11 +85,11 @@ class CGnuPlotArrowData {
   double calcLineWidth(CGnuPlotGroup *group) const;
 
   void draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted=false) const;
-  void draw(CGnuPlotRenderer *renderer, const CGnuPlotStroke &stroke) const;
+  void draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, const CGnuPlotStroke &stroke) const;
 
   CGnuPlotTipData tip() const;
 
-  void getLine(CGnuPlotRenderer *renderer, CPoint2D &from, CPoint2D &to) const;
+  void getLine(CGnuPlotRenderer *renderer, CPoint3D &from, CPoint3D &to) const;
 
   bool inside(const CGnuPlotMouseEvent &p) const;
 

@@ -22,6 +22,8 @@ class CQGnuPlotCanvas : public QWidget {
   void mouseMoveEvent   (QMouseEvent *);
   void mouseReleaseEvent(QMouseEvent *);
 
+  void wheelEvent(QWheelEvent *e);
+
   void keyPressEvent(QKeyEvent *);
 
   bool pixelToWindow(const CPoint2D &p, CPoint2D &w);

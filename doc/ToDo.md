@@ -1,5 +1,7 @@
 ## ToDo
 
+  + isosamples/samples logic (generate using isosamples and supersample at samples ?)
+
   + Better axes ticks for log (match base powers)
   + allow select/modifiy all objects (plots, axis, ...)
   + edit interface (move) for annotations

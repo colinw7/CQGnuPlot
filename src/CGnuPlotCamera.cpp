@@ -96,12 +96,18 @@ transform(const CPoint3D &p) const
   CGnuPlotAxisData &yaxis = group_->yaxis(1);
   CGnuPlotAxisData &zaxis = group_->zaxis(1);
 
-  double x1 = CGnuPlotUtil::map(p.x,
-    xaxis.min().getValue(0.0), xaxis.max().getValue(1.0), -scaleX_, scaleX_);
-  double y1 = CGnuPlotUtil::map(p.y,
-    yaxis.min().getValue(0.0), yaxis.max().getValue(1.0), -scaleY_, scaleY_);
-  double z1 = CGnuPlotUtil::map(p.z,
-    zaxis.min().getValue(0.0), zaxis.max().getValue(1.0), -scaleZ_, scaleZ_);
+  double xmin = xaxis.min().getValue(0.0);
+  double xmax = xaxis.max().getValue(1.0);
+  double ymin = yaxis.min().getValue(0.0);
+  double ymax = yaxis.max().getValue(1.0);
+
+  double zmin, zmax;
+
+  planeZRange(zmin, zmax);
+
+  double x1 = CGnuPlotUtil::map(p.x, xmin, xmax, -scaleX_, scaleX_);
+  double y1 = CGnuPlotUtil::map(p.y, ymin, ymax, -scaleY_, scaleY_);
+  double z1 = CGnuPlotUtil::map(p.z, zmin, zmax, -scaleZ_, scaleZ_);
 
   // transform to 2D
   CPoint3D p1(x1, y1, z1);
@@ -113,15 +119,29 @@ transform(const CPoint3D &p) const
   projMatrix_.multiplyPoint(p2, p3);
 
   // remap back to x/y axis
-  double x2 = CGnuPlotUtil::map(p3.x, -1, 1, xaxis.min().getValue(), xaxis.max().getValue());
-  double y2 = CGnuPlotUtil::map(p3.y, -1, 1, yaxis.min().getValue(), yaxis.max().getValue());
+  double x2 = CGnuPlotUtil::map(p3.x, -1, 1, xmin, xmax);
+  double y2 = CGnuPlotUtil::map(p3.y, -1, 1, ymin, ymax);
 
   double z2 = 0.0;
 
   if (zaxis.min().isValid() && zaxis.max().isValid())
-    z2 = CGnuPlotUtil::map(p3.z, -1, 1, zaxis.min().getValue(), zaxis.max().getValue());
+    z2 = CGnuPlotUtil::map(p3.z, -1, 1, zmin, zmax);
 
   return CPoint3D(x2, y2, z2);
+}
+
+void
+CGnuPlotCamera::
+planeZRange(double &zmin, double &zmax) const
+{
+  CGnuPlotAxisData &zaxis = group_->zaxis(1);
+
+  zmin = zaxis.min().getValue(0.0);
+  zmax = zaxis.max().getValue(1.0);
+
+  if (xyPlane_.isRelative()) {
+    zmin -= xyPlane_.z()*(zmax - zmin);
+  }
 }
 
 void

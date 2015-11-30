@@ -73,6 +73,10 @@ CRGBA getBorderColor() {
 
 class CGnuPlotStyleSunburstPainter : public CSunburstPainter {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   CGnuPlotStyleSunburstPainter(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) :
    plot_(plot), renderer_(renderer), ind_(0) {
     assert(plot_);
@@ -128,10 +132,12 @@ class CGnuPlotStyleSunburstPainter : public CSunburstPainter {
 
     if (tc >= 0)
       renderer_->drawRotatedText(CPoint2D(tx, ty), node->name(), ta,
-                                 CHALIGN_TYPE_LEFT, CVALIGN_TYPE_CENTER, tc1);
+                                 HAlignPos(CHALIGN_TYPE_LEFT  , 0),
+                                 VAlignPos(CVALIGN_TYPE_CENTER, 0), tc1);
     else
       renderer_->drawRotatedText(CPoint2D(tx, ty), node->name(), 180.0 + ta,
-                                 CHALIGN_TYPE_RIGHT, CVALIGN_TYPE_CENTER, tc1);
+                                 HAlignPos(CHALIGN_TYPE_RIGHT , 0),
+                                 VAlignPos(CVALIGN_TYPE_CENTER, 0), tc1);
 
     ++ind_;
   }

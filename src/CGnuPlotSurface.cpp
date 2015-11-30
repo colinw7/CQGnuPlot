@@ -26,6 +26,8 @@ void
 CGnuPlotSurface::
 draw(CGnuPlotRenderer *renderer)
 {
+  const CGnuPlotSurfaceData &surfaceData = plot_->surfaceData();
+
   bool pm3D = (plot_->getStyle() == CGnuPlot::PlotStyle::PM3D ||
                plot_->group()->pm3D()->isEnabled());
 
@@ -33,16 +35,27 @@ draw(CGnuPlotRenderer *renderer)
 
   CRGBA c = stroke.color();
 
-  if (plot_->isSurfaceEnabled()) {
-    if (plot_->group()->hidden3D()) {
-      CRGBA fc(1,1,1);
+  if (surfaceData.isEnabled()) {
+    if (plot_->group()->isHidden3D() && ! pm3D) {
+      CRGBA fc = surfaceData.color();
 
       for (auto polys : zpolygons_) {
-        for (auto poly : polys.second) {
-          const CGnuPlotSurface::PointsColor &pc = poly.second;
+        double zt = polys.first;
 
-          renderer->fillPolygon(pc.first, fc);
-          renderer->drawPolygon(pc.first, 0, c, CLineDash());
+        for (auto poly : polys.second) {
+          const CGnuPlotSurface::PointsIndColor &pic = poly.second;
+          const CGnuPlotSurface::PointsInd      &pi  = pic.first;
+
+          const Points &points = pi.first;
+
+          CPolygonOrientation orient = CMathGeom2D::PolygonOrientation(points);
+
+          renderer->fillHiddenPolygon(zt, points, fc);
+
+          if (orient == 1)
+            renderer->drawHiddenPolygon(zt, points, 0, c, CLineDash());
+          else
+            renderer->drawHiddenPolygon(zt, points, 0, c.inverse(), CLineDash());
         }
       }
     }
@@ -61,14 +74,15 @@ draw(CGnuPlotRenderer *renderer)
 
           const CGnuPlotSurface::Points &points = ipoly.second;
 
+          if (points.size() < 4) continue;
+
           if (pattern & 1) renderer->drawLine(points[0], points[1], 1, c);
           if (pattern & 2) renderer->drawLine(points[0], points[3], 1, c);
           if (pattern & 4) renderer->drawLine(points[0], points[2], 1, c);
 
           if (ix == nx - 1 || iy == ny - 1) {
-            if (pattern & 2) renderer->drawLine(points[2], points[1], 1, c);
-
             if (pattern & 1) renderer->drawLine(points[2], points[3], 1, c);
+            if (pattern & 2) renderer->drawLine(points[2], points[1], 1, c);
           }
         }
       }
@@ -84,26 +98,27 @@ draw(CGnuPlotRenderer *renderer)
     if (! renderer->isPseudo())
       plot_->updatePolygonCacheSize(np);
 
-    int i = 0;
-
     for (auto polys : zpolygons_) {
+      double zt = polys.first;
+
       for (auto poly : polys.second) {
+        const CGnuPlotSurface::PointsIndColor &pic = poly.second;
+        const CGnuPlotSurface::PointsInd      &pi  = pic.first;
+
         CGnuPlotPolygonObject *polygon = 0;
 
         if (! renderer->isPseudo())
-          polygon = plot_->polygonObjects()[i];
+          polygon = plot_->polygonObjects()[pi.second];
 
         double z = poly.first;
-
-        const CGnuPlotSurface::PointsColor &pc = poly.second;
 
         CRGBA rgba;
 
         if      (isCalcColor()) {
-          rgba = pc.second;
+          rgba = pic.second;
         }
         else if (isDataColor()) {
-          rgba = pc.second;
+          rgba = pic.second;
         }
         else {
           double r = (z - zmin_.getValue())/(zmax_.getValue() - zmin_.getValue());
@@ -114,7 +129,8 @@ draw(CGnuPlotRenderer *renderer)
         }
 
         if (! renderer->isPseudo()) {
-          polygon->setPoints(pc.first);
+          polygon->setPoints(pi.first);
+          polygon->setZ(zt);
 
           if (! polygon->testAndSetUsed()) {
             CGnuPlotFillP fill(polygon->fill()->dup());
@@ -130,10 +146,8 @@ draw(CGnuPlotRenderer *renderer)
           }
         }
         else {
-          renderer->fillPolygon(pc.first, rgba);
+          renderer->fillPolygon(pi.first, rgba);
         }
-
-        ++i;
       }
     }
 

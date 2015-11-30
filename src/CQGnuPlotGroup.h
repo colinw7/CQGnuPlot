@@ -27,6 +27,11 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   Q_PROPERTY(double marginTop    READ marginTop       WRITE setMarginTop   )
   Q_PROPERTY(double marginBottom READ marginBottom    WRITE setMarginBottom)
 
+  Q_PROPERTY(double rangeLeft   READ dataRangeLeft   WRITE setDataRangeLeft  )
+  Q_PROPERTY(double rangeRight  READ dataRangeRight  WRITE setDataRangeRight )
+  Q_PROPERTY(double rangeTop    READ dataRangeTop    WRITE setDataRangeTop   )
+  Q_PROPERTY(double rangeBottom READ dataRangeBottom WRITE setDataRangeBottom)
+
   Q_PROPERTY(double ratio        READ getRatio        WRITE setRatio)
 
   Q_PROPERTY(double xmin         READ getXMin         WRITE setXMin)
@@ -46,7 +51,8 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
 
   Q_PROPERTY(double histogramGap READ histogramGap WRITE setHistogramGap)
 
-  Q_PROPERTY(bool hidden3D READ hidden3D WRITE setHidden3D)
+  Q_PROPERTY(bool hidden3D        READ isHidden3D        WRITE setHidden3D       )
+  Q_PROPERTY(bool hiddenGrayScale READ isHiddenGrayScale WRITE setHiddenGrayScale)
 
  public:
   typedef CQGnuPlotEnum::DrawLayerType DrawLayerType;
@@ -89,6 +95,7 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   void moveObjects(int key);
 
   void pixelToWindow(const CPoint2D &p, CPoint2D &w);
+  void windowToPixel(const CPoint2D &w, CPoint2D &p);
 
   bool inside(const CGnuPlotMouseEvent &mouseEvent) const;
 

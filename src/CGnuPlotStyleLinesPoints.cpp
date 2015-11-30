@@ -59,7 +59,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (plot->isPolar()) {
       bool inside;
 
-      p1 = group->convertPolarAxisPoint(p1, inside);
+      p1 = plot->convertPolarAxisPoint(p1, inside);
     }
 
     p1 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p1);
@@ -81,7 +81,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (plot->isPolar()) {
         bool inside;
 
-        p2 = group->convertPolarAxisPoint(p2, inside);
+        p2 = plot->convertPolarAxisPoint(p2, inside);
       }
 
       p2 = group->mapLogPoint(plot->xind(), plot->yind(), 1, p2);
@@ -245,7 +245,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         }
 
         if (data.pointType() == CGnuPlotTypes::SymbolType::STRING)
-          renderer->drawHAlignedText(data.point(), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
+          renderer->drawHAlignedText(data.point(), HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                                     VAlignPos(CVALIGN_TYPE_CENTER, 0),
                                      data.pointString(), data.color());
         else
           renderer->drawSymbol(data.point(), data.pointType(), s,
@@ -377,7 +378,8 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
     if (labelStyle.textColor().isValid())
       tc = labelStyle.textColor().getValue().calcColor(plot->group());
 
-    renderer->drawHAlignedText(pm, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
+    renderer->drawHAlignedText(pm, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                               VAlignPos(CVALIGN_TYPE_CENTER, 0),
                                plot->pointTypeStr(), tc);
   }
   else

@@ -21,9 +21,9 @@ class CGnuPlotPoint {
     p.print(os); return os;
   }
 
-  bool getX(double &x) const;
-  bool getY(double &y) const;
-  bool getZ(double &z) const;
+  bool getX(double &x, bool force=false) const;
+  bool getY(double &y, bool force=false) const;
+  bool getZ(double &z, bool force=false) const;
 
   double getX() const;
   double getY() const;
@@ -31,14 +31,16 @@ class CGnuPlotPoint {
 
   bool getXY(double &x, double &y) const { return getX(x) && getY(y); }
 
-  bool getXYZ(double &x, double &y, double &z) const { return getX(x) && getY(y) && getZ(z); }
+  bool getXYZ(double &x, double &y, double &z, bool force=false) const {
+    return getX(x, force) && getY(y, force) && getZ(z, force);
+  }
 
-  bool getReals(std::vector<double> &reals) const;
+  bool getReals(std::vector<double> &reals, bool force=false) const;
 
   bool getPoint(CPoint2D &p, bool checkNaN=true) const;
   bool getPoint(double x, CPoint2D &p, bool checkNaN=true) const;
 
-  bool getPoint(CPoint3D &p) const;
+  bool getPoint(CPoint3D &p, bool force=false) const;
 
   int getNumValues() const { return values_.size(); }
 
@@ -47,6 +49,8 @@ class CGnuPlotPoint {
   bool getValue(int n, std::string &str) const;
 
   double getReal(int n) const { double r; getValue(n, r); return r; }
+
+  bool getForceReal(int n, double &r) const;
 
   const std::string &label() const { return label_; }
   void setLabel(const std::string &str) { label_ = str; }

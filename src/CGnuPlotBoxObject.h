@@ -13,8 +13,10 @@ class CGnuPlotRenderer;
 
 class CGnuPlotBoxObject : public CGnuPlotPlotObject {
  public:
-  typedef CBoxWhisker::Values   Values;
-  typedef CBoxWhisker::Outliers Outliers;
+  typedef CBoxWhisker::Values           Values;
+  typedef CBoxWhisker::Outliers         Outliers;
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
 
  public:
   CGnuPlotBoxObject(CGnuPlotPlot *plot);

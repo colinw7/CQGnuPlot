@@ -9,10 +9,10 @@
 #include <CGnuPlotCache.h>
 #include <CGnuPlotKey.h>
 #include <CGnuPlotRotate.h>
+#include <CGnuPlotProbeEvent.h>
 
 #include <CExpr.h>
 #include <CBBox2D.h>
-#include <CRange2D.h>
 #include <vector>
 #include <map>
 
@@ -278,6 +278,8 @@ class CGnuPlotPlot {
   typedef CGnuPlotTypes::FillPattern          FillPattern;
   typedef CGnuPlotTypes::Smooth               Smooth;
   typedef CGnuPlotTypes::SymbolType           SymbolType;
+  typedef CGnuPlotTypes::AngleType            AngleType;
+
   typedef CGnuPlot::Bars                      Bars;
   typedef std::vector<CExprValuePtr>          Values;
   typedef std::map<std::string,CExprValuePtr> Params;
@@ -372,6 +374,7 @@ class CGnuPlotPlot {
   bool isEnhanced() const { return enhanced_; }
   void setEnhanced(bool b) { enhanced_ = b; }
 
+  bool is2D() const;
   bool is3D() const;
 
   //---
@@ -604,7 +607,8 @@ class CGnuPlotPlot {
 
   void updateGroupRange();
 
-  const CBBox2D &bbox() const { return bbox_; }
+  const CBBox2D &bbox2D() const { return bbox2D_; }
+  const CBBox3D &bbox3D() const { return bbox3D_; }
 
   //---
 
@@ -748,6 +752,18 @@ class CGnuPlotPlot {
 
   bool mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const;
 
+  AngleType angleType() const { return angleType_; }
+  void setAngleType(AngleType type) { angleType_ = type; }
+
+  bool isAngleDegrees() const { return (angleType() == CGnuPlotTypes::AngleType::DEGREES); }
+
+  CPoint2D convertPolarAxisPoint(const CPoint2D &p, bool &inside) const;
+
+  CPoint2D convertPolarPoint(const CPoint2D &p) const;
+
+  double angleToRad(double a) const;
+  double angleToDeg(double a) const;
+
   void setStyleValue(const std::string &name, StyleValue *value);
   StyleValue *styleValue(const std::string &name) const;
 
@@ -765,9 +781,6 @@ class CGnuPlotPlot {
 
   const CGnuPlotSurfaceData &surfaceData() const { return surfaceData_; }
   void setSurfaceData(const CGnuPlotSurfaceData &d) { surfaceData_ = d; }
-
-  bool isSurfaceEnabled() const { return surfaceData_.isEnabled(); }
-  void setSurfaceEnabled(bool b) { surfaceData_.setEnabled(b); }
 
   //---
 
@@ -789,6 +802,8 @@ class CGnuPlotPlot {
 
   virtual bool mouseTip  (const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tipData);
   virtual void mousePress(const CGnuPlotMouseEvent &mouseEvent);
+
+  virtual bool mouseProbe(CGnuPlotProbeEvent &probeEvent);
 
   //------
 
@@ -870,7 +885,8 @@ class CGnuPlotPlot {
   COptReal                 zmin_, zmax_;                      // calculated points z range
   COptReal                 bymin_, bymax_;                    // calculated points bounded y range
   COptReal                 cbmin_, cbmax_;                    // color box range
-  CBBox2D                  bbox_ { 0, 0, 1, 1 };              // bounding box
+  CBBox2D                  bbox2D_ { 0, 0, 1, 1 };            // bounding box (2D)
+  CBBox3D                  bbox3D_ { 0, 0, 0, 1, 1, 1 };      // bounding box (3D)
   Smooth                   smooth_ { Smooth::NONE };          // smooth data
   CGnuPlotBoxPlot          boxPlot_;
   CGnuPlotContour          contour_;                          // contour data
@@ -895,6 +911,7 @@ class CGnuPlotPlot {
   PolygonCache             polygonCache_;
   RectCache                rectCache_;
   StyleValues              styleValues_;
+  AngleType                angleType_ { CGnuPlotTypes::AngleType::RADIANS };
   bool                     parametric_ { false };
   CGnuPlotTypes::Mapping   mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
   CGnuPlotSurfaceData      surfaceData_;

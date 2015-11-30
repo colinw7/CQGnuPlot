@@ -17,6 +17,8 @@ class CQPropertyRealEditor;
 class CQPropertyIntegerEditor;
 class CQZoomRegion;
 class CQCursor;
+class QRubberBand;
+class CQFloatLabel;
 
 class QLabel;
 class QTimer;
@@ -53,6 +55,8 @@ class CQGnuPlotWindow : public CGnuPlotWindow {
   virtual void mouseMove   (const CGnuPlotMouseEvent &, bool) { }
   virtual void mouseRelease(const CGnuPlotMouseEvent &) { }
 
+  virtual void mouseWheel(double) { }
+
   virtual bool mouseTip(const CGnuPlotMouseEvent &, CGnuPlotTipData &) { return false; }
 
   virtual void keyPress(const CGnuPlotKeyEvent &) { }
@@ -76,7 +80,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   enum class Mode {
     SELECT,
     MOVE,
-    ZOOM
+    ZOOM,
+    PROBE
   };
 
  public:
@@ -119,6 +124,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void mouseMove   (const CGnuPlotMouseEvent &mouseEvent, bool pressed) override;
   void mouseRelease(const CGnuPlotMouseEvent &mouseEvent) override;
 
+  void mouseWheel(double d) override;
+
   bool mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip) override;
 
   void keyPress(const CGnuPlotKeyEvent &keyEvent) override;
@@ -145,6 +152,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
 
   void pixelToWindow(double px, double py, double *wx, double *wy);
 
+  void updateMode();
+
   CQPropertyRealEditor    *realEdit   (const std::string &str);
   CQPropertyIntegerEditor *integerEdit(const std::string &str);
   CQPropertyRealEditor    *realSlider (const std::string &str);
@@ -162,6 +171,7 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void selectMode(bool b);
   void moveMode  (bool b);
   void zoomMode  (bool b);
+  void probeMode (bool b);
 
   void itemSelectedSlot(QObject *obj, const QString &path);
 
@@ -189,11 +199,14 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   QAction*           selectAction_ { 0 };
   QAction*           moveAction_   { 0 };
   QAction*           zoomAction_   { 0 };
+  QAction*           probeAction_  { 0 };
   CQZoomRegion*      zoomRegion_   { 0 };
   CPoint2D           zoomPress_    { 0, 0 };
   CPoint2D           zoomRelease_  { 0, 0 };
   CQGnuPlotGroup*    zoomGroup_    { 0 };
   CQCursor*          cursor_       { 0 };
+  QRubberBand*       probeLine_    { 0 };
+  CQFloatLabel*      probeTip_     { 0 };
   bool               tipOutside_   { false };
   mutable bool       escape_       { false };
 };

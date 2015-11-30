@@ -20,9 +20,11 @@ class CGnuPlotRenderer;
 
 class CGnuPlotAxis {
  public:
-  typedef CGnuPlotTypes::DrawLayer     DrawLayer;
-  typedef CGnuPlotTypes::AxisDirection AxisDirection;
-  typedef CGnuPlotTypes::AxisType      AxisType;
+  typedef CGnuPlotTypes::DrawLayer      DrawLayer;
+  typedef CGnuPlotTypes::AxisDirection  AxisDirection;
+  typedef CGnuPlotTypes::AxisType       AxisType;
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
 
  public:
   CGnuPlotAxis(CGnuPlotGroup *group, const CGnuPlotAxisData &data,
@@ -286,7 +288,8 @@ class CGnuPlotAxis {
   void drawUpperLine(CGnuPlotRenderer *renderer, const CRGBA &c, double w, const CLineDash &dash);
   void drawZeroLine (CGnuPlotRenderer *renderer, const CRGBA &c, double w, const CLineDash &dash);
 
-  const CBBox2D &bbox() const { return bbox_; }
+  const CBBox2D &bbox2D() const { return bbox2D_; }
+  const CBBox3D &bbox3D() const { return bbox3D_; }
 
   static bool calcTics(double start, double end, double &start1, double &end1,
                        int &numTicks1, int &numTicks2);
@@ -330,10 +333,12 @@ class CGnuPlotAxis {
   void drawLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c,
                 double w, const CLineDash &lineDash);
 
-  void drawHAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
-                        const std::string &str, const CRGBA &c, double angle=0);
-  void drawVAlignedText(const CPoint3D &pos, CHAlignType halign, CVAlignType valign,
-                        const std::string &str, const CRGBA &c, double angle=0);
+  void drawHAlignedText(const CPoint3D &pos, const HAlignPos &halignPos,
+                        const VAlignPos &valignPos, const std::string &str,
+                        const CRGBA &c, double angle=0);
+  void drawVAlignedText(const CPoint3D &pos, const HAlignPos &halignPos,
+                        const VAlignPos &valignPos, const std::string &str,
+                        const CRGBA &c, double angle=0);
 
   CPoint3D valueToPoint(double v, bool first, bool zero) const;
 
@@ -371,7 +376,8 @@ class CGnuPlotAxis {
   mutable int       numTicks1_         { 1 };
   mutable int       numTicks2_         { 0 };
   mutable bool      reverse_           { false };
-  mutable CBBox2D   bbox_              { 0, 0, 1, 1 };
+  mutable CBBox2D   bbox2D_            { 0, 0, 1, 1 };
+  mutable CBBox3D   bbox3D_            { 0, 0, 0, 1, 1, 1 };
   mutable bool      drawOther_         { false };
   mutable double    maxW_, maxH_;
 };

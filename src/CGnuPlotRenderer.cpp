@@ -43,12 +43,65 @@ setFontSize(double s)
 
 void
 CGnuPlotRenderer::
-fillClippedPolygon(const std::vector<CPoint3D> &points, const CGnuPlotFill &fill)
+initHidden()
 {
-  std::vector<CPoint2D> points1;
+  hiddenObjects_.clear();
+}
+
+void
+CGnuPlotRenderer::
+drawHidden(bool grayDepth)
+{
+  if (hiddenObjects_.empty())
+    return;
+
+  double zmin = hiddenObjects_. begin()->first;
+  double zmax = hiddenObjects_.rbegin()->first;
+
+  for (auto &zo : hiddenObjects_) {
+    hiddenZ_ = (grayDepth ? CGnuPlotUtil::map(zo.first, zmin, zmax, 0.25, 1) : 1);
+
+    for (auto &o : zo.second) {
+      o->draw(this);
+    }
+  }
+}
+
+//---
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+fillHiddenPolygon(const Points2D &points, double z, const CGnuPlotFill &fill)
+{
+  if      (fill.type() == CGnuPlotTypes::FillType::PATTERN) {
+    return patternHiddenPolygon(points, z, fill.pattern(), fill.color(), fill.background());
+  }
+  else if (fill.type() == CGnuPlotTypes::FillType::SOLID) {
+    return fillHiddenPolygon(z, points, fill.color());
+  }
+  else
+    return CGnuPlotHiddenObjectP();
+}
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+fillHiddenPolygon(double z, const Points2D &points, const CRGBA &c)
+{
+  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenFillPolygon(points, c));
+
+  hiddenObjects_[-z].push_back(obj);
+
+  return obj;
+}
+
+void
+CGnuPlotRenderer::
+fillClippedPolygon(const Points3D &points, const CGnuPlotFill &fill)
+{
+  Points2D points1;
 
   for (const auto &p : points) {
-    CPoint2D p1 = transform(p);
+    CPoint2D p1 = transform2D(p);
 
     points1.push_back(p1);
   }
@@ -58,10 +111,10 @@ fillClippedPolygon(const std::vector<CPoint3D> &points, const CGnuPlotFill &fill
 
 void
 CGnuPlotRenderer::
-fillClippedPolygon(const std::vector<CPoint2D> &points, const CGnuPlotFill &fill)
+fillClippedPolygon(const Points2D &points, const CGnuPlotFill &fill)
 {
   if (! isPseudo() && clip().isValid()) {
-    std::vector<CPoint2D> ipoints;
+    Points2D ipoints;
 
     if (CMathGeom2D::IntersectPolygon(points, clip().getValue(), ipoints))
       fillPolygon(ipoints, fill);
@@ -72,12 +125,12 @@ fillClippedPolygon(const std::vector<CPoint2D> &points, const CGnuPlotFill &fill
 
 void
 CGnuPlotRenderer::
-fillClippedPolygon(const std::vector<CPoint3D> &points, const CRGBA &c)
+fillClippedPolygon(const Points3D &points, const CRGBA &c)
 {
-  std::vector<CPoint2D> points1;
+  Points2D points1;
 
   for (const auto &p : points) {
-    CPoint2D p1 = transform(p);
+    CPoint2D p1 = transform2D(p);
 
     points1.push_back(p1);
   }
@@ -87,12 +140,12 @@ fillClippedPolygon(const std::vector<CPoint3D> &points, const CRGBA &c)
 
 void
 CGnuPlotRenderer::
-fillPolygon(const std::vector<CPoint3D> &points, const CGnuPlotFill &fill)
+fillPolygon(const Points3D &points, const CGnuPlotFill &fill)
 {
-  std::vector<CPoint2D> points1;
+  Points2D points1;
 
   for (const auto &p : points) {
-    CPoint2D p1 = transform(p);
+    CPoint2D p1 = transform2D(p);
 
     points1.push_back(p1);
   }
@@ -102,7 +155,7 @@ fillPolygon(const std::vector<CPoint3D> &points, const CGnuPlotFill &fill)
 
 void
 CGnuPlotRenderer::
-fillPolygon(const std::vector<CPoint2D> &points, const CGnuPlotFill &fill)
+fillPolygon(const Points2D &points, const CGnuPlotFill &fill)
 {
   if      (fill.type() == CGnuPlotTypes::FillType::PATTERN) {
     patternPolygon(points, fill.pattern(), fill.color(), fill.background());
@@ -114,10 +167,10 @@ fillPolygon(const std::vector<CPoint2D> &points, const CGnuPlotFill &fill)
 
 void
 CGnuPlotRenderer::
-fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
+fillClippedPolygon(const Points2D &points, const CRGBA &c)
 {
   if (! isPseudo() && clip().isValid()) {
-    std::vector<CPoint2D> ipoints;
+    Points2D ipoints;
 
     if (CMathGeom2D::IntersectPolygon(points, clip().getValue(), ipoints))
       fillPolygon(ipoints, c);
@@ -128,12 +181,12 @@ fillClippedPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
 
 void
 CGnuPlotRenderer::
-fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c)
+fillPolygon(const Points3D &points, const CRGBA &c)
 {
-  std::vector<CPoint2D> points1;
+  Points2D points1;
 
   for (const auto &p : points) {
-    CPoint2D p1 = transform(p);
+    CPoint2D p1 = transform2D(p);
 
     points1.push_back(p1);
   }
@@ -143,14 +196,24 @@ fillPolygon(const std::vector<CPoint3D> &points, const CRGBA &c)
 
 //---
 
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+strokeHiddenPolygon(const Points2D &points, double z, const CGnuPlotStroke &stroke)
+{
+  if (stroke.isEnabled())
+    return drawHiddenPolygon(z, points, stroke.width(), stroke.color(), stroke.lineDash());
+  else
+    return CGnuPlotHiddenObjectP();
+}
+
 void
 CGnuPlotRenderer::
-strokeClippedPolygon(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke)
+strokeClippedPolygon(const Points3D &points, const CGnuPlotStroke &stroke)
 {
-  std::vector<CPoint2D> points1;
+  Points2D points1;
 
   for (const auto &p : points) {
-    CPoint2D p1 = transform(p);
+    CPoint2D p1 = transform2D(p);
 
     points1.push_back(p1);
   }
@@ -160,10 +223,10 @@ strokeClippedPolygon(const std::vector<CPoint3D> &points, const CGnuPlotStroke &
 
 void
 CGnuPlotRenderer::
-strokeClippedPolygon(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
+strokeClippedPolygon(const Points2D &points, const CGnuPlotStroke &stroke)
 {
   if (! isPseudo() && clip().isValid()) {
-    std::vector<CPoint2D> ipoints;
+    Points2D ipoints;
 
     if (CMathGeom2D::IntersectPolygon(points, clip().getValue(), ipoints))
       strokePolygon(ipoints, stroke);
@@ -174,12 +237,12 @@ strokeClippedPolygon(const std::vector<CPoint2D> &points, const CGnuPlotStroke &
 
 void
 CGnuPlotRenderer::
-strokePolygon(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke)
+strokePolygon(const Points3D &points, const CGnuPlotStroke &stroke)
 {
-  std::vector<CPoint2D> points1;
+  Points2D points1;
 
   for (const auto &p : points) {
-    CPoint2D p1 = transform(p);
+    CPoint2D p1 = transform2D(p);
 
     points1.push_back(p1);
   }
@@ -189,21 +252,34 @@ strokePolygon(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke)
 
 void
 CGnuPlotRenderer::
-strokePolygon(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
+strokePolygon(const Points2D &points, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
     drawPolygon(points, stroke.width(), stroke.color(), stroke.lineDash());
 }
 
+//------
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+drawHiddenPolygon(double z, const Points2D &points,
+                  double w, const CRGBA &c, const CLineDash &dash)
+{
+  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenDrawPolygon(points, w, c, dash));
+
+  hiddenObjects_[-z].push_back(obj);
+
+  return obj;
+}
+
 void
 CGnuPlotRenderer::
-drawClippedPolygon(const std::vector<CPoint3D> &points, double w, const CRGBA &c,
-                   const CLineDash &dash)
+drawClippedPolygon(const Points3D &points, double w, const CRGBA &c, const CLineDash &dash)
 {
-  std::vector<CPoint2D> points1;
+  Points2D points1;
 
   for (const auto &p : points) {
-    CPoint2D p1 = transform(p);
+    CPoint2D p1 = transform2D(p);
 
     points1.push_back(p1);
   }
@@ -213,11 +289,10 @@ drawClippedPolygon(const std::vector<CPoint3D> &points, double w, const CRGBA &c
 
 void
 CGnuPlotRenderer::
-drawClippedPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c,
-                   const CLineDash &dash)
+drawClippedPolygon(const Points2D &points, double w, const CRGBA &c, const CLineDash &dash)
 {
   if (! isPseudo() && clip().isValid()) {
-    std::vector<CPoint2D> ipoints;
+    Points2D ipoints;
 
     if (CMathGeom2D::IntersectPolygon(points, clip().getValue(), ipoints))
       drawPolygon(ipoints, w, c, dash);
@@ -228,12 +303,12 @@ drawClippedPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c
 
 void
 CGnuPlotRenderer::
-drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c, const CLineDash &dash)
+drawPolygon(const Points3D &points, double lw, const CRGBA &c, const CLineDash &dash)
 {
-  std::vector<CPoint2D> points1;
+  Points2D points1;
 
   for (const auto &p : points) {
-    CPoint2D p1 = transform(p);
+    CPoint2D p1 = transform2D(p);
 
     points1.push_back(p1);
   }
@@ -241,13 +316,25 @@ drawPolygon(const std::vector<CPoint3D> &points, double lw, const CRGBA &c, cons
   drawPolygon(points1, lw, c, dash);
 }
 
-void
+CGnuPlotHiddenObjectP
 CGnuPlotRenderer::
-patternClippedPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern pattern,
+patternHiddenPolygon(const Points2D &points, double z, FillPattern pattern,
                      const CRGBA &fg, const CRGBA &bg)
 {
+  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenPatternPolygon(points, pattern, fg, bg));
+
+  hiddenObjects_[-z].push_back(obj);
+
+  return obj;
+}
+
+void
+CGnuPlotRenderer::
+patternClippedPolygon(const Points2D &points, FillPattern pattern,
+                      const CRGBA &fg, const CRGBA &bg)
+{
   if (! isPseudo() && clip().isValid()) {
-    std::vector<CPoint2D> ipoints;
+    Points2D ipoints;
 
     if (CMathGeom2D::IntersectPolygon(points, clip().getValue(), ipoints))
       patternPolygon(ipoints, pattern, fg, bg);
@@ -266,7 +353,7 @@ drawClippedEllipse(const CPoint2D &p, double rx, double ry, double a,
       int    na = 120;
       double da = 2*M_PI/na;
 
-      std::vector<CPoint2D> points;
+      Points2D points;
 
       for (int i = 0; i < na; ++i) {
         double a1 = i*da;
@@ -296,7 +383,7 @@ fillClippedEllipse(const CPoint2D &p, double rx, double ry, double a, const CRGB
       int    na = 120;
       double da = 2*M_PI/na;
 
-      std::vector<CPoint2D> points;
+      Points2D points;
 
       for (int i = 0; i < na; ++i) {
         double a1 = i*da;
@@ -315,6 +402,46 @@ fillClippedEllipse(const CPoint2D &p, double rx, double ry, double a, const CRGB
   }
   else
     fillEllipse(p, rx, ry, a, c);
+}
+
+void
+CGnuPlotRenderer::
+drawRect(const CBBox3D &rect, const CRGBA &c, double w)
+{
+  CPoint3D p11(rect.getXMin(), rect.getYMin(), rect.getZMin());
+  CPoint3D p21(rect.getXMax(), rect.getYMin(), rect.getZMin());
+  CPoint3D p31(rect.getXMax(), rect.getYMax(), rect.getZMin());
+  CPoint3D p41(rect.getXMin(), rect.getYMax(), rect.getZMin());
+  CPoint3D p12(rect.getXMin(), rect.getYMin(), rect.getZMax());
+  CPoint3D p22(rect.getXMax(), rect.getYMin(), rect.getZMax());
+  CPoint3D p32(rect.getXMax(), rect.getYMax(), rect.getZMax());
+  CPoint3D p42(rect.getXMin(), rect.getYMax(), rect.getZMax());
+
+  CPoint2D pt11 = transform2D(p11);
+  CPoint2D pt21 = transform2D(p21);
+  CPoint2D pt31 = transform2D(p31);
+  CPoint2D pt41 = transform2D(p41);
+  CPoint2D pt12 = transform2D(p12);
+  CPoint2D pt22 = transform2D(p22);
+  CPoint2D pt32 = transform2D(p32);
+  CPoint2D pt42 = transform2D(p42);
+
+  CLineDash d;
+
+  drawLine(pt11, pt21, w, c, d);
+  drawLine(pt21, pt31, w, c, d);
+  drawLine(pt31, pt41, w, c, d);
+  drawLine(pt41, pt11, w, c, d);
+
+  drawLine(pt11, pt12, w, c, d);
+  drawLine(pt21, pt22, w, c, d);
+  drawLine(pt31, pt32, w, c, d);
+  drawLine(pt41, pt42, w, c, d);
+
+  drawLine(pt12, pt22, w, c, d);
+  drawLine(pt22, pt32, w, c, d);
+  drawLine(pt32, pt42, w, c, d);
+  drawLine(pt42, pt12, w, c, d);
 }
 
 void
@@ -379,8 +506,7 @@ fillClippedRect(const CBBox2D &rect, const CRGBA &c)
 
 void
 CGnuPlotRenderer::
-patternClippedRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
-                   const CRGBA &fg, const CRGBA &bg)
+patternClippedRect(const CBBox2D &rect, FillPattern pattern, const CRGBA &fg, const CRGBA &bg)
 {
   if (clip().isValid() && ! isPseudo()) {
     CBBox2D crect;
@@ -405,6 +531,16 @@ strokeRect(const CBBox2D &rect, const CGnuPlotStroke &stroke)
 }
 
 //---
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+strokeHiddenLine(const CPoint2D &p1, const CPoint2D &p2, double z, const CGnuPlotStroke &stroke)
+{
+  if (stroke.isEnabled())
+    return drawHiddenLine(p1, p2, z, stroke.width(), stroke.color(), stroke.lineDash());
+  else
+    return CGnuPlotHiddenObjectP();
+}
 
 void
 CGnuPlotRenderer::
@@ -458,7 +594,7 @@ fillRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, const COptPoint2D
   CPoint2D p3 = rotatePoint(rect.getUR(), a, o1);
   CPoint2D p4 = rotatePoint(rect.getUL(), a, o1);
 
-  std::vector<CPoint2D> points({p1, p2, p3, p4});
+  Points2D points({p1, p2, p3, p4});
 
   fillPolygon(points, c);
 }
@@ -520,7 +656,7 @@ CGnuPlotRenderer::
 drawEllipse(const CPoint3D &pos, double dx, double ry, double angle, const CRGBA &c,
             double w, const CLineDash &dash)
 {
-  CPoint2D pos1 = transform(pos);
+  CPoint2D pos1 = transform2D(pos);
 
   drawEllipse(pos1, dx, ry, angle, c, w, dash);
 }
@@ -534,21 +670,117 @@ drawEllipse(const CBBox2D &rect, const CRGBA &c, double w, const CLineDash &dash
 
 //---
 
-void
+CBBox2D
 CGnuPlotRenderer::
-drawHAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
-                 CVAlignType valign, double y_offset, const std::string &str,
-                 const CRGBA &c, double a)
+drawTextBox(const CPoint2D &p, const std::string &str, bool enhanced, const CPoint2D &offset,
+            const CRGBA &bg, const CRGBA &fg, double w)
 {
-  CPoint2D pos1 = transform(pos);
+  CFontPtr font = getFont();
 
-  drawHAlignedText(pos1, halign, x_offset, valign, y_offset, str, c, a);
+  CBBox2D bbox;
+
+  CGnuPlotText text(str);
+
+  double tw = pixelWidthToWindowWidth  (font->getStringWidth(str));
+  double th = pixelHeightToWindowHeight(font->getCharHeight());
+
+  if (enhanced) {
+    bbox = text.calcBBox(this).moveBy(p);
+
+    bbox.setYMax(p.y);
+  }
+  else {
+    bbox = CBBox2D(p, p + CPoint2D(tw, th));
+  }
+
+  CPoint2D d(-bbox.getWidth()/2, -bbox.getHeight()/2);
+
+  CPoint2D of(0,0);
+
+  if (offset.x || offset.y) {
+    double tw1 = pixelWidthToWindowWidth(font->getStringWidth("X"));
+
+    of = offset*CPoint2D(tw1, th);
+  }
+
+  bbox.moveBy(d + of);
+
+  fillRect(bbox, bg);
+
+  drawRect(bbox, fg, w);
+
+  return bbox;
+}
+
+//---
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+drawHiddenEnhancedText(const CBBox2D &bbox, double z, const HAlignPos &halignPos,
+                       const std::string &str, const CFontPtr &font, const CRGBA &c)
+{
+  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenEnhancedText(bbox, str, halignPos, font, c));
+
+  hiddenObjects_[-z].push_back(obj);
+
+  return obj;
 }
 
 void
 CGnuPlotRenderer::
-calcTextRectAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced, CHAlignType halign,
-                    CVAlignType valign, double a, CBBox2D &bbox, CBBox2D &rbbox)
+drawEnhancedText(const CBBox2D &bbox, const HAlignPos &halignPos, const std::string &str,
+                 const CFontPtr &font, const CRGBA &c)
+{
+  setFont(font);
+
+  CGnuPlotText text(str);
+
+  text.draw(this, bbox, halignPos.first, c);
+}
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+drawHiddenHAlignedText(const CPoint3D &pos, const HAlignPos &halignPos,
+                       const VAlignPos &valignPos, const std::string &str,
+                       const CFontPtr &font, const CRGBA &c, double a)
+{
+  setFont(font);
+
+  CPoint3D pos1 = transform(pos);
+
+  return drawHiddenHAlignedText(pos1.toPoint2D(), pos1.z, halignPos, valignPos, str, font, c, a);
+}
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+drawHiddenHAlignedText(const CPoint2D &pos, double z, const HAlignPos &halignPos,
+                       const VAlignPos &valignPos, const std::string &str,
+                       const CFontPtr &font, const CRGBA &c, double a)
+{
+  CGnuPlotHiddenObjectP obj(
+     new CGnuPlotHiddenHAlignedText(pos, halignPos, valignPos, str, font, c, a));
+
+  hiddenObjects_[-z].push_back(obj);
+
+  return obj;
+}
+
+void
+CGnuPlotRenderer::
+drawHAlignedText(const CPoint3D &pos, const HAlignPos &halignPos,
+                 const VAlignPos &valignPos, const std::string &str,
+                 const CRGBA &c, double a)
+{
+  CPoint2D pos1 = transform2D(pos);
+
+  drawHAlignedText(pos1, halignPos, valignPos, str, c, a);
+}
+
+void
+CGnuPlotRenderer::
+calcTextRectAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced,
+                    const HAlignPos &halignPos, const VAlignPos &valignPos,
+                    double a, CBBox2D &bbox, CBBox2D &rbbox)
 {
   if (str == "")
     return;
@@ -571,7 +803,7 @@ calcTextRectAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced, 
 
   text.setEnhanced(enhanced);
 
-  text.calcRectAtPoint(this, pos1, halign, valign, a, bbox, rbbox);
+  text.calcRectAtPoint(this, pos1, halignPos.first, valignPos.first, a, bbox, rbbox);
 
   this->setRange (range);
 //this->setMargin(margin);
@@ -597,10 +829,48 @@ calcTextRectAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced, 
   }
 }
 
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+drawHiddenTextAtPoint(const CPoint3D &p, const std::string &str, bool enhanced,
+                      const HAlignPos &halignPos, const VAlignPos &valignPos, const CFontPtr &font,
+                      const CRGBA &c, double angle)
+{
+  CPoint3D pt = transform(p);
+
+  return drawHiddenTextAtPoint(pt.toPoint2D(), pt.z, str, enhanced, halignPos, valignPos,
+                               font, c, angle);
+}
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+drawHiddenTextAtPoint(const CPoint2D &p, double z, const std::string &str, bool enhanced,
+                      const HAlignPos &halignPos, const VAlignPos &valignPos, const CFontPtr &font,
+                      const CRGBA &c, double angle)
+{
+  CGnuPlotHiddenObjectP obj(
+    new CGnuPlotHiddenTextAtPoint(p, str, enhanced, halignPos, valignPos, font, c, angle));
+
+  hiddenObjects_[-z].push_back(obj);
+
+  return obj;
+}
+
 void
 CGnuPlotRenderer::
-drawTextAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced, CHAlignType halign,
-                CVAlignType valign, const CRGBA &c, double angle)
+drawTextAtPoint(const CPoint3D &pos, const std::string &str, bool enhanced,
+                const HAlignPos &halignPos, const VAlignPos &valignPos,
+                const CRGBA &c, double angle)
+{
+  CPoint3D pos1 = transform(pos);
+
+  drawTextAtPoint(pos1.toPoint2D(), str, enhanced, halignPos, valignPos, c, angle);
+}
+
+void
+CGnuPlotRenderer::
+drawTextAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced,
+                const HAlignPos &halignPos, const VAlignPos &valignPos,
+                const CRGBA &c, double angle)
 {
   if (isPseudo()) {
     drawPoint(pos, c);
@@ -628,7 +898,7 @@ drawTextAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced, CHAl
 
   text.setEnhanced(enhanced);
 
-  text.drawAtPoint(this, pos1, halign, valign, c, angle);
+  text.drawAtPoint(this, pos1, halignPos.first, valignPos.first, c, angle);
 
   this->setRange (range);
 //this->setMargin(margin);
@@ -636,12 +906,12 @@ drawTextAtPoint(const CPoint2D &pos, const std::string &str, bool enhanced, CHAl
 
 void
 CGnuPlotRenderer::
-drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
-                 CVAlignType valign, double y_offset, const std::string &str,
+drawHAlignedText(const CPoint2D &pos, const HAlignPos &halignPos,
+                 const VAlignPos &valignPos, const std::string &str,
                  const CRGBA &c, double a)
 {
   if (fabs(a) > 1E-6)
-    return drawRotatedText(pos, str, a, halign, valign, c);
+    return drawRotatedText(pos, str, a, halignPos, valignPos, c);
 
   CFontPtr font = getFont();
 
@@ -664,11 +934,11 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
 
   double x1 = 0, y1 = 0;
 
-  if      (valign == CVALIGN_TYPE_TOP)
+  if      (valignPos.first == CVALIGN_TYPE_TOP)
     y1 = pos.y;
-  else if (valign == CVALIGN_TYPE_CENTER)
+  else if (valignPos.first == CVALIGN_TYPE_CENTER)
     y1 = pos.y + height1/2;
-  else if (valign == CVALIGN_TYPE_BOTTOM)
+  else if (valignPos.first == CVALIGN_TYPE_BOTTOM)
     y1 = pos.y + height1;
 
   y1 -= pixelHeightToWindowHeight(font->getCharAscent());
@@ -678,15 +948,15 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
 
     double width2 = font->getStringWidth(str2);
 
-    if      (halign == CHALIGN_TYPE_LEFT)
+    if      (halignPos.first == CHALIGN_TYPE_LEFT)
       x1 = pos.x;
-    else if (halign == CHALIGN_TYPE_CENTER)
+    else if (halignPos.first == CHALIGN_TYPE_CENTER)
       x1 = pos.x - pixelWidthToWindowWidth(width2/2);
-    else if (halign == CHALIGN_TYPE_RIGHT)
+    else if (halignPos.first == CHALIGN_TYPE_RIGHT)
       x1 = pos.x - pixelWidthToWindowWidth(width2);
 
-    CPoint2D p1(x1 + pixelWidthToWindowWidth  (x_offset),
-                y1 - pixelHeightToWindowHeight(y_offset));
+    CPoint2D p1(x1 + pixelWidthToWindowWidth  (halignPos.second),
+                y1 - pixelHeightToWindowHeight(valignPos.second));
 
     drawText(p1, str2, c);
 
@@ -698,22 +968,23 @@ drawHAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
 
   double width2 = font->getStringWidth(str1);
 
-  if      (halign == CHALIGN_TYPE_LEFT)
+  if      (halignPos.first == CHALIGN_TYPE_LEFT)
     x1 = pos.x;
-  else if (halign == CHALIGN_TYPE_CENTER)
+  else if (halignPos.first == CHALIGN_TYPE_CENTER)
     x1 = pos.x - pixelWidthToWindowWidth(width2/2);
-  else if (halign == CHALIGN_TYPE_RIGHT)
+  else if (halignPos.first == CHALIGN_TYPE_RIGHT)
     x1 = pos.x - pixelWidthToWindowWidth(width2);
 
-  CPoint2D p1(x1 + pixelWidthToWindowWidth  (x_offset),
-              y1 - pixelHeightToWindowHeight(y_offset));
+  CPoint2D p1(x1 + pixelWidthToWindowWidth  (halignPos.second),
+              y1 - pixelHeightToWindowHeight(valignPos.second));
 
   drawText(p1, str1, c);
 }
 
 void
 CGnuPlotRenderer::
-drawHTextInBox(const CBBox2D &bbox, const std::string &str, CHAlignType halign, const CRGBA &c)
+drawHTextInBox(const CBBox2D &bbox, const std::string &str, const HAlignPos &halignPos,
+               const CRGBA &c)
 {
   CFontPtr font = getFont();
 
@@ -737,11 +1008,11 @@ drawHTextInBox(const CBBox2D &bbox, const std::string &str, CHAlignType halign, 
 
     double x = bbox.getLeft();
 
-    if      (halign == CHALIGN_TYPE_LEFT)
+    if      (halignPos.first == CHALIGN_TYPE_LEFT)
       ;
-    else if (halign == CHALIGN_TYPE_CENTER)
+    else if (halignPos.first == CHALIGN_TYPE_CENTER)
       x = bbox.getCenter().x - w/2;
-    else if (halign == CHALIGN_TYPE_RIGHT)
+    else if (halignPos.first == CHALIGN_TYPE_RIGHT)
       x = bbox.getRight() - w;
 
     drawText(CPoint2D(x, y), str2, c);
@@ -756,11 +1027,11 @@ drawHTextInBox(const CBBox2D &bbox, const std::string &str, CHAlignType halign, 
 
   double x = bbox.getLeft();
 
-  if      (halign == CHALIGN_TYPE_LEFT)
+  if      (halignPos.first == CHALIGN_TYPE_LEFT)
     ;
-  else if (halign == CHALIGN_TYPE_CENTER)
+  else if (halignPos.first == CHALIGN_TYPE_CENTER)
     x = bbox.getCenter().x - w/2;
-  else if (halign == CHALIGN_TYPE_RIGHT)
+  else if (halignPos.first == CHALIGN_TYPE_RIGHT)
     x = bbox.getRight() - w;
 
   drawText(CPoint2D(x, y), str1, c);
@@ -768,23 +1039,23 @@ drawHTextInBox(const CBBox2D &bbox, const std::string &str, CHAlignType halign, 
 
 void
 CGnuPlotRenderer::
-drawVAlignedText(const CPoint3D &pos, CHAlignType halign, double x_offset,
-                 CVAlignType valign, double y_offset, const std::string &str,
+drawVAlignedText(const CPoint3D &pos, const HAlignPos &halignPos,
+                 const VAlignPos &valignPos, const std::string &str,
                  const CRGBA &c, double a)
 {
-  CPoint2D pos1 = transform(pos);
+  CPoint2D pos1 = transform2D(pos);
 
-  drawVAlignedText(pos1, halign, x_offset, valign, y_offset, str, c, a);
+  drawVAlignedText(pos1, halignPos, valignPos, str, c, a);
 }
 
 void
 CGnuPlotRenderer::
-drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
-                 CVAlignType valign, double y_offset, const std::string &str,
+drawVAlignedText(const CPoint2D &pos, const HAlignPos &halignPos,
+                 const VAlignPos &valignPos, const std::string &str,
                  const CRGBA &c, double a)
 {
   if (fabs(a) > 1E-6)
-    return drawRotatedText(pos, str, a, halign, valign, c);
+    return drawRotatedText(pos, str, a, halignPos, valignPos, c);
 
   CFontPtr font = getFont();
 
@@ -829,11 +1100,11 @@ drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
 
   double x1 = 0, y1 = 0;
 
-  if      (halign == CHALIGN_TYPE_LEFT)
+  if      (halignPos.first == CHALIGN_TYPE_LEFT)
     x1 = pos.x;
-  else if (halign == CHALIGN_TYPE_CENTER)
+  else if (halignPos.first == CHALIGN_TYPE_CENTER)
     x1 = pos.x - pixelWidthToWindowWidth(height1/2);
-  else if (halign == CHALIGN_TYPE_RIGHT)
+  else if (halignPos.first == CHALIGN_TYPE_RIGHT)
     x1 = pos.x - pixelWidthToWindowWidth(height1);
 
   x1 += pixelWidthToWindowWidth(font->getCharAscent());
@@ -843,15 +1114,15 @@ drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
 
     double width2 = font->getStringWidth(str2);
 
-    if      (valign == CVALIGN_TYPE_TOP)
+    if      (valignPos.first == CVALIGN_TYPE_TOP)
       y1 = pos.y;
-    else if (valign == CVALIGN_TYPE_CENTER)
+    else if (valignPos.first == CVALIGN_TYPE_CENTER)
       y1 = pos.y - pixelHeightToWindowHeight(width2/2);
-    else if (valign == CVALIGN_TYPE_BOTTOM)
+    else if (valignPos.first == CVALIGN_TYPE_BOTTOM)
       y1 = pos.y - pixelHeightToWindowHeight(width2);
 
-    CPoint2D w(x1 + pixelWidthToWindowWidth  (x_offset),
-               y1 - pixelHeightToWindowHeight(y_offset));
+    CPoint2D w(x1 + pixelWidthToWindowWidth  (halignPos.second),
+               y1 - pixelHeightToWindowHeight(valignPos.second));
 
     drawText(w, str2, c);
 
@@ -863,15 +1134,15 @@ drawVAlignedText(const CPoint2D &pos, CHAlignType halign, double x_offset,
 
   width2 = font->getStringWidth(str1);
 
-  if      (valign == CVALIGN_TYPE_TOP)
+  if      (valignPos.first == CVALIGN_TYPE_TOP)
     y1 = pos.y;
-  else if (valign == CVALIGN_TYPE_CENTER)
+  else if (valignPos.first == CVALIGN_TYPE_CENTER)
     y1 = pos.y - pixelHeightToWindowHeight(width2/2);
-  else if (valign == CVALIGN_TYPE_BOTTOM)
+  else if (valignPos.first == CVALIGN_TYPE_BOTTOM)
     y1 = pos.y - pixelHeightToWindowHeight(width2);
 
-  CPoint2D w(x1 + pixelWidthToWindowWidth  (x_offset),
-             y1 - pixelHeightToWindowHeight(y_offset));
+  CPoint2D w(x1 + pixelWidthToWindowWidth  (halignPos.second),
+             y1 - pixelHeightToWindowHeight(valignPos.second));
 
   CFontPtr rfont = font->rotated(90);
 
@@ -920,67 +1191,108 @@ getHAlignedTextBBox(const std::string &str)
   return bbox;
 }
 
+//------
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+strokeHiddenPath(const Points2D &points, double z, const CGnuPlotStroke &stroke)
+{
+  if (stroke.isEnabled())
+    return drawHiddenPath(points, z, stroke.width(), stroke.color(), stroke.lineDash());
+  else
+    return CGnuPlotHiddenObjectP();
+}
+
 void
 CGnuPlotRenderer::
-strokePath(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke)
+strokePath(const Points3D &points, const CGnuPlotStroke &stroke)
 {
-  std::vector<CPoint2D> points1;
+  Points2D points1;
 
   for (const auto &p : points)
-    points1.push_back(transform(p));
+    points1.push_back(transform2D(p));
 
   strokePath(points1, stroke);
 }
 
 void
 CGnuPlotRenderer::
-strokePath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
+strokePath(const Points2D &points, const CGnuPlotStroke &stroke)
 {
-  drawPath(points, stroke.width(), stroke.color(), stroke.lineDash());
+  if (stroke.isEnabled())
+    drawPath(points, stroke.width(), stroke.color(), stroke.lineDash());
 }
 
 void
 CGnuPlotRenderer::
-drawPath(const std::vector<CPoint3D> &points, double width, const CRGBA &c,
-         const CLineDash &dash)
+strokeClippedPath(const Points3D &points, const CGnuPlotStroke &stroke)
 {
-  std::vector<CPoint2D> points1;
+  Points2D points1;
 
   for (const auto &p : points)
-    points1.push_back(transform(p));
-
-  drawPath(points1, width, c, dash);
-}
-
-void
-CGnuPlotRenderer::
-strokeClippedPath(const std::vector<CPoint3D> &points, const CGnuPlotStroke &stroke)
-{
-  std::vector<CPoint2D> points1;
-
-  for (const auto &p : points)
-    points1.push_back(transform(p));
+    points1.push_back(transform2D(p));
 
   strokeClippedPath(points, stroke);
 }
 
 void
 CGnuPlotRenderer::
-strokeClippedPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
+strokeClippedPath(const Points2D &points, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
     drawClippedPath(points, stroke.width(), stroke.color(), stroke.lineDash());
 }
 
+//------
+
 void
 CGnuPlotRenderer::
-drawClippedPath(const std::vector<CPoint2D> &points, double width, const CRGBA &c,
-                const CLineDash &dash)
+drawHiddenClippedPath(const Points3D &points, double width, const CRGBA &c, const CLineDash &dash)
+{
+  for (uint i = 0; i < points.size() - 1; ++i)
+    drawHiddenLine(points[i], points[i + 1], width, c, dash);
+}
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+drawHiddenPath(const Points2D &points, double z, double width, const CRGBA &c,
+               const CLineDash &dash)
+{
+  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenPath(points, width, c, dash));
+
+  hiddenObjects_[-z].push_back(obj);
+
+  return obj;
+}
+
+void
+CGnuPlotRenderer::
+drawClippedPath(const Points3D &points, double width, const CRGBA &c, const CLineDash &dash)
+{
+  if (clip().isValid() && ! isPseudo()) {
+    Points2D points1;
+
+    for (const auto &p : points) {
+      CPoint2D p1 = transform2D(p);
+
+      if (clip().getValue().inside(p1))
+        points1.push_back(p1);
+    }
+
+    drawPath(points1, width, c, dash);
+  }
+  else
+    drawPath(points, width, c, dash);
+}
+
+void
+CGnuPlotRenderer::
+drawClippedPath(const Points2D &points, double width, const CRGBA &c, const CLineDash &dash)
 {
   int np = points.size();
   if (np < 2) return;
 
-  std::vector<CPoint2D> points1;
+  Points2D points1;
 
   for (int i = 1; i < np; ++i) {
     CPoint2D p1 = points[i - 1];
@@ -1006,30 +1318,23 @@ drawClippedPath(const std::vector<CPoint2D> &points, double width, const CRGBA &
 
 void
 CGnuPlotRenderer::
-drawClippedPath(const std::vector<CPoint3D> &points, double width, const CRGBA &c,
-                const CLineDash &dash)
+drawPath(const Points3D &points, double width, const CRGBA &c, const CLineDash &dash)
 {
-  if (clip().isValid() && ! isPseudo()) {
-    std::vector<CPoint2D> points1;
+  Points2D points1;
 
-    for (const auto &p : points) {
-      CPoint2D p1 = transform(p);
+  for (const auto &p : points)
+    points1.push_back(transform2D(p));
 
-      if (clip().getValue().inside(p1))
-        points1.push_back(p1);
-    }
-
-    drawPath(points1, width, c, dash);
-  }
-  else
-    drawPath(points, width, c, dash);
+  drawPath(points1, width, c, dash);
 }
+
+//------
 
 void
 CGnuPlotRenderer::
 drawMark(const CPoint3D &p, const CGnuPlotMark &mark)
 {
-  drawMark(transform(p), mark);
+  drawMark(transform2D(p), mark);
 }
 
 void
@@ -1039,12 +1344,34 @@ drawMark(const CPoint2D &p, const CGnuPlotMark &mark)
   drawSymbol(p, mark.type(), mark.size(), mark.color(), mark.width(), mark.isPixelSize());
 }
 
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+drawHiddenSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c,
+                 double lw, bool pixelSize)
+{
+  CPoint3D pt = transform(p);
+
+  return drawHiddenSymbol(pt.toPoint2D(), pt.z, type, size, c, lw, pixelSize);
+}
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+drawHiddenSymbol(const CPoint2D &p, double z, SymbolType type, double size, const CRGBA &c,
+                 double lw, bool pixelSize)
+{
+  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenSymbol(p, type, size, c, lw, pixelSize));
+
+  hiddenObjects_[-z].push_back(obj);
+
+  return obj;
+}
+
 void
 CGnuPlotRenderer::
 drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c,
            double lw, bool pixelSize)
 {
-  drawSymbol(transform(p), type, size, c, lw, pixelSize);
+  drawSymbol(transform2D(p), type, size, c, lw, pixelSize);
 }
 
 void
@@ -1087,7 +1414,34 @@ void
 CGnuPlotRenderer::
 drawPoint(const CPoint3D &p, const CRGBA &c)
 {
-  drawPoint(transform(p), c);
+  drawPoint(transform2D(p), c);
+}
+
+//------
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+drawHiddenLine(const CPoint3D &p1, const CPoint3D &p2, double w, const CRGBA &c,
+               const CLineDash &dash)
+{
+  CPoint3D pt1 = transform(p1);
+  CPoint3D pt2 = transform(p2);
+
+  double zm = (pt1.z + pt2.z)/2;
+
+  return drawHiddenLine(pt1.toPoint2D(), pt2.toPoint2D(), zm, w, c, dash);
+}
+
+CGnuPlotHiddenObjectP
+CGnuPlotRenderer::
+drawHiddenLine(const CPoint2D &p1, const CPoint2D &p2, double z, double w, const CRGBA &c,
+               const CLineDash &dash)
+{
+  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenLine(p1, p2, w, c, dash));
+
+  hiddenObjects_[-z].push_back(obj);
+
+  return obj;
 }
 
 void
@@ -1095,8 +1449,10 @@ CGnuPlotRenderer::
 drawLine(const CPoint3D &p1, const CPoint3D &p2, double width, const CRGBA &c,
          const CLineDash &dash)
 {
-  drawLine(transform(p1), transform(p2), width, c, dash);
+  drawLine(transform2D(p1), transform2D(p2), width, c, dash);
 }
+
+//------
 
 double
 CGnuPlotRenderer::
@@ -1365,17 +1721,21 @@ regionToWindow(double rx, double ry, double *wx, double *wy)
   *wy = CGnuPlotUtil::map(ry, 0, 1, range_.getYMin(), range_.getYMax());
 }
 
-CPoint2D
+CPoint3D
 CGnuPlotRenderer::
 transform(const CPoint3D &p) const
 {
-  if (camera_.isValid()) {
-    CPoint3D p1 = camera_->transform(p);
-
-    return CPoint2D(p1.x, p1.y);
-  }
+  if (camera_.isValid())
+    return camera_->transform(p);
   else
-    return CPoint2D(p.x, p.y);
+    return p;
+}
+
+CPoint2D
+CGnuPlotRenderer::
+transform2D(const CPoint3D &p) const
+{
+  return transform(p).toPoint2D();
 }
 
 CPoint2D
@@ -1399,4 +1759,87 @@ rotatePoint(const CPoint2D &p, double a, const CPoint2D &o)
   pixelToWindow(pr1, pr);
 
   return pr;
+}
+
+//------
+
+void
+CGnuPlotHiddenFillPolygon::
+draw(CGnuPlotRenderer *renderer)
+{
+  renderer->fillPolygon(points_, scaledColor(renderer));
+}
+
+void
+CGnuPlotHiddenDrawPolygon::
+draw(CGnuPlotRenderer *renderer)
+{
+  renderer->drawPolygon(points_, w_, scaledColor(renderer), d_);
+}
+
+void
+CGnuPlotHiddenPatternPolygon::
+draw(CGnuPlotRenderer *renderer)
+{
+  renderer->patternPolygon(points_, pattern_, fg_, bg_);
+}
+
+void
+CGnuPlotHiddenLine::
+draw(CGnuPlotRenderer *renderer)
+{
+  renderer->setMapping(mapping_);
+
+  renderer->drawLine(p1_, p2_, w_, scaledColor(renderer), d_);
+
+  renderer->setMapping(true);
+}
+
+void
+CGnuPlotHiddenPath::
+draw(CGnuPlotRenderer *renderer)
+{
+  renderer->setMapping(mapping_);
+
+  for (uint i = 0; i < points_.size() - 1; ++i)
+    renderer->drawLine(points_[i], points_[i + 1], w_, scaledColor(renderer), d_);
+
+  renderer->setMapping(true);
+}
+
+void
+CGnuPlotHiddenHAlignedText::
+draw(CGnuPlotRenderer *renderer)
+{
+  renderer->drawHAlignedText(pos_, halignPos_, valignPos_, str_, scaledColor(renderer), a_);
+}
+
+void
+CGnuPlotHiddenSymbol::
+draw(CGnuPlotRenderer *renderer)
+{
+  renderer->drawSymbol(p_, type_, size_, scaledColor(renderer), lw_, pixelSize_);
+}
+
+void
+CGnuPlotHiddenTextAtPoint::
+draw(CGnuPlotRenderer *renderer)
+{
+  renderer->setFont(font_);
+
+  renderer->drawTextAtPoint(p_, str_, enhanced_, halignPos_, valignPos_, c_, angle_);
+}
+
+void
+CGnuPlotHiddenEnhancedText::
+draw(CGnuPlotRenderer *renderer)
+{
+  renderer->drawEnhancedText(bbox_, halignPos_, str_, font_, c_);
+}
+
+CRGBA
+CGnuPlotHiddenObject::
+scaledColor(CGnuPlotRenderer *renderer)
+{
+  return c_.getLightRGBA(renderer->hiddenZ());
 }

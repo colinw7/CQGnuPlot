@@ -190,6 +190,10 @@ class ChordDiagram {
 
 class ChordDiagramRenderer {
  public:
+  typedef std::pair<CHAlignType,double> HAlignPos;
+  typedef std::pair<CVAlignType,double> VAlignPos;
+
+ public:
   ChordDiagramRenderer() { }
 
   virtual ~ChordDiagramRenderer() { }
@@ -199,7 +203,7 @@ class ChordDiagramRenderer {
   virtual void drawLine(double x1, double y1, double x2, double y2) = 0;
 
   virtual void drawRotatedText(double x, double y, const std::string &text, double a,
-                               CHAlignType halign, CVAlignType valign) = 0;
+                               const HAlignPos &halignPos, const VAlignPos &valignPos) = 0;
 
   virtual void drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2,
                        const CRGBA &c) = 0;

@@ -126,7 +126,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       double s = data.size().getValue(1);
 
       if (data.pointType() == CGnuPlotTypes::SymbolType::STRING)
-        renderer->drawHAlignedText(data.point(), CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
+        renderer->drawHAlignedText(data.point(), HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                                   VAlignPos(CVALIGN_TYPE_CENTER, 0),
                                    data.pointString(), data.color());
       else
         renderer->drawSymbol(data.point(), data.pointType(), s,
@@ -146,6 +147,8 @@ void
 CGnuPlotStylePoints::
 draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotGroup *group = plot->group();
+
   //const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   CGnuPlotStroke stroke(plot);
@@ -176,7 +179,10 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (op.isValid())
         p += op.getValue();
 
-      renderer->drawSymbol(p, pointType, pointSize, stroke.color(), stroke.width(), true);
+      if (! group->isHidden3D())
+        renderer->drawSymbol(p, pointType, pointSize, stroke.color(), stroke.width(), true);
+      else
+        renderer->drawHiddenSymbol(p, pointType, pointSize, stroke.color(), stroke.width(), true);
     }
 
     ++k;
@@ -204,7 +210,8 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
     if (labelStyle.textColor().isValid())
       tc = labelStyle.textColor().getValue().calcColor(plot->group());
 
-    renderer->drawHAlignedText(pm, CHALIGN_TYPE_CENTER, 0, CVALIGN_TYPE_CENTER, 0,
+    renderer->drawHAlignedText(pm, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                               VAlignPos(CVALIGN_TYPE_CENTER, 0),
                                plot->pointTypeStr(), tc);
   }
   else

@@ -77,10 +77,12 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
   assert(boxFill_ && boxStroke_);
 
   // get font, align and angle
+  CFontPtr font1 = defFont_;
+
   if (getFont().isValid())
-    renderer->setFont(getFont());
-  else
-    renderer->setFont(defFont_);
+    font1 = getFont();
+
+  renderer->setFont(font1);
 
   double a = angle_.getValue(0);
 
@@ -93,7 +95,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
 
   CPoint3D pos = getPos().getPoint3D(renderer);
 
-  drawPos_ = renderer->transform(pos);
+  drawPos_ = renderer->transform2D(pos);
 
   //---
 
@@ -112,7 +114,8 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
 
   CBBox2D bbox, rbbox;
 
-  renderer->calcTextRectAtPoint(drawPos_, getText(), isEnhanced(), halign, valign, a, bbox, rbbox);
+  renderer->calcTextRectAtPoint(drawPos_, getText(), isEnhanced(), HAlignPos(halign, 0),
+                                VAlignPos(valign, 0), a, bbox, rbbox);
 
   bbox_ = rbbox;
 
@@ -141,17 +144,25 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
 
   // draw point symbol
   if (showPoint()) {
-    //renderer->drawSymbol(drawPos_, CGnuPlotTypes::SymbolType::CROSS, 1, c, 1, true);
-    renderer->drawSymbol(drawPos_, (CGnuPlotTypes::SymbolType) pointType(),
-                         pointSize(), c, pointWidth(), true);
+    //renderer->drawSymbol(drawPos_, SymbolType::CROSS, 1, c, 1, true);
+
+    if (group->isHidden3D())
+      renderer->drawHiddenSymbol(pos, symbolType(), pointSize(), c, pointWidth(), true);
+    else
+      renderer->drawSymbol(pos, symbolType(), pointSize(), c, pointWidth(), true);
   }
 
   //---
 
   // draw text
-  renderer->drawTextAtPoint(drawPos_, getText(), isEnhanced(), halign, valign, c, a);
+  if (group->isHidden3D())
+    renderer->drawHiddenTextAtPoint(pos, getText(), isEnhanced(),
+                                    HAlignPos(halign, 0), VAlignPos(valign, 0), font1, c, a);
+  else
+    renderer->drawTextAtPoint(pos, getText(), isEnhanced(),
+                              HAlignPos(halign, 0), VAlignPos(valign, 0), c, a);
 
-//renderer->drawSymbol(o.getValue(), CGnuPlotTypes::SymbolType::PLUS, 1, CRGBA(1,0,0), 1, true);
+//renderer->drawSymbol(o.getValue(), SymbolType::PLUS, 1, CRGBA(1,0,0), 1, true);
 }
 
 bool

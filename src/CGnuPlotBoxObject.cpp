@@ -89,6 +89,6 @@ draw(CGnuPlotRenderer *renderer) const
   }
 
   // draw label
-  renderer->drawHAlignedText(CPoint2D(x(), y()), CHALIGN_TYPE_CENTER, 0,
-                             CVALIGN_TYPE_TOP, -8, valueStr(), textColor());
+  renderer->drawHAlignedText(CPoint2D(x(), y()), HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                             VAlignPos(CVALIGN_TYPE_TOP, -8), valueStr(), textColor());
 }

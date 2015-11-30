@@ -38,8 +38,10 @@ draw(CGnuPlotRenderer *renderer)
 
   if (isTop())
     renderer->drawHAlignedText(CPoint2D(bbox.getXMin() + pw, bbox.getYMax() - ph),
-                               CHALIGN_TYPE_LEFT, 0, CVALIGN_TYPE_TOP   , 0, buffer, c);
+                               HAlignPos(CHALIGN_TYPE_LEFT  , 0),
+                               VAlignPos(CVALIGN_TYPE_TOP   , 0), buffer, c);
   else
     renderer->drawHAlignedText(CPoint2D(bbox.getXMin() + pw, bbox.getYMin() + ph),
-                               CHALIGN_TYPE_LEFT, 0, CVALIGN_TYPE_BOTTOM, 0, buffer, c);
+                               HAlignPos(CHALIGN_TYPE_LEFT  , 0),
+                               VAlignPos(CVALIGN_TYPE_BOTTOM, 0), buffer, c);
 }
