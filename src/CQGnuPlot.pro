@@ -130,6 +130,7 @@ CGnuPlotSurface.cpp \
 CGnuPlotTimeStamp.cpp \
 CGnuPlotUsingCols.cpp \
 \
+CGnuPlotStyleBase.cpp \
 CGnuPlotStyleAdjacency.cpp \
 CGnuPlotStyleBoxErrorBars.cpp \
 CGnuPlotStyleBoxes.cpp \
@@ -196,6 +197,7 @@ CQLineDash.cpp \
 CQPoint2DEdit.cpp \
 CQIconCombo.cpp \
 CQCursor.cpp \
+CQRubberBand.cpp \
 \
 CAdjacency.cpp \
 CDelaunay.cpp \
@@ -412,6 +414,7 @@ CQLineDash.h \
 CQPoint2DEdit.h \
 CQIconCombo.h \
 CQCursor.h \
+CQRubberBand.h \
 \
 CAdjacency.h \
 CDelaunay.h \
