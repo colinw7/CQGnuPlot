@@ -844,6 +844,8 @@ class CGnuPlotPlot {
 
   //------
 
+  void printPoints();
+
  private:
   bool renderBBox(CGnuPlotBBoxRenderer &brenderer) const;
 

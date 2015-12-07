@@ -223,6 +223,13 @@ getFunction(const std::string &name)
   return functionMgr_->getFunction(name);
 }
 
+void
+CExpr::
+getFunctions(const std::string &name, Functions &functions)
+{
+  functionMgr_->getFunctions(name, functions);
+}
+
 CExprFunctionPtr
 CExpr::
 addFunction(const std::string &name, const std::vector<std::string> &args,

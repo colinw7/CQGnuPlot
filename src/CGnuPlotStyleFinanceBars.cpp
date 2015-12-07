@@ -164,6 +164,72 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 }
 
+bool
+CGnuPlotStyleFinanceBars::
+mouseProbe(CGnuPlotPlot *plot, CGnuPlotProbeEvent &probeEvent)
+{
+  if (! plot->is2D()) return false;
+
+  //---
+
+  double minX = 1E50;
+  int    minI = -1;
+
+  int i = 0;
+
+  for (const auto &point : plot->getPoints2D()) {
+    std::vector<double> reals;
+
+    (void) point.getReals(reals);
+
+    if (reals.size() >= 5) {
+      double date  = reals[0];
+
+      double dx = fabs(date - probeEvent.x());
+
+      if (minI < 0 || dx < minX) {
+        minX = dx;
+        minI = i;
+      }
+    }
+
+    ++i;
+  }
+
+  if (minI < 0)
+    return false;
+
+  CBBox2D bbox = plot->bbox2D();
+
+  double ymin = bbox.getYMin();
+
+  const CGnuPlotPoint &point = plot->getPoint2D(minI);
+
+  std::vector<double> reals;
+
+  (void) point.getReals(reals);
+
+  if (reals.size() < 5)
+    return false;
+
+  double date  = reals[0];
+  double open  = reals[1];
+  double low   = reals[2];
+  double high  = reals[3];
+  double close = reals[4];
+
+  std::string tipStr = CStrUtil::strprintf("Open=%g, Low=%g, High=%g, Close=%g",
+                                           open, low, high, close);
+
+  double x = (probeEvent.isNearest() ? date : probeEvent.x());
+
+  probeEvent.addLine(CGnuPlotProbeEvent::Line(x, ymin, low, high, tipStr));
+
+  return true;
+}
+
+//------
+
 void
 CGnuPlotStyleFinanceData::
 draw(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) const

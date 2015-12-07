@@ -3,7 +3,7 @@
 
 #include <CGnuPlotStyleBase.h>
 
-class CGnuPlotStylePoints : public CGnuPlotStyleBase {
+class CGnuPlotStylePoints : public CGnuPlotStylePointsBase {
  public:
   typedef std::pair<CHAlignType,double> HAlignPos;
   typedef std::pair<CVAlignType,double> VAlignPos;

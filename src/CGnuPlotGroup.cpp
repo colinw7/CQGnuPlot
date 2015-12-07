@@ -63,9 +63,12 @@ init()
   for (int ind = 1; ind <= 2; ++ind) {
     CGnuPlotAxisData &axisData = this->xaxis(ind);
 
+    double defStart = (axisData.isLogValue() ? 1  : 0);
+    double defEnd   = (axisData.isLogValue() ? 10 : 1);
+
     if (axisData.min().isValid() || axisData.max().isValid()) {
-      double xmin = axisData.min().getValue(0.0);
-      double xmax = axisData.max().getValue(1.0);
+      double xmin = axisData.min().getValue(defStart);
+      double xmax = axisData.max().getValue(defEnd  );
 
       normalizeXRange(ind, xmin, xmax);
 
@@ -77,9 +80,12 @@ init()
   for (int ind = 1; ind <= 2; ++ind) {
     CGnuPlotAxisData &axisData = this->yaxis(ind);
 
+    double defStart = (axisData.isLogValue() ? 1  : 0);
+    double defEnd   = (axisData.isLogValue() ? 10 : 1);
+
     if (axisData.min().isValid() || axisData.max().isValid()) {
-      double ymin = axisData.min().getValue(0.0);
-      double ymax = axisData.max().getValue(1.0);
+      double ymin = axisData.min().getValue(defStart);
+      double ymax = axisData.max().getValue(defEnd  );
 
       normalizeYRange(ind, ymin, ymax);
 
@@ -91,9 +97,12 @@ init()
   if (is3D()) {
     CGnuPlotAxisData &axisData = this->zaxis(1);
 
+    double defStart = (axisData.isLogValue() ? 1  : 0);
+    double defEnd   = (axisData.isLogValue() ? 10 : 1);
+
     if (axisData.min().isValid() || axisData.max().isValid()) {
-      double zmin = axisData.min().getValue(0.0);
-      double zmax = axisData.max().getValue(1.0);
+      double zmin = axisData.min().getValue(defStart);
+      double zmax = axisData.max().getValue(defEnd  );
 
       normalizeZRange(1, zmin, zmax);
 
@@ -422,6 +431,7 @@ fit()
     if (xpmin2.isValid()) { plotYAxis2->setDataRange(ypmin2.getValue(), ypmax2.getValue()); }
   }
 
+  // TODO: can only reuse values if log status matches ?
   if (! xmin1.isValid()) xmin1 = -10; if (! xmax1.isValid()) xmax1 = 10;
   if (! ymin1.isValid()) ymin1 = -10; if (! ymax1.isValid()) ymax1 = 10;
 
@@ -748,27 +758,30 @@ updatePlotAxisRange(AxisType type, int ind)
   CGnuPlotAxis *axis = getPlotAxis(type, ind, false);
   if (! axis) return;
 
-  double start = 0, end = 1;
+  double defStart = (axis->isLogValue() ? 1  : 0);
+  double defEnd   = (axis->isLogValue() ? 10 : 1);
+
+  double start = defStart, end = defEnd;
 
   if      (type == AxisType::X || type == AxisType::Y || type == AxisType::Z) {
-    start = this->axis(type, ind).min().getValue(0.0);
-    end   = this->axis(type, ind).max().getValue(1.0);
+    start = this->axis(type, ind).min().getValue(defStart);
+    end   = this->axis(type, ind).max().getValue(defEnd  );
   }
   else if (type == AxisType::P) {
-    start = this->axis(type, ind).min().getValue(0.0);
-    end   = this->axis(type, ind).max().getValue(1.0);
+    start = this->axis(type, ind).min().getValue(defStart);
+    end   = this->axis(type, ind).max().getValue(defEnd  );
   }
   else if (type == AxisType::R) {
     assert(ind  == 1);
 
-    start = this->axis(type, ind).min().getValue(0.0);
-    end   = this->axis(type, ind).max().getValue(1.0);
+    start = this->axis(type, ind).min().getValue(defStart);
+    end   = this->axis(type, ind).max().getValue(defEnd  );
   }
   else if (type == AxisType::T) {
     assert(ind  == 1);
 
-    start = this->axis(type, ind).min().getValue(0.0);
-    end   = this->axis(type, ind).max().getValue(1.0);
+    start = this->axis(type, ind).min().getValue(defStart);
+    end   = this->axis(type, ind).max().getValue(defEnd  );
   }
   else
     assert(false);
@@ -917,22 +930,39 @@ normalizeYRange(int ind, double &ymin, double &ymax, double yi) const
 {
   CGnuPlotAxis *plotAxis = getPlotAxis(AxisType::Y, ind, true);
 
-  if (plotAxis->logBase().isValid())
-    return;
+  if (! plotAxis->logBase().isValid()) {
+    double ymin1, ymax1;
+    int    numTicks1, numTicks2;
 
-  double ymin1, ymax1;
-  int    numTicks1, numTicks2;
+    (void) CGnuPlotAxis::calcTics(ymin, ymax, yi, ymin1, ymax1, numTicks1, numTicks2);
 
-  (void) CGnuPlotAxis::calcTics(ymin, ymax, yi, ymin1, ymax1, numTicks1, numTicks2);
+    ymin = ymin1;
+    ymax = ymax1;
+  }
+  else {
+    CPoint3D p1 = mapLogPoint(1, ind, 1, CPoint3D(1, ymin, 1));
+    CPoint3D p2 = mapLogPoint(1, ind, 1, CPoint3D(1, ymax, 1));
 
-  ymin = ymin1;
-  ymax = ymax1;
+    double y1 = CMathGen::RoundDown(p1.y);
+    double y2 = CMathGen::RoundUp  (p2.y);
+
+    CPoint3D p3 = unmapLogPoint(1, ind, 1, CPoint3D(1, y1, 1));
+    CPoint3D p4 = unmapLogPoint(1, ind, 1, CPoint3D(1, y2, 1));
+
+    ymin = p3.y;
+    ymax = p4.y;
+  }
 }
 
 void
 CGnuPlotGroup::
-normalizeZRange(int /*ind*/, double &zmin, double &zmax, double zi) const
+normalizeZRange(int ind, double &zmin, double &zmax, double zi) const
 {
+  CGnuPlotAxis *plotAxis = getPlotAxis(AxisType::Z, ind, true);
+
+  if (plotAxis->logBase().isValid())
+    return;
+
   double zmin1, zmax1;
   int    numTicks1, numTicks2;
 
@@ -1021,12 +1051,14 @@ bool
 CGnuPlotGroup::
 mouseProbe(CGnuPlotProbeEvent &probeEvent)
 {
+  bool rc = false;
+
   for (auto plot : plots_) {
     if (plot->mouseProbe(probeEvent))
-      return true;
+      rc = true;
   }
 
-  return false;
+  return rc;
 }
 
 void
@@ -1080,12 +1112,19 @@ draw()
     const CGnuPlotAxisData &yaxis = this->yaxis(1);
     const CGnuPlotAxisData &zaxis = this->zaxis(1);
 
-    double xmin = xaxis.min().getValue(0.0);
-    double ymin = yaxis.min().getValue(0.0);
-    double zmin = zaxis.min().getValue(0.0);
-    double xmax = xaxis.max().getValue(1.0);
-    double ymax = yaxis.max().getValue(1.0);
-    double zmax = zaxis.max().getValue(1.0);
+    double defXStart = (xaxis.isLogValue() ? 1  : 0);
+    double defYStart = (yaxis.isLogValue() ? 1  : 0);
+    double defZStart = (zaxis.isLogValue() ? 1  : 0);
+    double defXEnd   = (xaxis.isLogValue() ? 10 : 1);
+    double defYEnd   = (yaxis.isLogValue() ? 10 : 1);
+    double defZEnd   = (zaxis.isLogValue() ? 10 : 1);
+
+    double xmin = xaxis.min().getValue(defXStart);
+    double ymin = yaxis.min().getValue(defYStart);
+    double zmin = zaxis.min().getValue(defZStart);
+    double xmax = xaxis.max().getValue(defXEnd  );
+    double ymax = yaxis.max().getValue(defYEnd  );
+    double zmax = zaxis.max().getValue(defZEnd  );
 
     CPoint3D p1 = this->mapLogPoint(1, 1, 1, CPoint3D(xmin, ymin, zmin));
     CPoint3D p2 = this->mapLogPoint(1, 1, 1, CPoint3D(xmax, ymax, zmax));
@@ -1311,7 +1350,9 @@ getPlotAxis(AxisType type, int ind, bool create) const
     else if (type == AxisType::Z) {
     }
     else if (type == AxisType::R) {
-      CPoint3D center(0, 0, 0);
+      double defStart = (axis->isLogValue() ? 1  : 0);
+
+      CPoint3D center(defStart, defStart, defStart);
 
       if (isPolar())
         center = CPoint3D(1, 1, 1);
@@ -1746,14 +1787,14 @@ drawBorder(CGnuPlotRenderer *renderer)
     double xmin1 = bbox.getXMin(), ymin1 = bbox.getYMin(), zmin1 = bbox.getZMin();
     double xmax1 = bbox.getXMax(), ymax1 = bbox.getYMax(), zmax1 = bbox.getZMax();
 
-    updateAxisBBox(CPoint3D(xmin1, ymin1, zmin1));
-    updateAxisBBox(CPoint3D(xmin1, ymin1, zmax1));
-    updateAxisBBox(CPoint3D(xmin1, ymax1, zmin1));
-    updateAxisBBox(CPoint3D(xmin1, ymax1, zmax1));
-    updateAxisBBox(CPoint3D(xmax1, ymin1, zmin1));
-    updateAxisBBox(CPoint3D(xmax1, ymin1, zmax1));
-    updateAxisBBox(CPoint3D(xmax1, ymax1, zmin1));
-    updateAxisBBox(CPoint3D(xmax1, ymax1, zmax1));
+    updateAxisBBox(1, 1, 1, CPoint3D(xmin1, ymin1, zmin1));
+    updateAxisBBox(1, 1, 1, CPoint3D(xmin1, ymin1, zmax1));
+    updateAxisBBox(1, 1, 1, CPoint3D(xmin1, ymax1, zmin1));
+    updateAxisBBox(1, 1, 1, CPoint3D(xmin1, ymax1, zmax1));
+    updateAxisBBox(1, 1, 1, CPoint3D(xmax1, ymin1, zmin1));
+    updateAxisBBox(1, 1, 1, CPoint3D(xmax1, ymin1, zmax1));
+    updateAxisBBox(1, 1, 1, CPoint3D(xmax1, ymax1, zmin1));
+    updateAxisBBox(1, 1, 1, CPoint3D(xmax1, ymax1, zmax1));
 
     // 1 : x front, bottom
     if (sides & (1<<0))
@@ -1814,10 +1855,10 @@ drawBorder(CGnuPlotRenderer *renderer)
     double xmin1 = bbox.getLeft  (), ymin1 = bbox.getBottom();
     double xmax1 = bbox.getRight (), ymax1 = bbox.getTop   ();
 
-    updateAxisBBox(CPoint2D(xmin1, ymin1));
-    updateAxisBBox(CPoint2D(xmin1, ymax1));
-    updateAxisBBox(CPoint2D(xmax1, ymin1));
-    updateAxisBBox(CPoint2D(xmax1, ymax1));
+    updateAxisBBox(1, 1, CPoint2D(xmin1, ymin1));
+    updateAxisBBox(1, 1, CPoint2D(xmin1, ymax1));
+    updateAxisBBox(1, 1, CPoint2D(xmax1, ymin1));
+    updateAxisBBox(1, 1, CPoint2D(xmax1, ymax1));
 
     // 1 : x axis (bottom)
     if (sides & (1<<0))
@@ -2180,7 +2221,7 @@ CGnuPlotGroup::
 getMappedDisplayRange(int xind, int yind) const
 {
   const CRange &xrange = this->xrange(xind);
-  const CRange &yrange = this->yrange(xind);
+  const CRange &yrange = this->yrange(yind);
 
   if (xrange.isSet() && yrange.isSet())
     return CBBox2D(xrange.low(), yrange.low(), xrange.high(), yrange.high());
@@ -2348,7 +2389,7 @@ getRegionBBox() const
 
 void
 CGnuPlotGroup::
-updateAxisBBox(const CPoint3D &p)
+updateAxisBBox(int xind, int yind, int /*zind*/, const CPoint3D &p)
 {
   axisBBox3D_.add(p);
 
@@ -2356,21 +2397,39 @@ updateAxisBBox(const CPoint3D &p)
 
   CPoint2D p1 = renderer->transform2D(p);
 
-  updateAxisBBox(p1);
+  updateAxisBBox(xind, yind, p1);
 }
 
 void
 CGnuPlotGroup::
-updateAxisBBox(const CPoint2D &p)
+updateAxisBBox(int xind, int yind, const CPoint2D &p)
 {
-  axisBBox2D_.add(p);
+  xaxis(xind).updateFitMinMax(p.x);
+  yaxis(yind).updateFitMinMax(p.y);
+
+  CPoint2D p1 = p;
+
+  if (xind == 2) p1.x = axisBBox2D_.getXMin();
+  if (yind == 2) p1.y = axisBBox2D_.getYMin();
+
+  axisBBox2D_.add(p1);
 }
 
 void
 CGnuPlotGroup::
-updateAxisBBox(const CBBox2D &box)
+updateAxisBBox(int xind, int yind, const CBBox2D &bbox)
 {
-  axisBBox2D_.add(box);
+  xaxis(xind).updateFitMin(bbox.getXMin());
+  xaxis(xind).updateFitMax(bbox.getXMax());
+  yaxis(yind).updateFitMin(bbox.getXMin());
+  yaxis(yind).updateFitMax(bbox.getXMax());
+
+  CBBox2D bbox1 = bbox;
+
+  if (xind == 2) { bbox1.setXMin(axisBBox2D_.getXMin()); bbox1.setXMax(axisBBox2D_.getXMax()); }
+  if (yind == 2) { bbox1.setYMin(axisBBox2D_.getYMin()); bbox1.setYMax(axisBBox2D_.getYMax()); }
+
+  axisBBox2D_.add(bbox1);
 }
 
 #if 0
@@ -2443,7 +2502,7 @@ CPoint2D
 CGnuPlotGroup::
 mapLogPoint(int xind, int yind, int zind, const CPoint2D &p) const
 {
-  CPoint3D p1(p.x, p.y, 0);
+  CPoint3D p1(p.x, p.y, 1);
 
   mapLogPoint(xind, yind, zind, &p1.x, &p1.y, &p1.z);
 
@@ -2465,7 +2524,7 @@ CPoint2D
 CGnuPlotGroup::
 unmapLogPoint(int xind, int yind, int zind, const CPoint2D &p) const
 {
-  CPoint3D p1(p.x, p.y, 0);
+  CPoint3D p1(p.x, p.y, 1);
 
   unmapLogPoint(xind, yind, zind, &p1.x, &p1.y, &p1.z);
 
@@ -2490,21 +2549,21 @@ mapLogPoint(int xind, int yind, int zind, double *x, double *y, double *z) const
   CGnuPlotAxis *plotXAxis = getPlotAxis(AxisType::X, xind, true);
   CGnuPlotAxis *plotYAxis = getPlotAxis(AxisType::Y, yind, true);
 
-  if (plotXAxis->isLogValue() && *x < 0)
-    *x = plotXAxis->mapLogValue(0.0);
+  if (plotXAxis->isLogValue() && *x <= 0)
+    *x = plotXAxis->mapLogValue(0.01);
   else
     *x = plotXAxis->mapLogValue(*x);
 
-  if (plotYAxis->isLogValue() && *y < 0)
-    *y = plotYAxis->mapLogValue(0.0);
+  if (plotYAxis->isLogValue() && *y <= 0)
+    *y = plotYAxis->mapLogValue(0.01);
   else
     *y = plotYAxis->mapLogValue(*y);
 
   if (is3D()) {
     CGnuPlotAxis *plotZAxis = getPlotAxis(AxisType::Z, zind, true);
 
-    if (plotZAxis->isLogValue() && *z < 0)
-      *z = plotZAxis->mapLogValue(0.0);
+    if (plotZAxis->isLogValue() && *z <= 0)
+      *z = plotZAxis->mapLogValue(0.01);
     else
       *z = plotZAxis->mapLogValue(*z);
   }

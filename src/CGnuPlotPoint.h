@@ -13,6 +13,21 @@ class CGnuPlotPoint {
   typedef std::map<std::string,CExprValuePtr> Params;
 
  public:
+  class GetOpts {
+   public:
+    GetOpts() { }
+
+    bool force() const { return force_; }
+    bool checkNaN() const { return checkNaN_; }
+
+    GetOpts &setForce   (bool b) { force_    = b; return *this; }
+    GetOpts &setCheckNaN(bool b) { checkNaN_ = b; return *this; }
+
+   private:
+    bool force_    { false };
+    bool checkNaN_ { true };
+  };
+
   CGnuPlotPoint(const Values &values=Values(), bool discontinuity=false,
                 bool bad=false, const Params &params=Params());
  ~CGnuPlotPoint();
@@ -21,28 +36,32 @@ class CGnuPlotPoint {
     p.print(os); return os;
   }
 
-  bool getX(double &x, bool force=false) const;
-  bool getY(double &y, bool force=false) const;
-  bool getZ(double &z, bool force=false) const;
+  bool getX(double &x, const GetOpts &opts=GetOpts()) const;
+  bool getY(double &y, const GetOpts &opts=GetOpts()) const;
+  bool getZ(double &z, const GetOpts &opts=GetOpts()) const;
 
   double getX() const;
   double getY() const;
   double getZ() const;
 
-  bool getXY(double &x, double &y) const { return getX(x) && getY(y); }
-
-  bool getXYZ(double &x, double &y, double &z, bool force=false) const {
-    return getX(x, force) && getY(y, force) && getZ(z, force);
+  bool getXY(double &x, double &y, const GetOpts &opts=GetOpts()) const {
+    return getX(x, opts) && getY(y, opts);
   }
 
-  bool getReals(std::vector<double> &reals, bool force=false) const;
+  bool getXYZ(double &x, double &y, double &z, const GetOpts &opts=GetOpts()) const {
+    return getX(x, opts) && getY(y, opts) && getZ(z, opts);
+  }
 
-  bool getPoint(CPoint2D &p, bool checkNaN=true) const;
-  bool getPoint(double x, CPoint2D &p, bool checkNaN=true) const;
+  bool getReals(std::vector<double> &reals, const GetOpts &opts=GetOpts()) const;
 
-  bool getPoint(CPoint3D &p, bool force=false) const;
+  bool getPoint(CPoint2D &p, const GetOpts &opts=GetOpts()) const;
+  bool getPoint(double x, CPoint2D &p, const GetOpts &opts=GetOpts()) const;
+
+  bool getPoint(CPoint3D &p, const GetOpts &opts=GetOpts()) const;
 
   int getNumValues() const { return values_.size(); }
+
+  const CExprValuePtr &getValue(int i) const { return values_[i]; }
 
   bool getValue(int n, double &r) const;
   bool getValue(int n, int &i) const;
@@ -64,10 +83,13 @@ class CGnuPlotPoint {
   bool hasParam(const std::string &name) const;
 
   CExprValuePtr getParam(const std::string &name) const;
+  void setParam(const std::string &name, const CExprValuePtr &value);
+  void unsetParam(const std::string &name);
 
   std::string getParamString(const std::string &name) const;
 
   CRGBA getParamColor(const std::string &name) const;
+  void setParamColor(const std::string &name, const CRGBA &c);
 
   int cmp(const CGnuPlotPoint &p) const;
 

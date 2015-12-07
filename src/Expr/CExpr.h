@@ -190,6 +190,9 @@ enum CExprITokenType {
 
 class CExpr {
  public:
+  typedef std::vector<CExprFunctionPtr> Functions;
+
+ public:
   static CExpr *instance();
 
  ~CExpr() { }
@@ -234,7 +237,9 @@ class CExpr {
   CExprVariablePtr createStringVariable (const std::string &name, const std::string &str);
   CExprVariablePtr createComplexVariable(const std::string &name, const std::complex<double> &c);
 
-  CExprFunctionPtr getFunction(const std::string &name);
+  CExprFunctionPtr getFunction (const std::string &name);
+  void             getFunctions(const std::string &name, Functions &functions);
+
   CExprFunctionPtr addFunction(const std::string &name, const std::vector<std::string> &args,
                                const std::string &proc);
   CExprFunctionPtr addFunction(const std::string &name, const std::string &argsStr,

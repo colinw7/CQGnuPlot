@@ -284,22 +284,62 @@ class CGnuPlotTimeColumnFn : public CGnuPlotFn {
   CGnuPlotTimeColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
   CExprValuePtr operator()(const Values &values) {
-    assert(values.size() == 2);
+    time_t t;
 
-    std::string str;
-    std::string fmt;
+    if      (values.size() == 2) {
+      std::string fmt;
 
-    long col = 0;
+      long col = 0;
 
-    if (values[0]->getIntegerValue(col) && values[1]->getStringValue(fmt)) {
-      CExprValuePtr value = plot_->fieldValue(col);
+      if (values[0]->getIntegerValue(col) && values[1]->getStringValue(fmt)) {
+        CExprValuePtr value = plot_->fieldValue(col);
 
-      if (value->isStringValue())
-        (void) value->getStringValue(str);
+        if (value->isStringValue()) {
+          std::string str;
+
+          (void) value->getStringValue(str);
+
+          struct tm tm1;
+
+          memset(&tm1, 0, sizeof(tm));
+
+          /*char *p =*/ strptime(str.c_str(), fmt.c_str(), &tm1);
+
+          t = mktime(&tm1);
+        }
+      }
+    }
+    else if (values.size() == 1) {
+      std::string fmt = plot_->timeFmt().getValue("%d/%m/%y,%H:%M");
+
+      long col = 0;
+
+      if (values[0]->getIntegerValue(col)) {
+        CExprValuePtr value = plot_->fieldValue(col);
+
+        if (value->isStringValue()) {
+          std::string str;
+
+          (void) value->getStringValue(str);
+
+          struct tm tm1;
+
+          memset(&tm1, 0, sizeof(tm));
+
+          /*char *p =*/ strptime(str.c_str(), fmt.c_str(), &tm1);
+
+          t = mktime(&tm1);
+        }
+      }
+    }
+    else {
+      assert(false);
     }
 
-    return CExprInst->createStringValue(str);
+    return CExprInst->createIntegerValue(t);
   }
+
+  bool isOverload() const override { return true; }
 };
 
 class CGnuPlotSumRangeFn : public CGnuPlotFn {
@@ -425,13 +465,13 @@ init(CGnuPlot *plot)
   CExprInst->addFunction("time"    , "irs",
                          new CGnuPlotValueTime(plot))->setBuiltin(true);
 
+  CExprInst->addFunction("timecolumn", "i" ,
+                         new CGnuPlotTimeColumnFn(plot))->setBuiltin(true);
   CExprInst->addFunction("timecolumn", "i,s" ,
                          new CGnuPlotTimeColumnFn(plot))->setBuiltin(true);
 
   CExprInst->addFunction("sum_range", "s,i,i,s",
                          new CGnuPlotSumRangeFn(plot))->setBuiltin(true);
-
-  // TODO: timecolumn
 }
 
 }

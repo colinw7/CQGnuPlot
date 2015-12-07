@@ -661,8 +661,9 @@ class CGnuPlot {
 
   //------
 
+  const COptString &timeFmt() { return timeFmt_; }
   void setTimeFmt(const std::string &f) { timeFmt_ = f; }
-  const std::string &timeFmt() { return timeFmt_; }
+  void unsetTimeFmt() { timeFmt_.setInvalid(); }
 
   //------
 
@@ -987,7 +988,7 @@ class CGnuPlot {
 
   bool readNamedBlock(const std::string &name, const std::string &eofStr);
 
-  std::string getUsingStr(CParseLine &line);
+  std::string parseUsingStr(CParseLine &line);
 
   void parseIndex(CParseLine &line, int &indexStart, int &indexEnd, int &indexStep);
   void parseEvery(CParseLine &line, int &everyPointStart, int &everyPointEnd, int &everyPointStep,
@@ -1149,6 +1150,8 @@ class CGnuPlot {
 
   void readDataFileLines();
 
+  void fileReadLines(CUnixFile &file, CGnuPlotFile::Lines &lines);
+
   bool fileReadLine(std::string &line) const;
 
   bool fieldToReal(const std::string &field, double &r) const;
@@ -1281,7 +1284,7 @@ class CGnuPlot {
   CGnuPlotPalette        palette_;
   CGnuPlotColorBoxData   colorBox_;
   CGnuPlotFilledCurve    filledCurve_;
-  std::string            timeFmt_ { "%d/%m/%y,%H:%M" };
+  COptString             timeFmt_;
   DummyVarMap            dummyVars_;
   Samples                samples_;
   LinkData               linkData_;

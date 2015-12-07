@@ -3,7 +3,7 @@
 
 #include <CGnuPlotStyleBase.h>
 
-class CGnuPlotStyleLines : public CGnuPlotStyleBase {
+class CGnuPlotStyleLines : public CGnuPlotStylePointsBase {
  public:
   CGnuPlotStyleLines();
 
@@ -18,8 +18,6 @@ class CGnuPlotStyleLines : public CGnuPlotStyleBase {
 
   void drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
                    const CPoint2D &p1, const CPoint2D &p2) override;
-
-  bool mouseProbe(CGnuPlotPlot *plot, CGnuPlotProbeEvent &probeEvent) override;
 };
 
 #endif

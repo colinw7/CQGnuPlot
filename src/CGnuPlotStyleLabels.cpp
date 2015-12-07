@@ -46,7 +46,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   for (const auto &point : plot->getPoints2D()) {
     std::vector<double> reals;
 
-    (void) point.getReals(reals, /*force*/true);
+    (void) point.getReals(reals, CGnuPlotPoint::GetOpts().setForce(true));
 
     if (reals.size() < 3)
       continue;

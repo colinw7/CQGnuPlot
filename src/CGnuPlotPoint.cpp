@@ -15,9 +15,9 @@ CGnuPlotPoint::
 
 bool
 CGnuPlotPoint::
-getX(double &x, bool force) const
+getX(double &x, const GetOpts &opts) const
 {
-  if (! force)
+  if (! opts.force())
     return getValue(1, x);
   else
     return getForceReal(1, x);
@@ -25,9 +25,9 @@ getX(double &x, bool force) const
 
 bool
 CGnuPlotPoint::
-getY(double &y, bool force) const
+getY(double &y, const GetOpts &opts) const
 {
-  if (! force)
+  if (! opts.force())
     return getValue(2, y);
   else
     return getForceReal(2, y);
@@ -35,9 +35,9 @@ getY(double &y, bool force) const
 
 bool
 CGnuPlotPoint::
-getZ(double &z, bool force) const
+getZ(double &z, const GetOpts &opts) const
 {
-  if (! force)
+  if (! opts.force())
     return getValue(3, z);
   else
     return getForceReal(3, z);
@@ -78,7 +78,7 @@ getZ() const
 
 bool
 CGnuPlotPoint::
-getReals(std::vector<double> &reals, bool force) const
+getReals(std::vector<double> &reals, const GetOpts &opts) const
 {
   reals.clear();
 
@@ -86,7 +86,7 @@ getReals(std::vector<double> &reals, bool force) const
   double r = 0.0;
 
   for (uint i = 0; i < values_.size(); ++i) {
-    if (! force) {
+    if (! opts.force()) {
       if (getValue(i + 1, r)) {
         reals.push_back(r);
         continue;
@@ -147,14 +147,14 @@ getForceReal(int n, double &r) const
 
 bool
 CGnuPlotPoint::
-getPoint(CPoint2D &p, bool checkNaN) const
+getPoint(CPoint2D &p, const GetOpts &opts) const
 {
   double x, y;
 
-  if (! getXY(x, y))
+  if (! getXY(x, y, opts))
     return false;
 
-  if (checkNaN && (IsNaN(x) || IsNaN(y)))
+  if (opts.checkNaN() && (IsNaN(x) || IsNaN(y)))
     return false;
 
   p = CPoint2D(x, y);
@@ -164,18 +164,18 @@ getPoint(CPoint2D &p, bool checkNaN) const
 
 bool
 CGnuPlotPoint::
-getPoint(double x, CPoint2D &p, bool checkNaN) const
+getPoint(double x, CPoint2D &p, const GetOpts &opts) const
 {
   double x1, y1;
 
-  if (! getXY(x1, y1)) {
+  if (! getXY(x1, y1, opts)) {
     x1 = x;
 
     if (! getX(y1))
       return false;
   }
 
-  if (checkNaN && (IsNaN(x1) || IsNaN(y1)))
+  if (opts.checkNaN() && (IsNaN(x1) || IsNaN(y1)))
     return false;
 
   p = CPoint2D(x1, y1);
@@ -185,11 +185,11 @@ getPoint(double x, CPoint2D &p, bool checkNaN) const
 
 bool
 CGnuPlotPoint::
-getPoint(CPoint3D &p, bool force) const
+getPoint(CPoint3D &p, const GetOpts &opts) const
 {
   double x, y, z;
 
-  if (! getXYZ(x, y, z, force))
+  if (! getXYZ(x, y, z, opts))
     return false;
 
   p = CPoint3D(x, y, z);
@@ -250,6 +250,20 @@ getParam(const std::string &name) const
   return (*p).second;
 }
 
+void
+CGnuPlotPoint::
+setParam(const std::string &name, const CExprValuePtr &value)
+{
+  params_[name] = value;
+}
+
+void
+CGnuPlotPoint::
+unsetParam(const std::string &name)
+{
+  params_.erase(name);
+}
+
 std::string
 CGnuPlotPoint::
 getParamString(const std::string &name) const
@@ -292,6 +306,15 @@ getParamColor(const std::string &name) const
   }
 
   return c;
+}
+
+void
+CGnuPlotPoint::
+setParamColor(const std::string &name, const CRGBA &c)
+{
+  CExprValuePtr value = CExprInst->createStringValue(c.stringEncode());
+
+  setParam(name, value);
 }
 
 int

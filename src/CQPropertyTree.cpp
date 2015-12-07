@@ -158,6 +158,24 @@ expandSelected()
 
 void
 CQPropertyTree::
+getSelectedObjects(std::vector<QObject *> &objs)
+{
+  QList<QTreeWidgetItem *> items = this->selectedItems();
+
+  for (int i = 0; i < items.length(); ++i) {
+    QTreeWidgetItem *item = items[i];
+
+    QObject *obj;
+    QString  path;
+
+    getItemData(items[i], obj, path);
+
+    objs.push_back(obj);
+  }
+}
+
+void
+CQPropertyTree::
 search(const QString &text)
 {
   Items items;

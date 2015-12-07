@@ -409,9 +409,9 @@ class CGnuPlotGroup {
   const CBBox2D &axisBBox2D() const { return axisBBox2D_; }
   const CBBox3D &axisBBox3D() const { return axisBBox3D_; }
 
-  void updateAxisBBox(const CPoint3D &p);
-  void updateAxisBBox(const CPoint2D &p);
-  void updateAxisBBox(const CBBox2D &box);
+  void updateAxisBBox(int xind, int yind, int zind, const CPoint3D &p);
+  void updateAxisBBox(int xind, int yind, const CPoint2D &p);
+  void updateAxisBBox(int xind, int yind, const CBBox2D &box);
 
   //-----
 

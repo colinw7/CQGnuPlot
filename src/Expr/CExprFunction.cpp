@@ -769,6 +769,15 @@ getFunction(const std::string &name)
   return CExprFunctionPtr();
 }
 
+void
+CExprFunctionMgr::
+getFunctions(const std::string &name, Functions &functions)
+{
+  for (const auto &func : functions_)
+    if (func->name() == name)
+      functions.push_back(func);
+}
+
 CExprFunctionPtr
 CExprFunctionMgr::
 addProcFunction(const std::string &name, const std::string &argsStr, CExprFunctionProc proc)
@@ -804,7 +813,8 @@ addObjFunction(const std::string &name, const std::string &argsStr, CExprFunctio
 
   function->setVariableArgs(variableArgs);
 
-  removeFunction(name);
+  if (! proc->isOverload())
+    removeFunction(name);
 
   functions_.push_back(function);
 

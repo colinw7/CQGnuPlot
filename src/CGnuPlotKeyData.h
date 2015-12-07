@@ -15,6 +15,12 @@ class CGnuPlotKeyData {
   typedef COptValT<CGnuPlotPosition> OptPos;
   typedef std::map<int,std::string>  PointLabels;
 
+  enum class HeadPosition {
+    IN_KEY,
+    AT_END,
+    AT_BEGINNING
+  };
+
  public:
   CGnuPlotKeyData();
 
@@ -154,6 +160,9 @@ class CGnuPlotKeyData {
     return columns_[columnNum_.getValue(0) - 1];
   }
 
+  const HeadPosition &headPosition() const { return headPosition_; }
+  void setHeadPosition(const HeadPosition &v) { headPosition_ = v; }
+
   void reset() {
     displayed_       = true;
     outside_         = false;
@@ -227,6 +236,7 @@ class CGnuPlotKeyData {
   bool              columnhead_ { false };
   COptInt           columnNum_;
   Columns           columns_;
+  HeadPosition      headPosition_ { HeadPosition::IN_KEY };
   CGnuPlotColorSpec textColor_;
   COptInt           maxCols_;
   COptInt           maxRows_;

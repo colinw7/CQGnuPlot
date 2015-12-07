@@ -173,7 +173,8 @@ reset()
 
   dummyVar_ = "";
 
-  format_ = "%g";
+  format_ .setInvalid();
+  timeFmt_.setInvalid();
 
   geographic_ = false;
 }
@@ -196,6 +197,9 @@ std::string
 CGnuPlotAxisData::
 formatAxisValue(double r) const
 {
+  if (IsNaN(r))
+    return "NaN";
+
   if (isTime()) {
     static char buffer[512];
 
@@ -203,23 +207,38 @@ formatAxisValue(double r) const
 
     struct tm *tm1 = localtime(&t);
 
-    (void) strftime(buffer, 512, format().c_str(), tm1);
+    (void) strftime(buffer, 512, timeFmt().getValue("%d/%m/%y,%H:%M").c_str(), tm1);
 
     return buffer;
   }
-  else if (format() != "") {
+  else if (format().isValid()) {
+    std::string fmt = format().getValue();
+
+    if (fmt != "") {
+      if (isGeographic()) {
+        return geographicFormat(fmt, r);
+      }
+      else {
+        if (fabs(r) < 1E-6)
+          return CStrUtil::strprintf(fmt.c_str(), 0.0);
+        else
+          return CStrUtil::strprintf(fmt.c_str(), r);
+      }
+    }
+    else
+      return "";
+  }
+  else {
     if (isGeographic()) {
-      return geographicFormat(format(), r);
+      return geographicFormat("%g", r);
     }
     else {
       if (fabs(r) < 1E-6)
-        return CStrUtil::strprintf(format().c_str(), 0.0);
+        return CStrUtil::strprintf("%g", 0.0);
       else
-        return CStrUtil::strprintf(format().c_str(), r);
+        return CStrUtil::strprintf("%g", r);
     }
   }
-  else
-    return "";
 }
 
 std::string
@@ -392,7 +411,7 @@ showTics(std::ostream &os, const std::string &prefix) const
   if (isShowTics()) {
     os << prefix << " tics: on axis" << std::endl;
     os << "  labels are justified automatically, format \"" <<
-          format_ << "\" and are not rotated," << std::endl;
+          format().getValue("%g") << "\" and are not rotated," << std::endl;
     os << "  offset (character " << labelOffset_.x << ", " <<
           labelOffset_.y << ", " << labelOffset_.z << ")" << std::endl;
     os << "  intervals computed automatically" << std::endl;
@@ -405,7 +424,7 @@ void
 CGnuPlotAxisData::
 showFormat(std::ostream &os, const std::string &prefix) const
 {
-  os << "set format " << prefix << " \"" << format_ << "\"" << std::endl;
+  os << "set format " << prefix << " \"" << format().getValue("%g") << "\"" << std::endl;
 }
 
 void

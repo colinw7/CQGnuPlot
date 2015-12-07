@@ -227,6 +227,8 @@ mouseMoveEvent(QMouseEvent *e)
 
   CQGnuPlotGroup *group = window_->getGroupAt(mouseEvent.pixel());
 
+  window_->setCurrentGroup(group);
+
   QString groupName = (group ? QString("Group%1").arg(group->id()) : QString(""));
 
   CPoint2D p;

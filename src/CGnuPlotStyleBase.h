@@ -61,4 +61,13 @@ class CGnuPlotStyleBase {
   CGnuPlotTypes::PlotStyle style_;
 };
 
+//------
+
+class CGnuPlotStylePointsBase : public CGnuPlotStyleBase {
+ public:
+  CGnuPlotStylePointsBase(CGnuPlotTypes::PlotStyle style);
+
+  virtual bool mouseProbe(CGnuPlotPlot *plot, CGnuPlotProbeEvent &probeEvent) override;
+};
+
 #endif

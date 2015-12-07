@@ -10,6 +10,8 @@ class CGnuPlotStyleFinanceBars : public CGnuPlotStyleBase {
   int numUsing() const override { return 5; }
 
   void draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) override;
+
+  bool mouseProbe(CGnuPlotPlot *plot, CGnuPlotProbeEvent &probeEvent) override;
 };
 
 #endif

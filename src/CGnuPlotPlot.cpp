@@ -478,6 +478,48 @@ mapPoints(MappedPoints &points)
 
 void
 CGnuPlotPlot::
+printPoints()
+{
+  for (uint i = 0; i < numPoints2D(); ++i) {
+    const CGnuPlotPoint &point = points2D_[i];
+
+    for (int j = 0; j < point.getNumValues(); ++j) {
+      if (j > 0)
+        std::cout << " ";
+
+      const CExprValuePtr &value = point.getValue(j);
+
+      if      (value->isIntegerValue()) {
+        long l;
+
+        value->getIntegerValue(l);
+
+        std::cout << l;
+      }
+      else if (value->isRealValue()) {
+        double r;
+
+        value->getRealValue(r);
+
+        std::cout << r;
+      }
+      else if (value->isStringValue()) {
+        std::string s;
+
+        value->getStringValue(s);
+
+        std::cout << '"' << s << '"';
+      }
+      else
+        std::cout << "?";
+    }
+
+    std::cout << std::endl;
+  }
+}
+
+void
+CGnuPlotPlot::
 draw()
 {
   if (! isDisplayed()) return;
@@ -1732,14 +1774,20 @@ calcBoundedYRange(double *ymin, double *ymax) const
     else {
       CGnuPlotBBoxRenderer brenderer(app()->renderer());
 
-      brenderer.setXRange(xmin, xmax);
+      CPoint2D p1 = group_->mapLogPoint(xind(), yind(), 1, CPoint2D(xmin, 1));
+      CPoint2D p2 = group_->mapLogPoint(xind(), yind(), 1, CPoint2D(xmax, 1));
+
+      brenderer.setXRange(p1.x, p2.x);
 
       if (renderBBox(brenderer)) {
         CBBox2D bbox = brenderer.bbox();
 
         if (bbox.isSet()) {
-          th->bymin_.updateMin(bbox.getBottom());
-          th->bymax_.updateMax(bbox.getTop   ());
+          CPoint2D p1 = group_->unmapLogPoint(xind(), yind(), 1, bbox.getLL());
+          CPoint2D p2 = group_->unmapLogPoint(xind(), yind(), 1, bbox.getUR());
+
+          th->bymin_.updateMin(p1.y);
+          th->bymax_.updateMax(p2.y);
         }
       }
       else {
@@ -1762,8 +1810,14 @@ calcBoundedYRange(double *ymin, double *ymax) const
     }
   }
 
-  *ymin = bymin_.getValue(-10);
-  *ymax = bymax_.getValue( 10);
+  if (! group_->yaxis(yind()).isLogValue()) {
+    *ymin = bymin_.getValue(-10);
+    *ymax = bymax_.getValue( 10);
+  }
+  else {
+    *ymin = bymin_.getValue(1);
+    *ymax = bymax_.getValue(10);
+  }
 
   return (bymin_.isValid() && bymax_.isValid());
 }
@@ -1901,7 +1955,7 @@ mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const
 {
   std::vector<double> reals;
 
-  (void) p.getReals(reals, /*force*/true);
+  (void) p.getReals(reals, CGnuPlotPoint::GetOpts().setForce(true));
 
   if      (mapping() == CGnuPlotTypes::Mapping::SPHERICAL_MAPPING) {
     double theta = (reals.size() > 0 ? reals[0] : 0.0);
@@ -1936,7 +1990,7 @@ mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const
     ind = (reals.size() > 3 ? 3 : reals.size());
   }
   else {
-    if (! p.getPoint(p1, /*force*/true))
+    if (! p.getPoint(p1, CGnuPlotPoint::GetOpts().setForce(true)))
       return false;
 
     ind = 3;

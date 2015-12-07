@@ -54,6 +54,7 @@
 #include <CQPropertyItem.h>
 #include <CQPropertyEditor.h>
 #include <CQFloatLabel.h>
+#include <CQRubberBand.h>
 
 #include <QPainter>
 #include <QHBoxLayout>
@@ -63,7 +64,6 @@
 #include <QLabel>
 #include <QFrame>
 #include <QTimer>
-#include <QRubberBand>
 #include <QPushButton>
 #include <QLineEdit>
 
@@ -80,6 +80,7 @@
 #include <svg/xaxis_svg.h>
 #include <svg/yaxis_svg.h>
 #include <svg/probe_svg.h>
+#include <svg/points_svg.h>
 
 namespace {
   QIcon svgIcon(const uchar *data, int len) {
@@ -138,7 +139,8 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   selectAction_ = new QAction(svgIcon(select_data, SELECT_DATA_LEN), "Select", this);
   moveAction_   = new QAction(svgIcon(move_data  , MOVE_DATA_LEN  ), "Move"  , this);
   zoomAction_   = new QAction(svgIcon(zoom_data  , ZOOM_DATA_LEN  ), "Zoom"  , this);
-  probeAction_  = new QAction(svgIcon(probe_data , PROBE_DATA_LEN ), "&Probe", this);
+  probeAction_  = new QAction(svgIcon(probe_data , PROBE_DATA_LEN ), "Probe" , this);
+  pointsAction_ = new QAction(svgIcon(points_data, POINTS_DATA_LEN), "Points", this);
 
   selectAction_->setCheckable(true);
   moveAction_  ->setCheckable(true);
@@ -152,6 +154,8 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   connect(zoomAction_  , SIGNAL(triggered(bool)), this, SLOT(zoomMode  (bool)));
   connect(probeAction_ , SIGNAL(triggered(bool)), this, SLOT(probeMode (bool)));
 
+  connect(pointsAction_, SIGNAL(triggered(bool)), this, SLOT(pointsSlot()));
+
   //---
 
   CQGnuPlotToolBar *toolbar = new CQGnuPlotToolBar("Controls");
@@ -162,6 +166,7 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   toolbar->addAction(moveAction_);
   toolbar->addAction(zoomAction_);
   toolbar->addAction(probeAction_);
+  toolbar->addAction(pointsAction_);
 
   //---
 
@@ -256,6 +261,7 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   modeMenu->addAction(moveAction_);
   modeMenu->addAction(zoomAction_);
   modeMenu->addAction(probeAction_);
+  modeMenu->addAction(pointsAction_);
 
   //------
 
@@ -313,7 +319,6 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   //---
 
-  //zoomRegion_ = new QRubberBand(QRubberBand::Rectangle, canvas_);
   zoomRegion_ = new CQZoomRegion(canvas_);
 
   //---
@@ -1592,18 +1597,14 @@ void
 CQGnuPlotMainWindow::
 selectMode(bool)
 {
-  mode_ = Mode::SELECT;
-
-  updateMode();
+  updateMode(Mode::SELECT);
 }
 
 void
 CQGnuPlotMainWindow::
 moveMode(bool)
 {
-  mode_ = Mode::MOVE;
-
-  updateMode();
+  updateMode(Mode::MOVE);
 }
 
 
@@ -1611,32 +1612,48 @@ void
 CQGnuPlotMainWindow::
 zoomMode(bool)
 {
-  mode_ = Mode::ZOOM;
-
-  updateMode();
+  updateMode(Mode::ZOOM);
 }
 
 void
 CQGnuPlotMainWindow::
 probeMode(bool)
 {
-  mode_ = Mode::PROBE;
-
-  updateMode();
+  updateMode(Mode::PROBE);
 }
 
 void
 CQGnuPlotMainWindow::
-updateMode()
+updateMode(Mode mode)
 {
-  selectAction_->setChecked(mode_ == Mode::SELECT);
-  moveAction_  ->setChecked(mode_ == Mode::MOVE);
-  zoomAction_  ->setChecked(mode_ == Mode::ZOOM);
-  probeAction_ ->setChecked(mode_ == Mode::PROBE);
+  if (mode_ != mode) {
+    mode_ = mode;
 
-  if (probeLine_) {
-    probeLine_->setVisible(mode_ == Mode::PROBE);
-    probeTip_ ->setVisible(mode_ == Mode::PROBE);
+    selectAction_->setChecked(mode_ == Mode::SELECT);
+    moveAction_  ->setChecked(mode_ == Mode::MOVE);
+    zoomAction_  ->setChecked(mode_ == Mode::ZOOM);
+    probeAction_ ->setChecked(mode_ == Mode::PROBE);
+
+    for (const auto &pw : probeWidgets_)
+      delete pw;
+
+    probeWidgets_.clear();
+  }
+}
+
+void
+CQGnuPlotMainWindow::
+pointsSlot()
+{
+  std::vector<QObject *> objs;
+
+  tree_->getSelectedObjects(objs);
+
+  for (const auto &o : objs) {
+    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(o);
+    if (! qplot) continue;
+
+    qplot->printPoints();
   }
 }
 
@@ -1756,31 +1773,86 @@ mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
     group->pixelToWindow(CPoint2D(mouseEvent.pixel().x, 0                ), start);
   //group->pixelToWindow(CPoint2D(mouseEvent.pixel().x, canvas_->height()), end  );
 
-    if (! probeLine_) {
-      probeLine_ = new QRubberBand(QRubberBand::Line, canvas_);
-      probeTip_  = new CQFloatLabel(canvas_);
-    }
-
-    CPoint2D pp(mouseEvent.pixel().x, 0);
-
-    probeLine_->show();
-
     CGnuPlotProbeEvent probeEvent;
 
     probeEvent.setX      (start.x);
     probeEvent.setNearest(true);
 
     if (group->mouseProbe(probeEvent)) {
-      group->windowToPixel(CPoint2D(probeEvent.x(), probeEvent.y()), pp);
+      const CGnuPlotProbeEvent::Lines &lines = probeEvent.lines();
+
+      uint nl = lines.size();
+
+      while (probeWidgets_.size() > nl) {
+        delete probeWidgets_.back();
+
+        probeWidgets_.pop_back();
+      }
+
+      while (probeWidgets_.size() < nl) {
+        probeWidgets_.push_back(new ProbeWidget(canvas_));
+      }
+
+      probeWidgets_.resize(nl);
+
+      bool concatTips = true;
+
+      std::string tipStr;
+      COptReal    concatX;
+      COptReal    concatY;
+
+      uint i = 0;
+
+      for (const auto &l : lines) {
+        ProbeWidget *pw = probeWidgets_[i];
+
+        CPoint2D p1, p2, p3;
+
+        group->windowToPixel(CPoint2D(l.x(), l.y1()), p1);
+        group->windowToPixel(CPoint2D(l.x(), l.y2()), p2);
+        group->windowToPixel(CPoint2D(l.x(), l.y3()), p3);
+
+        pw->line->setGeometry(QRect(p1.x, p2.y, 1, p1.y - p2.y));
+
+        pw->line->show();
+
+        if (! concatTips) {
+          pw->tip->setHtml(l.tip().c_str());
+
+          QPoint gp = canvas_->mapToGlobal(QPoint(p3.x, p3.y));
+
+          pw->tip->show(gp);
+        }
+        else {
+          if (tipStr != "")
+            tipStr += "\n";
+
+          tipStr += l.tip();
+
+          concatX = p3.x;
+
+          concatY.updateMin(p3.y);
+        }
+
+        ++i;
+      }
+
+      if (concatTips && nl > 0) {
+        ProbeWidget *pw = probeWidgets_[0];
+
+        pw->tip->setHtml(tipStr.c_str());
+
+        QPoint gp = canvas_->mapToGlobal(QPoint(concatX.getValue(0), concatY.getValue(0)));
+
+        pw->tip->show(gp);
+      }
     }
+    else {
+      for (const auto &pw : probeWidgets_)
+        delete pw;
 
-    probeLine_->setGeometry(QRect(pp.x, pp.y, 1, canvas_->height() - pp.y));
-
-    probeTip_->setHtml(probeEvent.tip().c_str());
-
-    QPoint gp = canvas_->mapToGlobal(QPoint(pp.x, pp.y));
-
-    probeTip_->show(gp);
+      probeWidgets_.clear();
+    }
   }
 }
 
@@ -1844,6 +1916,16 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
   CQGnuPlotGroup *group = currentGroup();
   if (! group) return;
 
+  int key = keyEvent.key();
+
+  if (key == Qt::Key_Escape) {
+    selectMode(true);
+
+    escape_ = true;
+
+    return;
+  }
+
   CGnuPlotCameraP camera = group->camera();
 
   if      (mode_ == Mode::SELECT) {
@@ -1854,8 +1936,6 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
     }
   }
   else if (mode_ == Mode::MOVE) {
-    int key = keyEvent.key();
-
     if (key == Qt::Key_Left || key == Qt::Key_Right ||
         key == Qt::Key_Up   || key == Qt::Key_Down) {
       group->moveObjects(key);
@@ -1864,8 +1944,6 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
     }
   }
   else if (mode_ == Mode::ZOOM) {
-    int key = keyEvent.key();
-
     double xmin = group->getXMin(), ymin = group->getYMin();
     double xmax = group->getXMax(), ymax = group->getYMax();
 
@@ -1961,8 +2039,6 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
 
       redraw();
     }
-    else if (key == Qt::Key_Escape)
-      escape_ = true;
   }
 }
 
@@ -2170,4 +2246,20 @@ realSlider(const std::string &str)
   }
 
   return (*p).second;
+}
+
+//-------
+
+CQGnuPlotWindow::ProbeWidget::
+ProbeWidget(CQGnuPlotCanvas *canvas)
+{
+  line = new CQRubberBand(QRubberBand::Line, canvas);
+  tip  = new CQFloatLabel(canvas);
+}
+
+CQGnuPlotWindow::ProbeWidget::
+~ProbeWidget()
+{
+  delete line;
+  delete tip;
 }

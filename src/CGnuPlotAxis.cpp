@@ -876,8 +876,8 @@ drawAxisTick(double pos, bool first, bool large)
 
   //---
 
-  group_->updateAxisBBox(p1);
-  group_->updateAxisBBox(p2);
+  group_->updateAxisBBox(xind(), yind(), zind(), p1);
+  group_->updateAxisBBox(xind(), yind(), zind(), p2);
 }
 
 void
@@ -1351,7 +1351,7 @@ drawHAlignedText(const CPoint3D &pos, const HAlignPos &halignPos, const VAlignPo
     if (bbox.isSet()) {
       maxH_ = std::max(maxH_, renderer_->windowHeightToPixelHeight(bbox.getHeight()));
 
-      group_->updateAxisBBox(rbbox);
+      group_->updateAxisBBox(xind(), yind(), rbbox);
     }
   }
   else {
@@ -1382,7 +1382,7 @@ drawHAlignedText(const CPoint3D &pos, const HAlignPos &halignPos, const VAlignPo
     else
       renderer_->drawHAlignedText(pos, halignPos, valignPos, str, c, angle);
 
-    group_->updateAxisBBox(bbox1);
+    group_->updateAxisBBox(xind(), yind(), bbox1);
 //renderer_->drawRect(bbox1, CRGBA(1,0,0), 1);
   }
 }
@@ -1401,7 +1401,7 @@ drawVAlignedText(const CPoint3D &pos, const HAlignPos &halignPos, const VAlignPo
 
   double px = renderer_->pixelWidthToWindowWidth(font->getCharAscent());
 
-  group_->updateAxisBBox(renderer_->transform2D(pos) - CPoint2D(px, 0));
+  group_->updateAxisBBox(xind(), yind(), renderer_->transform2D(pos) - CPoint2D(px, 0));
 }
 
 CPoint3D

@@ -12,6 +12,8 @@ class CExprFunctionObj {
   virtual ~CExprFunctionObj() { }
 
   virtual CExprValuePtr operator()(const CExprValueArray &values) = 0;
+
+  virtual bool isOverload() const { return false; }
 };
 
 //------
@@ -30,6 +32,7 @@ class CExprFunctionMgr {
  public:
   friend class CExpr;
 
+  typedef std::vector<CExprFunctionPtr> Functions;
   typedef std::vector<CExprFunctionArg> Args;
 
  public:
@@ -38,6 +41,8 @@ class CExprFunctionMgr {
   void addFunctions();
 
   CExprFunctionPtr getFunction(const std::string &name);
+
+  void getFunctions(const std::string &name, Functions &functions);
 
   CExprFunctionPtr addProcFunction(const std::string &name, const std::string &args,
                                    CExprFunctionProc proc);

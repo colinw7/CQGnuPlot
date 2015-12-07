@@ -1,5 +1,8 @@
 ## ToDo
 
+  + support probe in more styles
+  + better clipping support (objects)
+
   + isosamples/samples logic (generate using isosamples and supersample at samples ?)
 
   + Better axes ticks for log (match base powers)

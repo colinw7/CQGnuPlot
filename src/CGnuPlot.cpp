@@ -1462,7 +1462,8 @@ saveCmd(const std::string &args)
 
   raxis().showFormat(os, "r");
 
-  os << "set timefmt \"" << timeFmt() << "\"" << std::endl;
+  if (timeFmt().isValid())
+    os << "set timefmt \"" << timeFmt().getValue() << "\"" << std::endl;
 
   showAngleType(os);
 
@@ -2135,7 +2136,7 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
     // Read using columns
     // using <col1>[:<col2>[...]] <"format">
     if      (plotVar == PlotVar::USING) {
-      std::string usingStr = getUsingStr(line);
+      std::string usingStr = parseUsingStr(line);
 
       usingCols.init(usingStr);
 
@@ -2211,16 +2212,18 @@ plotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &samp
         setKeyColumnHeadNum(col.getValue(0));
 
         if      (line.isChars("at beginning")) {
-          // TODO
           line.skipChars(12);
 
           line.skipSpace();
+
+          keyData_.setHeadPosition(CGnuPlotKeyData::HeadPosition::AT_BEGINNING);
         }
         else if (line.isChars("at end")) {
-          // TODO
           line.skipChars(6);
 
           line.skipSpace();
+
+          keyData_.setHeadPosition(CGnuPlotKeyData::HeadPosition::AT_END);
         }
 
         //(void) readNonSpaceNonComma(line);
@@ -3017,7 +3020,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       line.skipChars(6);
 
-      if (line.skipSpaceAndChar('=')) {
+      if      (line.skipSpaceAndChar('=')) {
         if (line.skipSpaceAndChar('(')) {
           CPoint2D c;
 
@@ -3029,6 +3032,14 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
           (void) line.skipSpaceAndChar(')');
         }
+
+        found = true;
+      }
+      else if (style == CGnuPlotTypes::PlotStyle::LABELS) {
+        CHAlignType halign = CHALIGN_TYPE_CENTER;
+
+        styleData.text .setHAlign(halign); // TODO: remove
+        styleData.label.setAlign (halign);
 
         found = true;
       }
@@ -4434,7 +4445,7 @@ splotCmd1(const std::string &args, CGnuPlotGroup *group, Plots &plots, bool &sam
     // Read using columns
     // using <col1>[:<col2>[:<col3>[:...]]
     if      (plotVar == PlotVar::USING) {
-      std::string usingStr = getUsingStr(line);
+      std::string usingStr = parseUsingStr(line);
 
       usingCols.init(usingStr);
 
@@ -4953,7 +4964,7 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
       line.skipChars(6);
 
-      if (line.skipSpaceAndChar('=')) {
+      if      (line.skipSpaceAndChar('=')) {
         if (line.skipSpaceAndChar('(')) {
           CPoint3D c;
 
@@ -4962,6 +4973,14 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
 
           (void) line.skipSpaceAndChar(')');
         }
+
+        found = true;
+      }
+      else if (style == CGnuPlotTypes::PlotStyle::LABELS) {
+        CHAlignType halign = CHALIGN_TYPE_CENTER;
+
+        styleData.text .setHAlign(halign); // TODO: remove
+        styleData.label.setAlign (halign);
 
         found = true;
       }
@@ -6013,14 +6032,29 @@ setCmd(const std::string &args)
 
     if (! axisTypeIdSet.empty()) {
       for (int i = 1; i <= 2; ++i) {
-        if (axisTypeIdSet.count(AxisTypeId(AxisType::X, i))) xaxis(i).setFormat(formatStr);
-        if (axisTypeIdSet.count(AxisTypeId(AxisType::Y, i))) yaxis(i).setFormat(formatStr);
+        if (axisTypeIdSet.count(AxisTypeId(AxisType::X, i))) {
+          if (xaxis(i).isTime())
+            xaxis(i).setTimeFmt(formatStr);
+          else
+            xaxis(i).setFormat(formatStr);
+        }
+
+        if (axisTypeIdSet.count(AxisTypeId(AxisType::Y, i))) {
+          if (yaxis(i).isTime())
+            yaxis(i).setTimeFmt(formatStr);
+          else
+            yaxis(i).setFormat(formatStr);
+        }
       }
 
-      if (axisTypeIdSet.count(AxisTypeId(AxisType::Z, 1))) zaxis(1).setFormat(formatStr);
-      if (axisTypeIdSet.count(AxisTypeId(AxisType::R, 1))) raxis( ).setFormat(formatStr);
+      if (axisTypeIdSet.count(AxisTypeId(AxisType::Z, 1)))
+        zaxis(1).setFormat(formatStr);
 
-      if (axisTypeIdSet.count(AxisTypeId(AxisType::CB, 1))) colorBox_.axis().setFormat(formatStr);
+      if (axisTypeIdSet.count(AxisTypeId(AxisType::R, 1)))
+        raxis().setFormat(formatStr);
+
+      if (axisTypeIdSet.count(AxisTypeId(AxisType::CB, 1)))
+        colorBox_.axis().setFormat(formatStr);
     }
     else {
       for (int i = 1; i <= 2; ++i) {
@@ -7651,9 +7685,11 @@ setCmd(const std::string &args)
   }
   // set parametric
   else if (var == VariableName::PARAMETRIC) {
-    setParametric(true);
+    if (! isParametric()) {
+      setParametric(true);
 
-    resetDummyVars();
+      resetDummyVars();
+    }
 
     // TODO: dummy variable is t for curves, u/v for surfaces
   }
@@ -8012,9 +8048,11 @@ setCmd(const std::string &args)
   }
   // set polar
   else if (var == VariableName::POLAR) {
-    setPolar(true);
+    if (! isPolar()) {
+      setPolar(true);
 
-    resetDummyVars();
+      resetDummyVars();
+    }
 
     // TODO: dummy variable is t for curves
   }
@@ -8908,8 +8946,19 @@ setCmd(const std::string &args)
   else if (var == VariableName::TIMEFMT) {
     std::string fmt;
 
-    if (parseString(line, fmt, "Invalid time format"))
+    if (parseString(line, fmt, "Invalid time format")) {
       setTimeFmt(fmt);
+
+#if 0
+      for (int i = 1; i <= 2; ++i) {
+        xaxis(i).setTimeFmt(fmt);
+        yaxis(i).setTimeFmt(fmt);
+        zaxis(i).setTimeFmt(fmt);
+      }
+
+      colorBox_.axis().setTimeFmt(fmt);
+#endif
+    }
   }
   // set title {"<text>"} {offset <offset>} {font "<font>{,<size>}"}
   //           {{textcolor | tc} {<colorspec> | default}} {{no}enhanced}
@@ -9056,8 +9105,7 @@ setCmd(const std::string &args)
 
     std::string arg = readNonSpace(line);
 
-    if (arg == "time")
-      xaxis(2).setIsTime(true);
+    xaxis(2).setIsTime(arg == "time");
   }
   // set x2dtics
   else if (var == VariableName::X2DTICS) {
@@ -9097,10 +9145,11 @@ setCmd(const std::string &args)
   }
   // set xdata {time}
   else if (var == VariableName::XDATA) {
+    xaxis(1).setDisplayed(true);
+
     std::string arg = readNonSpace(line);
 
-    if (arg == "time")
-      xaxis(1).setIsTime(true);
+    xaxis(1).setIsTime(arg == "time");
   }
   // set xdtics
   else if (var == VariableName::XDTICS) {
@@ -9160,8 +9209,7 @@ setCmd(const std::string &args)
 
     std::string arg = readNonSpace(line);
 
-    if (arg == "time")
-      yaxis(2).setIsTime(true);
+    yaxis(2).setIsTime(arg == "time");
   }
   // set y2dtics
   else if (var == VariableName::Y2DTICS) {
@@ -9201,10 +9249,11 @@ setCmd(const std::string &args)
   }
   // set ydata {time}
   else if (var == VariableName::YDATA) {
+    yaxis(1).setDisplayed(true);
+
     std::string arg = readNonSpace(line);
 
-    if (arg == "time")
-      yaxis(1).setIsTime(true);
+    yaxis(1).setIsTime(arg == "time");
   }
   // set ydtics
   else if (var == VariableName::YDTICS) {
@@ -9232,10 +9281,11 @@ setCmd(const std::string &args)
   }
   // set zdata {time}
   else if (var == VariableName::ZDATA) {
+    zaxis(1).setDisplayed(true);
+
     std::string arg = readNonSpace(line);
 
-    if (arg == "time")
-      zaxis(1).setIsTime(true);
+    zaxis(1).setIsTime(arg == "time");
   }
   // set zdtics
   else if (var == VariableName::ZDTICS) {
@@ -9247,10 +9297,11 @@ setCmd(const std::string &args)
   }
   // set cbdata {time}
   else if (var == VariableName::CBDATA) {
+    colorBox_.axis().setDisplayed(true);
+
     std::string arg = readNonSpace(line);
 
-    if (arg == "time")
-      colorBox_.axis().setIsTime(true);
+    colorBox_.axis().setIsTime(arg == "time");
   }
   // set cbdtics
   else if (var == VariableName::CBDTICS) {
@@ -10809,15 +10860,16 @@ unsetCmd(const std::string &args)
   }
   // unset format
   else if (var == VariableName::FORMAT) {
-    xaxis(1).setFormat("%g");
-    yaxis(1).setFormat("%g");
-    xaxis(2).setFormat("%g");
-    yaxis(2).setFormat("%g");
-    zaxis(1).setFormat("%g");
+    for (int i = 1; i <= 2; ++i) {
+      xaxis(i).unsetFormat();
+      yaxis(i).unsetFormat();
+    }
 
-    colorBox_.axis().setFormat("%g");
+    zaxis(1).unsetFormat();
 
-    raxis().setFormat("%g");
+    colorBox_.axis().unsetFormat();
+
+    raxis().unsetFormat();
   }
   // unset functions (invalid)
   else if (var == VariableName::FUNCTIONS) {
@@ -10899,18 +10951,20 @@ unsetCmd(const std::string &args)
     std::string axesStr = line.substr();
 
     if (axesStr != "") {
-      CParseLine line(axesStr);
+      AxisTypeIdSet axisTypeIdSet;
 
-      while (line.isValid()) {
-        if      (line.isChars("x2")) { xaxis(2).resetLogBase(); line.skipChars(2); }
-        else if (line.isChars("y2")) { yaxis(2).resetLogBase(); line.skipChars(2); }
-        else if (line.isChars("x" )) { xaxis(1).resetLogBase(); line.skipChars(1); }
-        else if (line.isChars("y" )) { yaxis(1).resetLogBase(); line.skipChars(1); }
-        else if (line.isChars("z" )) { zaxis(1).resetLogBase(); line.skipChars(1); }
-        else if (line.isChars("r" )) { raxis( ).resetLogBase(); line.skipChars(1); }
-        else if (line.isChars("cb")) { colorBox_.axis().resetLogBase(); line.skipChars(2); }
-        else { errorMsg("Invalid axes name '" + line.substr() + "'"); break; }
+      if (! stringToAxes(axesStr, axisTypeIdSet))
+        errorMsg("Invalid logscale axes '" + axesStr + "'");
+
+      for (int i = 1; i <= 2; ++i) {
+        if (axisTypeIdSet.count(AxisTypeId(AxisType::X, i))) xaxis(i).resetLogBase();
+        if (axisTypeIdSet.count(AxisTypeId(AxisType::Y, i))) yaxis(i).resetLogBase();
       }
+
+      if (axisTypeIdSet.count(AxisTypeId(AxisType::Z, 1))) zaxis(1).resetLogBase();
+      if (axisTypeIdSet.count(AxisTypeId(AxisType::R, 1))) raxis( ).resetLogBase();
+
+      if (axisTypeIdSet.count(AxisTypeId(AxisType::CB, 1))) colorBox_.axis().resetLogBase();
     }
     else {
       for (int i = 1; i <= 2; ++i) {
@@ -10995,9 +11049,11 @@ unsetCmd(const std::string &args)
   }
   // unset parametric
   else if (var == VariableName::PARAMETRIC) {
-    setParametric(false);
+    if (isParametric()) {
+      setParametric(false);
 
-    resetDummyVars();
+      resetDummyVars();
+    }
 
     // TODO: dummy variable is x for curves, x/y for surfaces
   }
@@ -11031,9 +11087,11 @@ unsetCmd(const std::string &args)
   }
   // unset polar
   else if (var == VariableName::POLAR) {
-    setPolar(false);
+    if (isPolar()) {
+      setPolar(false);
 
-    resetDummyVars();
+      resetDummyVars();
+    }
 
     // TODO: dummy variable is x for curves
   }
@@ -11929,7 +11987,7 @@ readNamedBlock(const std::string &name, const std::string &eofStr)
 
 std::string
 CGnuPlot::
-getUsingStr(CParseLine &line)
+parseUsingStr(CParseLine &line)
 {
   std::string usingStr;
 
@@ -11937,6 +11995,24 @@ getUsingStr(CParseLine &line)
 
   while (line.isValid()) {
     if (rbrackets == 0) {
+      int pos = line.pos();
+
+      while (line.isSpace())
+        line.skipChar();
+
+      if (line.isChar(':')) {
+        line.skipChar();
+
+        while (line.isSpace())
+          line.skipChar();
+
+        usingStr += ':';
+      }
+      else
+        line.setPos(pos);
+
+      //---
+
       if (line.isSpace() || line.isChar(','))
         break;
 
@@ -12691,8 +12767,9 @@ addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle styl
 
         double y = 0.0;
 
-        if (value.isValid() && value->getRealValue(y))
+        if (value.isValid() && value->getRealValue(y)) {
           plot->addPoint2D(x, y);
+        }
       }
     }
   }
@@ -13324,10 +13401,7 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
 
     CGnuPlotFile::Lines lines;
 
-    std::string line;
-
-    while (file.readLine(line))
-      lines.push_back(line);
+    fileReadLines(file, lines);
 
     dataFile_.setLines(lines);
   }
@@ -13410,20 +13484,16 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
         //---
 
         // convert fields on line to values
-        // (None: save fields as used by columnhead function)
+        // (Note: save fields as used by columnhead function)
         // (TODO: save current file setNum, subSetNum and lineNum instead)
         const CGnuPlotFile::Fields &fields = dataFile_.fields(setNum_, subSetNum, lineNum);
 
         fieldValues_.clear();
 
-        int nf = 0;
-
         for (const auto &field : fields) {
-          CExprValuePtr value = fieldToValue(nf, field);
+          CExprValuePtr value = fieldToValue(fieldValues_.size(), field);
 
           fieldValues_.push_back(value);
-
-          ++nf;
         }
 
         bool bad = false;
@@ -13568,6 +13638,21 @@ addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
           }
         }
         else {
+          for (uint i = 0; i < values.size(); ++i) {
+            if ((i == 0 && xaxis(1).isTime()) ||
+                (i == 1 && yaxis(1).isTime())) {
+              std::string str;
+
+              if (! values[i]->getStringValue(str))
+                continue;
+
+              double r;
+
+              if (timeToValue(str, r))
+                values[i] = CExprInst->createRealValue(r);
+            }
+          }
+
           // add values
           /*int pointNum=*/ plot->addPoint2D(values, discontinuity, bad, params);
 
@@ -14364,10 +14449,7 @@ addFile3D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
 
     CGnuPlotFile::Lines lines;
 
-    std::string line;
-
-    while (file.readLine(line))
-      lines.push_back(line);
+    fileReadLines(file, lines);
 
     dataFile_.setLines(lines);
   }
@@ -14442,20 +14524,16 @@ addFile3D(Plots &plots, CGnuPlotGroup *group, const std::string &filename, PlotS
         //---
 
         // convert fields on line to values
-        // (None: save fields as used by columnhead function)
+        // (Note: save fields as used by columnhead function)
         // (TODO: save current file setNum, subSetNum and lineNum instead)
         const CGnuPlotFile::Fields &fields = dataFile_.fields(setNum_, subSetNum, lineNum);
 
         fieldValues_.clear();
 
-        int nf = 0;
-
         for (const auto &field : fields) {
-          CExprValuePtr value = fieldToValue(nf, field);
+          CExprValuePtr value = fieldToValue(fieldValues_.size(), field);
 
           fieldValues_.push_back(value);
-
-          ++nf;
         }
 
         bool bad = false;
@@ -15216,11 +15294,13 @@ bool
 CGnuPlot::
 timeToValue(const std::string &str, double &t)
 {
+  std::string fmt = timeFmt().getValue("%d/%m/%y,%H:%M");
+
   struct tm tm1; memset(&tm1, 0, sizeof(tm));
 
-  /*char *p =*/ strptime(str.c_str(), timeFmt().c_str(), &tm1);
+  char *p = strptime(str.c_str(), fmt.c_str(), &tm1);
 
-  //if (! p) return false;
+  if (! p) return false;
 
   t = mktime(&tm1);
 
@@ -15229,7 +15309,7 @@ timeToValue(const std::string &str, double &t)
 
 CExprValuePtr
 CGnuPlot::
-fieldToValue(int nf, const std::string &field)
+fieldToValue(int /*nf*/, const std::string &field)
 {
   CExprValuePtr value;
 
@@ -15239,6 +15319,7 @@ fieldToValue(int nf, const std::string &field)
 
   if      (field == dataFile_.getMissingStr())
     value = CExprValuePtr();
+#if 0
   else if ((nf == 0 && xaxis(1).isTime()) ||
            (nf == 1 && yaxis(1).isTime())) {
     double r;
@@ -15246,6 +15327,7 @@ fieldToValue(int nf, const std::string &field)
     if (timeToValue(field, r))
       value = CExprInst->createRealValue(r);
   }
+#endif
   else if (field[0] == '\"' && field[len - 1] == '\"')
     value = CExprInst->createStringValue(field.substr(1, len - 2));
   else if (fieldToReal(field, r))
@@ -15568,6 +15650,8 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
 {
   axis.setShowTics(true);
 
+  int pos = line.pos();
+
   std::string arg;
   bool        add = false;
 
@@ -15735,7 +15819,8 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
     }
     // <incr> | <start>, <incr> {,<end>} |
     else {
-      line.ungetChar(1);
+      //line.ungetChar(1);
+      line.setPos(pos);
 
       double r;
 
@@ -15781,6 +15866,8 @@ parseAxesTics(CParseLine &line, CGnuPlotAxisData &axis)
       if (end  .isValid()) axis.setTicEnd  (end  .getValue());
       if (incr .isValid()) axis.setTicIncr (incr .getValue());
     }
+
+    pos = line.pos();
 
     if (! readIdentifier(line, arg)) {
       line.skipSpace();
@@ -16952,6 +17039,16 @@ readFileLines(CGnuPlotFile::Lines &lines) const
 
     readLine_->setPrompt("> ");
   }
+}
+
+void
+CGnuPlot::
+fileReadLines(CUnixFile &file, CGnuPlotFile::Lines &lines)
+{
+  std::string line;
+
+  while (file.readLine(line))
+    lines.push_back(line);
 }
 
 bool

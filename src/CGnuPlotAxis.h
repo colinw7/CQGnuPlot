@@ -71,14 +71,12 @@ class CGnuPlotAxis {
   void setLogBase(int b) { data_.setLogBase(b); }
   void resetLogBase() { data_.resetLogBase(); }
 
-  double logTol() const { return 0.1; }
-
   double logValue(double x, int base) const {
-    return log(x + logTol())/log(base);
+    return data_.logValue(x, base);
   }
 
   double expValue(double x, int base) const {
-    return exp(x*log(base)) - logTol();
+    return data_.expValue(x, base);
   }
 
   double mapLogValue  (double x) const { return data_.mapLogValue  (x); }
@@ -144,8 +142,15 @@ class CGnuPlotAxis {
   const std::string &getLabel() const { return data_.text(); }
   void setLabel(const std::string &str) { data_.setText(str); }
 
-  const std::string &getTimeFormat() const { return data_.format(); }
-  void setTimeFormat(const std::string &s) { data_.setFormat(s); }
+  //---
+
+  const COptString &getFormat() const { return data_.format(); }
+  void setFormat(const std::string &s) { data_.setFormat(s); }
+  void unsetFormat() { data_.unsetFormat(); }
+
+  const COptString &getTimeFormat() const { return data_.timeFmt(); }
+  void setTimeFormat(const std::string &s) { data_.setTimeFmt(s); }
+  void unsetTimeFormat() { data_.unsetTimeFmt(); }
 
   //---
 
@@ -290,6 +295,10 @@ class CGnuPlotAxis {
 
   const CBBox2D &bbox2D() const { return bbox2D_; }
   const CBBox3D &bbox3D() const { return bbox3D_; }
+
+  int xind() const { return (direction_ == AxisDirection::X ? ind() : 1); }
+  int yind() const { return (direction_ == AxisDirection::Y ? ind() : 1); }
+  int zind() const { return (direction_ == AxisDirection::Z ? ind() : 1); }
 
   static bool calcTics(double start, double end, double &start1, double &end1,
                        int &numTicks1, int &numTicks2);

@@ -62,8 +62,6 @@
   + z axis should not be drawn
 
 ## contours.dem
-  + contour drawn at zmin (adjusted)
-  + last multiplot should overlay
   + globlet no contour
 
 ## controls.dem
@@ -121,6 +119,7 @@
 
 ## fit.dem
   + bad 3d
+  + lots of bad plots
   + runs ok, need to check output
 
 ## fitmulti.dem
@@ -246,7 +245,7 @@
   + no issues, check output
 
 ## nokey.dem
-  + bad display
+  + need column head at end
 
 ## orbits.dem
   + Invalid arg '(cy($2,$3,$4,$5,$6))'

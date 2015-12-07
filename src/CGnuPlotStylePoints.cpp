@@ -6,7 +6,7 @@
 
 CGnuPlotStylePoints::
 CGnuPlotStylePoints() :
- CGnuPlotStyleBase(CGnuPlot::PlotStyle::POINTS)
+ CGnuPlotStylePointsBase(CGnuPlot::PlotStyle::POINTS)
 {
 }
 

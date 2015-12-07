@@ -98,6 +98,16 @@ class CGnuPlotAxisData {
 
   //---
 
+  const COptString &format() const { return format_; }
+  void setFormat(const std::string &s) { format_ = s; }
+  void unsetFormat() { format_.setInvalid(); }
+
+  const COptString &timeFmt() const { return timeFmt_; }
+  void setTimeFmt(const std::string &s) { timeFmt_ = s; }
+  void unsetTimeFmt() { timeFmt_.setInvalid(); }
+
+  //---
+
   void resetZeroAxis() {
     setZeroAxisDisplayed(false);
 
@@ -159,6 +169,22 @@ class CGnuPlotAxisData {
   void setMax(double r) { max_ = r; }
   void updateMax(double r) { max_.updateMax(r); }
   void resetMax() { max_.setInvalid(); }
+
+  //---
+
+  const COptReal &fitMin() const { return fitMin_; }
+  void setFitMin(double r) { fitMin_ = r; }
+  void updateFitMin(double r) { fitMin_.updateMin(r); }
+  void resetFitMin() { fitMin_.setInvalid(); }
+
+  const COptReal &fitMax() const { return fitMax_; }
+  void setFitMax(double r) { fitMax_ = r; }
+  void updateFitMax(double r) { fitMax_.updateMax(r); }
+  void resetFitMax() { fitMax_.setInvalid(); }
+
+  void updateFitMinMax(double r) { fitMin_.updateMin(r); fitMax_.updateMax(r); }
+
+  //---
 
   bool inside(double x) const;
 
@@ -253,11 +279,6 @@ class CGnuPlotAxisData {
 
   //---
 
-  const std::string &format() const { return format_; }
-  void setFormat(const std::string &s) { format_ = s; }
-
-  //--
-
   const CFontPtr &ticFont() const { return ticFont_; }
   void setTicFont(const CFontPtr &f) { ticFont_ = f; }
 
@@ -306,14 +327,19 @@ class CGnuPlotAxisData {
   void setLogBase(int s) { logBase_ = s; }
   void resetLogBase() { logBase_ = COptInt(); }
 
-  double logTol() const { return 0.1; }
+  //double logTol() const { return 0.1; }
 
   double logValue(double x, int base) const {
-    return log(x + logTol())/log(base);
+    //return log(x + logTol())/log(base);
+    if (x >= 1E-6)
+      return log(x)/log(base);
+    else
+      return CMathGen::getNaN();
   }
 
   double expValue(double x, int base) const {
-    return exp(x*log(base)) - logTol();
+    //return exp(x*log(base)) - logTol();
+    return exp(x*log(base));
   }
 
   double mapLogValue(double x) const {
@@ -391,6 +417,8 @@ class CGnuPlotAxisData {
   bool              autoScaleFixMax_ { false };
   COptReal          min_;
   COptReal          max_;
+  COptReal          fitMin_;
+  COptReal          fitMax_;
   bool              borderTics_      { true  };
   bool              minorTics_       { false };
   COptReal          minorTicsFreq_;
@@ -403,7 +431,8 @@ class CGnuPlotAxisData {
   CPoint3D          labelOffset_     { 0,0,0 };
   double            ticsRotate_      { 0.0   };
   COptReal          labelRotate_;
-  std::string       format_          { "%g"  };
+  COptString        format_;
+  COptString        timeFmt_;
   Justify           ticJustify_      { Justify::CENTER };
   CFontPtr          ticFont_;
   CFontPtr          labelFont_;

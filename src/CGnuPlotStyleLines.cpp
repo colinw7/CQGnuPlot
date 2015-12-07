@@ -6,7 +6,7 @@
 
 CGnuPlotStyleLines::
 CGnuPlotStyleLines() :
- CGnuPlotStyleBase(CGnuPlot::PlotStyle::LINES)
+ CGnuPlotStylePointsBase(CGnuPlot::PlotStyle::LINES)
 {
 }
 
@@ -42,11 +42,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       const CGnuPlotPoint &point1 = plot->getPoint2D(i);
 
       if (plot->isPolar()) {
-        if (! point1.getPoint(i*idt, p1))
+        if (! point1.getPoint(i*idt, p1, CGnuPlotPoint::GetOpts().setForce(true)))
           continue;
       }
       else {
-        if (! point1.getPoint(i*idx, p1))
+        if (! point1.getPoint(i*idx, p1, CGnuPlotPoint::GetOpts().setForce(true)))
           continue;
       }
 
@@ -91,11 +91,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       const CGnuPlotPoint &point2 = plot->getPoint2D(i);
 
       if (plot->isPolar()) {
-        if (! point2.getPoint(i*idt, p2) || point2.isDiscontinuity())
+        if (! point2.getPoint(i*idt, p2, CGnuPlotPoint::GetOpts().setForce(true)) ||
+            point2.isDiscontinuity())
           break;
       }
       else {
-        if (! point2.getPoint(i*idx, p2) || point2.isDiscontinuity())
+        if (! point2.getPoint(i*idx, p2, CGnuPlotPoint::GetOpts().setForce(true)) ||
+            point2.isDiscontinuity())
           break;
       }
 
@@ -268,53 +270,4 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   double lw = stroke.width();
 
   renderer->drawLine(p1, p2, lw, c, stroke.lineDash());
-}
-
-bool
-CGnuPlotStyleLines::
-mouseProbe(CGnuPlotPlot *plot, CGnuPlotProbeEvent &probeEvent)
-{
-  if (! plot->is2D()) return false;
-
-  //---
-
-  double minX = 1E50;
-  int    minI = -1;
-
-  int i = 0;
-
-  for (const auto &point : plot->getPoints2D()) {
-    CPoint2D p;
-
-    if (! point.getPoint(p))
-      continue;
-
-    double dx = fabs(p.x - probeEvent.x());
-
-    if (minI < 0 || dx < minX) {
-      minX = dx;
-      minI = i;
-    }
-
-    ++i;
-  }
-
-  if (minI < 0)
-    return false;
-
-  const CGnuPlotPoint &point = plot->getPoint2D(minI);
-
-  CPoint2D p;
-
-  if (! point.getPoint(p))
-    return false;
-
-  if (probeEvent.isNearest())
-    probeEvent.setX(p.x);
-
-  probeEvent.setY(p.y);
-
-  probeEvent.setTip(CStrUtil::strprintf("X=%g, Y=%g", p.x, p.y));
-
-  return true;
 }

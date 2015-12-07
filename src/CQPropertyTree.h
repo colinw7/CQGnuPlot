@@ -21,6 +21,8 @@ class CQPropertyTree : public QTreeWidget {
 
   void selectObject(const QObject *obj);
 
+  void getSelectedObjects(std::vector<QObject *> &objs);
+
  signals:
   void valueChanged(QObject *obj, const QString &name);
 

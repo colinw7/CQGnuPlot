@@ -91,6 +91,13 @@ draw(CGnuPlotRenderer *renderer) const
 
   bbox_ = CBBox2D(point() - d, point() + d);
 
+  //---
+
+  if (renderer->clip().isValid() & ! renderer->clip().getValue().inside(bbox_))
+    return;
+
+  //---
+
   if (erasePoint) {
     CGnuPlotGroup *group = plot()->group();
 

@@ -17,7 +17,7 @@ class CQPropertyRealEditor;
 class CQPropertyIntegerEditor;
 class CQZoomRegion;
 class CQCursor;
-class QRubberBand;
+class CQRubberBand;
 class CQFloatLabel;
 
 class QLabel;
@@ -27,6 +27,16 @@ class QLineEdit;
 class CQGnuPlotWindow : public CGnuPlotWindow {
  public:
   typedef std::vector<QObject *> Objects;
+
+  struct ProbeWidget {
+    CQRubberBand* line { 0 };
+    CQFloatLabel* tip  { 0 };
+
+    ProbeWidget(CQGnuPlotCanvas *canvas);
+   ~ProbeWidget();
+  };
+
+  typedef std::vector<ProbeWidget *> ProbeWidgets;
 
  public:
   CQGnuPlotWindow(CQGnuPlot *plot=0);
@@ -152,7 +162,7 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
 
   void pixelToWindow(double px, double py, double *wx, double *wy);
 
-  void updateMode();
+  void updateMode(Mode mode);
 
   CQPropertyRealEditor    *realEdit   (const std::string &str);
   CQPropertyIntegerEditor *integerEdit(const std::string &str);
@@ -172,6 +182,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void moveMode  (bool b);
   void zoomMode  (bool b);
   void probeMode (bool b);
+
+  void pointsSlot();
 
   void itemSelectedSlot(QObject *obj, const QString &path);
 
@@ -200,13 +212,13 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   QAction*           moveAction_   { 0 };
   QAction*           zoomAction_   { 0 };
   QAction*           probeAction_  { 0 };
+  QAction*           pointsAction_ { 0 };
   CQZoomRegion*      zoomRegion_   { 0 };
   CPoint2D           zoomPress_    { 0, 0 };
   CPoint2D           zoomRelease_  { 0, 0 };
   CQGnuPlotGroup*    zoomGroup_    { 0 };
   CQCursor*          cursor_       { 0 };
-  QRubberBand*       probeLine_    { 0 };
-  CQFloatLabel*      probeTip_     { 0 };
+  ProbeWidgets       probeWidgets_ { 0 };
   bool               tipOutside_   { false };
   mutable bool       escape_       { false };
 };

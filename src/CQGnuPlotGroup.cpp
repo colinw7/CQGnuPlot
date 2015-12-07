@@ -116,6 +116,9 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
   Objects objects;
 
   for (auto &plot : plots()) {
+    if (! plot->isDisplayed())
+      continue;
+
     plot->initRenderer(renderer);
 
     CPoint2D window;
@@ -199,6 +202,9 @@ mouseMove(const CGnuPlotMouseEvent &mouseEvent)
   renderer->setRegion(region());
 
   for (auto &plot : plots()) {
+    if (! plot->isDisplayed())
+      continue;
+
     plot->initRenderer(renderer);
 
     CPoint2D window;
@@ -237,6 +243,9 @@ mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip)
   renderer->setRegion(region());
 
   for (auto &plot : plots()) {
+    if (! plot->isDisplayed())
+      continue;
+
     plot->initRenderer(renderer);
 
     CPoint2D window;
@@ -314,6 +323,9 @@ CQGnuPlotGroup::
 moveObjects(int key)
 {
   for (auto &plot : plots()) {
+    if (! plot->isDisplayed())
+      continue;
+
     CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
     qplot->moveObjects(key);

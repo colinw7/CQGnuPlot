@@ -8,7 +8,7 @@
 
 CGnuPlotStyleLinesPoints::
 CGnuPlotStyleLinesPoints() :
- CGnuPlotStyleBase(CGnuPlot::PlotStyle::LINES_POINTS)
+ CGnuPlotStylePointsBase(CGnuPlot::PlotStyle::LINES_POINTS)
 {
 }
 
