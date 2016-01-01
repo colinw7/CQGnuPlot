@@ -129,9 +129,9 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
 
     unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
 
-    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot.get());
 
-    CGnuPlotMouseEvent mouseEvent2;
+    CGnuPlotMouseEvent mouseEvent2 = mouseEvent;
 
     mouseEvent2.setWindow(window);
 
@@ -215,7 +215,7 @@ mouseMove(const CGnuPlotMouseEvent &mouseEvent)
 
     unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
 
-    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot.get());
 
     CGnuPlotMouseEvent mouseEvent1 = mouseEvent;
 
@@ -256,7 +256,7 @@ mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip)
 
     unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
 
-    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot.get());
 
     CGnuPlotMouseEvent mouseEvent1 = mouseEvent;
 
@@ -326,7 +326,7 @@ moveObjects(int key)
     if (! plot->isDisplayed())
       continue;
 
-    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
+    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot.get());
 
     qplot->moveObjects(key);
   }
@@ -380,4 +380,13 @@ inside(const CGnuPlotMouseEvent &mouseEvent) const
   double yr = CGnuPlotUtil::map(mouseEvent.pixel().y, 0, qwindow()->pixelHeight() - 1, 1, 0);
 
   return region().inside(CPoint2D(xr, yr));
+}
+
+void
+CQGnuPlotGroup::
+fitSlot()
+{
+  CGnuPlotGroup::fit();
+
+  window_->redraw();
 }

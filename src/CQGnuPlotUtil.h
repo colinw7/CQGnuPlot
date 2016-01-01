@@ -4,16 +4,25 @@
 #include <CQGnuPlot.h>
 #include <CQGnuPlotPlot.h>
 #include <CAlignType.h>
+#include <QIcon>
+#include <QPixmap>
 
 namespace CQGnuPlotUtil {
+  inline QIcon svgIcon(const uchar *data, int len) {
+    QPixmap pixmap;
+
+    pixmap.loadFromData(data, len);
+
+    return QIcon(pixmap);
+  }
+
+  //---
+
   CQGnuPlotEnum::HAlignType alignConv(const CHAlignType &type);
   CHAlignType alignConv(const CQGnuPlotEnum::HAlignType &type);
 
   CQGnuPlotEnum::VAlignType alignConv(const CVAlignType &type);
   CVAlignType alignConv(const CQGnuPlotEnum::VAlignType &type);
-
-  CQGnuPlotEnum::PlotStyle plotStyleConv(const CGnuPlot::PlotStyle &type);
-  CGnuPlot::PlotStyle plotStyleConv(const CQGnuPlotEnum::PlotStyle &type);
 
   CQGnuPlotEnum::HistogramStyle histogramStyleConv(const CGnuPlot::HistogramStyle &type);
   CGnuPlot::HistogramStyle histogramStyleConv(const CQGnuPlotEnum::HistogramStyle &type);

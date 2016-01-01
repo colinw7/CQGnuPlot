@@ -22,9 +22,7 @@ class CGnuPlotPalette {
   };
 
  public:
-  CGnuPlotPalette(CGnuPlotGroup *group=0) :
-   group_(group) {
-  }
+  CGnuPlotPalette(CGnuPlotGroup *group=0);
 
   virtual ~CGnuPlotPalette() { }
 

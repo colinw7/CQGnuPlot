@@ -20,7 +20,8 @@ class CQGnuPlotEnum : public QObject {
   Q_ENUMS(PaletteColorType)
   Q_ENUMS(ArrowCoordType)
 
-  Q_PROPERTY(SymbolType symbolType READ symbolType)
+  Q_PROPERTY(SymbolType symbolType READ symbolType WRITE setSymbolType)
+  Q_PROPERTY(PlotStyle  plotStyle  READ plotStyle  WRITE setPlotStyle )
 
  public:
   enum HAlignType {
@@ -170,8 +171,15 @@ class CQGnuPlotEnum : public QObject {
   static SymbolType symbolConv(const CGnuPlotTypes::SymbolType &type);
   static CGnuPlotTypes::SymbolType symbolConv(const SymbolType &type);
 
+  const PlotStyle &plotStyle() const { return plotStyle_; }
+  void setPlotStyle(const PlotStyle &v) { plotStyle_ = v; }
+
+  static PlotStyle plotStyleConv(const CGnuPlotTypes::PlotStyle &type);
+  static CGnuPlotTypes::PlotStyle plotStyleConv(const PlotStyle &type);
+
  private:
   SymbolType symbolType_;
+  PlotStyle  plotStyle_;
 };
 
 #endif

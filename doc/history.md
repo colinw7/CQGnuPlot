@@ -202,3 +202,8 @@
  + Update dummy vars on style change (polar, parametric, cartesian)
  + store radian/degree angle type state per plot
  + add basic mouse probe per plot
+
+### 12/31/2015
+ + Add dialogs to add plot for file or function
+ + Add dialogs to manage use functions and variables
+ + Reorg code to allow file/function to be added outside of gnuplot file commands

@@ -169,6 +169,14 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   CQPropertyRealEditor    *realSlider (const std::string &str);
 
  private slots:
+  void newWindow();
+
+  void loadFile();
+  void loadFunction();
+
+  void manageFunctions();
+  void manageVariables();
+
   void saveSVG();
   void savePNG();
 
@@ -186,6 +194,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void pointsSlot();
 
   void itemSelectedSlot(QObject *obj, const QString &path);
+
+  void treeMenuExec(QObject *obj, const QPoint &gpos);
 
  private:
   typedef std::map<std::string,CQPropertyRealEditor *>    RealEdits;

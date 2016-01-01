@@ -3,6 +3,11 @@
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotUtil.h>
 
+CGnuPlotColorSpec::
+CGnuPlotColorSpec()
+{
+}
+
 void
 CGnuPlotColorSpec::
 reset()

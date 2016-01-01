@@ -360,7 +360,7 @@ class CGnuPlotAxis {
   typedef std::vector<double> TickSpaces;
 
   CGnuPlotRenderer *renderer_          { 0 };
-  CGnuPlotGroup*    group_             { 0 };
+  CGnuPlotGroup    *group_             { 0 };
   CGnuPlotAxisData  data_;
   AxisDirection     direction_         { AxisDirection::X };
   CPoint3D          v_                 { 1, 0, 0 };

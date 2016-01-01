@@ -41,6 +41,10 @@ class CGnuPlotCache {
     }
   }
 
+  void clear() {
+    updateSize(0);
+  }
+
  private:
   Factory factory_;
   Objects objects_;

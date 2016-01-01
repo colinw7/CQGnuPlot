@@ -129,15 +129,15 @@ draw(CGnuPlotRenderer *renderer)
   for (auto plot : group_->plots()) {
     if (! plot->isKeyTitleEnabled()) continue;
 
-    CGnuPlotTypes::PlotStyle plotStyle = plot->getStyle();
+    CGnuPlotTypes::PlotStyle plotStyle = plot->style();
 
     CGnuPlotStyleBase *style = app()->getPlotStyle(plotStyle);
 
     const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
     const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
-    CGnuPlotFill   fill  (plot);
-    CGnuPlotStroke stroke(plot);
+    CGnuPlotFill   fill  (plot.get());
+    CGnuPlotStroke stroke(plot.get());
 
     //---
 
@@ -161,7 +161,7 @@ draw(CGnuPlotRenderer *renderer)
         renderer->drawLine(p1, p2, stroke.width(), c, stroke.lineDash());
       }
       else if (style && style->hasKeyLine()) {
-        style->drawKeyLine(plot, renderer, p1, p2);
+        style->drawKeyLine(plot.get(), renderer, p1, p2);
       }
       else if (group_->hasPlotStyle(CGnuPlotTypes::PlotStyle::HISTOGRAMS)) {
         CRGBA lc = stroke.color();
@@ -211,7 +211,7 @@ draw(CGnuPlotRenderer *renderer)
 
     double yp2 = y;
 
-    addPlotRect(plot, CBBox2D(x1, yp1, x2, yp2));
+    addPlotRect(plot.get(), CBBox2D(x1, yp1, x2, yp2));
 
     //renderer->drawRect(bbox, CRGBA(1,0,0), 1);
   }
@@ -348,8 +348,8 @@ drawClustered(CGnuPlotRenderer *renderer)
       const CGnuPlotLineStyle &lineStyle1 = plot1->lineStyle();
       const CGnuPlotFillStyle &fillStyle1 = plot1->fillStyle();
 
-      CGnuPlotFill   fill1  (plot1);
-      CGnuPlotStroke stroke1(plot1);
+      CGnuPlotFill   fill1  (plot1.get());
+      CGnuPlotStroke stroke1(plot1.get());
 
       double yp1 = y;
 
@@ -405,7 +405,7 @@ drawClustered(CGnuPlotRenderer *renderer)
 
       double yp2 = y;
 
-      addPlotRect(plot1, CBBox2D(x1, yp1, x2, yp2));
+      addPlotRect(plot1.get(), CBBox2D(x1, yp1, x2, yp2));
 
     //renderer->drawRect(bbox, CRGBA(1,0,0), 1);
     }
@@ -477,7 +477,7 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
   for (auto nplot : nplots) {
     const CGnuPlot::Plots &plots1 = nplot.second;
 
-    CGnuPlotPlot *plot = *plots1.begin();
+    CGnuPlotPlotP plot = *plots1.begin();
 
     for (uint i = 0; i < plot->numPoints2D(); ++i) {
       //const CGnuPlotPoint &point = plot->getPoint2D(i);
@@ -523,11 +523,11 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
   for (auto nplot : nplots) {
     const CGnuPlot::Plots &plots1 = nplot.second;
 
-    CGnuPlotPlot *plot = *plots1.begin();
+    CGnuPlotPlotP plot = *plots1.begin();
 
     const CGnuPlotFillStyle &fillStyle = plot->fillStyle();
 
-    CGnuPlotStroke stroke(plot);
+    CGnuPlotStroke stroke(plot.get());
 
     //---
 

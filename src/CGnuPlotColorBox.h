@@ -129,7 +129,7 @@ class CGnuPlotColorBox {
   virtual void draw(CGnuPlotRenderer *renderer);
 
  private:
-  CGnuPlotGroup*       group_       { 0 };
+  CGnuPlotGroup*       group_ { 0 };
   CGnuPlotColorBoxData data_;
   mutable CBBox2D      bbox_;
 };

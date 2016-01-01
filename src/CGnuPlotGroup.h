@@ -12,6 +12,8 @@
 #include <CGnuPlotProbeEvent.h>
 #include <CRange.h>
 
+typedef std::shared_ptr<CGnuPlotPlot> CGnuPlotPlotP;
+
 class CGnuPlotGroup {
  public:
   typedef CGnuPlotTypes::HistogramStyle      HistogramStyle;
@@ -21,13 +23,15 @@ class CGnuPlotGroup {
   typedef CGnuPlotTypes::VariableName        VariableName;
   typedef CGnuPlot::Annotations              Annotations;
   typedef std::map<VariableName,Annotations> VarAnnotations;
-  typedef std::vector<CGnuPlotPlot *>        Plots;
+  typedef std::vector<CGnuPlotPlotP>         Plots;
   typedef std::map<int, CGnuPlotAxis *>      IAxes;
   typedef std::map<AxisType, IAxes>          Axes;
   typedef std::map<int, CRange>              IndRange;
 
  public:
   CGnuPlotGroup(CGnuPlotWindow *window);
+
+  virtual ~CGnuPlotGroup();
 
   void initObjects();
 
@@ -39,6 +43,9 @@ class CGnuPlotGroup {
 
   int ind() const { return ind_; }
   void setInd(int ind) { ind_ = ind; }
+
+  bool is2D() const { return ! is3D(); }
+  void set2D(bool b);
 
   void set3D(bool b);
   bool is3D() const { return is3D_; }
@@ -53,9 +60,11 @@ class CGnuPlotGroup {
 
   void clearSubPlots();
 
-  void addSubPlot(CGnuPlotPlot *plot);
+  void addSubPlot(CGnuPlotPlotP &plot);
 
   void addSubPlots(const Plots &plots);
+
+  CGnuPlotPlotP createNewPlot(CGnuPlotTypes::PlotStyle style=CGnuPlotTypes::PlotStyle::LINES);
 
   //---
 
@@ -375,7 +384,7 @@ class CGnuPlotGroup {
 
   void drawAnnotations(CGnuPlotRenderer *renderer, DrawLayer layer);
 
-  CGnuPlotPlot *getSingleStylePlot() const;
+  CGnuPlotPlotP getSingleStylePlot() const;
 
   CGnuPlotAxis *getPlotAxis(AxisType type, int ind, bool create=false) const;
 
@@ -439,7 +448,7 @@ class CGnuPlotGroup {
 
   //-----
 
-  CGnuPlotPlot *getPlotForId(int id) const;
+  CGnuPlotPlotP getPlotForId(int id) const;
 
  protected:
   static int nextId_;
@@ -470,6 +479,8 @@ class CGnuPlotGroup {
   CGnuPlotColorBoxP         colorBox_;                        // color box
   CGnuPlotPaletteP          palette_;                         // palette
   CGnuPlotAxesData          axesData_;                        // axes data
+  CGnuPlotAxesData          initAxesData_;                    // axes data
+  bool                      fitted_ { false };
   VarAnnotations            varAnnotations_;                  // annotations
   Axes                      axes_;                            // axes
   CGnuPlotCameraP           camera_;                          // view camera
@@ -480,5 +491,7 @@ class CGnuPlotGroup {
   CRGBA                     backgroundColor_;                 // background color
   mutable CBBox3D           saveRange_;                       // save range
 };
+
+typedef std::shared_ptr<CGnuPlotGroup> CGnuPlotGroupP;
 
 #endif

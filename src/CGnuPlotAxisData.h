@@ -247,7 +247,7 @@ class CGnuPlotAxisData {
 
   //------
 
-  const std::string &getDummyVar() { return dummyVar_; }
+  const std::string &getDummyVar() const { return dummyVar_; }
   void setDummyVar(const std::string &name) { dummyVar_ = name; }
 
   //-----

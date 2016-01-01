@@ -139,6 +139,13 @@ setLines(const Lines &lines)
 
 void
 CGnuPlotFile::
+clearLines()
+{
+  lines_.clear();
+}
+
+void
+CGnuPlotFile::
 processLines()
 {
   sets_.clear();

@@ -192,6 +192,26 @@ class CParseLine {
     return isspace(c);
   }
 
+  bool skipCIdentifier() {
+    char c = lookChar();
+
+    if (! isalpha(c))
+      return false;
+
+    skipChar();
+
+    while (isValid()) {
+      char c = lookChar();
+
+      if (! isalnum(c) && c != '_')
+        break;
+
+      skipChar();
+    }
+
+    return true;
+  }
+
   void insert(const std::string &str) {
     str_ = str_.substr(0, pos_) + str + str_.substr(pos_);
 

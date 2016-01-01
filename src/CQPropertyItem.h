@@ -2,6 +2,7 @@
 #define CQPropertyItem_H
 
 #include <QTreeWidgetItem>
+#include <QPointer>
 
 class CQPropertyEditorFactory;
 class CQPropertyDelegate;
@@ -76,7 +77,7 @@ class CQPropertyItem : public QObject, public QTreeWidgetItem {
   QString                  name_;   //! property name
   QString                  info_;   //! property info (RO), (ENUM), ...
   QString                  type_;   //! property type name
-  QObject                 *object_; //! property object
+  QPointer<QObject>        object_; //! property object
   QWidget                 *widget_; //! editor widget
   QString                  label_;  //! property label
   CQPropertyEditorFactory *editor_; //! editor interface

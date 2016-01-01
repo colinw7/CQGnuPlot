@@ -28,7 +28,7 @@ draw(CGnuPlotRenderer *renderer)
 {
   const CGnuPlotSurfaceData &surfaceData = plot_->surfaceData();
 
-  bool pm3D = (plot_->getStyle() == CGnuPlot::PlotStyle::PM3D ||
+  bool pm3D = (plot_->style() == CGnuPlot::PlotStyle::PM3D ||
                plot_->group()->pm3D()->isEnabled());
 
   CGnuPlotStroke stroke(plot_);

@@ -20,7 +20,7 @@ class CGnuPlotColorSpec {
     INDEX
   };
 
-  CGnuPlotColorSpec() { }
+  CGnuPlotColorSpec();
 
   bool isValid() const { return (type_ != Type::NONE); }
 

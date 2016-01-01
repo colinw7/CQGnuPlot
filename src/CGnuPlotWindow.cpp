@@ -42,9 +42,20 @@ set3D(bool b)
   is3D_ = b;
 }
 
+CGnuPlotGroupP
+CGnuPlotWindow::
+createNewGroup()
+{
+  CGnuPlotGroupP group(plot_->createGroup(this));
+
+  addGroup(group);
+
+  return group;
+}
+
 void
 CGnuPlotWindow::
-addGroup(CGnuPlotGroup *group)
+addGroup(CGnuPlotGroupP &group)
 {
   if (plot_->isDebug())
     std::cerr << "Add Group" << std::endl;

@@ -13,6 +13,11 @@ CGnuPlotGroup(CGnuPlotWindow *window) :
 {
 }
 
+CGnuPlotGroup::
+~CGnuPlotGroup()
+{
+}
+
 void
 CGnuPlotGroup::
 initObjects()
@@ -22,7 +27,7 @@ initObjects()
   palette_  = CGnuPlotPaletteP (app()->createPalette (this));
   title_    = CGnuPlotTitleP   (app()->createTitle   (this));
 
-  camera_ = app()->createCamera(this);
+  camera_ = CGnuPlotCameraP(app()->createCamera(this));
 
   timeStamp_ = app()->createTimeStamp(this);
 }
@@ -122,6 +127,17 @@ init()
   pm3D_->setData(plot->pm3D());
 }
 
+CGnuPlotPlotP
+CGnuPlotGroup::
+createNewPlot(CGnuPlotTypes::PlotStyle style)
+{
+  CGnuPlotPlotP plot(app()->createPlot(this, style));
+
+  addSubPlot(plot);
+
+  return plot;
+}
+
 void
 CGnuPlotGroup::
 setHistogramDatas(const CGnuPlotHistogramData &data, const CGnuPlotNewHistogramDatas &newDatas)
@@ -142,9 +158,27 @@ setHistogramDatas(const CGnuPlotHistogramData &data, const CGnuPlotNewHistogramD
 
 void
 CGnuPlotGroup::
+set2D(bool b)
+{
+  set3D(! b);
+}
+
+void
+CGnuPlotGroup::
 set3D(bool b)
 {
   is3D_ = b;
+
+  if (is3D_) {
+    if (! pm3D_) {
+      pm3D_ = CGnuPlotPm3DP(app()->createPm3D(this));
+
+      pm3D_->setData(app()->pm3D());
+    }
+  }
+  else {
+    pm3D_ = 0;
+  }
 }
 
 void
@@ -183,9 +217,9 @@ addSubPlots(const Plots &plots)
 
 void
 CGnuPlotGroup::
-addSubPlot(CGnuPlotPlot *plot)
+addSubPlot(CGnuPlotPlotP &plot)
 {
-  plot->setInd(plots_.size() + 1);
+  //plot->setInd(plots_.size() + 1);
 
   plots_.push_back(plot);
 
@@ -248,12 +282,22 @@ void
 CGnuPlotGroup::
 fit()
 {
+  if (! fitted_) {
+    initAxesData_ = axesData_;
+    fitted_       = true;
+  }
+  else {
+    axesData_ = initAxesData_;
+  }
+
+  //---
+
   xrange_.clear();
   yrange_.clear();
 
   //---
 
-  CGnuPlotPlot *singlePlot = getSingleStylePlot();
+  CGnuPlotPlotP singlePlot = getSingleStylePlot();
 
   // data range (ind == 1)
   COptReal xmin1, xmax1, ymin1, ymax1, zmin1, zmax1;
@@ -271,7 +315,7 @@ fit()
       dy = 1.0;
   }
   else if (singlePlot) {
-    fitSinglePlot(singlePlot, xmin1, ymin1, xmax1, ymax1);
+    fitSinglePlot(singlePlot.get(), xmin1, ymin1, xmax1, ymax1);
   }
   else if (hasPlotStyle(PlotStyle::PARALLELAXES)) {
     fitParallelAxes(xmin1, ymin1, xmax1, ymax1);
@@ -672,7 +716,10 @@ fitHistograms(COptReal &xmin1, COptReal &ymin1, COptReal &xmax1, COptReal &ymax1
       xp += drawData.np;
     }
     else if (hstyle == HistogramStyle::ROWSTACKED) {
-      CGnuPlotPlot *plot1 = (! plots1.empty() ? plots1[0] : 0);
+      CGnuPlotPlotP plot1;
+
+      if (! plots1.empty())
+        plot1 = plots1[0];
 
       drawRowStackedHistograms(&brenderer, xp, plots1);
 
@@ -707,7 +754,7 @@ CGnuPlotGroup::
 fitSinglePlot(CGnuPlotPlot *singlePlot, COptReal &xmin1, COptReal &ymin1,
               COptReal &xmax1, COptReal &ymax1)
 {
-  CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->getStyle());
+  CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->style());
 
   CBBox2D rect = singleStyle->fit(singlePlot);
 
@@ -1137,7 +1184,7 @@ draw()
   CGnuPlotRenderer *renderer = app()->renderer();
 
   if (is3D())
-    renderer->setCamera(camera_);
+    renderer->setCamera(camera_.get());
   else
     renderer->unsetCamera();
 
@@ -1534,7 +1581,10 @@ drawHistogram(CGnuPlotRenderer *renderer, const Plots &plots)
       xp += drawData.np;
     }
     else if (hstyle == HistogramStyle::ROWSTACKED) {
-      CGnuPlotPlot *plot1 = (! plots1.empty() ? plots1[0] : 0);
+      CGnuPlotPlotP plot1;
+
+      if (! plots1.empty())
+        plot1 = plots1[0];
 
       drawRowStackedHistograms(renderer, xp, plots1);
 
@@ -1724,12 +1774,12 @@ drawAxes(CGnuPlotRenderer *renderer, bool border)
       drawZAxis(renderer, 1);
   }
   else {
-    CGnuPlotPlot *singlePlot = getSingleStylePlot();
+    CGnuPlotPlotP singlePlot = getSingleStylePlot();
 
     if (singlePlot) {
-      CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->getStyle());
+      CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->style());
 
-      singleStyle->drawAxes(singlePlot, renderer);
+      singleStyle->drawAxes(singlePlot.get(), renderer);
 
       return;
     }
@@ -2074,12 +2124,12 @@ drawKey(CGnuPlotRenderer *renderer)
 
   //---
 
-  CGnuPlotPlot *singlePlot = getSingleStylePlot();
+  CGnuPlotPlotP singlePlot = getSingleStylePlot();
 
   if (singlePlot) {
-    CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->getStyle());
+    CGnuPlotStyleBase *singleStyle = app()->getPlotStyle(singlePlot->style());
 
-    singleStyle->drawKey(singlePlot, renderer);
+    singleStyle->drawKey(singlePlot.get(), renderer);
 
     return;
   }
@@ -2087,7 +2137,7 @@ drawKey(CGnuPlotRenderer *renderer)
   key_->draw(renderer);
 }
 
-CGnuPlotPlot *
+CGnuPlotPlotP
 CGnuPlotGroup::
 getSingleStylePlot() const
 {
@@ -2096,7 +2146,7 @@ getSingleStylePlot() const
 
     if (style->isSingleType() && hasPlotStyle(style->style())) {
       for (auto plot : plots_) {
-        if (plot->getStyle() != style->style())
+        if (plot->style() != style->style())
           continue;
 
         return plot;
@@ -2104,7 +2154,7 @@ getSingleStylePlot() const
     }
   }
 
-  return 0;
+  return CGnuPlotPlotP();
 }
 
 void
@@ -2323,7 +2373,7 @@ CGnuPlotGroup::
 hasPlotStyle(PlotStyle style) const
 {
   for (auto plot : plots_) {
-    if (plot->getStyle() == style)
+    if (plot->style() == style)
       return true;
   }
 
@@ -2347,12 +2397,12 @@ CGnuPlotGroup::
 getPlotsOfStyle(Plots &plots, PlotStyle style) const
 {
   for (auto plot : plots_) {
-    if (plot->getStyle() == style)
+    if (plot->style() == style)
       plots.push_back(plot);
   }
 }
 
-CGnuPlotPlot *
+CGnuPlotPlotP
 CGnuPlotGroup::
 getPlotForId(int id) const
 {
@@ -2361,7 +2411,7 @@ getPlotForId(int id) const
       return plot;
   }
 
-  return 0;
+  return CGnuPlotPlotP();
 }
 
 CBBox2D

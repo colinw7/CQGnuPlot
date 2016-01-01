@@ -6,7 +6,7 @@
 #include <CVector3D.h>
 #include <CCoordFrame3D.h>
 #include <CMatrix3DH.h>
-#include <CRefPtr.h>
+#include <memory>
 
 class CGnuPlotGroup;
 
@@ -20,6 +20,8 @@ class CGnuPlotCamera {
 
  public:
   CGnuPlotCamera(CGnuPlotGroup *group=0);
+
+  virtual ~CGnuPlotCamera();
 
   bool isEnabled() const { return enabled_; }
   void setEnabled(bool b) { enabled_ = b; }
@@ -154,6 +156,6 @@ class CGnuPlotCamera {
   mutable CMatrix3DH projMatrix_;
 };
 
-typedef CRefPtr<CGnuPlotCamera> CGnuPlotCameraP;
+typedef std::shared_ptr<CGnuPlotCamera> CGnuPlotCameraP;
 
 #endif

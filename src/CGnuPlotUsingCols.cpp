@@ -19,7 +19,7 @@ bool evaluateExpression(const std::string &expr, CExprValuePtr &value, bool quie
 
 CGnuPlotUsingCols::
 CGnuPlotUsingCols(CGnuPlot *plot) :
- plot_(plot)
+ str_(), plot_(plot)
 {
 }
 
@@ -27,7 +27,21 @@ void
 CGnuPlotUsingCols::
 init(const std::string &str)
 {
-  CParseLine line(str);
+  str_ = str;
+
+  cols_.clear();
+
+  colMin_.setInvalid();
+  colMax_.setInvalid();
+
+  axisTicLabel_.clear();
+
+  format_   = "";
+  keyLabel_ = "";
+
+  //---
+
+  CParseLine line(str_);
 
   CGnuPlotUsingColData usingData;
   StringArray          usingStrs;

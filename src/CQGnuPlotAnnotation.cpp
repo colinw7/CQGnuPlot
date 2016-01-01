@@ -11,6 +11,11 @@ CQGnuPlotAnnotation(CQGnuPlotGroup *qgroup, CGnuPlotGroupAnnotation *obj) :
 {
 }
 
+CQGnuPlotAnnotation::
+~CQGnuPlotAnnotation()
+{
+}
+
 QColor
 CQGnuPlotAnnotation::
 getStrokeColor() const

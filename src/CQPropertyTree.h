@@ -29,6 +29,8 @@ class CQPropertyTree : public QTreeWidget {
   void itemClicked( QObject *obj, const QString &path);
   void itemSelected(QObject *obj, const QString &path);
 
+  void menuExec(QObject *obj, const QPoint &gpos);
+
  public slots:
   void expandSelected();
 
@@ -39,6 +41,8 @@ class CQPropertyTree : public QTreeWidget {
 
   void itemSelectionSlot();
 
+  void customContextMenuSlot(const QPoint &pos);
+
  private:
   bool selectObject(QTreeWidgetItem *item, const QObject *obj);
 
@@ -47,6 +51,8 @@ class CQPropertyTree : public QTreeWidget {
   void searchItemTree(QTreeWidgetItem *item, const QString &text, Items &items);
 
   void expandItemTree(QTreeWidgetItem *item);
+
+  void showContextMenu(QObject *obj, const QPoint &globalPos);
 };
 
 #endif

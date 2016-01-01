@@ -3,6 +3,7 @@
 
 #include <CGnuPlotDevice.h>
 #include <QObject>
+#include <QPointer>
 #include <vector>
 
 class CQGnuPlotRenderer;
@@ -11,7 +12,8 @@ class CQGnuPlotDevice : public QObject, public CGnuPlotDevice {
   Q_OBJECT
 
  public:
-  typedef std::vector<QObject *> Objects;
+  typedef QPointer<QObject>    ObjectP;
+  typedef std::vector<ObjectP> Objects;
 
  public:
   CQGnuPlotDevice();

@@ -103,7 +103,7 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
 
   renderer->pixelToWindow(mouseEvent.pixel(), p);
 
-  CGnuPlotPlot *plot = group()->getPlotForId(CGnuPlotKey::plotAtPos(p));
+  CGnuPlotPlotP plot = group()->getPlotForId(CGnuPlotKey::plotAtPos(p));
   if (! plot) return false;
 
   plot->setDisplayed(! plot->isDisplayed());

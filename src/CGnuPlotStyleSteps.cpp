@@ -70,7 +70,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     double lw = stroke.width();
 
     if (point1.getPoint(p1) && point2.getPoint(p2)) {
-      if      (plot->getStyle() == CGnuPlotTypes::PlotStyle::HISTEPS) {
+      if      (plot->style() == CGnuPlotTypes::PlotStyle::HISTEPS) {
         double xm = CGnuPlotUtil::avg({p1.x, p2.x});
 
         CPoint2D p3(xm, p1.y);
@@ -100,19 +100,19 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
           renderer->drawClipLine(p5, p6, lw, c);
         }
       }
-      else if (plot->getStyle() == CGnuPlotTypes::PlotStyle::STEPS) {
+      else if (plot->style() == CGnuPlotTypes::PlotStyle::STEPS) {
         CPoint2D p3(p2.x, p1.y);
 
         renderer->drawClipLine(p1, p3, lw, c);
         renderer->drawClipLine(p3, p2, lw, c);
       }
-      else if (plot->getStyle() == CGnuPlotTypes::PlotStyle::FSTEPS) {
+      else if (plot->style() == CGnuPlotTypes::PlotStyle::FSTEPS) {
         CPoint2D p3(p1.x, p2.y);
 
         renderer->drawClipLine(p1, p3, lw, c);
         renderer->drawClipLine(p3, p2, lw, c);
       }
-      else if (plot->getStyle() == CGnuPlotTypes::PlotStyle::FILLSTEPS) {
+      else if (plot->style() == CGnuPlotTypes::PlotStyle::FILLSTEPS) {
         CBBox2D bbox(p1.x, ymin, p2.x, p1.y);
 
         renderer->fillRect(bbox, c);
@@ -122,7 +122,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
 #if 0
   // TODO: when is symbol needed ?
-  if (plot->getStyle() != CGnuPlotTypes::PlotStyle::FILLSTEPS) {
+  if (plot->style() != CGnuPlotTypes::PlotStyle::FILLSTEPS) {
     for (const auto &point : plot->getPoints2D()) {
       CPoint2D p;
 

@@ -74,6 +74,9 @@ class CGnuPlotFile {
  public:
   CGnuPlotFile();
 
+  const std::string &fileName() const { return filename_; }
+  void setFileName(const std::string &v) { filename_ = v; }
+
   bool hasCommentChars() const { return commentChars_.isValid(); }
   std::string commentChars() const { return commentChars_.getValue("#"); }
   void setCommentChars(const std::string &chars) { commentChars_ = chars; }
@@ -109,7 +112,8 @@ class CGnuPlotFile {
   void resetBlankLines() { setBlankLines_ = 2; subSetBlankLines_ = 1; }
 
   const Lines &lines() const { return lines_; }
-  void setLines(const Lines &line);
+  void setLines(const Lines &lines);
+  void clearLines();
 
   bool loadFile(const std::string &filename);
 
@@ -190,7 +194,7 @@ class CGnuPlotFile {
   bool isCsv() const { return csv_; }
   void setCsv(bool b) { csv_ = b; }
 
-  bool commentStr(int setNum, int subSetNum, int lineNum, std::string &str) {
+  bool commentStr(int setNum, int subSetNum, int lineNum, std::string &str) const {
     auto p1 = commentStrs_.find(setNum);
     if (p1 == commentStrs_.end()) return false;
 

@@ -3,6 +3,7 @@
 #include <CQPropertyDelegate.h>
 
 #include <QHeaderView>
+#include <QMenu>
 #include <iostream>
 
 CQPropertyTree::
@@ -34,6 +35,11 @@ CQPropertyTree(QWidget *parent) :
 
   connect(this, SIGNAL(itemSelectionChanged()),
           this, SLOT(itemSelectionSlot()));
+
+  setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
+          this, SLOT(customContextMenuSlot(const QPoint&)));
 }
 
 void
@@ -168,7 +174,7 @@ getSelectedObjects(std::vector<QObject *> &objs)
     QObject *obj;
     QString  path;
 
-    getItemData(items[i], obj, path);
+    getItemData(item, obj, path);
 
     objs.push_back(obj);
   }
@@ -312,4 +318,30 @@ getItemData(QTreeWidgetItem *item, QObject* &obj, QString &path)
 
     obj = item2->getObject();
   }
+}
+
+void
+CQPropertyTree::
+customContextMenuSlot(const QPoint& pos)
+{
+  QTreeWidgetItem *item = itemAt(pos);
+  if (! item) return;
+
+  QObject *obj;
+  QString  path;
+
+  getItemData(item, obj, path);
+
+  if (! obj)
+    return;
+
+  // Map point to global from the viewport to account for the header.
+  showContextMenu(obj, viewport()->mapToGlobal(pos));
+}
+
+void
+CQPropertyTree::
+showContextMenu(QObject *obj, const QPoint &globalPos)
+{
+  emit menuExec(obj, globalPos);
 }

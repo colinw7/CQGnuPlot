@@ -24,21 +24,39 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_PROPERTY(int  xind READ xind)
   Q_PROPERTY(int  yind READ yind)
 
+  Q_PROPERTY(int  setNum READ setNum)
+
+  Q_PROPERTY(QString usingCols READ usingColsStr WRITE setUsingColsStr)
+
   Q_PROPERTY(bool displayed READ isDisplayed WRITE setDisplayed)
 
-  Q_PROPERTY(bool binary READ isBinary)
-  Q_PROPERTY(bool matrix READ isMatrix)
+  Q_PROPERTY(CQGnuPlotEnum::PlotStyle plotStyle READ plotStyle WRITE setPlotStyle)
+
+  Q_PROPERTY(bool binary     READ isBinary     WRITE setBinary    )
+  Q_PROPERTY(bool matrix     READ isMatrix)
+  Q_PROPERTY(bool polar      READ isPolar      WRITE setPolar     )
+  Q_PROPERTY(bool parametric READ isParametric WRITE setParametric)
 
   Q_PROPERTY(bool enhanced READ isEnhanced WRITE setEnhanced)
 
-  Q_PROPERTY(double xmin READ getXMin)
-  Q_PROPERTY(double xmax READ getXMax)
-  Q_PROPERTY(double ymin READ getYMin)
-  Q_PROPERTY(double ymax READ getYMax)
+  Q_PROPERTY(int samplesNX READ samplesNX WRITE setSampleNX)
+  Q_PROPERTY(int samplesNY READ samplesNY WRITE setSampleNY)
+
+  Q_PROPERTY(double xrangeMin READ xrangeMin WRITE setXRangeMin)
+  Q_PROPERTY(double xrangeMax READ xrangeMax WRITE setXRangeMax)
+  Q_PROPERTY(double yrangeMin READ yrangeMin WRITE setYRangeMin)
+  Q_PROPERTY(double yrangeMax READ yrangeMax WRITE setYRangeMax)
+
+  Q_PROPERTY(double xmin  READ getXMin)
+  Q_PROPERTY(double xmax  READ getXMax)
+  Q_PROPERTY(double ymin  READ getYMin)
+  Q_PROPERTY(double ymax  READ getYMax)
+  Q_PROPERTY(double zmin  READ getZMin)
+  Q_PROPERTY(double zmax  READ getZMax)
   Q_PROPERTY(double bymin READ getBYMin)
   Q_PROPERTY(double bymax READ getBYMax)
 
-  Q_PROPERTY(CQGnuPlotEnum::PlotStyle plotStyle READ plotStyle WRITE setPlotStyle)
+  Q_PROPERTY(QString functions READ functions WRITE setFunctions)
 
   Q_PROPERTY(int    lineStyleId READ lineStyleId WRITE setLineStyleId)
   Q_PROPERTY(double lineWidth   READ lineWidth   WRITE setLineWidth  )
@@ -83,6 +101,9 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   int lineStyleId() const { return CGnuPlotPlot::lineStyleId().getValue(-1); }
 
+  QString usingColsStr() const;
+  void setUsingColsStr(const QString &str);
+
   QColor lineColor() const;
   void setLineColor(const QColor &c);
 
@@ -94,6 +115,19 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   CQGnuPlotEnum::PlotStyle plotStyle() const;
   void setPlotStyle(const CQGnuPlotEnum::PlotStyle &s);
+
+  double xrangeMin() const;
+  void setXRangeMin(double x);
+  double xrangeMax() const;
+  void setXRangeMax(double x);
+
+  double yrangeMin() const;
+  void setYRangeMin(double x);
+  double yrangeMax() const;
+  void setYRangeMax(double x);
+
+  QString functions() const;
+  void setFunctions(const QString &functions);
 
   CQGnuPlotEnum::FillType fillType() const;
   void setFillType(const CQGnuPlotEnum::FillType &type);

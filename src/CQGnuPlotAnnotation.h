@@ -23,6 +23,7 @@ class CQGnuPlotAnnotation : public QObject {
 
  public:
   CQGnuPlotAnnotation(CQGnuPlotGroup *group, CGnuPlotGroupAnnotation *obj);
+ ~CQGnuPlotAnnotation();
 
   const CQGnuPlotGroup *qgroup() const { return qgroup_; }
   void setQGroup(CQGnuPlotGroup *p) { qgroup_ = p; }

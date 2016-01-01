@@ -19,56 +19,6 @@ VAlignConv valignConv({
  { CVALIGN_TYPE_CENTER, CQGnuPlotEnum::AlignVCenter }
 });
 
-typedef CEnumConv<CGnuPlot::PlotStyle, CQGnuPlotEnum::PlotStyle> PlotStyleConv;
-
-PlotStyleConv plotStyleConv({
-  { CGnuPlot::PlotStyle::NONE          , CQGnuPlotEnum::PlotNone           },
-  { CGnuPlot::PlotStyle::BOXERRORBARS  , CQGnuPlotEnum::PlotBoxErrorBars   },
-  { CGnuPlot::PlotStyle::BOXES         , CQGnuPlotEnum::PlotBoxes          },
-  { CGnuPlot::PlotStyle::BOXPLOT       , CQGnuPlotEnum::PlotBoxPlot        },
-  { CGnuPlot::PlotStyle::BOXXYERRORBARS, CQGnuPlotEnum::PlotBoxXYErrorBars },
-  { CGnuPlot::PlotStyle::BUBBLEPLOT    , CQGnuPlotEnum::PlotBubbleChart    },
-  { CGnuPlot::PlotStyle::CANDLESTICKS  , CQGnuPlotEnum::PlotCandlesticks   },
-  { CGnuPlot::PlotStyle::CHORDDIAGRAM  , CQGnuPlotEnum::PlotChordDiagram   },
-  { CGnuPlot::PlotStyle::CIRCLES       , CQGnuPlotEnum::PlotCircles        },
-  { CGnuPlot::PlotStyle::DELAUNAY      , CQGnuPlotEnum::PlotDelaunay       },
-  { CGnuPlot::PlotStyle::DOTS          , CQGnuPlotEnum::PlotDots           },
-  { CGnuPlot::PlotStyle::ELLIPSES      , CQGnuPlotEnum::PlotEllipses       },
-  { CGnuPlot::PlotStyle::ERRORBARS     , CQGnuPlotEnum::PlotErrorBars      },
-  { CGnuPlot::PlotStyle::ERRORLINES    , CQGnuPlotEnum::PlotErrorLines     },
-  { CGnuPlot::PlotStyle::FILLEDCURVES  , CQGnuPlotEnum::PlotFilledCurves   },
-  { CGnuPlot::PlotStyle::FILLSTEPS     , CQGnuPlotEnum::PlotFillSteps      },
-  { CGnuPlot::PlotStyle::FINANCEBARS   , CQGnuPlotEnum::PlotFinanceBars    },
-  { CGnuPlot::PlotStyle::FSTEPS        , CQGnuPlotEnum::PlotFSteps         },
-  { CGnuPlot::PlotStyle::HISTEPS       , CQGnuPlotEnum::PlotHiSteps        },
-  { CGnuPlot::PlotStyle::HISTOGRAMS    , CQGnuPlotEnum::PlotHistograms     },
-  { CGnuPlot::PlotStyle::IMAGE         , CQGnuPlotEnum::PlotImage          },
-  { CGnuPlot::PlotStyle::IMPULSES      , CQGnuPlotEnum::PlotImpulses       },
-  { CGnuPlot::PlotStyle::LABELS        , CQGnuPlotEnum::PlotLabels         },
-  { CGnuPlot::PlotStyle::LINES         , CQGnuPlotEnum::PlotLines          },
-  { CGnuPlot::PlotStyle::LINES_POINTS  , CQGnuPlotEnum::PlotLinesPoints    },
-  { CGnuPlot::PlotStyle::PARALLELAXES  , CQGnuPlotEnum::PlotParallelAxes   },
-  { CGnuPlot::PlotStyle::PIECHART      , CQGnuPlotEnum::PlotPieChart       },
-  { CGnuPlot::PlotStyle::PM3D          , CQGnuPlotEnum::PlotPm3d           },
-  { CGnuPlot::PlotStyle::POINTS        , CQGnuPlotEnum::PlotPoints         },
-  { CGnuPlot::PlotStyle::POLYGONS      , CQGnuPlotEnum::PlotPolygons       },
-  { CGnuPlot::PlotStyle::RADAR         , CQGnuPlotEnum::PlotRadar          },
-  { CGnuPlot::PlotStyle::RGBALPHA      , CQGnuPlotEnum::PlotRgbAlpha       },
-  { CGnuPlot::PlotStyle::RGBIMAGE      , CQGnuPlotEnum::PlotRgbImage       },
-  { CGnuPlot::PlotStyle::STEPS         , CQGnuPlotEnum::PlotSteps          },
-  { CGnuPlot::PlotStyle::SUNBURST      , CQGnuPlotEnum::PlotSunburst       },
-  { CGnuPlot::PlotStyle::TREEMAP       , CQGnuPlotEnum::PlotTreeMap        },
-  { CGnuPlot::PlotStyle::VECTORS       , CQGnuPlotEnum::PlotVectors        },
-  { CGnuPlot::PlotStyle::XERRORBARS    , CQGnuPlotEnum::PlotXErrorBars     },
-  { CGnuPlot::PlotStyle::XERRORLINES   , CQGnuPlotEnum::PlotXErrorLines    },
-  { CGnuPlot::PlotStyle::XYERRORBARS   , CQGnuPlotEnum::PlotXYErrorBars    },
-  { CGnuPlot::PlotStyle::XYERRORLINES  , CQGnuPlotEnum::PlotXYErrorLines   },
-  { CGnuPlot::PlotStyle::YERRORBARS    , CQGnuPlotEnum::PlotYErrorBars     },
-  { CGnuPlot::PlotStyle::YERRORLINES   , CQGnuPlotEnum::PlotYErrorLines    },
-  { CGnuPlot::PlotStyle::TEST_TERMINAL , CQGnuPlotEnum::PlotTestTerminal   },
-  { CGnuPlot::PlotStyle::TEST_PALETTE  , CQGnuPlotEnum::PlotTestPalette    },
-});
-
 typedef CEnumConv<CGnuPlot::HistogramStyle, CQGnuPlotEnum::HistogramStyle> HistogramStyleConv;
 
 HistogramStyleConv histogramStyleConv({
@@ -191,22 +141,6 @@ CQGnuPlotUtil::
 alignConv(const CQGnuPlotEnum::VAlignType &type)
 {
   return Conv::valignConv.conv(type);
-}
-
-//---
-
-CQGnuPlotEnum::PlotStyle
-CQGnuPlotUtil::
-plotStyleConv(const CGnuPlot::PlotStyle &type)
-{
-  return Conv::plotStyleConv.conv(type, CQGnuPlotEnum::PlotNone);
-}
-
-CGnuPlot::PlotStyle
-CQGnuPlotUtil::
-plotStyleConv(const CQGnuPlotEnum::PlotStyle &type)
-{
-  return Conv::plotStyleConv.conv(type);
 }
 
 //---

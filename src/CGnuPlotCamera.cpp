@@ -8,6 +8,11 @@ CGnuPlotCamera(CGnuPlotGroup *group) :
   init();
 }
 
+CGnuPlotCamera::
+~CGnuPlotCamera()
+{
+}
+
 void
 CGnuPlotCamera::
 init()

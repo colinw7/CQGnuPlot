@@ -72,6 +72,13 @@ is2D() const
   return ! is3D();
 }
 
+void
+CGnuPlotPlot::
+set2D(bool b)
+{
+  return set3D(! b);
+}
+
 bool
 CGnuPlotPlot::
 is3D() const
@@ -81,9 +88,16 @@ is3D() const
 
 void
 CGnuPlotPlot::
+set3D(bool b)
+{
+  return group_->set3D(b);
+}
+
+void
+CGnuPlotPlot::
 getKeyLabels(CGnuPlotPlot::KeyLabels &labels) const
 {
-  if (getStyle() == CGnuPlot::PlotStyle::TEST_PALETTE) {
+  if (style() == CGnuPlot::PlotStyle::TEST_PALETTE) {
     labels.push_back(CGnuPlotKeyLabel("red"  , CRGBA(1,0,0)));
     labels.push_back(CGnuPlotKeyLabel("green", CRGBA(0,1,0)));
     labels.push_back(CGnuPlotKeyLabel("blue" , CRGBA(0,0,1)));
@@ -141,11 +155,16 @@ init()
   setContourData(plot->contourData());
   setSurfaceData(plot->surfaceData());
 
+  setKeyData(plot->keyData());
+
   setEnhanced(plot->device()->isEnhanced());
 
   setTableFile(plot->tableFile());
 
   setNewHistogramId(plot->newHistogramId());
+
+  setPolar     (plot->isPolar());
+  setParametric(plot->isParametric());
 
   //---
 
@@ -168,6 +187,13 @@ init()
     setCenter(imageStyle.center());
 
   setOriginArray(imageStyle.originArray());
+
+  setSamples   (plot->samples   ());
+  setISOSamples(plot->isoSamples());
+  setSampleVars(plot->sampleVars());
+  setDummyVars (plot->dummyVars ());
+
+  setAxesData(plot->axesData());
 }
 
 void
@@ -178,6 +204,8 @@ setStyle(PlotStyle style)
 
   bymin_.setInvalid();
   bymax_.setInvalid();
+
+  clearCaches();
 }
 
 void
@@ -563,8 +591,8 @@ draw()
   CGnuPlotRenderer *renderer = app()->renderer();
 
   // normal plot (no children)
-  if (getStyle() == PlotStyle::TEST_TERMINAL || getStyle() == PlotStyle::TEST_PALETTE) {
-    CGnuPlotStyleBase *style = app()->getPlotStyle(getStyle());
+  if (style() == PlotStyle::TEST_TERMINAL || style() == PlotStyle::TEST_PALETTE) {
+    CGnuPlotStyleBase *style = app()->getPlotStyle(this->style());
 
     style->draw2D(this, renderer);
   }
@@ -609,7 +637,7 @@ printValues() const
         printSurfaceValues();
     }
     else {
-      CGnuPlotStyleBase *style = app()->getPlotStyle(getStyle());
+      CGnuPlotStyleBase *style = app()->getPlotStyle(this->style());
 
       if (style && style->has3D())
         printSurfaceValues(); // TODO: different format ?
@@ -719,6 +747,26 @@ printContourValues() const
 }
 
 //---
+
+void
+CGnuPlotPlot::
+clearCaches()
+{
+  arrowCache_     .clear();
+  boxBarCache_    .clear();
+  boxCache_       .clear();
+  bubbleCache_    .clear();
+  ellipseCache_   .clear();
+  errorBarCache_  .clear();
+  financeBarCache_.clear();
+  imageCache_     .clear();
+  labelCache_     .clear();
+  pathCache_      .clear();
+  pieCache_       .clear();
+  pointCache_     .clear();
+  polygonCache_   .clear();
+  rectCache_      .clear();
+}
 
 void
 CGnuPlotPlot::
@@ -841,13 +889,13 @@ draw3D(CGnuPlotRenderer *renderer)
       drawContour(renderer);
   }
 
-  CGnuPlotStyleBase *style = app()->getPlotStyle(getStyle());
+  CGnuPlotStyleBase *style = app()->getPlotStyle(this->style());
 
   if (style && style->has3D())
-    if (getStyle() == CGnuPlot::PlotStyle::IMAGE    ||
-        getStyle() == CGnuPlot::PlotStyle::RGBIMAGE ||
-        getStyle() == CGnuPlot::PlotStyle::POINTS   ||
-        getStyle() == CGnuPlot::PlotStyle::DOTS) {
+    if (this->style() == CGnuPlot::PlotStyle::IMAGE    ||
+        this->style() == CGnuPlot::PlotStyle::RGBIMAGE ||
+        this->style() == CGnuPlot::PlotStyle::POINTS   ||
+        this->style() == CGnuPlot::PlotStyle::DOTS) {
       style->draw3D(this, renderer);
     }
     else {

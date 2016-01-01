@@ -181,6 +181,8 @@ class CExprUserFunction : public CExprFunction {
 
   uint numArgs() const override { return args_.size(); }
 
+  const std::string &proc() const { return proc_; }
+
   bool checkValues(const CExprValueArray &) const override;
 
   void reset() override;

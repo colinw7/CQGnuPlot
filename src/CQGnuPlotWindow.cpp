@@ -22,6 +22,7 @@
 #include <CQGnuPlotTimeStamp.h>
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotDevice.h>
+#include <CQGnuPlotUtil.h>
 
 #include <CQGnuPlotArrowObject.h>
 #include <CQGnuPlotBoxBarObject.h>
@@ -44,6 +45,11 @@
 #include <CQGnuPlotMark.h>
 
 #include <CQGnuPlotToolBar.h>
+#include <CQGnuPlotLoadFileDialog.h>
+#include <CQGnuPlotLoadFunctionDialog.h>
+#include <CQGnuPlotManageFunctionsDialog.h>
+#include <CQGnuPlotManageVariablesDialog.h>
+
 #include <CQGnuPlotPNGRenderer.h>
 #include <CGnuPlotSVGRenderer.h>
 #include <CQUtil.h>
@@ -55,6 +61,7 @@
 #include <CQPropertyEditor.h>
 #include <CQFloatLabel.h>
 #include <CQRubberBand.h>
+#include <CUnixFile.h>
 
 #include <QPainter>
 #include <QHBoxLayout>
@@ -66,6 +73,7 @@
 #include <QTimer>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QFileDialog>
 
 //#include <xpm/select.xpm>
 //#include <xpm/zoom.xpm>
@@ -81,16 +89,6 @@
 #include <svg/yaxis_svg.h>
 #include <svg/probe_svg.h>
 #include <svg/points_svg.h>
-
-namespace {
-  QIcon svgIcon(const uchar *data, int len) {
-    QPixmap pixmap;
-
-    pixmap.loadFromData(data, len);
-
-    return QIcon(pixmap);
-  }
-}
 
 static const int TreeWidth = 400;
 
@@ -136,11 +134,11 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   //---
 
-  selectAction_ = new QAction(svgIcon(select_data, SELECT_DATA_LEN), "Select", this);
-  moveAction_   = new QAction(svgIcon(move_data  , MOVE_DATA_LEN  ), "Move"  , this);
-  zoomAction_   = new QAction(svgIcon(zoom_data  , ZOOM_DATA_LEN  ), "Zoom"  , this);
-  probeAction_  = new QAction(svgIcon(probe_data , PROBE_DATA_LEN ), "Probe" , this);
-  pointsAction_ = new QAction(svgIcon(points_data, POINTS_DATA_LEN), "Points", this);
+  selectAction_ = new QAction(CQGnuPlotUtil::svgIcon(select_data, SELECT_DATA_LEN), "Select", this);
+  moveAction_   = new QAction(CQGnuPlotUtil::svgIcon(move_data  , MOVE_DATA_LEN  ), "Move"  , this);
+  zoomAction_   = new QAction(CQGnuPlotUtil::svgIcon(zoom_data  , ZOOM_DATA_LEN  ), "Zoom"  , this);
+  probeAction_  = new QAction(CQGnuPlotUtil::svgIcon(probe_data , PROBE_DATA_LEN ), "Probe" , this);
+  pointsAction_ = new QAction(CQGnuPlotUtil::svgIcon(points_data, POINTS_DATA_LEN), "Points", this);
 
   selectAction_->setCheckable(true);
   moveAction_  ->setCheckable(true);
@@ -204,6 +202,9 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   connect(tree_, SIGNAL(itemSelected(QObject *, const QString &)),
           this, SLOT(itemSelectedSlot(QObject *, const QString &)));
 
+  connect(tree_, SIGNAL(menuExec(QObject *, const QPoint &)),
+          this, SLOT(treeMenuExec(QObject *, const QPoint &)));
+
   rlayout->addWidget(tree_);
 
   QFrame *buttonFrame = new QFrame;
@@ -238,6 +239,42 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   QMenu *fileMenu = menuBar()->addMenu("&File");
 
+  QAction *newWindowAction = new QAction("New Window", this);
+
+  fileMenu->addAction(newWindowAction);
+
+  connect(newWindowAction, SIGNAL(triggered()), this, SLOT(newWindow()));
+
+  //---
+
+  QAction *loadFileAction = new QAction("Load File", this);
+
+  fileMenu->addAction(loadFileAction);
+
+  connect(loadFileAction, SIGNAL(triggered()), this, SLOT(loadFile()));
+
+  QAction *loadFnAction = new QAction("Load Function", this);
+
+  fileMenu->addAction(loadFnAction);
+
+  connect(loadFnAction, SIGNAL(triggered()), this, SLOT(loadFunction()));
+
+  //---
+
+  QAction *functionsAction = new QAction("Manage Functions", this);
+
+  fileMenu->addAction(functionsAction);
+
+  connect(functionsAction, SIGNAL(triggered()), this, SLOT(manageFunctions()));
+
+  QAction *variablesAction = new QAction("Manage Variables", this);
+
+  fileMenu->addAction(variablesAction);
+
+  connect(variablesAction, SIGNAL(triggered()), this, SLOT(manageVariables()));
+
+  //---
+
   QAction *saveSVGAction = new QAction("Save S&VG", this);
   QAction *savePNGAction = new QAction("Save &PNG", this);
 
@@ -246,6 +283,8 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   connect(saveSVGAction, SIGNAL(triggered()), this, SLOT(saveSVG()));
   connect(savePNGAction, SIGNAL(triggered()), this, SLOT(savePNG()));
+
+  //---
 
   QAction *closeAction = new QAction("&Close", this);
 
@@ -268,11 +307,14 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   QMenu *dispMenu = menuBar()->addMenu("&Display");
 
 //QAction *xAxisAction = new QAction(QIcon(QPixmap(xaxis_data)), "&X Axis", this);
-  QAction *xAxisAction = new QAction(svgIcon(xaxis_data, XAXIS_DATA_LEN), "&X Axis", this);
+  QAction *xAxisAction =
+    new QAction(CQGnuPlotUtil::svgIcon(xaxis_data, XAXIS_DATA_LEN), "&X Axis", this);
 //QAction *yAxisAction = new QAction(QIcon(QPixmap(yaxis_data)), "&Y Axis", this);
-  QAction *yAxisAction = new QAction(svgIcon(yaxis_data, YAXIS_DATA_LEN), "&Y Axis", this);
+  QAction *yAxisAction =
+    new QAction(CQGnuPlotUtil::svgIcon(yaxis_data, YAXIS_DATA_LEN), "&Y Axis", this);
 //QAction *gridAction  = new QAction(QIcon(QPixmap(grid_data )), "&Grid"  , this);
-  QAction *gridAction  = new QAction(svgIcon(grid_data , GRID_DATA_LEN ), "&Grid"  , this);
+  QAction *gridAction  =
+    new QAction(CQGnuPlotUtil::svgIcon(grid_data , GRID_DATA_LEN ), "&Grid"  , this);
 
   xAxisAction->setCheckable(true); xAxisAction->setChecked(true);
   yAxisAction->setCheckable(true); yAxisAction->setChecked(true);
@@ -440,12 +482,12 @@ addProperties()
   //---
 
   for (auto group : groups()) {
-    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
     addGroupProperties(qgroup);
 
     for (auto subPlot : qgroup->plots())
-      addPlotProperties(subPlot);
+      addPlotProperties(subPlot.get());
   }
 }
 
@@ -459,9 +501,10 @@ addGroupProperties(CGnuPlotGroup *group)
 
   tree_->addProperty(groupName, qgroup, "ind" );
   tree_->addProperty(groupName, qgroup, "is3D");
+  tree_->addProperty(groupName, qgroup, "isPolar");
 
   if (group->is3D()) {
-    CQGnuPlotCamera *qcamera = static_cast<CQGnuPlotCamera *>(group->camera().getPtr());
+    CQGnuPlotCamera *qcamera = static_cast<CQGnuPlotCamera *>(group->camera().get());
 
     QString cameraName = groupName + "/camera";
 
@@ -822,12 +865,25 @@ addPlotProperties(CGnuPlotPlot *plot)
   tree_->addProperty(plotName, qplot, "xind");
   tree_->addProperty(plotName, qplot, "yind");
 
+  tree_->addProperty(plotName, qplot, "setNum");
+  tree_->addProperty(plotName, qplot, "usingCols");
+
   tree_->addProperty(plotName, qplot, "displayed");
 
   tree_->addProperty(plotName, qplot, "binary");
   tree_->addProperty(plotName, qplot, "matrix");
 
   tree_->addProperty(plotName, qplot, "enhanced");
+
+  tree_->addProperty(plotName, qplot, "functions");
+  tree_->addProperty(plotName, qplot, "samplesNX");
+  tree_->addProperty(plotName, qplot, "samplesNY");
+  tree_->addProperty(plotName, qplot, "xrangeMin");
+  tree_->addProperty(plotName, qplot, "xrangeMax");
+  tree_->addProperty(plotName, qplot, "xrangeMin");
+  tree_->addProperty(plotName, qplot, "xrangeMax");
+  tree_->addProperty(plotName, qplot, "yrangeMin");
+  tree_->addProperty(plotName, qplot, "yrangeMax");
 
   QString rangeName = plotName + "/range";
 
@@ -1492,6 +1548,258 @@ setCursor(QCursor cursor)
 
 void
 CQGnuPlotMainWindow::
+newWindow()
+{
+  CGnuPlotWindowP window = qapp()->createNewWindow();
+
+  CQGnuPlotMainWindow *qwindow = dynamic_cast<CQGnuPlotMainWindow *>(window.get());
+
+  qwindow->show();
+}
+
+void
+CQGnuPlotMainWindow::
+loadFile()
+{
+  CQGnuPlotLoadFileDialog *dialog = new CQGnuPlotLoadFileDialog(this);
+
+  dialog->exec();
+
+  if (! dialog->accepted())
+    return;
+
+  //QString fileName = QFileDialog::getOpenFileName(this, "Open File", "", "Files (*.*)");
+  //if (! fileName.length()) return;
+
+  bool                     is2D     = dialog->is2D();
+  bool                     binary   = dialog->isBinary();
+  CGnuPlotTypes::PlotStyle style    = dialog->plotStyle();
+  QString                  fileName = dialog->fileName();
+  double                   xmin     = dialog->xmin();
+  double                   xmax     = dialog->xmax();
+  QString                  usingStr = dialog->usingStr();
+  int                      lt       = dialog->lineType();
+
+  bool isImage = false;
+
+  if (fileName != "+" && fileName != "++") {
+    QFileInfo fi(fileName);
+
+    isImage = (fi.suffix().toLower() == "png");
+
+    CUnixFile file(fileName.toStdString());
+
+    if (! file.open())
+      return;
+  }
+
+  if (! numGroups())
+    createNewGroup();
+
+  CGnuPlotGroupP group = *groups().begin();
+
+  group->set2D(  is2D);
+  group->set3D(! is2D);
+
+  app()->setXRange(xmin, xmax);
+
+  CGnuPlotUsingCols usingCols;
+
+  usingCols.init(usingStr.toStdString());
+
+  if (! isImage) {
+    if (! binary) {
+      if (fileName == "+" || fileName == "++") {
+        CGnuPlotPlotP plot = group->createNewPlot(style);
+
+        plot->setSetNum(0);
+
+        plot->set2D(  is2D);
+        plot->set3D(! is2D);
+
+        plot->init();
+
+        if (is2D) {
+          if (fileName == "+") {
+            app()->initGen1File2D(plot.get(), usingCols);
+          }
+          else {
+            app()->initGen2File2D(plot.get(), usingCols);
+          }
+        }
+        else {
+          if (fileName == "+") {
+            app()->initGen1File3D(plot.get(), usingCols);
+          }
+          else {
+            app()->initGen2File3D(plot.get(), usingCols);
+          }
+        }
+
+        CGnuPlotLineStyle lineStyle(app());
+
+        lineStyle.setLineType(lt);
+
+        plot->setLineStyle(lineStyle);
+      }
+      else {
+        CGnuPlotFile dataFile;
+
+        if (! app()->readDataFile(fileName.toStdString(), dataFile))
+          return;
+
+        dataFile.processLines();
+
+        for (int setNum = 0; setNum < dataFile.numSets(); ++setNum) {
+          CGnuPlotPlotP plot = group->createNewPlot(style);
+
+          plot->setSetNum  (setNum);
+          plot->setDataFile(dataFile);
+
+          plot->set2D(  is2D);
+          plot->set3D(! is2D);
+
+          plot->init();
+
+          if (plot->is2D())
+            app()->setPlotValues2D(plot.get());
+          else
+            app()->setPlotValues3D(plot.get());
+
+          CGnuPlotLineStyle lineStyle(app());
+
+          lineStyle.setLineType(lt);
+
+          plot->setLineStyle(lineStyle);
+        }
+      }
+    }
+    else {
+      CGnuPlotPlotP plot = group->createNewPlot(style);
+
+      plot->setSetNum(0);
+
+      plot->set2D(  is2D);
+      plot->set3D(! is2D);
+
+      plot->init();
+
+      if (plot->is2D()) {
+        if (! app()->readBinaryFile2D(fileName.toStdString(), plot))
+          return;
+      }
+      else {
+        if (! app()->readBinaryFile3D(fileName.toStdString(), plot, usingCols))
+          return;
+      }
+
+      CGnuPlotLineStyle lineStyle(app());
+
+      lineStyle.setLineType(lt);
+
+      plot->setLineStyle(lineStyle);
+    }
+  }
+  else {
+    CGnuPlotImageStyle is = app()->imageStyle();
+
+    is.setFileType(CGnuPlotTypes::ImageType::PNG);
+
+    app()->setImageStyle(is);
+
+    style = CGnuPlotTypes::PlotStyle::RGBIMAGE;
+
+    CGnuPlotPlotP plot = app()->addImage2D(group, fileName.toStdString(), style, usingCols);
+
+    plot->setBinary(true);
+
+    CGnuPlotLineStyle lineStyle(app());
+
+    lineStyle.setLineType(lt);
+
+    plot->setLineStyle(lineStyle);
+
+    group->addSubPlot(plot);
+  }
+}
+
+void
+CQGnuPlotMainWindow::
+loadFunction()
+{
+  CQGnuPlotLoadFunctionDialog *dialog = new CQGnuPlotLoadFunctionDialog(this);
+
+  dialog->exec();
+
+  if (! dialog->accepted())
+    return;
+
+  bool                     is2D      = dialog->is2D();
+  CGnuPlotTypes::PlotStyle style     = dialog->plotStyle();
+  QStringList              functions = dialog->functions();
+  int                      ns        = dialog->samples();
+  double                   xmin      = dialog->xmin();
+  double                   xmax      = dialog->xmax();
+  int                      lt        = dialog->lineType();
+
+  if (! numGroups())
+    createNewGroup();
+
+  CGnuPlotGroupP group = *groups().begin();
+
+  group->set2D(  is2D);
+  group->set3D(! is2D);
+
+  CGnuPlot::Samples samples = app()->samples();
+
+  samples.set(ns, ns);
+
+  app()->setSamples(samples);
+
+  app()->setXRange(xmin, xmax);
+
+  for (int i = 0; i < functions.size(); ++i) {
+    CGnuPlot::StringArray funcs;
+
+    funcs.push_back(functions[i].toStdString());
+
+    CGnuPlotPlotP plot;
+
+    if (is2D)
+      plot = app()->addFunction2D(group, funcs, style);
+    else
+      plot = app()->addFunction3D(group, funcs, style);
+
+    CGnuPlotLineStyle lineStyle(app());
+
+    lineStyle.setLineType(lt);
+
+    plot->setLineStyle(lineStyle);
+
+    group->addSubPlot(plot);
+  }
+}
+
+void
+CQGnuPlotMainWindow::
+manageFunctions()
+{
+  CQGnuPlotManageFunctionsDialog *dialog = new CQGnuPlotManageFunctionsDialog(this);
+
+  dialog->exec();
+}
+
+void
+CQGnuPlotMainWindow::
+manageVariables()
+{
+  CQGnuPlotManageVariablesDialog *dialog = new CQGnuPlotManageVariablesDialog(this);
+
+  dialog->exec();
+}
+
+void
+CQGnuPlotMainWindow::
 saveSVG()
 {
   app()->pushDevice();
@@ -1650,7 +1958,7 @@ pointsSlot()
   tree_->getSelectedObjects(objs);
 
   for (const auto &o : objs) {
-    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(o);
+    CQGnuPlotPlot *qplot = qobject_cast<CQGnuPlotPlot *>(o);
     if (! qplot) continue;
 
     qplot->printPoints();
@@ -1675,7 +1983,7 @@ getGroupAt(const CPoint2D &p)
   mouseEvent.setPixel(p);
 
   for (auto group : groups()) {
-    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
     if (qgroup->inside(mouseEvent))
       return qgroup;
@@ -1692,7 +2000,7 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
 
   if      (mode_ == Mode::SELECT) {
     for (auto group : groups()) {
-      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
       qgroup->mousePress(mouseEvent);
     }
@@ -1712,7 +2020,7 @@ mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
 {
   if (mode_ == Mode::SELECT) {
     for (auto group : groups()) {
-      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
       qgroup->mouseMove(mouseEvent);
     }
@@ -1930,7 +2238,7 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
 
   if      (mode_ == Mode::SELECT) {
     for (auto group : groups()) {
-      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
       qgroup->keyPress(keyEvent);
     }
@@ -2047,7 +2355,7 @@ CQGnuPlotMainWindow::
 mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip)
 {
   for (auto group : groups()) {
-    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
     if (qgroup->mouseTip(mouseEvent, tip))
       return true;
@@ -2072,7 +2380,7 @@ paint(QPainter *p)
   qrenderer->setPainter(p);
 
   for (auto group : groups()) {
-    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group);
+    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
     qgroup->setPainter(p);
   }
@@ -2159,6 +2467,21 @@ itemSelectedSlot(QObject *obj, const QString & /*path*/)
   CQUtil::setProperty(obj, "selected", QVariant(true));
 
   redraw();
+}
+
+void
+CQGnuPlotMainWindow::
+treeMenuExec(QObject *obj, const QPoint &gpos)
+{
+  CQGnuPlotGroup *qgroup = qobject_cast<CQGnuPlotGroup *>(obj);
+
+  if (qgroup) {
+    QMenu menu;
+
+    menu.addAction("Fit", qgroup, SLOT(fitSlot()));
+
+    menu.exec(gpos);
+  }
 }
 
 void

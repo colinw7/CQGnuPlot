@@ -16,6 +16,7 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   Q_PROPERTY(int    id           READ id)
   Q_PROPERTY(int    ind          READ ind             WRITE setInd)
   Q_PROPERTY(bool   is3D         READ is3D            WRITE set3D)
+  Q_PROPERTY(bool   isPolar      READ isPolar         WRITE setPolar)
 
   Q_PROPERTY(double regionLeft   READ getRegionLeft   WRITE setRegionLeft  )
   Q_PROPERTY(double regionRight  READ getRegionRight  WRITE setRegionRight )
@@ -98,6 +99,9 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   void windowToPixel(const CPoint2D &w, CPoint2D &p);
 
   bool inside(const CGnuPlotMouseEvent &mouseEvent) const;
+
+ public slots:
+  void fitSlot();
 
  private:
   CQGnuPlotWindow *window_;

@@ -191,6 +191,7 @@ enum CExprITokenType {
 class CExpr {
  public:
   typedef std::vector<CExprFunctionPtr> Functions;
+  typedef std::vector<std::string>      StringArray;
 
  public:
   static CExpr *instance();
@@ -230,7 +231,7 @@ class CExpr {
   CExprVariablePtr getVariable     (const std::string &name) const;
   CExprVariablePtr createVariable  (const std::string &name, CExprValuePtr value);
   void             removeVariable  (const std::string &name);
-  void             getVariableNames(std::vector<std::string> &names) const;
+  void             getVariableNames(StringArray &names) const;
 
   CExprVariablePtr createRealVariable   (const std::string &name, double x);
   CExprVariablePtr createIntegerVariable(const std::string &name, long l);
@@ -240,11 +241,11 @@ class CExpr {
   CExprFunctionPtr getFunction (const std::string &name);
   void             getFunctions(const std::string &name, Functions &functions);
 
-  CExprFunctionPtr addFunction(const std::string &name, const std::vector<std::string> &args,
+  CExprFunctionPtr addFunction(const std::string &name, const StringArray &args,
                                const std::string &proc);
   CExprFunctionPtr addFunction(const std::string &name, const std::string &argsStr,
                                CExprFunctionObj *proc);
-  void getFunctionNames(std::vector<std::string> &names) const;
+  void getFunctionNames(StringArray &names) const;
 
   CExprTokenBaseP getOperator(CExprOpType id);
 

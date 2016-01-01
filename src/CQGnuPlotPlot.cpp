@@ -47,6 +47,27 @@ qwindow() const
   return qgroup()->qwindow();
 }
 
+QString
+CQGnuPlotPlot::
+usingColsStr() const
+{
+  return usingCols().str().c_str();
+}
+
+void
+CQGnuPlotPlot::
+setUsingColsStr(const QString &str)
+{
+  if (str != usingColsStr()) {
+    usingCols_.init(str.toStdString());
+
+    if (is2D())
+      app()->setPlotValues2D(this);
+    else
+      app()->setPlotValues3D(this);
+  }
+}
+
 QColor
 CQGnuPlotPlot::
 lineColor() const
@@ -58,11 +79,13 @@ void
 CQGnuPlotPlot::
 setLineColor(const QColor &c)
 {
-  CGnuPlotColorSpec cs;
+  if (c != lineColor()) {
+    CGnuPlotColorSpec cs;
 
-  cs.setRGB(fromQColor(c));
+    cs.setRGB(fromQColor(c));
 
-  CGnuPlotPlot::setLineColor(cs);
+    CGnuPlotPlot::setLineColor(cs);
+  }
 }
 
 bool
@@ -76,11 +99,13 @@ void
 CQGnuPlotPlot::
 setSurfaceEnabled(bool b)
 {
-  CGnuPlotSurfaceData surfaceData = CGnuPlotPlot::surfaceData();
+  if (b != isSurfaceEnabled()) {
+    CGnuPlotSurfaceData surfaceData = CGnuPlotPlot::surfaceData();
 
-  surfaceData.setEnabled(b);
+    surfaceData.setEnabled(b);
 
-  CGnuPlotPlot::setSurfaceData(surfaceData);
+    CGnuPlotPlot::setSurfaceData(surfaceData);
+  }
 }
 
 QColor
@@ -96,25 +121,134 @@ void
 CQGnuPlotPlot::
 setSurfaceColor(const QColor &c)
 {
-  CGnuPlotSurfaceData surfaceData = CGnuPlotPlot::surfaceData();
+  if (c != surfaceColor()) {
+    CGnuPlotSurfaceData surfaceData = CGnuPlotPlot::surfaceData();
 
-  surfaceData.setColor(fromQColor(c));
+    surfaceData.setColor(fromQColor(c));
 
-  CGnuPlotPlot::setSurfaceData(surfaceData);
+    CGnuPlotPlot::setSurfaceData(surfaceData);
+  }
 }
 
 CQGnuPlotEnum::PlotStyle
 CQGnuPlotPlot::
 plotStyle() const
 {
-  return CQGnuPlotUtil::plotStyleConv(CGnuPlotPlot::getStyle());
+  return CQGnuPlotEnum::plotStyleConv(CGnuPlotPlot::style());
 }
 
 void
 CQGnuPlotPlot::
 setPlotStyle(const CQGnuPlotEnum::PlotStyle &s)
 {
-  CGnuPlotPlot::setStyle(CQGnuPlotUtil::plotStyleConv(s));
+  if (s != plotStyle()) {
+    CGnuPlotPlot::setStyle(CQGnuPlotEnum::plotStyleConv(s));
+  }
+}
+
+double
+CQGnuPlotPlot::
+xrangeMin() const
+{
+  double xmin, xmax;
+
+  CGnuPlotPlot::getXRange(&xmin, &xmax);
+
+  return xmin;
+}
+
+void
+CQGnuPlotPlot::
+setXRangeMin(double x)
+{
+  CGnuPlotPlot::xaxis(1).setMin(x);
+}
+
+double
+CQGnuPlotPlot::
+xrangeMax() const
+{
+  double xmin, xmax;
+
+  CGnuPlotPlot::getXRange(&xmin, &xmax);
+
+  return xmax;
+}
+
+void
+CQGnuPlotPlot::
+setXRangeMax(double x)
+{
+  CGnuPlotPlot::xaxis(1).setMax(x);
+}
+
+double
+CQGnuPlotPlot::
+yrangeMin() const
+{
+  double ymin, ymax;
+
+  CGnuPlotPlot::getYRange(&ymin, &ymax);
+
+  return ymin;
+}
+
+void
+CQGnuPlotPlot::
+setYRangeMin(double y)
+{
+  CGnuPlotPlot::yaxis(1).setMin(y);
+}
+
+double
+CQGnuPlotPlot::
+yrangeMax() const
+{
+  double ymin, ymax;
+
+  CGnuPlotPlot::getYRange(&ymin, &ymax);
+
+  return ymax;
+}
+
+void
+CQGnuPlotPlot::
+setYRangeMax(double y)
+{
+  CGnuPlotPlot::yaxis(1).setMax(y);
+}
+
+QString
+CQGnuPlotPlot::
+functions() const
+{
+  QString fns;
+
+  for (const auto &s : CGnuPlotPlot::functions()) {
+    if (fns.length()) fns += " ";
+
+    fns += s.c_str();
+  }
+
+  return fns;
+}
+
+void
+CQGnuPlotPlot::
+setFunctions(const QString &functions)
+{
+  if (functions != this->functions()) {
+    QStringList fns = functions.split(" ", QString::SkipEmptyParts);
+
+    CGnuPlotPlot::StringArray fns1;
+
+    for (int i = 0; i < fns.size(); ++i)
+      fns1.push_back(fns[i].toStdString());
+
+    CGnuPlotPlot::setFunctions(fns1);
+
+    CGnuPlot::updateFunction2D(this);
+  }
 }
 
 CQGnuPlotEnum::FillType
@@ -128,7 +262,9 @@ void
 CQGnuPlotPlot::
 setFillType(const CQGnuPlotEnum::FillType &type)
 {
-  CGnuPlotPlot::fillStyle_.setStyle(CQGnuPlotUtil::fillTypeConv(type));
+  if (type != fillType()) {
+    CGnuPlotPlot::fillStyle_.setStyle(CQGnuPlotUtil::fillTypeConv(type));
+  }
 }
 
 CQGnuPlotEnum::FillPattern
@@ -142,7 +278,9 @@ void
 CQGnuPlotPlot::
 setFillPattern(const CQGnuPlotEnum::FillPattern &pattern)
 {
-  CGnuPlotPlot::fillStyle_.setPattern(CQGnuPlotUtil::fillPatternConv(pattern));
+  if (pattern != fillPattern()) {
+    CGnuPlotPlot::fillStyle_.setPattern(CQGnuPlotUtil::fillPatternConv(pattern));
+  }
 }
 
 CQGnuPlotEnum::SymbolType
@@ -156,7 +294,9 @@ void
 CQGnuPlotPlot::
 setPointType(const CQGnuPlotEnum::SymbolType &type)
 {
-  CGnuPlotPlot::setPointType(int(CQGnuPlotEnum::symbolConv(type)));
+  if (type != pointType()) {
+    CGnuPlotPlot::setPointType(int(CQGnuPlotEnum::symbolConv(type)));
+  }
 }
 
 CQGnuPlotEnum::BoxWidthType
@@ -170,7 +310,9 @@ void
 CQGnuPlotPlot::
 setBoxWidthType(const CQGnuPlotEnum::BoxWidthType &type)
 {
-  CGnuPlotPlot::setBoxWidthType(CQGnuPlotUtil::boxWidthTypeConv(type));
+  if (type != getBoxWidthType()) {
+    CGnuPlotPlot::setBoxWidthType(CQGnuPlotUtil::boxWidthTypeConv(type));
+  }
 }
 
 void

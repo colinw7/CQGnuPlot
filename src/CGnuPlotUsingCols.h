@@ -74,6 +74,9 @@ class CGnuPlotUsingCols {
  public:
   CGnuPlotUsingCols(CGnuPlot *plot=0);
 
+  const std::string &str() const { return str_; }
+  void setStr(const std::string &s) { str_ = s; }
+
   void init(const std::string &str);
 
   uint numCols() const { return cols_.size(); }
@@ -136,6 +139,7 @@ class CGnuPlotUsingCols {
  private:
   typedef std::vector<CGnuPlotUsingCol> Cols;
 
+  std::string       str_;
   Cols              cols_;
   COptInt           colMin_, colMax_;
   AxisTicLabel      axisTicLabel_;

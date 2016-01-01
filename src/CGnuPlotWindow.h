@@ -4,10 +4,11 @@
 #include <vector>
 
 #include <CGnuPlot.h>
+#include <CGnuPlotGroup.h>
 
 class CGnuPlotWindow {
  public:
-  typedef std::vector<CGnuPlotGroup *> Groups;
+  typedef std::vector<CGnuPlotGroupP> Groups;
 
  public:
   CGnuPlotWindow(CGnuPlot *plot=0);
@@ -28,7 +29,9 @@ class CGnuPlotWindow {
 
   //---
 
-  void addGroup(CGnuPlotGroup *group);
+  CGnuPlotGroupP createNewGroup();
+
+  void addGroup(CGnuPlotGroupP &group);
 
   const Groups &groups() const { return groups_; }
   uint numGroups() const { return groups_.size(); }

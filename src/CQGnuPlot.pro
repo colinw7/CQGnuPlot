@@ -63,6 +63,11 @@ CQGnuPlotToolBar.cpp \
 CQGnuPlotUtil.cpp \
 CQGnuPlotWindow.cpp \
 \
+CQGnuPlotLoadFileDialog.cpp \
+CQGnuPlotLoadFunctionDialog.cpp \
+CQGnuPlotManageFunctionsDialog.cpp \
+CQGnuPlotManageVariablesDialog.cpp \
+\
 CGnuPlot.cpp \
 CGnuPlotAnnotation.cpp \
 CGnuPlotArrow.cpp \
@@ -198,6 +203,8 @@ CQPoint2DEdit.cpp \
 CQIconCombo.cpp \
 CQCursor.cpp \
 CQRubberBand.cpp \
+CQDialog.cpp \
+CQEnumCombo.cpp \
 \
 CAdjacency.cpp \
 CDelaunay.cpp \
@@ -277,6 +284,11 @@ CQGnuPlotTitle.h \
 CQGnuPlotToolBar.h \
 CQGnuPlotUtil.h \
 CQGnuPlotWindow.h \
+\
+CQGnuPlotLoadFileDialog.h \
+CQGnuPlotLoadFunctionDialog.h \
+CQGnuPlotManageFunctionsDialog.h \
+CQGnuPlotManageVariablesDialog.h \
 \
 CGnuPlot.h \
 CGnuPlotArrow.h \
@@ -415,6 +427,8 @@ CQPoint2DEdit.h \
 CQIconCombo.h \
 CQCursor.h \
 CQRubberBand.h \
+CQDialog.h \
+CQEnumCombo.h \
 \
 CAdjacency.h \
 CDelaunay.h \

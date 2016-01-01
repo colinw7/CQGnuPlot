@@ -228,11 +228,11 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void setWindow(CGnuPlotWindow *w) { window_ = w; }
   CGnuPlotWindow *window() const { return window_; }
 
-  const CGnuPlotCameraP &camera() const { return camera_; }
-  void setCamera(const CGnuPlotCameraP &c) { camera_ = c; }
-  void unsetCamera() { camera_ = CGnuPlotCameraP(); }
+  CGnuPlotCamera *camera() const { return camera_; }
+  void setCamera(CGnuPlotCamera *c) { camera_ = c; }
+  void unsetCamera() { camera_ = 0; }
 
-  bool is3D() const { return camera_.isValid(); }
+  bool is3D() const { return camera_; }
 
   int width() const { return width_; }
   void setWidth(int w) { width_ = w; }
@@ -573,21 +573,21 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void pixelToWindowI(double px, double py, double *wx, double *wy, bool margin);
 
  protected:
-  CGnuPlotWindow  *window_ { 0 };     // current window
-  CGnuPlotCameraP  camera_;           // camera
-  int              width_ { 100 };    // pixel width
-  int              height_ { 100 };   // pixel height
-  bool             mapping_ { true }; // mapping enabled
-  CBBox2D          region_;           // window region (0,0) -> (1,1)
-  CGnuPlotMargin   margin_;           // margin for plot
-  CBBox2D          range_;            // data range
-  COptReal         ratio_;            // aspect ratio
-  COptBBox2D       clip_;             // clip area
-  CFontPtr         font_;             // font
-  bool             reverseX_ { false };
-  bool             reverseY_ { false };
-  ZHiddenObjects   hiddenObjects_;
-  double           hiddenZ_ { 1.0 };
+  CGnuPlotWindow* window_ { 0 };     // current window
+  CGnuPlotCamera* camera_ { 0 };     // camera
+  int             width_ { 100 };    // pixel width
+  int             height_ { 100 };   // pixel height
+  bool            mapping_ { true }; // mapping enabled
+  CBBox2D         region_;           // window region (0,0) -> (1,1)
+  CGnuPlotMargin  margin_;           // margin for plot
+  CBBox2D         range_;            // data range
+  COptReal        ratio_;            // aspect ratio
+  COptBBox2D      clip_;             // clip area
+  CFontPtr        font_;             // font
+  bool            reverseX_ { false };
+  bool            reverseY_ { false };
+  ZHiddenObjects  hiddenObjects_;
+  double          hiddenZ_ { 1.0 };
 };
 
 #endif

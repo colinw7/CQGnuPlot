@@ -286,6 +286,7 @@ class CGnuPlotPlot {
   typedef std::vector<CGnuPlotPoint>          Points2D;
   typedef std::map<int,Points2D>              Points3D;
   typedef std::vector<CPoint3D>               Point3DArray;
+  typedef std::vector<std::string>            StringArray;
 
   typedef CGnuPlotCache<CGnuPlotArrowObject>      ArrowCache;
   typedef CGnuPlotCache<CGnuPlotBoxBarObject>     BoxBarCache;
@@ -301,6 +302,11 @@ class CGnuPlotPlot {
   typedef CGnuPlotCache<CGnuPlotPointObject>      PointCache;
   typedef CGnuPlotCache<CGnuPlotPolygonObject>    PolygonCache;
   typedef CGnuPlotCache<CGnuPlotRectObject>       RectCache;
+
+  typedef CGnuPlot::Samples     Samples;
+  typedef CGnuPlot::ISOSamples  ISOSamples;
+  typedef CGnuPlot::SampleVars  SampleVars;
+  typedef CGnuPlot::DummyVars   DummyVars;
 
   typedef std::vector<CGnuPlotArrowObject *>      ArrowObjects;
   typedef std::vector<CGnuPlotBoxBarObject *>     BoxBarObjects;
@@ -354,7 +360,36 @@ class CGnuPlotPlot {
 
   //---
 
-  PlotStyle getStyle() const { return style_; }
+  int setNum() const { return setNum_; }
+  void setSetNum(int i) { setNum_ = i; }
+
+  const CGnuPlotFile &dataFile() const { return dataFile_; }
+  void setDataFile(const CGnuPlotFile &v) { dataFile_ = v; }
+
+  const CGnuPlotUsingCols &usingCols() const { return usingCols_; }
+  void setUsingCols(const CGnuPlotUsingCols &v) { usingCols_ = v; }
+
+  const CGnuPlotKeyTitle &keyTitle() const { return keyTitle_; }
+  void setKeyTitle(const CGnuPlotKeyTitle &v) { keyTitle_ = v; }
+
+  const StringArray &functions() const { return functions_; }
+  void setFunctions(const StringArray &v) { functions_ = v; }
+
+  const Samples &samples() const { return samples_; }
+  void setSamples(const Samples &s) { samples_ = s; }
+
+  const ISOSamples &isoSamples() const { return isoSamples_; }
+  void setISOSamples(const ISOSamples &s) { isoSamples_ = s; }
+
+  const SampleVars &sampleVars() const { return sampleVars_; }
+  void setSampleVars(const SampleVars &v) { sampleVars_ = v; }
+
+  const DummyVars &dummyVars() const { return dummyVars_; }
+  void setDummyVars(const DummyVars &v) { dummyVars_ = v; }
+
+  //---
+
+  PlotStyle style() const { return style_; }
   void setStyle(PlotStyle style);
 
   //---
@@ -371,20 +406,31 @@ class CGnuPlotPlot {
   bool isPolar() const { return polar_; }
   void setPolar(bool b) { polar_ = b; }
 
+  bool isParametric() const { return parametric_; }
+  void setParametric(bool b) { parametric_ = b; }
+
+  //------
+
   bool isEnhanced() const { return enhanced_; }
   void setEnhanced(bool b) { enhanced_ = b; }
 
   bool is2D() const;
+  void set2D(bool b);
+
   bool is3D() const;
-
-  //---
-
-  int ind() const { return ind_; }
-  void setInd(int ind) { ind_ = ind; }
+  void set3D(bool b);
 
   //---
 
   void resetSurface() { surfaceSet_ = false; }
+
+  //---
+
+  int samplesNX() const { int nx, ny; samples().get(nx, ny); return nx; }
+  void setSampleNX(int nx) { int nx1, ny; samples().get(nx1, ny); samples_.set(nx, ny); }
+
+  int samplesNY() const { int nx, ny; samples().get(nx, ny); return ny; }
+  void setSampleNY(int ny) { int nx, ny1; samples().get(nx, ny1); samples_.set(nx, ny); }
 
   //---
 
@@ -475,6 +521,12 @@ class CGnuPlotPlot {
   const CGnuPlotPointStyle &pointStyle() const { return pointStyle_; }
   void setPointStyle(const CGnuPlotPointStyle &s) { pointStyle_ = s; }
 
+  const CGnuPlotStyleData &styleData() const { return styleData_; }
+  void setStyleData(const CGnuPlotStyleData &v) { styleData_ = v; }
+
+  const CGnuPlotKeyData &keyData() const { return keyData_; }
+  void setKeyData(const CGnuPlotKeyData &k) { keyData_ = k; }
+
   //---
 
   const CGnuPlotArrowStyle &arrowStyle() const { return styleData_.arrow; }
@@ -506,8 +558,6 @@ class CGnuPlotPlot {
   void setPieStyle(const CGnuPlotPieStyle &s) { styleData_.pie = s; }
 
   //---
-
-  const CGnuPlotKeyTitle &keyTitle() const { return keyTitle_; }
 
   const std::string &keyTitleString() const { return keyTitle_.str; }
   void setKeyTitleString(const std::string &s) { keyTitle_.str = s; }
@@ -632,8 +682,64 @@ class CGnuPlotPlot {
 
   //---
 
+  const CGnuPlotAxesData &axesData() const { return axesData_; }
+  void setAxesData(const CGnuPlotAxesData &a) { axesData_ = a; }
+
+  const CGnuPlotAxisData &xaxis(int ind) const {
+    return const_cast<CGnuPlotPlot *>(this)->xaxis(ind);
+  }
+  const CGnuPlotAxisData &yaxis(int ind) const {
+    return const_cast<CGnuPlotPlot *>(this)->yaxis(ind);
+  }
+  const CGnuPlotAxisData &zaxis(int ind) const {
+    return const_cast<CGnuPlotPlot *>(this)->zaxis(ind);
+  }
+  const CGnuPlotAxisData &paxis(int ind) const {
+    return const_cast<CGnuPlotPlot *>(this)->paxis(ind);
+  }
+  const CGnuPlotAxisData &taxis(int ind) const {
+    return const_cast<CGnuPlotPlot *>(this)->taxis(ind);
+  }
+
+  CGnuPlotAxisData &xaxis(int ind) { return axesData_.xaxis(ind); }
+  CGnuPlotAxisData &yaxis(int ind) { return axesData_.yaxis(ind); }
+  CGnuPlotAxisData &zaxis(int ind) { return axesData_.zaxis(ind); }
+  CGnuPlotAxisData &paxis(int ind) { return axesData_.paxis(ind); }
+  CGnuPlotAxisData &taxis(int ind) { return axesData_.taxis(ind); }
+
+  //---
+
+  void getXRange(double *xmin, double *xmax) const {
+    *xmin = xaxis(1).min().getValue(-10);
+    *xmax = xaxis(1).max().getValue( 10);
+  }
+  void getYRange(double *ymin, double *ymax) const {
+    *ymin = yaxis(1).min().getValue(-10);
+    *ymax = yaxis(1).max().getValue( 10);
+  }
+  void getZRange(double *zmin, double *zmax) const {
+    *zmin = zaxis(1).min().getValue(-10);
+    *zmax = zaxis(1).max().getValue( 10);
+  }
+  void getParametricTRange(double *tmin, double *tmax) const {
+    *tmin = taxis(1).min().getValue(-5);
+    *tmax = taxis(1).max().getValue( 5);
+  }
+  void getPolarTRange(double *tmin, double *tmax) const {
+    *tmin = taxis(1).min().getValue(0);
+
+    if (isAngleDegrees())
+      *tmax = taxis(1).max().getValue(360.0);
+    else
+      *tmax = taxis(1).max().getValue(2*M_PI);
+  }
+
+  //---
+
   bool isCacheActive() const { return cacheActive_; }
   void setCacheActive(bool b) { cacheActive_ = b; }
+
+  void clearCaches();
 
   void updateArrowCacheSize     (int n);
   void updateBoxBarCacheSize    (int n);
@@ -769,11 +875,6 @@ class CGnuPlotPlot {
 
   //------
 
-  bool isParametric() const { return parametric_; }
-  void setParametric(bool b) { parametric_ = b; }
-
-  //------
-
   CGnuPlotTypes::Mapping mapping() const { return mapping_; }
   void setMapping(CGnuPlotTypes::Mapping m) { mapping_ = m; }
 
@@ -857,8 +958,16 @@ class CGnuPlotPlot {
   CGnuPlotGroup*           group_;                            // parent group
   PlotStyle                style_ { PlotStyle::POINTS};       // plot style
   int                      id_;                               // unique id
-  int                      ind_       { 0 };                  // axis index
   bool                     displayed_ { true };               // is displayed
+  int                      setNum_    { 0 };                  // set num
+  CGnuPlotFile             dataFile_;                         // data file
+  CGnuPlotUsingCols        usingCols_;                        // using column data
+  CGnuPlotKeyTitle         keyTitle_;                         // title on key
+  StringArray              functions_;                        // functions
+  Samples                  samples_;
+  ISOSamples               isoSamples_;
+  SampleVars               sampleVars_;
+  DummyVars                dummyVars_;
   Points2D                 points2D_;                         // 2D points
   Points3D                 points3D_;                         // 3D points
   CBBox2D                  imageRange_;                       // image range
@@ -878,7 +987,7 @@ class CGnuPlotPlot {
   CGnuPlotLineStyle        lineStyle_;                        // line style
   CGnuPlotPointStyle       pointStyle_;                       // point style
   CGnuPlotStyleData        styleData_;                        // style data
-  CGnuPlotKeyTitle         keyTitle_;                         // title on key
+  CGnuPlotKeyData          keyData_;                          // key data
   int                      xind_ { 1 };                       // xaxis index
   int                      yind_ { 1 };                       // yaxis index
   int                      zind_ { 1 };                       // yaxis index
@@ -887,6 +996,7 @@ class CGnuPlotPlot {
   COptReal                 zmin_, zmax_;                      // calculated points z range
   COptReal                 bymin_, bymax_;                    // calculated points bounded y range
   COptReal                 cbmin_, cbmax_;                    // color box range
+  CGnuPlotAxesData         axesData_;
   CBBox2D                  bbox2D_ { 0, 0, 1, 1 };            // bounding box (2D)
   CBBox3D                  bbox3D_ { 0, 0, 0, 1, 1, 1 };      // bounding box (3D)
   Smooth                   smooth_ { Smooth::NONE };          // smooth data
@@ -930,6 +1040,8 @@ class CGnuPlotPlot {
  private:
   CGnuPlotStyleAdjacencyRenderer *arenderer_;
 };
+
+typedef std::shared_ptr<CGnuPlotPlot> CGnuPlotPlotP;
 
 //------
 

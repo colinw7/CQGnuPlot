@@ -1725,7 +1725,7 @@ CPoint3D
 CGnuPlotRenderer::
 transform(const CPoint3D &p) const
 {
-  if (camera_.isValid())
+  if (camera_)
     return camera_->transform(p);
   else
     return p;

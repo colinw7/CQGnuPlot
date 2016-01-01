@@ -39,6 +39,8 @@ class CUnixFile;
 class CParseLine;
 
 typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
+typedef std::shared_ptr<CGnuPlotGroup>  CGnuPlotGroupP;
+typedef std::shared_ptr<CGnuPlotPlot>   CGnuPlotPlotP;
 
 //------
 
@@ -167,6 +169,70 @@ class CGnuPlot {
   typedef std::vector<double>                    Reals;
   typedef std::vector<float>                     Floats;
   typedef std::vector<int>                       Integers;
+
+  class DummyVars {
+   public:
+    DummyVars() { }
+
+    void dummyVars(std::string &dummyVar1, std::string &dummyVar2,
+                   bool isParametric, bool isPolar, bool is3D) const {
+      DummyVars *th = const_cast<DummyVars *>(this);
+
+      if      (isParametric) {
+        if (! is3D) {
+          dummyVar1 = th->varMap_["t"]; if (dummyVar1 == "") dummyVar1 = "t";
+          dummyVar2 = th->varMap_["y"]; if (dummyVar2 == "") dummyVar2 = "y";
+        }
+        else {
+          dummyVar1 = th->varMap_["u"]; if (dummyVar1 == "") dummyVar1 = "u";
+          dummyVar2 = th->varMap_["v"]; if (dummyVar2 == "") dummyVar2 = "v";
+        }
+      }
+      else if (isPolar) {
+        if (! is3D) {
+          dummyVar1 = th->varMap_["t"]; if (dummyVar1 == "") dummyVar1 = "t";
+          dummyVar2 = th->varMap_["y"]; if (dummyVar2 == "") dummyVar2 = "y";
+        }
+        else {
+          dummyVar1 = th->varMap_["u"]; if (dummyVar1 == "") dummyVar1 = "u";
+          dummyVar2 = th->varMap_["v"]; if (dummyVar2 == "") dummyVar2 = "v";
+        }
+      }
+      else {
+        dummyVar1 = th->varMap_["x"]; if (dummyVar1 == "") dummyVar1 = "x";
+        dummyVar2 = th->varMap_["y"]; if (dummyVar2 == "") dummyVar2 = "y";
+      }
+    }
+
+    void setDummyVar(const std::string &name, const std::string &value) {
+      varMap_[name] = value;
+    }
+
+    void setDummyVars(const std::string &dummyVar1, const std::string &dummyVar2,
+                      bool isParametric, bool isPolar) {
+      if      (isParametric) {
+        if (dummyVar1 != "") varMap_["t"] = dummyVar1;
+        if (dummyVar2 != "") varMap_["y"] = dummyVar2;
+      }
+      else if (isPolar) {
+        if (dummyVar1 != "") varMap_["t"] = dummyVar1;
+        if (dummyVar2 != "") varMap_["y"] = dummyVar2;
+      }
+      else {
+        if (dummyVar1 != "") varMap_["x"] = dummyVar1;
+        if (dummyVar2 != "") varMap_["y"] = dummyVar2;
+      }
+    }
+
+    void resetDummyVars() {
+      varMap_.clear();
+    }
+
+   private:
+    typedef std::map<std::string,std::string> VarMap;
+
+    VarMap varMap_;
+  };
 
   class Bars {
    public:
@@ -347,8 +413,8 @@ class CGnuPlot {
 
   //---
 
-  typedef std::vector<CGnuPlotPlot *> Plots;
-  typedef StringArray                 Statements;
+  typedef std::vector<CGnuPlotPlotP> Plots;
+  typedef StringArray                Statements;
 
   typedef std::map<CGnuPlot::VariableName,CGnuPlotPrefValueBase *> VarPrefs;
 
@@ -381,6 +447,7 @@ class CGnuPlot {
   //----
 
   void addWindow(CGnuPlotWindowP window);
+
   void removeWindow(CGnuPlotWindow *window);
 
   //----
@@ -392,10 +459,10 @@ class CGnuPlot {
 
   //----
 
-  PlotStyle getDataStyle() const { return dataStyle_; }
+  PlotStyle dataStyle() const { return dataStyle_; }
   void setDataStyle(PlotStyle style) { dataStyle_ = style; }
 
-  PlotStyle getFunctionStyle() const { return functionStyle_; }
+  PlotStyle functionStyle() const { return functionStyle_; }
   void setFunctionStyle(PlotStyle style) { functionStyle_ = style; }
 
   const CGnuPlotFillStyle &fillStyle() const { return fillStyle_; }
@@ -519,6 +586,12 @@ class CGnuPlot {
   const CGnuPlotAxisData &taxis(int ind) const {
     return const_cast<CGnuPlot *>(this)->taxis(ind);
   }
+  const CGnuPlotAxisData &uaxis() const {
+    return const_cast<CGnuPlot *>(this)->uaxis();
+  }
+  const CGnuPlotAxisData &vaxis() const {
+    return const_cast<CGnuPlot *>(this)->vaxis();
+  }
 
   CGnuPlotAxisData &xaxis(int ind) { return axesData_.xaxis(ind); }
   CGnuPlotAxisData &yaxis(int ind) { return axesData_.yaxis(ind); }
@@ -533,23 +606,23 @@ class CGnuPlot {
 
   //---
 
-  void getXRange(double *xmin, double *xmax) {
+  void getXRange(double *xmin, double *xmax) const {
     *xmin = xaxis(1).min().getValue(-10);
     *xmax = xaxis(1).max().getValue( 10);
   }
-  void getYRange(double *ymin, double *ymax) {
+  void getYRange(double *ymin, double *ymax) const {
     *ymin = yaxis(1).min().getValue(-10);
     *ymax = yaxis(1).max().getValue( 10);
   }
-  void getZRange(double *zmin, double *zmax) {
+  void getZRange(double *zmin, double *zmax) const {
     *zmin = zaxis(1).min().getValue(-10);
     *zmax = zaxis(1).max().getValue( 10);
   }
-  void getParametricTRange(double *tmin, double *tmax) {
+  void getParametricTRange(double *tmin, double *tmax) const {
     *tmin = taxis(1).min().getValue(-5);
     *tmax = taxis(1).max().getValue( 5);
   }
-  void getPolarTRange(double *tmin, double *tmax) {
+  void getPolarTRange(double *tmin, double *tmax) const {
     *tmin = taxis(1).min().getValue(0);
 
     if (isAngleDegrees())
@@ -557,13 +630,18 @@ class CGnuPlot {
     else
       *tmax = taxis(1).max().getValue(2*M_PI);
   }
-  void getURange(double *umin, double *umax) {
+  void getURange(double *umin, double *umax) const {
     *umin = uaxis().min().getValue(-5);
     *umax = uaxis().max().getValue(5);
   }
-  void getVRange(double *vmin, double *vmax) {
+  void getVRange(double *vmin, double *vmax) const {
     *vmin = vaxis().min().getValue(-5);
     *vmax = vaxis().max().getValue(5);
+  }
+
+  void setXRange(double xmin, double xmax) {
+    xaxis(1).setMin(xmin);
+    xaxis(1).setMax(xmax);
   }
 
   //---
@@ -700,6 +778,8 @@ class CGnuPlot {
 
   void mousePress(const CGnuPlotMouseEvent &mouseEvent);
   void keyPress  (const CGnuPlotKeyEvent   &keyEvent  );
+
+  CGnuPlotWindowP createNewWindow();
 
   CGnuPlotWindow *createWindow();
 
@@ -848,6 +928,8 @@ class CGnuPlot {
 
   void incLineStyle();
 
+  int numWindows() const;
+
   void drawWindows();
 
   CGnuPlotArrowStyle arrowStyle(int id) const;
@@ -862,12 +944,23 @@ class CGnuPlot {
   void warnMsg (const std::string &msg) const;
   void debugMsg(const std::string &msg) const;
 
+  void getBlockLines(const std::string &name, CGnuPlotFile::Lines &lines);
+
   CGnuPlotBlock *getBlock(const std::string &name);
 
   const CGnuPlotPrintFile &tableFile() const { return tableFile_; }
 
-  const Samples    &samples   () const { return samples_; }
+  const Samples &samples() const { return samples_; }
+  void setSamples(const Samples &s) { samples_ = s; }
+
   const ISOSamples &isoSamples() const { return isoSamples_; }
+  void setISOSamples(const ISOSamples &s) { isoSamples_ = s; }
+
+  const SampleVars &sampleVars() const { return sampleVars_; }
+  void setSampleVars(const SampleVars &v) { sampleVars_ = v; }
+
+  const DummyVars &dummyVars() const { return dummyVars_; }
+  void setDummyVars(const DummyVars &v) { dummyVars_ = v; }
 
   const CGnuPlotMultiplotP &multiplot() const { return multiplot_; }
   void setMultiplot(const CGnuPlotMultiplotP &m) { multiplot_ = m; }
@@ -876,7 +969,12 @@ class CGnuPlot {
   void setAngleType(AngleType type);
   void resetAngleType() { resetPrefValue(VariableName::ANGLES); }
 
+  bool readDataFile(const std::string &filename, CGnuPlotFile &dataFile);
+
   void readFileLines(StringArray &lines) const;
+
+  void setPlotValues2D(CGnuPlotPlot *plot);
+  void setPlotValues3D(CGnuPlotPlot *plot);
 
  private:
   void addPlotStyles();
@@ -913,21 +1011,21 @@ class CGnuPlot {
   void saveCmd(const std::string &args);
 
   void plotCmd   (const std::string &args);
-  void plotCmd1  (const std::string &args, CGnuPlotGroup *group, Plots &plots,
+  void plotCmd1  (const std::string &args, CGnuPlotGroupP &group, Plots &plots,
                   bool &sample, bool &first);
   void replotCmd (const std::string &args);
   void refreshCmd(const std::string &args);
   void splotCmd  (const std::string &args);
-  void splotCmd1 (const std::string &args, CGnuPlotGroup *group, Plots &plots,
+  void splotCmd1 (const std::string &args, CGnuPlotGroupP &group, Plots &plots,
                   bool &sample, bool &first);
 
   void saveAxisData();
   void restoreAxisData();
 
   void plotForCmd (const ForCmd &forCmd, const std::string &args,
-                   CGnuPlotGroup *group, Plots &plots);
+                   CGnuPlotGroupP &group, Plots &plots);
   void splotForCmd(const ForCmd &forCmd, const std::string &args,
-                   CGnuPlotGroup *group, Plots &plots);
+                   CGnuPlotGroupP &group, Plots &plots);
   void setForCmd  (const ForCmd &forCmd, const std::string &args);
   void unsetForCmd(const ForCmd &forCmd, const std::string &args);
 
@@ -944,7 +1042,7 @@ class CGnuPlot {
 
   bool parseFor(CParseLine &line, ForCmd &forCmd, std::string &cmd);
 
-  void addPlotWithStyle(CGnuPlotPlot *plot, Plots &plots, const CGnuPlotLineStyle &lineStyle,
+  void addPlotWithStyle(CGnuPlotPlotP &plot, Plots &plots, const CGnuPlotLineStyle &lineStyle,
                         const CGnuPlotFillStyle &fillStyle, const CGnuPlotStyleData &styleData,
                         const CGnuPlotKeyTitle &keyTitle);
 
@@ -1002,34 +1100,79 @@ class CGnuPlot {
 
   bool parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle);
 
-  CGnuPlotPlot *addFunction2D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style,
-                              const SampleVars &samples);
-  CGnuPlotPlot *addFunction3D(CGnuPlotGroup *group, const StringArray &functions, PlotStyle style,
-                              const SampleVars &samples);
-
-  void addFile2D(Plots &plots, CGnuPlotGroup *group, const std::string &filename,
+  void addFile2D(Plots &plots, CGnuPlotGroupP &group, const std::string &filename,
                  PlotStyle style, const CGnuPlotUsingCols &usingCols,
-                 const SampleVars &samples, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
+                 CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
                  CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle);
 
-  void addFile3D(Plots &plots, CGnuPlotGroup *group, const std::string &filename,
+  void addGen1File2D(Plots &plots, CGnuPlotGroupP &group, PlotStyle style,
+                     const CGnuPlotUsingCols &usingCols,
+                     CGnuPlotLineStyle &lineStyle, CGnuPlotFillStyle &fillStyle,
+                     CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle);
+  void addGen2File2D(Plots &plots, CGnuPlotGroupP &group, PlotStyle style,
+                     const CGnuPlotUsingCols &usingCols,
+                     CGnuPlotLineStyle &lineStyle, CGnuPlotFillStyle &fillStyle,
+                     CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle);
+
+ public:
+  void initGen1File2D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols);
+  void initGen2File2D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols);
+
+ private:
+  void addFile3D(Plots &plots, CGnuPlotGroupP &group, const std::string &filename,
                  PlotStyle style, const CGnuPlotUsingCols &usingCols,
-                 const SampleVars &samples, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
+                 CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
                  CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle);
 
+  void addGen1File3D(Plots &plots, CGnuPlotGroupP &group, PlotStyle style,
+                     const CGnuPlotUsingCols &usingCols,
+                     CGnuPlotLineStyle &lineStyle, CGnuPlotFillStyle &fillStyle,
+                     CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle);
+  void addGen2File3D(Plots &plots, CGnuPlotGroupP &group, PlotStyle style,
+                     const CGnuPlotUsingCols &usingCols,
+                     CGnuPlotLineStyle &lineStyle, CGnuPlotFillStyle &fillStyle,
+                     CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle);
+
+ public:
+  void initGen1File3D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols);
+  void initGen2File3D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols);
+
+ private:
   void parseCommentStyle(CParseLine &line, CGnuPlotLineStyle &ls, CGnuPlotFillStyle &fs,
-                         CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle);
+                         CGnuPlotStyleData &styleData, const CGnuPlotKeyTitle &keyTitle);
 
-  CGnuPlotPlot *addImage2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
+ public:
+  CGnuPlotPlotP addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
                            const CGnuPlotUsingCols &usingCols);
-  CGnuPlotPlot *addImage3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
+  CGnuPlotPlotP addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
                            const CGnuPlotUsingCols &usingCols);
 
-  CGnuPlotPlot *addBinary2D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
+  CGnuPlotPlotP addBinary2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
                             const CGnuPlotUsingCols &usingCols);
-  CGnuPlotPlot *addBinary3D(CGnuPlotGroup *group, const std::string &filename, PlotStyle style,
+  CGnuPlotPlotP addBinary3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
                             const CGnuPlotUsingCols &usingCols);
 
+  CGnuPlotPlotP readBinaryFormatFile2D(CUnixFile *file, CGnuPlotGroupP &group, PlotStyle style,
+                                       const CGnuPlotUsingCols &usingCols);
+  CGnuPlotPlotP readBinaryFormatFile3D(CUnixFile *file, CGnuPlotGroupP &group, PlotStyle style,
+                                       const CGnuPlotUsingCols &usingCols);
+
+  bool readBinaryFile2D(const std::string &filename, CGnuPlotPlotP &plot);
+  bool readBinaryFile3D(const std::string &filename, CGnuPlotPlotP &plot,
+                        const CGnuPlotUsingCols &usingCols);
+
+  CGnuPlotPlotP addFunction2D(CGnuPlotGroupP &group, const StringArray &functions,
+                              PlotStyle style);
+  CGnuPlotPlotP addFunction3D(CGnuPlotGroupP &group, const StringArray &functions,
+                              PlotStyle style);
+
+  static void updateFunction2D(CGnuPlotPlot *plot);
+
+ private:
+  bool readBinaryFile2D(CUnixFile *file, CGnuPlotPlotP &plot);
+  bool readBinaryFile3D(CUnixFile *file, CGnuPlotPlotP &plot, const CGnuPlotUsingCols &usingCols);
+
+ private:
   void parseLineProp(CParseLine &line, CGnuPlotLineProp &lineProp);
 
   bool parseAxisRange   (CParseLine &line, CGnuPlotAxisData &axis, bool hasArgs=true);
@@ -1086,10 +1229,6 @@ class CGnuPlot {
 
   const CGnuPlotTitleData &title() const { return title_; }
   void setTitle(const CGnuPlotTitleData &t) { title_ = t; }
-
-  void setDummyVars(const std::string &dummyVar1, const std::string &dummyVar2);
-  void getDummyVars(std::string &dummyVar1, std::string &dummyVar2, bool is3D=false) const;
-  void resetDummyVars();
 
   bool parseLineType(CParseLine &line, int &lt);
 
@@ -1207,7 +1346,6 @@ class CGnuPlot {
   typedef StringArray                            FileLines;
   typedef std::vector<FileData>                  FileDataArray;
   typedef CAutoPtr<CGnuPlotReadLine>             ReadLineP;
-  typedef std::map<std::string,std::string>      DummyVarMap;
   typedef std::vector<std::string>               PathList;
   typedef std::map<std::string,CGnuPlotBlock *>  Blocks;
 
@@ -1285,10 +1423,10 @@ class CGnuPlot {
   CGnuPlotColorBoxData   colorBox_;
   CGnuPlotFilledCurve    filledCurve_;
   COptString             timeFmt_;
-  DummyVarMap            dummyVars_;
+  DummyVars              dummyVars_;
   Samples                samples_;
-  LinkData               linkData_;
   ISOSamples             isoSamples_;
+  LinkData               linkData_;
   CGnuPlotTypes::Mapping mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
   CGnuPlotPlotSize       plotSize_;
   DecimalSign            decimalSign_;

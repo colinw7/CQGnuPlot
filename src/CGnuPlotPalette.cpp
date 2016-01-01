@@ -6,6 +6,12 @@
 #include <CStrUtil.h>
 #include <CAngle.h>
 
+CGnuPlotPalette::
+CGnuPlotPalette(CGnuPlotGroup *group) :
+ group_(group)
+{
+}
+
 CColor
 CGnuPlotPalette::
 getColor(double x) const
