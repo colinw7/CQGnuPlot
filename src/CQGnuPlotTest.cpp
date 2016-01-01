@@ -13,6 +13,7 @@ main(int argc, char **argv)
   bool autoContinue = false;
   bool autoExit     = false;
   bool mainLoop     = false;
+  bool window       = false;
 
   std::string ofile = "";
 
@@ -53,6 +54,8 @@ main(int argc, char **argv)
         autoContinue = true;
       else if (arg == "x")
         autoExit = true;
+      else if (arg == "window")
+        window = true;
       else if (arg == "qt")
         mainLoop = true;
     }
@@ -84,6 +87,9 @@ main(int argc, char **argv)
 
   for (const auto &file : files)
     plot.load(file);
+
+  if (window && ! plot.numWindows())
+    plot.createNewWindow();
 
   if      (mainLoop)
     app.exec();
