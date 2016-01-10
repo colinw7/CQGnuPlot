@@ -19,7 +19,9 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
 
   CGnuPlot *app() const;
 
-  CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::ARROW; }
+  ObjectType type() const override { return CGnuPlotTypes::ObjectType::ARROW; }
+
+  VariableName varName() const override { return CGnuPlotTypes::VariableName::ARROW; }
 
   CoordType coordType() const { return data_.coordType(); }
   void setCoordType(CoordType type) { data_.setCoordType(type); }
@@ -90,8 +92,8 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
   int getLineStyle() const { return data_.getLineStyle(); }
   void setLineStyle(int t) { data_.setLineStyle(t); }
 
-  const CGnuPlotDash &getDash() const { return data_.getDash(); }
-  void setDash(const CGnuPlotDash &dash) { data_.setDash(dash); }
+  const CGnuPlotDash &getLineDash() const { return data_.getDash(); }
+  void setLineDash(const CGnuPlotDash &dash) { data_.setDash(dash); }
 
   bool isVariable() const { return data_.isVariable(); }
   void setVariable(bool b) { data_.setVariable(b); }

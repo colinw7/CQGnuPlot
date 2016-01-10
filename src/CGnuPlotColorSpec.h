@@ -22,6 +22,8 @@ class CGnuPlotColorSpec {
 
   CGnuPlotColorSpec();
 
+  CGnuPlotColorSpec(const CRGBA &c);
+
   bool isValid() const { return (type_ != Type::NONE); }
 
   Type type() const { return type_; }

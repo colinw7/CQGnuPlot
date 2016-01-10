@@ -33,6 +33,8 @@ createWidgets(QWidget *)
 
   binaryCheck_ = addCheckBox("Binary", this, SLOT(binarySlot()));
 
+  parametricCheck_ = addCheckBox("Parametric", this, SLOT(parametricSlot()));
+
   file_ = new CQGnuPlotFilename;
 
   addField("Filename", file_);
@@ -56,6 +58,13 @@ is2D() const
   QList<QRadioButton *> buttons = dimensionGroup_->findChildren<QRadioButton *>();
 
   return buttons[0]->isChecked();
+}
+
+bool
+CQGnuPlotLoadFileDialog::
+isParametric() const
+{
+  return parametricCheck_->isChecked();
 }
 
 bool
@@ -117,6 +126,12 @@ CQGnuPlotLoadFileDialog::
 lineType() const
 {
   return lineTypeEdit_->value();
+}
+
+void
+CQGnuPlotLoadFileDialog::
+parametricSlot()
+{
 }
 
 //------

@@ -16,9 +16,11 @@ CQDialog(QWidget *parent, uint buttons) :
 
   //---
 
-  frame_ = new QWidget;
+  frame_ = new CQDialogForm;
 
   layout->addWidget(frame_);
+
+  layout->addStretch(1);
 
   //---
 
@@ -82,13 +84,7 @@ QCheckBox *
 CQDialog::
 addCheckBox(const QString &name, const QObject *receiver, const char *member)
 {
-  QCheckBox *check = new QCheckBox;
-
-  addField(name, check);
-
-  connect(check, SIGNAL(clicked(bool)), receiver, member);
-
-  return check;
+  return frame_->addCheckBox(name, receiver, member);
 }
 
 QGroupBox *
@@ -96,45 +92,14 @@ CQDialog::
 addRadioButtons(const QString &name, const std::vector<QString> &names,
                 const QObject *receiver, const char *member)
 {
-  QGroupBox *box = new QGroupBox;
-
-  QHBoxLayout *layout = new QHBoxLayout(box);
-  layout->setMargin(0); layout->setSpacing(2);
-
-  int i = 0;
-
-  for (const auto &n : names) {
-    QRadioButton *button = new QRadioButton(n);
-
-    layout->addWidget(button);
-
-    button->setChecked(! (i++));
-  }
-
-  layout->addStretch();
-
-  addField(name, box);
-
-  connect(box, SIGNAL(clicked(bool)), receiver, member);
-
-  return box;
+  return frame_->addRadioButtons(name, names, receiver, member);
 }
 
 void
 CQDialog::
 addField(const QString &name, QWidget *w)
 {
-  if (! grid_)
-    grid_ = new QGridLayout(frame_);
-
-  if (name.length()) {
-    grid_->addWidget(new QLabel(name), row_, 0);
-    grid_->addWidget(w               , row_, 1);
-  }
-  else
-    grid_->addWidget(w, row_, 0, 1, 2);
-
-  ++row_;
+  frame_->addField(name, w);
 }
 
 QPushButton *
@@ -179,4 +144,84 @@ rejectSlot()
   reject();
 
   QDialog::reject();
+}
+
+//------
+
+CQDialogForm::
+CQDialogForm(QWidget *parent) :
+ QWidget(parent)
+{
+}
+
+QCheckBox *
+CQDialogForm::
+addCheckBox(const QString &name, const QObject *receiver, const char *member)
+{
+  QCheckBox *check = new QCheckBox;
+
+  addField(name, check);
+
+  if (receiver)
+    connect(check, SIGNAL(clicked(bool)), receiver, member);
+
+  return check;
+}
+
+QGroupBox *
+CQDialogForm::
+addRadioButtons(const QString &name, const std::vector<QString> &names,
+                const QObject *receiver, const char *member)
+{
+  QGroupBox *box = new QGroupBox;
+
+  QHBoxLayout *layout = new QHBoxLayout(box);
+  layout->setMargin(0); layout->setSpacing(2);
+
+  int i = 0;
+
+  for (const auto &n : names) {
+    QRadioButton *button = new QRadioButton(n);
+
+    layout->addWidget(button);
+
+    button->setChecked(! (i++));
+  }
+
+  layout->addStretch();
+
+  addField(name, box);
+
+  if (receiver)
+    connect(box, SIGNAL(clicked(bool)), receiver, member);
+
+  return box;
+}
+
+void
+CQDialogForm::
+addField(const QString &name, QWidget *w)
+{
+  if (! grid_) {
+    grid_ = new QGridLayout(this);
+
+    grid_->setColumnStretch(2, 1);
+  }
+
+  if (name.length()) {
+    grid_->addWidget(new QLabel(name), row_, 0);
+    grid_->addWidget(w               , row_, 1);
+  }
+  else
+    grid_->addWidget(w, row_, 0, 1, 2);
+
+  ++row_;
+}
+
+void
+CQDialogForm::
+addStretch()
+{
+  if (grid_)
+    grid_->setRowStretch(row_, 1);
 }

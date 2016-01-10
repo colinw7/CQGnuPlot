@@ -310,7 +310,7 @@ drawLine(const CPoint2D &point1, const CPoint2D &point2, double width, const CRG
 
 void
 CGnuPlotSVGRenderer::
-drawRect(const CBBox2D &rect, const CRGBA &c, double width)
+drawRect(const CBBox2D &rect, const CRGBA &c, double width, const CLineDash & /*dash*/)
 {
   double px1, py1, px2, py2;
 
@@ -362,7 +362,7 @@ void
 CGnuPlotSVGRenderer::
 drawBezier(const CPoint2D &point1, const CPoint2D &point2,
            const CPoint2D &point3, const CPoint2D &point4,
-           double width, const CRGBA &c)
+           double width, const CRGBA &c, const CLineDash &)
 {
   CPoint2D p1, p2, p3, p4;
 
@@ -528,7 +528,7 @@ drawRotatedText(const CPoint2D &p, const std::string &text, double /*ta*/,
 void
 CGnuPlotSVGRenderer::
 drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
-             double width, const CRGBA &c)
+             double width, const CRGBA &c, const CLineDash &)
 {
   double x1, y1, x2, y2;
 

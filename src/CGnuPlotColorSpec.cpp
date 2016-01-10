@@ -8,6 +8,12 @@ CGnuPlotColorSpec()
 {
 }
 
+CGnuPlotColorSpec::
+CGnuPlotColorSpec(const CRGBA &c)
+{
+  setRGB(c);
+}
+
 void
 CGnuPlotColorSpec::
 reset()

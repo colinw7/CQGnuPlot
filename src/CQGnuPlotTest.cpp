@@ -6,6 +6,8 @@ main(int argc, char **argv)
 {
   CQApp app(argc, argv);
 
+  app.setStyle("windows");
+
   bool debug        = false;
   bool edebug       = false;
   bool svg          = false;

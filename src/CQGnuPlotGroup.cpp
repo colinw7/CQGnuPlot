@@ -7,6 +7,11 @@
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotKey.h>
 #include <CQGnuPlotRenderer.h>
+#include <CQGnuPlotArrow.h>
+#include <CQGnuPlotCircle.h>
+#include <CQGnuPlotEllipse.h>
+#include <CQGnuPlotPolygon.h>
+#include <CQGnuPlotRectangle.h>
 #include <CGnuPlotObject.h>
 
 CQGnuPlotGroup::
@@ -114,6 +119,55 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
   typedef std::vector<QObject *> Objects;
 
   Objects objects;
+
+  //---
+
+  for (const auto &vann : varAnnotations_) {
+    for (const auto &ann : vann.second) {
+      if (ann->inside(mouseEvent))
+        continue;
+
+      CGnuPlotArrow     *arrow   = 0;
+      CGnuPlotCircle    *circle  = 0;
+      CGnuPlotEllipse   *ellipse = 0;
+      CGnuPlotLabel     *label   = 0;
+      CGnuPlotPolygon   *poly    = 0;
+      CGnuPlotRectangle *rect    = 0;
+
+      if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann.get()))) {
+        CQGnuPlotArrow *qarrow = static_cast<CQGnuPlotArrow *>(arrow);
+
+        objects.push_back(qarrow);
+      }
+      else if ((circle = dynamic_cast<CGnuPlotCircle *>(ann.get()))) {
+        CQGnuPlotCircle *qcircle = static_cast<CQGnuPlotCircle *>(circle);
+
+        objects.push_back(qcircle);
+      }
+      else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
+        CQGnuPlotEllipse *qellipse = static_cast<CQGnuPlotEllipse *>(ellipse);
+
+        objects.push_back(qellipse);
+      }
+      else if ((label = dynamic_cast<CGnuPlotLabel *>(ann.get()))) {
+        CQGnuPlotLabel *qlabel = static_cast<CQGnuPlotLabel *>(label);
+
+        objects.push_back(qlabel);
+      }
+      else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann.get()))) {
+        CQGnuPlotPolygon *qpoly = static_cast<CQGnuPlotPolygon *>(poly);
+
+        objects.push_back(qpoly);
+      }
+      else if ((rect = dynamic_cast<CGnuPlotRectangle *>(ann.get()))) {
+        CQGnuPlotRectangle *qrect = static_cast<CQGnuPlotRectangle *>(rect);
+
+        objects.push_back(qrect);
+      }
+    }
+  }
+
+  //---
 
   for (auto &plot : plots()) {
     if (! plot->isDisplayed())
@@ -322,6 +376,17 @@ void
 CQGnuPlotGroup::
 moveObjects(int key)
 {
+  for (const auto &vann : varAnnotations_) {
+    for (const auto &annotation : vann.second) {
+      CQGnuPlotAnnotation *qann = dynamic_cast<CQGnuPlotAnnotation *>(annotation.get());
+
+      if (qann->obj()->isSelected())
+        qann->move(key);
+    }
+  }
+
+  //---
+
   for (auto &plot : plots()) {
     if (! plot->isDisplayed())
       continue;

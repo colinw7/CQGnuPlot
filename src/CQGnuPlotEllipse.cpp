@@ -32,7 +32,7 @@ QSizeF
 CQGnuPlotEllipse::
 getSize() const
 {
-  return QSizeF(CGnuPlotEllipse::xr_, CGnuPlotEllipse::yr_);
+  return QSizeF(2*CGnuPlotEllipse::xr_, 2*CGnuPlotEllipse::yr_);
 }
 
 void
@@ -40,6 +40,20 @@ CQGnuPlotEllipse::
 setSize(const QSizeF &s)
 {
   CGnuPlotEllipse::setSize(CGnuPlotSize(CSize2D(s.width(), s.height())));
+}
+
+double
+CQGnuPlotEllipse::
+getLineWidth() const
+{
+  return lw_.getValue(1);
+}
+
+void
+CQGnuPlotEllipse::
+setLineWidth(double r)
+{
+  lw_.setValue(r);
 }
 
 void

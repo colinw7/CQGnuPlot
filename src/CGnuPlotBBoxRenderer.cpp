@@ -96,7 +96,7 @@ drawLine(const CPoint2D &point1, const CPoint2D &point2,
 
 void
 CGnuPlotBBoxRenderer::
-drawRect(const CBBox2D &rect, const CRGBA &, double /*width*/)
+drawRect(const CBBox2D &rect, const CRGBA &, double /*width*/, const CLineDash &)
 {
   addRect(rect);
 }
@@ -120,7 +120,7 @@ void
 CGnuPlotBBoxRenderer::
 drawBezier(const CPoint2D &point1, const CPoint2D &point2,
            const CPoint2D &point3, const CPoint2D &point4,
-           double /*width*/, const CRGBA &)
+           double /*width*/, const CRGBA &, const CLineDash &)
 {
   addPoint(point1);
   addPoint(point2);
@@ -230,7 +230,7 @@ drawRotatedText(const CPoint2D &point, const std::string &str, double /*ta*/,
 void
 CGnuPlotBBoxRenderer::
 drawPieSlice(const CPoint2D &pc, double /*ri*/, double ro, double angle1, double angle2,
-             double /*lw*/, const CRGBA &/*c*/)
+             double /*lw*/, const CRGBA &/*c*/, const CLineDash &)
 {
   addPoint(pc);
 

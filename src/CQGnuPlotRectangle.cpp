@@ -54,6 +54,20 @@ getLineWidth() const
   return CGnuPlotRectangle::getLineWidth().getValue(0);
 }
 
+CLineDash
+CQGnuPlotRectangle::
+getLineDash() const
+{
+  return CGnuPlotRectangle::getLineDash();
+}
+
+void
+CQGnuPlotRectangle::
+setLineDash(const CLineDash &dash)
+{
+  CGnuPlotRectangle::setLineDash(dash);
+}
+
 CQGnuPlotEnum::FillType
 CQGnuPlotRectangle::
 fillType() const

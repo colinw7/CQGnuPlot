@@ -137,7 +137,9 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
     //renderer->drawRect(bbox, boxStroke()->Color(), 1);
     //renderer->drawRotatedRect(bbox, a, c, 1, o);
 
-    renderer->drawRotatedRect(bbox, a, boxStroke()->color(), boxStroke()->width(), o);
+    CLineDash dash;
+
+    renderer->drawRotatedRect(bbox, a, boxStroke()->color(), boxStroke()->width(), dash, o);
   }
 
   //---

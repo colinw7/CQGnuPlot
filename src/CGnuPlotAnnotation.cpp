@@ -1,4 +1,5 @@
 #include <CGnuPlotAnnotation.h>
+#include <CGnuPlotGroup.h>
 
 CGnuPlotGroupAnnotation::
 CGnuPlotGroupAnnotation(CGnuPlotGroup *group) :
@@ -17,4 +18,11 @@ setData(const CGnuPlotGroupAnnotation *ann)
   clip_        = ann->clip_;
 
   return this;
+}
+
+void
+CGnuPlotGroupAnnotation::
+autoSetInd()
+{
+  setInd(group()->varAnnotations(varName()).size() + 1);
 }

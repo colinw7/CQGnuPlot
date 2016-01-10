@@ -5,6 +5,10 @@
 
 class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
  public:
+  typedef CGnuPlotTypes::ObjectType   ObjectType;
+  typedef CGnuPlotTypes::VariableName VariableName;
+
+ public:
   static const char *getName() { return "object"; }
 
   CGnuPlotGroupAnnotation(CGnuPlotGroup *group);
@@ -13,7 +17,9 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
 
   CGnuPlotGroupAnnotation *setData(const CGnuPlotGroupAnnotation *ann);
 
-  virtual CGnuPlotTypes::ObjectType type() const { return CGnuPlotTypes::ObjectType::NONE; }
+  virtual ObjectType type() const { return CGnuPlotTypes::ObjectType::NONE; }
+
+  virtual VariableName varName() const { return CGnuPlotTypes::VariableName::NONE; }
 
   int getInd() const { return ind_; }
   void setInd(int t) { ind_ = t; }
@@ -29,6 +35,8 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
 
   bool isClip() const { return clip_; }
   void setClip(bool b) { clip_ = b; }
+
+  void autoSetInd();
 
   virtual void initClip() = 0;
 

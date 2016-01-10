@@ -38,6 +38,9 @@ class CQGnuPlotLoadFileDialog : public CQDialog {
   void createWidgets(QWidget *frame) override;
 
   bool is2D() const;
+
+  bool isParametric() const;
+
   bool isBinary() const;
 
   CGnuPlotTypes::PlotStyle plotStyle() const;
@@ -53,17 +56,19 @@ class CQGnuPlotLoadFileDialog : public CQDialog {
 
  private slots:
   void dimensionSlot();
+  void parametricSlot();
   void binarySlot();
 
  private:
-  CQGnuPlotEnum*     enum_           { 0 };
-  QGroupBox*         dimensionGroup_ { 0 };
-  QCheckBox*         binaryCheck_    { 0 };
-  CQGnuPlotFilename* file_           { 0 };
-  CQRealSpin*        xminEdit_       { 0 };
-  CQRealSpin*        xmaxEdit_       { 0 };
-  QLineEdit*         usingEdit_      { 0 };
-  CQIntegerSpin*     lineTypeEdit_   { 0 };
+  CQGnuPlotEnum*     enum_            { 0 };
+  QGroupBox*         dimensionGroup_  { 0 };
+  QCheckBox*         binaryCheck_     { 0 };
+  QCheckBox*         parametricCheck_ { 0 };
+  CQGnuPlotFilename* file_            { 0 };
+  CQRealSpin*        xminEdit_        { 0 };
+  CQRealSpin*        xmaxEdit_        { 0 };
+  QLineEdit*         usingEdit_       { 0 };
+  CQIntegerSpin*     lineTypeEdit_    { 0 };
 };
 
 #endif

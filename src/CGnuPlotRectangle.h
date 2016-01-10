@@ -18,7 +18,9 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
 
   CGnuPlotRectangle *setData(const CGnuPlotRectangle *rect);
 
-  CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::RECTANGLE; }
+  ObjectType type() const override { return CGnuPlotTypes::ObjectType::RECTANGLE; }
+
+  VariableName varName() const override { return CGnuPlotTypes::VariableName::RECTANGLE; }
 
   const Position &getFrom() const { return from_; }
   void setFrom(const CGnuPlotPosition &p) { from_ = p; }
@@ -43,6 +45,12 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
   const COptReal &getLineWidth() const { return lw_; }
   void setLineWidth(double w) { lw_ = w; }
 
+  const CLineDash &getLineDash() const { return dash_; }
+  void setLineDash(const CLineDash &v) { dash_ = v; }
+
+  const CBBox2D &bbox() const  override { return bbox_; }
+  void setBBox(const CBBox2D &bbox) override ;
+
   CBBox2D calcBBox() const;
 
   void initClip() override;
@@ -50,8 +58,6 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
   void draw(CGnuPlotRenderer *renderer) const override;
 
   bool inside(const CGnuPlotMouseEvent &p) const override;
-
-  const CBBox2D &bbox() const override { return bbox_; }
 
   CGnuPlotTipData tip() const override;
 
@@ -66,6 +72,7 @@ class CGnuPlotRectangle : public CGnuPlotGroupAnnotation {
   CGnuPlotFillStyle fs_;
   COptInt           lt_;
   COptReal          lw_;
+  CLineDash         dash_;
   mutable CBBox2D   bbox_;
   mutable CRGBA     lc_;
 };

@@ -12,9 +12,10 @@ class CQGnuPlotEllipse : public CQGnuPlotAnnotation, public CGnuPlotEllipse {
   Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
   Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
-  Q_PROPERTY(QPointF center READ getCenter WRITE setCenter)
-  Q_PROPERTY(QSizeF  size   READ getSize   WRITE setSize  )
-  Q_PROPERTY(double  angle  READ getAngle  WRITE setAngle )
+  Q_PROPERTY(QPointF center    READ getCenter    WRITE setCenter   )
+  Q_PROPERTY(QSizeF  size      READ getSize      WRITE setSize     )
+  Q_PROPERTY(double  angle     READ getAngle     WRITE setAngle    )
+  Q_PROPERTY(double  lineWidth READ getLineWidth WRITE setLineWidth)
 
  public:
   CQGnuPlotEllipse(CQGnuPlotGroup *group);
@@ -24,6 +25,9 @@ class CQGnuPlotEllipse : public CQGnuPlotAnnotation, public CGnuPlotEllipse {
 
   QSizeF getSize() const;
   void setSize(const QSizeF &s);
+
+  double getLineWidth() const;
+  void setLineWidth(double r);
 
   virtual void draw(CGnuPlotRenderer *renderer) const override;
 };

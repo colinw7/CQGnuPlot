@@ -331,7 +331,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   virtual void drawPath(const Points2D &points, double width,
                         const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
 
-  virtual void drawRect   (const CBBox2D &rect, const CRGBA &c, double w) = 0;
+  virtual void drawRect   (const CBBox2D &rect, const CRGBA &c, double w,
+                           const CLineDash &dash=CLineDash()) = 0;
   virtual void fillRect   (const CBBox2D &rect, const CRGBA &c) = 0;
   virtual void patternRect(const CBBox2D &rect, FillPattern pattern,
                            const CRGBA &fg, const CRGBA &bg) = 0;
@@ -351,7 +352,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
                               FillPattern pattern, const CRGBA &fg, const CRGBA &bg) = 0;
 
   virtual void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3,
-                          const CPoint2D &p4, double width, const CRGBA &c) = 0;
+                          const CPoint2D &p4, double width, const CRGBA &c,
+                          const CLineDash &dash=CLineDash()) = 0;
 
   virtual void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) override = 0;
 
@@ -360,7 +362,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
                                const CRGBA &c) override = 0;
 
   virtual void drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
-                            double angle2, double width, const CRGBA &c) = 0;
+                            double angle2, double width, const CRGBA &c,
+                            const CLineDash &dash=CLineDash()) = 0;
   virtual void fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
                             double angle2, const CRGBA &c) = 0;
 
@@ -459,15 +462,17 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   //---
 
-  void drawRect(const CBBox3D &rect, const CRGBA &c, double w);
+  void drawRect(const CBBox3D &rect, const CRGBA &c, double w,
+                const CLineDash &dash=CLineDash());
 
-  void drawClippedRect   (const CBBox2D &rect, const CRGBA &c, double w);
+  void drawClippedRect   (const CBBox2D &rect, const CRGBA &c, double w,
+                          const CLineDash &dash=CLineDash());
   void fillClippedRect   (const CBBox2D &rect, const CRGBA &c);
   void patternClippedRect(const CBBox2D &rect, FillPattern pattern,
                           const CRGBA &fg, const CRGBA &bg);
 
   void drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w,
-                       const COptPoint2D &o=COptPoint2D());
+                       const CLineDash &dash=CLineDash(), const COptPoint2D &o=COptPoint2D());
   void fillRotatedRect(const CBBox2D &rect, double a, const CRGBA &c,
                        const COptPoint2D &o=COptPoint2D());
 

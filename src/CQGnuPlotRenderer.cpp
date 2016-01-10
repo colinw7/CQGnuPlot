@@ -308,13 +308,14 @@ drawLine(const CPoint2D &point1, const CPoint2D &point2, double width, const CRG
 
 void
 CQGnuPlotRenderer::
-drawRect(const CBBox2D &rect, const CRGBA &c, double width)
+drawRect(const CBBox2D &rect, const CRGBA &c, double width, const CLineDash &dash)
 {
   QPen pen = painter_->pen();
 
   pen.setWidthF(width);
   pen.setColor(toQColor(c));
-  pen.setStyle(Qt::SolidLine);
+
+  CQUtil::penSetLineDash(pen, dash);
 
   painter_->setPen(pen);
 
@@ -369,7 +370,7 @@ void
 CQGnuPlotRenderer::
 drawBezier(const CPoint2D &point1, const CPoint2D &point2,
            const CPoint2D &point3, const CPoint2D &point4,
-           double width, const CRGBA &c)
+           double width, const CRGBA &c, const CLineDash &dash)
 {
   double px1, py1, px2, py2, px3, py3, px4, py4;
 
@@ -386,6 +387,8 @@ drawBezier(const CPoint2D &point1, const CPoint2D &point2,
   QPen pen(toQColor(c));
 
   pen.setWidthF(width);
+
+  CQUtil::penSetLineDash(pen, dash);
 
   painter_->strokePath(path, pen);
 }
@@ -741,7 +744,7 @@ fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double ang
 void
 CQGnuPlotRenderer::
 drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
-             double w, const CRGBA &c)
+             double w, const CRGBA &c, const CLineDash &dash)
 {
   QPainterPath path;
 
@@ -778,6 +781,8 @@ drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double ang
   QPen pen(toQColor(c));
 
   pen.setWidthF(w);
+
+  CQUtil::penSetLineDash(pen, dash);
 
   painter_->strokePath(path, pen);
 }

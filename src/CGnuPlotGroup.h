@@ -72,8 +72,14 @@ class CGnuPlotGroup {
 
   void addObjects();
 
+  void addAnnotation(CGnuPlotGroupAnnotation *ann);
+
   const VarAnnotations &annotations() const { return varAnnotations_; }
   void setAnnotations(const VarAnnotations &annotations);
+
+  const Annotations &varAnnotations(const VariableName &type) const {
+    return const_cast<CGnuPlotGroup *>(this)->varAnnotations_[type];
+  }
 
   void fit();
 

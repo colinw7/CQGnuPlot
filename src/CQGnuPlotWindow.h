@@ -177,6 +177,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void manageFunctions();
   void manageVariables();
 
+  void createObjects();
+
   void saveSVG();
   void savePNG();
 

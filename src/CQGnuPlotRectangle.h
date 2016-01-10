@@ -13,9 +13,10 @@ class CQGnuPlotRectangle : public CQGnuPlotAnnotation, public CGnuPlotRectangle 
   Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
   Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
-  Q_PROPERTY(QPointF from      READ getFrom      WRITE setFrom     )
-  Q_PROPERTY(QPointF to        READ getTo        WRITE setTo       )
-  Q_PROPERTY(double  lineWidth READ getLineWidth WRITE setLineWidth)
+  Q_PROPERTY(QPointF   from      READ getFrom      WRITE setFrom     )
+  Q_PROPERTY(QPointF   to        READ getTo        WRITE setTo       )
+  Q_PROPERTY(double    lineWidth READ getLineWidth WRITE setLineWidth)
+  Q_PROPERTY(CLineDash lineDash  READ getLineDash  WRITE setLineDash )
 
   Q_PROPERTY(CQGnuPlotEnum::FillType fillType READ fillType WRITE setFillType)
 
@@ -29,6 +30,9 @@ class CQGnuPlotRectangle : public CQGnuPlotAnnotation, public CGnuPlotRectangle 
   void setTo(const QPointF &p);
 
   double getLineWidth() const;
+
+  CLineDash getLineDash() const;
+  void setLineDash(const CLineDash &dash);
 
   CQGnuPlotEnum::FillType fillType() const;
   void setFillType(const CQGnuPlotEnum::FillType &type);

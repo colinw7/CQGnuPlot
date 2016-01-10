@@ -644,6 +644,11 @@ class CGnuPlot {
     xaxis(1).setMax(xmax);
   }
 
+  void setTRange(double tmin, double tmax) {
+    taxis(1).setMin(tmin);
+    taxis(1).setMax(tmax);
+  }
+
   //---
 
   const Bars &bars() const { return bars_; }
@@ -1250,8 +1255,10 @@ class CGnuPlot {
 
   bool skipExpression(const char *id, CParseLine &line, std::string &expr) const;
 
-  void skipString(CParseLine &line) const;
+ public:
+  static void skipString(CParseLine &line);
 
+ private:
   bool parseRoundBracketedString(CParseLine &line, std::string &str) const;
   bool skipRoundBracketedString(CParseLine &line) const;
 

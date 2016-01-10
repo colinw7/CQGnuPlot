@@ -49,6 +49,7 @@
 #include <CQGnuPlotLoadFunctionDialog.h>
 #include <CQGnuPlotManageFunctionsDialog.h>
 #include <CQGnuPlotManageVariablesDialog.h>
+#include <CQGnuPlotCreateDialog.h>
 
 #include <CQGnuPlotPNGRenderer.h>
 #include <CGnuPlotSVGRenderer.h>
@@ -272,6 +273,14 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   fileMenu->addAction(variablesAction);
 
   connect(variablesAction, SIGNAL(triggered()), this, SLOT(manageVariables()));
+
+  //---
+
+  QAction *createAction = new QAction("Create Object", this);
+
+  fileMenu->addAction(createAction);
+
+  connect(createAction, SIGNAL(triggered()), this, SLOT(createObjects()));
 
   //---
 
@@ -776,6 +785,7 @@ addGroupProperties(CGnuPlotGroup *group)
 
         tree_->addProperty(circleName, qcircle, "center");
         tree_->addProperty(circleName, qcircle, "radius");
+        tree_->addProperty(circleName, qcircle, "lineWidth");
       }
       else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
         QString ellipseName =
@@ -791,6 +801,7 @@ addGroupProperties(CGnuPlotGroup *group)
         tree_->addProperty(ellipseName, qellipse, "center");
         tree_->addProperty(ellipseName, qellipse, "size");
         tree_->addProperty(ellipseName, qellipse, "angle");
+        tree_->addProperty(ellipseName, qellipse, "lineWidth");
       }
       else if ((label = dynamic_cast<CGnuPlotLabel *>(ann.get()))) {
         QString labelName =
@@ -847,6 +858,7 @@ addGroupProperties(CGnuPlotGroup *group)
         tree_->addProperty(rectName, qrect, "to");
         tree_->addProperty(rectName, qrect, "fillType");
         tree_->addProperty(rectName, qrect, "lineWidth");
+        tree_->addProperty(rectName, qrect, "lineDash");
       }
     }
   }
@@ -872,6 +884,8 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   tree_->addProperty(plotName, qplot, "binary");
   tree_->addProperty(plotName, qplot, "matrix");
+  tree_->addProperty(plotName, qplot, "polar");
+  tree_->addProperty(plotName, qplot, "parametric");
 
   tree_->addProperty(plotName, qplot, "enhanced");
 
@@ -1571,14 +1585,15 @@ loadFile()
   //QString fileName = QFileDialog::getOpenFileName(this, "Open File", "", "Files (*.*)");
   //if (! fileName.length()) return;
 
-  bool                     is2D     = dialog->is2D();
-  bool                     binary   = dialog->isBinary();
-  CGnuPlotTypes::PlotStyle style    = dialog->plotStyle();
-  QString                  fileName = dialog->fileName();
-  double                   xmin     = dialog->xmin();
-  double                   xmax     = dialog->xmax();
-  QString                  usingStr = dialog->usingStr();
-  int                      lt       = dialog->lineType();
+  bool                     is2D         = dialog->is2D();
+  bool                     isParametric = dialog->isParametric();
+  bool                     binary       = dialog->isBinary();
+  CGnuPlotTypes::PlotStyle style        = dialog->plotStyle();
+  QString                  fileName     = dialog->fileName();
+  double                   xmin         = dialog->xmin();
+  double                   xmax         = dialog->xmax();
+  QString                  usingStr     = dialog->usingStr();
+  int                      lt           = dialog->lineType();
 
   bool isImage = false;
 
@@ -1601,7 +1616,12 @@ loadFile()
   group->set2D(  is2D);
   group->set3D(! is2D);
 
-  app()->setXRange(xmin, xmax);
+  app()->setParametric(isParametric);
+
+  if (! isParametric)
+    app()->setXRange(xmin, xmax);
+  else
+    app()->setTRange(xmin, xmax);
 
   CGnuPlotUsingCols usingCols;
 
@@ -1616,6 +1636,8 @@ loadFile()
 
         plot->set2D(  is2D);
         plot->set3D(! is2D);
+
+        plot->setParametric(isParametric);
 
         plot->init();
 
@@ -1734,13 +1756,14 @@ loadFunction()
   if (! dialog->accepted())
     return;
 
-  bool                     is2D      = dialog->is2D();
-  CGnuPlotTypes::PlotStyle style     = dialog->plotStyle();
-  QStringList              functions = dialog->functions();
-  int                      ns        = dialog->samples();
-  double                   xmin      = dialog->xmin();
-  double                   xmax      = dialog->xmax();
-  int                      lt        = dialog->lineType();
+  bool                     is2D         = dialog->is2D();
+  bool                     isParametric = dialog->isParametric();
+  CGnuPlotTypes::PlotStyle style        = dialog->plotStyle();
+  QStringList              functions    = dialog->functions();
+  int                      ns           = dialog->samples();
+  double                   xmin         = dialog->xmin();
+  double                   xmax         = dialog->xmax();
+  int                      lt           = dialog->lineType();
 
   if (! numGroups())
     createNewGroup();
@@ -1756,12 +1779,21 @@ loadFunction()
 
   app()->setSamples(samples);
 
-  app()->setXRange(xmin, xmax);
+  app()->setParametric(isParametric);
 
-  for (int i = 0; i < functions.size(); ++i) {
+  if (! isParametric)
+    app()->setXRange(xmin, xmax);
+  else
+    app()->setTRange(xmin, xmax);
+
+  int fi = (isParametric ? 2 : 1);
+  int nf = functions.size()/fi;
+
+  for (int i = 0; i < nf; ++i) {
     CGnuPlot::StringArray funcs;
 
-    funcs.push_back(functions[i].toStdString());
+    for (int j = 0; j < fi; ++j)
+      funcs.push_back(functions[i*fi + j].toStdString());
 
     CGnuPlotPlotP plot;
 
@@ -1769,6 +1801,8 @@ loadFunction()
       plot = app()->addFunction2D(group, funcs, style);
     else
       plot = app()->addFunction3D(group, funcs, style);
+
+    //plot->setParametric(isParametric);
 
     CGnuPlotLineStyle lineStyle(app());
 
@@ -1796,6 +1830,110 @@ manageVariables()
   CQGnuPlotManageVariablesDialog *dialog = new CQGnuPlotManageVariablesDialog(this);
 
   dialog->exec();
+}
+
+void
+CQGnuPlotMainWindow::
+createObjects()
+{
+  CQGnuPlotCreateDialog *dialog = new CQGnuPlotCreateDialog(this);
+
+  dialog->exec();
+
+  if (! dialog->accepted())
+    return;
+
+  if (! currentGroup_)
+    return;
+
+  CGnuPlotTypes::ObjectType objectType = dialog->objectType();
+
+  if      (objectType == CGnuPlotTypes::ObjectType::ARROW) {
+    CGnuPlotArrow *arrow = app()->device()->createArrow(currentGroup_);
+
+    arrow->autoSetInd();
+
+    arrow->setStrokeColor(dialog->strokeColor());
+    arrow->setFillColor  (dialog->fillColor());
+
+    arrow->setFrom(dialog->arrowFrom());
+    arrow->setTo  (dialog->arrowTo  ());
+
+    currentGroup_->addAnnotation(arrow);
+  }
+  else if (objectType == CGnuPlotTypes::ObjectType::CIRCLE) {
+    CGnuPlotCircle *circle = app()->device()->createCircle(currentGroup_);
+
+    circle->autoSetInd();
+
+    circle->setStrokeColor(dialog->strokeColor());
+    circle->setLineWidth  (dialog->strokeWidth());
+    circle->setLineDash   (dialog->strokeDash());
+    circle->setFillColor  (dialog->fillColor());
+
+    circle->setCenter  (dialog->circleCenter());
+    circle->setRadius  (dialog->circleRadius());
+    circle->setArcStart(dialog->circleStart());
+    circle->setArcEnd  (dialog->circleEnd());
+
+    currentGroup_->addAnnotation(circle);
+  }
+  else if (objectType == CGnuPlotTypes::ObjectType::ELLIPSE) {
+    CGnuPlotEllipse *ellipse = app()->device()->createEllipse(currentGroup_);
+
+    ellipse->autoSetInd();
+
+    ellipse->setStrokeColor(dialog->strokeColor());
+    ellipse->setLineWidth  (dialog->strokeWidth());
+    ellipse->setLineDash   (dialog->strokeDash());
+    ellipse->setFillColor  (dialog->fillColor());
+
+    ellipse->setCenter(dialog->ellipseCenter());
+    ellipse->setAngle (dialog->ellipseAngle());
+
+    currentGroup_->addAnnotation(ellipse);
+  }
+  else if (objectType == CGnuPlotTypes::ObjectType::LABEL) {
+    CGnuPlotLabel *label = app()->device()->createLabel(currentGroup_);
+
+    label->autoSetInd();
+
+    label->setStrokeColor(dialog->strokeColor());
+    label->setFillColor  (dialog->fillColor());
+
+    label->setPos  (dialog->labelOrigin());
+    label->setText (dialog->labelText());
+    label->setAngle(dialog->labelAngle());
+
+    currentGroup_->addAnnotation(label);
+  }
+  else if (objectType == CGnuPlotTypes::ObjectType::POLYGON) {
+    CGnuPlotPolygon *polygon = app()->device()->createPolygon(currentGroup_);
+
+    polygon->autoSetInd();
+
+    polygon->setStrokeColor(dialog->strokeColor());
+    polygon->setLineWidth  (dialog->strokeWidth());
+    polygon->setLineDash   (dialog->strokeDash());
+    polygon->setFillColor  (dialog->fillColor());
+
+    currentGroup_->addAnnotation(polygon);
+  }
+  else if (objectType == CGnuPlotTypes::ObjectType::RECTANGLE) {
+    CGnuPlotRectangle *rectangle = app()->device()->createRectangle(currentGroup_);
+
+    rectangle->autoSetInd();
+
+    rectangle->setStrokeColor(dialog->strokeColor());
+    rectangle->setLineWidth  (dialog->strokeWidth());
+    rectangle->setLineDash   (dialog->strokeDash());
+    rectangle->setFillColor  (dialog->fillColor());
+
+    rectangle->setFrom(dialog->rectFrom());
+    rectangle->setTo  (dialog->rectTo  ());
+
+    currentGroup_->addAnnotation(rectangle);
+  }
 }
 
 void
@@ -1914,7 +2052,6 @@ moveMode(bool)
 {
   updateMode(Mode::MOVE);
 }
-
 
 void
 CQGnuPlotMainWindow::

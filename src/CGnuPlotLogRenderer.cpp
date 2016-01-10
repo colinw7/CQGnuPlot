@@ -63,10 +63,10 @@ drawLine(const CPoint2D &point1, const CPoint2D &point2, double width, const CRG
 
 void
 CGnuPlotLogRenderer::
-drawRect(const CBBox2D &rect, const CRGBA &c, double width)
+drawRect(const CBBox2D &rect, const CRGBA &c, double width, const CLineDash &dash)
 {
   log("drawRect " + logValue("rect", rect) + " " + logValue("color", c) + " " +
-      logValue("width", width));
+      logValue("width", width) + " " + logValue("dash", dash));
 }
 
 void
@@ -89,11 +89,11 @@ void
 CGnuPlotLogRenderer::
 drawBezier(const CPoint2D &point1, const CPoint2D &point2,
            const CPoint2D &point3, const CPoint2D &point4,
-           double width, const CRGBA &c)
+           double width, const CRGBA &c, const CLineDash &dash)
 {
   log("drawBezier " + logValue("point1", point1) + " " + logValue("point2", point2) + " " +
       logValue("point3", point3) + " " + logValue("point4", point4) + " " +
-      logValue("width", width) + " " + logValue("color", c));
+      logValue("width", width) + " " + logValue("color", c) + " " + logValue("dash", dash));
 }
 
 void
@@ -170,11 +170,12 @@ drawRotatedText(const CPoint2D &point, const std::string &text, double angle,
 void
 CGnuPlotLogRenderer::
 drawPieSlice(const CPoint2D &center, double ri, double ro, double angle1, double angle2,
-             double width, const CRGBA &c)
+             double width, const CRGBA &c, const CLineDash &d)
 {
   log("drawPieSlice " + logValue("center", center) + " " + logValue("ri", ri) + " " +
       logValue("ro", ro) + " " + logValue("angle1", angle1) + " " +
-      logValue("angle2", angle2) + " " + logValue("width", width) + " " + logValue("color", c));
+      logValue("angle2", angle2) + " " + logValue("width", width) + " " +
+      logValue("color", c) + " " + logValue("dash", d));
 }
 
 void

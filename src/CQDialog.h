@@ -8,6 +8,28 @@ class QCheckBox;
 class QGroupBox;
 class QHBoxLayout;
 
+class CQDialogForm : public QWidget {
+  Q_OBJECT
+
+ public:
+  CQDialogForm(QWidget *parent=0);
+
+  QCheckBox *addCheckBox(const QString &name, const QObject *receiver=0, const char *member=0);
+
+  QGroupBox *addRadioButtons(const QString &name, const std::vector<QString> &names,
+                             const QObject *receiver=0, const char *member=0);
+
+  void addField(const QString &name, QWidget *w);
+
+  void addStretch();
+
+ private:
+  QGridLayout *grid_ { 0 };
+  mutable int  row_  { 0 };
+};
+
+//---
+
 class CQDialog : public QDialog {
   Q_OBJECT
 
@@ -29,10 +51,10 @@ class CQDialog : public QDialog {
 
   int exec();
 
-  QCheckBox *addCheckBox(const QString &name, const QObject *receiver, const char *member);
+  QCheckBox *addCheckBox(const QString &name, const QObject *receiver=0, const char *member=0);
 
   QGroupBox *addRadioButtons(const QString &name, const std::vector<QString> &names,
-                             const QObject *receiver, const char *member);
+                             const QObject *receiver=0, const char *member=0);
 
   void addField(const QString &name, QWidget *w);
 
@@ -52,12 +74,10 @@ class CQDialog : public QDialog {
   void rejectSlot();
 
  private:
-  QWidget     *frame_             { 0 };
-  bool         initialized_       { false };
-  bool         accepted_          { false };
-  QGridLayout *grid_              { 0 };
-  mutable int  row_               { 0 };
-  QHBoxLayout *buttonFrameLayout_ { 0 };
+  CQDialogForm *frame_             { 0 };
+  bool          initialized_       { false };
+  bool          accepted_          { false };
+  QHBoxLayout  *buttonFrameLayout_ { 0 };
 };
 
 #endif

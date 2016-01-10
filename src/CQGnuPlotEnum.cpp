@@ -73,6 +73,18 @@ PlotStyleConv plotStyleConv({
   { CGnuPlotTypes::PlotStyle::TEST_PALETTE  , CQGnuPlotEnum::PlotTestPalette    },
 });
 
+typedef CEnumConv<CGnuPlotTypes::ObjectType, CQGnuPlotEnum::ObjectType> ObjectTypeConv;
+
+ObjectTypeConv objectTypeConv({
+  { CGnuPlotTypes::ObjectType::NONE     , CQGnuPlotEnum::ObjectTypeNone      },
+  { CGnuPlotTypes::ObjectType::ARROW    , CQGnuPlotEnum::ObjectTypeArrow     },
+  { CGnuPlotTypes::ObjectType::CIRCLE   , CQGnuPlotEnum::ObjectTypeCircle    },
+  { CGnuPlotTypes::ObjectType::ELLIPSE  , CQGnuPlotEnum::ObjectTypeEllipse   },
+  { CGnuPlotTypes::ObjectType::LABEL    , CQGnuPlotEnum::ObjectTypeLabel     },
+  { CGnuPlotTypes::ObjectType::POLYGON  , CQGnuPlotEnum::ObjectTypePolygon   },
+  { CGnuPlotTypes::ObjectType::RECTANGLE, CQGnuPlotEnum::ObjectTypeRectangle },
+});
+
 }
 
 //---
@@ -108,4 +120,20 @@ CQGnuPlotEnum::
 plotStyleConv(const PlotStyle &type)
 {
   return Conv::plotStyleConv.conv(type);
+}
+
+//---
+
+CQGnuPlotEnum::ObjectType
+CQGnuPlotEnum::
+objectTypeConv(const CGnuPlotTypes::ObjectType &type)
+{
+  return Conv::objectTypeConv.conv(type, CQGnuPlotEnum::ObjectTypeNone);
+}
+
+CGnuPlotTypes::ObjectType
+CQGnuPlotEnum::
+objectTypeConv(const ObjectType &type)
+{
+  return Conv::objectTypeConv.conv(type);
 }

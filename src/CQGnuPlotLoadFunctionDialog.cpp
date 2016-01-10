@@ -3,6 +3,7 @@
 #include <CQEnumCombo.h>
 #include <CQIntegerSpin.h>
 #include <CQRealSpin.h>
+#include <CParseLine.h>
 
 #include <QHBoxLayout>
 #include <QLineEdit>
@@ -30,6 +31,8 @@ createWidgets(QWidget *)
 
   dimensionGroup_ = addRadioButtons("Dimension", {"2D", "3D"}, this, SLOT(dimensionSlot()));
 
+  parametricCheck_ = addCheckBox("Parametric", this, SLOT(parametricSlot()));
+
   addField("Function", (fnEdit_ = new QLineEdit));
 
   addField("Samples", (samplesEdit_ = new CQIntegerSpin));
@@ -54,6 +57,13 @@ is2D() const
   return buttons[0]->isChecked();
 }
 
+bool
+CQGnuPlotLoadFunctionDialog::
+isParametric() const
+{
+  return parametricCheck_->isChecked();
+}
+
 CGnuPlotTypes::PlotStyle
 CQGnuPlotLoadFunctionDialog::
 plotStyle() const
@@ -65,7 +75,56 @@ QStringList
 CQGnuPlotLoadFunctionDialog::
 functions() const
 {
-  return fnEdit_->text().split(",", QString::SkipEmptyParts);
+  QStringList fns;
+
+  CParseLine line(fnEdit_->text().toStdString());
+
+  int pos = line.pos();
+
+  while (line.isValid()) {
+    if (line.skipSpaceAndChar('(')) {
+      line.skipChar();
+
+      int brackets = 1;
+
+      while (line.isValid()) {
+        if      (line.isChar('('))
+          ++brackets;
+        else if (line.isChar(')')) {
+          --brackets;
+
+          if (brackets <= 0)
+            break;
+        }
+        else if (line.isChar('"') || line.isChar('\'')) {
+          CGnuPlot::skipString(line);
+        }
+        else
+          line.skipChar();
+      }
+    }
+    else if (line.skipSpaceAndChar(',')) {
+      std::string str = line.substr(pos, line.pos() - pos - 1);
+
+      str = CStrUtil::stripSpaces(str);
+
+      if (str.size())
+        fns << str.c_str();
+
+      pos = line.pos();
+    }
+    else
+      line.skipChar();
+  }
+
+  std::string str = line.substr(pos, line.pos() - pos);
+
+  str = CStrUtil::stripSpaces(str);
+
+  fns << str.c_str();
+
+  //return fnEdit_->text().split(",", QString::SkipEmptyParts);
+  return fns;
 }
 
 int
@@ -99,5 +158,11 @@ lineType() const
 void
 CQGnuPlotLoadFunctionDialog::
 dimensionSlot()
+{
+}
+
+void
+CQGnuPlotLoadFunctionDialog::
+parametricSlot()
 {
 }

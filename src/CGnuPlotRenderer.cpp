@@ -406,7 +406,7 @@ fillClippedEllipse(const CPoint2D &p, double rx, double ry, double a, const CRGB
 
 void
 CGnuPlotRenderer::
-drawRect(const CBBox3D &rect, const CRGBA &c, double w)
+drawRect(const CBBox3D &rect, const CRGBA &c, double w, const CLineDash &dash)
 {
   CPoint3D p11(rect.getXMin(), rect.getYMin(), rect.getZMin());
   CPoint3D p21(rect.getXMax(), rect.getYMin(), rect.getZMin());
@@ -426,40 +426,38 @@ drawRect(const CBBox3D &rect, const CRGBA &c, double w)
   CPoint2D pt32 = transform2D(p32);
   CPoint2D pt42 = transform2D(p42);
 
-  CLineDash d;
+  drawLine(pt11, pt21, w, c, dash);
+  drawLine(pt21, pt31, w, c, dash);
+  drawLine(pt31, pt41, w, c, dash);
+  drawLine(pt41, pt11, w, c, dash);
 
-  drawLine(pt11, pt21, w, c, d);
-  drawLine(pt21, pt31, w, c, d);
-  drawLine(pt31, pt41, w, c, d);
-  drawLine(pt41, pt11, w, c, d);
+  drawLine(pt11, pt12, w, c, dash);
+  drawLine(pt21, pt22, w, c, dash);
+  drawLine(pt31, pt32, w, c, dash);
+  drawLine(pt41, pt42, w, c, dash);
 
-  drawLine(pt11, pt12, w, c, d);
-  drawLine(pt21, pt22, w, c, d);
-  drawLine(pt31, pt32, w, c, d);
-  drawLine(pt41, pt42, w, c, d);
-
-  drawLine(pt12, pt22, w, c, d);
-  drawLine(pt22, pt32, w, c, d);
-  drawLine(pt32, pt42, w, c, d);
-  drawLine(pt42, pt12, w, c, d);
+  drawLine(pt12, pt22, w, c, dash);
+  drawLine(pt22, pt32, w, c, dash);
+  drawLine(pt32, pt42, w, c, dash);
+  drawLine(pt42, pt12, w, c, dash);
 }
 
 void
 CGnuPlotRenderer::
-drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w)
+drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w, const CLineDash &dash)
 {
   if (clip().isValid() && ! isPseudo()) {
     if      (clip().getValue().inside(rect))
-      drawRect(rect, c, w);
+      drawRect(rect, c, w, dash);
     else if (clip().getValue().intersect(rect)) {
-      drawClipLine(rect.getLL(), rect.getLR(), w, c);
-      drawClipLine(rect.getLR(), rect.getUR(), w, c);
-      drawClipLine(rect.getUR(), rect.getUL(), w, c);
-      drawClipLine(rect.getUL(), rect.getLL(), w, c);
+      drawClipLine(rect.getLL(), rect.getLR(), w, c, dash);
+      drawClipLine(rect.getLR(), rect.getUR(), w, c, dash);
+      drawClipLine(rect.getUR(), rect.getUL(), w, c, dash);
+      drawClipLine(rect.getUL(), rect.getLL(), w, c, dash);
     }
   }
   else
-    drawRect(rect, c, w);
+    drawRect(rect, c, w, dash);
 }
 
 //----
@@ -527,7 +525,7 @@ CGnuPlotRenderer::
 strokeRect(const CBBox2D &rect, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
-    drawRect(rect, stroke.color(), stroke.width());
+    drawRect(rect, stroke.color(), stroke.width(), stroke.lineDash());
 }
 
 //---
@@ -568,7 +566,8 @@ drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &
 
 void
 CGnuPlotRenderer::
-drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w, const COptPoint2D &o)
+drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w,
+                const CLineDash &dash, const COptPoint2D &o)
 {
   CPoint2D o1 = (o.isValid() ? o.getValue() : rect.getCenter());
 
@@ -577,10 +576,10 @@ drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w, const C
   CPoint2D p3 = rotatePoint(rect.getUR(), a, o1);
   CPoint2D p4 = rotatePoint(rect.getUL(), a, o1);
 
-  drawLine(p1, p2, w, c);
-  drawLine(p2, p3, w, c);
-  drawLine(p3, p4, w, c);
-  drawLine(p4, p1, w, c);
+  drawLine(p1, p2, w, c, dash);
+  drawLine(p2, p3, w, c, dash);
+  drawLine(p3, p4, w, c, dash);
+  drawLine(p4, p1, w, c, dash);
 }
 
 void
@@ -707,7 +706,9 @@ drawTextBox(const CPoint2D &p, const std::string &str, bool enhanced, const CPoi
 
   fillRect(bbox, bg);
 
-  drawRect(bbox, fg, w);
+  CLineDash dash;
+
+  drawRect(bbox, fg, w, dash);
 
   return bbox;
 }
@@ -1380,7 +1381,7 @@ strokePieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
                double angle2, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
-    drawPieSlice(pc, ri, ro, angle1, angle2, stroke.width(), stroke.color());
+    drawPieSlice(pc, ri, ro, angle1, angle2, stroke.width(), stroke.color(), stroke.lineDash());
 }
 
 void

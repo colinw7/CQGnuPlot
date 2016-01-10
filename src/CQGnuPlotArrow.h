@@ -29,7 +29,7 @@ class CQGnuPlotArrow : public CQGnuPlotAnnotation, public CGnuPlotArrow {
   Q_PROPERTY(bool      headEmpty     READ getHeadEmpty     WRITE setHeadEmpty    )
   Q_PROPERTY(int       lineType      READ getLineStyle     WRITE setLineStyle    )
   Q_PROPERTY(double    lineWidth     READ calcLineWidth    WRITE setLineWidth    )
-  Q_PROPERTY(CLineDash lineDash      READ getDash          WRITE setDash         )
+  Q_PROPERTY(CLineDash lineDash      READ getLineDash      WRITE setLineDash     )
 
  public:
   CQGnuPlotArrow(CQGnuPlotGroup *group);
@@ -49,8 +49,8 @@ class CQGnuPlotArrow : public CQGnuPlotAnnotation, public CGnuPlotArrow {
   double getHeadLength() const;
   void setHeadLength(double l);
 
-  CLineDash getDash() const;
-  void setDash(const CLineDash &dash);
+  CLineDash getLineDash() const;
+  void setLineDash(const CLineDash &dash);
 
   void draw(CGnuPlotRenderer *renderer) const override;
 };

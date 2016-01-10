@@ -43,7 +43,8 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void drawPixelLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,
                      const CLineDash &dash) override;
 
-  void drawRect   (const CBBox2D &rect, const CRGBA &c, double width) override;
+  void drawRect   (const CBBox2D &rect, const CRGBA &c, double width,
+                   const CLineDash &dash) override;
   void fillRect   (const CBBox2D &rect, const CRGBA &c) override;
   void patternRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern pattern,
                    const CRGBA &fg, const CRGBA &bg) override;
@@ -56,7 +57,7 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
                       const CRGBA &fg, const CRGBA &bg) override;
 
   void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3, const CPoint2D &p4,
-                  double width, const CRGBA &c) override;
+                  double width, const CRGBA &c, const CLineDash &dash) override;
 
   void drawPolygon   (const std::vector<CPoint2D> &points, double w, const CRGBA &c,
                       const CLineDash &dash) override;
@@ -71,7 +72,7 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
                        const CRGBA &c) override;
 
   void drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
-                    double w, const CRGBA &c) override;
+                    double w, const CRGBA &c, const CLineDash &dash) override;
   void fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
                     const CRGBA &c) override;
 

@@ -36,6 +36,7 @@ setData(const CGnuPlotRectangle *rect)
   fs_     = rect->fs_;
   lt_     = rect->lt_;
   lw_     = rect->lw_;
+  dash_   = rect->dash_;
   bbox_   = rect->bbox_;
 
   return this;
@@ -161,7 +162,7 @@ draw(CGnuPlotRenderer *renderer) const
       renderer->patternRect(bbox, getFillStyle().pattern(), fc, lc);
   }
 
-  renderer->drawClippedRect(bbox, lc, lw);
+  renderer->drawClippedRect(bbox, lc, lw, dash_);
 }
 
 bool
@@ -169,6 +170,37 @@ CGnuPlotRectangle::
 inside(const CGnuPlotMouseEvent &mouseEvent) const
 {
   return bbox_.inside(mouseEvent.window());
+}
+
+void
+CGnuPlotRectangle::
+setBBox(const CBBox2D &bbox)
+{
+  CPoint2D p1 = bbox.getMin();
+  CPoint2D p2 = bbox.getMax();
+
+  if      (from_.isValid()) {
+    if      (to_.isValid()) {
+      from_ = CGnuPlotPosition(CPoint3D(p1.x, p1.y, 0));
+      to_   = CGnuPlotPosition(CPoint3D(p2.x, p2.y, 0));
+    }
+    else if (rto_.isValid()) {
+      from_ = CGnuPlotPosition(CPoint3D(p1.x, p1.y, 0));
+      rto_  = CGnuPlotPosition(CPoint3D(p2.x - p1.x, p2.y - p1.y, 0));
+    }
+    else if (size_.isValid()) {
+      from_ = CGnuPlotPosition(CPoint3D(p1.x, p1.y, 0));
+      size_ = CSize2D(p2.x - p1.x, p2.y - p1.y);
+    }
+  }
+  else if (center_.isValid()) {
+    CPoint2D c = bbox.getCenter();
+
+    if (size_.isValid()) {
+      size_   = CSize2D(p2.x - p1.x, p2.y - p1.y);
+      center_ = CGnuPlotPosition(CPoint3D(c.x, c.y, 0));
+    }
+  }
 }
 
 void

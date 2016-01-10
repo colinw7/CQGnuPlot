@@ -207,3 +207,8 @@
  + Add dialogs to add plot for file or function
  + Add dialogs to manage use functions and variables
  + Reorg code to allow file/function to be added outside of gnuplot file commands
+
+### 01/10/2016
+ + add create object dialog
+ + more line dash support in renderer
+ + move support for group annotations

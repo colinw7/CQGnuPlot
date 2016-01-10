@@ -46,6 +46,9 @@ draw(CGnuPlotRenderer *renderer) const
 
   CSize2D s = this->getSize().getSize(renderer);
 
+  xr_ = s.width /2;
+  yr_ = s.height/2;
+
   if (this->getFillColor().isRGB()) {
     CRGBA fc = this->getFillColor().color();
 
@@ -53,16 +56,11 @@ draw(CGnuPlotRenderer *renderer) const
       fc = fc.getLightRGBA();
     }
 
-    renderer->fillClippedEllipse(center_, s.width/2, s.height/2, 0, fc);
+    renderer->fillClippedEllipse(center_, xr_, yr_, angle_, fc);
   }
 
   CRGBA  c;
   double lw = 1;
-
-  xr_ = s.width /2;
-  yr_ = s.height/2;
-
-  bbox_ = CBBox2D(center_.x - xr_, center_.y - yr_, center_.x + xr_, center_.y + yr_);
 
   if      (this->getStrokeColor().isValid()) {
     c_ = this->getStrokeColor().getValue();
@@ -74,7 +72,7 @@ draw(CGnuPlotRenderer *renderer) const
       lw = 2;
     }
 
-    renderer->drawClippedEllipse(center_, xr_, yr_, angle_, c, lw);
+    renderer->drawClippedEllipse(center_, xr_, yr_, angle_, c, lw, dash_);
   }
   else if (getFillStyle().calcColor(group_, c_)) {
     c = c_;
@@ -84,14 +82,16 @@ draw(CGnuPlotRenderer *renderer) const
       lw = 2;
     }
 
-    renderer->drawClippedEllipse(center_, xr_, yr_, angle_, c, lw);
+    renderer->drawClippedEllipse(center_, xr_, yr_, angle_, c, lw, dash_);
   }
   else if (highlighted) {
     c  = CRGBA(1,0,0);
     lw = 2;
 
-    renderer->drawClippedEllipse(center_, xr_, yr_, angle_, c, lw);
+    renderer->drawClippedEllipse(center_, xr_, yr_, angle_, c, lw, dash_);
   }
+
+  bbox_ = CBBox2D(center_.x - xr_, center_.y - yr_, center_.x + xr_, center_.y + yr_);
 }
 
 bool
@@ -116,6 +116,15 @@ tip() const
   tip.setBBox(bbox_);
 
   return tip;
+}
+
+
+void
+CGnuPlotEllipse::
+setBBox(const CBBox2D &bbox)
+{
+  p_    = bbox.getCenter();
+  size_ = bbox.getSize();
 }
 
 void

@@ -67,6 +67,7 @@ CQGnuPlotLoadFileDialog.cpp \
 CQGnuPlotLoadFunctionDialog.cpp \
 CQGnuPlotManageFunctionsDialog.cpp \
 CQGnuPlotManageVariablesDialog.cpp \
+CQGnuPlotCreateDialog.cpp \
 \
 CGnuPlot.cpp \
 CGnuPlotAnnotation.cpp \
@@ -289,6 +290,7 @@ CQGnuPlotLoadFileDialog.h \
 CQGnuPlotLoadFunctionDialog.h \
 CQGnuPlotManageFunctionsDialog.h \
 CQGnuPlotManageVariablesDialog.h \
+CQGnuPlotCreateDialog.h \
 \
 CGnuPlot.h \
 CGnuPlotArrow.h \

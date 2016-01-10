@@ -48,16 +48,16 @@ draw(CGnuPlotRenderer *renderer) const
   xr_ = this->getRadius().getXDistance(renderer);
   yr_ = this->getRadius().getYDistance(renderer);
 
-  CRGBA fc = this->getFillColor().color();
-
-  if (highlighted) {
-    fc = fc.getLightRGBA();
-  }
-
   double a1 = arcStart_.getValue(0);
   double a2 = arcEnd_  .getValue(360);
 
   if (this->getFillColor().isRGB()) {
+    CRGBA fc = this->getFillColor().color();
+
+    if (highlighted) {
+      fc = fc.getLightRGBA();
+    }
+
     if (arcStart_.isValid() || arcEnd_.isValid())
       renderer->fillPieSlice(center_, 0, xr_, a1, a2, fc);
     else
@@ -74,12 +74,12 @@ draw(CGnuPlotRenderer *renderer) const
     lw = 2;
   }
 
-  bbox_ = CBBox2D(center_.x - xr_, center_.y - yr_, center_.x + xr_, center_.y + yr_);
-
   if (arcStart_.isValid() || arcEnd_.isValid())
-    renderer->drawPieSlice(center_, 0, xr_, a1, a2, lw, c);
+    renderer->drawPieSlice(center_, 0, xr_, a1, a2, lw, c, dash_);
   else
-    renderer->drawClippedEllipse(center_, xr_, yr_, 0, c, lw);
+    renderer->drawClippedEllipse(center_, xr_, yr_, 0, c, lw, dash_);
+
+  bbox_ = CBBox2D(center_.x - xr_, center_.y - yr_, center_.x + xr_, center_.y + yr_);
 }
 
 bool
@@ -143,6 +143,14 @@ tip() const
   tip.setBBox(bbox_);
 
   return tip;
+}
+
+void
+CGnuPlotCircle::
+setBBox(const CBBox2D &bbox)
+{
+  p_ = bbox.getCenter();
+  r_ = bbox.getWidth ()/2;
 }
 
 void

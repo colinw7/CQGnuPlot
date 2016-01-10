@@ -20,7 +20,9 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
 
   CGnuPlotPolygon *setData(const CGnuPlotPolygon *poly);
 
-  CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::POLYGON; }
+  ObjectType type() const override { return CGnuPlotTypes::ObjectType::POLYGON; }
+
+  VariableName varName() const override { return CGnuPlotTypes::VariableName::POLYGON; }
 
   void addPoint (const CGnuPlotPosition &p);
   void addRPoint(const CGnuPlotPosition &p);
@@ -36,8 +38,8 @@ class CGnuPlotPolygon : public CGnuPlotGroupAnnotation {
   const COptReal &getLineWidth() const { return lw_; }
   void setLineWidth(double w) { lw_ = w; }
 
-  const CLineDash &dash() const { return dash_; }
-  void setDash(const CLineDash &v) { dash_ = v; }
+  const CLineDash &getLineDash() const { return dash_; }
+  void setLineDash(const CLineDash &v) { dash_ = v; }
 
   CBBox2D calcBBox() const;
 

@@ -28,6 +28,8 @@ class CQGnuPlotAnnotation : public QObject {
   const CQGnuPlotGroup *qgroup() const { return qgroup_; }
   void setQGroup(CQGnuPlotGroup *p) { qgroup_ = p; }
 
+  CGnuPlotGroupAnnotation *obj() const { return obj_; }
+
   QColor getStrokeColor() const;
   void setStrokeColor(const QColor &c);
 
@@ -41,6 +43,8 @@ class CQGnuPlotAnnotation : public QObject {
   void setDrawLayer(const DrawLayerType &layer);
 
   bool mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip);
+
+  void move(int key);
 
  private:
   CQGnuPlotGroup          *qgroup_;

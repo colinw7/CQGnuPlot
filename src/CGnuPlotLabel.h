@@ -14,7 +14,9 @@ class CGnuPlotLabel : public CGnuPlotGroupAnnotation {
 
   CGnuPlotLabel *setData(const CGnuPlotLabel *label);
 
-  CGnuPlotTypes::ObjectType type() const override { return CGnuPlotTypes::ObjectType::LABEL; }
+  ObjectType type() const override { return CGnuPlotTypes::ObjectType::LABEL; }
+
+  VariableName varName() const override { return CGnuPlotTypes::VariableName::LABEL; }
 
   const CGnuPlotLabelData *data() const { return data_; }
   void setData(CGnuPlotLabelData *data);

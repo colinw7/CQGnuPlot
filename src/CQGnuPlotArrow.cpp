@@ -90,16 +90,16 @@ setHeadLength(double l)
 
 CLineDash
 CQGnuPlotArrow::
-getDash() const
+getLineDash() const
 {
-  return CGnuPlotArrow::getDash().calcDash(group_->app(), CLineDash());
+  return CGnuPlotArrow::getLineDash().calcDash(group_->app(), CLineDash());
 }
 
 void
 CQGnuPlotArrow::
-setDash(const CLineDash &dash)
+setLineDash(const CLineDash &dash)
 {
-  CGnuPlotArrow::setDash(CGnuPlotDash(dash));
+  CGnuPlotArrow::setLineDash(CGnuPlotDash(dash));
 }
 
 void

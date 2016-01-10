@@ -15,6 +15,10 @@ class CGnuPlotPosition {
    p_(p), systemX_(s), systemY_(s), systemZ_(s) {
   }
 
+  CGnuPlotPosition(const CPoint2D &p, CoordSys s=CoordSys::FIRST) :
+   p_(CPoint3D(p.x, p.y, 0)), systemX_(s), systemY_(s), systemZ_(s) {
+  }
+
   const CPoint3D &point() const { return p_; }
   void setPoint(const CPoint3D &p) { p_ = p; }
 

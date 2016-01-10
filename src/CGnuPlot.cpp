@@ -5369,7 +5369,7 @@ setCmd(const std::string &args)
         CGnuPlotDash dash;
 
         if (parseDash(line, dash))
-          arrow->setDash(dash);
+          arrow->setLineDash(dash);
       }
       else {
         errorMsg("Invalid arg '" + arg + "'");
@@ -16637,7 +16637,7 @@ skipExpression(const char *id, CParseLine &line, std::string &expr) const
 
 void
 CGnuPlot::
-skipString(CParseLine &line) const
+skipString(CParseLine &line)
 {
   if      (line.skipSpaceAndChar('"')) {
     while (line.isValid() && ! line.isChar('"')) {

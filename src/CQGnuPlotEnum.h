@@ -19,9 +19,11 @@ class CQGnuPlotEnum : public QObject {
   Q_ENUMS(DrawLayerType)
   Q_ENUMS(PaletteColorType)
   Q_ENUMS(ArrowCoordType)
+  Q_ENUMS(ObjectType)
 
   Q_PROPERTY(SymbolType symbolType READ symbolType WRITE setSymbolType)
   Q_PROPERTY(PlotStyle  plotStyle  READ plotStyle  WRITE setPlotStyle )
+  Q_PROPERTY(ObjectType objectType READ objectType WRITE setObjectType )
 
  public:
   enum HAlignType {
@@ -162,6 +164,16 @@ class CQGnuPlotEnum : public QObject {
     ArrowCoordFromAngle
   };
 
+  enum ObjectType {
+    ObjectTypeNone,
+    ObjectTypeArrow,
+    ObjectTypeCircle,
+    ObjectTypeEllipse,
+    ObjectTypeLabel,
+    ObjectTypePolygon,
+    ObjectTypeRectangle
+  };
+
  public:
   CQGnuPlotEnum() { }
 
@@ -177,9 +189,16 @@ class CQGnuPlotEnum : public QObject {
   static PlotStyle plotStyleConv(const CGnuPlotTypes::PlotStyle &type);
   static CGnuPlotTypes::PlotStyle plotStyleConv(const PlotStyle &type);
 
+  const ObjectType &objectType() const { return objectType_; }
+  void setObjectType(const ObjectType &v) { objectType_ = v; }
+
+  static ObjectType objectTypeConv(const CGnuPlotTypes::ObjectType &type);
+  static CGnuPlotTypes::ObjectType objectTypeConv(const ObjectType &type);
+
  private:
   SymbolType symbolType_;
   PlotStyle  plotStyle_;
+  ObjectType objectType_;
 };
 
 #endif

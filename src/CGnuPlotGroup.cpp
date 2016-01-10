@@ -232,42 +232,51 @@ addObjects()
 {
   CGnuPlot *plot = this->app();
 
-  CGnuPlotDevice *device = plot->device();
-
   for (auto vann : plot->annotations()) {
     for (auto ann : vann.second) {
-      CGnuPlotArrow     *arrow   = 0;
-      CGnuPlotCircle    *circle  = 0;
-      CGnuPlotEllipse   *ellipse = 0;
-      CGnuPlotLabel     *label   = 0;
-      CGnuPlotPolygon   *poly    = 0;
-      CGnuPlotRectangle *rect    = 0;
-
-      if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann.get()))) {
-        varAnnotations_[VariableName::ARROW].push_back(
-          CGnuPlotGroupAnnotationP(device->createArrow(this)->setData(arrow)));
-      }
-      else if ((label = dynamic_cast<CGnuPlotLabel *>(ann.get()))) {
-        varAnnotations_[VariableName::LABEL].push_back(
-          CGnuPlotGroupAnnotationP(device->createLabel(this)->setData(label)));
-      }
-      else if ((circle = dynamic_cast<CGnuPlotCircle *>(ann.get()))) {
-        varAnnotations_[VariableName::OBJECT].push_back(
-          CGnuPlotGroupAnnotationP(device->createCircle(this)->setData(circle)));
-      }
-      else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann.get()))) {
-        varAnnotations_[VariableName::OBJECT].push_back(
-          CGnuPlotGroupAnnotationP(device->createEllipse(this)->setData(ellipse)));
-      }
-      else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann.get()))) {
-        varAnnotations_[VariableName::OBJECT].push_back(
-          CGnuPlotGroupAnnotationP(device->createPolygon(this)->setData(poly)));
-      }
-      else if ((rect = dynamic_cast<CGnuPlotRectangle *>(ann.get()))) {
-        varAnnotations_[VariableName::OBJECT].push_back(
-          CGnuPlotGroupAnnotationP(device->createRectangle(this)->setData(rect)));
-      }
+      addAnnotation(ann.get());
     }
+  }
+}
+
+void
+CGnuPlotGroup::
+addAnnotation(CGnuPlotGroupAnnotation *ann)
+{
+  CGnuPlot *plot = this->app();
+
+  CGnuPlotDevice *device = plot->device();
+
+  CGnuPlotArrow     *arrow   = 0;
+  CGnuPlotCircle    *circle  = 0;
+  CGnuPlotEllipse   *ellipse = 0;
+  CGnuPlotLabel     *label   = 0;
+  CGnuPlotPolygon   *poly    = 0;
+  CGnuPlotRectangle *rect    = 0;
+
+  if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann))) {
+    varAnnotations_[ann->varName()].push_back(
+      CGnuPlotGroupAnnotationP(device->createArrow(this)->setData(arrow)));
+  }
+  else if ((label = dynamic_cast<CGnuPlotLabel *>(ann))) {
+    varAnnotations_[ann->varName()].push_back(
+      CGnuPlotGroupAnnotationP(device->createLabel(this)->setData(label)));
+  }
+  else if ((circle = dynamic_cast<CGnuPlotCircle *>(ann))) {
+    varAnnotations_[ann->varName()].push_back(
+      CGnuPlotGroupAnnotationP(device->createCircle(this)->setData(circle)));
+  }
+  else if ((ellipse = dynamic_cast<CGnuPlotEllipse *>(ann))) {
+    varAnnotations_[ann->varName()].push_back(
+      CGnuPlotGroupAnnotationP(device->createEllipse(this)->setData(ellipse)));
+  }
+  else if ((poly = dynamic_cast<CGnuPlotPolygon *>(ann))) {
+    varAnnotations_[ann->varName()].push_back(
+      CGnuPlotGroupAnnotationP(device->createPolygon(this)->setData(poly)));
+  }
+  else if ((rect = dynamic_cast<CGnuPlotRectangle *>(ann))) {
+    varAnnotations_[ann->varName()].push_back(
+      CGnuPlotGroupAnnotationP(device->createRectangle(this)->setData(rect)));
   }
 }
 
