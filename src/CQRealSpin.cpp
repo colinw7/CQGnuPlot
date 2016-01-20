@@ -5,14 +5,14 @@
 
 CQRealSpin::
 CQRealSpin(QWidget *parent, double value) :
- QDoubleSpinBox(parent), autoStep_(true), step_(1)
+ QDoubleSpinBox(parent)
 {
   init(value);
 }
 
 CQRealSpin::
 CQRealSpin(double value) :
- QDoubleSpinBox(0), autoStep_(true), step_(1)
+ QDoubleSpinBox(0)
 {
   init(value);
 }

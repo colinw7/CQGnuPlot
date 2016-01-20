@@ -466,7 +466,9 @@ OBJECTS_DIR = ../obj
 LIB_DIR     = ../lib
 
 INCLUDEPATH += \
-. Expr ../include \
+. \
+Expr \
+../include \
 ../../CQApp/include \
 ../../CQUtil/include \
 ../../CFont/include \

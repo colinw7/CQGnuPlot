@@ -38,8 +38,8 @@ class CQRealSpin : public QDoubleSpinBox {
   int dotPos() const;
 
  private:
-  bool   autoStep_;
-  double step_;
+  bool   autoStep_ { true };
+  double step_     { 1 };
 };
 
 #endif

@@ -9,7 +9,8 @@
 class CQPoint2DEdit : public QFrame {
   Q_OBJECT
 
-  Q_PROPERTY(bool spin READ isSpin WRITE setSpin)
+  Q_PROPERTY(bool spin     READ isSpin   WRITE setSpin    )
+  Q_PROPERTY(int  decimals READ decimals WRITE setDecimals)
 
  public:
   CQPoint2DEdit(QWidget *parent, const CPoint2D &value=CPoint2D(0,0), bool spin=false);
@@ -22,6 +23,9 @@ class CQPoint2DEdit : public QFrame {
 
   bool isSpin() const { return spin_; }
   void setSpin(bool b);
+
+  int decimals() const { return decimals_; }
+  void setDecimals(int i);
 
   void setValue(const CPoint2D &point);
   void setValue(const QPointF &point);
@@ -49,17 +53,20 @@ class CQPoint2DEdit : public QFrame {
   void widgetToPoint();
 
  private:
-  CPoint2D          point_;
-  bool              spin_;
-  CPoint2D          min_, max_, step_;
-  QDoubleValidator *x_validator_;
-  QDoubleValidator *y_validator_;
-  QLineEdit        *x_edit_;
-  QLineEdit        *y_edit_;
-  QDoubleSpinBox   *x_spin_;
-  QDoubleSpinBox   *y_spin_;
-  QHBoxLayout      *layout_;
-  mutable bool      disableSignals_;
+  CPoint2D          point_ { CPoint2D(0, 0) };
+  bool              spin_ { false };
+  CPoint2D          min_ { CPoint2D(-1E50, -1E50) };
+  CPoint2D          max_ { CPoint2D(1E50, 1E50) };
+  CPoint2D          step_ { CPoint2D(1, 1) };
+  int               decimals_ { 3 };
+  QDoubleValidator *x_validator_ { 0 };
+  QDoubleValidator *y_validator_ { 0 };
+  QLineEdit        *x_edit_ { 0 };
+  QLineEdit        *y_edit_ { 0 };
+  QDoubleSpinBox   *x_spin_ { 0 };
+  QDoubleSpinBox   *y_spin_ { 0 };
+  QHBoxLayout      *layout_ { 0 };
+  mutable bool      disableSignals_ { false };
 };
 
 #endif

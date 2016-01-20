@@ -48,6 +48,15 @@ setSpin(bool spin)
 
 void
 CQPoint2DEdit::
+setDecimals(int i)
+{
+  decimals_ = i;
+
+  updateRange();
+}
+
+void
+CQPoint2DEdit::
 setMinimum(const CPoint2D &p)
 {
   min_ = p;
@@ -77,8 +86,8 @@ void
 CQPoint2DEdit::
 updateRange()
 {
-  x_validator_->setRange(min_.x, max_.x);
-  y_validator_->setRange(min_.y, max_.y);
+  x_validator_->setRange(min_.x, max_.x, decimals_);
+  y_validator_->setRange(min_.y, max_.y, decimals_);
 
   x_spin_->setRange(min_.x, max_.x);
   y_spin_->setRange(min_.y, max_.y);
@@ -93,14 +102,7 @@ init(const CPoint2D &value)
 {
   setObjectName("edit");
 
-  disableSignals_ = false;
-
   setFrameStyle(QFrame::NoFrame | QFrame::Plain);
-
-  min_ = CPoint2D(-1E50, -1E50);
-  max_ = CPoint2D( 1E50,  1E50);
-
-  step_ = CPoint2D(1, 1);
 
   //---
 
