@@ -184,24 +184,10 @@ CGnuPlotWindow.cpp \
 CGnuPlotText.cpp \
 CGnuPlotTextRenderer.cpp \
 \
-CQPropertyDelegate.cpp \
-CQPropertyEditor.cpp \
-CQPropertyItem.cpp \
-CQPropertyTree.cpp \
-CQPaletteChooser.cpp \
-CQPaletteDialog.cpp \
-\
 CQToolTip.cpp \
 CQFloatLabel.cpp \
 CQRotatedText.cpp \
-CQComboSlider.cpp \
-CQSlider.cpp \
-CQAngleSpinBox.cpp \
 CQIntegerSpin.cpp \
-CQRealSpin.cpp \
-CQLineDash.cpp \
-CQPoint2DEdit.cpp \
-CQIconCombo.cpp \
 CQCursor.cpp \
 CQRubberBand.cpp \
 CQDialog.cpp \
@@ -409,24 +395,10 @@ CGnuPlotWindow.h \
 CGnuPlotText.h \
 CGnuPlotTextRenderer.h \
 \
-CQPropertyDelegate.h \
-CQPropertyEditor.h \
-CQPropertyItem.h \
-CQPropertyTree.h \
-CQPaletteChooser.h \
-CQPaletteDialog.h \
-\
 CQToolTip.h \
 CQFloatLabel.h \
 CQRotatedText.h \
-CQComboSlider.h \
-CQSlider.h \
-CQAngleSpinBox.h \
 CQIntegerSpin.h \
-CQRealSpin.h \
-CQLineDash.h \
-CQPoint2DEdit.h \
-CQIconCombo.h \
 CQCursor.h \
 CQRubberBand.h \
 CQDialog.h \
@@ -471,6 +443,7 @@ Expr \
 ../include \
 ../../CQApp/include \
 ../../CQUtil/include \
+../../CQPropertyTree/include \
 ../../CFont/include \
 ../../CImageLib/include \
 ../../CReadLine/include \
@@ -484,6 +457,7 @@ Expr \
 unix:LIBS += \
 -L$$LIB_DIR \
 -L../../CQUtil/lib \
+-L../../CQPropertyTree/lib \
 -L../../CReadLine/lib \
 -L../../CFont/lib \
 -L../../CUtil/lib \
@@ -494,6 +468,6 @@ unix:LIBS += \
 -L../../CStrUtil/lib \
 -L../../CRegExp/lib \
 -L../../CRGBName/lib \
--lCQUtil -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
+-lCQPropertyTree -lCQUtil -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
 -lCRGBName -lCFile -lCOS -lCStrUtil -lCRegExp \
 -lpng -ljpeg -ltre -lreadline
