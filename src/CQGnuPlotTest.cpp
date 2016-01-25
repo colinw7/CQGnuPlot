@@ -1,12 +1,13 @@
 #include <CQGnuPlot.h>
 #include <CQApp.h>
+#include <CQStyle.h>
 
 int
 main(int argc, char **argv)
 {
   CQApp app(argc, argv);
 
-  app.setStyle("windows");
+  app.setStyle(new CQStyle);
 
   bool debug        = false;
   bool edebug       = false;

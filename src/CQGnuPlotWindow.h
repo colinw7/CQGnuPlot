@@ -15,6 +15,7 @@ class CQGnuPlotRenderer;
 class CQPropertyTree;
 class CQPropertyRealEditor;
 class CQPropertyIntegerEditor;
+class CQGnuPlotDataDialog;
 class CQZoomRegion;
 class CQCursor;
 class CQRubberBand;
@@ -122,6 +123,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   QColor backgroundColor() const;
   void setBackgroundColor(const QColor &c);
 
+  void initCurrentGroup();
+
   CQGnuPlotGroup *currentGroup() const { return currentGroup_; }
   void setCurrentGroup(CQGnuPlotGroup *group) override;
 
@@ -172,12 +175,18 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void newWindow();
 
   void loadFile();
+  void loadFileSlot();
+
   void loadFunction();
+  void loadFunctionSlot();
+
+  void showData();
 
   void manageFunctions();
   void manageVariables();
 
   void createObjects();
+  void createObjectsSlot();
 
   void saveSVG();
   void savePNG();
@@ -206,33 +215,34 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
 
   static uint lastId;
 
-  uint               id_           { 0 };
-  CQGnuPlotRenderer* renderer_     { 0 };
-  CQGnuPlotCanvas*   canvas_       { 0 };
-  CQPropertyTree*    tree_         { 0 };
-  QLineEdit*         edit_         { 0 };
-  RealEdits          redits_;
-  IntegerEdits       iedits_;
-  RealSliders        rsliders_;
-  QTimer*            propTimer_    { 0 };
-  QLabel*            plotLabel_    { 0 };
-  QLabel*            posLabel_     { 0 };
-  CQGnuPlotGroup*    currentGroup_ { 0 };
-  Mode               mode_         { Mode::SELECT };
-  bool               showPixels_   { false };
-  QAction*           selectAction_ { 0 };
-  QAction*           moveAction_   { 0 };
-  QAction*           zoomAction_   { 0 };
-  QAction*           probeAction_  { 0 };
-  QAction*           pointsAction_ { 0 };
-  CQZoomRegion*      zoomRegion_   { 0 };
-  CPoint2D           zoomPress_    { 0, 0 };
-  CPoint2D           zoomRelease_  { 0, 0 };
-  CQGnuPlotGroup*    zoomGroup_    { 0 };
-  CQCursor*          cursor_       { 0 };
-  ProbeWidgets       probeWidgets_ { 0 };
-  bool               tipOutside_   { false };
-  mutable bool       escape_       { false };
+  uint                 id_           { 0 };
+  CQGnuPlotRenderer*   renderer_     { 0 };
+  CQGnuPlotCanvas*     canvas_       { 0 };
+  CQPropertyTree*      tree_         { 0 };
+  CQGnuPlotDataDialog* dataDialog_   { 0 };
+  QLineEdit*           edit_         { 0 };
+  RealEdits            redits_;
+  IntegerEdits         iedits_;
+  RealSliders          rsliders_;
+  QTimer*              propTimer_    { 0 };
+  QLabel*              plotLabel_    { 0 };
+  QLabel*              posLabel_     { 0 };
+  CQGnuPlotGroup*      currentGroup_ { 0 };
+  Mode                 mode_         { Mode::SELECT };
+  bool                 showPixels_   { false };
+  QAction*             selectAction_ { 0 };
+  QAction*             moveAction_   { 0 };
+  QAction*             zoomAction_   { 0 };
+  QAction*             probeAction_  { 0 };
+  QAction*             pointsAction_ { 0 };
+  CQZoomRegion*        zoomRegion_   { 0 };
+  CPoint2D             zoomPress_    { 0, 0 };
+  CPoint2D             zoomRelease_  { 0, 0 };
+  CQGnuPlotGroup*      zoomGroup_    { 0 };
+  CQCursor*            cursor_       { 0 };
+  ProbeWidgets         probeWidgets_ { 0 };
+  bool                 tipOutside_   { false };
+  mutable bool         escape_       { false };
 };
 
 #endif

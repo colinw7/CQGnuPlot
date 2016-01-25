@@ -970,6 +970,8 @@ parseStatement(int &i, const Statements &statements)
     case CommandName::LOAD    : loadCmd  (args); break;
     case CommandName::SAVE    : saveCmd  (args); break;
 
+    case CommandName::DATA    : dataCmd   (args); break;
+    case CommandName::WINDOW  : windowCmd (args); break;
     case CommandName::PLOT    : plotCmd   (args); break;
     case CommandName::REPLOT  : replotCmd (args); break;
     case CommandName::REFRESH : refreshCmd(args); break;
@@ -1635,6 +1637,105 @@ saveCmd(const std::string &args)
   showVariables(os);
 }
 
+void
+CGnuPlot::
+dataCmd(const std::string &args)
+{
+  if (isDebug()) debugMsg("data " + args);
+
+  CParseLine line(args);
+
+  std::string filename;
+
+  if (! parseString(line, filename)) {
+    errorMsg("Invalid filename");
+    return;
+  }
+
+  if (filename == "") {
+    errorMsg("Invalid filename");
+    return;
+  }
+
+  bool columnheaders = false;
+  bool binary        = false;
+  bool matrix        = false;
+
+  Sizes                sizes;
+  CGnuPlotBinaryFormat binaryFormat;
+
+  line.skipSpace();
+
+  int pos = line.pos();
+
+  std::string arg = readNonSpace(line);
+
+  while (arg != "") {
+    if      (arg == "column" || arg == "columnhead" ||
+             arg == "columnheader" || arg == "columnheaders") {
+      columnheaders = true;
+    }
+    else if (arg == "matrix") {
+      matrix = true;
+    }
+    else if (arg == "binary") {
+      binary = true;
+    }
+    else {
+      line.setPos(pos);
+
+      if      (line.isChars("array=")) {
+        line.skipChars(6);
+
+        parseArrayValues(line, sizes);
+      }
+      // format=
+      else if (line.isChars("format=")) {
+        line.skipChars(7);
+
+        std::string str;
+
+        (void) parseString(line, str, "Invalid format");
+
+        binaryFormat.setFormat(str);
+      }
+      else
+        warnMsg("Invalid arg '" + line.substr() + "'");
+    }
+
+    line.skipSpace();
+
+    pos = line.pos();
+
+    arg = readNonSpace(line);
+  }
+
+  dataFile_.reset();
+
+  dataFile_.setColumnHeaders(columnheaders);
+
+  dataFile_.setBinary(binary);
+  dataFile_.setMatrix(matrix);
+  dataFile_.setBinaryFormat(binaryFormat);
+
+  if (! sizes.empty())
+    dataFile_.setBinarySize(sizes[0]);
+
+  if (! readDataFile(filename, dataFile_))
+    return;
+
+  dataFile_.processFile();
+
+  setLastFilename(filename);
+}
+
+void
+CGnuPlot::
+windowCmd(const std::string &)
+{
+  createNewWindow();
+}
+
 // plot [ {ranges} ]
 //      [ (function) | "{str:filename}" ]
 //      {csv}
@@ -1659,7 +1760,8 @@ plotCmd(const std::string &args)
 
   lastPlotCmd_  = args;
   lastSPlotCmd_ = "";
-  lastFilename_ = "";
+
+  setLastFilename("");
 
   xind_ = 1;
   yind_ = 1;
@@ -2010,7 +2112,7 @@ plotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
 
     // special filename '' (use previous file)
     if      (filename == "") {
-      filename = lastFilename_;
+      filename = lastFilename();
     }
     // special filename '-' (read lines from stdin)
     else if (filename == "-") {
@@ -2025,7 +2127,7 @@ plotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
     if (isDebug())
       debugMsg("Filename: " + filename);
 
-    lastFilename_ = filename;
+    setLastFilename(filename);
 
     style = dataStyle();
   }
@@ -2036,7 +2138,7 @@ plotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
 
     filename = "$" + name;
 
-    lastFilename_ = filename;
+    setLastFilename(filename);
 
     style = dataStyle();
   }
@@ -2095,10 +2197,7 @@ plotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
 
   CGnuPlotUsingCols usingCols(this);
 
-  dataFile_.resetIndices();
-  dataFile_.resetEvery  ();
-
-  dataFile_.resetBlankLines();
+  dataFile_.reset();
 
   imageStyle_  .reset();
   binaryFormat_.clear();
@@ -4043,7 +4142,8 @@ splotCmd(const std::string &args)
 
   lastSPlotCmd_ = args;
   lastPlotCmd_  = "";
-  lastFilename_ = "";
+
+  setLastFilename("");
 
   saveAxisData();
 
@@ -4351,7 +4451,7 @@ splotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
 
     // special filename '' (use previous file)
     if      (filename == "") {
-      filename = lastFilename_;
+      filename = lastFilename();
     }
     // special filename '-' (read lines from stdin)
     else if (filename == "-") {
@@ -4366,7 +4466,7 @@ splotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
     if (isDebug())
       debugMsg("Filename: " + filename);
 
-    lastFilename_ = filename;
+    setLastFilename(filename);
 
     style = dataStyle();
   }
@@ -4377,7 +4477,7 @@ splotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
 
     filename = "$" + name;
 
-    lastFilename_ = filename;
+    setLastFilename(filename);
 
     style = dataStyle();
   }
@@ -4412,10 +4512,7 @@ splotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
 
   CGnuPlotUsingCols usingCols(this);
 
-  dataFile_.resetIndices();
-  dataFile_.resetEvery  ();
-
-  dataFile_.resetBlankLines();
+  dataFile_.reset();
 
   imageStyle_  .reset();
   binaryFormat_.clear();
@@ -13303,7 +13400,7 @@ addFile2D(Plots &plots, CGnuPlotGroupP &group, const std::string &filename, Plot
 
   //---
 
-  dataFile_.processLines();
+  dataFile_.processFile();
 
   if (dataFile_.numSets() == 0) {
     errorMsg("no data in file");
@@ -13502,7 +13599,7 @@ setPlotValues2D(CGnuPlotPlot *plot)
                   bool   bad1;
                   Params params1;
 
-                  (void) usingCols.decodeValues(th, i, values, bad1, values1, params1);
+                  (void) usingCols.decodeValues(th, 0, i, values, bad1, values1, params1);
 
                   // TODO: error handling
                   values = values1;
@@ -13544,7 +13641,7 @@ setPlotValues2D(CGnuPlotPlot *plot)
         }
         // extract specified columns
         else {
-          nskip = usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
+          nskip = usingCols.decodeValues(th, setNum_, pointNum_, fieldValues_, bad, values, params);
 
           // one value then auto add the point number
           if (values.size() == 1) {
@@ -13684,7 +13781,7 @@ initGen1File2D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols)
     Values values;
     Params params;
 
-    usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
+    usingCols.decodeValues(th, setNum_, pointNum_, fieldValues_, bad, values, params);
 
     plot->addPoint2D(values, false, bad, params);
   }
@@ -13770,7 +13867,7 @@ initGen2File2D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols)
       Values values;
       Params params;
 
-      usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
+      usingCols.decodeValues(th, setNum_, pointNum_, fieldValues_, bad, values, params);
 
       plot->addPoint2D(values, false, bad, params);
     }
@@ -13841,7 +13938,7 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
 
   COptReal xmin, ymin, xmax, ymax;
 
-  if (imageStyle_.fileType() == CGnuPlotTypes::ImageType::PNG) {
+  if (istyle.fileType() == CGnuPlotTypes::ImageType::PNG) {
     if (filename == "-") {
       errorMsg("no \"-\" filename support for PNG");
       return 0;
@@ -13890,12 +13987,12 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
 
     //---
 
-    if (binaryFormat().fmt() == "") {
+    if (binaryFormat().format() == "") {
       int iw = -1, ih = -1;
 
-      if (imageStyle_.width().isValid() && imageStyle_.height().isValid()) {
-        iw = imageStyle_.width ().getValue();
-        ih = imageStyle_.height().getValue();
+      if (istyle.width().isValid() && istyle.height().isValid()) {
+        iw = istyle.width ().getValue();
+        ih = istyle.height().getValue();
       }
 
       if (style == PlotStyle::IMAGE) {
@@ -13928,8 +14025,8 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
 
         int n = std::numeric_limits<int>::max();
 
-        if (imageStyle_.width().isValid() && imageStyle_.height().isValid())
-          n = 3*imageStyle_.width().getValue()*imageStyle_.height().getValue();
+        if (istyle.width().isValid() && istyle.height().isValid())
+          n = 3*istyle.width().getValue()*istyle.height().getValue();
 
         // read from current input source
         while (int(chars.size()) < n && file->readChar(c))
@@ -13978,9 +14075,9 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
 
       int iw, ih;
 
-      if (imageStyle_.width().isValid() && imageStyle_.height().isValid()) {
-        iw = imageStyle_.width ().getValue();
-        ih = imageStyle_.height().getValue();
+      if (istyle.width().isValid() && istyle.height().isValid()) {
+        iw = istyle.width ().getValue();
+        ih = istyle.height().getValue();
 
         int n = iw*ih;
 
@@ -14042,7 +14139,7 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
 
           pointNum_ = i;
 
-          usingCols.decodeValues(th, pointNum_, fieldValues, bad, values, params);
+          usingCols.decodeValues(th, setNum_, pointNum_, fieldValues, bad, values, params);
 
           if (style == PlotStyle::IMAGE) { // palette
             double r = 0;
@@ -14099,7 +14196,7 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
         }
       }
 
-      if (imageStyle_.width().isValid() && imageStyle_.height().isValid()) {
+      if (istyle.width().isValid() && istyle.height().isValid()) {
         if (style == PlotStyle::IMAGE) {
           int nx = 0;
 
@@ -14151,7 +14248,7 @@ addBinary2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
   CGnuPlotPlotP plot;
 
   // matrix format
-  if (binaryFormat().fmt() == "") {
+  if (binaryFormat().format() == "") {
     plot = CGnuPlotPlotP(createPlot(group.get(), PlotStyle::SURFACE));
 
     plot->setSetNum(0);
@@ -14254,7 +14351,7 @@ readBinaryFormatFile2D(CUnixFile *file, CGnuPlotGroupP &group, PlotStyle style,
 
       pointNum_ = i/nv;
 
-      usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
+      usingCols.decodeValues(th, setNum_, pointNum_, fieldValues_, bad, values, params);
 
       plot->addPoint2D(values, false, bad, params);
     }
@@ -14435,7 +14532,7 @@ addFile3D(Plots &plots, CGnuPlotGroupP &group, const std::string &filename, Plot
     dataFile_.setSubSetBlankLines(-1); // disable
   }
 
-  dataFile_.processLines();
+  dataFile_.processFile();
 
   if (dataFile_.numSets() == 0) {
     errorMsg("no data in file");
@@ -14595,7 +14692,7 @@ setPlotValues3D(CGnuPlotPlot *plot)
         }
         // extract specified columns
         else {
-          usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
+          usingCols.decodeValues(th, setNum_, pointNum_, fieldValues_, bad, values, params);
 
           // one value then auto add the point and set number
           if (values.size() == 1) {
@@ -14725,7 +14822,7 @@ initGen1File3D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols)
     Values values;
     Params params;
 
-    usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
+    usingCols.decodeValues(th, setNum_, pointNum_, fieldValues_, bad, values, params);
 
     plot->addPoint3D(0, values, false, bad);
   }
@@ -14856,7 +14953,7 @@ initGen2File3D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols)
       Values values;
       Params params;
 
-      usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
+      usingCols.decodeValues(th, setNum_, pointNum_, fieldValues_, bad, values, params);
 
       plot->addPoint3D(iy, values, false, bad);
     }
@@ -14881,7 +14978,7 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
 
   COptReal xmin, ymin, xmax, ymax;
 
-  if (imageStyle_.fileType() == CGnuPlotTypes::ImageType::PNG) {
+  if (istyle.fileType() == CGnuPlotTypes::ImageType::PNG) {
     if (filename == "-") {
       errorMsg("no \"-\" filename support for PNG");
       return 0;
@@ -14930,12 +15027,12 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
 
     //---
 
-    if (binaryFormat().fmt() == "") {
+    if (binaryFormat().format() == "") {
       int iw = -1, ih = -1;
 
-      if (imageStyle_.width().isValid() && imageStyle_.height().isValid()) {
-        iw = imageStyle_.width ().getValue();
-        ih = imageStyle_.height().getValue();
+      if (istyle.width().isValid() && istyle.height().isValid()) {
+        iw = istyle.width ().getValue();
+        ih = istyle.height().getValue();
       }
 
       if (style == PlotStyle::IMAGE) {
@@ -14968,8 +15065,8 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
 
         int n = std::numeric_limits<int>::max();
 
-        if (imageStyle_.width().isValid() && imageStyle_.height().isValid())
-          n = 3*imageStyle_.width().getValue()*imageStyle_.height().getValue();
+        if (istyle.width().isValid() && istyle.height().isValid())
+          n = 3*istyle.width().getValue()*istyle.height().getValue();
 
         // read from current input source
         while (int(chars.size()) < n && file->readChar(c))
@@ -15018,9 +15115,9 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
 
       int iw, ih;
 
-      if (imageStyle_.width().isValid() && imageStyle_.height().isValid()) {
-        iw = imageStyle_.width ().getValue();
-        ih = imageStyle_.height().getValue();
+      if (istyle.width().isValid() && istyle.height().isValid()) {
+        iw = istyle.width ().getValue();
+        ih = istyle.height().getValue();
 
         int n = iw*ih;
 
@@ -15082,7 +15179,7 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
 
           pointNum_ = i;
 
-          usingCols.decodeValues(th, pointNum_, fieldValues, bad, values, params);
+          usingCols.decodeValues(th, setNum_, pointNum_, fieldValues, bad, values, params);
 
           if (style == PlotStyle::IMAGE) { // palette
             double r = 0;
@@ -15139,7 +15236,7 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
         }
       }
 
-      if (imageStyle_.width().isValid() && imageStyle_.height().isValid()) {
+      if (istyle.width().isValid() && istyle.height().isValid()) {
         if (style == PlotStyle::IMAGE) {
           int nx = 0;
 
@@ -15191,7 +15288,7 @@ addBinary3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
   CGnuPlotPlotP plot;
 
   // matrix format
-  if (binaryFormat().fmt() == "") {
+  if (binaryFormat().format() == "") {
     plot = CGnuPlotPlotP(createPlot(group.get(), PlotStyle::SURFACE));
 
     plot->setSetNum(0);
@@ -15305,7 +15402,7 @@ readBinaryFormatFile3D(CUnixFile *file, CGnuPlotGroupP &group, PlotStyle style,
 
           setSetNum(0);
 
-          usingCols.decodeValues(th, pointNum_, fieldValues_, bad, values, params);
+          usingCols.decodeValues(th, setNum_, pointNum_, fieldValues_, bad, values, params);
 
           plot->addPoint3D(iy, values, false, bad, params);
         }
@@ -15481,7 +15578,7 @@ readBinaryFile3D(CUnixFile *file, CGnuPlotPlotP &plot, const CGnuPlotUsingCols &
           Values values1;
           Params params;
 
-          usingCols.decodeValues(th, i, values, bad, values1, params);
+          usingCols.decodeValues(th, 0, i, values, bad, values1, params);
 
           // one value then auto add the point and set number
           CPoint3D point1;
@@ -15648,7 +15745,7 @@ fieldToValue(int /*nf*/, const std::string &field)
 
 bool
 CGnuPlot::
-fieldToReal(const std::string &str, double &r) const
+fieldToReal(const std::string &str, double &r)
 {
   const char *c_str = str.c_str();
 
@@ -15878,6 +15975,15 @@ drawWindows()
 {
   for (const auto &window : device_->windows())
     window->draw();
+}
+
+void
+CGnuPlot::
+setLastFilename(const std::string &v)
+{
+  lastFilename_ = v;
+
+  CExprInst->createStringVariable("GPVAL_FILENAME", lastFilename_);
 }
 
 void

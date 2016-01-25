@@ -50,6 +50,7 @@
 #include <CQGnuPlotManageFunctionsDialog.h>
 #include <CQGnuPlotManageVariablesDialog.h>
 #include <CQGnuPlotCreateDialog.h>
+#include <CQGnuPlotDataDialog.h>
 
 #include <CQGnuPlotPNGRenderer.h>
 #include <CGnuPlotSVGRenderer.h>
@@ -62,6 +63,7 @@
 #include <CQPropertyEditor.h>
 #include <CQFloatLabel.h>
 #include <CQRubberBand.h>
+#include <CQPixmapCache.h>
 #include <CUnixFile.h>
 
 #include <QPainter>
@@ -75,12 +77,6 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QFileDialog>
-
-//#include <xpm/select.xpm>
-//#include <xpm/zoom.xpm>
-//#include <xpm/grid.xpm>
-//#include <xpm/xaxis.xpm>
-//#include <xpm/yaxis.xpm>
 
 #include <svg/select_svg.h>
 #include <svg/move_svg.h>
@@ -135,11 +131,11 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   //---
 
-  selectAction_ = new QAction(CQGnuPlotUtil::svgIcon(select_data, SELECT_DATA_LEN), "Select", this);
-  moveAction_   = new QAction(CQGnuPlotUtil::svgIcon(move_data  , MOVE_DATA_LEN  ), "Move"  , this);
-  zoomAction_   = new QAction(CQGnuPlotUtil::svgIcon(zoom_data  , ZOOM_DATA_LEN  ), "Zoom"  , this);
-  probeAction_  = new QAction(CQGnuPlotUtil::svgIcon(probe_data , PROBE_DATA_LEN ), "Probe" , this);
-  pointsAction_ = new QAction(CQGnuPlotUtil::svgIcon(points_data, POINTS_DATA_LEN), "Points", this);
+  selectAction_ = new QAction(CQPixmapCacheInst->getIcon("SELECT"), "Select", this);
+  moveAction_   = new QAction(CQPixmapCacheInst->getIcon("MOVE"  ), "Move"  , this);
+  zoomAction_   = new QAction(CQPixmapCacheInst->getIcon("ZOOM"  ), "Zoom"  , this);
+  probeAction_  = new QAction(CQPixmapCacheInst->getIcon("PROBE" ), "Probe" , this);
+  pointsAction_ = new QAction(CQPixmapCacheInst->getIcon("POINTS"), "Points", this);
 
   selectAction_->setCheckable(true);
   moveAction_  ->setCheckable(true);
@@ -260,6 +256,12 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   connect(loadFnAction, SIGNAL(triggered()), this, SLOT(loadFunction()));
 
+  QAction *dataAction = new QAction("Show Data", this);
+
+  fileMenu->addAction(dataAction);
+
+  connect(dataAction, SIGNAL(triggered()), this, SLOT(showData()));
+
   //---
 
   QAction *functionsAction = new QAction("Manage Functions", this);
@@ -315,15 +317,9 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   QMenu *dispMenu = menuBar()->addMenu("&Display");
 
-//QAction *xAxisAction = new QAction(QIcon(QPixmap(xaxis_data)), "&X Axis", this);
-  QAction *xAxisAction =
-    new QAction(CQGnuPlotUtil::svgIcon(xaxis_data, XAXIS_DATA_LEN), "&X Axis", this);
-//QAction *yAxisAction = new QAction(QIcon(QPixmap(yaxis_data)), "&Y Axis", this);
-  QAction *yAxisAction =
-    new QAction(CQGnuPlotUtil::svgIcon(yaxis_data, YAXIS_DATA_LEN), "&Y Axis", this);
-//QAction *gridAction  = new QAction(QIcon(QPixmap(grid_data )), "&Grid"  , this);
-  QAction *gridAction  =
-    new QAction(CQGnuPlotUtil::svgIcon(grid_data , GRID_DATA_LEN ), "&Grid"  , this);
+  QAction *xAxisAction = new QAction(CQPixmapCacheInst->getIcon("XAXIS"), "&X Axis", this);
+  QAction *yAxisAction = new QAction(CQPixmapCacheInst->getIcon("YAXIS"), "&Y Axis", this);
+  QAction *gridAction  = new QAction(CQPixmapCacheInst->getIcon("GRID" ), "&Grid"  , this);
 
   xAxisAction->setCheckable(true); xAxisAction->setChecked(true);
   yAxisAction->setCheckable(true); yAxisAction->setChecked(true);
@@ -1577,13 +1573,16 @@ loadFile()
 {
   CQGnuPlotLoadFileDialog *dialog = new CQGnuPlotLoadFileDialog(this);
 
+  connect(dialog, SIGNAL(accepted()), this, SLOT(loadFileSlot()));
+
   dialog->exec();
+}
 
-  if (! dialog->accepted())
-    return;
-
-  //QString fileName = QFileDialog::getOpenFileName(this, "Open File", "", "Files (*.*)");
-  //if (! fileName.length()) return;
+void
+CQGnuPlotMainWindow::
+loadFileSlot()
+{
+  CQGnuPlotLoadFileDialog *dialog = qobject_cast<CQGnuPlotLoadFileDialog *>(sender());
 
   bool                     is2D         = dialog->is2D();
   bool                     isParametric = dialog->isParametric();
@@ -1608,8 +1607,7 @@ loadFile()
       return;
   }
 
-  if (! numGroups())
-    createNewGroup();
+  initCurrentGroup();
 
   CGnuPlotGroupP group = *groups().begin();
 
@@ -1670,7 +1668,7 @@ loadFile()
         if (! app()->readDataFile(fileName.toStdString(), dataFile))
           return;
 
-        dataFile.processLines();
+        dataFile.processFile();
 
         for (int setNum = 0; setNum < dataFile.numSets(); ++setNum) {
           CGnuPlotPlotP plot = group->createNewPlot(style);
@@ -1743,6 +1741,8 @@ loadFile()
 
     group->addSubPlot(plot);
   }
+
+  redraw();
 }
 
 void
@@ -1751,10 +1751,16 @@ loadFunction()
 {
   CQGnuPlotLoadFunctionDialog *dialog = new CQGnuPlotLoadFunctionDialog(this);
 
-  dialog->exec();
+  connect(dialog, SIGNAL(accepted()), this, SLOT(loadFunctionSlot()));
 
-  if (! dialog->accepted())
-    return;
+  dialog->exec();
+}
+
+void
+CQGnuPlotMainWindow::
+loadFunctionSlot()
+{
+  CQGnuPlotLoadFunctionDialog *dialog = qobject_cast<CQGnuPlotLoadFunctionDialog *>(sender());
 
   bool                     is2D         = dialog->is2D();
   bool                     isParametric = dialog->isParametric();
@@ -1765,8 +1771,7 @@ loadFunction()
   double                   xmax         = dialog->xmax();
   int                      lt           = dialog->lineType();
 
-  if (! numGroups())
-    createNewGroup();
+  initCurrentGroup();
 
   CGnuPlotGroupP group = *groups().begin();
 
@@ -1812,6 +1817,31 @@ loadFunction()
 
     group->addSubPlot(plot);
   }
+
+  redraw();
+}
+
+void
+CQGnuPlotMainWindow::
+showData()
+{
+  delete dataDialog_;
+
+  if (currentGroup_) {
+    CGnuPlotPlot *currentPlot = 0;
+
+    for (auto plot : currentGroup_->plots())
+      currentPlot = plot.get();
+
+    if (currentPlot)
+      dataDialog_ = new CQGnuPlotDataDialog(this, currentPlot->dataFile());
+    else
+      dataDialog_ = new CQGnuPlotDataDialog(this, plot_->dataFile());
+  }
+  else
+    dataDialog_ = new CQGnuPlotDataDialog(this, plot_->dataFile());
+
+  dataDialog_->show();
 }
 
 void
@@ -1838,10 +1868,16 @@ createObjects()
 {
   CQGnuPlotCreateDialog *dialog = new CQGnuPlotCreateDialog(this);
 
-  dialog->exec();
+  connect(dialog, SIGNAL(accepted()), this, SLOT(createObjectsSlot()));
 
-  if (! dialog->accepted())
-    return;
+  dialog->exec();
+}
+
+void
+CQGnuPlotMainWindow::
+createObjectsSlot()
+{
+  CQGnuPlotCreateDialog *dialog = qobject_cast<CQGnuPlotCreateDialog *>(sender());
 
   if (! currentGroup_)
     return;
@@ -1934,6 +1970,8 @@ createObjects()
 
     currentGroup_->addAnnotation(rectangle);
   }
+
+  redraw();
 }
 
 void
@@ -2100,6 +2138,18 @@ pointsSlot()
 
     qplot->printPoints();
   }
+}
+
+void
+CQGnuPlotMainWindow::
+initCurrentGroup()
+{
+  if (! numGroups())
+    createNewGroup();
+
+  CGnuPlotGroupP group = *groups().begin();
+
+  currentGroup_ = static_cast<CQGnuPlotGroup *>(group.get());
 }
 
 void

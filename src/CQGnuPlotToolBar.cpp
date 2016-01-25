@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QMenu>
+#include <QStyle>
 
 class CQWidgetAction : public QWidgetAction {
  public:
@@ -47,6 +48,9 @@ CQGnuPlotToolBar::
 CQGnuPlotToolBar(const QString &text) :
  QToolBar(text)
 {
+  int is = style()->pixelMetric(QStyle::PM_LargeIconSize);
+
+  setIconSize(QSize(is, is));
 }
 
 void

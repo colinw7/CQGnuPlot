@@ -97,9 +97,9 @@ addRadioButtons(const QString &name, const std::vector<QString> &names,
 
 void
 CQDialog::
-addField(const QString &name, QWidget *w)
+addField(const QString &name, QWidget *w, bool stretch)
 {
-  frame_->addField(name, w);
+  frame_->addField(name, w, stretch);
 }
 
 QPushButton *
@@ -121,6 +121,8 @@ acceptSlot()
 
   accept();
 
+  emit accepted();
+
   QDialog::accept();
 }
 
@@ -131,6 +133,8 @@ applySlot()
   accepted_ = true;
 
   accept();
+
+  emit accepted();
 
   accepted_ = false;
 }
@@ -200,12 +204,13 @@ addRadioButtons(const QString &name, const std::vector<QString> &names,
 
 void
 CQDialogForm::
-addField(const QString &name, QWidget *w)
+addField(const QString &name, QWidget *w, bool stretch)
 {
   if (! grid_) {
     grid_ = new QGridLayout(this);
 
-    grid_->setColumnStretch(2, 1);
+    if (stretch)
+      grid_->setColumnStretch(2, 1);
   }
 
   if (name.length()) {

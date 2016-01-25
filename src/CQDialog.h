@@ -19,7 +19,7 @@ class CQDialogForm : public QWidget {
   QGroupBox *addRadioButtons(const QString &name, const std::vector<QString> &names,
                              const QObject *receiver=0, const char *member=0);
 
-  void addField(const QString &name, QWidget *w);
+  void addField(const QString &name, QWidget *w, bool stretch=true);
 
   void addStretch();
 
@@ -56,11 +56,14 @@ class CQDialog : public QDialog {
   QGroupBox *addRadioButtons(const QString &name, const std::vector<QString> &names,
                              const QObject *receiver=0, const char *member=0);
 
-  void addField(const QString &name, QWidget *w);
+  void addField(const QString &name, QWidget *w, bool stretch=true);
 
   QPushButton *addButton(const QString &name);
 
-  bool accepted() const { return accepted_; }
+  bool isAccepted() const { return accepted_; }
+
+ signals:
+  void accepted();
 
  protected:
   virtual void createWidgets(QWidget *) { }

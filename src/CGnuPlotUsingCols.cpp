@@ -192,10 +192,12 @@ processUsingStr(CGnuPlotUsingColData &usingData, StringArray &usingStrs)
 
 int
 CGnuPlotUsingCols::
-decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
-             Values &values, Params &params) const
+decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues,
+             bool &bad, Values &values, Params &params) const
 {
-  plot_ = plot;
+  plot_     = plot;
+  setNum_   = setNum;
+  pointNum_ = pointNum;
 
   bad = false;
 
@@ -248,14 +250,16 @@ decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
       continue;
 
     if (type == CGnuPlotTypes::AxisType::X) {
-      int x = plot->histogramPointOffset() + pointNum;
+      int x = (plot_ ? plot_->histogramPointOffset() : 0) + this->pointNum();
 
-      plot->xaxis(ind1).setTicLabel(x, str1, 0);
+      if (plot_)
+        plot_->xaxis(ind1).setTicLabel(x, str1, 0);
     }
     else {
-      int y = pointNum;
+      int y = this->pointNum();
 
-      plot->yaxis(ind1).setTicLabel(y, str1, 0);
+      if (plot_)
+        plot_->yaxis(ind1).setTicLabel(y, str1, 0);
     }
   }
 
@@ -271,8 +275,10 @@ decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
       if (value.isValid() && value->getIntegerValue(icol)) {
         CExprValuePtr value1 = getFieldValue(fieldValues, icol, ns);
 
-        if (value1.isValid() && value1->getStringValue(str1))
-          plot->setKeyPointLabel(pointNum, str1);
+        if (value1.isValid() && value1->getStringValue(str1)) {
+          if (plot_)
+            plot_->setKeyPointLabel(this->pointNum(), str1);
+        }
       }
     }
   }
@@ -313,7 +319,8 @@ CGnuPlotUsingCols::
 decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
             int &ns, bool &ignore, Params &params) const
 {
-  col.updateColumnStr(plot_);
+  if (plot_)
+    col.updateColumnStr(plot_);
 
   CExprValuePtr value;
 
@@ -441,10 +448,16 @@ getFieldValue(const Values &fieldValues, int icol, int &ns) const
 
   int nf = fieldValues.size();
 
-  if      (icol == 0)
-    value = CExprInst->createRealValue(plot_->pointNum());
-  else if (icol == -2)
-    value = CExprInst->createRealValue(plot_->setNum());
+  if      (icol == 0) {
+    int pointNum = this->pointNum();
+
+    value = CExprInst->createRealValue(pointNum);
+  }
+  else if (icol == -2) {
+    int setNum = this->setNum();
+
+    value = CExprInst->createRealValue(setNum);
+  }
   else if (icol > 0 && icol <= nf) {
     value = fieldValues[icol - 1];
 
@@ -552,6 +565,8 @@ void
 CGnuPlotUsingCol::
 updateColumnStr(CGnuPlot *plot) const
 {
+  assert(plot);
+
   if (! isStr_) return;
 
   CGnuPlotUsingCol *th = const_cast<CGnuPlotUsingCol *>(this);

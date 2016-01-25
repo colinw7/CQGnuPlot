@@ -17,6 +17,8 @@ CQGnuPlotLoadFunctionDialog::
 CQGnuPlotLoadFunctionDialog(QWidget *parent) :
  CQDialog(parent)
 {
+  setWindowTitle("Load Function");
+
   enum_ = new CQGnuPlotEnum;
 
   // app()->functionStyle

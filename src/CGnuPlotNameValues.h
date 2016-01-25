@@ -15,6 +15,7 @@ namespace CStrUniqueMatch {
                           {"call"    , CGnuPlotTypes::CommandName::CALL},
                           {"cd"      , CGnuPlotTypes::CommandName::CD},
                           {"clear"   , CGnuPlotTypes::CommandName::CLEAR},
+                          {"data"    , CGnuPlotTypes::CommandName::DATA},
                           {"do"      , CGnuPlotTypes::CommandName::DO},
                           {"evaluate", CGnuPlotTypes::CommandName::EVALUATE},
                           {"exit"    , CGnuPlotTypes::CommandName::EXIT},
@@ -48,7 +49,8 @@ namespace CStrUniqueMatch {
                           {"undefine", CGnuPlotTypes::CommandName::UNDEFINE},
                           {"unset"   , CGnuPlotTypes::CommandName::UNSET},
                           {"update"  , CGnuPlotTypes::CommandName::UPDATE},
-                          {"while"   , CGnuPlotTypes::CommandName::WHILE}});
+                          {"while"   , CGnuPlotTypes::CommandName::WHILE},
+                          {"window"  , CGnuPlotTypes::CommandName::WINDOW}});
   }
 
   CStrUniqueMatchInitT(CGnuPlotTypes::VariableName) {

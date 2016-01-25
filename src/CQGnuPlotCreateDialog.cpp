@@ -14,6 +14,8 @@ CQGnuPlotCreateDialog::
 CQGnuPlotCreateDialog(QWidget *parent) :
  CQDialog(parent)
 {
+  setWindowTitle("Create Object");
+
   enum_ = new CQGnuPlotEnum;
 
   enum_->setObjectType(CQGnuPlotEnum::ObjectTypeArrow);
@@ -114,7 +116,6 @@ createWidgets(QWidget *)
   rectFrame_->addField("From", (rectFrom_  = new CQPoint2DEdit));
   rectFrame_->addField("To"  , (rectTo_    = new CQPoint2DEdit));
   rectFrame_->addStretch();
-
 }
 
 CGnuPlotTypes::ObjectType

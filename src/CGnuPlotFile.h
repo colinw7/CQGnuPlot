@@ -1,12 +1,15 @@
 #ifndef CGnuPlotFile_H
 #define CGnuPlotFile_H
 
+#include <CGnuPlotBinaryFormat.h>
+#include <CSize2D.h>
 #include <COptVal.h>
 
 #include <string>
 #include <vector>
 #include <map>
 #include <limits>
+#include <iostream>
 
 class CGnuPlotFile {
  public:
@@ -53,6 +56,12 @@ class CGnuPlotFile {
   struct SubSetLine {
     int    num { 0 };
     Fields fields;
+
+    void print(std::ostream &os) const {
+      for (const auto &f : fields)
+        os << " " << f;
+      os << std::endl;
+    }
   };
 
   typedef std::vector<SubSetLine> SubSetLines;
@@ -60,6 +69,11 @@ class CGnuPlotFile {
   struct SubSet {
     int         num { 0 };
     SubSetLines lines;
+
+    void print(std::ostream &os) const {
+      for (const auto &l : lines)
+        l.print(os);
+    }
   };
 
   typedef std::vector<SubSet> SubSets;
@@ -67,6 +81,11 @@ class CGnuPlotFile {
   struct Set {
     int     num { 0 };
     SubSets subSets;
+
+    void print(std::ostream &os) const {
+      for (const auto &s : subSets)
+        s.print(os);
+    }
   };
 
   typedef std::vector<Set> Sets;
@@ -87,6 +106,12 @@ class CGnuPlotFile {
   char getSeparator() const { return separator_; }
   void setSeparator(char c) { separator_ = c; }
   void resetSeparator() { separator_ = '\0'; }
+
+  bool isParseStrings() const { return parseStrings_; }
+  void setParseStrings(bool b) { parseStrings_ = b; }
+
+  bool isColumnHeaders() const { return columnHeaders_; }
+  void setColumnHeaders(bool b) { columnHeaders_ = b; }
 
   void getIndices(int &indexStart, int &indexEnd, int &indexStep);
   void setIndices(int indexStart, int indexEnd, int indexStep);
@@ -117,7 +142,11 @@ class CGnuPlotFile {
 
   bool loadFile(const std::string &filename);
 
-  void processLines();
+  void reset();
+
+  void processFile();
+
+  void processBinaryFile();
 
   int numSets() const { return sets_.size(); }
 
@@ -182,17 +211,37 @@ class CGnuPlotFile {
 
   int maxNumFields() const { return maxNumFields_; }
 
+  int numColumnHeaders() const {
+    return columnHeaderFields_.size();
+  }
+
+  std::string columnHeader(int fieldNum) const {
+    if (fieldNum < 0 || fieldNum >= numColumnHeaders())
+      return "";
+
+    return columnHeaderFields_[fieldNum];
+  }
+
   bool isFortran() const { return fortran_; }
   void setFortran(bool b) { fortran_ = b; }
 
   bool isFpeTrap() const { return fpeTrap_; }
   void setFpeTrap(bool b) { fpeTrap_ = b; }
 
+  bool isCsv() const { return csv_; }
+  void setCsv(bool b) { csv_ = b; }
+
+  bool isMatrix() const { return matrix_; }
+  void setMatrix(bool b) { matrix_ = b; }
+
   bool isBinary() const { return binary_; }
   void setBinary(bool b) { binary_ = b; }
 
-  bool isCsv() const { return csv_; }
-  void setCsv(bool b) { csv_ = b; }
+  const CGnuPlotBinaryFormat &binaryFormat() const { return binaryFormat_; }
+  void setBinaryFormat(const CGnuPlotBinaryFormat &v) { binaryFormat_ = v; }
+
+  const CSize2D &binarySize() const { return binarySize_; }
+  void setBinarySize(const CSize2D &v) { binarySize_ = v; }
 
   bool commentStr(int setNum, int subSetNum, int lineNum, std::string &str) const {
     auto p1 = commentStrs_.find(setNum);
@@ -212,9 +261,13 @@ class CGnuPlotFile {
 
   void unset();
 
+  void addSet(const Set &set);
+
   void show(std::ostream &os, std::map<std::string,bool> &show, bool verbose);
 
   void save(std::ostream &os);
+
+  void print(std::ostream &os) const;
 
  private:
   bool addFileLines();
@@ -226,23 +279,28 @@ class CGnuPlotFile {
   typedef std::map<int,FieldsArray>    SubFieldsArray;
   typedef std::map<int,SubFieldsArray> SetSubFieldsArray;
 
-  std::string filename_     { "" };
-  COptString  commentChars_;
-  std::string missingStr_;
-  char        separator_    { '\0' };
-  bool        parseStrings_ { true };
-  Indices     indices_;
-  Every       every_;
-  Lines       lines_;
-  Sets        sets_;
-  SetString   commentStrs_;
-  int         maxNumFields_     { 0 };
-  int         setBlankLines_    { 2 };
-  int         subSetBlankLines_ { 1 };
-  bool        fortran_          { false };
-  bool        fpeTrap_          { true };
-  bool        binary_           { false };
-  bool        csv_              { false };
+  std::string          filename_     { "" };
+  COptString           commentChars_;
+  std::string          missingStr_;
+  char                 separator_    { '\0' };
+  bool                 parseStrings_ { true };
+  bool                 columnHeaders_ { false };
+  Fields               columnHeaderFields_;
+  Indices              indices_;
+  Every                every_;
+  Lines                lines_;
+  Sets                 sets_;
+  SetString            commentStrs_;
+  int                  maxNumFields_     { 0 };
+  int                  setBlankLines_    { 2 };
+  int                  subSetBlankLines_ { 1 };
+  bool                 fortran_          { false };
+  bool                 fpeTrap_          { true };
+  bool                 csv_              { false };
+  bool                 matrix_           { false };
+  bool                 binary_           { false };
+  CGnuPlotBinaryFormat binaryFormat_;
+  CSize2D              binarySize_;
 };
 
 #endif

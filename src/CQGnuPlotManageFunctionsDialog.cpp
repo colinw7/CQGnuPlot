@@ -14,6 +14,7 @@ CQGnuPlotManageFunctionsDialog::
 CQGnuPlotManageFunctionsDialog(QWidget *parent) :
  CQDialog(parent)
 {
+  setWindowTitle("Manage Functions");
 }
 
 void
@@ -34,7 +35,7 @@ createWidgets(QWidget *)
 
   tree_->setAlternatingRowColors(true);
 
-  addField("", tree_);
+  addField("", tree_, /*stretch*/false);
 
   //---
 

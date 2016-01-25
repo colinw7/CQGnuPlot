@@ -11,6 +11,14 @@ CGnuPlotBinaryFormat(const std::string &fmt) :
     init(fmt);
 }
 
+void
+CGnuPlotBinaryFormat::
+setFormat(const std::string &fmt)
+{
+  if (fmt != "")
+    init(fmt);
+}
+
 bool
 CGnuPlotBinaryFormat::
 init(const std::string &fmt)

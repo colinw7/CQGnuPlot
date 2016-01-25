@@ -50,7 +50,8 @@ class CGnuPlotBinaryFormat {
  public:
   CGnuPlotBinaryFormat(const std::string &str="");
 
-  const std::string &fmt() const { return fmt_; }
+  const std::string &format() const { return fmt_; }
+  void setFormat(const std::string &fmt);
 
   bool init(const std::string &str);
 

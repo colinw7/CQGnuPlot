@@ -3,6 +3,7 @@
 #include <CQEnumCombo.h>
 #include <CQIntegerSpin.h>
 #include <CQRealSpin.h>
+#include <CQPixmapCache.h>
 
 #include <QHBoxLayout>
 #include <QLineEdit>
@@ -18,6 +19,8 @@ CQGnuPlotLoadFileDialog::
 CQGnuPlotLoadFileDialog(QWidget *parent) :
  CQDialog(parent)
 {
+  setWindowTitle("Load File");
+
   enum_ = new CQGnuPlotEnum;
 
   enum_->setPlotStyle(CQGnuPlotEnum::PlotLinesPoints);
@@ -145,7 +148,7 @@ CQGnuPlotFilename(QWidget *parent) :
   edit_   = new QLineEdit;
   button_ = new QToolButton;
 
-  button_->setIcon(CQGnuPlotUtil::svgIcon(file_dialog_data, FILE_DIALOG_DATA_LEN));
+  button_->setIcon(CQPixmapCacheInst->getIcon("FILE_DIALOG"));
 
   layout->addWidget(edit_);
   layout->addWidget(button_);

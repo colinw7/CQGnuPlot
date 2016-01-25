@@ -401,6 +401,7 @@ CQGnuPlotManageVariablesDialog::
 CQGnuPlotManageVariablesDialog(QWidget *parent) :
  CQDialog(parent)
 {
+  setWindowTitle("Manage Variables");
 }
 
 void
@@ -427,7 +428,7 @@ createWidgets(QWidget *)
 
   tree_->setItemDelegate(delegate);
 
-  addField("", tree_);
+  addField("", tree_, /*stretch*/false);
 
   QPushButton *updateButton = addButton("Update");
 

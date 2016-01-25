@@ -68,6 +68,9 @@ CQGnuPlotLoadFunctionDialog.cpp \
 CQGnuPlotManageFunctionsDialog.cpp \
 CQGnuPlotManageVariablesDialog.cpp \
 CQGnuPlotCreateDialog.cpp \
+CQGnuPlotDataDialog.cpp \
+CQGnuPlotDataTree.cpp \
+CQGnuPlotDataModel.cpp \
 \
 CGnuPlot.cpp \
 CGnuPlotAnnotation.cpp \
@@ -184,6 +187,8 @@ CGnuPlotWindow.cpp \
 CGnuPlotText.cpp \
 CGnuPlotTextRenderer.cpp \
 \
+CQStyle.cpp \
+CQHeaderView.cpp \
 CQToolTip.cpp \
 CQFloatLabel.cpp \
 CQRotatedText.cpp \
@@ -277,6 +282,9 @@ CQGnuPlotLoadFunctionDialog.h \
 CQGnuPlotManageFunctionsDialog.h \
 CQGnuPlotManageVariablesDialog.h \
 CQGnuPlotCreateDialog.h \
+CQGnuPlotDataDialog.h \
+CQGnuPlotDataTree.h \
+CQGnuPlotDataModel.h \
 \
 CGnuPlot.h \
 CGnuPlotArrow.h \
@@ -395,6 +403,8 @@ CGnuPlotWindow.h \
 CGnuPlotText.h \
 CGnuPlotTextRenderer.h \
 \
+CQStyle.h \
+CQHeaderView.h \
 CQToolTip.h \
 CQFloatLabel.h \
 CQRotatedText.h \
@@ -468,6 +478,7 @@ unix:LIBS += \
 -L../../CStrUtil/lib \
 -L../../CRegExp/lib \
 -L../../CRGBName/lib \
--lCQPropertyTree -lCQUtil -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
+-lCQPropertyTree -lCQUtil \
+-lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
 -lCRGBName -lCFile -lCOS -lCStrUtil -lCRegExp \
 -lpng -ljpeg -ltre -lreadline

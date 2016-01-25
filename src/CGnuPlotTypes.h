@@ -26,6 +26,7 @@ namespace CGnuPlotTypes {
     CALL,
     CD,
     CLEAR,
+    DATA,
     DO,
     EVALUATE,
     EXIT,
@@ -58,7 +59,8 @@ namespace CGnuPlotTypes {
     UNDEFINE,
     UNSET,
     UPDATE,
-    WHILE
+    WHILE,
+    WINDOW
   };
 
   enum class VariableName {

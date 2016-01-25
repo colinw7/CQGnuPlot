@@ -104,7 +104,7 @@ loadFile(const std::string &filename)
   if (! addFileLines())
     return false;
 
-  processLines();
+  processFile();
 
   return true;
 }
@@ -146,8 +146,26 @@ clearLines()
 
 void
 CGnuPlotFile::
-processLines()
+reset()
 {
+  resetIndices();
+  resetEvery  ();
+
+  resetBlankLines();
+
+  columnHeaders_      = false;
+  columnHeaderFields_ = Fields();
+}
+
+void
+CGnuPlotFile::
+processFile()
+{
+  if (isBinary())
+    return processBinaryFile();
+
+  //---
+
   sets_.clear();
 
   maxNumFields_ = 0;
@@ -155,6 +173,8 @@ processLines()
   // TODO: skip comments and blank lines at start of file
 
   // process each line in file
+  bool columnHeaders = isColumnHeaders();
+
   Set        set;
   SubSet     subSet;
   SubSetLine subSetLine;
@@ -166,6 +186,21 @@ processLines()
   int lineNum   = 0;
 
   for (const auto &line : lines_) {
+    if (columnHeaders && setNum == 0 && subSetNum == 0 && lineNum == 0) {
+      if (line.empty())
+        continue;
+
+      Fields fields;
+
+      parseFileLine(line, fields);
+
+      columnHeaderFields_ = fields;
+
+      columnHeaders = false;
+
+      continue;
+    }
+
     if (line.empty()) {
       ++bline;
 
@@ -217,7 +252,7 @@ processLines()
       CParseLine pline(line1);
 
       while (pline.isValid()) {
-        if (parseStrings_ && pline.isChar('\"')) {
+        if (isParseStrings() && pline.isChar('\"')) {
           pline.skipChar();
 
           while (pline.isValid() && ! pline.isChar('"')) {
@@ -303,7 +338,7 @@ parseFileLine(const std::string &str, Fields &fields)
     CParseLine line(str);
 
     while (line.isValid()) {
-      if (parseStrings_ && line.isChar('\"')) {
+      if (isParseStrings() && line.isChar('\"')) {
         line.skipChar();
 
         std::string word;
@@ -362,6 +397,108 @@ parseFileLine(const std::string &str, Fields &fields)
 
 void
 CGnuPlotFile::
+processBinaryFile()
+{
+  sets_.clear();
+
+  CUnixFile file(filename_);
+
+  if (! file.open())
+    return;
+
+  std::vector<double> values;
+
+  binaryFormat_.readValues(file, values);
+
+  if (values.empty())
+    return;
+
+  CGnuPlotFile::Set set;
+
+  if (isMatrix()) {
+    int nv = values.size();
+
+    int nx = values[0];
+
+    int i = 1;
+
+    if (i + nx > nv)
+      return;
+
+    typedef std::map<int,double> IRMap;
+
+    std::vector<double> xvals;
+    std::vector<double> yvals;
+    std::map<int,IRMap> zvals;
+
+    for (int j = 0; j < nx; ++j)
+      xvals.push_back(values[i++]);
+
+    int ny = (nv - nx - 1)/(nx + 1);
+
+    for (int k = 0; k < ny; ++k) {
+      yvals.push_back(values[i++]);
+
+      for (int j = 0; j < nx; ++j) {
+        zvals[j][k] = values[i++];
+      }
+    }
+
+    for (int k = 0; k < ny; ++k) {
+      CGnuPlotFile::SubSet subSet;
+
+      std::string ystr = std::to_string(yvals[k]);
+
+      for (int j = 0; j < nx; ++j) {
+        std::string xstr = std::to_string(xvals[j]);
+        std::string zstr = std::to_string(zvals[j][k]);
+
+        CGnuPlotFile::SubSetLine subSetLine;
+
+        subSetLine.fields.push_back(xstr);
+        subSetLine.fields.push_back(ystr);
+        subSetLine.fields.push_back(zstr);
+
+        subSet.lines.push_back(subSetLine);
+      }
+
+      set.subSets.push_back(subSet);
+    }
+
+    sets_.push_back(set);
+  }
+  else {
+    CGnuPlotFile::SubSet subSet;
+
+    int w = binarySize_.width;
+
+    if (w <= 1)
+      w = 1;
+
+    int h = values.size()/w;
+
+    int i = 0;
+
+    for (int y = 0; y < h; ++y) {
+      CGnuPlotFile::SubSetLine subSetLine;
+
+      for (int x = 0; x < w; ++x) {
+        std::string str = std::to_string(values[i++]);
+
+        subSetLine.fields.push_back(str);
+      }
+
+      subSet.lines.push_back(subSetLine);
+    }
+
+    set.subSets.push_back(subSet);
+
+    sets_.push_back(set);
+  }
+}
+
+void
+CGnuPlotFile::
 unset()
 {
   commentChars_ = COptString();
@@ -370,6 +507,13 @@ unset()
   fortran_      = false;
   fpeTrap_      = true;
   binary_       = false;
+}
+
+void
+CGnuPlotFile::
+addSet(const Set &set)
+{
+  sets_.push_back(set);
 }
 
 void
@@ -429,4 +573,12 @@ save(std::ostream &os)
     os << "separator \"" << getSeparator() << "\"";
 
   os << std::endl;
+}
+
+void
+CGnuPlotFile::
+print(std::ostream &os) const
+{
+  for (const auto &s : sets_)
+    s.print(os);
 }

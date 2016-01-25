@@ -662,6 +662,10 @@ class CGnuPlot {
 
   //---
 
+  const CGnuPlotFile &dataFile() const { return dataFile_; }
+
+  //---
+
   const CGnuPlotBoxWidth &boxWidth() const { return boxWidth_; }
   void setBoxWidth(const CGnuPlotBoxWidth &w) { boxWidth_ = w; }
 
@@ -953,6 +957,9 @@ class CGnuPlot {
 
   CGnuPlotBlock *getBlock(const std::string &name);
 
+  const std::string &lastFilename() const { return lastFilename_; }
+  void setLastFilename(const std::string &v);
+
   const CGnuPlotPrintFile &tableFile() const { return tableFile_; }
 
   const Samples &samples() const { return samples_; }
@@ -1015,6 +1022,8 @@ class CGnuPlot {
   void loadCmd(const std::string &args);
   void saveCmd(const std::string &args);
 
+  void dataCmd   (const std::string &args);
+  void windowCmd (const std::string &args);
   void plotCmd   (const std::string &args);
   void plotCmd1  (const std::string &args, CGnuPlotGroupP &group, Plots &plots,
                   bool &sample, bool &first);
@@ -1300,8 +1309,10 @@ class CGnuPlot {
 
   bool fileReadLine(std::string &line) const;
 
-  bool fieldToReal(const std::string &field, double &r) const;
+ public:
+  static bool fieldToReal(const std::string &field, double &r);
 
+ private:
   template<typename T>
   T getPrefValue(VariableName name) const {
     return static_cast<CGnuPlotPrefValue<T> *>

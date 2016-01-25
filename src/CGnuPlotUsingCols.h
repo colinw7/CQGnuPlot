@@ -121,19 +121,23 @@ class CGnuPlotUsingCols {
 
   std::string columnTitle(const std::vector<std::string> &columns) const;
 
-  int decodeValues(CGnuPlot *plot, int pointNum, const Values &fieldValues, bool &bad,
+  int decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues, bool &bad,
                    Values &values, Params &params) const;
 
-  CExprValuePtr decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
-                            int &ns, bool &ignore, Params &params) const;
-
-  CExprValuePtr getFieldValue(const Values &fieldValues, int ival, int &ns) const;
-
   std::string toString() const;
+
+  int setNum() const { return setNum_; }
+
+  int pointNum() const { return pointNum_; }
 
   void print(std::ostream &os) const;
 
  private:
+  CExprValuePtr getFieldValue(const Values &fieldValues, int ival, int &ns) const;
+
+  CExprValuePtr decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
+                            int &ns, bool &ignore, Params &params) const;
+
   void processUsingStr(CGnuPlotUsingColData &usingData, StringArray &usingStrs);
 
  private:
@@ -145,7 +149,9 @@ class CGnuPlotUsingCols {
   AxisTicLabel      axisTicLabel_;
   std::string       format_;
   std::string       keyLabel_;
-  mutable CGnuPlot *plot_ { 0 };
+  mutable CGnuPlot *plot_     { 0 };
+  mutable int       setNum_   { 0 };
+  mutable int       pointNum_ { 0 };
 };
 
 #endif

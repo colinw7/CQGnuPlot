@@ -212,3 +212,6 @@
  + add create object dialog
  + more line dash support in renderer
  + move support for group annotations
+
+### 01/24/2016
+ + add data dialog to view data and plot
