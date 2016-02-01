@@ -273,8 +273,7 @@ drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c,
 
 void
 CGnuPlotSVGRenderer::
-drawPath(const std::vector<CPoint2D> &points, double width, const CRGBA &c,
-         const CLineDash & /*dash*/)
+drawPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
 {
   os() << "<path d=\"";
 
@@ -289,8 +288,8 @@ drawPath(const std::vector<CPoint2D> &points, double width, const CRGBA &c,
       os() << " L " << p.x << " " << p.y;
   }
 
-  os() << "\" " << "style=\"" << fillNone() << " " << strokeColor(c) << " " <<
-          strokeWidth(width) << "\"/>\n";
+  os() << "\" " << "style=\"" << fillNone() << " " << strokeColor(stroke.color()) << " " <<
+          strokeWidth(stroke.width()) << "\"/>\n";
 }
 
 void

@@ -36,14 +36,14 @@ CQGnuPlotEnum::HAlignType
 CQGnuPlotLabelObject::
 getAlign() const
 {
-  return CQGnuPlotUtil::alignConv(CGnuPlotLabelObject::getAlign());
+  return CQGnuPlotEnum::halignConv(CGnuPlotLabelObject::getAlign());
 }
 
 void
 CQGnuPlotLabelObject::
 setAlign(const CQGnuPlotEnum::HAlignType &a)
 {
-  CGnuPlotLabelObject::setAlign(CQGnuPlotUtil::alignConv(a));
+  CGnuPlotLabelObject::setAlign(CQGnuPlotEnum::halignConv(a));
 }
 
 QPointF

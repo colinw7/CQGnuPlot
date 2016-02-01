@@ -45,6 +45,8 @@ void
 CGnuPlotPointObject::
 draw(CGnuPlotRenderer *renderer) const
 {
+  if (! isDisplayed()) return;
+
   if (! isVisible()) return;
 
   bool highlighted = (isHighlighted() || isSelected());

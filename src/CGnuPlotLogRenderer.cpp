@@ -46,10 +46,10 @@ drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c,
 
 void
 CGnuPlotLogRenderer::
-drawPath(const std::vector<CPoint2D> &points, double width, const CRGBA &c, const CLineDash &dash)
+drawPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
 {
-  log("drawPath " + logValues("points", points) + " " + logValue("width", width) + " " +
-      logValue("color", c) + " " + logValue("dash", dash));
+  log("drawPath " + logValues("points", points) + " " + logValue("width", stroke.width()) + " " +
+      logValue("color", stroke.color()) + " " + logValue("dash", stroke.lineDash()));
 }
 
 void

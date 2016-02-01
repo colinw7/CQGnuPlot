@@ -10,6 +10,8 @@ class CQGnuPlotPNGRenderer : public CQGnuPlotRenderer {
   CQGnuPlotPNGRenderer(CQGnuPlotPNGDevice *device);
  ~CQGnuPlotPNGRenderer() override;
 
+  void setOutputSize(const QSize &size);
+
  private:
   CQGnuPlotPNGDevice *device_;
 };

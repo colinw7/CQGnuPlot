@@ -17,10 +17,13 @@ class CQGnuPlotDataDialog : public QFrame {
  public:
   CQGnuPlotDataDialog(CQGnuPlotMainWindow *window, const CGnuPlotFile &file);
 
+  void doPlot(bool add);
+
  private slots:
   void generateSlot();
   void filterSlot();
-  void plotSlot();
+  void overlayPlotSlot();
+  void addPlotSlot();
   void closeSlot();
 
  private:

@@ -18,12 +18,6 @@ namespace CQGnuPlotUtil {
 
   //---
 
-  CQGnuPlotEnum::HAlignType alignConv(const CHAlignType &type);
-  CHAlignType alignConv(const CQGnuPlotEnum::HAlignType &type);
-
-  CQGnuPlotEnum::VAlignType alignConv(const CVAlignType &type);
-  CVAlignType alignConv(const CQGnuPlotEnum::VAlignType &type);
-
   CQGnuPlotEnum::HistogramStyle histogramStyleConv(const CGnuPlot::HistogramStyle &type);
   CGnuPlot::HistogramStyle histogramStyleConv(const CQGnuPlotEnum::HistogramStyle &type);
 

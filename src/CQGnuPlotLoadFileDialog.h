@@ -6,28 +6,11 @@
 #include <CQGnuPlotEnum.h>
 #include <QFrame>
 
+class CQGnuPlotFilename;
 class QLineEdit;
 class QToolButton;
 class CQIntegerSpin;
 class CQRealSpin;
-
-class CQGnuPlotFilename : public QFrame {
-  Q_OBJECT
-
- public:
-  CQGnuPlotFilename(QWidget *parent=0);
-
-  QString name() const;
-
- private slots:
-  void fileSlot();
-
- private:
-  QLineEdit   *edit_;
-  QToolButton *button_;
-};
-
-//----
 
 class CQGnuPlotLoadFileDialog : public CQDialog {
   Q_OBJECT

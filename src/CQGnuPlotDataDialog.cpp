@@ -24,7 +24,7 @@ CQGnuPlotDataDialog::
 CQGnuPlotDataDialog(CQGnuPlotMainWindow *window, const CGnuPlotFile &file) :
  window_(window)
 {
-  setWindowTitle("Data File");
+  setWindowTitle("Data Dialog");
 
   setObjectName("dataDialog");
 
@@ -144,11 +144,14 @@ CQGnuPlotDataDialog(CQGnuPlotMainWindow *window, const CGnuPlotFile &file) :
   QHBoxLayout *plotButtonsLayout = new QHBoxLayout;
   plotButtonsLayout->setMargin(2); plotButtonsLayout->setSpacing(2);
 
-  QPushButton *plotButton = new QPushButton("Plot");
+  QPushButton *overlayPlotButton = new QPushButton("Overlay Plot");
+  QPushButton *addPlotButton     = new QPushButton("Add Plot");
 
-  connect(plotButton, SIGNAL(clicked()), this, SLOT(plotSlot()));
+  connect(overlayPlotButton, SIGNAL(clicked()), this, SLOT(overlayPlotSlot()));
+  connect(addPlotButton    , SIGNAL(clicked()), this, SLOT(addPlotSlot()));
 
-  plotButtonsLayout->addWidget(plotButton);
+  plotButtonsLayout->addWidget(overlayPlotButton);
+  plotButtonsLayout->addWidget(addPlotButton);
   plotButtonsLayout->addStretch(1);
 
   plotPlayout->addLayout(plotButtonsLayout);
@@ -355,14 +358,38 @@ filterSlot()
 
 void
 CQGnuPlotDataDialog::
-plotSlot()
+overlayPlotSlot()
 {
-  window_->initCurrentGroup();
+  doPlot(false);
+}
 
-  CGnuPlotGroup *group = window_->currentGroup();
+void
+CQGnuPlotDataDialog::
+addPlotSlot()
+{
+  doPlot(true);
+}
 
-  if (! group)
-    return;
+void
+CQGnuPlotDataDialog::
+doPlot(bool add)
+{
+  CGnuPlotGroup *group;
+
+  if (add) {
+    group = window_->createTiledGroup();
+
+    if (! group)
+      return;
+  }
+  else {
+    window_->initCurrentGroup();
+
+    group = window_->currentGroup();
+
+    if (! group)
+      return;
+  }
 
   CQGnuPlotDataModel *model = tree_->model();
 

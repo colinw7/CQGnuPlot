@@ -51,6 +51,7 @@
 #include <CQGnuPlotManageVariablesDialog.h>
 #include <CQGnuPlotCreateDialog.h>
 #include <CQGnuPlotDataDialog.h>
+#include <CQGnuPlotSaveDialog.h>
 
 #include <CQGnuPlotPNGRenderer.h>
 #include <CGnuPlotSVGRenderer.h>
@@ -286,6 +287,13 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   //---
 
+  QAction *saveAction = new QAction("Save Image", this);
+
+  fileMenu->addAction(saveAction);
+
+  connect(saveAction, SIGNAL(triggered()), this, SLOT(saveSlot()));
+
+#if 0
   QAction *saveSVGAction = new QAction("Save S&VG", this);
   QAction *savePNGAction = new QAction("Save &PNG", this);
 
@@ -294,6 +302,7 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   connect(saveSVGAction, SIGNAL(triggered()), this, SLOT(saveSVG()));
   connect(savePNGAction, SIGNAL(triggered()), this, SLOT(savePNG()));
+#endif
 
   //---
 
@@ -864,6 +873,8 @@ void
 CQGnuPlotMainWindow::
 addPlotProperties(CGnuPlotPlot *plot)
 {
+  static int MAX_OBJECTS = 1000;
+
   CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot);
 
   CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(plot->group());
@@ -886,6 +897,7 @@ addPlotProperties(CGnuPlotPlot *plot)
   tree_->addProperty(plotName, qplot, "enhanced");
 
   tree_->addProperty(plotName, qplot, "functions");
+  tree_->addProperty(plotName, qplot, "keyTitle");
   tree_->addProperty(plotName, qplot, "samplesNX");
   tree_->addProperty(plotName, qplot, "samplesNY");
   tree_->addProperty(plotName, qplot, "xrangeMin");
@@ -949,6 +961,8 @@ addPlotProperties(CGnuPlotPlot *plot)
   //---
 
   if (! plot->arrowObjects().empty()) {
+    //CQGnuPlotPlotArrowObjects *qarrowObjects = qplot->arrowObjectsObj();
+
     int i = 0;
 
     for (const auto &arrow : plot->arrowObjects()) {
@@ -972,22 +986,16 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotStroke *qstroke = qarrow->stroke();
 
-      QString strokeName = QString("%1/Stroke").arg(arrowName);
-
-    //tree_->addProperty(strokeName, qstroke, "enabled");
-      tree_->addProperty(strokeName, qstroke, "color");
-      tree_->addProperty(strokeName, qstroke, "width")->setEditorFactory(realEdit("0:50:1"));
-      tree_->addProperty(strokeName, qstroke, "lineDash");
-      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+      addStrokeProperties(arrowName, qstroke);
 
       ++i;
     }
   }
 
   if (! plot->boxBarObjects().empty()) {
-    QString barsName = QString("%1/BoxBars").arg(plotName);
-
     CQGnuPlotPlotBoxBarObjects *qboxBarObjects = qplot->boxBarObjectsObj();
+
+    QString barsName = QString("%1/BoxBars").arg(plotName);
 
     tree_->addProperty(barsName, qboxBarObjects, "fillType");
     tree_->addProperty(barsName, qboxBarObjects, "fillPattern");
@@ -1007,24 +1015,11 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(barName, qbar, "x");
       tree_->addProperty(barName, qbar, "y");
 
-      CQGnuPlotFill *qfill = qbar->fill();
-
-      QString fillName = QString("%1/Fill").arg(barName);
-
-      tree_->addProperty(fillName, qfill, "color");
-      tree_->addProperty(fillName, qfill, "background");
-      tree_->addProperty(fillName, qfill, "type");
-      tree_->addProperty(fillName, qfill, "pattern");
-
+      CQGnuPlotFill   *qfill   = qbar->fill();
       CQGnuPlotStroke *qstroke = qbar->stroke();
 
-      QString strokeName = QString("%1/Stroke").arg(barName);
-
-      tree_->addProperty(strokeName, qstroke, "enabled");
-      tree_->addProperty(strokeName, qstroke, "color");
-      tree_->addProperty(strokeName, qstroke, "width");
-      tree_->addProperty(strokeName, qstroke, "lineDash");
-      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+      addFillProperties  (barName, qfill);
+      addStrokeProperties(barName, qstroke);
 
       int j = 0;
 
@@ -1055,6 +1050,8 @@ addPlotProperties(CGnuPlotPlot *plot)
   }
 
   if (! plot->boxObjects().empty()) {
+    //CQGnuPlotPlotBoxObjects *qboxObjects = qplot->boxObjectsObj();
+
     QString boxesName = QString("%1/Boxes").arg(plotName);
 
     int i = 0;
@@ -1076,24 +1073,11 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(boxName, qbox, "lowerValue");
       tree_->addProperty(boxName, qbox, "upperValue");
 
-      CQGnuPlotFill *qfill = qbox->fill();
-
-      QString fillName = QString("%1/Fill").arg(boxName);
-
-      tree_->addProperty(fillName, qfill, "color");
-      tree_->addProperty(fillName, qfill, "background");
-      tree_->addProperty(fillName, qfill, "type");
-      tree_->addProperty(fillName, qfill, "pattern");
-
+      CQGnuPlotFill   *qfill   = qbox->fill();
       CQGnuPlotStroke *qstroke = qbox->stroke();
 
-      QString strokeName = QString("%1/Stroke").arg(boxName);
-
-      tree_->addProperty(strokeName, qstroke, "enabled");
-      tree_->addProperty(strokeName, qstroke, "color");
-      tree_->addProperty(strokeName, qstroke, "width");
-      tree_->addProperty(strokeName, qstroke, "lineDash");
-      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+      addFillProperties  (boxName, qfill);
+      addStrokeProperties(boxName, qstroke);
 
       CQGnuPlotMark *qmark = qbox->outlierMark();
 
@@ -1110,6 +1094,8 @@ addPlotProperties(CGnuPlotPlot *plot)
   }
 
   if (! plot->bubbleObjects().empty()) {
+    //CQGnuPlotPlotBubbleObjects *qbubbleObjects = qplot->bubbleObjectsObj();
+
     int i = 0;
 
     for (const auto &bubble : plot->bubbleObjects()) {
@@ -1121,30 +1107,19 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(bubbleName, qbubble, "name" );
       tree_->addProperty(bubbleName, qbubble, "value");
 
-      CQGnuPlotFill *qfill = qbubble->fill();
-
-      QString fillName = QString("%1/Fill").arg(bubbleName);
-
-      tree_->addProperty(fillName, qfill, "color");
-      tree_->addProperty(fillName, qfill, "background");
-      tree_->addProperty(fillName, qfill, "type");
-      tree_->addProperty(fillName, qfill, "pattern");
-
+      CQGnuPlotFill   *qfill   = qbubble->fill();
       CQGnuPlotStroke *qstroke = qbubble->stroke();
 
-      QString strokeName = QString("%1/Stroke").arg(bubbleName);
-
-      tree_->addProperty(strokeName, qstroke, "enabled");
-      tree_->addProperty(strokeName, qstroke, "color");
-      tree_->addProperty(strokeName, qstroke, "width");
-      tree_->addProperty(strokeName, qstroke, "lineDash");
-      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+      addFillProperties  (bubbleName, qfill);
+      addStrokeProperties(bubbleName, qstroke);
 
       ++i;
     }
   }
 
   if (! plot->ellipseObjects().empty()) {
+    //CQGnuPlotPlotEllipseObjects *qellipseObjects = qplot->ellipseObjectsObj();
+
     int i = 0;
 
     for (const auto &ellipse : plot->ellipseObjects()) {
@@ -1156,30 +1131,19 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(ellipseName, qellipse, "angle");
       tree_->addProperty(ellipseName, qellipse, "text");
 
-      CQGnuPlotFill *qfill = qellipse->fill();
-
-      QString fillName = QString("%1/Fill").arg(ellipseName);
-
-      tree_->addProperty(fillName, qfill, "color");
-      tree_->addProperty(fillName, qfill, "background");
-      tree_->addProperty(fillName, qfill, "type");
-      tree_->addProperty(fillName, qfill, "pattern");
-
+      CQGnuPlotFill   *qfill   = qellipse->fill();
       CQGnuPlotStroke *qstroke = qellipse->stroke();
 
-      QString strokeName = QString("%1/Stroke").arg(ellipseName);
-
-      tree_->addProperty(strokeName, qstroke, "enabled");
-      tree_->addProperty(strokeName, qstroke, "color");
-      tree_->addProperty(strokeName, qstroke, "width");
-      tree_->addProperty(strokeName, qstroke, "lineDash");
-      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+      addFillProperties  (ellipseName, qfill);
+      addStrokeProperties(ellipseName, qstroke);
 
       ++i;
     }
   }
 
   if (! plot->errorBarObjects().empty()) {
+    //CQGnuPlotPlotErrorBarObjects *qerrorBarObjects = qplot->errorBarObjectsObj();
+
     QString barsName = QString("%1/ErrorBars").arg(plotName);
 
     int i = 0;
@@ -1207,13 +1171,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotStroke *qstroke = qbar->stroke();
 
-      QString strokeName = QString("%1/Stroke").arg(barName);
-
-      tree_->addProperty(strokeName, qstroke, "enabled");
-      tree_->addProperty(strokeName, qstroke, "color");
-      tree_->addProperty(strokeName, qstroke, "width");
-      tree_->addProperty(strokeName, qstroke, "lineDash");
-      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+      addStrokeProperties(barName, qstroke);
 
       CQGnuPlotMark *qmark = qbar->mark();
 
@@ -1230,6 +1188,8 @@ addPlotProperties(CGnuPlotPlot *plot)
   }
 
   if (! plot->financeBarObjects().empty()) {
+    //CQGnuPlotPlotFinanceBarObjects *qfinanceBarObjects = qplot->financeBarObjectsObj();
+
     QString barsName = QString("%1/FinanceBars").arg(plotName);
 
     int i = 0;
@@ -1249,19 +1209,15 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotStroke *qstroke = qbar->stroke();
 
-      QString strokeName = QString("%1/Stroke").arg(barName);
-
-      tree_->addProperty(strokeName, qstroke, "enabled");
-      tree_->addProperty(strokeName, qstroke, "color");
-      tree_->addProperty(strokeName, qstroke, "width");
-      tree_->addProperty(strokeName, qstroke, "lineDash");
-      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+      addStrokeProperties(barName, qstroke);
 
       ++i;
     }
   }
 
   if (! plot->imageObjects().empty()) {
+    //CQGnuPlotPlotImageObjects *qimageObjects = qplot->imageObjectsObj();
+
     int i = 0;
 
     for (const auto &image : plot->imageObjects()) {
@@ -1287,6 +1243,8 @@ addPlotProperties(CGnuPlotPlot *plot)
   }
 
   if (! plot->labelObjects().empty()) {
+    //CQGnuPlotPlotLabelObjects *qlabelObjects = qplot->labelObjectsObj();
+
     int i = 0;
 
     for (const auto &label : plot->labelObjects()) {
@@ -1334,6 +1292,8 @@ addPlotProperties(CGnuPlotPlot *plot)
   }
 
   if (! plot->pathObjects().empty()) {
+    //CQGnuPlotPlotPathObjects *qpathObjects = qplot->pathObjectsObj();
+
     int i = 0;
 
     for (const auto &path : plot->pathObjects()) {
@@ -1346,22 +1306,16 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotStroke *qstroke = qpath->stroke();
 
-      QString strokeName = QString("%1/Stroke").arg(pathName);
-
-      tree_->addProperty(strokeName, qstroke, "enabled");
-      tree_->addProperty(strokeName, qstroke, "color");
-      tree_->addProperty(strokeName, qstroke, "width");
-      tree_->addProperty(strokeName, qstroke, "lineDash");
-      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+      addStrokeProperties(pathName, qstroke);
 
       ++i;
     }
   }
 
   if (! plot->pieObjects().empty()) {
-    QString piesName = QString("%1/Pies").arg(plotName);
-
     CQGnuPlotPlotPieObjects *qpieObjects = qplot->pieObjectsObj();
+
+    QString piesName = QString("%1/Pies").arg(plotName);
 
     tree_->addProperty(piesName, qpieObjects, "innerRadius");
     tree_->addProperty(piesName, qpieObjects, "labelRadius");
@@ -1380,30 +1334,29 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(pieName, qpie, "labelRadius");
       tree_->addProperty(pieName, qpie, "exploded"   );
 
-      CQGnuPlotFill *qfill = qpie->fill();
-
-      QString fillName = QString("%1/Fill").arg(pieName);
-
-      tree_->addProperty(fillName, qfill, "color");
-      tree_->addProperty(fillName, qfill, "background");
-      tree_->addProperty(fillName, qfill, "type");
-      tree_->addProperty(fillName, qfill, "pattern");
-
+      CQGnuPlotFill   *qfill   = qpie->fill();
       CQGnuPlotStroke *qstroke = qpie->stroke();
 
-      QString strokeName = QString("%1/Stroke").arg(pieName);
-
-      tree_->addProperty(strokeName, qstroke, "enabled");
-      tree_->addProperty(strokeName, qstroke, "color");
-      tree_->addProperty(strokeName, qstroke, "width");
-      tree_->addProperty(strokeName, qstroke, "lineDash");
-      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+      addFillProperties  (pieName, qfill);
+      addStrokeProperties(pieName, qstroke);
 
       ++i;
     }
   }
 
-  if (! plot->pointObjects().empty()) {
+  //---
+
+  int numPointObjects = plot->pointObjects().size();
+
+  if (numPointObjects > 0 && numPointObjects < MAX_OBJECTS) {
+    CQGnuPlotPlotPointObjects *qpointObjects = qplot->pointObjectsObj();
+
+    QString pointsName = QString("%1/Points").arg(plotName);
+
+    tree_->addProperty(pointsName, qpointObjects, "pointType");
+    tree_->addProperty(pointsName, qpointObjects, "size");
+    tree_->addProperty(pointsName, qpointObjects, "color");
+
     int i = 0;
 
     for (const auto &point : plot->pointObjects()) {
@@ -1425,9 +1378,13 @@ addPlotProperties(CGnuPlotPlot *plot)
     }
   }
 
-  int np = plot->polygonObjects().size();
+  //---
 
-  if (np > 0 && np < 1000) {// TODO: limits
+  int numPolygonObjects = plot->polygonObjects().size();
+
+  if (numPolygonObjects > 0 && numPolygonObjects < MAX_OBJECTS) {
+    //CQGnuPlotPlotPolygonObjects *qpolygonObjects = qplot->polygonObjectsObj();
+
     int i = 0;
 
     for (const auto &polygon : plot->polygonObjects()) {
@@ -1438,30 +1395,23 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(polygonName, qpolygon, "displayed");
       tree_->addProperty(polygonName, qpolygon, "text");
 
-      CQGnuPlotFill *qfill = qpolygon->fill();
-
-      QString fillName = QString("%1/Fill").arg(polygonName);
-
-      tree_->addProperty(fillName, qfill, "color");
-      tree_->addProperty(fillName, qfill, "background");
-      tree_->addProperty(fillName, qfill, "type");
-      tree_->addProperty(fillName, qfill, "pattern");
-
+      CQGnuPlotFill   *qfill   = qpolygon->fill();
       CQGnuPlotStroke *qstroke = qpolygon->stroke();
 
-      QString strokeName = QString("%1/Stroke").arg(polygonName);
-
-      tree_->addProperty(strokeName, qstroke, "enabled");
-      tree_->addProperty(strokeName, qstroke, "color");
-      tree_->addProperty(strokeName, qstroke, "width");
-      tree_->addProperty(strokeName, qstroke, "lineDash");
-      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+      addFillProperties  (polygonName, qfill);
+      addStrokeProperties(polygonName, qstroke);
 
       ++i;
     }
   }
 
-  if (! plot->rectObjects().empty()) {
+  //---
+
+  int numRectObjects = plot->rectObjects().size();
+
+  if (numRectObjects > 0 && numRectObjects < MAX_OBJECTS) {
+    //CQGnuPlotPlotRectObjects *qrectObjects = qplot->rectObjectsObj();
+
     int i = 0;
 
     for (const auto &rect : plot->rectObjects()) {
@@ -1472,28 +1422,42 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(rectName, qrect, "displayed");
       tree_->addProperty(rectName, qrect, "text");
 
-      CQGnuPlotFill *qfill = qrect->fill();
-
-      QString fillName = QString("%1/Fill").arg(rectName);
-
-      tree_->addProperty(fillName, qfill, "color");
-      tree_->addProperty(fillName, qfill, "background");
-      tree_->addProperty(fillName, qfill, "type");
-      tree_->addProperty(fillName, qfill, "pattern");
-
+      CQGnuPlotFill   *qfill   = qrect->fill();
       CQGnuPlotStroke *qstroke = qrect->stroke();
 
-      QString strokeName = QString("%1/Stroke").arg(rectName);
-
-      tree_->addProperty(strokeName, qstroke, "enabled");
-      tree_->addProperty(strokeName, qstroke, "color");
-      tree_->addProperty(strokeName, qstroke, "width");
-      tree_->addProperty(strokeName, qstroke, "lineDash");
-      tree_->addProperty(strokeName, qstroke, "mitreLimit");
+      addFillProperties  (rectName, qfill);
+      addStrokeProperties(rectName, qstroke);
 
       ++i;
     }
   }
+}
+
+void
+CQGnuPlotMainWindow::
+addFillProperties(const QString &name, CQGnuPlotFill *qfill)
+{
+  QString fillName = QString("%1/Fill").arg(name);
+
+  tree_->addProperty(fillName, qfill, "color");
+  tree_->addProperty(fillName, qfill, "background");
+  tree_->addProperty(fillName, qfill, "type");
+  tree_->addProperty(fillName, qfill, "pattern");
+}
+
+void
+CQGnuPlotMainWindow::
+addStrokeProperties(const QString &name, CQGnuPlotStroke *qstroke)
+{
+  QString strokeName = QString("%1/Stroke").arg(name);
+
+  tree_->addProperty(strokeName, qstroke, "enabled");
+  tree_->addProperty(strokeName, qstroke, "color");
+  tree_->addProperty(strokeName, qstroke, "width");
+  tree_->addProperty(strokeName, qstroke, "lineDash");
+  tree_->addProperty(strokeName, qstroke, "lineCap");
+  tree_->addProperty(strokeName, qstroke, "lineJoin");
+  tree_->addProperty(strokeName, qstroke, "mitreLimit");
 }
 
 void
@@ -1976,13 +1940,47 @@ createObjectsSlot()
 
 void
 CQGnuPlotMainWindow::
-saveSVG()
+saveSlot()
+{
+  CQGnuPlotSaveDialog *dialog = new CQGnuPlotSaveDialog(this);
+
+  connect(dialog, SIGNAL(accepted()), this, SLOT(saveAcceptSlot()));
+
+  dialog->exec();
+}
+
+void
+CQGnuPlotMainWindow::
+saveAcceptSlot()
+{
+  CQGnuPlotSaveDialog *dialog = qobject_cast<CQGnuPlotSaveDialog *>(sender());
+
+  bool    isSVG    = dialog->isSVG();
+  QString filename = dialog->fileName();
+
+  if (isSVG) {
+    if (filename == "")
+      filename = "temp.svg";
+
+    saveSVG(filename);
+  }
+  else {
+    if (filename == "")
+      filename = "temp.png";
+
+    savePNG(filename, dialog->width(), dialog->height());
+  }
+}
+
+void
+CQGnuPlotMainWindow::
+saveSVG(const QString &filename)
 {
   app()->pushDevice();
 
   app()->setDevice("svg");
 
-  app()->setOutputFile("temp.svg");
+  app()->setOutputFile(filename.toStdString());
 
   CGnuPlotSVGRenderer *renderer =
     dynamic_cast<CGnuPlotSVGRenderer *>(app()->device()->renderer());
@@ -2008,16 +2006,18 @@ saveSVG()
 
 void
 CQGnuPlotMainWindow::
-savePNG()
+savePNG(const QString &filename, int width, int height)
 {
   app()->pushDevice();
 
   app()->setDevice("png");
 
-  app()->setOutputFile("temp.png");
+  app()->setOutputFile(filename.toStdString());
 
   CQGnuPlotPNGRenderer *renderer =
     dynamic_cast<CQGnuPlotPNGRenderer *>(app()->device()->renderer());
+
+  renderer->setOutputSize(QSize(width, height));
 
   renderer->setWindow(this);
 
@@ -2150,6 +2150,38 @@ initCurrentGroup()
   CGnuPlotGroupP group = *groups().begin();
 
   currentGroup_ = static_cast<CQGnuPlotGroup *>(group.get());
+}
+
+CQGnuPlotGroup *
+CQGnuPlotMainWindow::
+createTiledGroup()
+{
+  createNewGroup();
+
+  int n = groups().size();
+
+  int nr = std::max(int(sqrt(n)), 1);
+  int nc = (n + nr - 1)/nr;
+
+  double dx = 1.0/nc;
+  double dy = 1.0/nr;
+
+  int i = 0;
+
+  for (auto group : groups()) {
+    CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+
+    int r = i / nc;
+    int c = i % nc;
+
+    qgroup->setRegion(CBBox2D(c*dx, r*dy, (c + 1)*dx, (r + 1)*dy));
+
+    ++i;
+  }
+
+  CGnuPlotGroupP group = *groups().rbegin();
+
+  return static_cast<CQGnuPlotGroup *>(group.get());
 }
 
 void

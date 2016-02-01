@@ -215,3 +215,7 @@
 
 ### 01/24/2016
  + add data dialog to view data and plot
+
+### 01/31/2016
+ + add save image dialog
+ + add line cap and line join to stroke

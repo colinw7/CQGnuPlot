@@ -238,8 +238,7 @@ drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c,
 
 void
 CQGnuPlotRenderer::
-drawPath(const std::vector<CPoint2D> &points, double width, const CRGBA &c,
-         const CLineDash &dash)
+drawPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
 {
   if (points.empty()) return;
 
@@ -259,10 +258,12 @@ drawPath(const std::vector<CPoint2D> &points, double width, const CRGBA &c,
 
   QPen pen = painter_->pen();
 
-  pen.setWidthF(width);
-  pen.setColor(toQColor(c));
+  CQUtil::penSetLineDash(pen, stroke.lineDash());
 
-  CQUtil::penSetLineDash(pen, dash);
+  pen.setWidthF   (stroke.width());
+  pen.setColor    (toQColor(stroke.color()));
+  pen.setCapStyle (toPenCapStyle(stroke.lineCap()));
+  pen.setJoinStyle(toPenJoinStyle(stroke.lineJoin()));
 
   painter_->strokePath(path, pen);
 }

@@ -16,6 +16,24 @@ namespace {
   inline CRGBA fromQColor(const QColor &c) {
     return CRGBA(c.redF(),c.greenF(),c.blueF(),c.alphaF());
   }
+
+  inline Qt::PenCapStyle toPenCapStyle(const CLineCapType &lineCap) {
+    switch (lineCap) {
+      default:
+      case LINE_CAP_TYPE_BUTT  : return Qt::FlatCap;
+      case LINE_CAP_TYPE_ROUND : return Qt::RoundCap;
+      case LINE_CAP_TYPE_SQUARE: return Qt::SquareCap;
+    }
+  }
+
+  inline Qt::PenJoinStyle toPenJoinStyle(const CLineJoinType &lineJoin) {
+    switch (lineJoin) {
+      default:
+      case LINE_JOIN_TYPE_MITRE: return Qt::MiterJoin;
+      case LINE_JOIN_TYPE_ROUND: return Qt::RoundJoin;
+      case LINE_JOIN_TYPE_BEVEL: return Qt::BevelJoin;
+    }
+  }
 }
 
 class CQGnuPlotRenderer : public CGnuPlotRenderer {
@@ -35,8 +53,7 @@ class CQGnuPlotRenderer : public CGnuPlotRenderer {
   void drawPoint  (const CPoint2D &p, const CRGBA &c) override;
   void drawSymbol (const CPoint2D &p, SymbolType type, double size,
                    const CRGBA &c, double lw, bool pixelSize) override;
-  void drawPath   (const std::vector<CPoint2D> &points, double width, const CRGBA &c,
-                   const CLineDash &dash) override;
+  void drawPath   (const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke) override;
   void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,
                    const CLineDash &dash) override;
 

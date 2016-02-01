@@ -556,8 +556,14 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   else {
     int i = 0;
 
-    typedef std::vector<CPoint3D> Points;
-    typedef std::vector<Points>   PointsArray;
+    struct XYColor {
+      double x;
+      double y;
+      CRGBA  c;
+    };
+
+    typedef std::vector<XYColor> Points;
+    typedef std::vector<Points>  PointsArray;
 
     Points      points;
     PointsArray pointsArray;
@@ -570,10 +576,34 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         points.clear();
       }
 
-      CPoint3D p1;
+      std::vector<double> reals;
 
-      if (p.getPoint(p1))
-        points.push_back(p1);
+      if (! p.getReals(reals))
+        continue;
+
+      if (reals.size() < 3)
+        continue;
+
+      XYColor c;
+
+      if (reals.size() < 5) {
+        c.x = reals[0];
+        c.y = reals[1];
+
+        double z = reals[2];
+
+        if (renderer->isPseudo())
+          renderer->setCBValue(z);
+        else
+          c.c = cb->valueToColor(z).rgba();
+      }
+      else {
+        c.x = reals[0];
+        c.y = reals[1];
+        c.c = CRGBA(reals[2]/255.0, reals[3]/255.0, reals[4]/255.0);
+      }
+
+      points.push_back(c);
     }
 
     if (! points.empty())
@@ -599,13 +629,6 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         double x1 = point.x;
         double y1 = point.y;
 
-        CRGBA rgba;
-
-        if (renderer->isPseudo())
-          renderer->setCBValue(point.z);
-        else
-          rgba = cb->valueToColor(point.z).rgba();
-
         CPoint2D p(x1 + dx, y1 + dy);
 
         CBBox2D bbox(p.x - 0.5, p.y - 0.5, p.x + 0.5, p.y + 0.5);
@@ -617,17 +640,17 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
           if (! rect->testAndSetUsed()) {
             rect->fill()->setType (CGnuPlotTypes::FillType::SOLID);
-            rect->fill()->setColor(rgba);
+            rect->fill()->setColor(point.c);
 
             rect->stroke()->setEnabled(false);
 
-            rect->setTipText(CStrUtil::strprintf("%g", point.z));
+            rect->setTipText(point.c.toString());
           }
 
           ++i;
         }
         else
-          renderer->fillRect(bbox, rgba);
+          renderer->fillRect(bbox, point.c);
       }
     }
   }

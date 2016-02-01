@@ -328,8 +328,7 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   virtual void drawLine(const CPoint2D &p1, const CPoint2D &p2, double width,
                         const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
-  virtual void drawPath(const Points2D &points, double width,
-                        const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
+  virtual void drawPath(const Points2D &points, const CGnuPlotStroke &stroke) = 0;
 
   virtual void drawRect   (const CBBox2D &rect, const CRGBA &c, double w,
                            const CLineDash &dash=CLineDash()) = 0;
@@ -406,8 +405,7 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void strokePath(const Points3D &points, const CGnuPlotStroke &stroke);
   void strokePath(const Points2D &points, const CGnuPlotStroke &stroke);
 
-  void drawPath(const Points3D &points, double width,
-                const CRGBA &c, const CLineDash &dash=CLineDash());
+  void drawPath(const Points3D &points, const CGnuPlotStroke &stroke);
   void drawLine(const CPoint3D &p1, const CPoint3D &p2, double width,
                 const CRGBA &c, const CLineDash &dash=CLineDash());
 

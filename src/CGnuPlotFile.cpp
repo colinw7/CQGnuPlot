@@ -413,8 +413,6 @@ processBinaryFile()
   if (values.empty())
     return;
 
-  CGnuPlotFile::Set set;
-
   if (isMatrix()) {
     int nv = values.size();
 
@@ -444,6 +442,8 @@ processBinaryFile()
       }
     }
 
+    CGnuPlotFile::Set set;
+
     for (int k = 0; k < ny; ++k) {
       CGnuPlotFile::SubSet subSet;
 
@@ -468,30 +468,48 @@ processBinaryFile()
     sets_.push_back(set);
   }
   else {
-    CGnuPlotFile::SubSet subSet;
-
     int w = binarySize_.width;
+    int h = binarySize_.height;
 
-    if (w <= 1)
-      w = 1;
+    if (w <= 1) w = 1;
+    if (h <= 1) h = 1;
 
-    int h = values.size()/w;
+    int wh = w*h;
+    int nd = values.size()/wh;
+
+    if (nd < 0) {
+      std::cerr << "Bad image data size" << std::endl;
+      return;
+    }
 
     int i = 0;
 
+    CGnuPlotFile::Set set;
+
     for (int y = 0; y < h; ++y) {
-      CGnuPlotFile::SubSetLine subSetLine;
+      CGnuPlotFile::SubSet subSet;
+
+      std::string ystr = std::to_string(y);
 
       for (int x = 0; x < w; ++x) {
-        std::string str = std::to_string(values[i++]);
+        CGnuPlotFile::SubSetLine subSetLine;
 
-        subSetLine.fields.push_back(str);
+        std::string xstr = std::to_string(x);
+
+        subSetLine.fields.push_back(xstr);
+        subSetLine.fields.push_back(ystr);
+
+        for (int z = 0; z < nd; ++z) {
+          std::string str = std::to_string(values[i++]);
+
+          subSetLine.fields.push_back(str);
+        }
+
+        subSet.lines.push_back(subSetLine);
       }
 
-      subSet.lines.push_back(subSetLine);
+      set.subSets.push_back(subSet);
     }
-
-    set.subSets.push_back(subSet);
 
     sets_.push_back(set);
   }

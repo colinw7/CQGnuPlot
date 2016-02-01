@@ -60,6 +60,7 @@ CQGnuPlotStroke.cpp \
 CQGnuPlotTimeStamp.cpp \
 CQGnuPlotTitle.cpp \
 CQGnuPlotToolBar.cpp \
+CQGnuPlotFilename.cpp \
 CQGnuPlotUtil.cpp \
 CQGnuPlotWindow.cpp \
 \
@@ -69,6 +70,7 @@ CQGnuPlotManageFunctionsDialog.cpp \
 CQGnuPlotManageVariablesDialog.cpp \
 CQGnuPlotCreateDialog.cpp \
 CQGnuPlotDataDialog.cpp \
+CQGnuPlotSaveDialog.cpp \
 CQGnuPlotDataTree.cpp \
 CQGnuPlotDataModel.cpp \
 \
@@ -274,6 +276,7 @@ CQGnuPlotStroke.h \
 CQGnuPlotTimeStamp.h \
 CQGnuPlotTitle.h \
 CQGnuPlotToolBar.h \
+CQGnuPlotFilename.h \
 CQGnuPlotUtil.h \
 CQGnuPlotWindow.h \
 \
@@ -283,6 +286,7 @@ CQGnuPlotManageFunctionsDialog.h \
 CQGnuPlotManageVariablesDialog.h \
 CQGnuPlotCreateDialog.h \
 CQGnuPlotDataDialog.h \
+CQGnuPlotSaveDialog.h \
 CQGnuPlotDataTree.h \
 CQGnuPlotDataModel.h \
 \

@@ -156,6 +156,8 @@ void
 CGnuPlotImageObject::
 draw(CGnuPlotRenderer *renderer) const
 {
+  if (! isDisplayed()) return;
+
   if (renderer->is3D())
     draw3D(renderer);
   else
@@ -166,8 +168,6 @@ void
 CGnuPlotImageObject::
 draw2D(CGnuPlotRenderer *renderer) const
 {
-  if (! isDisplayed()) return;
-
   init();
 
   //---
@@ -211,10 +211,6 @@ void
 CGnuPlotImageObject::
 draw3D(CGnuPlotRenderer *renderer) const
 {
-  if (! isDisplayed()) return;
-
-  //---
-
   CGnuPlotGroup *group = plot_->group();
 
   bool highlighted = (isHighlighted() || isSelected());

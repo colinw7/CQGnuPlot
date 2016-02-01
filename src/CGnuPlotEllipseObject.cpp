@@ -82,6 +82,8 @@ void
 CGnuPlotEllipseObject::
 draw(CGnuPlotRenderer *renderer) const
 {
+  if (! isDisplayed()) return;
+
   bool highlighted = (isHighlighted() || isSelected());
 
   CGnuPlotFillP   fill   = fill_;

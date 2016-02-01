@@ -12,6 +12,8 @@ class CQGnuPlotGroup;
 class CQGnuPlotPlot;
 class CQGnuPlotCanvas;
 class CQGnuPlotRenderer;
+class CQGnuPlotFill;
+class CQGnuPlotStroke;
 class CQPropertyTree;
 class CQPropertyRealEditor;
 class CQPropertyIntegerEditor;
@@ -106,6 +108,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void updateProperties() override;
   void addGroupProperties(CGnuPlotGroup *group);
   void addPlotProperties(CGnuPlotPlot *plot);
+  void addFillProperties(const QString &name, CQGnuPlotFill *qfill);
+  void addStrokeProperties(const QString &name, CQGnuPlotStroke *qstroke);
 
   void paint(QPainter *p) override;
 
@@ -124,6 +128,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void setBackgroundColor(const QColor &c);
 
   void initCurrentGroup();
+
+  CQGnuPlotGroup *createTiledGroup();
 
   CQGnuPlotGroup *currentGroup() const { return currentGroup_; }
   void setCurrentGroup(CQGnuPlotGroup *group) override;
@@ -188,8 +194,11 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void createObjects();
   void createObjectsSlot();
 
-  void saveSVG();
-  void savePNG();
+  void saveSlot();
+  void saveAcceptSlot();
+
+  void saveSVG(const QString &filename);
+  void savePNG(const QString &filename, int w, int h);
 
   void xAxisSlot(bool show);
   void yAxisSlot(bool show);

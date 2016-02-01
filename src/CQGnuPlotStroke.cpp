@@ -48,3 +48,31 @@ setDash(const CLineDash &dash)
 {
   CGnuPlotStroke::setLineDash(dash);
 }
+
+CQGnuPlotEnum::LineCapType
+CQGnuPlotStroke::
+getLineCap() const
+{
+  return CQGnuPlotEnum::lineCapConv(CGnuPlotStroke::lineCap());
+}
+
+void
+CQGnuPlotStroke::
+setLineCap(const CQGnuPlotEnum::LineCapType &a)
+{
+  CGnuPlotStroke::setLineCap(CQGnuPlotEnum::lineCapConv(a));
+}
+
+CQGnuPlotEnum::LineJoinType
+CQGnuPlotStroke::
+getLineJoin() const
+{
+  return CQGnuPlotEnum::lineJoinConv(CGnuPlotStroke::lineJoin());
+}
+
+void
+CQGnuPlotStroke::
+setLineJoin(const CQGnuPlotEnum::LineJoinType &a)
+{
+  CGnuPlotStroke::setLineJoin(CQGnuPlotEnum::lineJoinConv(a));
+}

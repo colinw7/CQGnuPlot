@@ -1,17 +1,14 @@
 #include <CQGnuPlotLoadFileDialog.h>
+#include <CQGnuPlotFilename.h>
 #include <CQGnuPlotUtil.h>
 #include <CQEnumCombo.h>
 #include <CQIntegerSpin.h>
 #include <CQRealSpin.h>
-#include <CQPixmapCache.h>
 
-#include <QHBoxLayout>
 #include <QLineEdit>
-#include <QToolButton>
 #include <QGroupBox>
 #include <QRadioButton>
 #include <QCheckBox>
-#include <QFileDialog>
 
 #include <svg/file_dialog_svg.h>
 
@@ -135,43 +132,4 @@ void
 CQGnuPlotLoadFileDialog::
 parametricSlot()
 {
-}
-
-//------
-
-CQGnuPlotFilename::
-CQGnuPlotFilename(QWidget *parent) :
- QFrame(parent)
-{
-  QHBoxLayout *layout = new QHBoxLayout(this);
-
-  edit_   = new QLineEdit;
-  button_ = new QToolButton;
-
-  button_->setIcon(CQPixmapCacheInst->getIcon("FILE_DIALOG"));
-
-  layout->addWidget(edit_);
-  layout->addWidget(button_);
-
-  connect(button_, SIGNAL(clicked()), this, SLOT(fileSlot()));
-}
-
-void
-CQGnuPlotFilename::
-fileSlot()
-{
-  QString fileName = QFileDialog::getOpenFileName(this,
-    "Open File", "", "Files (*.*)");
-
-  if (! fileName.length())
-    return;
-
-  edit_->setText(fileName);
-}
-
-QString
-CQGnuPlotFilename::
-name() const
-{
-  return edit_->text();
 }

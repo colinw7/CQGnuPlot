@@ -17,7 +17,7 @@ CQGnuPlotPointObject::
 
 QPointF
 CQGnuPlotPointObject::
-getPoint() const
+point() const
 {
   return CQUtil::toQPoint(CGnuPlotPointObject::point());
 }
@@ -45,7 +45,7 @@ setPointType(const CQGnuPlotEnum::SymbolType &type)
 
 double
 CQGnuPlotPointObject::
-getSize() const
+size() const
 {
   return CGnuPlotPointObject::size().getValue(1);
 }
@@ -59,7 +59,7 @@ setSize(double s)
 
 QColor
 CQGnuPlotPointObject::
-getColor() const
+color() const
 {
   return toQColor(CGnuPlotPointObject::color());
 }
@@ -73,7 +73,7 @@ setColor(const QColor &color)
 
 QString
 CQGnuPlotPointObject::
-getPointString() const
+pointString() const
 {
   return QString(CGnuPlotPointObject::pointString().c_str());
 }

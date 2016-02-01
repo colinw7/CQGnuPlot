@@ -319,7 +319,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
 
       // TODO: clip
-      renderer->drawPath(points, stroke.width(), stroke.color(), stroke.lineDash());
+      renderer->drawPath(points, stroke);
     }
   }
 

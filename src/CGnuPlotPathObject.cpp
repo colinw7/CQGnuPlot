@@ -65,6 +65,8 @@ void
 CGnuPlotPathObject::
 draw(CGnuPlotRenderer *renderer) const
 {
+  if (! isDisplayed()) return;
+
   bool highlighted = (isHighlighted() || isSelected());
 
   CGnuPlotStrokeP stroke = stroke_;

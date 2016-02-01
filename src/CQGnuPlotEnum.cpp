@@ -3,6 +3,46 @@
 
 namespace Conv {
 
+typedef CEnumConv<CHAlignType, CQGnuPlotEnum::HAlignType> HAlignConv;
+
+HAlignConv halignConv({
+ { CHALIGN_TYPE_LEFT  , CQGnuPlotEnum::AlignLeft    },
+ { CHALIGN_TYPE_RIGHT , CQGnuPlotEnum::AlignRight   },
+ { CHALIGN_TYPE_CENTER, CQGnuPlotEnum::AlignHCenter }
+});
+
+//---
+
+typedef CEnumConv<CVAlignType, CQGnuPlotEnum::VAlignType> VAlignConv;
+
+VAlignConv valignConv({
+ { CVALIGN_TYPE_BOTTOM, CQGnuPlotEnum::AlignBottom  },
+ { CVALIGN_TYPE_TOP   , CQGnuPlotEnum::AlignTop     },
+ { CVALIGN_TYPE_CENTER, CQGnuPlotEnum::AlignVCenter }
+});
+
+//---
+
+typedef CEnumConv<CLineCapType, CQGnuPlotEnum::LineCapType> LineCapConv;
+
+LineCapConv lineCapConv({
+ { LINE_CAP_TYPE_BUTT  , CQGnuPlotEnum::LineCapButt   },
+ { LINE_CAP_TYPE_ROUND , CQGnuPlotEnum::LineCapRound  },
+ { LINE_CAP_TYPE_SQUARE, CQGnuPlotEnum::LineCapSquare }
+});
+
+//---
+
+typedef CEnumConv<CLineJoinType, CQGnuPlotEnum::LineJoinType> LineJoinConv;
+
+LineJoinConv lineJoinConv({
+ { LINE_JOIN_TYPE_MITRE, CQGnuPlotEnum::LineJoinMitre },
+ { LINE_JOIN_TYPE_ROUND, CQGnuPlotEnum::LineJoinRound },
+ { LINE_JOIN_TYPE_BEVEL, CQGnuPlotEnum::LineJoinBevel }
+});
+
+//---
+
 typedef CEnumConv<CGnuPlotTypes::SymbolType, CQGnuPlotEnum::SymbolType> SymbolConv;
 
 SymbolConv symbolConv({
@@ -22,6 +62,8 @@ SymbolConv symbolConv({
   { CGnuPlotTypes::SymbolType::DIAMOND            , CQGnuPlotEnum::SymbolDiamond         },
   { CGnuPlotTypes::SymbolType::FILLED_DIAMOND     , CQGnuPlotEnum::SymbolFilledDiamond   }
 });
+
+//---
 
 typedef CEnumConv<CGnuPlotTypes::PlotStyle, CQGnuPlotEnum::PlotStyle> PlotStyleConv;
 
@@ -73,6 +115,8 @@ PlotStyleConv plotStyleConv({
   { CGnuPlotTypes::PlotStyle::TEST_PALETTE  , CQGnuPlotEnum::PlotTestPalette    },
 });
 
+//---
+
 typedef CEnumConv<CGnuPlotTypes::ObjectType, CQGnuPlotEnum::ObjectType> ObjectTypeConv;
 
 ObjectTypeConv objectTypeConv({
@@ -85,6 +129,72 @@ ObjectTypeConv objectTypeConv({
   { CGnuPlotTypes::ObjectType::RECTANGLE, CQGnuPlotEnum::ObjectTypeRectangle },
 });
 
+//---
+
+}
+
+//---
+
+CQGnuPlotEnum::HAlignType
+CQGnuPlotEnum::
+halignConv(const CHAlignType &type)
+{
+  return Conv::halignConv.conv(type);
+}
+
+CHAlignType
+CQGnuPlotEnum::
+halignConv(const CQGnuPlotEnum::HAlignType &type)
+{
+  return Conv::halignConv.conv(type);
+}
+
+//---
+
+CQGnuPlotEnum::VAlignType
+CQGnuPlotEnum::
+valignConv(const CVAlignType &type)
+{
+  return Conv::valignConv.conv(type);
+}
+
+CVAlignType
+CQGnuPlotEnum::
+valignConv(const CQGnuPlotEnum::VAlignType &type)
+{
+  return Conv::valignConv.conv(type);
+}
+
+//---
+
+CQGnuPlotEnum::LineCapType
+CQGnuPlotEnum::
+lineCapConv(const CLineCapType &type)
+{
+  return Conv::lineCapConv.conv(type);
+}
+
+CLineCapType
+CQGnuPlotEnum::
+lineCapConv(const CQGnuPlotEnum::LineCapType &type)
+{
+  return Conv::lineCapConv.conv(type);
+}
+
+//---
+
+CQGnuPlotEnum::LineJoinType
+CQGnuPlotEnum::
+lineJoinConv(const CLineJoinType &type)
+{
+  return Conv::lineJoinConv.conv(type);
+}
+
+CLineJoinType
+CQGnuPlotEnum::
+lineJoinConv(const CQGnuPlotEnum::LineJoinType &type)
+{
+  return Conv::lineJoinConv.conv(type);
 }
 
 //---

@@ -110,8 +110,13 @@ data(const QModelIndex &index, int role) const
     if (parent.isValid()) {
       int subSet = parent.row();
 
-      if (role == Qt::DisplayRole)
+      if (role == Qt::DisplayRole) {
+        Row *row = static_cast<Row *>(index.internalPointer());
+
+        assert(row->subSet == subSet);
+
         return QString(file_.field(0, subSet, index.row(), index.column()).c_str());
+      }
       else
         return QVariant();
     }
@@ -177,9 +182,11 @@ index(int row, int column, const QModelIndex &parent) const
   }
   else if (isHierarchical1()) {
     if (parent.isValid()) {
-      int set = parent.row();
+      int subSet = parent.row();
 
-      return createIndex(row, column, (void *) &rows1_[set]);
+      assert(subSet >= 0 && subSet < int(rows1_.size()));
+
+      return createIndex(row, column, (void *) &rows1_[subSet]);
     }
     else
       return createIndex(row, column, nullptr);
@@ -195,10 +202,16 @@ index(int row, int column, const QModelIndex &parent) const
 
         set = parent1.row();
 
+        assert(set >= 0 && set < int(rows2_.size()));
+        assert(subSet >= 0 && subSet < int(rows2_[set].size()));
+
         return createIndex(row, column, (void *) &rows2_[set][subSet]);
       }
-      else
+      else {
+        assert(set >= 0 && set < int(rows1_.size()));
+
         return createIndex(row, column, (void *) &rows1_[set]);
+      }
     }
     else
       return createIndex(row, column, nullptr);
@@ -218,8 +231,9 @@ parent(const QModelIndex &index) const
   else if (isHierarchical1()) {
     Row *row = static_cast<Row *>(index.internalPointer());
 
-    if (row)
+    if (row) {
       return createIndex(row->subSet, 0, nullptr);
+    }
     else
       return QModelIndex();
   }
@@ -230,7 +244,7 @@ parent(const QModelIndex &index) const
       if (row->subSet < 0)
         return createIndex(row->set, 0, nullptr);
       else {
-        assert(row->set >= 0 && row->set < rows1_.size());
+        assert(row->set >= 0 && row->set < int(rows1_.size()));
 
         return createIndex(row->subSet, 0, (void *) &rows1_[row->set]);
       }
@@ -252,6 +266,11 @@ rowCount(const QModelIndex &parent) const
   }
   else if (isHierarchical1()) {
     if (parent.isValid()) {
+      QModelIndex parent1 = parent.parent();
+
+      if (parent1.isValid())
+        return 0;
+
       int subSet = parent.row();
 
       return file_.numLines(0, subSet);
@@ -260,27 +279,28 @@ rowCount(const QModelIndex &parent) const
     return file_.numSubSets(0);
   }
   else {
-    if (! parent.isValid())
-      return file_.numSets();
+    if (parent.isValid()) {
+      int set = parent.row();
 
-    int set = parent.row();
+      QModelIndex parent1 = parent.parent();
 
-    QModelIndex parent1 = parent.parent();
+      if (parent1.isValid()) {
+        int subSet = set;
 
-    if (parent1.isValid()) {
-      int subSet = set;
+        set = parent1.row();
 
-      set = parent1.row();
+        QModelIndex parent2 = parent1.parent();
 
-      QModelIndex parent2 = parent1.parent();
+        if (parent2.isValid())
+          return 0;
 
-      if (parent2.isValid())
-        return 0;
+        return file_.numLines(set, subSet);
+      }
 
-      return file_.numLines(set, subSet);
+      return file_.numSubSets(set);
     }
 
-    return file_.numSubSets(set);
+    return file_.numSets();
   }
 }
 

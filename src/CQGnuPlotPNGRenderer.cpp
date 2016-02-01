@@ -11,3 +11,10 @@ CQGnuPlotPNGRenderer::
 ~CQGnuPlotPNGRenderer()
 {
 }
+
+void
+CQGnuPlotPNGRenderer::
+setOutputSize(const QSize &size)
+{
+  device_->setOutputSize(size);
+}

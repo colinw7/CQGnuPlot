@@ -1221,7 +1221,7 @@ CGnuPlotRenderer::
 strokePath(const Points2D &points, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
-    drawPath(points, stroke.width(), stroke.color(), stroke.lineDash());
+    drawPath(points, stroke);
 }
 
 void
@@ -1270,6 +1270,12 @@ void
 CGnuPlotRenderer::
 drawClippedPath(const Points3D &points, double width, const CRGBA &c, const CLineDash &dash)
 {
+  CGnuPlotStroke stroke;
+
+  stroke.setWidth   (width);
+  stroke.setColor   (c);
+  stroke.setLineDash(dash);
+
   if (clip().isValid() && ! isPseudo()) {
     Points2D points1;
 
@@ -1280,10 +1286,10 @@ drawClippedPath(const Points3D &points, double width, const CRGBA &c, const CLin
         points1.push_back(p1);
     }
 
-    drawPath(points1, width, c, dash);
+    drawPath(points1, stroke);
   }
   else
-    drawPath(points, width, c, dash);
+    drawPath(points, stroke);
 }
 
 void
@@ -1292,6 +1298,12 @@ drawClippedPath(const Points2D &points, double width, const CRGBA &c, const CLin
 {
   int np = points.size();
   if (np < 2) return;
+
+  CGnuPlotStroke stroke;
+
+  stroke.setWidth   (width);
+  stroke.setColor   (c);
+  stroke.setLineDash(dash);
 
   Points2D points1;
 
@@ -1307,26 +1319,26 @@ drawClippedPath(const Points2D &points, double width, const CRGBA &c, const CLin
     }
     else {
       if (! points1.empty())
-        drawPath(points1, width, c, dash);
+        drawPath(points1, stroke);
 
       points1.clear();
     }
   }
 
   if (! points1.empty())
-    drawPath(points1, width, c, dash);
+    drawPath(points1, stroke);
 }
 
 void
 CGnuPlotRenderer::
-drawPath(const Points3D &points, double width, const CRGBA &c, const CLineDash &dash)
+drawPath(const Points3D &points, const CGnuPlotStroke &stroke)
 {
   Points2D points1;
 
   for (const auto &p : points)
     points1.push_back(transform2D(p));
 
-  drawPath(points1, width, c, dash);
+  drawPath(points1, stroke);
 }
 
 //------

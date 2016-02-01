@@ -79,7 +79,7 @@ drawSymbol(const CPoint2D &point, SymbolType, double size, const CRGBA &, double
 
 void
 CGnuPlotBBoxRenderer::
-drawPath(const std::vector<CPoint2D> &points, double /*width*/, const CRGBA &, const CLineDash &)
+drawPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &)
 {
   for (uint i = 0; i < points.size(); ++i)
     addPoint(points[i]);

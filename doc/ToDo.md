@@ -2,6 +2,10 @@
 
   + support probe in more styles
   + better clipping support (objects)
+  + support zoom/pan using scale and offset properties to modify window->pixel calc (don't change range)
+  + CGnuPlotFile store reals as well as strings
+  + data table view
+  + Polygons modify all with property
 
   + isosamples/samples logic (generate using isosamples and supersample at samples ?)
 

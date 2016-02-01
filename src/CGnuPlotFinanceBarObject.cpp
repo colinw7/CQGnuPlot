@@ -39,6 +39,8 @@ void
 CGnuPlotFinanceBarObject::
 draw(CGnuPlotRenderer *renderer) const
 {
+  if (! isDisplayed()) return;
+
   if (! isUsed()) return;
 
   bool highlighted = (isHighlighted() || isSelected());

@@ -3,22 +3,6 @@
 
 namespace Conv {
 
-typedef CEnumConv<CHAlignType, CQGnuPlotEnum::HAlignType> HAlignConv;
-
-HAlignConv halignConv({
- { CHALIGN_TYPE_LEFT  , CQGnuPlotEnum::AlignLeft    },
- { CHALIGN_TYPE_RIGHT , CQGnuPlotEnum::AlignRight   },
- { CHALIGN_TYPE_CENTER, CQGnuPlotEnum::AlignHCenter }
-});
-
-typedef CEnumConv<CVAlignType, CQGnuPlotEnum::VAlignType> VAlignConv;
-
-VAlignConv valignConv({
- { CVALIGN_TYPE_BOTTOM, CQGnuPlotEnum::AlignBottom  },
- { CVALIGN_TYPE_TOP   , CQGnuPlotEnum::AlignTop     },
- { CVALIGN_TYPE_CENTER, CQGnuPlotEnum::AlignVCenter }
-});
-
 typedef CEnumConv<CGnuPlot::HistogramStyle, CQGnuPlotEnum::HistogramStyle> HistogramStyleConv;
 
 HistogramStyleConv histogramStyleConv({
@@ -109,38 +93,6 @@ ArrorColorTypeConv arrowCoordTypeConv({
   { CGnuPlotArrow::CoordType::FROM_ANGLE, CQGnuPlotEnum::ArrowCoordFromAngle },
 });
 
-}
-
-//---
-
-CQGnuPlotEnum::HAlignType
-CQGnuPlotUtil::
-alignConv(const CHAlignType &type)
-{
-  return Conv::halignConv.conv(type);
-}
-
-CHAlignType
-CQGnuPlotUtil::
-alignConv(const CQGnuPlotEnum::HAlignType &type)
-{
-  return Conv::halignConv.conv(type);
-}
-
-//---
-
-CQGnuPlotEnum::VAlignType
-CQGnuPlotUtil::
-alignConv(const CVAlignType &type)
-{
-  return Conv::valignConv.conv(type);
-}
-
-CVAlignType
-CQGnuPlotUtil::
-alignConv(const CQGnuPlotEnum::VAlignType &type)
-{
-  return Conv::valignConv.conv(type);
 }
 
 //---

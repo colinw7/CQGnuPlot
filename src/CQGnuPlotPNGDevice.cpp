@@ -8,16 +8,25 @@
 
 CQGnuPlotPNGDevice::
 CQGnuPlotPNGDevice() :
- CGnuPlotDevice("PNG"), painter_(0), image_(0), count_(1)
+ CGnuPlotDevice("PNG")
 {
   renderer_ = new CQGnuPlotPNGRenderer(this);
 
-  setSize(CISize2D(800, 800));
+  setSize(CISize2D(outputSize_.width(), outputSize_.height()));
 }
 
 CQGnuPlotPNGDevice::
 ~CQGnuPlotPNGDevice()
 {
+}
+
+void
+CQGnuPlotPNGDevice::
+setOutputSize(const QSize &size)
+{
+  outputSize_ = size;
+
+  setSize(CISize2D(outputSize_.width(), outputSize_.height()));
 }
 
 void

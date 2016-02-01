@@ -2,6 +2,8 @@
 #define CQGnuPlotEnum_H
 
 #include <CGnuPlotTypes.h>
+#include <CLineCapType.h>
+#include <CLineJoinType.h>
 #include <QObject>
 
 class CQGnuPlotEnum : public QObject {
@@ -9,6 +11,8 @@ class CQGnuPlotEnum : public QObject {
 
   Q_ENUMS(HAlignType)
   Q_ENUMS(VAlignType)
+  Q_ENUMS(LineCapType)
+  Q_ENUMS(LineJoinType)
   Q_ENUMS(SymbolType)
   Q_ENUMS(PlotStyle)
   Q_ENUMS(HistogramStyle)
@@ -36,6 +40,18 @@ class CQGnuPlotEnum : public QObject {
     AlignTop,
     AlignBottom,
     AlignVCenter
+  };
+
+  enum LineCapType {
+    LineCapButt,
+    LineCapRound,
+    LineCapSquare
+  };
+
+  enum LineJoinType {
+    LineJoinMitre,
+    LineJoinRound,
+    LineJoinBevel,
   };
 
   enum SymbolType {
@@ -177,11 +193,47 @@ class CQGnuPlotEnum : public QObject {
  public:
   CQGnuPlotEnum() { }
 
+  //---
+
+  const HAlignType &halignType() { return halignType_; }
+  void setHAlignType(const HAlignType &v) { halignType_ = v; }
+
+  static HAlignType halignConv(const CHAlignType &type);
+  static CHAlignType halignConv(const HAlignType &type);
+
+  //---
+
+  const VAlignType &valignType() { return valignType_; }
+  void setVAlignType(const VAlignType &v) { valignType_ = v; }
+
+  static VAlignType valignConv(const CVAlignType &type);
+  static CVAlignType valignConv(const VAlignType &type);
+
+  //---
+
+  const LineCapType &lineCapType() { return lineCapType_; }
+  void setLineCapType(const LineCapType &v) { lineCapType_ = v; }
+
+  static LineCapType lineCapConv(const CLineCapType &type);
+  static CLineCapType lineCapConv(const LineCapType &type);
+
+  //---
+
+  const LineJoinType &lineJoinType() { return lineJoinType_; }
+  void setLineJoinType(const LineJoinType &v) { lineJoinType_ = v; }
+
+  static LineJoinType lineJoinConv(const CLineJoinType &type);
+  static CLineJoinType lineJoinConv(const LineJoinType &type);
+
+  //---
+
   const SymbolType &symbolType() const { return symbolType_; }
   void setSymbolType(const SymbolType &v) { symbolType_ = v; }
 
   static SymbolType symbolConv(const CGnuPlotTypes::SymbolType &type);
   static CGnuPlotTypes::SymbolType symbolConv(const SymbolType &type);
+
+  //---
 
   const PlotStyle &plotStyle() const { return plotStyle_; }
   void setPlotStyle(const PlotStyle &v) { plotStyle_ = v; }
@@ -189,16 +241,24 @@ class CQGnuPlotEnum : public QObject {
   static PlotStyle plotStyleConv(const CGnuPlotTypes::PlotStyle &type);
   static CGnuPlotTypes::PlotStyle plotStyleConv(const PlotStyle &type);
 
+  //---
+
   const ObjectType &objectType() const { return objectType_; }
   void setObjectType(const ObjectType &v) { objectType_ = v; }
 
   static ObjectType objectTypeConv(const CGnuPlotTypes::ObjectType &type);
   static CGnuPlotTypes::ObjectType objectTypeConv(const ObjectType &type);
 
+  //---
+
  private:
-  SymbolType symbolType_;
-  PlotStyle  plotStyle_;
-  ObjectType objectType_;
+  HAlignType   halignType_;
+  VAlignType   valignType_;
+  LineCapType  lineCapType_;
+  LineJoinType lineJoinType_;
+  SymbolType   symbolType_;
+  PlotStyle    plotStyle_;
+  ObjectType   objectType_;
 };
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <CGnuPlotStroke.h>
+#include <CQGnuPlotEnum.h>
 #include <QColor>
 
 class CQGnuPlotPlot;
@@ -16,6 +17,8 @@ class CQGnuPlotStroke : public QObject, public CGnuPlotStroke {
   Q_PROPERTY(CLineDash lineDash   READ getDash    WRITE setDash      )
   Q_PROPERTY(double    mitreLimit READ mitreLimit WRITE setMitreLimit)
 
+  Q_PROPERTY(CQGnuPlotEnum::LineCapType  lineCap  READ getLineCap  WRITE setLineCap )
+  Q_PROPERTY(CQGnuPlotEnum::LineJoinType lineJoin READ getLineJoin WRITE setLineJoin)
  public:
   CQGnuPlotStroke(CQGnuPlotPlot *plot);
 
@@ -26,6 +29,12 @@ class CQGnuPlotStroke : public QObject, public CGnuPlotStroke {
 
   CLineDash getDash() const;
   void setDash(const CLineDash &dash);
+
+  CQGnuPlotEnum::LineCapType getLineCap() const;
+  void setLineCap(const CQGnuPlotEnum::LineCapType &a);
+
+  CQGnuPlotEnum::LineJoinType getLineJoin() const;
+  void setLineJoin(const CQGnuPlotEnum::LineJoinType &a);
 };
 
 #endif

@@ -14,8 +14,25 @@ class CQGnuPlotWindow;
 class CQGnuPlotGroup;
 class CQGnuPlotCanvas;
 class CQGnuPlotRenderer;
+
+class CQGnuPlotPlotArrowObjects;
 class CQGnuPlotPlotBoxBarObjects;
+class CQGnuPlotPlotBoxObjects;
+class CQGnuPlotPlotBubbleObjects;
+class CQGnuPlotPlotEllipseObjects;
+class CQGnuPlotPlotErrorBarObjects;
+class CQGnuPlotPlotFinanceBarObjects;
+class CQGnuPlotPlotImageObjects;
+class CQGnuPlotPlotLabelObjects;
+class CQGnuPlotPlotPathObjects;
 class CQGnuPlotPlotPieObjects;
+class CQGnuPlotPlotPointObjects;
+class CQGnuPlotPlotPolygonObjects;
+class CQGnuPlotPlotRectObjects;
+
+class CQGnuPlotBoxBarObject;
+class CQGnuPlotPieObject;
+class CQGnuPlotPointObject;
 
 class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_OBJECT
@@ -58,13 +75,15 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   Q_PROPERTY(QString functions READ functions WRITE setFunctions)
 
+  Q_PROPERTY(QString keyTitle READ keyTitle WRITE setKeyTitle)
+
   Q_PROPERTY(int    lineStyleId READ lineStyleId WRITE setLineStyleId)
   Q_PROPERTY(double lineWidth   READ lineWidth   WRITE setLineWidth  )
   Q_PROPERTY(QColor lineColor   READ lineColor   WRITE setLineColor  )
   Q_PROPERTY(double pointSize   READ pointSize   WRITE setPointSize  )
 
-  Q_PROPERTY(CQGnuPlotEnum::SymbolType pointType    READ pointType   WRITE setPointType  )
-  Q_PROPERTY(CQGnuPlotEnum::FillType fillType       READ fillType    WRITE setFillType   )
+  Q_PROPERTY(CQGnuPlotEnum::SymbolType  pointType   READ pointType   WRITE setPointType  )
+  Q_PROPERTY(CQGnuPlotEnum::FillType    fillType    READ fillType    WRITE setFillType   )
   Q_PROPERTY(CQGnuPlotEnum::FillPattern fillPattern READ fillPattern WRITE setFillPattern)
 
   Q_PROPERTY(double barsSize  READ barsSize  WRITE setBarsSize )
@@ -127,7 +146,10 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   void setYRangeMax(double x);
 
   QString functions() const;
-  void setFunctions(const QString &functions);
+  void setFunctions(const QString &s);
+
+  QString keyTitle() const;
+  void setKeyTitle(const QString &s);
 
   CQGnuPlotEnum::FillType fillType() const;
   void setFillType(const CQGnuPlotEnum::FillType &type);
@@ -141,8 +163,20 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   CQGnuPlotEnum::BoxWidthType getBoxWidthType() const;
   void setBoxWidthType(const CQGnuPlotEnum::BoxWidthType &type);
 
-  CQGnuPlotPlotBoxBarObjects *boxBarObjectsObj() const { return boxBarObjects_; }
-  CQGnuPlotPlotPieObjects    *pieObjectsObj   () const { return pieObjects_   ; }
+  CQGnuPlotPlotArrowObjects*      arrowObjectsObj     () { return arrowObjects_     ; }
+  CQGnuPlotPlotBoxBarObjects*     boxBarObjectsObj    () { return boxBarObjects_    ; }
+  CQGnuPlotPlotBoxObjects*        boxObjectsObj       () { return boxObjects_       ; }
+  CQGnuPlotPlotBubbleObjects*     bubbleObjectsObj    () { return bubbleObjects_    ; }
+  CQGnuPlotPlotEllipseObjects*    ellipseObjectsObj   () { return ellipseObjects_   ; }
+  CQGnuPlotPlotErrorBarObjects*   errorBarObjectsObj  () { return errorBarObjects_  ; }
+  CQGnuPlotPlotFinanceBarObjects* financeBarObjectsObj() { return financeBarObjects_; }
+  CQGnuPlotPlotImageObjects*      imageObjectsObj     () { return imageObjects_     ; }
+  CQGnuPlotPlotLabelObjects*      labelObjectsObj     () { return labelObjects_     ; }
+  CQGnuPlotPlotPathObjects*       pathObjectsObj      () { return pathObjects_      ; }
+  CQGnuPlotPlotPieObjects*        pieObjectsObj       () { return pieObjects_       ; }
+  CQGnuPlotPlotPointObjects*      pointObjectsObj     () { return pointObjects_     ; }
+  CQGnuPlotPlotPolygonObjects*    polygonObjectsObj   () { return polygonObjects_   ; }
+  CQGnuPlotPlotRectObjects*       rectObjectsObj      () { return rectObjects_      ; }
 
   void draw() override;
 
@@ -153,10 +187,36 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   void moveObjects(int key);
 
  public:
-  CQGnuPlotGroup*             group_;
-  COptValT<CPoint2D>          selectedPos_;
-  CQGnuPlotPlotBoxBarObjects* boxBarObjects_;
-  CQGnuPlotPlotPieObjects*    pieObjects_;
+  CQGnuPlotGroup*                 group_;
+  COptValT<CPoint2D>              selectedPos_;
+  CQGnuPlotPlotArrowObjects*      arrowObjects_;
+  CQGnuPlotPlotBoxBarObjects*     boxBarObjects_;
+  CQGnuPlotPlotBoxObjects*        boxObjects_;
+  CQGnuPlotPlotBubbleObjects*     bubbleObjects_;
+  CQGnuPlotPlotEllipseObjects*    ellipseObjects_;
+  CQGnuPlotPlotErrorBarObjects*   errorBarObjects_;
+  CQGnuPlotPlotFinanceBarObjects* financeBarObjects_;
+  CQGnuPlotPlotImageObjects*      imageObjects_;
+  CQGnuPlotPlotLabelObjects*      labelObjects_;
+  CQGnuPlotPlotPathObjects*       pathObjects_;
+  CQGnuPlotPlotPieObjects*        pieObjects_;
+  CQGnuPlotPlotPointObjects*      pointObjects_;
+  CQGnuPlotPlotPolygonObjects*    polygonObjects_;
+  CQGnuPlotPlotRectObjects*       rectObjects_;
+};
+
+//----------
+
+class CQGnuPlotPlotArrowObjects : public QObject {
+  Q_OBJECT
+
+ public:
+  CQGnuPlotPlotArrowObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+ private:
+  CQGnuPlotPlot *plot_;
 };
 
 //------
@@ -196,6 +256,121 @@ class CQGnuPlotPlotBoxBarObjects : public QObject {
   void setFillPattern(const CQGnuPlotEnum::FillPattern &p);
 
  private:
+  CQGnuPlotBoxBarObject *firstBar() const;
+
+ private:
+  CQGnuPlotPlot *plot_;
+};
+
+//------
+
+class CQGnuPlotPlotBoxObjects : public QObject {
+  Q_OBJECT
+
+ public:
+  CQGnuPlotPlotBoxObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+ private:
+  CQGnuPlotPlot *plot_;
+};
+
+//------
+
+class CQGnuPlotPlotBubbleObjects : public QObject {
+  Q_OBJECT
+
+ public:
+  CQGnuPlotPlotBubbleObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+ private:
+  CQGnuPlotPlot *plot_;
+};
+
+//------
+
+class CQGnuPlotPlotEllipseObjects : public QObject {
+  Q_OBJECT
+
+ public:
+  CQGnuPlotPlotEllipseObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+ private:
+  CQGnuPlotPlot *plot_;
+};
+
+//------
+
+class CQGnuPlotPlotErrorBarObjects : public QObject {
+  Q_OBJECT
+
+ public:
+  CQGnuPlotPlotErrorBarObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+ private:
+  CQGnuPlotPlot *plot_;
+};
+
+//------
+
+class CQGnuPlotPlotFinanceBarObjects : public QObject {
+  Q_OBJECT
+
+ public:
+  CQGnuPlotPlotFinanceBarObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+ private:
+  CQGnuPlotPlot *plot_;
+};
+
+//------
+
+class CQGnuPlotPlotImageObjects : public QObject {
+  Q_OBJECT
+
+ public:
+  CQGnuPlotPlotImageObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+ private:
+  CQGnuPlotPlot *plot_;
+};
+
+//------
+
+class CQGnuPlotPlotLabelObjects : public QObject {
+  Q_OBJECT
+
+ public:
+  CQGnuPlotPlotLabelObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+ private:
+  CQGnuPlotPlot *plot_;
+};
+
+//------
+
+class CQGnuPlotPlotPathObjects : public QObject {
+  Q_OBJECT
+
+ public:
+  CQGnuPlotPlotPathObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+ private:
   CQGnuPlotPlot *plot_;
 };
 
@@ -219,7 +394,70 @@ class CQGnuPlotPlotPieObjects : public QObject {
   void   setLabelRadius(double r);
 
  private:
+  CQGnuPlotPieObject *firstPie() const;
+
+ private:
   CQGnuPlotPlot *plot_;
 };
+
+//------
+
+class CQGnuPlotPlotPointObjects : public QObject {
+  Q_OBJECT
+
+  Q_PROPERTY(CQGnuPlotEnum::SymbolType pointType READ pointType WRITE setPointType)
+  Q_PROPERTY(double                    size      READ size      WRITE setSize     )
+  Q_PROPERTY(QColor                    color     READ color     WRITE setColor    )
+
+ public:
+  CQGnuPlotPlotPointObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+  CQGnuPlotEnum::SymbolType pointType() const;
+  void setPointType(const CQGnuPlotEnum::SymbolType &type);
+
+  double size() const;
+  void setSize(double s);
+
+  QColor color() const;
+  void setColor(const QColor &c);
+
+ private:
+  CQGnuPlotPointObject *firstPoint() const;
+
+ private:
+  CQGnuPlotPlot *plot_;
+};
+
+//------
+
+class CQGnuPlotPlotPolygonObjects : public QObject {
+  Q_OBJECT
+
+ public:
+  CQGnuPlotPlotPolygonObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+ private:
+  CQGnuPlotPlot *plot_;
+};
+
+//------
+
+class CQGnuPlotPlotRectObjects : public QObject {
+  Q_OBJECT
+
+ public:
+  CQGnuPlotPlotRectObjects(CQGnuPlotPlot *plot) :
+   plot_(plot) {
+  }
+
+ private:
+  CQGnuPlotPlot *plot_;
+};
+
+//------
 
 #endif

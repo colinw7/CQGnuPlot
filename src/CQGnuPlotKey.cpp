@@ -41,28 +41,28 @@ CQGnuPlotEnum::HAlignType
 CQGnuPlotKey::
 halign() const
 {
-  return CQGnuPlotUtil::alignConv(CGnuPlotKey::getHAlign());
+  return CQGnuPlotEnum::halignConv(CGnuPlotKey::getHAlign());
 }
 
 void
 CQGnuPlotKey::
 setHAlign(const CQGnuPlotEnum::HAlignType &a)
 {
-  CGnuPlotKey::setHAlign(CQGnuPlotUtil::alignConv(a));
+  CGnuPlotKey::setHAlign(CQGnuPlotEnum::halignConv(a));
 }
 
 CQGnuPlotEnum::VAlignType
 CQGnuPlotKey::
 valign() const
 {
-  return CQGnuPlotUtil::alignConv(CGnuPlotKey::getVAlign());
+  return CQGnuPlotEnum::valignConv(CGnuPlotKey::getVAlign());
 }
 
 void
 CQGnuPlotKey::
 setVAlign(const CQGnuPlotEnum::VAlignType &a)
 {
-  CGnuPlotKey::setVAlign(CQGnuPlotUtil::alignConv(a));
+  CGnuPlotKey::setVAlign(CQGnuPlotEnum::valignConv(a));
 }
 
 QFont
