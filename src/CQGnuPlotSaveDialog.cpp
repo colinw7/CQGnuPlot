@@ -27,6 +27,8 @@ createWidgets(QWidget *)
 
   addField("Width" , widthEdit_  = new CQIntegerSpin(nullptr, 800));
   addField("Height", heightEdit_ = new CQIntegerSpin(nullptr, 800));
+
+  addStretch();
 }
 
 void

@@ -71,7 +71,7 @@ CQGnuPlotPlot::
 setUsingColsStr(const QString &str)
 {
   if (str != usingColsStr()) {
-    usingCols_.init(str.toStdString());
+    usingCols_.parse(str.toStdString());
 
     if (is2D())
       app()->setPlotValues2D(this);

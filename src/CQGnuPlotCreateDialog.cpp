@@ -116,6 +116,8 @@ createWidgets(QWidget *)
   rectFrame_->addField("From", (rectFrom_  = new CQPoint2DEdit));
   rectFrame_->addField("To"  , (rectTo_    = new CQPoint2DEdit));
   rectFrame_->addStretch();
+
+  addStretch();
 }
 
 CGnuPlotTypes::ObjectType

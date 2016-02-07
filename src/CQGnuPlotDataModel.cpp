@@ -100,11 +100,13 @@ data(const QModelIndex &index, int role) const
 
   if      (! isHierarchical1() && ! isHierarchical2()) {
     if (role == Qt::DisplayRole)
-      return QString(file_.field(0, 0, index.row(), index.column()).c_str());
+      return QString(file_.field(0, 0, index.row(), index.column()).str().c_str());
     else
       return QVariant();
   }
   else if (isHierarchical1()) {
+    int set = 0;
+
     QModelIndex parent = index.parent();
 
     if (parent.isValid()) {
@@ -115,15 +117,18 @@ data(const QModelIndex &index, int role) const
 
         assert(row->subSet == subSet);
 
-        return QString(file_.field(0, subSet, index.row(), index.column()).c_str());
+        return QString(file_.field(0, subSet, index.row(), index.column()).str().c_str());
       }
       else
         return QVariant();
     }
     else {
       if (role == Qt::DisplayRole) {
-        if (index.column() == 0)
-          return QString("SubSet %1").arg(index.row());
+        if (index.column() == 0) {
+          int nl = file_.numLines(set, index.row());
+
+          return QString("SubSet %1 (%2 Lines)").arg(index.row()).arg(nl);
+        }
         else
           return QVariant();
       }
@@ -145,14 +150,17 @@ data(const QModelIndex &index, int role) const
         set = parent1.row();
 
         if (role == Qt::DisplayRole)
-          return QString(file_.field(set, subSet, index.row(), index.column()).c_str());
+          return QString(file_.field(set, subSet, index.row(), index.column()).str().c_str());
         else
           return QVariant();
       }
       else {
         if (role == Qt::DisplayRole) {
-          if (index.column() == 0)
-            return QString("SubSet %1").arg(index.row());
+          if (index.column() == 0) {
+            int nl = file_.numLines(set, index.row());
+
+            return QString("SubSet %1 (%2 Lines)").arg(index.row()).arg(nl);
+          }
           else
             return QVariant();
         }
@@ -162,8 +170,11 @@ data(const QModelIndex &index, int role) const
     }
     else {
       if (role == Qt::DisplayRole) {
-        if (index.column() == 0)
-          return QString("Set %1").arg(index.row());
+        if (index.column() == 0) {
+          int ns = file_.numSubSets(index.row());
+
+          return QString("Set %1 (%2 SubSets)").arg(index.row()).arg(ns);
+        }
         else
           return QVariant();
       }

@@ -1,11 +1,15 @@
 ## ToDo
 
+  + smooth bezier, sbezier, csplines, acsplines
   + support probe in more styles
   + better clipping support (objects)
   + support zoom/pan using scale and offset properties to modify window->pixel calc (don't change range)
   + CGnuPlotFile store reals as well as strings
+  + Use model data to drive plot
   + data table view
   + Polygons modify all with property
+  + Generate multiple (>2) columns
+  + Info on table (sets, subsets, values)
 
   + isosamples/samples logic (generate using isosamples and supersample at samples ?)
 

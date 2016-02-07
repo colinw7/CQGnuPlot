@@ -3,19 +3,173 @@
 #include <CParseLine.h>
 #include <CStrUtil.h>
 
-namespace {
+class CGnuPlotUsingColsFnObj : public CExprFunctionObj {
+ public:
+  typedef std::vector<CExprValuePtr> Values;
 
-bool evaluateExpression(const std::string &expr, CExprValuePtr &value, bool quiet=false) {
-  if (! CExprInst->evaluateExpression(expr, value))
-    value = CExprValuePtr();
+ public:
+  CGnuPlotUsingColsFnObj(CGnuPlotUsingCols *cols) : cols_(cols) { }
 
-  if (! value.isValid() && ! quiet)
-    std::cerr << "Eval failed: " << expr << std::endl;
+ protected:
+  CGnuPlotUsingCols *cols_;
+};
 
-  return true;
-}
+class CGnuPlotStringColumnFn : public CGnuPlotUsingColsFnObj {
+ public:
+  CGnuPlotStringColumnFn(CGnuPlotUsingCols *cols) : CGnuPlotUsingColsFnObj(cols) { }
 
-}
+  CExprValuePtr operator()(const Values &values) {
+    assert(values.size() == 1);
+
+    std::string str;
+
+    long col = 0;
+
+    if (values[0]->getIntegerValue(col)) {
+      int ns;
+
+      CExprValuePtr value = cols_->getFieldValue(col, ns);
+
+      if (value.isValid() && value->isStringValue())
+        (void) value->getStringValue(str);
+    }
+
+    return CExprInst->createStringValue(str);
+  }
+};
+
+class CGnuPlotColumnFn : public CGnuPlotUsingColsFnObj {
+ public:
+  CGnuPlotColumnFn(CGnuPlotUsingCols *cols) : CGnuPlotUsingColsFnObj(cols) { }
+
+  CExprValuePtr operator()(const Values &values) {
+    long icol = 0;
+
+    if      (values[0]->isIntegerValue()) {
+      (void) values[0]->getIntegerValue(icol);
+    }
+    else if (values[0]->isStringValue()) {
+      std::string str;
+
+      (void) values[0]->getStringValue(str);
+
+      icol = cols_->getColumnIndex(str);
+    }
+    else
+      return CExprInst->createRealValue(0.0);
+
+    //---
+
+    CExprValuePtr value;
+
+    if      (icol == 0)
+      value = CExprInst->createRealValue(cols_->pointNum());
+    else if (icol == -2)
+      value = CExprInst->createRealValue(cols_->setNum());
+    else {
+      if (cols_->isParsePlotTitle()) {
+        cols_->setKeyColumnHeadNum(icol);
+
+        value = CExprInst->createStringValue("");
+      }
+      else {
+        int ns;
+
+        value = cols_->getFieldValue(icol, ns);
+
+        if (! value.isValid())
+          value = CExprInst->createStringValue("column(" + std::to_string(icol) + ")");
+      }
+    }
+
+    return value;
+  }
+};
+
+class CGnuPlotStringValidFn : public CGnuPlotUsingColsFnObj {
+ public:
+  CGnuPlotStringValidFn(CGnuPlotUsingCols *cols) : CGnuPlotUsingColsFnObj(cols) { }
+
+  CExprValuePtr operator()(const Values &values) {
+    assert(values.size() == 1);
+
+    std::string str;
+
+    bool valid = false;
+
+    long icol = 0;
+
+    if (values[0]->getIntegerValue(icol)) {
+      int ns;
+
+      CExprValuePtr value = cols_->getFieldValue(icol, ns);
+
+      valid = value.isValid();
+    }
+
+    return CExprInst->createIntegerValue(valid ? 0 : 1);
+  }
+};
+
+class CGnuPlotTimeColumnFn : public CGnuPlotUsingColsFnObj {
+ public:
+  CGnuPlotTimeColumnFn(CGnuPlotUsingCols *cols) : CGnuPlotUsingColsFnObj(cols) { }
+
+  CExprValuePtr operator()(const Values &values) {
+    std::string fmt;
+    long        col = 0;
+    bool        hasCol = false;
+
+    if      (values.size() == 2) {
+      if (values[0]->getIntegerValue(col) && values[1]->getStringValue(fmt))
+        hasCol = true;
+    }
+    else if (values.size() == 1) {
+      CGnuPlot *plot = cols_->plot();
+
+      if (plot)
+        fmt = plot->timeFmt().getValue("%d/%m/%y,%H:%M");
+      else
+        fmt = plot->timeFmt().getValue("%d/%m/%y,%H:%M");
+
+      if (values[0]->getIntegerValue(col))
+        hasCol = true;
+    }
+    else {
+      assert(false);
+    }
+
+    //---
+
+    time_t t;
+
+    if (hasCol) {
+      int ns;
+
+      CExprValuePtr value = cols_->getFieldValue(col, ns);
+
+      if (value->isStringValue()) {
+        std::string str;
+
+        (void) value->getStringValue(str);
+
+        struct tm tm1;
+
+        memset(&tm1, 0, sizeof(tm));
+
+        /*char *p =*/ strptime(str.c_str(), fmt.c_str(), &tm1);
+
+        t = mktime(&tm1);
+      }
+    }
+
+    return CExprInst->createIntegerValue(t);
+  }
+
+  bool isOverload() const override { return true; }
+};
+
+//---
 
 CGnuPlotUsingCols::
 CGnuPlotUsingCols(CGnuPlot *plot) :
@@ -25,7 +179,7 @@ CGnuPlotUsingCols(CGnuPlot *plot) :
 
 void
 CGnuPlotUsingCols::
-init(const std::string &str)
+parse(const std::string &str)
 {
   str_ = str;
 
@@ -190,14 +344,37 @@ processUsingStr(CGnuPlotUsingColData &usingData, StringArray &usingStrs)
     usingStrs.push_back(usingData.usingStr);
 }
 
+namespace {
+
+template<typename FUNC>
+void addFunction(CGnuPlotUsingCols *cols, const std::string &name, const std::string &args) {
+  CExprInst->addFunction(name, args, new FUNC(cols))->setBuiltin(true);
+}
+
+}
+
 int
 CGnuPlotUsingCols::
 decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues,
              bool &bad, Values &values, Params &params) const
 {
-  plot_     = plot;
-  setNum_   = setNum;
-  pointNum_ = pointNum;
+  plot_        = plot;
+  setNum_      = setNum;
+  pointNum_    = pointNum;
+  fieldValues_ = fieldValues;
+
+  //---
+
+  CGnuPlotUsingCols *th = const_cast<CGnuPlotUsingCols *>(this);
+
+  addFunction<CGnuPlotStringColumnFn>(th, "stringcolumn", "i"  );
+  addFunction<CGnuPlotStringColumnFn>(th, "strcol"      , "i"  );
+  addFunction<CGnuPlotColumnFn      >(th, "column"      , "is" );
+  addFunction<CGnuPlotStringValidFn >(th, "valid"       , "i"  );
+  addFunction<CGnuPlotTimeColumnFn  >(th, "timecolumn"  , "i"  );
+  addFunction<CGnuPlotTimeColumnFn  >(th, "timecolumn"  , "i,s");
+
+  //---
 
   bad = false;
 
@@ -208,14 +385,13 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
 
     const CGnuPlotUsingCol &col = getCol(i);
 
-    CExprValuePtr value = decodeValue(fieldValues, col, ns, ignore, params);
+    CExprValuePtr value = decodeValue(col, ns, ignore, params);
+    if (ignore) continue;
 
-    if (! ignore) {
-      if (! value.isValid())
-        bad = true;
+    if (! value.isValid() || value->isMissing())
+      bad = true;
 
-      values.push_back(value);
-    }
+    values.push_back(value);
   }
 
   //---
@@ -234,17 +410,19 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
 
     CExprValuePtr value;
 
-    if (! evaluateExpression(str, value, true))
+    if (! CGnuPlotUtil::evaluateExpression(str, value, true))
       continue;
 
-    int         ns;
-    long        icol;
-    std::string str1;
+    long icol;
 
     if (! value.isValid() || ! value->getIntegerValue(icol))
       continue;
 
-    CExprValuePtr value1 = getFieldValue(fieldValues, icol, ns);
+    int ns1;
+
+    CExprValuePtr value1 = getFieldValue(icol, ns1);
+
+    std::string str1;
 
     if (! value1.isValid() || ! value1->getStringValue(str1))
       continue;
@@ -267,13 +445,15 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
   if (keyLabel_ != "") {
     CExprValuePtr value;
 
-    if (evaluateExpression(keyLabel_, value, true)) {
-      int         ns;
-      long        icol;
-      std::string str1;
+    if (CGnuPlotUtil::evaluateExpression(keyLabel_, value, true)) {
+      long icol;
 
       if (value.isValid() && value->getIntegerValue(icol)) {
-        CExprValuePtr value1 = getFieldValue(fieldValues, icol, ns);
+        int ns1;
+
+        CExprValuePtr value1 = getFieldValue(icol, ns1);
+
+        std::string str1;
 
         if (value1.isValid() && value1->getStringValue(str1)) {
           if (plot_)
@@ -282,6 +462,12 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
       }
     }
   }
+
+  CExprInst->removeFunction("stringcolumn");
+  CExprInst->removeFunction("strcol");
+  CExprInst->removeFunction("column");
+  CExprInst->removeFunction("valid");
+  CExprInst->removeFunction("timecolumn");
 
   return ns;
 }
@@ -316,8 +502,7 @@ columnTitle(const std::vector<std::string> &columns) const
 
 CExprValuePtr
 CGnuPlotUsingCols::
-decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
-            int &ns, bool &ignore, Params &params) const
+decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) const
 {
   if (plot_)
     col.updateColumnStr(plot_);
@@ -327,7 +512,7 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
   ignore = false;
 
   if (col.isInt())
-    value = getFieldValue(fieldValues, col.ival(), ns);
+    value = getFieldValue(col.ival(), ns);
   else {
     std::string expr = col.str();
 
@@ -349,30 +534,41 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
 
       int ns1 = 0;
 
-      CExprValuePtr value1 = getFieldValue(fieldValues, icol, ns1);
+      CExprValuePtr value1 = getFieldValue(icol, ns1);
+
+      std::string lstr = expr.substr(0, pos - 1);
+      std::string rstr = expr.substr(pos1);
+
+      std::string midStr;
 
       if (value1.isValid()) {
         double      x1;
         std::string s1;
 
         if (value1->getRealValue(x1)) {
-          std::string rstr = CStrUtil::toString(x1);
+          if (! IsNaN(x1)) {
+            std::string realStr = CStrUtil::toString(x1);
 
-          auto p = rstr.find('.');
+            auto p = realStr.find('.');
 
-          if (p == std::string::npos)
-            rstr += ".";
+            if (p == std::string::npos)
+              realStr += ".";
 
-          expr = expr.substr(0, pos - 1) + rstr + expr.substr(pos1);
+            midStr = realStr;
+          }
+          else
+            midStr = "NaN";
         }
         else if (value1->getStringValue(s1)) {
-          expr = expr.substr(0, pos - 1) + "\"" + s1 + "\"" + expr.substr(pos1);
+          midStr = "\"" + s1 + "\"";
         }
         else
-          expr = expr.substr(0, pos - 1) + "NaN" + expr.substr(pos1);
+          midStr = "NaN";
       }
       else
-        expr = expr.substr(0, pos - 1) + "NaN" + expr.substr(pos1);
+        midStr = "NaN";
+
+      expr = lstr + midStr + rstr;
 
       pos = expr.find('$');
     }
@@ -404,7 +600,7 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
 
       CExprValuePtr value;
 
-      if (! evaluateExpression(name1, value, true))
+      if (! CGnuPlotUtil::evaluateExpression(name1, value, true))
         value = CExprValuePtr();
 
 #if 0
@@ -414,7 +610,7 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
       std::string str1;
 
       if (value.isValid() && value->getIntegerValue(icol)) {
-        CExprValuePtr value1 = getFieldValue(fieldValues, icol, ns);
+        CExprValuePtr value1 = getFieldValue(icol, ns);
 
         if (value1.isValid() && value1->getStringValue(str1))
           valid = true;
@@ -425,14 +621,14 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
 #endif
       params[name] = value;
 
-      ignore = true;
+      ignore = true; // ignore parameter values
       expr   = "";
     }
 
     //----
 
     if (expr != "") {
-      if (! evaluateExpression(expr, value, true))
+      if (! CGnuPlotUtil::evaluateExpression(expr, value, true))
         value = CExprValuePtr();
     }
   }
@@ -442,11 +638,11 @@ decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
 
 CExprValuePtr
 CGnuPlotUsingCols::
-getFieldValue(const Values &fieldValues, int icol, int &ns) const
+getFieldValue(int icol, int &ns) const
 {
   CExprValuePtr value;
 
-  int nf = fieldValues.size();
+  int nf = fieldValues_.size();
 
   if      (icol == 0) {
     int pointNum = this->pointNum();
@@ -459,7 +655,7 @@ getFieldValue(const Values &fieldValues, int icol, int &ns) const
     value = CExprInst->createRealValue(setNum);
   }
   else if (icol > 0 && icol <= nf) {
-    value = fieldValues[icol - 1];
+    value = fieldValues_[icol - 1];
 
     if (! value.isValid()) {
       ++ns;
@@ -482,6 +678,40 @@ addCol(const std::string &str)
     colMin_.updateMin(col.ival());
     colMax_.updateMax(col.ival());
   }
+}
+
+int
+CGnuPlotUsingCols::
+getColumnIndex(const std::string &str) const
+{
+  if (plot_)
+    return plot_->getColumnIndex(str);
+
+  std::cerr << "No plot for CGnuPlotUsingCol::getColumnIndex" << std::endl;
+
+  return -1;
+}
+
+bool
+CGnuPlotUsingCols::
+isParsePlotTitle() const
+{
+  if (plot_)
+    return plot_->isParsePlotTitle();
+
+  std::cerr << "No plot for CGnuPlotUsingCol::isParsePlotTitle" << std::endl;
+
+  return false;
+}
+
+void
+CGnuPlotUsingCols::
+setKeyColumnHeadNum(int icol)
+{
+  if (plot_)
+    plot_->setKeyColumnHeadNum(icol);
+  else
+    std::cerr << "No plot for CGnuPlotUsingCol::setKeyColumnHeadNum" << std::endl;
 }
 
 std::string

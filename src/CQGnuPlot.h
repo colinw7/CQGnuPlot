@@ -23,9 +23,13 @@ class CQGnuPlot : public QObject, public CGnuPlot {
 
   CQGnuPlotRenderer *qrenderer() const;
 
+  const std::string &usingString() const { return usingString_; }
+  void setUsingString(const std::string &v) { usingString_ = v; }
+
  private:
   CQGnuPlotDevice    *device_;
   CQGnuPlotPNGDevice *pngDevice_;
+  std::string         usingString_;
 };
 
 #endif

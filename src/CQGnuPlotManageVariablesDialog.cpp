@@ -221,7 +221,7 @@ CQGnuPlotVariableItem(QTreeWidgetItem *parent, CExprVariablePtr var) :
 {
   CExprValuePtr value = var_->value();
 
-  type_ = (value.isValid() ? value->getType() : CEXPR_VALUE_NONE);
+  type_ = (value.isValid() ? value->getType() : CExprValueType::NONE);
 
   setText(0, var_->name().c_str());
   setData(1, Qt::EditRole, getEditorData());
@@ -237,7 +237,7 @@ CQGnuPlotVariableItem(const CQGnuPlotVariableItem &item) :
 {
   CExprValuePtr value = var_->value();
 
-  type_ = (value.isValid() ? value->getType() : CEXPR_VALUE_NONE);
+  type_ = (value.isValid() ? value->getType() : CExprValueType::NONE);
 
   setText(0, var_->name().c_str());
   setData(1, Qt::EditRole, getEditorData());
@@ -276,7 +276,7 @@ createEditor(QWidget *parent)
 {
   CExprValuePtr value = var_->value();
 
-  if      (type_ == CEXPR_VALUE_REAL) {
+  if      (type_ == CExprValueType::REAL) {
     CQRealSpin *spin = new CQRealSpin(parent);
 
     double r;
@@ -289,7 +289,7 @@ createEditor(QWidget *parent)
 
     widget_ = spin;
   }
-  else if (type_ == CEXPR_VALUE_INTEGER) {
+  else if (type_ == CExprValueType::INTEGER) {
     CQIntegerSpin *spin = new CQIntegerSpin(parent);
 
     long i;
@@ -353,7 +353,7 @@ void
 CQGnuPlotVariableItem::
 updateValue()
 {
-  if      (type_ == CEXPR_VALUE_REAL) {
+  if      (type_ == CExprValueType::REAL) {
     CQRealSpin *spin = qobject_cast<CQRealSpin *>(widget_);
     assert(spin);
 
@@ -361,7 +361,7 @@ updateValue()
 
     setEditorData(QVariant(value));
   }
-  else if (type_ == CEXPR_VALUE_INTEGER) {
+  else if (type_ == CExprValueType::INTEGER) {
     CQIntegerSpin *spin = qobject_cast<CQIntegerSpin *>(widget_);
     assert(spin);
 

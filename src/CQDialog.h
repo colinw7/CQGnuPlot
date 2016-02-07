@@ -62,6 +62,8 @@ class CQDialog : public QDialog {
 
   bool isAccepted() const { return accepted_; }
 
+  void addStretch();
+
  signals:
   void accepted();
 

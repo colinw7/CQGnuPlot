@@ -18,7 +18,7 @@ set xtics nomirror
 set ytics nomirror
 set yrange [0:100]
 
-plot 'silver.dat' using (1):2, '' using (2):(5*$3)
+plot 'data/silver.dat' using (1):2, '' using (2):(5*$3)
 
 pause -1 'Hit <cr> to continue: Compare sub-datasets'
 

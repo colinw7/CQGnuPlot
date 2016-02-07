@@ -140,6 +140,9 @@ CGnuPlotStyle.cpp \
 CGnuPlotSurface.cpp \
 CGnuPlotTimeStamp.cpp \
 CGnuPlotUsingCols.cpp \
+CGnuPlotEveryData.cpp \
+CGnuPlotIndexData.cpp \
+CGnuPlotWhereData.cpp \
 \
 CGnuPlotStyleBase.cpp \
 CGnuPlotStyleAdjacency.cpp \
@@ -358,6 +361,9 @@ CGnuPlotStroke.h \
 CGnuPlotSurface.h \
 CGnuPlotTimeStamp.h \
 CGnuPlotUsingCols.h \
+CGnuPlotEveryData.h \
+CGnuPlotIndexData.h \
+CGnuPlotWhereData.h \
 \
 CGnuPlotStyleAdjacency.h \
 CGnuPlotStyleBase.h \

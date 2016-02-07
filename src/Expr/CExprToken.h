@@ -1,6 +1,7 @@
 #ifndef CExprToken_H
 #define CExprToken_H
 
+#include <CExpr.h>
 #include <deque>
 #include <iostream>
 
@@ -42,7 +43,7 @@ typedef CRefPtr<CExprTokenBase> CExprTokenBaseP;
 
 class CExprTokenUnknown : public CExprTokenBase {
  public:
-  CExprTokenUnknown() : CExprTokenBase(CEXPR_TOKEN_UNKNOWN) { }
+  CExprTokenUnknown() : CExprTokenBase(CExprTokenType::UNKNOWN) { }
 
   //CExprTokenUnknown *dup() const { return new CExprTokenUnknown(); }
 
@@ -52,7 +53,7 @@ class CExprTokenUnknown : public CExprTokenBase {
 class CExprTokenIdentifier : public CExprTokenBase {
  public:
   CExprTokenIdentifier(const std::string &identifier) :
-   CExprTokenBase(CEXPR_TOKEN_IDENTIFIER), identifier_(identifier) {
+   CExprTokenBase(CExprTokenType::IDENTIFIER), identifier_(identifier) {
   }
 
   const std::string &getIdentifier() const { return identifier_; }
@@ -72,7 +73,7 @@ class CExprTokenIdentifier : public CExprTokenBase {
 class CExprTokenOperator : public CExprTokenBase {
  public:
   CExprTokenOperator(CExprOpType type) :
-   CExprTokenBase(CEXPR_TOKEN_OPERATOR), type_(type) {
+   CExprTokenBase(CExprTokenType::OPERATOR), type_(type) {
   }
 
   CExprOpType getType() const { return type_; }
@@ -90,7 +91,7 @@ class CExprTokenOperator : public CExprTokenBase {
 class CExprTokenInteger : public CExprTokenBase {
  public:
   CExprTokenInteger(long integer) :
-   CExprTokenBase(CEXPR_TOKEN_INTEGER), integer_(integer) {
+   CExprTokenBase(CExprTokenType::INTEGER), integer_(integer) {
   }
 
   long getInteger() const { return integer_; }
@@ -110,7 +111,7 @@ class CExprTokenInteger : public CExprTokenBase {
 class CExprTokenReal : public CExprTokenBase {
  public:
   CExprTokenReal(double real) :
-   CExprTokenBase(CEXPR_TOKEN_REAL), real_(real) {
+   CExprTokenBase(CExprTokenType::REAL), real_(real) {
   }
 
   double getReal() const { return real_; }
@@ -130,7 +131,7 @@ class CExprTokenReal : public CExprTokenBase {
 class CExprTokenString : public CExprTokenBase {
  public:
   CExprTokenString(const std::string &str) :
-   CExprTokenBase(CEXPR_TOKEN_STRING), str_(str) {
+   CExprTokenBase(CExprTokenType::STRING), str_(str) {
   }
 
   const std::string &getString() const { return str_; }
@@ -150,7 +151,7 @@ class CExprTokenString : public CExprTokenBase {
 class CExprTokenComplex : public CExprTokenBase {
  public:
   CExprTokenComplex(const std::complex<double> &c) :
-   CExprTokenBase(CEXPR_TOKEN_COMPLEX), c_(c) {
+   CExprTokenBase(CExprTokenType::COMPLEX), c_(c) {
   }
 
   const std::complex<double> &getComplex() const { return c_; }
@@ -170,7 +171,7 @@ class CExprTokenComplex : public CExprTokenBase {
 class CExprTokenFunction : public CExprTokenBase {
  public:
   CExprTokenFunction(CExprFunctionPtr function) :
-   CExprTokenBase(CEXPR_TOKEN_FUNCTION), function_(function) {
+   CExprTokenBase(CExprTokenType::FUNCTION), function_(function) {
   }
 
   CExprFunctionPtr getFunction() const { return function_; }
@@ -188,7 +189,7 @@ class CExprTokenFunction : public CExprTokenBase {
 class CExprTokenValue : public CExprTokenBase {
  public:
   CExprTokenValue(CExprValuePtr value) :
-   CExprTokenBase(CEXPR_TOKEN_VALUE), value_(value) {
+   CExprTokenBase(CExprTokenType::VALUE), value_(value) {
   }
 
   CExprValuePtr getValue() const { return value_; }
@@ -205,79 +206,14 @@ class CExprTokenValue : public CExprTokenBase {
 
 //---
 
-class CExprTokenStack {
- public:
-  CExprTokenStack() { }
-
- ~CExprTokenStack() {
-    clear();
-  }
-
-  bool empty() const {
-    return stack_.empty();
-  }
-
-  uint getNumTokens() const {
-    return stack_.size();
-  }
-
-  void addToken(const CExprTokenBaseP &token) {
-    stack_.push_back(token);
-  }
-
-  const CExprTokenBaseP &getToken(uint i) const {
-    return stack_[i];
-  }
-
-  CExprTokenBaseP lastToken() const {
-    if (stack_.empty())
-      return CExprTokenBaseP();
-
-    return stack_[stack_.size() - 1];
-  }
-
-  void clear() {
-    stack_.clear();
-  }
-
-  CExprTokenBaseP pop_front() {
-    CExprTokenBaseP token = stack_.front();
-
-    stack_.pop_front();
-
-    return token;
-  }
-
-  CExprTokenBaseP pop_back() {
-    if (stack_.empty()) return CExprTokenBaseP();
-
-    CExprTokenBaseP token = stack_.back();
-
-    stack_.pop_back();
-
-    return token;
-  }
-
-  void print(std::ostream &os) const;
-
-  friend std::ostream &operator<<(std::ostream &os, const CExprTokenStack &stack) {
-    stack.print(os);
-
-    return os;
-  }
-
- private:
-  typedef std::deque<CExprTokenBaseP> Stack;
-
-  Stack stack_;
-};
+#include <CExprTokenStack.h>
 
 //---
 
 class CExprTokenBlock : public CExprTokenBase {
  public:
   CExprTokenBlock(const CExprTokenStack &stack=CExprTokenStack()) :
-   CExprTokenBase(CEXPR_TOKEN_BLOCK), stack_(stack) {
+   CExprTokenBase(CExprTokenType::BLOCK), stack_(stack) {
   }
 
   const CExprTokenStack &stack() const { return stack_; }
@@ -290,58 +226,6 @@ class CExprTokenBlock : public CExprTokenBase {
 
  private:
   CExprTokenStack stack_;
-};
-
-//---
-
-#define CExprTokenMgrInst CExprTokenMgr::instance()
-
-class CExprTokenMgr {
- public:
-  static CExprTokenMgr *instance() {
-    static CExprTokenMgr *instance;
-
-    if (! instance)
-      instance = new CExprTokenMgr;
-
-    return instance;
-  }
-
-  CExprTokenIdentifier *createIdentifierToken(const std::string &identifier) {
-    return new CExprTokenIdentifier(identifier);
-  }
-
-  CExprTokenOperator *createOperatorToken(CExprOpType id) {
-    return new CExprTokenOperator(id);
-  }
-
-  CExprTokenInteger *createIntegerToken(long integer) {
-    return new CExprTokenInteger(integer);
-  }
-
-  CExprTokenReal *createRealToken(double real) {
-    return new CExprTokenReal(real);
-  }
-
-  CExprTokenString *createStringToken(const std::string &str) {
-    return new CExprTokenString(str);
-  }
-
-  CExprTokenComplex *createComplexToken(const std::complex<double> &c) {
-    return new CExprTokenComplex(c);
-  }
-
-  CExprTokenFunction *createFunctionToken(CExprFunctionPtr function) {
-    return new CExprTokenFunction(function);
-  }
-
-  CExprTokenValue *createValueToken(CExprValuePtr value) {
-    return new CExprTokenValue(value);
-  }
-
-  CExprTokenUnknown *createUnknownToken() {
-    return new CExprTokenUnknown();
-  }
 };
 
 #endif

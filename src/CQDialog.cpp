@@ -20,8 +20,6 @@ CQDialog(QWidget *parent, uint buttons) :
 
   layout->addWidget(frame_);
 
-  layout->addStretch(1);
-
   //---
 
   QHBoxLayout *buttonLayout = new QHBoxLayout;
@@ -111,6 +109,15 @@ addButton(const QString &name)
   buttonFrameLayout_->addWidget(pb);
 
   return pb;
+}
+
+void
+CQDialog::
+addStretch()
+{
+  QVBoxLayout *l = qobject_cast<QVBoxLayout *>(layout());
+
+  l->addStretch(1);
 }
 
 void

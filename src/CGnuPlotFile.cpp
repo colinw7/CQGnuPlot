@@ -1,5 +1,6 @@
 #include <CGnuPlotFile.h>
 #include <CUnixFile.h>
+#include <CCsv.h>
 #include <CParseLine.h>
 #include <CStrUtil.h>
 
@@ -51,48 +52,30 @@ CGnuPlotFile()
 
 void
 CGnuPlotFile::
-getIndices(int &indexStart, int &indexEnd, int &indexStep)
+indices(CGnuPlotIndexData &index)
 {
-  indexStart = indices_.start;
-  indexEnd   = indices_.end;
-  indexStep  = indices_.step;
+  index = indices_;
 }
 
 void
 CGnuPlotFile::
-setIndices(int indexStart, int indexEnd, int indexStep)
+setIndices(const CGnuPlotIndexData &index)
 {
-  indices_.start = indexStart;
-  indices_.end   = indexEnd;
-  indices_.step  = indexStep;
+  indices_ = index;
 }
 
 void
 CGnuPlotFile::
-getEvery(int &everyPointStart, int &everyPointEnd, int &everyPointStep,
-         int &everyBlockStart, int &everyBlockEnd, int &everyBlockStep)
+every(CGnuPlotEveryData &every)
 {
-  everyPointStart = every_.pointStart;
-  everyPointEnd   = every_.pointEnd;
-  everyPointStep  = every_.pointStep;
-
-  everyBlockStart = every_.blockStart;
-  everyBlockEnd   = every_.blockEnd;
-  everyBlockStep  = every_.blockStep;
+  every = every_;
 }
 
 void
 CGnuPlotFile::
-setEvery(int everyPointStart, int everyPointEnd, int everyPointStep,
-         int everyBlockStart, int everyBlockEnd, int everyBlockStep)
+setEvery(const CGnuPlotEveryData &every)
 {
-  every_.pointStart = everyPointStart;
-  every_.pointEnd   = everyPointEnd;
-  every_.pointStep  = everyPointStep;
-
-  every_.blockStart = everyBlockStart;
-  every_.blockEnd   = everyBlockEnd;
-  every_.blockStep  = everyBlockStep;
+  every_ = every;
 }
 
 bool
@@ -163,6 +146,9 @@ processFile()
 {
   if (isBinary())
     return processBinaryFile();
+
+  if (isCsv())
+    return processCsvFile();
 
   //---
 
@@ -327,72 +313,74 @@ void
 CGnuPlotFile::
 parseFileLine(const std::string &str, Fields &fields)
 {
-  if (csv_) {
-    (void) CStrUtil::addFields(str, fields, ",");
-  }
-  else {
-    bool separator = false;
+  bool isSeparator = false;
 
-    Words words(fields);
+  std::vector<std::string> strs;
 
-    CParseLine line(str);
+  Words words(strs);
 
-    while (line.isValid()) {
-      if (isParseStrings() && line.isChar('\"')) {
-        line.skipChar();
+  CParseLine line(str);
 
-        std::string word;
+  while (line.isValid()) {
+    if (isParseStrings() && line.isChar('\"')) {
+      line.skipChar();
 
-        while (line.isValid() && ! line.isChar('"')) {
-          char c = line.getChar();
+      std::string word;
 
-          if (c == '\\') {
-            if (line.isValid()) {
-              c = line.getChar();
+      while (line.isValid() && ! line.isChar('"')) {
+        char c = line.getChar();
 
-              switch (c) {
-                case 't' : word += '\t'; break;
-                case 'n' : word += '\n'; break;
-                default  : word += '?' ; break;
-              }
+        if (c == '\\') {
+          if (line.isValid()) {
+            c = line.getChar();
+
+            switch (c) {
+              case 't' : word += '\t'; break;
+              case 'n' : word += '\n'; break;
+              default  : word += '?' ; break;
             }
-            else
-              word += c;
           }
           else
             word += c;
         }
-
-        if (line.isChar('"'))
-          line.skipChar();
-
-        words.addWord("\"" + word + "\"");
-
-        separator = false;
+        else
+          word += c;
       }
-      else if (separator_ == '\0' && line.isSpace()) {
-        words.flush(false);
 
-        line.skipSpace();
+      if (line.isChar('"'))
+        line.skipChar();
 
-        separator = true;
-      }
-      else if (line.isChar(separator_)) {
-        words.flush(separator);
+      words.addWord("\"" + word + "\"");
 
-        // TODO: skip all generic separators ?
-        while (line.isValid() && line.isChar(separator_))
-          line.skipChar();
+      isSeparator = false;
+    }
+    else if (separator() == '\0' && line.isSpace()) {
+      words.flush(false);
 
-        separator = true;
-      }
-      else {
-        words.addChar(line.getChar());
+      line.skipSpace();
 
-        separator = false;
-      }
+      isSeparator = true;
+    }
+    else if (line.isChar(separator())) {
+      words.flush(isSeparator);
+
+      // TODO: skip all generic separators ?
+      while (line.isValid() && line.isChar(separator()))
+        line.skipChar();
+
+      isSeparator = true;
+    }
+    else {
+      words.addChar(line.getChar());
+
+      isSeparator = false;
     }
   }
+
+  words.flush(true);
+
+  for (const auto &s : strs)
+    fields.push_back(Field(s));
 }
 
 void
@@ -517,6 +505,41 @@ processBinaryFile()
 
 void
 CGnuPlotFile::
+processCsvFile()
+{
+  sets_.clear();
+
+  CGnuPlotFile::Set    set;
+  CGnuPlotFile::SubSet subSet;
+
+  CCsv csv(filename_);
+
+  CCsv::FieldsArray fieldsArray;
+
+  csv.getFields(fieldsArray);
+
+  int i = 0;
+
+  for (const auto &fields : fieldsArray) {
+    CGnuPlotFile::SubSetLine subSetLine;
+
+    subSetLine.num = i;
+
+    for (const auto &f : fields)
+      subSetLine.fields.push_back(f);
+
+    subSet.lines.push_back(subSetLine);
+
+    ++i;
+  }
+
+  set.subSets.push_back(subSet);
+
+  sets_.push_back(set);
+}
+
+void
+CGnuPlotFile::
 unset()
 {
   commentChars_ = COptString();
@@ -540,16 +563,16 @@ show(std::ostream &os, std::map<std::string,bool> &show, bool verbose)
 {
   if (show.empty() || show.find("missing") != show.end()) {
     if (verbose) {
-      if (getMissingStr().empty())
+      if (missingStr().empty())
         os << "No missing data string set for datafile";
       else
-        os << "\"" << getMissingStr() << "\" in datafile is interpreted as missing value";
+        os << "\"" << missingStr() << "\" in datafile is interpreted as missing value";
 
       os << std::endl;
     }
     else {
-      if ( ! getMissingStr().empty())
-        os << "set datafile missing \"" << getMissingStr() << "\"" << std::endl;
+      if ( ! missingStr().empty())
+        os << "set datafile missing \"" << missingStr() << "\"" << std::endl;
     }
   }
 
@@ -559,10 +582,10 @@ show(std::ostream &os, std::map<std::string,bool> &show, bool verbose)
     else
       os << "set datafile separator ";
 
-    if (! getSeparator())
+    if (! separator())
       os << "whitespace";
     else
-      os << "\"" << getSeparator() << "\"";
+      os << "\"" << separator() << "\"";
 
     os << std::endl;
   }
@@ -585,10 +608,10 @@ save(std::ostream &os)
 {
   os << "set datafile ";
 
-  if (separator_ == '\0')
+  if (separator() == '\0')
     os << "separator whitespace";
   else
-    os << "separator \"" << getSeparator() << "\"";
+    os << "separator \"" << separator() << "\"";
 
   os << std::endl;
 }

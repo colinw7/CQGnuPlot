@@ -8,14 +8,32 @@
 
 class CGnuPlotStyleDelaunayValue : public CGnuPlotPlot::StyleValue {
  public:
-  CGnuPlotStyleDelaunayValue(CDelaunay *delaunay) :
-   delaunay_(delaunay) {
+  CGnuPlotStyleDelaunayValue() {
+    delaunay_ = new CDelaunay;
+  }
+
+ ~CGnuPlotStyleDelaunayValue() {
+    delete delaunay_;
   }
 
   CDelaunay *delaunay() const { return delaunay_; }
 
+  bool isInited() const { return inited_; }
+  void setInited(bool b) { inited_ = b; }
+
+  bool isClipped() const { return clipped_; }
+  void setClipped(bool b) { clipped_ = b; }
+
+  void init() {
+    delete delaunay_;
+
+    delaunay_ = new CDelaunay;
+  }
+
  private:
-  CDelaunay *delaunay_;
+  CDelaunay *delaunay_ { 0 };
+  bool       inited_   { false };
+  bool       clipped_  { false };
 };
 
 //------
@@ -30,12 +48,29 @@ void
 CGnuPlotStyleDelaunay::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  // just use points for range
+  if (renderer->isPseudo()) {
+    CRGBA c(0,0,0);
+
+    for (const auto &point : plot->getPoints2D()) {
+      std::vector<double> reals;
+
+      (void) point.getReals(reals);
+
+      if (reals.size() < 2)
+        continue;
+
+      CPoint2D p(reals[0], reals[1]);
+
+      renderer->drawPoint(p, c);
+    }
+  }
+
+  //---
+
   CGnuPlotGroup *group = plot->group();
 
   const CGnuPlotClip &clip = group->clip();
-
-  CGnuPlotStyleDelaunayValue *value =
-    dynamic_cast<CGnuPlotStyleDelaunayValue *>(plot->styleValue("delaunay"));
 
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
@@ -43,37 +78,47 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  CDelaunay *delaunay;
+  CGnuPlotStyleDelaunayValue *value =
+    dynamic_cast<CGnuPlotStyleDelaunayValue *>(plot->styleValue("delaunay"));
 
   if (! value) {
-    delaunay = new CDelaunay;
-
-    value = new CGnuPlotStyleDelaunayValue(delaunay);
+    value = new CGnuPlotStyleDelaunayValue;
 
     plot->setStyleValue("delaunay", value);
+  }
 
-    //---
+  //---
+
+  CDelaunay *delaunay { 0 };
+
+  bool clipped = clip.isOn();
+
+  if (! value->isInited() || clipped != value->isClipped()) {
+    value->init();
+
+    delaunay = value->delaunay();
 
     for (const auto &point : plot->getPoints2D()) {
       std::vector<double> reals;
 
       (void) point.getReals(reals);
 
-      if (reals.size() != 2)
+      if (reals.size() < 2)
         continue;
 
       CPoint2D p(reals[0], reals[1]);
 
-      if (clip.isOn() && ! clip.bbox().inside(p))
+      if (clipped && ! clip.bbox().inside(p))
         continue;
 
       delaunay->addVertex(p.x, p.y);
     }
 
     delaunay->calc();
-  }
 
-  //---
+    value->setInited (true);
+    value->setClipped(clipped);
+  }
 
   delaunay = value->delaunay();
 
@@ -129,17 +174,4 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     renderer->drawLine(CPoint2D(v1->x(), v1->y()), CPoint2D(v2->x(), v2->y()), 1, lc);
   }
-}
-
-void
-CGnuPlotStyleDelaunay::
-drawKey(CGnuPlotPlot *, CGnuPlotRenderer *)
-{
-}
-
-CBBox2D
-CGnuPlotStyleDelaunay::
-fit(CGnuPlotPlot *)
-{
-  return CBBox2D(-1, -1, 1, 1);
 }

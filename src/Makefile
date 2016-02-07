@@ -169,6 +169,9 @@ SOURCES       = CQGnuPlotTest.cpp \
 		CGnuPlotSurface.cpp \
 		CGnuPlotTimeStamp.cpp \
 		CGnuPlotUsingCols.cpp \
+		CGnuPlotEveryData.cpp \
+		CGnuPlotIndexData.cpp \
+		CGnuPlotWhereData.cpp \
 		CGnuPlotStyleBase.cpp \
 		CGnuPlotStyleAdjacency.cpp \
 		CGnuPlotStyleBoxErrorBars.cpp \
@@ -434,6 +437,9 @@ OBJECTS       = ../obj/CQGnuPlotTest.o \
 		../obj/CGnuPlotSurface.o \
 		../obj/CGnuPlotTimeStamp.o \
 		../obj/CGnuPlotUsingCols.o \
+		../obj/CGnuPlotEveryData.o \
+		../obj/CGnuPlotIndexData.o \
+		../obj/CGnuPlotWhereData.o \
 		../obj/CGnuPlotStyleBase.o \
 		../obj/CGnuPlotStyleAdjacency.o \
 		../obj/CGnuPlotStyleBoxErrorBars.o \
@@ -835,7 +841,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d ../obj/CQGnuPlot1.0.0 || mkdir -p ../obj/CQGnuPlot1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotArrowObject.h CQGnuPlotAxis.h CQGnuPlotBoxBarObject.h CQGnuPlotBoxObject.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEndBar.h CQGnuPlotEnum.h CQGnuPlotErrorBarObject.h CQGnuPlotFill.h CQGnuPlotFinanceBarObject.h CQGnuPlotGroup.h CQGnuPlotImageObject.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLabelObject.h CQGnuPlotLineStyle.h CQGnuPlotMark.h CQGnuPlotMultiplot.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPathObject.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPm3D.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPointObject.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotStroke.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotFilename.h CQGnuPlotUtil.h CQGnuPlotWindow.h CQGnuPlotLoadFileDialog.h CQGnuPlotLoadFunctionDialog.h CQGnuPlotManageFunctionsDialog.h CQGnuPlotManageVariablesDialog.h CQGnuPlotCreateDialog.h CQGnuPlotDataDialog.h CQGnuPlotSaveDialog.h CQGnuPlotDataTree.h CQGnuPlotDataModel.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowData.h CGnuPlotArrowObject.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBoxBarObject.h CGnuPlotBoxObject.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotEndBar.h CGnuPlotErrorBarObject.h CGnuPlotErrorBarData.h CGnuPlotFile.h CGnuPlotFill.h CGnuPlotFillStyle.h CGnuPlotFinanceBarObject.h CGnuPlotFunctions.h CGnuPlotGroup.h CGnuPlotImageObject.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLabelData.h CGnuPlotLabelObject.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotLogDevice.h CGnuPlotLogRenderer.h CGnuPlotMark.h CGnuPlotMultiplot.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPathObject.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPm3D.h CGnuPlotPoint.h CGnuPlotPointObject.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotStroke.h CGnuPlotSurface.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CGnuPlotText.h CGnuPlotTextRenderer.h CQStyle.h CQHeaderView.h CQToolTip.h CQFloatLabel.h CQRotatedText.h CQIntegerSpin.h CQCursor.h CQRubberBand.h CQDialog.h CQEnumCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlotTest.cpp CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotArrowObject.cpp CQGnuPlotAxis.cpp CQGnuPlotBoxBarObject.cpp CQGnuPlotBoxObject.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotEndBar.cpp CQGnuPlotEnum.cpp CQGnuPlotErrorBarObject.cpp CQGnuPlotFill.cpp CQGnuPlotFinanceBarObject.cpp CQGnuPlotGroup.cpp CQGnuPlotImageObject.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLabelObject.cpp CQGnuPlotLineStyle.cpp CQGnuPlotMark.cpp CQGnuPlotMultiplot.cpp CQGnuPlotPalette.cpp CQGnuPlotPathObject.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPm3D.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPointObject.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotStroke.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotFilename.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CQGnuPlotLoadFileDialog.cpp CQGnuPlotLoadFunctionDialog.cpp CQGnuPlotManageFunctionsDialog.cpp CQGnuPlotManageVariablesDialog.cpp CQGnuPlotCreateDialog.cpp CQGnuPlotDataDialog.cpp CQGnuPlotSaveDialog.cpp CQGnuPlotDataTree.cpp CQGnuPlotDataModel.cpp CGnuPlot.cpp CGnuPlotAnnotation.cpp CGnuPlotArrow.cpp CGnuPlotArrowData.cpp CGnuPlotArrowObject.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBoxBarObject.cpp CGnuPlotBoxObject.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotEndBar.cpp CGnuPlotErrorBarObject.cpp CGnuPlotErrorBarData.cpp CGnuPlotFile.cpp CGnuPlotFill.cpp CGnuPlotFillStyle.cpp CGnuPlotFinanceBarObject.cpp CGnuPlotFunctions.cpp CGnuPlotGroup.cpp CGnuPlotImageObject.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLabelData.cpp CGnuPlotLabelObject.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotLogDevice.cpp CGnuPlotLogRenderer.cpp CGnuPlotMargin.cpp CGnuPlotMark.cpp CGnuPlotMultiplot.cpp CGnuPlotObject.cpp CGnuPlotPalette.cpp CGnuPlotPathObject.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPm3D.cpp CGnuPlotPoint.cpp CGnuPlotPointObject.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStroke.cpp CGnuPlotStyle.cpp CGnuPlotSurface.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotStyleBase.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlotText.cpp CGnuPlotTextRenderer.cpp CQStyle.cpp CQHeaderView.cpp CQToolTip.cpp CQFloatLabel.cpp CQRotatedText.cpp CQIntegerSpin.cpp CQCursor.cpp CQRubberBand.cpp CQDialog.cpp CQEnumCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CMathGeom2D.cpp CInvNorm.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCompile.cpp Expr/CExprCValue.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprToken.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotArrowObject.h CQGnuPlotAxis.h CQGnuPlotBoxBarObject.h CQGnuPlotBoxObject.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEndBar.h CQGnuPlotEnum.h CQGnuPlotErrorBarObject.h CQGnuPlotFill.h CQGnuPlotFinanceBarObject.h CQGnuPlotGroup.h CQGnuPlotImageObject.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLabelObject.h CQGnuPlotLineStyle.h CQGnuPlotMark.h CQGnuPlotMultiplot.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPathObject.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPm3D.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPointObject.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotStroke.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotFilename.h CQGnuPlotUtil.h CQGnuPlotWindow.h CQGnuPlotLoadFileDialog.h CQGnuPlotLoadFunctionDialog.h CQGnuPlotManageFunctionsDialog.h CQGnuPlotManageVariablesDialog.h CQGnuPlotCreateDialog.h CQGnuPlotDataDialog.h CQGnuPlotSaveDialog.h CQGnuPlotDataTree.h CQGnuPlotDataModel.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowData.h CGnuPlotArrowObject.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBoxBarObject.h CGnuPlotBoxObject.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotEndBar.h CGnuPlotErrorBarObject.h CGnuPlotErrorBarData.h CGnuPlotFile.h CGnuPlotFill.h CGnuPlotFillStyle.h CGnuPlotFinanceBarObject.h CGnuPlotFunctions.h CGnuPlotGroup.h CGnuPlotImageObject.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLabelData.h CGnuPlotLabelObject.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotLogDevice.h CGnuPlotLogRenderer.h CGnuPlotMark.h CGnuPlotMultiplot.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPathObject.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPm3D.h CGnuPlotPoint.h CGnuPlotPointObject.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotSize.h CGnuPlotStroke.h CGnuPlotSurface.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotEveryData.h CGnuPlotIndexData.h CGnuPlotWhereData.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CGnuPlotText.h CGnuPlotTextRenderer.h CQStyle.h CQHeaderView.h CQToolTip.h CQFloatLabel.h CQRotatedText.h CQIntegerSpin.h CQCursor.h CQRubberBand.h CQDialog.h CQEnumCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlotTest.cpp CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotArrowObject.cpp CQGnuPlotAxis.cpp CQGnuPlotBoxBarObject.cpp CQGnuPlotBoxObject.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotEndBar.cpp CQGnuPlotEnum.cpp CQGnuPlotErrorBarObject.cpp CQGnuPlotFill.cpp CQGnuPlotFinanceBarObject.cpp CQGnuPlotGroup.cpp CQGnuPlotImageObject.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLabelObject.cpp CQGnuPlotLineStyle.cpp CQGnuPlotMark.cpp CQGnuPlotMultiplot.cpp CQGnuPlotPalette.cpp CQGnuPlotPathObject.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPm3D.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPointObject.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotStroke.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotFilename.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CQGnuPlotLoadFileDialog.cpp CQGnuPlotLoadFunctionDialog.cpp CQGnuPlotManageFunctionsDialog.cpp CQGnuPlotManageVariablesDialog.cpp CQGnuPlotCreateDialog.cpp CQGnuPlotDataDialog.cpp CQGnuPlotSaveDialog.cpp CQGnuPlotDataTree.cpp CQGnuPlotDataModel.cpp CGnuPlot.cpp CGnuPlotAnnotation.cpp CGnuPlotArrow.cpp CGnuPlotArrowData.cpp CGnuPlotArrowObject.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBoxBarObject.cpp CGnuPlotBoxObject.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotEndBar.cpp CGnuPlotErrorBarObject.cpp CGnuPlotErrorBarData.cpp CGnuPlotFile.cpp CGnuPlotFill.cpp CGnuPlotFillStyle.cpp CGnuPlotFinanceBarObject.cpp CGnuPlotFunctions.cpp CGnuPlotGroup.cpp CGnuPlotImageObject.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLabelData.cpp CGnuPlotLabelObject.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotLogDevice.cpp CGnuPlotLogRenderer.cpp CGnuPlotMargin.cpp CGnuPlotMark.cpp CGnuPlotMultiplot.cpp CGnuPlotObject.cpp CGnuPlotPalette.cpp CGnuPlotPathObject.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPm3D.cpp CGnuPlotPoint.cpp CGnuPlotPointObject.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStroke.cpp CGnuPlotStyle.cpp CGnuPlotSurface.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotEveryData.cpp CGnuPlotIndexData.cpp CGnuPlotWhereData.cpp CGnuPlotStyleBase.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotSize.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlotText.cpp CGnuPlotTextRenderer.cpp CQStyle.cpp CQHeaderView.cpp CQToolTip.cpp CQFloatLabel.cpp CQRotatedText.cpp CQIntegerSpin.cpp CQCursor.cpp CQRubberBand.cpp CQDialog.cpp CQEnumCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CMathGeom2D.cpp CInvNorm.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCompile.cpp Expr/CExprCValue.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprToken.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
 
 
 clean:compiler_clean 
@@ -874,14 +880,17 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -928,6 +937,13 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -937,13 +953,6 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -957,6 +966,8 @@ moc_CQGnuPlot.cpp: CGnuPlot.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -1117,14 +1128,17 @@ moc_CQGnuPlotAnnotation.cpp: CGnuPlotObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -1138,19 +1152,19 @@ moc_CQGnuPlotAnnotation.cpp: CGnuPlotObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -1164,6 +1178,8 @@ moc_CQGnuPlotAnnotation.cpp: CGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -1334,14 +1350,17 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -1355,19 +1374,19 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -1381,6 +1400,8 @@ moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -1567,14 +1588,17 @@ moc_CQGnuPlotArrowObject.cpp: CGnuPlotArrowObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -1600,6 +1624,8 @@ moc_CQGnuPlotArrowObject.cpp: CGnuPlotArrowObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -1791,14 +1817,17 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -1845,6 +1874,13 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -1854,13 +1890,6 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -1874,6 +1903,8 @@ moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -2002,14 +2033,17 @@ moc_CQGnuPlotBoxBarObject.cpp: CGnuPlotBoxBarObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -2023,18 +2057,18 @@ moc_CQGnuPlotBoxBarObject.cpp: CGnuPlotBoxBarObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -2045,6 +2079,8 @@ moc_CQGnuPlotBoxBarObject.cpp: CGnuPlotBoxBarObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -2212,14 +2248,17 @@ moc_CQGnuPlotBoxObject.cpp: CGnuPlotBoxObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -2233,18 +2272,18 @@ moc_CQGnuPlotBoxObject.cpp: CGnuPlotBoxObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -2255,6 +2294,8 @@ moc_CQGnuPlotBoxObject.cpp: CGnuPlotBoxObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -2421,14 +2462,17 @@ moc_CQGnuPlotBubbleObject.cpp: CGnuPlotBubbleObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -2442,18 +2486,18 @@ moc_CQGnuPlotBubbleObject.cpp: CGnuPlotBubbleObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -2464,6 +2508,8 @@ moc_CQGnuPlotBubbleObject.cpp: CGnuPlotBubbleObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -2825,14 +2871,17 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -2846,19 +2895,19 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -2872,6 +2921,8 @@ moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -3085,14 +3136,8 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CGnuPlotGridData.h \
-		../../CFont/include/CFont.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
-		CQGnuPlot.h \
-		CGnuPlot.h \
 		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -3103,14 +3148,30 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CGnuPlotGridData.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -3128,13 +3189,6 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -3148,6 +3202,8 @@ moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -3248,6 +3304,35 @@ moc_CQGnuPlotDevice.cpp: CGnuPlotDevice.h \
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CDirectionType.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -3368,14 +3453,17 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -3389,19 +3477,19 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -3415,6 +3503,8 @@ moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -3591,14 +3681,17 @@ moc_CQGnuPlotEllipseObject.cpp: CGnuPlotEllipseObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -3612,18 +3705,18 @@ moc_CQGnuPlotEllipseObject.cpp: CGnuPlotEllipseObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -3634,6 +3727,8 @@ moc_CQGnuPlotEllipseObject.cpp: CGnuPlotEllipseObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -3800,14 +3895,17 @@ moc_CQGnuPlotEndBar.cpp: CGnuPlotBoxBarObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -3821,18 +3919,18 @@ moc_CQGnuPlotEndBar.cpp: CGnuPlotBoxBarObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -3843,6 +3941,8 @@ moc_CQGnuPlotEndBar.cpp: CGnuPlotBoxBarObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -4098,14 +4198,17 @@ moc_CQGnuPlotErrorBarObject.cpp: CGnuPlotErrorBarObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -4119,18 +4222,18 @@ moc_CQGnuPlotErrorBarObject.cpp: CGnuPlotErrorBarObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -4142,6 +4245,8 @@ moc_CQGnuPlotErrorBarObject.cpp: CGnuPlotErrorBarObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -4409,14 +4514,17 @@ moc_CQGnuPlotFinanceBarObject.cpp: CGnuPlotFinanceBarObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -4430,18 +4538,18 @@ moc_CQGnuPlotFinanceBarObject.cpp: CGnuPlotFinanceBarObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -4453,6 +4561,8 @@ moc_CQGnuPlotFinanceBarObject.cpp: CGnuPlotFinanceBarObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -4577,14 +4687,17 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -4631,6 +4744,13 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -4640,13 +4760,6 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -4660,6 +4773,8 @@ moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -4846,14 +4961,17 @@ moc_CQGnuPlotImageObject.cpp: CGnuPlotImageObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -4867,18 +4985,18 @@ moc_CQGnuPlotImageObject.cpp: CGnuPlotImageObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -4889,6 +5007,8 @@ moc_CQGnuPlotImageObject.cpp: CGnuPlotImageObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -5112,14 +5232,17 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -5128,6 +5251,13 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -5136,13 +5266,6 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -5156,6 +5279,8 @@ moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -5269,14 +5394,17 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -5290,19 +5418,19 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -5316,6 +5444,8 @@ moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -5505,14 +5635,17 @@ moc_CQGnuPlotLabelObject.cpp: CGnuPlotLabelObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -5523,18 +5656,18 @@ moc_CQGnuPlotLabelObject.cpp: CGnuPlotLabelObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -5542,6 +5675,8 @@ moc_CQGnuPlotLabelObject.cpp: CGnuPlotLabelObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -5750,14 +5885,17 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -5804,6 +5942,13 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -5813,13 +5958,6 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -5833,6 +5971,8 @@ moc_CQGnuPlotLineStyle.cpp: /usr/include/qt5/QtCore/QObject \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -6223,14 +6363,17 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -6248,6 +6391,13 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -6257,13 +6407,6 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -6277,6 +6420,8 @@ moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -6384,14 +6529,17 @@ moc_CQGnuPlotPathObject.cpp: CGnuPlotPathObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -6405,18 +6553,18 @@ moc_CQGnuPlotPathObject.cpp: CGnuPlotPathObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -6428,6 +6576,8 @@ moc_CQGnuPlotPathObject.cpp: CGnuPlotPathObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -6594,14 +6744,17 @@ moc_CQGnuPlotPieObject.cpp: CGnuPlotPieObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -6615,18 +6768,18 @@ moc_CQGnuPlotPieObject.cpp: CGnuPlotPieObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -6637,6 +6790,8 @@ moc_CQGnuPlotPieObject.cpp: CGnuPlotPieObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -6848,14 +7003,17 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -6875,6 +7033,12 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -6884,12 +7048,6 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -6902,6 +7060,8 @@ moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -7122,14 +7282,17 @@ moc_CQGnuPlotPointObject.cpp: CGnuPlotPointObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -7143,19 +7306,19 @@ moc_CQGnuPlotPointObject.cpp: CGnuPlotPointObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -7169,6 +7332,8 @@ moc_CQGnuPlotPointObject.cpp: CGnuPlotPointObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -7339,14 +7504,17 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -7360,19 +7528,19 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -7386,6 +7554,8 @@ moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -7560,14 +7730,17 @@ moc_CQGnuPlotPolygonObject.cpp: CGnuPlotPolygonObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -7581,18 +7754,18 @@ moc_CQGnuPlotPolygonObject.cpp: CGnuPlotPolygonObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -7603,6 +7776,8 @@ moc_CQGnuPlotPolygonObject.cpp: CGnuPlotPolygonObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -7764,14 +7939,17 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -7785,19 +7963,19 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -7811,6 +7989,8 @@ moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -7987,14 +8167,17 @@ moc_CQGnuPlotRectObject.cpp: CGnuPlotRectObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -8008,18 +8191,18 @@ moc_CQGnuPlotRectObject.cpp: CGnuPlotRectObject.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -8030,6 +8213,8 @@ moc_CQGnuPlotRectObject.cpp: CGnuPlotRectObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -8447,14 +8632,17 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -8466,6 +8654,13 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotObject.h \
@@ -8474,13 +8669,6 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -8494,6 +8682,8 @@ moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -8802,14 +8992,17 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -8856,6 +9049,13 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -8865,13 +9065,6 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -8885,6 +9078,8 @@ moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -9604,14 +9799,17 @@ moc_CQGnuPlotManageVariablesDialog.cpp: CQDialog.h \
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		CQGnuPlotManageVariablesDialog.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotManageVariablesDialog.h -o moc_CQGnuPlotManageVariablesDialog.cpp
 
@@ -9759,7 +9957,152 @@ moc_CQGnuPlotCreateDialog.cpp: CQDialog.h \
 		CQGnuPlotCreateDialog.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCreateDialog.h -o moc_CQGnuPlotCreateDialog.cpp
 
-moc_CQGnuPlotDataDialog.cpp: /usr/include/qt5/QtWidgets/QFrame \
+moc_CQGnuPlotDataDialog.cpp: CGnuPlotFile.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CUtil/include/COptVal.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotTypes.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		CGnuPlotPalette.h \
+		CGnuPlotDash.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotMouseEvent.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowData.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotLabelData.h \
+		CGnuPlotText.h \
+		CGnuPlotLabelStyle.h \
+		CGnuPlotFill.h \
+		CGnuPlotStroke.h \
+		../../CUtil/include/CLineCapType.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotCamera.h \
+		CGnuPlotXYPlane.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotKeyEvent.h \
+		../../CUtil/include/CKeyType.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotLineProp.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CGnuPlotKeyTitle.h \
+		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
+		CGnuPlotPieStyle.h \
+		/usr/include/qt5/QtWidgets/QFrame \
 		/usr/include/qt5/QtWidgets/qframe.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
 		/usr/include/qt5/QtGui/qwindowdefs.h \
@@ -10115,6 +10458,8 @@ moc_CQGnuPlotDataTree.cpp: /usr/include/qt5/QtWidgets/QTreeView \
 
 moc_CQGnuPlotDataModel.cpp: CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CPoint2D.h \
@@ -11046,14 +11391,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -11100,6 +11448,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -11109,13 +11464,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -11129,6 +11477,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -11298,7 +11648,8 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/QCommonStyle \
 		/usr/include/qt5/QtWidgets/qcommonstyle.h \
 		/usr/include/qt5/QtWidgets/qstyle.h \
-		/usr/include/qt5/QtGui/qicon.h
+		/usr/include/qt5/QtGui/qicon.h \
+		CBool.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotTest.o CQGnuPlotTest.cpp
 
 ../obj/CQGnuPlot.o: CQGnuPlot.cpp CQGnuPlot.h \
@@ -11315,14 +11666,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -11369,6 +11723,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -11378,13 +11739,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -11398,6 +11752,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -11656,14 +12012,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -11677,19 +12036,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -11703,6 +12062,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -11981,14 +12342,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -12002,19 +12366,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -12028,6 +12392,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -12315,14 +12681,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -12348,6 +12717,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -12644,14 +13015,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -12698,6 +13072,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -12707,13 +13088,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -12727,6 +13101,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -12950,14 +13326,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -12971,18 +13350,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -12993,6 +13372,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -13183,14 +13564,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -13204,18 +13588,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -13226,6 +13610,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -13416,14 +13802,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -13437,18 +13826,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -13459,6 +13848,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -13704,14 +14095,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -13751,6 +14145,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -13760,13 +14161,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -13780,6 +14174,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
 		CGnuPlotUsingCols.h \
@@ -13958,14 +14354,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -14010,6 +14409,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -14019,13 +14425,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -14039,6 +14438,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -14216,14 +14617,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -14237,19 +14641,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -14263,6 +14667,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -14569,14 +14975,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CGnuPlotGridData.h \
-		../../CFont/include/CFont.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
-		CQGnuPlot.h \
-		CGnuPlot.h \
 		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -14587,14 +14987,30 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CGnuPlotGridData.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -14612,13 +15028,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -14632,6 +15041,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -14836,6 +15247,35 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CDirectionType.h \
 		/usr/include/qt5/QtCore/QObject \
@@ -14904,25 +15344,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qpair.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlot.h \
-		Expr/CExpr.h \
-		../../CUtil/include/CAutoPtr.h \
-		../../CStrUtil/include/CStrUtil.h \
-		Expr/CExprBValue.h \
-		Expr/CExprIValue.h \
-		Expr/CExprRValue.h \
-		Expr/CExprSValue.h \
-		Expr/CExprCValue.h \
-		Expr/CExprValue.h \
-		Expr/CExprOperator.h \
-		Expr/CExprToken.h \
-		Expr/CExprParse.h \
-		Expr/CExprVariable.h \
-		Expr/CExprInterp.h \
-		Expr/CExprCompile.h \
-		Expr/CExprFunction.h \
-		Expr/CExprExecute.h \
-		Expr/CExprStrgen.h \
-		Expr/CExprError.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -14941,13 +15362,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -14961,6 +15375,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -15207,14 +15623,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -15228,19 +15647,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -15254,6 +15673,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -15523,14 +15944,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -15544,18 +15968,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -15566,6 +15990,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -15754,14 +16180,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -15775,18 +16204,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -15797,6 +16226,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -16075,14 +16506,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -16096,18 +16530,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -16119,6 +16553,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -16364,14 +16800,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -16391,6 +16830,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -16400,12 +16845,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -16417,6 +16856,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -16561,14 +17002,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -16582,18 +17026,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -16605,6 +17049,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -16752,14 +17198,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -16806,6 +17255,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -16815,13 +17271,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -16835,6 +17284,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -17108,14 +17559,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -17129,18 +17583,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -17151,6 +17605,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -17463,14 +17919,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -17479,6 +17938,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -17487,13 +17953,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -17507,6 +17966,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -17726,14 +18187,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -17747,19 +18211,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -17773,6 +18237,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -18062,14 +18528,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -18080,18 +18549,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -18099,6 +18568,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -18407,14 +18878,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -18461,6 +18935,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -18470,13 +18951,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -18490,6 +18964,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -18750,14 +19226,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -18777,6 +19256,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -18786,12 +19271,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -18804,6 +19283,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -18957,14 +19438,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -19007,6 +19491,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -19016,13 +19507,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -19036,6 +19520,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -19279,14 +19765,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -19304,6 +19793,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -19313,13 +19809,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -19333,6 +19822,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -19486,14 +19977,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -19507,18 +20001,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -19530,6 +20024,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -19719,14 +20215,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -19740,18 +20239,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -19762,6 +20261,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -19995,14 +20496,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -20022,6 +20526,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -20031,12 +20541,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -20049,6 +20553,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -20360,14 +20866,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -20382,6 +20891,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -20391,13 +20907,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -20411,6 +20920,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -20508,6 +21019,35 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CDirectionType.h \
 		/usr/include/qt5/QtCore/QSize \
@@ -20552,25 +21092,6 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotPNGRenderer.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlot.h \
-		Expr/CExpr.h \
-		../../CUtil/include/CAutoPtr.h \
-		../../CStrUtil/include/CStrUtil.h \
-		Expr/CExprBValue.h \
-		Expr/CExprIValue.h \
-		Expr/CExprRValue.h \
-		Expr/CExprSValue.h \
-		Expr/CExprCValue.h \
-		Expr/CExprValue.h \
-		Expr/CExprOperator.h \
-		Expr/CExprToken.h \
-		Expr/CExprParse.h \
-		Expr/CExprVariable.h \
-		Expr/CExprInterp.h \
-		Expr/CExprCompile.h \
-		Expr/CExprFunction.h \
-		Expr/CExprExecute.h \
-		Expr/CExprStrgen.h \
-		Expr/CExprError.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -20589,13 +21110,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -20609,6 +21123,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -20743,14 +21259,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -20797,6 +21316,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -20806,13 +21332,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -20826,6 +21345,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -21000,14 +21521,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -21021,19 +21545,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -21047,6 +21571,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -21315,14 +21841,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -21336,19 +21865,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -21362,6 +21891,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -21550,14 +22081,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -21571,18 +22105,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -21593,6 +22127,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -21777,14 +22313,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -21798,19 +22337,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -21824,6 +22363,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -22104,14 +22645,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -22125,18 +22669,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -22147,6 +22691,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -22292,14 +22838,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -22346,6 +22895,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -22355,13 +22911,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -22375,6 +22924,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -22725,14 +23276,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -22752,6 +23306,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -22761,12 +23321,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -22778,6 +23332,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -22955,14 +23511,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -22975,6 +23534,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -22984,13 +23550,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -23004,6 +23563,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -23171,14 +23732,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -23190,6 +23754,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotObject.h \
@@ -23198,13 +23769,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -23218,6 +23782,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -23672,14 +24238,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -23726,6 +24295,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -23735,13 +24311,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -23755,6 +24324,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -23920,14 +24491,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -23974,6 +24548,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -23983,13 +24564,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -24003,6 +24577,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -24523,14 +25099,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -24550,6 +25129,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -24559,12 +25144,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -24577,6 +25156,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -24833,14 +25414,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -24860,6 +25444,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -24869,12 +25459,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -24887,6 +25471,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -25121,14 +25707,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		/usr/include/qt5/QtWidgets/QTreeWidget \
 		/usr/include/qt5/QtWidgets/qtreewidget.h \
 		/usr/include/qt5/QtWidgets/qtreeview.h \
@@ -25318,14 +25907,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CQUtil/include/CQUtil.h \
 		/usr/include/qt5/QtCore/Qt \
 		/usr/include/qt5/QtGui/QColor \
@@ -25635,6 +26227,151 @@ compiler_clean: compiler_moc_header_clean
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotCreateDialog.o CQGnuPlotCreateDialog.cpp
 
 ../obj/CQGnuPlotDataDialog.o: CQGnuPlotDataDialog.cpp CQGnuPlotDataDialog.h \
+		CGnuPlotFile.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CUtil/include/COptVal.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CUtil/include/CColor.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotTypes.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		CGnuPlotPalette.h \
+		CGnuPlotDash.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotMouseEvent.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowData.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotLabelData.h \
+		CGnuPlotText.h \
+		CGnuPlotLabelStyle.h \
+		CGnuPlotFill.h \
+		CGnuPlotStroke.h \
+		../../CUtil/include/CLineCapType.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotCamera.h \
+		CGnuPlotXYPlane.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotKeyEvent.h \
+		../../CUtil/include/CKeyType.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotLineProp.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CGnuPlotKeyTitle.h \
+		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
+		CGnuPlotPieStyle.h \
 		/usr/include/qt5/QtWidgets/QFrame \
 		/usr/include/qt5/QtWidgets/qframe.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -25764,149 +26501,9 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		/usr/include/qt5/QtWidgets/qrubberband.h \
 		CQGnuPlotDataModel.h \
-		CGnuPlotFile.h \
-		CGnuPlotBinaryFormat.h \
-		../../CMath/include/CSize2D.h \
-		../../CMath/include/CISize2D.h \
-		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
-		../../CUtil/include/COptVal.h \
 		/usr/include/qt5/QtCore/QAbstractItemModel \
 		CQGnuPlotWindow.h \
 		CQGnuPlot.h \
-		CGnuPlot.h \
-		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
-		../../CStrUtil/include/CStrUtil.h \
-		Expr/CExprBValue.h \
-		Expr/CExprIValue.h \
-		Expr/CExprRValue.h \
-		Expr/CExprSValue.h \
-		Expr/CExprCValue.h \
-		Expr/CExprValue.h \
-		Expr/CExprOperator.h \
-		Expr/CExprToken.h \
-		Expr/CExprParse.h \
-		Expr/CExprVariable.h \
-		Expr/CExprInterp.h \
-		Expr/CExprCompile.h \
-		Expr/CExprFunction.h \
-		Expr/CExprExecute.h \
-		Expr/CExprStrgen.h \
-		Expr/CExprError.h \
-		../../CFont/include/CFont.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
-		../../CMath/include/CBBox2D.h \
-		../../CMath/include/CMathGen.h \
-		../../COS/include/NaN.h \
-		../../CMath/include/CVector2D.h \
-		../../CUtil/include/CRGBA.h \
-		../../CUtil/include/CRGB.h \
-		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
-		../../CUtil/include/CCMYK.h \
-		../../CUtil/include/CHSL.h \
-		../../CUtil/include/CHSB.h \
-		../../CUtil/include/CHSI.h \
-		../../CUtil/include/CRGBName.h \
-		../../CUtil/include/CColorComponent.h \
-		../../CUtil/include/CColor.h \
-		../../CUtil/include/CAlignType.h \
-		../../CMath/include/CAngle.h \
-		CGnuPlotColorSpec.h \
-		CGnuPlotStyle.h \
-		CGnuPlotTypes.h \
-		../../CMath/include/CPoint3D.h \
-		../../CMath/include/CIPoint3D.h \
-		../../CMath/include/CBBox3D.h \
-		../../CMath/include/CVector3D.h \
-		../../CUtil/include/CLineDash.h \
-		../../CUtil/include/CILineDash.h \
-		CGnuPlotPalette.h \
-		CGnuPlotDash.h \
-		CGnuPlotLineStyle.h \
-		CGnuPlotLineType.h \
-		CGnuPlotFillStyle.h \
-		CGnuPlotPointStyle.h \
-		CGnuPlotCoordValue.h \
-		CGnuPlotKeyData.h \
-		CGnuPlotPosition.h \
-		CGnuPlotSize.h \
-		CGnuPlotAxisData.h \
-		CGnuPlotUtil.h \
-		CGnuPlotGridData.h \
-		CGnuPlotTipData.h \
-		CGnuPlotTitle.h \
-		CGnuPlotObject.h \
-		CGnuPlotMouseEvent.h \
-		CGnuPlotArrow.h \
-		CGnuPlotAnnotation.h \
-		CGnuPlotArrowData.h \
-		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
-		CGnuPlotCircle.h \
-		CGnuPlotEllipse.h \
-		CGnuPlotLabel.h \
-		CGnuPlotLabelData.h \
-		CGnuPlotText.h \
-		CGnuPlotLabelStyle.h \
-		CGnuPlotFill.h \
-		CGnuPlotStroke.h \
-		../../CUtil/include/CLineCapType.h \
-		CGnuPlotPolygon.h \
-		CGnuPlotRectangle.h \
-		CGnuPlotCamera.h \
-		CGnuPlotXYPlane.h \
-		CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
-		../../CMath/include/CMatrix3D.h \
-		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
-		../../CMath/include/CMatrix3DH.h \
-		CGnuPlotColorBox.h \
-		CGnuPlotTicLabel.h \
-		CGnuPlotUsingCols.h \
-		CGnuPlotImageStyle.h \
-		CGnuPlotHistogramData.h \
-		CGnuPlotMultiplot.h \
-		CGnuPlotPrefValue.h \
-		CStrUniqueMatch.h \
-		CGnuPlotBoxWidth.h \
-		CGnuPlotKeyEvent.h \
-		../../CUtil/include/CKeyType.h \
-		CGnuPlotBoxPlot.h \
-		CGnuPlotCircleStyle.h \
-		CGnuPlotEllipseStyle.h \
-		CGnuPlotRectStyle.h \
-		CGnuPlotTimeStampData.h \
-		CGnuPlotMouseData.h \
-		CGnuPlotClip.h \
-		CGnuPlotContourData.h \
-		CGnuPlotSurfaceData.h \
-		CGnuPlotAxesData.h \
-		CGnuPlotBorderData.h \
-		CGnuPlotPrintFile.h \
-		CGnuPlotBlock.h \
-		CGnuPlotPm3DData.h \
-		CGnuPlotLineProp.h \
-		CGnuPlotPlotSize.h \
-		CGnuPlotFilledCurve.h \
-		CGnuPlotFitData.h \
-		CGnuPlotHidden3DData.h \
-		CGnuPlotKeyTitle.h \
-		CGnuPlotMargin.h \
-		CGnuPlotStyleData.h \
-		CGnuPlotTextBoxStyle.h \
-		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QString \
@@ -25924,6 +26521,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		CQGnuPlotGroup.h \
 		CQGnuPlotObject.h \
+		CQGnuPlotFilename.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -25931,6 +26529,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotWhereData.h \
 		CQHeaderView.h \
 		/usr/include/qt5/QtWidgets/QHeaderView \
 		/usr/include/qt5/QtWidgets/qheaderview.h \
@@ -25940,6 +26539,7 @@ compiler_clean: compiler_moc_header_clean
 		CQIntegerSpin.h \
 		/usr/include/qt5/QtWidgets/QSpinBox \
 		/usr/include/qt5/QtWidgets/qspinbox.h \
+		CGnuPlotValueKey.h \
 		/usr/include/qt5/QtWidgets/QGroupBox \
 		/usr/include/qt5/QtWidgets/qgroupbox.h \
 		/usr/include/qt5/QtWidgets/QVBoxLayout \
@@ -26223,6 +26823,8 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotDataModel.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CPoint2D.h \
@@ -26242,6 +26844,8 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CQGnuPlotDataModel.o: CQGnuPlotDataModel.cpp CQGnuPlotDataModel.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CPoint2D.h \
@@ -26337,14 +26941,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -26391,6 +26998,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -26400,13 +27014,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -26420,6 +27027,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -26598,14 +27207,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -26619,18 +27231,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -26644,6 +27256,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -26761,14 +27375,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -26794,6 +27411,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -26907,14 +27526,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -26948,6 +27570,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -27071,14 +27695,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -27104,6 +27731,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -27216,14 +27845,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -27236,6 +27868,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -27244,13 +27883,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -27264,6 +27896,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -27344,15 +27978,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CGnuPlotGridData.h \
-		../../CFont/include/CFont.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
-		CDirectionType.h \
-		CGnuPlotWindow.h \
-		CGnuPlot.h \
 		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -27363,14 +27990,31 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CGnuPlotGridData.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CDirectionType.h \
+		CGnuPlotWindow.h \
+		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -27389,13 +28033,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -27409,6 +28046,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -27505,14 +28144,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CGnuPlotGridData.h \
-		../../CFont/include/CFont.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
-		CGnuPlotGroup.h \
-		CGnuPlot.h \
 		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -27523,14 +28156,30 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CGnuPlotGridData.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlotGroup.h \
+		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -27549,13 +28198,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -27569,6 +28211,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -27679,14 +28323,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -27700,18 +28347,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -27722,6 +28369,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -27838,14 +28487,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -27859,18 +28511,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -27881,6 +28533,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -27953,14 +28607,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -28007,6 +28664,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -28016,13 +28680,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -28036,6 +28693,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -28179,14 +28838,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -28200,18 +28862,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -28222,6 +28884,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -28309,14 +28973,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -28356,6 +29023,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -28365,13 +29039,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -28385,6 +29052,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
 		CGnuPlotUsingCols.h \
@@ -28484,14 +29153,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -28503,18 +29175,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
 		CGnuPlotLabelData.h \
@@ -28527,6 +29199,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -28619,14 +29293,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CGnuPlotGridData.h \
-		../../CFont/include/CFont.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
-		CGnuPlotGroup.h \
-		CGnuPlot.h \
 		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -28637,14 +29305,30 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CGnuPlotGridData.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlotGroup.h \
+		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -28662,13 +29346,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -28682,6 +29359,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -28783,14 +29462,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -28806,6 +29488,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -28815,13 +29504,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -28835,6 +29517,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -28918,12 +29602,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		../../CFont/include/CFont.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
-		CGnuPlot.h \
 		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -28934,18 +29614,32 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CMathGeom2D.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlot.h \
 		../../CUtil/include/CColor.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotColorSpec.h \
@@ -28974,13 +29668,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -28994,6 +29681,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -29100,14 +29789,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -29126,6 +29818,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -29135,13 +29834,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -29155,6 +29847,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -29254,14 +29948,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -29280,6 +29977,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -29289,13 +29993,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -29309,6 +30006,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -29394,10 +30093,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CGnuPlotGridData.h \
-		CDirectionType.h \
-		CGnuPlotWindow.h \
-		CGnuPlot.h \
 		Expr/CExpr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -29409,14 +30104,28 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CGnuPlotGridData.h \
+		CDirectionType.h \
+		CGnuPlotWindow.h \
+		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -29435,13 +30144,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -29455,6 +30157,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -29597,14 +30301,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -29617,18 +30324,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotLabel.h \
 		CGnuPlotLabelData.h \
@@ -29641,6 +30348,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -29754,14 +30463,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -29775,18 +30487,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -29797,6 +30509,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -29889,14 +30603,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -29927,6 +30644,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -29936,12 +30659,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -29953,6 +30670,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -30069,14 +30788,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -30090,18 +30812,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -30113,6 +30835,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -30213,14 +30937,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -30240,6 +30967,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -30249,13 +30983,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -30269,6 +30996,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -30320,12 +31049,15 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CGnuPlotFile.o: CGnuPlotFile.cpp CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/COptVal.h \
 		CUnixFile.h \
+		CCsv.h \
 		CParseLine.h \
 		../../CStrUtil/include/CStrUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotFile.o CGnuPlotFile.cpp
@@ -30379,14 +31111,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -30399,6 +31134,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -30408,13 +31150,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -30427,6 +31162,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -30534,14 +31271,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -30556,6 +31296,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -30565,13 +31312,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -30585,6 +31325,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -30695,14 +31437,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -30716,18 +31461,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -30739,6 +31484,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -30816,14 +31563,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -30870,6 +31620,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -30879,13 +31636,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -30899,6 +31649,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -30959,14 +31711,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -31013,6 +31768,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -31022,13 +31784,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -31042,6 +31797,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -31177,14 +31934,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -31198,18 +31958,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -31220,6 +31980,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -31339,14 +32101,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -31355,6 +32120,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -31363,13 +32135,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -31383,6 +32148,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -31598,14 +32365,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -31617,6 +32387,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotObject.h \
@@ -31624,12 +32400,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -31637,6 +32407,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -31764,14 +32536,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -31782,18 +32557,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -31801,6 +32576,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -31912,14 +32689,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -31933,6 +32713,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -31942,13 +32729,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -31962,6 +32742,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -32071,14 +32853,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -32092,6 +32877,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -32101,13 +32893,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -32121,6 +32906,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -32214,10 +33001,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CGnuPlotGridData.h \
-		CDirectionType.h \
-		CGnuPlotLogRenderer.h \
-		CGnuPlot.h \
 		Expr/CExpr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -32229,14 +33012,28 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CGnuPlotGridData.h \
+		CDirectionType.h \
+		CGnuPlotLogRenderer.h \
+		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -32255,13 +33052,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -32275,6 +33065,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -32353,14 +33145,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -32407,6 +33202,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -32416,13 +33218,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -32436,6 +33231,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -32532,14 +33329,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -32559,6 +33359,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -32568,13 +33375,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -32588,6 +33388,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -32685,14 +33487,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -32705,6 +33510,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -32714,13 +33526,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -32734,6 +33539,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -32847,14 +33654,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -32868,19 +33678,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -32894,6 +33704,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -32996,14 +33808,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -33021,6 +33836,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -33030,13 +33852,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -33050,6 +33865,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -33151,14 +33968,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -33172,18 +33992,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -33195,6 +34015,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -33311,14 +34133,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -33332,18 +34157,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -33354,6 +34179,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -33426,14 +34253,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -33480,6 +34310,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -33489,13 +34326,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -33509,6 +34339,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -33660,14 +34492,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
@@ -33752,14 +34587,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -33773,19 +34611,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -33799,6 +34637,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -33916,14 +34756,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -33936,18 +34779,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -33960,6 +34803,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -34073,14 +34918,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -34094,18 +34942,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -34116,6 +34964,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -34222,14 +35072,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -34248,6 +35101,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -34257,13 +35117,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -34277,6 +35130,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -34340,14 +35195,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -34394,6 +35252,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -34403,13 +35268,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -34423,6 +35281,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -34521,14 +35381,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -34541,18 +35404,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -34565,6 +35428,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPolygon.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -34679,14 +35544,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -34700,18 +35568,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -34722,6 +35590,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -34794,14 +35664,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -34848,6 +35721,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -34857,13 +35737,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -34877,6 +35750,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -34987,14 +35862,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -35007,6 +35885,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -35016,12 +35900,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -35033,6 +35911,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -35150,14 +36030,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -35189,6 +36072,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -35198,13 +36088,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -35218,6 +36101,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -35332,14 +36217,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -35352,6 +36240,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -35361,13 +36256,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -35381,6 +36269,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -35449,14 +36339,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		CGnuPlotTicLabel.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
@@ -35505,6 +36398,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -35514,13 +36414,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -35534,6 +36427,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -35579,6 +36474,100 @@ compiler_clean: compiler_moc_header_clean
 		CParseLine.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotUsingCols.o CGnuPlotUsingCols.cpp
 
+../obj/CGnuPlotEveryData.o: CGnuPlotEveryData.cpp CGnuPlotEveryData.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotEveryData.o CGnuPlotEveryData.cpp
+
+../obj/CGnuPlotIndexData.o: CGnuPlotIndexData.cpp CGnuPlotIndexData.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotIndexData.o CGnuPlotIndexData.cpp
+
+../obj/CGnuPlotWhereData.o: CGnuPlotWhereData.cpp CGnuPlotWhereData.h \
+		Expr/CExpr.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CGnuPlotUtil.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		CMathGeom2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotWhereData.o CGnuPlotWhereData.cpp
+
 ../obj/CGnuPlotStyleBase.o: CGnuPlotStyleBase.cpp CGnuPlotStyleBase.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -35623,14 +36612,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -35650,6 +36642,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -35658,13 +36657,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -35678,6 +36670,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -35782,14 +36776,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -35809,6 +36806,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -35817,13 +36821,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -35837,6 +36834,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -35947,14 +36946,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -35974,6 +36976,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -35982,13 +36991,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -36002,6 +37004,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -36107,14 +37111,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -36134,6 +37141,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -36142,13 +37156,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -36162,6 +37169,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -36273,14 +37282,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -36300,6 +37312,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -36308,13 +37327,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -36328,6 +37340,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -36439,14 +37453,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -36466,6 +37483,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -36474,13 +37498,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -36494,6 +37511,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -36599,14 +37618,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -36626,6 +37648,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -36634,13 +37663,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -36654,6 +37676,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -36762,14 +37786,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -36789,6 +37816,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -36797,13 +37831,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -36817,6 +37844,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -36928,14 +37957,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -36955,6 +37987,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -36963,13 +38002,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -36983,6 +38015,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -37094,14 +38128,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -37121,6 +38158,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -37129,13 +38173,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -37149,6 +38186,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -37254,14 +38293,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -37281,6 +38323,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -37289,13 +38338,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -37309,6 +38351,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -37424,14 +38468,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -37451,6 +38498,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -37459,13 +38513,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -37479,6 +38526,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -37596,14 +38645,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -37617,18 +38669,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -37639,6 +38691,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -37741,14 +38795,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -37768,6 +38825,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -37776,13 +38840,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -37796,6 +38853,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -37907,14 +38966,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -37934,6 +38996,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -37942,13 +39011,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -37962,6 +39024,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -38086,14 +39150,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -38107,18 +39174,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -38130,6 +39197,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -38237,14 +39306,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -38264,6 +39336,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -38272,13 +39351,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -38292,6 +39364,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -38415,14 +39489,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -38442,6 +39519,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -38450,13 +39534,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -38470,6 +39547,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -38597,14 +39676,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -38615,18 +39697,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTitle.h \
 		CGnuPlotArrow.h \
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -38634,6 +39716,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -38744,14 +39828,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -38771,6 +39858,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -38779,13 +39873,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -38799,6 +39886,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -38908,14 +39997,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -38935,6 +40027,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -38943,13 +40042,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -38963,6 +40055,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -39074,14 +40168,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -39101,6 +40198,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -39109,13 +40213,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -39129,6 +40226,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -39238,14 +40337,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -39265,6 +40367,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -39273,13 +40382,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -39293,6 +40395,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -39403,14 +40507,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -39430,6 +40537,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -39438,13 +40552,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -39458,6 +40565,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -39567,14 +40676,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -39594,6 +40706,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -39602,13 +40721,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -39622,6 +40734,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -39726,14 +40840,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -39753,6 +40870,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -39761,13 +40885,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -39781,6 +40898,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -39890,14 +41009,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -39917,6 +41039,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -39925,13 +41054,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -39945,6 +41067,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -40048,14 +41172,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -40075,6 +41202,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -40083,13 +41217,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -40103,6 +41230,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -40214,14 +41343,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -40241,6 +41373,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -40249,13 +41388,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -40269,6 +41401,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -40377,14 +41511,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -40404,6 +41541,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -40412,13 +41556,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -40432,6 +41569,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -40537,14 +41676,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -40564,6 +41706,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -40572,13 +41721,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -40592,6 +41734,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -40727,14 +41871,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -40760,6 +41907,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -40862,14 +42011,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -40889,6 +42041,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -40897,13 +42056,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -40917,6 +42069,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -41028,14 +42182,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -41055,6 +42212,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -41063,13 +42227,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -41083,6 +42240,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -41186,14 +42345,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -41213,6 +42375,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -41221,13 +42390,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -41241,6 +42403,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -41352,14 +42516,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -41379,6 +42546,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -41387,13 +42561,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -41407,6 +42574,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -41510,14 +42679,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -41537,6 +42709,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -41545,13 +42724,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -41565,6 +42737,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -41676,14 +42850,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -41703,6 +42880,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -41711,13 +42895,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -41731,6 +42908,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -41829,10 +43008,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CGnuPlotGridData.h \
-		CDirectionType.h \
-		CGnuPlotSVGRenderer.h \
-		CGnuPlot.h \
 		Expr/CExpr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -41844,14 +43019,28 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CGnuPlotGridData.h \
+		CDirectionType.h \
+		CGnuPlotSVGRenderer.h \
+		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -41870,13 +43059,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -41890,6 +43072,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -41968,14 +43152,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -42022,6 +43209,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -42031,13 +43225,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -42051,6 +43238,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -42148,14 +43337,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -42174,6 +43366,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPosition.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -42183,13 +43382,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -42203,6 +43395,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -42302,14 +43496,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -42321,6 +43518,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotObject.h \
@@ -42329,13 +43533,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -42349,6 +43546,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -42422,14 +43621,17 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
@@ -42476,6 +43678,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
 		CGnuPlotTipData.h \
 		CGnuPlotTitle.h \
@@ -42485,13 +43694,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotAnnotation.h \
 		CGnuPlotArrowData.h \
 		CGnuPlotArrowStyle.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotCircle.h \
 		CGnuPlotEllipse.h \
 		CGnuPlotLabel.h \
@@ -42505,6 +43707,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectangle.h \
 		CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		CCoordFrame3D.h \
@@ -44101,14 +45305,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h \
 		../../CStrUtil/include/CPrintF.h \
 		../../CStrUtil/include/CConv.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExpr.o Expr/CExpr.cpp
@@ -44129,14 +45337,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprBValue.o Expr/CExprBValue.cpp
 
 ../obj/CExprCompile.o: Expr/CExprCompile.cpp Expr/CExprI.h \
@@ -44155,14 +45367,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprCompile.o Expr/CExprCompile.cpp
 
 ../obj/CExprCValue.o: Expr/CExprCValue.cpp Expr/CExprI.h \
@@ -44181,14 +45397,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprCValue.o Expr/CExprCValue.cpp
 
 ../obj/CExprExecute.o: Expr/CExprExecute.cpp Expr/CExprI.h \
@@ -44207,14 +45427,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprExecute.o Expr/CExprExecute.cpp
 
 ../obj/CExprFunction.o: Expr/CExprFunction.cpp Expr/CExprI.h \
@@ -44233,14 +45457,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
 		CInvNorm.h
@@ -44262,14 +45490,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprInterp.o Expr/CExprInterp.cpp
 
 ../obj/CExprIValue.o: Expr/CExprIValue.cpp Expr/CExprI.h \
@@ -44288,14 +45520,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprIValue.o Expr/CExprIValue.cpp
 
 ../obj/CExprOperator.o: Expr/CExprOperator.cpp Expr/CExprI.h \
@@ -44314,14 +45550,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprOperator.o Expr/CExprOperator.cpp
 
 ../obj/CExprParse.o: Expr/CExprParse.cpp Expr/CExprI.h \
@@ -44340,14 +45580,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprParse.o Expr/CExprParse.cpp
 
 ../obj/CExprRValue.o: Expr/CExprRValue.cpp Expr/CExprI.h \
@@ -44366,14 +45610,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
 		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprRValue.o Expr/CExprRValue.cpp
@@ -44394,14 +45642,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprStrgen.o Expr/CExprStrgen.cpp
 
 ../obj/CExprSValue.o: Expr/CExprSValue.cpp Expr/CExprI.h \
@@ -44420,14 +45672,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprSValue.o Expr/CExprSValue.cpp
 
 ../obj/CExprToken.o: Expr/CExprToken.cpp Expr/CExprI.h \
@@ -44446,14 +45702,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprToken.o Expr/CExprToken.cpp
 
 ../obj/CExprValue.o: Expr/CExprValue.cpp Expr/CExprI.h \
@@ -44472,14 +45732,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprValue.o Expr/CExprValue.cpp
 
 ../obj/CExprVariable.o: Expr/CExprVariable.cpp Expr/CExprI.h \
@@ -44498,14 +45762,18 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
+		Expr/CExprVariableMgr.h \
 		Expr/CExprInterp.h \
 		Expr/CExprCompile.h \
 		Expr/CExprFunction.h \
 		Expr/CExprExecute.h \
 		Expr/CExprStrgen.h \
-		Expr/CExprError.h
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprVariable.o Expr/CExprVariable.cpp
 
 ../obj/moc_CQGnuPlot.o: moc_CQGnuPlot.cpp 

@@ -4,7 +4,7 @@ const std::string &
 CExprTokenBase::
 getIdentifier() const
 {
-  assert(type() == CEXPR_TOKEN_IDENTIFIER);
+  assert(type() == CExprTokenType::IDENTIFIER);
 
   return static_cast<const CExprTokenIdentifier *>(this)->getIdentifier();
 }
@@ -13,7 +13,7 @@ CExprOpType
 CExprTokenBase::
 getOperator() const
 {
-  assert(type() == CEXPR_TOKEN_OPERATOR);
+  assert(type() == CExprTokenType::OPERATOR);
 
   return static_cast<const CExprTokenOperator *>(this)->getType();
 }
@@ -22,7 +22,7 @@ long
 CExprTokenBase::
 getInteger() const
 {
-  assert(type() == CEXPR_TOKEN_INTEGER);
+  assert(type() == CExprTokenType::INTEGER);
 
   return static_cast<const CExprTokenInteger *>(this)->getInteger();
 }
@@ -31,7 +31,7 @@ double
 CExprTokenBase::
 getReal() const
 {
-  assert(type() == CEXPR_TOKEN_REAL);
+  assert(type() == CExprTokenType::REAL);
 
   return static_cast<const CExprTokenReal *>(this)->getReal();
 }
@@ -40,7 +40,7 @@ const std::string &
 CExprTokenBase::
 getString() const
 {
-  assert(type() == CEXPR_TOKEN_STRING);
+  assert(type() == CExprTokenType::STRING);
 
   return static_cast<const CExprTokenString *>(this)->getString();
 }
@@ -49,7 +49,7 @@ const std::complex<double> &
 CExprTokenBase::
 getComplex() const
 {
-  assert(type() == CEXPR_TOKEN_COMPLEX);
+  assert(type() == CExprTokenType::COMPLEX);
 
   return static_cast<const CExprTokenComplex *>(this)->getComplex();
 }
@@ -58,7 +58,7 @@ CExprFunctionPtr
 CExprTokenBase::
 getFunction() const
 {
-  assert(type() == CEXPR_TOKEN_FUNCTION);
+  assert(type() == CExprTokenType::FUNCTION);
 
   return static_cast<const CExprTokenFunction *>(this)->getFunction();
 }
@@ -67,7 +67,7 @@ CExprValuePtr
 CExprTokenBase::
 getValue() const
 {
-  assert(type() == CEXPR_TOKEN_VALUE);
+  assert(type() == CExprTokenType::VALUE);
 
   return static_cast<const CExprTokenValue *>(this)->getValue();
 }
@@ -76,7 +76,7 @@ const CExprTokenStack &
 CExprTokenBase::
 getBlock() const
 {
-  assert(type() == CEXPR_TOKEN_BLOCK);
+  assert(type() == CExprTokenType::BLOCK);
 
   return static_cast<const CExprTokenBlock *>(this)->stack();
 }
@@ -86,31 +86,31 @@ CExprTokenBase::
 printQualified(std::ostream &os) const
 {
   switch (type()) {
-    case CEXPR_TOKEN_IDENTIFIER:
+    case CExprTokenType::IDENTIFIER:
       os << "<identifier>";
       break;
-    case CEXPR_TOKEN_OPERATOR:
+    case CExprTokenType::OPERATOR:
       os << "<operator>";
       break;
-    case CEXPR_TOKEN_INTEGER:
+    case CExprTokenType::INTEGER:
       os << "<integer>";
       break;
-    case CEXPR_TOKEN_REAL:
+    case CExprTokenType::REAL:
       os << "<real>";
       break;
-    case CEXPR_TOKEN_STRING:
+    case CExprTokenType::STRING:
       os << "<string>";
       break;
-    case CEXPR_TOKEN_COMPLEX:
+    case CExprTokenType::COMPLEX:
       os << "<complex>";
       break;
-    case CEXPR_TOKEN_FUNCTION:
+    case CExprTokenType::FUNCTION:
       os << "<function>";
       break;
-    case CEXPR_TOKEN_VALUE:
+    case CExprTokenType::VALUE:
       os << "<value>";
       break;
-    case CEXPR_TOKEN_BLOCK:
+    case CExprTokenType::BLOCK:
       os << "<block>";
       break;
     default:

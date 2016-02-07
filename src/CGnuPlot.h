@@ -34,6 +34,8 @@ class CGnuPlotWindow;
 class CGnuPlotTimeStamp;
 class CGnuPlotStyleBase;
 class CGnuPlotPm3D;
+class CGnuPlotIndexData;
+class CGnuPlotEveryData;
 
 class CUnixFile;
 class CParseLine;
@@ -409,6 +411,21 @@ class CGnuPlot {
     std::string start;
     std::string end;
     std::string inc;
+  };
+
+  //---
+
+  struct LoadDataParams {
+    std::string filename;
+
+    bool columnheaders = false;
+    bool binary        = false;
+    bool matrix        = false;
+    bool csv           = false;
+    char separator     = '\0';
+
+    Sizes                sizes;
+    CGnuPlotBinaryFormat binaryFormat;
   };
 
   //---
@@ -792,6 +809,8 @@ class CGnuPlot {
 
   CGnuPlotWindow *createWindow();
 
+  bool loadData(const std::string &filename, const LoadDataParams &params);
+
   CGnuPlotMultiplot *createMultiplot();
 
   CGnuPlotGroup *createGroup(CGnuPlotWindow *window);
@@ -929,7 +948,7 @@ class CGnuPlot {
 
   int getColumnIndex(const std::string &str) const;
 
-  CExprValuePtr fieldToValue(int nf, const std::string &field);
+  CExprValuePtr fieldToValue(int nf, const std::string &field, bool &missing);
 
   bool timeToValue(const std::string &str, double &t);
 
@@ -998,7 +1017,7 @@ class CGnuPlot {
   void replaceEmbeddedString(CParseLine &line, std::string &str) const;
   bool replaceEmbeddedCmd   (CParseLine &line, std::string &str) const;
 
-  bool replaceEscapeChar(CParseLine &line, std::string &str) const;
+  static bool replaceEscapeChar(CParseLine &line, std::string &str);
 
   bool execCmd(const std::string &cmd, StringArray &lines) const;
 
@@ -1102,11 +1121,12 @@ class CGnuPlot {
 
   std::string parseUsingStr(CParseLine &line);
 
-  void parseIndex(CParseLine &line, int &indexStart, int &indexEnd, int &indexStep);
-  void parseEvery(CParseLine &line, int &everyPointStart, int &everyPointEnd, int &everyPointStep,
-                  int &everyBlockStart, int &everyBlockEnd, int &everyBlockStep);
+  bool parseIndex(CParseLine &line, CGnuPlotIndexData &indexData);
+  bool parseEvery(CParseLine &line, CGnuPlotEveryData &everyData);
 
   bool parseFont(CParseLine &line, CFontPtr &font);
+
+  bool parseDataFileSeparator(CParseLine &line, char &c) const;
 
   bool parseBoolExpression(CParseLine &line, bool &res);
 
@@ -1297,11 +1317,11 @@ class CGnuPlot {
 
   bool readIdentifier(CParseLine &line, std::string &identifier) const;
 
-  std::string readNonSpace(CParseLine &line);
-  std::string readNonSpaceNonComma(CParseLine &line);
-  std::string readNonSpaceNonChar(CParseLine &line, char c);
-  std::string readNonSpaceNonChar(CParseLine &line, const std::string &c);
-  std::string readName(CParseLine &line);
+  std::string readNonSpace(CParseLine &line) const;
+  std::string readNonSpaceNonComma(CParseLine &line) const;
+  std::string readNonSpaceNonChar(CParseLine &line, char c) const;
+  std::string readNonSpaceNonChar(CParseLine &line, const std::string &c) const;
+  std::string readName(CParseLine &line) const;
 
   void readDataFileLines();
 

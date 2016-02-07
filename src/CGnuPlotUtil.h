@@ -1,6 +1,9 @@
 #ifndef CGnuPlotUtil_H
 #define CGnuPlotUtil_H
 
+#include <CExpr.h>
+#include <CPoint2D.h>
+#include <CMathGeom2D.h>
 #include <algorithm>
 
 namespace CGnuPlotUtil {
@@ -53,6 +56,16 @@ namespace CGnuPlotUtil {
     }
 
     return false;
+  }
+
+  inline bool evaluateExpression(const std::string &expr, CExprValuePtr &value, bool quiet=false) {
+    if (! CExprInst->evaluateExpression(expr, value))
+      value = CExprValuePtr();
+
+    if (! value.isValid() && ! quiet)
+      std::cerr << "Eval failed: " << expr << std::endl;
+
+    return true;
   }
 }
 

@@ -247,6 +247,13 @@ addFunction(const std::string &name, const std::string &argsStr, CExprFunctionOb
 
 void
 CExpr::
+removeFunction(const std::string &name)
+{
+  functionMgr_->removeFunction(name);
+}
+
+void
+CExpr::
 getFunctionNames(std::vector<std::string> &names) const
 {
   functionMgr_->getFunctionNames(names);

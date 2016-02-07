@@ -1,6 +1,7 @@
 #include <CQGnuPlot.h>
 #include <CQApp.h>
 #include <CQStyle.h>
+#include <CBool.h>
 
 int
 main(int argc, char **argv)
@@ -9,16 +10,19 @@ main(int argc, char **argv)
 
   app.setStyle(new CQStyle);
 
-  bool debug        = false;
-  bool edebug       = false;
-  bool svg          = false;
-  bool png          = false;
-  bool autoContinue = false;
-  bool autoExit     = false;
-  bool mainLoop     = false;
-  bool window       = false;
+  CBool       debug;
+  CBool       edebug;
+  CBool       svg;
+  CBool       png;
+  CBool       autoContinue;
+  CBool       autoExit;
+  CBool       mainLoop;
+  CBool       window;
+  std::string dataFile;
+  std::string ofile;
+  std::string usingStr;
 
-  std::string ofile = "";
+  CGnuPlot::LoadDataParams loadParams;
 
   std::vector<std::string> files;
   std::vector<std::string> execs;
@@ -59,6 +63,26 @@ main(int argc, char **argv)
         autoExit = true;
       else if (arg == "window")
         window = true;
+      else if (arg == "data") {
+        ++i;
+
+        if (i < argc)
+          dataFile = argv[i];
+      }
+      else if (arg == "csv")
+        loadParams.csv = true;
+      else if (arg == "separator") {
+        ++i;
+
+        if (i < argc)
+          loadParams.separator = argv[i][0];
+      }
+      else if (arg == "using") {
+        ++i;
+
+        if (i < argc)
+          usingStr = argv[i];
+      }
       else if (arg == "qt")
         mainLoop = true;
     }
@@ -71,6 +95,8 @@ main(int argc, char **argv)
   plot.setDebug(debug);
   plot.setExprDebug(edebug);
   plot.setAutoContinue(autoContinue);
+
+  plot.setUsingString(usingStr);
 
   if      (svg) {
     plot.setDevice("SVG");
@@ -93,6 +119,9 @@ main(int argc, char **argv)
 
   if (window && ! plot.numWindows())
     plot.createNewWindow();
+
+  if (dataFile != "")
+    plot.loadData(dataFile, loadParams);
 
   if      (mainLoop)
     app.exec();

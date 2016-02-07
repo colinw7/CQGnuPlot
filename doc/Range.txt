@@ -1,0 +1,3 @@
+Plot:
+  x data range (calculated and from axis)
+  y data range (filtered by x data range)

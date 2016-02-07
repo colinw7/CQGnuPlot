@@ -2,14 +2,26 @@
 #include <CMathGen.h>
 #include <cerrno>
 
+bool
+CExprRealValue::
+getStringValue(std::string &s) const
+{
+  if (! IsNaN(real_))
+    s = CStrUtil::toString(real_);
+  else
+    s = "NaN";
+
+  return true;
+}
+
 CExprValuePtr
 CExprRealValue::
 execUnaryOp(CExprOpType op) const
 {
   switch (op) {
-    case CEXPR_OP_UNARY_PLUS:
+    case CExprOpType::UNARY_PLUS:
       return CExprInst->createRealValue(real_);
-    case CEXPR_OP_UNARY_MINUS:
+    case CExprOpType::UNARY_MINUS:
       return CExprInst->createRealValue(-real_);
     default:
       return CExprValuePtr();
@@ -26,13 +38,13 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
     return CExprValuePtr();
 
   switch (op) {
-    case CEXPR_OP_POWER: {
+    case CExprOpType::POWER: {
       int error_code;
 
       double real = realPower(real_, rrhs, &error_code);
 
 #ifdef GNUPLOT_EXPR
-      if      (error_code == CEXPR_ERROR_NON_INTEGER_POWER_OF_NEGATIVE) {
+      if      (error_code == int(CExprErrorType::NON_INTEGER_POWER_OF_NEGATIVE)) {
         std::complex<double> c(real_, 0);
 
         errno = 0;
@@ -57,11 +69,11 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 
       return CExprInst->createRealValue(real);
     }
-    case CEXPR_OP_TIMES:
+    case CExprOpType::TIMES:
       return CExprInst->createRealValue(real_ * rrhs);
-    case CEXPR_OP_DIVIDE:
+    case CExprOpType::DIVIDE:
       return CExprInst->createRealValue(real_ / rrhs);
-    case CEXPR_OP_MODULUS: {
+    case CExprOpType::MODULUS: {
       int error_code;
 
       double real = realModulus(real_, rrhs, &error_code);
@@ -76,21 +88,21 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 
       return CExprInst->createRealValue(real);
     }
-    case CEXPR_OP_PLUS:
+    case CExprOpType::PLUS:
       return CExprInst->createRealValue(real_ + rrhs);
-    case CEXPR_OP_MINUS:
+    case CExprOpType::MINUS:
       return CExprInst->createRealValue(real_ - rrhs);
-    case CEXPR_OP_LESS:
+    case CExprOpType::LESS:
       return CExprInst->createBooleanValue(real_ < rrhs);
-    case CEXPR_OP_LESS_EQUAL:
+    case CExprOpType::LESS_EQUAL:
       return CExprInst->createBooleanValue(real_ <= rrhs);
-    case CEXPR_OP_GREATER:
+    case CExprOpType::GREATER:
       return CExprInst->createBooleanValue(real_ > rrhs);
-    case CEXPR_OP_GREATER_EQUAL:
+    case CExprOpType::GREATER_EQUAL:
       return CExprInst->createBooleanValue(real_ >= rrhs);
-    case CEXPR_OP_EQUAL:
+    case CExprOpType::EQUAL:
       return CExprInst->createBooleanValue(real_ == rrhs);
-    case CEXPR_OP_NOT_EQUAL:
+    case CExprOpType::NOT_EQUAL:
       return CExprInst->createBooleanValue(real_ != rrhs);
     default:
       return CExprValuePtr();
@@ -104,19 +116,19 @@ realPower(double real1, double real2, int *error_code) const
   *error_code = 0;
 
   if (IsNaN(real1) || IsNaN(real2)) {
-    *error_code = CEXPR_ERROR_NAN_OPERATION;
+    *error_code = int(CExprErrorType::NAN_OPERATION);
     return CMathGen::getNaN();
   }
 
   bool is_int = ((((int) real2) == real2));
 
   if (real1 < 0.0 && ! is_int) {
-    *error_code = CEXPR_ERROR_NON_INTEGER_POWER_OF_NEGATIVE;
+    *error_code = int(CExprErrorType::NON_INTEGER_POWER_OF_NEGATIVE);
     return CMathGen::getNaN();
   }
 
   if (real1 == 0.0 && real2 < 0.0) {
-    *error_code = CEXPR_ERROR_ZERO_TO_NEG_POWER_UNDEF;
+    *error_code = int(CExprErrorType::ZERO_TO_NEG_POWER_UNDEF);
     return CMathGen::getNaN();
   }
 
@@ -130,7 +142,7 @@ realPower(double real1, double real2, int *error_code) const
     real = pow(real1, real2);
 
   if (errno != 0) {
-    *error_code = CEXPR_ERROR_POWER_FAILED;
+    *error_code = int(CExprErrorType::POWER_FAILED);
     return CMathGen::getNaN();
   }
 
@@ -144,12 +156,12 @@ realModulus(double real1, double real2, int *error_code) const
   *error_code = 0;
 
   if (IsNaN(real1) || IsNaN(real2)) {
-    *error_code = CEXPR_ERROR_NAN_OPERATION;
+    *error_code = int(CExprErrorType::NAN_OPERATION);
     return CMathGen::getNaN();
   }
 
   if (real2 == 0.0) {
-    *error_code = CEXPR_ERROR_DIVIDE_BY_ZERO;
+    *error_code = int(CExprErrorType::DIVIDE_BY_ZERO);
     return CMathGen::getNaN();
   }
 

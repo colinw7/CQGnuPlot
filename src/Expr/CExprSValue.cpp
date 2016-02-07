@@ -1,5 +1,26 @@
 #include <CExprI.h>
 
+bool
+CExprStringValue::
+getBooleanValue(bool &b) const
+{
+  return CStrUtil::toBool(str_, &b);
+}
+
+bool
+CExprStringValue::
+getIntegerValue(long &l) const
+{
+  return CStrUtil::toInteger(str_, &l);
+}
+
+bool
+CExprStringValue::
+getRealValue(double &r) const
+{
+  return CStrUtil::toReal(str_, &r);
+}
+
 CExprValuePtr
 CExprStringValue::
 execUnaryOp(CExprOpType) const
@@ -21,25 +42,25 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
   std::string result;
 
   switch (op) {
-    case CEXPR_OP_LESS:
+    case CExprOpType::LESS:
       return CExprInst->createBooleanValue(str_ < rstr);
-    case CEXPR_OP_LESS_EQUAL:
+    case CExprOpType::LESS_EQUAL:
       return CExprInst->createBooleanValue(str_ <= rstr);
-    case CEXPR_OP_GREATER:
+    case CExprOpType::GREATER:
       return CExprInst->createBooleanValue(str_ > rstr);
-    case CEXPR_OP_GREATER_EQUAL:
+    case CExprOpType::GREATER_EQUAL:
       return CExprInst->createBooleanValue(str_ >= rstr);
     // TODO: disable for gnuplot ?
-    case CEXPR_OP_EQUAL:
+    case CExprOpType::EQUAL:
       return CExprInst->createBooleanValue(str_ == rstr);
-    case CEXPR_OP_NOT_EQUAL:
+    case CExprOpType::NOT_EQUAL:
       return CExprInst->createBooleanValue(str_ != rstr);
 #ifdef GNUPLOT_EXPR
-    case CEXPR_OP_STR_EQUAL:
+    case CExprOpType::STR_EQUAL:
       return CExprInst->createBooleanValue(str_ == rstr);
-    case CEXPR_OP_STR_NOT_EQUAL:
+    case CExprOpType::STR_NOT_EQUAL:
       return CExprInst->createBooleanValue(str_ != rstr);
-    case CEXPR_OP_STR_CONCAT:
+    case CExprOpType::STR_CONCAT:
       return CExprInst->createStringValue(str_ + rstr);
     default: {
       uint   i1       = 0    , i2       = 0;
@@ -74,7 +95,7 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
       }
     }
 #else
-    case CEXPR_OP_PLUS:
+    case CExprOpType::PLUS:
       return CExprInst->createStringValue(str_ + rstr);
     default:
       return CExprValuePtr();

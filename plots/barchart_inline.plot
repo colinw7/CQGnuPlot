@@ -11,3 +11,11 @@ plot "-" using 2:xticlabel(1):fillcolor($0) with histogram
 80 34
 90 14
 e
+
+plot "-" using 2:xticlabel(1):fillcolor($0) with histogram
+"banana" 18
+"orange" 29
+"apple" 40
+"mango" 34
+"grape" 24
+e

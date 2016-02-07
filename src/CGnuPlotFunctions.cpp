@@ -12,6 +12,7 @@ class CGnuPlotFn : public CExprFunctionObj {
   CGnuPlot *plot_;
 };
 
+// assert on bool value
 class CGnuPlotAssertFn : public CGnuPlotFn {
  public:
   CGnuPlotAssertFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
@@ -28,52 +29,7 @@ class CGnuPlotAssertFn : public CGnuPlotFn {
   }
 };
 
-class CGnuPlotColumnFn : public CGnuPlotFn {
- public:
-  CGnuPlotColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    long icol = 0;
-
-    if      (values[0]->isIntegerValue()) {
-      (void) values[0]->getIntegerValue(icol);
-    }
-    else if (values[0]->isStringValue()) {
-      std::string str;
-
-      (void) values[0]->getStringValue(str);
-
-      icol = plot_->getColumnIndex(str);
-    }
-    else
-      return CExprInst->createRealValue(0.0);
-
-    //---
-
-    CExprValuePtr value;
-
-    if      (icol == 0)
-      value = CExprInst->createRealValue(plot_->pointNum());
-    else if (icol == -2)
-      value = CExprInst->createRealValue(plot_->setNum());
-    else {
-      if (plot_->isParsePlotTitle()) {
-        plot_->setKeyColumnHeadNum(icol);
-
-        value = CExprInst->createStringValue("");
-      }
-      else {
-        value = plot_->fieldValue(icol);
-
-        if (! value.isValid())
-          value = CExprInst->createStringValue("column(" + std::to_string(icol) + ")");
-      }
-    }
-
-    return value;
-  }
-};
-
+// variable exists
 class CGnuPlotExistsFn : public CGnuPlotFn {
  public:
   CGnuPlotExistsFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
@@ -90,51 +46,7 @@ class CGnuPlotExistsFn : public CGnuPlotFn {
   }
 };
 
-class CGnuPlotStringColumnFn : public CGnuPlotFn {
- public:
-  CGnuPlotStringColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    assert(values.size() == 1);
-
-    std::string str;
-
-    long col = 0;
-
-    if (values[0]->getIntegerValue(col)) {
-      CExprValuePtr value = plot_->fieldValue(col);
-
-      if (value->isStringValue())
-        (void) value->getStringValue(str);
-    }
-
-    return CExprInst->createStringValue(str);
-  }
-};
-
-class CGnuPlotStringValidFn : public CGnuPlotFn {
- public:
-  CGnuPlotStringValidFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
-
-  CExprValuePtr operator()(const Values &values) {
-    assert(values.size() == 1);
-
-    std::string str;
-
-    bool valid = false;
-
-    long col = 0;
-
-    if (values[0]->getIntegerValue(col)) {
-      CExprValuePtr value = plot_->fieldValue(col);
-
-      valid = value.isValid();
-    }
-
-    return CExprInst->createIntegerValue(valid ? 0 : 1);
-  }
-};
-
+// variable value
 class CGnuPlotValueFn : public CGnuPlotFn {
  public:
   CGnuPlotValueFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
@@ -147,13 +59,11 @@ class CGnuPlotValueFn : public CGnuPlotFn {
 
     CExprVariablePtr var = CExprInst->getVariable(name);
 
-    if (! var.isValid())
-      return CExprValuePtr();
-
-    return var->getValue();
+    return (var.isValid() ? var->getValue() : CExprValuePtr());
   }
 };
 
+// hsv (three integers) -> rgb integer
 class CGnuPlotValueHSV2RGBFn : public CGnuPlotFn {
  public:
   CGnuPlotValueHSV2RGBFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
@@ -176,6 +86,7 @@ class CGnuPlotValueHSV2RGBFn : public CGnuPlotFn {
   }
 };
 
+// format time to string
 class CGnuPlotValueStrFTime : public CGnuPlotFn {
  public:
   CGnuPlotValueStrFTime(CGnuPlot *plot) : CGnuPlotFn(plot) { }
@@ -202,6 +113,7 @@ class CGnuPlotValueStrFTime : public CGnuPlotFn {
   }
 };
 
+// decode time string to time (integer)
 class CGnuPlotValueStrPTime : public CGnuPlotFn {
  public:
   CGnuPlotValueStrPTime(CGnuPlot *plot) : CGnuPlotFn(plot) { }
@@ -230,6 +142,7 @@ class CGnuPlotValueStrPTime : public CGnuPlotFn {
   }
 };
 
+// get value from time (integer)
 class CGnuPlotValueTmValue : public CGnuPlotFn {
  public:
   CGnuPlotValueTmValue(CGnuPlot *plot, const std::string &value) :
@@ -279,6 +192,7 @@ class CGnuPlotValueTime : public CGnuPlotFn {
   }
 };
 
+#if 0
 class CGnuPlotTimeColumnFn : public CGnuPlotFn {
  public:
   CGnuPlotTimeColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
@@ -341,6 +255,7 @@ class CGnuPlotTimeColumnFn : public CGnuPlotFn {
 
   bool isOverload() const override { return true; }
 };
+#endif
 
 class CGnuPlotSumRangeFn : public CGnuPlotFn {
  public:
@@ -421,57 +336,43 @@ class CGnuPlotSumRangeFn : public CGnuPlotFn {
 
 namespace CGnuPlotFunctions {
 
+template<typename FUNC>
+void addFunction(CGnuPlot *plot, const std::string &name, const std::string &args) {
+  CExprInst->addFunction(name, args, new FUNC(plot))->setBuiltin(true);
+}
+
+template<typename FUNC>
+void addFunction1(CGnuPlot *plot, const std::string &name,
+                  const std::string &args, const std::string &fnArg) {
+  CExprInst->addFunction(name, args, new FUNC(plot, fnArg))->setBuiltin(true);
+}
+
 void
 init(CGnuPlot *plot)
 {
-  CExprInst->addFunction("assert", "i", new CGnuPlotAssertFn(plot))->setBuiltin(true);
+  addFunction<CGnuPlotAssertFn>(plot, "assert", "i");
 
-  CExprInst->addFunction("column"      , "is",
-                         new CGnuPlotColumnFn(plot))->setBuiltin(true);
-  CExprInst->addFunction("exists"      , "s" ,
-                         new CGnuPlotExistsFn(plot))->setBuiltin(true);
-  CExprInst->addFunction("stringcolumn", "i" ,
-                         new CGnuPlotStringColumnFn(plot))->setBuiltin(true);
-  CExprInst->addFunction("strcol"      , "i" ,
-                         new CGnuPlotStringColumnFn(plot))->setBuiltin(true);
-  CExprInst->addFunction("valid"       , "i" ,
-                         new CGnuPlotStringValidFn(plot))->setBuiltin(true);
-  CExprInst->addFunction("value"       , "s" ,
-                         new CGnuPlotValueFn(plot))->setBuiltin(true);
+  // variable functions
+  addFunction<CGnuPlotExistsFn>(plot, "exists", "s");
+  addFunction<CGnuPlotValueFn >(plot, "value" , "s");
 
-  CExprInst->addFunction("hsv2rgb", "r,r,r",
-                         new CGnuPlotValueHSV2RGBFn(plot))->setBuiltin(true);
+  addFunction<CGnuPlotValueHSV2RGBFn>(plot, "hsv2rgb", "r,r,r");
 
-  CExprInst->addFunction("strftime", "s,i",
-                         new CGnuPlotValueStrFTime(plot))->setBuiltin(true);
-  CExprInst->addFunction("strptime", "s,s",
-                         new CGnuPlotValueStrPTime(plot))->setBuiltin(true);
-  CExprInst->addFunction("tm_hour" , "i"  ,
-                         new CGnuPlotValueTmValue(plot, "hour"))->setBuiltin(true);
-  CExprInst->addFunction("tm_mday" , "i"  ,
-                         new CGnuPlotValueTmValue(plot, "mday"))->setBuiltin(true);
-  CExprInst->addFunction("tm_min"  , "i"  ,
-                         new CGnuPlotValueTmValue(plot, "min" ))->setBuiltin(true);
-  CExprInst->addFunction("tm_mon"  , "i"  ,
-                         new CGnuPlotValueTmValue(plot, "mon" ))->setBuiltin(true);
-  CExprInst->addFunction("tm_sec"  , "i"  ,
-                         new CGnuPlotValueTmValue(plot, "sec" ))->setBuiltin(true);
-  CExprInst->addFunction("tm_wday" , "i"  ,
-                         new CGnuPlotValueTmValue(plot, "wday"))->setBuiltin(true);
-  CExprInst->addFunction("tm_yday" , "i"  ,
-                         new CGnuPlotValueTmValue(plot, "yday"))->setBuiltin(true);
-  CExprInst->addFunction("tm_year" , "i"  ,
-                         new CGnuPlotValueTmValue(plot, "year"))->setBuiltin(true);
-  CExprInst->addFunction("time"    , "irs",
-                         new CGnuPlotValueTime(plot))->setBuiltin(true);
+  // time function
+  addFunction<CGnuPlotValueStrFTime>(plot, "strftime", "s,i");
+  addFunction<CGnuPlotValueStrPTime>(plot, "strptime", "s,s");
+  addFunction<CGnuPlotValueTime    >(plot, "time"    , "irs");
 
-  CExprInst->addFunction("timecolumn", "i" ,
-                         new CGnuPlotTimeColumnFn(plot))->setBuiltin(true);
-  CExprInst->addFunction("timecolumn", "i,s" ,
-                         new CGnuPlotTimeColumnFn(plot))->setBuiltin(true);
+  addFunction1<CGnuPlotValueTmValue >(plot, "tm_hour" , "i", "hour");
+  addFunction1<CGnuPlotValueTmValue >(plot, "tm_mday" , "i", "mday");
+  addFunction1<CGnuPlotValueTmValue >(plot, "tm_min"  , "i", "min" );
+  addFunction1<CGnuPlotValueTmValue >(plot, "tm_mon"  , "i", "mon" );
+  addFunction1<CGnuPlotValueTmValue >(plot, "tm_sec"  , "i", "sec" );
+  addFunction1<CGnuPlotValueTmValue >(plot, "tm_wday" , "i", "wday");
+  addFunction1<CGnuPlotValueTmValue >(plot, "tm_yday" , "i", "yday");
+  addFunction1<CGnuPlotValueTmValue >(plot, "tm_year" , "i", "year");
 
-  CExprInst->addFunction("sum_range", "s,i,i,s",
-                         new CGnuPlotSumRangeFn(plot))->setBuiltin(true);
+  addFunction<CGnuPlotSumRangeFn>(plot, "sum_range", "s,i,i,s");
 }
 
 }

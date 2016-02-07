@@ -40,6 +40,15 @@ CQGnuPlotDataTree(const CGnuPlotFile &file) :
 
 void
 CQGnuPlotDataTree::
+load(const CGnuPlotFile &file)
+{
+  model_->setFile(file);
+
+  reload();
+}
+
+void
+CQGnuPlotDataTree::
 reload()
 {
   model_->reload();

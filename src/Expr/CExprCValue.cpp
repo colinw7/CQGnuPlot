@@ -1,13 +1,22 @@
 #include <CExprI.h>
 
+bool
+CExprComplexValue::
+getStringValue(std::string &s) const
+{
+  s = "{" + CStrUtil::toString(c_.real()) + ", " + CStrUtil::toString(c_.imag()) + "}";
+
+  return true;
+}
+
 CExprValuePtr
 CExprComplexValue::
 execUnaryOp(CExprOpType op) const
 {
   switch (op) {
-    case CEXPR_OP_UNARY_PLUS:
+    case CExprOpType::UNARY_PLUS:
       return CExprInst->createComplexValue(c_);
-    case CEXPR_OP_UNARY_MINUS:
+    case CExprOpType::UNARY_MINUS:
       return CExprInst->createComplexValue(-c_);
     default:
       return CExprValuePtr();
@@ -28,13 +37,13 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
   std::string result;
 
   switch (op) {
-    case CEXPR_OP_PLUS:
+    case CExprOpType::PLUS:
       return CExprInst->createComplexValue(c_ + rc);
-    case CEXPR_OP_MINUS:
+    case CExprOpType::MINUS:
       return CExprInst->createComplexValue(c_ - rc);
-    case CEXPR_OP_TIMES:
+    case CExprOpType::TIMES:
       return CExprInst->createComplexValue(c_ * rc);
-    case CEXPR_OP_DIVIDE:
+    case CExprOpType::DIVIDE:
       return CExprInst->createComplexValue(c_ / rc);
     default:
       return CExprValuePtr();

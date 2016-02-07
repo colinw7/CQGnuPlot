@@ -77,7 +77,7 @@ class CGnuPlotUsingCols {
   const std::string &str() const { return str_; }
   void setStr(const std::string &s) { str_ = s; }
 
-  void init(const std::string &str);
+  void parse(const std::string &str);
 
   uint numCols() const { return cols_.size(); }
 
@@ -121,22 +121,30 @@ class CGnuPlotUsingCols {
 
   std::string columnTitle(const std::vector<std::string> &columns) const;
 
-  int decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues, bool &bad,
-                   Values &values, Params &params) const;
+  int decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues,
+                   bool &bad, Values &values, Params &params) const;
 
-  std::string toString() const;
+  CGnuPlot *plot() const { return plot_; }
 
   int setNum() const { return setNum_; }
 
   int pointNum() const { return pointNum_; }
 
+  CExprValuePtr getFieldValue(int ival, int &ns) const;
+
+  int getColumnIndex(const std::string &str) const;
+
+  bool isParsePlotTitle() const;
+
+  void setKeyColumnHeadNum(int icol);
+
+  std::string toString() const;
+
   void print(std::ostream &os) const;
 
  private:
-  CExprValuePtr getFieldValue(const Values &fieldValues, int ival, int &ns) const;
-
-  CExprValuePtr decodeValue(const Values &fieldValues, const CGnuPlotUsingCol &col,
-                            int &ns, bool &ignore, Params &params) const;
+  CExprValuePtr decodeValue(const CGnuPlotUsingCol &col, int &ns,
+                            bool &ignore, Params &params) const;
 
   void processUsingStr(CGnuPlotUsingColData &usingData, StringArray &usingStrs);
 
@@ -152,6 +160,7 @@ class CGnuPlotUsingCols {
   mutable CGnuPlot *plot_     { 0 };
   mutable int       setNum_   { 0 };
   mutable int       pointNum_ { 0 };
+  mutable Values    fieldValues_;
 };
 
 #endif

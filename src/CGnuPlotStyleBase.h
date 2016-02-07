@@ -20,7 +20,7 @@ class CGnuPlotStyleBase {
 
   CGnuPlotTypes::PlotStyle style() const { return style_; }
 
-  // if single type is true, must define dtawKey, draw Axis and fit
+  // if single type is true, must define drawKey, drawAxis and fit
   virtual bool isSingleType() const { return false; }
 
   virtual bool has3D() const { return false; }

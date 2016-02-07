@@ -19,56 +19,11 @@ class CExprFunctionObj {
 //------
 
 struct CExprFunctionArg {
-  CExprFunctionArg(CExprValueType type1=CEXPR_VALUE_NONE) :
+  CExprFunctionArg(CExprValueType type1=CExprValueType::NONE) :
    type(type1) {
   }
 
   CExprValueType type;
-};
-
-//------
-
-class CExprFunctionMgr {
- public:
-  friend class CExpr;
-
-  typedef std::vector<CExprFunctionPtr> Functions;
-  typedef std::vector<CExprFunctionArg> Args;
-
- public:
- ~CExprFunctionMgr();
-
-  void addFunctions();
-
-  CExprFunctionPtr getFunction(const std::string &name);
-
-  void getFunctions(const std::string &name, Functions &functions);
-
-  CExprFunctionPtr addProcFunction(const std::string &name, const std::string &args,
-                                   CExprFunctionProc proc);
-  CExprFunctionPtr addObjFunction (const std::string &name, const std::string &args,
-                                   CExprFunctionObj *proc);
-  CExprFunctionPtr addUserFunction(const std::string &name, const std::vector<std::string> &args,
-                                   const std::string &proc);
-
-  void removeFunction(const std::string &name);
-  void removeFunction(CExprFunctionPtr function);
-
-  void getFunctionNames(std::vector<std::string> &names) const;
-
-  static bool parseArgs(const std::string &argsStr, Args &args, bool &variableArgs);
-
- private:
-  void resetCompiled();
-
- private:
-  CExprFunctionMgr(CExpr *expr);
-
- private:
-  typedef std::list<CExprFunctionPtr> FunctionList;
-
-  CExpr        *expr_;
-  FunctionList  functions_;
 };
 
 //------
@@ -91,7 +46,7 @@ class CExprFunction {
 
   virtual uint numArgs() const = 0;
 
-  virtual CExprValueType argType(uint) const { return CEXPR_VALUE_ANY; }
+  virtual CExprValueType argType(uint) const { return CExprValueType::ANY; }
 
   virtual bool checkValues(const CExprValueArray &) const { return true; }
 
@@ -133,7 +88,7 @@ class CExprProcFunction : public CExprFunction {
   uint numArgs() const override { return args_.size(); }
 
   CExprValueType argType(uint i) const override {
-    return (i < args_.size() ? args_[i].type : CEXPR_VALUE_NULL);
+    return (i < args_.size() ? args_[i].type : CExprValueType::NUL);
   }
 
   bool checkValues(const CExprValueArray &) const override;
@@ -158,7 +113,7 @@ class CExprObjFunction : public CExprFunction {
   uint numArgs() const override { return args_.size(); }
 
   CExprValueType argType(uint i) const override {
-    return (i < args_.size() ? args_[i].type : CEXPR_VALUE_NULL);
+    return (i < args_.size() ? args_[i].type : CExprValueType::NUL);
   }
 
   bool checkValues(const CExprValueArray &values) const override;

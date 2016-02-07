@@ -22,6 +22,7 @@ class CQGnuPlotFilename : public QFrame {
   void setPattern(const QString &v) { pattern_ = v; }
 
   QString name() const;
+  void setName(const QString &name);
 
  private slots:
   void fileSlot();

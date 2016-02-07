@@ -137,49 +137,49 @@ CExprExecuteImpl::
 executeToken(const CExprTokenBaseP &ctoken)
 {
   switch (ctoken->type()) {
-    case CEXPR_TOKEN_IDENTIFIER:
+    case CExprTokenType::IDENTIFIER:
       stackEToken(ctoken);
 
       break;
-    case CEXPR_TOKEN_OPERATOR:
+    case CExprTokenType::OPERATOR:
       if (! executeOperator(ctoken))
         return false;
 
       break;
-    case CEXPR_TOKEN_INTEGER: {
+    case CExprTokenType::INTEGER: {
       CExprValuePtr value = CExprInst->createIntegerValue(ctoken->getInteger());
 
       stackValue(value);
 
       break;
     }
-    case CEXPR_TOKEN_REAL: {
+    case CExprTokenType::REAL: {
       CExprValuePtr value = CExprInst->createRealValue(ctoken->getReal());
 
       stackValue(value);
 
       break;
     }
-    case CEXPR_TOKEN_STRING: {
+    case CExprTokenType::STRING: {
       CExprValuePtr value = CExprInst->createStringValue(ctoken->getString());
 
       stackValue(value);
 
       break;
     }
-    case CEXPR_TOKEN_COMPLEX: {
+    case CExprTokenType::COMPLEX: {
       CExprValuePtr value = CExprInst->createComplexValue(ctoken->getComplex());
 
       stackValue(value);
 
       break;
     }
-    case CEXPR_TOKEN_FUNCTION: {
+    case CExprTokenType::FUNCTION: {
       stackEToken(ctoken);
 
       break;
     }
-    case CEXPR_TOKEN_VALUE:
+    case CExprTokenType::VALUE:
       stackEToken(ctoken);
 
       break;
@@ -198,78 +198,78 @@ executeOperator(const CExprTokenBaseP &ctoken)
   CExprOpType type = ctoken->getOperator();
 
   switch (type) {
-    case CEXPR_OP_LOGICAL_NOT:
+    case CExprOpType::LOGICAL_NOT:
       executeLogicalUnaryOperator(type);
       break;
-    case CEXPR_OP_BIT_NOT:
+    case CExprOpType::BIT_NOT:
       executeBitwiseUnaryOperator(type);
       break;
-    case CEXPR_OP_UNARY_PLUS:
-    case CEXPR_OP_UNARY_MINUS:
+    case CExprOpType::UNARY_PLUS:
+    case CExprOpType::UNARY_MINUS:
 #ifdef GNUPLOT_EXPR
-    case CEXPR_OP_FACTORIAL:
+    case CExprOpType::FACTORIAL:
 #endif
       executeUnaryOperator(type);
       break;
-    case CEXPR_OP_POWER:
-    case CEXPR_OP_TIMES:
-    case CEXPR_OP_DIVIDE:
-    case CEXPR_OP_MODULUS:
-    case CEXPR_OP_PLUS:
-    case CEXPR_OP_MINUS:
-    case CEXPR_OP_LESS:
-    case CEXPR_OP_LESS_EQUAL:
-    case CEXPR_OP_GREATER:
-    case CEXPR_OP_GREATER_EQUAL:
-    case CEXPR_OP_EQUAL:
-    case CEXPR_OP_STR_EQUAL:
-    case CEXPR_OP_NOT_EQUAL:
-    case CEXPR_OP_STR_NOT_EQUAL:
+    case CExprOpType::POWER:
+    case CExprOpType::TIMES:
+    case CExprOpType::DIVIDE:
+    case CExprOpType::MODULUS:
+    case CExprOpType::PLUS:
+    case CExprOpType::MINUS:
+    case CExprOpType::LESS:
+    case CExprOpType::LESS_EQUAL:
+    case CExprOpType::GREATER:
+    case CExprOpType::GREATER_EQUAL:
+    case CExprOpType::EQUAL:
+    case CExprOpType::STR_EQUAL:
+    case CExprOpType::NOT_EQUAL:
+    case CExprOpType::STR_NOT_EQUAL:
 #ifdef GNUPLOT_EXPR
-    case CEXPR_OP_STR_CONCAT:
+    case CExprOpType::STR_CONCAT:
 #endif
       if (! executeBinaryOperator(type))
         return false;
 
       break;
-    case CEXPR_OP_LOGICAL_AND:
-    case CEXPR_OP_LOGICAL_OR:
+    case CExprOpType::LOGICAL_AND:
+    case CExprOpType::LOGICAL_OR:
       executeLogicalBinaryOperator(type);
       break;
-    case CEXPR_OP_BIT_LSHIFT:
-    case CEXPR_OP_BIT_RSHIFT:
-    case CEXPR_OP_BIT_AND:
-    case CEXPR_OP_BIT_XOR:
-    case CEXPR_OP_BIT_OR:
+    case CExprOpType::BIT_LSHIFT:
+    case CExprOpType::BIT_RSHIFT:
+    case CExprOpType::BIT_AND:
+    case CExprOpType::BIT_XOR:
+    case CExprOpType::BIT_OR:
       executeBitwiseBinaryOperator(type);
       break;
-    case CEXPR_OP_QUESTION:
+    case CExprOpType::QUESTION:
       executeQuestionOperator();
       break;
-    case CEXPR_OP_COLON:
+    case CExprOpType::COLON:
       executeColonOperator();
       break;
-    case CEXPR_OP_EQUALS:
+    case CExprOpType::EQUALS:
       executeEqualsOperator();
       break;
-    case CEXPR_OP_COMMA:
+    case CExprOpType::COMMA:
       executeCommaOperator();
       break;
-    case CEXPR_OP_OPEN_RBRACKET:
+    case CExprOpType::OPEN_RBRACKET:
       stackEToken(ctoken);
       break;
 #ifdef GNUPLOT_EXPR
-    case CEXPR_OP_OPEN_SBRACKET:
+    case CExprOpType::OPEN_SBRACKET:
       stackEToken(ctoken);
       break;
-    case CEXPR_OP_CLOSE_SBRACKET:
+    case CExprOpType::CLOSE_SBRACKET:
       executeSubscriptOperator();
       break;
 #endif
-    case CEXPR_OP_START_BLOCK:
+    case CExprOpType::START_BLOCK:
       stackBlock();
       break;
-    case CEXPR_OP_UNKNOWN:
+    case CExprOpType::UNKNOWN:
       stackEToken(ctoken);
       break;
     default: {
@@ -535,11 +535,11 @@ executeSubscriptOperator()
   while (etoken1.isValid()) {
     CExprValuePtr value1;
 
-    if (etoken1->type() != CEXPR_TOKEN_OPERATOR) {
+    if (etoken1->type() != CExprTokenType::OPERATOR) {
       value1 = etokenToValue(etoken1);
     }
     else {
-      if (etoken1->getOperator() != CEXPR_OP_UNKNOWN)
+      if (etoken1->getOperator() != CExprOpType::UNKNOWN)
         break;
     }
 
@@ -589,7 +589,7 @@ executeEqualsOperator()
 
   CExprValuePtr value;
 
-  if (etoken2->type() == CEXPR_TOKEN_IDENTIFIER) {
+  if (etoken2->type() == CExprTokenType::IDENTIFIER) {
     CExprVariablePtr variable = CExprInst->createVariable(etoken2->getIdentifier(), value1);
 
     value = variable->getValue();
@@ -615,7 +615,7 @@ executeFunction(const CExprFunctionPtr &function, CExprValuePtr &value)
   if (! etoken.isValid())
     return false;
 
-  while (etoken->type() != CEXPR_TOKEN_OPERATOR) {
+  while (etoken->type() != CExprTokenType::OPERATOR) {
     CExprValuePtr value1 = etokenToValue(etoken);
 
     values.push_front(value1);
@@ -630,14 +630,14 @@ executeFunction(const CExprFunctionPtr &function, CExprValuePtr &value)
     CExprValueType argType = function->argType(i);
 
     if (! value1.isValid()) {
-      if (! (argType & CEXPR_VALUE_NULL)) {
+      if (! (uint(argType) & uint(CExprValueType::NUL))) {
         CExprInst->errorMsg("Invalid type for function argument");
         return false;
       }
     }
     else {
-      if (! (argType & CEXPR_VALUE_NULL)) {
-        if (! (value1->getType() & argType))
+      if (! (uint(argType) & uint(CExprValueType::NUL))) {
+        if (! (uint(value1->getType()) & uint(argType)))
           value1 = value1->dup();
 
         if (! value1->convToType(argType)) {
@@ -648,7 +648,7 @@ executeFunction(const CExprFunctionPtr &function, CExprValuePtr &value)
     }
   }
 
-  assert(etoken->type() == CEXPR_TOKEN_OPERATOR);
+  assert(etoken->type() == CExprTokenType::OPERATOR);
 
   CExprValueArray values1;
 
@@ -681,7 +681,7 @@ CExprExecuteImpl::
 etokenToValue(const CExprTokenBaseP &etoken)
 {
   switch (etoken->type()) {
-    case CEXPR_TOKEN_IDENTIFIER: {
+    case CExprTokenType::IDENTIFIER: {
       CExprVariablePtr variable = CExprInst->getVariable(etoken->getIdentifier());
 
       if (variable.isValid())
@@ -689,7 +689,7 @@ etokenToValue(const CExprTokenBaseP &etoken)
 
       break;
     }
-    case CEXPR_TOKEN_FUNCTION: {
+    case CExprTokenType::FUNCTION: {
       CExprValuePtr value;
 
       if (executeFunction(etoken->getFunction(), value))
@@ -697,7 +697,7 @@ etokenToValue(const CExprTokenBaseP &etoken)
 
       break;
     }
-    case CEXPR_TOKEN_BLOCK: {
+    case CExprTokenType::BLOCK: {
       CExprValuePtr value;
 
       if (executeBlock(etoken->getBlock(), value))
@@ -705,7 +705,7 @@ etokenToValue(const CExprTokenBaseP &etoken)
 
       break;
     }
-    case CEXPR_TOKEN_VALUE:
+    case CExprTokenType::VALUE:
       return etoken->getValue();
     default:
       break;
@@ -739,12 +739,12 @@ stackBlock()
     if (! ctoken.isValid())
       break;
 
-    if (ctoken->type() == CEXPR_TOKEN_OPERATOR) {
+    if (ctoken->type() == CExprTokenType::OPERATOR) {
       CExprOpType op = ctoken->getOperator();
 
-      if      (op == CEXPR_OP_START_BLOCK)
+      if      (op == CExprOpType::START_BLOCK)
         ++brackets;
-      else if (op == CEXPR_OP_END_BLOCK) {
+      else if (op == CExprOpType::END_BLOCK) {
         --brackets;
 
         if (brackets <= 0)

@@ -12,7 +12,7 @@ set xrange [0:11]
 unset key #below 
 
 set title "variable color points, circles, candlesticks, boxes, and boxxyerror"
-plot 'candlesticks.dat' using 1:(1):1 with points pt 11 lc variable, \
+plot 'data/candlesticks.dat' using 1:(1):1 with points pt 11 lc variable, \
      '' using 1:2:(.1):1 with circles lc variable, \
      '' using 1:3:2:6:5:1 with candlesticks lc variable, \
      '' using ($1+.3):3:2:6:5:1 with financebars lc variable, \
@@ -23,7 +23,7 @@ pause -1 'Hit <cr> to continue'
 
 set title "variable color boxerror, xyerrorbars, impulses, vectors, and labels"
 unset colorbox
-plot 'candlesticks.dat' \
+plot 'data/candlesticks.dat' \
         using 1:5:2:6:(.2):1 with boxerror lc var fs solid 0.5 border -1 , \
      '' using 1:(1):1 with points pt 11 lc variable, \
      '' using 1:(8):(by3($0)):(by4($0)):1 with xyerrorbars lc var, \
@@ -35,7 +35,7 @@ pause -1 'Hit <cr> to continue'
 
 set title "variable color using 'lc palette z'"
 set colorbox
-plot 'candlesticks.dat' using 1:(1):1 with points pt 11 lc pal z, \
+plot 'data/candlesticks.dat' using 1:(1):1 with points pt 11 lc pal z, \
      '' using 1:2:(.1):1 with circles lc pal z, \
      '' using 1:3:2:6:5:1 with candlesticks lc pal z, \
      '' using ($1+.3):3:2:6:5:1 with financebars lc pal z, \
@@ -44,7 +44,7 @@ plot 'candlesticks.dat' using 1:(1):1 with points pt 11 lc pal z, \
 
 pause -1 'Hit <cr> to continue'
 
-plot 'candlesticks.dat' \
+plot 'data/candlesticks.dat' \
         using 1:5:2:6:(.2):1 with boxerror lc pal z fs solid 0.5, \
      '' using 1:(1):1 with points pt 11 lc pal z, \
      '' using 1:(8):(by3($0)):(by4($0)):1 with xyerrorbars lc pal z, \
@@ -56,7 +56,7 @@ plot 'candlesticks.dat' \
 pause -1 'Hit <cr> to continue'
 
 set title "variable color using 'lc rgb variable'"
-plot 'candlesticks.dat' using 1:(1):(rgbfudge($1)) with points pt 11 lc rgb var, \
+plot 'data/candlesticks.dat' using 1:(1):(rgbfudge($1)) with points pt 11 lc rgb var, \
      '' using 1:2:(.1):(rgbfudge($1)) with circles lc rgb var, \
      '' using 1:3:2:6:5:(rgbfudge($1)) with candlesticks lc rgb var, \
      '' using ($1+.3):3:2:6:5:(rgbfudge($1)) with financebars lc rgb var, \
@@ -65,7 +65,7 @@ plot 'candlesticks.dat' using 1:(1):(rgbfudge($1)) with points pt 11 lc rgb var,
 
 pause -1 'Hit <cr> to continue'
 
-plot 'candlesticks.dat' \
+plot 'data/candlesticks.dat' \
         using 1:5:2:6:(.2):(rgbfudge($1)) with boxerror lc rgb var fs solid 0.5 noborder, \
      '' using 1:(1):(rgbfudge($1)) with points pt 11 lc rgb var, \
      '' using 1:(8):(by3($0)):(by4($0)):(rgbfudge($1)) with xyerrorbars lc rgb var, \

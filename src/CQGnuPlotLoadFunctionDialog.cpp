@@ -48,6 +48,8 @@ createWidgets(QWidget *)
   xminEdit_    ->setValue(-10);
   xmaxEdit_    ->setValue(10);
   lineTypeEdit_->setValue(1);
+
+  addStretch();
 }
 
 bool

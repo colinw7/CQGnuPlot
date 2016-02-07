@@ -4,5 +4,6 @@
 #include <CStrUtil.h>
 #include <CFile.h>
 #include <CExpr.h>
+#include <CExprTokenMgr.h>
 
 #endif

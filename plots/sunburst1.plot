@@ -1,1 +1,1 @@
-plot "data/tree_map.data" with sunburst using 2:3:1
+plot "data/tree_map.data" with sunburst using 1:2:3

@@ -1,73 +1,72 @@
 #ifndef CEXPR_H
 #define CEXPR_H
 
-enum CExprOpType {
-  CEXPR_OP_UNKNOWN           = -1,
-  CEXPR_OP_OPEN_RBRACKET     = 0,
-  CEXPR_OP_CLOSE_RBRACKET    = 1,
-  CEXPR_OP_LOGICAL_NOT       = 2,
-  CEXPR_OP_BIT_NOT           = 3,
-  CEXPR_OP_INCREMENT         = 4,
-  CEXPR_OP_DECREMENT         = 5,
-  CEXPR_OP_UNARY_PLUS        = 6,
-  CEXPR_OP_UNARY_MINUS       = 7,
-  CEXPR_OP_POWER             = 8,
-  CEXPR_OP_TIMES             = 9,
-  CEXPR_OP_DIVIDE            = 10,
-  CEXPR_OP_MODULUS           = 11,
-  CEXPR_OP_PLUS              = 12,
-  CEXPR_OP_MINUS             = 13,
-  CEXPR_OP_BIT_LSHIFT        = 14,
-  CEXPR_OP_BIT_RSHIFT        = 15,
-  CEXPR_OP_LESS              = 16,
-  CEXPR_OP_LESS_EQUAL        = 17,
-  CEXPR_OP_GREATER           = 18,
-  CEXPR_OP_GREATER_EQUAL     = 19,
-  CEXPR_OP_EQUAL             = 20,
-  CEXPR_OP_NOT_EQUAL         = 21,
-  CEXPR_OP_APPROX_EQUAL      = 22,
-  CEXPR_OP_BIT_AND           = 23,
-  CEXPR_OP_BIT_XOR           = 24,
-  CEXPR_OP_BIT_OR            = 25,
-  CEXPR_OP_LOGICAL_AND       = 26,
-  CEXPR_OP_LOGICAL_OR        = 27,
-  CEXPR_OP_QUESTION          = 28,
-  CEXPR_OP_COLON             = 29,
-  CEXPR_OP_EQUALS            = 30,
-  CEXPR_OP_PLUS_EQUALS       = 31,
-  CEXPR_OP_MINUS_EQUALS      = 32,
-  CEXPR_OP_TIMES_EQUALS      = 33,
-  CEXPR_OP_DIVIDE_EQUALS     = 34,
-  CEXPR_OP_MODULUS_EQUALS    = 35,
-  CEXPR_OP_BIT_AND_EQUALS    = 36,
-  CEXPR_OP_BIT_XOR_EQUALS    = 37,
-  CEXPR_OP_BIT_OR_EQUALS     = 38,
-  CEXPR_OP_BIT_LSHIFT_EQUALS = 39,
-  CEXPR_OP_BIT_RSHIFT_EQUALS = 40,
+enum class CExprOpType {
+  UNKNOWN           = -1,
+  OPEN_RBRACKET     = 0,
+  CLOSE_RBRACKET    = 1,
+  LOGICAL_NOT       = 2,
+  BIT_NOT           = 3,
+  INCREMENT         = 4,
+  DECREMENT         = 5,
+  UNARY_PLUS        = 6,
+  UNARY_MINUS       = 7,
+  POWER             = 8,
+  TIMES             = 9,
+  DIVIDE            = 10,
+  MODULUS           = 11,
+  PLUS              = 12,
+  MINUS             = 13,
+  BIT_LSHIFT        = 14,
+  BIT_RSHIFT        = 15,
+  LESS              = 16,
+  LESS_EQUAL        = 17,
+  GREATER           = 18,
+  GREATER_EQUAL     = 19,
+  EQUAL             = 20,
+  NOT_EQUAL         = 21,
+  APPROX_EQUAL      = 22,
+  BIT_AND           = 23,
+  BIT_XOR           = 24,
+  BIT_OR            = 25,
+  LOGICAL_AND       = 26,
+  LOGICAL_OR        = 27,
+  QUESTION          = 28,
+  COLON             = 29,
+  EQUALS            = 30,
+  PLUS_EQUALS       = 31,
+  MINUS_EQUALS      = 32,
+  TIMES_EQUALS      = 33,
+  DIVIDE_EQUALS     = 34,
+  MODULUS_EQUALS    = 35,
+  BIT_AND_EQUALS    = 36,
+  BIT_XOR_EQUALS    = 37,
+  BIT_OR_EQUALS     = 38,
+  BIT_LSHIFT_EQUALS = 39,
+  BIT_RSHIFT_EQUALS = 40,
 #ifdef GNUPLOT_EXPR
-  CEXPR_OP_OPEN_SBRACKET     = 41,
-  CEXPR_OP_CLOSE_SBRACKET    = 42,
-  CEXPR_OP_STR_EQUAL         = 43,
-  CEXPR_OP_STR_NOT_EQUAL     = 44,
-  CEXPR_OP_STR_CONCAT        = 45,
-  CEXPR_OP_FACTORIAL         = 46,
+  OPEN_SBRACKET     = 41,
+  CLOSE_SBRACKET    = 42,
+  STR_EQUAL         = 43,
+  STR_NOT_EQUAL     = 44,
+  STR_CONCAT        = 45,
+  FACTORIAL         = 46,
 #endif
-  CEXPR_OP_COMMA             = 47,
-  CEXPR_OP_START_BLOCK       = 48,
-  CEXPR_OP_END_BLOCK         = 49
+  COMMA             = 47,
+  START_BLOCK       = 48,
+  END_BLOCK         = 49
 };
 
-enum CExprValueType {
-  CEXPR_VALUE_NONE    = 0,
-  CEXPR_VALUE_BOOLEAN = (1<<0),
-  CEXPR_VALUE_INTEGER = (1<<1),
-  CEXPR_VALUE_REAL    = (1<<2),
-  CEXPR_VALUE_STRING  = (1<<3),
-  CEXPR_VALUE_COMPLEX = (1<<4),
-  CEXPR_VALUE_NULL    = (1<<5),
+enum class CExprValueType {
+  NONE    = 0,
+  BOOLEAN = (1<<0),
+  INTEGER = (1<<1),
+  REAL    = (1<<2),
+  STRING  = (1<<3),
+  COMPLEX = (1<<4),
+  NUL     = (1<<5),
 
-  CEXPR_VALUE_ANY = (CEXPR_VALUE_BOOLEAN | CEXPR_VALUE_INTEGER |
-                     CEXPR_VALUE_REAL | CEXPR_VALUE_STRING | CEXPR_VALUE_COMPLEX)
+  ANY = (BOOLEAN | INTEGER | REAL | STRING | COMPLEX)
 };
 
 class CExprValue;
@@ -126,43 +125,43 @@ class CExprValueBase {
 
 //-------
 
-enum CExprTokenType {
-  CEXPR_TOKEN_UNKNOWN = -1,
+enum class CExprTokenType {
+  UNKNOWN = -1,
 
-  CEXPR_TOKEN_NONE = 0,
+  NONE = 0,
 
-  CEXPR_TOKEN_IDENTIFIER = 1,
-  CEXPR_TOKEN_OPERATOR   = 2,
-  CEXPR_TOKEN_INTEGER    = 4,
-  CEXPR_TOKEN_REAL       = 5,
-  CEXPR_TOKEN_STRING     = 6,
-  CEXPR_TOKEN_COMPLEX    = 7,
-  CEXPR_TOKEN_FUNCTION   = 8,
-  CEXPR_TOKEN_VALUE      = 9,
-  CEXPR_TOKEN_BLOCK      = 10
+  IDENTIFIER = 1,
+  OPERATOR   = 2,
+  INTEGER    = 4,
+  REAL       = 5,
+  STRING     = 6,
+  COMPLEX    = 7,
+  FUNCTION   = 8,
+  VALUE      = 9,
+  BLOCK      = 10
 };
 
-enum CExprITokenType {
-  CEXPR_TOKEN_TYPE                = 100,
-  CEXPR_EXPRESSION                = 101,
-  CEXPR_ASSIGNMENT_EXPRESSION     = 102,
-  CEXPR_CONDITIONAL_EXPRESSION    = 103,
-  CEXPR_LOGICAL_OR_EXPRESSION     = 104,
-  CEXPR_LOGICAL_AND_EXPRESSION    = 105,
-  CEXPR_INCLUSIVE_OR_EXPRESSION   = 106,
-  CEXPR_EXCLUSIVE_OR_EXPRESSION   = 107,
-  CEXPR_AND_EXPRESSION            = 108,
-  CEXPR_EQUALITY_EXPRESSION       = 109,
-  CEXPR_RELATIONAL_EXPRESSION     = 110,
-  CEXPR_SHIFT_EXPRESSION          = 111,
-  CEXPR_ADDITIVE_EXPRESSION       = 112,
-  CEXPR_MULTIPLICATIVE_EXPRESSION = 113,
-  CEXPR_POWER_EXPRESSION          = 114,
-  CEXPR_UNARY_EXPRESSION          = 115,
-  CEXPR_POSTFIX_EXPRESSION        = 116,
-  CEXPR_PRIMARY_EXPRESSION        = 117,
-  CEXPR_ARGUMENT_EXPRESSION_LIST  = 118,
-  CEXPR_DUMMY_EXPRESSION          = 119,
+enum class CExprITokenType {
+  TOKEN_TYPE                = 100,
+  EXPRESSION                = 101,
+  ASSIGNMENT_EXPRESSION     = 102,
+  CONDITIONAL_EXPRESSION    = 103,
+  LOGICAL_OR_EXPRESSION     = 104,
+  LOGICAL_AND_EXPRESSION    = 105,
+  INCLUSIVE_OR_EXPRESSION   = 106,
+  EXCLUSIVE_OR_EXPRESSION   = 107,
+  AND_EXPRESSION            = 108,
+  EQUALITY_EXPRESSION       = 109,
+  RELATIONAL_EXPRESSION     = 110,
+  SHIFT_EXPRESSION          = 111,
+  ADDITIVE_EXPRESSION       = 112,
+  MULTIPLICATIVE_EXPRESSION = 113,
+  POWER_EXPRESSION          = 114,
+  UNARY_EXPRESSION          = 115,
+  POSTFIX_EXPRESSION        = 116,
+  PRIMARY_EXPRESSION        = 117,
+  ARGUMENT_EXPRESSION_LIST  = 118,
+  DUMMY_EXPRESSION          = 119,
 };
 
 //-------
@@ -183,6 +182,7 @@ enum CExprITokenType {
 #include <CExprExecute.h>
 #include <CExprStrgen.h>
 #include <CExprError.h>
+#include <CExprFunctionMgr.h>
 
 //-------
 
@@ -245,6 +245,9 @@ class CExpr {
                                const std::string &proc);
   CExprFunctionPtr addFunction(const std::string &name, const std::string &argsStr,
                                CExprFunctionObj *proc);
+
+  void removeFunction(const std::string &name);
+
   void getFunctionNames(StringArray &names) const;
 
   CExprTokenBaseP getOperator(CExprOpType id);

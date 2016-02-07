@@ -2,37 +2,37 @@
 
 CExprValue::
 CExprValue() :
- type_(CEXPR_VALUE_NONE), base_(0)
+ type_(CExprValueType::NONE), base_(0)
 {
 }
 
 CExprValue::
 CExprValue(const CExprBooleanValue &boolean) :
- type_(CEXPR_VALUE_BOOLEAN), base_(boolean.dup())
+ type_(CExprValueType::BOOLEAN), base_(boolean.dup())
 {
 }
 
 CExprValue::
 CExprValue(const CExprIntegerValue &integer) :
- type_(CEXPR_VALUE_INTEGER), base_(integer.dup())
+ type_(CExprValueType::INTEGER), base_(integer.dup())
 {
 }
 
 CExprValue::
 CExprValue(const CExprRealValue &real) :
- type_(CEXPR_VALUE_REAL), base_(real.dup())
+ type_(CExprValueType::REAL), base_(real.dup())
 {
 }
 
 CExprValue::
 CExprValue(const CExprStringValue &str) :
- type_(CEXPR_VALUE_STRING), base_(str.dup())
+ type_(CExprValueType::STRING), base_(str.dup())
 {
 }
 
 CExprValue::
 CExprValue(const CExprComplexValue &str) :
- type_(CEXPR_VALUE_COMPLEX), base_(str.dup())
+ type_(CExprValueType::COMPLEX), base_(str.dup())
 {
 }
 
@@ -47,7 +47,8 @@ dup() const
 {
   CExprValue *value1 = new CExprValue;
 
-  value1->type_ = type_;
+  value1->type_       = type_;
+  value1->attributes_ = attributes_;
 
   if (base_)
     value1->base_ = base_->dup();
@@ -59,35 +60,35 @@ bool
 CExprValue::
 isBooleanValue() const
 {
-  return (type_ == CEXPR_VALUE_BOOLEAN);
+  return isType(CExprValueType::BOOLEAN);
 }
 
 bool
 CExprValue::
 isIntegerValue() const
 {
-  return (type_ == CEXPR_VALUE_INTEGER);
+  return isType(CExprValueType::INTEGER);
 }
 
 bool
 CExprValue::
 isRealValue() const
 {
-  return (type_ == CEXPR_VALUE_REAL);
+  return isType(CExprValueType::REAL);
 }
 
 bool
 CExprValue::
 isStringValue() const
 {
-  return (type_ == CEXPR_VALUE_STRING);
+  return isType(CExprValueType::STRING);
 }
 
 bool
 CExprValue::
 isComplexValue() const
 {
-  return (type_ == CEXPR_VALUE_COMPLEX);
+  return isType(CExprValueType::COMPLEX);
 }
 
 bool
@@ -174,18 +175,20 @@ bool
 CExprValue::
 convToType(CExprValueType type)
 {
-  if (type & type_) return true;
+  uint itype = uint(type);
+
+  if (itype & uint(type_)) return true;
 
   // TODO: conversion order
-  if      (type & CEXPR_VALUE_BOOLEAN)
+  if      (hasType(itype, CExprValueType::BOOLEAN))
     return convToBoolean();
-  else if (type & CEXPR_VALUE_INTEGER)
+  else if (hasType(itype, CExprValueType::INTEGER))
     return convToInteger();
-  else if (type & CEXPR_VALUE_REAL)
+  else if (hasType(itype, CExprValueType::REAL))
     return convToReal();
-  else if (type & CEXPR_VALUE_STRING)
+  else if (hasType(itype, CExprValueType::STRING))
     return convToString();
-  else if (type & CEXPR_VALUE_COMPLEX)
+  else if (hasType(itype, CExprValueType::COMPLEX))
     return convToComplex();
   else
     return false;
@@ -202,7 +205,7 @@ convToBoolean()
   if (! getBooleanValue(boolean))
     return false;
 
-  type_ = CEXPR_VALUE_BOOLEAN;
+  type_ = CExprValueType::BOOLEAN;
   base_ = new CExprBooleanValue(boolean);
 
   return true;
@@ -219,7 +222,7 @@ convToInteger()
   if (! getIntegerValue(integer))
     return false;
 
-  type_ = CEXPR_VALUE_INTEGER;
+  type_ = CExprValueType::INTEGER;
   base_ = new CExprIntegerValue(integer);
 
   return true;
@@ -236,7 +239,7 @@ convToReal()
   if (! getRealValue(real))
     return false;
 
-  type_ = CEXPR_VALUE_REAL;
+  type_ = CExprValueType::REAL;
   base_ = new CExprRealValue(real);
 
   return true;
@@ -253,7 +256,7 @@ convToString()
   if (! getStringValue(str))
     return false;
 
-  type_ = CEXPR_VALUE_STRING;
+  type_ = CExprValueType::STRING;
   base_ = new CExprStringValue(str);
 
   return true;
@@ -270,7 +273,7 @@ convToComplex()
   if (! getComplexValue(c))
     return false;
 
-  type_ = CEXPR_VALUE_COMPLEX;
+  type_ = CExprValueType::COMPLEX;
   base_ = new CExprComplexValue(c);
 
   return true;

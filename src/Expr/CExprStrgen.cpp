@@ -66,7 +66,7 @@ CExprStringToNumber(const std::string &str, uint *i, long &integer, double &real
 
   if (*i < str.size() - 2 && str[*i] == '0' &&
       (str[*i + 1] == 'x' || str[*i + 1] == 'X') && isxdigit(str[*i + 2])) {
-    (*i)++;
+    (*i)++; // skip 2 chars
     (*i)++;
 
     uint j = *i;

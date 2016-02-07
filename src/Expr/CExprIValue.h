@@ -14,7 +14,7 @@ class CExprIntegerValue : public CExprValueBase {
   bool getBooleanValue(bool        &b) const { b = (integer_ != 0); return true; }
   bool getIntegerValue(long        &l) const { l = integer_       ; return true; }
   bool getRealValue   (double      &r) const { r = integer_       ; return true; }
-  bool getStringValue (std::string &s) const { s = CStrUtil::toString(integer_); return true; }
+  bool getStringValue (std::string &s) const;
 
   bool getComplexValue(std::complex<double> &c) const {
     c = std::complex<double>(integer_, 0.0); return true;

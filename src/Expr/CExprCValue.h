@@ -17,10 +17,7 @@ class CExprComplexValue : public CExprValueBase {
   bool getIntegerValue(long   &l) const { l = long(c_.real()) ; return true; }
   bool getRealValue   (double &r) const { r = c_.real(); return true; }
 
-  bool getStringValue(std::string &s) const {
-    s = "{" + CStrUtil::toString(c_.real()) + ", " + CStrUtil::toString(c_.imag()) + "}";
-    return true;
-  }
+  bool getStringValue (std::string &s) const;
 
   bool getComplexValue(std::complex<double> &c) const { c = c_; return true; }
 

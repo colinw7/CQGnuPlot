@@ -11,9 +11,9 @@ class CExprStringValue : public CExprValueBase {
     return new CExprStringValue(str_);
   }
 
-  bool getBooleanValue(bool        &b) const { return CStrUtil::toBool   (str_, &b); }
-  bool getIntegerValue(long        &l) const { return CStrUtil::toInteger(str_, &l); }
-  bool getRealValue   (double      &r) const { return CStrUtil::toReal   (str_, &r); }
+  bool getBooleanValue(bool        &b) const;
+  bool getIntegerValue(long        &l) const;
+  bool getRealValue   (double      &r) const;
   bool getStringValue (std::string &s) const { s = str_; return true; }
 
   void setStringValue(const std::string &s) { str_ = s; }

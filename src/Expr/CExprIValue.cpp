@@ -14,18 +14,27 @@ double factorial(int i) {
 
 //---
 
+bool
+CExprIntegerValue::
+getStringValue(std::string &s) const
+{
+  s = CStrUtil::toString(integer_);
+
+  return true;
+}
+
 CExprValuePtr
 CExprIntegerValue::
 execUnaryOp(CExprOpType op) const
 {
   switch (op) {
-    case CEXPR_OP_UNARY_PLUS:
+    case CExprOpType::UNARY_PLUS:
       return CExprInst->createIntegerValue(integer_);
-    case CEXPR_OP_UNARY_MINUS:
+    case CExprOpType::UNARY_MINUS:
       return CExprInst->createIntegerValue(-integer_);
-    case CEXPR_OP_BIT_NOT:
+    case CExprOpType::BIT_NOT:
       return CExprInst->createIntegerValue(~integer_);
-    case CEXPR_OP_FACTORIAL:
+    case CExprOpType::FACTORIAL:
       return CExprInst->createRealValue(factorial(integer_));
     default:
       return CExprValuePtr();
@@ -42,7 +51,7 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
     return CExprValuePtr();
 
   switch (op) {
-    case CEXPR_OP_POWER: {
+    case CExprOpType::POWER: {
       int error_code;
 
       long integer = integerPower(integer_, irhs, &error_code);
@@ -52,45 +61,45 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
       else
         return CExprInst->createIntegerValue(integer);
     }
-    case CEXPR_OP_TIMES:
+    case CExprOpType::TIMES:
       return CExprInst->createIntegerValue(integer_ * irhs);
-    case CEXPR_OP_DIVIDE: {
+    case CExprOpType::DIVIDE: {
       // divide by zero
       if (irhs == 0) return CExprValuePtr();
 
       return CExprInst->createIntegerValue(integer_ / irhs);
     }
-    case CEXPR_OP_MODULUS: {
+    case CExprOpType::MODULUS: {
       // divide by zero
       if (irhs == 0) return CExprValuePtr();
 
       return CExprInst->createIntegerValue(integer_ % irhs);
     }
-    case CEXPR_OP_PLUS:
+    case CExprOpType::PLUS:
       return CExprInst->createIntegerValue(integer_ + irhs);
-    case CEXPR_OP_MINUS:
+    case CExprOpType::MINUS:
       return CExprInst->createIntegerValue(integer_ - irhs);
-    case CEXPR_OP_BIT_LSHIFT:
+    case CExprOpType::BIT_LSHIFT:
       return CExprInst->createIntegerValue(integer_ << irhs);
-    case CEXPR_OP_BIT_RSHIFT:
+    case CExprOpType::BIT_RSHIFT:
       return CExprInst->createIntegerValue(integer_ >> irhs);
-    case CEXPR_OP_LESS:
+    case CExprOpType::LESS:
       return CExprInst->createBooleanValue(integer_ < irhs);
-    case CEXPR_OP_LESS_EQUAL:
+    case CExprOpType::LESS_EQUAL:
       return CExprInst->createBooleanValue(integer_ <= irhs);
-    case CEXPR_OP_GREATER:
+    case CExprOpType::GREATER:
       return CExprInst->createBooleanValue(integer_ > irhs);
-    case CEXPR_OP_GREATER_EQUAL:
+    case CExprOpType::GREATER_EQUAL:
       return CExprInst->createBooleanValue(integer_ >= irhs);
-    case CEXPR_OP_EQUAL:
+    case CExprOpType::EQUAL:
       return CExprInst->createBooleanValue(integer_ == irhs);
-    case CEXPR_OP_NOT_EQUAL:
+    case CExprOpType::NOT_EQUAL:
       return CExprInst->createBooleanValue(integer_ != irhs);
-    case CEXPR_OP_BIT_AND:
+    case CExprOpType::BIT_AND:
       return CExprInst->createIntegerValue(integer_ & irhs);
-    case CEXPR_OP_BIT_XOR:
+    case CExprOpType::BIT_XOR:
       return CExprInst->createIntegerValue(integer_ ^ irhs);
-    case CEXPR_OP_BIT_OR:
+    case CExprOpType::BIT_OR:
       return CExprInst->createIntegerValue(integer_ | irhs);
     default:
       return CExprValuePtr();
@@ -104,7 +113,7 @@ integerPower(long integer1, long integer2, int *error_code) const
   *error_code = 0;
 
   if (integer1 == 0 && integer2 < 0) {
-    *error_code = CEXPR_ERROR_ZERO_TO_NEG_POWER_UNDEF;
+    *error_code = int(CExprErrorType::ZERO_TO_NEG_POWER_UNDEF);
     return 0;
   }
 
@@ -118,7 +127,7 @@ integerPower(long integer1, long integer2, int *error_code) const
     real = pow((double) integer1, (double) integer2);
 
   if (errno != 0) {
-    *error_code = CEXPR_ERROR_POWER_FAILED;
+    *error_code = int(CExprErrorType::POWER_FAILED);
     return 0;
   }
 
@@ -139,7 +148,7 @@ realToInteger(double real, int *error_code) const
   double real1 = (double) integer;
 
   if (fabs(real1 - real) >= 1.0)
-    *error_code = CEXPR_ERROR_REAL_TOO_BIG_FOR_INTEGER;
+    *error_code = int(CExprErrorType::REAL_TOO_BIG_FOR_INTEGER);
 
   return integer;
 }

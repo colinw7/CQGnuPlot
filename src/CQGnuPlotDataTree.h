@@ -17,6 +17,8 @@ class CQGnuPlotDataTree : public QTreeView {
 
   CQHeaderView *header() const { return header_; }
 
+  void load(const CGnuPlotFile &file);
+
  public slots:
   void reload();
 

@@ -245,19 +245,19 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   //---
 
-  QAction *loadFileAction = new QAction("Load File", this);
+  QAction *loadFileAction = new QAction("Plot File", this);
 
   fileMenu->addAction(loadFileAction);
 
   connect(loadFileAction, SIGNAL(triggered()), this, SLOT(loadFile()));
 
-  QAction *loadFnAction = new QAction("Load Function", this);
+  QAction *loadFnAction = new QAction("Plot Function", this);
 
   fileMenu->addAction(loadFnAction);
 
   connect(loadFnAction, SIGNAL(triggered()), this, SLOT(loadFunction()));
 
-  QAction *dataAction = new QAction("Show Data", this);
+  QAction *dataAction = new QAction("Process Data", this);
 
   fileMenu->addAction(dataAction);
 
@@ -556,14 +556,10 @@ addGroupProperties(CGnuPlotGroup *group)
 
   QString regionName = groupName + "/region";
 
-  tree_->addProperty(regionName, qgroup, "regionLeft"  )->
-   setLabel("left"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
-  tree_->addProperty(regionName, qgroup, "regionBottom")->
-   setLabel("bottom")->setEditorFactory(realEdit("-1000:1000:0.1"));
-  tree_->addProperty(regionName, qgroup, "regionRight" )->
-   setLabel("right" )->setEditorFactory(realEdit("-1000:1000:0.1"));
-  tree_->addProperty(regionName, qgroup, "regionTop"   )->
-   setLabel("top"   )->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(regionName, qgroup, "regionLeft"  )->setLabel("left"  );
+  tree_->addProperty(regionName, qgroup, "regionBottom")->setLabel("bottom");
+  tree_->addProperty(regionName, qgroup, "regionRight" )->setLabel("right" );
+  tree_->addProperty(regionName, qgroup, "regionTop"   )->setLabel("top"   );
 
   QString marginName = groupName + "/margin";
 
@@ -578,14 +574,10 @@ addGroupProperties(CGnuPlotGroup *group)
 
   QString rangeName = groupName + "/range";
 
-  tree_->addProperty(rangeName, qgroup, "rangeLeft"  )->
-   setLabel("left"  )->setEditorFactory(realEdit("-1000:1000:0.1"));
-  tree_->addProperty(rangeName, qgroup, "rangeBottom")->
-   setLabel("bottom")->setEditorFactory(realEdit("-1000:1000:0.1"));
-  tree_->addProperty(rangeName, qgroup, "rangeRight" )->
-   setLabel("right" )->setEditorFactory(realEdit("-1000:1000:0.1"));
-  tree_->addProperty(rangeName, qgroup, "rangeTop"   )->
-   setLabel("top"   )->setEditorFactory(realEdit("-1000:1000:0.1"));
+  tree_->addProperty(rangeName, qgroup, "rangeLeft"  )->setLabel("left"  );
+  tree_->addProperty(rangeName, qgroup, "rangeBottom")->setLabel("bottom");
+  tree_->addProperty(rangeName, qgroup, "rangeRight" )->setLabel("right" );
+  tree_->addProperty(rangeName, qgroup, "rangeTop"   )->setLabel("top"   );
 
   tree_->addProperty(groupName, qgroup, "ratio")->setEditorFactory(realEdit("-1000:1000:0.1"));
 
@@ -1587,7 +1579,7 @@ loadFileSlot()
 
   CGnuPlotUsingCols usingCols;
 
-  usingCols.init(usingStr.toStdString());
+  usingCols.parse(usingStr.toStdString());
 
   if (! isImage) {
     if (! binary) {

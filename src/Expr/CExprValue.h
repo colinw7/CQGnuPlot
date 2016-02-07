@@ -3,6 +3,12 @@
 
 class CExprValue {
  public:
+  enum class AttributeType {
+    NONE    = 0,
+    MISSING = (1<<0)
+  };
+
+ public:
   CExprValue();
 
   CExprValue(const CExprBooleanValue &boolean);
@@ -14,6 +20,20 @@ class CExprValue {
  ~CExprValue();
 
   CExprValueType getType() const { return type_; }
+  bool isType(CExprValueType type) const { return (type_ == type); }
+
+  bool hasType(uint type, CExprValueType subType) const {
+    return (type & uint(subType));
+  }
+
+  bool isMissing() const { return (attributes_ & uint(AttributeType::MISSING)); }
+
+  void setMissing(bool b) {
+    if (b)
+      attributes_ |= uint(AttributeType::MISSING);
+    else
+      attributes_ &= ~uint(AttributeType::MISSING);
+  }
 
   CExprValue *dup() const;
 
@@ -59,6 +79,7 @@ class CExprValue {
  private:
   CExprValueType           type_;
   CAutoPtr<CExprValueBase> base_;
+  uint                     attributes_ { 0 };
 };
 
 #endif

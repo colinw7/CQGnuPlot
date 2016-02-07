@@ -1,7 +1,7 @@
 #ifndef CExprParse_H
 #define CExprParse_H
 
-//---
+#include <CExprToken.h>
 
 class CExprParseImpl;
 

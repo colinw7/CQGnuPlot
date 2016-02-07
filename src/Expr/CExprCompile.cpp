@@ -93,101 +93,101 @@ CExprCompileImpl::
 compileIToken1(CExprITokenPtr itoken)
 {
   switch (itoken->getIType()) {
-    case CEXPR_EXPRESSION:
+    case CExprITokenType::EXPRESSION:
       compileExpression(itoken);
 
       break;
-    case CEXPR_ASSIGNMENT_EXPRESSION:
+    case CExprITokenType::ASSIGNMENT_EXPRESSION:
       compileAssignmentExpression(itoken);
 
       break;
-    case CEXPR_CONDITIONAL_EXPRESSION:
+    case CExprITokenType::CONDITIONAL_EXPRESSION:
       compileConditionalExpression(itoken);
 
       break;
-    case CEXPR_LOGICAL_OR_EXPRESSION:
+    case CExprITokenType::LOGICAL_OR_EXPRESSION:
       compileLogicalOrExpression(itoken);
 
       break;
-    case CEXPR_LOGICAL_AND_EXPRESSION:
+    case CExprITokenType::LOGICAL_AND_EXPRESSION:
       compileLogicalAndExpression(itoken);
 
       break;
-    case CEXPR_INCLUSIVE_OR_EXPRESSION:
+    case CExprITokenType::INCLUSIVE_OR_EXPRESSION:
       compileInclusiveOrExpression(itoken);
 
       break;
-    case CEXPR_EXCLUSIVE_OR_EXPRESSION:
+    case CExprITokenType::EXCLUSIVE_OR_EXPRESSION:
       compileExclusiveOrExpression(itoken);
 
       break;
-    case CEXPR_AND_EXPRESSION:
+    case CExprITokenType::AND_EXPRESSION:
       compileAndExpression(itoken);
 
       break;
-    case CEXPR_EQUALITY_EXPRESSION:
+    case CExprITokenType::EQUALITY_EXPRESSION:
       compileEqualityExpression(itoken);
 
       break;
-    case CEXPR_RELATIONAL_EXPRESSION:
+    case CExprITokenType::RELATIONAL_EXPRESSION:
       compileRelationalExpression(itoken);
 
       break;
-    case CEXPR_SHIFT_EXPRESSION:
+    case CExprITokenType::SHIFT_EXPRESSION:
       compileShiftExpression(itoken);
 
       break;
-    case CEXPR_ADDITIVE_EXPRESSION:
+    case CExprITokenType::ADDITIVE_EXPRESSION:
       compileAdditiveExpression(itoken);
 
       break;
-    case CEXPR_MULTIPLICATIVE_EXPRESSION:
+    case CExprITokenType::MULTIPLICATIVE_EXPRESSION:
       compileMultiplicativeExpression(itoken);
 
       break;
-    case CEXPR_POWER_EXPRESSION:
+    case CExprITokenType::POWER_EXPRESSION:
       compilePowerExpression(itoken);
 
       break;
-    case CEXPR_UNARY_EXPRESSION:
+    case CExprITokenType::UNARY_EXPRESSION:
       compileUnaryExpression(itoken);
 
       break;
-    case CEXPR_POSTFIX_EXPRESSION:
+    case CExprITokenType::POSTFIX_EXPRESSION:
       compilePostfixExpression(itoken);
 
       break;
-    case CEXPR_PRIMARY_EXPRESSION:
+    case CExprITokenType::PRIMARY_EXPRESSION:
       compilePrimaryExpression(itoken);
 
       break;
-    case CEXPR_ARGUMENT_EXPRESSION_LIST:
+    case CExprITokenType::ARGUMENT_EXPRESSION_LIST:
       compileArgumentExpressionList(itoken);
 
       break;
-    case CEXPR_TOKEN_TYPE: {
+    case CExprITokenType::TOKEN_TYPE: {
       switch (itoken->getType()) {
-        case CEXPR_TOKEN_IDENTIFIER:
+        case CExprTokenType::IDENTIFIER:
           compileIdentifier(itoken);
 
           break;
-        case CEXPR_TOKEN_OPERATOR:
+        case CExprTokenType::OPERATOR:
           compileOperator(itoken);
 
           break;
-        case CEXPR_TOKEN_INTEGER:
+        case CExprTokenType::INTEGER:
           compileInteger(itoken);
 
           break;
-        case CEXPR_TOKEN_REAL:
+        case CExprTokenType::REAL:
           compileReal(itoken);
 
           break;
-        case CEXPR_TOKEN_STRING:
+        case CExprTokenType::STRING:
           compileString(itoken);
 
           break;
-        case CEXPR_TOKEN_COMPLEX:
+        case CExprTokenType::COMPLEX:
           compileComplex(itoken);
 
           break;
@@ -254,88 +254,88 @@ compileAssignmentExpression(CExprITokenPtr itoken)
     CExprOpType op = itoken1->getOperator();
 
     switch (op) {
-      case CEXPR_OP_EQUALS:
+      case CExprOpType::EQUALS:
         compileAssignmentExpression(itoken->getChild(2));
 
         break;
-      case CEXPR_OP_TIMES_EQUALS:
+      case CExprOpType::TIMES_EQUALS:
         compileUnaryExpression(itoken->getChild(0));
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_TIMES));
+        stackCToken(CExprInst->getOperator(CExprOpType::TIMES));
 
         break;
-      case CEXPR_OP_DIVIDE_EQUALS:
+      case CExprOpType::DIVIDE_EQUALS:
         compileUnaryExpression(itoken->getChild(0));
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_DIVIDE));
+        stackCToken(CExprInst->getOperator(CExprOpType::DIVIDE));
 
         break;
-      case CEXPR_OP_MODULUS_EQUALS:
+      case CExprOpType::MODULUS_EQUALS:
         compileUnaryExpression(itoken->getChild(0));
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_MODULUS));
+        stackCToken(CExprInst->getOperator(CExprOpType::MODULUS));
 
         break;
-      case CEXPR_OP_PLUS_EQUALS:
+      case CExprOpType::PLUS_EQUALS:
         compileUnaryExpression(itoken->getChild(0));
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_PLUS));
+        stackCToken(CExprInst->getOperator(CExprOpType::PLUS));
 
         break;
-      case CEXPR_OP_MINUS_EQUALS:
+      case CExprOpType::MINUS_EQUALS:
         compileUnaryExpression(itoken->getChild(0));
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_MINUS));
+        stackCToken(CExprInst->getOperator(CExprOpType::MINUS));
 
         break;
-      case CEXPR_OP_BIT_LSHIFT_EQUALS:
+      case CExprOpType::BIT_LSHIFT_EQUALS:
         compileUnaryExpression(itoken->getChild(0));
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_LSHIFT));
+        stackCToken(CExprInst->getOperator(CExprOpType::BIT_LSHIFT));
 
         break;
-      case CEXPR_OP_BIT_RSHIFT_EQUALS:
+      case CExprOpType::BIT_RSHIFT_EQUALS:
         compileUnaryExpression(itoken->getChild(0));
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_RSHIFT));
+        stackCToken(CExprInst->getOperator(CExprOpType::BIT_RSHIFT));
 
         break;
-      case CEXPR_OP_BIT_AND_EQUALS:
+      case CExprOpType::BIT_AND_EQUALS:
         compileUnaryExpression(itoken->getChild(0));
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_AND));
+        stackCToken(CExprInst->getOperator(CExprOpType::BIT_AND));
 
         break;
-      case CEXPR_OP_BIT_XOR_EQUALS:
+      case CExprOpType::BIT_XOR_EQUALS:
         compileUnaryExpression(itoken->getChild(0));
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_XOR));
+        stackCToken(CExprInst->getOperator(CExprOpType::BIT_XOR));
 
         break;
-      case CEXPR_OP_BIT_OR_EQUALS:
+      case CExprOpType::BIT_OR_EQUALS:
         compileUnaryExpression(itoken->getChild(0));
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_OR));
+        stackCToken(CExprInst->getOperator(CExprOpType::BIT_OR));
 
         break;
       default:
@@ -343,7 +343,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
         break;
     }
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
+    stackCToken(CExprInst->getOperator(CExprOpType::EQUALS));
   }
   else
     compileConditionalExpression(itoken->getChild(0));
@@ -365,27 +365,27 @@ compileConditionalExpression(CExprITokenPtr itoken)
     // 0 boolean, 2 = lhs, 4 = rhs
 
     // stack lhs expression
-    stackCToken(CExprInst->getOperator(CEXPR_OP_START_BLOCK));
+    stackCToken(CExprInst->getOperator(CExprOpType::START_BLOCK));
 
     compileExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_END_BLOCK));
+    stackCToken(CExprInst->getOperator(CExprOpType::END_BLOCK));
 
     //---
 
     // stack lhs expression
-    stackCToken(CExprInst->getOperator(CEXPR_OP_START_BLOCK));
+    stackCToken(CExprInst->getOperator(CExprOpType::START_BLOCK));
 
     compileConditionalExpression(itoken->getChild(4));
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_END_BLOCK));
+    stackCToken(CExprInst->getOperator(CExprOpType::END_BLOCK));
 
     //---
 
     // stack conditional
     compileLogicalOrExpression(itoken->getChild(0));
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_QUESTION));
+    stackCToken(CExprInst->getOperator(CExprOpType::QUESTION));
   }
   else
     compileLogicalOrExpression(itoken->getChild(0));
@@ -407,7 +407,7 @@ compileLogicalOrExpression(CExprITokenPtr itoken)
 
     compileLogicalAndExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_LOGICAL_OR));
+    stackCToken(CExprInst->getOperator(CExprOpType::LOGICAL_OR));
   }
   else
     compileLogicalAndExpression(itoken->getChild(0));
@@ -429,7 +429,7 @@ compileLogicalAndExpression(CExprITokenPtr itoken)
 
     compileInclusiveOrExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_LOGICAL_AND));
+    stackCToken(CExprInst->getOperator(CExprOpType::LOGICAL_AND));
   }
   else
     compileInclusiveOrExpression(itoken->getChild(0));
@@ -451,7 +451,7 @@ compileInclusiveOrExpression(CExprITokenPtr itoken)
 
     compileExclusiveOrExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_OR));
+    stackCToken(CExprInst->getOperator(CExprOpType::BIT_OR));
   }
   else
     compileExclusiveOrExpression(itoken->getChild(0));
@@ -473,7 +473,7 @@ compileExclusiveOrExpression(CExprITokenPtr itoken)
 
     compileAndExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_XOR));
+    stackCToken(CExprInst->getOperator(CExprOpType::BIT_XOR));
   }
   else
     compileAndExpression(itoken->getChild(0));
@@ -495,7 +495,7 @@ compileAndExpression(CExprITokenPtr itoken)
 
     compileEqualityExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_BIT_AND));
+    stackCToken(CExprInst->getOperator(CExprOpType::BIT_AND));
   }
   else
     compileEqualityExpression(itoken->getChild(0));
@@ -519,14 +519,14 @@ compileEqualityExpression(CExprITokenPtr itoken)
 
     CExprOpType op = itoken1->getOperator();
 
-    if      (op == CEXPR_OP_EQUAL || op == CEXPR_OP_STR_EQUAL) {
+    if      (op == CExprOpType::EQUAL || op == CExprOpType::STR_EQUAL) {
       compileEqualityExpression(itoken->getChild(0));
 
       compileRelationalExpression(itoken->getChild(2));
 
       stackCToken(itoken1->base());
     }
-    else if (op == CEXPR_OP_NOT_EQUAL || op == CEXPR_OP_STR_NOT_EQUAL) {
+    else if (op == CExprOpType::NOT_EQUAL || op == CExprOpType::STR_NOT_EQUAL) {
       compileEqualityExpression(itoken->getChild(0));
 
       compileRelationalExpression(itoken->getChild(2));
@@ -538,7 +538,7 @@ compileEqualityExpression(CExprITokenPtr itoken)
 
       compileRelationalExpression(itoken->getChild(2));
 
-      stackCToken(CExprInst->getOperator(CEXPR_OP_APPROX_EQUAL));
+      stackCToken(CExprInst->getOperator(CExprOpType::APPROX_EQUAL));
     }
   }
   else
@@ -593,7 +593,7 @@ compileShiftExpression(CExprITokenPtr itoken)
 
     CExprOpType op = itoken1->getOperator();
 
-    if (op == CEXPR_OP_BIT_LSHIFT)
+    if (op == CExprOpType::BIT_LSHIFT)
       stackCToken(itoken1->base());
     else
       stackCToken(itoken1->base());
@@ -631,12 +631,12 @@ compileAdditiveExpression(CExprITokenPtr itoken)
 
     CExprOpType op = itoken1->getOperator();
 
-    if      (op == CEXPR_OP_PLUS)
+    if      (op == CExprOpType::PLUS)
       stackCToken(itoken1->base());
-    else if (op == CEXPR_OP_MINUS)
+    else if (op == CExprOpType::MINUS)
       stackCToken(itoken1->base());
 #ifdef GNUPLOT_EXPR
-    else if (op == CEXPR_OP_STR_CONCAT)
+    else if (op == CExprOpType::STR_CONCAT)
       stackCToken(itoken1->base());
 #endif
   }
@@ -666,9 +666,9 @@ compileMultiplicativeExpression(CExprITokenPtr itoken)
 
     CExprOpType op = itoken1->getOperator();
 
-    if      (op == CEXPR_OP_TIMES)
+    if      (op == CExprOpType::TIMES)
       stackCToken(itoken1->base());
-    else if (op == CEXPR_OP_DIVIDE)
+    else if (op == CExprOpType::DIVIDE)
       stackCToken(itoken1->base());
     else
       stackCToken(itoken1->base());
@@ -701,43 +701,43 @@ compileUnaryExpression(CExprITokenPtr itoken)
       CExprOpType op = itoken0->getOperator();
 
       switch (op) {
-        case CEXPR_OP_INCREMENT:
+        case CExprOpType::INCREMENT:
           compileUnaryExpression(itoken->getChild(1));
 
           compileUnaryExpression(itoken->getChild(1));
 
-          stackCToken(CExprInst->getOperator(CEXPR_OP_PLUS));
-          stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
+          stackCToken(CExprInst->getOperator(CExprOpType::PLUS));
+          stackCToken(CExprInst->getOperator(CExprOpType::EQUALS));
 
           break;
-        case CEXPR_OP_DECREMENT:
+        case CExprOpType::DECREMENT:
           compileUnaryExpression(itoken->getChild(1));
 
           compileUnaryExpression(itoken->getChild(1));
 
-          stackCToken(CExprInst->getOperator(CEXPR_OP_MINUS));
-          stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
+          stackCToken(CExprInst->getOperator(CExprOpType::MINUS));
+          stackCToken(CExprInst->getOperator(CExprOpType::EQUALS));
 
           break;
-        case CEXPR_OP_PLUS:
+        case CExprOpType::PLUS:
           compileUnaryExpression(itoken->getChild(1));
 
-          stackCToken(CExprInst->getOperator(CEXPR_OP_UNARY_PLUS));
+          stackCToken(CExprInst->getOperator(CExprOpType::UNARY_PLUS));
 
           break;
-        case CEXPR_OP_MINUS:
+        case CExprOpType::MINUS:
           compileUnaryExpression(itoken->getChild(1));
 
-          stackCToken(CExprInst->getOperator(CEXPR_OP_UNARY_MINUS));
+          stackCToken(CExprInst->getOperator(CExprOpType::UNARY_MINUS));
 
           break;
-        case CEXPR_OP_BIT_NOT:
+        case CExprOpType::BIT_NOT:
           compileUnaryExpression(itoken->getChild(1));
 
           stackCToken(itoken0->base());
 
           break;
-        case CEXPR_OP_LOGICAL_NOT:
+        case CExprOpType::LOGICAL_NOT:
           compileUnaryExpression(itoken->getChild(1));
 
           stackCToken(itoken0->base());
@@ -776,7 +776,7 @@ compilePowerExpression(CExprITokenPtr itoken)
 
     compilePowerExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_POWER));
+    stackCToken(CExprInst->getOperator(CExprOpType::POWER));
   }
   else
     compilePostfixExpression(itoken->getChild(0));
@@ -810,52 +810,52 @@ compilePostfixExpression(CExprITokenPtr itoken)
 
   CExprOpType op = itoken1->getOperator();
 
-  if      (num_children == 4 && itoken0->getIType() == CEXPR_PRIMARY_EXPRESSION &&
-           op == CEXPR_OP_OPEN_SBRACKET) {
+  if      (num_children == 4 && itoken0->getIType() == CExprITokenType::PRIMARY_EXPRESSION &&
+           op == CExprOpType::OPEN_SBRACKET) {
     compilePrimaryExpression(itoken0);
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_OPEN_SBRACKET));
+    stackCToken(CExprInst->getOperator(CExprOpType::OPEN_SBRACKET));
 
-    if (itoken->getChild(2)->getIType() != CEXPR_DUMMY_EXPRESSION)
+    if (itoken->getChild(2)->getIType() != CExprITokenType::DUMMY_EXPRESSION)
       compileExpression(itoken->getChild(2));
     else
-      stackCToken(CExprInst->getOperator(CEXPR_OP_UNKNOWN));
+      stackCToken(CExprInst->getOperator(CExprOpType::UNKNOWN));
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
+    stackCToken(CExprInst->getOperator(CExprOpType::CLOSE_SBRACKET));
 
     return;
   }
-  else if (num_children == 6 && itoken0->getIType() == CEXPR_PRIMARY_EXPRESSION &&
-           op == CEXPR_OP_OPEN_SBRACKET) {
+  else if (num_children == 6 && itoken0->getIType() == CExprITokenType::PRIMARY_EXPRESSION &&
+           op == CExprOpType::OPEN_SBRACKET) {
     compilePrimaryExpression(itoken0);
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_OPEN_SBRACKET));
+    stackCToken(CExprInst->getOperator(CExprOpType::OPEN_SBRACKET));
 
-    if (itoken->getChild(2)->getIType() != CEXPR_DUMMY_EXPRESSION)
+    if (itoken->getChild(2)->getIType() != CExprITokenType::DUMMY_EXPRESSION)
       compileExpression(itoken->getChild(2));
     else
-      stackCToken(CExprInst->getOperator(CEXPR_OP_UNKNOWN));
+      stackCToken(CExprInst->getOperator(CExprOpType::UNKNOWN));
 
-    if (itoken->getChild(4)->getIType() != CEXPR_DUMMY_EXPRESSION)
+    if (itoken->getChild(4)->getIType() != CExprITokenType::DUMMY_EXPRESSION)
       compileExpression(itoken->getChild(4));
     else
-      stackCToken(CExprInst->getOperator(CEXPR_OP_UNKNOWN));
+      stackCToken(CExprInst->getOperator(CExprOpType::UNKNOWN));
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
+    stackCToken(CExprInst->getOperator(CExprOpType::CLOSE_SBRACKET));
 
     return;
   }
 
   //----
 
-  if      (op == CEXPR_OP_OPEN_RBRACKET) {
+  if      (op == CExprOpType::OPEN_RBRACKET) {
     stackCToken(itoken1->base());
 
     uint num_args = 0;
 
     if (num_children == 4) {
       num_args = itoken->getChild(2)->
-        countITokenChildrenOfType(CEXPR_ASSIGNMENT_EXPRESSION);
+        countITokenChildrenOfType(CExprITokenType::ASSIGNMENT_EXPRESSION);
 
       compileArgumentExpressionList(itoken->getChild(2));
     }
@@ -890,7 +890,7 @@ compilePostfixExpression(CExprITokenPtr itoken)
     uint function_num_args = function->numArgs();
 
     for (uint i = num_args; i < function_num_args; ++i) {
-      if (! (function->argType(i) & CEXPR_VALUE_NULL))
+      if (! (uint(function->argType(i)) & uint(CExprValueType::NUL)))
         break;
 
       stackDummyValue();
@@ -914,7 +914,7 @@ compilePostfixExpression(CExprITokenPtr itoken)
     stackFunction(function);
   }
 #ifdef GNUPLOT_EXPR
-  else if (op == CEXPR_OP_OPEN_SBRACKET) {
+  else if (op == CExprOpType::OPEN_SBRACKET) {
     // <var> [ <ind> ]
     if (num_children == 4) {
       CExprITokenPtr itoken0 = itoken->getChild(0);
@@ -925,7 +925,7 @@ compilePostfixExpression(CExprITokenPtr itoken)
 
       compileExpression(itoken->getChild(2));
 
-      stackCToken(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
+      stackCToken(CExprInst->getOperator(CExprOpType::CLOSE_SBRACKET));
     }
     // <var> [ <ind> : <ind> ]
     else {
@@ -935,33 +935,33 @@ compilePostfixExpression(CExprITokenPtr itoken)
 
       stackCToken(itoken1->base());
 
-      if (itoken->getChild(2)->getIType() != CEXPR_DUMMY_EXPRESSION)
+      if (itoken->getChild(2)->getIType() != CExprITokenType::DUMMY_EXPRESSION)
         compileExpression(itoken->getChild(2));
       else
-        stackCToken(CExprInst->getOperator(CEXPR_OP_UNKNOWN));
+        stackCToken(CExprInst->getOperator(CExprOpType::UNKNOWN));
 
-      if (itoken->getChild(4)->getIType() != CEXPR_DUMMY_EXPRESSION)
+      if (itoken->getChild(4)->getIType() != CExprITokenType::DUMMY_EXPRESSION)
         compileExpression(itoken->getChild(4));
       else
-        stackCToken(CExprInst->getOperator(CEXPR_OP_UNKNOWN));
+        stackCToken(CExprInst->getOperator(CExprOpType::UNKNOWN));
 
-      stackCToken(CExprInst->getOperator(CEXPR_OP_CLOSE_SBRACKET));
+      stackCToken(CExprInst->getOperator(CExprOpType::CLOSE_SBRACKET));
     }
   }
 #endif
-  else if (op == CEXPR_OP_INCREMENT) {
+  else if (op == CExprOpType::INCREMENT) {
     compilePostfixExpression(itoken->getChild(0));
-    compilePostfixExpression(itoken->getChild(0));
+    compilePostfixExpression(itoken->getChild(0)); // dup value
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
-    stackCToken(CExprInst->getOperator(CEXPR_OP_PLUS));
+    stackCToken(CExprInst->getOperator(CExprOpType::EQUALS));
+    stackCToken(CExprInst->getOperator(CExprOpType::PLUS));
   }
-  else if (op == CEXPR_OP_DECREMENT) {
+  else if (op == CExprOpType::DECREMENT) {
     compilePostfixExpression(itoken->getChild(0));
-    compilePostfixExpression(itoken->getChild(0));
+    compilePostfixExpression(itoken->getChild(0)); // dup value
 
-    stackCToken(CExprInst->getOperator(CEXPR_OP_EQUALS));
-    stackCToken(CExprInst->getOperator(CEXPR_OP_MINUS));
+    stackCToken(CExprInst->getOperator(CExprOpType::EQUALS));
+    stackCToken(CExprInst->getOperator(CExprOpType::MINUS));
   }
 }
 
@@ -985,23 +985,23 @@ compilePrimaryExpression(CExprITokenPtr itoken)
   }
   else {
     switch (itoken->getChild(0)->getType()) {
-      case CEXPR_TOKEN_INTEGER:
+      case CExprTokenType::INTEGER:
         compileInteger(itoken->getChild(0));
 
         break;
-      case CEXPR_TOKEN_REAL:
+      case CExprTokenType::REAL:
         compileReal(itoken->getChild(0));
 
         break;
-      case CEXPR_TOKEN_STRING:
+      case CExprTokenType::STRING:
         compileString(itoken->getChild(0));
 
         break;
-      case CEXPR_TOKEN_COMPLEX:
+      case CExprTokenType::COMPLEX:
         compileComplex(itoken->getChild(0));
 
         break;
-      case CEXPR_TOKEN_IDENTIFIER:
+      case CExprTokenType::IDENTIFIER:
         compileIdentifier(itoken->getChild(0));
 
         break;

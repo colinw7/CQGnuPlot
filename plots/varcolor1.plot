@@ -16,9 +16,9 @@ unset key #below
 
 set title "variable color points, circles, candlesticks, boxes, and boxxyerror"
 
-#plot 'candlesticks.dat' using 1:(1):1 with points pt 11 lc variable
-#plot 'candlesticks.dat' using 1:2:(.1):1 with circles lc variable
-#plot 'candlesticks.dat' using 1:3:2:6:5:1 with candlesticks lc variable
-#plot 'candlesticks.dat' using ($1+.3):3:2:6:5:1 with financebars lc variable
-#plot 'candlesticks.dat' using 1:(8):(by3($0)):(by4($0)):1 with boxxy lc var fs solid
-plot 'candlesticks.dat' using 1:(-$2/2):1 with boxes lc var
+#plot 'data/candlesticks.dat' using 1:(1):1 with points pt 11 lc variable
+#plot 'data/candlesticks.dat' using 1:2:(.1):1 with circles lc variable
+plot 'data/candlesticks.dat' using 1:3:2:6:5:1 with candlesticks lc variable
+#plot 'data/candlesticks.dat' using ($1+.3):3:2:6:5:1 with financebars lc variable
+#plot 'data/candlesticks.dat' using 1:(8):(by3($0)):(by4($0)):1 with boxxy lc var fs solid
+#plot 'data/candlesticks.dat' using 1:(-$2/2):1 with boxes lc var

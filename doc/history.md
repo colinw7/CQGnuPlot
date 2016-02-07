@@ -219,3 +219,9 @@
 ### 01/31/2016
  + add save image dialog
  + add line cap and line join to stroke
+
+### 02/07/2016
+ + add cvs, separator, missing, index, every, where. smooth, line type support to data dialog
+ + add auto load to command line parameters
+ + add field functions into using code
+ + fix delaunay auto scale

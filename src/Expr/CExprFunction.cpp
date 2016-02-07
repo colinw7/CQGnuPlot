@@ -892,19 +892,19 @@ parseArgs(const std::string &argsStr, Args &args, bool &variableArgs)
       break;
     }
 
-    uint types = CEXPR_VALUE_NONE;
+    uint types = uint(CExprValueType::NONE);
 
     uint len = arg.size();
 
     for (uint j = 0; j < len; j++) {
       char c = arg[j];
 
-      if      (c == 'b') types |= CEXPR_VALUE_BOOLEAN;
-      else if (c == 'i') types |= CEXPR_VALUE_INTEGER;
-      else if (c == 'r') types |= CEXPR_VALUE_REAL;
-      else if (c == 's') types |= CEXPR_VALUE_STRING;
-      else if (c == 'c') types |= CEXPR_VALUE_COMPLEX;
-      else if (c == 'n') types |= CEXPR_VALUE_NULL;
+      if      (c == 'b') types |= uint(CExprValueType::BOOLEAN);
+      else if (c == 'i') types |= uint(CExprValueType::INTEGER);
+      else if (c == 'r') types |= uint(CExprValueType::REAL);
+      else if (c == 's') types |= uint(CExprValueType::STRING);
+      else if (c == 'c') types |= uint(CExprValueType::COMPLEX);
+      else if (c == 'n') types |= uint(CExprValueType::NUL);
       else {
         CExprInst->errorMsg("Invalid argument type char '" + std::string(&c, 1) + "'");
         rc = false;

@@ -2,6 +2,8 @@
 #define CGnuPlotFile_H
 
 #include <CGnuPlotBinaryFormat.h>
+#include <CGnuPlotEveryData.h>
+#include <CGnuPlotIndexData.h>
 #include <CSize2D.h>
 #include <COptVal.h>
 
@@ -13,53 +15,40 @@
 
 class CGnuPlotFile {
  public:
-  typedef std::vector<std::string>   Lines;
-  typedef std::vector<std::string>   Fields;
-  typedef std::map<int,std::string>  LineString;
+  typedef std::string                Line;
+  typedef std::vector<Line>          Lines;
+  typedef std::map<int,Line>         LineString;
   typedef std::map<int,LineString>   SubSetString;
   typedef std::map<int,SubSetString> SetString;
 
   //---
 
-  struct Indices {
-    Indices() { }
-
-    int start { 0 };
-    int end   { std::numeric_limits<int>::max() };
-    int step  { 1 };
-
-    bool validIndex(int i) const { return (i >= start && i <= end && ((i - start) % step) == 0); }
-  };
-
-  //---
-
-  struct Every {
-    Every() { }
-
-    int pointStart { 0 };
-    int pointEnd   { std::numeric_limits<int>::max() };
-    int pointStep  { 1 };
-
-    int blockStart { 0 };
-    int blockEnd   { std::numeric_limits<int>::max() };
-    int blockStep  { 1 };
-
-    bool validPointIndex(int i) const {
-      return (i >= pointStart && i <= pointEnd && ((i - pointStart) % pointStep) == 0);
+  class Field {
+   public:
+    Field(const std::string &str="") :
+     str_(str) {
     }
 
-    bool validBlockIndex(int i) const {
-      return (i >= blockStart && i <= blockEnd && ((i - blockStart) % blockStep) == 0);
+    const std::string &str() const { return str_; }
+
+    void print(std::ostream &os) const {
+      os << str_;
     }
+
+   private:
+    std::string str_;
   };
+
+  typedef std::vector<Field> Fields;
 
   struct SubSetLine {
     int    num { 0 };
     Fields fields;
 
     void print(std::ostream &os) const {
-      for (const auto &f : fields)
-        os << " " << f;
+      for (const auto &f : fields) {
+        os << " "; f.print(os);
+      }
       os << std::endl;
     }
   };
@@ -100,10 +89,10 @@ class CGnuPlotFile {
   std::string commentChars() const { return commentChars_.getValue("#"); }
   void setCommentChars(const std::string &chars) { commentChars_ = chars; }
 
+  const std::string &missingStr() const { return missingStr_; }
   void setMissingStr(const std::string &chars) { missingStr_ = chars; }
-  const std::string &getMissingStr() const { return missingStr_; }
 
-  char getSeparator() const { return separator_; }
+  char separator() const { return separator_; }
   void setSeparator(char c) { separator_ = c; }
   void resetSeparator() { separator_ = '\0'; }
 
@@ -113,20 +102,15 @@ class CGnuPlotFile {
   bool isColumnHeaders() const { return columnHeaders_; }
   void setColumnHeaders(bool b) { columnHeaders_ = b; }
 
-  void getIndices(int &indexStart, int &indexEnd, int &indexStep);
-  void setIndices(int indexStart, int indexEnd, int indexStep);
-  void resetIndices() { setIndices(0, std::numeric_limits<int>::max(), 1); }
+  const CGnuPlotIndexData &indices() const { return indices_; }
+  void indices(CGnuPlotIndexData &index);
+  void setIndices(const CGnuPlotIndexData &index);
+  void resetIndices() { indices_.reset(); }
 
-  const Every &every() const { return every_; }
-
-  void getEvery(int &everyPointStart, int &everyPointEnd, int &everyPointStep,
-                int &everyBlockStart, int &everyBlockEnd, int &everyBlockStep);
-
-  void setEvery(int everyPointStart, int everyPointEnd, int everyPointStep,
-                int everyBlockStart, int everyBlockEnd, int everyBlockStep);
-
-  void resetEvery() { setEvery(0, std::numeric_limits<int>::max(), 1,
-                               0, std::numeric_limits<int>::max(), 1); }
+  const CGnuPlotEveryData &every() const { return every_; }
+  void every(CGnuPlotEveryData &every);
+  void setEvery(const CGnuPlotEveryData &every);
+  void resetEvery() { every_.reset(); }
 
   int setBlankLines() const { return setBlankLines_; }
   void setSetBlankLines(int i) { setBlankLines_ = i; }
@@ -148,13 +132,17 @@ class CGnuPlotFile {
 
   void processBinaryFile();
 
+  void processCsvFile();
+
   int numSets() const { return sets_.size(); }
 
   int numSubSets(int setNum=0) const {
     if (setNum < 0 || setNum >= numSets())
       return 0;
 
-    return sets_[setNum].subSets.size();
+    const Set &set = sets_[setNum];
+
+    return set.subSets.size();
   }
 
   int numLines(int subSetNum=0) const {
@@ -165,10 +153,14 @@ class CGnuPlotFile {
     if (setNum < 0 || setNum >= numSets())
       return 0;
 
+    const Set &set = sets_[setNum];
+
     if (subSetNum < 0 || subSetNum >= numSubSets(setNum))
       return 0;
 
-    return sets_[setNum].subSets[subSetNum].lines.size();
+    const SubSet &subSet = set.subSets[subSetNum];
+
+    return subSet.lines.size();
   }
 
   const Fields &fields(int lineNum) const {
@@ -185,20 +177,26 @@ class CGnuPlotFile {
     if (setNum < 0 || setNum >= numSets())
       return noFields;
 
+    const Set &set = sets_[setNum];
+
     if (subSetNum < 0 || subSetNum >= numSubSets(setNum))
       return noFields;
+
+    const SubSet &subSet = set.subSets[subSetNum];
 
     if (lineNum < 0 || lineNum >= numLines(setNum, subSetNum))
       return noFields;
 
-    return sets_[setNum].subSets[subSetNum].lines[lineNum].fields;
+    const SubSetLine &line = subSet.lines[lineNum];
+
+    return line.fields;
   }
 
   int numFields(int setNum, int subSetNum, int lineNum) const {
     return fields(setNum, subSetNum, lineNum).size();
   }
 
-  const std::string field(int setNum, int subSetNum, int lineNum, int fieldNum) const {
+  const Field field(int setNum, int subSetNum, int lineNum, int fieldNum) const {
     static std::string noField;
 
     const Fields &fields = this->fields(setNum, subSetNum, lineNum);
@@ -219,7 +217,7 @@ class CGnuPlotFile {
     if (fieldNum < 0 || fieldNum >= numColumnHeaders())
       return "";
 
-    return columnHeaderFields_[fieldNum];
+    return columnHeaderFields_[fieldNum].str();
   }
 
   bool isFortran() const { return fortran_; }
@@ -286,8 +284,8 @@ class CGnuPlotFile {
   bool                 parseStrings_ { true };
   bool                 columnHeaders_ { false };
   Fields               columnHeaderFields_;
-  Indices              indices_;
-  Every                every_;
+  CGnuPlotIndexData    indices_;
+  CGnuPlotEveryData    every_;
   Lines                lines_;
   Sets                 sets_;
   SetString            commentStrs_;

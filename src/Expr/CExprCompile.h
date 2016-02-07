@@ -1,6 +1,9 @@
 #ifndef CExprCompile_H
 #define CExprCompile_H
 
+#include <CExprToken.h>
+#include <CAutoPtr.h>
+
 class CExprCompileImpl;
 
 class CExprCompile {

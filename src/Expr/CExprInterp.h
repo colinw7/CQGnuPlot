@@ -18,7 +18,8 @@ class CExprIToken {
 
   const CExprTokenBaseP &base() const { return base_; }
 
-  CExprTokenType  getType () const { return base()->type(); }
+  CExprTokenType getType() const;
+
   CExprITokenType getIType() const { return itype_; }
 
   //CExprIToken *dup() const;

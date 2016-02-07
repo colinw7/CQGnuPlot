@@ -9,7 +9,7 @@
 
 CQGnuPlotFilename::
 CQGnuPlotFilename(QWidget *parent) :
- QFrame(parent), save_(false), pattern_("*.*")
+ QFrame(parent), save_(false), pattern_("Files (*.*)")
 {
   QHBoxLayout *layout = new QHBoxLayout(this);
 
@@ -33,10 +33,10 @@ fileSlot()
   QString fileName;
 
   if (isSave()) {
-    fileName = QFileDialog::getSaveFileName(this, "Save File", dir, "Files (" + pattern_ + ")");
+    fileName = QFileDialog::getSaveFileName(this, "Save File", dir, pattern_);
   }
   else {
-    fileName = QFileDialog::getOpenFileName(this, "Open File", dir, "Files (" + pattern_ + ")");
+    fileName = QFileDialog::getOpenFileName(this, "Open File", dir, pattern_);
   }
 
   if (! fileName.length())
@@ -50,4 +50,11 @@ CQGnuPlotFilename::
 name() const
 {
   return edit_->text();
+}
+
+void
+CQGnuPlotFilename::
+setName(const QString &name)
+{
+  edit_->setText(name);
 }
