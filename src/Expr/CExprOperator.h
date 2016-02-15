@@ -7,25 +7,6 @@ class CExprOperator;
 
 typedef CRefPtr<CExprOperator> CExprOperatorPtr;
 
-class CExprOperatorMgr {
- public:
- ~CExprOperatorMgr() { }
-
-  CExprOperatorPtr getOperator(CExprOpType type) const;
-
- private:
-  friend class CExpr;
-
-  CExprOperatorMgr();
-
- private:
-  typedef std::map<CExprOpType,CExprOperatorPtr> OperatorMap;
-
-  OperatorMap operator_map_;
-};
-
-//---
-
 class CExprOperator {
  public:
   static bool isOperatorChar(char c);

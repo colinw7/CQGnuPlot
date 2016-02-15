@@ -148,7 +148,7 @@ struct CExprBuiltinFunction {
 };
 
 static CExprValuePtr
-CExprFunctionSqrt(const CExprValueArray &values)
+CExprFunctionSqrt(CExpr *expr, const CExprValueArray &values)
 {
   assert(values.size() == 1);
 
@@ -160,17 +160,17 @@ CExprFunctionSqrt(const CExprValueArray &values)
   if (real >= 0.0) {
     double real1 = ::sqrt(real);
 
-    return CExprInst->createRealValue(real1);
+    return expr->createRealValue(real1);
   }
   else {
     double real1 = ::sqrt(-real);
 
-    return CExprInst->createComplexValue(std::complex<double>(0, real1));
+    return expr->createComplexValue(std::complex<double>(0, real1));
   }
 }
 
 static CExprValuePtr
-CExprFunctionExp(const CExprValueArray &values)
+CExprFunctionExp(CExpr *expr, const CExprValueArray &values)
 {
   assert(values.size() == 1);
 
@@ -182,7 +182,7 @@ CExprFunctionExp(const CExprValueArray &values)
       double r1 = exp(c.real())*cos(c.imag());
       double c1 = exp(c.real())*sin(c.imag());
 
-      return CExprInst->createComplexValue(std::complex<double>(r1, c1));
+      return expr->createComplexValue(std::complex<double>(r1, c1));
     }
     else
       return CExprValuePtr();
@@ -190,7 +190,7 @@ CExprFunctionExp(const CExprValueArray &values)
   else if (values[0]->getRealValue(r)) {
     double r1 = exp(r);
 
-    return CExprInst->createRealValue(r1);
+    return expr->createRealValue(r1);
   }
   else
     return CExprValuePtr();
@@ -198,7 +198,7 @@ CExprFunctionExp(const CExprValueArray &values)
 
 #define CEXPR_REAL_TO_REAL_FUNC(NAME, F) \
 static CExprValuePtr \
-CExprFunction##NAME(const CExprValueArray &values) { \
+CExprFunction##NAME(CExpr *expr, const CExprValueArray &values) { \
   assert(values.size() == 1); \
   double r = 0.0; \
   if (values[0]->getRealValue(r)) { \
@@ -206,12 +206,12 @@ CExprFunction##NAME(const CExprValueArray &values) { \
   else \
     return CExprValuePtr(); \
   double r1 = F(r); \
-  return CExprInst->createRealValue(r1); \
+  return expr->createRealValue(r1); \
 }
 
 #define CEXPR_REALC_TO_REAL_FUNC(NAME, F) \
 static CExprValuePtr \
-CExprFunction##NAME(const CExprValueArray &values) { \
+CExprFunction##NAME(CExpr *expr, const CExprValueArray &values) { \
   assert(values.size() == 1); \
   double r = 0.0; \
   if (values[0]->isComplexValue()) { \
@@ -227,12 +227,12 @@ CExprFunction##NAME(const CExprValueArray &values) { \
   else \
     return CExprValuePtr(); \
   double r1 = F(r); \
-  return CExprInst->createRealValue(r1); \
+  return expr->createRealValue(r1); \
 }
 
 #define CEXPR_REALC_TO_REALC_FUNC(NAME, F) \
 static CExprValuePtr \
-CExprFunction##NAME(const CExprValueArray &values) { \
+CExprFunction##NAME(CExpr *expr, const CExprValueArray &values) { \
   assert(values.size() == 1); \
   double r; \
   if (values[0]->isComplexValue()) { \
@@ -241,13 +241,13 @@ CExprFunction##NAME(const CExprValueArray &values) { \
       errno = 0; \
       std::complex<double> c1 = F(c); \
       if (errno != 0) return CExprValuePtr(); \
-      return CExprInst->createComplexValue(c1); \
+      return expr->createComplexValue(c1); \
     } \
       return CExprValuePtr(); \
   } \
   else if (values[0]->getRealValue(r)) { \
     double r1 = F(r); \
-    return CExprInst->createRealValue(r1); \
+    return expr->createRealValue(r1); \
   } \
   else \
     return CExprValuePtr(); \
@@ -255,21 +255,21 @@ CExprFunction##NAME(const CExprValueArray &values) { \
 
 #define CEXPR_ANGLE_TO_REAL_FUNC(NAME, F) \
 static CExprValuePtr \
-CExprFunction##NAME(const CExprValueArray &values) { \
+CExprFunction##NAME(CExpr *expr, const CExprValueArray &values) { \
   assert(values.size() == 1); \
   double real; \
   if (values[0]->getRealValue(real)) { \
-    if (CExprInst->getDegrees()) \
+    if (expr->getDegrees()) \
       real = DegToRad(real); \
     double real1 = F(real); \
-    return CExprInst->createRealValue(real1); \
+    return expr->createRealValue(real1); \
   } \
   return CExprValuePtr(); \
 }
 
 #define CEXPR_REALC_TO_ANGLE_FUNC(NAME, F) \
 static CExprValuePtr \
-CExprFunction##NAME(const CExprValueArray &values) { \
+CExprFunction##NAME(CExpr *expr, const CExprValueArray &values) { \
   assert(values.size() == 1); \
   double r; \
   if (values[0]->isComplexValue()) { \
@@ -278,9 +278,9 @@ CExprFunction##NAME(const CExprValueArray &values) { \
       errno = 0; \
       std::complex<double> c1 = F(c); \
       if (errno != 0) return CExprValuePtr(); \
-      if (CExprInst->getDegrees()) \
+      if (expr->getDegrees()) \
         c1 = std::complex<double>(RadToDeg(c1.real()), RadToDeg(c1.imag())); \
-      return CExprInst->createComplexValue(c1); \
+      return expr->createComplexValue(c1); \
     } \
     else \
       return CExprValuePtr(); \
@@ -289,18 +289,18 @@ CExprFunction##NAME(const CExprValueArray &values) { \
     errno = 0; \
     double r1 = F(r); \
     if (errno == 0) { \
-      if (CExprInst->getDegrees()) \
+      if (expr->getDegrees()) \
         r1 = RadToDeg(r1); \
-      return CExprInst->createRealValue(r1); \
+      return expr->createRealValue(r1); \
     } \
     else if (errno == EDOM) { \
       std::complex<double> c(r,0); \
       errno = 0; \
       std::complex<double> c1 = F(c); \
       if (errno != 0) return CExprValuePtr(); \
-      if (CExprInst->getDegrees()) \
+      if (expr->getDegrees()) \
         c1 = std::complex<double>(RadToDeg(c1.real()), RadToDeg(c1.imag())); \
-      return CExprInst->createComplexValue(c1); \
+      return expr->createComplexValue(c1); \
     } \
     else { \
       return CExprValuePtr(); \
@@ -312,21 +312,21 @@ CExprFunction##NAME(const CExprValueArray &values) { \
 
 #define CEXPR_REAL2_TO_ANGLE_FUNC(NAME, F) \
 static CExprValuePtr \
-CExprFunction##NAME(const CExprValueArray &values) { \
+CExprFunction##NAME(CExpr *expr, const CExprValueArray &values) { \
   assert(values.size() == 2); \
   double real1, real2; \
   if (values[0]->getRealValue(real1) && values[1]->getRealValue(real2)) { \
     double real = F(real1, real2); \
-    if (CExprInst->getDegrees()) \
+    if (expr->getDegrees()) \
       real = RadToDeg(real); \
-    return CExprInst->createRealValue(real); \
+    return expr->createRealValue(real); \
   } \
   return CExprValuePtr(); \
 }
 
 #define CEXPR_COMPLEX_TO_COMPLEX_FUNC(NAME, F) \
 static CExprValuePtr \
-CExprFunction##NAME(const CExprValueArray &values) { \
+CExprFunction##NAME(CExpr *expr, const CExprValueArray &values) { \
   assert(values.size() == 1); \
   std::complex<double> c; \
   if (! values[0]->getComplexValue(c)) { \
@@ -336,27 +336,27 @@ CExprFunction##NAME(const CExprValueArray &values) { \
     c = std::complex<double>(r, 0); \
   } \
   std::complex<double> c1 = F(c); \
-  return CExprInst->createComplexValue(c1); \
+  return expr->createComplexValue(c1); \
 }
 
 class CExprFunctionAbs : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
     assert(values.size() == 1);
     if      (values[0]->isRealValue()) {
       double real;
       if (values[0]->getRealValue(real))
-        return CExprInst->createRealValue(std::abs(real));
+        return expr->createRealValue(std::abs(real));
     }
     else if (values[0]->isIntegerValue()) {
       long integer;
       if (values[0]->getIntegerValue(integer))
-        return CExprInst->createIntegerValue(std::abs(integer));
+        return expr->createIntegerValue(std::abs(integer));
     }
     else if (values[0]->isComplexValue()) {
       std::complex<double> c;
       if (values[0]->getComplexValue(c))
-        return CExprInst->createRealValue(std::abs(c));
+        return expr->createRealValue(std::abs(c));
     }
     return CExprValuePtr();
   }
@@ -364,15 +364,15 @@ class CExprFunctionAbs : public CExprFunctionObj {
 
 class CExprFunctionCArg : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
     assert(values.size() == 1);
     if (values[0]->isComplexValue()) {
       std::complex<double> c;
       if (values[0]->getComplexValue(c)) {
         double r = std::arg(c);
-        if (CExprInst->getDegrees())
+        if (expr->getDegrees())
           r = DegToRad(r);
-        return CExprInst->createRealValue(r);
+        return expr->createRealValue(r);
       }
     }
     return CExprValuePtr();
@@ -381,12 +381,12 @@ class CExprFunctionCArg : public CExprFunctionObj {
 
 class CExprFunctionImag : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
     assert(values.size() == 1);
     if (values[0]->isComplexValue()) {
       std::complex<double> c;
       if (values[0]->getComplexValue(c))
-        return CExprInst->createRealValue(c.imag());
+        return expr->createRealValue(c.imag());
     }
     return CExprValuePtr();
   }
@@ -394,22 +394,22 @@ class CExprFunctionImag : public CExprFunctionObj {
 
 class CExprFunctionSign : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
     assert(values.size() == 1);
     if      (values[0]->isRealValue()) {
       double real;
       if (values[0]->getRealValue(real))
-        return CExprInst->createIntegerValue(real >= 0 ? (real == 0 ? 0 : 1) : -1);
+        return expr->createIntegerValue(real >= 0 ? (real == 0 ? 0 : 1) : -1);
     }
     else if (values[0]->isIntegerValue()) {
       long integer;
       if (values[0]->getIntegerValue(integer))
-        return CExprInst->createIntegerValue(integer >= 0 ? (integer == 0 ? 0 : 1) : -1);
+        return expr->createIntegerValue(integer >= 0 ? (integer == 0 ? 0 : 1) : -1);
     }
     else if (values[0]->isComplexValue()) {
       std::complex<double> c;
       if (values[0]->getComplexValue(c))
-        return CExprInst->createIntegerValue(c.real() >= 0 ? (c.real() == 0 ? 0 : 1) : -1);
+        return expr->createIntegerValue(c.real() >= 0 ? (c.real() == 0 ? 0 : 1) : -1);
     }
     return CExprValuePtr();
   }
@@ -417,22 +417,22 @@ class CExprFunctionSign : public CExprFunctionObj {
 
 class CExprFunctionExpr : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
     assert(values.size() == 1);
 
-    std::string expr;
+    std::string exprStr;
 
-    if (! values[0]->getStringValue(expr))
+    if (! values[0]->getStringValue(exprStr))
       return CExprValuePtr();
 
-    CExprInst->saveCompileState();
+    expr->saveCompileState();
 
     CExprValuePtr value;
 
-    if (! CExprInst->evaluateExpression(expr, value))
+    if (! expr->evaluateExpression(exprStr, value))
       value = CExprValuePtr();
 
-    CExprInst->restoreCompileState();
+    expr->restoreCompileState();
 
     return value;
   }
@@ -441,7 +441,7 @@ class CExprFunctionExpr : public CExprFunctionObj {
 #ifdef GNUPLOT_EXPR
 class CExprFunctionRand : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
     assert(values.size() == 1);
     if (values[0]->isIntegerValue()) {
       long integer = 0;
@@ -451,7 +451,7 @@ class CExprFunctionRand : public CExprFunctionObj {
       else if (integer > 0)
         srand(integer);
       double r = (1.0*rand())/RAND_MAX;
-      return CExprInst->createRealValue(r);
+      return expr->createRealValue(r);
     }
     return CExprValuePtr();
   }
@@ -461,7 +461,7 @@ class CExprFunctionRand : public CExprFunctionObj {
 #define CEXPR_REALC_TO_REAL_FOBJ(NAME, F) \
 class CExprFunction##NAME : public CExprFunctionObj { \
  public: \
-  CExprValuePtr operator()(const CExprValueArray &values) { \
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) { \
     assert(values.size() == 1); \
     double r = 0.0; \
     if      (values[0]->isRealValue()) { \
@@ -481,13 +481,13 @@ class CExprFunction##NAME : public CExprFunctionObj { \
       return CExprValuePtr(); \
     } \
     double r1 = F(r); \
-    return CExprInst->createRealValue(r1); \
+    return expr->createRealValue(r1); \
   } \
 };
 
 class CExprFunctionInt : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
     assert(values.size() == 1);
     double r = 0.0;
     if      (values[0]->isRealValue()) {
@@ -507,7 +507,7 @@ class CExprFunctionInt : public CExprFunctionObj {
       return CExprValuePtr();
     }
     int i1 = static_cast<int>(r);
-    return CExprInst->createIntegerValue(i1);
+    return expr->createIntegerValue(i1);
   }
 };
 
@@ -518,7 +518,7 @@ CEXPR_REALC_TO_REAL_FOBJ(Real , static_cast<double>)
 #ifdef GNUPLOT_EXPR
 class CExprFunctionSPrintF : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
     assert(values.size() >= 1);
 
     std::string fmt;
@@ -531,9 +531,9 @@ class CExprFunctionSPrintF : public CExprFunctionObj {
     for (uint i = 1; i < values.size(); ++i)
       values1.push_back(values[i]);
 
-    std::string res = CExprInst->printf(fmt, values1);
+    std::string res = expr->printf(fmt, values1);
 
-    return CExprInst->createStringValue(res);
+    return expr->createStringValue(res);
   }
 };
 #endif
@@ -547,11 +547,11 @@ class CExprFunctionObjT1 : public CExprFunctionObj {
     func_ = mgr->addObjFunction(name, argsStr, this);
   }
 
-  CExprValuePtr operator()(const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
     assert(values.size() == 1);
     T v;
     if (CExprUtil<T>::getTypeValue(values[0], v))
-      return CExprUtil<R>::createValue(f_(v));
+      return CExprUtil<R>::createValue(expr, f_(v));
     return CExprValuePtr();
   }
 
@@ -573,12 +573,12 @@ class CExprFunctionObjT2 : public CExprFunctionObj {
     func_ = mgr->addObjFunction(name, argsStr, this);
   }
 
-  CExprValuePtr operator()(const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
     assert(values.size() == 2);
     T1 v1; T2 v2;
     if (CExprUtil<T1>::getTypeValue(values[0], v1) &&
         CExprUtil<T2>::getTypeValue(values[1], v2))
-      return CExprUtil<R>::createValue(f_(v1, v2));
+      return CExprUtil<R>::createValue(expr, f_(v1, v2));
     return CExprValuePtr();
   }
 
@@ -601,13 +601,13 @@ class CExprFunctionObjT3 : public CExprFunctionObj {
     func_ = mgr->addObjFunction(name, argsStr, this);
   }
 
-  CExprValuePtr operator()(const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
     assert(values.size() == 3);
     T1 v1; T2 v2; T3 v3;
     if (CExprUtil<T1>::getTypeValue(values[0], v1) &&
         CExprUtil<T2>::getTypeValue(values[1], v2) &&
         CExprUtil<T2>::getTypeValue(values[2], v3))
-      return CExprUtil<R>::createValue(f_(v1, v2, v3));
+      return CExprUtil<R>::createValue(expr, f_(v1, v2, v3));
     return CExprValuePtr();
   }
 
@@ -703,11 +703,6 @@ builtinFns[] = {
 CExprFunctionMgr::
 CExprFunctionMgr(CExpr *expr) :
  expr_(expr)
-{
-}
-
-CExprFunctionMgr::
-~CExprFunctionMgr()
 {
 }
 
@@ -906,7 +901,8 @@ parseArgs(const std::string &argsStr, Args &args, bool &variableArgs)
       else if (c == 'c') types |= uint(CExprValueType::COMPLEX);
       else if (c == 'n') types |= uint(CExprValueType::NUL);
       else {
-        CExprInst->errorMsg("Invalid argument type char '" + std::string(&c, 1) + "'");
+        CExpr::instance()->
+          errorMsg("Invalid argument type char '" + std::string(&c, 1) + "'");
         rc = false;
       }
     }
@@ -934,11 +930,11 @@ checkValues(const CExprValueArray &values) const
 
 CExprValuePtr
 CExprProcFunction::
-exec(const CExprValueArray &values)
+exec(CExpr *expr, const CExprValueArray &values)
 {
   assert(checkValues(values));
 
-  return (*proc_)(values);
+  return (*proc_)(expr, values);
 }
 
 //----------
@@ -967,11 +963,11 @@ checkValues(const CExprValueArray &values) const
 
 CExprValuePtr
 CExprObjFunction::
-exec(const CExprValueArray &values)
+exec(CExpr *expr, const CExprValueArray &values)
 {
   assert(checkValues(values));
 
-  return (*proc_)(values);
+  return (*proc_)(expr, values);
 }
 
 //----------
@@ -1003,16 +999,16 @@ reset()
 
 CExprValuePtr
 CExprUserFunction::
-exec(const CExprValueArray &values)
+exec(CExpr *expr, const CExprValueArray &values)
 {
   assert(checkValues(values));
 
   //---
 
   if (! compiled_) {
-    pstack_ = CExprInst->parseLine(proc_);
-    itoken_ = CExprInst->interpPTokenStack(pstack_);
-    cstack_ = CExprInst->compileIToken(itoken_);
+    pstack_ = expr->parseLine(proc_);
+    itoken_ = expr->interpPTokenStack(pstack_);
+    cstack_ = expr->compileIToken(itoken_);
 
     compiled_ = true;
   }
@@ -1027,7 +1023,7 @@ exec(const CExprValueArray &values)
   for (uint i = 0; i < numArgs(); ++i) {
     const std::string &arg = args_[i];
 
-    CExprVariablePtr var = CExprInst->getVariable(arg);
+    CExprVariablePtr var = expr->getVariable(arg);
 
     if (var.isValid()) {
       varValues[arg] = var->getValue();
@@ -1037,23 +1033,23 @@ exec(const CExprValueArray &values)
     else {
       varValues[arg] = CExprValuePtr();
 
-      CExprInst->createVariable(arg, values[i]);
+      expr->createVariable(arg, values[i]);
     }
   }
 
   // run proc
-  CExprInst->saveCompileState();
+  expr->saveCompileState();
 
   CExprValuePtr value;
 
-//if (! CExprInst->evaluateExpression(proc_, value))
+//if (! expr->evaluateExpression(proc_, value))
 //  value = CExprValuePtr();
-//if (! CExprInst->executePTokenStack(pstack_, value))
+//if (! expr->executePTokenStack(pstack_, value))
 //  value = CExprValuePtr();
-  if (! CExprInst->executeCTokenStack(cstack_, value))
+  if (! expr->executeCTokenStack(cstack_, value))
     value = CExprValuePtr();
 
-  CExprInst->restoreCompileState();
+  expr->restoreCompileState();
 
   // restore variables
   for (const auto &v : varValues) {
@@ -1061,12 +1057,12 @@ exec(const CExprValueArray &values)
     CExprValuePtr     value   = v.second;
 
     if (value.isValid()) {
-      CExprVariablePtr var = CExprInst->getVariable(varName);
+      CExprVariablePtr var = expr->getVariable(varName);
 
       var->setValue(value);
     }
     else
-      CExprInst->removeVariable(varName);
+      expr->removeVariable(varName);
   }
 
   return value;

@@ -451,6 +451,8 @@ class CGnuPlot {
   void setAutoContinue(bool b) { autoContinue_ = b; }
   bool isAutoContinue() const { return autoContinue_; }
 
+  CExpr *expr() const { return expr_; }
+
   //----
 
   CGnuPlotDevice *device() const { return device_; }
@@ -696,6 +698,7 @@ class CGnuPlot {
 
   const CGnuPlotPalette &palette() const { return palette_; }
   void setPalette(const CGnuPlotPalette &p) { palette_ = p; }
+  void setPalette(const CGradientPalette &p) { palette_.setGradientPalette(p); }
 
   const CGnuPlotColorBoxData &colorBox() const { return colorBox_; }
   void setColorBox(const CGnuPlotColorBoxData &c) { colorBox_ = c; }
@@ -1130,6 +1133,7 @@ class CGnuPlot {
 
   bool parseBoolExpression(CParseLine &line, bool &res);
 
+  bool parseBracketedExpression(CParseLine &line, std::string &expr);
   bool parseExpression(CParseLine &line, std::string &expr);
 
   bool parseFillStyle(CParseLine &line, CGnuPlotFillStyle &fillStyle);
@@ -1378,6 +1382,9 @@ class CGnuPlot {
 
   double scaleColorComponent(double z) const;
 
+ public:
+  static PlotStyle stringToPlotStyle(const std::string &str);
+
  private:
   typedef std::map<std::string,CGnuPlotDevice*>  Devices;
   typedef std::vector<CGnuPlotDevice*>           DeviceStack;
@@ -1390,6 +1397,7 @@ class CGnuPlot {
   bool                      debug_  { false };
   bool                      edebug_ { false };
   bool                      autoContinue_ { false };
+  CExpr*                    expr_ { 0 };
   CGnuPlotSVGDevice*        svgDevice_ { 0 };
   CGnuPlotLogDevice*        logDevice_ { 0 };
   CGnuPlotDevice*           device_ { 0 };

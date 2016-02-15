@@ -310,9 +310,9 @@ getParamColor(const std::string &name) const
 
 void
 CGnuPlotPoint::
-setParamColor(const std::string &name, const CRGBA &c)
+setParamColor(CExpr *expr, const std::string &name, const CRGBA &c)
 {
-  CExprValuePtr value = CExprInst->createStringValue(c.stringEncode());
+  CExprValuePtr value = expr->createStringValue(c.stringEncode());
 
   setParam(name, value);
 }

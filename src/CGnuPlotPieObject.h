@@ -50,6 +50,12 @@ class CGnuPlotPieObject : public CGnuPlotPlotObject {
   bool isExploded() const { return exploded_; }
   void setExploded(bool b) { exploded_ = b; }
 
+  bool isExplodeSelected() const { return explodeSelected_; }
+  void setExplodeSelected(bool b) { explodeSelected_ = b; }
+
+  bool isRotatedText() const { return rotatedText_; }
+  void setRotatedText(bool b) { rotatedText_ = b; }
+
   const CBBox2D &keyRect() const { return keyRect_; }
   void setKeyRect(const CBBox2D &r) { keyRect_ = r; }
 
@@ -70,15 +76,17 @@ class CGnuPlotPieObject : public CGnuPlotPlotObject {
   void draw(CGnuPlotRenderer *renderer) const override;
 
  protected:
-  CPoint2D        center_      { 0, 0 };
-  double          r_           { 1 };
-  double          angle1_      { 0 };
-  double          angle2_      { 360 };
-  double          innerRadius_ { 0.0 };
-  double          labelRadius_ { 0.5 };
-  std::string     name_        { "" };
-  double          value_       { 0 };
-  bool            exploded_    { false };
+  CPoint2D        center_          { 0, 0 };
+  double          r_               { 1 };
+  double          angle1_          { 0 };
+  double          angle2_          { 360 };
+  double          innerRadius_     { 0.0 };
+  double          labelRadius_     { 0.5 };
+  std::string     name_            { "" };
+  double          value_           { 0 };
+  bool            rotatedText_     { false };
+  bool            exploded_        { false };
+  bool            explodeSelected_ { true };
   CBBox2D         keyRect_;
   CGnuPlotFillP   fill_;
   CGnuPlotStrokeP stroke_;

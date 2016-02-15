@@ -381,14 +381,6 @@ namespace CGnuPlotTypes {
     RECTANGLE
   };
 
-  enum class ColorModel {
-    RGB,
-    HSV,
-    CMY,
-    YIQ,
-    XYZ,
-  };
-
   enum class DrawLayer {
     DEFAULT,
     FRONT,

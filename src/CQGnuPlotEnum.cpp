@@ -69,6 +69,7 @@ typedef CEnumConv<CGnuPlotTypes::PlotStyle, CQGnuPlotEnum::PlotStyle> PlotStyleC
 
 PlotStyleConv plotStyleConv({
   { CGnuPlotTypes::PlotStyle::NONE          , CQGnuPlotEnum::PlotNone           },
+  { CGnuPlotTypes::PlotStyle::ADJACENCY     , CQGnuPlotEnum::PlotAdjacency      },
   { CGnuPlotTypes::PlotStyle::BOXERRORBARS  , CQGnuPlotEnum::PlotBoxErrorBars   },
   { CGnuPlotTypes::PlotStyle::BOXES         , CQGnuPlotEnum::PlotBoxes          },
   { CGnuPlotTypes::PlotStyle::BOXPLOT       , CQGnuPlotEnum::PlotBoxPlot        },

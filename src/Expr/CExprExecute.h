@@ -1,6 +1,7 @@
 #ifndef CExprExecute_H
 #define CExprExecute_H
 
+class CExpr;
 class CExprExecuteImpl;
 
 class CExprExecute {
@@ -13,9 +14,10 @@ class CExprExecute {
  private:
   friend class CExpr;
 
-  CExprExecute();
+  CExprExecute(CExpr *expr);
 
  private:
+  CExpr*                     expr_;
   CAutoPtr<CExprExecuteImpl> impl_;
 };
 

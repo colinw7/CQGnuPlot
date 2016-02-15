@@ -2,11 +2,11 @@
 
 CExprValuePtr
 CExprBooleanValue::
-execUnaryOp(CExprOpType op) const
+execUnaryOp(CExpr *expr, CExprOpType op) const
 {
   switch (op) {
     case CExprOpType::LOGICAL_NOT:
-      return CExprInst->createBooleanValue(! boolean_);
+      return expr->createBooleanValue(! boolean_);
     default:
       return CExprValuePtr();
   }
@@ -14,7 +14,7 @@ execUnaryOp(CExprOpType op) const
 
 CExprValuePtr
 CExprBooleanValue::
-execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
+execBinaryOp(CExpr *expr, CExprValuePtr rhs, CExprOpType op) const
 {
   bool rboolean = false;
 
@@ -23,9 +23,9 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 
   switch (op) {
     case CExprOpType::LOGICAL_AND:
-      return CExprInst->createBooleanValue(boolean_ && rboolean);
+      return expr->createBooleanValue(boolean_ && rboolean);
     case CExprOpType::LOGICAL_OR:
-      return CExprInst->createBooleanValue(boolean_ || rboolean);
+      return expr->createBooleanValue(boolean_ || rboolean);
     default:
       return CExprValuePtr();
   }

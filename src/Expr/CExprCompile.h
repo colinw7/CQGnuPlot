@@ -15,9 +15,10 @@ class CExprCompile {
  private:
   friend class CExpr;
 
-  CExprCompile();
+  CExprCompile(CExpr *expr);
 
  private:
+  CExpr*                     expr_;
   CAutoPtr<CExprCompileImpl> impl_;
 };
 

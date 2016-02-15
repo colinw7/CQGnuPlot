@@ -1,6 +1,8 @@
 #ifndef CExprFunctionMgr_H
 #define CExprFunctionMgr_H
 
+#include <list>
+
 class CExprFunctionMgr {
  public:
   friend class CExpr;
@@ -9,7 +11,7 @@ class CExprFunctionMgr {
   typedef std::vector<CExprFunctionArg> Args;
 
  public:
- ~CExprFunctionMgr();
+ ~CExprFunctionMgr() { }
 
   void addFunctions();
 

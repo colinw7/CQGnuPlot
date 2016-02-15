@@ -22,48 +22,52 @@ CPoint3D
 CGnuPlotPosition::
 getPoint(CGnuPlotRenderer *renderer, double x, double y, double z) const
 {
+  CPoint2D tw(x, y), gw(x, y), sw(x, y), cw(x, y);
+
+  if (systemX_ == CGnuPlotTypes::CoordSys::SECOND ||
+      systemY_ == CGnuPlotTypes::CoordSys::SECOND)
+    renderer->secondToWindow(CPoint2D(x, y), tw);
+
+  if (systemX_ == CGnuPlotTypes::CoordSys::GRAPH ||
+      systemY_ == CGnuPlotTypes::CoordSys::GRAPH)
+    renderer->graphToWindow(CPoint2D(x, y), gw);
+
+  if (systemX_ == CGnuPlotTypes::CoordSys::SCREEN ||
+      systemY_ == CGnuPlotTypes::CoordSys::SCREEN)
+    renderer->screenToWindow(CPoint2D(x, y), sw);
+
+  if (systemX_ == CGnuPlotTypes::CoordSys::CHARACTER ||
+      systemY_ == CGnuPlotTypes::CoordSys::CHARACTER)
+    renderer->charToWindow(CPoint2D(x, y), cw);
+
+  //---
+
   if      (systemX_ == CGnuPlotTypes::CoordSys::SECOND) {
-    // TODO
+    x = tw.x;
   }
   else if (systemX_ == CGnuPlotTypes::CoordSys::GRAPH) {
-    const CBBox2D &range = renderer->range();
-
-    if (range.isSet())
-      x = CGnuPlotUtil::map(x, 0, 1, range.getXMin(), range.getXMax());
+    x = gw.x;
   }
   else if (systemX_ == CGnuPlotTypes::CoordSys::SCREEN) {
-    double px1, py1, px2, py2;
-
-    renderer->pixelToWindow(                    0,                      0, &px1, &py1);
-    renderer->pixelToWindow(renderer->width() - 1, renderer->height() - 1, &px2, &py2);
-
-    x = CGnuPlotUtil::map(x, 0, 1, px1, px2);
+    x = sw.x;
   }
   else if (systemX_ == CGnuPlotTypes::CoordSys::CHARACTER) {
-    // TODO
+    x = cw.x;
   }
 
   //---
 
   if      (systemY_ == CGnuPlotTypes::CoordSys::SECOND) {
-    // TODO
+    y = tw.y;
   }
   else if (systemY_ == CGnuPlotTypes::CoordSys::GRAPH) {
-    const CBBox2D &range = renderer->range();
-
-    if (range.isSet())
-      y = CGnuPlotUtil::map(y, 0, 1, range.getYMin(), range.getYMax());
+    y = gw.y;
   }
   else if (systemY_ == CGnuPlotTypes::CoordSys::SCREEN) {
-    double px1, py1, px2, py2;
-
-    renderer->pixelToWindow(                    0,                      0, &px1, &py1);
-    renderer->pixelToWindow(renderer->width() - 1, renderer->height() - 1, &px2, &py2);
-
-    y = CGnuPlotUtil::map(y, 0, 1, py2, py1);
+    y = sw.y;
   }
   else if (systemY_ == CGnuPlotTypes::CoordSys::CHARACTER) {
-    // TODO
+    y = cw.y;
   }
 
   //---

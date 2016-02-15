@@ -15,11 +15,13 @@ class CQGnuPlotPieObject : public QObject, public CGnuPlotPieObject {
   Q_PROPERTY(bool selected    READ isSelected    WRITE setSelected   )
   Q_PROPERTY(bool highlighted READ isHighlighted WRITE setHighlighted)
 
-  Q_PROPERTY(QString name        READ getName      WRITE setName       )
-  Q_PROPERTY(double  value       READ value        WRITE setValue      )
-  Q_PROPERTY(double  innerRadius READ innerRadius  WRITE setInnerRadius)
-  Q_PROPERTY(double  labelRadius READ labelRadius  WRITE setLabelRadius)
-  Q_PROPERTY(bool    exploded    READ isExploded   WRITE setExploded   )
+  Q_PROPERTY(QString name            READ getName           WRITE setName           )
+  Q_PROPERTY(double  value           READ value             WRITE setValue          )
+  Q_PROPERTY(double  innerRadius     READ innerRadius       WRITE setInnerRadius    )
+  Q_PROPERTY(double  labelRadius     READ labelRadius       WRITE setLabelRadius    )
+  Q_PROPERTY(bool    exploded        READ isExploded        WRITE setExploded       )
+  Q_PROPERTY(bool    rotatedText     READ isRotatedText     WRITE setRotatedText    )
+  Q_PROPERTY(bool    explodeSelected READ isExplodeSelected WRITE setExplodeSelected)
 
  public:
   CQGnuPlotPieObject(CQGnuPlotPlot *plot);

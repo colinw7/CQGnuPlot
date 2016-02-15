@@ -3,9 +3,11 @@
 
 #include <list>
 
+class CExpr;
+
 class CExprVariableMgr {
  public:
- ~CExprVariableMgr();
+ ~CExprVariableMgr() { }
 
   CExprVariablePtr createVariable(const std::string &name, CExprValuePtr value);
 
@@ -16,7 +18,7 @@ class CExprVariableMgr {
  private:
   friend class CExpr;
 
-  CExprVariableMgr();
+  CExprVariableMgr(CExpr *expr);
 
   void addVariable   (CExprVariablePtr variable);
   void removeVariable(CExprVariablePtr variable);
@@ -24,6 +26,7 @@ class CExprVariableMgr {
  private:
   typedef std::list<CExprVariablePtr> VariableList;
 
+  CExpr*       expr_;
   VariableList variables_;
 };
 

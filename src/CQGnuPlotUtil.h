@@ -33,8 +33,8 @@ namespace CQGnuPlotUtil {
   CQGnuPlotEnum::BoxWidthType boxWidthTypeConv(const CGnuPlotTypes::BoxWidthType &type);
   CGnuPlotTypes::BoxWidthType boxWidthTypeConv(const CQGnuPlotEnum::BoxWidthType &type);
 
-  CQGnuPlotEnum::ColorModelType colorModelTypeConv(const CGnuPlotTypes::ColorModel &layer);
-  CGnuPlotTypes::ColorModel colorModelTypeConv(const CQGnuPlotEnum::ColorModelType &layer);
+  CQGnuPlotEnum::ColorModelType colorModelTypeConv(const CGradientPalette::ColorModel &layer);
+  CGradientPalette::ColorModel colorModelTypeConv(const CQGnuPlotEnum::ColorModelType &layer);
 
   CQGnuPlotEnum::DrawLayerType drawLayerTypeConv(const CGnuPlotTypes::DrawLayer &layer);
   CGnuPlotTypes::DrawLayer drawLayerTypeConv(const CQGnuPlotEnum::DrawLayerType &layer);

@@ -3,6 +3,7 @@
 
 #include <CQDialog.h>
 
+class CQGnuPlotMainWindow;
 class QTreeWidget;
 class QLineEdit;
 
@@ -10,7 +11,7 @@ class CQGnuPlotManageFunctionsDialog : public CQDialog {
   Q_OBJECT
 
  public:
-  CQGnuPlotManageFunctionsDialog(QWidget *parent=0);
+  CQGnuPlotManageFunctionsDialog(CQGnuPlotMainWindow *window);
 
   void createWidgets(QWidget *frame) override;
 
@@ -22,10 +23,11 @@ class CQGnuPlotManageFunctionsDialog : public CQDialog {
   void updateFunctions();
 
  private:
-  QTreeWidget *tree_;
-  QLineEdit   *nameEdit_;
-  QLineEdit   *exprEdit_;
-  QSize        size_;
+  CQGnuPlotMainWindow *window_;
+  QTreeWidget         *tree_;
+  QLineEdit           *nameEdit_;
+  QLineEdit           *exprEdit_;
+  QSize                size_;
 };
 
 #endif

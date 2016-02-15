@@ -19,7 +19,8 @@ CGnuPlotBBoxRenderer(CGnuPlotRenderer *renderer) :
   height_  = 800;
   mapping_ = true;
   region_  = CBBox2D(0, 0, 1, 1);
-  range_   = CBBox2D(-1, -1, 1, 1);
+  range1_  = CBBox2D(-1, -1, 1, 1);
+  range2_  = CBBox2D(-1, -1, 1, 1);
 }
 
 CGnuPlotBBoxRenderer::

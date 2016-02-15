@@ -31,6 +31,10 @@ class CGnuPlotPosition {
   CGnuPlotTypes::CoordSys systemZ() const { return systemZ_; }
   void setSystemZ(const CGnuPlotTypes::CoordSys &s) { systemZ_ = s; }
 
+  void setSystem(const CGnuPlotTypes::CoordSys &s) {
+    systemX_ = s; systemY_ = s; systemZ_ = s;
+  }
+
   bool isScreen() const {
     return (systemX_ == CoordSys::SCREEN ||
             systemY_ == CoordSys::SCREEN ||
@@ -42,6 +46,8 @@ class CGnuPlotPosition {
 
   CPoint3D getDistance3D(CGnuPlotRenderer *renderer) const;
   CPoint2D getDistance2D(CGnuPlotRenderer *renderer) const;
+
+  bool isCommonSystem() const { return (systemX_ == systemY_ && systemX_ == systemZ_); }
 
   void print(std::ostream &os) const {
     if (systemX_ == systemY_ && systemX_ == systemZ_) {

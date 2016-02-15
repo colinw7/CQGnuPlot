@@ -309,9 +309,9 @@ initPalette(const std::string &name)
 {
   auto p = namedColors_.find(name);
 
-  CGnuPlotPalette palette;
+  CGnuPlotPalette palette(0);
 
-  palette.setColorType(CGnuPlotPalette::ColorType::DEFINED);
+  palette.setColorType(CGradientPalette::ColorType::DEFINED);
 
   for (uint i = 0; i < (*p).second.size(); ++i) {
     CColor c((*p).second[i].second);

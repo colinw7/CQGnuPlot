@@ -21,6 +21,19 @@ dup() const
   return stroke;
 }
 
+void
+CQGnuPlotStroke::
+setValues(const CQGnuPlotStroke &stroke)
+{
+  CGnuPlotStroke::setEnabled   (stroke.isEnabled());
+  CGnuPlotStroke::setColor     (fromQColor(stroke.color()));
+  CGnuPlotStroke::setWidth     (stroke.width());
+  CGnuPlotStroke::setLineDash  (stroke.dash());
+  CGnuPlotStroke::setLineCap   (CQGnuPlotEnum::lineCapConv(stroke.lineCap()));
+  CGnuPlotStroke::setLineJoin  (CQGnuPlotEnum::lineJoinConv(stroke.lineJoin()));
+  CGnuPlotStroke::setMitreLimit(stroke.mitreLimit());
+}
+
 QColor
 CQGnuPlotStroke::
 color() const
@@ -33,11 +46,13 @@ CQGnuPlotStroke::
 setColor(const QColor &color)
 {
   CGnuPlotStroke::setColor(fromQColor(color));
+
+  emit changed();
 }
 
 CLineDash
 CQGnuPlotStroke::
-getDash() const
+dash() const
 {
   return CGnuPlotStroke::lineDash();
 }
@@ -47,11 +62,13 @@ CQGnuPlotStroke::
 setDash(const CLineDash &dash)
 {
   CGnuPlotStroke::setLineDash(dash);
+
+  emit changed();
 }
 
 CQGnuPlotEnum::LineCapType
 CQGnuPlotStroke::
-getLineCap() const
+lineCap() const
 {
   return CQGnuPlotEnum::lineCapConv(CGnuPlotStroke::lineCap());
 }
@@ -61,11 +78,13 @@ CQGnuPlotStroke::
 setLineCap(const CQGnuPlotEnum::LineCapType &a)
 {
   CGnuPlotStroke::setLineCap(CQGnuPlotEnum::lineCapConv(a));
+
+  emit changed();
 }
 
 CQGnuPlotEnum::LineJoinType
 CQGnuPlotStroke::
-getLineJoin() const
+lineJoin() const
 {
   return CQGnuPlotEnum::lineJoinConv(CGnuPlotStroke::lineJoin());
 }
@@ -75,4 +94,6 @@ CQGnuPlotStroke::
 setLineJoin(const CQGnuPlotEnum::LineJoinType &a)
 {
   CGnuPlotStroke::setLineJoin(CQGnuPlotEnum::lineJoinConv(a));
+
+  emit changed();
 }

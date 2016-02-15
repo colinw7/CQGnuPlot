@@ -74,6 +74,7 @@ class CQGnuPlotEnum : public QObject {
 
   enum PlotStyle {
     PlotNone,
+    PlotAdjacency,
     PlotBoxErrorBars,
     PlotBoxes,
     PlotBoxPlot,

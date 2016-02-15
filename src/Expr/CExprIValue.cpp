@@ -25,17 +25,17 @@ getStringValue(std::string &s) const
 
 CExprValuePtr
 CExprIntegerValue::
-execUnaryOp(CExprOpType op) const
+execUnaryOp(CExpr *expr, CExprOpType op) const
 {
   switch (op) {
     case CExprOpType::UNARY_PLUS:
-      return CExprInst->createIntegerValue(integer_);
+      return expr->createIntegerValue(integer_);
     case CExprOpType::UNARY_MINUS:
-      return CExprInst->createIntegerValue(-integer_);
+      return expr->createIntegerValue(-integer_);
     case CExprOpType::BIT_NOT:
-      return CExprInst->createIntegerValue(~integer_);
+      return expr->createIntegerValue(~integer_);
     case CExprOpType::FACTORIAL:
-      return CExprInst->createRealValue(factorial(integer_));
+      return expr->createRealValue(factorial(integer_));
     default:
       return CExprValuePtr();
   }
@@ -43,7 +43,7 @@ execUnaryOp(CExprOpType op) const
 
 CExprValuePtr
 CExprIntegerValue::
-execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
+execBinaryOp(CExpr *expr, CExprValuePtr rhs, CExprOpType op) const
 {
   long irhs;
 
@@ -59,48 +59,48 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
       if (error_code != 0)
         return CExprValuePtr();
       else
-        return CExprInst->createIntegerValue(integer);
+        return expr->createIntegerValue(integer);
     }
     case CExprOpType::TIMES:
-      return CExprInst->createIntegerValue(integer_ * irhs);
+      return expr->createIntegerValue(integer_ * irhs);
     case CExprOpType::DIVIDE: {
       // divide by zero
       if (irhs == 0) return CExprValuePtr();
 
-      return CExprInst->createIntegerValue(integer_ / irhs);
+      return expr->createIntegerValue(integer_ / irhs);
     }
     case CExprOpType::MODULUS: {
       // divide by zero
       if (irhs == 0) return CExprValuePtr();
 
-      return CExprInst->createIntegerValue(integer_ % irhs);
+      return expr->createIntegerValue(integer_ % irhs);
     }
     case CExprOpType::PLUS:
-      return CExprInst->createIntegerValue(integer_ + irhs);
+      return expr->createIntegerValue(integer_ + irhs);
     case CExprOpType::MINUS:
-      return CExprInst->createIntegerValue(integer_ - irhs);
+      return expr->createIntegerValue(integer_ - irhs);
     case CExprOpType::BIT_LSHIFT:
-      return CExprInst->createIntegerValue(integer_ << irhs);
+      return expr->createIntegerValue(integer_ << irhs);
     case CExprOpType::BIT_RSHIFT:
-      return CExprInst->createIntegerValue(integer_ >> irhs);
+      return expr->createIntegerValue(integer_ >> irhs);
     case CExprOpType::LESS:
-      return CExprInst->createBooleanValue(integer_ < irhs);
+      return expr->createBooleanValue(integer_ < irhs);
     case CExprOpType::LESS_EQUAL:
-      return CExprInst->createBooleanValue(integer_ <= irhs);
+      return expr->createBooleanValue(integer_ <= irhs);
     case CExprOpType::GREATER:
-      return CExprInst->createBooleanValue(integer_ > irhs);
+      return expr->createBooleanValue(integer_ > irhs);
     case CExprOpType::GREATER_EQUAL:
-      return CExprInst->createBooleanValue(integer_ >= irhs);
+      return expr->createBooleanValue(integer_ >= irhs);
     case CExprOpType::EQUAL:
-      return CExprInst->createBooleanValue(integer_ == irhs);
+      return expr->createBooleanValue(integer_ == irhs);
     case CExprOpType::NOT_EQUAL:
-      return CExprInst->createBooleanValue(integer_ != irhs);
+      return expr->createBooleanValue(integer_ != irhs);
     case CExprOpType::BIT_AND:
-      return CExprInst->createIntegerValue(integer_ & irhs);
+      return expr->createIntegerValue(integer_ & irhs);
     case CExprOpType::BIT_XOR:
-      return CExprInst->createIntegerValue(integer_ ^ irhs);
+      return expr->createIntegerValue(integer_ ^ irhs);
     case CExprOpType::BIT_OR:
-      return CExprInst->createIntegerValue(integer_ | irhs);
+      return expr->createIntegerValue(integer_ | irhs);
     default:
       return CExprValuePtr();
   }

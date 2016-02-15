@@ -1045,6 +1045,13 @@ getClip(int xind, int yind) const
 
 void
 CGnuPlotGroup::
+setPalette(const CGradientPalette &pal)
+{
+  palette_->setGradientPalette(pal);
+}
+
+void
+CGnuPlotGroup::
 reset3D()
 {
   for (auto plot : plots_)
@@ -1091,16 +1098,18 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
 
   renderer->pixelToWindow(mouseEvent.pixel(), p2);
 
-  CExprInst->createRealVariable("MOUSE_X" , p1.x);
-  CExprInst->createRealVariable("MOUSE_Y" , p1.y);
-  CExprInst->createRealVariable("MOUSE_X2", p2.x);
-  CExprInst->createRealVariable("MOUSE_Y2", p2.y);
+  CExpr *expr = app()->expr();
 
-  CExprInst->createIntegerVariable("MOUSE_BUTTON", mouseEvent.button());
+  expr->createRealVariable("MOUSE_X" , p1.x);
+  expr->createRealVariable("MOUSE_Y" , p1.y);
+  expr->createRealVariable("MOUSE_X2", p2.x);
+  expr->createRealVariable("MOUSE_Y2", p2.y);
 
-  CExprInst->createIntegerVariable("MOUSE_SHIFT", mouseEvent.isShift());
-  CExprInst->createIntegerVariable("MOUSE_ALT"  , mouseEvent.isAlt());
-  CExprInst->createIntegerVariable("MOUSE_CTRL" , mouseEvent.isControl());
+  expr->createIntegerVariable("MOUSE_BUTTON", mouseEvent.button());
+
+  expr->createIntegerVariable("MOUSE_SHIFT", mouseEvent.isShift());
+  expr->createIntegerVariable("MOUSE_ALT"  , mouseEvent.isAlt());
+  expr->createIntegerVariable("MOUSE_CTRL" , mouseEvent.isControl());
 }
 
 bool
@@ -1137,21 +1146,45 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
 
   renderer->pixelToWindow(keyEvent.pixel(), p2);
 
-  CExprInst->createRealVariable("MOUSE_X" , p1.x);
-  CExprInst->createRealVariable("MOUSE_Y" , p1.y);
-  CExprInst->createRealVariable("MOUSE_X2", p2.x);
-  CExprInst->createRealVariable("MOUSE_Y2", p2.y);
+  CExpr *expr = app()->expr();
 
-  CExprInst->createIntegerVariable("MOUSE_SHIFT", keyEvent.isShift());
-  CExprInst->createIntegerVariable("MOUSE_ALT"  , keyEvent.isAlt());
-  CExprInst->createIntegerVariable("MOUSE_CTRL" , keyEvent.isControl());
+  expr->createRealVariable("MOUSE_X" , p1.x);
+  expr->createRealVariable("MOUSE_Y" , p1.y);
+  expr->createRealVariable("MOUSE_X2", p2.x);
+  expr->createRealVariable("MOUSE_Y2", p2.y);
 
-  CExprInst->createIntegerVariable("MOUSE_KEY", keyEvent.key());
+  expr->createIntegerVariable("MOUSE_SHIFT", keyEvent.isShift());
+  expr->createIntegerVariable("MOUSE_ALT"  , keyEvent.isAlt());
+  expr->createIntegerVariable("MOUSE_CTRL" , keyEvent.isControl());
+
+  expr->createIntegerVariable("MOUSE_KEY", keyEvent.key());
 
   if (keyEvent.text() != "")
-    CExprInst->createStringVariable("MOUSE_CHAR", keyEvent.text().substr(0, 1));
+    expr->createStringVariable("MOUSE_CHAR", keyEvent.text().substr(0, 1));
   else
-    CExprInst->createStringVariable("MOUSE_CHAR", "");
+    expr->createStringVariable("MOUSE_CHAR", "");
+}
+
+void
+CGnuPlotGroup::
+displayPixelCoordinates(const CPoint2D &pixel)
+{
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setRange(getMappedDisplayRange(1, 1), getMappedDisplayRange(2, 2));
+
+  CPoint2D window; renderer->pixelToWindow (pixel , window);
+  CPoint2D second; renderer->windowToSecond(window, second);
+  CPoint2D graph ; renderer->windowToGraph (window, graph );
+  CPoint2D screen; renderer->windowToScreen(window, screen);
+  CPoint2D chr   ; renderer->windowToChar  (window, chr   );
+
+  std::cerr << "Pixel:  " << pixel  << std::endl;
+  std::cerr << "First:  " << window << std::endl;
+  std::cerr << "Second: " << second << std::endl;
+  std::cerr << "Graph:  " << graph  << std::endl;
+  std::cerr << "Screen: " << screen << std::endl;
+  std::cerr << "Char:   " << chr    << std::endl;
 }
 
 void
@@ -1497,9 +1530,7 @@ CGnuPlotGroup::
 drawTitle(CGnuPlotRenderer *renderer)
 {
   if (! is3D() || pm3D()->isEnabled()) {
-    CBBox2D bbox = getMappedDisplayRange(1, 1);
-
-    renderer->setRange(bbox);
+    renderer->setRange(getMappedDisplayRange(1, 1));
   }
   else
     renderer->setRange(region());
@@ -2126,9 +2157,7 @@ drawKey(CGnuPlotRenderer *renderer)
 
   // TODO: key drawn in own coord system
   // TODO: always fill background, opaque draws on top of plots
-  CBBox2D bbox = getMappedDisplayRange(1, 1);
-
-  renderer->setRange(bbox);
+  renderer->setRange(getMappedDisplayRange(1, 1));
   renderer->setReverse(false, false);
 
   //---
@@ -2184,9 +2213,7 @@ drawAnnotations(CGnuPlotRenderer *renderer, DrawLayer layer)
     return;
 
   // draw labels last
-  CBBox2D bbox = getMappedDisplayRange(1, 1);
-
-  renderer->setRange(bbox);
+  renderer->setRange(getMappedDisplayRange(1, 1));
 
   renderer->setReverse(xaxis(1).isReverse(), yaxis(1).isReverse());
 

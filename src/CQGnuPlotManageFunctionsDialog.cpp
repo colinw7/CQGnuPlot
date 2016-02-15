@@ -1,4 +1,5 @@
 #include <CQGnuPlotManageFunctionsDialog.h>
+#include <CQGnuPlotWindow.h>
 #include <CParseLine.h>
 #include <CExpr.h>
 
@@ -11,8 +12,8 @@
 #include <QGridLayout>
 
 CQGnuPlotManageFunctionsDialog::
-CQGnuPlotManageFunctionsDialog(QWidget *parent) :
- CQDialog(parent)
+CQGnuPlotManageFunctionsDialog(CQGnuPlotMainWindow *window) :
+ CQDialog(window), window_(window)
 {
   setWindowTitle("Manage Functions");
 }
@@ -74,11 +75,13 @@ void
 CQGnuPlotManageFunctionsDialog::
 updateFunctions()
 {
+  CExpr *expr = window_->app()->expr();
+
   tree_->clear();
 
   CExpr::StringArray names;
 
-  CExprInst->getFunctionNames(names);
+  expr->getFunctionNames(names);
 
   QFontMetrics fm(font());
 
@@ -86,7 +89,7 @@ updateFunctions()
   int w  = fm.width("Name") + fm.width("Definition") + 32;
 
   for (const auto &n : names) {
-    CExprFunctionPtr function = CExprInst->getFunction(n);
+    CExprFunctionPtr function = expr->getFunction(n);
 
     if (function->isBuiltin()) continue;
 
@@ -121,7 +124,7 @@ CQGnuPlotManageFunctionsDialog::
 addSlot()
 {
   std::string identifier = nameEdit_->text().toStdString();
-  std::string expr       = exprEdit_->text().toStdString();
+  std::string exprStr    = exprEdit_->text().toStdString();
 
   CParseLine line(identifier);
 
@@ -165,7 +168,9 @@ addSlot()
   if (! line.skipSpaceAndChar(')'))
     return;
 
-  CExprInst->addFunction(identifier, args, expr);
+  CExpr *expr = window_->app()->expr();
+
+  expr->addFunction(identifier, args, exprStr);
 
   //---
 

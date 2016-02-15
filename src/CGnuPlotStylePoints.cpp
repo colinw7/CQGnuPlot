@@ -149,6 +149,10 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
   CGnuPlotGroup *group = plot->group();
 
+  bool pm3D = group->pm3D()->isEnabled();
+
+  const CGnuPlotColorBoxP &cb = group->colorBox();
+
   //const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   CGnuPlotStroke stroke(plot);
@@ -179,10 +183,17 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (op.isValid())
         p += op.getValue();
 
-      if (! group->isHidden3D())
-        renderer->drawSymbol(p, pointType, pointSize, stroke.color(), stroke.width(), true);
-      else
-        renderer->drawHiddenSymbol(p, pointType, pointSize, stroke.color(), stroke.width(), true);
+      if (! pm3D) {
+        if (! group->isHidden3D())
+          renderer->drawSymbol(p, pointType, pointSize, stroke.color(), stroke.width(), true);
+        else
+          renderer->drawHiddenSymbol(p, pointType, pointSize, stroke.color(), stroke.width(), true);
+      }
+      else {
+        CRGBA c = cb->valueToColor(p.z).rgba();
+
+        renderer->drawPoint(p, c);
+      }
     }
 
     ++k;

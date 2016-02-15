@@ -3,6 +3,7 @@
 
 #include <CExprToken.h>
 
+class CExpr;
 class CExprParseImpl;
 
 class CExprParse {
@@ -18,9 +19,10 @@ class CExprParse {
  private:
   friend class CExpr;
 
-  CExprParse();
+  CExprParse(CExpr *expr);
 
  private:
+  CExpr*                   expr_;
   CAutoPtr<CExprParseImpl> impl_;
 };
 

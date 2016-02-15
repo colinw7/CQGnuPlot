@@ -155,29 +155,31 @@ namespace {
 
 CGnuPlot::
 CGnuPlot() :
- printFile_(this, true), tableFile_(this, false)
+ expr_(new CExpr), printFile_(this, true), tableFile_(this, false)
 {
+  palette_.setExpr(expr_);
+
   varPrefs_[VariableName::ANGLES] =
     new CGnuPlotPrefValue<AngleType>("Angle Type", "angles", AngleType::RADIANS);
 
-  CExprInst->createRealVariable("pi" , M_PI);
-  CExprInst->createRealVariable("NaN", CMathGen::getNaN());
+  expr_->createRealVariable("pi" , M_PI);
+  expr_->createRealVariable("NaN", CMathGen::getNaN());
 
-  CExprInst->createIntegerVariable("ARGC", 0);
-  CExprInst->createStringVariable ("ARG0", "");
+  expr_->createIntegerVariable("ARGC", 0);
+  expr_->createStringVariable ("ARG0", "");
 
-  CExprInst->createStringVariable("GNUTERM", "qt");
+  expr_->createStringVariable("GNUTERM", "qt");
 
-  CExprInst->createStringVariable("GPVAL_ENCODING" , "default");
-  CExprInst->createStringVariable("GPVAL_ERRMSG"   , "");
-  CExprInst->createStringVariable("GPVAL_OUTPUT"   , "");
-  CExprInst->createStringVariable("GPVAL_PWD"      , CDir::getCurrent());
-  CExprInst->createStringVariable("GPVAL_TERM"     , "qt");
-  CExprInst->createStringVariable("GPVAL_TERMINALS", "qt svg");
-  CExprInst->createRealVariable  ("GPVAL_pi"       , M_PI);
-  CExprInst->createRealVariable  ("GPVAL_NaN"      , CMathGen::getNaN());
+  expr_->createStringVariable("GPVAL_ENCODING" , "default");
+  expr_->createStringVariable("GPVAL_ERRMSG"   , "");
+  expr_->createStringVariable("GPVAL_OUTPUT"   , "");
+  expr_->createStringVariable("GPVAL_PWD"      , CDir::getCurrent());
+  expr_->createStringVariable("GPVAL_TERM"     , "qt");
+  expr_->createStringVariable("GPVAL_TERMINALS", "qt svg");
+  expr_->createRealVariable  ("GPVAL_pi"       , M_PI);
+  expr_->createRealVariable  ("GPVAL_NaN"      , CMathGen::getNaN());
 
-  CExprInst->createStringVariable("GPVAL_COMPILE_OPTIONS", "+GD_PNG");
+  expr_->createStringVariable("GPVAL_COMPILE_OPTIONS", "+GD_PNG");
 
   CGnuPlotFunctions::init(this);
 
@@ -196,6 +198,7 @@ CGnuPlot() :
 CGnuPlot::
 ~CGnuPlot()
 {
+  delete expr_;
 }
 
 void
@@ -270,7 +273,7 @@ setExprDebug(bool b)
 {
   edebug_ = b;
 
-  CExprInst->setDebug(edebug_);
+  expr_->setDebug(edebug_);
 }
 
 void
@@ -299,7 +302,7 @@ setDevice(const std::string &name)
     if (name1 == name2) {
       device_ = d.second;
 
-      CExprInst->createStringVariable("GPVAL_TERM", device_->name());
+      expr_->createStringVariable("GPVAL_TERM", device_->name());
 
       return true;
     }
@@ -348,34 +351,34 @@ setOutputFile(const std::string &file)
 {
   outputFile_ = file;
 
-  CExprInst->createStringVariable("GPVAL_OUTPUT", outputFile_);
+  expr_->createStringVariable("GPVAL_OUTPUT", outputFile_);
 }
 
 bool
 CGnuPlot::
 load(const std::string &filename, const StringArray &args)
 {
-  CExprInst->createStringVariable ("ARG0", filename);
+  expr_->createStringVariable ("ARG0", filename);
 
   if (! args.empty()) {
-    CExprInst->createIntegerVariable("ARGC", args.size());
+    expr_->createIntegerVariable("ARGC", args.size());
 
     for (const auto &i : IRangeItr::range(0, 9)) {
       std::string argName = CStrUtil::strprintf("ARG%d", i + 1);
 
       if (i < int(args.size()))
-        CExprInst->createStringVariable(argName, args[i]);
+        expr_->createStringVariable(argName, args[i]);
       else
-        CExprInst->createStringVariable(argName, "");
+        expr_->createStringVariable(argName, "");
     }
   }
   else {
-    CExprInst->createIntegerVariable("ARGC", 0);
+    expr_->createIntegerVariable("ARGC", 0);
 
     for (const auto &i : IRangeItr::rangeClosed(1, 9)) {
       std::string argName = CStrUtil::strprintf("ARG%d", i);
 
-      CExprInst->removeVariable(argName);
+      expr_->removeVariable(argName);
     }
   }
 
@@ -420,7 +423,7 @@ load(const std::string &filename, const StringArray &args)
 
   fileDataArray_.pop_back();
 
-  CExprInst->createIntegerVariable("GPVAL_LINENO", fileData_.lineNum);
+  expr_->createIntegerVariable("GPVAL_LINENO", fileData_.lineNum);
 
   return true;
 }
@@ -1043,7 +1046,7 @@ parseFunctionDef(const std::string &identifier, CParseLine &line)
 
   expr = CStrUtil::stripSpaces(expr);
 
-  CExprInst->addFunction(identifier, args, expr);
+  expr_->addFunction(identifier, args, expr);
 
   std::string gvar = "GPFUN_" + identifier;
 
@@ -1056,7 +1059,7 @@ parseFunctionDef(const std::string &identifier, CParseLine &line)
 
   std::string gfunc = identifier + "(" + gargs + ") = " + expr;
 
-  CExprInst->createStringVariable(gvar, gfunc);
+  expr_->createStringVariable(gvar, gfunc);
 
   return true;
 }
@@ -1083,7 +1086,7 @@ parseVariableDef(const std::string &identifier, CParseLine &line)
   if (! value.isValid())
     return false;
 
-  CExprInst->createVariable(identifier, value);
+  expr_->createVariable(identifier, value);
 
   return true;
 }
@@ -1145,7 +1148,7 @@ helpCmd(const std::string &args)
   else if (arg == "variables") {
     StringArray names;
 
-    CExprInst->getVariableNames(names);
+    expr_->getVariableNames(names);
 
     std::string str;
 
@@ -1160,7 +1163,7 @@ helpCmd(const std::string &args)
   else if (arg == "functions") {
     StringArray names;
 
-    CExprInst->getFunctionNames(names);
+    expr_->getFunctionNames(names);
 
     std::string str;
 
@@ -1278,7 +1281,7 @@ printfCmd(const std::string &args)
     }
   }
 
-  std::string str = CExprInst->printf(fmt, values);
+  std::string str = expr_->printf(fmt, values);
 
   std::cout << str;
 }
@@ -1321,7 +1324,7 @@ cdCmd(const std::string &args)
   else
     CDir::changeDir(str);
 
-  CExprInst->createStringVariable("GPVAL_PWD", CDir::getCurrent());
+  expr_->createStringVariable("GPVAL_PWD", CDir::getCurrent());
 }
 
 // pwd
@@ -1371,7 +1374,7 @@ callCmd(const std::string &args)
           arg = str;
       }
       else {
-        CExprVariablePtr var = CExprInst->getVariable(arg);
+        CExprVariablePtr var = expr_->getVariable(arg);
 
         CExprValuePtr value = (var.isValid() ? var->getValue() : CExprValuePtr());
         std::string   str;
@@ -3435,7 +3438,7 @@ plotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroupP &group,
     CStrUtil::addWords(forCmd.start, words);
 
     for (const auto &w : words) {
-      CExprInst->createStringVariable(forCmd.var, w);
+      expr_->createStringVariable(forCmd.var, w);
 
       plotCmd1(args, group, plots, sample, first);
     }
@@ -3467,7 +3470,7 @@ plotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroupP &group,
       return;
 
     while (i1 <= i2) {
-      CExprInst->createIntegerVariable(forCmd.var, i1);
+      expr_->createIntegerVariable(forCmd.var, i1);
 
       plotCmd1(args, group, plots, sample, first);
 
@@ -3488,7 +3491,7 @@ splotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroupP &group
     CStrUtil::addWords(forCmd.start, words);
 
     for (const auto &w : words) {
-      CExprInst->createStringVariable(forCmd.var, w);
+      expr_->createStringVariable(forCmd.var, w);
 
       splotCmd1(args, group, plots, sample, first);
     }
@@ -3520,7 +3523,7 @@ splotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroupP &group
       return;
 
     while (i1 <= i2) {
-      CExprInst->createIntegerVariable(forCmd.var, i1);
+      expr_->createIntegerVariable(forCmd.var, i1);
 
       splotCmd1(args, group, plots, sample, first);
 
@@ -7931,7 +7934,7 @@ setCmd(const std::string &args)
   //               { nops_allcF | ps_allcF }
   //               { maxcolors <maxcolors> } }
   else if (var == VariableName::PALETTE) {
-    palette_.setColorModel(CGnuPlotTypes::ColorModel::RGB);
+    palette_.setColorModel(CGradientPalette::ColorModel::RGB);
 
     std::string arg = readNonSpace(line);
 
@@ -7955,7 +7958,7 @@ setCmd(const std::string &args)
             if (parseInteger(line, g)) {
               if (line.skipSpaceAndChar(',')) {
                 if (parseInteger(line, b)) {
-                  palette_.setColorType(CGnuPlotPalette::ColorType::MODEL);
+                  palette_.setColorType(CGradientPalette::ColorType::MODEL);
 
                   palette_.setRgbModel(r, g, b);
                 }
@@ -7979,7 +7982,7 @@ setCmd(const std::string &args)
             if (! parseReal(line, gray))
               break;
 
-            if      (palette_.colorModel() == CGnuPlotTypes::ColorModel::RGB) {
+            if      (palette_.colorModel() == CGradientPalette::ColorModel::RGB) {
               CRGB   rgb;
               double a;
 
@@ -7989,7 +7992,7 @@ setCmd(const std::string &args)
 
               valueColors.push_back(ValueColor(gray, c));
             }
-            else if (palette_.colorModel() == CGnuPlotTypes::ColorModel::HSV) {
+            else if (palette_.colorModel() == CGradientPalette::ColorModel::HSV) {
               CHSV   hsv;
               double a;
 
@@ -8012,7 +8015,7 @@ setCmd(const std::string &args)
             line.skipChar();
 
           if (! valueColors.empty()) {
-            palette_.setColorType(CGnuPlotPalette::ColorType::DEFINED);
+            palette_.setColorType(CGradientPalette::ColorType::DEFINED);
 
             palette_.resetDefinedColors();
 
@@ -8036,15 +8039,23 @@ setCmd(const std::string &args)
 
         std::string rf, gf, bf;
 
-        rf = readNonSpaceNonComma(line);
-
-        if (line.skipSpaceAndChar(','))
-          gf = readNonSpaceNonComma(line);
-
-        if (line.skipSpaceAndChar(','))
-          bf = readNonSpaceNonComma(line);
-
-        palette_.setFunctions(rf, gf, bf);
+        if (parseExpression(line, rf)) {
+          if (line.skipSpaceAndChar(',')) {
+            if (parseExpression(line, gf)) {
+              if (line.skipSpaceAndChar(',')) {
+                if (parseExpression(line, bf)) {
+                  palette_.setFunctions(rf, gf, bf);
+                }
+                else
+                  errorMsg("Invalid blue function");
+              }
+            }
+            else
+              errorMsg("Invalid green function");
+          }
+        }
+        else
+          errorMsg("Invalid red function");
       }
       else if (arg == "cubehelix") {
         int pos = line.pos();
@@ -8094,11 +8105,11 @@ setCmd(const std::string &args)
       else if (arg == "model" || arg == "mode") {
         std::string arg1 = readNonSpace(line);
 
-        if      (arg1 == "RGB") palette_.setColorModel(CGnuPlotTypes::ColorModel::RGB);
-        else if (arg1 == "HSV") palette_.setColorModel(CGnuPlotTypes::ColorModel::HSV);
-        else if (arg1 == "CMY") palette_.setColorModel(CGnuPlotTypes::ColorModel::CMY);
-        else if (arg1 == "YIQ") palette_.setColorModel(CGnuPlotTypes::ColorModel::YIQ);
-        else if (arg1 == "XYZ") palette_.setColorModel(CGnuPlotTypes::ColorModel::XYZ);
+        if      (arg1 == "RGB") palette_.setColorModel(CGradientPalette::ColorModel::RGB);
+        else if (arg1 == "HSV") palette_.setColorModel(CGradientPalette::ColorModel::HSV);
+        else if (arg1 == "CMY") palette_.setColorModel(CGradientPalette::ColorModel::CMY);
+        else if (arg1 == "YIQ") palette_.setColorModel(CGradientPalette::ColorModel::YIQ);
+        else if (arg1 == "XYZ") palette_.setColorModel(CGradientPalette::ColorModel::XYZ);
         else                    { errorMsg("Invalid arg '" + arg1 + "'"); }
       }
       else if (arg == "positive" || arg == "negative") {
@@ -9476,7 +9487,7 @@ setForCmd(const ForCmd &forCmd, const std::string &args)
     CStrUtil::addWords(forCmd.start, words);
 
     for (const auto &w : words) {
-      CExprInst->createStringVariable(forCmd.var, w);
+      expr_->createStringVariable(forCmd.var, w);
 
       setCmd(args);
     }
@@ -9508,7 +9519,7 @@ setForCmd(const ForCmd &forCmd, const std::string &args)
       return;
 
     while (i1 <= i2) {
-      CExprInst->createIntegerVariable(forCmd.var, i1);
+      expr_->createIntegerVariable(forCmd.var, i1);
 
       setCmd(args);
 
@@ -9540,7 +9551,7 @@ getCmd(const std::string &args)
 
   // get angles
   if      (var == VariableName::ANGLES) {
-    CExprInst->createStringVariable(identifier, getAngleTypeString());
+    expr_->createStringVariable(identifier, getAngleTypeString());
   }
 
   return true;
@@ -10588,7 +10599,7 @@ showVariables(std::ostream &os, const StringArray &args)
 {
   StringArray names;
 
-  CExprInst->getVariableNames(names);
+  expr_->getVariableNames(names);
 
   for (const auto &name : names) {
     bool match = (args.empty() ? true : false);
@@ -10601,7 +10612,7 @@ showVariables(std::ostream &os, const StringArray &args)
     }
 
     if (match) {
-      CExprVariablePtr var = CExprInst->getVariable(name);
+      CExprVariablePtr var = expr_->getVariable(name);
 
       os << var->name() << " = ";
 
@@ -10625,10 +10636,10 @@ showFunctions(std::ostream &os)
 {
   StringArray names;
 
-  CExprInst->getFunctionNames(names);
+  expr_->getFunctionNames(names);
 
   for (const auto &n : names) {
-    CExprFunctionPtr function = CExprInst->getFunction(n);
+    CExprFunctionPtr function = expr_->getFunction(n);
 
     if (! function->isBuiltin())
       os << function << std::endl;
@@ -10747,7 +10758,7 @@ undefineCmd(const std::string &args)
   }
 
   for (const auto &arg : args1) {
-    CExprInst->removeVariable(arg);
+    expr_->removeVariable(arg);
   }
 }
 
@@ -11522,7 +11533,7 @@ unsetCmd(const std::string &args)
   }
   // unset edebug
   else if (var == VariableName::EDEBUG) {
-    CExprInst->setDebug(false);
+    expr_->setDebug(false);
   }
 
   return false;
@@ -11538,7 +11549,7 @@ unsetForCmd(const ForCmd &forCmd, const std::string &args)
     CStrUtil::addWords(forCmd.start, words);
 
     for (const auto &w : words) {
-      CExprInst->createStringVariable(forCmd.var, w);
+      expr_->createStringVariable(forCmd.var, w);
 
       unsetCmd(args);
     }
@@ -11570,7 +11581,7 @@ unsetForCmd(const ForCmd &forCmd, const std::string &args)
       return;
 
     while (i1 <= i2) {
-      CExprInst->createIntegerVariable(forCmd.var, i1);
+      expr_->createIntegerVariable(forCmd.var, i1);
 
       unsetCmd(args);
 
@@ -11996,7 +12007,7 @@ readBlockLines(Statements &lines, std::string &eline, int depth)
         if (line.isChar('(')) {
           std::string expr;
 
-          if (! parseExpression(line, expr))
+          if (! parseBracketedExpression(line, expr))
             return;
 
           if (line.skipSpaceAndChar('{')) {
@@ -12131,7 +12142,7 @@ parseIndex(CParseLine &line, CGnuPlotIndexData &indexData)
 
   line.skipSpace();
 
-  return indexData.parse(indexStr);
+  return indexData.parse(expr_, indexStr);
 }
 
 bool
@@ -12142,7 +12153,7 @@ parseEvery(CParseLine &line, CGnuPlotEveryData &everyData)
 
   line.skipSpace();
 
-  return everyData.parse(everyStr);
+  return everyData.parse(expr_, everyStr);
 }
 
 bool
@@ -12236,7 +12247,7 @@ parseBoolExpression(CParseLine &line, bool &res)
 
   std::string expr;
 
-  if (! parseExpression(line, expr))
+  if (! parseBracketedExpression(line, expr))
     return false;
 
   CExprValuePtr value;
@@ -12256,7 +12267,7 @@ parseBoolExpression(CParseLine &line, bool &res)
 
 bool
 CGnuPlot::
-parseExpression(CParseLine &line, std::string &expr)
+parseBracketedExpression(CParseLine &line, std::string &expr)
 {
   if (! line.isChar('('))
     return false;
@@ -12280,6 +12291,38 @@ parseExpression(CParseLine &line, std::string &expr)
 
       if (rbrackets == 0)
         break;
+    }
+  }
+
+  return true;
+}
+
+bool
+CGnuPlot::
+parseExpression(CParseLine &line, std::string &expr)
+{
+  int rbrackets = 0;
+
+  while (line.isValid()) {
+    if (rbrackets == 0) {
+      if      (line.isChar('('))
+        ++rbrackets;
+      else if (line.isChar(','))
+        break;
+
+      expr += line.getChar();
+    }
+    else {
+      if      (line.isChar('('))
+        ++rbrackets;
+      else if (line.isChar(')')) {
+        --rbrackets;
+
+        if (rbrackets < 0)
+          break;
+      }
+
+      expr += line.getChar();
     }
   }
 
@@ -12393,7 +12436,7 @@ doCmd(const std::string &args)
       return;
 
     while (i1 <= i2) {
-      CExprInst->createIntegerVariable(var, i1);
+      expr_->createIntegerVariable(var, i1);
 
       for (const auto &l : lines)
         parseLine(l);
@@ -12403,7 +12446,7 @@ doCmd(const std::string &args)
   }
   else {
     for (const auto &f : fields) {
-      CExprInst->createStringVariable(var, f);
+      expr_->createStringVariable(var, f);
 
       for (const auto &l : lines)
         parseLine(l);
@@ -12429,7 +12472,7 @@ whileCmd(const std::string &args)
 
   std::string expr;
 
-  if (! parseExpression(line, expr))
+  if (! parseBracketedExpression(line, expr))
     return;
 
   if (! line.skipSpaceAndChar('{'))
@@ -12832,6 +12875,8 @@ void
 CGnuPlot::
 updateFunction2D(CGnuPlotPlot *plot)
 {
+  CExpr *expr = plot->app()->expr();
+
   plot->clearPoints();
 
   // don't set polar for plot (double conversion)
@@ -12869,7 +12914,7 @@ updateFunction2D(CGnuPlotPlot *plot)
     if (sampleVars.x.var != "")
       varName1 = sampleVars.x.var;
 
-    CExprVariablePtr xvar = CExprInst->createRealVariable(varName1, 0.0);
+    CExprVariablePtr xvar = expr->createRealVariable(varName1, 0.0);
 
     double dx1 = (nx > 1 ? (xmax1 - xmin1)/(nx - 1) : 0);
 
@@ -12886,11 +12931,11 @@ updateFunction2D(CGnuPlotPlot *plot)
       for (auto x1 : RRangeItr::range(xmin1).step(dx1).limit(nx)) {
         double x = xaxis.unmapLogValue(x1);
 
-        xvar->setRealValue(x);
+        xvar->setRealValue(expr, x);
 
         CExprValuePtr value;
 
-        if (! CExprInst->executeCTokenStack(cstack, value)) {
+        if (! expr->executeCTokenStack(cstack, value)) {
           plot->app()->errorMsg("Failed to eval \'" + plot->functions()[0] + "\' for " +
                                 varName1 + "=" + CStrUtil::toString(x));
           value = CExprValuePtr(); // TODO
@@ -12915,7 +12960,7 @@ updateFunction2D(CGnuPlotPlot *plot)
 
     //getDummyVar("t", varName);
 
-    CExprVariablePtr tvar = CExprInst->createRealVariable(varName, 0.0);
+    CExprVariablePtr tvar = expr->createRealVariable(varName, 0.0);
 
     double da = (nx > 1 ? (tmax - tmin)/(nx - 1) : 0);
 
@@ -12930,11 +12975,11 @@ updateFunction2D(CGnuPlotPlot *plot)
         //double c = cos(a);
         //double s = sin(a);
 
-        tvar->setRealValue(a);
+        tvar->setRealValue(expr, a);
 
         CExprValuePtr value;
 
-        if (! CExprInst->executeCTokenStack(cstack, value)) {
+        if (! expr->executeCTokenStack(cstack, value)) {
           plot->app()->errorMsg("Failed to eval " + plot->functions()[0] + " for " +
                                 varName + "=" + CStrUtil::toString(a));
           value = CExprValuePtr();
@@ -12968,7 +13013,7 @@ updateFunction2D(CGnuPlotPlot *plot)
     plot->dummyVars().dummyVars(varName1, varName2,
       plot->isParametric(), plot->isPolar(), /*is3D*/ false);
 
-    CExprVariablePtr tvar = CExprInst->createRealVariable(varName1, 0.0);
+    CExprVariablePtr tvar = expr->createRealVariable(varName1, 0.0);
 
     double dt = (nx > 1 ? (tmax - tmin)/(nx - 1) : 0);
 
@@ -12981,7 +13026,7 @@ updateFunction2D(CGnuPlotPlot *plot)
     if (f2) cstack2 = plot->app()->compileExpression(plot->functions()[1]);
 
     for (auto t : RRangeItr::range(tmin).step(dt).limit(nx)) {
-      tvar->setRealValue(t);
+      tvar->setRealValue(expr, t);
 
       double x, y;
 
@@ -12990,7 +13035,7 @@ updateFunction2D(CGnuPlotPlot *plot)
       if (f1) {
         CExprValuePtr value;
 
-        if (! CExprInst->executeCTokenStack(cstack1, value)) {
+        if (! expr->executeCTokenStack(cstack1, value)) {
           plot->app()->errorMsg("Failed to eval " + plot->functions()[0] + " for " +
                                 varName1 + "=" + CStrUtil::toString(t));
           value = CExprValuePtr();
@@ -13007,7 +13052,7 @@ updateFunction2D(CGnuPlotPlot *plot)
       if (f2) {
         CExprValuePtr value;
 
-        if (! CExprInst->executeCTokenStack(cstack2, value)) {
+        if (! expr->executeCTokenStack(cstack2, value)) {
           plot->app()->errorMsg("Failed to eval " + plot->functions()[1] + " for " +
                                 varName2 + "=" + CStrUtil::toString(t));
           value = CExprValuePtr();
@@ -13090,8 +13135,8 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
     if (sampleVars.y.var != "")
       varName2 = sampleVars.y.var;
 
-    CExprVariablePtr xvar = CExprInst->createRealVariable(varName1, 0.0);
-    CExprVariablePtr yvar = CExprInst->createRealVariable(varName2, 0.0);
+    CExprVariablePtr xvar = expr_->createRealVariable(varName1, 0.0);
+    CExprVariablePtr yvar = expr_->createRealVariable(varName2, 0.0);
 
     double dx = (nx > 1 ? (xmax - xmin)/(nx - 1) : 0);
     double dy = (ny > 1 ? (ymax - ymin)/(ny - 1) : 0);
@@ -13113,14 +13158,14 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
       int iy = 0;
 
       for (auto y : RRangeItr::range(ymin).step(dy).limit(ny)) {
-        yvar->setRealValue(y);
+        yvar->setRealValue(expr_, y);
 
         for (auto x : RRangeItr::range(xmin).step(dx).limit(nx)) {
-          xvar->setRealValue(x);
+          xvar->setRealValue(expr_, x);
 
           CExprValuePtr value;
 
-          if (! CExprInst->executeCTokenStack(cstack, value)) {
+          if (! expr_->executeCTokenStack(cstack, value)) {
             errorMsg("Failed to eval " + functions[0] + " for " + varName1 + "=" +
                      CStrUtil::toString(x) + ", " + varName2 + "=" + CStrUtil::toString(y));
             value = CExprValuePtr(); // TODO
@@ -13152,8 +13197,8 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
 
     //dummyVars().dummyVars(varName1, varName2, isParametric(), isPolar(), /*is3D*/ true);
 
-    CExprVariablePtr uvar = CExprInst->createRealVariable(varName1, 0.0);
-    CExprVariablePtr vvar = CExprInst->createRealVariable(varName2, 0.0);
+    CExprVariablePtr uvar = expr_->createRealVariable(varName1, 0.0);
+    CExprVariablePtr vvar = expr_->createRealVariable(varName2, 0.0);
 
     double da1 = (nx > 0 ? (umax - umin)/nx : 0);
     double da2 = (ny > 0 ? (vmax - vmin)/ny : 0);
@@ -13171,14 +13216,14 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
     for (int j = 0; j <= ny; ++j, a2 += da2) {
       //double c2 = cos(a2), s2 = sin(a2);
 
-      vvar->setRealValue(a2);
+      vvar->setRealValue(expr_, a2);
 
       double a1 = umin;
 
       for (int i = 0; i <= nx; ++i, a1 += da1) {
         double c1 = cos(a1), s1 = sin(a1);
 
-        uvar->setRealValue(a1);
+        uvar->setRealValue(expr_, a1);
 
         //---
 
@@ -13187,7 +13232,7 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
         if (f1) {
           CExprValuePtr value1;
 
-          if (! CExprInst->executeCTokenStack(cstack1, value1)) {
+          if (! expr_->executeCTokenStack(cstack1, value1)) {
             errorMsg("Failed to eval " + functions[0] + " for a1=" + CStrUtil::toString(a1) +
                      " a2=" + CStrUtil::toString(a2));
             value1 = CExprValuePtr();
@@ -13206,7 +13251,7 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
         if (f2) {
           CExprValuePtr value2;
 
-          if (! CExprInst->executeCTokenStack(cstack2, value2)) {
+          if (! expr_->executeCTokenStack(cstack2, value2)) {
             errorMsg("Failed to eval " + functions[1] + " for a1=" + CStrUtil::toString(a1) +
                      " a2=" + CStrUtil::toString(a2));
             value2 = CExprValuePtr();
@@ -13250,8 +13295,8 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
 
     dummyVars().dummyVars(varName1, varName2, isParametric(), isPolar(), /*is3D*/ true);
 
-    CExprVariablePtr uvar = CExprInst->createRealVariable(varName1, 0.0);
-    CExprVariablePtr vvar = CExprInst->createRealVariable(varName2, 0.0);
+    CExprVariablePtr uvar = expr_->createRealVariable(varName1, 0.0);
+    CExprVariablePtr vvar = expr_->createRealVariable(varName2, 0.0);
 
     double du = (umax - umin)/nx;
     double dv = (vmax - vmin)/ny;
@@ -13269,12 +13314,12 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
     double v = vmin;
 
     for (int j = 0; j <= ny; ++j, v += dv) {
-      vvar->setRealValue(v);
+      vvar->setRealValue(expr_, v);
 
       double u = umin;
 
       for (int i = 0; i <= nx; ++i, u += du) {
-        uvar->setRealValue(u);
+        uvar->setRealValue(expr_, u);
 
         double x, y, z;
 
@@ -13283,7 +13328,7 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
         if (f1) {
           CExprValuePtr value;
 
-          if (! CExprInst->executeCTokenStack(cstack1, value)) {
+          if (! expr_->executeCTokenStack(cstack1, value)) {
             errorMsg("Failed to eval " + functions[0] + " for " + varName1 + "=" +
                      CStrUtil::toString(u) + " " + varName2 + "=" + CStrUtil::toString(v));
             value = CExprValuePtr();
@@ -13300,7 +13345,7 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
         if (f2) {
           CExprValuePtr value;
 
-          if (! CExprInst->executeCTokenStack(cstack2, value)) {
+          if (! expr_->executeCTokenStack(cstack2, value)) {
             errorMsg("Failed to eval " + functions[1] + " for " + varName1 + "=" +
                      CStrUtil::toString(u) + " " + varName2 + "=" + CStrUtil::toString(v));
             value = CExprValuePtr();
@@ -13317,7 +13362,7 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
         if (f3) {
           CExprValuePtr value;
 
-          if (! CExprInst->executeCTokenStack(cstack3, value)) {
+          if (! expr_->executeCTokenStack(cstack3, value)) {
             errorMsg("Failed to eval " + functions[2] + " for " + varName1 + "=" +
                      CStrUtil::toString(u) + " " + varName2 + "=" + CStrUtil::toString(v));
             value = CExprValuePtr();
@@ -13588,8 +13633,8 @@ setPlotValues2D(CGnuPlotPlot *plot)
                 int x = (matrixData().isColumnHeaders() ? i         - 1 : i        );
                 int y = (matrixData().isRowHeaders   () ? pointNum_ - 1 : pointNum_);
 
-                CExprValuePtr xvalue = CExprInst->createRealValue(x);
-                CExprValuePtr yvalue = CExprInst->createRealValue(y);
+                CExprValuePtr xvalue = expr_->createRealValue(x);
+                CExprValuePtr yvalue = expr_->createRealValue(y);
 
                 values.push_back(xvalue);
                 values.push_back(yvalue);
@@ -13647,7 +13692,7 @@ setPlotValues2D(CGnuPlotPlot *plot)
 
           // one value then auto add the point number
           if (values.size() == 1) {
-            CExprValuePtr value1 = CExprInst->createRealValue(pointNum());
+            CExprValuePtr value1 = expr_->createRealValue(pointNum());
 
             values.push_back(value1);
 
@@ -13693,7 +13738,7 @@ setPlotValues2D(CGnuPlotPlot *plot)
             double r;
 
             if (timeToValue(str, r))
-              values[i] = CExprInst->createRealValue(r);
+              values[i] = expr_->createRealValue(r);
           }
         }
 
@@ -13761,13 +13806,13 @@ initGen1File2D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols)
   if (sampleVars.x.var != "")
     varName1 = sampleVars.x.var;
 
-  CExprVariablePtr xvar = CExprInst->createRealVariable(varName1, 0.0);
+  CExprVariablePtr xvar = expr_->createRealVariable(varName1, 0.0);
 
   double x  = xmin;
   double dx = (xmax - xmin)/nx;
 
   for (int ix = 0; ix <= nx; ++ix, x += dx) {
-    CExprValuePtr xval = CExprInst->createRealValue(x);
+    CExprValuePtr xval = expr_->createRealValue(x);
 
     xvar->setValue(xval);
 
@@ -13837,14 +13882,14 @@ initGen2File2D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols)
 
   dummyVars().dummyVars(varName1, varName2, isParametric(), isPolar(), /*is3D*/ false);
 
-  CExprVariablePtr xvar = CExprInst->createRealVariable(varName1, 0.0);
-  CExprVariablePtr yvar = CExprInst->createRealVariable(varName2, 0.0);
+  CExprVariablePtr xvar = expr_->createRealVariable(varName1, 0.0);
+  CExprVariablePtr yvar = expr_->createRealVariable(varName2, 0.0);
 
   double y  = ymin;
   double dy = (ymax - ymin)/ny;
 
   for (int iy = 0; iy <= ny; ++iy, y += dy) {
-    CExprValuePtr yval = CExprInst->createRealValue(y);
+    CExprValuePtr yval = expr_->createRealValue(y);
 
     yvar->setValue(yval);
 
@@ -13852,7 +13897,7 @@ initGen2File2D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols)
     double dx = (xmax - xmin)/nx;
 
     for (int ix = 0; ix <= nx; ++ix, x += dx) {
-      CExprValuePtr xval = CExprInst->createRealValue(x);
+      CExprValuePtr xval = expr_->createRealValue(x);
 
       xvar->setValue(xval);
 
@@ -14127,7 +14172,7 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
           Values fieldValues;
 
           for (const auto &v : values) {
-            CExprValuePtr val = CExprInst->createRealValue(v);
+            CExprValuePtr val = expr_->createRealValue(v);
 
             fieldValues.push_back(val);
           }
@@ -14338,7 +14383,7 @@ readBinaryFormatFile2D(CUnixFile *file, CGnuPlotGroupP &group, PlotStyle style,
     fieldValues_.clear();
 
     for (const auto &j : IRangeItr::range(0, nv)) {
-      CExprValuePtr val = CExprInst->createRealValue(vals[i + j]);
+      CExprValuePtr val = expr_->createRealValue(vals[i + j]);
 
       fieldValues_.push_back(val);
     }
@@ -14708,8 +14753,8 @@ setPlotValues3D(CGnuPlotPlot *plot)
 
           // one value then auto add the point and set number
           if (values.size() == 1) {
-            CExprValuePtr value1 = CExprInst->createRealValue(lineNum);
-            CExprValuePtr value2 = CExprInst->createRealValue(subSetNum);
+            CExprValuePtr value1 = expr_->createRealValue(lineNum);
+            CExprValuePtr value2 = expr_->createRealValue(subSetNum);
 
             if (value1.isValid() && value2.isValid()) {
               values.push_back(value1);
@@ -14737,8 +14782,8 @@ setPlotValues3D(CGnuPlotPlot *plot)
         for (const auto &value : fieldValues_) {
           Values values1;
 
-          CExprValuePtr value1 = CExprInst->createIntegerValue(i);
-          CExprValuePtr value2 = CExprInst->createIntegerValue(lineNum);
+          CExprValuePtr value1 = expr_->createIntegerValue(i);
+          CExprValuePtr value2 = expr_->createIntegerValue(lineNum);
 
           values1.push_back(value1);
           values1.push_back(value2);
@@ -14812,13 +14857,13 @@ initGen1File3D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols)
   if (sampleVars.x.var != "")
     varName1 = sampleVars.x.var;
 
-  CExprVariablePtr xvar = CExprInst->createRealVariable(varName1, 0.0);
+  CExprVariablePtr xvar = expr_->createRealVariable(varName1, 0.0);
 
   double x  = xmin;
   double dx = (xmax - xmin)/nx;
 
   for (int ix = 0; ix <= nx; ++ix, x += dx) {
-    CExprValuePtr xval = CExprInst->createRealValue(x);
+    CExprValuePtr xval = expr_->createRealValue(x);
 
     xvar->setValue(xval);
 
@@ -14933,14 +14978,14 @@ initGen2File3D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols)
 
   dummyVars().dummyVars(varName1, varName2, isParametric(), isPolar(), /*is3D*/ true);
 
-  CExprVariablePtr xvar = CExprInst->createRealVariable(varName1, 0.0);
-  CExprVariablePtr yvar = CExprInst->createRealVariable(varName2, 0.0);
+  CExprVariablePtr xvar = expr_->createRealVariable(varName1, 0.0);
+  CExprVariablePtr yvar = expr_->createRealVariable(varName2, 0.0);
 
   double y  = ymin;
   double dy = (ymax - ymin)/ny;
 
   for (int iy = 0; iy <= ny; ++iy, y += dy) {
-    CExprValuePtr yval = CExprInst->createRealValue(y);
+    CExprValuePtr yval = expr_->createRealValue(y);
 
     yvar->setValue(yval);
 
@@ -14948,7 +14993,7 @@ initGen2File3D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols)
     double dx = (xmax - xmin)/nx;
 
     for (int ix = 0; ix <= nx; ++ix, x += dx) {
-      CExprValuePtr xval = CExprInst->createRealValue(x);
+      CExprValuePtr xval = expr_->createRealValue(x);
 
       xvar->setValue(xval);
 
@@ -15177,7 +15222,7 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
           Values fieldValues;
 
           for (const auto &v : values) {
-            CExprValuePtr val = CExprInst->createRealValue(v);
+            CExprValuePtr val = expr_->createRealValue(v);
 
             fieldValues.push_back(val);
           }
@@ -15397,7 +15442,7 @@ readBinaryFormatFile3D(CUnixFile *file, CGnuPlotGroupP &group, PlotStyle style,
       fieldValues_.clear();
 
       for (const auto &j : IRangeItr::range(0, nv)) {
-        CExprValuePtr val = CExprInst->createRealValue(reals[i + j]);
+        CExprValuePtr val = expr_->createRealValue(reals[i + j]);
 
         fieldValues_.push_back(val);
       }
@@ -15582,9 +15627,9 @@ readBinaryFile3D(CUnixFile *file, CGnuPlotPlotP &plot, const CGnuPlotUsingCols &
         if (usingCols.numCols() > 0) {
           Values values;
 
-          values.push_back(CExprInst->createRealValue(point.x));
-          values.push_back(CExprInst->createRealValue(point.y));
-          values.push_back(CExprInst->createRealValue(point.z));
+          values.push_back(expr_->createRealValue(point.x));
+          values.push_back(expr_->createRealValue(point.y));
+          values.push_back(expr_->createRealValue(point.z));
 
           bool   bad;
           Values values1;
@@ -15694,13 +15739,13 @@ CExprTokenStack
 CGnuPlot::
 compileExpression(const std::string &expr) const
 {
-  CExprTokenStack pstack = CExprInst->parseLine(expr);
-  CExprITokenPtr  itoken = CExprInst->interpPTokenStack(pstack);
+  CExprTokenStack pstack = expr_->parseLine(expr);
+  CExprITokenPtr  itoken = expr_->interpPTokenStack(pstack);
 
   CExprTokenStack cstack;
 
   if (itoken.isValid())
-    cstack = CExprInst->compileIToken(itoken);
+    cstack = expr_->compileIToken(itoken);
   else
     errorMsg("Eval failed: '" + expr + "'");
 
@@ -15737,7 +15782,7 @@ fieldToValue(int /*nf*/, const std::string &field, bool &missing)
   double r;
 
   if      (field == dataFile_.missingStr()) {
-    value = CExprInst->createRealValue(CMathGen::getNaN());
+    value = expr_->createRealValue(CMathGen::getNaN());
 
     missing = true;
   }
@@ -15747,15 +15792,15 @@ fieldToValue(int /*nf*/, const std::string &field, bool &missing)
     double r;
 
     if (timeToValue(field, r))
-      value = CExprInst->createRealValue(r);
+      value = expr_->createRealValue(r);
   }
 #endif
   else if (len && field[0] == '\"' && field[len - 1] == '\"')
-    value = CExprInst->createStringValue(field.substr(1, len - 2));
+    value = expr_->createStringValue(field.substr(1, len - 2));
   else if (fieldToReal(field, r))
-    value = CExprInst->createRealValue(r);
+    value = expr_->createRealValue(r);
   else
-    value = CExprInst->createStringValue(field);
+    value = expr_->createStringValue(field);
 
   return value;
 }
@@ -16000,7 +16045,7 @@ setLastFilename(const std::string &v)
 {
   lastFilename_ = v;
 
-  CExprInst->createStringVariable("GPVAL_FILENAME", lastFilename_);
+  expr_->createStringVariable("GPVAL_FILENAME", lastFilename_);
 }
 
 void
@@ -16009,7 +16054,7 @@ setAngleType(AngleType type)
 {
   setPrefValue<AngleType>(VariableName::ANGLES, type);
 
-  CExprInst->setDegrees(type == AngleType::DEGREES);
+  expr_->setDegrees(type == AngleType::DEGREES);
 }
 
 // set tics {axis | border} {{no}mirror}
@@ -16599,7 +16644,7 @@ parseAssignment(CParseLine &line)
       return false;
     }
 
-    CExprInst->createVariable(identifier, value);
+    expr_->createVariable(identifier, value);
   }
   else {
     line.setPos(pos);
@@ -16699,7 +16744,7 @@ bool
 CGnuPlot::
 getIntegerVariable(const std::string &name, int &value) const
 {
-  CExprVariablePtr var = CExprInst->getVariable(name);
+  CExprVariablePtr var = expr_->getVariable(name);
 
   if (! var.isValid())
     return false;
@@ -16720,7 +16765,7 @@ bool
 CGnuPlot::
 getRealVariable(const std::string &name, double &value) const
 {
-  CExprVariablePtr var = CExprInst->getVariable(name);
+  CExprVariablePtr var = expr_->getVariable(name);
 
   if (! var.isValid())
     return false;
@@ -16745,7 +16790,7 @@ skipExpression(const char *id, CParseLine &line, std::string &expr) const
 
   uint pos = line.pos();
 
-  if (! CExprInst->skipExpression(line.str(), pos))
+  if (! expr_->skipExpression(line.str(), pos))
     return false;
 
   expr = line.substr(line.pos(), pos - line.pos());
@@ -16794,7 +16839,7 @@ bool
 CGnuPlot::
 getStringVariable(const std::string &name, std::string &value) const
 {
-  CExprVariablePtr var = CExprInst->getVariable(name);
+  CExprVariablePtr var = expr_->getVariable(name);
 
   if (! var.isValid())
     return false;
@@ -17124,7 +17169,7 @@ parseFunction(CParseLine &line, FunctionData &functionData)
 
   uint pos = line.pos();
 
-  if (! CExprInst->skipExpression(line.str(), pos))
+  if (! expr_->skipExpression(line.str(), pos))
     return false;
 
   str = CStrUtil::stripSpaces(line.substr(line.pos(), pos - line.pos()));
@@ -17465,7 +17510,7 @@ fileReadLine(std::string &line) const
     ++th->fileData_.lineNum;
 //std::cerr << th->fileData_.lineNum << ":" << line << std::endl;
 
-    CExprInst->createIntegerVariable("GPVAL_LINENO", th->fileData_.lineNum);
+    expr_->createIntegerVariable("GPVAL_LINENO", th->fileData_.lineNum);
   }
 
   return true;
@@ -17499,7 +17544,7 @@ errorMsg(const std::string &msg) const
 {
   std::cerr << msg << std::endl;
 
-  CExprInst->createStringVariable("GPVAL_ERRMSG" , msg);
+  expr_->createStringVariable("GPVAL_ERRMSG" , msg);
 }
 
 void
@@ -17522,17 +17567,17 @@ evaluateExpression(const std::string &expr, CExprValuePtr &value, bool quiet) co
 {
   std::string expr1 = replaceSumInExpr(expr);
 
-  bool oldQuiet = CExprInst->getQuiet();
+  bool oldQuiet = expr_->getQuiet();
 
-  CExprInst->setQuiet(quiet);
+  expr_->setQuiet(quiet);
 
-  if (! CExprInst->evaluateExpression(expr1, value))
+  if (! expr_->evaluateExpression(expr1, value))
     value = CExprValuePtr();
 
   if (! value.isValid() && ! quiet)
     errorMsg("Eval failed: '" + expr1 + "'");
 
-  CExprInst->setQuiet(oldQuiet);
+  expr_->setQuiet(oldQuiet);
 
   return true;
 }
@@ -17543,14 +17588,14 @@ evaluateExpression(const std::string &expr, Values &values, bool quiet) const
 {
   std::string expr1 = replaceSumInExpr(expr);
 
-  bool oldQuiet = CExprInst->getQuiet();
+  bool oldQuiet = expr_->getQuiet();
 
-  CExprInst->setQuiet(quiet);
+  expr_->setQuiet(quiet);
 
-  if (! CExprInst->evaluateExpression(expr1, values))
+  if (! expr_->evaluateExpression(expr1, values))
     errorMsg("Eval failed: '" + expr1 + "'");
 
-  CExprInst->setQuiet(oldQuiet);
+  expr_->setQuiet(oldQuiet);
 
   return true;
 }
@@ -17753,4 +17798,15 @@ scaleColorComponent(double z) const
   double cbmax = colorBox_.max().getValue(255);
 
   return CGnuPlotUtil::map(z, cbmin, cbmax, 0, 1);
+}
+
+CGnuPlot::PlotStyle
+CGnuPlot::
+stringToPlotStyle(const std::string &str)
+{
+  CGnuPlot::PlotStyle plotStyle = CGnuPlot::PlotStyle::LINES_POINTS;
+
+  (void) CStrUniqueMatch::stringToValue(str, plotStyle);
+
+  return plotStyle;
 }

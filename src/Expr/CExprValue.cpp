@@ -30,11 +30,13 @@ CExprValue(const CExprStringValue &str) :
 {
 }
 
+#ifdef GNUPLOT_EXPR
 CExprValue::
 CExprValue(const CExprComplexValue &str) :
  type_(CExprValueType::COMPLEX), base_(str.dup())
 {
 }
+#endif
 
 CExprValue::
 ~CExprValue()
@@ -84,12 +86,14 @@ isStringValue() const
   return isType(CExprValueType::STRING);
 }
 
+#ifdef GNUPLOT_EXPR
 bool
 CExprValue::
 isComplexValue() const
 {
   return isType(CExprValueType::COMPLEX);
 }
+#endif
 
 bool
 CExprValue::
@@ -119,12 +123,14 @@ getStringValue(std::string &s) const
   return base_->getStringValue(s);
 }
 
+#ifdef GNUPLOT_EXPR
 bool
 CExprValue::
 getComplexValue(std::complex<double> &c) const
 {
   return base_->getComplexValue(c);
 }
+#endif
 
 void
 CExprValue::
@@ -162,6 +168,7 @@ setStringValue(const std::string &s)
   base_->setStringValue(s);
 }
 
+#ifdef GNUPLOT_EXPR
 void
 CExprValue::
 setComplexValue(const std::complex<double> &c)
@@ -170,6 +177,7 @@ setComplexValue(const std::complex<double> &c)
 
   base_->setComplexValue(c);
 }
+#endif
 
 bool
 CExprValue::
@@ -188,8 +196,10 @@ convToType(CExprValueType type)
     return convToReal();
   else if (hasType(itype, CExprValueType::STRING))
     return convToString();
+#ifdef GNUPLOT_EXPR
   else if (hasType(itype, CExprValueType::COMPLEX))
     return convToComplex();
+#endif
   else
     return false;
 }
@@ -262,6 +272,7 @@ convToString()
   return true;
 }
 
+#ifdef GNUPLOT_EXPR
 bool
 CExprValue::
 convToComplex()
@@ -278,26 +289,27 @@ convToComplex()
 
   return true;
 }
+#endif
 
 CExprValuePtr
 CExprValue::
-execUnaryOp(CExprOpType op) const
+execUnaryOp(CExpr *expr, CExprOpType op) const
 {
-  return base_->execUnaryOp(op);
+  return base_->execUnaryOp(expr, op);
 }
 
 CExprValuePtr
 CExprValue::
-execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
+execBinaryOp(CExpr *expr, CExprValuePtr rhs, CExprOpType op) const
 {
-  return base_->execBinaryOp(rhs, op);
+  return base_->execBinaryOp(expr, rhs, op);
 }
 
 CExprValuePtr
 CExprValue::
-subscript(const CExprValueArray &values) const
+subscript(CExpr *expr, const CExprValueArray &values) const
 {
-  return base_->subscript(values);
+  return base_->subscript(expr, values);
 }
 
 void

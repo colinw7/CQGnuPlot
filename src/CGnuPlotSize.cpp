@@ -10,48 +10,50 @@ getSize(CGnuPlotRenderer *renderer) const
   double x = s_.width;
   double y = s_.height;
 
+  CPoint2D tw(x, y), gw(x, y), sw(x, y), cw(x, y);
+
+  if (systemX_ == CGnuPlotTypes::CoordSys::SECOND ||
+      systemY_ == CGnuPlotTypes::CoordSys::SECOND)
+    renderer->secondToWindow(CPoint2D(s_.width, s_.height), tw);
+
+  if (systemX_ == CGnuPlotTypes::CoordSys::GRAPH ||
+      systemY_ == CGnuPlotTypes::CoordSys::GRAPH)
+    renderer->graphToWindow(CPoint2D(s_.width, s_.height), gw);
+
+  if (systemX_ == CGnuPlotTypes::CoordSys::SCREEN ||
+      systemY_ == CGnuPlotTypes::CoordSys::SCREEN)
+    renderer->screenToWindow(CPoint2D(s_.width, s_.height), sw);
+
+  if (systemX_ == CGnuPlotTypes::CoordSys::CHARACTER ||
+      systemY_ == CGnuPlotTypes::CoordSys::CHARACTER)
+    renderer->screenToChar(CPoint2D(s_.width, s_.height), cw);
+
+  //---
+
   if      (systemX_ == CGnuPlotTypes::CoordSys::SECOND) {
-    // TODO
+    x = tw.x;
   }
   else if (systemX_ == CGnuPlotTypes::CoordSys::GRAPH) {
-    const CBBox2D &range = renderer->range();
-
-    x = CGnuPlotUtil::map(s_.width, 0, 1, range.getXMin(), range.getXMax());
+    x = gw.x;
   }
   else if (systemX_ == CGnuPlotTypes::CoordSys::SCREEN) {
-    double px1, py1, px2, py2;
-
-    renderer->pixelToWindow(                    0,                      0, &px1, &py1);
-    renderer->pixelToWindow(renderer->width() - 1, renderer->height() - 1, &px2, &py2);
-
-    x = CGnuPlotUtil::map(s_.width, 0, 1, px1, px2);
+    x = sw.x;
   }
   else if (systemX_ == CGnuPlotTypes::CoordSys::CHARACTER) {
-    CFontPtr font = renderer->getFont();
-
-    x = renderer->pixelWidthToWindowWidth(font->getStringWidth("X")*s_.width);
+    x = cw.x;
   }
 
   if      (systemY_ == CGnuPlotTypes::CoordSys::SECOND) {
-    // TODO
+    y = tw.y;
   }
   else if (systemY_ == CGnuPlotTypes::CoordSys::GRAPH) {
-    const CBBox2D &range = renderer->range();
-
-    y = CGnuPlotUtil::map(s_.height, 0, 1, range.getYMin(), range.getYMax());
+    y = gw.y;
   }
   else if (systemY_ == CGnuPlotTypes::CoordSys::SCREEN) {
-    double px1, py1, px2, py2;
-
-    renderer->pixelToWindow(                    0,                      0, &px1, &py1);
-    renderer->pixelToWindow(renderer->width() - 1, renderer->height() - 1, &px2, &py2);
-
-    y = CGnuPlotUtil::map(s_.height, 0, 1, py1, py2);
+    y = sw.y;
   }
   else if (systemY_ == CGnuPlotTypes::CoordSys::CHARACTER) {
-    CFontPtr font = renderer->getFont();
-
-    y = renderer->pixelHeightToWindowHeight(font->getCharHeight()*s_.height);
+    y = cw.y;
   }
 #endif
 

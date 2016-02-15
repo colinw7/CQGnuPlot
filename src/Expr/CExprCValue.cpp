@@ -11,13 +11,13 @@ getStringValue(std::string &s) const
 
 CExprValuePtr
 CExprComplexValue::
-execUnaryOp(CExprOpType op) const
+execUnaryOp(CExpr *expr, CExprOpType op) const
 {
   switch (op) {
     case CExprOpType::UNARY_PLUS:
-      return CExprInst->createComplexValue(c_);
+      return expr->createComplexValue(c_);
     case CExprOpType::UNARY_MINUS:
-      return CExprInst->createComplexValue(-c_);
+      return expr->createComplexValue(-c_);
     default:
       return CExprValuePtr();
   }
@@ -25,7 +25,7 @@ execUnaryOp(CExprOpType op) const
 
 CExprValuePtr
 CExprComplexValue::
-execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
+execBinaryOp(CExpr *expr, CExprValuePtr rhs, CExprOpType op) const
 {
   std::complex<double> rc;
 
@@ -38,13 +38,13 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 
   switch (op) {
     case CExprOpType::PLUS:
-      return CExprInst->createComplexValue(c_ + rc);
+      return expr->createComplexValue(c_ + rc);
     case CExprOpType::MINUS:
-      return CExprInst->createComplexValue(c_ - rc);
+      return expr->createComplexValue(c_ - rc);
     case CExprOpType::TIMES:
-      return CExprInst->createComplexValue(c_ * rc);
+      return expr->createComplexValue(c_ * rc);
     case CExprOpType::DIVIDE:
-      return CExprInst->createComplexValue(c_ / rc);
+      return expr->createComplexValue(c_ / rc);
     default:
       return CExprValuePtr();
   }

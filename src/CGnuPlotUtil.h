@@ -58,12 +58,13 @@ namespace CGnuPlotUtil {
     return false;
   }
 
-  inline bool evaluateExpression(const std::string &expr, CExprValuePtr &value, bool quiet=false) {
-    if (! CExprInst->evaluateExpression(expr, value))
+  inline bool evaluateExpression(CExpr *expr, const std::string &str,
+                                 CExprValuePtr &value, bool quiet=false) {
+    if (! expr->evaluateExpression(str, value))
       value = CExprValuePtr();
 
     if (! value.isValid() && ! quiet)
-      std::cerr << "Eval failed: " << expr << std::endl;
+      std::cerr << "Eval failed: " << str << std::endl;
 
     return true;
   }

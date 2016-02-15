@@ -44,6 +44,20 @@ stroke() const
 
 void
 CQGnuPlotPolygonObject::
+setFillValues(const CQGnuPlotFill &fill)
+{
+  dynamic_cast<CQGnuPlotFill *>(fill_.get())->setValues(fill);
+}
+
+void
+CQGnuPlotPolygonObject::
+setStrokeValues(const CQGnuPlotStroke &stroke)
+{
+  dynamic_cast<CQGnuPlotStroke *>(stroke_.get())->setValues(stroke);
+}
+
+void
+CQGnuPlotPolygonObject::
 draw(CGnuPlotRenderer *renderer) const
 {
   CGnuPlotPolygonObject::draw(renderer);

@@ -10,17 +10,18 @@ main(int argc, char **argv)
 
   app.setStyle(new CQStyle);
 
-  CBool       debug;
-  CBool       edebug;
-  CBool       svg;
-  CBool       png;
-  CBool       autoContinue;
-  CBool       autoExit;
-  CBool       mainLoop;
-  CBool       window;
-  std::string dataFile;
-  std::string ofile;
-  std::string usingStr;
+  CBool               debug;
+  CBool               edebug;
+  CBool               svg;
+  CBool               png;
+  CBool               autoContinue;
+  CBool               autoExit;
+  CBool               mainLoop;
+  CBool               window;
+  std::string         dataFile;
+  std::string         ofile;
+  std::string         usingStr;
+  CGnuPlot::PlotStyle plotStyle = CGnuPlot::PlotStyle::LINES_POINTS;
 
   CGnuPlot::LoadDataParams loadParams;
 
@@ -83,6 +84,12 @@ main(int argc, char **argv)
         if (i < argc)
           usingStr = argv[i];
       }
+      else if (arg == "style" || arg == "plot_style") {
+        ++i;
+
+        if (i < argc)
+          plotStyle = CGnuPlot::stringToPlotStyle(argv[i]);
+      }
       else if (arg == "qt")
         mainLoop = true;
     }
@@ -97,6 +104,7 @@ main(int argc, char **argv)
   plot.setAutoContinue(autoContinue);
 
   plot.setUsingString(usingStr);
+  plot.setPlotStyle  (plotStyle);
 
   if      (svg) {
     plot.setDevice("SVG");

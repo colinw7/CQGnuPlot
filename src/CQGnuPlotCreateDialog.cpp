@@ -2,6 +2,7 @@
 #include <CQEnumCombo.h>
 #include <CQColorChooser.h>
 #include <CQPoint2DEdit.h>
+#include <CQGnuPlotPositionEdit.h>
 #include <CQAngleSpinBox.h>
 #include <CQIntegerSpin.h>
 #include <CQRealSpin.h>
@@ -9,11 +10,14 @@
 #include <CQUtil.h>
 #include <QStackedWidget>
 #include <QGroupBox>
+#include <QRadioButton>
 
 CQGnuPlotCreateDialog::
 CQGnuPlotCreateDialog(QWidget *parent) :
  CQDialog(parent)
 {
+  setObjectName("createDialog");
+
   setWindowTitle("Create Object");
 
   enum_ = new CQGnuPlotEnum;
@@ -29,11 +33,14 @@ createWidgets(QWidget *)
 
   connect(typeCombo_, SIGNAL(currentIndexChanged(int)), this, SLOT(typeSlot(int)));
 
-  addField("Type", typeCombo_);
+  addField("Type", typeCombo_, true);
+
+  dimensionGroup_ = addRadioButtons("Dimension", {"2D", "3D"}, this, SLOT(dimensionSlot()));
 
   //---
 
   QGroupBox *strokeGroup = new QGroupBox("Stroke");
+  strokeGroup->setObjectName("strokeGroup");
 
   addField("", strokeGroup);
 
@@ -41,6 +48,8 @@ createWidgets(QWidget *)
   strokeLayout->setMargin(0); strokeLayout->setSpacing(0);
 
   CQDialogForm *strokeFrame = new CQDialogForm;
+  strokeFrame->setObjectName("strokeForm");
+
   strokeLayout->addWidget(strokeFrame);
 
   strokeFrame->addField("Color", (strokeColor_ = new CQColorChooser));
@@ -55,6 +64,7 @@ createWidgets(QWidget *)
   //---
 
   QGroupBox *fillGroup = new QGroupBox("Fill");
+  fillGroup->setObjectName("fillGroup");
 
   addField("", fillGroup);
 
@@ -62,6 +72,8 @@ createWidgets(QWidget *)
   fillLayout->setMargin(0); fillLayout->setSpacing(0);
 
   CQDialogForm *fillFrame = new CQDialogForm;
+  fillFrame->setObjectName("fillForm");
+
   fillLayout->addWidget(fillFrame);
 
   fillFrame->addField("Color", (fillColor_ = new CQColorChooser));
@@ -71,15 +83,16 @@ createWidgets(QWidget *)
   //---
 
   stack_ = new QStackedWidget;
+  stack_->setObjectName("stack");
 
   addField("", stack_);
 
-  arrowFrame_   = new CQDialogForm;
-  circleFrame_  = new CQDialogForm;
-  ellipseFrame_ = new CQDialogForm;
-  labelFrame_   = new CQDialogForm;
-  polyFrame_    = new CQDialogForm;
-  rectFrame_    = new CQDialogForm;
+  arrowFrame_   = new CQDialogForm; arrowFrame_  ->setObjectName("arrowForm");
+  circleFrame_  = new CQDialogForm; circleFrame_ ->setObjectName("circleForm");
+  ellipseFrame_ = new CQDialogForm; ellipseFrame_->setObjectName("ellipseForm");
+  labelFrame_   = new CQDialogForm; labelFrame_  ->setObjectName("labelForm");
+  polyFrame_    = new CQDialogForm; polyFrame_   ->setObjectName("polyForm");
+  rectFrame_    = new CQDialogForm; rectFrame_   ->setObjectName("rectForm");
 
   stack_->addWidget(arrowFrame_  );
   stack_->addWidget(circleFrame_ );
@@ -88,8 +101,8 @@ createWidgets(QWidget *)
   stack_->addWidget(polyFrame_   );
   stack_->addWidget(rectFrame_   );
 
-  arrowFrame_->addField("From", (arrowFrom_  = new CQPoint2DEdit));
-  arrowFrame_->addField("To"  , (arrowTo_    = new CQPoint2DEdit));
+  arrowFrame_->addField("From", (arrowFrom_  = new CQGnuPlotPositionEdit), true);
+  arrowFrame_->addField("To"  , (arrowTo_    = new CQGnuPlotPositionEdit), true);
   arrowFrame_->addStretch();
 
   circleFrame_->addField("Center"     , (circleCenter_ = new CQPoint2DEdit));
@@ -125,6 +138,15 @@ CQGnuPlotCreateDialog::
 objectType() const
 {
   return CQGnuPlotEnum::objectTypeConv(enum_->objectType());
+}
+
+bool
+CQGnuPlotCreateDialog::
+is2D() const
+{
+  QList<QRadioButton *> buttons = dimensionGroup_->findChildren<QRadioButton *>();
+
+  return buttons[0]->isChecked();
 }
 
 CRGBA
@@ -167,18 +189,28 @@ typeSlot(int ind)
     stack_->setCurrentIndex(ind - 1);
 }
 
-CPoint2D
+void
+CQGnuPlotCreateDialog::
+dimensionSlot()
+{
+  bool is2D = this->is2D();
+
+  arrowFrom_->set2D(is2D);
+  arrowTo_  ->set2D(is2D);
+}
+
+CGnuPlotPosition
 CQGnuPlotCreateDialog::
 arrowFrom() const
 {
-  return arrowFrom_->getValue();
+  return arrowFrom_->position();
 }
 
-CPoint2D
+CGnuPlotPosition
 CQGnuPlotCreateDialog::
 arrowTo() const
 {
-  return arrowTo_->getValue();
+  return arrowTo_->position();
 }
 
 CPoint2D

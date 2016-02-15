@@ -27,7 +27,7 @@ class CExprTokenBase {
   const std::complex<double> &getComplex   () const;
   CExprFunctionPtr            getFunction  () const;
   CExprValuePtr               getValue     () const;
-  const CExprTokenStack       &getBlock    () const;
+  const CExprTokenStack      &getBlock     () const;
 
   void printQualified(std::ostream &os) const;
 
@@ -60,9 +60,7 @@ class CExprTokenIdentifier : public CExprTokenBase {
 
   //CExprTokenIdentifier *dup() const { return new CExprTokenIdentifier(identifier_); }
 
-  void print(std::ostream &os) const {
-     os << identifier_;
-  }
+  void print(std::ostream &os) const { os << identifier_; }
 
  private:
   std::string identifier_;
@@ -98,9 +96,7 @@ class CExprTokenInteger : public CExprTokenBase {
 
   //CExprTokenInteger *dup() const { return new CExprTokenInteger(integer_); }
 
-  void print(std::ostream &os) const {
-    os << integer_;
-  }
+  void print(std::ostream &os) const { os << integer_; }
 
  private:
   long integer_;
@@ -118,9 +114,7 @@ class CExprTokenReal : public CExprTokenBase {
 
   //CExprTokenReal *dup() const { return new CExprTokenReal(real_); }
 
-  void print(std::ostream &os) const {
-    os << real_;
-  }
+  void print(std::ostream &os) const { os << real_; }
 
  private:
   double real_;
@@ -138,9 +132,7 @@ class CExprTokenString : public CExprTokenBase {
 
   //CExprTokenString *dup() const { return new CExprTokenString(str_); }
 
-  void print(std::ostream &os) const {
-    os << "\"" << str_ << "\"";
-  }
+  void print(std::ostream &os) const { os << "\"" << str_ << "\""; }
 
  private:
   std::string str_;
@@ -158,9 +150,7 @@ class CExprTokenComplex : public CExprTokenBase {
 
   //CExprTokenComplex *dup() const { return new CExprTokenComplex(c_); }
 
-  void print(std::ostream &os) const {
-    os << "{" << c_.real() << ", " << c_.imag() << "}";
-  }
+  void print(std::ostream &os) const { os << "{" << c_.real() << ", " << c_.imag() << "}"; }
 
  private:
   std::complex<double> c_;
@@ -196,9 +186,7 @@ class CExprTokenValue : public CExprTokenBase {
 
   //CExprTokenValue *dup() const { return new CExprTokenValue(value_); }
 
-  void print(std::ostream &os) const {
-    os << *value_;
-  }
+  void print(std::ostream &os) const { os << *value_; }
 
  private:
   CExprValuePtr value_;
@@ -212,7 +200,7 @@ class CExprTokenValue : public CExprTokenBase {
 
 class CExprTokenBlock : public CExprTokenBase {
  public:
-  CExprTokenBlock(const CExprTokenStack &stack=CExprTokenStack()) :
+  CExprTokenBlock(const CExprTokenStack &stack) :
    CExprTokenBase(CExprTokenType::BLOCK), stack_(stack) {
   }
 
@@ -220,9 +208,7 @@ class CExprTokenBlock : public CExprTokenBase {
 
   //CExprTokenBlock *dup() const { return new CExprTokenBlock(stack_); }
 
-  void print(std::ostream &os) const {
-    stack_.print(os);
-  }
+  void print(std::ostream &os) const { stack_.print(os); }
 
  private:
   CExprTokenStack stack_;

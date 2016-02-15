@@ -1,14 +1,16 @@
 #ifndef CGnuPlotIndexData_H
 #define CGnuPlotIndexData_H
 
+class CExpr;
+
 #include <string>
 #include <limits>
 
 class CGnuPlotIndexData {
  public:
-  CGnuPlotIndexData(const std::string &str="");
+  CGnuPlotIndexData(CExpr *expr=0, const std::string &str="");
 
-  bool parse(const std::string &str);
+  bool parse(CExpr *expr, const std::string &str);
 
   int start() const { return start_; }
   void setStart(int i) { start_ = i; }

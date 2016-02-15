@@ -225,3 +225,11 @@
  + add auto load to command line parameters
  + add field functions into using code
  + fix delaunay auto scale
+
+### 02/15/2016
+ + improve handling of coordinate system types (first, second, graph, screen, character)
+ + Replace use of global expression instance with our own instance
+ + Move palette class to separate class and add GUI interface to edit
+ + Add Pie object support for sunbrust plot
+ + Add Pm3D support to points style
+ + Add position editor for create dialog

@@ -14,6 +14,8 @@ class CQGnuPlotWindow;
 class CQGnuPlotGroup;
 class CQGnuPlotCanvas;
 class CQGnuPlotRenderer;
+class CQGnuPlotStroke;
+class CQGnuPlotFill;
 
 class CQGnuPlotPlotArrowObjects;
 class CQGnuPlotPlotBoxBarObjects;
@@ -436,12 +438,19 @@ class CQGnuPlotPlotPolygonObjects : public QObject {
   Q_OBJECT
 
  public:
-  CQGnuPlotPlotPolygonObjects(CQGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
+  CQGnuPlotPlotPolygonObjects(CQGnuPlotPlot *plot);
+
+  CQGnuPlotStroke *stroke() const { return stroke_; }
+  CQGnuPlotFill   *fill  () const { return fill_  ; }
+
+ private slots:
+  void updateStroke();
+  void updateFill();
 
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot   *plot_;
+  CQGnuPlotStroke *stroke_;
+  CQGnuPlotFill   *fill_;
 };
 
 //------

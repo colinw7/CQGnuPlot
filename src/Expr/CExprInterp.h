@@ -113,6 +113,7 @@ class CExprITokenStack {
 
 //---
 
+class CExpr;
 class CExprInterpImpl;
 
 class CExprInterp {
@@ -124,9 +125,10 @@ class CExprInterp {
  private:
   friend class CExpr;
 
-  CExprInterp();
+  CExprInterp(CExpr *expr);
 
  private:
+  CExpr*                    expr_;
   CAutoPtr<CExprInterpImpl> impl_;
 };
 

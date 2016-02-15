@@ -374,12 +374,12 @@ namespace CStrUniqueMatch {
                           {"rectangle", CGnuPlotTypes::ObjectType::RECTANGLE}});
   }
 
-  CStrUniqueMatchInitT(CGnuPlotTypes::ColorModel) {
-    nameValues.addValues({{"RGB", CGnuPlotTypes::ColorModel::RGB},
-                          {"HSV", CGnuPlotTypes::ColorModel::HSV},
-                          {"CMY", CGnuPlotTypes::ColorModel::CMY},
-                          {"YIQ", CGnuPlotTypes::ColorModel::YIQ},
-                          {"XYZ", CGnuPlotTypes::ColorModel::XYZ}});
+  CStrUniqueMatchInitT(CGradientPalette::ColorModel) {
+    nameValues.addValues({{"RGB", CGradientPalette::ColorModel::RGB},
+                          {"HSV", CGradientPalette::ColorModel::HSV},
+                          {"CMY", CGradientPalette::ColorModel::CMY},
+                          {"YIQ", CGradientPalette::ColorModel::YIQ},
+                          {"XYZ", CGradientPalette::ColorModel::XYZ}});
   }
 
   CStrUniqueMatchInitT(CGnuPlotTypes::DrawLayer) {

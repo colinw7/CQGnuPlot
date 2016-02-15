@@ -198,7 +198,7 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     // fixed size ?
     image->setSize(CISize2D(nx, ny));
 
-    if (! image->isUsed()) {
+    if (! image->testAndSetUsed()) {
       image->setOrigin(origin);
       image->setCenter(center);
       image->setDelta (CSize2D(idx, idy));
@@ -206,8 +206,6 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       image->setFlipY (imageStyle.isFlipY());
 
       image->setTipText(imageStyle.filename());
-
-      image->setUsed(true);
     }
 
     if (! plot->is3D()) {
@@ -784,6 +782,8 @@ double
 CGnuPlotStyleImageBase::
 decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
 {
+  CExpr *expr = plot->app()->expr();
+
   const CGnuPlotImageStyle &imageStyle = plot->imageStyle();
 
   int nc = imageStyle.usingCols().numCols();
@@ -794,21 +794,21 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
     else {
       bool lookup = true;
 
-      std::string expr = imageStyle.usingCols().getCol(col).str();
+      std::string exprStr = imageStyle.usingCols().getCol(col).str();
 
       // replace $N variables
       // TODO: easier to define $1 variables
-      auto pos = expr.find('$');
+      auto pos = exprStr.find('$');
 
       while (pos != std::string::npos) {
         lookup = false;
 
         int pos1 = ++pos;
 
-        while (isdigit(expr[pos1]))
+        while (isdigit(exprStr[pos1]))
           ++pos1;
 
-        std::string numStr = expr.substr(pos, pos1 - pos);
+        std::string numStr = exprStr.substr(pos, pos1 - pos);
 
         int icol = 0;
 
@@ -816,20 +816,20 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
 
         double r = indexImageColor(icol, rgba);
 
-        expr = expr.substr(0, pos - 1) + CStrUtil::toString(r) + expr.substr(pos1);
+        exprStr = exprStr.substr(0, pos - 1) + CStrUtil::toString(r) + exprStr.substr(pos1);
 
-        pos = expr.find('$');
+        pos = exprStr.find('$');
       }
 
-      if (expr.size() > 2 && expr[0] == '(' && expr[expr.size() - 1] == ')') {
+      if (exprStr.size() > 2 && exprStr[0] == '(' && exprStr[exprStr.size() - 1] == ')') {
         lookup = false;
 
-        expr = expr.substr(1, expr.size() - 2);
+        exprStr = exprStr.substr(1, exprStr.size() - 2);
       }
 
       CExprValuePtr value;
 
-      if (! CExprInst->evaluateExpression(expr, value))
+      if (! expr->evaluateExpression(exprStr, value))
         value = CExprValuePtr();
 
       if (! lookup) {
@@ -841,7 +841,7 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
       else {
         CExprValuePtr value;
 
-        if (! CExprInst->evaluateExpression(expr, value))
+        if (! expr->evaluateExpression(exprStr, value))
           value = CExprValuePtr();
 
         long l;

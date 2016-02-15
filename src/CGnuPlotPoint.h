@@ -89,7 +89,7 @@ class CGnuPlotPoint {
   std::string getParamString(const std::string &name) const;
 
   CRGBA getParamColor(const std::string &name) const;
-  void setParamColor(const std::string &name, const CRGBA &c);
+  void setParamColor(CExpr *expr, const std::string &name, const CRGBA &c);
 
   int cmp(const CGnuPlotPoint &p) const;
 

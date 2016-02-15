@@ -11,11 +11,33 @@ CGnuPlotRenderer::
 CGnuPlotRenderer()
 {
   font_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
+
+  updateMatrix();
 }
 
 CGnuPlotRenderer::
 ~CGnuPlotRenderer()
 {
+}
+
+void
+CGnuPlotRenderer::
+setRange(const CBBox2D &r)
+{
+  range1_ = r;
+  range2_ = r;
+
+  updateMatrix();
+}
+
+void
+CGnuPlotRenderer::
+setRange(const CBBox2D &r1, const CBBox2D &r2)
+{
+  range1_ = r1;
+  range2_ = r2;
+
+  updateMatrix();
 }
 
 void
@@ -37,6 +59,60 @@ CGnuPlotRenderer::
 setFontSize(double s)
 {
   font_ = font_->dup(font_->getFamily(), font_->getStyle(), s);
+}
+
+void
+CGnuPlotRenderer::
+setXScale(double x)
+{
+  xscale_ = x;
+
+  updateMatrix();
+}
+
+void
+CGnuPlotRenderer::
+setYScale(double y)
+{
+  yscale_ = y;
+
+  updateMatrix();
+}
+
+void
+CGnuPlotRenderer::
+setScale(double x, double y)
+{
+  xscale_ = x;
+  yscale_ = y;
+
+  updateMatrix();
+}
+
+void
+CGnuPlotRenderer::
+setOffset(const CPoint2D &o)
+{
+  offset_ = o;
+
+  updateMatrix();
+}
+
+void
+CGnuPlotRenderer::
+updateMatrix()
+{
+  CPoint2D c  = (range1_.isSet() ? range1_.getCenter() : CPoint2D(0, 0));
+  CPoint2D c1 = c + offset_;
+
+  CMatrix2D matrix1, matrix2, matrix3;
+
+  matrix1.setTranslation(c.x, c.y);
+  matrix2.setScale(xscale_, yscale_);
+  matrix3.setTranslation(-c1.x, -c1.y);
+
+  matrix_  = matrix1*matrix2*matrix3;
+  imatrix_ = matrix_.inverse();
 }
 
 //---
@@ -1557,9 +1633,15 @@ void
 CGnuPlotRenderer::
 windowToPixel(double wx, double wy, double *px, double *py)
 {
-  if (! mapping_ || ! region_.isSet()) {
-    *px = wx;
-    *py = wy;
+  double wx1, wy1;
+
+  matrix_.multiplyPoint(wx, wy, &wx1, &wy1);
+
+  //---
+
+  if (! mapping() || ! region_.isSet()) {
+    *px = wx1;
+    *py = wy1;
     return;
   }
 
@@ -1610,14 +1692,14 @@ windowToPixel(double wx, double wy, double *px, double *py)
 
   // map
   if (reverseX_)
-    *px = CGnuPlotUtil::map(wx, range_.getXMin(), range_.getXMax(), pxmax, pxmin);
+    *px = CGnuPlotUtil::map(wx1, range1_.getXMin(), range1_.getXMax(), pxmax, pxmin);
   else
-    *px = CGnuPlotUtil::map(wx, range_.getXMin(), range_.getXMax(), pxmin, pxmax);
+    *px = CGnuPlotUtil::map(wx1, range1_.getXMin(), range1_.getXMax(), pxmin, pxmax);
 
   if (reverseY_)
-    *py = CGnuPlotUtil::map(wy, range_.getYMin(), range_.getYMax(), pymin, pymax);
+    *py = CGnuPlotUtil::map(wy1, range1_.getYMin(), range1_.getYMax(), pymin, pymax);
   else
-    *py = CGnuPlotUtil::map(wy, range_.getYMin(), range_.getYMax(), pymax, pymin);
+    *py = CGnuPlotUtil::map(wy1, range1_.getYMin(), range1_.getYMax(), pymax, pymin);
 }
 
 void
@@ -1638,9 +1720,12 @@ void
 CGnuPlotRenderer::
 pixelToWindowI(double px, double py, double *wx, double *wy, bool margin)
 {
-  if (! mapping_ || ! region_.isSet()) {
-    *wx = px;
-    *wy = py;
+  if (! mapping() || ! region_.isSet()) {
+    double wx1 = px;
+    double wy1 = py;
+
+    imatrix_.multiplyPoint(wx1, wy1, wx, wy);
+
     return;
   }
 
@@ -1700,15 +1785,19 @@ pixelToWindowI(double px, double py, double *wx, double *wy, bool margin)
   }
 
   // map
+  double wx1, wy1;
+
   if (reverseX_)
-    *wx = CGnuPlotUtil::map(px, pxmax, pxmin, range_.getXMin(), range_.getXMax());
+    wx1 = CGnuPlotUtil::map(px, pxmax, pxmin, range1_.getXMin(), range1_.getXMax());
   else
-    *wx = CGnuPlotUtil::map(px, pxmin, pxmax, range_.getXMin(), range_.getXMax());
+    wx1 = CGnuPlotUtil::map(px, pxmin, pxmax, range1_.getXMin(), range1_.getXMax());
 
   if (reverseY_)
-    *wy = CGnuPlotUtil::map(py, pymin, pymax, range_.getYMin(), range_.getYMax());
+    wy1 = CGnuPlotUtil::map(py, pymin, pymax, range1_.getYMin(), range1_.getYMax());
   else
-    *wy = CGnuPlotUtil::map(py, pymax, pymin, range_.getYMin(), range_.getYMax());
+    wy1 = CGnuPlotUtil::map(py, pymax, pymin, range1_.getYMin(), range1_.getYMax());
+
+  imatrix_.multiplyPoint(wx1, wy1, wx, wy);
 }
 
 void
@@ -1722,16 +1811,149 @@ void
 CGnuPlotRenderer::
 windowToRegion(double wx, double wy, double *rx, double *ry)
 {
-  *rx = CGnuPlotUtil::map(wx, range_.getXMin(), range_.getXMax(), 0, 1);
-  *ry = CGnuPlotUtil::map(wy, range_.getYMin(), range_.getYMax(), 0, 1);
+  double wx1, wy1;
+
+  matrix_.multiplyPoint(wx, wy, &wx1, &wy1);
+
+  *rx = CGnuPlotUtil::map(wx1, range1_.getXMin(), range1_.getXMax(), 0, 1);
+  *ry = CGnuPlotUtil::map(wy1, range1_.getYMin(), range1_.getYMax(), 0, 1);
 }
 
 void
 CGnuPlotRenderer::
 regionToWindow(double rx, double ry, double *wx, double *wy)
 {
-  *wx = CGnuPlotUtil::map(rx, 0, 1, range_.getXMin(), range_.getXMax());
-  *wy = CGnuPlotUtil::map(ry, 0, 1, range_.getYMin(), range_.getYMax());
+  double wx1 = CGnuPlotUtil::map(rx, 0, 1, range1_.getXMin(), range1_.getXMax());
+  double wy1 = CGnuPlotUtil::map(ry, 0, 1, range1_.getYMin(), range1_.getYMax());
+
+  imatrix_.multiplyPoint(wx1, wy1, wx, wy);
+}
+
+void
+CGnuPlotRenderer::
+windowToScreen(const CPoint2D &w, CPoint2D &s)
+{
+  double px1, py1, px2, py2;
+
+  pixelToWindow(          0,            0, &px1, &py2);
+  pixelToWindow(width() - 1, height() - 1, &px2, &py1);
+
+  double sx = CGnuPlotUtil::map(w.x, px1, px2, 0, 1);
+  double sy = CGnuPlotUtil::map(w.y, py1, py2, 0, 1);
+
+  s = CPoint2D(sx, sy);
+}
+
+void
+CGnuPlotRenderer::
+screenToWindow(const CPoint2D &s, CPoint2D &w)
+{
+  double px1, py1, px2, py2;
+
+  pixelToWindow(          0,            0, &px1, &py2);
+  pixelToWindow(width() - 1, height() - 1, &px2, &py1);
+
+  double wx = CGnuPlotUtil::map(s.x, 0, 1, px1, px2);
+  double wy = CGnuPlotUtil::map(s.y, 0, 1, py1, py2);
+
+  w = CPoint2D(wx, wy);
+}
+
+void
+CGnuPlotRenderer::
+windowToGraph(const CPoint2D &w, CPoint2D &g)
+{
+  const CBBox2D &range = this->range();
+
+  if (range.isSet()) {
+    double gx = CGnuPlotUtil::map(w.x, range.getXMin(), range.getXMax(), 0, 1);
+    double gy = CGnuPlotUtil::map(w.y, range.getYMin(), range.getYMax(), 0, 1);
+
+    g = CPoint2D(gx, gy);
+  }
+  else
+    g = w;
+}
+
+void
+CGnuPlotRenderer::
+graphToWindow(const CPoint2D &g, CPoint2D &w)
+{
+  const CBBox2D &range = this->range();
+
+  if (range.isSet()) {
+    double wx = CGnuPlotUtil::map(g.x, 0, 1, range.getXMin(), range.getXMax());
+    double wy = CGnuPlotUtil::map(g.y, 0, 1, range.getYMin(), range.getYMax());
+
+    w = CPoint2D(wx, wy);
+  }
+  else
+    w = g;
+}
+
+void
+CGnuPlotRenderer::
+windowToChar(const CPoint2D &w, CPoint2D &c)
+{
+  CPoint2D w1;
+
+  screenToWindow(CPoint2D(0,0), w1);
+
+  CPoint2D p1, p2;
+
+  windowToPixel(w , p1);
+  windowToPixel(w1, p2);
+
+  double cx = (p2.x - p1.x)/charPixelWidth ();
+  double cy = (p1.y - p2.y)/charPixelHeight();
+
+  c = CPoint2D(cx, cy);
+}
+
+void
+CGnuPlotRenderer::
+charToWindow(const CPoint2D &c, CPoint2D &w)
+{
+  CPoint2D w1;
+
+  screenToWindow(CPoint2D(0,0), w1);
+
+  CPoint2D p1;
+
+  windowToPixel(w1, p1);
+
+  CFontPtr font = getFont();
+
+  double cx = c.x*charPixelWidth ();
+  double cy = c.y*charPixelHeight();
+
+  CPoint2D p2 = p1 + CPoint2D(cx, -cy);
+
+  pixelToWindow(p2, w);
+}
+
+void
+CGnuPlotRenderer::
+windowToSecond(const CPoint2D &w, CPoint2D &s)
+{
+  double sx = CGnuPlotUtil::map(w.x, range1_.getXMin(), range1_.getXMax(),
+                                range2_.getXMin(), range2_.getXMax());
+  double sy = CGnuPlotUtil::map(w.y, range1_.getYMin(), range1_.getYMax(),
+                                range2_.getYMin(), range2_.getYMax());
+
+  s = CPoint2D(sx, sy);
+}
+
+void
+CGnuPlotRenderer::
+secondToWindow(const CPoint2D &s, CPoint2D &w)
+{
+  double wx = CGnuPlotUtil::map(s.x, range2_.getXMin(), range2_.getXMax(),
+                                range1_.getXMin(), range1_.getXMax());
+  double wy = CGnuPlotUtil::map(s.y, range2_.getYMin(), range2_.getYMax(),
+                                range1_.getYMin(), range1_.getYMax());
+
+  w = CPoint2D(wx, wy);
 }
 
 CPoint3D
@@ -1772,6 +1994,38 @@ rotatePoint(const CPoint2D &p, double a, const CPoint2D &o)
   pixelToWindow(pr1, pr);
 
   return pr;
+}
+
+double
+CGnuPlotRenderer::
+charWidth()
+{
+  return pixelWidthToWindowWidth(charPixelWidth());
+}
+
+double
+CGnuPlotRenderer::
+charHeight()
+{
+  return pixelHeightToWindowHeight(charPixelHeight());
+}
+
+double
+CGnuPlotRenderer::
+charPixelWidth()
+{
+  CFontPtr font = getFont();
+
+  return font->getStringWidth("X");
+}
+
+double
+CGnuPlotRenderer::
+charPixelHeight()
+{
+  CFontPtr font = getFont();
+
+  return font->getCharHeight();
 }
 
 //------

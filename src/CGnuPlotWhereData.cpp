@@ -2,45 +2,45 @@
 #include <CGnuPlotUtil.h>
 
 CGnuPlotWhereData::
-CGnuPlotWhereData(const std::string &expr)
+CGnuPlotWhereData(const std::string &exprStr)
 {
-  if (expr != "")
-    (void) parse(expr);
+  if (exprStr != "")
+    (void) parse(exprStr);
 }
 
 bool
 CGnuPlotWhereData::
-parse(const std::string &expr)
+parse(const std::string &exprStr)
 {
-  expr_ = expr;
+  exprStr_ = exprStr;
 
   return true;
 }
 
 bool
 CGnuPlotWhereData::
-isValid(int setNum, int pointNum, const Values &fieldValues) const
+isValid(CExpr *expr, int setNum, int pointNum, const Values &fieldValues) const
 {
-  std::string expr = expr_;
+  std::string exprStr = exprStr_;
 
-  auto pos = expr.find('$');
+  auto pos = exprStr.find('$');
 
   while (pos != std::string::npos) {
     int pos1 = ++pos;
 
-    while (isdigit(expr[pos1]))
+    while (isdigit(exprStr[pos1]))
       ++pos1;
 
-    std::string numStr = expr.substr(pos, pos1 - pos);
+    std::string numStr = exprStr.substr(pos, pos1 - pos);
 
     int icol = 0;
 
     (void) CStrUtil::toInteger(numStr, &icol);
 
-    CExprValuePtr value1 = getFieldValue(setNum, pointNum, fieldValues, icol);
+    CExprValuePtr value1 = getFieldValue(expr, setNum, pointNum, fieldValues, icol);
 
-    std::string lstr = expr.substr(0, pos - 1);
-    std::string rstr = expr.substr(pos1);
+    std::string lstr = exprStr.substr(0, pos - 1);
+    std::string rstr = exprStr.substr(pos1);
 
     std::string midStr;
 
@@ -71,15 +71,15 @@ isValid(int setNum, int pointNum, const Values &fieldValues) const
     else
       midStr = "NaN";
 
-    expr = lstr + midStr + rstr;
+    exprStr = lstr + midStr + rstr;
 
-    pos = expr.find('$');
+    pos = exprStr.find('$');
   }
 
   CExprValuePtr value;
 
-  if (expr != "") {
-    if (! CGnuPlotUtil::evaluateExpression(expr, value, true))
+  if (exprStr != "") {
+    if (! CGnuPlotUtil::evaluateExpression(expr, exprStr, value, true))
       value = CExprValuePtr();
   }
 
@@ -93,17 +93,17 @@ isValid(int setNum, int pointNum, const Values &fieldValues) const
 
 CExprValuePtr
 CGnuPlotWhereData::
-getFieldValue(int setNum, int pointNum, const Values &fieldValues, int icol) const
+getFieldValue(CExpr *expr, int setNum, int pointNum, const Values &fieldValues, int icol) const
 {
   CExprValuePtr value;
 
   int nf = fieldValues.size();
 
   if      (icol == 0) {
-    value = CExprInst->createRealValue(pointNum);
+    value = expr->createRealValue(pointNum);
   }
   else if (icol == -2) {
-    value = CExprInst->createRealValue(setNum);
+    value = expr->createRealValue(setNum);
   }
   else if (icol > 0 && icol <= nf) {
     value = fieldValues[icol - 1];

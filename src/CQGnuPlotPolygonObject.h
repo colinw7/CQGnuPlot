@@ -27,6 +27,9 @@ class CQGnuPlotPolygonObject : public QObject, public CGnuPlotPolygonObject {
   CQGnuPlotFill   *fill  () const;
   CQGnuPlotStroke *stroke() const;
 
+  void setFillValues  (const CQGnuPlotFill   &fill);
+  void setStrokeValues(const CQGnuPlotStroke &stroke);
+
   void draw(CGnuPlotRenderer *renderer) const override;
 };
 

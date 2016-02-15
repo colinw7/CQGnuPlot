@@ -16,13 +16,13 @@ getStringValue(std::string &s) const
 
 CExprValuePtr
 CExprRealValue::
-execUnaryOp(CExprOpType op) const
+execUnaryOp(CExpr *expr, CExprOpType op) const
 {
   switch (op) {
     case CExprOpType::UNARY_PLUS:
-      return CExprInst->createRealValue(real_);
+      return expr->createRealValue(real_);
     case CExprOpType::UNARY_MINUS:
-      return CExprInst->createRealValue(-real_);
+      return expr->createRealValue(-real_);
     default:
       return CExprValuePtr();
   }
@@ -30,7 +30,7 @@ execUnaryOp(CExprOpType op) const
 
 CExprValuePtr
 CExprRealValue::
-execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
+execBinaryOp(CExpr *expr, CExprValuePtr rhs, CExprOpType op) const
 {
   double rrhs;
 
@@ -56,7 +56,7 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
           return CExprValuePtr();
         }
 
-        return CExprInst->createComplexValue(c1);
+        return expr->createComplexValue(c1);
       }
       else if (error_code != 0) {
         real = CMathGen::getNaN();
@@ -67,12 +67,12 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
         return CExprValuePtr();
 #endif
 
-      return CExprInst->createRealValue(real);
+      return expr->createRealValue(real);
     }
     case CExprOpType::TIMES:
-      return CExprInst->createRealValue(real_ * rrhs);
+      return expr->createRealValue(real_ * rrhs);
     case CExprOpType::DIVIDE:
-      return CExprInst->createRealValue(real_ / rrhs);
+      return expr->createRealValue(real_ / rrhs);
     case CExprOpType::MODULUS: {
       int error_code;
 
@@ -86,24 +86,24 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 #endif
       }
 
-      return CExprInst->createRealValue(real);
+      return expr->createRealValue(real);
     }
     case CExprOpType::PLUS:
-      return CExprInst->createRealValue(real_ + rrhs);
+      return expr->createRealValue(real_ + rrhs);
     case CExprOpType::MINUS:
-      return CExprInst->createRealValue(real_ - rrhs);
+      return expr->createRealValue(real_ - rrhs);
     case CExprOpType::LESS:
-      return CExprInst->createBooleanValue(real_ < rrhs);
+      return expr->createBooleanValue(real_ < rrhs);
     case CExprOpType::LESS_EQUAL:
-      return CExprInst->createBooleanValue(real_ <= rrhs);
+      return expr->createBooleanValue(real_ <= rrhs);
     case CExprOpType::GREATER:
-      return CExprInst->createBooleanValue(real_ > rrhs);
+      return expr->createBooleanValue(real_ > rrhs);
     case CExprOpType::GREATER_EQUAL:
-      return CExprInst->createBooleanValue(real_ >= rrhs);
+      return expr->createBooleanValue(real_ >= rrhs);
     case CExprOpType::EQUAL:
-      return CExprInst->createBooleanValue(real_ == rrhs);
+      return expr->createBooleanValue(real_ == rrhs);
     case CExprOpType::NOT_EQUAL:
-      return CExprInst->createBooleanValue(real_ != rrhs);
+      return expr->createBooleanValue(real_ != rrhs);
     default:
       return CExprValuePtr();
   }

@@ -49,6 +49,7 @@
 #include <CQGnuPlotLoadFunctionDialog.h>
 #include <CQGnuPlotManageFunctionsDialog.h>
 #include <CQGnuPlotManageVariablesDialog.h>
+#include <CQGnuPlotPaletteDialog.h>
 #include <CQGnuPlotCreateDialog.h>
 #include <CQGnuPlotDataDialog.h>
 #include <CQGnuPlotSaveDialog.h>
@@ -257,25 +258,13 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
 
   connect(loadFnAction, SIGNAL(triggered()), this, SLOT(loadFunction()));
 
+  //---
+
   QAction *dataAction = new QAction("Process Data", this);
 
   fileMenu->addAction(dataAction);
 
   connect(dataAction, SIGNAL(triggered()), this, SLOT(showData()));
-
-  //---
-
-  QAction *functionsAction = new QAction("Manage Functions", this);
-
-  fileMenu->addAction(functionsAction);
-
-  connect(functionsAction, SIGNAL(triggered()), this, SLOT(manageFunctions()));
-
-  QAction *variablesAction = new QAction("Manage Variables", this);
-
-  fileMenu->addAction(variablesAction);
-
-  connect(variablesAction, SIGNAL(triggered()), this, SLOT(manageVariables()));
 
   //---
 
@@ -311,6 +300,28 @@ CQGnuPlotMainWindow(CQGnuPlot *plot) :
   connect(closeAction, SIGNAL(triggered()), this, SLOT(close()));
 
   fileMenu->addAction(closeAction);
+
+  //--------
+
+  QMenu *viewMenu = menuBar()->addMenu("&View");
+
+  QAction *functionsAction = new QAction("Manage Functions", this);
+
+  viewMenu->addAction(functionsAction);
+
+  connect(functionsAction, SIGNAL(triggered()), this, SLOT(manageFunctions()));
+
+  QAction *variablesAction = new QAction("Manage Variables", this);
+
+  viewMenu->addAction(variablesAction);
+
+  connect(variablesAction, SIGNAL(triggered()), this, SLOT(manageVariables()));
+
+  QAction *paletteAction = new QAction("Color Palette", this);
+
+  viewMenu->addAction(paletteAction);
+
+  connect(paletteAction, SIGNAL(triggered()), this, SLOT(editColorPalette()));
 
   //--------
 
@@ -955,10 +966,14 @@ addPlotProperties(CGnuPlotPlot *plot)
   if (! plot->arrowObjects().empty()) {
     //CQGnuPlotPlotArrowObjects *qarrowObjects = qplot->arrowObjectsObj();
 
+    QString arrowsName = QString("%1/Arrows").arg(plotName);
+
+    //---
+
     int i = 0;
 
     for (const auto &arrow : plot->arrowObjects()) {
-      QString arrowName = QString("%1/Arrows/Arrow%2").arg(plotName).arg(i + 1);
+      QString arrowName = QString("%1/Arrow%2").arg(arrowsName).arg(i + 1);
 
       CQGnuPlotArrowObject *qarrow = static_cast<CQGnuPlotArrowObject *>(arrow);
 
@@ -995,6 +1010,8 @@ addPlotProperties(CGnuPlotPlot *plot)
     tree_->addProperty(barsName, qboxBarObjects, "border");
     tree_->addProperty(barsName, qboxBarObjects, "lineColor");
     tree_->addProperty(barsName, qboxBarObjects, "lineWidth");
+
+    //---
 
     int i = 0;
 
@@ -1046,6 +1063,8 @@ addPlotProperties(CGnuPlotPlot *plot)
 
     QString boxesName = QString("%1/Boxes").arg(plotName);
 
+    //---
+
     int i = 0;
 
     for (const auto &box : plot->boxObjects()) {
@@ -1088,10 +1107,14 @@ addPlotProperties(CGnuPlotPlot *plot)
   if (! plot->bubbleObjects().empty()) {
     //CQGnuPlotPlotBubbleObjects *qbubbleObjects = qplot->bubbleObjectsObj();
 
+    QString bubblesName = QString("%1/Bubbles").arg(plotName);
+
+    //---
+
     int i = 0;
 
     for (const auto &bubble : plot->bubbleObjects()) {
-      QString bubbleName = QString("%1/Bubbles/Bubble%2").arg(plotName).arg(i + 1);
+      QString bubbleName = QString("%1/Bubble%2").arg(bubblesName).arg(i + 1);
 
       CQGnuPlotBubbleObject *qbubble = static_cast<CQGnuPlotBubbleObject *>(bubble);
 
@@ -1112,10 +1135,14 @@ addPlotProperties(CGnuPlotPlot *plot)
   if (! plot->ellipseObjects().empty()) {
     //CQGnuPlotPlotEllipseObjects *qellipseObjects = qplot->ellipseObjectsObj();
 
+    QString ellipsesName = QString("%1/Ellipses").arg(plotName);
+
+    //---
+
     int i = 0;
 
     for (const auto &ellipse : plot->ellipseObjects()) {
-      QString ellipseName = QString("%1/Ellipses/Ellipse%2").arg(plotName).arg(i + 1);
+      QString ellipseName = QString("%1/Ellipse%2").arg(ellipsesName).arg(i + 1);
 
       CQGnuPlotEllipseObject *qellipse = static_cast<CQGnuPlotEllipseObject *>(ellipse);
 
@@ -1137,6 +1164,8 @@ addPlotProperties(CGnuPlotPlot *plot)
     //CQGnuPlotPlotErrorBarObjects *qerrorBarObjects = qplot->errorBarObjectsObj();
 
     QString barsName = QString("%1/ErrorBars").arg(plotName);
+
+    //---
 
     int i = 0;
 
@@ -1184,6 +1213,8 @@ addPlotProperties(CGnuPlotPlot *plot)
 
     QString barsName = QString("%1/FinanceBars").arg(plotName);
 
+    //---
+
     int i = 0;
 
     for (const auto &bar : plot->financeBarObjects()) {
@@ -1210,10 +1241,14 @@ addPlotProperties(CGnuPlotPlot *plot)
   if (! plot->imageObjects().empty()) {
     //CQGnuPlotPlotImageObjects *qimageObjects = qplot->imageObjectsObj();
 
+    QString imagesName = QString("%1/Images").arg(plotName);
+
+    //---
+
     int i = 0;
 
     for (const auto &image : plot->imageObjects()) {
-      QString imageName = QString("%1/Images/Image%2").arg(plotName).arg(i + 1);
+      QString imageName = QString("%1/Image%2").arg(imagesName).arg(i + 1);
 
       CQGnuPlotImageObject *qimage = static_cast<CQGnuPlotImageObject *>(image);
 
@@ -1237,10 +1272,14 @@ addPlotProperties(CGnuPlotPlot *plot)
   if (! plot->labelObjects().empty()) {
     //CQGnuPlotPlotLabelObjects *qlabelObjects = qplot->labelObjectsObj();
 
+    QString labelsName = QString("%1/Labels").arg(plotName);
+
+    //---
+
     int i = 0;
 
     for (const auto &label : plot->labelObjects()) {
-      QString labelName = QString("%1/Labels/Label%2").arg(plotName).arg(i + 1);
+      QString labelName = QString("%1/Label%2").arg(labelsName).arg(i + 1);
 
       CQGnuPlotLabelObject *qlabel = static_cast<CQGnuPlotLabelObject *>(label);
 
@@ -1286,10 +1325,14 @@ addPlotProperties(CGnuPlotPlot *plot)
   if (! plot->pathObjects().empty()) {
     //CQGnuPlotPlotPathObjects *qpathObjects = qplot->pathObjectsObj();
 
+    QString pathsName = QString("%1/Paths").arg(plotName);
+
+    //---
+
     int i = 0;
 
     for (const auto &path : plot->pathObjects()) {
-      QString pathName = QString("%1/Paths/Path%2").arg(plotName).arg(i + 1);
+      QString pathName = QString("%1/Path%2").arg(pathsName).arg(i + 1);
 
       CQGnuPlotPathObject *qpath = static_cast<CQGnuPlotPathObject *>(path);
 
@@ -1312,6 +1355,8 @@ addPlotProperties(CGnuPlotPlot *plot)
     tree_->addProperty(piesName, qpieObjects, "innerRadius");
     tree_->addProperty(piesName, qpieObjects, "labelRadius");
 
+    //---
+
     int i = 0;
 
     for (const auto &pie : plot->pieObjects()) {
@@ -1319,12 +1364,14 @@ addPlotProperties(CGnuPlotPlot *plot)
 
       CQGnuPlotPieObject *qpie = static_cast<CQGnuPlotPieObject *>(pie);
 
-      tree_->addProperty(pieName, qpie, "displayed");
-      tree_->addProperty(pieName, qpie, "name"       );
-      tree_->addProperty(pieName, qpie, "value"      );
-      tree_->addProperty(pieName, qpie, "innerRadius");
-      tree_->addProperty(pieName, qpie, "labelRadius");
-      tree_->addProperty(pieName, qpie, "exploded"   );
+      tree_->addProperty(pieName, qpie, "displayed"      );
+      tree_->addProperty(pieName, qpie, "name"           );
+      tree_->addProperty(pieName, qpie, "value"          );
+      tree_->addProperty(pieName, qpie, "innerRadius"    );
+      tree_->addProperty(pieName, qpie, "labelRadius"    );
+      tree_->addProperty(pieName, qpie, "exploded"       );
+      tree_->addProperty(pieName, qpie, "rotatedText"    );
+      tree_->addProperty(pieName, qpie, "explodeSelected");
 
       CQGnuPlotFill   *qfill   = qpie->fill();
       CQGnuPlotStroke *qstroke = qpie->stroke();
@@ -1349,10 +1396,12 @@ addPlotProperties(CGnuPlotPlot *plot)
     tree_->addProperty(pointsName, qpointObjects, "size");
     tree_->addProperty(pointsName, qpointObjects, "color");
 
+    //---
+
     int i = 0;
 
     for (const auto &point : plot->pointObjects()) {
-      QString pointName = QString("%1/Points/Point%2").arg(plotName).arg(i + 1);
+      QString pointName = QString("%1/Point%2").arg(pointsName).arg(i + 1);
 
       CQGnuPlotPointObject *qpoint = static_cast<CQGnuPlotPointObject *>(point);
 
@@ -1375,12 +1424,22 @@ addPlotProperties(CGnuPlotPlot *plot)
   int numPolygonObjects = plot->polygonObjects().size();
 
   if (numPolygonObjects > 0 && numPolygonObjects < MAX_OBJECTS) {
-    //CQGnuPlotPlotPolygonObjects *qpolygonObjects = qplot->polygonObjectsObj();
+    CQGnuPlotPlotPolygonObjects *qpolygonObjects = qplot->polygonObjectsObj();
+
+    QString polygonsName = QString("%1/Polygons").arg(plotName);
+
+    CQGnuPlotFill   *qfill   = qpolygonObjects->fill();
+    CQGnuPlotStroke *qstroke = qpolygonObjects->stroke();
+
+    addFillProperties  (polygonsName, qfill);
+    addStrokeProperties(polygonsName, qstroke);
+
+    //---
 
     int i = 0;
 
     for (const auto &polygon : plot->polygonObjects()) {
-      QString polygonName = QString("%1/Polygons/Polygon%2").arg(plotName).arg(i + 1);
+      QString polygonName = QString("%1/Polygon%2").arg(polygonsName).arg(i + 1);
 
       CQGnuPlotPolygonObject *qpolygon = static_cast<CQGnuPlotPolygonObject *>(polygon);
 
@@ -1404,10 +1463,14 @@ addPlotProperties(CGnuPlotPlot *plot)
   if (numRectObjects > 0 && numRectObjects < MAX_OBJECTS) {
     //CQGnuPlotPlotRectObjects *qrectObjects = qplot->rectObjectsObj();
 
+    QString rectsName = QString("%1/Rects").arg(plotName);
+
+    //---
+
     int i = 0;
 
     for (const auto &rect : plot->rectObjects()) {
-      QString rectName = QString("%1/Rects/Rect%2").arg(plotName).arg(i + 1);
+      QString rectName = QString("%1/Rect%2").arg(rectsName).arg(i + 1);
 
       CQGnuPlotRectObject *qrect = static_cast<CQGnuPlotRectObject *>(rect);
 
@@ -1783,10 +1846,12 @@ showData()
 {
   delete dataDialog_;
 
-  if (currentGroup_) {
+  CQGnuPlotGroup *currentGroup = this->currentGroup();
+
+  if (currentGroup) {
     CGnuPlotPlot *currentPlot = 0;
 
-    for (auto plot : currentGroup_->plots())
+    for (auto plot : currentGroup->plots())
       currentPlot = plot.get();
 
     if (currentPlot)
@@ -1804,29 +1869,74 @@ void
 CQGnuPlotMainWindow::
 manageFunctions()
 {
-  CQGnuPlotManageFunctionsDialog *dialog = new CQGnuPlotManageFunctionsDialog(this);
+  if (! manageFnsDialog_) {
+    manageFnsDialog_ = new CQGnuPlotManageFunctionsDialog(this);
 
-  dialog->exec();
+    manageFnsDialog_->init();
+  }
+
+  manageFnsDialog_->show();
 }
 
 void
 CQGnuPlotMainWindow::
 manageVariables()
 {
-  CQGnuPlotManageVariablesDialog *dialog = new CQGnuPlotManageVariablesDialog(this);
+  if (! manageVarsDialog_) {
+    manageVarsDialog_ = new CQGnuPlotManageVariablesDialog(this);
 
-  dialog->exec();
+    manageVarsDialog_->init();
+  }
+
+  manageVarsDialog_->show();
+}
+
+void
+CQGnuPlotMainWindow::
+editColorPalette()
+{
+  if (! paletteDialog_) {
+    paletteDialog_ = new CQGnuPlotPaletteDialog(this);
+
+    paletteDialog_->init();
+
+    connect(paletteDialog_, SIGNAL(accepted()), this, SLOT(applyPaletteSlot()));
+  }
+
+  paletteDialog_->show();
+}
+
+void
+CQGnuPlotMainWindow::
+applyPaletteSlot()
+{
+  CQGnuPlotGroup *group = this->currentGroup();
+
+  if (group) {
+    group->setPalette(*paletteDialog_->palette());
+
+    for (auto plot : group->plots())
+      plot->clearCaches();
+
+    update();
+  }
+  else
+    app()->setPalette(*paletteDialog_->palette());
 }
 
 void
 CQGnuPlotMainWindow::
 createObjects()
 {
-  CQGnuPlotCreateDialog *dialog = new CQGnuPlotCreateDialog(this);
+  if (! createDialog_) {
+    createDialog_ = new CQGnuPlotCreateDialog(this);
 
-  connect(dialog, SIGNAL(accepted()), this, SLOT(createObjectsSlot()));
+    createDialog_->init();
 
-  dialog->exec();
+    connect(createDialog_, SIGNAL(accepted()), this, SLOT(createObjectsSlot()));
+  }
+
+  createDialog_->show();
 }
 
 void
@@ -1835,13 +1945,15 @@ createObjectsSlot()
 {
   CQGnuPlotCreateDialog *dialog = qobject_cast<CQGnuPlotCreateDialog *>(sender());
 
-  if (! currentGroup_)
+  CQGnuPlotGroup *currentGroup = this->currentGroup();
+
+  if (! currentGroup)
     return;
 
   CGnuPlotTypes::ObjectType objectType = dialog->objectType();
 
   if      (objectType == CGnuPlotTypes::ObjectType::ARROW) {
-    CGnuPlotArrow *arrow = app()->device()->createArrow(currentGroup_);
+    CGnuPlotArrow *arrow = app()->device()->createArrow(currentGroup);
 
     arrow->autoSetInd();
 
@@ -1851,10 +1963,10 @@ createObjectsSlot()
     arrow->setFrom(dialog->arrowFrom());
     arrow->setTo  (dialog->arrowTo  ());
 
-    currentGroup_->addAnnotation(arrow);
+    currentGroup->addAnnotation(arrow);
   }
   else if (objectType == CGnuPlotTypes::ObjectType::CIRCLE) {
-    CGnuPlotCircle *circle = app()->device()->createCircle(currentGroup_);
+    CGnuPlotCircle *circle = app()->device()->createCircle(currentGroup);
 
     circle->autoSetInd();
 
@@ -1868,10 +1980,10 @@ createObjectsSlot()
     circle->setArcStart(dialog->circleStart());
     circle->setArcEnd  (dialog->circleEnd());
 
-    currentGroup_->addAnnotation(circle);
+    currentGroup->addAnnotation(circle);
   }
   else if (objectType == CGnuPlotTypes::ObjectType::ELLIPSE) {
-    CGnuPlotEllipse *ellipse = app()->device()->createEllipse(currentGroup_);
+    CGnuPlotEllipse *ellipse = app()->device()->createEllipse(currentGroup);
 
     ellipse->autoSetInd();
 
@@ -1883,10 +1995,10 @@ createObjectsSlot()
     ellipse->setCenter(dialog->ellipseCenter());
     ellipse->setAngle (dialog->ellipseAngle());
 
-    currentGroup_->addAnnotation(ellipse);
+    currentGroup->addAnnotation(ellipse);
   }
   else if (objectType == CGnuPlotTypes::ObjectType::LABEL) {
-    CGnuPlotLabel *label = app()->device()->createLabel(currentGroup_);
+    CGnuPlotLabel *label = app()->device()->createLabel(currentGroup);
 
     label->autoSetInd();
 
@@ -1897,10 +2009,10 @@ createObjectsSlot()
     label->setText (dialog->labelText());
     label->setAngle(dialog->labelAngle());
 
-    currentGroup_->addAnnotation(label);
+    currentGroup->addAnnotation(label);
   }
   else if (objectType == CGnuPlotTypes::ObjectType::POLYGON) {
-    CGnuPlotPolygon *polygon = app()->device()->createPolygon(currentGroup_);
+    CGnuPlotPolygon *polygon = app()->device()->createPolygon(currentGroup);
 
     polygon->autoSetInd();
 
@@ -1909,10 +2021,10 @@ createObjectsSlot()
     polygon->setLineDash   (dialog->strokeDash());
     polygon->setFillColor  (dialog->fillColor());
 
-    currentGroup_->addAnnotation(polygon);
+    currentGroup->addAnnotation(polygon);
   }
   else if (objectType == CGnuPlotTypes::ObjectType::RECTANGLE) {
-    CGnuPlotRectangle *rectangle = app()->device()->createRectangle(currentGroup_);
+    CGnuPlotRectangle *rectangle = app()->device()->createRectangle(currentGroup);
 
     rectangle->autoSetInd();
 
@@ -1924,7 +2036,7 @@ createObjectsSlot()
     rectangle->setFrom(dialog->rectFrom());
     rectangle->setTo  (dialog->rectTo  ());
 
-    currentGroup_->addAnnotation(rectangle);
+    currentGroup->addAnnotation(rectangle);
   }
 
   redraw();
@@ -2136,8 +2248,13 @@ void
 CQGnuPlotMainWindow::
 initCurrentGroup()
 {
-  if (! numGroups())
+  if (! numGroups()) {
     createNewGroup();
+
+    CGnuPlotGroupP group = *groups().begin();
+
+    group->init();
+  }
 
   CGnuPlotGroupP group = *groups().begin();
 
@@ -2445,13 +2562,30 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
     return;
   }
 
-  CGnuPlotCameraP camera = group->camera();
-
   if      (mode_ == Mode::SELECT) {
-    for (auto group : groups()) {
-      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+    if      (key == Qt::Key_Left || key == Qt::Key_Right) {
+      scrollLeftRightKey(group, key == Qt::Key_Left);
+    }
+    else if (key == Qt::Key_Down || key == Qt::Key_Up) {
+      scrollUpDownKey(group, key == Qt::Key_Down);
+    }
+    else if (key == Qt::Key_Plus) {
+      zoomInKey(group);
+    }
+    else if (key == Qt::Key_Minus) {
+      zoomOutKey(group);
+    }
+    else if (key == Qt::Key_Period) {
+      QPoint pos = canvas_->mapFromGlobal(QCursor::pos());
 
-      qgroup->keyPress(keyEvent);
+      group->displayPixelCoordinates(CPoint2D(pos.x(), pos.y()));
+    }
+    else {
+      for (auto group : groups()) {
+        CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+
+        qgroup->keyPress(keyEvent);
+      }
     }
   }
   else if (mode_ == Mode::MOVE) {
@@ -2463,94 +2597,42 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
     }
   }
   else if (mode_ == Mode::ZOOM) {
-    double xmin = group->getXMin(), ymin = group->getYMin();
-    double xmax = group->getXMax(), ymax = group->getYMax();
+    //double xmin = group->getXMin(), ymin = group->getYMin();
+    //double xmax = group->getXMax(), ymax = group->getYMax();
 
-    CPoint2D p1 = group->mapLogPoint(1, 1, 1, CPoint2D(xmin, ymin));
-    CPoint2D p2 = group->mapLogPoint(1, 1, 1, CPoint2D(xmax, ymax));
+    //CPoint2D p1 = group->mapLogPoint(1, 1, 1, CPoint2D(xmin, ymin));
+    //CPoint2D p2 = group->mapLogPoint(1, 1, 1, CPoint2D(xmax, ymax));
 
-    double w = p2.x - p1.x;
-    double h = p2.y - p1.y;
+    //double w = p2.x - p1.x;
+    //double h = p2.y - p1.y;
 
-    double xc = (p1.x + p2.x)/2;
-    double yc = (p1.y + p2.y)/2;
+    //double xc = (p1.x + p2.x)/2;
+    //double yc = (p1.y + p2.y)/2;
 
     if      (key == Qt::Key_Left || key == Qt::Key_Right) {
-      if (! group->is3D()) {
-        double dx = w/4;
-
-        if (key == Qt::Key_Left)
-          dx = -dx;
-
-        CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(p1.x + dx, p1.y));
-        CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(p2.x + dx, p1.y));
-
-        group->setAxisRange(CGnuPlotTypes::AxisType::X, 1, p3.x, p4.x);
-      }
-      else {
-        camera->moveDX(key == Qt::Key_Left ? -0.01 : 0.01);
-
-        group->reset3D();
-      }
-
-      redraw();
+      scrollLeftRightKey(group, key == Qt::Key_Left);
     }
     else if (key == Qt::Key_Down || key == Qt::Key_Up) {
-      if (! group->is3D()) {
-        double dy = h/4;
-
-        if (key == Qt::Key_Down)
-          dy = -dy;
-
-        CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(p1.x, p1.y + dy));
-        CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(p1.x, p2.y + dy));
-
-        group->setAxisRange(CGnuPlotTypes::AxisType::Y, 1, p3.y, p4.y);
-      }
-      else {
-        camera->moveDY(key == Qt::Key_Down ? -0.01 : 0.01);
-
-        group->reset3D();
-      }
-
-      redraw();
+      scrollUpDownKey(group, key == Qt::Key_Down);
     }
     else if (key == Qt::Key_Plus) {
-      if (! group->is3D()) {
-        CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc - w/4, yc - h/4));
-        CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc + w/4, yc + h/4));
-
-        group->setAxisRange(CGnuPlotTypes::AxisType::X, 1, p3.x, p4.x);
-        group->setAxisRange(CGnuPlotTypes::AxisType::Y, 1, p3.y, p4.y);
-      }
-      else {
-        camera->zoomIn();
-
-        group->reset3D();
-      }
-
-      redraw();
+      zoomInKey(group);
     }
     else if (key == Qt::Key_Minus) {
-      if (! group->is3D()) {
-        CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc - w, yc - h));
-        CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc + w, yc + h));
-
-        group->setAxisRange(CGnuPlotTypes::AxisType::X, 1, p3.x, p4.x);
-        group->setAxisRange(CGnuPlotTypes::AxisType::Y, 1, p3.y, p4.y);
-      }
-      else {
-        camera->zoomOut();
-
-        group->reset3D();
-      }
-
-      redraw();
+      zoomOutKey(group);
     }
     else if (key == Qt::Key_Home) {
-      if (! group->is3D())
-        group->restoreRange();
+      if (! group->is3D()) {
+        //group->restoreRange();
+
+        CQGnuPlotRenderer *qrenderer = qapp()->qrenderer();
+
+        qrenderer->setScale(1.0, 1.0);
+        qrenderer->setOffset(CPoint2D(0,0));
+      }
       else {
+        CGnuPlotCameraP camera = group->camera();
+
         camera->resetZoom();
 
         group->reset3D();
@@ -2559,6 +2641,145 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
       redraw();
     }
   }
+}
+
+void
+CQGnuPlotMainWindow::
+scrollLeftRightKey(CQGnuPlotGroup *group, bool left)
+{
+  if (! group->is3D()) {
+    CQGnuPlotRenderer *qrenderer = qapp()->qrenderer();
+
+    double scale = qrenderer->xscale();
+
+    double xmin = group->getXMin(), ymin = group->getYMin();
+    double xmax = group->getXMax(), ymax = group->getYMax();
+
+    CPoint2D p1 = group->mapLogPoint(1, 1, 1, CPoint2D(xmin, ymin));
+    CPoint2D p2 = group->mapLogPoint(1, 1, 1, CPoint2D(xmax, ymax));
+
+    double w = p2.x - p1.x;
+    //double h = p2.y - p1.y;
+
+    //double xc = (p1.x + p2.x)/2;
+    //double yc = (p1.y + p2.y)/2;
+
+    double dx = w/(4*scale);
+
+    if (left)
+      dx = -dx;
+
+    //CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(p1.x + dx, p1.y));
+    //CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(p2.x + dx, p1.y));
+
+    //group->setAxisRange(CGnuPlotTypes::AxisType::X, 1, p3.x, p4.x);
+    qrenderer->setOffset(qrenderer->offset() + CPoint2D(dx, 0));
+  }
+  else {
+    CGnuPlotCameraP camera = group->camera();
+
+    camera->moveDX(left ? -0.01 : 0.01);
+
+    group->reset3D();
+  }
+
+  redraw();
+}
+
+void
+CQGnuPlotMainWindow::
+scrollUpDownKey(CQGnuPlotGroup *group, bool down)
+{
+  if (! group->is3D()) {
+    CQGnuPlotRenderer *qrenderer = qapp()->qrenderer();
+
+    double scale = qrenderer->yscale();
+
+    double xmin = group->getXMin(), ymin = group->getYMin();
+    double xmax = group->getXMax(), ymax = group->getYMax();
+
+    CPoint2D p1 = group->mapLogPoint(1, 1, 1, CPoint2D(xmin, ymin));
+    CPoint2D p2 = group->mapLogPoint(1, 1, 1, CPoint2D(xmax, ymax));
+
+    //double w = p2.x - p1.x;
+    double h = p2.y - p1.y;
+
+    //double xc = (p1.x + p2.x)/2;
+    //double yc = (p1.y + p2.y)/2;
+
+    double dy = h/(4*scale);
+
+    if (down)
+      dy = -dy;
+
+    //CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(p1.x, p1.y + dy));
+    //CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(p1.x, p2.y + dy));
+
+    //group->setAxisRange(CGnuPlotTypes::AxisType::Y, 1, p3.y, p4.y);
+    qrenderer->setOffset(qrenderer->offset() + CPoint2D(0, dy));
+  }
+  else {
+    CGnuPlotCameraP camera = group->camera();
+
+    camera->moveDY(down ? -0.01 : 0.01);
+
+    group->reset3D();
+  }
+
+  redraw();
+}
+
+void
+CQGnuPlotMainWindow::
+zoomInKey(CQGnuPlotGroup *group)
+{
+  if (! group->is3D()) {
+    //CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc - w/4, yc - h/4));
+    //CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc + w/4, yc + h/4));
+
+    //group->setAxisRange(CGnuPlotTypes::AxisType::X, 1, p3.x, p4.x);
+    //group->setAxisRange(CGnuPlotTypes::AxisType::Y, 1, p3.y, p4.y);
+
+    CQGnuPlotRenderer *qrenderer = qapp()->qrenderer();
+
+    qrenderer->setXScale(qrenderer->xscale()*2);
+    qrenderer->setYScale(qrenderer->yscale()*2);
+  }
+  else {
+    CGnuPlotCameraP camera = group->camera();
+
+    camera->zoomIn();
+
+    group->reset3D();
+  }
+
+  redraw();
+}
+
+void
+CQGnuPlotMainWindow::
+zoomOutKey(CQGnuPlotGroup *group)
+{
+  if (! group->is3D()) {
+    //CPoint2D p3 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc - w, yc - h));
+    //CPoint2D p4 = group->unmapLogPoint(1, 1, 1, CPoint2D(xc + w, yc + h));
+
+    //group->setAxisRange(CGnuPlotTypes::AxisType::X, 1, p3.x, p4.x);
+    //group->setAxisRange(CGnuPlotTypes::AxisType::Y, 1, p3.y, p4.y);
+
+    CQGnuPlotRenderer *qrenderer = qapp()->qrenderer();
+
+    qrenderer->setScale(qrenderer->xscale()/2, qrenderer->yscale()/2);
+  }
+  else {
+    CGnuPlotCameraP camera = group->camera();
+
+    camera->zoomOut();
+
+    group->reset3D();
+  }
+
+  redraw();
 }
 
 bool
@@ -2624,11 +2845,13 @@ void
 CQGnuPlotMainWindow::
 showPos(const QString &name, double px, double py, double wx, double wy)
 {
+  CQGnuPlotGroup *currentGroup = this->currentGroup();
+
   std::string xstr, ystr;
 
-  if (currentGroup_) {
-    const CGnuPlotAxisData &xaxis = currentGroup_->xaxis(1);
-    const CGnuPlotAxisData &yaxis = currentGroup_->yaxis(1);
+  if (currentGroup) {
+    const CGnuPlotAxisData &xaxis = currentGroup->xaxis(1);
+    const CGnuPlotAxisData &yaxis = currentGroup->yaxis(1);
 
     xstr = xaxis.formatAxisValue(wx);
     ystr = yaxis.formatAxisValue(wy);

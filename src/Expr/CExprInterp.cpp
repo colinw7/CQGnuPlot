@@ -28,6 +28,8 @@ class Trace {
 
 class CExprInterpImpl {
  public:
+  CExprInterpImpl(CExpr *expr) : expr_(expr) { }
+
   CExprITokenPtr interpStack(const CExprTokenStack &stack);
 
  private:
@@ -44,8 +46,8 @@ class CExprInterpImpl {
   CExprITokenPtr readShiftExpression();
   CExprITokenPtr readAdditiveExpression();
   CExprITokenPtr readMultiplicativeExpression();
-  CExprITokenPtr readUnaryExpression();
   CExprITokenPtr readPowerExpression();
+  CExprITokenPtr readUnaryExpression();
   CExprITokenPtr readPostfixExpression();
   CExprITokenPtr readPrimaryExpression();
   CExprITokenPtr readArgumentExpressionList();
@@ -61,7 +63,9 @@ class CExprInterpImpl {
   bool isIntegerIToken   (const CExprITokenPtr &itoken);
   bool isRealIToken      (const CExprITokenPtr &itoken);
   bool isStringIToken    (const CExprITokenPtr &itoken);
+#ifdef GNUPLOT_EXPR
   bool isComplexIToken   (const CExprITokenPtr &itoken);
+#endif
 
   void           stackIToken(const CExprITokenPtr &itoken);
   CExprITokenPtr unstackIToken();
@@ -77,6 +81,7 @@ class CExprInterpImpl {
 #endif
 
  private:
+  CExpr*           expr_ { 0 };
   CExprTokenStack  ptokenStack_;
   CExprITokenStack itokenStack_;
   CExprErrorData   errorData_;
@@ -100,8 +105,8 @@ namespace CExprInterpUtil {
       case CExprITokenType::SHIFT_EXPRESSION         : return "shift_expression";
       case CExprITokenType::ADDITIVE_EXPRESSION      : return "additive_expression";
       case CExprITokenType::MULTIPLICATIVE_EXPRESSION: return "multiplicative_expression";
-      case CExprITokenType::UNARY_EXPRESSION         : return "unary_expression";
       case CExprITokenType::POWER_EXPRESSION         : return "power_expression";
+      case CExprITokenType::UNARY_EXPRESSION         : return "unary_expression";
       case CExprITokenType::POSTFIX_EXPRESSION       : return "postfix_expression";
       case CExprITokenType::PRIMARY_EXPRESSION       : return "primary_expression";
       case CExprITokenType::ARGUMENT_EXPRESSION_LIST : return "argument_expression_list";
@@ -113,7 +118,9 @@ namespace CExprInterpUtil {
           case CExprTokenType::INTEGER    : return "integer";
           case CExprTokenType::REAL       : return "real";
           case CExprTokenType::STRING     : return "string";
+#ifdef GNUPLOT_EXPR
           case CExprTokenType::COMPLEX    : return "complex";
+#endif
           default                         : return "<-?->";
         }
       }
@@ -125,9 +132,10 @@ namespace CExprInterpUtil {
 //-----------
 
 CExprInterp::
-CExprInterp()
+CExprInterp(CExpr *expr) :
+ expr_(expr)
 {
-  impl_ = new CExprInterpImpl;
+  impl_ = new CExprInterpImpl(expr);
 }
 
 CExprInterp::
@@ -708,9 +716,13 @@ readEqualityExpression()
     CExprITokenPtr itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::EQUAL        ) ||
+#ifdef GNUPLOT_EXPR
            isOperatorIToken(itoken1, CExprOpType::STR_EQUAL    ) ||
+#endif
            isOperatorIToken(itoken1, CExprOpType::NOT_EQUAL    ) ||
+#ifdef GNUPLOT_EXPR
            isOperatorIToken(itoken1, CExprOpType::STR_NOT_EQUAL) ||
+#endif
            isOperatorIToken(itoken1, CExprOpType::APPROX_EQUAL )) {
       CExprITokenPtr itoken2 = readRelationalExpression();
 
@@ -1254,6 +1266,7 @@ readPostfixExpression()
     }
   }
 
+#ifdef GNUPLOT_EXPR
   if (itoken.isValid()) {
     CExprITokenPtr itoken2 = unstackIToken();
 
@@ -1344,6 +1357,7 @@ readPostfixExpression()
       stackIToken(itoken2);
     }
   }
+#endif
 
   if (itoken.isValid()) {
     CExprITokenPtr itoken1 = unstackIToken();
@@ -1372,7 +1386,9 @@ readPostfixExpression()
  * <primary_expression>:= <integer>
  * <primary_expression>:= <real>
  * <primary_expression>:= <string>
+#ifdef GNUPLOT_EXPR
  * <primary_expression>:= <complex>
+#endif
  * <primary_expression>:= <identifier>
  * <primary_expression>:= ( <expression> )
  */
@@ -1388,8 +1404,12 @@ readPrimaryExpression()
   if (! itoken.isValid()) {
     CExprITokenPtr itoken1 = unstackIToken();
 
+#ifdef GNUPLOT_EXPR
     if      (isIntegerIToken(itoken1) || isStringIToken(itoken1) ||
              isRealIToken(itoken1)    || isComplexIToken(itoken1)) {
+#else
+    if      (isIntegerIToken(itoken1) || isStringIToken(itoken1) || isRealIToken(itoken1)) {
+#endif
       itoken = CExprIToken::createIToken(CExprITokenType::PRIMARY_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
@@ -1614,6 +1634,7 @@ isStringIToken(const CExprITokenPtr &itoken)
   return (itoken->getType() == CExprTokenType::STRING);
 }
 
+#ifdef GNUPLOT_EXPR
 bool
 CExprInterpImpl::
 isComplexIToken(const CExprITokenPtr &itoken)
@@ -1623,6 +1644,7 @@ isComplexIToken(const CExprITokenPtr &itoken)
 
   return (itoken->getType() == CExprTokenType::COMPLEX);
 }
+#endif
 
 void
 CExprInterpImpl::
@@ -1655,15 +1677,15 @@ void
 CExprInterpImpl::
 printTrackBack(std::ostream &os)
 {
-  if (CExprInst->getQuiet())
+  if (expr_->getQuiet())
     return;
 
   std::string error_message = errorData_.getLastError();
 
   if (error_message != "")
-    CExprInst->errorMsg(error_message);
+    expr_->errorMsg(error_message);
   else
-    CExprInst->errorMsg("Syntax Error");
+    expr_->errorMsg("Syntax Error");
 
   uint size = itokenStack_.getNumTokens();
 
@@ -1704,7 +1726,7 @@ printTypeIToken(std::ostream &os, CExprITokenPtr itoken)
   if (! itoken.isValid())
     return;
 
-  if (! CExprInst->getDebug())
+  if (! expr_->getDebug())
     return;
 
   printTypeIToken1(os, itoken);

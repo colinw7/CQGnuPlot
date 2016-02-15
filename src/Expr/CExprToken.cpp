@@ -127,7 +127,7 @@ void
 CExprTokenOperator::
 print(std::ostream &os) const
 {
-  os << CExprInst->getOperatorName(type_);
+  os << CExpr::instance()->getOperatorName(type_);
 }
 
 void

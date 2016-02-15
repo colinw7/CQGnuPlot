@@ -968,3 +968,38 @@ firstPoint() const
 
   return dynamic_cast<CQGnuPlotPointObject *>(plot_->pointObjects()[0]);
 }
+
+//------
+
+CQGnuPlotPlotPolygonObjects::
+CQGnuPlotPlotPolygonObjects(CQGnuPlotPlot *plot) :
+ plot_(plot)
+{
+  stroke_ = new CQGnuPlotStroke(plot);
+  fill_   = new CQGnuPlotFill(plot);
+
+  connect(stroke_, SIGNAL(changed()), this, SLOT(updateStroke()));
+  connect(fill_  , SIGNAL(changed()), this, SLOT(updateFill  ()));
+}
+
+void
+CQGnuPlotPlotPolygonObjects::
+updateStroke()
+{
+  for (auto &polygon : plot_->polygonObjects()) {
+    CQGnuPlotPolygonObject *qpolygon = dynamic_cast<CQGnuPlotPolygonObject *>(polygon);
+
+    qpolygon->setStrokeValues(*stroke_);
+  }
+}
+
+void
+CQGnuPlotPlotPolygonObjects::
+updateFill()
+{
+  for (auto &polygon : plot_->polygonObjects()) {
+    CQGnuPlotPolygonObject *qpolygon = dynamic_cast<CQGnuPlotPolygonObject *>(polygon);
+
+    qpolygon->setFillValues(*fill_);
+  }
+}

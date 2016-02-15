@@ -69,6 +69,7 @@ enum class CExprValueType {
   ANY = (BOOLEAN | INTEGER | REAL | STRING | COMPLEX)
 };
 
+class CExpr;
 class CExprValue;
 class CExprIToken;
 class CExprVariable;
@@ -86,7 +87,7 @@ typedef CRefPtr<CExprFunction> CExprFunctionPtr;
 
 typedef std::vector<CExprValuePtr> CExprValueArray;
 
-typedef CExprValuePtr (*CExprFunctionProc)(const CExprValueArray &values);
+typedef CExprValuePtr (*CExprFunctionProc)(CExpr *expr, const CExprValueArray &values);
 
 class CExprValueBase {
  public:
@@ -106,15 +107,15 @@ class CExprValueBase {
   virtual void setStringValue (const std::string          &) { assert(false); }
   virtual void setComplexValue(const std::complex<double> &) { assert(false); }
 
-  virtual CExprValuePtr execUnaryOp(CExprOpType) const {
+  virtual CExprValuePtr execUnaryOp(CExpr *, CExprOpType) const {
     return CExprValuePtr();
   }
 
-  virtual CExprValuePtr execBinaryOp(CExprValuePtr, CExprOpType) const {
+  virtual CExprValuePtr execBinaryOp(CExpr *, CExprValuePtr, CExprOpType) const {
     return CExprValuePtr();
   }
 
-  virtual CExprValuePtr subscript(const CExprValueArray &) const {
+  virtual CExprValuePtr subscript(CExpr *, const CExprValueArray &) const {
     return CExprValuePtr();
   }
 
@@ -183,10 +184,12 @@ enum class CExprITokenType {
 #include <CExprStrgen.h>
 #include <CExprError.h>
 #include <CExprFunctionMgr.h>
+#include <CExprOperatorMgr.h>
+#include <CExprVariableMgr.h>
 
 //-------
 
-#define CExprInst CExpr::instance()
+//#define CExprInst CExpr::instance()
 
 class CExpr {
  public:
@@ -196,6 +199,7 @@ class CExpr {
  public:
   static CExpr *instance();
 
+  CExpr();
  ~CExpr() { }
 
   bool getQuiet() const { return quiet_; }
@@ -265,9 +269,6 @@ class CExpr {
   void errorMsg(const std::string &msg) const;
 
  private:
-  CExpr();
-
- private:
   typedef std::vector<CExprCompile *> Compiles;
   typedef std::vector<CExprExecute *> Executes;
 
@@ -303,7 +304,9 @@ class CExprUtil<bool> {
  public:
   static bool getTypeValue(CExprValuePtr value, bool &b) { return value->getBooleanValue(b); }
 
-  static CExprValuePtr createValue(const bool &b) { return CExprInst->createBooleanValue(b); }
+  static CExprValuePtr createValue(CExpr *expr, const bool &b) {
+    return expr->createBooleanValue(b);
+  }
 
   static std::string argTypeStr() { return "b"; }
 };
@@ -313,7 +316,9 @@ class CExprUtil<long> {
  public:
   static bool getTypeValue(CExprValuePtr value, long &i) { return value->getIntegerValue(i); }
 
-  static CExprValuePtr createValue(const long &i) { return CExprInst->createIntegerValue(i); }
+  static CExprValuePtr createValue(CExpr *expr, const long &i) {
+    return expr->createIntegerValue(i);
+  }
 
   static std::string argTypeStr() { return "i"; }
 };
@@ -323,7 +328,9 @@ class CExprUtil<double> {
  public:
   static bool getTypeValue(CExprValuePtr value, double &r) { return value->getRealValue(r); }
 
-  static CExprValuePtr createValue(const double &r) { return CExprInst->createRealValue(r); }
+  static CExprValuePtr createValue(CExpr *expr, const double &r) {
+    return expr->createRealValue(r);
+  }
 
   static std::string argTypeStr() { return "r"; }
 };
@@ -331,9 +338,13 @@ class CExprUtil<double> {
 template<>
 class CExprUtil<std::string> {
  public:
-  static bool getTypeValue(CExprValuePtr value, std::string &s) { return value->getStringValue(s); }
+  static bool getTypeValue(CExprValuePtr value, std::string &s) {
+    return value->getStringValue(s);
+  }
 
-  static CExprValuePtr createValue(const std::string &s) { return CExprInst->createStringValue(s); }
+  static CExprValuePtr createValue(CExpr *expr, const std::string &s) {
+    return expr->createStringValue(s);
+  }
 
   static std::string argTypeStr() { return "s"; }
 };
@@ -345,8 +356,8 @@ class CExprUtil< std::complex<double> > {
     return value->getComplexValue(c);
   }
 
-  static CExprValuePtr createValue(const std::complex<double> &c) {
-    return CExprInst->createComplexValue(c);
+  static CExprValuePtr createValue(CExpr *expr, const std::complex<double> &c) {
+    return expr->createComplexValue(c);
   }
 
   static std::string argTypeStr() { return "c"; }

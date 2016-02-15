@@ -14,27 +14,22 @@ double
 CGnuPlotCoordValue::
 getXValue(CGnuPlotRenderer *renderer, double x) const
 {
+  CPoint2D w(x, 0);
+
   if      (system_ == CGnuPlotTypes::CoordSys::SECOND) {
-    // TODO
+    renderer->secondToWindow(CPoint2D(x, 0.0), w);
   }
   else if (system_ == CGnuPlotTypes::CoordSys::GRAPH) {
-    const CBBox2D &range = renderer->range();
-
-    x = CGnuPlotUtil::map(x, 0, 1, range.getXMin(), range.getXMax());
+    renderer->graphToWindow(CPoint2D(x, 0.0), w);
   }
   else if (system_ == CGnuPlotTypes::CoordSys::SCREEN) {
-    double px1, py1, px2, py2;
-
-    renderer->pixelToWindow(                    0,                      0, &px1, &py1);
-    renderer->pixelToWindow(renderer->width() - 1, renderer->height() - 1, &px2, &py2);
-
-    x = CGnuPlotUtil::map(x, 0, 1, px1, px2);
+    renderer->screenToWindow(CPoint2D(x, 0.0), w);
   }
   else if (system_ == CGnuPlotTypes::CoordSys::CHARACTER) {
-    // TODO
+    renderer->charToWindow(CPoint2D(x, 0.0), w);
   }
 
-  return x;
+  return w.x;
 }
 
 double
@@ -48,27 +43,22 @@ double
 CGnuPlotCoordValue::
 getYValue(CGnuPlotRenderer *renderer, double y) const
 {
+  CPoint2D w(0, y);
+
   if      (system_ == CGnuPlotTypes::CoordSys::SECOND) {
-    // TODO
+    renderer->secondToWindow(CPoint2D(0.0, y), w);
   }
   else if (system_ == CGnuPlotTypes::CoordSys::GRAPH) {
-    const CBBox2D &range = renderer->range();
-
-    y = CGnuPlotUtil::map(y, 0, 1, range.getYMin(), range.getYMax());
+    renderer->graphToWindow(CPoint2D(0.0, y), w);
   }
   else if (system_ == CGnuPlotTypes::CoordSys::SCREEN) {
-    double px1, py1, px2, py2;
-
-    renderer->pixelToWindow(                    0,                      0, &px1, &py1);
-    renderer->pixelToWindow(renderer->width() - 1, renderer->height() - 1, &px2, &py2);
-
-    y = CGnuPlotUtil::map(y, 0, 1, py2, py1);
+    renderer->screenToWindow(CPoint2D(0.0, y), w);
   }
   else if (system_ == CGnuPlotTypes::CoordSys::CHARACTER) {
-    // TODO
+    renderer->charToWindow(CPoint2D(0.0, y), w);
   }
 
-  return y;
+  return w.y;
 }
 
 double

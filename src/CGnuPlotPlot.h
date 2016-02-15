@@ -47,6 +47,7 @@ class CGnuPlotStyleChordDiagramRenderer;
 
 class CAdjacency;
 class ChordDiagram;
+class CSunburst;
 
 //------
 
@@ -266,6 +267,20 @@ class CGnuPlotChordDiagramData {
  private:
   ChordDiagram                      *chord_    { 0 };
   CGnuPlotStyleChordDiagramRenderer *renderer_ { 0 };
+};
+
+//------
+
+class CGnuPlotSunburstData {
+ public:
+  CGnuPlotSunburstData() { }
+ ~CGnuPlotSunburstData();
+
+  CSunburst *sunburst() const { return sunburst_; }
+  void setSunburst(CSunburst *s) { sunburst_ = s; }
+
+ private:
+  CSunburst *sunburst_ { 0 };
 };
 
 //------
@@ -926,6 +941,12 @@ class CGnuPlotPlot {
 
   //------
 
+  const CGnuPlotSunburstData &sunburstData() const { return sunburstData_; }
+
+  void setSunburst(CSunburst *s) { sunburstData_.setSunburst(s); }
+
+  //------
+
   int newHistogramId() const { return newHistogramId_; }
   void setNewHistogramId(int i) { newHistogramId_ = i; }
 
@@ -1031,6 +1052,7 @@ class CGnuPlotPlot {
   CGnuPlotPrintFile        tableFile_;
   CGnuPlotAdjacencyData    adjacencyData_;
   CGnuPlotChordDiagramData chordDiagramData_;
+  CGnuPlotSunburstData     sunburstData_;
   int                      newHistogramId_ { -1 };
   Delta                    delta_ { 1, 1, 1, 1 };
   CGnuPlotRotate           rotate_;

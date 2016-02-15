@@ -1,12 +1,8 @@
 #include <CExprI.h>
 
 CExprVariableMgr::
-CExprVariableMgr()
-{
-}
-
-CExprVariableMgr::
-~CExprVariableMgr()
+CExprVariableMgr(CExpr *expr) :
+ expr_(expr)
 {
 }
 
@@ -82,22 +78,22 @@ setValue(const CExprValuePtr &value)
 
 void
 CExprVariable::
-setRealValue(double r)
+setRealValue(CExpr *expr, double r)
 {
   if (value_->isRealValue())
     value_->setRealValue(r);
   else
-    value_ = CExprInst->createRealValue(r);
+    value_ = expr->createRealValue(r);
 }
 
 void
 CExprVariable::
-setIntegerValue(int i)
+setIntegerValue(CExpr *expr, int i)
 {
   if (value_->isIntegerValue())
     value_->setIntegerValue(i);
   else
-    value_ = CExprInst->createIntegerValue(i);
+    value_ = expr->createIntegerValue(i);
 }
 
 CExprValueType

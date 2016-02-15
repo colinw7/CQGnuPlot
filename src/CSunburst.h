@@ -9,6 +9,7 @@
 #include <algorithm>
 
 class CSunburstPainter;
+class CSunburstVisitor;
 
 //------
 
@@ -40,16 +41,19 @@ class CSunburst {
 
   void pack();
 
-  void draw(CSunburstPainter *painter);
+  void draw (CSunburstPainter *p);
+  void visit(CSunburstVisitor *v);
 
  private:
   Node *getNodeAt(HierNode *node, double x, double y) const;
 
   void drawNodes(CSunburstPainter *p, HierNode *hier);
+  void drawNode (CSunburstPainter *p, Node *node);
+  void draw     (CSunburstPainter *p, double px, double py, double len);
 
-  void drawNode(CSunburstPainter *p, Node *node);
-
-  void draw(CSunburstPainter *p, double px, double py, double len);
+  void visitNodes(CSunburstVisitor *v, HierNode *hier);
+  void visitNode (CSunburstVisitor *v, Node *node);
+  void visit     (CSunburstVisitor *v, double px, double py, double len);
 
  public:
   class Node {
@@ -370,6 +374,17 @@ class CSunburstPainter {
   virtual ~CSunburstPainter() { }
 
   virtual void drawNode(CSunburst::Node *node) = 0;
+};
+
+//------
+
+class CSunburstVisitor {
+ public:
+  CSunburstVisitor() { }
+
+  virtual ~CSunburstVisitor() { }
+
+  virtual void visitNode(CSunburst::Node *node) = 0;
 };
 
 #endif

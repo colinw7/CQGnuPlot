@@ -26,10 +26,14 @@ class CQGnuPlot : public QObject, public CGnuPlot {
   const std::string &usingString() const { return usingString_; }
   void setUsingString(const std::string &v) { usingString_ = v; }
 
+  const CGnuPlot::PlotStyle &plotStyle() const { return plotStyle_; }
+  void setPlotStyle(const CGnuPlot::PlotStyle &v) { plotStyle_ = v; }
+
  private:
   CQGnuPlotDevice    *device_;
   CQGnuPlotPNGDevice *pngDevice_;
   std::string         usingString_;
+  CGnuPlot::PlotStyle plotStyle_ { CGnuPlot::PlotStyle::LINES_POINTS };
 };
 
 #endif

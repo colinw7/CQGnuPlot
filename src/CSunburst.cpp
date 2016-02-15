@@ -93,6 +93,8 @@ getNodeAt(HierNode *hier, double x, double y) const
   return 0;
 }
 
+//---
+
 void
 CSunburst::
 draw(CSunburstPainter *painter)
@@ -128,4 +130,43 @@ drawNode(CSunburstPainter *painter, Node *node)
   if (! node->placed()) return;
 
   painter->drawNode(node);
+}
+
+//---
+
+void
+CSunburst::
+visit(CSunburstVisitor *visitor)
+{
+  for (const auto &r : roots_)
+    visitNodes(visitor, r);
+}
+
+void
+CSunburst::
+visitNodes(CSunburstVisitor *visitor, HierNode *hier)
+{
+  const Nodes &nodes = hier->getNodes();
+
+  for (auto node : nodes)
+    visitNode(visitor, node);
+
+  //------
+
+  const HierNode::Children &children = hier->getChildren();
+
+  for (auto hierNode : children) {
+    visitNode(visitor, hierNode);
+
+    visitNodes(visitor, hierNode);
+  }
+}
+
+void
+CSunburst::
+visitNode(CSunburstVisitor *visitor, Node *node)
+{
+  if (! node->placed()) return;
+
+  visitor->visitNode(node);
 }

@@ -17,6 +17,7 @@ CQDialog(QWidget *parent, uint buttons) :
   //---
 
   frame_ = new CQDialogForm;
+  frame_->setObjectName("frame");
 
   layout->addWidget(frame_);
 
@@ -34,6 +35,7 @@ CQDialog(QWidget *parent, uint buttons) :
 
   if (buttons & BUTTON_OK) {
     QPushButton *ok = new QPushButton("OK");
+    ok->setObjectName("OK");
 
     connect(ok, SIGNAL(clicked()), this, SLOT(acceptSlot()));
 
@@ -42,6 +44,7 @@ CQDialog(QWidget *parent, uint buttons) :
 
   if (buttons & BUTTON_APPLY) {
     QPushButton *apply = new QPushButton("Apply");
+    apply->setObjectName("Apply");
 
     connect(apply, SIGNAL(clicked()), this, SLOT(applySlot()));
 
@@ -50,6 +53,7 @@ CQDialog(QWidget *parent, uint buttons) :
 
   if (buttons & BUTTON_CANCEL) {
     QPushButton *cancel = new QPushButton("Cancel");
+    cancel->setObjectName("Cancel");
 
     connect(cancel, SIGNAL(clicked()), this, SLOT(rejectSlot()));
 
@@ -213,12 +217,11 @@ void
 CQDialogForm::
 addField(const QString &name, QWidget *w, bool stretch)
 {
-  if (! grid_) {
+  if (! grid_)
     grid_ = new QGridLayout(this);
 
-    if (stretch)
-      grid_->setColumnStretch(2, 1);
-  }
+  if (stretch)
+    grid_->setColumnStretch(2, 1);
 
   if (name.length()) {
     grid_->addWidget(new QLabel(name), row_, 0);

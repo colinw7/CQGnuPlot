@@ -1,4 +1,5 @@
 #include <CQGnuPlotManageVariablesDialog.h>
+#include <CQGnuPlotWindow.h>
 #include <CQUtil.h>
 #include <CQRealSpin.h>
 #include <CQIntegerSpin.h>
@@ -216,8 +217,9 @@ drawString(QPainter *painter, const QStyleOptionViewItem &option,
 /*! create custom tree widget item for variable name
 */
 CQGnuPlotVariableItem::
-CQGnuPlotVariableItem(QTreeWidgetItem *parent, CExprVariablePtr var) :
- QObject(), QTreeWidgetItem(parent, VARIABLE_ITEM_TYPE), var_(var), widget_(0)
+CQGnuPlotVariableItem(CQGnuPlotManageVariablesDialog *dialog, QTreeWidgetItem *parent,
+                      CExprVariablePtr var) :
+ QObject(), QTreeWidgetItem(parent, VARIABLE_ITEM_TYPE), dialog_(dialog), var_(var), widget_(0)
 {
   CExprValuePtr value = var_->value();
 
@@ -233,7 +235,7 @@ CQGnuPlotVariableItem(QTreeWidgetItem *parent, CExprVariablePtr var) :
 */
 CQGnuPlotVariableItem::
 CQGnuPlotVariableItem(const CQGnuPlotVariableItem &item) :
- QObject(), QTreeWidgetItem(item), var_(item.var_), widget_(0)
+ QObject(), QTreeWidgetItem(item), dialog_(item.dialog_), var_(item.var_), widget_(0)
 {
   CExprValuePtr value = var_->value();
 
@@ -325,7 +327,9 @@ void
 CQGnuPlotVariableItem::
 setEditorData(const QString &str)
 {
-  CExprValuePtr value = CExprInst->createStringValue(str.toStdString());
+  CExpr *expr = dialog_->window()->app()->expr();
+
+  CExprValuePtr value = expr->createStringValue(str.toStdString());
 
   var_->setValue(value);
 
@@ -338,9 +342,11 @@ void
 CQGnuPlotVariableItem::
 setEditorData(const QVariant &v)
 {
+  CExpr *expr = dialog_->window()->app()->expr();
+
   QString str = v.toString();
 
-  CExprValuePtr value = CExprInst->createStringValue(str.toStdString());
+  CExprValuePtr value = expr->createStringValue(str.toStdString());
 
   var_->setValue(value);
 
@@ -398,8 +404,8 @@ paint(const CQGnuPlotVariablesDelegate *delegate, QPainter *painter,
 //------
 
 CQGnuPlotManageVariablesDialog::
-CQGnuPlotManageVariablesDialog(QWidget *parent) :
- CQDialog(parent)
+CQGnuPlotManageVariablesDialog(CQGnuPlotMainWindow *window) :
+ CQDialog(window), window_(window)
 {
   setWindowTitle("Manage Variables");
 }
@@ -441,11 +447,13 @@ void
 CQGnuPlotManageVariablesDialog::
 updateVariables()
 {
+  CExpr *expr = window_->app()->expr();
+
   tree_->clear();
 
   CExpr::StringArray names;
 
-  CExprInst->getVariableNames(names);
+  expr->getVariableNames(names);
 
   QFontMetrics fm(font());
 
@@ -453,7 +461,7 @@ updateVariables()
   int w  = 0;
 
   for (const auto &name : names) {
-    CExprVariablePtr var = CExprInst->getVariable(name);
+    CExprVariablePtr var = expr->getVariable(name);
 
     std::string value;
 
@@ -461,7 +469,7 @@ updateVariables()
 
     (void) v->getStringValue(value);
 
-    QTreeWidgetItem *item = new CQGnuPlotVariableItem(0, var);
+    QTreeWidgetItem *item = new CQGnuPlotVariableItem(this, 0, var);
 
     tree_->addTopLevelItem(item);
 

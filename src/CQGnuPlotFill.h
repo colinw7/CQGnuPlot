@@ -21,6 +21,8 @@ class CQGnuPlotFill : public QObject, public CGnuPlotFill {
 
   CQGnuPlotFill *dup() const override;
 
+  void setValues(const CQGnuPlotFill &fill);
+
   QColor color() const;
   void setColor(const QColor &c);
 
@@ -32,6 +34,9 @@ class CQGnuPlotFill : public QObject, public CGnuPlotFill {
 
   CQGnuPlotEnum::FillPattern pattern() const;
   void setPattern(const CQGnuPlotEnum::FillPattern &f);
+
+ signals:
+  void changed();
 };
 
 #endif

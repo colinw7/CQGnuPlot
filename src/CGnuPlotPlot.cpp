@@ -26,6 +26,7 @@
 #include <CGnuPlotUtil.h>
 #include <CGnuPlotStyleAdjacencyRenderer.h>
 #include <CGnuPlotStyleChordDiagramRenderer.h>
+#include <CSunburst.h>
 
 #include <CExpr.h>
 #include <CRGBName.h>
@@ -275,7 +276,7 @@ addPoint2D(const std::vector<double> &rvals)
   std::vector<CExprValuePtr> values;
 
   for (auto r : rvals)
-    values.push_back(CExprInst->createRealValue(r));
+    values.push_back(app()->expr()->createRealValue(r));
 
   return addPoint2D(values, false);
 }
@@ -288,7 +289,7 @@ addPoint2D(double x, CExprValuePtr y)
 
   std::vector<CExprValuePtr> values;
 
-  values.push_back(CExprInst->createRealValue(x));
+  values.push_back(app()->expr()->createRealValue(x));
   values.push_back(y);
 
   return addPoint2D(values, false);
@@ -323,11 +324,13 @@ addPoint3D(int iy, double x, double y, double z)
 {
   assert(is3D());
 
+  CExpr *expr = app()->expr();
+
   std::vector<CExprValuePtr> values;
 
-  values.push_back(CExprInst->createRealValue(x));
-  values.push_back(CExprInst->createRealValue(y));
-  values.push_back(CExprInst->createRealValue(z));
+  values.push_back(expr->createRealValue(x));
+  values.push_back(expr->createRealValue(y));
+  values.push_back(expr->createRealValue(z));
 
   return addPoint3D(iy, values, false);
 }
@@ -338,10 +341,12 @@ addPoint3D(int iy, double x, double y, CExprValuePtr z)
 {
   assert(is3D());
 
+  CExpr *expr = app()->expr();
+
   std::vector<CExprValuePtr> values;
 
-  values.push_back(CExprInst->createRealValue(x));
-  values.push_back(CExprInst->createRealValue(y));
+  values.push_back(expr->createRealValue(x));
+  values.push_back(expr->createRealValue(y));
   values.push_back(z);
 
   return addPoint3D(iy, values, false);
@@ -353,11 +358,13 @@ addPoint3D(int iy, const CPoint3D &p)
 {
   assert(is3D());
 
+  CExpr *expr = app()->expr();
+
   std::vector<CExprValuePtr> values;
 
-  values.push_back(CExprInst->createRealValue(p.x));
-  values.push_back(CExprInst->createRealValue(p.y));
-  values.push_back(CExprInst->createRealValue(p.z));
+  values.push_back(expr->createRealValue(p.x));
+  values.push_back(expr->createRealValue(p.y));
+  values.push_back(expr->createRealValue(p.z));
 
   return addPoint3D(iy, values, false);
 }
@@ -2165,4 +2172,12 @@ CGnuPlotChordDiagramData::
 {
   delete chord_;
   delete renderer_;
+}
+
+//------
+
+CGnuPlotSunburstData::
+~CGnuPlotSunburstData()
+{
+  delete sunburst_;
 }

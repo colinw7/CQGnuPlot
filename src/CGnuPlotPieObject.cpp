@@ -19,25 +19,27 @@ inside(const CGnuPlotMouseEvent &mouseEvent) const
 
   double r = p.distanceTo(center());
 
-  if (r > r_)
+  double ir = innerRadius()*radius();
+
+  if (r < ir || r > radius())
     return false;
 
   // check angle
   double a = CAngle::Rad2Deg(atan2(p.y - center().y, p.x - center().x)); while (a < 0) a += 360.0;
 
-  double angle1 = angle1_; while (angle1 < 0) angle1 += 360.0;
-  double angle2 = angle2_; while (angle2 < 0) angle2 += 360.0;
+  double a1 = angle1(); while (a1 < 0) a1 += 360.0;
+  double a2 = angle2(); while (a2 < 0) a2 += 360.0;
 
-  if (angle1 > angle2) {
+  if (a1 > a2) {
     // crosses zero
-    if (a >= 0 && a <= angle2)
+    if (a >= 0 && a <= a2)
       return true;
 
-    if (a <= 360 && a >= angle1)
+    if (a <= 360 && a >= a1)
       return true;
   }
   else {
-    if (a >= angle1 && a <= angle2)
+    if (a >= a1 && a <= a2)
       return true;
   }
 
@@ -48,7 +50,7 @@ bool
 CGnuPlotPieObject::
 keyInside(const CPoint2D &p) const
 {
-  return keyRect_.inside(p);
+  return keyRect().inside(p);
 }
 
 CGnuPlotTipData
@@ -57,10 +59,10 @@ tip() const
 {
   CGnuPlotTipData tip;
 
-  tip.setXStr(name_);
-  tip.setYStr(CStrUtil::strprintf("%g", value_));
+  tip.setXStr(name());
+  tip.setYStr(CStrUtil::strprintf("%g", value()));
 
-  CPoint2D d(r_, r_);
+  CPoint2D d(radius(), radius());
 
   CBBox2D rect(center() - d, center() + d);
 
@@ -95,16 +97,16 @@ draw(CGnuPlotRenderer *renderer) const
 
   CPoint2D c = center();
 
-  bool exploded = exploded_;
+  bool exploded = isExploded();
 
-  if (isSelected())
+  if (isSelected() && isExplodeSelected())
     exploded = true;
 
   if (exploded) {
-    double angle = CAngle::Deg2Rad((angle1_ + angle2_)/2.0);
+    double angle = CAngle::Deg2Rad((angle1() + angle2())/2.0);
 
-    double dx = 0.1*r_*cos(angle);
-    double dy = 0.1*r_*sin(angle);
+    double dx = 0.1*radius()*cos(angle);
+    double dy = 0.1*radius()*sin(angle);
 
     c.x += dx;
     c.y += dy;
@@ -112,39 +114,53 @@ draw(CGnuPlotRenderer *renderer) const
 
   //---
 
-  double ir = innerRadius_*r_;
+  double ir = innerRadius()*radius();
 
-  renderer->fillPieSlice  (c, ir, r_, angle1_, angle2_, *fill  );
-  renderer->strokePieSlice(c, ir, r_, angle1_, angle2_, *stroke);
+  renderer->fillPieSlice  (c, ir, radius(), angle1(), angle2(), *fill  );
+  renderer->strokePieSlice(c, ir, radius(), angle1(), angle2(), *stroke);
 
   //---
 
-  if (name_ != "") {
-    double tangle = CAngle::Deg2Rad((angle1_ + angle2_)/2.0);
+  if (name() != "") {
+    double ta = (angle1() + angle2())/2.0;
 
-    double lr = labelRadius_*r_;
+    double tangle = CAngle::Deg2Rad(ta);
+
+    double lr = labelRadius()*radius();
 
     if (lr < 0.01)
       lr = 0.01;
 
-    double x = c.x + lr*cos(tangle);
-    double y = c.y + lr*sin(tangle);
+    double tc = cos(tangle);
+    double ts = sin(tangle);
 
-    CPoint2D tp(x, y);
+    double tx = c.x + lr*tc;
+    double ty = c.y + lr*ts;
 
-    CRGBA tc(0,0,0);
+    CPoint2D tp(tx, ty);
+
+    CRGBA tc1(0,0,0);
 
     if (fill->type() == CGnuPlotTypes::FillType::SOLID)
-      tc = fill->color().bwContrast();
+      tc1 = fill->color().bwContrast();
 
     // aligned ?
-    renderer->drawHAlignedText(tp, HAlignPos(CHALIGN_TYPE_CENTER, 0),
-                               VAlignPos(CVALIGN_TYPE_CENTER, 0), name_, tc);
+    if (isRotatedText()) {
+      if (tc >= 0)
+        renderer->drawRotatedText(tp, name(), ta, HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                                  VAlignPos(CVALIGN_TYPE_CENTER, 0), tc1);
+      else
+        renderer->drawRotatedText(tp, name(), 180.0 + ta, HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+                                  VAlignPos(CVALIGN_TYPE_CENTER, 0), tc1);
+    }
+    else
+      renderer->drawHAlignedText(tp, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                                 VAlignPos(CVALIGN_TYPE_CENTER, 0), name(), tc1);
   }
 
   //---
 
-  CPoint2D pr(r_, r_);
+  CPoint2D pr(radius(), radius());
 
   bbox_ = CBBox2D(c - pr, c + pr);
 }

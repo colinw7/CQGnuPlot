@@ -2,6 +2,8 @@
 
 class CExprCompileImpl {
  public:
+  CExprCompileImpl(CExpr *expr) : expr_(expr) { }
+
   CExprTokenStack compileIToken(CExprITokenPtr itoken);
 
  private:
@@ -19,8 +21,8 @@ class CExprCompileImpl {
   void compileShiftExpression         (CExprITokenPtr itoken);
   void compileAdditiveExpression      (CExprITokenPtr itoken);
   void compileMultiplicativeExpression(CExprITokenPtr itoken);
-  void compileUnaryExpression         (CExprITokenPtr itoken);
   void compilePowerExpression         (CExprITokenPtr itoken);
+  void compileUnaryExpression         (CExprITokenPtr itoken);
   void compilePostfixExpression       (CExprITokenPtr itoken);
   void compilePrimaryExpression       (CExprITokenPtr itoken);
   void compileArgumentExpressionList  (CExprITokenPtr itoken);
@@ -30,7 +32,9 @@ class CExprCompileImpl {
   void compileInteger   (CExprITokenPtr itoken);
   void compileReal      (CExprITokenPtr itoken);
   void compileString    (CExprITokenPtr itoken);
+#ifdef GNUPLOT_EXPR
   void compileComplex   (CExprITokenPtr itoken);
+#endif
   void compileValue     (CExprITokenPtr itoken);
 #if 0
   void compileITokenChildren(CExprITokenPtr itoken);
@@ -41,6 +45,7 @@ class CExprCompileImpl {
   void stackCToken    (const CExprTokenBaseP &base);
 
  private:
+  CExpr*          expr_ { 0 };
   CExprTokenStack tokenStack_;
   CExprErrorData  errorData_;
 };
@@ -48,9 +53,10 @@ class CExprCompileImpl {
 //------
 
 CExprCompile::
-CExprCompile()
+CExprCompile(CExpr *expr) :
+ expr_(expr)
 {
-  impl_ = new CExprCompileImpl;
+  impl_ = new CExprCompileImpl(expr);
 }
 
 CExprCompile::
@@ -81,7 +87,7 @@ compileIToken(CExprITokenPtr itoken)
   compileIToken1(itoken);
 
   if (errorData_.isError()) {
-    CExprInst->errorMsg(errorData_.getLastError());
+    expr_->errorMsg(errorData_.getLastError());
     return CExprTokenStack();
   }
 
@@ -187,10 +193,12 @@ compileIToken1(CExprITokenPtr itoken)
           compileString(itoken);
 
           break;
+#ifdef GNUPLOT_EXPR
         case CExprTokenType::COMPLEX:
           compileComplex(itoken);
 
           break;
+#endif
         default:
           assert(false);
           break;
@@ -263,7 +271,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CExprOpType::TIMES));
+        stackCToken(expr_->getOperator(CExprOpType::TIMES));
 
         break;
       case CExprOpType::DIVIDE_EQUALS:
@@ -271,7 +279,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CExprOpType::DIVIDE));
+        stackCToken(expr_->getOperator(CExprOpType::DIVIDE));
 
         break;
       case CExprOpType::MODULUS_EQUALS:
@@ -279,7 +287,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CExprOpType::MODULUS));
+        stackCToken(expr_->getOperator(CExprOpType::MODULUS));
 
         break;
       case CExprOpType::PLUS_EQUALS:
@@ -287,7 +295,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CExprOpType::PLUS));
+        stackCToken(expr_->getOperator(CExprOpType::PLUS));
 
         break;
       case CExprOpType::MINUS_EQUALS:
@@ -295,7 +303,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CExprOpType::MINUS));
+        stackCToken(expr_->getOperator(CExprOpType::MINUS));
 
         break;
       case CExprOpType::BIT_LSHIFT_EQUALS:
@@ -303,7 +311,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CExprOpType::BIT_LSHIFT));
+        stackCToken(expr_->getOperator(CExprOpType::BIT_LSHIFT));
 
         break;
       case CExprOpType::BIT_RSHIFT_EQUALS:
@@ -311,7 +319,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CExprOpType::BIT_RSHIFT));
+        stackCToken(expr_->getOperator(CExprOpType::BIT_RSHIFT));
 
         break;
       case CExprOpType::BIT_AND_EQUALS:
@@ -319,7 +327,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CExprOpType::BIT_AND));
+        stackCToken(expr_->getOperator(CExprOpType::BIT_AND));
 
         break;
       case CExprOpType::BIT_XOR_EQUALS:
@@ -327,7 +335,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CExprOpType::BIT_XOR));
+        stackCToken(expr_->getOperator(CExprOpType::BIT_XOR));
 
         break;
       case CExprOpType::BIT_OR_EQUALS:
@@ -335,7 +343,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
 
         compileAssignmentExpression(itoken->getChild(2));
 
-        stackCToken(CExprInst->getOperator(CExprOpType::BIT_OR));
+        stackCToken(expr_->getOperator(CExprOpType::BIT_OR));
 
         break;
       default:
@@ -343,7 +351,7 @@ compileAssignmentExpression(CExprITokenPtr itoken)
         break;
     }
 
-    stackCToken(CExprInst->getOperator(CExprOpType::EQUALS));
+    stackCToken(expr_->getOperator(CExprOpType::EQUALS));
   }
   else
     compileConditionalExpression(itoken->getChild(0));
@@ -365,27 +373,27 @@ compileConditionalExpression(CExprITokenPtr itoken)
     // 0 boolean, 2 = lhs, 4 = rhs
 
     // stack lhs expression
-    stackCToken(CExprInst->getOperator(CExprOpType::START_BLOCK));
+    stackCToken(expr_->getOperator(CExprOpType::START_BLOCK));
 
     compileExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CExprOpType::END_BLOCK));
+    stackCToken(expr_->getOperator(CExprOpType::END_BLOCK));
 
     //---
 
     // stack lhs expression
-    stackCToken(CExprInst->getOperator(CExprOpType::START_BLOCK));
+    stackCToken(expr_->getOperator(CExprOpType::START_BLOCK));
 
     compileConditionalExpression(itoken->getChild(4));
 
-    stackCToken(CExprInst->getOperator(CExprOpType::END_BLOCK));
+    stackCToken(expr_->getOperator(CExprOpType::END_BLOCK));
 
     //---
 
     // stack conditional
     compileLogicalOrExpression(itoken->getChild(0));
 
-    stackCToken(CExprInst->getOperator(CExprOpType::QUESTION));
+    stackCToken(expr_->getOperator(CExprOpType::QUESTION));
   }
   else
     compileLogicalOrExpression(itoken->getChild(0));
@@ -407,7 +415,7 @@ compileLogicalOrExpression(CExprITokenPtr itoken)
 
     compileLogicalAndExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CExprOpType::LOGICAL_OR));
+    stackCToken(expr_->getOperator(CExprOpType::LOGICAL_OR));
   }
   else
     compileLogicalAndExpression(itoken->getChild(0));
@@ -429,7 +437,7 @@ compileLogicalAndExpression(CExprITokenPtr itoken)
 
     compileInclusiveOrExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CExprOpType::LOGICAL_AND));
+    stackCToken(expr_->getOperator(CExprOpType::LOGICAL_AND));
   }
   else
     compileInclusiveOrExpression(itoken->getChild(0));
@@ -451,7 +459,7 @@ compileInclusiveOrExpression(CExprITokenPtr itoken)
 
     compileExclusiveOrExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CExprOpType::BIT_OR));
+    stackCToken(expr_->getOperator(CExprOpType::BIT_OR));
   }
   else
     compileExclusiveOrExpression(itoken->getChild(0));
@@ -473,7 +481,7 @@ compileExclusiveOrExpression(CExprITokenPtr itoken)
 
     compileAndExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CExprOpType::BIT_XOR));
+    stackCToken(expr_->getOperator(CExprOpType::BIT_XOR));
   }
   else
     compileAndExpression(itoken->getChild(0));
@@ -495,7 +503,7 @@ compileAndExpression(CExprITokenPtr itoken)
 
     compileEqualityExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CExprOpType::BIT_AND));
+    stackCToken(expr_->getOperator(CExprOpType::BIT_AND));
   }
   else
     compileEqualityExpression(itoken->getChild(0));
@@ -519,27 +527,37 @@ compileEqualityExpression(CExprITokenPtr itoken)
 
     CExprOpType op = itoken1->getOperator();
 
+#ifdef GNUPLOT_EXPR
     if      (op == CExprOpType::EQUAL || op == CExprOpType::STR_EQUAL) {
+#else
+    if      (op == CExprOpType::EQUAL) {
+#endif
       compileEqualityExpression(itoken->getChild(0));
 
       compileRelationalExpression(itoken->getChild(2));
 
       stackCToken(itoken1->base());
     }
+#ifdef GNUPLOT_EXPR
     else if (op == CExprOpType::NOT_EQUAL || op == CExprOpType::STR_NOT_EQUAL) {
+#else
+    else if (op == CExprOpType::NOT_EQUAL) {
+#endif
       compileEqualityExpression(itoken->getChild(0));
 
       compileRelationalExpression(itoken->getChild(2));
 
       stackCToken(itoken1->base());
     }
-    else {
+    else if (op == CExprOpType::APPROX_EQUAL) {
       compileEqualityExpression(itoken->getChild(0));
 
       compileRelationalExpression(itoken->getChild(2));
 
-      stackCToken(CExprInst->getOperator(CExprOpType::APPROX_EQUAL));
+      stackCToken(itoken1->base());
     }
+    else
+      assert(false);
   }
   else
     compileRelationalExpression(itoken->getChild(0));
@@ -593,10 +611,12 @@ compileShiftExpression(CExprITokenPtr itoken)
 
     CExprOpType op = itoken1->getOperator();
 
-    if (op == CExprOpType::BIT_LSHIFT)
+    if      (op == CExprOpType::BIT_LSHIFT)
+      stackCToken(itoken1->base());
+    else if (op == CExprOpType::BIT_RSHIFT)
       stackCToken(itoken1->base());
     else
-      stackCToken(itoken1->base());
+      assert(false);
   }
   else
     compileAdditiveExpression(itoken->getChild(0));
@@ -604,15 +624,12 @@ compileShiftExpression(CExprITokenPtr itoken)
 
 /*
  * <additive_expression>:= <multiplicative_expression>
- * <additive_expression>:= <additive_expression> +
- *                         <multiplicative_expression>
- * <additive_expression>:= <additive_expression> -
- *                         <multiplicative_expression>
+ * <additive_expression>:= <additive_expression> + <multiplicative_expression>
+ * <additive_expression>:= <additive_expression> - <multiplicative_expression>
  */
 #ifdef GNUPLOT_EXPR
 /*
- * <additive_expression>:= <additive_expression> .
- *                         <multiplicative_expression>
+ * <additive_expression>:= <additive_expression> . <multiplicative_expression>
  */
 #endif
 
@@ -639,6 +656,8 @@ compileAdditiveExpression(CExprITokenPtr itoken)
     else if (op == CExprOpType::STR_CONCAT)
       stackCToken(itoken1->base());
 #endif
+    else
+      assert(false);
   }
   else
     compileMultiplicativeExpression(itoken->getChild(0));
@@ -670,8 +689,10 @@ compileMultiplicativeExpression(CExprITokenPtr itoken)
       stackCToken(itoken1->base());
     else if (op == CExprOpType::DIVIDE)
       stackCToken(itoken1->base());
-    else
+    else if (op == CExprOpType::MODULUS)
       stackCToken(itoken1->base());
+    else
+      assert(false);
   }
   else
     compileUnaryExpression(itoken->getChild(0));
@@ -706,8 +727,8 @@ compileUnaryExpression(CExprITokenPtr itoken)
 
           compileUnaryExpression(itoken->getChild(1));
 
-          stackCToken(CExprInst->getOperator(CExprOpType::PLUS));
-          stackCToken(CExprInst->getOperator(CExprOpType::EQUALS));
+          stackCToken(expr_->getOperator(CExprOpType::PLUS));
+          stackCToken(expr_->getOperator(CExprOpType::EQUALS));
 
           break;
         case CExprOpType::DECREMENT:
@@ -715,20 +736,20 @@ compileUnaryExpression(CExprITokenPtr itoken)
 
           compileUnaryExpression(itoken->getChild(1));
 
-          stackCToken(CExprInst->getOperator(CExprOpType::MINUS));
-          stackCToken(CExprInst->getOperator(CExprOpType::EQUALS));
+          stackCToken(expr_->getOperator(CExprOpType::MINUS));
+          stackCToken(expr_->getOperator(CExprOpType::EQUALS));
 
           break;
         case CExprOpType::PLUS:
           compileUnaryExpression(itoken->getChild(1));
 
-          stackCToken(CExprInst->getOperator(CExprOpType::UNARY_PLUS));
+          stackCToken(expr_->getOperator(CExprOpType::UNARY_PLUS));
 
           break;
         case CExprOpType::MINUS:
           compileUnaryExpression(itoken->getChild(1));
 
-          stackCToken(CExprInst->getOperator(CExprOpType::UNARY_MINUS));
+          stackCToken(expr_->getOperator(CExprOpType::UNARY_MINUS));
 
           break;
         case CExprOpType::BIT_NOT:
@@ -776,7 +797,7 @@ compilePowerExpression(CExprITokenPtr itoken)
 
     compilePowerExpression(itoken->getChild(2));
 
-    stackCToken(CExprInst->getOperator(CExprOpType::POWER));
+    stackCToken(expr_->getOperator(CExprOpType::POWER));
   }
   else
     compilePostfixExpression(itoken->getChild(0));
@@ -810,18 +831,19 @@ compilePostfixExpression(CExprITokenPtr itoken)
 
   CExprOpType op = itoken1->getOperator();
 
+#ifdef GNUPLOT_EXPR
   if      (num_children == 4 && itoken0->getIType() == CExprITokenType::PRIMARY_EXPRESSION &&
            op == CExprOpType::OPEN_SBRACKET) {
     compilePrimaryExpression(itoken0);
 
-    stackCToken(CExprInst->getOperator(CExprOpType::OPEN_SBRACKET));
+    stackCToken(expr_->getOperator(CExprOpType::OPEN_SBRACKET));
 
     if (itoken->getChild(2)->getIType() != CExprITokenType::DUMMY_EXPRESSION)
       compileExpression(itoken->getChild(2));
     else
-      stackCToken(CExprInst->getOperator(CExprOpType::UNKNOWN));
+      stackCToken(expr_->getOperator(CExprOpType::UNKNOWN));
 
-    stackCToken(CExprInst->getOperator(CExprOpType::CLOSE_SBRACKET));
+    stackCToken(expr_->getOperator(CExprOpType::CLOSE_SBRACKET));
 
     return;
   }
@@ -829,22 +851,23 @@ compilePostfixExpression(CExprITokenPtr itoken)
            op == CExprOpType::OPEN_SBRACKET) {
     compilePrimaryExpression(itoken0);
 
-    stackCToken(CExprInst->getOperator(CExprOpType::OPEN_SBRACKET));
+    stackCToken(expr_->getOperator(CExprOpType::OPEN_SBRACKET));
 
     if (itoken->getChild(2)->getIType() != CExprITokenType::DUMMY_EXPRESSION)
       compileExpression(itoken->getChild(2));
     else
-      stackCToken(CExprInst->getOperator(CExprOpType::UNKNOWN));
+      stackCToken(expr_->getOperator(CExprOpType::UNKNOWN));
 
     if (itoken->getChild(4)->getIType() != CExprITokenType::DUMMY_EXPRESSION)
       compileExpression(itoken->getChild(4));
     else
-      stackCToken(CExprInst->getOperator(CExprOpType::UNKNOWN));
+      stackCToken(expr_->getOperator(CExprOpType::UNKNOWN));
 
-    stackCToken(CExprInst->getOperator(CExprOpType::CLOSE_SBRACKET));
+    stackCToken(expr_->getOperator(CExprOpType::CLOSE_SBRACKET));
 
     return;
   }
+#endif
 
   //----
 
@@ -866,7 +889,7 @@ compilePostfixExpression(CExprITokenPtr itoken)
 
     CExprFunctionMgr::Functions functions;
 
-    CExprInst->getFunctions(identifier, functions);
+    expr_->getFunctions(identifier, functions);
 
     CExprFunctionPtr function;
 
@@ -925,7 +948,7 @@ compilePostfixExpression(CExprITokenPtr itoken)
 
       compileExpression(itoken->getChild(2));
 
-      stackCToken(CExprInst->getOperator(CExprOpType::CLOSE_SBRACKET));
+      stackCToken(expr_->getOperator(CExprOpType::CLOSE_SBRACKET));
     }
     // <var> [ <ind> : <ind> ]
     else {
@@ -938,14 +961,14 @@ compilePostfixExpression(CExprITokenPtr itoken)
       if (itoken->getChild(2)->getIType() != CExprITokenType::DUMMY_EXPRESSION)
         compileExpression(itoken->getChild(2));
       else
-        stackCToken(CExprInst->getOperator(CExprOpType::UNKNOWN));
+        stackCToken(expr_->getOperator(CExprOpType::UNKNOWN));
 
       if (itoken->getChild(4)->getIType() != CExprITokenType::DUMMY_EXPRESSION)
         compileExpression(itoken->getChild(4));
       else
-        stackCToken(CExprInst->getOperator(CExprOpType::UNKNOWN));
+        stackCToken(expr_->getOperator(CExprOpType::UNKNOWN));
 
-      stackCToken(CExprInst->getOperator(CExprOpType::CLOSE_SBRACKET));
+      stackCToken(expr_->getOperator(CExprOpType::CLOSE_SBRACKET));
     }
   }
 #endif
@@ -953,15 +976,15 @@ compilePostfixExpression(CExprITokenPtr itoken)
     compilePostfixExpression(itoken->getChild(0));
     compilePostfixExpression(itoken->getChild(0)); // dup value
 
-    stackCToken(CExprInst->getOperator(CExprOpType::EQUALS));
-    stackCToken(CExprInst->getOperator(CExprOpType::PLUS));
+    stackCToken(expr_->getOperator(CExprOpType::EQUALS));
+    stackCToken(expr_->getOperator(CExprOpType::PLUS));
   }
   else if (op == CExprOpType::DECREMENT) {
     compilePostfixExpression(itoken->getChild(0));
     compilePostfixExpression(itoken->getChild(0)); // dup value
 
-    stackCToken(CExprInst->getOperator(CExprOpType::EQUALS));
-    stackCToken(CExprInst->getOperator(CExprOpType::MINUS));
+    stackCToken(expr_->getOperator(CExprOpType::EQUALS));
+    stackCToken(expr_->getOperator(CExprOpType::MINUS));
   }
 }
 
@@ -969,7 +992,9 @@ compilePostfixExpression(CExprITokenPtr itoken)
  * <primary_expression>:= <integer>
  * <primary_expression>:= <real>
  * <primary_expression>:= <string>
+#ifdef GNUPLOT_EXPR
  * <primary_expression>:= <complex>
+#endif
  * <primary_expression>:= <identifier>
  * <primary_expression>:= ( <expression> )
  */
@@ -997,10 +1022,12 @@ compilePrimaryExpression(CExprITokenPtr itoken)
         compileString(itoken->getChild(0));
 
         break;
+#ifdef GNUPLOT_EXPR
       case CExprTokenType::COMPLEX:
         compileComplex(itoken->getChild(0));
 
         break;
+#endif
       case CExprTokenType::IDENTIFIER:
         compileIdentifier(itoken->getChild(0));
 
@@ -1050,7 +1077,7 @@ void
 CExprCompileImpl::
 compileInteger(CExprITokenPtr itoken)
 {
-  CExprValuePtr value = CExprInst->createIntegerValue(itoken->getInteger());
+  CExprValuePtr value = expr_->createIntegerValue(itoken->getInteger());
 
   CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(value));
 
@@ -1061,7 +1088,7 @@ void
 CExprCompileImpl::
 compileReal(CExprITokenPtr itoken)
 {
-  CExprValuePtr value = CExprInst->createRealValue(itoken->getReal());
+  CExprValuePtr value = expr_->createRealValue(itoken->getReal());
 
   CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(value));
 
@@ -1072,23 +1099,25 @@ void
 CExprCompileImpl::
 compileString(CExprITokenPtr itoken)
 {
-  CExprValuePtr value = CExprInst->createStringValue(itoken->getString());
+  CExprValuePtr value = expr_->createStringValue(itoken->getString());
 
   CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(value));
 
   stackCToken(base);
 }
 
+#ifdef GNUPLOT_EXPR
 void
 CExprCompileImpl::
 compileComplex(CExprITokenPtr itoken)
 {
-  CExprValuePtr value = CExprInst->createComplexValue(itoken->getComplex());
+  CExprValuePtr value = expr_->createComplexValue(itoken->getComplex());
 
   CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(value));
 
   stackCToken(base);
 }
+#endif
 
 void
 CExprCompileImpl::

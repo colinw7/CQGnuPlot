@@ -18,7 +18,7 @@ class CGnuPlotUsingCol {
  public:
   CGnuPlotUsingCol(int i);
 
-  CGnuPlotUsingCol(const std::string &str1);
+  CGnuPlotUsingCol(CExpr *expr, const std::string &str1);
 
   const std::string &str() const { return str_; }
 

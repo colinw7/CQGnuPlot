@@ -7,6 +7,8 @@
 
 #include <CExpr.h>
 
+class CQGnuPlotManageVariablesDialog;
+class CQGnuPlotMainWindow;
 class QTreeWidget;
 
 // Tree Widget Item Delegate class to handle custom editing of tree widget items
@@ -58,7 +60,8 @@ class CQGnuPlotVariableItem : public QObject, public QTreeWidgetItem {
   static bool isType(int type) { return type == VARIABLE_ITEM_TYPE; }
 
   //! constructor
-  CQGnuPlotVariableItem(QTreeWidgetItem *item, CExprVariablePtr var);
+  CQGnuPlotVariableItem(CQGnuPlotManageVariablesDialog *dialog,
+                        QTreeWidgetItem *item, CExprVariablePtr var);
 
   //! copy constructor
   CQGnuPlotVariableItem(const CQGnuPlotVariableItem &item);
@@ -93,9 +96,10 @@ class CQGnuPlotVariableItem : public QObject, public QTreeWidgetItem {
 
  private:
   //! private data
-  CExprVariablePtr  var_;    //! variable
-  CExprValueType    type_;   //! value type
-  QWidget          *widget_; //! editor widget
+  CQGnuPlotManageVariablesDialog* dialog_; //! dialog
+  CExprVariablePtr                var_;    //! variable
+  CExprValueType                  type_;   //! value type
+  QWidget*                        widget_; //! editor widget
 };
 
 //----
@@ -104,7 +108,9 @@ class CQGnuPlotManageVariablesDialog : public CQDialog {
   Q_OBJECT
 
  public:
-  CQGnuPlotManageVariablesDialog(QWidget *parent=0);
+  CQGnuPlotManageVariablesDialog(CQGnuPlotMainWindow *window);
+
+  CQGnuPlotMainWindow *window() const { return window_; }
 
   void createWidgets(QWidget *frame) override;
 
@@ -114,8 +120,9 @@ class CQGnuPlotManageVariablesDialog : public CQDialog {
   void updateVariables();
 
  private:
-  QTreeWidget *tree_;
-  QSize        size_;
+  CQGnuPlotMainWindow *window_;
+  QTreeWidget         *tree_;
+  QSize                size_;
 };
 
 #endif

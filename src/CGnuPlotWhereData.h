@@ -9,17 +9,17 @@ class CGnuPlotWhereData {
   typedef std::vector<CExprValuePtr> Values;
 
  public:
-  CGnuPlotWhereData(const std::string &expr="");
+  CGnuPlotWhereData(const std::string &exprStr="");
 
-  bool parse(const std::string &expr);
+  bool parse(const std::string &exprStr);
 
-  bool isValid(int setNum, int pointNum, const Values &values) const;
+  bool isValid(CExpr *expr, int setNum, int pointNum, const Values &values) const;
 
-  CExprValuePtr getFieldValue(int setNum, int pointNum,
+  CExprValuePtr getFieldValue(CExpr *expr, int setNum, int pointNum,
                               const Values &fieldValues, int icol) const;
 
  private:
-  std::string expr_;
+  std::string exprStr_;
 };
 
 #endif

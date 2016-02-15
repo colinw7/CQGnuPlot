@@ -90,7 +90,8 @@ operator_data[] = {
 //------
 
 CExprOperatorMgr::
-CExprOperatorMgr()
+CExprOperatorMgr(CExpr *expr) :
+ expr_(expr)
 {
   for (uint i = 0; operator_data[i].name != 0; ++i)
     operator_map_[operator_data[i].type] =

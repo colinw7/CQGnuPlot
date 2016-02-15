@@ -71,8 +71,10 @@ CQGnuPlotManageVariablesDialog.cpp \
 CQGnuPlotCreateDialog.cpp \
 CQGnuPlotDataDialog.cpp \
 CQGnuPlotSaveDialog.cpp \
+CQGnuPlotPaletteDialog.cpp \
 CQGnuPlotDataTree.cpp \
 CQGnuPlotDataModel.cpp \
+CQGnuPlotPositionEdit.cpp \
 \
 CGnuPlot.cpp \
 CGnuPlotAnnotation.cpp \
@@ -203,6 +205,10 @@ CQRubberBand.cpp \
 CQDialog.cpp \
 CQEnumCombo.cpp \
 \
+CGradientPalette.cpp \
+CQGradientPalette.cpp \
+CQGradientPaletteControl.cpp \
+\
 CAdjacency.cpp \
 CDelaunay.cpp \
 ChordDiagram.cpp  \
@@ -290,8 +296,10 @@ CQGnuPlotManageVariablesDialog.h \
 CQGnuPlotCreateDialog.h \
 CQGnuPlotDataDialog.h \
 CQGnuPlotSaveDialog.h \
+CQGnuPlotPaletteDialog.h \
 CQGnuPlotDataTree.h \
 CQGnuPlotDataModel.h \
+CQGnuPlotPositionEdit.h \
 \
 CGnuPlot.h \
 CGnuPlotArrow.h \
@@ -423,6 +431,10 @@ CQCursor.h \
 CQRubberBand.h \
 CQDialog.h \
 CQEnumCombo.h \
+\
+CGradientPalette.h \
+CQGradientPalette.h \
+CQGradientPaletteControl.h \
 \
 CAdjacency.h \
 CDelaunay.h \

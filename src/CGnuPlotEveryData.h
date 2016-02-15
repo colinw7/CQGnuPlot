@@ -1,14 +1,16 @@
 #ifndef CGnuPlotEveryData_H
 #define CGnuPlotEveryData_H
 
+class CExpr;
+
 #include <string>
 #include <limits>
 
 class CGnuPlotEveryData {
  public:
-  CGnuPlotEveryData(const std::string &str="");
+  CGnuPlotEveryData(CExpr *expr=0, const std::string &str="");
 
-  bool parse(const std::string &str);
+  bool parse(CExpr *expr, const std::string &str);
 
   int pointStart() const { return pointStart_; }
   void setPointStart(int i) { pointStart_ = i; }

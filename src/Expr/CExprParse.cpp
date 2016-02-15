@@ -3,7 +3,7 @@
 
 class CExprParseImpl {
  public:
-  CExprParseImpl() { }
+  CExprParseImpl(CExpr *expr) : expr_(expr) { }
  ~CExprParseImpl() { }
 
   CExprTokenStack parseFile(const std::string &filename);
@@ -23,7 +23,9 @@ class CExprParseImpl {
 
   CExprTokenBaseP readNumber     (const std::string &str, uint *i);
   CExprTokenBaseP readString     (const std::string &str, uint *i);
+#ifdef GNUPLOT_EXPR
   CExprTokenBaseP readComplex    (const std::string &str, uint *i);
+#endif
   CExprTokenBaseP readOperator   (const std::string &str, uint *i);
 #ifdef GNUPLOT_EXPR
   CExprTokenBaseP readOperatorStr(const std::string &str, uint *i);
@@ -35,7 +37,9 @@ class CExprParseImpl {
 
   bool        skipNumber     (const std::string &str, uint *i);
   bool        skipString     (const std::string &str, uint *i);
+#ifdef GNUPLOT_EXPR
   bool        skipComplex    (const std::string &str, uint *i);
+#endif
   CExprOpType skipOperator   (const std::string &str, uint *i);
 #ifdef GNUPLOT_EXPR
   CExprOpType skipOperatorStr(const std::string &str, uint *i);
@@ -43,7 +47,9 @@ class CExprParseImpl {
   void        skipIdentifier (const std::string &str, uint *i);
 
   bool readStringChars    (const std::string &str, uint *i, bool process, std::string &str1);
+#ifdef GNUPLOT_EXPR
   bool readComplexChars   (const std::string &str, uint *i, std::complex<double> &c);
+#endif
   void readIdentifierChars(const std::string &str, uint *i, std::string &identifier);
 
 #if 0
@@ -54,23 +60,29 @@ class CExprParseImpl {
   CExprTokenBaseP createIntegerToken   (long);
   CExprTokenBaseP createRealToken      (double);
   CExprTokenBaseP createStringToken    (const std::string &str);
+#ifdef GNUPLOT_EXPR
   CExprTokenBaseP createComplexToken   (const std::complex<double> &c);
+#endif
 
   std::string replaceEscapeCodes(const std::string &str);
 
+#ifdef GNUPLOT_EXPR
   bool isStringOp (CExprOpType op) const;
+#endif
   bool isBooleanOp(CExprOpType op) const;
 
  private:
+  CExpr*          expr_ { 0 };
   CExprTokenStack tokenStack_;
 };
 
 //-----------
 
 CExprParse::
-CExprParse()
+CExprParse(CExpr *expr) :
+ expr_(expr)
 {
-  impl_ = new CExprParseImpl;
+  impl_ = new CExprParseImpl(expr);
 }
 
 CExprParse::
@@ -301,10 +313,17 @@ skipExpression(const std::string &line, uint &i, const std::string &echars)
           lastOpType = skipOperator(line, &i);
 
           if (lastOpType != CExprOpType::UNKNOWN) {
+#ifdef GNUPLOT_EXPR
             if (lastTokenType1 == CExprTokenType::STRING && ! isStringOp(lastOpType)) {
               i = i2;
               break;
             }
+#else
+            if (lastTokenType1 == CExprTokenType::STRING) {
+              i = i2;
+              break;
+            }
+#endif
 
             lastTokenType = CExprTokenType::OPERATOR;
           }
@@ -314,10 +333,17 @@ skipExpression(const std::string &line, uint &i, const std::string &echars)
         lastOpType = skipOperator(line, &i);
 
         if (lastOpType != CExprOpType::UNKNOWN) {
+#ifdef GNUPLOT_EXPR
           if (lastTokenType1 == CExprTokenType::STRING && ! isStringOp(lastOpType)) {
             i = i2;
             break;
           }
+#else
+          if (lastTokenType1 == CExprTokenType::STRING) {
+            i = i2;
+            break;
+          }
+#endif
 
           lastTokenType = CExprTokenType::OPERATOR;
         }
@@ -371,6 +397,7 @@ skipExpression(const std::string &line, uint &i, const std::string &echars)
 
           break;
         }
+#ifdef GNUPLOT_EXPR
         else if (lastTokenType == CExprTokenType::OPERATOR &&
                  lastOpType == CExprOpType::OPEN_SBRACKET) {
           if (! skipExpression(line, i, ":]")) { // also ends on ',' ?
@@ -406,6 +433,7 @@ skipExpression(const std::string &line, uint &i, const std::string &echars)
 
           break;
         }
+#endif
         else if (lastTokenType == CExprTokenType::OPERATOR &&
                  lastOpType == CExprOpType::QUESTION) {
           if (! skipExpression(line, i, ":")) {
@@ -536,9 +564,10 @@ parseError(const std::string &msg, const std::string &line, uint i)
 
   ostr << "^";
 
-  CExprInst->errorMsg(ostr.str());
+  expr_->errorMsg(ostr.str());
 }
 
+#ifdef GNUPLOT_EXPR
 bool
 CExprParseImpl::
 isStringOp(CExprOpType op) const
@@ -546,15 +575,24 @@ isStringOp(CExprOpType op) const
   return (op == CExprOpType::STR_CONCAT || op == CExprOpType::STR_EQUAL ||
           op == CExprOpType::STR_NOT_EQUAL);
 }
+#endif
 
 bool
 CExprParseImpl::
 isBooleanOp(CExprOpType op) const
 {
+#ifdef GNUPLOT_EXPR
   return (op == CExprOpType::LESS         || op == CExprOpType::LESS_EQUAL ||
           op == CExprOpType::GREATER      || op == CExprOpType::GREATER_EQUAL ||
           op == CExprOpType::EQUAL        || op == CExprOpType::NOT_EQUAL ||
-          op == CExprOpType::APPROX_EQUAL || op == CExprOpType::STR_EQUAL);
+          op == CExprOpType::APPROX_EQUAL || op == CExprOpType::STR_EQUAL ||
+          op == CExprOpType::STR_NOT_EQUAL);
+#else
+  return (op == CExprOpType::LESS         || op == CExprOpType::LESS_EQUAL ||
+          op == CExprOpType::GREATER      || op == CExprOpType::GREATER_EQUAL ||
+          op == CExprOpType::EQUAL        || op == CExprOpType::NOT_EQUAL ||
+          op == CExprOpType::APPROX_EQUAL);
+#endif
 }
 
 bool
@@ -845,6 +883,7 @@ replaceEscapeCodes(const std::string &str)
   return str1;
 }
 
+#ifdef GNUPLOT_EXPR
 CExprTokenBaseP
 CExprParseImpl::
 readComplex(const std::string &str, uint *i)
@@ -911,6 +950,7 @@ readComplexChars(const std::string &str, uint *i, std::complex<double> &c)
 
   return true;
 }
+#endif
 
 CExprTokenBaseP
 CExprParseImpl::
@@ -1290,9 +1330,11 @@ createStringToken(const std::string &str)
   return CExprTokenBaseP(CExprTokenMgrInst->createStringToken(str));
 }
 
+#ifdef GNUPLOT_EXPR
 CExprTokenBaseP
 CExprParseImpl::
 createComplexToken(const std::complex<double> &c)
 {
   return CExprTokenBaseP(CExprTokenMgrInst->createComplexToken(c));
 }
+#endif

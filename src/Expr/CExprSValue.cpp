@@ -23,14 +23,14 @@ getRealValue(double &r) const
 
 CExprValuePtr
 CExprStringValue::
-execUnaryOp(CExprOpType) const
+execUnaryOp(CExpr *, CExprOpType) const
 {
   return CExprValuePtr();
 }
 
 CExprValuePtr
 CExprStringValue::
-execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
+execBinaryOp(CExpr *expr, CExprValuePtr rhs, CExprOpType op) const
 {
   std::string rstr;
 
@@ -43,25 +43,25 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 
   switch (op) {
     case CExprOpType::LESS:
-      return CExprInst->createBooleanValue(str_ < rstr);
+      return expr->createBooleanValue(str_ < rstr);
     case CExprOpType::LESS_EQUAL:
-      return CExprInst->createBooleanValue(str_ <= rstr);
+      return expr->createBooleanValue(str_ <= rstr);
     case CExprOpType::GREATER:
-      return CExprInst->createBooleanValue(str_ > rstr);
+      return expr->createBooleanValue(str_ > rstr);
     case CExprOpType::GREATER_EQUAL:
-      return CExprInst->createBooleanValue(str_ >= rstr);
+      return expr->createBooleanValue(str_ >= rstr);
     // TODO: disable for gnuplot ?
     case CExprOpType::EQUAL:
-      return CExprInst->createBooleanValue(str_ == rstr);
+      return expr->createBooleanValue(str_ == rstr);
     case CExprOpType::NOT_EQUAL:
-      return CExprInst->createBooleanValue(str_ != rstr);
+      return expr->createBooleanValue(str_ != rstr);
 #ifdef GNUPLOT_EXPR
     case CExprOpType::STR_EQUAL:
-      return CExprInst->createBooleanValue(str_ == rstr);
+      return expr->createBooleanValue(str_ == rstr);
     case CExprOpType::STR_NOT_EQUAL:
-      return CExprInst->createBooleanValue(str_ != rstr);
+      return expr->createBooleanValue(str_ != rstr);
     case CExprOpType::STR_CONCAT:
-      return CExprInst->createStringValue(str_ + rstr);
+      return expr->createStringValue(str_ + rstr);
     default: {
       uint   i1       = 0    , i2       = 0;
       long   integer1 = 0    , integer2 = 0;
@@ -82,21 +82,21 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
         return CExprValuePtr();
 
       if (is_int1 && is_int2) {
-        CExprValuePtr ival1 = CExprInst->createIntegerValue(integer1);
-        CExprValuePtr ival2 = CExprInst->createIntegerValue(integer2);
+        CExprValuePtr ival1 = expr->createIntegerValue(integer1);
+        CExprValuePtr ival2 = expr->createIntegerValue(integer2);
 
-        return ival1->execBinaryOp(ival2, op);
+        return ival1->execBinaryOp(expr, ival2, op);
       }
       else {
-        CExprValuePtr rval1 = CExprInst->createRealValue(real1);
-        CExprValuePtr rval2 = CExprInst->createRealValue(real2);
+        CExprValuePtr rval1 = expr->createRealValue(real1);
+        CExprValuePtr rval2 = expr->createRealValue(real2);
 
-        return rval1->execBinaryOp(rval2, op);
+        return rval1->execBinaryOp(expr, rval2, op);
       }
     }
 #else
     case CExprOpType::PLUS:
-      return CExprInst->createStringValue(str_ + rstr);
+      return expr->createStringValue(str_ + rstr);
     default:
       return CExprValuePtr();
 #endif
@@ -105,7 +105,7 @@ execBinaryOp(CExprValuePtr rhs, CExprOpType op) const
 
 CExprValuePtr
 CExprStringValue::
-subscript(const CExprValueArray &values) const
+subscript(CExpr *expr, const CExprValueArray &values) const
 {
 #ifdef GNUPLOT_EXPR
   if      (values.size() == 1) {
@@ -123,7 +123,7 @@ subscript(const CExprValueArray &values) const
 
     str += str_[i1 - 1];
 
-    return CExprInst->createStringValue(str);
+    return expr->createStringValue(str);
   }
   else if (values.size() == 2) {
     long i1 = 1, i2 = str_.size();
@@ -149,7 +149,7 @@ subscript(const CExprValueArray &values) const
     for (int j = i1 - 1; j <= i2 - 1; ++j)
       str += str_[j];
 
-    return CExprInst->createStringValue(str);
+    return expr->createStringValue(str);
   }
   else {
     return CExprValuePtr();

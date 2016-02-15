@@ -1,8 +1,6 @@
 #ifndef CExprVariable_H
 #define CExprVariable_H
 
-#include <CExprVariableMgr.h>
-
 class CExprVariable {
  public:
  ~CExprVariable();
@@ -12,8 +10,8 @@ class CExprVariable {
 
   void setValue(const CExprValuePtr &value);
 
-  void setRealValue   (double r);
-  void setIntegerValue(int    i);
+  void setRealValue   (CExpr *expr, double r);
+  void setIntegerValue(CExpr *expr, int    i);
 
   const CExprValuePtr &getValue() const { return value_; }
 

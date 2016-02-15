@@ -1,134 +1,98 @@
 #ifndef CGnuPlotPalette_H
 #define CGnuPlotPalette_H
 
-#include <CGnuPlotTypes.h>
-#include <CColor.h>
-#include <map>
-#include <memory>
+#include <CGradientPalette.h>
 
 class CGnuPlot;
 class CGnuPlotGroup;
 
 class CGnuPlotPalette {
  public:
-  typedef CGnuPlotTypes::ColorModel ColorModel;
-
- public:
-  enum class ColorType {
-    MODEL,
-    DEFINED,
-    FUNCTIONS,
-    CUBEHELIX
-  };
+  typedef CGradientPalette::ColorType  ColorType;
+  typedef CGradientPalette::ColorModel ColorModel;
 
  public:
   CGnuPlotPalette(CGnuPlotGroup *group=0);
 
-  virtual ~CGnuPlotPalette() { }
+  virtual ~CGnuPlotPalette();
 
   void init(const CGnuPlotPalette &palette) {
     CGnuPlotGroup *group;
 
     std::swap(group, group_);
 
-    *this = palette;
+    *pal_ = *palette.pal_;
 
     std::swap(group, group_);
   }
 
-  ColorType colorType() const { return colorType_; }
-  void setColorType(ColorType t) { colorType_ = t; }
+  CGradientPalette *gradientPalette() const { return pal_; }
+  void setGradientPalette(const CGradientPalette &pal);
 
-  CGnuPlotTypes::ColorModel colorModel() const { return colorModel_; }
-  void setColorModel(CGnuPlotTypes::ColorModel m) { colorModel_ = m; }
+  void setExpr(CExpr *expr) { pal_->setExpr(expr); }
 
-  double gamma() const { return gamma_; }
-  void setGamma(double g) { gamma_ = g; }
+  ColorType colorType() const { return pal_->colorType(); }
+  void setColorType(ColorType t) { pal_->setColorType(t); }
 
-  bool isGray() const { return gray_; }
-  void setGray(bool b) { gray_ = b; }
+  ColorModel colorModel() const { return pal_->colorModel(); }
+  void setColorModel(ColorModel m) { pal_->setColorModel(m); }
 
-  bool isNegative() const { return negative_; }
-  void setNegative(bool b) { negative_ = b; }
+  double gamma() const { return pal_->gamma(); }
+  void setGamma(double g) { pal_->setGamma(g); }
 
-  int maxColors() const { return maxColors_; }
-  void setMaxColors(int n) { maxColors_ = n; }
+  bool isGray() const { return pal_->isGray(); }
+  void setGray(bool b) { pal_->setGray(b); }
 
-  bool isPSAllCF() const { return psAllcF_; }
-  void setPSAllCF(bool b) { psAllcF_ = b; }
+  bool isNegative() const { return pal_->isNegative(); }
+  void setNegative(bool b) { pal_->setNegative(b); }
 
-  void setRgbModel(int r, int g, int b) {
-    colorType_ = ColorType::MODEL;
+  int maxColors() const { return pal_->maxColors(); }
+  void setMaxColors(int n) { pal_->setMaxColors(n); }
 
-    rModel_ = r;
-    gModel_ = g;
-    bModel_ = b;
+  bool isPSAllCF() const { return pal_->isPSAllCF(); }
+  void setPSAllCF(bool b) { pal_->setPSAllCF(b); }
+
+  void setRgbModel(int r, int g, int b) { pal_->setRgbModel(r, g, b); }
+
+  int redModel() const { return pal_->redModel(); }
+  void setRedModel(int r) { pal_->setRedModel(r); }
+
+  int greenModel() const { return pal_->greenModel(); }
+  void setGreenModel(int r) { pal_->setGreenModel(r); }
+
+  int blueModel() const { return pal_->blueModel(); }
+  void setBlueModel(int r) { pal_->setBlueModel(r); }
+
+  void addDefinedColor(double v, const CColor &c) { pal_->addDefinedColor(v, c); }
+
+  void resetDefinedColors() { pal_->resetDefinedColors(); }
+
+  void setFunctions(const std::string &rf, const std::string &gf, const std::string &bf) {
+    pal_->setFunctions(rf, gf, bf);
   }
 
-  int redModel() const { return rModel_; }
-  void setRedModel(int r) { rModel_ = r; }
-
-  int greenModel() const { return gModel_; }
-  void setGreenModel(int r) { gModel_ = r; }
-
-  int blueModel() const { return bModel_; }
-  void setBlueModel(int r) { bModel_ = r; }
-
-  void resetDefinedColors() {
-    colors_.clear();
-  }
-
-  void addDefinedColor(double v, const CColor &c) {
-    colors_[v] = c;
+  void setCubeHelix(double start, double cycles, double saturation) {
+    pal_->setCubeHelix(start, cycles, saturation);
   }
 
   CColor getColor(double x) const;
 
-  double interp(int ind, double x) const;
-
-  void setFunctions(const std::string &rf, const std::string &gf, const std::string &bf) {
-    colorType_ = ColorType::FUNCTIONS;
-
-    rf_ = rf; gf_ = gf; bf_ = bf;
-  }
-
-  void setCubeHelix(int start, int cycles, double saturation) {
-    colorType_ = ColorType::CUBEHELIX;
-
-    cbStart_      = start;
-    cbCycles_     = cycles;
-    cbSaturation_ = saturation;
-  }
-
   bool readFile(CGnuPlot *plot, const std::string &filename);
 
-  void unset();
+  void unset() { pal_->unset(); }
 
-  void show(std::ostream &os) const;
+  void show(std::ostream &os) const { pal_->show(os); }
 
-  void showGradient(std::ostream &os) const;
-  void showRGBFormulae(std::ostream &os) const;
-  void showPaletteValues(std::ostream &os, int n, bool is_float, bool is_int);
+  void showGradient(std::ostream &os) const { pal_->showGradient(os); }
+  void showRGBFormulae(std::ostream &os) const { pal_->showRGBFormulae(os); }
+
+  void showPaletteValues(std::ostream &os, int n, bool is_float, bool is_int) {
+    pal_->showPaletteValues(os, n, is_float, is_int);
+  }
 
  private:
-  typedef std::map<double,CColor> ColorMap;
-
-  CGnuPlotGroup *group_        { 0 };
-  ColorType      colorType_    { ColorType::MODEL };
-  bool           gray_         { false };
-  ColorModel     colorModel_   { ColorModel::RGB };
-  int            rModel_       { 7 };
-  int            gModel_       { 5 };
-  int            bModel_       { 15 };
-  std::string    rf_, gf_, bf_;
-  bool           negative_     { false };
-  bool           psAllcF_      { false };
-  double         gamma_        { 1.5 };
-  int            maxColors_    { -1 };
-  int            cbStart_      { 0 };
-  int            cbCycles_     { 1 };
-  double         cbSaturation_ { 1 };
-  ColorMap       colors_;
+  CGnuPlotGroup*    group_ { 0 };
+  CGradientPalette* pal_   { 0 };
 };
 
 typedef std::unique_ptr<CGnuPlotPalette> CGnuPlotPaletteP;

@@ -11,7 +11,7 @@ class CExprFunctionObj {
 
   virtual ~CExprFunctionObj() { }
 
-  virtual CExprValuePtr operator()(const CExprValueArray &values) = 0;
+  virtual CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) = 0;
 
   virtual bool isOverload() const { return false; }
 };
@@ -52,7 +52,7 @@ class CExprFunction {
 
   virtual void reset() { }
 
-  virtual CExprValuePtr exec(const CExprValueArray &values) = 0;
+  virtual CExprValuePtr exec(CExpr *expr, const CExprValueArray &values) = 0;
 
   friend std::ostream &operator<<(std::ostream &os, const CExprFunction &fn) {
     fn.print(os);
@@ -93,7 +93,7 @@ class CExprProcFunction : public CExprFunction {
 
   bool checkValues(const CExprValueArray &) const override;
 
-  CExprValuePtr exec(const CExprValueArray &values) override;
+  CExprValuePtr exec(CExpr *expr, const CExprValueArray &values) override;
 
  private:
   Args              args_;
@@ -118,7 +118,7 @@ class CExprObjFunction : public CExprFunction {
 
   bool checkValues(const CExprValueArray &values) const override;
 
-  CExprValuePtr exec(const CExprValueArray &values) override;
+  CExprValuePtr exec(CExpr *expr, const CExprValueArray &values) override;
 
  private:
   Args              args_;
@@ -142,7 +142,7 @@ class CExprUserFunction : public CExprFunction {
 
   void reset() override;
 
-  CExprValuePtr exec(const CExprValueArray &values) override;
+  CExprValuePtr exec(CExpr *expr, const CExprValueArray &values) override;
 
   void print(std::ostream &os, bool expanded=true) const override {
     os << name_ << "(";

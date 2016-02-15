@@ -247,6 +247,7 @@ class CGnuPlotGroup {
   CGnuPlotColorBoxP colorBox() { return colorBox_; }
 
   const CGnuPlotPaletteP &palette() const { return palette_; }
+  void setPalette(const CGradientPalette &pal);
 
   //---
 
@@ -356,6 +357,8 @@ class CGnuPlotGroup {
   virtual bool mouseProbe(CGnuPlotProbeEvent &probeEvent);
 
   //-----
+
+  void displayPixelCoordinates(const CPoint2D &pixel);
 
   virtual void draw();
 

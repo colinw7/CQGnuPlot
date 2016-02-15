@@ -18,10 +18,10 @@ class CExprStringValue : public CExprValueBase {
 
   void setStringValue(const std::string &s) { str_ = s; }
 
-  CExprValuePtr execUnaryOp (CExprOpType op) const;
-  CExprValuePtr execBinaryOp(CExprValuePtr rhs, CExprOpType op) const;
+  CExprValuePtr execUnaryOp (CExpr *expr, CExprOpType op) const;
+  CExprValuePtr execBinaryOp(CExpr *expr, CExprValuePtr rhs, CExprOpType op) const;
 
-  CExprValuePtr subscript(const CExprValueArray &values) const;
+  CExprValuePtr subscript(CExpr *expr, const CExprValueArray &values) const;
 
   void print(std::ostream &os) const {
     os << str_;

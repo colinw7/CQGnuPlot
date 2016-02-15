@@ -11,6 +11,7 @@
 #include <CFont.h>
 #include <CImagePtr.h>
 #include <CRefPtr.h>
+#include <CMatrix2D.h>
 
 class CGnuPlotWindow;
 class CGnuPlotFill;
@@ -247,8 +248,15 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void setMargin(const CGnuPlotMargin &m) { margin_ = m; }
   void resetMargin() { margin_.reset(); }
 
-  const CBBox2D &range() const { return range_; }
-  void setRange(const CBBox2D &r) { range_ = r; }
+  const CBBox2D &range1() const { return range1_; }
+  void setRange1(const CBBox2D &r) { range1_ = r; }
+
+  const CBBox2D &range2() const { return range2_; }
+  void setRange2(const CBBox2D &r) { range2_ = r; }
+
+  const CBBox2D &range() const { return range1_; }
+  void setRange(const CBBox2D &r1);
+  void setRange(const CBBox2D &r1, const CBBox2D &r2);
 
   const COptReal &ratio() const { return ratio_; }
   void setRatio(const COptReal &r) { ratio_ = r; }
@@ -272,6 +280,17 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   virtual void setCBValue(double) { }
 
   double hiddenZ() const { return hiddenZ_; }
+
+  double xscale() const { return xscale_; }
+  void setXScale(double r);
+
+  double yscale() const { return yscale_; }
+  void setYScale(double r);
+
+  void setScale(double x, double y);
+
+  const CPoint2D &offset() const { return offset_; }
+  void setOffset(const CPoint2D &v);
 
   //---
 
@@ -566,31 +585,56 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void windowToRegion(double wx, double wy, double *rx, double *ry);
   void regionToWindow(double rx, double ry, double *wx, double *wy);
 
-  CPoint3D transform(const CPoint3D &p) const;
+  void windowToScreen(const CPoint2D &w, CPoint2D &s);
+  void screenToWindow(const CPoint2D &s, CPoint2D &w);
 
+  void windowToGraph(const CPoint2D &w, CPoint2D &g);
+  void graphToWindow(const CPoint2D &g, CPoint2D &w);
+
+  void windowToChar(const CPoint2D &w, CPoint2D &c);
+  void charToWindow(const CPoint2D &c, CPoint2D &w);
+
+  void windowToSecond(const CPoint2D &w, CPoint2D &s);
+  void secondToWindow(const CPoint2D &s, CPoint2D &w);
+
+  CPoint3D transform  (const CPoint3D &p) const;
   CPoint2D transform2D(const CPoint3D &p) const;
 
   CPoint2D rotatePoint(const CPoint2D &p, double a, const CPoint2D &o);
 
+  double charWidth ();
+  double charHeight();
+
+  double charPixelWidth ();
+  double charPixelHeight();
+
  private:
   void pixelToWindowI(double px, double py, double *wx, double *wy, bool margin);
 
+  void updateMatrix();
+
  protected:
-  CGnuPlotWindow* window_ { 0 };     // current window
-  CGnuPlotCamera* camera_ { 0 };     // camera
-  int             width_ { 100 };    // pixel width
-  int             height_ { 100 };   // pixel height
-  bool            mapping_ { true }; // mapping enabled
-  CBBox2D         region_;           // window region (0,0) -> (1,1)
-  CGnuPlotMargin  margin_;           // margin for plot
-  CBBox2D         range_;            // data range
-  COptReal        ratio_;            // aspect ratio
-  COptBBox2D      clip_;             // clip area
-  CFontPtr        font_;             // font
-  bool            reverseX_ { false };
-  bool            reverseY_ { false };
-  ZHiddenObjects  hiddenObjects_;
-  double          hiddenZ_ { 1.0 };
+  CGnuPlotWindow*   window_ { 0 };     // current window
+  CGnuPlotCamera*   camera_ { 0 };     // camera
+  int               width_  { 100 };   // pixel width
+  int               height_ { 100 };   // pixel height
+  bool              mapping_ { true }; // mapping enabled
+  CBBox2D           region_;           // window region (0,0) -> (1,1)
+  CGnuPlotMargin    margin_;           // margin for plot
+  CBBox2D           range1_;           // data first range
+  CBBox2D           range2_;           // data second range
+  COptReal          ratio_;            // aspect ratio
+  COptBBox2D        clip_;             // clip area
+  CFontPtr          font_;             // font
+  bool              reverseX_ { false };
+  bool              reverseY_ { false };
+  ZHiddenObjects    hiddenObjects_;
+  double            hiddenZ_ { 1.0 };
+  double            xscale_ { 1.0 };
+  double            yscale_ { 1.0 };
+  CPoint2D          offset_ { 0, 0 };
+  mutable CMatrix2D matrix_;
+  mutable CMatrix2D imatrix_;
 };
 
 #endif

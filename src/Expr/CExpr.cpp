@@ -17,13 +17,13 @@ CExpr::
 CExpr() :
  quiet_(false), debug_(false), trace_(false), degrees_(false)
 {
-  parse_   = new CExprParse;
-  interp_  = new CExprInterp;
-  compile_ = new CExprCompile;
-  execute_ = new CExprExecute;
+  parse_   = new CExprParse  (this);
+  interp_  = new CExprInterp (this);
+  compile_ = new CExprCompile(this);
+  execute_ = new CExprExecute(this);
 
-  operatorMgr_ = new CExprOperatorMgr;
-  variableMgr_ = new CExprVariableMgr;
+  operatorMgr_ = new CExprOperatorMgr(this);
+  variableMgr_ = new CExprVariableMgr(this);
   functionMgr_ = new CExprFunctionMgr(this);
 
   functionMgr_->addFunctions();
@@ -150,8 +150,8 @@ saveCompileState()
   compiles_.push_back(compile);
   executes_.push_back(execute);
 
-  compile_ = new CExprCompile;
-  execute_ = new CExprExecute;
+  compile_ = new CExprCompile(this);
+  execute_ = new CExprExecute(this);
 }
 
 void
@@ -306,12 +306,14 @@ createStringValue(const std::string &str)
   return CExprValuePtr(new CExprValue(CExprStringValue(str)));
 }
 
+#ifdef GNUPLOT_EXPR
 CExprValuePtr
 CExpr::
 createComplexValue(const std::complex<double> &c)
 {
   return CExprValuePtr(new CExprValue(CExprComplexValue(c)));
 }
+#endif
 
 //------
 

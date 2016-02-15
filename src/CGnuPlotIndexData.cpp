@@ -5,15 +5,15 @@
 
 namespace {
 
-bool evaluateExpression(const std::string &expr, CExprValuePtr &value) {
-  bool oldQuiet = CExprInst->getQuiet();
+bool evaluateExpression(CExpr *expr, const std::string &exprStr, CExprValuePtr &value) {
+  bool oldQuiet = expr->getQuiet();
 
-  CExprInst->setQuiet(true);
+  expr->setQuiet(true);
 
-  if (! CExprInst->evaluateExpression(expr, value))
+  if (! expr->evaluateExpression(exprStr, value))
     value = CExprValuePtr();
 
-  CExprInst->setQuiet(oldQuiet);
+  expr->setQuiet(oldQuiet);
 
   return true;
 }
@@ -23,15 +23,15 @@ bool evaluateExpression(const std::string &expr, CExprValuePtr &value) {
 //---
 
 CGnuPlotIndexData::
-CGnuPlotIndexData(const std::string &str)
+CGnuPlotIndexData(CExpr *expr, const std::string &str)
 {
   if (str != "")
-    (void) parse(str);
+    (void) parse(expr, str);
 }
 
 bool
 CGnuPlotIndexData::
-parse(const std::string &str)
+parse(CExpr *expr, const std::string &str)
 {
   std::vector<std::string> inds;
 
@@ -47,7 +47,7 @@ parse(const std::string &str)
 
       var = def;
 
-      if (inds[i] != "" && evaluateExpression(inds[i], value)) {
+      if (inds[i] != "" && evaluateExpression(expr, inds[i], value)) {
         long l;
 
         if (value.isValid() && value->getIntegerValue(l))

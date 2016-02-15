@@ -64,6 +64,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       renderer->drawPoint(p, c);
     }
+
+    return;
   }
 
   //---

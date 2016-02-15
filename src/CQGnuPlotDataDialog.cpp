@@ -209,6 +209,8 @@ CQGnuPlotDataDialog(CQGnuPlotMainWindow *window, const CGnuPlotFile &file) :
 
   //--
 
+  enum_->setPlotStyle(CQGnuPlotEnum::plotStyleConv(window_->qapp()->plotStyle()));
+
   QHBoxLayout *styleLayout = new QHBoxLayout;
   styleLayout->setMargin(2); styleLayout->setSpacing(2);
 
@@ -350,6 +352,8 @@ void
 CQGnuPlotDataDialog::
 filterSlot()
 {
+  CExpr *expr = window_->app()->expr();
+
   missingStr_ = missingEdit_->text().toStdString();
 
   //---
@@ -374,8 +378,8 @@ filterSlot()
   CGnuPlotWhereData whereData;
 
   usingCols.parse(usingStr.toStdString());
-  indexData.parse(indexStr.toStdString());
-  everyData.parse(everyStr.toStdString());
+  indexData.parse(expr, indexStr.toStdString());
+  everyData.parse(expr, everyStr.toStdString());
   whereData.parse(whereStr.toStdString());
 
   CQGnuPlotDataModel *model = tree_->model();
@@ -419,7 +423,7 @@ filterSlot()
       //---
 
       if (whereStr != "") {
-        if (! whereData.isValid(setNum, lineNum, values))
+        if (! whereData.isValid(expr, setNum, lineNum, values))
           continue;
       }
 
@@ -505,7 +509,7 @@ filterSlot()
         //---
 
         if (whereStr != "") {
-          if (! whereData.isValid(setNum, lineNum, values))
+          if (! whereData.isValid(expr, setNum, lineNum, values))
             continue;
         }
 
@@ -596,7 +600,7 @@ filterSlot()
           //---
 
           if (whereStr != "") {
-            if (! whereData.isValid(setNum, lineNum, values))
+            if (! whereData.isValid(expr, setNum, lineNum, values))
               continue;
           }
 
@@ -672,6 +676,8 @@ void
 CQGnuPlotDataDialog::
 doPlot(bool add)
 {
+  CExpr *expr = window_->app()->expr();
+
   missingStr_ = missingEdit_->text().toStdString();
 
   //---
@@ -715,8 +721,8 @@ doPlot(bool add)
   CGnuPlotWhereData whereData;
 
   usingCols.parse(usingStr.toStdString());
-  indexData.parse(indexStr.toStdString());
-  everyData.parse(everyStr.toStdString());
+  indexData.parse(expr, indexStr.toStdString());
+  everyData.parse(expr, everyStr.toStdString());
   whereData.parse(whereStr.toStdString());
 
   CQGnuPlotDataModel *model = tree_->model();
@@ -797,7 +803,7 @@ doPlot(bool add)
       //---
 
       if (whereStr != "") {
-        if (! whereData.isValid(setNum, lineNum, values))
+        if (! whereData.isValid(expr, setNum, lineNum, values))
           continue;
       }
 
@@ -889,7 +895,7 @@ doPlot(bool add)
         //---
 
         if (whereStr != "") {
-          if (! whereData.isValid(setNum, lineNum, values))
+          if (! whereData.isValid(expr, setNum, lineNum, values))
             continue;
         }
 
@@ -1011,7 +1017,7 @@ doPlot(bool add)
           //---
 
           if (whereStr != "") {
-            if (! whereData.isValid(setNum, lineNum, values))
+            if (! whereData.isValid(expr, setNum, lineNum, values))
               continue;
           }
 
@@ -1076,26 +1082,28 @@ fieldToValue(const std::string &field, bool &missing) const
 
   auto len = field.size();
 
+  CExpr *expr = window_->app()->expr();
+
   double r;
 
   if      (field == missingStr_) {
-    value = CExprInst->createRealValue(CMathGen::getNaN());
+    value = expr->createRealValue(CMathGen::getNaN());
 
     missing = true;
   }
   else if (len && field[0] == '\"' && field[len - 1] == '\"')
-    value = CExprInst->createStringValue(field.substr(1, len - 2));
+    value = expr->createStringValue(field.substr(1, len - 2));
   else if (CGnuPlot::fieldToReal(field, r))
-    value = CExprInst->createRealValue(r);
+    value = expr->createRealValue(r);
   else
-    value = CExprInst->createStringValue(field);
+    value = expr->createStringValue(field);
 
   return value;
 }
 
 CGnuPlotFile::SubSetLines
 CQGnuPlotDataDialog::
-smoothLines(const CGnuPlotFile::SubSetLines &lines, Smooth smooth) const
+smoothLines(const CGnuPlotFile::SubSetLines &lines, Smooth /*smooth*/) const
 {
   typedef std::map<std::string,CGnuPlotFile::SubSetLines> KeyLines;
 
@@ -1121,6 +1129,8 @@ CQGnuPlotDataDialog::ValuesDataList
 CQGnuPlotDataDialog::
 smoothValuesList(const ValuesDataList &valuesDataList, Smooth smooth) const
 {
+  CExpr *expr = window_->app()->expr();
+
   typedef std::map<double,ValuesDataList> KeyValuesDataList;
 
   KeyValuesDataList keyValuesDataList;
@@ -1166,7 +1176,7 @@ smoothValuesList(const ValuesDataList &valuesDataList, Smooth smooth) const
     ValuesData newValuesData;
 
     for (uint j = 0; j < vd.size(); ++j)
-      newValuesData.values.push_back(CExprInst->createRealValue(sum[j]));
+      newValuesData.values.push_back(expr->createRealValue(sum[j]));
 
     newValuesDataList.push_back(newValuesData);
   }
@@ -1178,6 +1188,8 @@ CGnuPlot::Matrix
 CQGnuPlotDataDialog::
 smoothValuesList(const CGnuPlot::Matrix &valuesList, Smooth smooth) const
 {
+  CExpr *expr = window_->app()->expr();
+
   typedef std::map<double,CGnuPlot::Matrix> KeyMatrix;
 
   KeyMatrix keyMatrix;
@@ -1223,7 +1235,7 @@ smoothValuesList(const CGnuPlot::Matrix &valuesList, Smooth smooth) const
     CGnuPlot::Values newValues;
 
     for (uint j = 0; j < m.size(); ++j)
-      newValues.push_back(CExprInst->createRealValue(sum[j]));
+      newValues.push_back(expr->createRealValue(sum[j]));
 
     newValuesList.push_back(newValues);
   }

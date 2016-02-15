@@ -18,6 +18,10 @@ class CQPropertyTree;
 class CQPropertyRealEditor;
 class CQPropertyIntegerEditor;
 class CQGnuPlotDataDialog;
+class CQGnuPlotCreateDialog;
+class CQGnuPlotManageFunctionsDialog;
+class CQGnuPlotManageVariablesDialog;
+class CQGnuPlotPaletteDialog;
 class CQZoomRegion;
 class CQCursor;
 class CQRubberBand;
@@ -163,6 +167,12 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void searchProperties();
 
  private:
+  void scrollLeftRightKey(CQGnuPlotGroup *group, bool left);
+  void scrollUpDownKey(CQGnuPlotGroup *group, bool down);
+
+  void zoomInKey (CQGnuPlotGroup *group);
+  void zoomOutKey(CQGnuPlotGroup *group);
+
   void paintPlot(CGnuPlotPlot *plot);
 
   void setCursor(QCursor cursor);
@@ -190,6 +200,9 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
 
   void manageFunctions();
   void manageVariables();
+
+  void editColorPalette();
+  void applyPaletteSlot();
 
   void createObjects();
   void createObjectsSlot();
@@ -224,34 +237,38 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
 
   static uint lastId;
 
-  uint                 id_           { 0 };
-  CQGnuPlotRenderer*   renderer_     { 0 };
-  CQGnuPlotCanvas*     canvas_       { 0 };
-  CQPropertyTree*      tree_         { 0 };
-  CQGnuPlotDataDialog* dataDialog_   { 0 };
-  QLineEdit*           edit_         { 0 };
-  RealEdits            redits_;
-  IntegerEdits         iedits_;
-  RealSliders          rsliders_;
-  QTimer*              propTimer_    { 0 };
-  QLabel*              plotLabel_    { 0 };
-  QLabel*              posLabel_     { 0 };
-  CQGnuPlotGroup*      currentGroup_ { 0 };
-  Mode                 mode_         { Mode::SELECT };
-  bool                 showPixels_   { false };
-  QAction*             selectAction_ { 0 };
-  QAction*             moveAction_   { 0 };
-  QAction*             zoomAction_   { 0 };
-  QAction*             probeAction_  { 0 };
-  QAction*             pointsAction_ { 0 };
-  CQZoomRegion*        zoomRegion_   { 0 };
-  CPoint2D             zoomPress_    { 0, 0 };
-  CPoint2D             zoomRelease_  { 0, 0 };
-  CQGnuPlotGroup*      zoomGroup_    { 0 };
-  CQCursor*            cursor_       { 0 };
-  ProbeWidgets         probeWidgets_ { 0 };
-  bool                 tipOutside_   { false };
-  mutable bool         escape_       { false };
+  uint                            id_               { 0 };
+  CQGnuPlotRenderer*              renderer_         { 0 };
+  CQGnuPlotCanvas*                canvas_           { 0 };
+  CQPropertyTree*                 tree_             { 0 };
+  CQGnuPlotDataDialog*            dataDialog_       { 0 };
+  CQGnuPlotCreateDialog*          createDialog_     { 0 };
+  CQGnuPlotManageFunctionsDialog* manageFnsDialog_  { 0 };
+  CQGnuPlotManageVariablesDialog* manageVarsDialog_ { 0 };
+  CQGnuPlotPaletteDialog*         paletteDialog_    { 0 };
+  QLineEdit*                      edit_             { 0 };
+  RealEdits                       redits_;
+  IntegerEdits                    iedits_;
+  RealSliders                     rsliders_;
+  QTimer*                         propTimer_        { 0 };
+  QLabel*                         plotLabel_        { 0 };
+  QLabel*                         posLabel_         { 0 };
+  CQGnuPlotGroup*                 currentGroup_     { 0 };
+  Mode                            mode_             { Mode::SELECT };
+  bool                            showPixels_       { false };
+  QAction*                        selectAction_     { 0 };
+  QAction*                        moveAction_       { 0 };
+  QAction*                        zoomAction_       { 0 };
+  QAction*                        probeAction_      { 0 };
+  QAction*                        pointsAction_     { 0 };
+  CQZoomRegion*                   zoomRegion_       { 0 };
+  CPoint2D                        zoomPress_        { 0, 0 };
+  CPoint2D                        zoomRelease_      { 0, 0 };
+  CQGnuPlotGroup*                 zoomGroup_        { 0 };
+  CQCursor*                       cursor_           { 0 };
+  ProbeWidgets                    probeWidgets_     { 0 };
+  bool                            tipOutside_       { false };
+  mutable bool                    escape_           { false };
 };
 
 #endif
