@@ -233,3 +233,14 @@
  + Add Pie object support for sunbrust plot
  + Add Pm3D support to points style
  + Add position editor for create dialog
+
+### 02/21/2016
+ + Auto load function from cmd line
+ + Ensure all objects inherit device enhanced state 
+ + Auto set active position edit from key shortcut
+ + Support enhanced text in key
+ + Ensure SVG text is encoded/escaped
+ + Ensure using cols with no plot has valid expression pointer
+ + Improve overwrite and space rendering in enhanced text
+ + Use more position editors in create dialog
+ + Honor key sample length and spacing in key

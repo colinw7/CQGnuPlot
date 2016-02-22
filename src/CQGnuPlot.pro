@@ -485,11 +485,13 @@ Expr \
 ../../CMath/include \
 ../../CStrUtil/include \
 ../../CRGBName/include \
+../../CXML/include \
 
 unix:LIBS += \
 -L$$LIB_DIR \
 -L../../CQUtil/lib \
 -L../../CQPropertyTree/lib \
+-L../../CXML/lib \
 -L../../CReadLine/lib \
 -L../../CFont/lib \
 -L../../CUtil/lib \
@@ -501,6 +503,6 @@ unix:LIBS += \
 -L../../CRegExp/lib \
 -L../../CRGBName/lib \
 -lCQPropertyTree -lCQUtil \
--lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
+-lCXML -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
 -lCRGBName -lCFile -lCOS -lCStrUtil -lCRegExp \
 -lpng -ljpeg -ltre -lreadline

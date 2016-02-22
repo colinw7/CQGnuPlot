@@ -9,7 +9,6 @@
 class CQEnumCombo;
 class CQColorChooser;
 class CQGnuPlotPositionEdit;
-class CQPoint2DEdit;
 class CQAngleSpinBox;
 class CQIntegerSpin;
 class CQRealSpin;
@@ -38,20 +37,20 @@ class CQGnuPlotCreateDialog : public CQDialog {
   CGnuPlotPosition arrowFrom() const;
   CGnuPlotPosition arrowTo  () const;
 
-  CPoint2D circleCenter() const;
-  double   circleRadius() const;
-  double   circleStart () const;
-  double   circleEnd   () const;
+  CGnuPlotPosition circleCenter() const;
+  double           circleRadius() const;
+  double           circleStart () const;
+  double           circleEnd   () const;
 
-  CPoint2D ellipseCenter() const;
-  double   ellipseAngle () const;
+  CGnuPlotPosition ellipseCenter() const;
+  double           ellipseAngle () const;
 
-  CPoint2D    labelOrigin() const;
-  std::string labelText  () const;
-  double      labelAngle () const;
+  CGnuPlotPosition labelOrigin() const;
+  std::string      labelText  () const;
+  double           labelAngle () const;
 
-  CPoint2D rectFrom () const;
-  CPoint2D rectTo   () const;
+  CGnuPlotPosition rectFrom() const;
+  CGnuPlotPosition rectTo  () const;
 
  private slots:
   void typeSlot(int);
@@ -75,17 +74,17 @@ class CQGnuPlotCreateDialog : public CQDialog {
   CQDialogForm*          rectFrame_      { 0 };
   CQGnuPlotPositionEdit* arrowFrom_      { 0 };
   CQGnuPlotPositionEdit* arrowTo_        { 0 };
-  CQPoint2DEdit*         circleCenter_   { 0 };
+  CQGnuPlotPositionEdit* circleCenter_   { 0 };
   CQRealSpin*            circleRadius_   { 0 };
   CQAngleSpinBox*        circleStart_    { 0 };
   CQAngleSpinBox*        circleEnd_      { 0 };
-  CQPoint2DEdit*         ellipseCenter_  { 0 };
+  CQGnuPlotPositionEdit* ellipseCenter_  { 0 };
   CQAngleSpinBox*        ellipseAngle_   { 0 };
-  CQPoint2DEdit*         labelOrigin_    { 0 };
+  CQGnuPlotPositionEdit* labelOrigin_    { 0 };
   QLineEdit*             labelText_      { 0 };
   CQAngleSpinBox*        labelAngle_     { 0 };
-  CQPoint2DEdit*         rectFrom_       { 0 };
-  CQPoint2DEdit*         rectTo_         { 0 };
+  CQGnuPlotPositionEdit* rectFrom_       { 0 };
+  CQGnuPlotPositionEdit* rectTo_         { 0 };
 };
 
 #endif

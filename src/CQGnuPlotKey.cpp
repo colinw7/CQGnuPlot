@@ -79,6 +79,34 @@ setFont(const QFont &f)
   CGnuPlotKey::setFont(CQUtil::fromQFont(f));
 }
 
+double
+CQGnuPlotKey::
+sampLen() const
+{
+  return CGnuPlotKey::sampLen().getValue(4);
+}
+
+void
+CQGnuPlotKey::
+setSampLen(double l)
+{
+  CGnuPlotKey::setSampLen(l);
+}
+
+double
+CQGnuPlotKey::
+spacing() const
+{
+  return CGnuPlotKey::spacing().getValue(1.5);
+}
+
+void
+CQGnuPlotKey::
+setSpacing(double l)
+{
+  CGnuPlotKey::setSpacing(l);
+}
+
 void
 CQGnuPlotKey::
 draw(CGnuPlotRenderer *renderer)

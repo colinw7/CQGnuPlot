@@ -110,6 +110,8 @@ init()
 
         CGnuPlotText text(tstr);
 
+        text.setBracketed(true);
+
         addPart(new CGnuPlotTextPart(CGnuPlotCharType::TEXT, text));
       }
       else if (c == '}') {
@@ -118,7 +120,7 @@ init()
       else if (c == '\\') {
         char c1 = '0', c2 = '0', c3 = '0';
 
-        c1 = line.lookChar();
+        c1 = (line.isValid() ? line.lookChar() : '\0');
 
         if      (isdigit(c1)) {
           line.skipChar();
@@ -240,6 +242,8 @@ readPart(CParseLine &line, CGnuPlotTextPart **part)
 
     CGnuPlotText text(tstr);
 
+    text.setBracketed(true);
+
     *part = new CGnuPlotTextPart(CGnuPlotCharType::TEXT, text);
   }
   else {
@@ -269,6 +273,8 @@ readPartText(CParseLine &line, CGnuPlotText &text)
 
     if (! readBraceString(line, tstr))
       return false;
+
+    text.setBracketed(true);
   }
   else {
     tstr += line.getChar();
@@ -388,11 +394,11 @@ draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
 
   //---
 
-  CGnuPlotTextState state(renderer);
+  state_ = CGnuPlotTextState(renderer);
 
-  state.lines.push_back(CGnuPlotTextLine());
+  state_.lines.push_back(CGnuPlotTextLine());
 
-  placeChars(state, CGnuPlotCharType::TEXT);
+  placeChars(state_, CGnuPlotCharType::TEXT);
 
   //---
 
@@ -406,7 +412,7 @@ draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
   double dx = (bbox.isSet() ? bbox.getXMin() : 0);
   double dy = (bbox.isSet() ? bbox.getYMax() : 0);
 
-  for (const auto &l : state.lines) {
+  for (const auto &l : state_.lines) {
     // calc line bbox
     CBBox2D lbbox;
 
@@ -422,10 +428,14 @@ draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
       CPoint2D p1(ch.pos.x + dx    , ch.pos.y + dy - fd);
       CPoint2D p2(ch.pos.x + dx + w, ch.pos.y + dy + fa);
 
-      if (ch.type != CGnuPlotCharType::SUPERSCRIPT && ch.type != CGnuPlotCharType::SUBSCRIPT) {
-        lbbox.add(p1);
-        lbbox.add(p2);
-      }
+      if (ch.type == CGnuPlotCharType::SUPERSCRIPT || ch.type == CGnuPlotCharType::SUBSCRIPT)
+        continue;
+
+      if (ch.type == CGnuPlotCharType::OVERPRINT)
+        continue;
+
+      lbbox.add(p1);
+      lbbox.add(p2);
     }
 
     if (! lbbox.isSet())
@@ -453,6 +463,9 @@ draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
 
       if (renderer->isPseudo()) {
         if (ch.type == CGnuPlotCharType::SUPERSCRIPT || ch.type == CGnuPlotCharType::SUBSCRIPT)
+          continue;
+
+        if (ch.type == CGnuPlotCharType::OVERPRINT)
           continue;
       }
 
@@ -484,7 +497,7 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
 
   uint i = 0;
 
-  if (estr_[0] == '/') {
+  if (isBracketed() && estr_[0] == '/') {
     ++i;
 
     std::string family, style, multiplier, size;
@@ -546,9 +559,9 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
     double ascent = renderer->pixelHeightToWindowHeight(state.font->getCharAscent());
   //double ascent = line.ascent;
 
-    double o = ascent*s;
-
-    dy = renderer->pixelHeightToWindowHeight(o);
+    //double o = ascent*s;
+    //dy = renderer->pixelHeightToWindowHeight(o);
+    dy = ascent*s;
   }
 
   while (i < estr_.size()) {
@@ -562,13 +575,32 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
 
     CGnuPlotTextLine &line = state.lines.back();
 
+    //---
+
+    // update line ascent/descent
     if (line.ascent <= 0) {
       line.ascent  = renderer->pixelHeightToWindowHeight(state.font->getCharAscent ());
       line.descent = renderer->pixelHeightToWindowHeight(state.font->getCharDescent());
     }
 
-    double fa = renderer->pixelHeightToWindowHeight(state.font->getCharAscent());
-  //double fa = line.ascent;
+    double fa = renderer->pixelHeightToWindowHeight(state.font->getCharAscent ());
+    double fd = renderer->pixelHeightToWindowHeight(state.font->getCharDescent());
+
+    if (fa > line.ascent) {
+      double dy = fa - line.ascent;
+
+      // adjust characters at previous ascent (aligned to top of bbox)
+      for (auto &c : line.chars)
+        c.pos.y -= dy;
+
+      line.ascent = fa;
+    }
+
+    if (fd > line.descent) {
+      line.descent = fd;
+    }
+
+    //---
 
     int i1 = i;
 
@@ -578,11 +610,13 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
 
     i = i1;
 
-    CPoint2D pos = state.pos - CPoint2D(0, fa);
+    CPoint2D pos = state.pos - CPoint2D(0, line.ascent) + CPoint2D(0, dy);
 
-    CGnuPlotTextChar c(pos, state.font, cs, type);
+    if (! state.space) {
+      CGnuPlotTextChar c(pos, state.font, cs, type);
 
-    state.lines.back().chars.push_back(c);
+      state.lines.back().chars.push_back(c);
+    }
 
     double w = renderer->pixelWidthToWindowWidth(state.font->getStringWidth(cs));
 
@@ -592,6 +626,8 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
   state.pos += CPoint2D(0, dy);
 
   placePartChars(state, estr_.size(), type);
+
+  state.font = origFont;
 
   renderer->setFont(origFont);
 }
@@ -603,14 +639,22 @@ placePartChars(CGnuPlotTextState &state, int i, CGnuPlotCharType type) const
   auto p = parts_.find(i);
   if (p == parts_.end()) return;
 
+  double x = state.pos.x;
+
   for (const auto &part : (*p).second) {
     CPoint2D pos1 = state.pos;
 
     part->placeChars(state);
 
-    if (type == CGnuPlotCharType::BOX)
+    if (type == CGnuPlotCharType::BOX) {
+      x = std::max(x, state.pos.x);
+
       state.pos = pos1;
+    }
   }
+
+  if (type == CGnuPlotCharType::BOX)
+    state.pos.x = x;
 }
 
 CBBox2D
@@ -633,11 +677,11 @@ calcBBox(CGnuPlotTextRenderer *renderer) const
 
   //---
 
-  CGnuPlotTextState state(renderer);
+  state_ = CGnuPlotTextState(renderer);
 
-  state.lines.push_back(CGnuPlotTextLine());
+  state_.lines.push_back(CGnuPlotTextLine());
 
-  placeChars(state, CGnuPlotCharType::TEXT);
+  placeChars(state_, CGnuPlotCharType::TEXT);
 
   //---
 
@@ -647,7 +691,7 @@ calcBBox(CGnuPlotTextRenderer *renderer) const
 
   CPoint2D pos(0,0);
 
-  for (const auto &l : state.lines) {
+  for (const auto &l : state_.lines) {
     // calc line bbox
     CBBox2D lbbox;
 
@@ -663,10 +707,14 @@ calcBBox(CGnuPlotTextRenderer *renderer) const
       CPoint2D p1(ch.pos.x    , ch.pos.y - fd);
       CPoint2D p2(ch.pos.x + w, ch.pos.y + fa);
 
-      if (ch.type != CGnuPlotCharType::SUPERSCRIPT && ch.type != CGnuPlotCharType::SUBSCRIPT) {
-        lbbox.add(p1);
-        lbbox.add(p2);
-      }
+      if (ch.type == CGnuPlotCharType::SUPERSCRIPT || ch.type == CGnuPlotCharType::SUBSCRIPT)
+        continue;
+
+      if (ch.type == CGnuPlotCharType::OVERPRINT)
+        continue;
+
+      lbbox.add(p1);
+      lbbox.add(p2);
     }
 
     if (! lbbox.isSet())
@@ -767,6 +815,42 @@ renderBBox(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, double a) const
   return bbox1;
 }
 
+int
+CGnuPlotText::
+numLines() const
+{
+  return state_.lines.size();
+}
+
+double
+CGnuPlotText::
+lineAscent(int i) const
+{
+  assert(i >= 0 && i < numLines());
+
+  return state_.lines[i].ascent;
+}
+
+double
+CGnuPlotText::
+lineDescent(int i) const
+{
+  assert(i >= 0 && i < numLines());
+
+  return state_.lines[i].descent;
+}
+
+std::string
+CGnuPlotText::
+toString() const
+{
+  std::stringstream ss;
+
+  print(ss);
+
+  return ss.str();
+}
+
 void
 CGnuPlotText::
 print(std::ostream &os) const
@@ -804,7 +888,7 @@ placeChars(CGnuPlotTextState &state) const
   renderer->setFont(state.font);
 
   if      (type_ == CGnuPlotCharType::SUPERSCRIPT) {
-    double h = renderer->pixelHeightToWindowHeight(state.font->getCharHeight()/2);
+    double h = renderer->pixelHeightToWindowHeight(state.font->getCharAscent()/2);
 
     state.pos += CPoint2D(0, h);
 
@@ -826,17 +910,42 @@ placeChars(CGnuPlotTextState &state) const
 
     text_.placeChars(state, CGnuPlotCharType::TEXT);
 
+    CPoint2D pos2 = state.pos;
+
+    double dx1 = pos2.x - pos1.x;
+
+    int nl1 = state.lines.size();
+    int nc1 = state.lines.back().chars.size();
+
     state.pos = pos1;
 
     text1_.placeChars(state, CGnuPlotCharType::OVERPRINT);
+
+    double dx2 = state.pos.x - pos1.x;
+
+    int nl2 = state.lines.size();
+    int nc2 = state.lines.back().chars.size();
+
+    if (nl1 == nl2) {
+      double dx = dx1/2 - dx2/2;
+
+      CGnuPlotTextLine &line = state.lines.back();
+
+      for (int i = nc1; i < nc2; ++i)
+        line.chars[i].pos.x += dx;
+    }
   }
   else if (type_ == CGnuPlotCharType::BOX) {
     text_.placeChars(state, CGnuPlotCharType::BOX);
   }
   else if (type_ == CGnuPlotCharType::SPACE) {
-    double w = renderer->pixelWidthToWindowWidth(state.font->getStringWidth(text_.etext()));
+    state.space = true;
 
-    state.pos += CPoint2D(w, 0);
+    text_.placeChars(state, CGnuPlotCharType::TEXT);
+
+    state.space = false;
+    //double w = renderer->pixelWidthToWindowWidth(state.font->getStringWidth(text_.etext()));
+    //state.pos += CPoint2D(w, 0);
   }
   else if (type_ == CGnuPlotCharType::NEWLINE) {
     state.pos = CPoint2D(0, 0);

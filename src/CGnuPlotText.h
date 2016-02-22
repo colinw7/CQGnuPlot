@@ -43,21 +43,22 @@ struct CGnuPlotTextLine {
   typedef std::vector<CGnuPlotTextChar> Chars;
 
   Chars  chars;
-  double ascent  { 0 };
-  double descent { 0 };
+  double ascent  { 0 }; // overall ascent of line (largest)
+  double descent { 0 }; // overall descent of line (largest)
 };
 
 struct CGnuPlotTextState {
   typedef std::vector<CGnuPlotTextLine> Lines;
 
-  CGnuPlotTextState(CGnuPlotTextRenderer *r) :
+  CGnuPlotTextState(CGnuPlotTextRenderer *r=0) :
    renderer(r) {
   }
 
-  CGnuPlotTextRenderer *renderer;
+  CGnuPlotTextRenderer *renderer { 0 };
   CFontPtr              font;
   CPoint2D              pos { 0, 0 };
   Lines                 lines;
+  bool                  space { false };
 };
 
 class CGnuPlotText {
@@ -76,6 +77,9 @@ class CGnuPlotText {
 
   bool isEnhanced() const { return enhanced_; }
   void setEnhanced(bool b);
+
+  bool isBracketed() const { return bracketed_; }
+  void setBracketed(bool b) { bracketed_ = b; }
 
   void drawAtPoint(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, CHAlignType halign,
                    CVAlignType valign, const CRGBA &c, double a) const;
@@ -96,6 +100,13 @@ class CGnuPlotText {
                      CHAlignType halign, double a) const;
 
   CBBox2D renderBBox(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, double a=0) const;
+
+  int numLines() const;
+
+  double lineAscent (int i) const;
+  double lineDescent(int i) const;
+
+  std::string toString() const;
 
   void print(std::ostream &os=std::cout) const;
 
@@ -120,10 +131,12 @@ class CGnuPlotText {
   typedef std::vector<CGnuPlotTextPart *> Parts;
   typedef std::map<int,Parts>             PosParts;
 
-  std::string str_;
-  std::string estr_;
-  bool        enhanced_ { true };
-  PosParts    parts_;
+  std::string               str_;
+  std::string               estr_;
+  bool                      enhanced_ { true };
+  bool                      bracketed_ { false };
+  PosParts                  parts_;
+  mutable CGnuPlotTextState state_;
 };
 
 class CGnuPlotTextPart {

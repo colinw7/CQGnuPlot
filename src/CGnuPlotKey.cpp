@@ -29,19 +29,21 @@ draw(CGnuPlotRenderer *renderer)
 {
   if (! isDisplayed()) return;
 
+  renderer_ = renderer;
+
   if (group_->hasPlotStyle(CGnuPlotTypes::PlotStyle::HISTOGRAMS)) {
     CGnuPlotTypes::HistogramStyle hstyle = group_->getHistogramData().style();
 
     if      (hstyle == CGnuPlotTypes::HistogramStyle::CLUSTERED) {
-      drawClustered(renderer);
+      drawClustered();
       return;
     }
     else if (hstyle == CGnuPlotTypes::HistogramStyle::COLUMNSTACKED) {
-      drawColumnStacked(renderer);
+      drawColumnStacked();
       return;
     }
     else if (hstyle == CGnuPlotTypes::HistogramStyle::ROWSTACKED) {
-      drawClustered(renderer);
+      drawClustered();
       return;
     }
   }
@@ -49,20 +51,19 @@ draw(CGnuPlotRenderer *renderer)
   //---
 
   if (getFont().isValid())
-    renderer->setFont(getFont());
+    renderer_->setFont(getFont());
 
   //---
 
-  CFontPtr font = renderer->getFont();
+  CFontPtr font = renderer_->getFont();
 
-  double font_size = font->getCharAscent() + font->getCharDescent();
-
-  double pw = renderer->pixelWidthToWindowWidth  (1);
-  double ph = renderer->pixelHeightToWindowHeight(1);
+  double pw = renderer_->pixelWidthToWindowWidth  (1);
+  double ph = renderer_->pixelHeightToWindowHeight(1);
 
   double bx = 8*pw;
   double by = 8*ph;
-  double ll = 64*pw;
+  double ll = keyData_.sampLen().getValue(4  )*renderer_->charPixelWidth ()*pw;
+  double ls = keyData_.spacing().getValue(1.5)*renderer_->charPixelHeight()*ph;
 
   //---
 
@@ -79,7 +80,7 @@ draw(CGnuPlotRenderer *renderer)
     if (header != "") {
       textWidth = std::max(textWidth, font->getStringWidth(header)*pw);
 
-      textHeight += font_size*ph;
+      textHeight += ls;
     }
   }
 
@@ -95,7 +96,7 @@ draw(CGnuPlotRenderer *renderer)
     for (const auto &l : labels) {
       textWidth = std::max(textWidth, font->getStringWidth(l.text())*pw);
 
-      textHeight += font_size*ph;
+      textHeight += ls;
     }
   }
 
@@ -103,11 +104,11 @@ draw(CGnuPlotRenderer *renderer)
 
   //---
 
-  calcBBox(renderer, size);
+  calcBBox(size);
 
   //---
 
-  drawBox(renderer);
+  drawBox();
 
   //---
 
@@ -118,10 +119,12 @@ draw(CGnuPlotRenderer *renderer)
   double y = y2 - by;
 
   if (header != "") {
-    renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), HAlignPos(CHALIGN_TYPE_CENTER, 0),
-                               VAlignPos(CVALIGN_TYPE_TOP, 0), header, CRGBA(0,0,0));
+    CPoint2D pos((x1 + x2)/2, y);
 
-    y -= font_size*ph;
+    drawHAlignedText(pos, HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                     VAlignPos(CVALIGN_TYPE_TOP, 0), header, CRGBA(0,0,0));
+
+    y -= ls;
   }
 
   clearPlotRects();
@@ -149,7 +152,7 @@ draw(CGnuPlotRenderer *renderer)
 
     for (const auto &l : labels) {
       double xx = (isReverse() ? x1 + bx : x2 - ll - bx);
-      double yy = y - font_size*ph/2;
+      double yy = y - ls/2;
 
       CPoint2D p1(xx     , yy);
       CPoint2D p2(xx + ll, yy);
@@ -158,32 +161,32 @@ draw(CGnuPlotRenderer *renderer)
       if      (l.color().isValid()) {
         CRGBA c = l.color().getValue();
 
-        renderer->drawLine(p1, p2, stroke.width(), c, stroke.lineDash());
+        renderer_->drawLine(p1, p2, stroke.width(), c, stroke.lineDash());
       }
       else if (style && style->hasKeyLine()) {
-        style->drawKeyLine(plot.get(), renderer, p1, p2);
+        style->drawKeyLine(plot.get(), renderer_, p1, p2);
       }
       else if (group_->hasPlotStyle(CGnuPlotTypes::PlotStyle::HISTOGRAMS)) {
         CRGBA lc = stroke.color();
 
-        double h = (font_size - 4)*ph;
+        double h = (renderer_->charPixelHeight() - 4)*ph;
 
         CBBox2D hbbox(xx, yy - h/2, xx + ll, yy + h/2);
 
-        renderer->fillRect(hbbox, fill);
+        renderer_->fillRect(hbbox, fill);
 
         if (stroke.isEnabled()) {
           CRGBA lc1 = lc;
 
           fillStyle.calcColor(group_, lc1);
 
-          renderer->drawRect(hbbox, lc1, 1);
+          renderer_->drawRect(hbbox, lc1, 1);
         }
       }
       else {
         CRGBA c = stroke.color();
 
-        renderer->drawLine(p1, p2, stroke.width(), c, stroke.lineDash());
+        renderer_->drawLine(p1, p2, stroke.width(), c, stroke.lineDash());
       }
 
       // draw key text
@@ -200,20 +203,20 @@ draw(CGnuPlotRenderer *renderer)
         tc.setAlpha(0.5);
 
       if (isReverse())
-        renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), HAlignPos(CHALIGN_TYPE_LEFT, 0),
-                                   VAlignPos(CVALIGN_TYPE_TOP, 0), l.text(), tc);
+        drawHAlignedText(CPoint2D(xx + ll + bx, y), HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                         VAlignPos(CVALIGN_TYPE_TOP, 0), l.text(), tc);
       else
-        renderer->drawHAlignedText(CPoint2D(xx - bx, y), HAlignPos(CHALIGN_TYPE_RIGHT, 0),
-                                   VAlignPos(CVALIGN_TYPE_TOP, 0), l.text(), tc);
+        drawHAlignedText(CPoint2D(xx - bx, y), HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+                         VAlignPos(CVALIGN_TYPE_TOP, 0), l.text(), tc);
 
-      y -= font_size*ph;
+      y -= ls;
     }
 
     double yp2 = y;
 
     addPlotRect(plot.get(), CBBox2D(x1, yp1, x2, yp2));
 
-    //renderer->drawRect(bbox, CRGBA(1,0,0), 1);
+    //renderer_->drawRect(bbox, CRGBA(1,0,0), 1);
   }
 
   group_->updateKeyBBox(bbox_);
@@ -221,23 +224,22 @@ draw(CGnuPlotRenderer *renderer)
 
 void
 CGnuPlotKey::
-drawClustered(CGnuPlotRenderer *renderer)
+drawClustered()
 {
   if (getFont().isValid())
-    renderer->setFont(getFont());
+    renderer_->setFont(getFont());
 
   //---
 
-  CFontPtr font = renderer->getFont();
+  CFontPtr font = renderer_->getFont();
 
-  double font_size = font->getCharAscent() + font->getCharDescent();
-
-  double pw = renderer->pixelWidthToWindowWidth  (1);
-  double ph = renderer->pixelHeightToWindowHeight(1);
+  double pw = renderer_->pixelWidthToWindowWidth  (1);
+  double ph = renderer_->pixelHeightToWindowHeight(1);
 
   double bx = 8*pw;
   double by = 8*ph;
-  double ll = 64*pw;
+  double ll = keyData_.sampLen().getValue(4  )*renderer_->charPixelWidth ()*pw;
+  double ls = keyData_.spacing().getValue(1.5)*renderer_->charPixelHeight()*ph;
 
   //---
 
@@ -277,7 +279,7 @@ drawClustered(CGnuPlotRenderer *renderer)
     if (title != "") {
       textWidth = std::max(textWidth, font->getStringWidth(title)*pw);
 
-      textHeight += font_size*ph;
+      textHeight += ls;
     }
 
     for (auto plot1 : plots1) {
@@ -288,7 +290,7 @@ drawClustered(CGnuPlotRenderer *renderer)
       for (const auto &l : labels) {
         textWidth = std::max(textWidth, font->getStringWidth(l.text())*pw);
 
-        textHeight += font_size*ph;
+        textHeight += ls;
       }
     }
 
@@ -302,11 +304,11 @@ drawClustered(CGnuPlotRenderer *renderer)
 
   //---
 
-  calcBBox(renderer, size);
+  calcBBox(size);
 
   //---
 
-  drawBox(renderer);
+  drawBox();
 
   //---
 
@@ -338,10 +340,10 @@ drawClustered(CGnuPlotRenderer *renderer)
     double y = y2 - by;
 
     if (title != "") {
-      renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), HAlignPos(CHALIGN_TYPE_CENTER, 0),
-                                 VAlignPos(CVALIGN_TYPE_TOP, 0), title, CRGBA(0,0,0));
+      drawHAlignedText(CPoint2D((x1 + x2)/2, y), HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                       VAlignPos(CVALIGN_TYPE_TOP, 0), title, CRGBA(0,0,0));
 
-      y -= font_size*ph;
+      y -= ls;
     }
 
     for (auto plot1 : plots1) {
@@ -359,25 +361,25 @@ drawClustered(CGnuPlotRenderer *renderer)
 
       for (const auto &l : labels) {
         double xx = (isReverse() ? x1 + bx : x2 - ll - bx);
-        double yy = y - font_size*ph/2;
+        double yy = y - ls/2;
 
         CPoint2D p1(xx     , yy);
         CPoint2D p2(xx + ll, yy);
 
         CRGBA lc = stroke1.color();
 
-        double h = (font_size - 4)*ph;
+        double h = (renderer_->charPixelHeight() - 4)*ph;
 
         CBBox2D hbbox(xx, yy - h/2, xx + ll, yy + h/2);
 
-        renderer->fillRect(hbbox, fill1);
+        renderer_->fillRect(hbbox, fill1);
 
         if (stroke1.isEnabled()) {
           CRGBA lc1 = lc;
 
           fillStyle1.calcColor(group_, lc1);
 
-          renderer->drawRect(hbbox, lc1, 1);
+          renderer_->drawRect(hbbox, lc1, 1);
         }
 
         // draw key text
@@ -394,20 +396,20 @@ drawClustered(CGnuPlotRenderer *renderer)
           tc.setAlpha(0.5);
 
         if (isReverse())
-          renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), HAlignPos(CHALIGN_TYPE_LEFT, 0),
-                                     VAlignPos(CVALIGN_TYPE_TOP, 0), l.text(), tc);
+          drawHAlignedText(CPoint2D(xx + ll + bx, y), HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                           VAlignPos(CVALIGN_TYPE_TOP, 0), l.text(), tc);
         else
-          renderer->drawHAlignedText(CPoint2D(xx - bx, y), HAlignPos(CHALIGN_TYPE_RIGHT, 0),
-                                     VAlignPos(CVALIGN_TYPE_TOP, 0), l.text(), tc);
+          drawHAlignedText(CPoint2D(xx - bx, y), HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+                           VAlignPos(CVALIGN_TYPE_TOP, 0), l.text(), tc);
 
-        y -= font_size*ph;
+        y -= ls;
       }
 
       double yp2 = y;
 
       addPlotRect(plot1.get(), CBBox2D(x1, yp1, x2, yp2));
 
-    //renderer->drawRect(bbox, CRGBA(1,0,0), 1);
+    //renderer_->drawRect(bbox, CRGBA(1,0,0), 1);
     }
 
     if (! isReverse())
@@ -425,23 +427,22 @@ drawClustered(CGnuPlotRenderer *renderer)
 
 void
 CGnuPlotKey::
-drawColumnStacked(CGnuPlotRenderer *renderer)
+drawColumnStacked()
 {
   if (getFont().isValid())
-    renderer->setFont(getFont());
+    renderer_->setFont(getFont());
 
   //---
 
-  CFontPtr font = renderer->getFont();
+  CFontPtr font = renderer_->getFont();
 
-  double font_size = font->getCharAscent() + font->getCharDescent();
-
-  double pw = renderer->pixelWidthToWindowWidth  (1);
-  double ph = renderer->pixelHeightToWindowHeight(1);
+  double pw = renderer_->pixelWidthToWindowWidth  (1);
+  double ph = renderer_->pixelHeightToWindowHeight(1);
 
   double bx = 8*pw;
   double by = 8*ph;
-  double ll = 64*pw;
+  double ll = keyData_.sampLen().getValue(4  )*renderer_->charPixelWidth ()*pw;
+  double ls = keyData_.spacing().getValue(1.5)*renderer_->charPixelHeight()*ph;
 
   //---
 
@@ -470,7 +471,7 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
     if (header != "") {
       textWidth = std::max(textWidth, font->getStringWidth(header)*pw);
 
-      textHeight += font_size*ph;
+      textHeight += ls;
     }
   }
 
@@ -489,7 +490,7 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
 
       textWidth = std::max(textWidth, font->getStringWidth(pointStr)*pw);
 
-      textHeight += font_size*ph;
+      textHeight += ls;
     }
   }
 
@@ -497,11 +498,11 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
 
   //---
 
-  calcBBox(renderer, size);
+  calcBBox(size);
 
   //---
 
-  drawBox(renderer);
+  drawBox();
 
   //---
 
@@ -512,10 +513,10 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
   double y = y2 - by;
 
   if (header != "") {
-    renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), HAlignPos(CHALIGN_TYPE_CENTER, 0),
-                               VAlignPos(CVALIGN_TYPE_TOP, 0), header, CRGBA(0,0,0));
+    drawHAlignedText(CPoint2D((x1 + x2)/2, y), HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                     VAlignPos(CVALIGN_TYPE_TOP, 0), header, CRGBA(0,0,0));
 
-    y2 -= font_size*ph;
+    y2 -= ls;
   }
 
   int pi = 0;
@@ -537,7 +538,7 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
 
     for (uint i = 0; i < plot->numPoints2D(); ++i) {
       double xx = (isReverse() ? x1 + bx : x2 - ll - bx);
-      double yy = y - font_size*ph/2;
+      double yy = y - ls/2;
 
       //const CGnuPlotPoint &point = plot->getPoint2D(i);
 
@@ -549,31 +550,31 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
       CRGBA lc = CRGBA(0,0,0);
       CRGBA fc = CGnuPlotStyleInst->indexColor(i + 1);
 
-      double h = (font_size - 4)*ph;
+      double h = (renderer_->charPixelHeight() - 4)*ph;
 
       CBBox2D hbbox(xx, yy - h/2, xx + ll, yy + h/2);
 
-      renderer->fillRect(hbbox, fc);
+      renderer_->fillRect(hbbox, fc);
 
       if (stroke.isEnabled()) {
         CRGBA lc1 = lc;
 
         fillStyle.calcColor(group_, lc1);
 
-        renderer->drawRect(hbbox, lc1, 1);
+        renderer_->drawRect(hbbox, lc1, 1);
       }
 
       // draw key text
       CRGBA tc = CRGBA(0,0,0);
 
       if (isReverse())
-        renderer->drawHAlignedText(CPoint2D(xx + ll + bx, y), HAlignPos(CHALIGN_TYPE_LEFT, 0),
-                                   VAlignPos(CVALIGN_TYPE_TOP, 0), pointStr, tc);
+        drawHAlignedText(CPoint2D(xx + ll + bx, y), HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                         VAlignPos(CVALIGN_TYPE_TOP, 0), pointStr, tc);
       else
-        renderer->drawHAlignedText(CPoint2D(xx - bx, y), HAlignPos(CHALIGN_TYPE_RIGHT, 0),
-                                   VAlignPos(CVALIGN_TYPE_TOP, 0), pointStr, tc);
+        drawHAlignedText(CPoint2D(xx - bx, y), HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+                         VAlignPos(CVALIGN_TYPE_TOP, 0), pointStr, tc);
 
-      y -= font_size*ph;
+      y -= ls;
     }
 
     ++pi;
@@ -586,7 +587,7 @@ drawColumnStacked(CGnuPlotRenderer *renderer)
 
 void
 CGnuPlotKey::
-drawBox(CGnuPlotRenderer *renderer)
+drawBox()
 {
   if (getFillBox()) {
     CRGBA fc = group_->window()->backgroundColor();
@@ -597,7 +598,7 @@ drawBox(CGnuPlotRenderer *renderer)
       fc = lineStyle->calcColor(group_, fc);
     }
 
-    renderer->fillRect(bbox_, fc);
+    renderer_->fillRect(bbox_, fc);
   }
 
   if (getDrawBox()) {
@@ -613,16 +614,16 @@ drawBox(CGnuPlotRenderer *renderer)
 
     double lw = boxLineWidth();
 
-    renderer->drawRect(bbox_, lc, lw);
+    renderer_->drawRect(bbox_, lc, lw);
   }
 }
 
 void
 CGnuPlotKey::
-calcBBox(CGnuPlotRenderer *renderer, const CSize2D &size)
+calcBBox(const CSize2D &size)
 {
-  double pw = renderer->pixelWidthToWindowWidth  (1);
-  double ph = renderer->pixelHeightToWindowHeight(1);
+  double pw = renderer_->pixelWidthToWindowWidth  (1);
+  double ph = renderer_->pixelHeightToWindowHeight(1);
 
   double bx = 8*pw;
   double by = 8*ph;
@@ -633,7 +634,7 @@ calcBBox(CGnuPlotRenderer *renderer, const CSize2D &size)
   double x1 = 0, y1 = 0;
 
   if (keyData_.position().isValid()) {
-    CPoint2D p = keyData_.position().getValue().getPoint2D(renderer);
+    CPoint2D p = keyData_.position().getValue().getPoint2D(renderer_);
 
     if      (halign == CHALIGN_TYPE_LEFT)
       x1 = p.x;
@@ -653,8 +654,8 @@ calcBBox(CGnuPlotRenderer *renderer, const CSize2D &size)
 #if 0
     double px1, py1, px2, py2;
 
-    renderer->pixelToWindow(                    0,                      0, &px1, &py2);
-    renderer->pixelToWindow(renderer->width() - 1, renderer->height() - 1, &px2, &py1);
+    renderer_->pixelToWindow(                     0,                       0, &px1, &py2);
+    renderer_->pixelToWindow(renderer_->width() - 1, renderer_->height() - 1, &px2, &py1);
 
     CBBox2D rbbox(px1, py1, px2, py2);
 
@@ -705,7 +706,7 @@ calcBBox(CGnuPlotRenderer *renderer, const CSize2D &size)
   }
   else {
     if (! isOutside()) {
-      CBBox2D rbbox = renderer->range();
+      CBBox2D rbbox = renderer_->range();
 
       if      (halign == CHALIGN_TYPE_LEFT)
         x1 = rbbox.getLeft () + bx;
@@ -791,3 +792,19 @@ inside(const CGnuPlotMouseEvent &mouseEvent) const
   return bbox_.inside(mouseEvent.window());
 }
 
+void
+CGnuPlotKey::
+drawHAlignedText(const CPoint2D &pos, const HAlignPos &halignPos, const VAlignPos &valignPos,
+                 const std::string &str, const CRGBA &c)
+{
+  if (isEnhanced()) {
+    CBBox2D bbox, rbbox;
+
+    renderer_->calcTextRectAtPoint(pos, str, true, halignPos, valignPos, 0.0, bbox, rbbox);
+
+    renderer_->drawTextAtPoint(pos, str, true, halignPos, valignPos, c, 0.0);
+  }
+  else {
+    renderer_->drawHAlignedText(pos, halignPos, valignPos, str, c);
+  }
+}

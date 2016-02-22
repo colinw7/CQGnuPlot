@@ -1167,7 +1167,38 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
 
 void
 CGnuPlotGroup::
-displayPixelCoordinates(const CPoint2D &pixel)
+updatePosition(const CPoint2D &pixel, CGnuPlotPosition &pos) const
+{
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setRange(getMappedDisplayRange(1, 1), getMappedDisplayRange(2, 2));
+
+  CPoint2D window; renderer->pixelToWindow (pixel , window);
+  CPoint2D second; renderer->windowToSecond(window, second);
+  CPoint2D graph ; renderer->windowToGraph (window, graph );
+  CPoint2D screen; renderer->windowToScreen(window, screen);
+  CPoint2D chr   ; renderer->windowToChar  (window, chr   );
+
+  double x, y;
+
+  if      (pos.systemX() == CGnuPlotPosition::CoordSys::FIRST    ) x = window.x;
+  else if (pos.systemX() == CGnuPlotPosition::CoordSys::SECOND   ) x = second.x;
+  else if (pos.systemX() == CGnuPlotPosition::CoordSys::GRAPH    ) x = graph .x;
+  else if (pos.systemX() == CGnuPlotPosition::CoordSys::SCREEN   ) x = screen.x;
+  else if (pos.systemX() == CGnuPlotPosition::CoordSys::CHARACTER) x = chr   .x;
+
+  if      (pos.systemY() == CGnuPlotPosition::CoordSys::FIRST    ) y = window.y;
+  else if (pos.systemY() == CGnuPlotPosition::CoordSys::SECOND   ) y = second.y;
+  else if (pos.systemY() == CGnuPlotPosition::CoordSys::GRAPH    ) y = graph .y;
+  else if (pos.systemY() == CGnuPlotPosition::CoordSys::SCREEN   ) y = screen.y;
+  else if (pos.systemY() == CGnuPlotPosition::CoordSys::CHARACTER) y = chr   .y;
+
+  pos.setPoint(CPoint3D(x, y, 0));
+}
+
+void
+CGnuPlotGroup::
+displayPixelCoordinates(const CPoint2D &pixel) const
 {
   CGnuPlotRenderer *renderer = app()->renderer();
 

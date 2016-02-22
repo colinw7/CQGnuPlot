@@ -15,10 +15,10 @@ CXX           = g++
 DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 CXXFLAGS      = -m64 -pipe -std=c++11 -DGNUPLOT_EXPR -DRGB_UTIL -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I. -I../include -I. -IExpr -I../include -I../../CQApp/include -I../../CQUtil/include -I../../CQPropertyTree/include -I../../CFont/include -I../../CImageLib/include -I../../CReadLine/include -I../../CFile/include -I../../COS/include -I../../CUtil/include -I../../CMath/include -I../../CStrUtil/include -I../../CRGBName/include -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I.
+INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I. -I../include -I. -IExpr -I../include -I../../CQApp/include -I../../CQUtil/include -I../../CQPropertyTree/include -I../../CFont/include -I../../CImageLib/include -I../../CReadLine/include -I../../CFile/include -I../../COS/include -I../../CUtil/include -I../../CMath/include -I../../CStrUtil/include -I../../CRGBName/include -I../../CXML/include -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I.
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L../lib -L../../CQUtil/lib -L../../CQPropertyTree/lib -L../../CReadLine/lib -L../../CFont/lib -L../../CUtil/lib -L../../CImageLib/lib -L../../CConfig/lib -L../../CFile/lib -L../../COS/lib -L../../CStrUtil/lib -L../../CRegExp/lib -L../../CRGBName/lib -lCQPropertyTree -lCQUtil -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig -lCRGBName -lCFile -lCOS -lCStrUtil -lCRegExp -lpng -ljpeg -ltre -lreadline -lQt5Widgets -L/usr/lib/x86_64-linux-gnu -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L../lib -L../../CQUtil/lib -L../../CQPropertyTree/lib -L../../CXML/lib -L../../CReadLine/lib -L../../CFont/lib -L../../CUtil/lib -L../../CImageLib/lib -L../../CConfig/lib -L../../CFile/lib -L../../COS/lib -L../../CStrUtil/lib -L../../CRegExp/lib -L../../CRGBName/lib -lCQPropertyTree -lCQUtil -lCXML -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig -lCRGBName -lCFile -lCOS -lCStrUtil -lCRegExp -lpng -ljpeg -ltre -lreadline -lQt5Widgets -L/usr/lib/x86_64-linux-gnu -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
@@ -10793,7 +10793,7 @@ moc_CQGnuPlotDataModel.cpp: CGnuPlotFile.h \
 		CQGnuPlotDataModel.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDataModel.h -o moc_CQGnuPlotDataModel.cpp
 
-moc_CQGnuPlotPositionEdit.cpp: ../../CQPropertyTree/include/CQIconCombo.h \
+moc_CQGnuPlotPositionEdit.cpp: CQIconCombo.h \
 		/usr/include/qt5/QtWidgets/QComboBox \
 		/usr/include/qt5/QtWidgets/qcombobox.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -10946,6 +10946,9 @@ moc_CQGnuPlotPositionEdit.cpp: ../../CQPropertyTree/include/CQIconCombo.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		/usr/include/qt5/QtWidgets/QFrame \
+		/usr/include/qt5/QtWidgets/QToolButton \
+		/usr/include/qt5/QtWidgets/qtoolbutton.h \
+		/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		CQGnuPlotPositionEdit.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPositionEdit.h -o moc_CQGnuPlotPositionEdit.cpp
 
@@ -25020,7 +25023,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qfiledevice.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
-		../../CQPropertyTree/include/CQPixmapCache.h \
+		../../CQUtil/include/CQPixmapCache.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtGui/QPixmap \
 		/usr/include/qt5/QtGui/QIcon \
@@ -25620,6 +25623,26 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotUtil.h \
 		/usr/include/qt5/QtGui/QIcon \
 		/usr/include/qt5/QtGui/QPixmap \
+		CQGnuPlotPositionEdit.h \
+		CQIconCombo.h \
+		/usr/include/qt5/QtWidgets/QComboBox \
+		/usr/include/qt5/QtWidgets/qcombobox.h \
+		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
+		/usr/include/qt5/QtWidgets/qstyleoption.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qstyle.h \
+		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qrubberband.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h \
+		/usr/include/qt5/QtWidgets/QFrame \
+		/usr/include/qt5/QtWidgets/QToolButton \
+		/usr/include/qt5/QtWidgets/qtoolbutton.h \
+		/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		CQGnuPlotArrowObject.h \
 		CGnuPlotArrowObject.h \
 		CQGnuPlotBoxBarObject.h \
@@ -25672,24 +25695,11 @@ compiler_clean: compiler_moc_header_clean
 		CQDialog.h \
 		/usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtWidgets/qdialog.h \
-		/usr/include/qt5/QtWidgets/QFrame \
-		/usr/include/qt5/QtWidgets/qframe.h \
 		CQGnuPlotLoadFunctionDialog.h \
 		CQGnuPlotManageFunctionsDialog.h \
 		CQGnuPlotManageVariablesDialog.h \
 		/usr/include/qt5/QtWidgets/QItemDelegate \
 		/usr/include/qt5/QtWidgets/qitemdelegate.h \
-		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
-		/usr/include/qt5/QtWidgets/qstyleoption.h \
-		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
-		/usr/include/qt5/QtGui/qvalidator.h \
-		/usr/include/qt5/QtCore/qregularexpression.h \
-		/usr/include/qt5/QtWidgets/qslider.h \
-		/usr/include/qt5/QtWidgets/qabstractslider.h \
-		/usr/include/qt5/QtWidgets/qstyle.h \
-		/usr/include/qt5/QtWidgets/qtabbar.h \
-		/usr/include/qt5/QtWidgets/qrubberband.h \
-		/usr/include/qt5/QtCore/qabstractitemmodel.h \
 		/usr/include/qt5/QtWidgets/QTreeWidgetItem \
 		/usr/include/qt5/QtWidgets/qtreewidget.h \
 		/usr/include/qt5/QtWidgets/qtreeview.h \
@@ -25726,7 +25736,7 @@ compiler_clean: compiler_moc_header_clean
 		CQFloatLabel.h \
 		CQRubberBand.h \
 		/usr/include/qt5/QtWidgets/QRubberBand \
-		../../CQPropertyTree/include/CQPixmapCache.h \
+		../../CQUtil/include/CQPixmapCache.h \
 		CUnixFile.h \
 		/usr/include/qt5/QtWidgets/QHBoxLayout \
 		/usr/include/qt5/QtWidgets/qboxlayout.h \
@@ -25749,7 +25759,6 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qbasictimer.h \
 		/usr/include/qt5/QtWidgets/QPushButton \
 		/usr/include/qt5/QtWidgets/qpushbutton.h \
-		/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		/usr/include/qt5/QtWidgets/QLineEdit \
 		/usr/include/qt5/QtWidgets/qlineedit.h \
 		/usr/include/qt5/QtGui/qtextcursor.h \
@@ -26085,7 +26094,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/QCheckBox \
 		/usr/include/qt5/QtWidgets/qcheckbox.h \
 		svg/file_dialog_svg.h \
-		../../CQPropertyTree/include/CQPixmapCache.h
+		../../CQUtil/include/CQPixmapCache.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotLoadFileDialog.o CQGnuPlotLoadFileDialog.cpp
 
 ../obj/CQGnuPlotLoadFunctionDialog.o: CQGnuPlotLoadFunctionDialog.cpp CQGnuPlotLoadFunctionDialog.h \
@@ -27249,25 +27258,16 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qabstractitemmodel.h \
 		../../CQUtil/include/CQColorChooser.h \
 		/usr/include/qt5/QtWidgets/QWidget \
-		CQPoint2DEdit.h \
-		/usr/include/qt5/QtWidgets/QLineEdit \
-		/usr/include/qt5/QtWidgets/qlineedit.h \
-		/usr/include/qt5/QtGui/qtextcursor.h \
-		/usr/include/qt5/QtGui/qtextformat.h \
-		/usr/include/qt5/QtGui/qpen.h \
-		/usr/include/qt5/QtGui/qtextoption.h \
-		/usr/include/qt5/QtWidgets/QDoubleSpinBox \
-		/usr/include/qt5/QtWidgets/qspinbox.h \
-		/usr/include/qt5/QtWidgets/QHBoxLayout \
-		/usr/include/qt5/QtWidgets/qboxlayout.h \
-		/usr/include/qt5/QtWidgets/qlayout.h \
-		/usr/include/qt5/QtWidgets/qlayoutitem.h \
-		/usr/include/qt5/QtWidgets/qgridlayout.h \
 		CQGnuPlotPositionEdit.h \
-		../../CQPropertyTree/include/CQIconCombo.h \
+		CQIconCombo.h \
 		/usr/include/qt5/QtWidgets/QFrame \
+		/usr/include/qt5/QtWidgets/QToolButton \
+		/usr/include/qt5/QtWidgets/qtoolbutton.h \
+		/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		../../CQPropertyTree/include/CQAngleSpinBox.h \
 		../../CMath/include/CAngle.h \
+		/usr/include/qt5/QtWidgets/QDoubleSpinBox \
+		/usr/include/qt5/QtWidgets/qspinbox.h \
 		CQIntegerSpin.h \
 		/usr/include/qt5/QtWidgets/QSpinBox \
 		../../CQPropertyTree/include/CQRealSpin.h \
@@ -27287,6 +27287,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
 		/usr/include/qt5/QtCore/qitemselectionmodel.h \
 		/usr/include/qt5/QtGui/QPen \
+		/usr/include/qt5/QtGui/qpen.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CKeyType.h \
 		../../CFont/include/CFontStyle.h \
@@ -27309,13 +27310,32 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CMatrix2D.h \
 		../../CMath/include/CMatrixType.h \
 		../../CUtil/include/CThrow.h \
+		../../CQUtil/include/CQPixmapCache.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtGui/QPixmap \
+		/usr/include/qt5/QtGui/QIcon \
+		/usr/include/qt5/QtWidgets/QVBoxLayout \
+		/usr/include/qt5/QtWidgets/qboxlayout.h \
+		/usr/include/qt5/QtWidgets/qlayout.h \
+		/usr/include/qt5/QtWidgets/qlayoutitem.h \
+		/usr/include/qt5/QtWidgets/qgridlayout.h \
 		/usr/include/qt5/QtWidgets/QStackedWidget \
 		/usr/include/qt5/QtWidgets/qstackedwidget.h \
 		/usr/include/qt5/QtWidgets/QGroupBox \
 		/usr/include/qt5/QtWidgets/qgroupbox.h \
 		/usr/include/qt5/QtWidgets/QRadioButton \
 		/usr/include/qt5/QtWidgets/qradiobutton.h \
-		/usr/include/qt5/QtWidgets/qabstractbutton.h
+		/usr/include/qt5/QtWidgets/QLineEdit \
+		/usr/include/qt5/QtWidgets/qlineedit.h \
+		/usr/include/qt5/QtGui/qtextcursor.h \
+		/usr/include/qt5/QtGui/qtextformat.h \
+		/usr/include/qt5/QtGui/qtextoption.h \
+		svg/arrow_obj_svg.h \
+		svg/circle_obj_svg.h \
+		svg/ellipse_obj_svg.h \
+		svg/label_obj_svg.h \
+		svg/polygon_obj_svg.h \
+		svg/rectangle_obj_svg.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotCreateDialog.o CQGnuPlotCreateDialog.cpp
 
 ../obj/CQGnuPlotDataDialog.o: CQGnuPlotDataDialog.cpp CQGnuPlotDataDialog.h \
@@ -28332,7 +28352,7 @@ compiler_clean: compiler_moc_header_clean
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotDataModel.o CQGnuPlotDataModel.cpp
 
 ../obj/CQGnuPlotPositionEdit.o: CQGnuPlotPositionEdit.cpp CQGnuPlotPositionEdit.h \
-		../../CQPropertyTree/include/CQIconCombo.h \
+		CQIconCombo.h \
 		/usr/include/qt5/QtWidgets/QComboBox \
 		/usr/include/qt5/QtWidgets/qcombobox.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -28485,10 +28505,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		/usr/include/qt5/QtWidgets/QFrame \
+		/usr/include/qt5/QtWidgets/QToolButton \
+		/usr/include/qt5/QtWidgets/qtoolbutton.h \
+		/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		../../CQPropertyTree/include/CQRealSpin.h \
 		/usr/include/qt5/QtWidgets/QDoubleSpinBox \
 		/usr/include/qt5/QtWidgets/qspinbox.h \
-		../../CQPropertyTree/include/CQPixmapCache.h \
+		../../CQUtil/include/CQPixmapCache.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtGui/QPixmap \
 		/usr/include/qt5/QtGui/QIcon \
@@ -28506,7 +28529,8 @@ compiler_clean: compiler_moc_header_clean
 		svg/coord_second_svg.h \
 		svg/coord_txt_svg.h \
 		svg/coord_single_svg.h \
-		svg/coord_multi_svg.h
+		svg/coord_multi_svg.h \
+		svg/grab_point_svg.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotPositionEdit.o CQGnuPlotPositionEdit.cpp
 
 ../obj/CGnuPlot.o: CGnuPlot.cpp CGnuPlot.h \
@@ -45256,6 +45280,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
+		../../CXML/include/CXMLNamedChar.h \
 		CSymbol2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotSVGRenderer.o CGnuPlotSVGRenderer.cpp
 

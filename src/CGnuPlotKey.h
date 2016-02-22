@@ -134,8 +134,17 @@ class CGnuPlotKey {
   const CFontPtr &getFont() const { return keyData_.font(); }
   void setFont(const CFontPtr &f) { keyData_.setFont(f); }
 
+  bool isEnhanced() const { return keyData_.isEnhanced(); }
+  void setEnhanced(bool b) { keyData_.setEnhanced(b); }
+
   const Columns &columns() const { return keyData_.columns(); }
   void setColumns(const Columns &c) { keyData_.setColumns(c); }
+
+  const COptReal &sampLen() const { return keyData_.sampLen(); }
+  void setSampLen(double r) { keyData_.setSampLen(r); }
+
+  const COptReal &spacing() const { return keyData_.spacing(); }
+  void setSpacing(double r) { keyData_.setSpacing(r); }
 
   void clearPlotRects() { prects_.clear(); }
 
@@ -148,22 +157,25 @@ class CGnuPlotKey {
   bool inside(const CGnuPlotMouseEvent &p) const;
 
  private:
-  void drawClustered(CGnuPlotRenderer *renderer);
+  void drawClustered();
+  void drawColumnStacked();
 
-  void drawColumnStacked(CGnuPlotRenderer *renderer);
+  void drawBox();
 
-  void drawBox(CGnuPlotRenderer *renderer);
+  void calcBBox(const CSize2D &size);
 
-  void calcBBox(CGnuPlotRenderer *renderer, const CSize2D &size);
+  void drawHAlignedText(const CPoint2D &pos, const HAlignPos &halignPos, const VAlignPos &valignPos,
+                        const std::string &str, const CRGBA &c);
 
  private:
   typedef std::vector<double>   TickSpaces;
   typedef std::map<int,CBBox2D> PlotRects;
 
-  CGnuPlotGroup*    group_ { 0 };
-  CGnuPlotKeyData   keyData_;
-  CBBox2D           bbox_ { 0, 0, 1, 1};
-  mutable PlotRects prects_;
+  CGnuPlotGroup*            group_ { 0 };
+  CGnuPlotKeyData           keyData_;
+  CBBox2D                   bbox_ { 0, 0, 1, 1};
+  mutable PlotRects         prects_;
+  mutable CGnuPlotRenderer* renderer_ { 0 };
 };
 
 typedef CRefPtr<CGnuPlotKey> CGnuPlotKeyP;

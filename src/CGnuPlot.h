@@ -418,14 +418,24 @@ class CGnuPlot {
   struct LoadDataParams {
     std::string filename;
 
-    bool columnheaders = false;
-    bool binary        = false;
-    bool matrix        = false;
-    bool csv           = false;
-    char separator     = '\0';
+    bool columnheaders { false };
+    bool binary        { false };
+    bool matrix        { false };
+    bool csv           { false };
+    char separator     { '\0' };
 
     Sizes                sizes;
     CGnuPlotBinaryFormat binaryFormat;
+  };
+
+  //---
+
+  struct FunctionDataParams {
+    bool     is3D { false };
+    COptReal xmin;
+    COptReal xmax;
+    COptReal ymin;
+    COptReal ymax;
   };
 
   //---
@@ -813,6 +823,8 @@ class CGnuPlot {
   CGnuPlotWindow *createWindow();
 
   bool loadData(const std::string &filename, const LoadDataParams &params);
+
+  bool loadFunction(const std::string &function, const FunctionDataParams &params);
 
   CGnuPlotMultiplot *createMultiplot();
 
@@ -1381,6 +1393,8 @@ class CGnuPlot {
   std::string replaceSumInExpr(const std::string &expr) const;
 
   double scaleColorComponent(double z) const;
+
+  void setDeviceEnhanced(bool b);
 
  public:
   static PlotStyle stringToPlotStyle(const std::string &str);

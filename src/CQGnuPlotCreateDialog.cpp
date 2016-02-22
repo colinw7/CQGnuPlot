@@ -1,16 +1,25 @@
 #include <CQGnuPlotCreateDialog.h>
 #include <CQEnumCombo.h>
 #include <CQColorChooser.h>
-#include <CQPoint2DEdit.h>
 #include <CQGnuPlotPositionEdit.h>
 #include <CQAngleSpinBox.h>
 #include <CQIntegerSpin.h>
 #include <CQRealSpin.h>
 #include <CQLineDash.h>
 #include <CQUtil.h>
+#include <CQPixmapCache.h>
+#include <QVBoxLayout>
 #include <QStackedWidget>
 #include <QGroupBox>
 #include <QRadioButton>
+#include <QLineEdit>
+
+#include <svg/arrow_obj_svg.h>
+#include <svg/circle_obj_svg.h>
+#include <svg/ellipse_obj_svg.h>
+#include <svg/label_obj_svg.h>
+#include <svg/polygon_obj_svg.h>
+#include <svg/rectangle_obj_svg.h>
 
 CQGnuPlotCreateDialog::
 CQGnuPlotCreateDialog(QWidget *parent) :
@@ -30,6 +39,20 @@ CQGnuPlotCreateDialog::
 createWidgets(QWidget *)
 {
   typeCombo_ = new CQEnumCombo(this, enum_, "objectType");
+
+  typeCombo_->setItemText(int(CQGnuPlotEnum::ObjectTypeNone     ), "None");
+  typeCombo_->setItemData(int(CQGnuPlotEnum::ObjectTypeArrow    ),
+                          "Arrow"    , CQPixmapCacheInst->getIcon("ARROW_OBJ"));
+  typeCombo_->setItemData(int(CQGnuPlotEnum::ObjectTypeCircle   ),
+                          "Circle"   , CQPixmapCacheInst->getIcon("CIRCLE_OBJ"));
+  typeCombo_->setItemData(int(CQGnuPlotEnum::ObjectTypeEllipse  ),
+                          "Ellipse"  , CQPixmapCacheInst->getIcon("ELLIPSE_OBJ"));
+  typeCombo_->setItemData(int(CQGnuPlotEnum::ObjectTypeLabel    ),
+                          "Label"    , CQPixmapCacheInst->getIcon("LABEL_OBJ"));
+  typeCombo_->setItemData(int(CQGnuPlotEnum::ObjectTypePolygon  ),
+                          "Polygon"  , CQPixmapCacheInst->getIcon("POLYGON_OBJ"));
+  typeCombo_->setItemData(int(CQGnuPlotEnum::ObjectTypeRectangle),
+                          "Rectangle", CQPixmapCacheInst->getIcon("RECTANGLE_OBJ"));
 
   connect(typeCombo_, SIGNAL(currentIndexChanged(int)), this, SLOT(typeSlot(int)));
 
@@ -105,7 +128,7 @@ createWidgets(QWidget *)
   arrowFrame_->addField("To"  , (arrowTo_    = new CQGnuPlotPositionEdit), true);
   arrowFrame_->addStretch();
 
-  circleFrame_->addField("Center"     , (circleCenter_ = new CQPoint2DEdit));
+  circleFrame_->addField("Center"     , (circleCenter_ = new CQGnuPlotPositionEdit));
   circleFrame_->addField("Radius"     , (circleRadius_ = new CQRealSpin));
   circleFrame_->addField("Start Angle", (circleStart_  = new CQAngleSpinBox));
   circleFrame_->addField("End Angle"  , (circleEnd_    = new CQAngleSpinBox));
@@ -115,19 +138,19 @@ createWidgets(QWidget *)
   circleStart_ ->setAngle(CAngle(  0));
   circleEnd_   ->setAngle(CAngle(360));
 
-  ellipseFrame_->addField("Center", (ellipseCenter_ = new CQPoint2DEdit));
+  ellipseFrame_->addField("Center", (ellipseCenter_ = new CQGnuPlotPositionEdit));
   ellipseFrame_->addField("Angle" , (ellipseAngle_  = new CQAngleSpinBox));
   ellipseFrame_->addStretch();
 
-  labelFrame_->addField("Origin", (labelOrigin_ = new CQPoint2DEdit));
+  labelFrame_->addField("Origin", (labelOrigin_ = new CQGnuPlotPositionEdit));
   labelFrame_->addField("Text"  , (labelText_   = new QLineEdit));
   labelFrame_->addField("Angle" , (labelAngle_  = new CQAngleSpinBox));
   labelFrame_->addStretch();
 
   polyFrame_->addCheckBox("Polygon");
 
-  rectFrame_->addField("From", (rectFrom_  = new CQPoint2DEdit));
-  rectFrame_->addField("To"  , (rectTo_    = new CQPoint2DEdit));
+  rectFrame_->addField("From", (rectFrom_  = new CQGnuPlotPositionEdit));
+  rectFrame_->addField("To"  , (rectTo_    = new CQGnuPlotPositionEdit));
   rectFrame_->addStretch();
 
   addStretch();
@@ -213,11 +236,11 @@ arrowTo() const
   return arrowTo_->position();
 }
 
-CPoint2D
+CGnuPlotPosition
 CQGnuPlotCreateDialog::
 circleCenter() const
 {
-  return circleCenter_->getValue();
+  return circleCenter_->position();
 }
 
 double
@@ -241,11 +264,11 @@ circleEnd() const
   return circleEnd_->getAngle().degrees();
 }
 
-CPoint2D
+CGnuPlotPosition
 CQGnuPlotCreateDialog::
 ellipseCenter() const
 {
-  return ellipseCenter_->getValue();
+  return ellipseCenter_->position();
 }
 
 double
@@ -255,11 +278,11 @@ ellipseAngle() const
   return ellipseAngle_->getAngle().degrees();
 }
 
-CPoint2D
+CGnuPlotPosition
 CQGnuPlotCreateDialog::
 labelOrigin() const
 {
-  return labelOrigin_->getValue();
+  return labelOrigin_->position();
 }
 
 std::string
@@ -276,16 +299,16 @@ labelAngle() const
   return labelAngle_->getAngle().degrees();
 }
 
-CPoint2D
+CGnuPlotPosition
 CQGnuPlotCreateDialog::
 rectFrom() const
 {
-  return rectFrom_->getValue();
+  return rectFrom_->position();
 }
 
-CPoint2D
+CGnuPlotPosition
 CQGnuPlotCreateDialog::
 rectTo() const
 {
-  return rectTo_->getValue();
+  return rectTo_->position();
 }

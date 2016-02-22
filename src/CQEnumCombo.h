@@ -30,6 +30,11 @@ class CQEnumCombo : public QComboBox {
   CQEnumCombo(QWidget *parent, const QObject *obj, const QString &name);
   CQEnumCombo(const QObject *obj, const QString &name);
 
+  void setItemIcon(int i, const QIcon &icon);
+  void setItemText(int i, const QString &text);
+
+  void setItemData(int i, const QString &text, const QIcon &icon);
+
  private:
   void init();
 

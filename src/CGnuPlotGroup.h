@@ -358,7 +358,9 @@ class CGnuPlotGroup {
 
   //-----
 
-  void displayPixelCoordinates(const CPoint2D &pixel);
+  void updatePosition(const CPoint2D &pixel, CGnuPlotPosition &pos) const;
+
+  void displayPixelCoordinates(const CPoint2D &pixel) const;
 
   virtual void draw();
 

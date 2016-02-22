@@ -23,6 +23,7 @@
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotDevice.h>
 #include <CQGnuPlotUtil.h>
+#include <CQGnuPlotPositionEdit.h>
 
 #include <CQGnuPlotArrowObject.h>
 #include <CQGnuPlotBoxBarObject.h>
@@ -702,10 +703,13 @@ addGroupProperties(CGnuPlotGroup *group)
   tree_->addProperty(keyName, qkey, "halign");
   tree_->addProperty(keyName, qkey, "valign");
   tree_->addProperty(keyName, qkey, "font");
+  tree_->addProperty(keyName, qkey, "enhanced");
   tree_->addProperty(keyName, qkey, "lmargin");
   tree_->addProperty(keyName, qkey, "rmargin");
   tree_->addProperty(keyName, qkey, "tmargin");
   tree_->addProperty(keyName, qkey, "bmargin");
+  tree_->addProperty(keyName, qkey, "sampLen");
+  tree_->addProperty(keyName, qkey, "spacing");
 
   //---
 
@@ -1790,9 +1794,15 @@ loadFunctionSlot()
   double                   xmax         = dialog->xmax();
   int                      lt           = dialog->lineType();
 
-  initCurrentGroup();
+  if (dialog->isOverlay())
+    initCurrentGroup();
+  else
+    createTiledGroup();
 
-  CGnuPlotGroupP group = *groups().begin();
+  CGnuPlotGroupP group = *groups().rbegin();
+
+  if (! group)
+    return;
 
   group->set2D(  is2D);
   group->set3D(! is2D);
@@ -2578,7 +2588,20 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
     else if (key == Qt::Key_Period) {
       QPoint pos = canvas_->mapFromGlobal(QCursor::pos());
 
-      group->displayPixelCoordinates(CPoint2D(pos.x(), pos.y()));
+      CPoint2D pixel(pos.x(), pos.y());
+
+      if (CQGnuPlotPositionGrabMgrInst->currentGrab()) {
+        CQGnuPlotPositionEdit *edit = CQGnuPlotPositionGrabMgrInst->currentGrab()->edit();
+
+        CGnuPlotPosition pos = edit->position();
+
+        group->updatePosition(pixel, pos);
+
+        edit->setPosition(pos);
+      }
+      else {
+        group->displayPixelCoordinates(pixel);
+      }
     }
     else {
       for (auto group : groups()) {

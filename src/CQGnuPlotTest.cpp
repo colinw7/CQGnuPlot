@@ -19,11 +19,13 @@ main(int argc, char **argv)
   CBool               mainLoop;
   CBool               window;
   std::string         dataFile;
+  std::string         function;
   std::string         ofile;
   std::string         usingStr;
   CGnuPlot::PlotStyle plotStyle = CGnuPlot::PlotStyle::LINES_POINTS;
 
-  CGnuPlot::LoadDataParams loadParams;
+  CGnuPlot::LoadDataParams     loadParams;
+  CGnuPlot::FunctionDataParams functionParams;
 
   std::vector<std::string> files;
   std::vector<std::string> execs;
@@ -70,6 +72,12 @@ main(int argc, char **argv)
         if (i < argc)
           dataFile = argv[i];
       }
+      else if (arg == "function") {
+        ++i;
+
+        if (i < argc)
+          function = argv[i];
+      }
       else if (arg == "csv")
         loadParams.csv = true;
       else if (arg == "separator") {
@@ -92,6 +100,34 @@ main(int argc, char **argv)
       }
       else if (arg == "qt")
         mainLoop = true;
+      else if (arg == "3d")
+        functionParams.is3D = true;
+      else if (arg == "xmin") {
+        ++i;
+
+        if (i < argc)
+          functionParams.xmin = CStrUtil::toReal(argv[i]);
+      }
+      else if (arg == "xmax") {
+        ++i;
+
+        if (i < argc)
+          functionParams.xmax = CStrUtil::toReal(argv[i]);
+      }
+      else if (arg == "ymin") {
+        ++i;
+
+        if (i < argc)
+          functionParams.ymin = CStrUtil::toReal(argv[i]);
+      }
+      else if (arg == "ymax") {
+        ++i;
+
+        if (i < argc)
+          functionParams.ymax = CStrUtil::toReal(argv[i]);
+      }
+      else
+        std::cerr << "Invalid arg '" << arg << "'" << std::endl;
     }
     else
       files.push_back(argv[i]);
@@ -130,6 +166,9 @@ main(int argc, char **argv)
 
   if (dataFile != "")
     plot.loadData(dataFile, loadParams);
+
+  if (function != "")
+    plot.loadFunction(function, functionParams);
 
   if      (mainLoop)
     app.exec();

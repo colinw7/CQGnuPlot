@@ -23,6 +23,9 @@ class CQGnuPlotKey : public CQGnuPlotObject, public CGnuPlotKey {
   Q_PROPERTY(bool    tmargin      READ isTMargin    WRITE setTMargin     )
   Q_PROPERTY(bool    bmargin      READ isBMargin    WRITE setBMargin     )
   Q_PROPERTY(QFont   font         READ getFont      WRITE setFont        )
+  Q_PROPERTY(bool    enhanced     READ isEnhanced   WRITE setEnhanced    )
+  Q_PROPERTY(double  sampLen      READ sampLen      WRITE setSampLen     )
+  Q_PROPERTY(double  spacing      READ spacing      WRITE setSpacing     )
 
   Q_PROPERTY(CQGnuPlotEnum::HAlignType halign READ halign WRITE setHAlign)
   Q_PROPERTY(CQGnuPlotEnum::VAlignType valign READ valign WRITE setVAlign)
@@ -44,6 +47,12 @@ class CQGnuPlotKey : public CQGnuPlotObject, public CGnuPlotKey {
 
   QFont getFont() const;
   void setFont(const QFont &f);
+
+  double sampLen() const;
+  void setSampLen(double l);
+
+  double spacing() const;
+  void setSpacing(double l);
 
   void draw(CGnuPlotRenderer *renderer) override;
 

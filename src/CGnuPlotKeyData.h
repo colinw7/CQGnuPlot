@@ -223,8 +223,8 @@ class CGnuPlotKeyData {
   OptPos            pos_;
   int               widthIncrement_  { 0 };
   int               heightIncrement_ { 0 };
-  COptReal          sampLen_;
-  COptReal          spacing_;
+  COptReal          sampLen_;                           // key line length (default 4)
+  COptReal          spacing_;                           // key line spacing (default 1.25)
   COptString        title_;
   CFontPtr          font_;
   bool              box_           { false };

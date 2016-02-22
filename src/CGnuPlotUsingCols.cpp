@@ -130,7 +130,7 @@ class CGnuPlotTimeColumnFn : public CGnuPlotUsingColsFnObj {
       if (plot)
         fmt = plot->timeFmt().getValue("%d/%m/%y,%H:%M");
       else
-        fmt = plot->timeFmt().getValue("%d/%m/%y,%H:%M");
+        fmt = "%d/%m/%y,%H:%M";
 
       if (values[0]->getIntegerValue(col))
         hasCol = true;
@@ -173,8 +173,17 @@ class CGnuPlotTimeColumnFn : public CGnuPlotUsingColsFnObj {
 
 CGnuPlotUsingCols::
 CGnuPlotUsingCols(CGnuPlot *plot) :
- str_(), plot_(plot)
+ str_(), plot_(plot), expr_(0)
 {
+  if (! plot_)
+    expr_ = new CExpr;
+}
+
+CGnuPlotUsingCols::
+~CGnuPlotUsingCols()
+{
+  if (plot_)
+    delete expr_;
 }
 
 void
@@ -366,16 +375,14 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
 
   //---
 
-  CExpr *expr = plot->expr();
-
   CGnuPlotUsingCols *th = const_cast<CGnuPlotUsingCols *>(this);
 
-  addFunction<CGnuPlotStringColumnFn>(th, expr, "stringcolumn", "i"  );
-  addFunction<CGnuPlotStringColumnFn>(th, expr, "strcol"      , "i"  );
-  addFunction<CGnuPlotColumnFn      >(th, expr, "column"      , "is" );
-  addFunction<CGnuPlotStringValidFn >(th, expr, "valid"       , "i"  );
-  addFunction<CGnuPlotTimeColumnFn  >(th, expr, "timecolumn"  , "i"  );
-  addFunction<CGnuPlotTimeColumnFn  >(th, expr, "timecolumn"  , "i,s");
+  addFunction<CGnuPlotStringColumnFn>(th, expr_, "stringcolumn", "i"  );
+  addFunction<CGnuPlotStringColumnFn>(th, expr_, "strcol"      , "i"  );
+  addFunction<CGnuPlotColumnFn      >(th, expr_, "column"      , "is" );
+  addFunction<CGnuPlotStringValidFn >(th, expr_, "valid"       , "i"  );
+  addFunction<CGnuPlotTimeColumnFn  >(th, expr_, "timecolumn"  , "i"  );
+  addFunction<CGnuPlotTimeColumnFn  >(th, expr_, "timecolumn"  , "i,s");
 
   //---
 
@@ -413,7 +420,7 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
 
     CExprValuePtr value;
 
-    if (! CGnuPlotUtil::evaluateExpression(expr, str, value, true))
+    if (! CGnuPlotUtil::evaluateExpression(expr_, str, value, true))
       continue;
 
     long icol;
@@ -448,7 +455,7 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
   if (keyLabel_ != "") {
     CExprValuePtr value;
 
-    if (CGnuPlotUtil::evaluateExpression(expr, keyLabel_, value, true)) {
+    if (CGnuPlotUtil::evaluateExpression(expr_, keyLabel_, value, true)) {
       long icol;
 
       if (value.isValid() && value->getIntegerValue(icol)) {
@@ -466,11 +473,11 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
     }
   }
 
-  expr->removeFunction("stringcolumn");
-  expr->removeFunction("strcol");
-  expr->removeFunction("column");
-  expr->removeFunction("valid");
-  expr->removeFunction("timecolumn");
+  expr_->removeFunction("stringcolumn");
+  expr_->removeFunction("strcol");
+  expr_->removeFunction("column");
+  expr_->removeFunction("valid");
+  expr_->removeFunction("timecolumn");
 
   return ns;
 }
@@ -509,8 +516,6 @@ decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) 
 {
   if (plot_)
     col.updateColumnStr(plot_);
-
-  CExpr *expr = plot_->expr();
 
   CExprValuePtr value;
 
@@ -605,7 +610,7 @@ decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) 
 
       CExprValuePtr value;
 
-      if (! CGnuPlotUtil::evaluateExpression(expr, name1, value, true))
+      if (! CGnuPlotUtil::evaluateExpression(expr_, name1, value, true))
         value = CExprValuePtr();
 
 #if 0
@@ -633,7 +638,7 @@ decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) 
     //----
 
     if (exprStr != "") {
-      if (! CGnuPlotUtil::evaluateExpression(expr, exprStr, value, true))
+      if (! CGnuPlotUtil::evaluateExpression(expr_, exprStr, value, true))
         value = CExprValuePtr();
     }
   }
@@ -652,14 +657,12 @@ getFieldValue(int icol, int &ns) const
   if      (icol == 0) {
     int pointNum = this->pointNum();
 
-    if (plot_)
-      value = plot_->expr()->createRealValue(pointNum);
+    value = expr_->createRealValue(pointNum);
   }
   else if (icol == -2) {
     int setNum = this->setNum();
 
-    if (plot_)
-      value = plot_->expr()->createRealValue(setNum);
+    value = expr_->createRealValue(setNum);
   }
   else if (icol > 0 && icol <= nf) {
     value = fieldValues_[icol - 1];
@@ -677,7 +680,7 @@ void
 CGnuPlotUsingCols::
 addCol(const std::string &str)
 {
-  CGnuPlotUsingCol col(plot_->expr(), str);
+  CGnuPlotUsingCol col(expr_, str);
 
   cols_.push_back(col);
 

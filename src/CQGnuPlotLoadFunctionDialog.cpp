@@ -44,6 +44,8 @@ createWidgets(QWidget *)
 
   addField("Line Type", (lineTypeEdit_ = new CQIntegerSpin));
 
+  overlayCheck_ = addCheckBox("Overlay", this, SLOT(overlaySlot()));
+
   samplesEdit_ ->setValue(100);
   xminEdit_    ->setValue(-10);
   xmaxEdit_    ->setValue(10);
@@ -159,6 +161,13 @@ lineType() const
   return lineTypeEdit_->value();
 }
 
+bool
+CQGnuPlotLoadFunctionDialog::
+isOverlay() const
+{
+  return overlayCheck_->isChecked();
+}
+
 void
 CQGnuPlotLoadFunctionDialog::
 dimensionSlot()
@@ -168,5 +177,11 @@ dimensionSlot()
 void
 CQGnuPlotLoadFunctionDialog::
 parametricSlot()
+{
+}
+
+void
+CQGnuPlotLoadFunctionDialog::
+overlaySlot()
 {
 }

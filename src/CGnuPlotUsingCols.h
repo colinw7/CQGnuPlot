@@ -73,6 +73,7 @@ class CGnuPlotUsingCols {
 
  public:
   CGnuPlotUsingCols(CGnuPlot *plot=0);
+ ~CGnuPlotUsingCols();
 
   const std::string &str() const { return str_; }
   void setStr(const std::string &s) { str_ = s; }
@@ -158,6 +159,7 @@ class CGnuPlotUsingCols {
   std::string       format_;
   std::string       keyLabel_;
   mutable CGnuPlot *plot_     { 0 };
+  CExpr*            expr_ { 0 };
   mutable int       setNum_   { 0 };
   mutable int       pointNum_ { 0 };
   mutable Values    fieldValues_;

@@ -1753,6 +1753,44 @@ loadData(const std::string &filename, const LoadDataParams &params)
   return true;
 }
 
+bool
+CGnuPlot::
+loadFunction(const std::string &function, const FunctionDataParams &params)
+{
+  if (device_->windows().empty())
+    createNewWindow();
+
+  CGnuPlotWindowP window = device_->windows().back();
+
+  CGnuPlotGroupP group(createGroup(window.get()));
+
+  group->set3D(params.is3D);
+
+  if (params.xmin.isValid()) xaxis(1).setMin(params.xmin.getValue());
+  if (params.xmax.isValid()) xaxis(1).setMax(params.xmax.getValue());
+  if (params.ymin.isValid()) yaxis(1).setMin(params.ymin.getValue());
+  if (params.ymax.isValid()) yaxis(1).setMax(params.ymax.getValue());
+
+  StringArray functions;
+
+  functions.push_back(function);
+
+  if (params.is3D) {
+    CGnuPlotPlotP plot = addFunction3D(group, functions, PlotStyle::LINES_POINTS);
+
+    group->addSubPlot(plot);
+  }
+  else {
+    CGnuPlotPlotP plot = addFunction2D(group, functions, PlotStyle::LINES_POINTS);
+
+    group->addSubPlot(plot);
+  }
+
+  window->addGroup(group);
+
+  return true;
+}
+
 void
 CGnuPlot::
 windowCmd(const std::string &)
@@ -6686,10 +6724,13 @@ setCmd(const std::string &args)
     auto label = lookupAnnotation<CGnuPlotLabel>(VariableName::LABEL, ind, created);
     if (! label) return false;
 
+    if (created)
+      label->setEnhanced(device()->isEnhanced());
+
     //---
 
-    std::string              arg;
-    bool                     isStr = false;
+    std::string arg;
+    bool        isStr = false;
     StringArray extraArgs;
 
     line.skipSpace();
@@ -7190,7 +7231,8 @@ setCmd(const std::string &args)
       multiplot_ = createMultiplot();
 
     multiplot_->setEnabled(true);
-    //multiplot_->setAutoFit(true);
+  //multiplot_->setAutoFit(true);
+    multiplot_->setEnhanced(device()->isEnhanced());
 
     std::string arg = readNonSpace(line);
 
@@ -8900,7 +8942,13 @@ setCmd(const std::string &args)
             setBackgroundColor(c.color());
         }
         else if (arg == "enhanced" || arg == "noenhanced") {
-          device()->setEnhanced(arg == "enhanced");
+          setDeviceEnhanced(arg == "enhanced");
+        }
+        else if (arg == "font") {
+          CFontPtr font;
+
+          if (parseFont(line, font))
+            device()->setFont(font);
         }
         else {
           int pos1 = line.pos();
@@ -8929,7 +8977,7 @@ setCmd(const std::string &args)
     std::string arg = readNonSpace(line);
 
     if      (arg == "enhanced" || arg == "noenhanced") {
-      device()->setEnhanced(arg == "enhanced");
+      setDeviceEnhanced(arg == "enhanced");
     }
     else if (arg == "font") {
       CFontPtr font;
@@ -17809,4 +17857,22 @@ stringToPlotStyle(const std::string &str)
   (void) CStrUniqueMatch::stringToValue(str, plotStyle);
 
   return plotStyle;
+}
+
+void
+CGnuPlot::
+setDeviceEnhanced(bool b)
+{
+  device()->setEnhanced(b);
+
+  for (int i = 1; i <= 2; ++i) {
+    xaxis(i).setEnhanced(b);
+    yaxis(i).setEnhanced(b);
+  }
+
+  zaxis(1).setEnhanced(b);
+  raxis( ).setEnhanced(b);
+
+  keyData_.setEnhanced(b);
+  title_  .setEnhanced(b);
 }

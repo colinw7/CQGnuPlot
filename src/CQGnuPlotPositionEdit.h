@@ -4,11 +4,15 @@
 #include <CQIconCombo.h>
 #include <CGnuPlotPosition.h>
 #include <QFrame>
+#include <QToolButton>
+#include <set>
 
 class QStackedWidget;
 class CQGnuPlotCoordSys;
 class CQRealSpin;
 class CQGnuPlotPositionTypeCombo;
+class CQGnuPlotPositionGrabMgr;
+class CQGnuPlotPositionGrab;
 
 class CQGnuPlotPositionEdit : public QFrame {
   Q_OBJECT
@@ -42,6 +46,50 @@ class CQGnuPlotPositionEdit : public QFrame {
   CQRealSpin                 *yMultiEdit_;
   CQRealSpin                 *zMultiEdit_;
   CQGnuPlotPositionTypeCombo *type_;
+  CQGnuPlotPositionGrab      *grab_;
+};
+
+#define CQGnuPlotPositionGrabMgrInst CQGnuPlotPositionGrabMgr::instance()
+
+class CQGnuPlotPositionGrabMgr {
+ public:
+  static CQGnuPlotPositionGrabMgr *instance();
+
+  CQGnuPlotPositionGrab *currentGrab() const { return grab_; }
+
+ protected:
+  friend class CQGnuPlotPositionGrab;
+
+  void addGrab   (CQGnuPlotPositionGrab *grab);
+  void removeGrab(CQGnuPlotPositionGrab *grab);
+
+  void grab  (CQGnuPlotPositionGrab *grab);
+  void ungrab(CQGnuPlotPositionGrab *grab);
+
+ private:
+  CQGnuPlotPositionGrabMgr();
+
+ private:
+  typedef std::set<CQGnuPlotPositionGrab *> Grabs;
+
+  Grabs                  grabs_;
+  CQGnuPlotPositionGrab *grab_ { 0 };
+};
+
+class CQGnuPlotPositionGrab : public QToolButton {
+  Q_OBJECT
+
+ public:
+  CQGnuPlotPositionGrab(CQGnuPlotPositionEdit *edit);
+ ~CQGnuPlotPositionGrab();
+
+  CQGnuPlotPositionEdit *edit() const { return edit_; }
+
+ private slots:
+  void grabSlot(bool b);
+
+ private:
+  CQGnuPlotPositionEdit *edit_;
 };
 
 class CQGnuPlotCoordSys : public CQIconCombo {

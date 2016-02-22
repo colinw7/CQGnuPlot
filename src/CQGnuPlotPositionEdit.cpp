@@ -12,6 +12,105 @@
 #include <svg/coord_txt_svg.h>
 #include <svg/coord_single_svg.h>
 #include <svg/coord_multi_svg.h>
+#include <svg/grab_point_svg.h>
+
+CQGnuPlotPositionGrabMgr *
+CQGnuPlotPositionGrabMgr::
+instance()
+{
+  static CQGnuPlotPositionGrabMgr *inst;
+
+  if (! inst)
+    inst = new CQGnuPlotPositionGrabMgr;
+
+  return inst;
+}
+
+CQGnuPlotPositionGrabMgr::
+CQGnuPlotPositionGrabMgr()
+{
+}
+
+void
+CQGnuPlotPositionGrabMgr::
+addGrab(CQGnuPlotPositionGrab *grab)
+{
+  grabs_.insert(grab);
+}
+
+void
+CQGnuPlotPositionGrabMgr::
+removeGrab(CQGnuPlotPositionGrab *grab)
+{
+  if (grab == grab_)
+    grab_ = 0;
+
+  grabs_.erase(grab);
+}
+
+void
+CQGnuPlotPositionGrabMgr::
+grab(CQGnuPlotPositionGrab *grab)
+{
+  if (grab_ == grab)
+    return;
+
+  std::swap(grab_, grab);
+
+  if (grab)
+    grab->setChecked(false);
+
+  if (grab_)
+    grab_->setChecked(true);
+}
+
+void
+CQGnuPlotPositionGrabMgr::
+ungrab(CQGnuPlotPositionGrab *grab)
+{
+  if (grab_ != grab)
+    return;
+
+  grab_ = 0;
+
+  if (grab)
+    grab->setChecked(false);
+}
+
+//------
+
+CQGnuPlotPositionGrab::
+CQGnuPlotPositionGrab(CQGnuPlotPositionEdit *edit) :
+ QToolButton(0), edit_(edit)
+{
+  setObjectName("grab");
+
+  setIcon(CQPixmapCacheInst->getIcon("GRAB_POINT"));
+
+  setCheckable(true);
+
+  connect(this, SIGNAL(clicked(bool)), this, SLOT(grabSlot(bool)));
+
+  CQGnuPlotPositionGrabMgrInst->addGrab(this);
+}
+
+CQGnuPlotPositionGrab::
+~CQGnuPlotPositionGrab()
+{
+  CQGnuPlotPositionGrabMgrInst->removeGrab(this);
+}
+
+void
+CQGnuPlotPositionGrab::
+grabSlot(bool b)
+{
+  if (b)
+    CQGnuPlotPositionGrabMgrInst->grab(this);
+  else
+    CQGnuPlotPositionGrabMgrInst->ungrab(this);
+}
+
+//------
 
 CQGnuPlotPositionEdit::
 CQGnuPlotPositionEdit(QWidget *w) :
@@ -20,7 +119,7 @@ CQGnuPlotPositionEdit(QWidget *w) :
   setObjectName("positionEdit");
 
   QHBoxLayout *layout = new QHBoxLayout(this);
-  layout->setMargin(2); layout->setSpacing(2);
+  layout->setMargin(0); layout->setSpacing(2);
 
   stack_ = new QStackedWidget;
   stack_->setObjectName("stack");
@@ -31,7 +130,7 @@ CQGnuPlotPositionEdit(QWidget *w) :
   singleFrame->setObjectName("single");
 
   QHBoxLayout *singleFrameLayout = new QHBoxLayout(singleFrame);
-  singleFrameLayout->setMargin(2); singleFrameLayout->setSpacing(2);
+  singleFrameLayout->setMargin(0); singleFrameLayout->setSpacing(2);
 
   systemXYZ_ = new CQGnuPlotCoordSys("xyz");
 
@@ -57,7 +156,7 @@ CQGnuPlotPositionEdit(QWidget *w) :
   multiFrame->setObjectName("multi");
 
   QHBoxLayout *multiFrameLayout = new QHBoxLayout(multiFrame);
-  multiFrameLayout->setMargin(2); multiFrameLayout->setSpacing(2);
+  multiFrameLayout->setMargin(0); multiFrameLayout->setSpacing(2);
 
   systemX_ = new CQGnuPlotCoordSys("x");
   systemY_ = new CQGnuPlotCoordSys("y");
@@ -96,8 +195,13 @@ CQGnuPlotPositionEdit(QWidget *w) :
 
   //---
 
+  grab_ = new CQGnuPlotPositionGrab(this);
+
+  //---
+
   layout->addWidget(stack_);
   layout->addWidget(type_);
+  layout->addWidget(grab_);
 
   //---
 
@@ -126,6 +230,22 @@ void
 CQGnuPlotPositionEdit::
 updateState()
 {
+  disconnect(systemXYZ_, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePosition()));
+
+  disconnect(xSingleEdit_, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+  disconnect(ySingleEdit_, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+  disconnect(zSingleEdit_, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+
+  disconnect(systemX_, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePosition()));
+  disconnect(systemY_, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePosition()));
+  disconnect(systemZ_, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePosition()));
+
+  disconnect(xMultiEdit_, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+  disconnect(yMultiEdit_, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+  disconnect(zMultiEdit_, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+
+  //---
+
   systemXYZ_->setCoordSys(position_.systemX());
 
   xSingleEdit_->setValue(position_.point().x);
@@ -147,6 +267,22 @@ updateState()
   systemZ_    ->setVisible(! is2D_);
   zSingleEdit_->setVisible(! is2D_);
   zMultiEdit_ ->setVisible(! is2D_);
+
+  //---
+
+  connect(systemXYZ_, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePosition()));
+
+  connect(xSingleEdit_, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+  connect(ySingleEdit_, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+  connect(zSingleEdit_, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+
+  connect(systemX_, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePosition()));
+  connect(systemY_, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePosition()));
+  connect(systemZ_, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePosition()));
+
+  connect(xMultiEdit_, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+  connect(yMultiEdit_, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+  connect(zMultiEdit_, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
 }
 
 void

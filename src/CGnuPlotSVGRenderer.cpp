@@ -1,6 +1,7 @@
 #include <CGnuPlotSVGRenderer.h>
 #include <CGnuPlotSVGDevice.h>
 #include <CGnuPlotUtil.h>
+#include <CXMLNamedChar.h>
 #include <CSymbol2D.h>
 
 namespace {
@@ -501,6 +502,8 @@ void
 CGnuPlotSVGRenderer::
 drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 {
+  std::string etext = CXMLNamedCharMgrInst->encodeString(text);
+
   double a = getFont()->getAngle();
 
   CPoint2D p;
@@ -512,7 +515,7 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
            "font-family:" << getFont()->getFamily() << "; " <<
            "font-size:" << getFont()->getSize() << "; " <<
            "text-anchor:start\">\n";
-  os() << "<text>" << text << "</text>\n";
+  os() << "<text>" << etext << "</text>\n";
   os() << "</g>\n";
 }
 

@@ -32,9 +32,12 @@ class CQGnuPlotLoadFunctionDialog : public CQDialog {
 
   int lineType() const;
 
+  bool isOverlay() const;
+
  private slots:
   void dimensionSlot();
   void parametricSlot();
+  void overlaySlot();
 
  private:
   CQGnuPlotEnum* enum_            { 0 };
@@ -45,6 +48,7 @@ class CQGnuPlotLoadFunctionDialog : public CQDialog {
   CQRealSpin*    xminEdit_        { 0 };
   CQRealSpin*    xmaxEdit_        { 0 };
   CQIntegerSpin* lineTypeEdit_    { 0 };
+  QCheckBox*     overlayCheck_    { 0 };
 };
 
 #endif

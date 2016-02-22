@@ -24,6 +24,8 @@ void
 CQEnumCombo::
 init()
 {
+  setObjectName("enumCombo");
+
   CQUtil::PropInfo propInfo;
   QString          typeName;
 
@@ -35,7 +37,8 @@ init()
 
   const QStringList &names = propInfo.enumNames();
 
-  addItems(names);
+  for (int i = 0; i < names.length(); ++i)
+    addItem(names[i], QVariant(i));
 
   QVariant var;
 
@@ -46,6 +49,28 @@ init()
 
   if (ind >= 0)
     setCurrentIndex(ind);
+}
+
+void
+CQEnumCombo::
+setItemIcon(int i, const QIcon &icon)
+{
+  QComboBox::setItemIcon(i, icon);
+}
+
+void
+CQEnumCombo::
+setItemText(int i, const QString &text)
+{
+  QComboBox::setItemText(i, text);
+}
+
+void
+CQEnumCombo::
+setItemData(int i, const QString &text, const QIcon &icon)
+{
+  QComboBox::setItemText(i, text);
+  QComboBox::setItemIcon(i, icon);
 }
 
 void
