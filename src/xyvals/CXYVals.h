@@ -154,10 +154,15 @@ class CXYValsInside : public CXYVals {
 
   void removePolygon(const Polygon &poly);
 
+  void fill();
+
   void print(std::ostream &os) const;
 
  private:
   void initMem();
+
+  bool fillH();
+  bool fillV();
 
  private:
   InsideArray inside_;

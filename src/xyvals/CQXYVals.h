@@ -18,6 +18,8 @@ class CQXYValsCanvas : public QWidget {
 
   void keyPressEvent(QKeyEvent *);
 
+  void updatePolygons();
+
  private:
   typedef std::vector<QPolygon> Polygons;
 

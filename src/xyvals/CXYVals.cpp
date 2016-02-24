@@ -889,6 +889,151 @@ removePolygon(const Polygon &polygon)
 
 void
 CXYValsInside::
+fill()
+{
+  Polygons polygons;
+
+  if (! getPolygons(polygons) || polygons.size() < 2)
+    return;
+
+print(std::cerr); std::cerr << std::endl;
+  for (int j = 0; j < num_yvals_ - 1; ++j) {
+    double ym = CMathGen::avg(yvals_[j], yvals_[j + 1]);
+
+    for (int i = 0; i < num_xvals_ - 1; ++i) {
+      double xm = CMathGen::avg(xvals_[i], xvals_[i + 1]);
+
+      inside_[i][j] = 0;
+
+      for (uint k = 0; k < polygons.size(); ++k) {
+        const Polygon &polygon = polygons[k];
+
+        if (polygon.isInside(xm, ym)) {
+          inside_[i][j] = k + 1;
+          break;
+        }
+      }
+    }
+  }
+print(std::cerr); std::cerr << std::endl;
+
+  while (fillH() || fillV()) {
+print(std::cerr); std::cerr << std::endl;
+  }
+
+  for (int j = 0; j < num_yvals_ - 1; ++j) {
+    for (int i = 0; i < num_xvals_ - 1; ++i) {
+      if (inside_[i][j])
+        inside_[i][j] = 1;
+    }
+  }
+print(std::cerr); std::cerr << std::endl;
+}
+
+bool
+CXYValsInside::
+fillH()
+{
+  bool found = false;
+
+  for (int j = 0; j < num_yvals_ - 1; ++j) {
+    int i = 0;
+
+    // find first non-zero
+    while (i < num_xvals_ - 1 && ! inside_[i][j])
+      ++i;
+
+    if (i >= num_xvals_ - 1)
+      continue;
+
+    while (i < num_xvals_ - 1) {
+      InsideValue val = inside_[i][j];
+
+      // skip to last non-zero
+      while (i < num_xvals_ - 1 && inside_[i][j] == val)
+        ++i;
+
+      if (i >= num_xvals_ - 1 || inside_[i][j])
+        continue;
+
+      int i1 = i;
+
+      // find next non-zero
+      while (i < num_xvals_ - 1 && ! inside_[i][j])
+        ++i;
+
+      if (i >= num_xvals_ - 1)
+        continue;
+
+      int i2 = i - 1;
+
+      // must be different value
+      if (inside_[i][j] == val)
+        continue;
+
+      for (int ii = i1; ii <= i2; ++ii)
+        inside_[ii][j] = val;
+
+      found  = true;
+    }
+  }
+
+  return found;
+}
+
+bool
+CXYValsInside::
+fillV()
+{
+  bool found = false;
+
+  for (int i = 0; i < num_xvals_ - 1; ++i) {
+    int j = 0;
+
+    // find first non-zero
+    while (j < num_yvals_ - 1 && ! inside_[i][j])
+      ++j;
+
+    if (j >= num_yvals_ - 1)
+      continue;
+
+    while (j < num_yvals_ - 1) {
+      InsideValue val = inside_[i][j];
+
+      // skip to last non-zero
+      while (j < num_yvals_ - 1 && inside_[i][j] == val)
+        ++j;
+
+      if (j >= num_yvals_ - 1 || inside_[i][j])
+        continue;
+
+      int j1 = j;
+
+      // find next non-zero
+      while (j < num_yvals_ - 1 && ! inside_[i][j])
+        ++j;
+
+      if (j >= num_yvals_ - 1)
+        continue;
+
+      int j2 = j - 1;
+
+      // must be different value
+      if (inside_[i][j] == val)
+        continue;
+
+      for (int jj = j1; jj <= j2; ++jj)
+        inside_[i][jj] = val;
+
+      found  = true;
+    }
+  }
+
+  return found;
+}
+
+void
+CXYValsInside::
 print(std::ostream &os) const
 {
   int num_x = getNumXVals();

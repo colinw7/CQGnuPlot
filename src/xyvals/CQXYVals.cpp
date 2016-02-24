@@ -178,6 +178,15 @@ mouseReleaseEvent(QMouseEvent *me)
 
   xyvals_->print(std::cerr); std::cerr << std::endl;
 
+  updatePolygons();
+
+  update();
+}
+
+void
+CQXYValsCanvas::
+updatePolygons()
+{
   polygons_.clear();
 
   CXYValsInside::Polygons polygons;
@@ -196,18 +205,23 @@ mouseReleaseEvent(QMouseEvent *me)
       polygons_.push_back(poly);
     }
   }
-
-  update();
 }
 
 void
 CQXYValsCanvas::
 keyPressEvent(QKeyEvent *ke)
 {
-  if (ke->key() == Qt::Key_R)
-    polygons_.clear();
-
+  if      (ke->key() == Qt::Key_C) {
     xyvals_->clear();
+
+    updatePolygons();
+
+    update();
+  }
+  else if (ke->key() == Qt::Key_F)
+    xyvals_->fill();
+
+    updatePolygons();
 
     update();
   }
