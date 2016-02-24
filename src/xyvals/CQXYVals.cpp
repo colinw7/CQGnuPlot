@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QMouseEvent>
+#include <QKeyEvent>
 
 int
 main(int argc, char **argv)
@@ -45,6 +46,8 @@ CQXYValsCanvas(CQXYValsTest *test) :
   setObjectName("canvas");
 
   xyvals_ = new CXYValsInside;
+
+  setFocusPolicy(Qt::StrongFocus);
 
   //setMouseTracking(true);
 }
@@ -109,12 +112,14 @@ paintEvent(QPaintEvent *)
 
   //---
 
-  QPen pen(Qt::green);
-  pen.setWidth(3);
+  for (uint i = 0; i < polygons_.size(); ++i) {
+    QPen pen(Qt::green);
+    pen.setWidth(3);
 
-  painter.setPen(pen);
+    painter.setPen(pen);
 
-  painter.drawPolygon(poly_);
+    painter.drawPolygon(polygons_[i]);
+  }
 }
 
 void
@@ -153,35 +158,56 @@ mouseReleaseEvent(QMouseEvent *me)
   std::vector<double> y { y1, y1, y2, y2};
 
   if (xyvals_->getNumXVals() > 0) {
-    xyvals_->print(std::cerr); std::cerr << std::endl;
+    //xyvals_->print(std::cerr); std::cerr << std::endl;
 
     CXYValsInside xyvals1;
 
     xyvals1.initValues(*xyvals_, x, y);
 
-    xyvals1.print(std::cerr); std::cerr << std::endl;
+    //xyvals1.print(std::cerr); std::cerr << std::endl;
 
     xyvals1.combineInside();
 
-    xyvals1.print(std::cerr); std::cerr << std::endl;
+    //xyvals1.print(std::cerr); std::cerr << std::endl;
 
     *xyvals_ = xyvals1;
   }
   else {
     xyvals_->initValues(x, y);
-
-    xyvals_->print(std::cerr); std::cerr << std::endl;
   }
 
-  std::vector<double> xo, yo;
+  xyvals_->print(std::cerr); std::cerr << std::endl;
 
-  if (xyvals_->getPoly(xo, yo)) {
-    for (uint i = 0; i < xo.size(); ++i)
-      poly_.push_back(QPoint(xo[i], yo[i]));
-    poly_.push_back(QPoint(xo[0], yo[0]));
+  polygons_.clear();
+
+  CXYValsInside::Polygons polygons;
+
+  if (xyvals_->getPolygons(polygons)) {
+    for (uint j = 0; j < polygons.size(); ++j) {
+      QPolygon poly;
+
+      const CXYValsInside::Polygon &polygon = polygons[j];
+
+      for (int i = 0; i < polygon.size(); ++i)
+        poly.push_back(QPoint(polygon.x[i], polygon.y[i]));
+
+      poly.push_back(QPoint(polygon.x[0], polygon.y[0]));
+
+      polygons_.push_back(poly);
+    }
   }
-  else
-    poly_ = QPolygon();
 
   update();
 }
+
+void
+CQXYValsCanvas::
+keyPressEvent(QKeyEvent *ke)
+{
+  if (ke->key() == Qt::Key_R)
+    polygons_.clear();
+
+    xyvals_->clear();
+
+    update();
+  }

@@ -16,13 +16,17 @@ class CQXYValsCanvas : public QWidget {
   void mouseMoveEvent   (QMouseEvent *me);
   void mouseReleaseEvent(QMouseEvent *me);
 
+  void keyPressEvent(QKeyEvent *);
+
  private:
+  typedef std::vector<QPolygon> Polygons;
+
   CQXYValsTest  *test_;
   CXYValsInside *xyvals_;
   bool           pressed_ { false };
   QPoint         pressPos_;
   QPoint         releasePos_;
-  QPolygon       poly_;
+  Polygons       polygons_;
 };
 
 class CQXYValsTest : public QWidget {
