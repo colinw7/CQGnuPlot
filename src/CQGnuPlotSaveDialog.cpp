@@ -15,7 +15,7 @@ void
 CQGnuPlotSaveDialog::
 createWidgets(QWidget *)
 {
-  typeGroup_ = addRadioButtons("Type", {"PNG", "SVG"}, this, SLOT(typeSlot()));
+  typeGroup_ = addRadioButtons("Type", {"PNG", "SVG", "PS"}, this, SLOT(typeSlot()));
 
   //---
 
@@ -53,6 +53,15 @@ isSVG() const
   QList<QRadioButton *> buttons = typeGroup_->findChildren<QRadioButton *>();
 
   return buttons[1]->isChecked();
+}
+
+bool
+CQGnuPlotSaveDialog::
+isPS() const
+{
+  QList<QRadioButton *> buttons = typeGroup_->findChildren<QRadioButton *>();
+
+  return buttons[2]->isChecked();
 }
 
 QString

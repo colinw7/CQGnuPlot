@@ -6,6 +6,7 @@
 #include <CGnuPlotContour.h>
 #include <CGnuPlotStyle.h>
 #include <CGnuPlotSVGDevice.h>
+#include <CGnuPlotPSDevice.h>
 #include <CGnuPlotLogDevice.h>
 #include <CGnuPlotUtil.h>
 #include <CGnuPlotNameValues.h>
@@ -184,9 +185,11 @@ CGnuPlot() :
   CGnuPlotFunctions::init(this);
 
   svgDevice_ = new CGnuPlotSVGDevice();
+  psDevice_  = new CGnuPlotPSDevice();
   logDevice_ = new CGnuPlotLogDevice();
 
   addDevice("svg", svgDevice_);
+  addDevice("ps" , psDevice_ );
   addDevice("log", logDevice_);
 
   for (const auto &i : IRangeItr(0, 8))
@@ -199,6 +202,17 @@ CGnuPlot::
 ~CGnuPlot()
 {
   delete expr_;
+}
+
+void
+CGnuPlot::
+loadStatup()
+{
+  std::string homeDir  = CDir::getHome();
+  std::string initFile = homeDir + "/.CGnuPlot";
+
+  if (CFile::exists(initFile))
+    load(initFile);
 }
 
 void
@@ -1684,6 +1698,9 @@ dataCmd(const std::string &args)
     else if (arg == "csv") {
       params.csv = true;
     }
+    else if (arg == "header") {
+      params.header = true;
+    }
     else if (arg == "separator") {
       char c = ' ';
 
@@ -1745,6 +1762,9 @@ loadData(const std::string &filename, const LoadDataParams &params)
 
   if (params.csv)
     dataFile_.setCsv(true);
+
+  if (params.header)
+    dataFile_.setColumnHeaders(true);
 
   dataFile_.processFile();
 
@@ -8508,11 +8528,11 @@ setCmd(const std::string &args)
         }
         // candlesticks
         else if (arg == "candlesticks") {
-          boxPlot_.setType(CGnuPlotBoxPlot::Type::CandleSticks);
+          boxPlot_.setType(CGnuPlotTypes::BoxType::CandleSticks);
         }
         // financebars
         else if (arg == "financebars") {
-          boxPlot_.setType(CGnuPlotBoxPlot::Type::FinanceBars);
+          boxPlot_.setType(CGnuPlotTypes::BoxType::FinanceBars);
         }
         // separation <x>
         else if (arg == "separation") {
@@ -8525,10 +8545,10 @@ setCmd(const std::string &args)
         else if (arg == "labels") {
           arg = readNonSpace(line);
 
-          if      (arg == "off" ) boxPlot_.setLabels(CGnuPlotBoxPlot::Labels::Off);
-          else if (arg == "auto") boxPlot_.setLabels(CGnuPlotBoxPlot::Labels::Auto);
-          else if (arg == "x"   ) boxPlot_.setLabels(CGnuPlotBoxPlot::Labels::X);
-          else if (arg == "x2"  ) boxPlot_.setLabels(CGnuPlotBoxPlot::Labels::X2);
+          if      (arg == "off" ) boxPlot_.setLabels(CGnuPlotTypes::BoxLabels::Off);
+          else if (arg == "auto") boxPlot_.setLabels(CGnuPlotTypes::BoxLabels::Auto);
+          else if (arg == "x"   ) boxPlot_.setLabels(CGnuPlotTypes::BoxLabels::X);
+          else if (arg == "x2"  ) boxPlot_.setLabels(CGnuPlotTypes::BoxLabels::X2);
           else                    errorMsg("Invalid arg '" + arg + "'");
         }
         // sorted | unsorted

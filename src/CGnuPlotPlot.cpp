@@ -43,8 +43,7 @@ CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
  pathCache_(this), pieCache_(this), pointCache_(this), polygonCache_(this), rectCache_(this),
  tableFile_(group->app())
 {
-  setSmooth (app()->getSmooth());
-  setBoxPlot(app()->getBoxPlot());
+  setSmooth(app()->getSmooth());
 }
 
 CGnuPlotPlot::
@@ -126,6 +125,14 @@ CGnuPlotPlot::
 init()
 {
   CGnuPlot *plot = this->app();
+
+  //---
+
+  boxPlot_ = app()->device()->createBoxPlot(this);
+
+  boxPlot_->init(app()->getBoxPlot());
+
+  //---
 
   setBars    (plot->bars());
   setBoxWidth(plot->boxWidth());
@@ -761,7 +768,7 @@ clearCaches()
 {
   arrowCache_     .clear();
   boxBarCache_    .clear();
-  boxCache_       .clear();
+  clearBoxCache   ();
   bubbleCache_    .clear();
   ellipseCache_   .clear();
   errorBarCache_  .clear();
@@ -794,6 +801,13 @@ CGnuPlotPlot::
 updateBoxCacheSize(int n)
 {
   boxCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
+clearBoxCache()
+{
+  boxCache_.clear();
 }
 
 void

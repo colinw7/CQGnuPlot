@@ -12,6 +12,7 @@ main(int argc, char **argv)
 
   CBool               debug;
   CBool               edebug;
+  CBool               fast;
   CBool               svg;
   CBool               png;
   CBool               autoContinue;
@@ -46,6 +47,8 @@ main(int argc, char **argv)
         if (i < argc)
           execs.push_back(argv[i]);
       }
+      else if (arg == "f")
+        fast = true;
       else if (arg == "o") {
         ++i;
 
@@ -80,6 +83,8 @@ main(int argc, char **argv)
       }
       else if (arg == "csv")
         loadParams.csv = true;
+      else if (arg == "header")
+        loadParams.header = true;
       else if (arg == "separator") {
         ++i;
 
@@ -134,6 +139,9 @@ main(int argc, char **argv)
   }
 
   CQGnuPlot plot;
+
+  if (! fast)
+    plot.loadStatup();
 
   plot.setDebug(debug);
   plot.setExprDebug(edebug);

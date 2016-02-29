@@ -3,38 +3,6 @@
 
 namespace Conv {
 
-typedef CEnumConv<CGnuPlot::HistogramStyle, CQGnuPlotEnum::HistogramStyle> HistogramStyleConv;
-
-HistogramStyleConv histogramStyleConv({
- { CGnuPlot::HistogramStyle::NONE         , CQGnuPlotEnum::HistogramNone          },
- { CGnuPlot::HistogramStyle::CLUSTERED    , CQGnuPlotEnum::HistogramClustered     },
- { CGnuPlot::HistogramStyle::ERRORBARS    , CQGnuPlotEnum::HistogramErrorBars     },
- { CGnuPlot::HistogramStyle::ROWSTACKED   , CQGnuPlotEnum::HistogramRowStacked    },
- { CGnuPlot::HistogramStyle::COLUMNSTACKED, CQGnuPlotEnum::HistogramColumnStacked },
-});
-
-typedef CEnumConv<CGnuPlotTypes::FillType, CQGnuPlotEnum::FillType> FillTypeConv;
-
-FillTypeConv fillTypeConv({
-  { CGnuPlotTypes::FillType::EMPTY  , CQGnuPlotEnum::FillNone      },
-  { CGnuPlotTypes::FillType::SOLID  , CQGnuPlotEnum::FillSolid     },
-  { CGnuPlotTypes::FillType::PATTERN, CQGnuPlotEnum::FillPatterned },
-});
-
-typedef CEnumConv<CGnuPlotTypes::FillPattern, CQGnuPlotEnum::FillPattern> FillPatternConv;
-
-FillPatternConv fillPatternConv({
-  { CGnuPlotTypes::FillPattern::NONE  , CQGnuPlotEnum::PatternNone  },
-  { CGnuPlotTypes::FillPattern::HATCH , CQGnuPlotEnum::PatternHatch  },
-  { CGnuPlotTypes::FillPattern::DENSE , CQGnuPlotEnum::PatternDense  },
-  { CGnuPlotTypes::FillPattern::FG    , CQGnuPlotEnum::PatternFg     },
-  { CGnuPlotTypes::FillPattern::FDIAG , CQGnuPlotEnum::PatternFDiag  },
-  { CGnuPlotTypes::FillPattern::BDIAG , CQGnuPlotEnum::PatternBDiag  },
-  { CGnuPlotTypes::FillPattern::FDIAG1, CQGnuPlotEnum::PatternFDiag1 },
-  { CGnuPlotTypes::FillPattern::BDIAG1, CQGnuPlotEnum::PatternBDiag1 },
-  { CGnuPlotTypes::FillPattern::BG    , CQGnuPlotEnum::PatternBg     },
-});
-
 typedef CEnumConv<CGnuPlotTypes::FillPattern, Qt::BrushStyle> FillPatternQtConv;
 
 FillPatternQtConv fillPatternQtConv({
@@ -93,54 +61,6 @@ ArrorColorTypeConv arrowCoordTypeConv({
   { CGnuPlotArrow::CoordType::FROM_ANGLE, CQGnuPlotEnum::ArrowCoordFromAngle },
 });
 
-}
-
-//---
-
-CQGnuPlotEnum::HistogramStyle
-CQGnuPlotUtil::
-histogramStyleConv(const CGnuPlot::HistogramStyle &type)
-{
-  return Conv::histogramStyleConv.conv(type);
-}
-
-CGnuPlot::HistogramStyle
-CQGnuPlotUtil::
-histogramStyleConv(const CQGnuPlotEnum::HistogramStyle &type)
-{
-  return Conv::histogramStyleConv.conv(type);
-}
-
-//---
-
-CQGnuPlotEnum::FillType
-CQGnuPlotUtil::
-fillTypeConv(const CGnuPlotTypes::FillType &type)
-{
-  return Conv::fillTypeConv.conv(type);
-}
-
-CGnuPlotTypes::FillType
-CQGnuPlotUtil::
-fillTypeConv(const CQGnuPlotEnum::FillType &type)
-{
-  return Conv::fillTypeConv.conv(type);
-}
-
-//---
-
-CQGnuPlotEnum::FillPattern
-CQGnuPlotUtil::
-fillPatternConv(const CGnuPlotTypes::FillPattern &type)
-{
-  return Conv::fillPatternConv.conv(type);
-}
-
-CGnuPlotTypes::FillPattern
-CQGnuPlotUtil::
-fillPatternConv(const CQGnuPlotEnum::FillPattern &type)
-{
-  return Conv::fillPatternConv.conv(type);
 }
 
 //---

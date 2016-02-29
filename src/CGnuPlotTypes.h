@@ -491,6 +491,18 @@ namespace CGnuPlotTypes {
     SWAP
   };
 
+  enum class BoxLabels {
+    Off,
+    Auto,
+    X,
+    X2
+  };
+
+  enum class BoxType {
+    CandleSticks,
+    FinanceBars
+  };
+
   typedef std::pair<CHAlignType,double> HAlignPos;
   typedef std::pair<CVAlignType,double> VAlignPos;
 }

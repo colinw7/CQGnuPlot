@@ -55,6 +55,8 @@ class CQGnuPlotDevice : public QObject, public CGnuPlotDevice {
 
   CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group) override;
 
+  CGnuPlotBoxPlot *createBoxPlot(CGnuPlotPlot *plot) override;
+
   CGnuPlotArrowObject      *createArrowObject     (CGnuPlotPlot *plot) override;
   CGnuPlotBoxBarObject     *createBoxBarObject    (CGnuPlotPlot *plot) override;
   CGnuPlotEndBar           *createEndBar          (CGnuPlotPlot *plot) override;

@@ -28,6 +28,7 @@ class CGnuPlotPm3D;
 class CGnuPlotPolygon;
 class CGnuPlotRectangle;
 class CGnuPlotTimeStamp;
+class CGnuPlotBoxPlot;
 
 class CGnuPlotArrowObject;
 class CGnuPlotBoxBarObject;
@@ -148,6 +149,8 @@ class CGnuPlotDevice {
   virtual CGnuPlotPm3D *createPm3D(CGnuPlotGroup *group);
 
   virtual CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group);
+
+  virtual CGnuPlotBoxPlot *createBoxPlot(CGnuPlotPlot *plot);
 
   virtual CGnuPlotArrowObject      *createArrowObject     (CGnuPlotPlot *plot);
   virtual CGnuPlotBoxBarObject     *createBoxBarObject    (CGnuPlotPlot *plot);

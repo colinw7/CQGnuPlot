@@ -1,15 +1,19 @@
 ## ToDo
 
+  + animation (fade in/out)
+
   + smooth bezier, sbezier, csplines, acsplines
   + support probe in more styles
   + better clipping support (objects)
-  + support zoom/pan using scale and offset properties to modify window->pixel calc (don't change range)
+  + support zoom/pan using scale and offset properties to modify
+    window->pixel calc (do not change range)
   + CGnuPlotFile store reals as well as strings
   + Use model data to drive plot
   + data table view
   + Polygons modify all with property
   + Generate multiple (>2) columns
   + Info on table (sets, subsets, values)
+  + bind shortcuts
 
   + isosamples/samples logic (generate using isosamples and supersample at samples ?)
 
@@ -19,9 +23,8 @@
   + save cmd
   + user shared_ptr/unique_ptr instead of CRefPtr
   + more color schemes (selectable)
-  + don't recalc bar/bubble/pie on plot
+  + do not recalc bar/bubble/pie on plot
   + consistent handling of position front,back,behind
-  + startup file
   + improve variable color, ... handling for each plot type
   + rationalize use of line style/line type (one copies current values, one use global values)
   + plot options (after with) are type specific
@@ -75,7 +78,6 @@
 
   + chord diagram
   + . check value order and coloring
-  + . interactive selection
 
   + custom key for style
 
@@ -86,4 +88,4 @@
  + force directed
  + stacked area
  + choropleth (use polygons)
- + hierarchical treemap, sunburst, bubble
+ + hierarchical treemap, sunburst, bubble, dendogram

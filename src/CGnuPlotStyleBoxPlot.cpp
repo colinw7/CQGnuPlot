@@ -17,7 +17,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   CGnuPlotGroup *group = plot->group();
 
   // get x value (first value of first set of values)
-  // (if 4 or more values then discreete values)
+  // (if 4 or more values then discrete values)
   double x        = 0;
   bool   discrete = false;
 
@@ -37,6 +37,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //----
 
+  double bw = plot->boxWidth().getSpacing(0.1);
+
+  //----
+
   // get sorted y values (discrete or single set)
   typedef std::vector<double>       YVals;
   typedef std::map<int,YVals>       IYVals;
@@ -49,11 +53,18 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   for (const auto &point : plot->getPoints2D()) {
     if (point.getNumValues() >= 2) {
+      // skip bad values
       double y = 0;
 
-      // skip bad values
       if (! point.getValue(2, y))
         continue;
+
+      double w = 0;
+
+      if (point.getNumValues() >= 3) {
+        if (point.getValue(3, w) && w > 0)
+          bw = w;
+      }
 
       if (discrete && point.getNumValues() >= 4) {
         // add integer or string discrete values
@@ -97,8 +108,6 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   CRGBA fc = fill  .color();
   CRGBA lc = stroke.color();
 
-  double bw = plot->boxWidth().getSpacing(0.1);
-
   double ww = bw;
 
   if (plot->bars().size() < 0.0)
@@ -108,10 +117,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       ww = renderer->pixelWidthToWindowWidth(12*plot->bars().size());
   }
 
-  const CGnuPlotBoxPlot &boxPlot = plot->getBoxPlot();
+  CGnuPlotBoxPlot *boxPlot = plot->getBoxPlot();
 
   CGnuPlotTypes::SymbolType outlierSymbol =
-    CGnuPlotTypes::SymbolType(boxPlot.pointType().getValue(7));
+    CGnuPlotTypes::SymbolType(boxPlot->pointType().getValue(7));
 
   double ps = plot->pointSize();
 
@@ -121,7 +130,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   std::vector<int> inds;
 
-  if (boxPlot.sorted()) {
+  if (boxPlot->sorted()) {
     for (const auto &so : sorder)
       inds.push_back(so.second);
   }
@@ -146,7 +155,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   double ix = (syv.empty() && iyv.size() == 1 ? x : 1);
 
   for (const auto &yv : iyv) {
-    double ix1 = ix + ic;
+    double ix1 = ix + ic*boxPlot->separation().getValue(1.0);
 
     std::string s = xaxis->getValueStr(ix1, ix1);
 
@@ -162,9 +171,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     boxObj->setY     (ypos);
 
     if (renderer->isPseudo() || ! boxObj->testAndSetUsed()) {
-      boxObj->setLineWidth(ww);
-      boxObj->setBoxWidth (bw);
-      boxObj->setValueStr (s);
+      boxObj->setLineWidth   (ww);
+      boxObj->setBoxWidth    (bw);
+      boxObj->setRange       (boxPlot->range   ().getValue(1.5));
+      boxObj->setFraction    (boxPlot->fraction().getValue(0.95));
+      boxObj->setShowOutliers(boxPlot->outliers());
+      boxObj->setBoxLabels   (boxPlot->labels());
+      boxObj->setValueStr    (s);
 
       boxObj->outlierMark()->setType(outlierSymbol);
       boxObj->outlierMark()->setSize(ps);
@@ -184,7 +197,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   for (const auto &i : inds) {
-    double ix1 = ix + ic;
+    double ix1 = ix + ic*boxPlot->separation().getValue(1.0);
 
     auto yv = syv[i];
 
@@ -209,9 +222,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     boxObj->setY     (ypos);
 
     if (renderer->isPseudo() || ! boxObj->testAndSetUsed()) {
-      boxObj->setLineWidth(ww);
-      boxObj->setBoxWidth (bw);
-      boxObj->setValueStr (s);
+      boxObj->setLineWidth   (ww);
+      boxObj->setBoxWidth    (bw);
+      boxObj->setRange       (boxPlot->range   ().getValue(1.5));
+      boxObj->setFraction    (boxPlot->fraction().getValue(0.95));
+      boxObj->setShowOutliers(boxPlot->outliers());
+      boxObj->setBoxLabels   (boxPlot->labels());
+      boxObj->setValueStr    (s);
 
       boxObj->outlierMark()->setType(outlierSymbol);
       boxObj->outlierMark()->setSize(ps);

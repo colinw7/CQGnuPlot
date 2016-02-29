@@ -14,8 +14,9 @@ class CQGnuPlotSaveDialog : public CQDialog {
 
   void createWidgets(QWidget *frame) override;
 
-  bool isPNG() const;
   bool isSVG() const;
+  bool isPS () const;
+  bool isPNG() const;
 
   QString fileName() const;
 

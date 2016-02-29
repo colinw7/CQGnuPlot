@@ -210,8 +210,11 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void saveSlot();
   void saveAcceptSlot();
 
-  void saveSVG(const QString &filename);
+  void saveSVG(const QString &filename, int w, int h);
+  void savePS (const QString &filename, int w, int h);
   void savePNG(const QString &filename, int w, int h);
+
+  void saveDevice(const QString &filename, const QString &deviceName, int w, int h);
 
   void xAxisSlot(bool show);
   void yAxisSlot(bool show);

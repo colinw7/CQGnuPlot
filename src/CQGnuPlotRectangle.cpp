@@ -72,7 +72,7 @@ CQGnuPlotEnum::FillType
 CQGnuPlotRectangle::
 fillType() const
 {
-  return CQGnuPlotUtil::fillTypeConv(CGnuPlotRectangle::getFillStyle().style());
+  return CQGnuPlotEnum::fillTypeConv(CGnuPlotRectangle::getFillStyle().style());
 }
 
 void
@@ -81,7 +81,7 @@ setFillType(const CQGnuPlotEnum::FillType &type)
 {
   CGnuPlotFillStyle fs = CGnuPlotRectangle::getFillStyle();
 
-  fs.setStyle(CQGnuPlotUtil::fillTypeConv(type));
+  fs.setStyle(CQGnuPlotEnum::fillTypeConv(type));
 
   CGnuPlotRectangle::setFillStyle(fs);
 }

@@ -62,7 +62,7 @@ histogramStyle() const
 {
   const CGnuPlotHistogramData &data = CGnuPlotGroup::getHistogramData();
 
-  return CQGnuPlotUtil::histogramStyleConv(data.style());
+  return CQGnuPlotEnum::histogramStyleConv(data.style());
 }
 
 void
@@ -71,7 +71,7 @@ setHistogramStyle(const CQGnuPlotEnum::HistogramStyle &s)
 {
   CGnuPlotHistogramData data = CGnuPlotGroup::getHistogramData();
 
-  data.setStyle(CQGnuPlotUtil::histogramStyleConv(s));
+  data.setStyle(CQGnuPlotEnum::histogramStyleConv(s));
 
   CGnuPlotGroup::setHistogramData(data);
 }

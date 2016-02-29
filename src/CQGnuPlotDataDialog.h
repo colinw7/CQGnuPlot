@@ -73,6 +73,7 @@ class CQGnuPlotDataDialog : public QFrame {
   CQGnuPlotFilename*   fileEdit_         { 0 };
   CQIntegerSpin*       numberEdit_       { 0 };
   QCheckBox*           csvCheck_         { 0 };
+  QCheckBox*           headerCheck_      { 0 };
   QLineEdit*           separatorEdit_    { 0 };
   QLineEdit*           missingEdit_      { 0 };
   QLineEdit*           usingEdit_        { 0 };

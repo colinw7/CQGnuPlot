@@ -501,8 +501,8 @@ class CGnuPlotPlot {
 
   //---
 
-  void setBoxPlot(const CGnuPlotBoxPlot &b) { boxPlot_ = b; }
-  const CGnuPlotBoxPlot &getBoxPlot() const { return boxPlot_; }
+  void setBoxPlot(const CGnuPlotBoxPlot &b);
+  CGnuPlotBoxPlot *getBoxPlot() const { return boxPlot_; }
 
   //---
 
@@ -771,6 +771,8 @@ class CGnuPlotPlot {
   void updatePolygonCacheSize   (int n);
   void updateRectCacheSize      (int n);
 
+  void clearBoxCache();
+
   const ArrowObjects      &arrowObjects     () const { return arrowCache_     .objects(); }
   const BoxBarObjects     &boxBarObjects    () const { return boxBarCache_    .objects(); }
   const BoxObjects        &boxObjects       () const { return boxCache_       .objects(); }
@@ -1021,7 +1023,7 @@ class CGnuPlotPlot {
   CBBox2D                  bbox2D_ { 0, 0, 1, 1 };            // bounding box (2D)
   CBBox3D                  bbox3D_ { 0, 0, 0, 1, 1, 1 };      // bounding box (3D)
   Smooth                   smooth_ { Smooth::NONE };          // smooth data
-  CGnuPlotBoxPlot          boxPlot_;
+  CGnuPlotBoxPlot*         boxPlot_ { 0 };
   CGnuPlotContour          contour_;                          // contour data
   bool                     contourSet_ { false };
   CGnuPlotSurface          surface_;

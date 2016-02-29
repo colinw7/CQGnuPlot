@@ -118,6 +118,44 @@ PlotStyleConv plotStyleConv({
 
 //---
 
+typedef CEnumConv<CGnuPlotTypes::FillType, CQGnuPlotEnum::FillType> FillTypeConv;
+
+FillTypeConv fillTypeConv({
+  { CGnuPlotTypes::FillType::EMPTY  , CQGnuPlotEnum::FillNone      },
+  { CGnuPlotTypes::FillType::SOLID  , CQGnuPlotEnum::FillSolid     },
+  { CGnuPlotTypes::FillType::PATTERN, CQGnuPlotEnum::FillPatterned },
+});
+
+//---
+
+typedef CEnumConv<CGnuPlotTypes::HistogramStyle, CQGnuPlotEnum::HistogramStyle> HistogramStyleConv;
+
+HistogramStyleConv histogramStyleConv({
+ { CGnuPlotTypes::HistogramStyle::NONE         , CQGnuPlotEnum::HistogramNone          },
+ { CGnuPlotTypes::HistogramStyle::CLUSTERED    , CQGnuPlotEnum::HistogramClustered     },
+ { CGnuPlotTypes::HistogramStyle::ERRORBARS    , CQGnuPlotEnum::HistogramErrorBars     },
+ { CGnuPlotTypes::HistogramStyle::ROWSTACKED   , CQGnuPlotEnum::HistogramRowStacked    },
+ { CGnuPlotTypes::HistogramStyle::COLUMNSTACKED, CQGnuPlotEnum::HistogramColumnStacked },
+});
+
+//---
+
+typedef CEnumConv<CGnuPlotTypes::FillPattern, CQGnuPlotEnum::FillPattern> FillPatternConv;
+
+FillPatternConv fillPatternConv({
+  { CGnuPlotTypes::FillPattern::NONE  , CQGnuPlotEnum::PatternNone  },
+  { CGnuPlotTypes::FillPattern::HATCH , CQGnuPlotEnum::PatternHatch  },
+  { CGnuPlotTypes::FillPattern::DENSE , CQGnuPlotEnum::PatternDense  },
+  { CGnuPlotTypes::FillPattern::FG    , CQGnuPlotEnum::PatternFg     },
+  { CGnuPlotTypes::FillPattern::FDIAG , CQGnuPlotEnum::PatternFDiag  },
+  { CGnuPlotTypes::FillPattern::BDIAG , CQGnuPlotEnum::PatternBDiag  },
+  { CGnuPlotTypes::FillPattern::FDIAG1, CQGnuPlotEnum::PatternFDiag1 },
+  { CGnuPlotTypes::FillPattern::BDIAG1, CQGnuPlotEnum::PatternBDiag1 },
+  { CGnuPlotTypes::FillPattern::BG    , CQGnuPlotEnum::PatternBg     },
+});
+
+//---
+
 typedef CEnumConv<CGnuPlotTypes::ObjectType, CQGnuPlotEnum::ObjectType> ObjectTypeConv;
 
 ObjectTypeConv objectTypeConv({
@@ -128,6 +166,26 @@ ObjectTypeConv objectTypeConv({
   { CGnuPlotTypes::ObjectType::LABEL    , CQGnuPlotEnum::ObjectTypeLabel     },
   { CGnuPlotTypes::ObjectType::POLYGON  , CQGnuPlotEnum::ObjectTypePolygon   },
   { CGnuPlotTypes::ObjectType::RECTANGLE, CQGnuPlotEnum::ObjectTypeRectangle },
+});
+
+//---
+
+typedef CEnumConv<CGnuPlotTypes::BoxLabels, CQGnuPlotEnum::BoxLabels> BoxLabelsConv;
+
+BoxLabelsConv boxLabelsConv({
+  { CGnuPlotTypes::BoxLabels::Off , CQGnuPlotEnum::BoxLabelOff  },
+  { CGnuPlotTypes::BoxLabels::Auto, CQGnuPlotEnum::BoxLabelAuto },
+  { CGnuPlotTypes::BoxLabels::X   , CQGnuPlotEnum::BoxLabelX    },
+  { CGnuPlotTypes::BoxLabels::X2  , CQGnuPlotEnum::BoxLabelX2   },
+});
+
+//---
+
+typedef CEnumConv<CGnuPlotTypes::BoxType, CQGnuPlotEnum::BoxType> BoxTypeConv;
+
+BoxTypeConv boxTypeConv({
+  { CGnuPlotTypes::BoxType::CandleSticks, CQGnuPlotEnum::BoxTypeCandleSticks },
+  { CGnuPlotTypes::BoxType::FinanceBars , CQGnuPlotEnum::BoxTypeFinanceBars  },
 });
 
 //---
@@ -235,6 +293,54 @@ plotStyleConv(const PlotStyle &type)
 
 //---
 
+CQGnuPlotEnum::FillType
+CQGnuPlotEnum::
+fillTypeConv(const CGnuPlotTypes::FillType &type)
+{
+  return Conv::fillTypeConv.conv(type);
+}
+
+CGnuPlotTypes::FillType
+CQGnuPlotEnum::
+fillTypeConv(const FillType &type)
+{
+  return Conv::fillTypeConv.conv(type);
+}
+
+//---
+
+CQGnuPlotEnum::HistogramStyle
+CQGnuPlotEnum::
+histogramStyleConv(const CGnuPlotTypes::HistogramStyle &type)
+{
+  return Conv::histogramStyleConv.conv(type);
+}
+
+CGnuPlotTypes::HistogramStyle
+CQGnuPlotEnum::
+histogramStyleConv(const CQGnuPlotEnum::HistogramStyle &type)
+{
+  return Conv::histogramStyleConv.conv(type);
+}
+
+//---
+
+CQGnuPlotEnum::FillPattern
+CQGnuPlotEnum::
+fillPatternConv(const CGnuPlotTypes::FillPattern &type)
+{
+  return Conv::fillPatternConv.conv(type);
+}
+
+CGnuPlotTypes::FillPattern
+CQGnuPlotEnum::
+fillPatternConv(const CQGnuPlotEnum::FillPattern &type)
+{
+  return Conv::fillPatternConv.conv(type);
+}
+
+//---
+
 CQGnuPlotEnum::ObjectType
 CQGnuPlotEnum::
 objectTypeConv(const CGnuPlotTypes::ObjectType &type)
@@ -247,4 +353,36 @@ CQGnuPlotEnum::
 objectTypeConv(const ObjectType &type)
 {
   return Conv::objectTypeConv.conv(type);
+}
+
+//---
+
+CQGnuPlotEnum::BoxLabels
+CQGnuPlotEnum::
+boxLabelsConv(const CGnuPlotTypes::BoxLabels &labels)
+{
+  return Conv::boxLabelsConv.conv(labels);
+}
+
+CGnuPlotTypes::BoxLabels
+CQGnuPlotEnum::
+boxLabelsConv(const BoxLabels &labels)
+{
+  return Conv::boxLabelsConv.conv(labels);
+}
+
+//---
+
+CQGnuPlotEnum::BoxType
+CQGnuPlotEnum::
+boxTypeConv(const CGnuPlotTypes::BoxType &type)
+{
+  return Conv::boxTypeConv.conv(type);
+}
+
+CGnuPlotTypes::BoxType
+CQGnuPlotEnum::
+boxTypeConv(const BoxType &type)
+{
+  return Conv::boxTypeConv.conv(type);
 }

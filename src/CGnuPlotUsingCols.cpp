@@ -177,12 +177,14 @@ CGnuPlotUsingCols(CGnuPlot *plot) :
 {
   if (! plot_)
     expr_ = new CExpr;
+  else
+    expr_ = plot_->expr();
 }
 
 CGnuPlotUsingCols::
 ~CGnuPlotUsingCols()
 {
-  if (plot_)
+  if (! plot_)
     delete expr_;
 }
 

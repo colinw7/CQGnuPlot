@@ -20,6 +20,7 @@
 #include <CQGnuPlotCamera.h>
 #include <CQGnuPlotPm3D.h>
 #include <CQGnuPlotTimeStamp.h>
+#include <CQGnuPlotBoxPlot.h>
 #include <CQGnuPlotBubbleObject.h>
 
 #include <CQGnuPlotArrowObject.h>
@@ -298,6 +299,17 @@ createTimeStamp(CGnuPlotGroup *group)
   CQGnuPlotTimeStamp *timeStamp = new CQGnuPlotTimeStamp(qgroup);
 
   return timeStamp;
+}
+
+CGnuPlotBoxPlot *
+CQGnuPlotDevice::
+createBoxPlot(CGnuPlotPlot *plot)
+{
+  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
+
+  CQGnuPlotBoxPlot *boxPlot = new CQGnuPlotBoxPlot(qplot);
+
+  return boxPlot;
 }
 
 //---

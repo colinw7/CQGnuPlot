@@ -507,6 +507,8 @@ void
 CGnuPlotFile::
 processCsvFile()
 {
+  bool columnHeaders = isColumnHeaders();
+
   sets_.clear();
 
   CGnuPlotFile::Set    set;
@@ -521,6 +523,15 @@ processCsvFile()
   int i = 0;
 
   for (const auto &fields : fieldsArray) {
+    if (columnHeaders) {
+      for (const auto &f : fields)
+        columnHeaderFields_.push_back(f);
+
+      columnHeaders = false;
+
+      continue;
+    }
+
     CGnuPlotFile::SubSetLine subSetLine;
 
     subSetLine.num = i;

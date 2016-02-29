@@ -18,15 +18,6 @@ namespace CQGnuPlotUtil {
 
   //---
 
-  CQGnuPlotEnum::HistogramStyle histogramStyleConv(const CGnuPlot::HistogramStyle &type);
-  CGnuPlot::HistogramStyle histogramStyleConv(const CQGnuPlotEnum::HistogramStyle &type);
-
-  CQGnuPlotEnum::FillType fillTypeConv(const CGnuPlotTypes::FillType &type);
-  CGnuPlotTypes::FillType fillTypeConv(const CQGnuPlotEnum::FillType &type);
-
-  CQGnuPlotEnum::FillPattern fillPatternConv(const CGnuPlotTypes::FillPattern &type);
-  CGnuPlotTypes::FillPattern fillPatternConv(const CQGnuPlotEnum::FillPattern &type);
-
   Qt::BrushStyle fillPatternQtConv(const CGnuPlotTypes::FillPattern &type);
   CGnuPlotTypes::FillPattern fillPatternQtConv(const Qt::BrushStyle &type);
 

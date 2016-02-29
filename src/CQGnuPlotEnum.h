@@ -15,8 +15,8 @@ class CQGnuPlotEnum : public QObject {
   Q_ENUMS(LineJoinType)
   Q_ENUMS(SymbolType)
   Q_ENUMS(PlotStyle)
-  Q_ENUMS(HistogramStyle)
   Q_ENUMS(FillType)
+  Q_ENUMS(HistogramStyle)
   Q_ENUMS(FillPattern)
   Q_ENUMS(BoxWidthType)
   Q_ENUMS(ColorModelType)
@@ -24,10 +24,17 @@ class CQGnuPlotEnum : public QObject {
   Q_ENUMS(PaletteColorType)
   Q_ENUMS(ArrowCoordType)
   Q_ENUMS(ObjectType)
+  Q_ENUMS(BoxLabels)
+  Q_ENUMS(BoxType)
 
-  Q_PROPERTY(SymbolType symbolType READ symbolType WRITE setSymbolType)
-  Q_PROPERTY(PlotStyle  plotStyle  READ plotStyle  WRITE setPlotStyle )
-  Q_PROPERTY(ObjectType objectType READ objectType WRITE setObjectType )
+  Q_PROPERTY(SymbolType     symbolType     READ symbolType     WRITE setSymbolType    )
+  Q_PROPERTY(PlotStyle      plotStyle      READ plotStyle      WRITE setPlotStyle     )
+  Q_PROPERTY(FillType       fillType       READ fillType       WRITE setFillType      )
+  Q_PROPERTY(HistogramStyle histogramStyle READ histogramStyle WRITE setHistogramStyle)
+  Q_PROPERTY(FillPattern    fillPattern    READ fillPattern    WRITE setFillPattern   )
+  Q_PROPERTY(ObjectType     objectType     READ objectType     WRITE setObjectType    )
+  Q_PROPERTY(BoxLabels      boxLabels      READ boxLabels      WRITE setBoxLabels     )
+  Q_PROPERTY(BoxType        boxType        READ boxType        WRITE setBoxType       )
 
  public:
   enum HAlignType {
@@ -191,6 +198,18 @@ class CQGnuPlotEnum : public QObject {
     ObjectTypeRectangle
   };
 
+  enum BoxLabels {
+    BoxLabelOff,
+    BoxLabelAuto,
+    BoxLabelX,
+    BoxLabelX2
+  };
+
+  enum BoxType {
+    BoxTypeCandleSticks,
+    BoxTypeFinanceBars
+  };
+
  public:
   CQGnuPlotEnum() { }
 
@@ -244,6 +263,30 @@ class CQGnuPlotEnum : public QObject {
 
   //---
 
+  const FillType &fillType() const { return fillType_; }
+  void setFillType(const FillType &v) { fillType_ = v; }
+
+  static FillType fillTypeConv(const CGnuPlotTypes::FillType &type);
+  static CGnuPlotTypes::FillType fillTypeConv(const FillType &type);
+
+  //---
+
+  const HistogramStyle &histogramStyle() const { return histogramStyle_; }
+  void setHistogramStyle(const HistogramStyle &v) { histogramStyle_ = v; }
+
+  static HistogramStyle histogramStyleConv(const CGnuPlotTypes::HistogramStyle &type);
+  static CGnuPlotTypes::HistogramStyle histogramStyleConv(const HistogramStyle &type);
+
+  //---
+
+  const FillPattern &fillPattern() const { return fillPattern_; }
+  void setFillPattern(const FillPattern &v) { fillPattern_ = v; }
+
+  static FillPattern fillPatternConv(const CGnuPlotTypes::FillPattern &type);
+  static CGnuPlotTypes::FillPattern fillPatternConv(const FillPattern &type);
+
+  //---
+
   const ObjectType &objectType() const { return objectType_; }
   void setObjectType(const ObjectType &v) { objectType_ = v; }
 
@@ -252,14 +295,35 @@ class CQGnuPlotEnum : public QObject {
 
   //---
 
+  const BoxLabels &boxLabels() const { return boxLabels_; }
+  void setBoxLabels(const BoxLabels &v) { boxLabels_ = v; }
+
+  static BoxLabels boxLabelsConv(const CGnuPlotTypes::BoxLabels &type);
+  static CGnuPlotTypes::BoxLabels boxLabelsConv(const BoxLabels &type);
+
+  //---
+
+  const BoxType &boxType() const { return boxType_; }
+  void setBoxType(const BoxType &v) { boxType_ = v; }
+
+  static BoxType boxTypeConv(const CGnuPlotTypes::BoxType &type);
+  static CGnuPlotTypes::BoxType boxTypeConv(const BoxType &type);
+
+  //---
+
  private:
-  HAlignType   halignType_;
-  VAlignType   valignType_;
-  LineCapType  lineCapType_;
-  LineJoinType lineJoinType_;
-  SymbolType   symbolType_;
-  PlotStyle    plotStyle_;
-  ObjectType   objectType_;
+  HAlignType     halignType_;
+  VAlignType     valignType_;
+  LineCapType    lineCapType_;
+  LineJoinType   lineJoinType_;
+  SymbolType     symbolType_;
+  PlotStyle      plotStyle_;
+  FillType       fillType_;
+  HistogramStyle histogramStyle_;
+  FillPattern    fillPattern_;
+  ObjectType     objectType_;
+  BoxLabels      boxLabels_;
+  BoxType        boxType_;
 };
 
 #endif

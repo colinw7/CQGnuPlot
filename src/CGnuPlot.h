@@ -29,6 +29,7 @@ class CGnuPlotKey;
 class CGnuPlotPlot;
 class CGnuPlotReadLine;
 class CGnuPlotSVGDevice;
+class CGnuPlotPSDevice;
 class CGnuPlotLogDevice;
 class CGnuPlotWindow;
 class CGnuPlotTimeStamp;
@@ -422,6 +423,7 @@ class CGnuPlot {
     bool binary        { false };
     bool matrix        { false };
     bool csv           { false };
+    bool header        { false };
     char separator     { '\0' };
 
     Sizes                sizes;
@@ -466,6 +468,8 @@ class CGnuPlot {
   //----
 
   CGnuPlotDevice *device() const { return device_; }
+
+  void loadStatup();
 
   void addDevice(const std::string &name, CGnuPlotDevice *device);
   bool setDevice(const std::string &name);
@@ -1413,6 +1417,7 @@ class CGnuPlot {
   bool                      autoContinue_ { false };
   CExpr*                    expr_ { 0 };
   CGnuPlotSVGDevice*        svgDevice_ { 0 };
+  CGnuPlotPSDevice*         psDevice_ { 0 };
   CGnuPlotLogDevice*        logDevice_ { 0 };
   CGnuPlotDevice*           device_ { 0 };
   Devices                   devices_;

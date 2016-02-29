@@ -37,6 +37,22 @@ class CBoxWhisker {
     calc();
   }
 
+  double range() const { return range_; }
+
+  void setRange(double r) {
+    range_ = r;
+
+    calc();
+  }
+
+  double fraction() const { return fraction_; }
+
+  void setFraction(double r) {
+    fraction_ = r;
+
+    calc();
+  }
+
   double median() const { return median_; }
 
   double min() const { return min_; }
@@ -77,10 +93,10 @@ class CBoxWhisker {
 
       upper_ = (values_[nu1] + values_[nu2])/2.0;
 
-      // outliers outside 1.5*(upper - lower)
+      // outliers outside range()*(upper - lower)
       double routlier = upper_ - lower_;
-      double loutlier = lower_ - 1.5*routlier;
-      double uoutlier = upper_ + 1.5*routlier;
+      double loutlier = lower_ - range()*routlier;
+      double uoutlier = upper_ + range()*routlier;
 
       //---
 
@@ -126,9 +142,13 @@ class CBoxWhisker {
 
  private:
   Values   values_;
-  double   median_;
-  double   min_, max_;
-  double   lower_, upper_;
+  double   range_    { 1.5 };
+  double   fraction_ { 0.95 }; // TODO
+  double   median_   { 0.0 };
+  double   min_      { 0.0 };
+  double   max_      { 0.0 };
+  double   lower_    { 0.0 };
+  double   upper_    { 0.0 };
   Outliers outliers_;
 };
 

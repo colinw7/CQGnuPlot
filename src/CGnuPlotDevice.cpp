@@ -162,6 +162,13 @@ createTimeStamp(CGnuPlotGroup *group)
   return new CGnuPlotTimeStamp(group);
 }
 
+CGnuPlotBoxPlot *
+CGnuPlotDevice::
+createBoxPlot(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotBoxPlot(plot);
+}
+
 //---
 
 CGnuPlotArrowObject *

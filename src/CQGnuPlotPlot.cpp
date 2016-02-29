@@ -281,7 +281,7 @@ CQGnuPlotEnum::FillType
 CQGnuPlotPlot::
 fillType() const
 {
-  return CQGnuPlotUtil::fillTypeConv(CGnuPlotPlot::fillStyle_.style());
+  return CQGnuPlotEnum::fillTypeConv(CGnuPlotPlot::fillStyle_.style());
 }
 
 void
@@ -289,7 +289,7 @@ CQGnuPlotPlot::
 setFillType(const CQGnuPlotEnum::FillType &type)
 {
   if (type != fillType()) {
-    CGnuPlotPlot::fillStyle_.setStyle(CQGnuPlotUtil::fillTypeConv(type));
+    CGnuPlotPlot::fillStyle_.setStyle(CQGnuPlotEnum::fillTypeConv(type));
   }
 }
 
@@ -297,7 +297,7 @@ CQGnuPlotEnum::FillPattern
 CQGnuPlotPlot::
 fillPattern() const
 {
-  return CQGnuPlotUtil::fillPatternConv(CGnuPlotPlot::fillStyle_.pattern());
+  return CQGnuPlotEnum::fillPatternConv(CGnuPlotPlot::fillStyle_.pattern());
 }
 
 void
@@ -305,7 +305,7 @@ CQGnuPlotPlot::
 setFillPattern(const CQGnuPlotEnum::FillPattern &pattern)
 {
   if (pattern != fillPattern()) {
-    CGnuPlotPlot::fillStyle_.setPattern(CQGnuPlotUtil::fillPatternConv(pattern));
+    CGnuPlotPlot::fillStyle_.setPattern(CQGnuPlotEnum::fillPatternConv(pattern));
   }
 }
 

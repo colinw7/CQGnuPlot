@@ -96,6 +96,7 @@ CQGnuPlotDataDialog(CQGnuPlotMainWindow *window, const CGnuPlotFile &file) :
   formatLayout->setMargin(2); formatLayout->setSpacing(2);
 
   formatLayout->addWidget(csvCheck_ = new QCheckBox("CSV"));
+  formatLayout->addWidget(headerCheck_ = new QCheckBox("Header"));
   formatLayout->addStretch(1);
 
   loadLayout->addLayout(formatLayout);
@@ -304,6 +305,8 @@ loadSlot()
     return;
 
   dataFile.setCsv(csvCheck_->isChecked());
+
+  dataFile.setColumnHeaders(headerCheck_->isChecked());
 
   QString sepStr = separatorEdit_->text();
 

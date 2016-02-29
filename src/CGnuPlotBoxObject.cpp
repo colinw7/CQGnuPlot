@@ -58,8 +58,10 @@ draw(CGnuPlotRenderer *renderer) const
   renderer->strokeClipLine(CPoint2D(x(), minValue()), CPoint2D(x(), maxValue()), *stroke);
 
   // horizontal lines at min and max
-  double x11 = x() - lineWidth()/2;
-  double x21 = x() + lineWidth()/2;
+  double lw2 = lineWidth()/2;
+
+  double x11 = x() - lw2;
+  double x21 = x() + lw2;
 
   renderer->strokeClipLine(CPoint2D(x11, minValue()), CPoint2D(x21, minValue()), *stroke);
   renderer->strokeClipLine(CPoint2D(x11, maxValue()), CPoint2D(x21, maxValue()), *stroke);
@@ -70,16 +72,29 @@ draw(CGnuPlotRenderer *renderer) const
 
   bbox_ = CBBox2D(x12, lowerValue(), x22, upperValue());
 
-  renderer->fillRect  (bbox_, *fill);
-  renderer->strokeRect(bbox_, *stroke);
+  if (boxType() == BoxType::CandleSticks) {
+    // draw box from lower to upper
+    renderer->fillRect  (bbox_, *fill);
+    renderer->strokeRect(bbox_, *stroke);
 
-  // draw median in box
-  renderer->strokeClipLine(CPoint2D(x12, medianValue()), CPoint2D(x22, medianValue()), *stroke);
+    // draw median in box
+    renderer->strokeClipLine(CPoint2D(x12, medianValue()), CPoint2D(x22, medianValue()), *stroke);
+  }
+  else {
+    // draw lines at lower and upper
+    renderer->strokeClipLine(CPoint2D(x11, lowerValue()), CPoint2D(x21, lowerValue()), *stroke);
+    renderer->strokeClipLine(CPoint2D(x11, upperValue()), CPoint2D(x21, upperValue()), *stroke);
+
+    // draw median line
+    renderer->strokeClipLine(CPoint2D(x11, medianValue()), CPoint2D(x21, medianValue()), *stroke);
+  }
 
   // draw outliers
-  if (hasOutliers()) {
-    for (const auto &o : outlierValues())
-      renderer->drawMark(CPoint2D(x(), value(o)), *mark);
+  if (isShowOutliers()) {
+    if (hasOutliers()) {
+      for (const auto &o : outlierValues())
+        renderer->drawMark(CPoint2D(x(), value(o)), *mark);
+    }
   }
 
   // add range for pseudo (bbox renderer)
@@ -88,6 +103,43 @@ draw(CGnuPlotRenderer *renderer) const
 
     renderer->drawSymbol(CPoint2D(x() - 1, 0), symbol, 1, CRGBA(0,0,0), 1, true);
     renderer->drawSymbol(CPoint2D(x() + 1, 0), symbol, 1, CRGBA(0,0,0), 1, true);
+  }
+
+  // draw value labels
+  if (boxLabels() == BoxLabels::Auto) {
+    std::string ustr = CStrUtil::strprintf("%g", upperValue ());
+    std::string lstr = CStrUtil::strprintf("%g", lowerValue ());
+    std::string mstr = CStrUtil::strprintf("%g", medianValue());
+    std::string strl = CStrUtil::strprintf("%g", minValue   ());
+    std::string strh = CStrUtil::strprintf("%g", maxValue   ());
+
+    if (boxType() == BoxType::CandleSticks) {
+      renderer->drawHAlignedText(CPoint2D(x12 - lw2, upperValue ()),
+                                 HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+                                 VAlignPos(CVALIGN_TYPE_CENTER, 0), ustr, textColor());
+      renderer->drawHAlignedText(CPoint2D(x12 - lw2, lowerValue ()),
+                                 HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+                                 VAlignPos(CVALIGN_TYPE_CENTER, 0), lstr, textColor());
+      renderer->drawHAlignedText(CPoint2D(x22 + lw2, medianValue()),
+                                 HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                                 VAlignPos(CVALIGN_TYPE_CENTER, 0), mstr, textColor());
+    }
+    else {
+      renderer->drawHAlignedText(CPoint2D(x11 - lw2, upperValue ()),
+                                 HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+                                 VAlignPos(CVALIGN_TYPE_CENTER, 0), ustr, textColor());
+      renderer->drawHAlignedText(CPoint2D(x11 - lw2, lowerValue ()),
+                                 HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+                                 VAlignPos(CVALIGN_TYPE_CENTER, 0), lstr, textColor());
+      renderer->drawHAlignedText(CPoint2D(x21 + lw2, medianValue()),
+                                 HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                                 VAlignPos(CVALIGN_TYPE_CENTER, 0), mstr, textColor());
+    }
+
+    renderer->drawHAlignedText(CPoint2D(x21 + lw2, minValue()), HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                               VAlignPos(CVALIGN_TYPE_CENTER, 0), strl, textColor());
+    renderer->drawHAlignedText(CPoint2D(x21 + lw2, maxValue()), HAlignPos(CHALIGN_TYPE_LEFT, 0),
+                               VAlignPos(CVALIGN_TYPE_CENTER, 0), strh, textColor());
   }
 
   // draw label

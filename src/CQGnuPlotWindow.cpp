@@ -20,6 +20,7 @@
 #include <CQGnuPlotCamera.h>
 #include <CQGnuPlotPm3D.h>
 #include <CQGnuPlotTimeStamp.h>
+#include <CQGnuPlotBoxPlot.h>
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotDevice.h>
 #include <CQGnuPlotUtil.h>
@@ -57,6 +58,7 @@
 
 #include <CQGnuPlotPNGRenderer.h>
 #include <CGnuPlotSVGRenderer.h>
+#include <CGnuPlotPSRenderer.h>
 #include <CQUtil.h>
 #include <CQZoomRegion.h>
 #include <CQCursor.h>
@@ -967,6 +969,21 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
+  CQGnuPlotBoxPlot *qboxPlot = static_cast<CQGnuPlotBoxPlot  *>(qplot->getBoxPlot());
+
+  QString boxPlotName = plotName + "/boxPlot";
+
+  tree_->addProperty(boxPlotName, qboxPlot, "boxType");
+  tree_->addProperty(boxPlotName, qboxPlot, "range");
+  tree_->addProperty(boxPlotName, qboxPlot, "fraction");
+  tree_->addProperty(boxPlotName, qboxPlot, "outliers");
+  tree_->addProperty(boxPlotName, qboxPlot, "separation");
+  tree_->addProperty(boxPlotName, qboxPlot, "pointType");
+  tree_->addProperty(boxPlotName, qboxPlot, "boxLabels");
+  tree_->addProperty(boxPlotName, qboxPlot, "sorted");
+
+  //---
+
   if (! plot->arrowObjects().empty()) {
     //CQGnuPlotPlotArrowObjects *qarrowObjects = qplot->arrowObjectsObj();
 
@@ -1081,6 +1098,13 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(boxName, qbox, "y");
       tree_->addProperty(boxName, qbox, "lineWidth");
       tree_->addProperty(boxName, qbox, "boxWidth");
+      tree_->addProperty(boxName, qbox, "showOutliers");
+
+      tree_->addProperty(boxName, qbox, "boxType");
+      tree_->addProperty(boxName, qbox, "boxLabels");
+
+      tree_->addProperty(boxName, qbox, "range");
+      tree_->addProperty(boxName, qbox, "fraction");
 
       tree_->addProperty(boxName, qbox, "minValue");
       tree_->addProperty(boxName, qbox, "maxValue");
@@ -2070,13 +2094,20 @@ saveAcceptSlot()
   CQGnuPlotSaveDialog *dialog = qobject_cast<CQGnuPlotSaveDialog *>(sender());
 
   bool    isSVG    = dialog->isSVG();
+  bool    isPS     = dialog->isPS();
   QString filename = dialog->fileName();
 
-  if (isSVG) {
+  if      (isSVG) {
     if (filename == "")
       filename = "temp.svg";
 
-    saveSVG(filename);
+    saveSVG(filename, dialog->width(), dialog->height());
+  }
+  else if (isPS) {
+    if (filename == "")
+      filename = "temp.ps";
+
+    savePS(filename, dialog->width(), dialog->height());
   }
   else {
     if (filename == "")
@@ -2088,50 +2119,57 @@ saveAcceptSlot()
 
 void
 CQGnuPlotMainWindow::
-saveSVG(const QString &filename)
+saveSVG(const QString &filename, int width, int height)
 {
-  app()->pushDevice();
+  saveDevice(filename, "svg", width, height);
+}
 
-  app()->setDevice("svg");
-
-  app()->setOutputFile(filename.toStdString());
-
-  CGnuPlotSVGRenderer *renderer =
-    dynamic_cast<CGnuPlotSVGRenderer *>(app()->device()->renderer());
-
-  renderer->setWindow(this);
-
-  app()->device()->drawInit(this);
-
-  renderer->clear(CGnuPlotWindow::backgroundColor());
-
-  for (auto group : groups()) {
-    renderer->setRegion(group->region());
-
-    group->draw();
-  }
-
-  app()->device()->drawTerm();
-
-  app()->popDevice();
-
-  app()->setOutputFile("");
+void
+CQGnuPlotMainWindow::
+savePS(const QString &filename, int width, int height)
+{
+  saveDevice(filename, "ps", width, height);
 }
 
 void
 CQGnuPlotMainWindow::
 savePNG(const QString &filename, int width, int height)
 {
+  saveDevice(filename, "png", width, height);
+}
+
+void
+CQGnuPlotMainWindow::
+saveDevice(const QString &filename, const QString &deviceName, int width, int height)
+{
   app()->pushDevice();
 
-  app()->setDevice("png");
+  app()->setDevice(deviceName.toStdString());
 
   app()->setOutputFile(filename.toStdString());
 
-  CQGnuPlotPNGRenderer *renderer =
-    dynamic_cast<CQGnuPlotPNGRenderer *>(app()->device()->renderer());
+  CGnuPlotRenderer *renderer = 0;
 
-  renderer->setOutputSize(QSize(width, height));
+  if      (deviceName == "svg") {
+    CGnuPlotSVGRenderer *svgRenderer =
+      dynamic_cast<CGnuPlotSVGRenderer *>(app()->device()->renderer());
+
+    renderer = svgRenderer;
+  }
+  else if (deviceName == "ps") {
+    CGnuPlotPSRenderer *psRenderer =
+      dynamic_cast<CGnuPlotPSRenderer *>(app()->device()->renderer());
+
+    renderer = psRenderer;
+  }
+  else {
+    CQGnuPlotPNGRenderer *pngRenderer =
+      dynamic_cast<CQGnuPlotPNGRenderer *>(app()->device()->renderer());
+
+    pngRenderer->setOutputSize(QSize(width, height));
+
+    renderer = pngRenderer;
+  }
 
   renderer->setWindow(this);
 

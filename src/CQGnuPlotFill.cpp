@@ -28,8 +28,8 @@ setValues(const CQGnuPlotFill &fill)
 {
   CGnuPlotFill::setColor     (fromQColor(fill.color()));
   CGnuPlotFill::setBackground(fromQColor(fill.background()));
-  CGnuPlotFill::setType      (CQGnuPlotUtil::fillTypeConv(fill.type()));
-  CGnuPlotFill::setPattern   (CQGnuPlotUtil::fillPatternConv(fill.pattern()));
+  CGnuPlotFill::setType      (CQGnuPlotEnum::fillTypeConv(fill.type()));
+  CGnuPlotFill::setPattern   (CQGnuPlotEnum::fillPatternConv(fill.pattern()));
 }
 
 QColor
@@ -68,14 +68,14 @@ CQGnuPlotEnum::FillType
 CQGnuPlotFill::
 type() const
 {
-  return CQGnuPlotUtil::fillTypeConv(CGnuPlotFill::type());
+  return CQGnuPlotEnum::fillTypeConv(CGnuPlotFill::type());
 }
 
 void
 CQGnuPlotFill::
 setType(const CQGnuPlotEnum::FillType &type)
 {
-  CGnuPlotFill::setType(CQGnuPlotUtil::fillTypeConv(type));
+  CGnuPlotFill::setType(CQGnuPlotEnum::fillTypeConv(type));
 
   emit changed();
 }
@@ -84,14 +84,14 @@ CQGnuPlotEnum::FillPattern
 CQGnuPlotFill::
 pattern() const
 {
-  return CQGnuPlotUtil::fillPatternConv(CGnuPlotFill::pattern());
+  return CQGnuPlotEnum::fillPatternConv(CGnuPlotFill::pattern());
 }
 
 void
 CQGnuPlotFill::
 setPattern(const CQGnuPlotEnum::FillPattern &pattern)
 {
-  CGnuPlotFill::setPattern(CQGnuPlotUtil::fillPatternConv(pattern));
+  CGnuPlotFill::setPattern(CQGnuPlotEnum::fillPatternConv(pattern));
 
   emit changed();
 }

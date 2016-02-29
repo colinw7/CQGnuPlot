@@ -1,25 +1,27 @@
 #ifndef CGnuPlotBoxPlot_H
 #define CGnuPlotBoxPlot_H
 
+#include <COptVal.h>
+#include <CGnuPlotTypes.h>
+
+class CGnuPlotPlot;
+
 class CGnuPlotBoxPlot {
  public:
-  enum class Type {
-    CandleSticks,
-    FinanceBars
-  };
-
-  enum class Labels {
-    Off,
-    Auto,
-    X,
-    X2
-  };
+  typedef CGnuPlotTypes::BoxType   BoxType;
+  typedef CGnuPlotTypes::BoxLabels BoxLabels;
 
  public:
-  CGnuPlotBoxPlot() { }
+  CGnuPlotBoxPlot(CGnuPlotPlot *plot=0);
 
-  const Type &type() const { return type_; }
-  void setType(const Type &t) { type_ = t; }
+  virtual ~CGnuPlotBoxPlot() { }
+
+  void init(const CGnuPlotBoxPlot &boxPlot);
+
+  CGnuPlotPlot *plot() const { return plot_; }
+
+  const BoxType &type() const { return type_; }
+  void setType(const BoxType &t) { type_ = t; }
 
   const COptReal &range() const { return range_; }
   void setRange(double r) { range_ = r; }
@@ -33,70 +35,29 @@ class CGnuPlotBoxPlot {
   const COptReal &separation() const { return separation_; }
   void setSeparation(double s) { separation_ = s; }
 
-  const COptInt &pointType() const { return pointtype_; }
-  void setPointType(int t) { pointtype_ = t; }
+  const COptInt &pointType() const { return pointType_; }
+  void setPointType(int t) { pointType_ = t; }
 
-  const Labels &labels() const { return labels_; }
-  void setLabels(const Labels &l) { labels_ = l; }
+  const BoxLabels &labels() const { return labels_; }
+  void setLabels(const BoxLabels &l) { labels_ = l; }
 
   bool sorted() const { return sorted_; }
   void setSorted(bool b) { sorted_ = b; }
 
-  void show(std::ostream &os) const {
-    if (type_ == Type::CandleSticks)
-      os << "boxplot representation is box and whisker" << std::endl;
-    else
-      os << "boxplot representation is finance bar" << std::endl;
+  void show(std::ostream &os) const;
 
-    if (fraction_.isValid())
-      os << "boxplot range extends from the median to include " <<
-            fraction_.getValue() << " of the points" << std::endl;
-    else
-      os << "boxplot range extends from the box by " <<
-            range_.getValue(1.5) << " of the interquartile distance" << std::endl;
+  void unset();
 
-    if (outliers_)
-      os << "outliers will be drawn using point type " << pointtype_.getValue(7) << std::endl;
-    else
-      os << "outliers will not be drawn" << std::endl;
-
-    os << "separation between boxplots is " << separation_.getValue(1) << std::endl;
-
-    if      (labels_ == Labels::Off)
-      os << "factor labels are off" << std::endl;
-    else if (labels_ == Labels::Auto)
-      os << "factor labels are automatic" << std::endl;
-    else if (labels_ == Labels::X)
-      os << "factor labels will be put on the x axis" << std::endl;
-    else if (labels_ == Labels::X2)
-      os << "factor labels will be put on the x2 axis" << std::endl;
-
-    if (! sorted_)
-      os << "factor labels will appear in the order they were found" << std::endl;
-    else
-      os << "factor labels will be sorted alphabetically" << std::endl;
-  }
-
-  void unset() {
-    type_       = Type::CandleSticks;
-    range_      = COptReal();
-    fraction_   = COptReal();
-    outliers_   = true;
-    separation_ = COptReal();
-    pointtype_  = COptInt();
-    labels_     = Labels::Auto;
-    sorted_     = false;
-  }
-
- private:
-  Type     type_       { Type::CandleSticks };
-  COptReal range_;
-  COptReal fraction_;
-  bool     outliers_   { true };
-  COptReal separation_;
-  COptInt  pointtype_;
-  Labels   labels_     { Labels::Auto };
-  bool     sorted_     { false };
+ protected:
+  CGnuPlotPlot* plot_       { 0 };
+  BoxType       type_       { BoxType::CandleSticks };
+  COptReal      range_;
+  COptReal      fraction_;
+  bool          outliers_   { true };
+  COptReal      separation_;
+  COptInt       pointType_;
+  BoxLabels     labels_     { BoxLabels::Auto };
+  bool          sorted_     { false };
 };
 
 #endif

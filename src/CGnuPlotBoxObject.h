@@ -6,6 +6,7 @@
 #include <CGnuPlotStroke.h>
 #include <CGnuPlotFill.h>
 #include <CGnuPlotMark.h>
+#include <CGnuPlotBoxPlot.h>
 #include <CBoxWhisker.h>
 
 class CGnuPlotPlot;
@@ -15,6 +16,8 @@ class CGnuPlotBoxObject : public CGnuPlotPlotObject {
  public:
   typedef CBoxWhisker::Values           Values;
   typedef CBoxWhisker::Outliers         Outliers;
+  typedef CGnuPlotTypes::BoxType        BoxType;
+  typedef CGnuPlotTypes::BoxLabels      BoxLabels;
   typedef std::pair<CHAlignType,double> HAlignPos;
   typedef std::pair<CVAlignType,double> VAlignPos;
 
@@ -39,9 +42,23 @@ class CGnuPlotBoxObject : public CGnuPlotPlotObject {
   double boxWidth() const { return boxWidth_; }
   void setBoxWidth(double r) { boxWidth_ = r; }
 
-  double minValue() const { return whisker_.min(); }
-  double maxValue() const { return whisker_.max(); }
+  bool isShowOutliers() const { return showOutliers_; }
+  void setShowOutliers(bool b) { showOutliers_ = b; }
 
+  const BoxType &boxType() const { return boxType_; }
+  void setBoxType(const BoxType &v) { boxType_ = v; }
+
+  const BoxLabels &boxLabels() const { return boxLabels_; }
+  void setBoxLabels(const BoxLabels &v) { boxLabels_ = v; }
+
+  double range() const { return whisker_.range(); }
+  void setRange(double r) { whisker_.setRange(r); }
+
+  double fraction() const { return whisker_.fraction(); }
+  void setFraction(double r) { whisker_.setFraction(r); }
+
+  double minValue   () const { return whisker_.min   (); }
+  double maxValue   () const { return whisker_.max   (); }
   double medianValue() const { return whisker_.median(); }
   double lowerValue () const { return whisker_.lower (); }
   double upperValue () const { return whisker_.upper (); }
@@ -79,6 +96,9 @@ class CGnuPlotBoxObject : public CGnuPlotPlotObject {
   double          y_             { 0 };
   double          lineWidth_     { 1 };
   double          boxWidth_      { 1 };
+  bool            showOutliers_  { true };
+  BoxType         boxType_       { BoxType::CandleSticks };
+  BoxLabels       boxLabels_     { BoxLabels::Auto };
   std::string     valueStr_;
   CRGBA           textColor_     { 0, 0, 0 };
   CGnuPlotStrokeP stroke_;

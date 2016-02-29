@@ -10,6 +10,8 @@ INCLUDEPATH += . ../include
 
 QMAKE_CXXFLAGS += -std=c++11 -DGNUPLOT_EXPR -DRGB_UTIL
 
+MOC_DIR = .moc
+
 CONFIG += debug
 
 # Input
@@ -22,6 +24,7 @@ CQGnuPlotArrowObject.cpp \
 CQGnuPlotAxis.cpp \
 CQGnuPlotBoxBarObject.cpp \
 CQGnuPlotBoxObject.cpp \
+CQGnuPlotBoxPlot.cpp \
 CQGnuPlotBubbleObject.cpp \
 CQGnuPlotCamera.cpp \
 CQGnuPlotCanvas.cpp \
@@ -86,6 +89,7 @@ CGnuPlotAxis.cpp \
 CGnuPlotAxisData.cpp \
 CGnuPlotBoxBarObject.cpp \
 CGnuPlotBoxObject.cpp \
+CGnuPlotBoxPlot.cpp \
 CGnuPlotBBoxRenderer.cpp \
 CGnuPlotBinaryFormat.cpp \
 CGnuPlotBorderData.cpp \
@@ -187,6 +191,9 @@ CGnuPlotStyleYErrorLines.cpp \
 \
 CGnuPlotSVGDevice.cpp \
 CGnuPlotSVGRenderer.cpp \
+CGnuPlotPSDevice.cpp \
+CGnuPlotPSRenderer.cpp \
+\
 CGnuPlotSize.cpp \
 CGnuPlotTitle.cpp \
 CGnuPlotWindow.cpp \
@@ -215,6 +222,7 @@ ChordDiagram.cpp  \
 CHull3D.cpp \
 CSunburst.cpp \
 CTreeMap.cpp \
+CPrint.cpp \
 \
 CMathGeom2D.cpp \
 CInvNorm.cpp \
@@ -246,6 +254,7 @@ CQGnuPlotArrowObject.h \
 CQGnuPlotAxis.h \
 CQGnuPlotBoxBarObject.h \
 CQGnuPlotBoxObject.h \
+CQGnuPlotBoxPlot.h \
 CQGnuPlotBubbleObject.h \
 CQGnuPlotCamera.h \
 CQGnuPlotCanvas.h \
@@ -311,6 +320,7 @@ CGnuPlotAxisData.h \
 CGnuPlotBBoxRenderer.h \
 CGnuPlotBoxBarObject.h \
 CGnuPlotBoxObject.h \
+CGnuPlotBoxPlot.h \
 CGnuPlotBinaryFormat.h \
 CGnuPlotBubbleObject.h \
 CGnuPlotCache.h \
@@ -362,8 +372,12 @@ CGnuPlotPrintFile.h \
 CGnuPlotRectangle.h \
 CGnuPlotRectObject.h \
 CGnuPlotRenderer.h \
+\
 CGnuPlotSVGDevice.h \
 CGnuPlotSVGRenderer.h \
+CGnuPlotPSDevice.h \
+CGnuPlotPSRenderer.h \
+\
 CGnuPlotSize.h \
 CGnuPlotStroke.h \
 CGnuPlotSurface.h \
@@ -442,6 +456,7 @@ ChordDiagram.h \
 CHull3D.h \
 CSunburst.h \
 CTreeMap.h \
+CPrint.h \
 \
 CMathGeom2D.h \
 CArcToBezier.h \

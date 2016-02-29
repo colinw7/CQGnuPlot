@@ -15,6 +15,34 @@ CQGnuPlotBoxObject::
 {
 }
 
+CQGnuPlotEnum::BoxType
+CQGnuPlotBoxObject::
+boxType()
+{
+  return CQGnuPlotEnum::boxTypeConv(CGnuPlotBoxObject::boxType());
+}
+
+void
+CQGnuPlotBoxObject::
+setBoxType(CQGnuPlotEnum::BoxType type)
+{
+  CGnuPlotBoxObject::setBoxType(CQGnuPlotEnum::boxTypeConv(type));
+}
+
+CQGnuPlotEnum::BoxLabels
+CQGnuPlotBoxObject::
+boxLabels()
+{
+  return CQGnuPlotEnum::boxLabelsConv(CGnuPlotBoxObject::boxLabels());
+}
+
+void
+CQGnuPlotBoxObject::
+setBoxLabels(CQGnuPlotEnum::BoxLabels labels)
+{
+  CGnuPlotBoxObject::setBoxLabels(CQGnuPlotEnum::boxLabelsConv(labels));
+}
+
 CQGnuPlotFill *
 CQGnuPlotBoxObject::
 fill() const

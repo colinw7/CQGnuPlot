@@ -244,3 +244,9 @@
  + Improve overwrite and space rendering in enhanced text
  + Use more position editors in create dialog
  + Honor key sample length and spacing in key
+
+### 02/28/2016
+ + support financebars and labels in boxplot
+ + add Postscript device
+ + column header support in data dialog
+ + add more box plot properties
