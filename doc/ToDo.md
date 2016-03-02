@@ -1,6 +1,8 @@
 ## ToDo
 
   + animation (fade in/out)
+  + per style data/properties
+  + less reload on data change
 
   + smooth bezier, sbezier, csplines, acsplines
   + support probe in more styles
