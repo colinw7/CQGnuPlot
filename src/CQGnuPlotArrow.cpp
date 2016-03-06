@@ -1,6 +1,6 @@
 #include <CQGnuPlotArrow.h>
 #include <CQGnuPlotGroup.h>
-#include <CQGnuPlotUtil.h>
+#include <CQGnuPlotEnum.h>
 #include <CQUtil.h>
 
 CQGnuPlotArrow::
@@ -14,14 +14,14 @@ CQGnuPlotEnum::ArrowCoordType
 CQGnuPlotArrow::
 getCoordType() const
 {
-  return CQGnuPlotUtil::arrowCoordTypeConv(CGnuPlotArrow::coordType());
+  return CQGnuPlotEnum::arrowCoordTypeConv(CGnuPlotArrow::coordType());
 }
 
 void
 CQGnuPlotArrow::
 setCoordType(CQGnuPlotEnum::ArrowCoordType type)
 {
-  CGnuPlotArrow::setCoordType(CQGnuPlotUtil::arrowCoordTypeConv(type));
+  CGnuPlotArrow::setCoordType(CQGnuPlotEnum::arrowCoordTypeConv(type));
 }
 
 QPointF

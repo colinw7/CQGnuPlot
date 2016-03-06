@@ -159,6 +159,60 @@ FillPatternConv fillPatternConv({
 
 //---
 
+typedef CEnumConv<CGnuPlotTypes::BoxWidthType, CQGnuPlotEnum::BoxWidthType> BoxWidthTypeConv;
+
+BoxWidthTypeConv boxWidthTypeConv({
+  { CGnuPlotTypes::BoxWidthType::AUTO    , CQGnuPlotEnum::BoxWidthAuto     },
+  { CGnuPlotTypes::BoxWidthType::ABSOLUTE, CQGnuPlotEnum::BoxWidthAbsolute },
+  { CGnuPlotTypes::BoxWidthType::RELATIVE, CQGnuPlotEnum::BoxWidthRelative },
+});
+
+//---
+
+typedef CEnumConv<CGradientPalette::ColorModel, CQGnuPlotEnum::ColorModelType> ColorModelTypeConv;
+
+ColorModelTypeConv colorModelTypeConv({
+  { CGradientPalette::ColorModel::RGB, CQGnuPlotEnum::ColorModelRGB},
+  { CGradientPalette::ColorModel::HSV, CQGnuPlotEnum::ColorModelHSV},
+  { CGradientPalette::ColorModel::CMY, CQGnuPlotEnum::ColorModelCMY},
+  { CGradientPalette::ColorModel::YIQ, CQGnuPlotEnum::ColorModelYIQ},
+  { CGradientPalette::ColorModel::XYZ, CQGnuPlotEnum::ColorModelXYZ},
+});
+
+//---
+
+typedef CEnumConv<CGnuPlotTypes::DrawLayer, CQGnuPlotEnum::DrawLayerType> DrawLayerTypeConv;
+
+DrawLayerTypeConv drawLayerTypeConv({
+  { CGnuPlotTypes::DrawLayer::DEFAULT, CQGnuPlotEnum::LayerDefault},
+  { CGnuPlotTypes::DrawLayer::FRONT  , CQGnuPlotEnum::LayerFront  },
+  { CGnuPlotTypes::DrawLayer::BACK   , CQGnuPlotEnum::LayerBack   },
+  { CGnuPlotTypes::DrawLayer::BEHIND , CQGnuPlotEnum::LayerBehind },
+});
+
+//---
+
+typedef CEnumConv<CGnuPlotPalette::ColorType, CQGnuPlotEnum::PaletteColorType> PaletteColorTypeConv;
+
+PaletteColorTypeConv paletteColorTypeConv({
+  { CGnuPlotPalette::ColorType::MODEL    , CQGnuPlotEnum::PaletteColorModel     },
+  { CGnuPlotPalette::ColorType::DEFINED  , CQGnuPlotEnum::PaletteColorDefined   },
+  { CGnuPlotPalette::ColorType::FUNCTIONS, CQGnuPlotEnum::PaletteColorFunctions },
+  { CGnuPlotPalette::ColorType::CUBEHELIX, CQGnuPlotEnum::PaletteColorCubeHelix },
+});
+
+//---
+
+typedef CEnumConv<CGnuPlotArrow::CoordType, CQGnuPlotEnum::ArrowCoordType> ArrorColorTypeConv;
+
+ArrorColorTypeConv arrowCoordTypeConv({
+  { CGnuPlotArrow::CoordType::FROM_TO   , CQGnuPlotEnum::ArrowCoordFromTo    },
+  { CGnuPlotArrow::CoordType::FROM_RTO  , CQGnuPlotEnum::ArrowCoordFromRTo   },
+  { CGnuPlotArrow::CoordType::FROM_ANGLE, CQGnuPlotEnum::ArrowCoordFromAngle },
+});
+
+//---
+
 typedef CEnumConv<CGnuPlotTypes::ObjectType, CQGnuPlotEnum::ObjectType> ObjectTypeConv;
 
 ObjectTypeConv objectTypeConv({
@@ -206,7 +260,7 @@ halignConv(const CHAlignType &type)
 
 CHAlignType
 CQGnuPlotEnum::
-halignConv(const CQGnuPlotEnum::HAlignType &type)
+halignConv(const HAlignType &type)
 {
   return Conv::halignConv.conv(type);
 }
@@ -222,7 +276,7 @@ valignConv(const CVAlignType &type)
 
 CVAlignType
 CQGnuPlotEnum::
-valignConv(const CQGnuPlotEnum::VAlignType &type)
+valignConv(const VAlignType &type)
 {
   return Conv::valignConv.conv(type);
 }
@@ -238,7 +292,7 @@ lineCapConv(const CLineCapType &type)
 
 CLineCapType
 CQGnuPlotEnum::
-lineCapConv(const CQGnuPlotEnum::LineCapType &type)
+lineCapConv(const LineCapType &type)
 {
   return Conv::lineCapConv.conv(type);
 }
@@ -254,7 +308,7 @@ lineJoinConv(const CLineJoinType &type)
 
 CLineJoinType
 CQGnuPlotEnum::
-lineJoinConv(const CQGnuPlotEnum::LineJoinType &type)
+lineJoinConv(const LineJoinType &type)
 {
   return Conv::lineJoinConv.conv(type);
 }
@@ -268,7 +322,7 @@ symbolConv(const CGnuPlotTypes::SymbolType &type)
   if (int(type) >= 0 && int(type) <= int(CGnuPlotTypes::SymbolType::LAST))
     return Conv::symbolConv.conv(type);
   else
-    return CQGnuPlotEnum::SymbolNone;
+    return SymbolNone;
 }
 
 CGnuPlotTypes::SymbolType
@@ -284,7 +338,7 @@ CQGnuPlotEnum::PlotStyle
 CQGnuPlotEnum::
 plotStyleConv(const CGnuPlotTypes::PlotStyle &type)
 {
-  return Conv::plotStyleConv.conv(type, CQGnuPlotEnum::PlotNone);
+  return Conv::plotStyleConv.conv(type, PlotNone);
 }
 
 CGnuPlotTypes::PlotStyle
@@ -321,7 +375,7 @@ histogramStyleConv(const CGnuPlotTypes::HistogramStyle &type)
 
 CGnuPlotTypes::HistogramStyle
 CQGnuPlotEnum::
-histogramStyleConv(const CQGnuPlotEnum::HistogramStyle &type)
+histogramStyleConv(const HistogramStyle &type)
 {
   return Conv::histogramStyleConv.conv(type);
 }
@@ -337,9 +391,89 @@ fillPatternConv(const CGnuPlotTypes::FillPattern &type)
 
 CGnuPlotTypes::FillPattern
 CQGnuPlotEnum::
-fillPatternConv(const CQGnuPlotEnum::FillPattern &type)
+fillPatternConv(const FillPattern &type)
 {
   return Conv::fillPatternConv.conv(type);
+}
+
+//---
+
+CQGnuPlotEnum::BoxWidthType
+CQGnuPlotEnum::
+boxWidthTypeConv(const CGnuPlotTypes::BoxWidthType &type)
+{
+  return Conv::boxWidthTypeConv.conv(type);
+}
+
+CGnuPlotTypes::BoxWidthType
+CQGnuPlotEnum::
+boxWidthTypeConv(const BoxWidthType &type)
+{
+  return Conv::boxWidthTypeConv.conv(type);
+}
+
+//---
+
+CQGnuPlotEnum::ColorModelType
+CQGnuPlotEnum::
+colorModelTypeConv(const CGradientPalette::ColorModel &layer)
+{
+  return Conv::colorModelTypeConv.conv(layer);
+}
+
+CGradientPalette::ColorModel
+CQGnuPlotEnum::
+colorModelTypeConv(const ColorModelType &layer)
+{
+  return Conv::colorModelTypeConv.conv(layer);
+}
+
+//---
+
+CQGnuPlotEnum::DrawLayerType
+CQGnuPlotEnum::
+drawLayerTypeConv(const CGnuPlotTypes::DrawLayer &layer)
+{
+  return Conv::drawLayerTypeConv.conv(layer);
+}
+
+CGnuPlotTypes::DrawLayer
+CQGnuPlotEnum::
+drawLayerTypeConv(const DrawLayerType &layer)
+{
+  return Conv::drawLayerTypeConv.conv(layer);
+}
+
+//---
+
+CQGnuPlotEnum::PaletteColorType
+CQGnuPlotEnum::
+paletteColorTypeConv(const CGnuPlotPalette::ColorType &layer)
+{
+  return Conv::paletteColorTypeConv.conv(layer);
+}
+
+CGnuPlotPalette::ColorType
+CQGnuPlotEnum::
+paletteColorTypeConv(const PaletteColorType &layer)
+{
+  return Conv::paletteColorTypeConv.conv(layer);
+}
+
+//---
+
+CQGnuPlotEnum::ArrowCoordType
+CQGnuPlotEnum::
+arrowCoordTypeConv(const CGnuPlotArrow::CoordType  &type)
+{
+  return Conv::arrowCoordTypeConv.conv(type);
+}
+
+CGnuPlotArrow::CoordType
+CQGnuPlotEnum::
+arrowCoordTypeConv(const ArrowCoordType &type)
+{
+  return Conv::arrowCoordTypeConv.conv(type);
 }
 
 //---
@@ -348,7 +482,7 @@ CQGnuPlotEnum::ObjectType
 CQGnuPlotEnum::
 objectTypeConv(const CGnuPlotTypes::ObjectType &type)
 {
-  return Conv::objectTypeConv.conv(type, CQGnuPlotEnum::ObjectTypeNone);
+  return Conv::objectTypeConv.conv(type, ObjectTypeNone);
 }
 
 CGnuPlotTypes::ObjectType

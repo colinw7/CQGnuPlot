@@ -819,8 +819,11 @@ class CGnuPlot {
 
   void waitForMouse(int mask, const std::string &msg);
 
-  void mousePress(const CGnuPlotMouseEvent &mouseEvent);
-  void keyPress  (const CGnuPlotKeyEvent   &keyEvent  );
+  void mousePress  (const CGnuPlotMouseEvent &mouseEvent);
+  void mouseMove   (const CGnuPlotMouseEvent &mouseEvent, bool pressed);
+  void mouseRelease(const CGnuPlotMouseEvent &mouseEvent);
+
+  void keyPress(const CGnuPlotKeyEvent &keyEvent);
 
   CGnuPlotWindowP createNewWindow();
 

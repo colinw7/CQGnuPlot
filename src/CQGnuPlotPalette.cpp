@@ -1,6 +1,6 @@
 #include <CQGnuPlotPalette.h>
 #include <CQGnuPlotGroup.h>
-#include <CQGnuPlotUtil.h>
+#include <CQGnuPlotEnum.h>
 
 CQGnuPlotPalette::
 CQGnuPlotPalette(CQGnuPlotGroup *group) :
@@ -17,26 +17,26 @@ CQGnuPlotEnum::PaletteColorType
 CQGnuPlotPalette::
 colorType() const
 {
-  return CQGnuPlotUtil::paletteColorTypeConv(CGnuPlotPalette::colorType());
+  return CQGnuPlotEnum::paletteColorTypeConv(CGnuPlotPalette::colorType());
 }
 
 void
 CQGnuPlotPalette::
 setColorType(CQGnuPlotEnum::PaletteColorType c)
 {
-  CGnuPlotPalette::setColorType(CQGnuPlotUtil::paletteColorTypeConv(c));
+  CGnuPlotPalette::setColorType(CQGnuPlotEnum::paletteColorTypeConv(c));
 }
 
 CQGnuPlotEnum::ColorModelType
 CQGnuPlotPalette::
 colorModel() const
 {
-  return CQGnuPlotUtil::colorModelTypeConv(CGnuPlotPalette::colorModel());
+  return CQGnuPlotEnum::colorModelTypeConv(CGnuPlotPalette::colorModel());
 }
 
 void
 CQGnuPlotPalette::
 setColorModel(CQGnuPlotEnum::ColorModelType c)
 {
-  CGnuPlotPalette::setColorModel(CQGnuPlotUtil::colorModelTypeConv(c));
+  CGnuPlotPalette::setColorModel(CQGnuPlotEnum::colorModelTypeConv(c));
 }

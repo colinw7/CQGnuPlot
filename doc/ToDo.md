@@ -85,9 +85,3 @@
 
   + single line/path for contours
   + vertical line probe on line plots
-
-### Plots
- + force directed
- + stacked area
- + choropleth (use polygons)
- + hierarchical treemap, sunburst, bubble, dendogram

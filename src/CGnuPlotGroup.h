@@ -351,8 +351,11 @@ class CGnuPlotGroup {
 
   //-----
 
-  virtual void mousePress(const CGnuPlotMouseEvent &mouseEvent);
-  virtual void keyPress  (const CGnuPlotKeyEvent   &keyEvent  );
+  virtual void mousePress  (const CGnuPlotMouseEvent &mouseEvent);
+  virtual void mouseMove   (const CGnuPlotMouseEvent &mouseEvent, bool pressed);
+  virtual void mouseRelease(const CGnuPlotMouseEvent &mouseEvent);
+
+  virtual void keyPress(const CGnuPlotKeyEvent   &keyEvent  );
 
   virtual bool mouseProbe(CGnuPlotProbeEvent &probeEvent);
 

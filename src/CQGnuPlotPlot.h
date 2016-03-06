@@ -36,6 +36,8 @@ class CQGnuPlotBoxBarObject;
 class CQGnuPlotPieObject;
 class CQGnuPlotPointObject;
 
+class QTimer;
+
 class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_OBJECT
 
@@ -182,14 +184,24 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   void draw() override;
 
-  void mousePress(const CGnuPlotMouseEvent &mouseEvent, Objects &objects);
-  void mouseMove (const CGnuPlotMouseEvent &mouseEvent);
-  bool mouseTip  (const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip) override;
+  void mousePress  (const CGnuPlotMouseEvent &mouseEvent) override;
+  void mouseMove   (const CGnuPlotMouseEvent &mouseEvent, bool pressed) override;
+  void mouseRelease(const CGnuPlotMouseEvent &mouseEvent) override;
+
+  bool mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip) override;
+
+  void mouseObjects(const CGnuPlotMouseEvent &mouseEvent, Objects &objects);
 
   void moveObjects(int key);
 
+ private:
+  void initTimer();
+
+ private slots:
+  void animateSlot();
+
  public:
-  CQGnuPlotGroup*                 group_;
+  CQGnuPlotGroup*                 group_ { 0 };
   COptValT<CPoint2D>              selectedPos_;
   CQGnuPlotPlotArrowObjects*      arrowObjects_;
   CQGnuPlotPlotBoxBarObjects*     boxBarObjects_;
@@ -205,6 +217,7 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   CQGnuPlotPlotPointObjects*      pointObjects_;
   CQGnuPlotPlotPolygonObjects*    polygonObjects_;
   CQGnuPlotPlotRectObjects*       rectObjects_;
+  QTimer*                         timer_ { 0 };
 };
 
 //----------

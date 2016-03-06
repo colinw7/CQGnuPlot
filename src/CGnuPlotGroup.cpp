@@ -1123,6 +1123,20 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
   expr->createIntegerVariable("MOUSE_CTRL" , mouseEvent.isControl());
 }
 
+void
+CGnuPlotGroup::
+mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
+{
+  app()->mouseMove(mouseEvent, pressed);
+}
+
+void
+CGnuPlotGroup::
+mouseRelease(const CGnuPlotMouseEvent &mouseEvent)
+{
+  app()->mouseRelease(mouseEvent);
+}
+
 bool
 CGnuPlotGroup::
 mouseProbe(CGnuPlotProbeEvent &probeEvent)

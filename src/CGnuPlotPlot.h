@@ -918,8 +918,11 @@ class CGnuPlotPlot {
 
   //------
 
-  virtual bool mouseTip  (const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tipData);
-  virtual void mousePress(const CGnuPlotMouseEvent &mouseEvent);
+  virtual void mousePress  (const CGnuPlotMouseEvent &mouseEvent);
+  virtual void mouseMove   (const CGnuPlotMouseEvent &mouseEvent, bool pressed);
+  virtual void mouseRelease(const CGnuPlotMouseEvent &mouseEvent);
+
+  virtual bool mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tipData);
 
   virtual bool mouseProbe(CGnuPlotProbeEvent &probeEvent);
 

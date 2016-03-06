@@ -2,7 +2,7 @@
 #include <CQGnuPlotWindow.h>
 #include <CQGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
-#include <CQGnuPlotUtil.h>
+#include <CQGnuPlotEnum.h>
 #include <CQUtil.h>
 
 CQGnuPlotAnnotation::
@@ -52,14 +52,14 @@ CQGnuPlotEnum::DrawLayerType
 CQGnuPlotAnnotation::
 getDrawLayer() const
 {
-  return CQGnuPlotUtil::drawLayerTypeConv(obj_->getLayer());
+  return CQGnuPlotEnum::drawLayerTypeConv(obj_->getLayer());
 }
 
 void
 CQGnuPlotAnnotation::
 setDrawLayer(const DrawLayerType &layer)
 {
-  obj_->setLayer(CQGnuPlotUtil::drawLayerTypeConv(layer));
+  obj_->setLayer(CQGnuPlotEnum::drawLayerTypeConv(layer));
 }
 
 bool

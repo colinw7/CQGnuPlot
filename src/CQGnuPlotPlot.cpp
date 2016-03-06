@@ -19,10 +19,13 @@
 
 #include <CQGnuPlotFill.h>
 #include <CQGnuPlotStroke.h>
+#include <CGnuPlotStyleBase.h>
 
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
+
+#include <QTimer>
 
 CQGnuPlotPlot::
 CQGnuPlotPlot(CQGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style) :
@@ -45,6 +48,8 @@ CQGnuPlotPlot(CQGnuPlotGroup *group, CGnuPlotTypes::PlotStyle style) :
   pointObjects_      = new CQGnuPlotPlotPointObjects(this);
   polygonObjects_    = new CQGnuPlotPlotPolygonObjects(this);
   rectObjects_       = new CQGnuPlotPlotRectObjects(this);
+
+  initTimer();
 }
 
 CQGnuPlotPlot::
@@ -155,7 +160,39 @@ setPlotStyle(const CQGnuPlotEnum::PlotStyle &s)
 {
   if (s != plotStyle()) {
     CGnuPlotPlot::setStyle(CQGnuPlotEnum::plotStyleConv(s));
+
+    initTimer();
   }
+}
+
+void
+CQGnuPlotPlot::
+initTimer()
+{
+  CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
+  if (! style) return;
+
+  delete timer_;
+
+  if (style->isAnimated()) {
+    timer_ = new QTimer;
+
+    connect(timer_, SIGNAL(timeout()), this, SLOT(animateSlot()));
+
+    timer_->start(style->animateTimeout());
+  }
+}
+
+void
+CQGnuPlotPlot::
+animateSlot()
+{
+  CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
+  if (! style) return;
+
+  style->animate(this);
+
+  qwindow()->redraw();
 }
 
 double
@@ -329,7 +366,7 @@ CQGnuPlotEnum::BoxWidthType
 CQGnuPlotPlot::
 getBoxWidthType() const
 {
-  return CQGnuPlotUtil::boxWidthTypeConv(CGnuPlotPlot::getBoxWidthType());
+  return CQGnuPlotEnum::boxWidthTypeConv(CGnuPlotPlot::getBoxWidthType());
 }
 
 void
@@ -337,7 +374,7 @@ CQGnuPlotPlot::
 setBoxWidthType(const CQGnuPlotEnum::BoxWidthType &type)
 {
   if (type != getBoxWidthType()) {
-    CGnuPlotPlot::setBoxWidthType(CQGnuPlotUtil::boxWidthTypeConv(type));
+    CGnuPlotPlot::setBoxWidthType(CQGnuPlotEnum::boxWidthTypeConv(type));
   }
 }
 
@@ -359,7 +396,28 @@ draw()
 
 void
 CQGnuPlotPlot::
-mousePress(const CGnuPlotMouseEvent &mouseEvent, Objects &objects)
+mousePress(const CGnuPlotMouseEvent &mouseEvent)
+{
+  CGnuPlotPlot::mousePress(mouseEvent);
+}
+
+void
+CQGnuPlotPlot::
+mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
+{
+  CGnuPlotPlot::mouseMove(mouseEvent, pressed);
+}
+
+void
+CQGnuPlotPlot::
+mouseRelease(const CGnuPlotMouseEvent &mouseEvent)
+{
+  CGnuPlotPlot::mouseRelease(mouseEvent);
+}
+
+void
+CQGnuPlotPlot::
+mouseObjects(const CGnuPlotMouseEvent &mouseEvent, Objects &objects)
 {
   for (auto &arrow : arrowObjects()) {
     if (! arrow->inside(mouseEvent))
@@ -484,14 +542,6 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent, Objects &objects)
 
     objects.push_back(qrect);
   }
-
-  CGnuPlotPlot::mousePress(mouseEvent);
-}
-
-void
-CQGnuPlotPlot::
-mouseMove(const CGnuPlotMouseEvent &)
-{
 }
 
 bool

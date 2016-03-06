@@ -53,9 +53,17 @@ class CGnuPlotStyleBase {
   virtual bool mouseTip(CGnuPlotPlot *, const CGnuPlotMouseEvent &,
                         CGnuPlotTipData &) { return false; }
 
-  virtual void mousePress(CGnuPlotPlot *, const CGnuPlotMouseEvent &) { }
+  virtual void mousePress  (CGnuPlotPlot *, const CGnuPlotMouseEvent &) { }
+  virtual void mouseMove   (CGnuPlotPlot *, const CGnuPlotMouseEvent &, bool) { }
+  virtual void mouseRelease(CGnuPlotPlot *, const CGnuPlotMouseEvent &) { }
 
   virtual bool mouseProbe(CGnuPlotPlot *, CGnuPlotProbeEvent &) { return false; }
+
+  virtual bool isAnimated() const { return false; }
+
+  virtual int animateTimeout() const { return 30; }
+
+  virtual void animate(CGnuPlotPlot *) const { }
 
  protected:
   CGnuPlotTypes::PlotStyle style_;

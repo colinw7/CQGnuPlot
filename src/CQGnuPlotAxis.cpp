@@ -1,6 +1,6 @@
 #include <CQGnuPlotAxis.h>
 #include <CQGnuPlotGroup.h>
-#include <CQGnuPlotUtil.h>
+#include <CQGnuPlotEnum.h>
 #include <CQGnuPlotRenderer.h>
 #include <CQUtil.h>
 
@@ -61,14 +61,14 @@ CQGnuPlotEnum::DrawLayerType
 CQGnuPlotAxis::
 getGridLayer() const
 {
-  return CQGnuPlotUtil::drawLayerTypeConv(CGnuPlotAxis::getGridLayer());
+  return CQGnuPlotEnum::drawLayerTypeConv(CGnuPlotAxis::getGridLayer());
 }
 
 void
 CQGnuPlotAxis::
 setGridLayer(const DrawLayerType &layer)
 {
-  CGnuPlotAxis::setGridLayer(CQGnuPlotUtil::drawLayerTypeConv(layer));
+  CGnuPlotAxis::setGridLayer(CQGnuPlotEnum::drawLayerTypeConv(layer));
 }
 
 QFont

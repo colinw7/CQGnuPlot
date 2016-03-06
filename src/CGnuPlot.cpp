@@ -32,6 +32,7 @@
 #include <CGnuPlotStyleErrorBars.h>
 #include <CGnuPlotStyleFilledCurves.h>
 #include <CGnuPlotStyleFinanceBars.h>
+#include <CGnuPlotStyleForceDirected.h>
 #include <CGnuPlotStyleHierBubblePlot.h>
 #include <CGnuPlotStyleImage.h>
 #include <CGnuPlotStyleImpulses.h>
@@ -241,6 +242,7 @@ addPlotStyles()
   addPlotStyle(PlotStyle::FILLEDCURVES  , new CGnuPlotStyleFilledCurves  );
   addPlotStyle(PlotStyle::FILLSTEPS     , new CGnuPlotStyleFillSteps     );
   addPlotStyle(PlotStyle::FINANCEBARS   , new CGnuPlotStyleFinanceBars   );
+  addPlotStyle(PlotStyle::FORCEDIRECTED , new CGnuPlotStyleForceDirected );
   addPlotStyle(PlotStyle::FSTEPS        , new CGnuPlotStyleFSteps        );
   addPlotStyle(PlotStyle::HIERBUBBLEPLOT, new CGnuPlotStyleHierBubblePlot);
   addPlotStyle(PlotStyle::HIERTREEMAP   , new CGnuPlotStyleTreeMap(true) );
@@ -545,6 +547,18 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
 
   if (readLine_.isValid())
     readLine_->doInterrupt();
+}
+
+void
+CGnuPlot::
+mouseMove(const CGnuPlotMouseEvent &, bool)
+{
+}
+
+void
+CGnuPlot::
+mouseRelease(const CGnuPlotMouseEvent &)
+{
 }
 
 void

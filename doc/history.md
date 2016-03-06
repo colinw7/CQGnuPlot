@@ -252,5 +252,7 @@
  + add more box plot properties
 
 ### 03/06/2016
- + Add Dendrogram, Bivariate, Hier Bubble, Hier Tree and Stacked Area Plots
+ + Add Dendrogram, Bivariate, Hier Bubble, Hier Tree and Stacked Area plots
  + Add auto fit to tree widget
+ + Add Force Directed plot
+ + Add animation support

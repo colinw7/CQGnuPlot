@@ -169,6 +169,7 @@ CGnuPlotStyleEllipses.cpp \
 CGnuPlotStyleErrorBars.cpp \
 CGnuPlotStyleFilledCurves.cpp \
 CGnuPlotStyleFinanceBars.cpp \
+CGnuPlotStyleForceDirected.cpp \
 CGnuPlotStyleHierBubblePlot.cpp \
 CGnuPlotStyleImage.cpp \
 CGnuPlotStyleImpulses.cpp \
@@ -410,6 +411,7 @@ CGnuPlotStyleEllipses.h \
 CGnuPlotStyleErrorBars.h \
 CGnuPlotStyleFilledCurves.h \
 CGnuPlotStyleFinanceBars.h \
+CGnuPlotStyleForceDirected.h \
 CGnuPlotStyle.h \
 CGnuPlotStyleImage.h \
 CGnuPlotStyleImpulses.h \

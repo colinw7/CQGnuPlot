@@ -284,6 +284,7 @@ namespace CStrUniqueMatch {
                           {"filledcurves"   , CGnuPlotTypes::PlotStyle::FILLEDCURVES},
                           {"fillsteps"      , CGnuPlotTypes::PlotStyle::FILLSTEPS},
                           {"financebars"    , CGnuPlotTypes::PlotStyle::FINANCEBARS},
+                          {"forcedirected"  , CGnuPlotTypes::PlotStyle::FORCEDIRECTED},
                           {"fsteps"         , CGnuPlotTypes::PlotStyle::FSTEPS},
                           {"hierbubblechart", CGnuPlotTypes::PlotStyle::HIERBUBBLEPLOT},
                           {"hiertreemap"    , CGnuPlotTypes::PlotStyle::HIERTREEMAP},

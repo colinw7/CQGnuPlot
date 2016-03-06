@@ -1,7 +1,7 @@
 #include <CQGnuPlotArrowObject.h>
 #include <CQGnuPlotPlot.h>
 #include <CQGnuPlotGroup.h>
-#include <CQGnuPlotUtil.h>
+#include <CQGnuPlotEnum.h>
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotStroke.h>
 #include <CQUtil.h>
@@ -21,14 +21,14 @@ CQGnuPlotEnum::ArrowCoordType
 CQGnuPlotArrowObject::
 getCoordType() const
 {
-  return CQGnuPlotUtil::arrowCoordTypeConv(CGnuPlotArrowObject::coordType());
+  return CQGnuPlotEnum::arrowCoordTypeConv(CGnuPlotArrowObject::coordType());
 }
 
 void
 CQGnuPlotArrowObject::
 setCoordType(CQGnuPlotEnum::ArrowCoordType type)
 {
-  CGnuPlotArrowObject::setCoordType(CQGnuPlotUtil::arrowCoordTypeConv(type));
+  CGnuPlotArrowObject::setCoordType(CQGnuPlotEnum::arrowCoordTypeConv(type));
 }
 
 QPointF

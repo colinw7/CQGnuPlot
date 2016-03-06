@@ -2,6 +2,9 @@
 #define CQGnuPlotEnum_H
 
 #include <CGnuPlotTypes.h>
+#include <CGnuPlotPalette.h>
+#include <CGnuPlotArrow.h>
+#include <CGradientPalette.h>
 #include <CLineCapType.h>
 #include <CLineJoinType.h>
 #include <QObject>
@@ -27,14 +30,19 @@ class CQGnuPlotEnum : public QObject {
   Q_ENUMS(BoxLabels)
   Q_ENUMS(BoxType)
 
-  Q_PROPERTY(SymbolType     symbolType     READ symbolType     WRITE setSymbolType    )
-  Q_PROPERTY(PlotStyle      plotStyle      READ plotStyle      WRITE setPlotStyle     )
-  Q_PROPERTY(FillType       fillType       READ fillType       WRITE setFillType      )
-  Q_PROPERTY(HistogramStyle histogramStyle READ histogramStyle WRITE setHistogramStyle)
-  Q_PROPERTY(FillPattern    fillPattern    READ fillPattern    WRITE setFillPattern   )
-  Q_PROPERTY(ObjectType     objectType     READ objectType     WRITE setObjectType    )
-  Q_PROPERTY(BoxLabels      boxLabels      READ boxLabels      WRITE setBoxLabels     )
-  Q_PROPERTY(BoxType        boxType        READ boxType        WRITE setBoxType       )
+  Q_PROPERTY(SymbolType       symbolType       READ symbolType       WRITE setSymbolType      )
+  Q_PROPERTY(PlotStyle        plotStyle        READ plotStyle        WRITE setPlotStyle       )
+  Q_PROPERTY(FillType         fillType         READ fillType         WRITE setFillType        )
+  Q_PROPERTY(HistogramStyle   histogramStyle   READ histogramStyle   WRITE setHistogramStyle  )
+  Q_PROPERTY(FillPattern      fillPattern      READ fillPattern      WRITE setFillPattern     )
+  Q_PROPERTY(BoxWidthType     boxWidthType     READ boxWidthType     WRITE setBoxWidthType    )
+  Q_PROPERTY(ColorModelType   colorModelType   READ colorModelType   WRITE setColorModelType  )
+  Q_PROPERTY(DrawLayerType    drawLayerType    READ drawLayerType    WRITE setDrawLayerType   )
+  Q_PROPERTY(PaletteColorType paletteColorType READ paletteColorType WRITE setPaletteColorType)
+  Q_PROPERTY(ArrowCoordType   arrowCoordType   READ arrowCoordType   WRITE setArrowCoordType  )
+  Q_PROPERTY(ObjectType       objectType       READ objectType       WRITE setObjectType      )
+  Q_PROPERTY(BoxLabels        boxLabels        READ boxLabels        WRITE setBoxLabels       )
+  Q_PROPERTY(BoxType          boxType          READ boxType          WRITE setBoxType         )
 
  public:
   enum HAlignType {
@@ -290,6 +298,46 @@ class CQGnuPlotEnum : public QObject {
 
   //---
 
+  const BoxWidthType &boxWidthType() const { return boxWidthType_; }
+  void setBoxWidthType(const BoxWidthType &v) { boxWidthType_ = v; }
+
+  static BoxWidthType boxWidthTypeConv(const CGnuPlotTypes::BoxWidthType &type);
+  static CGnuPlotTypes::BoxWidthType boxWidthTypeConv(const BoxWidthType &type);
+
+  //---
+
+  const ColorModelType &colorModelType() const { return colorModelType_; }
+  void setColorModelType(const ColorModelType &v) { colorModelType_ = v; }
+
+  static ColorModelType colorModelTypeConv(const CGradientPalette::ColorModel &type);
+  static CGradientPalette::ColorModel colorModelTypeConv(const ColorModelType &type);
+
+  //---
+
+  const DrawLayerType &drawLayerType() const { return drawLayerType_; }
+  void setDrawLayerType(const DrawLayerType &v) { drawLayerType_ = v; }
+
+  static DrawLayerType drawLayerTypeConv(const CGnuPlotTypes::DrawLayer &type);
+  static CGnuPlotTypes::DrawLayer drawLayerTypeConv(const DrawLayerType &type);
+
+  //---
+
+  const PaletteColorType &paletteColorType() const { return paletteColorType_; }
+  void setPaletteColorType(const PaletteColorType &v) { paletteColorType_ = v; }
+
+  static PaletteColorType paletteColorTypeConv(const CGnuPlotPalette::ColorType &type);
+  static CGnuPlotPalette::ColorType paletteColorTypeConv(const PaletteColorType &type);
+
+  //---
+
+  const ArrowCoordType &arrowCoordType() const { return arrowCoordType_; }
+  void setArrowCoordType(const ArrowCoordType &v) { arrowCoordType_ = v; }
+
+  static ArrowCoordType arrowCoordTypeConv(const CGnuPlotArrow::CoordType &type);
+  static CGnuPlotArrow::CoordType arrowCoordTypeConv(const ArrowCoordType &type);
+
+  //---
+
   const ObjectType &objectType() const { return objectType_; }
   void setObjectType(const ObjectType &v) { objectType_ = v; }
 
@@ -315,18 +363,23 @@ class CQGnuPlotEnum : public QObject {
   //---
 
  private:
-  HAlignType     halignType_;
-  VAlignType     valignType_;
-  LineCapType    lineCapType_;
-  LineJoinType   lineJoinType_;
-  SymbolType     symbolType_;
-  PlotStyle      plotStyle_;
-  FillType       fillType_;
-  HistogramStyle histogramStyle_;
-  FillPattern    fillPattern_;
-  ObjectType     objectType_;
-  BoxLabels      boxLabels_;
-  BoxType        boxType_;
+  HAlignType       halignType_;
+  VAlignType       valignType_;
+  LineCapType      lineCapType_;
+  LineJoinType     lineJoinType_;
+  SymbolType       symbolType_;
+  PlotStyle        plotStyle_;
+  FillType         fillType_;
+  HistogramStyle   histogramStyle_;
+  FillPattern      fillPattern_;
+  BoxWidthType     boxWidthType_;
+  ColorModelType   colorModelType_;
+  DrawLayerType    drawLayerType_;
+  PaletteColorType paletteColorType_;
+  ArrowCoordType   arrowCoordType_;
+  ObjectType       objectType_;
+  BoxLabels        boxLabels_;
+  BoxType          boxType_;
 };
 
 #endif

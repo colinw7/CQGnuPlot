@@ -1927,6 +1927,26 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
   style->mousePress(this, mouseEvent);
 }
 
+void
+CGnuPlotPlot::
+mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
+{
+  CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
+  if (! style) return;
+
+  style->mouseMove(this, mouseEvent, pressed);
+}
+
+void
+CGnuPlotPlot::
+mouseRelease(const CGnuPlotMouseEvent &mouseEvent)
+{
+  CGnuPlotStyleBase *style = app()->getPlotStyle(style_);
+  if (! style) return;
+
+  style->mouseRelease(this, mouseEvent);
+}
+
 bool
 CGnuPlotPlot::
 mouseProbe(CGnuPlotProbeEvent &probeEvent)

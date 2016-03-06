@@ -1,9 +1,10 @@
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotWindow.h>
+#include <CQGnuPlotPlot.h>
 #include <CQGnuPlotCanvas.h>
 #include <CQGnuPlotDevice.h>
 #include <CQGnuPlotRenderer.h>
-#include <CQGnuPlotUtil.h>
+#include <CQGnuPlotEnum.h>
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotKey.h>
 #include <CQGnuPlotRenderer.h>
@@ -80,14 +81,14 @@ CQGnuPlotEnum::DrawLayerType
 CQGnuPlotGroup::
 getBorderLayer() const
 {
-  return CQGnuPlotUtil::drawLayerTypeConv(CGnuPlotGroup::getBorderLayer());
+  return CQGnuPlotEnum::drawLayerTypeConv(CGnuPlotGroup::getBorderLayer());
 }
 
 void
 CQGnuPlotGroup::
 setBorderLayer(const DrawLayerType &layer)
 {
-  CGnuPlotGroup::setBorderLayer(CQGnuPlotUtil::drawLayerTypeConv(layer));
+  CGnuPlotGroup::setBorderLayer(CQGnuPlotEnum::drawLayerTypeConv(layer));
 }
 
 void
@@ -189,7 +190,9 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
 
     mouseEvent2.setWindow(window);
 
-    qplot->mousePress(mouseEvent2, objects);
+    qplot->mousePress(mouseEvent2);
+
+    qplot->mouseObjects(mouseEvent2, objects);
   }
 
   renderer->setRange(getMappedDisplayRange(1, 1));
@@ -247,13 +250,15 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
 
 void
 CQGnuPlotGroup::
-mouseMove(const CGnuPlotMouseEvent &mouseEvent)
+mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
 {
   if (! inside(mouseEvent)) return;
 
   CGnuPlotRenderer *renderer = app()->renderer();
 
   renderer->setRegion(region());
+
+  //---
 
   for (auto &plot : plots()) {
     if (! plot->isDisplayed())
@@ -275,15 +280,44 @@ mouseMove(const CGnuPlotMouseEvent &mouseEvent)
 
     mouseEvent1.setWindow(window);
 
-    qplot->mouseMove(mouseEvent1);
+    qplot->mouseMove(mouseEvent1, pressed);
   }
 }
 
 void
 CQGnuPlotGroup::
-mouseRelease(const CGnuPlotMouseEvent &)
+mouseRelease(const CGnuPlotMouseEvent &mouseEvent)
 {
-  //if (! inside(mouseEvent)) return;
+  if (! inside(mouseEvent)) return;
+
+  CGnuPlotRenderer *renderer = app()->renderer();
+
+  renderer->setRegion(region());
+
+  //---
+
+  for (auto &plot : plots()) {
+    if (! plot->isDisplayed())
+      continue;
+
+    plot->initRenderer(renderer);
+
+    CPoint2D window;
+
+    renderer->pixelToWindow(mouseEvent.pixel(), window);
+
+    double z = 0;
+
+    unmapLogPoint(1, 1, 1, &window.x, &window.y, &z);
+
+    CQGnuPlotPlot *qplot = static_cast<CQGnuPlotPlot *>(plot.get());
+
+    CGnuPlotMouseEvent mouseEvent1 = mouseEvent;
+
+    mouseEvent1.setWindow(window);
+
+    qplot->mouseRelease(mouseEvent1);
+  }
 }
 
 bool

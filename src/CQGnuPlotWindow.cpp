@@ -2398,7 +2398,7 @@ mouseMove(const CGnuPlotMouseEvent &mouseEvent, bool pressed)
     for (auto group : groups()) {
       CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
 
-      qgroup->mouseMove(mouseEvent);
+      qgroup->mouseMove(mouseEvent, pressed);
     }
   }
   else if (mode_ == Mode::MOVE) {
@@ -2564,9 +2564,14 @@ mouseWheel(double d)
 
 void
 CQGnuPlotMainWindow::
-mouseRelease(const CGnuPlotMouseEvent &)
+mouseRelease(const CGnuPlotMouseEvent &mouseEvent)
 {
   if      (mode_ == Mode::SELECT) {
+    for (auto group : groups()) {
+      CQGnuPlotGroup *qgroup = static_cast<CQGnuPlotGroup *>(group.get());
+
+      qgroup->mouseRelease(mouseEvent);
+    }
   }
   else if (mode_ == Mode::MOVE) {
   }

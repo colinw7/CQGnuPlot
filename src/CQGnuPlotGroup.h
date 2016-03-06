@@ -84,8 +84,8 @@ class CQGnuPlotGroup : public CQGnuPlotObject, public CGnuPlotGroup {
   void draw() override;
 
   void mousePress  (const CGnuPlotMouseEvent &mouseEvent) override;
-  void mouseMove   (const CGnuPlotMouseEvent &mouseEvent);
-  void mouseRelease(const CGnuPlotMouseEvent &mouseEvent);
+  void mouseMove   (const CGnuPlotMouseEvent &mouseEvent, bool pressed) override;
+  void mouseRelease(const CGnuPlotMouseEvent &mouseEvent) override;
 
   bool mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip);
 
