@@ -70,6 +70,7 @@ typedef CEnumConv<CGnuPlotTypes::PlotStyle, CQGnuPlotEnum::PlotStyle> PlotStyleC
 PlotStyleConv plotStyleConv({
   { CGnuPlotTypes::PlotStyle::NONE          , CQGnuPlotEnum::PlotNone           },
   { CGnuPlotTypes::PlotStyle::ADJACENCY     , CQGnuPlotEnum::PlotAdjacency      },
+  { CGnuPlotTypes::PlotStyle::BIVARIATE     , CQGnuPlotEnum::PlotBivariate      },
   { CGnuPlotTypes::PlotStyle::BOXERRORBARS  , CQGnuPlotEnum::PlotBoxErrorBars   },
   { CGnuPlotTypes::PlotStyle::BOXES         , CQGnuPlotEnum::PlotBoxes          },
   { CGnuPlotTypes::PlotStyle::BOXPLOT       , CQGnuPlotEnum::PlotBoxPlot        },
@@ -79,6 +80,7 @@ PlotStyleConv plotStyleConv({
   { CGnuPlotTypes::PlotStyle::CHORDDIAGRAM  , CQGnuPlotEnum::PlotChordDiagram   },
   { CGnuPlotTypes::PlotStyle::CIRCLES       , CQGnuPlotEnum::PlotCircles        },
   { CGnuPlotTypes::PlotStyle::DELAUNAY      , CQGnuPlotEnum::PlotDelaunay       },
+  { CGnuPlotTypes::PlotStyle::DENDROGRAM    , CQGnuPlotEnum::PlotDendrogram     },
   { CGnuPlotTypes::PlotStyle::DOTS          , CQGnuPlotEnum::PlotDots           },
   { CGnuPlotTypes::PlotStyle::ELLIPSES      , CQGnuPlotEnum::PlotEllipses       },
   { CGnuPlotTypes::PlotStyle::ERRORBARS     , CQGnuPlotEnum::PlotErrorBars      },
@@ -102,6 +104,7 @@ PlotStyleConv plotStyleConv({
   { CGnuPlotTypes::PlotStyle::RADAR         , CQGnuPlotEnum::PlotRadar          },
   { CGnuPlotTypes::PlotStyle::RGBALPHA      , CQGnuPlotEnum::PlotRgbAlpha       },
   { CGnuPlotTypes::PlotStyle::RGBIMAGE      , CQGnuPlotEnum::PlotRgbImage       },
+  { CGnuPlotTypes::PlotStyle::STACKEDAREA   , CQGnuPlotEnum::PlotStackedArea    },
   { CGnuPlotTypes::PlotStyle::STEPS         , CQGnuPlotEnum::PlotSteps          },
   { CGnuPlotTypes::PlotStyle::SUNBURST      , CQGnuPlotEnum::PlotSunburst       },
   { CGnuPlotTypes::PlotStyle::TREEMAP       , CQGnuPlotEnum::PlotTreeMap        },

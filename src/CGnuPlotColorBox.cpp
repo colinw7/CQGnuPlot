@@ -186,7 +186,7 @@ draw(CGnuPlotRenderer *renderer)
 
         CColor c = group_->palette()->getColor(z);
 
-        renderer->drawPixelLine(pl1, pl2, 1, c.rgba());
+        renderer->drawPixelLine(pl1, pl2, c.rgba(), 1);
       }
     }
     else {
@@ -201,7 +201,7 @@ draw(CGnuPlotRenderer *renderer)
 
         CColor c = group_->palette()->getColor(z);
 
-        renderer->drawPixelLine(pl1, pl2, 1, c.rgba());
+        renderer->drawPixelLine(pl1, pl2, c.rgba(), 1);
       }
     }
   }
@@ -239,12 +239,12 @@ draw(CGnuPlotRenderer *renderer)
             CPoint2D pl1(x1     , yy);
             CPoint2D pl2(x1 + w1, yy);
 
-            renderer->drawLine(pl1, pl2, 1, CRGBA(0,0,0));
+            renderer->drawLine(pl1, pl2, CRGBA(0,0,0), 1);
 
             CPoint2D pl3(x2 - w1, yy);
             CPoint2D pl4(x2     , yy);
 
-            renderer->drawLine(pl3, pl4, 1, CRGBA(0,0,0));
+            renderer->drawLine(pl3, pl4, CRGBA(0,0,0), 1);
           }
 
           std::stringstream ss;
@@ -276,12 +276,12 @@ draw(CGnuPlotRenderer *renderer)
             CPoint2D pl1(xx, y1     );
             CPoint2D pl2(xx, y1 + h1);
 
-            renderer->drawLine(pl1, pl2, 1, CRGBA(0,0,0));
+            renderer->drawLine(pl1, pl2, CRGBA(0,0,0), 1);
 
             CPoint2D pl3(xx, y2 - h1);
             CPoint2D pl4(xx, y2     );
 
-            renderer->drawLine(pl3, pl4, 1, CRGBA(0,0,0));
+            renderer->drawLine(pl3, pl4, CRGBA(0,0,0), 1);
           }
 
           std::stringstream ss;
@@ -419,7 +419,7 @@ show(std::ostream &os) const
 
   if (isEnabled()) {
     os << (borderStyle() < 0 ? std::string("DEFAULT line type") :
-                               "line type " + CStrUtil::toString(borderStyle())) << " " <<
+                               "line type " + CGnuPlotUtil::toString(borderStyle())) << " " <<
           (isFront() ? "is drawn front" : "is drawn back") << std::endl;
 
     if (! isUser())

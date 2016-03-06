@@ -143,12 +143,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
     }
     else {
-      renderer->drawClipLine(p1, p2, stroke.width(), lc1);
-      renderer->drawClipLine(p3, p4, stroke.width(), lc1);
+      renderer->drawClipLine(p1, p2, lc1, stroke.width());
+      renderer->drawClipLine(p3, p4, lc1, stroke.width());
 
       if (plot->whiskerBars() > 0) {
-        renderer->drawClipLine(CPoint2D(x1, p1.y), CPoint2D(x2, p1.y), stroke.width(), lc1);
-        renderer->drawClipLine(CPoint2D(x1, p4.y), CPoint2D(x2, p4.y), stroke.width(), lc1);
+        renderer->drawClipLine(CPoint2D(x1, p1.y), CPoint2D(x2, p1.y), lc1, stroke.width());
+        renderer->drawClipLine(CPoint2D(x1, p4.y), CPoint2D(x2, p4.y), lc1, stroke.width());
       }
 
       if (fillType != CGnuPlotTypes::FillType::EMPTY) {

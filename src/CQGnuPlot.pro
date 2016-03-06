@@ -75,6 +75,7 @@ CQGnuPlotCreateDialog.cpp \
 CQGnuPlotDataDialog.cpp \
 CQGnuPlotSaveDialog.cpp \
 CQGnuPlotPaletteDialog.cpp \
+CQGnuPlotTreeWidget.cpp \
 CQGnuPlotDataTree.cpp \
 CQGnuPlotDataModel.cpp \
 CQGnuPlotPositionEdit.cpp \
@@ -152,6 +153,7 @@ CGnuPlotWhereData.cpp \
 \
 CGnuPlotStyleBase.cpp \
 CGnuPlotStyleAdjacency.cpp \
+CGnuPlotStyleBivariate.cpp \
 CGnuPlotStyleBoxErrorBars.cpp \
 CGnuPlotStyleBoxes.cpp \
 CGnuPlotStyleBoxPlot.cpp \
@@ -161,11 +163,13 @@ CGnuPlotStyleCandlesticks.cpp \
 CGnuPlotStyleChordDiagram.cpp \
 CGnuPlotStyleCircles.cpp \
 CGnuPlotStyleDelaunay.cpp \
+CGnuPlotStyleDendrogram.cpp \
 CGnuPlotStyleDots.cpp \
 CGnuPlotStyleEllipses.cpp \
 CGnuPlotStyleErrorBars.cpp \
 CGnuPlotStyleFilledCurves.cpp \
 CGnuPlotStyleFinanceBars.cpp \
+CGnuPlotStyleHierBubblePlot.cpp \
 CGnuPlotStyleImage.cpp \
 CGnuPlotStyleImpulses.cpp \
 CGnuPlotStyleLabels.cpp \
@@ -176,6 +180,7 @@ CGnuPlotStylePieChart.cpp \
 CGnuPlotStylePoints.cpp \
 CGnuPlotStylePolygons.cpp \
 CGnuPlotStyleRadar.cpp \
+CGnuPlotStyleStackedArea.cpp \
 CGnuPlotStyleSteps.cpp \
 CGnuPlotStyleSunburst.cpp \
 CGnuPlotStyleTestPalette.cpp \
@@ -222,6 +227,7 @@ ChordDiagram.cpp  \
 CHull3D.cpp \
 CSunburst.cpp \
 CTreeMap.cpp \
+CDendrogram.cpp \
 CPrint.cpp \
 \
 CMathGeom2D.cpp \
@@ -306,6 +312,7 @@ CQGnuPlotCreateDialog.h \
 CQGnuPlotDataDialog.h \
 CQGnuPlotSaveDialog.h \
 CQGnuPlotPaletteDialog.h \
+CQGnuPlotTreeWidget.h \
 CQGnuPlotDataTree.h \
 CQGnuPlotDataModel.h \
 CQGnuPlotPositionEdit.h \

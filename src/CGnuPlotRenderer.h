@@ -74,7 +74,7 @@ class CGnuPlotHiddenFillPolygon : public CGnuPlotHiddenObject {
 
 class CGnuPlotHiddenDrawPolygon : public CGnuPlotHiddenObject {
  public:
-  CGnuPlotHiddenDrawPolygon(const Points2D &points, double w, const CRGBA &c, const CLineDash &d) :
+  CGnuPlotHiddenDrawPolygon(const Points2D &points, const CRGBA &c, double w, const CLineDash &d) :
    CGnuPlotHiddenObject(c), points_(points), w_(w), d_(d) {
   }
 
@@ -88,7 +88,7 @@ class CGnuPlotHiddenDrawPolygon : public CGnuPlotHiddenObject {
 
 class CGnuPlotHiddenLine : public CGnuPlotHiddenObject {
  public:
-  CGnuPlotHiddenLine(const CPoint2D &p1, const CPoint2D &p2, double w, const CRGBA &c,
+  CGnuPlotHiddenLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c, double w,
                      const CLineDash &d) :
    CGnuPlotHiddenObject(c), p1_(p1), p2_(p2), w_(w), d_(d) {
   }
@@ -103,7 +103,7 @@ class CGnuPlotHiddenLine : public CGnuPlotHiddenObject {
 
 class CGnuPlotHiddenPath : public CGnuPlotHiddenObject {
  public:
-  CGnuPlotHiddenPath(const Points2D &points, double w, const CRGBA &c, const CLineDash &d) :
+  CGnuPlotHiddenPath(const Points2D &points, const CRGBA &c, double w, const CLineDash &d) :
    CGnuPlotHiddenObject(c), points_(points), w_(w), d_(d) {
   }
 
@@ -300,17 +300,17 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   HiddenObjP patternHiddenPolygon(const Points2D &points, double z, FillPattern pattern,
                                   const CRGBA &fg, const CRGBA &bg);
 
-  HiddenObjP drawHiddenPolygon(double z, const Points2D &points, double w,
-                               const CRGBA &c, const CLineDash &d);
+  HiddenObjP drawHiddenPolygon(double z, const Points2D &points, const CRGBA &c, double width,
+                               const CLineDash &d);
 
-  HiddenObjP drawHiddenLine(const CPoint3D &p1, const CPoint3D &p2, double w,
-                            const CRGBA &c, const CLineDash &d);
+  HiddenObjP drawHiddenLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c, double width,
+                            const CLineDash &d);
 
-  HiddenObjP drawHiddenLine(const CPoint2D &p1, const CPoint2D &p2,
-                            double z, double w, const CRGBA &c, const CLineDash &d);
+  HiddenObjP drawHiddenLine(const CPoint2D &p1, const CPoint2D &p2, double z,
+                            const CRGBA &c, double width, const CLineDash &d);
 
   CBBox2D drawTextBox(const CPoint2D &p, const std::string &str, bool enhanced,
-                      const CPoint2D &offset, const CRGBA &bg, const CRGBA &fg, double w);
+                      const CPoint2D &offset, const CRGBA &bg, const CRGBA &fg, double width);
 
   HiddenObjP drawHiddenEnhancedText(const CBBox2D &bbox, double z, const HAlignPos &halignPos,
                                     const std::string &str, const CFontPtr &font,
@@ -345,17 +345,17 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   virtual void drawSymbol(const CPoint2D &p, SymbolType type, double size,
                           const CRGBA &c, double lw, bool pixelSize) = 0;
 
-  virtual void drawLine(const CPoint2D &p1, const CPoint2D &p2, double width,
-                        const CRGBA &c, const CLineDash &dash=CLineDash()) = 0;
+  virtual void drawLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c, double width,
+                        const CLineDash &dash=CLineDash()) = 0;
   virtual void drawPath(const Points2D &points, const CGnuPlotStroke &stroke) = 0;
 
-  virtual void drawRect   (const CBBox2D &rect, const CRGBA &c, double w,
+  virtual void drawRect   (const CBBox2D &rect, const CRGBA &c, double width,
                            const CLineDash &dash=CLineDash()) = 0;
   virtual void fillRect   (const CBBox2D &rect, const CRGBA &c) = 0;
   virtual void patternRect(const CBBox2D &rect, FillPattern pattern,
                            const CRGBA &fg, const CRGBA &bg) = 0;
 
-  virtual void drawPolygon(const Points2D &points, double w, const CRGBA &c,
+  virtual void drawPolygon(const Points2D &points, const CRGBA &c, double width,
                            const CLineDash &d) = 0;
   virtual void fillPolygon(const Points2D &points, const CRGBA &c) = 0;
 
@@ -363,14 +363,14 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
                               const CRGBA &fg, const CRGBA &bg) = 0;
 
   virtual void drawEllipse(const CPoint2D &p, double rx, double ry, double a,
-                           const CRGBA &c, double w, const CLineDash &dash=CLineDash()) = 0;
+                           const CRGBA &c, double width, const CLineDash &dash=CLineDash()) = 0;
   virtual void fillEllipse(const CPoint2D &p, double rx, double ry, double a,
                            const CRGBA &c) = 0;
   virtual void patternEllipse(const CPoint2D &p, double rx, double ry, double a,
                               FillPattern pattern, const CRGBA &fg, const CRGBA &bg) = 0;
 
   virtual void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3,
-                          const CPoint2D &p4, double width, const CRGBA &c,
+                          const CPoint2D &p4, const CRGBA &c, double width,
                           const CLineDash &dash=CLineDash()) = 0;
 
   virtual void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) override = 0;
@@ -380,7 +380,7 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
                                const CRGBA &c) override = 0;
 
   virtual void drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
-                            double angle2, double width, const CRGBA &c,
+                            double angle2, const CRGBA &c, double width,
                             const CLineDash &dash=CLineDash()) = 0;
   virtual void fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
                             double angle2, const CRGBA &c) = 0;
@@ -398,8 +398,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   //---
 
-  virtual void drawPixelLine(const CPoint2D &p1, const CPoint2D &p2, double width,
-                             const CRGBA &c, const CLineDash &dash=CLineDash());
+  virtual void drawPixelLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c,
+                             double width, const CLineDash &dash=CLineDash());
 
   //---
 
@@ -408,16 +408,16 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void strokeClippedPath(const Points2D &points, const CGnuPlotStroke &stroke);
   void strokeClippedPath(const Points3D &points, const CGnuPlotStroke &stroke);
 
-  void drawHiddenClippedPath(const Points3D &points, double width,
-                             const CRGBA &c, const CLineDash &dash=CLineDash());
+  void drawHiddenClippedPath(const Points3D &points, const CRGBA &c, double width,
+                             const CLineDash &dash=CLineDash());
 
-  HiddenObjP drawHiddenPath(const Points2D &points, double z, double width,
-                            const CRGBA &c, const CLineDash &dash=CLineDash());
+  HiddenObjP drawHiddenPath(const Points2D &points, double z, const CRGBA &c, double width,
+                            const CLineDash &dash=CLineDash());
 
-  void drawClippedPath(const Points3D &points, double width,
-                       const CRGBA &c, const CLineDash &dash=CLineDash());
-  void drawClippedPath(const Points2D &points, double width,
-                       const CRGBA &c, const CLineDash &dash=CLineDash());
+  void drawClippedPath(const Points3D &points, const CRGBA &c, double width,
+                       const CLineDash &dash=CLineDash());
+  void drawClippedPath(const Points2D &points, const CRGBA &c, double width,
+                       const CLineDash &dash=CLineDash());
 
   HiddenObjP strokeHiddenPath(const Points2D &points, double z, const CGnuPlotStroke &stroke);
 
@@ -425,8 +425,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void strokePath(const Points2D &points, const CGnuPlotStroke &stroke);
 
   void drawPath(const Points3D &points, const CGnuPlotStroke &stroke);
-  void drawLine(const CPoint3D &p1, const CPoint3D &p2, double width,
-                const CRGBA &c, const CLineDash &dash=CLineDash());
+  void drawLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c, double width,
+                const CLineDash &dash=CLineDash());
 
   void drawMark(const CPoint3D &p, const CGnuPlotMark &mark);
   void drawMark(const CPoint2D &p, const CGnuPlotMark &mark);
@@ -459,7 +459,7 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void fillPolygon(const Points2D &points, const CGnuPlotFill &fill);
 
   void drawClippedEllipse(const CPoint2D &p, double rx, double ry, double a,
-                          const CRGBA &c, double w, const CLineDash &dash=CLineDash());
+                          const CRGBA &c, double width, const CLineDash &dash=CLineDash());
   void fillClippedEllipse(const CPoint2D &p, double rx, double ry, double a, const CRGBA &c);
 
   void fillClippedRect(const CBBox2D &rect, const CGnuPlotFill &fill);
@@ -479,16 +479,16 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   //---
 
-  void drawRect(const CBBox3D &rect, const CRGBA &c, double w,
+  void drawRect(const CBBox3D &rect, const CRGBA &c, double width,
                 const CLineDash &dash=CLineDash());
 
-  void drawClippedRect   (const CBBox2D &rect, const CRGBA &c, double w,
+  void drawClippedRect   (const CBBox2D &rect, const CRGBA &c, double width,
                           const CLineDash &dash=CLineDash());
   void fillClippedRect   (const CBBox2D &rect, const CRGBA &c);
   void patternClippedRect(const CBBox2D &rect, FillPattern pattern,
                           const CRGBA &fg, const CRGBA &bg);
 
-  void drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w,
+  void drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double width,
                        const CLineDash &dash=CLineDash(), const COptPoint2D &o=COptPoint2D());
   void fillRotatedRect(const CBBox2D &rect, double a, const CRGBA &c,
                        const COptPoint2D &o=COptPoint2D());
@@ -497,8 +497,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
                      const CGnuPlotStroke &stroke);
 
   void drawEllipse(const CPoint3D &p, double dx, double ry, double a,
-                   const CRGBA &c, double w, const CLineDash &dash=CLineDash());
-  void drawEllipse(const CBBox2D &rect, const CRGBA &c, double w,
+                   const CRGBA &c, double width, const CLineDash &dash=CLineDash());
+  void drawEllipse(const CBBox2D &rect, const CRGBA &c, double width,
                    const CLineDash &dash=CLineDash());
 
   void fillEllipse(const CPoint2D &p, double rx, double ry, double a, const CGnuPlotFill &fill);
@@ -507,11 +507,11 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void fillClippedPolygon(const Points2D &points, const CRGBA &c);
   void fillPolygon(const Points3D &points, const CRGBA &c);
 
-  void drawClippedPolygon(const Points3D &points, double w, const CRGBA &c,
+  void drawClippedPolygon(const Points3D &points, const CRGBA &c, double width,
                           const CLineDash &dash);
-  void drawClippedPolygon(const Points2D &points, double w, const CRGBA &c,
+  void drawClippedPolygon(const Points2D &points, const CRGBA &c, double width,
                           const CLineDash &dash);
-  void drawPolygon(const Points3D &points, double lw, const CRGBA &c, const CLineDash &dash);
+  void drawPolygon(const Points3D &points, const CRGBA &c, double width, const CLineDash &dash);
 
   void patternClippedPolygon(const Points2D &points, FillPattern pat,
                              const CRGBA &fg, const CRGBA &bg);
@@ -521,8 +521,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   void strokeClipLine(const CPoint2D &p1, const CPoint2D &p2, const CGnuPlotStroke &stroke);
 
-  void drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width,
-                    const CRGBA &c, const CLineDash &dash=CLineDash());
+  void drawClipLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c, double width,
+                    const CLineDash &dash=CLineDash());
 
   bool clipLine(CPoint2D &p1, CPoint2D &p2);
 
@@ -577,8 +577,8 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   double pixelWidthToWindowWidthNoMargin  (double p);
   double pixelHeightToWindowHeightNoMargin(double p);
 
-  double windowWidthToPixelWidth  (double w);
-  double windowHeightToPixelHeight(double w);
+  double windowWidthToPixelWidth  (double width);
+  double windowHeightToPixelHeight(double height);
 
   void regionToPixel(const CPoint2D &r, CPoint2D &p);
 

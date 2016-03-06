@@ -16,6 +16,7 @@
 #include <CGnuPlotEveryData.h>
 
 #include <CGnuPlotStyleAdjacency.h>
+#include <CGnuPlotStyleBivariate.h>
 #include <CGnuPlotStyleBoxErrorBars.h>
 #include <CGnuPlotStyleBoxes.h>
 #include <CGnuPlotStyleBoxPlot.h>
@@ -25,11 +26,13 @@
 #include <CGnuPlotStyleChordDiagram.h>
 #include <CGnuPlotStyleCircles.h>
 #include <CGnuPlotStyleDelaunay.h>
+#include <CGnuPlotStyleDendrogram.h>
 #include <CGnuPlotStyleDots.h>
 #include <CGnuPlotStyleEllipses.h>
 #include <CGnuPlotStyleErrorBars.h>
 #include <CGnuPlotStyleFilledCurves.h>
 #include <CGnuPlotStyleFinanceBars.h>
+#include <CGnuPlotStyleHierBubblePlot.h>
 #include <CGnuPlotStyleImage.h>
 #include <CGnuPlotStyleImpulses.h>
 #include <CGnuPlotStyleLabels.h>
@@ -40,6 +43,7 @@
 #include <CGnuPlotStylePolygons.h>
 #include <CGnuPlotStylePoints.h>
 #include <CGnuPlotStyleRadar.h>
+#include <CGnuPlotStyleStackedArea.h>
 #include <CGnuPlotStyleSteps.h>
 #include <CGnuPlotStyleSunburst.h>
 #include <CGnuPlotStyleTestPalette.h>
@@ -220,6 +224,7 @@ CGnuPlot::
 addPlotStyles()
 {
   addPlotStyle(PlotStyle::ADJACENCY     , new CGnuPlotStyleAdjacency     );
+  addPlotStyle(PlotStyle::BIVARIATE     , new CGnuPlotStyleBivariate     );
   addPlotStyle(PlotStyle::BOXERRORBARS  , new CGnuPlotStyleBoxErrorBars  );
   addPlotStyle(PlotStyle::BOXES         , new CGnuPlotStyleBoxes         );
   addPlotStyle(PlotStyle::BOXPLOT       , new CGnuPlotStyleBoxPlot       );
@@ -229,6 +234,7 @@ addPlotStyles()
   addPlotStyle(PlotStyle::CHORDDIAGRAM  , new CGnuPlotStyleChordDiagram  );
   addPlotStyle(PlotStyle::CIRCLES       , new CGnuPlotStyleCircles       );
   addPlotStyle(PlotStyle::DELAUNAY      , new CGnuPlotStyleDelaunay      );
+  addPlotStyle(PlotStyle::DENDROGRAM    , new CGnuPlotStyleDendrogram    );
   addPlotStyle(PlotStyle::DOTS          , new CGnuPlotStyleDots          );
   addPlotStyle(PlotStyle::ERRORBARS     , new CGnuPlotStyleErrorBars     );
   addPlotStyle(PlotStyle::ELLIPSES      , new CGnuPlotStyleEllipses      );
@@ -236,6 +242,8 @@ addPlotStyles()
   addPlotStyle(PlotStyle::FILLSTEPS     , new CGnuPlotStyleFillSteps     );
   addPlotStyle(PlotStyle::FINANCEBARS   , new CGnuPlotStyleFinanceBars   );
   addPlotStyle(PlotStyle::FSTEPS        , new CGnuPlotStyleFSteps        );
+  addPlotStyle(PlotStyle::HIERBUBBLEPLOT, new CGnuPlotStyleHierBubblePlot);
+  addPlotStyle(PlotStyle::HIERTREEMAP   , new CGnuPlotStyleTreeMap(true) );
   addPlotStyle(PlotStyle::HISTEPS       , new CGnuPlotStyleHiSteps       );
   addPlotStyle(PlotStyle::IMAGE         , new CGnuPlotStyleImage         );
   addPlotStyle(PlotStyle::IMPULSES      , new CGnuPlotStyleImpulses      );
@@ -247,13 +255,14 @@ addPlotStyles()
   addPlotStyle(PlotStyle::POINTS        , new CGnuPlotStylePoints        );
   addPlotStyle(PlotStyle::POLYGONS      , new CGnuPlotStylePolygons      );
   addPlotStyle(PlotStyle::RADAR         , new CGnuPlotStyleRadar         );
-  addPlotStyle(PlotStyle::RGBIMAGE      , new CGnuPlotStyleRGBImage      );
   addPlotStyle(PlotStyle::RGBALPHA      , new CGnuPlotStyleRGBAlpha      );
+  addPlotStyle(PlotStyle::RGBIMAGE      , new CGnuPlotStyleRGBImage      );
+  addPlotStyle(PlotStyle::STACKEDAREA   , new CGnuPlotStyleStackedArea   );
   addPlotStyle(PlotStyle::STEPS         , new CGnuPlotStyleSteps         );
   addPlotStyle(PlotStyle::SUNBURST      , new CGnuPlotStyleSunburst      );
   addPlotStyle(PlotStyle::TEST_PALETTE  , new CGnuPlotStyleTestPalette   );
   addPlotStyle(PlotStyle::TEST_TERMINAL , new CGnuPlotStyleTestTerminal  );
-  addPlotStyle(PlotStyle::TREEMAP       , new CGnuPlotStyleTreeMap       );
+  addPlotStyle(PlotStyle::TREEMAP       , new CGnuPlotStyleTreeMap(false));
   addPlotStyle(PlotStyle::VECTORS       , new CGnuPlotStyleVectors       );
   addPlotStyle(PlotStyle::XERRORBARS    , new CGnuPlotStyleXErrorBars    );
   addPlotStyle(PlotStyle::XERRORLINES   , new CGnuPlotStyleXErrorLines   );
@@ -13005,7 +13014,7 @@ updateFunction2D(CGnuPlotPlot *plot)
 
         if (! expr->executeCTokenStack(cstack, value)) {
           plot->app()->errorMsg("Failed to eval \'" + plot->functions()[0] + "\' for " +
-                                varName1 + "=" + CStrUtil::toString(x));
+                                varName1 + "=" + CGnuPlotUtil::toString(x));
           value = CExprValuePtr(); // TODO
         }
 
@@ -13049,7 +13058,7 @@ updateFunction2D(CGnuPlotPlot *plot)
 
         if (! expr->executeCTokenStack(cstack, value)) {
           plot->app()->errorMsg("Failed to eval " + plot->functions()[0] + " for " +
-                                varName + "=" + CStrUtil::toString(a));
+                                varName + "=" + CGnuPlotUtil::toString(a));
           value = CExprValuePtr();
         }
 
@@ -13105,7 +13114,7 @@ updateFunction2D(CGnuPlotPlot *plot)
 
         if (! expr->executeCTokenStack(cstack1, value)) {
           plot->app()->errorMsg("Failed to eval " + plot->functions()[0] + " for " +
-                                varName1 + "=" + CStrUtil::toString(t));
+                                varName1 + "=" + CGnuPlotUtil::toString(t));
           value = CExprValuePtr();
         }
 
@@ -13122,7 +13131,7 @@ updateFunction2D(CGnuPlotPlot *plot)
 
         if (! expr->executeCTokenStack(cstack2, value)) {
           plot->app()->errorMsg("Failed to eval " + plot->functions()[1] + " for " +
-                                varName2 + "=" + CStrUtil::toString(t));
+                                varName2 + "=" + CGnuPlotUtil::toString(t));
           value = CExprValuePtr();
         }
 
@@ -13235,7 +13244,8 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
 
           if (! expr_->executeCTokenStack(cstack, value)) {
             errorMsg("Failed to eval " + functions[0] + " for " + varName1 + "=" +
-                     CStrUtil::toString(x) + ", " + varName2 + "=" + CStrUtil::toString(y));
+                     CGnuPlotUtil::toString(x) + ", " + varName2 + "=" +
+                     CGnuPlotUtil::toString(y));
             value = CExprValuePtr(); // TODO
           }
 
@@ -13301,8 +13311,8 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
           CExprValuePtr value1;
 
           if (! expr_->executeCTokenStack(cstack1, value1)) {
-            errorMsg("Failed to eval " + functions[0] + " for a1=" + CStrUtil::toString(a1) +
-                     " a2=" + CStrUtil::toString(a2));
+            errorMsg("Failed to eval " + functions[0] + " for a1=" + CGnuPlotUtil::toString(a1) +
+                     " a2=" + CGnuPlotUtil::toString(a2));
             value1 = CExprValuePtr();
           }
 
@@ -13320,8 +13330,8 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
           CExprValuePtr value2;
 
           if (! expr_->executeCTokenStack(cstack2, value2)) {
-            errorMsg("Failed to eval " + functions[1] + " for a1=" + CStrUtil::toString(a1) +
-                     " a2=" + CStrUtil::toString(a2));
+            errorMsg("Failed to eval " + functions[1] + " for a1=" + CGnuPlotUtil::toString(a1) +
+                     " a2=" + CGnuPlotUtil::toString(a2));
             value2 = CExprValuePtr();
           }
 
@@ -13398,7 +13408,7 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
 
           if (! expr_->executeCTokenStack(cstack1, value)) {
             errorMsg("Failed to eval " + functions[0] + " for " + varName1 + "=" +
-                     CStrUtil::toString(u) + " " + varName2 + "=" + CStrUtil::toString(v));
+                     CGnuPlotUtil::toString(u) + " " + varName2 + "=" + CGnuPlotUtil::toString(v));
             value = CExprValuePtr();
           }
 
@@ -13415,7 +13425,7 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
 
           if (! expr_->executeCTokenStack(cstack2, value)) {
             errorMsg("Failed to eval " + functions[1] + " for " + varName1 + "=" +
-                     CStrUtil::toString(u) + " " + varName2 + "=" + CStrUtil::toString(v));
+                     CGnuPlotUtil::toString(u) + " " + varName2 + "=" + CGnuPlotUtil::toString(v));
             value = CExprValuePtr();
           }
 
@@ -13432,7 +13442,7 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
 
           if (! expr_->executeCTokenStack(cstack3, value)) {
             errorMsg("Failed to eval " + functions[2] + " for " + varName1 + "=" +
-                     CStrUtil::toString(u) + " " + varName2 + "=" + CStrUtil::toString(v));
+                     CGnuPlotUtil::toString(u) + " " + varName2 + "=" + CGnuPlotUtil::toString(v));
             value = CExprValuePtr();
           }
 
@@ -13798,14 +13808,24 @@ setPlotValues2D(CGnuPlotPlot *plot)
         for (uint i = 0; i < values.size(); ++i) {
           if ((i == 0 && xaxis(1).isTime()) ||
               (i == 1 && yaxis(1).isTime())) {
-            std::string str;
+            std::string s;
 
-            if (! values[i]->getStringValue(str))
-              continue;
+            if (values[i]->isStringValue()) {
+              if (! values[i]->getStringValue(s))
+                continue;
+            }
+            else {
+              long l;
+
+              if (! values[i]->getIntegerValue(l))
+                continue;
+
+              s = CGnuPlotUtil::toString(l);
+            }
 
             double r;
 
-            if (timeToValue(str, r))
+            if (timeToValue(s, r))
               values[i] = expr_->createRealValue(r);
           }
         }

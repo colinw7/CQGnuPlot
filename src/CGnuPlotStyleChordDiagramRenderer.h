@@ -18,7 +18,7 @@ class CGnuPlotStyleChordDiagramRenderer : public ChordDiagramRenderer {
   }
 
   void drawLine(double x1, double y1, double x2, double y2) {
-    renderer_->drawLine(CPoint2D(x1, y1), CPoint2D(x2, y2), 0, CRGBA(0,0,0));
+    renderer_->drawLine(CPoint2D(x1, y1), CPoint2D(x2, y2), CRGBA(0,0,0), 0);
   }
 
   void drawRotatedText(double x, double y, const std::string &text, double a,

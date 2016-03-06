@@ -82,6 +82,7 @@ class CQGnuPlotEnum : public QObject {
   enum PlotStyle {
     PlotNone,
     PlotAdjacency,
+    PlotBivariate,
     PlotBoxErrorBars,
     PlotBoxes,
     PlotBoxPlot,
@@ -91,6 +92,7 @@ class CQGnuPlotEnum : public QObject {
     PlotChordDiagram,
     PlotCircles,
     PlotDelaunay,
+    PlotDendrogram,
     PlotDots,
     PlotEllipses,
     PlotErrorBars,
@@ -114,6 +116,7 @@ class CQGnuPlotEnum : public QObject {
     PlotRadar,
     PlotRgbAlpha,
     PlotRgbImage,
+    PlotStackedArea,
     PlotSteps,
     PlotSunburst,
     PlotTreeMap,

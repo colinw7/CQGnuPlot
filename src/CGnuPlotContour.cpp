@@ -291,7 +291,7 @@ drawContourLines(CGnuPlotRenderer *renderer)
     }
     else {
       for (const auto &line : lines)
-        renderer->drawLine(line.start(), line.end(), width, c);
+        renderer->drawLine(line.start(), line.end(), c, width);
     }
   }
 

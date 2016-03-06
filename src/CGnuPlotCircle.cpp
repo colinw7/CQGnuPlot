@@ -75,7 +75,7 @@ draw(CGnuPlotRenderer *renderer) const
   }
 
   if (arcStart_.isValid() || arcEnd_.isValid())
-    renderer->drawPieSlice(center_, 0, xr_, a1, a2, lw, c, dash_);
+    renderer->drawPieSlice(center_, 0, xr_, a1, a2, c, lw, dash_);
   else
     renderer->drawClippedEllipse(center_, xr_, yr_, 0, c, lw, dash_);
 

@@ -53,9 +53,9 @@ draw(CGnuPlotRenderer *renderer)
           renderer->fillHiddenPolygon(zt, points, fc);
 
           if (orient == 1)
-            renderer->drawHiddenPolygon(zt, points, 0, c, CLineDash());
+            renderer->drawHiddenPolygon(zt, points, c, 0, CLineDash());
           else
-            renderer->drawHiddenPolygon(zt, points, 0, c.inverse(), CLineDash());
+            renderer->drawHiddenPolygon(zt, points, c.inverse(), 0, CLineDash());
         }
       }
     }
@@ -76,13 +76,13 @@ draw(CGnuPlotRenderer *renderer)
 
           if (points.size() < 4) continue;
 
-          if (pattern & 1) renderer->drawLine(points[0], points[1], 1, c);
-          if (pattern & 2) renderer->drawLine(points[0], points[3], 1, c);
-          if (pattern & 4) renderer->drawLine(points[0], points[2], 1, c);
+          if (pattern & 1) renderer->drawLine(points[0], points[1], c, 1);
+          if (pattern & 2) renderer->drawLine(points[0], points[3], c, 1);
+          if (pattern & 4) renderer->drawLine(points[0], points[2], c, 1);
 
           if (ix == nx - 1 || iy == ny - 1) {
-            if (pattern & 1) renderer->drawLine(points[2], points[3], 1, c);
-            if (pattern & 2) renderer->drawLine(points[2], points[1], 1, c);
+            if (pattern & 1) renderer->drawLine(points[2], points[3], c, 1);
+            if (pattern & 2) renderer->drawLine(points[2], points[1], c, 1);
           }
         }
       }

@@ -89,7 +89,7 @@ drawPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &)
 void
 CGnuPlotBBoxRenderer::
 drawLine(const CPoint2D &point1, const CPoint2D &point2,
-         double /*width*/, const CRGBA &, const CLineDash &)
+         const CRGBA &, double /*width*/, const CLineDash &)
 {
   addPoint(point1);
   addPoint(point2);
@@ -121,7 +121,7 @@ void
 CGnuPlotBBoxRenderer::
 drawBezier(const CPoint2D &point1, const CPoint2D &point2,
            const CPoint2D &point3, const CPoint2D &point4,
-           double /*width*/, const CRGBA &, const CLineDash &)
+           const CRGBA &, double /*width*/, const CLineDash &)
 {
   addPoint(point1);
   addPoint(point2);
@@ -131,7 +131,7 @@ drawBezier(const CPoint2D &point1, const CPoint2D &point2,
 
 void
 CGnuPlotBBoxRenderer::
-drawPolygon(const std::vector<CPoint2D> &points, double /*width*/, const CRGBA &,
+drawPolygon(const std::vector<CPoint2D> &points, const CRGBA &, double /*width*/,
             const CLineDash &)
 {
   for (uint i = 1; i < points.size(); ++i)
@@ -231,7 +231,7 @@ drawRotatedText(const CPoint2D &point, const std::string &str, double /*ta*/,
 void
 CGnuPlotBBoxRenderer::
 drawPieSlice(const CPoint2D &pc, double /*ri*/, double ro, double angle1, double angle2,
-             double /*lw*/, const CRGBA &/*c*/, const CLineDash &)
+             const CRGBA &/*c*/, double /*lw*/, const CLineDash &)
 {
   addPoint(pc);
 
@@ -249,7 +249,7 @@ CGnuPlotBBoxRenderer::
 fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
              const CRGBA &c)
 {
-  drawPieSlice(pc, ri, ro, angle1, angle2, 0, c);
+  drawPieSlice(pc, ri, ro, angle1, angle2, c, 0);
 }
 
 void

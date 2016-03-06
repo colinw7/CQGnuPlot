@@ -179,14 +179,14 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   //----
 
-  renderer->drawLine(p1, p2, stroke.width(), stroke.color(), stroke.lineDash());
+  renderer->drawLine(p1, p2, stroke.color(), stroke.width(), stroke.lineDash());
 
   double ph = renderer->pixelHeightToWindowHeight(4);
 
   CPoint2D dy(0, ph);
 
-  renderer->drawLine(p1 - dy, p1 + dy, stroke.width(), stroke.color(), stroke.lineDash());
-  renderer->drawLine(p2 - dy, p2 + dy, stroke.width(), stroke.color(), stroke.lineDash());
+  renderer->drawLine(p1 - dy, p1 + dy, stroke.color(), stroke.width(), stroke.lineDash());
+  renderer->drawLine(p2 - dy, p2 + dy, stroke.color(), stroke.width(), stroke.lineDash());
 
   CPoint2D pm = (p1 + p2)/2;
 

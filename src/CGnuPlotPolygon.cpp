@@ -120,9 +120,9 @@ draw(CGnuPlotRenderer *renderer) const
   }
 
   if (group_->is3D())
-    renderer->drawClippedPolygon(ppoints3D_, lw, lc, dash_);
+    renderer->drawClippedPolygon(ppoints3D_, lc, lw, dash_);
   else
-    renderer->drawClippedPolygon(ppoints2D_, lw, lc, dash_);
+    renderer->drawClippedPolygon(ppoints2D_, lc, lw, dash_);
 }
 
 void

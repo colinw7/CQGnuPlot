@@ -816,7 +816,7 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
 
         double r = indexImageColor(icol, rgba);
 
-        exprStr = exprStr.substr(0, pos - 1) + CStrUtil::toString(r) + exprStr.substr(pos1);
+        exprStr = exprStr.substr(0, pos - 1) + CGnuPlotUtil::toString(r) + exprStr.substr(pos1);
 
         pos = exprStr.find('$');
       }

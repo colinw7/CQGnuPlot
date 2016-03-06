@@ -270,7 +270,7 @@ drawPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
 
 void
 CQGnuPlotRenderer::
-drawPixelLine(const CPoint2D &point1, const CPoint2D &point2, double width, const CRGBA &c,
+drawPixelLine(const CPoint2D &point1, const CPoint2D &point2, const CRGBA &c, double width,
               const CLineDash &dash)
 {
   QPen pen = painter_->pen();
@@ -287,7 +287,7 @@ drawPixelLine(const CPoint2D &point1, const CPoint2D &point2, double width, cons
 
 void
 CQGnuPlotRenderer::
-drawLine(const CPoint2D &point1, const CPoint2D &point2, double width, const CRGBA &c,
+drawLine(const CPoint2D &point1, const CPoint2D &point2, const CRGBA &c, double width,
          const CLineDash &dash)
 {
   QPen pen = painter_->pen();
@@ -371,7 +371,7 @@ void
 CQGnuPlotRenderer::
 drawBezier(const CPoint2D &point1, const CPoint2D &point2,
            const CPoint2D &point3, const CPoint2D &point4,
-           double width, const CRGBA &c, const CLineDash &dash)
+           const CRGBA &c, double width, const CLineDash &dash)
 {
   double px1, py1, px2, py2, px3, py3, px4, py4;
 
@@ -396,7 +396,7 @@ drawBezier(const CPoint2D &point1, const CPoint2D &point2,
 
 void
 CQGnuPlotRenderer::
-drawPolygon(const std::vector<CPoint2D> &points, double w, const CRGBA &c, const CLineDash &dash)
+drawPolygon(const std::vector<CPoint2D> &points, const CRGBA &c, double w, const CLineDash &dash)
 {
   if (points.empty()) return;
 
@@ -745,7 +745,7 @@ fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double ang
 void
 CQGnuPlotRenderer::
 drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
-             double w, const CRGBA &c, const CLineDash &dash)
+             const CRGBA &c, double w, const CLineDash &dash)
 {
   QPainterPath path;
 

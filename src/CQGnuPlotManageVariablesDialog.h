@@ -9,14 +9,14 @@
 
 class CQGnuPlotManageVariablesDialog;
 class CQGnuPlotMainWindow;
-class QTreeWidget;
+class CQGnuPlotTreeWidget;
 
 // Tree Widget Item Delegate class to handle custom editing of tree widget items
 class CQGnuPlotVariablesDelegate : public QItemDelegate {
   Q_OBJECT
 
  public:
-  CQGnuPlotVariablesDelegate(QTreeWidget *tree);
+  CQGnuPlotVariablesDelegate(CQGnuPlotTreeWidget *tree);
 
   // Override to create editor
   QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
@@ -43,7 +43,7 @@ class CQGnuPlotVariablesDelegate : public QItemDelegate {
                   const QString &str, const QModelIndex &index) const;
 
  private:
-  QTreeWidget *tree_;
+  CQGnuPlotTreeWidget *tree_;
 };
 
 //----
@@ -121,7 +121,7 @@ class CQGnuPlotManageVariablesDialog : public CQDialog {
 
  private:
   CQGnuPlotMainWindow *window_;
-  QTreeWidget         *tree_;
+  CQGnuPlotTreeWidget *tree_;
   QSize                size_;
 };
 

@@ -110,9 +110,11 @@ draw(CGnuPlotRenderer *renderer) const
     renderer->fillEllipse(ebbox, bg);
   }
 
-  if (pointType() == CGnuPlotTypes::SymbolType::STRING)
+  if      (pointType() == CGnuPlotTypes::SymbolType::STRING)
     renderer->drawHAlignedText(point(), HAlignPos(CHALIGN_TYPE_CENTER, 0),
                                VAlignPos(CVALIGN_TYPE_CENTER, 0), pointString(), c);
+  else if (pointType() == CGnuPlotTypes::SymbolType::BIVARIATE)
+    renderer->drawLine(point(), point() + CPoint2D(0, this->size().getValue(0)), c, lineWidth());
   else
     renderer->drawSymbol(point(), pointType(), scale*pw_/8.0, c, lineWidth(), true);
 

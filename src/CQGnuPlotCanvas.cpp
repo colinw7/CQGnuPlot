@@ -203,7 +203,7 @@ mousePressEvent(QMouseEvent *e)
   CGnuPlotMouseEvent mouseEvent;
 
   mouseEvent.setPixel  (CPoint2D(e->pos().x(), e->pos().y()));
-  mouseEvent.setButton (e->button());
+  mouseEvent.setButton (CQUtil::convertButton(e->button()));
   mouseEvent.setShift  (e->modifiers() & Qt::ShiftModifier  );
   mouseEvent.setControl(e->modifiers() & Qt::ControlModifier);
   mouseEvent.setAlt    (e->modifiers() & Qt::AltModifier    );
@@ -246,7 +246,7 @@ mouseReleaseEvent(QMouseEvent *e)
   CGnuPlotMouseEvent mouseEvent;
 
   mouseEvent.setPixel  (CPoint2D(e->pos().x(), e->pos().y()));
-  mouseEvent.setButton (e->button());
+  mouseEvent.setButton (CQUtil::convertButton(e->button()));
   mouseEvent.setShift  (e->modifiers() & Qt::ShiftModifier  );
   mouseEvent.setControl(e->modifiers() & Qt::ControlModifier);
   mouseEvent.setAlt    (e->modifiers() & Qt::AltModifier    );

@@ -115,7 +115,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     //---
 
     for (uint j = 1; j < ireals.size(); ++j)
-      renderer->drawClipLine(CPoint2D(j, ireals[j - 1]), CPoint2D(j + 1, ireals[j]), 1.0, c);
+      renderer->drawClipLine(CPoint2D(j, ireals[j - 1]), CPoint2D(j + 1, ireals[j]), c, 1.0);
   }
 
   //------

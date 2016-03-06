@@ -82,13 +82,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
           CPoint2D p5(xm1, 0);
           CPoint2D p6(xm1, p1.y);
 
-          renderer->drawClipLine(p5, p6, lw, c);
-          renderer->drawClipLine(p6, p1, lw, c);
+          renderer->drawClipLine(p5, p6, c, lw);
+          renderer->drawClipLine(p6, p1, c, lw);
         }
 
-        renderer->drawClipLine(p1, p3, lw, c);
-        renderer->drawClipLine(p3, p4, lw, c);
-        renderer->drawClipLine(p4, p2, lw, c);
+        renderer->drawClipLine(p1, p3, c, lw);
+        renderer->drawClipLine(p3, p4, c, lw);
+        renderer->drawClipLine(p4, p2, c, lw);
 
         if (i2 == np - 1) {
           double xm1 = p2.x + (p2.x - xm);
@@ -96,21 +96,21 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
           CPoint2D p5(xm1, p2.y);
           CPoint2D p6(xm1, 0);
 
-          renderer->drawClipLine(p2, p5, lw, c);
-          renderer->drawClipLine(p5, p6, lw, c);
+          renderer->drawClipLine(p2, p5, c, lw);
+          renderer->drawClipLine(p5, p6, c, lw);
         }
       }
       else if (plot->style() == CGnuPlotTypes::PlotStyle::STEPS) {
         CPoint2D p3(p2.x, p1.y);
 
-        renderer->drawClipLine(p1, p3, lw, c);
-        renderer->drawClipLine(p3, p2, lw, c);
+        renderer->drawClipLine(p1, p3, c, lw);
+        renderer->drawClipLine(p3, p2, c, lw);
       }
       else if (plot->style() == CGnuPlotTypes::PlotStyle::FSTEPS) {
         CPoint2D p3(p1.x, p2.y);
 
-        renderer->drawClipLine(p1, p3, lw, c);
-        renderer->drawClipLine(p3, p2, lw, c);
+        renderer->drawClipLine(p1, p3, c, lw);
+        renderer->drawClipLine(p3, p2, c, lw);
       }
       else if (plot->style() == CGnuPlotTypes::PlotStyle::FILLSTEPS) {
         CBBox2D bbox(p1.x, ymin, p2.x, p1.y);

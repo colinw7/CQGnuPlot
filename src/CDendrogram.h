@@ -71,6 +71,8 @@ class CDendrogram {
 
     virtual void compressNode(double d);
 
+    bool isNodeAtPoint(double x, double y, double tol) const;
+
    protected:
     HierNode    *parent_ { 0 };
     uint         id_;
@@ -110,6 +112,8 @@ class CDendrogram {
 
     bool hasChildren() const;
 
+    HierNode *findChild(const std::string &name) const;
+
     void resetPlaced();
 
     void placeSubNodes(RootNode *root, int depth, double row);
@@ -117,6 +121,8 @@ class CDendrogram {
     void addNode(Node *node);
 
     void compressNode(double d);
+
+    Node *getNodeAtPoint(double x, double y, double tol) const;
 
    protected:
     Nodes    nodes_;
@@ -213,6 +219,8 @@ class CDendrogram {
   void setOpenDepth(int depth);
 
   void openNode(int depth, const std::string &name);
+
+  Node *getNodeAtPoint(double x, double y, double tol=1E-3) const;
 
   void printGaps();
 

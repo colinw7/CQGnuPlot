@@ -90,7 +90,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       renderer->fillPolygon(points, fill.color());
 
       if (stroke.isEnabled())
-        renderer->drawPolygon(points, stroke.width(), stroke.color(), stroke.lineDash());
+        renderer->drawPolygon(points, stroke.color(), stroke.width(), stroke.lineDash());
     }
   }
 }

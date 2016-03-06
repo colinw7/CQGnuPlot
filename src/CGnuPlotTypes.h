@@ -271,6 +271,7 @@ namespace CGnuPlotTypes {
   enum class PlotStyle {
     NONE,
     ADJACENCY,
+    BIVARIATE,
     BOXERRORBARS,
     BOXES,
     BOXPLOT,
@@ -280,6 +281,7 @@ namespace CGnuPlotTypes {
     CHORDDIAGRAM,
     CIRCLES,
     DELAUNAY,
+    DENDROGRAM,
     DOTS,
     ELLIPSES,
     ERRORBARS,
@@ -288,6 +290,8 @@ namespace CGnuPlotTypes {
     FILLSTEPS,
     FINANCEBARS,
     FSTEPS,
+    HIERBUBBLEPLOT,
+    HIERTREEMAP,
     HISTEPS,
     HISTOGRAMS,
     IMAGE,
@@ -303,6 +307,7 @@ namespace CGnuPlotTypes {
     RADAR,
     RGBALPHA,
     RGBIMAGE,
+    STACKEDAREA,
     STEPS,
     SURFACE,
     SUNBURST,
@@ -425,6 +430,7 @@ namespace CGnuPlotTypes {
     PENTAGON,
     FILLED_PENTAGON,
     LAST=FILLED_PENTAGON,
+    BIVARIATE=998,
     STRING=999
   };
 

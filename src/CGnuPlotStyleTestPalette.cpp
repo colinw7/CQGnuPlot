@@ -50,7 +50,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CRGBA rgba = c.rgba();
 
-    //renderer->drawLine(CPoint2D(wx, wy1), CPoint2D(wx, wy2), 0.0, rgba);
+    //renderer->drawLine(CPoint2D(wx, wy1), CPoint2D(wx, wy2), rgba, 0);
 
     //double x = (i - px1)/(px2 - px1);
 
@@ -61,10 +61,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     double m2 = rgba.getGray();
 
     if (! first) {
-      renderer->drawLine(CPoint2D(x1, r1), CPoint2D(x2, r2), 0, CRGBA(1,0,0));
-      renderer->drawLine(CPoint2D(x1, g1), CPoint2D(x2, g2), 0, CRGBA(0,1,0));
-      renderer->drawLine(CPoint2D(x1, b1), CPoint2D(x2, b2), 0, CRGBA(0,0,1));
-      renderer->drawLine(CPoint2D(x1, m1), CPoint2D(x2, m2), 0, CRGBA(0,0,0));
+      renderer->drawLine(CPoint2D(x1, r1), CPoint2D(x2, r2), CRGBA(1,0,0), 0);
+      renderer->drawLine(CPoint2D(x1, g1), CPoint2D(x2, g2), CRGBA(0,1,0), 0);
+      renderer->drawLine(CPoint2D(x1, b1), CPoint2D(x2, b2), CRGBA(0,0,1), 0);
+      renderer->drawLine(CPoint2D(x1, m1), CPoint2D(x2, m2), CRGBA(0,0,0), 0);
     }
 
     x1 = x2;

@@ -174,6 +174,6 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     auto *v1 = e->start();
     auto *v2 = e->end  ();
 
-    renderer->drawLine(CPoint2D(v1->x(), v1->y()), CPoint2D(v2->x(), v2->y()), 1, lc);
+    renderer->drawLine(CPoint2D(v1->x(), v1->y()), CPoint2D(v2->x(), v2->y()), lc, 1);
   }
 }

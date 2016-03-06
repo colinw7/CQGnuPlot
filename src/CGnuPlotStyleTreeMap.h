@@ -5,7 +5,7 @@
 
 class CGnuPlotStyleTreeMap : public CGnuPlotStyleBase {
  public:
-  CGnuPlotStyleTreeMap();
+  CGnuPlotStyleTreeMap(bool hier=false);
 
   int numUsing() const override { return 2; }
 
@@ -18,6 +18,14 @@ class CGnuPlotStyleTreeMap : public CGnuPlotStyleBase {
   void drawAxes(CGnuPlotPlot *, CGnuPlotRenderer *) override { }
 
   CBBox2D fit(CGnuPlotPlot *plot) override;
+
+  bool mouseTip(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent,
+                CGnuPlotTipData &tipData);
+
+  void mousePress(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent);
+
+ private:
+  bool hier_ { false };
 };
 
 #endif

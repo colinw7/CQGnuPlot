@@ -248,7 +248,7 @@ draw(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) const
 
   CPoint2D db(barWidth(), 0);
 
-  renderer->drawClipLine(p1, p2     , lineWidth(), lineColor());
-  renderer->drawClipLine(p3, p3 - db, lineWidth(), lineColor());
-  renderer->drawClipLine(p4, p4 + db, lineWidth(), lineColor());
+  renderer->drawClipLine(p1, p2     , lineColor(), lineWidth());
+  renderer->drawClipLine(p3, p3 - db, lineColor(), lineWidth());
+  renderer->drawClipLine(p4, p4 + db, lineColor(), lineWidth());
 }

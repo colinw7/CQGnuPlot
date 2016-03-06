@@ -48,8 +48,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CLineDash lineDash(grid_dashes, num_grid_dashes);
 
-  renderer->drawLine(CPoint2D(0.5, 0.0), CPoint2D(0.5, 1.0), 1, CRGBA(0,0,0), lineDash);
-  renderer->drawLine(CPoint2D(0.0, 0.5), CPoint2D(1.0, 0.5), 1, CRGBA(0,0,0), lineDash);
+  renderer->drawLine(CPoint2D(0.5, 0.0), CPoint2D(0.5, 1.0), CRGBA(0,0,0), 1, lineDash);
+  renderer->drawLine(CPoint2D(0.0, 0.5), CPoint2D(1.0, 0.5), CRGBA(0,0,0), 1, lineDash);
 
   //---
 
@@ -76,7 +76,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   int    sw = 24;
 
   for (int i = 0; i < nlines; ++i) {
-    std::string str = CStrUtil::toString(i - 1);
+    std::string str = CGnuPlotUtil::toString(i - 1);
 
     double w = font->getStringWidth(str);
 
@@ -95,7 +95,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     renderer->pixelToWindow(px2 - sw, py2 + font->getCharAscent()/2, &x1, &y1);
 
-    renderer->drawLine(CPoint2D(x1 - lw, y1 - i*dy), CPoint2D(x1, y1 - i*dy), width, c, dash);
+    renderer->drawLine(CPoint2D(x1 - lw, y1 - i*dy), CPoint2D(x1, y1 - i*dy), c, width, dash);
 
     renderer->pixelToWindow(px2 - sw/2, py2 + font->getCharAscent()/2, &x1, &y1);
 
@@ -290,7 +290,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     renderer->pixelToWindow(CPoint2D(px1 + lb1     , py1 - i*font_size), p1);
     renderer->pixelToWindow(CPoint2D(px1 + lb1 + ll, py1 - i*font_size), p2);
 
-    renderer->drawLine(p1, p2, i, CRGBA(0,0,0));
+    renderer->drawLine(p1, p2, CRGBA(0,0,0), i);
 
     CPoint2D p3;
 

@@ -80,13 +80,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CPoint2D p2 = CPoint2D(x, y);
 
-    renderer->drawClipLine(CPoint2D(x, yl), CPoint2D(x, yh), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(x, yl), CPoint2D(x, yh), lc1, 1.0);
 
-    renderer->drawClipLine(CPoint2D(x - pw, yl), CPoint2D(x + pw, yl), 1.0, lc1);
-    renderer->drawClipLine(CPoint2D(x - pw, yh), CPoint2D(x + pw, yh), 1.0, lc1);
+    renderer->drawClipLine(CPoint2D(x - pw, yl), CPoint2D(x + pw, yl), lc1, 1.0);
+    renderer->drawClipLine(CPoint2D(x - pw, yh), CPoint2D(x + pw, yh), lc1, 1.0);
 
     if (i > 0)
-      renderer->drawLine(p1, p2, 1, lc1);
+      renderer->drawLine(p1, p2, lc1, 1);
 
     p1 = p2;
 

@@ -233,9 +233,9 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       double lw = stroke.width();
 
       if (group->isHidden3D())
-        renderer->drawHiddenClippedPath(points, lw, c, stroke.lineDash());
+        renderer->drawHiddenClippedPath(points, c, lw, stroke.lineDash());
       else
-        renderer->drawClippedPath(points, lw, c, stroke.lineDash());
+        renderer->drawClippedPath(points, c, lw, stroke.lineDash());
 
       if (n < 0)
         n = points.size();
@@ -253,9 +253,9 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       double lw = stroke.width();
 
       if (group->isHidden3D())
-        renderer->drawHiddenClippedPath(ip.second, lw, c, stroke.lineDash());
+        renderer->drawHiddenClippedPath(ip.second, c, lw, stroke.lineDash());
       else
-        renderer->drawClippedPath(ip.second, lw, c, stroke.lineDash());
+        renderer->drawClippedPath(ip.second, c, lw, stroke.lineDash());
     }
   }
 }
@@ -269,5 +269,5 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   CRGBA  c  = stroke.color();
   double lw = stroke.width();
 
-  renderer->drawLine(p1, p2, lw, c, stroke.lineDash());
+  renderer->drawLine(p1, p2, c, lw, stroke.lineDash());
 }

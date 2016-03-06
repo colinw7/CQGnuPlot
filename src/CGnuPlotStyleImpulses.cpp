@@ -78,7 +78,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         lc1 = lineStyle.calcColor(plot, z);
     }
 
-    renderer->drawClipLine(p1, p2, lw, lc1);
+    renderer->drawClipLine(p1, p2, lc1, lw);
   }
 }
 
@@ -91,5 +91,5 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   CRGBA  c  = stroke.color();
   double lw = stroke.width();
 
-  renderer->drawLine(p1, p2, lw, c);
+  renderer->drawLine(p1, p2, c, lw);
 }

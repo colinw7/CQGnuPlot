@@ -29,7 +29,7 @@ set yrange [*:*]
 set title "Distribution of energy usage of the continents, grouped by type of energy source\n"
 set ylabel "Billion Tons of Oil Equivalent"
 
-plot 'energy_circles.dat' using (1):($8/1.e6):(0):4
+plot 'data/energy_circles.dat' using (1):($8/1.e6):(0):4
 
 pause -1 'Hit <cr> to continue: Sort factors alphabetically'
 
@@ -56,6 +56,6 @@ set for [i=1:n_f] xtics add (word(factors,i) i)
 t(x) = x/1.e6
 filter(col, factor_col, level) = (strcol(factor_col) eq word(factors, level)) ? t(column(col)) : 1/0
 
-plot for [i=1:n_f] 'energy_circles.dat' using (i):(filter(8, 4, i)) 
+plot for [i=1:n_f] 'data/energy_circles.dat' using (i):(filter(8, 4, i)) 
 
 pause -1 'Hit <cr> to continue: boxplot demo finished'

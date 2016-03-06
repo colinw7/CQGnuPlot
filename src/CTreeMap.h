@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 
 class CTreeMapPainter;
 
@@ -16,6 +17,10 @@ class CTreeMap {
 
  public:
   CTreeMap();
+
+  HierNode *root() const { return root_; }
+
+  HierNode *createRootNode(const std::string &name="");
 
   HierNode *addHierNode(const std::string &name);
   HierNode *addHierNode(HierNode *parent, const std::string &name);
@@ -34,7 +39,7 @@ class CTreeMap {
   HierNode *getHierNodeAt(HierNode *hier, double x, double y);
   Node     *getNodeAt    (HierNode *hier, double x, double y);
 
-  void drawNodes(CTreeMapPainter *painter, HierNode *parent);
+  void drawNodes(CTreeMapPainter *painter, HierNode *parent, int depth);
 
  public:
   class Node {
@@ -63,6 +68,9 @@ class CTreeMap {
 
     virtual double size() const { return size_; }
     virtual void setSize(double size) { size_ = size; }
+
+    virtual bool isOpen() const { return true; }
+    virtual void setOpen(bool) { }
 
     double x() const { return x_; }
     double y() const { return y_; }
@@ -144,6 +152,11 @@ class CTreeMap {
     const Nodes &getNodes() const { return nodes_; }
 
     const Children &getChildren() const { return children_; }
+
+    bool isOpen() const { return open_; }
+    void setOpen(bool b) { open_ = b; }
+
+    HierNode *findChild(const std::string &name) const;
 
     void packNodes(double x, double y, double w, double h) {
       // make single list of nodes to pack
@@ -229,10 +242,11 @@ class CTreeMap {
    private:
     Nodes    nodes_;
     Children children_;
+    bool     open_ { true };
   };
 
  private:
-  HierNode *root_;
+  HierNode *root_ { 0 };
 };
 
 //------
@@ -243,7 +257,9 @@ class CTreeMapPainter {
 
   virtual ~CTreeMapPainter() { }
 
-  virtual void drawNode(CTreeMap::Node *node) = 0;
+  virtual void drawNode(CTreeMap::Node *node, int depth) = 0;
+
+  virtual void drawHierNode(CTreeMap::HierNode * /*node*/, int /*depth*/) { }
 };
 
 #endif

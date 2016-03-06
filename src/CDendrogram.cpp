@@ -78,6 +78,15 @@ compressNode(double d)
   setGap(gap() - d);
 }
 
+bool
+CDendrogram::Node::
+isNodeAtPoint(double x, double y, double tol) const
+{
+  double d = hypot(this->x() - x, this->yc() - y);
+
+  return (d <= tol);
+}
+
 //---
 
 CDendrogram::HierNode::
@@ -148,6 +157,17 @@ CDendrogram::HierNode::
 hasChildren() const
 {
   return numNodes() > 0;
+}
+
+CDendrogram::HierNode *
+CDendrogram::HierNode::
+findChild(const std::string &name) const
+{
+  for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
+    if ((*p)->name() == name)
+      return *p;
+
+  return 0;
 }
 
 void
@@ -237,6 +257,30 @@ compressNode(double d)
   setGap(gap() - d);
 }
 
+CDendrogram::Node *
+CDendrogram::HierNode::
+getNodeAtPoint(double x, double y, double tol) const
+{
+  if (isNodeAtPoint(x, y, tol))
+    return const_cast<HierNode *>(this);
+
+  // make single list of nodes to place
+  for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p) {
+    Node *node = (*p)->getNodeAtPoint(x, y, tol);
+
+    if (node)
+      return node;
+  }
+
+  for (Nodes::const_iterator pn = nodes_.begin(); pn != nodes_.end(); ++pn) {
+    if ((*pn)->isNodeAtPoint(x, y, tol))
+      return *pn;
+  }
+
+  return 0;
+}
+
+// print node gaps
 //---
 
 CDendrogram::RootNode::
@@ -339,7 +383,6 @@ setGaps()
   dy_ = 1.0/max_rows_;
 }
 
-// print node gaps
 void
 CDendrogram::RootNode::
 printGaps() const
@@ -788,6 +831,16 @@ openNode(int depth, const std::string &name)
 {
   if (root_)
     root_->openNode(depth, name);
+}
+
+CDendrogram::Node *
+CDendrogram::
+getNodeAtPoint(double x, double y, double tol) const
+{
+  if (root_)
+    return root_->getNodeAtPoint(x, y, tol);
+  else
+    return 0;
 }
 
 void

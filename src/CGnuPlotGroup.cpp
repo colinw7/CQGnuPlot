@@ -767,8 +767,19 @@ fitSinglePlot(CGnuPlotPlot *singlePlot, COptReal &xmin1, COptReal &ymin1,
 
   CBBox2D rect = singleStyle->fit(singlePlot);
 
-  xmin1 = rect.getXMin(); ymin1 = rect.getYMin();
-  xmax1 = rect.getXMax(); ymax1 = rect.getYMax();
+  if (rect.isSet()) {
+    xmin1 = rect.getXMin(); ymin1 = rect.getYMin();
+    xmax1 = rect.getXMax(); ymax1 = rect.getYMax();
+  }
+  else {
+    double xmin, ymin, xmax, ymax;
+
+    singlePlot->calcXRange(&xmin, &xmax);
+    singlePlot->calcYRange(&ymin, &ymax);
+
+    xmin1 = xmin; ymin1 = ymin;
+    xmax1 = xmax; ymax1 = ymax;
+  }
 
   CGnuPlotAxis *plotXAxis1 = getPlotAxis(AxisType::X, 1, true);
   CGnuPlotAxis *plotYAxis1 = getPlotAxis(AxisType::Y, 1, true);
@@ -2008,9 +2019,9 @@ drawBorderLine(CGnuPlotRenderer *renderer, const CPoint3D &p1, const CPoint3D &p
   double bw = axesData().getBorderWidth();
 
   if (! renderer->isPseudo() && isHidden3D())
-    renderer->drawHiddenLine(p1, p2, bw, c, CLineDash());
+    renderer->drawHiddenLine(p1, p2, c, bw, CLineDash());
   else
-    renderer->drawLine(p1, p2, bw, c);
+    renderer->drawLine(p1, p2, c, bw);
 }
 
 void
@@ -2021,7 +2032,7 @@ drawBorderLine(CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p
 
   double bw = axesData().getBorderWidth();
 
-  renderer->drawLine(p1, p2, bw, c);
+  renderer->drawLine(p1, p2, c, bw);
 }
 
 void

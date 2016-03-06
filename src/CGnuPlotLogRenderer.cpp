@@ -54,7 +54,7 @@ drawPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
 
 void
 CGnuPlotLogRenderer::
-drawLine(const CPoint2D &point1, const CPoint2D &point2, double width, const CRGBA &c,
+drawLine(const CPoint2D &point1, const CPoint2D &point2, const CRGBA &c, double width,
          const CLineDash &dash)
 {
   log("drawLine " + logValue("point1", point1) + " " + logValue("point2", point2) + " " +
@@ -89,7 +89,7 @@ void
 CGnuPlotLogRenderer::
 drawBezier(const CPoint2D &point1, const CPoint2D &point2,
            const CPoint2D &point3, const CPoint2D &point4,
-           double width, const CRGBA &c, const CLineDash &dash)
+           const CRGBA &c, double width, const CLineDash &dash)
 {
   log("drawBezier " + logValue("point1", point1) + " " + logValue("point2", point2) + " " +
       logValue("point3", point3) + " " + logValue("point4", point4) + " " +
@@ -98,7 +98,7 @@ drawBezier(const CPoint2D &point1, const CPoint2D &point2,
 
 void
 CGnuPlotLogRenderer::
-drawPolygon(const std::vector<CPoint2D> &points, double width, const CRGBA &c,
+drawPolygon(const std::vector<CPoint2D> &points, const CRGBA &c, double width,
             const CLineDash &dash)
 {
   log("drawPolygon " + logValues("points", points) + " " + logValue("width", width) + " " +
@@ -170,7 +170,7 @@ drawRotatedText(const CPoint2D &point, const std::string &text, double angle,
 void
 CGnuPlotLogRenderer::
 drawPieSlice(const CPoint2D &center, double ri, double ro, double angle1, double angle2,
-             double width, const CRGBA &c, const CLineDash &d)
+             const CRGBA &c, double width, const CLineDash &d)
 {
   log("drawPieSlice " + logValue("center", center) + " " + logValue("ri", ri) + " " +
       logValue("ro", ro) + " " + logValue("angle1", angle1) + " " +

@@ -1,12 +1,12 @@
 #include <CQGnuPlotManageVariablesDialog.h>
 #include <CQGnuPlotWindow.h>
+#include <CQGnuPlotTreeWidget.h>
 #include <CQUtil.h>
 #include <CQRealSpin.h>
 #include <CQIntegerSpin.h>
 #include <CExpr.h>
 
 #include <QApplication>
-#include <QTreeWidget>
 #include <QHeaderView>
 #include <QPushButton>
 #include <QLineEdit>
@@ -15,7 +15,7 @@
 /*! create tree widget delegate
 */
 CQGnuPlotVariablesDelegate::
-CQGnuPlotVariablesDelegate(QTreeWidget *tree) :
+CQGnuPlotVariablesDelegate(CQGnuPlotTreeWidget *tree) :
  QItemDelegate(tree), tree_(tree)
 {
 }
@@ -414,19 +414,11 @@ void
 CQGnuPlotManageVariablesDialog::
 createWidgets(QWidget *)
 {
-  tree_ = new QTreeWidget;
+  tree_ = new CQGnuPlotTreeWidget;
 
   tree_->setColumnCount(2);
   tree_->setHeaderLabels(QStringList() << "Name" << "Definition");
   tree_->setSortingEnabled(true);
-
-  tree_->setUniformRowHeights(true);
-
-  tree_->header()->setStretchLastSection(true);
-
-  tree_->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-
-  tree_->setAlternatingRowColors(true);
 
   tree_->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
 

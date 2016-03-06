@@ -73,13 +73,13 @@ class CSymbol2DPSRenderer : public CSymbol2DRenderer {
   void stroke() {
     if      (fill_ && stroke_) {
       r_->fillPolygon(points_, fc_);
-      r_->drawPolygon(points_, lw_, lc_, CLineDash());
+      r_->drawPolygon(points_, lc_, lw_, CLineDash());
     }
     else if (fill_) {
       r_->fillPolygon(points_, fc_);
     }
     else if (stroke_) {
-      r_->drawPolygon(points_, lw_, lc_, CLineDash());
+      r_->drawPolygon(points_, lc_, lw_, CLineDash());
     }
 
     str_.str("");
@@ -241,7 +241,7 @@ drawPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
 
 void
 CGnuPlotPSRenderer::
-drawLine(const CPoint2D &point1, const CPoint2D &point2, double width, const CRGBA &c,
+drawLine(const CPoint2D &point1, const CPoint2D &point2, const CRGBA &c, double width,
          const CLineDash & /*dash*/)
 {
   CPoint2D ppoint1, ppoint2;
@@ -303,16 +303,16 @@ void
 CGnuPlotPSRenderer::
 drawBezier(const CPoint2D &point1, const CPoint2D &point2,
            const CPoint2D &point3, const CPoint2D &point4,
-           double width, const CRGBA &c, const CLineDash &dash)
+           const CRGBA &c, double width, const CLineDash &dash)
 {
-  drawLine(point1, point2, width, c, dash);
-  drawLine(point2, point3, width, c, dash);
-  drawLine(point3, point4, width, c, dash);
+  drawLine(point1, point2, c, width, dash);
+  drawLine(point2, point3, c, width, dash);
+  drawLine(point3, point4, c, width, dash);
 }
 
 void
 CGnuPlotPSRenderer::
-drawPolygon(const std::vector<CPoint2D> &points, double width, const CRGBA &c, const CLineDash &)
+drawPolygon(const std::vector<CPoint2D> &points, const CRGBA &c, double width, const CLineDash &)
 {
   if (points.empty()) return;
 
@@ -424,7 +424,7 @@ drawRotatedText(const CPoint2D &p, const std::string &text, double /*ta*/,
 void
 CGnuPlotPSRenderer::
 drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
-             double width, const CRGBA &c, const CLineDash &)
+             const CRGBA &c, double width, const CLineDash &)
 {
   CPoint2D ppc;
 

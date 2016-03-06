@@ -872,7 +872,7 @@ drawAxisTick(double pos, bool first, bool large)
 
   CRGBA c = ticColor().color();
 
-  renderer_->drawLine(p1, p2, 1, c, CLineDash());
+  renderer_->drawLine(p1, p2, c, 1, CLineDash());
 
   //---
 
@@ -1321,9 +1321,9 @@ drawLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c,
          double w, const CLineDash &lineDash)
 {
   if (! renderer_->isPseudo() && group_->isHidden3D())
-    renderer_->drawHiddenLine(p1, p2, w, c, lineDash);
+    renderer_->drawHiddenLine(p1, p2, c, w, lineDash);
   else
-    renderer_->drawLine(p1, p2, w, c, lineDash);
+    renderer_->drawLine(p1, p2, c, w, lineDash);
 }
 
 void

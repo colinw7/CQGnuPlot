@@ -68,6 +68,33 @@ namespace CGnuPlotUtil {
 
     return true;
   }
+
+  inline std::string toString(int integer) {
+    static char buffer[64];
+
+    ::sprintf(buffer, "%d", integer);
+
+    return std::string(buffer);
+  }
+
+  inline std::string toString(long integer) {
+    static char buffer[64];
+
+    ::sprintf(buffer, "%ld", integer);
+
+    return std::string(buffer);
+  }
+
+  inline std::string toString(double real) {
+    static char buffer[128];
+
+    if (IsNaN(real))
+      return "NaN";
+
+    ::sprintf(buffer, "%lf", real);
+
+    return std::string(buffer);
+  }
 }
 
 #endif

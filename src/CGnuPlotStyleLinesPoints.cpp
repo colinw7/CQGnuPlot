@@ -368,7 +368,7 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
   if (! plot->isDisplayed())
     lc.setAlpha(0.5);
 
-  renderer->drawLine(p1, p2, stroke.width(), lc);
+  renderer->drawLine(p1, p2, lc, stroke.width());
 
   if (plot->pointType() == CGnuPlotTypes::SymbolType::STRING) {
     const CGnuPlotLabelStyle &labelStyle = plot->labelStyle();

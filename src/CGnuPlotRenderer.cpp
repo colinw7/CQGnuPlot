@@ -277,7 +277,7 @@ CGnuPlotRenderer::
 strokeHiddenPolygon(const Points2D &points, double z, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
-    return drawHiddenPolygon(z, points, stroke.width(), stroke.color(), stroke.lineDash());
+    return drawHiddenPolygon(z, points, stroke.color(), stroke.width(), stroke.lineDash());
   else
     return CGnuPlotHiddenObjectP();
 }
@@ -331,17 +331,17 @@ CGnuPlotRenderer::
 strokePolygon(const Points2D &points, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
-    drawPolygon(points, stroke.width(), stroke.color(), stroke.lineDash());
+    drawPolygon(points, stroke.color(), stroke.width(), stroke.lineDash());
 }
 
 //------
 
 CGnuPlotHiddenObjectP
 CGnuPlotRenderer::
-drawHiddenPolygon(double z, const Points2D &points,
-                  double w, const CRGBA &c, const CLineDash &dash)
+drawHiddenPolygon(double z, const Points2D &points, const CRGBA &c,
+                  double width, const CLineDash &dash)
 {
-  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenDrawPolygon(points, w, c, dash));
+  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenDrawPolygon(points, c, width, dash));
 
   hiddenObjects_[-z].push_back(obj);
 
@@ -350,7 +350,7 @@ drawHiddenPolygon(double z, const Points2D &points,
 
 void
 CGnuPlotRenderer::
-drawClippedPolygon(const Points3D &points, double w, const CRGBA &c, const CLineDash &dash)
+drawClippedPolygon(const Points3D &points, const CRGBA &c, double width, const CLineDash &dash)
 {
   Points2D points1;
 
@@ -360,26 +360,26 @@ drawClippedPolygon(const Points3D &points, double w, const CRGBA &c, const CLine
     points1.push_back(p1);
   }
 
-  drawClippedPolygon(points1, w, c, dash);
+  drawClippedPolygon(points1, c, width, dash);
 }
 
 void
 CGnuPlotRenderer::
-drawClippedPolygon(const Points2D &points, double w, const CRGBA &c, const CLineDash &dash)
+drawClippedPolygon(const Points2D &points, const CRGBA &c, double width, const CLineDash &dash)
 {
   if (! isPseudo() && clip().isValid()) {
     Points2D ipoints;
 
     if (CMathGeom2D::IntersectPolygon(points, clip().getValue(), ipoints))
-      drawPolygon(ipoints, w, c, dash);
+      drawPolygon(ipoints, c, width, dash);
   }
   else
-    drawPolygon(points, w, c, dash);
+    drawPolygon(points, c, width, dash);
 }
 
 void
 CGnuPlotRenderer::
-drawPolygon(const Points3D &points, double lw, const CRGBA &c, const CLineDash &dash)
+drawPolygon(const Points3D &points, const CRGBA &c, double lw, const CLineDash &dash)
 {
   Points2D points1;
 
@@ -389,7 +389,7 @@ drawPolygon(const Points3D &points, double lw, const CRGBA &c, const CLineDash &
     points1.push_back(p1);
   }
 
-  drawPolygon(points1, lw, c, dash);
+  drawPolygon(points1, c, lw, dash);
 }
 
 CGnuPlotHiddenObjectP
@@ -422,7 +422,7 @@ patternClippedPolygon(const Points2D &points, FillPattern pattern,
 void
 CGnuPlotRenderer::
 drawClippedEllipse(const CPoint2D &p, double rx, double ry, double a,
-                   const CRGBA &c, double w, const CLineDash &dash)
+                   const CRGBA &c, double width, const CLineDash &dash)
 {
   if (! isPseudo() && clip().isValid()) {
     if (a == 0) {
@@ -441,13 +441,13 @@ drawClippedEllipse(const CPoint2D &p, double rx, double ry, double a,
         points.push_back(CPoint2D(x, y));
       }
 
-      drawClippedPolygon(points, w, c, dash);
+      drawClippedPolygon(points, c, width, dash);
     }
     else
-      drawEllipse(p, rx, ry, a, c, w, dash);
+      drawEllipse(p, rx, ry, a, c, width, dash);
   }
   else
-    drawEllipse(p, rx, ry, a, c, w, dash);
+    drawEllipse(p, rx, ry, a, c, width, dash);
 }
 
 void
@@ -482,7 +482,7 @@ fillClippedEllipse(const CPoint2D &p, double rx, double ry, double a, const CRGB
 
 void
 CGnuPlotRenderer::
-drawRect(const CBBox3D &rect, const CRGBA &c, double w, const CLineDash &dash)
+drawRect(const CBBox3D &rect, const CRGBA &c, double width, const CLineDash &dash)
 {
   CPoint3D p11(rect.getXMin(), rect.getYMin(), rect.getZMin());
   CPoint3D p21(rect.getXMax(), rect.getYMin(), rect.getZMin());
@@ -502,38 +502,38 @@ drawRect(const CBBox3D &rect, const CRGBA &c, double w, const CLineDash &dash)
   CPoint2D pt32 = transform2D(p32);
   CPoint2D pt42 = transform2D(p42);
 
-  drawLine(pt11, pt21, w, c, dash);
-  drawLine(pt21, pt31, w, c, dash);
-  drawLine(pt31, pt41, w, c, dash);
-  drawLine(pt41, pt11, w, c, dash);
+  drawLine(pt11, pt21, c, width, dash);
+  drawLine(pt21, pt31, c, width, dash);
+  drawLine(pt31, pt41, c, width, dash);
+  drawLine(pt41, pt11, c, width, dash);
 
-  drawLine(pt11, pt12, w, c, dash);
-  drawLine(pt21, pt22, w, c, dash);
-  drawLine(pt31, pt32, w, c, dash);
-  drawLine(pt41, pt42, w, c, dash);
+  drawLine(pt11, pt12, c, width, dash);
+  drawLine(pt21, pt22, c, width, dash);
+  drawLine(pt31, pt32, c, width, dash);
+  drawLine(pt41, pt42, c, width, dash);
 
-  drawLine(pt12, pt22, w, c, dash);
-  drawLine(pt22, pt32, w, c, dash);
-  drawLine(pt32, pt42, w, c, dash);
-  drawLine(pt42, pt12, w, c, dash);
+  drawLine(pt12, pt22, c, width, dash);
+  drawLine(pt22, pt32, c, width, dash);
+  drawLine(pt32, pt42, c, width, dash);
+  drawLine(pt42, pt12, c, width, dash);
 }
 
 void
 CGnuPlotRenderer::
-drawClippedRect(const CBBox2D &rect, const CRGBA &c, double w, const CLineDash &dash)
+drawClippedRect(const CBBox2D &rect, const CRGBA &c, double width, const CLineDash &dash)
 {
   if (clip().isValid() && ! isPseudo()) {
     if      (clip().getValue().inside(rect))
-      drawRect(rect, c, w, dash);
+      drawRect(rect, c, width, dash);
     else if (clip().getValue().intersect(rect)) {
-      drawClipLine(rect.getLL(), rect.getLR(), w, c, dash);
-      drawClipLine(rect.getLR(), rect.getUR(), w, c, dash);
-      drawClipLine(rect.getUR(), rect.getUL(), w, c, dash);
-      drawClipLine(rect.getUL(), rect.getLL(), w, c, dash);
+      drawClipLine(rect.getLL(), rect.getLR(), c, width, dash);
+      drawClipLine(rect.getLR(), rect.getUR(), c, width, dash);
+      drawClipLine(rect.getUR(), rect.getUL(), c, width, dash);
+      drawClipLine(rect.getUL(), rect.getLL(), c, width, dash);
     }
   }
   else
-    drawRect(rect, c, w, dash);
+    drawRect(rect, c, width, dash);
 }
 
 //----
@@ -611,7 +611,7 @@ CGnuPlotRenderer::
 strokeHiddenLine(const CPoint2D &p1, const CPoint2D &p2, double z, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
-    return drawHiddenLine(p1, p2, z, stroke.width(), stroke.color(), stroke.lineDash());
+    return drawHiddenLine(p1, p2, z, stroke.color(), stroke.width(), stroke.lineDash());
   else
     return CGnuPlotHiddenObjectP();
 }
@@ -621,12 +621,12 @@ CGnuPlotRenderer::
 strokeClipLine(const CPoint2D &p1, const CPoint2D &p2, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
-    drawClipLine(p1, p2, stroke.width(), stroke.color(), stroke.lineDash());
+    drawClipLine(p1, p2, stroke.color(), stroke.width(), stroke.lineDash());
 }
 
 void
 CGnuPlotRenderer::
-drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,
+drawClipLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c, double width,
              const CLineDash &dash)
 {
   if (! isPseudo()) {
@@ -634,15 +634,15 @@ drawClipLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &
     CPoint2D p21 = p2;
 
     if (clipLine(p11, p21))
-      drawLine(p11, p21, width, c, dash);
+      drawLine(p11, p21, c, width, dash);
   }
   else
-    drawLine(p1, p2, width, c, dash);
+    drawLine(p1, p2, c, width, dash);
 }
 
 void
 CGnuPlotRenderer::
-drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w,
+drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double width,
                 const CLineDash &dash, const COptPoint2D &o)
 {
   CPoint2D o1 = (o.isValid() ? o.getValue() : rect.getCenter());
@@ -652,10 +652,10 @@ drawRotatedRect(const CBBox2D &rect, double a, const CRGBA &c, double w,
   CPoint2D p3 = rotatePoint(rect.getUR(), a, o1);
   CPoint2D p4 = rotatePoint(rect.getUL(), a, o1);
 
-  drawLine(p1, p2, w, c, dash);
-  drawLine(p2, p3, w, c, dash);
-  drawLine(p3, p4, w, c, dash);
-  drawLine(p4, p1, w, c, dash);
+  drawLine(p1, p2, c, width, dash);
+  drawLine(p2, p3, c, width, dash);
+  drawLine(p3, p4, c, width, dash);
+  drawLine(p4, p1, c, width, dash);
 }
 
 void
@@ -729,18 +729,18 @@ strokeEllipse(const CPoint2D &p, double rx, double ry, double a, const CGnuPlotS
 void
 CGnuPlotRenderer::
 drawEllipse(const CPoint3D &pos, double dx, double ry, double angle, const CRGBA &c,
-            double w, const CLineDash &dash)
+            double width, const CLineDash &dash)
 {
   CPoint2D pos1 = transform2D(pos);
 
-  drawEllipse(pos1, dx, ry, angle, c, w, dash);
+  drawEllipse(pos1, dx, ry, angle, c, width, dash);
 }
 
 void
 CGnuPlotRenderer::
-drawEllipse(const CBBox2D &rect, const CRGBA &c, double w, const CLineDash &dash)
+drawEllipse(const CBBox2D &rect, const CRGBA &c, double width, const CLineDash &dash)
 {
-  drawEllipse(rect.getCenter(), rect.getWidth()/2, rect.getHeight()/2, 0, c, w, dash);
+  drawEllipse(rect.getCenter(), rect.getWidth()/2, rect.getHeight()/2, 0, c, width, dash);
 }
 
 //---
@@ -748,7 +748,7 @@ drawEllipse(const CBBox2D &rect, const CRGBA &c, double w, const CLineDash &dash
 CBBox2D
 CGnuPlotRenderer::
 drawTextBox(const CPoint2D &p, const std::string &str, bool enhanced, const CPoint2D &offset,
-            const CRGBA &bg, const CRGBA &fg, double w)
+            const CRGBA &bg, const CRGBA &fg, double width)
 {
   CFontPtr font = getFont();
 
@@ -784,7 +784,7 @@ drawTextBox(const CPoint2D &p, const std::string &str, bool enhanced, const CPoi
 
   CLineDash dash;
 
-  drawRect(bbox, fg, w, dash);
+  drawRect(bbox, fg, width, dash);
 
   return bbox;
 }
@@ -1275,7 +1275,7 @@ CGnuPlotRenderer::
 strokeHiddenPath(const Points2D &points, double z, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
-    return drawHiddenPath(points, z, stroke.width(), stroke.color(), stroke.lineDash());
+    return drawHiddenPath(points, z, stroke.color(), stroke.width(), stroke.lineDash());
   else
     return CGnuPlotHiddenObjectP();
 }
@@ -1317,25 +1317,25 @@ CGnuPlotRenderer::
 strokeClippedPath(const Points2D &points, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
-    drawClippedPath(points, stroke.width(), stroke.color(), stroke.lineDash());
+    drawClippedPath(points, stroke.color(), stroke.width(), stroke.lineDash());
 }
 
 //------
 
 void
 CGnuPlotRenderer::
-drawHiddenClippedPath(const Points3D &points, double width, const CRGBA &c, const CLineDash &dash)
+drawHiddenClippedPath(const Points3D &points, const CRGBA &c, double width, const CLineDash &dash)
 {
   for (uint i = 0; i < points.size() - 1; ++i)
-    drawHiddenLine(points[i], points[i + 1], width, c, dash);
+    drawHiddenLine(points[i], points[i + 1], c, width, dash);
 }
 
 CGnuPlotHiddenObjectP
 CGnuPlotRenderer::
-drawHiddenPath(const Points2D &points, double z, double width, const CRGBA &c,
+drawHiddenPath(const Points2D &points, double z, const CRGBA &c, double width,
                const CLineDash &dash)
 {
-  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenPath(points, width, c, dash));
+  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenPath(points, c, width, dash));
 
   hiddenObjects_[-z].push_back(obj);
 
@@ -1344,12 +1344,12 @@ drawHiddenPath(const Points2D &points, double z, double width, const CRGBA &c,
 
 void
 CGnuPlotRenderer::
-drawClippedPath(const Points3D &points, double width, const CRGBA &c, const CLineDash &dash)
+drawClippedPath(const Points3D &points, const CRGBA &c, double width, const CLineDash &dash)
 {
   CGnuPlotStroke stroke;
 
-  stroke.setWidth   (width);
   stroke.setColor   (c);
+  stroke.setWidth   (width);
   stroke.setLineDash(dash);
 
   if (clip().isValid() && ! isPseudo()) {
@@ -1370,15 +1370,15 @@ drawClippedPath(const Points3D &points, double width, const CRGBA &c, const CLin
 
 void
 CGnuPlotRenderer::
-drawClippedPath(const Points2D &points, double width, const CRGBA &c, const CLineDash &dash)
+drawClippedPath(const Points2D &points, const CRGBA &c, double width, const CLineDash &dash)
 {
   int np = points.size();
   if (np < 2) return;
 
   CGnuPlotStroke stroke;
 
-  stroke.setWidth   (width);
   stroke.setColor   (c);
+  stroke.setWidth   (width);
   stroke.setLineDash(dash);
 
   Points2D points1;
@@ -1469,7 +1469,7 @@ strokePieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
                double angle2, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
-    drawPieSlice(pc, ri, ro, angle1, angle2, stroke.width(), stroke.color(), stroke.lineDash());
+    drawPieSlice(pc, ri, ro, angle1, angle2, stroke.color(), stroke.width(), stroke.lineDash());
 }
 
 void
@@ -1488,7 +1488,7 @@ fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
 
 void
 CGnuPlotRenderer::
-drawPixelLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,
+drawPixelLine(const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c, double width,
               const CLineDash &dash)
 {
   double wx1, wy1, wx2, wy2;
@@ -1496,7 +1496,7 @@ drawPixelLine(const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA 
   windowToPixel(p1.x, p1.y, &wx1, &wy1);
   windowToPixel(p2.x, p2.y, &wx2, &wy2);
 
-  drawLine(CPoint2D(wx1, wy1), CPoint2D(wx2, wy2), width, c, dash);
+  drawLine(CPoint2D(wx1, wy1), CPoint2D(wx2, wy2), c, width, dash);
 }
 
 void
@@ -1510,7 +1510,7 @@ drawPoint(const CPoint3D &p, const CRGBA &c)
 
 CGnuPlotHiddenObjectP
 CGnuPlotRenderer::
-drawHiddenLine(const CPoint3D &p1, const CPoint3D &p2, double w, const CRGBA &c,
+drawHiddenLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c, double width,
                const CLineDash &dash)
 {
   CPoint3D pt1 = transform(p1);
@@ -1518,15 +1518,15 @@ drawHiddenLine(const CPoint3D &p1, const CPoint3D &p2, double w, const CRGBA &c,
 
   double zm = (pt1.z + pt2.z)/2;
 
-  return drawHiddenLine(pt1.toPoint2D(), pt2.toPoint2D(), zm, w, c, dash);
+  return drawHiddenLine(pt1.toPoint2D(), pt2.toPoint2D(), zm, c, width, dash);
 }
 
 CGnuPlotHiddenObjectP
 CGnuPlotRenderer::
-drawHiddenLine(const CPoint2D &p1, const CPoint2D &p2, double z, double w, const CRGBA &c,
-               const CLineDash &dash)
+drawHiddenLine(const CPoint2D &p1, const CPoint2D &p2, double z, const CRGBA &c,
+               double width, const CLineDash &dash)
 {
-  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenLine(p1, p2, w, c, dash));
+  CGnuPlotHiddenObjectP obj(new CGnuPlotHiddenLine(p1, p2, c, width, dash));
 
   hiddenObjects_[-z].push_back(obj);
 
@@ -1535,10 +1535,10 @@ drawHiddenLine(const CPoint2D &p1, const CPoint2D &p2, double z, double w, const
 
 void
 CGnuPlotRenderer::
-drawLine(const CPoint3D &p1, const CPoint3D &p2, double width, const CRGBA &c,
+drawLine(const CPoint3D &p1, const CPoint3D &p2, const CRGBA &c, double width,
          const CLineDash &dash)
 {
-  drawLine(transform2D(p1), transform2D(p2), width, c, dash);
+  drawLine(transform2D(p1), transform2D(p2), c, width, dash);
 }
 
 //------
@@ -2041,7 +2041,7 @@ void
 CGnuPlotHiddenDrawPolygon::
 draw(CGnuPlotRenderer *renderer)
 {
-  renderer->drawPolygon(points_, w_, scaledColor(renderer), d_);
+  renderer->drawPolygon(points_, scaledColor(renderer), w_, d_);
 }
 
 void
@@ -2057,7 +2057,7 @@ draw(CGnuPlotRenderer *renderer)
 {
   renderer->setMapping(mapping_);
 
-  renderer->drawLine(p1_, p2_, w_, scaledColor(renderer), d_);
+  renderer->drawLine(p1_, p2_, scaledColor(renderer), w_, d_);
 
   renderer->setMapping(true);
 }
@@ -2069,7 +2069,7 @@ draw(CGnuPlotRenderer *renderer)
   renderer->setMapping(mapping_);
 
   for (uint i = 0; i < points_.size() - 1; ++i)
-    renderer->drawLine(points_[i], points_[i + 1], w_, scaledColor(renderer), d_);
+    renderer->drawLine(points_[i], points_[i + 1], scaledColor(renderer), w_, d_);
 
   renderer->setMapping(true);
 }

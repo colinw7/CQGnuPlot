@@ -1248,7 +1248,7 @@ draw2D(CGnuPlotRenderer *renderer)
 
       renderer->drawBezier(CPoint2D(x1, y1), CPoint2D(x2, y2),
                            CPoint2D(x3, y3), CPoint2D(x4, y4),
-                           lineStyle.calcWidth(), c);
+                           c, lineStyle.calcWidth());
     }
   }
 }

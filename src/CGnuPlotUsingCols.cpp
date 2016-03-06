@@ -323,7 +323,7 @@ processUsingStr(CGnuPlotUsingColData &usingData, StringArray &usingStrs)
 
     if (CStrUtil::toInteger(lhs, &col1) && CStrUtil::toInteger(rhs, &col2)) {
       for (int i = col1; i <= col2; ++i)
-        usingStrs.push_back(CStrUtil::toString(i));
+        usingStrs.push_back(CGnuPlotUtil::toString(i));
 
       return true;
     }
@@ -554,19 +554,23 @@ decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) 
       std::string midStr;
 
       if (value1.isValid()) {
-        double      x1;
+        long        i1;
+        double      r1;
         std::string s1;
 
-        if (value1->getRealValue(x1)) {
-          if (! IsNaN(x1)) {
-            std::string realStr = CStrUtil::toString(x1);
+        if      (value1->getIntegerValue(i1)) {
+          midStr = CGnuPlotUtil::toString(i1);
+        }
+        else if (value1->getRealValue(r1)) {
+          if (! IsNaN(r1)) {
+            std::string rstr = CGnuPlotUtil::toString(r1);
 
-            auto p = realStr.find('.');
+            auto p = rstr.find('.');
 
             if (p == std::string::npos)
-              realStr += ".";
+              rstr += ".";
 
-            midStr = realStr;
+            midStr = rstr;
           }
           else
             midStr = "NaN";

@@ -6,8 +6,13 @@ bool
 CExprRealValue::
 getStringValue(std::string &s) const
 {
-  if (! IsNaN(real_))
-    s = CStrUtil::toString(real_);
+  static char buffer[128];
+
+  if (! IsNaN(real_)) {
+    ::sprintf(buffer, "%lf", real_);
+
+    s = std::string(buffer);
+  }
   else
     s = "NaN";
 

@@ -19,7 +19,7 @@ class CGnuPlotLogRenderer : public CGnuPlotRenderer {
   void drawSymbol (const CPoint2D &p, SymbolType type, double size,
                    const CRGBA &c, double lw, bool pixelSize) override;
   void drawPath   (const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke) override;
-  void drawLine   (const CPoint2D &p1, const CPoint2D &p2, double width, const CRGBA &c,
+  void drawLine   (const CPoint2D &p1, const CPoint2D &p2, const CRGBA &c, double width,
                    const CLineDash &dash) override;
 
   void drawRect   (const CBBox2D &rect, const CRGBA &c, double width,
@@ -36,9 +36,9 @@ class CGnuPlotLogRenderer : public CGnuPlotRenderer {
                       const CRGBA &fg, const CRGBA &bg) override;
 
   void drawBezier(const CPoint2D &p1, const CPoint2D &p2, const CPoint2D &p3, const CPoint2D &p4,
-                  double width, const CRGBA &c, const CLineDash &d) override;
+                  const CRGBA &c, double width, const CLineDash &d) override;
 
-  void drawPolygon   (const std::vector<CPoint2D> &points, double w, const CRGBA &c,
+  void drawPolygon   (const std::vector<CPoint2D> &points, const CRGBA &c, double width,
                       const CLineDash &d) override;
   void fillPolygon   (const std::vector<CPoint2D> &points, const CRGBA &c) override;
   void patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern pattern,
@@ -51,7 +51,7 @@ class CGnuPlotLogRenderer : public CGnuPlotRenderer {
                        const CRGBA &c) override;
 
   void drawPieSlice(const CPoint2D &pc, double ro, double ri, double angle1, double angle2,
-                    double width, const CRGBA &c, const CLineDash &) override;
+                    const CRGBA &c, double width, const CLineDash &) override;
   void fillPieSlice(const CPoint2D &pc, double ro, double ri, double angle1, double angle2,
                     const CRGBA &c) override;
 

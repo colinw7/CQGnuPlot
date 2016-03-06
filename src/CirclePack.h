@@ -27,7 +27,7 @@ class CircleNode {
 
    virtual void setPosition(double x, double y) { x_ = x; y_ = y; }
 
-  private:
+  protected:
    double r_;
    double x_;
    double y_;

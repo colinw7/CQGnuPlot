@@ -161,7 +161,7 @@ draw(CGnuPlotRenderer *renderer)
       if      (l.color().isValid()) {
         CRGBA c = l.color().getValue();
 
-        renderer_->drawLine(p1, p2, stroke.width(), c, stroke.lineDash());
+        renderer_->drawLine(p1, p2, c, stroke.width(), stroke.lineDash());
       }
       else if (style && style->hasKeyLine()) {
         style->drawKeyLine(plot.get(), renderer_, p1, p2);
@@ -186,7 +186,7 @@ draw(CGnuPlotRenderer *renderer)
       else {
         CRGBA c = stroke.color();
 
-        renderer_->drawLine(p1, p2, stroke.width(), c, stroke.lineDash());
+        renderer_->drawLine(p1, p2, c, stroke.width(), stroke.lineDash());
       }
 
       // draw key text
