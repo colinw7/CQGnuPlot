@@ -1403,6 +1403,10 @@ draw()
   //---
 
   renderer->drawHidden(isHiddenGrayScale());
+
+  //---
+
+  renderer->unsetCamera();
 }
 
 void

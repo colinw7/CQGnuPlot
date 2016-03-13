@@ -4,7 +4,7 @@
 #include <CQDialog.h>
 
 class CQGnuPlotMainWindow;
-class QTreeWidget;
+class CQGnuPlotTreeWidget;
 class QLineEdit;
 
 class CQGnuPlotManageFunctionsDialog : public CQDialog {
@@ -24,7 +24,7 @@ class CQGnuPlotManageFunctionsDialog : public CQDialog {
 
  private:
   CQGnuPlotMainWindow *window_;
-  QTreeWidget         *tree_;
+  CQGnuPlotTreeWidget *tree_;
   QLineEdit           *nameEdit_;
   QLineEdit           *exprEdit_;
   QSize                size_;

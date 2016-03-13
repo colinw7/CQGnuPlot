@@ -2,6 +2,8 @@
 #define CGnuPlotStyleAdjacencyRenderer_H
 
 #include <CAdjacency.h>
+#include <CGnuPlotRenderer.h>
+#include <CGnuPlotStyle.h>
 
 class CGnuPlotStyleAdjacencyRenderer : public CAdjacencyRenderer {
  public:
@@ -11,6 +13,9 @@ class CGnuPlotStyleAdjacencyRenderer : public CAdjacencyRenderer {
 
   CGnuPlotRenderer *renderer() const { return renderer_; }
   void setRenderer(CGnuPlotRenderer *r) { renderer_ = r; }
+
+  const std::string &palette() const { return palette_; }
+  void setPalette(const std::string &v) { palette_ = v; }
 
   int pixelWidth () const { return renderer_->width (); }
   int pixelHeight() const { return renderer_->height(); }
@@ -63,12 +68,16 @@ class CGnuPlotStyleAdjacencyRenderer : public CAdjacencyRenderer {
         value = r  .first;
         name1 = nnr.first->name();
         name2 = nr .first->name();
-        c     = adjacency_->nodeColor(nnr.first, nr.first);
+        c     = adjacency_->nodeColor(this, nnr.first, nr.first);
         return true;
       }
     }
 
     return false;
+  }
+
+  CRGBA indexColor(int i) const {
+    return CGnuPlotStyleInst->indexColor(palette(), i);
   }
 
  public:
@@ -80,6 +89,7 @@ class CGnuPlotStyleAdjacencyRenderer : public CAdjacencyRenderer {
   CGnuPlotRenderer   *renderer_;
   CAdjacency         *adjacency_;
   ValueNodeNodeRects  rects_;
+  std::string         palette_;
 };
 
 #endif

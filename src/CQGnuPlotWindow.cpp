@@ -46,6 +46,17 @@
 #include <CQGnuPlotStroke.h>
 #include <CQGnuPlotMark.h>
 
+#include <CGnuPlotStyleValueMgr.h>
+#include <CQGnuPlotAdjacencyStyleValue.h>
+#include <CQGnuPlotChordDiagramStyleValue.h>
+#include <CQGnuPlotDelaunayStyleValue.h>
+#include <CQGnuPlotDendrogramStyleValue.h>
+#include <CQGnuPlotForceDirectedStyleValue.h>
+#include <CQGnuPlotHierBubbleStyleValue.h>
+#include <CQGnuPlotPieChartStyleValue.h>
+#include <CQGnuPlotSunburstStyleValue.h>
+#include <CQGnuPlotTreeMapStyleValue.h>
+
 #include <CQGnuPlotToolBar.h>
 #include <CQGnuPlotLoadFileDialog.h>
 #include <CQGnuPlotLoadFunctionDialog.h>
@@ -969,7 +980,7 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
-  CQGnuPlotBoxPlot *qboxPlot = static_cast<CQGnuPlotBoxPlot  *>(qplot->getBoxPlot());
+  CQGnuPlotBoxPlot *qboxPlot = static_cast<CQGnuPlotBoxPlot *>(qplot->getBoxPlot());
 
   QString boxPlotName = plotName + "/boxPlot";
 
@@ -981,6 +992,121 @@ addPlotProperties(CGnuPlotPlot *plot)
   tree_->addProperty(boxPlotName, qboxPlot, "pointType");
   tree_->addProperty(boxPlotName, qboxPlot, "boxLabels");
   tree_->addProperty(boxPlotName, qboxPlot, "sorted");
+
+  //---
+
+  CQGnuPlotAdjacencyStyleValue *qadjacency = static_cast<CQGnuPlotAdjacencyStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotAdjacencyStyleValue>(qplot));
+
+  if (qadjacency) {
+    QString adjacencyName = plotName + "/adjacency";
+
+    tree_->addProperty(adjacencyName, qadjacency, "palette");
+  }
+
+  //---
+
+  CQGnuPlotChordDiagramStyleValue *qchord = static_cast<CQGnuPlotChordDiagramStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotChordDiagramStyleValue>(qplot));
+
+  if (qchord) {
+    QString chordName = plotName + "/chorddiagram";
+
+    tree_->addProperty(chordName, qchord, "palette");
+  }
+
+  //---
+
+  CQGnuPlotDelaunayStyleValue *qdelaunay = static_cast<CQGnuPlotDelaunayStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotDelaunayStyleValue>(qplot));
+
+  if (qdelaunay) {
+    QString delaunayName = plotName + "/delaunay";
+
+    tree_->addProperty(delaunayName, qdelaunay, "lineColor");
+    tree_->addProperty(delaunayName, qdelaunay, "lineWidth");
+  }
+
+  //---
+
+  CQGnuPlotDendrogramStyleValue *qdendrogram = static_cast<CQGnuPlotDendrogramStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotDendrogramStyleValue>(qplot));
+
+  if (qdendrogram) {
+    QString dendrogramName = plotName + "/dendrogram";
+
+    tree_->addProperty(dendrogramName, qdendrogram, "circleSize");
+    tree_->addProperty(dendrogramName, qdendrogram, "marginLeft");
+    tree_->addProperty(dendrogramName, qdendrogram, "marginRight");
+    tree_->addProperty(dendrogramName, qdendrogram, "marginBottom");
+    tree_->addProperty(dendrogramName, qdendrogram, "marginTop");
+  }
+
+  //---
+
+  CQGnuPlotForceDirectedStyleValue *qforcedir = static_cast<CQGnuPlotForceDirectedStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotForceDirectedStyleValue>(qplot));
+
+  if (qforcedir) {
+    QString forceDirName = plotName + "/forcedirected";
+
+    tree_->addProperty(forceDirName, qforcedir, "palette"   );
+    tree_->addProperty(forceDirName, qforcedir, "circleSize");
+    tree_->addProperty(forceDirName, qforcedir, "animating" );
+  }
+
+  //---
+
+  CQGnuPlotHierBubbleStyleValue *qhierbubble = static_cast<CQGnuPlotHierBubbleStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotHierBubbleStyleValue>(qplot));
+
+  if (qhierbubble) {
+    QString hierBubbleName = plotName + "/hierbubble";
+
+    tree_->addProperty(hierBubbleName, qhierbubble, "palette");
+  }
+
+  //---
+
+  CQGnuPlotPieChartStyleValue *qpiechart = static_cast<CQGnuPlotPieChartStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotPieChartStyleValue>(qplot));
+
+  if (qpiechart) {
+    QString piechartName = plotName + "/piechart";
+
+    tree_->addProperty(piechartName, qpiechart, "palette");
+    tree_->addProperty(piechartName, qpiechart, "alpha");
+    tree_->addProperty(piechartName, qpiechart, "startAngle");
+    tree_->addProperty(piechartName, qpiechart, "innerRadius");
+    tree_->addProperty(piechartName, qpiechart, "labelRadius");
+  }
+
+  //---
+
+  CQGnuPlotSunburstStyleValue *qsunburst = static_cast<CQGnuPlotSunburstStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotSunburstStyleValue>(qplot));
+
+  if (qsunburst) {
+    QString sunburstName = plotName + "/sunburst";
+
+    tree_->addProperty(sunburstName, qsunburst, "borderColor");
+    tree_->addProperty(sunburstName, qsunburst, "palette");
+    tree_->addProperty(sunburstName, qsunburst, "startAngle");
+    tree_->addProperty(sunburstName, qsunburst, "innerRadius");
+  }
+
+  //---
+
+  CQGnuPlotTreeMapStyleValue *qtreemap = static_cast<CQGnuPlotTreeMapStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotTreeMapStyleValue>(qplot));
+
+  if (qtreemap) {
+    QString treemapName = plotName + "/treemap";
+
+    tree_->addProperty(treemapName, qtreemap, "openBorderWidth");
+    tree_->addProperty(treemapName, qtreemap, "closedBorderWidth");
+    tree_->addProperty(treemapName, qtreemap, "palette");
+  }
 
   //---
 
@@ -1668,7 +1794,7 @@ loadFileSlot()
   else
     app()->setTRange(xmin, xmax);
 
-  CGnuPlotUsingCols usingCols;
+  CGnuPlotUsingCols usingCols(app());
 
   usingCols.parse(usingStr.toStdString());
 
@@ -2628,6 +2754,9 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
     else if (key == Qt::Key_Minus) {
       zoomOutKey(group);
     }
+    else if (key == Qt::Key_Home) {
+      homeKey(group);
+    }
     else if (key == Qt::Key_Period) {
       QPoint pos = canvas_->mapFromGlobal(QCursor::pos());
 
@@ -2688,23 +2817,7 @@ keyPress(const CGnuPlotKeyEvent &keyEvent)
       zoomOutKey(group);
     }
     else if (key == Qt::Key_Home) {
-      if (! group->is3D()) {
-        //group->restoreRange();
-
-        CQGnuPlotRenderer *qrenderer = qapp()->qrenderer();
-
-        qrenderer->setScale(1.0, 1.0);
-        qrenderer->setOffset(CPoint2D(0,0));
-      }
-      else {
-        CGnuPlotCameraP camera = group->camera();
-
-        camera->resetZoom();
-
-        group->reset3D();
-      }
-
-      redraw();
+      homeKey(group);
     }
   }
 }
@@ -2841,6 +2954,29 @@ zoomOutKey(CQGnuPlotGroup *group)
     CGnuPlotCameraP camera = group->camera();
 
     camera->zoomOut();
+
+    group->reset3D();
+  }
+
+  redraw();
+}
+
+void
+CQGnuPlotMainWindow::
+homeKey(CQGnuPlotGroup *group)
+{
+  if (! group->is3D()) {
+    //group->restoreRange();
+
+    CQGnuPlotRenderer *qrenderer = qapp()->qrenderer();
+
+    qrenderer->setScale(1.0, 1.0);
+    qrenderer->setOffset(CPoint2D(0,0));
+  }
+  else {
+    CGnuPlotCameraP camera = group->camera();
+
+    camera->resetZoom();
 
     group->reset3D();
   }

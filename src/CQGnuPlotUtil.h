@@ -20,6 +20,16 @@ namespace CQGnuPlotUtil {
 
   Qt::BrushStyle fillPatternQtConv(const CGnuPlotTypes::FillPattern &type);
   CGnuPlotTypes::FillPattern fillPatternQtConv(const Qt::BrushStyle &type);
+
+  //---
+
+  inline QColor toQColor(const CRGBA &c) {
+    return QColor(c.getRedI(),c.getGreenI(),c.getBlueI(),c.getAlphaI());
+  }
+
+  inline CRGBA fromQColor(const QColor &c) {
+    return CRGBA(c.redF(),c.greenF(),c.blueF(),c.alphaF());
+  }
 }
 
 #endif

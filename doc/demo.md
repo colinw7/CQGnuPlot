@@ -3,6 +3,7 @@
 
 ## animate2.dem
   + Slow
+  + Bad clipped lines
 
 ## animate.dem
   + no issues
@@ -11,7 +12,7 @@
   + no issues
 
 ## arrowstyle.dem
-  + should have no key on first few plots
+  + no issues
 
 ## autoscale.dem
   + handle range limits
@@ -29,10 +30,11 @@
   + No issues
 
 ## borders.dem
-  + key not needed
+  + no issues
 
 ## boxplot.dem
   + different outlier definition
+  + default no labels
 
 ## callargs.dem
   + No issues
@@ -62,7 +64,7 @@
   + z axis should not be drawn
 
 ## contours.dem
-  + globlet no contour
+  + goblet no contour
 
 ## controls.dem
   + No issues
@@ -92,14 +94,11 @@
   + No issues
 
 ## enhancedtext.dem
-  + y axis not correct
-  + power 3/2 not spaced properly
-  + v overprint in wrong spot
+  + Sum not displaying text
 
 ## enhanced_utf8.dem
-  + y axis not correct
-  + power 3/2 not spaced properly
-  + v overprint in wrong spot
+  + Key line not centered
+  + Overprint centered not left aligned
 
 ## epslatex.dem
   + terminal not supported, device push/pop

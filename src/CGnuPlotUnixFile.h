@@ -5,24 +5,19 @@
 
 class CGnuPlotUnixFile {
  public:
-  CGnuPlotUnixFile(const std::string &filename) :
-   CGnuPlotUnixFile() {
+  CGnuPlotUnixFile(const std::string &filename) {
     init(filename);
   }
 
-  CGnuPlotUnixFile(CUnixFile *file) :
-   CGnuPlotUnixFile() {
+  CGnuPlotUnixFile(CUnixFile *file) {
     init(file);
   }
 
-  CGnuPlotUnixFile(FILE *fp) :
-   CGnuPlotUnixFile() {
+  CGnuPlotUnixFile(FILE *fp) {
     init(fp);
   }
 
-  CGnuPlotUnixFile() :
-   file_(0), owner_(false), valid_(true) {
-  }
+  CGnuPlotUnixFile() { }
 
  ~CGnuPlotUnixFile() {
     if (owner_)

@@ -790,14 +790,15 @@ addProcFunction(const std::string &name, const std::string &argsStr, CExprFuncti
 
   functions_.push_back(function);
 
-  resetCompiled();
+  resetCompiled(name);
 
   return function;
 }
 
 CExprFunctionPtr
 CExprFunctionMgr::
-addObjFunction(const std::string &name, const std::string &argsStr, CExprFunctionObj *proc)
+addObjFunction(const std::string &name, const std::string &argsStr,
+               CExprFunctionObj *proc, bool resetCompiled)
 {
   Args args;
   bool variableArgs;
@@ -813,7 +814,8 @@ addObjFunction(const std::string &name, const std::string &argsStr, CExprFunctio
 
   functions_.push_back(function);
 
-  resetCompiled();
+  if (resetCompiled)
+    this->resetCompiled(name);
 
   return function;
 }
@@ -829,7 +831,7 @@ addUserFunction(const std::string &name, const std::vector<std::string> &args,
 
   functions_.push_back(function);
 
-  resetCompiled();
+  resetCompiled(name);
 
   return function;
 }
@@ -859,10 +861,12 @@ getFunctionNames(std::vector<std::string> &names) const
 
 void
 CExprFunctionMgr::
-resetCompiled()
+resetCompiled(const std::string &name)
 {
-  for (const auto &func : functions_)
-    func->reset();
+  for (const auto &func : functions_) {
+    if (func->hasFunction(name))
+      func->reset();
+  }
 }
 
 bool

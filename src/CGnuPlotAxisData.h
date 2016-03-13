@@ -15,7 +15,7 @@ class CGnuPlotAxisData {
   typedef CGnuPlotTypes::AxisType      AxisType;
   typedef CGnuPlotTypes::AxisDirection AxisDirection;
 
-  enum Justify {
+  enum class Justify {
     LEFT,
     RIGHT,
     CENTER,

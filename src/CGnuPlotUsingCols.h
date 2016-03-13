@@ -72,7 +72,7 @@ class CGnuPlotUsingCols {
   typedef std::vector<std::string>                   StringArray;
 
  public:
-  CGnuPlotUsingCols(CGnuPlot *plot=0);
+  CGnuPlotUsingCols(CGnuPlot *plot);
  ~CGnuPlotUsingCols();
 
   const std::string &str() const { return str_; }
@@ -158,10 +158,11 @@ class CGnuPlotUsingCols {
   AxisTicLabel      axisTicLabel_;
   std::string       format_;
   std::string       keyLabel_;
-  mutable CGnuPlot *plot_     { 0 };
-  CExpr*            expr_ { 0 };
-  mutable int       setNum_   { 0 };
-  mutable int       pointNum_ { 0 };
+  mutable CGnuPlot *plot_      { 0 };
+  CExpr*            expr_      { 0 };
+  bool              exprLocal_ { false };
+  mutable int       setNum_    { 0 };
+  mutable int       pointNum_  { 0 };
   mutable Values    fieldValues_;
 };
 

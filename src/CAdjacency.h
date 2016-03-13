@@ -13,7 +13,7 @@ class CAdjacencyRenderer;
 class CAdjacencyNode {
  public:
   CAdjacencyNode(int id, const std::string &name, int group) :
-   id_(id), name_(name), group_(group), count_(0), maxCount_(0) {
+   id_(id), name_(name), group_(group) {
   }
 
   int                id   () const { return id_   ; }
@@ -47,11 +47,11 @@ class CAdjacencyNode {
   typedef std::pair<CAdjacencyNode *,int> NodeValue;
   typedef std::map<int,NodeValue>         NodeMap;
 
-  int         id_;
+  int         id_ { 0 };
   std::string name_;
-  int         group_;
-  int         count_;
-  int         maxCount_;
+  int         group_ { 0 };
+  int         count_ { 0 };
+  int         maxCount_ { 0 };
   NodeMap     nodes_;
 };
 
@@ -101,10 +101,10 @@ struct CAdjacencyNodeGroupCmp {
 
 class CAdjacency {
  public:
-  enum SortType {
-    SORT_NAME,
-    SORT_GROUP,
-    SORT_COUNT
+  enum class SortType {
+    NAME,
+    GROUP,
+    COUNT
   };
 
   typedef std::pair<CHAlignType,double> HAlignPos;
@@ -112,8 +112,6 @@ class CAdjacency {
 
  public:
   CAdjacency();
-
-  void addDefaultColors();
 
   void addNode(int id, const std::string &name, int group);
 
@@ -125,27 +123,23 @@ class CAdjacency {
 
   void nodeAtPoint(double x, double y);
 
-  CRGBA nodeColor(CAdjacencyNode *node1, CAdjacencyNode *node2) const;
-
-  const CRGBA &getColor(int i) const;
+  CRGBA nodeColor(CAdjacencyRenderer *renderer, CAdjacencyNode *node1, CAdjacencyNode *node2) const;
 
   CRGBA blendColors(const CRGBA &c1, const CRGBA &c2, int value) const;
 
  private:
   typedef std::map<int,CAdjacencyNode *> NodeMap;
   typedef std::vector<CAdjacencyNode *>  NodeArray;
-  typedef std::vector<CRGBA>             Colors;
 
   NodeMap   nodes_;
   NodeArray sortedNodes_;
-  SortType  sort_;
-  int       ts_;
-  double    cs_;
-  int       ix_;
-  int       iy_;
-  int       maxValue_;
-  Colors    colors_;
-  double    grey_;
+  SortType  sort_ { SortType::NAME };
+  int       ts_ { 0 };
+  double    cs_ { 0 };
+  int       ix_ { -1 };
+  int       iy_ { -1 };
+  int       maxValue_ { 0 };
+  double    grey_ { 0 };
 };
 
 class CAdjacencyRenderer {
@@ -177,6 +171,8 @@ class CAdjacencyRenderer {
   virtual void drawRotatedText(const CPoint2D &p, const std::string &text, double a,
                                const HAlignPos &halignPos, const VAlignPos &valignPos,
                                const CRGBA &c) = 0;
+
+  virtual CRGBA indexColor(int i) const = 0;
 };
 
 #endif

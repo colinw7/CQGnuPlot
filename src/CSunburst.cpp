@@ -2,9 +2,24 @@
 #include <CBBox2D.h>
 
 CSunburst::
-CSunburst() :
- roots_()
+CSunburst()
 {
+}
+
+CSunburst::
+~CSunburst()
+{
+  reset();
+}
+
+void
+CSunburst::
+reset()
+{
+  for (auto &r : roots_)
+    delete r;
+
+  roots_.clear();
 }
 
 void
@@ -12,12 +27,12 @@ CSunburst::
 pack()
 {
   if       (roots_.size() == 1)
-    roots_[0]->packNodes(0.5, 1.0, 0.0, -90, 360);
+    roots_[0]->packNodes(innerRadius(), 1.0, 0.0, startAngle(), 360);
   else  if (roots_.size() == 2) {
     double dr = 0.9/5;
 
-    roots_[0]->packNodes(0.1, 1.0, dr, -90, 180);
-    roots_[1]->packNodes(0.1, 1.0, dr,  90, 180);
+    roots_[0]->packNodes(0.1, 1.0, dr, startAngle()      , 180);
+    roots_[1]->packNodes(0.1, 1.0, dr, startAngle() + 180, 180);
   }
 }
 

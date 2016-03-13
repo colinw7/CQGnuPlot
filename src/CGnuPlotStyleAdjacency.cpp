@@ -1,26 +1,41 @@
 #include <CGnuPlotStyleAdjacency.h>
+#include <CGnuPlotAdjacencyStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotDevice.h>
 #include <CGnuPlotStyleAdjacencyRenderer.h>
 
 CGnuPlotStyleAdjacency::
 CGnuPlotStyleAdjacency() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::ADJACENCY)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotAdjacencyStyleValue>("adjacency");
 }
 
 void
 CGnuPlotStyleAdjacency::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotAdjacencyStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotAdjacencyStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createAdjacencyStyleValue(plot);
+
+    value->initRenderer(renderer);
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotAdjacencyStyleValue>(plot, value);
+  }
+
+  //---
+
   plot->group()->setMargin(CGnuPlotMargin(0, 0, 0, 0));
 
-  CAdjacency *adjacency = plot->adjacencyData().adjacency();
+  CAdjacency *adjacency = value->adjacency();
 
-  if (! adjacency) {
-    adjacency = new CAdjacency;
-
+  if (! value->isInited()) {
     int state = 0;
 
     for (const auto &point : plot->getPoints2D()) {
@@ -72,18 +87,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     adjacency->sortNodes();
 
-    plot->setAdjacency(adjacency);
+    value->setInited(true);
   }
 
-  CGnuPlotStyleAdjacencyRenderer *arenderer = plot->adjacencyData().renderer();
-
-  if (! arenderer) {
-    arenderer = new CGnuPlotStyleAdjacencyRenderer(renderer, adjacency);
-
-    plot->setAdjacencyRenderer(arenderer);
-  }
+  CGnuPlotStyleAdjacencyRenderer *arenderer = value->renderer();
 
   arenderer->setRenderer(renderer);
+  arenderer->setPalette (value->palette());
 
   arenderer->clearRects();
 
@@ -94,23 +104,27 @@ bool
 CGnuPlotStyleAdjacency::
 mouseTip(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tipData)
 {
-  CGnuPlotStyleAdjacencyRenderer *arenderer = plot->adjacencyData().renderer();
+  CGnuPlotAdjacencyStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotAdjacencyStyleValue>(plot);
+  if (! value) return false;
 
-  int         value;
+  CGnuPlotStyleAdjacencyRenderer *arenderer = value->renderer();
+
+  int         ivalue;
   std::string name1, name2;
   CRGBA       c;
 
-  if (! arenderer->getValueAtPos(mouseEvent.window(), value, name1, name2, c))
+  if (! arenderer->getValueAtPos(mouseEvent.window(), ivalue, name1, name2, c))
     return false;
 
-  if (value <= 0)
+  if (ivalue <= 0)
     return false;
 
   tipData.setBorderColor(c);
 
   if (name1 != name2) {
     tipData.setXStr(name1);
-    tipData.setYStr(name2 + " = " + CStrUtil::strprintf("%d", value));
+    tipData.setYStr(name2 + " = " + CStrUtil::strprintf("%d", ivalue));
   }
   else {
     tipData.setXStr(name1);

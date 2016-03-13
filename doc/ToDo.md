@@ -3,6 +3,9 @@
   + animation (fade in/out)
   + per style data/properties
   + less reload on data change
+  + tab separated values
+  + color gradient palette for treemap, sunburst, ...
+  + cpu usage animated plot
 
   + smooth bezier, sbezier, csplines, acsplines
   + support probe in more styles

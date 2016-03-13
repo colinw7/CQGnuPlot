@@ -4,7 +4,7 @@
 #include <CGnuPlotTextBoxStyle.h>
 #include <CGnuPlotEllipseStyle.h>
 #include <CGnuPlotTextStyle.h>
-#include <CGnuPlotPieStyle.h>
+//#include <CGnuPlotPieStyle.h>
 
 struct CGnuPlotStyleData {
   CGnuPlotArrowStyle   arrow;
@@ -12,7 +12,7 @@ struct CGnuPlotStyleData {
   CGnuPlotEllipseStyle ellipse;
   CGnuPlotTextStyle    text;
   CGnuPlotLabelStyle   label;
-  CGnuPlotPieStyle     pie;
+//CGnuPlotPieStyle     pie;
 };
 
 #endif

@@ -1,65 +1,39 @@
 #include <CGnuPlotStyleDendrogram.h>
+#include <CGnuPlotDendrogramStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
-#include <CDendrogram.h>
-
-class CGnuPlotStyleDendrogramValue : public CGnuPlotPlot::StyleValue {
- public:
-  CGnuPlotStyleDendrogramValue() {
-    dendrogram_ = new CDendrogram;
-  }
-
- ~CGnuPlotStyleDendrogramValue() {
-    delete dendrogram_;
-  }
-
-  CDendrogram *dendrogram() const { return dendrogram_; }
-
-  bool isInited() const { return inited_; }
-  void setInited(bool b) { inited_ = b; }
-
-  void init() {
-    delete dendrogram_;
-
-    dendrogram_ = new CDendrogram;
-  }
-
- private:
-  CDendrogram *dendrogram_ { 0 };
-  bool         inited_     { false };
-};
-
-//------
+#include <CGnuPlotDevice.h>
 
 CGnuPlotStyleDendrogram::
 CGnuPlotStyleDendrogram() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::DENDROGRAM)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotDendrogramStyleValue>("dendrogram");
 }
 
 void
 CGnuPlotStyleDendrogram::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  CGnuPlotStyleDendrogramValue *value =
-    dynamic_cast<CGnuPlotStyleDendrogramValue *>(plot->styleValue("dendrogram"));
+  value_ = CGnuPlotStyleValueMgrInst->getValue<CGnuPlotDendrogramStyleValue>(plot);
 
-  if (! value) {
-    value = new CGnuPlotStyleDendrogramValue;
+  if (! value_) {
+    value_ = plot->app()->device()->createDendrogramStyleValue(plot);
 
-    plot->setStyleValue("dendrogram", value);
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotDendrogramStyleValue>(plot, value_);
   }
 
   //---
 
   CDendrogram *dendrogram { 0 };
 
-  if (! value->isInited()) {
-    value->init();
+  if (! value_->isInited()) {
+    value_->init();
 
-    dendrogram = value->dendrogram();
+    dendrogram = value_->dendrogram();
 
     for (const auto &point : plot->getPoints2D()) {
       if (point.getNumValues() < 2)
@@ -148,10 +122,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     dendrogram->placeNodes();
 
-    value->setInited(true);
+    value_->setInited(true);
   }
   else
-    dendrogram = value->dendrogram();
+    dendrogram = value_->dendrogram();
 
   CDendrogram::HierNode *root = dendrogram->root();
 
@@ -190,29 +164,14 @@ drawNode(CGnuPlotRenderer *renderer, CDendrogram::HierNode *hier, CDendrogram::N
 
   bool is_hier = dynamic_cast<CDendrogram::HierNode *>(node);
 
-#if 0
-  {
-    double px1, py1, px2, py2;
-
-    mapPoint(node->x()             , node->yc() - root->dy()/2, &px1, &py1);
-    mapPoint(node->x() + root->dx(), node->yc() + root->dy()/2, &px2, &py2);
-
-    CBBox2D rect(px1, py1, px2, py2));
-
-    renderer->fillRect(rect, CRGBA(0.9, 0.9, 0.9));
-  }
-#endif
-
   double px1, py1;
 
   mapPoint(node->x(), node->yc(), px1, py1);
 
-  px1 += textMargin_;
+  double cs = value_->circleSize()/2.0;
+  double tm = value_->textMargin();
 
-  double cs = circleSize_/2.0;
-
-  //path.addEllipse(QRectF(px1 - cs, py1 - cs, circleSize_, circleSize_));
-  //renderer->setPen(node_outline);
+  px1 += tm;
 
   CRGBA ellipseColor = CRGBA::fromRGBAI(158,202,225);
 
@@ -239,13 +198,10 @@ drawNode(CGnuPlotRenderer *renderer, CDendrogram::HierNode *hier, CDendrogram::N
 
     mapPoint(hier->x(), hier->yc(), px2, py2);
 
-    double x1 = px2 + textMargin_ + cs; double y1 = py2;
-    double x4 = px1 - cs              ; double y4 = py1;
-    double x2 = x1 + (x4 - x1)/3.0    ; double y2 = y1;
-    double x3 = x2 + (x4 - x1)/3.0    ; double y3 = y4;
-
-    //path.moveTo(QPointF(x1, y1));
-    //path.cubicTo(QPointF(x2, y2), QPointF(x3, y3), QPointF(x4, y4));
+    double x1 = px2 + tm + cs     ; double y1 = py2;
+    double x4 = px1 - cs          ; double y4 = py1;
+    double x2 = x1 + (x4 - x1)/3.0; double y2 = y1;
+    double x3 = x2 + (x4 - x1)/3.0; double y3 = y4;
 
     renderer->drawBezier(CPoint2D(x1, y1), CPoint2D(x2, y2),
                          CPoint2D(x3, y3), CPoint2D(x4, y4),
@@ -270,17 +226,16 @@ bool
 CGnuPlotStyleDendrogram::
 mouseTip(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tipData)
 {
-  CGnuPlotStyleDendrogramValue *value =
-    dynamic_cast<CGnuPlotStyleDendrogramValue *>(plot->styleValue("dendrogram"));
-  if (! value) return false;
+  value_ = dynamic_cast<CGnuPlotDendrogramStyleValue *>(plot->styleValue("dendrogram"));
+  if (! value_) return false;
 
-  CDendrogram *dendrogram = value->dendrogram();
+  CDendrogram *dendrogram = value_->dendrogram();
 
   double x, y;
 
   unmapPoint(mouseEvent.window().x, mouseEvent.window().y, x, y);
 
-  CDendrogram::Node *node = dendrogram->getNodeAtPoint(x, y, circleSize_);
+  CDendrogram::Node *node = dendrogram->getNodeAtPoint(x, y, value_->circleSize());
 
   if (! node)
     return false;
@@ -295,17 +250,16 @@ void
 CGnuPlotStyleDendrogram::
 mousePress(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent)
 {
-  CGnuPlotStyleDendrogramValue *value =
-    dynamic_cast<CGnuPlotStyleDendrogramValue *>(plot->styleValue("dendrogram"));
-  if (! value) return;
+  value_ = dynamic_cast<CGnuPlotDendrogramStyleValue *>(plot->styleValue("dendrogram"));
+  if (! value_) return;
 
-  CDendrogram *dendrogram = value->dendrogram();
+  CDendrogram *dendrogram = value_->dendrogram();
 
   double x, y;
 
   unmapPoint(mouseEvent.window().x, mouseEvent.window().y, x, y);
 
-  CDendrogram::Node *node = dendrogram->getNodeAtPoint(x, y, circleSize_);
+  CDendrogram::Node *node = dendrogram->getNodeAtPoint(x, y, value_->circleSize());
 
   if (! node)
     return;
@@ -320,8 +274,8 @@ CGnuPlotStyleDendrogram::
 mapPoint(double x1, double y1, double &x2, double &y2) const
 {
   // map 0->1 to 0-1 with margin
-  x2 = CGnuPlotUtil::map(x1, 0, 1, marginLeft_  , 1 - marginRight_);
-  y2 = CGnuPlotUtil::map(y1, 0, 1, marginBottom_, 1 - marginTop_  );
+  x2 = CGnuPlotUtil::map(x1, 0, 1, value_->marginLeft  (), 1 - value_->marginRight());
+  y2 = CGnuPlotUtil::map(y1, 0, 1, value_->marginBottom(), 1 - value_->marginTop  ());
 }
 
 void
@@ -329,6 +283,6 @@ CGnuPlotStyleDendrogram::
 unmapPoint(double x1, double y1, double &x2, double &y2) const
 {
   // map 0->1 with margin to 0-1
-  x2 = CGnuPlotUtil::map(x1, marginLeft_  , 1 - marginRight_, 0, 1);
-  y2 = CGnuPlotUtil::map(y1, marginBottom_, 1 - marginTop_  , 0, 1);
+  x2 = CGnuPlotUtil::map(x1, value_->marginLeft  (), 1 - value_->marginRight(), 0, 1);
+  y2 = CGnuPlotUtil::map(y1, value_->marginBottom(), 1 - value_->marginTop  (), 0, 1);
 }

@@ -77,6 +77,16 @@ class CQGnuPlotDevice : public QObject, public CGnuPlotDevice {
   CGnuPlotStroke *createStroke(CGnuPlotPlot *plot) override;
   CGnuPlotMark   *createMark  (CGnuPlotPlot *plot) override;
 
+  CGnuPlotAdjacencyStyleValue     *createAdjacencyStyleValue    (CGnuPlotPlot *plot) override;
+  CGnuPlotChordDiagramStyleValue  *createChordDiagramStyleValue (CGnuPlotPlot *plot) override;
+  CGnuPlotDelaunayStyleValue      *createDelaunayStyleValue     (CGnuPlotPlot *plot) override;
+  CGnuPlotDendrogramStyleValue    *createDendrogramStyleValue   (CGnuPlotPlot *plot) override;
+  CGnuPlotForceDirectedStyleValue *createForceDirectedStyleValue(CGnuPlotPlot *plot) override;
+  CGnuPlotHierBubbleStyleValue    *createHierBubbleStyleValue   (CGnuPlotPlot *plot) override;
+  CGnuPlotPieChartStyleValue      *createPieChartStyleValue     (CGnuPlotPlot *plot) override;
+  CGnuPlotSunburstStyleValue      *createSunburstStyleValue     (CGnuPlotPlot *plot) override;
+  CGnuPlotTreeMapStyleValue       *createTreeMapStyleValue      (CGnuPlotPlot *plot) override;
+
   const Objects &objects() const { return objects_; }
 
   void timeout() override;

@@ -173,6 +173,8 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   void zoomInKey (CQGnuPlotGroup *group);
   void zoomOutKey(CQGnuPlotGroup *group);
 
+  void homeKey(CQGnuPlotGroup *group);
+
   void paintPlot(CGnuPlotPlot *plot);
 
   void setCursor(QCursor cursor);

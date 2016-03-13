@@ -26,7 +26,10 @@ class CExprRealValue : public CExprValueBase {
   CExprValuePtr execBinaryOp(CExpr *expr, CExprValuePtr rhs, CExprOpType op) const;
 
   void print(std::ostream &os) const {
-    os << real_;
+    std::string s;
+
+    if (getStringValue(s))
+      os << s;
   }
 
  private:

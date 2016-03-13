@@ -1,9 +1,9 @@
 #include <CQGnuPlotManageFunctionsDialog.h>
 #include <CQGnuPlotWindow.h>
+#include <CQGnuPlotTreeWidget.h>
 #include <CParseLine.h>
 #include <CExpr.h>
 
-#include <QTreeWidget>
 #include <QHeaderView>
 #include <QGroupBox>
 #include <QLabel>
@@ -22,7 +22,7 @@ void
 CQGnuPlotManageFunctionsDialog::
 createWidgets(QWidget *)
 {
-  tree_ = new QTreeWidget;
+  tree_ = new CQGnuPlotTreeWidget;
 
   tree_->setColumnCount(2);
   tree_->setHeaderLabels(QStringList() << "Name" << "Definition");

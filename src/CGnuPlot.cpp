@@ -70,7 +70,6 @@
 #include <CMathGeom2D.h>
 #include <CMathGen.h>
 #include <CFontMgr.h>
-#include <CAutoFree.h>
 
 #include <vector>
 #include <cmath>
@@ -161,7 +160,7 @@ namespace {
 
 CGnuPlot::
 CGnuPlot() :
- expr_(new CExpr), printFile_(this, true), tableFile_(this, false)
+ expr_(new CExpr), printFile_(this, true), tableFile_(this, false), imageStyle_(this)
 {
   palette_.setExpr(expr_);
 
@@ -412,7 +411,7 @@ load(const std::string &filename, const StringArray &args)
   // open file
   CUnixFile *file = new CUnixFile(filename);
 
-  CAutoFree<CUnixFile> freeFile(file);
+  std::unique_ptr<CUnixFile> freeFile(file);
 
   if (! file->open())
     return false;
@@ -3446,7 +3445,8 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
         double a;
 
         if (parseReal(line, a))
-          styleData.pie.setStartAngle(a);
+          pieChartStyleValue_.setStartAngle(a);
+          //styleData.pie.setStartAngle(a);
 
         found = true;
       }
@@ -3456,7 +3456,8 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
         double r;
 
         if (parseReal(line, r))
-          styleData.pie.setInnerRadius(r);
+          //styleData.pie.setInnerRadius(r);
+          pieChartStyleValue_.setInnerRadius(r);
 
         found = true;
       }
@@ -3466,7 +3467,8 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
         double r;
 
         if (parseReal(line, r))
-          styleData.pie.setLabelRadius(r);
+          //styleData.pie.setLabelRadius(r);
+          pieChartStyleValue_.setLabelRadius(r);
 
         found = true;
       }
@@ -8921,6 +8923,34 @@ setCmd(const std::string &args)
           errorMsg("Invalid histogram style '" + arg + "'");
 
         arg = readNonSpace(line);
+      }
+    }
+    // set style piechart
+    else if (var1 == StyleVar::PIECHART) {
+      std::string arg = readNonSpace(line);
+
+      double      r;
+      std::string name;
+
+      if      (arg == "palette") {
+        if (parseString(line, name))
+          pieChartStyleValue_.setPalette(name);
+      }
+      else if (arg == "alpha") {
+        if (parseReal(line, r))
+          pieChartStyleValue_.setAlpha(r);
+      }
+      else if (arg == "startAngle") {
+        if (parseReal(line, r))
+          pieChartStyleValue_.setStartAngle(r);
+      }
+      else if (arg == "innerRadius") {
+        if (parseReal(line, r))
+          pieChartStyleValue_.setInnerRadius(r);
+      }
+      else if (arg == "labelRadius") {
+        if (parseReal(line, r))
+          pieChartStyleValue_.setLabelRadius(r);
       }
     }
   }

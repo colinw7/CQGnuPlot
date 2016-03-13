@@ -218,6 +218,7 @@ namespace CStrUniqueMatch {
                           {"histogram", CGnuPlotTypes::StyleVar::HISTOGRAM},
                           {"increment", CGnuPlotTypes::StyleVar::INCREMENT},
                           {"line"     , CGnuPlotTypes::StyleVar::LINE},
+                          {"piechart" , CGnuPlotTypes::StyleVar::PIECHART},
                           {"rectangle", CGnuPlotTypes::StyleVar::RECTANGLE},
                           {"textbox"  , CGnuPlotTypes::StyleVar::TEXTBOX}});
   }

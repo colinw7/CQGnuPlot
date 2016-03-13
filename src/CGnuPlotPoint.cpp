@@ -281,6 +281,23 @@ getParamString(const std::string &name) const
   return str;
 }
 
+int
+CGnuPlotPoint::
+getParamInt(const std::string &name) const
+{
+  long i = 0;
+
+  CExprValuePtr value = getParam(name);
+
+  if (! value.isValid())
+    return i;
+
+  if (value->isIntegerValue() || value->isRealValue())
+    (void) value->getIntegerValue(i);
+
+  return i;
+}
+
 CRGBA
 CGnuPlotPoint::
 getParamColor(const std::string &name) const

@@ -1,53 +1,35 @@
 #include <CGnuPlotStyleDelaunay.h>
+#include <CGnuPlotDelaunayStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotDevice.h>
 #include <CGnuPlotKey.h>
-#include <CDelaunay.h>
-
-class CGnuPlotStyleDelaunayValue : public CGnuPlotPlot::StyleValue {
- public:
-  CGnuPlotStyleDelaunayValue() {
-    delaunay_ = new CDelaunay;
-  }
-
- ~CGnuPlotStyleDelaunayValue() {
-    delete delaunay_;
-  }
-
-  CDelaunay *delaunay() const { return delaunay_; }
-
-  bool isInited() const { return inited_; }
-  void setInited(bool b) { inited_ = b; }
-
-  bool isClipped() const { return clipped_; }
-  void setClipped(bool b) { clipped_ = b; }
-
-  void init() {
-    delete delaunay_;
-
-    delaunay_ = new CDelaunay;
-  }
-
- private:
-  CDelaunay *delaunay_ { 0 };
-  bool       inited_   { false };
-  bool       clipped_  { false };
-};
-
-//------
 
 CGnuPlotStyleDelaunay::
 CGnuPlotStyleDelaunay() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::DELAUNAY)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotDelaunayStyleValue>("delaunay");
 }
 
 void
 CGnuPlotStyleDelaunay::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotDelaunayStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotDelaunayStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createDelaunayStyleValue(plot);
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotDelaunayStyleValue>(plot, value);
+  }
+
+  //---
+
   // just use points for range
   if (renderer->isPseudo()) {
     CRGBA c(0,0,0);
@@ -77,17 +59,6 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   CGnuPlotStroke stroke(plot);
-
-  //---
-
-  CGnuPlotStyleDelaunayValue *value =
-    dynamic_cast<CGnuPlotStyleDelaunayValue *>(plot->styleValue("delaunay"));
-
-  if (! value) {
-    value = new CGnuPlotStyleDelaunayValue;
-
-    plot->setStyleValue("delaunay", value);
-  }
 
   //---
 
@@ -164,9 +135,6 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     renderer->drawPolygon(points, 1, c);
   }
 #endif
-  // TODO: calc line color
-  CRGBA lc(0,0,0.8);
-
   for (CHull3D::EdgeIterator pve = delaunay->voronoiEdgesBegin();
          pve != delaunay->voronoiEdgesEnd(); ++pve) {
     const CHull3D::Edge *e = *pve;
@@ -174,6 +142,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     auto *v1 = e->start();
     auto *v2 = e->end  ();
 
-    renderer->drawLine(CPoint2D(v1->x(), v1->y()), CPoint2D(v2->x(), v2->y()), lc, 1);
+    renderer->drawLine(CPoint2D(v1->x(), v1->y()), CPoint2D(v2->x(), v2->y()),
+                       value->lineColor(), value->lineWidth());
   }
 }

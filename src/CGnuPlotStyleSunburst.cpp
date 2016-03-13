@@ -1,200 +1,15 @@
 #include <CGnuPlotStyleSunburst.h>
+#include <CGnuPlotStyleSunburstPainter.h>
+#include <CGnuPlotSunburstStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotKey.h>
-#include <CSunburst.h>
+#include <CGnuPlotDevice.h>
 #include <CFontMgr.h>
 #include <CGnuPlotPieObject.h>
-
-namespace {
-
-CRGBA getColor(int i) {
-#if 0
-  static int numColors = 20;
-
-  static CRGBA bg_colors[] = {
-    // blue
-    CRGBName::toRGBA("#3182BD"),
-    CRGBName::toRGBA("#6BAED6"),
-    CRGBName::toRGBA("#9ECAE1"),
-    CRGBName::toRGBA("#C6DBEF"),
-
-    // orange
-    CRGBName::toRGBA("#E6550D"),
-    CRGBName::toRGBA("#FD8D3C"),
-    CRGBName::toRGBA("#FDAE6B"),
-    CRGBName::toRGBA("#FDD0A2"),
-
-    // green
-    CRGBName::toRGBA("#31A354"),
-    CRGBName::toRGBA("#74C476"),
-    CRGBName::toRGBA("#A1D99B"),
-    CRGBName::toRGBA("#C7E9C0"),
-
-    // purple
-    CRGBName::toRGBA("#756BB1"),
-    CRGBName::toRGBA("#9E9AC8"),
-    CRGBName::toRGBA("#BCBDDC"),
-    CRGBName::toRGBA("#DADAEB"),
-
-    // gray
-    CRGBName::toRGBA("#636363"),
-    CRGBName::toRGBA("#969696"),
-    CRGBName::toRGBA("#BDBDBD"),
-    CRGBName::toRGBA("#D9D9D9"),
-  };
-#endif
-  static int numColors = 5;
-
-  static CRGBA bg_colors[] = {
-    CRGBName::toRGBA("#756BB1"), // purple
-    CRGBName::toRGBA("#3182BD"), // blue
-    CRGBName::toRGBA("#31A354"), // green
-    CRGBName::toRGBA("#E6550D"), // orange
-    CRGBName::toRGBA("#636363"), // gray
-  };
-
-  return bg_colors[i % numColors];
-}
-
-#if 0
-CRGBA getBorderColor() {
-  //static CRGBA border_color = CRGBA("#2078B4");
-  static CRGBA border_color = CRGBName::toRGBA("#FFFFFF");
-
-  return border_color;
-}
-#endif
-
-//CRGBA fg_color = CRGBA("#FF7F0E");
-
-}
-
-//------
-
-class CGnuPlotStyleSunburstPainter : public CSunburstPainter {
- public:
-  typedef std::pair<CHAlignType,double> HAlignPos;
-  typedef std::pair<CVAlignType,double> VAlignPos;
-
- public:
-  CGnuPlotStyleSunburstPainter(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer) :
-   plot_(plot), renderer_(renderer) {
-    assert(plot_);
-  }
-
-  void drawNode(CSunburst::Node *node) {
-    double xc = 0.0;
-    double yc = 0.0;
-
-    double r1 = node->r();
-    double r2 = r1 + node->dr();
-
-    double a1 = node->a();
-    double da = node->da();
-    double a2 = a1 + da;
-
-    CSunburst::HierNode *parent = 0;
-
-    if (node->parent() && ! node->parent()->isRoot())
-      parent = node->parent();
-
-    CSunburst::HierNode *root = parent;
-
-    while (root && root->parent() && ! root->parent()->isRoot())
-      root = root->parent();
-
-    int rcolorId = (root ? root->colorId() : node->colorId());
-
-    double r = 0.0;
-
-    if (node->isHier())
-      r = (parent ? (1.0*parent->childIndex(node))/(parent->getChildren().size() - 1.0) : 0.0);
-    else
-      r = (parent ? (1.0*parent->nodeIndex(node))/(parent->getNodes().size() - 1.0) : 0.0);
-
-    CPoint2D pc(xc, yc);
-
-    CRGBA color = getColor(rcolorId) + r*CRGBA(0.5, 0.5, 0.5);
-
-    if (plot_->isCacheActive()) {
-      CGnuPlotPieObject *pie = plot_->pieObjects()[ind_];
-
-      pie->setCenter(pc);
-      pie->setRadius(r2);
-      pie->setInnerRadius(r1/r2);
-      pie->setAngle1(a1);
-      pie->setAngle2(a2);
-
-      if (! pie->testAndSetUsed()) {
-        CGnuPlotFillP   fill  (pie->fill  ()->dup());
-        CGnuPlotStrokeP stroke(pie->stroke()->dup());
-
-        pie->setName       (node->name());
-        pie->setValue      (node->size());
-        pie->setLabelRadius((r1 + 0.01)/r2);
-
-        pie->setRotatedText    (true);
-        pie->setExplodeSelected(false);
-
-        fill->setType (CGnuPlotTypes::FillType::SOLID);
-        fill->setColor(color);
-
-        stroke->setWidth(1);
-        stroke->setColor(CRGBA(0,0,0));
-
-        pie->setFill  (fill  );
-        pie->setStroke(stroke);
-      }
-    }
-    else {
-      double ta = a1 + da/2.0;
-
-      double tangle = CAngle::Deg2Rad(ta);
-
-      double lr = r1 + 0.01;
-
-      double tc = cos(tangle);
-      double ts = sin(tangle);
-
-      double tx = pc.x + lr*tc;
-      double ty = pc.y + lr*ts;
-
-      CPoint2D tp(tx, ty);
-
-      CRGBA tc1(0,0,0);
-
-      //---
-
-      renderer_->fillPieSlice(pc, r1, r2, a1, a2, color);
-      renderer_->drawPieSlice(pc, r1, r2, a1, a2, CRGBA(0,0,0), 1);
-
-#if 0
-      renderer_->drawText(tp, node->name(), tc1);
-#endif
-
-      if (tc >= 0)
-        renderer_->drawRotatedText(tp, node->name(), ta,
-                                   HAlignPos(CHALIGN_TYPE_LEFT  , 0),
-                                   VAlignPos(CVALIGN_TYPE_CENTER, 0), tc1);
-      else
-        renderer_->drawRotatedText(tp, node->name(), 180.0 + ta,
-                                   HAlignPos(CHALIGN_TYPE_RIGHT , 0),
-                                   VAlignPos(CVALIGN_TYPE_CENTER, 0), tc1);
-    }
-
-    ++ind_;
-  }
-
- private:
-  CGnuPlotPlot     *plot_     { 0 };
-  CGnuPlotRenderer *renderer_ { 0 };
-  int               ind_      { 0 };
-};
-
-//------
 
 class CGnuPlotStyleSunburstVisitor : public CSunburstVisitor {
  public:
@@ -216,32 +31,44 @@ CGnuPlotStyleSunburst::
 CGnuPlotStyleSunburst() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::SUNBURST)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotSunburstStyleValue>("sunburst");
 }
 
 void
 CGnuPlotStyleSunburst::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotSunburstStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotSunburstStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createSunburstStyleValue(plot);
+
+    value->init();
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotSunburstStyleValue>(plot, value);
+  }
+
+  //---
+
   if (renderer->isPseudo())
     return;
 
   //---
 
-  CFontPtr font = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 6);
-  renderer->setFont(font);
+  renderer->setFont(value->font());
 
-  CSunburst *sunburst = plot->sunburstData().sunburst();
+  CSunburst *sunburst = value->sunburst();
 
-  if (! sunburst) {
-    sunburst = new CSunburst;
+  sunburst->setInnerRadius(value->innerRadius());
+  sunburst->setStartAngle (value->startAngle ());
 
-    plot->setSunburst(sunburst);
-
-    //---
-
+  if (! value->isInited()) {
     typedef std::map<std::string, CSunburst::HierNode *> GroupMap;
 
-    GroupMap  groups;
+    sunburst->reset();
+
+    GroupMap groups;
 
     sunburst->addRoot();
 
@@ -314,6 +141,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
 
     sunburst->pack();
+
+    value->setInited(true);
   }
 
   //---
@@ -327,6 +156,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   CGnuPlotStyleSunburstPainter painter(plot, renderer);
+
+  painter.setBorderColor(value->borderColor());
+  painter.setPalette    (value->palette());
 
   sunburst->draw(&painter);
 

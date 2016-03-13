@@ -173,10 +173,12 @@ class CGnuPlotTimeColumnFn : public CGnuPlotUsingColsFnObj {
 
 CGnuPlotUsingCols::
 CGnuPlotUsingCols(CGnuPlot *plot) :
- str_(), plot_(plot), expr_(0)
+ str_(), plot_(plot)
 {
-  if (! plot_)
-    expr_ = new CExpr;
+  if (! plot_) {
+    expr_      = new CExpr;
+    exprLocal_ = true;
+  }
   else
     expr_ = plot_->expr();
 }
@@ -184,7 +186,7 @@ CGnuPlotUsingCols(CGnuPlot *plot) :
 CGnuPlotUsingCols::
 ~CGnuPlotUsingCols()
 {
-  if (! plot_)
+  if (exprLocal_)
     delete expr_;
 }
 
@@ -359,8 +361,8 @@ namespace {
 
 template<typename FUNC>
 void addFunction(CGnuPlotUsingCols *cols, CExpr *expr,
-                 const std::string &name, const std::string &args) {
-  expr->addFunction(name, args, new FUNC(cols))->setBuiltin(true);
+                 const std::string &name, const std::string &args, bool resetCompiled) {
+  expr->addFunction(name, args, new FUNC(cols), resetCompiled)->setBuiltin(true);
 }
 
 }
@@ -379,12 +381,12 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
 
   CGnuPlotUsingCols *th = const_cast<CGnuPlotUsingCols *>(this);
 
-  addFunction<CGnuPlotStringColumnFn>(th, expr_, "stringcolumn", "i"  );
-  addFunction<CGnuPlotStringColumnFn>(th, expr_, "strcol"      , "i"  );
-  addFunction<CGnuPlotColumnFn      >(th, expr_, "column"      , "is" );
-  addFunction<CGnuPlotStringValidFn >(th, expr_, "valid"       , "i"  );
-  addFunction<CGnuPlotTimeColumnFn  >(th, expr_, "timecolumn"  , "i"  );
-  addFunction<CGnuPlotTimeColumnFn  >(th, expr_, "timecolumn"  , "i,s");
+  addFunction<CGnuPlotStringColumnFn>(th, expr_, "stringcolumn", "i"  , false);
+  addFunction<CGnuPlotStringColumnFn>(th, expr_, "strcol"      , "i"  , false);
+  addFunction<CGnuPlotColumnFn      >(th, expr_, "column"      , "is" , false);
+  addFunction<CGnuPlotStringValidFn >(th, expr_, "valid"       , "i"  , false);
+  addFunction<CGnuPlotTimeColumnFn  >(th, expr_, "timecolumn"  , "i"  , false);
+  addFunction<CGnuPlotTimeColumnFn  >(th, expr_, "timecolumn"  , "i,s", false);
 
   //---
 
@@ -558,10 +560,10 @@ decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) 
         double      r1;
         std::string s1;
 
-        if      (value1->getIntegerValue(i1)) {
+        if      (value1->isIntegerValue() && value1->getIntegerValue(i1)) {
           midStr = CGnuPlotUtil::toString(i1);
         }
-        else if (value1->getRealValue(r1)) {
+        else if (value1->isRealValue   () && value1->getRealValue   (r1)) {
           if (! IsNaN(r1)) {
             std::string rstr = CGnuPlotUtil::toString(r1);
 

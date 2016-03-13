@@ -256,3 +256,6 @@
  + Add auto fit to tree widget
  + Add Force Directed plot
  + Add animation support
+
+### 03/13/2016
+ + Add generic support for per plot style data and add more config for plot styles

@@ -51,6 +51,8 @@ class CQGnuPlotCanvasTipLabel : public QWidget {
       painter.drawText(rect(), Qt::AlignCenter, text);
     }
     else {
+#if 0
+      // TODO: encode xstr, ystr for HTML or draw manually
       QString html = QString("<font color=\"%1\">%2:</font> <font color=\"%3\">%4</font>").
         arg(CQUtil::colorToHtml(CQUtil::toQColor(tip_.xcolor()))).
         arg(tip_.xstr().c_str()).
@@ -58,6 +60,29 @@ class CQGnuPlotCanvasTipLabel : public QWidget {
         arg(tip_.ystr().c_str());
 
       CQUtil::drawHtmlText(this, &painter, html, palette(), rect());
+#endif
+      QFontMetrics fm(font());
+
+      QString text = QString("%1: %2").arg(tip_.xstr().c_str()).arg(tip_.ystr().c_str());
+
+      int tw = fm.width(text);
+
+      int dx = (rect().width() - tw)/2;
+      int dy = (fm.ascent() - fm.descent())/2;
+
+      painter.setPen(CQUtil::toQColor(tip_.xcolor()));
+
+      QString xtext = QString("%1: ").arg(tip_.xstr().c_str());
+
+      painter.drawText(dx, rect().height()/2 + dy, xtext);
+
+      int xtw = fm.width(xtext);
+
+      painter.setPen(CQUtil::toQColor(tip_.ycolor()));
+
+      QString ytext = tip_.ystr().c_str();
+
+      painter.drawText(dx + xtw, rect().height()/2 + dy, ytext);
     }
 
     QPen pen(CQUtil::toQColor(tip_.borderColor()));

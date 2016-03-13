@@ -240,9 +240,10 @@ addFunction(const std::string &name, const std::vector<std::string> &args,
 
 CExprFunctionPtr
 CExpr::
-addFunction(const std::string &name, const std::string &argsStr, CExprFunctionObj *func)
+addFunction(const std::string &name, const std::string &argsStr,
+            CExprFunctionObj *func, bool resetCompiled)
 {
-  return functionMgr_->addObjFunction(name, argsStr, func);
+  return functionMgr_->addObjFunction(name, argsStr, func, resetCompiled);
 }
 
 void

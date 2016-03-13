@@ -25,46 +25,13 @@ static int contour_flags[] = {
   6, 7,
 };
 
-static std::vector<CRGBA> contour_colors;
-
-void initContourColors() {
-  if (contour_colors.empty()) {
-    contour_colors.push_back(CRGBName::toRGBA("#3182BD"));
-    contour_colors.push_back(CRGBName::toRGBA("#6BAED6"));
-    contour_colors.push_back(CRGBName::toRGBA("#9ECAE1"));
-    contour_colors.push_back(CRGBName::toRGBA("#C6DBEF"));
-    contour_colors.push_back(CRGBName::toRGBA("#E6550D"));
-    contour_colors.push_back(CRGBName::toRGBA("#FD8D3C"));
-    contour_colors.push_back(CRGBName::toRGBA("#FDAE6B"));
-    contour_colors.push_back(CRGBName::toRGBA("#FDD0A2"));
-    contour_colors.push_back(CRGBName::toRGBA("#31A354"));
-    contour_colors.push_back(CRGBName::toRGBA("#74C476"));
-    contour_colors.push_back(CRGBName::toRGBA("#A1D99B"));
-    contour_colors.push_back(CRGBName::toRGBA("#C7E9C0"));
-    contour_colors.push_back(CRGBName::toRGBA("#756BB1"));
-    contour_colors.push_back(CRGBName::toRGBA("#9E9AC8"));
-    contour_colors.push_back(CRGBName::toRGBA("#BCBDDC"));
-    contour_colors.push_back(CRGBName::toRGBA("#DADAEB"));
-    contour_colors.push_back(CRGBName::toRGBA("#636363"));
-    contour_colors.push_back(CRGBName::toRGBA("#969696"));
-    contour_colors.push_back(CRGBName::toRGBA("#BDBDBD"));
-    contour_colors.push_back(CRGBName::toRGBA("#D9D9D9"));
-  }
-}
-
-//---
-
 CGnuPlotContour::
 CGnuPlotContour(CGnuPlotPlot *plot) :
  plot_(plot)
 {
-  initContourColors();
-
   min_x_ = 1E-6;
   min_y_ = 1E-6;
   min_z_ = -1.0;
-
-  colors_ = std::vector<CRGBA>(&contour_colors[0], &contour_colors[20]);
 }
 
 CGnuPlot *
@@ -122,13 +89,6 @@ CGnuPlotContour::
 setContourLevels(const std::vector<double> &levels)
 {
   levels_ = levels;
-}
-
-void
-CGnuPlotContour::
-setContourColors(const std::vector<CRGBA> &colors)
-{
-  colors_ = colors;
 }
 
 void
@@ -730,12 +690,7 @@ CRGBA
 CGnuPlotContour::
 levelColor(int level) const
 {
-  CRGBA c(0,0,0);
-
-  if (! colors_.empty())
-    c = colors_[level % colors_.size()];
-
-  return c;
+  return CGnuPlotStyleInst->indexColor(palette(), level);
 }
 
 void

@@ -88,8 +88,22 @@ main(int argc, char **argv)
       else if (arg == "separator") {
         ++i;
 
-        if (i < argc)
-          loadParams.separator = argv[i][0];
+        if (i < argc) {
+          arg = argv[i];
+
+          char c = '\0';
+
+          if      (arg == "whitespace")
+            c = ' ';
+          else if (arg == "tab" || arg == "\\t")
+            c = '\t';
+          else if (arg == "comma")
+            c = ',';
+          else
+            c = arg[0];
+
+          loadParams.separator = c;
+        }
       }
       else if (arg == "using") {
         ++i;

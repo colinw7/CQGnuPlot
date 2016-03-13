@@ -294,11 +294,74 @@ initColors() const
 
     //---
 
-    th->initPalette("basic" );
-    th->initPalette("classic" );
-    th->initPalette("default");
-    th->initPalette("podo");
-    th->initPalette("subtle");
+    Colors d3jsColors = {{
+      NAME_COLOR_DEF("#98ABC5"),
+      NAME_COLOR_DEF("#8A89A6"),
+      NAME_COLOR_DEF("#7B6888"),
+      NAME_COLOR_DEF("#6B486B"),
+      NAME_COLOR_DEF("#A05D56"),
+      NAME_COLOR_DEF("#D0743C"),
+      NAME_COLOR_DEF("#FF8C00")
+    }};
+
+    th->namedColors_["d3js"] = d3jsColors;
+
+    //---
+
+    Colors sunburstColors = {{
+      NAME_COLOR_DEF("#756BB1"),
+      NAME_COLOR_DEF("#3182BD"),
+      NAME_COLOR_DEF("#31A354"),
+      NAME_COLOR_DEF("#E6550D"),
+      NAME_COLOR_DEF("#636363"),
+    }};
+
+    th->namedColors_["sunburst"] = sunburstColors;
+
+    //---
+
+    Colors adjacencyColors = {{
+      NAME_COLOR_DEF("#888888"),
+      NAME_COLOR_DEF("#FF7F0E"),
+      NAME_COLOR_DEF("#2CA02C"),
+      NAME_COLOR_DEF("#D62728"),
+      NAME_COLOR_DEF("#9467BD"),
+      NAME_COLOR_DEF("#8C564B"),
+      NAME_COLOR_DEF("#EACFE2"),
+      NAME_COLOR_DEF("#D1D1D1"),
+      NAME_COLOR_DEF("#BCBD22"),
+      NAME_COLOR_DEF("#4CDAD6"),
+      NAME_COLOR_DEF("#1F77B4"),
+    }};
+
+    th->namedColors_["adjacency"] = adjacencyColors;
+
+    //---
+
+    Colors chordColors = {{
+      NAME_COLOR_DEF("#E41A1C"),
+      NAME_COLOR_DEF("#FFFF33"),
+      NAME_COLOR_DEF("#FF7F00"),
+      NAME_COLOR_DEF("#999999"),
+      NAME_COLOR_DEF("#984EA3"),
+      NAME_COLOR_DEF("#377EB8"),
+      NAME_COLOR_DEF("#4DAF4A"),
+      NAME_COLOR_DEF("#F781BF"),
+      NAME_COLOR_DEF("#A65628"),
+    }};
+
+    th->namedColors_["chord"] = chordColors;
+
+    //---
+
+    th->initPalette("basic"    );
+    th->initPalette("classic"  );
+    th->initPalette("default"  );
+    th->initPalette("podo"     );
+    th->initPalette("subtle"   );
+    th->initPalette("d3js"     );
+    th->initPalette("sunburst" );
+    th->initPalette("adjacency");
   };
 #undef NAME_COLOR_DEF
 }

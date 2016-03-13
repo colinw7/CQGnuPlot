@@ -10,6 +10,7 @@
 #include <CGnuPlotKey.h>
 #include <CGnuPlotRotate.h>
 #include <CGnuPlotProbeEvent.h>
+#include <CGnuPlotStyleValue.h>
 
 #include <CExpr.h>
 #include <CBBox2D.h>
@@ -42,246 +43,10 @@ class CGnuPlotStroke;
 class CGnuPlotMark;
 
 class CGnuPlotBBoxRenderer;
-class CGnuPlotStyleAdjacencyRenderer;
-class CGnuPlotStyleChordDiagramRenderer;
-
-class CAdjacency;
-class ChordDiagram;
-class CSunburst;
 
 //------
 
-template<>
-class CGnuPlotCacheFactory<CGnuPlotArrowObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotArrowObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotBoxBarObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotBoxBarObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotBoxObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotBoxObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotBubbleObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotBubbleObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotEllipseObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotEllipseObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotErrorBarObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotErrorBarObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotFinanceBarObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotFinanceBarObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotImageObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotImageObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotLabelObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotLabelObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotPathObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotPathObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotPieObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotPieObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotPointObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotPointObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotPolygonObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotPolygonObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-template<>
-class CGnuPlotCacheFactory<CGnuPlotRectObject> {
- public:
-  CGnuPlotCacheFactory(CGnuPlotPlot *plot) :
-   plot_(plot) {
-  }
-
-  CGnuPlotRectObject *make();
-
- private:
-  CGnuPlotPlot *plot_;
-};
-
-//------
-
-class CGnuPlotAdjacencyData {
- public:
-  CGnuPlotAdjacencyData() { }
- ~CGnuPlotAdjacencyData();
-
-  CAdjacency *adjacency() const { return adjacency_; }
-  void setAdjacency(CAdjacency *a) { adjacency_ = a; }
-
-  CGnuPlotStyleAdjacencyRenderer *renderer() const { return renderer_; }
-  void setRenderer(CGnuPlotStyleAdjacencyRenderer *r) { renderer_ = r; }
-
- private:
-  CAdjacency                     *adjacency_ { 0 };
-  CGnuPlotStyleAdjacencyRenderer *renderer_  { 0 };
-};
-
-//------
-
-class CGnuPlotChordDiagramData {
- public:
-  CGnuPlotChordDiagramData() { }
- ~CGnuPlotChordDiagramData();
-
-  ChordDiagram *chordDiagram() const { return chord_; }
-  void setChordDiagram(ChordDiagram *c) { chord_ = c; }
-
-  CGnuPlotStyleChordDiagramRenderer *renderer() const { return renderer_; }
-  void setRenderer(CGnuPlotStyleChordDiagramRenderer *r) { renderer_ = r; }
-
- private:
-  ChordDiagram                      *chord_    { 0 };
-  CGnuPlotStyleChordDiagramRenderer *renderer_ { 0 };
-};
-
-//------
-
-class CGnuPlotSunburstData {
- public:
-  CGnuPlotSunburstData() { }
- ~CGnuPlotSunburstData();
-
-  CSunburst *sunburst() const { return sunburst_; }
-  void setSunburst(CSunburst *s) { sunburst_ = s; }
-
- private:
-  CSunburst *sunburst_ { 0 };
-};
+#include <CGnuPlotPlotCacheFactoriesDcl.h>
 
 //------
 
@@ -569,8 +334,8 @@ class CGnuPlotPlot {
 
   //---
 
-  const CGnuPlotPieStyle &pieStyle() const { return styleData_.pie; }
-  void setPieStyle(const CGnuPlotPieStyle &s) { styleData_.pie = s; }
+  //const CGnuPlotPieStyle &pieStyle() const { return styleData_.pie; }
+  //void setPieStyle(const CGnuPlotPieStyle &s) { styleData_.pie = s; }
 
   //---
 
@@ -772,6 +537,10 @@ class CGnuPlotPlot {
   void updateRectCacheSize      (int n);
 
   void clearBoxCache();
+  void clearPieCache();
+  void clearRectCache();
+
+  void resetRectCache();
 
   const ArrowObjects      &arrowObjects     () const { return arrowCache_     .objects(); }
   const BoxBarObjects     &boxBarObjects    () const { return boxBarCache_    .objects(); }
@@ -790,11 +559,7 @@ class CGnuPlotPlot {
 
   //---
 
-  struct StyleValue {
-    virtual ~StyleValue() { }
-  };
-
-  typedef std::map<std::string, StyleValue *> StyleValues;
+  typedef std::map<std::string, CGnuPlotStyleValue *> StyleValues;
 
   //---
 
@@ -887,8 +652,8 @@ class CGnuPlotPlot {
   double angleToRad(double a) const;
   double angleToDeg(double a) const;
 
-  void setStyleValue(const std::string &name, StyleValue *value);
-  StyleValue *styleValue(const std::string &name) const;
+  void setStyleValue(const std::string &name, CGnuPlotStyleValue *value);
+  CGnuPlotStyleValue *styleValue(const std::string &name) const;
 
   //------
 
@@ -925,30 +690,6 @@ class CGnuPlotPlot {
   virtual bool mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tipData);
 
   virtual bool mouseProbe(CGnuPlotProbeEvent &probeEvent);
-
-  //------
-
-  const CGnuPlotAdjacencyData &adjacencyData() const { return adjacencyData_; }
-
-  void setAdjacency(CAdjacency *a) { adjacencyData_.setAdjacency(a); }
-
-  void setAdjacencyRenderer(CGnuPlotStyleAdjacencyRenderer *r) { adjacencyData_.setRenderer(r); }
-
-  //------
-
-  const CGnuPlotChordDiagramData &chordDiagramData() const { return chordDiagramData_; }
-
-  void setChordDiagram(ChordDiagram *c) { chordDiagramData_.setChordDiagram(c); }
-
-  void setChordDiagramRenderer(CGnuPlotStyleChordDiagramRenderer *r) {
-    chordDiagramData_.setRenderer(r);
-  }
-
-  //------
-
-  const CGnuPlotSunburstData &sunburstData() const { return sunburstData_; }
-
-  void setSunburst(CSunburst *s) { sunburstData_.setSunburst(s); }
 
   //------
 
@@ -1055,119 +796,17 @@ class CGnuPlotPlot {
   CGnuPlotSurfaceData      surfaceData_;
   CGnuPlotContourData      contourData_;
   CGnuPlotPrintFile        tableFile_;
-  CGnuPlotAdjacencyData    adjacencyData_;
-  CGnuPlotChordDiagramData chordDiagramData_;
-  CGnuPlotSunburstData     sunburstData_;
   int                      newHistogramId_ { -1 };
   Delta                    delta_ { 1, 1, 1, 1 };
   CGnuPlotRotate           rotate_;
   COptPoint3D              center_;
   Point3DArray             originArray_;
-
- private:
-  CGnuPlotStyleAdjacencyRenderer *arenderer_;
 };
 
 typedef std::shared_ptr<CGnuPlotPlot> CGnuPlotPlotP;
 
 //------
 
-inline CGnuPlotArrowObject *
-CGnuPlotCacheFactory<CGnuPlotArrowObject>::
-make()
-{
-  return plot_->createArrowObject();
-}
-
-inline CGnuPlotBoxBarObject *
-CGnuPlotCacheFactory<CGnuPlotBoxBarObject>::
-make()
-{
-  return plot_->createBoxBarObject();
-}
-
-inline CGnuPlotBoxObject *
-CGnuPlotCacheFactory<CGnuPlotBoxObject>::
-make()
-{
-  return plot_->createBoxObject();
-}
-
-inline CGnuPlotBubbleObject *
-CGnuPlotCacheFactory<CGnuPlotBubbleObject>::
-make()
-{
-  return plot_->createBubbleObject();
-}
-
-inline CGnuPlotEllipseObject *
-CGnuPlotCacheFactory<CGnuPlotEllipseObject>::
-make()
-{
-  return plot_->createEllipseObject();
-}
-
-inline CGnuPlotErrorBarObject *
-CGnuPlotCacheFactory<CGnuPlotErrorBarObject>::
-make()
-{
-  return plot_->createErrorBarObject();
-}
-
-inline CGnuPlotFinanceBarObject *
-CGnuPlotCacheFactory<CGnuPlotFinanceBarObject>::
-make()
-{
-  return plot_->createFinanceBarObject();
-}
-
-inline CGnuPlotImageObject *
-CGnuPlotCacheFactory<CGnuPlotImageObject>::
-make()
-{
-  return plot_->createImageObject();
-}
-
-inline CGnuPlotLabelObject *
-CGnuPlotCacheFactory<CGnuPlotLabelObject>::
-make()
-{
-  return plot_->createLabelObject();
-}
-
-inline CGnuPlotPathObject *
-CGnuPlotCacheFactory<CGnuPlotPathObject>::
-make()
-{
-  return plot_->createPathObject();
-}
-
-inline CGnuPlotPieObject *
-CGnuPlotCacheFactory<CGnuPlotPieObject>::
-make()
-{
-  return plot_->createPieObject();
-}
-
-inline CGnuPlotPointObject *
-CGnuPlotCacheFactory<CGnuPlotPointObject>::
-make()
-{
-  return plot_->createPointObject();
-}
-
-inline CGnuPlotPolygonObject *
-CGnuPlotCacheFactory<CGnuPlotPolygonObject>::
-make()
-{
-  return plot_->createPolygonObject();
-}
-
-inline CGnuPlotRectObject *
-CGnuPlotCacheFactory<CGnuPlotRectObject>::
-make()
-{
-  return plot_->createRectObject();
-}
+#include <CGnuPlotPlotCacheFactoriesDef.h>
 
 #endif

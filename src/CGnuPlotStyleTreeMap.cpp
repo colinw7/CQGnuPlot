@@ -1,103 +1,14 @@
 #include <CGnuPlotStyleTreeMap.h>
+#include <CGnuPlotTreeMapStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotKey.h>
 #include <CGnuPlotRectObject.h>
+#include <CGnuPlotDevice.h>
 #include <CTreeMap.h>
-
-namespace {
-
-CRGBA getColor(int i) {
-#if 0
-  static int numColors = 20;
-
-  static CRGBA bg_colors[] = {
-    // blue
-    CRGBName::toRGBA("#3182BD"),
-    CRGBName::toRGBA("#6BAED6"),
-    CRGBName::toRGBA("#9ECAE1"),
-    CRGBName::toRGBA("#C6DBEF"),
-
-    // orange
-    CRGBName::toRGBA("#E6550D"),
-    CRGBName::toRGBA("#FD8D3C"),
-    CRGBName::toRGBA("#FDAE6B"),
-    CRGBName::toRGBA("#FDD0A2"),
-
-    // green
-    CRGBName::toRGBA("#31A354"),
-    CRGBName::toRGBA("#74C476"),
-    CRGBName::toRGBA("#A1D99B"),
-    CRGBName::toRGBA("#C7E9C0"),
-
-    // purple
-    CRGBName::toRGBA("#756BB1"),
-    CRGBName::toRGBA("#9E9AC8"),
-    CRGBName::toRGBA("#BCBDDC"),
-    CRGBName::toRGBA("#DADAEB"),
-
-    // gray
-    CRGBName::toRGBA("#636363"),
-    CRGBName::toRGBA("#969696"),
-    CRGBName::toRGBA("#BDBDBD"),
-    CRGBName::toRGBA("#D9D9D9"),
-  };
-#endif
-  static int numColors = 5;
-
-  static CRGBA bg_colors[] = {
-    CRGBName::toRGBA("#756BB1"), // purple
-    CRGBName::toRGBA("#3182BD"), // blue
-    CRGBName::toRGBA("#31A354"), // green
-    CRGBName::toRGBA("#E6550D"), // orange
-    CRGBName::toRGBA("#636363"), // gray
-  };
-
-  return bg_colors[i % numColors];
-}
-
-#if 0
-CRGBA getBorderColor() {
-  //static CRGBA border_color = CRGBA("#2078B4");
-  static CRGBA border_color = CRGBName::toRGBA("#FFFFFF");
-
-  return border_color;
-}
-#endif
-
-//CRGBA fg_color = CRGBA("#FF7F0E");
-
-}
-
-class CGnuPlotStyleTreeMapValue : public CGnuPlotPlot::StyleValue {
- public:
-  CGnuPlotStyleTreeMapValue() {
-    tree_ = new CTreeMap;
-  }
-
- ~CGnuPlotStyleTreeMapValue() {
-    delete tree_;
-  }
-
-  CTreeMap *tree() const { return tree_; }
-
-  bool isInited() const { return inited_; }
-  void setInited(bool b) { inited_ = b; }
-
-  void init() {
-    delete tree_;
-
-    tree_ = new CTreeMap;
-  }
-
- private:
-  CTreeMap *tree_ { 0 };
-  bool      inited_ { false };
-};
-
-//------
 
 class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
  public:
@@ -106,6 +17,12 @@ class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
   }
 
   void drawHierNode(CTreeMap::HierNode *node, int depth) {
+    if (! hier_) return;
+
+    CGnuPlotTreeMapStyleValue *value =
+      CGnuPlotStyleValueMgrInst->getValue<CGnuPlotTreeMapStyleValue>(plot_);
+    if (! value) return;
+
     if (renderer_->isPseudo()) return;
 
     //---
@@ -115,39 +32,35 @@ class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
     double w = node->w();
     double h = node->h();
 
-    //double pw = renderer_->pixelWidthToWindowWidth  (1);
-    //double ph = renderer_->pixelHeightToWindowHeight(1);
-
-    //double x1 = x +   pw;
-    //double y1 = y +   ph;
-    //double w1 = w - 2*pw;
-    //double h1 = h - 2*ph;
-
     CBBox2D bbox(x, y, x + w, y + h);
 
     if (node->isOpen()) {
-      CRGBA c(0,0,0);
-
-      renderer_->drawRect(bbox, c, 2);
+      renderer_->drawRect(bbox, value->openBorderColor(), value->openBorderWidth());
     }
     else {
       std::string text = node->name() + "...";
 
-      CRGBA c = getColor(depth);
+      CRGBA c = CGnuPlotStyleInst->indexColor(value->palette(), depth);
 
       renderer_->fillRect(bbox, c);
-      renderer_->drawRect(bbox, CRGBA(0.5,0.5,0.5), 0);
+      renderer_->drawRect(bbox, value->closedBorderColor(), value->closedBorderWidth());
+
+      CRGBA tc = c.bwContrast();
 
       renderer_->drawHAlignedText(bbox.getCenter(),
                                   CGnuPlotTypes::HAlignPos(CHALIGN_TYPE_CENTER, 0),
                                   CGnuPlotTypes::VAlignPos(CVALIGN_TYPE_CENTER, 0),
-                                  text, CRGBA(0,0,0));
+                                  text, tc);
     }
   }
 
   void drawNode(CTreeMap::Node *node, int depth) {
     if (renderer_->isPseudo()) return;
 
+    CGnuPlotTreeMapStyleValue *value =
+      CGnuPlotStyleValueMgrInst->getValue<CGnuPlotTreeMapStyleValue>(plot_);
+    if (! value) return;
+
     //---
 
     double x = node->x();
@@ -155,17 +68,8 @@ class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
     double w = node->w();
     double h = node->h();
 
-    //double pw = renderer_->pixelWidthToWindowWidth  (1);
-    //double ph = renderer_->pixelHeightToWindowHeight(1);
-
-    //double x1 = x +   pw;
-    //double y1 = y +   ph;
-    //double w1 = w - 2*pw;
-    //double h1 = h - 2*ph;
-
     //---
 
-    //CBBox2D bbox(x1, y1, x1 + w1, y1 + h1);
     CBBox2D bbox(x, y, x + w, y + h);
 
     //---
@@ -179,10 +83,8 @@ class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
     CRGBA c;
 
     if (! hier_) {
-      //CRGBA c = CGnuPlotStyleInst->indexColor(node->colorId());
-
-      CRGBA c1 = getColor(pcolorId    );
-      CRGBA c2 = getColor(pcolorId + 1);
+      CRGBA c1 = CGnuPlotStyleInst->indexColor(value->palette(), pcolorId    );
+      CRGBA c2 = CGnuPlotStyleInst->indexColor(value->palette(), pcolorId + 1);
 
       double r = 0.0;
 
@@ -192,10 +94,10 @@ class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
       c = c1 + r*c2;
     }
     else {
-      CRGBA c1 = getColor(depth    );
-      //CRGBA c2 = getColor(depth + 1);
+      CRGBA c1 = CGnuPlotStyleInst->indexColor(value->palette(), depth    );
+    //CRGBA c2 = CGnuPlotStyleInst->indexColor(value->palette(), depth + 1);
 
-      //c = c1 + r*c2;
+    //c = c1 + r*c2;
       c = c1;
     }
 
@@ -210,18 +112,20 @@ class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
         rect->fill()->setType (CGnuPlotTypes::FillType::SOLID);
         rect->fill()->setColor(c);
 
-        rect->stroke()->setColor(CRGBA(0,0,0));
-        rect->stroke()->setWidth(0);
+        rect->stroke()->setColor(value->openBorderColor());
+        rect->stroke()->setWidth(value->openBorderWidth());
       }
     }
     else {
       renderer_->fillRect(bbox, c);
-      renderer_->drawRect(bbox, CRGBA(0.5,0.5,0.5), 0);
+      renderer_->drawRect(bbox, value->closedBorderColor(), value->closedBorderWidth());
+
+      CRGBA tc = c.bwContrast();
 
       renderer_->drawHAlignedText(bbox.getCenter(),
                                   CGnuPlotTypes::HAlignPos(CHALIGN_TYPE_CENTER, 0),
                                   CGnuPlotTypes::VAlignPos(CVALIGN_TYPE_CENTER, 0),
-                                  text, CRGBA(0,0,0));
+                                  text, tc);
     }
 
     ++ind_;
@@ -241,6 +145,7 @@ CGnuPlotStyleTreeMap(bool hier) :
  CGnuPlotStyleBase(hier ? CGnuPlot::PlotStyle::HIERTREEMAP : CGnuPlot::PlotStyle::TREEMAP),
  hier_(hier)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotTreeMapStyleValue>("tree_map");
 }
 
 void
@@ -252,13 +157,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  CGnuPlotStyleTreeMapValue *value =
-    dynamic_cast<CGnuPlotStyleTreeMapValue *>(plot->styleValue("tree_map"));
+  CGnuPlotTreeMapStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotTreeMapStyleValue>(plot);
 
   if (! value) {
-    value = new CGnuPlotStyleTreeMapValue;
+    value = plot->app()->device()->createTreeMapStyleValue(plot);
 
-    plot->setStyleValue("tree_map", value);
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotTreeMapStyleValue>(plot, value);
   }
 
   //---
@@ -442,8 +347,8 @@ bool
 CGnuPlotStyleTreeMap::
 mouseTip(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tipData)
 {
-  CGnuPlotStyleTreeMapValue *value =
-    dynamic_cast<CGnuPlotStyleTreeMapValue *>(plot->styleValue("tree_map"));
+  CGnuPlotTreeMapStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotTreeMapStyleValue>(plot);
   if (! value) return false;
 
   CTreeMap *tree = value->tree();
@@ -463,8 +368,8 @@ void
 CGnuPlotStyleTreeMap::
 mousePress(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent)
 {
-  CGnuPlotStyleTreeMapValue *value =
-    dynamic_cast<CGnuPlotStyleTreeMapValue *>(plot->styleValue("tree_map"));
+  CGnuPlotTreeMapStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotTreeMapStyleValue>(plot);
   if (! value) return;
 
   CTreeMap *tree = value->tree();
@@ -474,12 +379,19 @@ mousePress(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent)
   if (! node)
     return;
 
+  if (! hier_)
+    return;
+
   if      (mouseEvent.button() == 1) {
     if (node->isHier())
       node->setOpen(true);
+
+    //plot->clearRectCache();
   }
   else if (mouseEvent.button() == 3) {
     if (node->parent())
       node->parent()->setOpen(false);
+
+    //plot->clearRectCache();
   }
 }

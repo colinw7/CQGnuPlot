@@ -75,6 +75,7 @@ CQGnuPlotCreateDialog.cpp \
 CQGnuPlotDataDialog.cpp \
 CQGnuPlotSaveDialog.cpp \
 CQGnuPlotPaletteDialog.cpp \
+CQGnuPlotTreeView.cpp \
 CQGnuPlotTreeWidget.cpp \
 CQGnuPlotDataTree.cpp \
 CQGnuPlotDataModel.cpp \
@@ -238,18 +239,19 @@ CSymbol2D.cpp \
 \
 Expr/CExpr.cpp \
 Expr/CExprBValue.cpp \
-Expr/CExprCompile.cpp \
 Expr/CExprCValue.cpp \
+Expr/CExprCompile.cpp \
 Expr/CExprExecute.cpp \
 Expr/CExprFunction.cpp \
-Expr/CExprInterp.cpp \
 Expr/CExprIValue.cpp \
+Expr/CExprInterp.cpp \
 Expr/CExprOperator.cpp \
 Expr/CExprParse.cpp \
 Expr/CExprRValue.cpp \
-Expr/CExprStrgen.cpp \
 Expr/CExprSValue.cpp \
+Expr/CExprStrgen.cpp \
 Expr/CExprToken.cpp \
+Expr/CExprTokenStack.cpp \
 Expr/CExprValue.cpp \
 Expr/CExprVariable.cpp \
 
@@ -313,10 +315,21 @@ CQGnuPlotCreateDialog.h \
 CQGnuPlotDataDialog.h \
 CQGnuPlotSaveDialog.h \
 CQGnuPlotPaletteDialog.h \
+CQGnuPlotTreeView.h \
 CQGnuPlotTreeWidget.h \
 CQGnuPlotDataTree.h \
 CQGnuPlotDataModel.h \
 CQGnuPlotPositionEdit.h \
+\
+CQGnuPlotAdjacencyStyleValue.h \
+CQGnuPlotChordDiagramStyleValue.h \
+CQGnuPlotDelaunayStyleValue.h \
+CQGnuPlotDendrogramStyleValue.h \
+CQGnuPlotForceDirectedStyleValue.h \
+CQGnuPlotHierBubbleStyleValue.h \
+CQGnuPlotPieChartStyleValue.h \
+CQGnuPlotSunburstStyleValue.h \
+CQGnuPlotTreeMapStyleValue.h \
 \
 CGnuPlot.h \
 CGnuPlotArrow.h \

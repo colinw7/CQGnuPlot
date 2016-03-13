@@ -11,7 +11,9 @@ class CGnuPlotImageStyle {
   typedef std::vector<CPoint3D>    Points;
 
  public:
-  CGnuPlotImageStyle() { }
+  CGnuPlotImageStyle(CGnuPlot *plot) :
+   plot_(plot), usingCols_(plot_) {
+  }
 
   const COptInt &width() const { return width_; }
   void setWidth(int w) { width_ = w; }
@@ -77,13 +79,14 @@ class CGnuPlotImageStyle {
     originArray_.clear();
 
     flipY_     = false;
-    usingCols_ = CGnuPlotUsingCols();
+    usingCols_ = CGnuPlotUsingCols(plot_);
     fileType_  = CGnuPlotTypes::ImageType::NONE;
 
     filename_ = "";
   }
 
  private:
+  CGnuPlot*         plot_ { 0 };
   COptInt           width_;
   COptInt           height_;
   Points            originArray_;

@@ -2,11 +2,8 @@
 #include <algorithm>
 
 CAdjacency::
-CAdjacency() :
- nodes_(), sort_(SORT_NAME), ts_(0), cs_(0), ix_(-1), iy_(-1), maxValue_(0)
+CAdjacency()
 {
-  addDefaultColors();
-
   grey_ = 0xEE/255.0;
 }
 
@@ -54,11 +51,11 @@ sortNodes()
     maxValue_ = std::max(maxValue_, node->maxCount());
   }
 
-  if      (sort_ == SORT_NAME)
+  if      (sort_ == SortType::NAME)
     std::sort(sortedNodes_.begin(), sortedNodes_.end(), CAdjacencyNodeNameCmp());
-  else if (sort_ == SORT_GROUP)
+  else if (sort_ == SortType::GROUP)
     std::sort(sortedNodes_.begin(), sortedNodes_.end(), CAdjacencyNodeGroupCmp());
-  else if (sort_ == SORT_COUNT)
+  else if (sort_ == SortType::COUNT)
     std::sort(sortedNodes_.begin(), sortedNodes_.end(), CAdjacencyNodeCountCmp());
 }
 
@@ -160,7 +157,7 @@ draw(CAdjacencyRenderer *renderer)
     for (auto node2 : sortedNodes_) {
       int value = node1->nodeValue(node2);
 
-      CRGBA bc = nodeColor(node1, node2);
+      CRGBA bc = nodeColor(renderer, node1, node2);
 
       CBBox2D r(px, py, px + cs_, py + cs_);
 
@@ -202,54 +199,24 @@ nodeAtPoint(double x, double y)
   }
 }
 
-void
-CAdjacency::
-addDefaultColors()
-{
-  // TODO: set group colors
-  for (const auto &c : {
-   CRGBA(0x88/255.0,0x88/255.0,0x88/255.0),
-   CRGBA(0xFF/255.0,0x7F/255.0,0x0E/255.0),
-   CRGBA(0x2C/255.0,0xA0/255.0,0x2C/255.0),
-   CRGBA(0xD6/255.0,0x27/255.0,0x28/255.0),
-   CRGBA(0x94/255.0,0x67/255.0,0xBD/255.0),
-   CRGBA(0x8C/255.0,0x56/255.0,0x4B/255.0),
-   CRGBA(0xEA/255.0,0xCF/255.0,0xE2/255.0),
-   CRGBA(0xD1/255.0,0xD1/255.0,0xD1/255.0),
-   CRGBA(0xBC/255.0,0xBD/255.0,0x22/255.0),
-   CRGBA(0x4C/255.0,0xDA/255.0,0xD6/255.0),
-   CRGBA(0x1F/255.0,0x77/255.0,0xB4/255.0) }) {
-    colors_.push_back(c);
-  }
-}
-
 CRGBA
 CAdjacency::
-nodeColor(CAdjacencyNode *node1, CAdjacencyNode *node2) const
+nodeColor(CAdjacencyRenderer *renderer, CAdjacencyNode *node1, CAdjacencyNode *node2) const
 {
   int value = node1->nodeValue(node2);
 
   CRGBA c(grey_, grey_, grey_);
 
   if      (node1 == node2)
-    c = getColor(node1->group());
+    c = renderer->indexColor(node1->group());
   else if (value) {
-    CRGBA c1 = getColor(node1->group());
-    CRGBA c2 = getColor(node2->group());
+    CRGBA c1 = renderer->indexColor(node1->group());
+    CRGBA c2 = renderer->indexColor(node2->group());
 
     c = blendColors(c1, c2, value);
   }
 
   return c;
-}
-
-const CRGBA &
-CAdjacency::
-getColor(int i) const
-{
-  int i1 = i % colors_.size();
-
-  return colors_[i1];
 }
 
 CRGBA

@@ -24,7 +24,8 @@ class CGnuPlotStyleHierBubblePlot : public CGnuPlotStyleBase {
                 CGnuPlotTipData &tipData);
 
  private:
-  void drawNodes(CGnuPlotRenderer *renderer, CHierBubblePack::HierNode *hier, int depth);
+  void drawNodes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
+                 CHierBubblePack::HierNode *hier, int depth);
 
   void mapPoint(double x1, double y1, double &x2, double &y2) const;
   void unmapPoint(double x1, double y1, double &x2, double &y2) const;

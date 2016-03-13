@@ -233,6 +233,7 @@ namespace CGnuPlotTypes {
     HISTOGRAM,
     INCREMENT,
     LINE,
+    PIECHART,
     RECTANGLE,
     TEXTBOX
   };

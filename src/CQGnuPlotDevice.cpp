@@ -42,6 +42,16 @@
 #include <CQGnuPlotStroke.h>
 #include <CQGnuPlotMark.h>
 
+#include <CQGnuPlotAdjacencyStyleValue.h>
+#include <CQGnuPlotChordDiagramStyleValue.h>
+#include <CQGnuPlotDelaunayStyleValue.h>
+#include <CQGnuPlotDendrogramStyleValue.h>
+#include <CQGnuPlotForceDirectedStyleValue.h>
+#include <CQGnuPlotHierBubbleStyleValue.h>
+#include <CQGnuPlotPieChartStyleValue.h>
+#include <CQGnuPlotSunburstStyleValue.h>
+#include <CQGnuPlotTreeMapStyleValue.h>
+
 #include <QApplication>
 
 CQGnuPlotDevice::
@@ -324,7 +334,7 @@ createArrowObject(CGnuPlotPlot *plot)
 
   objects_.push_back(arrow);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return arrow;
 }
@@ -339,7 +349,7 @@ createBoxBarObject(CGnuPlotPlot *plot)
 
   objects_.push_back(bar);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return bar;
 }
@@ -365,7 +375,7 @@ createBoxObject(CGnuPlotPlot *plot)
 
   objects_.push_back(box);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return box;
 }
@@ -380,7 +390,7 @@ createBubbleObject(CGnuPlotPlot *plot)
 
   objects_.push_back(bubble);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return bubble;
 }
@@ -395,7 +405,7 @@ createEllipseObject(CGnuPlotPlot *plot)
 
   objects_.push_back(ellipse);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return ellipse;
 }
@@ -410,7 +420,7 @@ createErrorBarObject(CGnuPlotPlot *plot)
 
   objects_.push_back(bar);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return bar;
 }
@@ -425,7 +435,7 @@ createFinanceBarObject(CGnuPlotPlot *plot)
 
   objects_.push_back(bar);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return bar;
 }
@@ -440,7 +450,7 @@ createImageObject(CGnuPlotPlot *plot)
 
   objects_.push_back(image);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return image;
 }
@@ -455,7 +465,7 @@ createLabelObject(CGnuPlotPlot *plot)
 
   objects_.push_back(label);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return label;
 }
@@ -470,7 +480,7 @@ createPathObject(CGnuPlotPlot *plot)
 
   objects_.push_back(path);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return path;
 }
@@ -485,7 +495,7 @@ createPieObject(CGnuPlotPlot *plot)
 
   objects_.push_back(pie);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return pie;
 }
@@ -500,7 +510,7 @@ createPointObject(CGnuPlotPlot *plot)
 
   objects_.push_back(point);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return point;
 }
@@ -515,7 +525,7 @@ createPolygonObject(CGnuPlotPlot *plot)
 
   objects_.push_back(polygon);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return polygon;
 }
@@ -530,7 +540,7 @@ createRectObject(CGnuPlotPlot *plot)
 
   objects_.push_back(rect);
 
-  qplot->qwindow()->updateProperties();
+  //qplot->qwindow()->updateProperties();
 
   return rect;
 }
@@ -566,6 +576,71 @@ createMark(CGnuPlotPlot *plot)
   CQGnuPlotMark *mark = new CQGnuPlotMark(qplot);
 
   return mark;
+}
+
+//---
+
+CGnuPlotAdjacencyStyleValue *
+CQGnuPlotDevice::
+createAdjacencyStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotAdjacencyStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotChordDiagramStyleValue *
+CQGnuPlotDevice::
+createChordDiagramStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotChordDiagramStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotDelaunayStyleValue *
+CQGnuPlotDevice::
+createDelaunayStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotDelaunayStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotDendrogramStyleValue *
+CQGnuPlotDevice::
+createDendrogramStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotDendrogramStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotForceDirectedStyleValue *
+CQGnuPlotDevice::
+createForceDirectedStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotForceDirectedStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotHierBubbleStyleValue *
+CQGnuPlotDevice::
+createHierBubbleStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotHierBubbleStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotPieChartStyleValue *
+CQGnuPlotDevice::
+createPieChartStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotPieChartStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotSunburstStyleValue *
+CQGnuPlotDevice::
+createSunburstStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotSunburstStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotTreeMapStyleValue *
+CQGnuPlotDevice::
+createTreeMapStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotTreeMapStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
 }
 
 //---

@@ -15,9 +15,9 @@ class CSunburstVisitor;
 
 class CSunburst {
  public:
-  enum Order {
-    ORDER_SIZE,
-    ORDER_COUNT
+  enum class Order {
+    SIZE,
+    COUNT
   };
 
  public:
@@ -27,6 +27,16 @@ class CSunburst {
 
  public:
   CSunburst();
+
+ ~CSunburst();
+
+  void reset();
+
+  double innerRadius() const { return innerRadius_; }
+  void setInnerRadius(double r) { innerRadius_ = r; }
+
+  double startAngle() const { return startAngle_; }
+  void setStartAngle(double r) { startAngle_ = r; }
 
   void addRoot();
 
@@ -206,16 +216,21 @@ class CSunburst {
         parent_->children_.push_back(this);
     }
 
+   ~HierNode() {
+      for (auto &c : children_)
+        delete c;
+    }
+
     bool isHier() const override { return true; }
 
     double size() const override {
       double s = 0.0;
 
-      for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
-        s += (*p)->size();
+      for (const auto &c : children_)
+        s += c->size();
 
-      for (Nodes::const_iterator pn = nodes_.begin(); pn != nodes_.end(); ++pn)
-        s += (*pn)->size();
+      for (const auto &n : nodes_)
+        s += n->size();
 
       return s;
     }
@@ -223,8 +238,8 @@ class CSunburst {
     int depth() const override {
       int depth = 1;
 
-      for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
-        depth = std::max(depth, (*p)->depth() + 1);
+      for (const auto &c : children_)
+        depth = std::max(depth, c->depth() + 1);
 
       return depth;
     }
@@ -232,8 +247,8 @@ class CSunburst {
     int numNodes() const override {
       int num = nodes_.size();
 
-      for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
-        num += (*p)->numNodes();
+      for (const auto &c : children_)
+        num += c->numNodes();
 
       return std::max(num, 1);
     }
@@ -265,11 +280,11 @@ class CSunburst {
     void unplaceNodes() {
       Node::unplace();
 
-      for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
-        (*p)->unplaceNodes();
+      for (const auto &c : children_)
+        c->unplaceNodes();
 
-      for (Nodes::const_iterator pn = nodes_.begin(); pn != nodes_.end(); ++pn)
-        (*pn)->unplace();
+      for (const auto &n : nodes_)
+        n->unplace();
     }
 
     void packNodes(RootNode *root, double ri, double ro, double dr, double a, double da) {
@@ -278,7 +293,7 @@ class CSunburst {
       if (dr <= 0.0)
         dr = (ro - ri)/d;
 
-      double s = (root->order() == ORDER_SIZE ? size() : numNodes());
+      double s = (root->order() == Order::SIZE ? size() : numNodes());
 
       double da1 = da/s;
 
@@ -289,15 +304,15 @@ class CSunburst {
       // make single list of nodes to pack
       Nodes nodes;
 
-      for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
-        nodes.push_back(*p);
+      for (const auto &c : children_)
+        nodes.push_back(c);
 
-      for (Nodes::const_iterator pn = nodes_.begin(); pn != nodes_.end(); ++pn)
-        nodes.push_back(*pn);
+      for (const auto &n : nodes_)
+        nodes.push_back(n);
 
       if (root->sort()) {
 #if 0
-        if (root->order() == ORDER_SIZE)
+        if (root->order() == Order::SIZE)
           std::sort(nodes.begin(), nodes.end(), NodeSizeCmp());
         else
           std::sort(nodes.begin(), nodes.end(), NodeCountCmp());
@@ -316,7 +331,7 @@ class CSunburst {
       for (Nodes::const_iterator pn = nodes.begin(); pn != nodes.end(); ++pn) {
         Node *node = *pn;
 
-        double s = (root->order() == ORDER_SIZE ? node->size() : node->numNodes());
+        double s = (root->order() == Order::SIZE ? node->size() : node->numNodes());
 
         node->setPosition(ri, a1, dr, s*da);
 
@@ -341,7 +356,7 @@ class CSunburst {
   class RootNode : public HierNode {
    public:
     RootNode(const std::string &name="") :
-     HierNode(0, name), sort_(true), order_(ORDER_SIZE) {
+     HierNode(0, name) {
     }
 
     bool isRoot() const override { return true; }
@@ -357,12 +372,16 @@ class CSunburst {
     }
 
    private:
-    bool  sort_;
-    Order order_;
+    bool  sort_  { true };
+    Order order_ { Order::SIZE };
   };
 
  private:
-  std::vector<RootNode *> roots_;
+  typedef std::vector<RootNode *> Roots;
+
+  Roots  roots_;
+  double innerRadius_ { 0.5 };
+  double startAngle_  { -90 };
 };
 
 //------

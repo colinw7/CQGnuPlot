@@ -103,6 +103,7 @@ SOURCES       = CQGnuPlotTest.cpp \
 		CQGnuPlotDataDialog.cpp \
 		CQGnuPlotSaveDialog.cpp \
 		CQGnuPlotPaletteDialog.cpp \
+		CQGnuPlotTreeView.cpp \
 		CQGnuPlotTreeWidget.cpp \
 		CQGnuPlotDataTree.cpp \
 		CQGnuPlotDataModel.cpp \
@@ -256,18 +257,19 @@ SOURCES       = CQGnuPlotTest.cpp \
 		CSymbol2D.cpp \
 		Expr/CExpr.cpp \
 		Expr/CExprBValue.cpp \
-		Expr/CExprCompile.cpp \
 		Expr/CExprCValue.cpp \
+		Expr/CExprCompile.cpp \
 		Expr/CExprExecute.cpp \
 		Expr/CExprFunction.cpp \
-		Expr/CExprInterp.cpp \
 		Expr/CExprIValue.cpp \
+		Expr/CExprInterp.cpp \
 		Expr/CExprOperator.cpp \
 		Expr/CExprParse.cpp \
 		Expr/CExprRValue.cpp \
-		Expr/CExprStrgen.cpp \
 		Expr/CExprSValue.cpp \
+		Expr/CExprStrgen.cpp \
 		Expr/CExprToken.cpp \
+		Expr/CExprTokenStack.cpp \
 		Expr/CExprValue.cpp \
 		Expr/CExprVariable.cpp .moc/moc_CQGnuPlot.cpp \
 		.moc/moc_CQGnuPlotAnnotation.cpp \
@@ -323,10 +325,20 @@ SOURCES       = CQGnuPlotTest.cpp \
 		.moc/moc_CQGnuPlotDataDialog.cpp \
 		.moc/moc_CQGnuPlotSaveDialog.cpp \
 		.moc/moc_CQGnuPlotPaletteDialog.cpp \
+		.moc/moc_CQGnuPlotTreeView.cpp \
 		.moc/moc_CQGnuPlotTreeWidget.cpp \
 		.moc/moc_CQGnuPlotDataTree.cpp \
 		.moc/moc_CQGnuPlotDataModel.cpp \
 		.moc/moc_CQGnuPlotPositionEdit.cpp \
+		.moc/moc_CQGnuPlotAdjacencyStyleValue.cpp \
+		.moc/moc_CQGnuPlotChordDiagramStyleValue.cpp \
+		.moc/moc_CQGnuPlotDelaunayStyleValue.cpp \
+		.moc/moc_CQGnuPlotDendrogramStyleValue.cpp \
+		.moc/moc_CQGnuPlotForceDirectedStyleValue.cpp \
+		.moc/moc_CQGnuPlotHierBubbleStyleValue.cpp \
+		.moc/moc_CQGnuPlotPieChartStyleValue.cpp \
+		.moc/moc_CQGnuPlotSunburstStyleValue.cpp \
+		.moc/moc_CQGnuPlotTreeMapStyleValue.cpp \
 		.moc/moc_CQHeaderView.cpp \
 		.moc/moc_CQToolTip.cpp \
 		.moc/moc_CQFloatLabel.cpp \
@@ -394,6 +406,7 @@ OBJECTS       = ../obj/CQGnuPlotTest.o \
 		../obj/CQGnuPlotDataDialog.o \
 		../obj/CQGnuPlotSaveDialog.o \
 		../obj/CQGnuPlotPaletteDialog.o \
+		../obj/CQGnuPlotTreeView.o \
 		../obj/CQGnuPlotTreeWidget.o \
 		../obj/CQGnuPlotDataTree.o \
 		../obj/CQGnuPlotDataModel.o \
@@ -547,18 +560,19 @@ OBJECTS       = ../obj/CQGnuPlotTest.o \
 		../obj/CSymbol2D.o \
 		../obj/CExpr.o \
 		../obj/CExprBValue.o \
-		../obj/CExprCompile.o \
 		../obj/CExprCValue.o \
+		../obj/CExprCompile.o \
 		../obj/CExprExecute.o \
 		../obj/CExprFunction.o \
-		../obj/CExprInterp.o \
 		../obj/CExprIValue.o \
+		../obj/CExprInterp.o \
 		../obj/CExprOperator.o \
 		../obj/CExprParse.o \
 		../obj/CExprRValue.o \
-		../obj/CExprStrgen.o \
 		../obj/CExprSValue.o \
+		../obj/CExprStrgen.o \
 		../obj/CExprToken.o \
+		../obj/CExprTokenStack.o \
 		../obj/CExprValue.o \
 		../obj/CExprVariable.o \
 		../obj/moc_CQGnuPlot.o \
@@ -615,10 +629,20 @@ OBJECTS       = ../obj/CQGnuPlotTest.o \
 		../obj/moc_CQGnuPlotDataDialog.o \
 		../obj/moc_CQGnuPlotSaveDialog.o \
 		../obj/moc_CQGnuPlotPaletteDialog.o \
+		../obj/moc_CQGnuPlotTreeView.o \
 		../obj/moc_CQGnuPlotTreeWidget.o \
 		../obj/moc_CQGnuPlotDataTree.o \
 		../obj/moc_CQGnuPlotDataModel.o \
 		../obj/moc_CQGnuPlotPositionEdit.o \
+		../obj/moc_CQGnuPlotAdjacencyStyleValue.o \
+		../obj/moc_CQGnuPlotChordDiagramStyleValue.o \
+		../obj/moc_CQGnuPlotDelaunayStyleValue.o \
+		../obj/moc_CQGnuPlotDendrogramStyleValue.o \
+		../obj/moc_CQGnuPlotForceDirectedStyleValue.o \
+		../obj/moc_CQGnuPlotHierBubbleStyleValue.o \
+		../obj/moc_CQGnuPlotPieChartStyleValue.o \
+		../obj/moc_CQGnuPlotSunburstStyleValue.o \
+		../obj/moc_CQGnuPlotTreeMapStyleValue.o \
 		../obj/moc_CQHeaderView.o \
 		../obj/moc_CQToolTip.o \
 		../obj/moc_CQFloatLabel.o \
@@ -887,7 +911,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d ../obj/CQGnuPlot1.0.0 || mkdir -p ../obj/CQGnuPlot1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotArrowObject.h CQGnuPlotAxis.h CQGnuPlotBoxBarObject.h CQGnuPlotBoxObject.h CQGnuPlotBoxPlot.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEndBar.h CQGnuPlotEnum.h CQGnuPlotErrorBarObject.h CQGnuPlotFill.h CQGnuPlotFinanceBarObject.h CQGnuPlotGroup.h CQGnuPlotImageObject.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLabelObject.h CQGnuPlotLineStyle.h CQGnuPlotMark.h CQGnuPlotMultiplot.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPathObject.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPm3D.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPointObject.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotStroke.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotFilename.h CQGnuPlotUtil.h CQGnuPlotWindow.h CQGnuPlotLoadFileDialog.h CQGnuPlotLoadFunctionDialog.h CQGnuPlotManageFunctionsDialog.h CQGnuPlotManageVariablesDialog.h CQGnuPlotCreateDialog.h CQGnuPlotDataDialog.h CQGnuPlotSaveDialog.h CQGnuPlotPaletteDialog.h CQGnuPlotTreeWidget.h CQGnuPlotDataTree.h CQGnuPlotDataModel.h CQGnuPlotPositionEdit.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowData.h CGnuPlotArrowObject.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBoxBarObject.h CGnuPlotBoxObject.h CGnuPlotBoxPlot.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotEndBar.h CGnuPlotErrorBarObject.h CGnuPlotErrorBarData.h CGnuPlotFile.h CGnuPlotFill.h CGnuPlotFillStyle.h CGnuPlotFinanceBarObject.h CGnuPlotFunctions.h CGnuPlotGroup.h CGnuPlotImageObject.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLabelData.h CGnuPlotLabelObject.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotLogDevice.h CGnuPlotLogRenderer.h CGnuPlotMark.h CGnuPlotMultiplot.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPathObject.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPm3D.h CGnuPlotPoint.h CGnuPlotPointObject.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotPSDevice.h CGnuPlotPSRenderer.h CGnuPlotSize.h CGnuPlotStroke.h CGnuPlotSurface.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotEveryData.h CGnuPlotIndexData.h CGnuPlotWhereData.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyleForceDirected.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CGnuPlotText.h CGnuPlotTextRenderer.h CQStyle.h CQHeaderView.h CQToolTip.h CQFloatLabel.h CQRotatedText.h CQIntegerSpin.h CQCursor.h CQRubberBand.h CQDialog.h CQEnumCombo.h CGradientPalette.h CQGradientPalette.h CQGradientPaletteControl.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CPrint.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlotTest.cpp CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotArrowObject.cpp CQGnuPlotAxis.cpp CQGnuPlotBoxBarObject.cpp CQGnuPlotBoxObject.cpp CQGnuPlotBoxPlot.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotEndBar.cpp CQGnuPlotEnum.cpp CQGnuPlotErrorBarObject.cpp CQGnuPlotFill.cpp CQGnuPlotFinanceBarObject.cpp CQGnuPlotGroup.cpp CQGnuPlotImageObject.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLabelObject.cpp CQGnuPlotLineStyle.cpp CQGnuPlotMark.cpp CQGnuPlotMultiplot.cpp CQGnuPlotPalette.cpp CQGnuPlotPathObject.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPm3D.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPointObject.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotStroke.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotFilename.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CQGnuPlotLoadFileDialog.cpp CQGnuPlotLoadFunctionDialog.cpp CQGnuPlotManageFunctionsDialog.cpp CQGnuPlotManageVariablesDialog.cpp CQGnuPlotCreateDialog.cpp CQGnuPlotDataDialog.cpp CQGnuPlotSaveDialog.cpp CQGnuPlotPaletteDialog.cpp CQGnuPlotTreeWidget.cpp CQGnuPlotDataTree.cpp CQGnuPlotDataModel.cpp CQGnuPlotPositionEdit.cpp CGnuPlot.cpp CGnuPlotAnnotation.cpp CGnuPlotArrow.cpp CGnuPlotArrowData.cpp CGnuPlotArrowObject.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBoxBarObject.cpp CGnuPlotBoxObject.cpp CGnuPlotBoxPlot.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotEndBar.cpp CGnuPlotErrorBarObject.cpp CGnuPlotErrorBarData.cpp CGnuPlotFile.cpp CGnuPlotFill.cpp CGnuPlotFillStyle.cpp CGnuPlotFinanceBarObject.cpp CGnuPlotFunctions.cpp CGnuPlotGroup.cpp CGnuPlotImageObject.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLabelData.cpp CGnuPlotLabelObject.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotLogDevice.cpp CGnuPlotLogRenderer.cpp CGnuPlotMargin.cpp CGnuPlotMark.cpp CGnuPlotMultiplot.cpp CGnuPlotObject.cpp CGnuPlotPalette.cpp CGnuPlotPathObject.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPm3D.cpp CGnuPlotPoint.cpp CGnuPlotPointObject.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStroke.cpp CGnuPlotStyle.cpp CGnuPlotSurface.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotEveryData.cpp CGnuPlotIndexData.cpp CGnuPlotWhereData.cpp CGnuPlotStyleBase.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBivariate.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDendrogram.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleForceDirected.cpp CGnuPlotStyleHierBubblePlot.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleStackedArea.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotPSDevice.cpp CGnuPlotPSRenderer.cpp CGnuPlotSize.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlotText.cpp CGnuPlotTextRenderer.cpp CQStyle.cpp CQHeaderView.cpp CQToolTip.cpp CQFloatLabel.cpp CQRotatedText.cpp CQIntegerSpin.cpp CQCursor.cpp CQRubberBand.cpp CQDialog.cpp CQEnumCombo.cpp CGradientPalette.cpp CQGradientPalette.cpp CQGradientPaletteControl.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CDendrogram.cpp CPrint.cpp CMathGeom2D.cpp CInvNorm.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCompile.cpp Expr/CExprCValue.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprInterp.cpp Expr/CExprIValue.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprStrgen.cpp Expr/CExprSValue.cpp Expr/CExprToken.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotArrowObject.h CQGnuPlotAxis.h CQGnuPlotBoxBarObject.h CQGnuPlotBoxObject.h CQGnuPlotBoxPlot.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEndBar.h CQGnuPlotEnum.h CQGnuPlotErrorBarObject.h CQGnuPlotFill.h CQGnuPlotFinanceBarObject.h CQGnuPlotGroup.h CQGnuPlotImageObject.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLabelObject.h CQGnuPlotLineStyle.h CQGnuPlotMark.h CQGnuPlotMultiplot.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPathObject.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPm3D.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPointObject.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotStroke.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotFilename.h CQGnuPlotUtil.h CQGnuPlotWindow.h CQGnuPlotLoadFileDialog.h CQGnuPlotLoadFunctionDialog.h CQGnuPlotManageFunctionsDialog.h CQGnuPlotManageVariablesDialog.h CQGnuPlotCreateDialog.h CQGnuPlotDataDialog.h CQGnuPlotSaveDialog.h CQGnuPlotPaletteDialog.h CQGnuPlotTreeView.h CQGnuPlotTreeWidget.h CQGnuPlotDataTree.h CQGnuPlotDataModel.h CQGnuPlotPositionEdit.h CQGnuPlotAdjacencyStyleValue.h CQGnuPlotChordDiagramStyleValue.h CQGnuPlotDelaunayStyleValue.h CQGnuPlotDendrogramStyleValue.h CQGnuPlotForceDirectedStyleValue.h CQGnuPlotHierBubbleStyleValue.h CQGnuPlotPieChartStyleValue.h CQGnuPlotSunburstStyleValue.h CQGnuPlotTreeMapStyleValue.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowData.h CGnuPlotArrowObject.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBoxBarObject.h CGnuPlotBoxObject.h CGnuPlotBoxPlot.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotEndBar.h CGnuPlotErrorBarObject.h CGnuPlotErrorBarData.h CGnuPlotFile.h CGnuPlotFill.h CGnuPlotFillStyle.h CGnuPlotFinanceBarObject.h CGnuPlotFunctions.h CGnuPlotGroup.h CGnuPlotImageObject.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLabelData.h CGnuPlotLabelObject.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotLogDevice.h CGnuPlotLogRenderer.h CGnuPlotMark.h CGnuPlotMultiplot.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPathObject.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPm3D.h CGnuPlotPoint.h CGnuPlotPointObject.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotPSDevice.h CGnuPlotPSRenderer.h CGnuPlotSize.h CGnuPlotStroke.h CGnuPlotSurface.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotEveryData.h CGnuPlotIndexData.h CGnuPlotWhereData.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyleForceDirected.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CGnuPlotText.h CGnuPlotTextRenderer.h CQStyle.h CQHeaderView.h CQToolTip.h CQFloatLabel.h CQRotatedText.h CQIntegerSpin.h CQCursor.h CQRubberBand.h CQDialog.h CQEnumCombo.h CGradientPalette.h CQGradientPalette.h CQGradientPaletteControl.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CPrint.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h ../obj/CQGnuPlot1.0.0/ && $(COPY_FILE) --parents CQGnuPlotTest.cpp CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotArrowObject.cpp CQGnuPlotAxis.cpp CQGnuPlotBoxBarObject.cpp CQGnuPlotBoxObject.cpp CQGnuPlotBoxPlot.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotEndBar.cpp CQGnuPlotEnum.cpp CQGnuPlotErrorBarObject.cpp CQGnuPlotFill.cpp CQGnuPlotFinanceBarObject.cpp CQGnuPlotGroup.cpp CQGnuPlotImageObject.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLabelObject.cpp CQGnuPlotLineStyle.cpp CQGnuPlotMark.cpp CQGnuPlotMultiplot.cpp CQGnuPlotPalette.cpp CQGnuPlotPathObject.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPm3D.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPointObject.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotStroke.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotFilename.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CQGnuPlotLoadFileDialog.cpp CQGnuPlotLoadFunctionDialog.cpp CQGnuPlotManageFunctionsDialog.cpp CQGnuPlotManageVariablesDialog.cpp CQGnuPlotCreateDialog.cpp CQGnuPlotDataDialog.cpp CQGnuPlotSaveDialog.cpp CQGnuPlotPaletteDialog.cpp CQGnuPlotTreeView.cpp CQGnuPlotTreeWidget.cpp CQGnuPlotDataTree.cpp CQGnuPlotDataModel.cpp CQGnuPlotPositionEdit.cpp CGnuPlot.cpp CGnuPlotAnnotation.cpp CGnuPlotArrow.cpp CGnuPlotArrowData.cpp CGnuPlotArrowObject.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBoxBarObject.cpp CGnuPlotBoxObject.cpp CGnuPlotBoxPlot.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotEndBar.cpp CGnuPlotErrorBarObject.cpp CGnuPlotErrorBarData.cpp CGnuPlotFile.cpp CGnuPlotFill.cpp CGnuPlotFillStyle.cpp CGnuPlotFinanceBarObject.cpp CGnuPlotFunctions.cpp CGnuPlotGroup.cpp CGnuPlotImageObject.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLabelData.cpp CGnuPlotLabelObject.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotLogDevice.cpp CGnuPlotLogRenderer.cpp CGnuPlotMargin.cpp CGnuPlotMark.cpp CGnuPlotMultiplot.cpp CGnuPlotObject.cpp CGnuPlotPalette.cpp CGnuPlotPathObject.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPm3D.cpp CGnuPlotPoint.cpp CGnuPlotPointObject.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStroke.cpp CGnuPlotStyle.cpp CGnuPlotSurface.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotEveryData.cpp CGnuPlotIndexData.cpp CGnuPlotWhereData.cpp CGnuPlotStyleBase.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBivariate.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDendrogram.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleForceDirected.cpp CGnuPlotStyleHierBubblePlot.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleStackedArea.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotPSDevice.cpp CGnuPlotPSRenderer.cpp CGnuPlotSize.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlotText.cpp CGnuPlotTextRenderer.cpp CQStyle.cpp CQHeaderView.cpp CQToolTip.cpp CQFloatLabel.cpp CQRotatedText.cpp CQIntegerSpin.cpp CQCursor.cpp CQRubberBand.cpp CQDialog.cpp CQEnumCombo.cpp CGradientPalette.cpp CQGradientPalette.cpp CQGradientPaletteControl.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CDendrogram.cpp CPrint.cpp CMathGeom2D.cpp CInvNorm.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprIValue.cpp Expr/CExprInterp.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprSValue.cpp Expr/CExprStrgen.cpp Expr/CExprToken.cpp Expr/CExprTokenStack.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp ../obj/CQGnuPlot1.0.0/ && (cd `dirname ../obj/CQGnuPlot1.0.0` && $(TAR) CQGnuPlot1.0.0.tar CQGnuPlot1.0.0 && $(COMPRESS) CQGnuPlot1.0.0.tar) && $(MOVE) `dirname ../obj/CQGnuPlot1.0.0`/CQGnuPlot1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQGnuPlot1.0.0
 
 
 clean:compiler_clean 
@@ -910,12 +934,13 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: .moc/moc_CQGnuPlot.cpp .moc/moc_CQGnuPlotAnnotation.cpp .moc/moc_CQGnuPlotArrow.cpp .moc/moc_CQGnuPlotArrowObject.cpp .moc/moc_CQGnuPlotAxis.cpp .moc/moc_CQGnuPlotBoxBarObject.cpp .moc/moc_CQGnuPlotBoxObject.cpp .moc/moc_CQGnuPlotBoxPlot.cpp .moc/moc_CQGnuPlotBubbleObject.cpp .moc/moc_CQGnuPlotCamera.cpp .moc/moc_CQGnuPlotCanvas.cpp .moc/moc_CQGnuPlotCircle.cpp .moc/moc_CQGnuPlotColorBox.cpp .moc/moc_CQGnuPlotDevice.cpp .moc/moc_CQGnuPlotEllipse.cpp .moc/moc_CQGnuPlotEllipseObject.cpp .moc/moc_CQGnuPlotEndBar.cpp .moc/moc_CQGnuPlotEnum.cpp .moc/moc_CQGnuPlotErrorBarObject.cpp .moc/moc_CQGnuPlotFill.cpp .moc/moc_CQGnuPlotFinanceBarObject.cpp .moc/moc_CQGnuPlotGroup.cpp .moc/moc_CQGnuPlotImageObject.cpp .moc/moc_CQGnuPlotKey.cpp .moc/moc_CQGnuPlotLabel.cpp .moc/moc_CQGnuPlotLabelObject.cpp .moc/moc_CQGnuPlotLineStyle.cpp .moc/moc_CQGnuPlotMark.cpp .moc/moc_CQGnuPlotMultiplot.cpp .moc/moc_CQGnuPlotObject.cpp .moc/moc_CQGnuPlotPalette.cpp .moc/moc_CQGnuPlotPathObject.cpp .moc/moc_CQGnuPlotPieObject.cpp .moc/moc_CQGnuPlotPlot.cpp .moc/moc_CQGnuPlotPm3D.cpp .moc/moc_CQGnuPlotPointObject.cpp .moc/moc_CQGnuPlotPolygon.cpp .moc/moc_CQGnuPlotPolygonObject.cpp .moc/moc_CQGnuPlotRectangle.cpp .moc/moc_CQGnuPlotRectObject.cpp .moc/moc_CQGnuPlotStroke.cpp .moc/moc_CQGnuPlotTimeStamp.cpp .moc/moc_CQGnuPlotTitle.cpp .moc/moc_CQGnuPlotToolBar.cpp .moc/moc_CQGnuPlotFilename.cpp .moc/moc_CQGnuPlotWindow.cpp .moc/moc_CQGnuPlotLoadFileDialog.cpp .moc/moc_CQGnuPlotLoadFunctionDialog.cpp .moc/moc_CQGnuPlotManageFunctionsDialog.cpp .moc/moc_CQGnuPlotManageVariablesDialog.cpp .moc/moc_CQGnuPlotCreateDialog.cpp .moc/moc_CQGnuPlotDataDialog.cpp .moc/moc_CQGnuPlotSaveDialog.cpp .moc/moc_CQGnuPlotPaletteDialog.cpp .moc/moc_CQGnuPlotTreeWidget.cpp .moc/moc_CQGnuPlotDataTree.cpp .moc/moc_CQGnuPlotDataModel.cpp .moc/moc_CQGnuPlotPositionEdit.cpp .moc/moc_CQHeaderView.cpp .moc/moc_CQToolTip.cpp .moc/moc_CQFloatLabel.cpp .moc/moc_CQIntegerSpin.cpp .moc/moc_CQRubberBand.cpp .moc/moc_CQDialog.cpp .moc/moc_CQEnumCombo.cpp .moc/moc_CQGradientPalette.cpp .moc/moc_CQGradientPaletteControl.cpp
+compiler_moc_header_make_all: .moc/moc_CQGnuPlot.cpp .moc/moc_CQGnuPlotAnnotation.cpp .moc/moc_CQGnuPlotArrow.cpp .moc/moc_CQGnuPlotArrowObject.cpp .moc/moc_CQGnuPlotAxis.cpp .moc/moc_CQGnuPlotBoxBarObject.cpp .moc/moc_CQGnuPlotBoxObject.cpp .moc/moc_CQGnuPlotBoxPlot.cpp .moc/moc_CQGnuPlotBubbleObject.cpp .moc/moc_CQGnuPlotCamera.cpp .moc/moc_CQGnuPlotCanvas.cpp .moc/moc_CQGnuPlotCircle.cpp .moc/moc_CQGnuPlotColorBox.cpp .moc/moc_CQGnuPlotDevice.cpp .moc/moc_CQGnuPlotEllipse.cpp .moc/moc_CQGnuPlotEllipseObject.cpp .moc/moc_CQGnuPlotEndBar.cpp .moc/moc_CQGnuPlotEnum.cpp .moc/moc_CQGnuPlotErrorBarObject.cpp .moc/moc_CQGnuPlotFill.cpp .moc/moc_CQGnuPlotFinanceBarObject.cpp .moc/moc_CQGnuPlotGroup.cpp .moc/moc_CQGnuPlotImageObject.cpp .moc/moc_CQGnuPlotKey.cpp .moc/moc_CQGnuPlotLabel.cpp .moc/moc_CQGnuPlotLabelObject.cpp .moc/moc_CQGnuPlotLineStyle.cpp .moc/moc_CQGnuPlotMark.cpp .moc/moc_CQGnuPlotMultiplot.cpp .moc/moc_CQGnuPlotObject.cpp .moc/moc_CQGnuPlotPalette.cpp .moc/moc_CQGnuPlotPathObject.cpp .moc/moc_CQGnuPlotPieObject.cpp .moc/moc_CQGnuPlotPlot.cpp .moc/moc_CQGnuPlotPm3D.cpp .moc/moc_CQGnuPlotPointObject.cpp .moc/moc_CQGnuPlotPolygon.cpp .moc/moc_CQGnuPlotPolygonObject.cpp .moc/moc_CQGnuPlotRectangle.cpp .moc/moc_CQGnuPlotRectObject.cpp .moc/moc_CQGnuPlotStroke.cpp .moc/moc_CQGnuPlotTimeStamp.cpp .moc/moc_CQGnuPlotTitle.cpp .moc/moc_CQGnuPlotToolBar.cpp .moc/moc_CQGnuPlotFilename.cpp .moc/moc_CQGnuPlotWindow.cpp .moc/moc_CQGnuPlotLoadFileDialog.cpp .moc/moc_CQGnuPlotLoadFunctionDialog.cpp .moc/moc_CQGnuPlotManageFunctionsDialog.cpp .moc/moc_CQGnuPlotManageVariablesDialog.cpp .moc/moc_CQGnuPlotCreateDialog.cpp .moc/moc_CQGnuPlotDataDialog.cpp .moc/moc_CQGnuPlotSaveDialog.cpp .moc/moc_CQGnuPlotPaletteDialog.cpp .moc/moc_CQGnuPlotTreeView.cpp .moc/moc_CQGnuPlotTreeWidget.cpp .moc/moc_CQGnuPlotDataTree.cpp .moc/moc_CQGnuPlotDataModel.cpp .moc/moc_CQGnuPlotPositionEdit.cpp .moc/moc_CQGnuPlotAdjacencyStyleValue.cpp .moc/moc_CQGnuPlotChordDiagramStyleValue.cpp .moc/moc_CQGnuPlotDelaunayStyleValue.cpp .moc/moc_CQGnuPlotDendrogramStyleValue.cpp .moc/moc_CQGnuPlotForceDirectedStyleValue.cpp .moc/moc_CQGnuPlotHierBubbleStyleValue.cpp .moc/moc_CQGnuPlotPieChartStyleValue.cpp .moc/moc_CQGnuPlotSunburstStyleValue.cpp .moc/moc_CQGnuPlotTreeMapStyleValue.cpp .moc/moc_CQHeaderView.cpp .moc/moc_CQToolTip.cpp .moc/moc_CQFloatLabel.cpp .moc/moc_CQIntegerSpin.cpp .moc/moc_CQRubberBand.cpp .moc/moc_CQDialog.cpp .moc/moc_CQEnumCombo.cpp .moc/moc_CQGradientPalette.cpp .moc/moc_CQGradientPaletteControl.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) .moc/moc_CQGnuPlot.cpp .moc/moc_CQGnuPlotAnnotation.cpp .moc/moc_CQGnuPlotArrow.cpp .moc/moc_CQGnuPlotArrowObject.cpp .moc/moc_CQGnuPlotAxis.cpp .moc/moc_CQGnuPlotBoxBarObject.cpp .moc/moc_CQGnuPlotBoxObject.cpp .moc/moc_CQGnuPlotBoxPlot.cpp .moc/moc_CQGnuPlotBubbleObject.cpp .moc/moc_CQGnuPlotCamera.cpp .moc/moc_CQGnuPlotCanvas.cpp .moc/moc_CQGnuPlotCircle.cpp .moc/moc_CQGnuPlotColorBox.cpp .moc/moc_CQGnuPlotDevice.cpp .moc/moc_CQGnuPlotEllipse.cpp .moc/moc_CQGnuPlotEllipseObject.cpp .moc/moc_CQGnuPlotEndBar.cpp .moc/moc_CQGnuPlotEnum.cpp .moc/moc_CQGnuPlotErrorBarObject.cpp .moc/moc_CQGnuPlotFill.cpp .moc/moc_CQGnuPlotFinanceBarObject.cpp .moc/moc_CQGnuPlotGroup.cpp .moc/moc_CQGnuPlotImageObject.cpp .moc/moc_CQGnuPlotKey.cpp .moc/moc_CQGnuPlotLabel.cpp .moc/moc_CQGnuPlotLabelObject.cpp .moc/moc_CQGnuPlotLineStyle.cpp .moc/moc_CQGnuPlotMark.cpp .moc/moc_CQGnuPlotMultiplot.cpp .moc/moc_CQGnuPlotObject.cpp .moc/moc_CQGnuPlotPalette.cpp .moc/moc_CQGnuPlotPathObject.cpp .moc/moc_CQGnuPlotPieObject.cpp .moc/moc_CQGnuPlotPlot.cpp .moc/moc_CQGnuPlotPm3D.cpp .moc/moc_CQGnuPlotPointObject.cpp .moc/moc_CQGnuPlotPolygon.cpp .moc/moc_CQGnuPlotPolygonObject.cpp .moc/moc_CQGnuPlotRectangle.cpp .moc/moc_CQGnuPlotRectObject.cpp .moc/moc_CQGnuPlotStroke.cpp .moc/moc_CQGnuPlotTimeStamp.cpp .moc/moc_CQGnuPlotTitle.cpp .moc/moc_CQGnuPlotToolBar.cpp .moc/moc_CQGnuPlotFilename.cpp .moc/moc_CQGnuPlotWindow.cpp .moc/moc_CQGnuPlotLoadFileDialog.cpp .moc/moc_CQGnuPlotLoadFunctionDialog.cpp .moc/moc_CQGnuPlotManageFunctionsDialog.cpp .moc/moc_CQGnuPlotManageVariablesDialog.cpp .moc/moc_CQGnuPlotCreateDialog.cpp .moc/moc_CQGnuPlotDataDialog.cpp .moc/moc_CQGnuPlotSaveDialog.cpp .moc/moc_CQGnuPlotPaletteDialog.cpp .moc/moc_CQGnuPlotTreeWidget.cpp .moc/moc_CQGnuPlotDataTree.cpp .moc/moc_CQGnuPlotDataModel.cpp .moc/moc_CQGnuPlotPositionEdit.cpp .moc/moc_CQHeaderView.cpp .moc/moc_CQToolTip.cpp .moc/moc_CQFloatLabel.cpp .moc/moc_CQIntegerSpin.cpp .moc/moc_CQRubberBand.cpp .moc/moc_CQDialog.cpp .moc/moc_CQEnumCombo.cpp
-	-$(DEL_FILE) .moc/moc_CQGradientPalette.cpp .moc/moc_CQGradientPaletteControl.cpp
+	-$(DEL_FILE) .moc/moc_CQGnuPlot.cpp .moc/moc_CQGnuPlotAnnotation.cpp .moc/moc_CQGnuPlotArrow.cpp .moc/moc_CQGnuPlotArrowObject.cpp .moc/moc_CQGnuPlotAxis.cpp .moc/moc_CQGnuPlotBoxBarObject.cpp .moc/moc_CQGnuPlotBoxObject.cpp .moc/moc_CQGnuPlotBoxPlot.cpp .moc/moc_CQGnuPlotBubbleObject.cpp .moc/moc_CQGnuPlotCamera.cpp .moc/moc_CQGnuPlotCanvas.cpp .moc/moc_CQGnuPlotCircle.cpp .moc/moc_CQGnuPlotColorBox.cpp .moc/moc_CQGnuPlotDevice.cpp .moc/moc_CQGnuPlotEllipse.cpp .moc/moc_CQGnuPlotEllipseObject.cpp .moc/moc_CQGnuPlotEndBar.cpp .moc/moc_CQGnuPlotEnum.cpp .moc/moc_CQGnuPlotErrorBarObject.cpp .moc/moc_CQGnuPlotFill.cpp .moc/moc_CQGnuPlotFinanceBarObject.cpp .moc/moc_CQGnuPlotGroup.cpp .moc/moc_CQGnuPlotImageObject.cpp .moc/moc_CQGnuPlotKey.cpp .moc/moc_CQGnuPlotLabel.cpp .moc/moc_CQGnuPlotLabelObject.cpp .moc/moc_CQGnuPlotLineStyle.cpp .moc/moc_CQGnuPlotMark.cpp .moc/moc_CQGnuPlotMultiplot.cpp .moc/moc_CQGnuPlotObject.cpp .moc/moc_CQGnuPlotPalette.cpp .moc/moc_CQGnuPlotPathObject.cpp .moc/moc_CQGnuPlotPieObject.cpp .moc/moc_CQGnuPlotPlot.cpp .moc/moc_CQGnuPlotPm3D.cpp .moc/moc_CQGnuPlotPointObject.cpp .moc/moc_CQGnuPlotPolygon.cpp .moc/moc_CQGnuPlotPolygonObject.cpp .moc/moc_CQGnuPlotRectangle.cpp .moc/moc_CQGnuPlotRectObject.cpp .moc/moc_CQGnuPlotStroke.cpp .moc/moc_CQGnuPlotTimeStamp.cpp .moc/moc_CQGnuPlotTitle.cpp .moc/moc_CQGnuPlotToolBar.cpp .moc/moc_CQGnuPlotFilename.cpp .moc/moc_CQGnuPlotWindow.cpp .moc/moc_CQGnuPlotLoadFileDialog.cpp .moc/moc_CQGnuPlotLoadFunctionDialog.cpp .moc/moc_CQGnuPlotManageFunctionsDialog.cpp .moc/moc_CQGnuPlotManageVariablesDialog.cpp .moc/moc_CQGnuPlotCreateDialog.cpp .moc/moc_CQGnuPlotDataDialog.cpp .moc/moc_CQGnuPlotSaveDialog.cpp .moc/moc_CQGnuPlotPaletteDialog.cpp .moc/moc_CQGnuPlotTreeView.cpp .moc/moc_CQGnuPlotTreeWidget.cpp .moc/moc_CQGnuPlotDataTree.cpp .moc/moc_CQGnuPlotDataModel.cpp .moc/moc_CQGnuPlotPositionEdit.cpp .moc/moc_CQGnuPlotAdjacencyStyleValue.cpp .moc/moc_CQGnuPlotChordDiagramStyleValue.cpp .moc/moc_CQGnuPlotDelaunayStyleValue.cpp
+	-$(DEL_FILE) .moc/moc_CQGnuPlotDendrogramStyleValue.cpp .moc/moc_CQGnuPlotForceDirectedStyleValue.cpp .moc/moc_CQGnuPlotHierBubbleStyleValue.cpp .moc/moc_CQGnuPlotPieChartStyleValue.cpp .moc/moc_CQGnuPlotSunburstStyleValue.cpp .moc/moc_CQGnuPlotTreeMapStyleValue.cpp .moc/moc_CQHeaderView.cpp .moc/moc_CQToolTip.cpp .moc/moc_CQFloatLabel.cpp .moc/moc_CQIntegerSpin.cpp .moc/moc_CQRubberBand.cpp .moc/moc_CQDialog.cpp .moc/moc_CQEnumCombo.cpp .moc/moc_CQGradientPalette.cpp .moc/moc_CQGradientPaletteControl.cpp
 .moc/moc_CQGnuPlot.cpp: CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -927,6 +952,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -1060,7 +1086,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -1160,6 +1187,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -1171,6 +1199,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -1274,7 +1303,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -1384,6 +1414,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -1395,6 +1426,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -1498,7 +1530,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -1610,6 +1643,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -1621,6 +1655,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -1724,7 +1759,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -1861,6 +1897,7 @@ compiler_moc_header_clean:
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -1872,6 +1909,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -2005,7 +2043,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -2068,6 +2107,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -2079,6 +2119,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -2183,7 +2224,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -2284,6 +2326,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -2295,6 +2338,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -2400,7 +2444,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -2556,6 +2601,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -2567,6 +2613,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -2640,6 +2687,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -2651,6 +2699,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -2754,7 +2803,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -3055,6 +3105,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -3066,6 +3117,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -3169,7 +3221,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -3339,6 +3392,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -3350,6 +3404,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -3451,7 +3506,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -3509,6 +3565,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -3519,6 +3576,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -3643,6 +3701,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -3654,6 +3713,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -3757,7 +3817,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -3869,6 +3930,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -3880,6 +3942,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -3983,7 +4046,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -4084,6 +4148,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -4095,6 +4160,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -4199,7 +4265,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -4296,6 +4363,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -4307,6 +4375,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -4436,6 +4505,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -4447,6 +4517,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -4552,7 +4623,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -4652,6 +4724,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -4662,6 +4735,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -4800,6 +4874,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -4811,6 +4886,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -4916,7 +4992,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -4986,6 +5063,7 @@ compiler_moc_header_clean:
 .moc/moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -4997,6 +5075,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -5130,7 +5209,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -5254,6 +5334,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -5263,6 +5344,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -5366,7 +5448,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -5525,6 +5608,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -5536,6 +5620,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -5640,7 +5725,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -5693,6 +5779,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -5704,6 +5791,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -5807,7 +5895,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -5926,6 +6015,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -5937,6 +6027,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -6040,7 +6131,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -6194,6 +6286,7 @@ compiler_moc_header_clean:
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -6205,6 +6298,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -6338,7 +6432,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -6438,6 +6533,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -6448,6 +6544,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -6691,6 +6788,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -6702,6 +6800,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -6835,7 +6934,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -6879,6 +6979,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -6890,6 +6991,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -6993,7 +7095,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -7095,6 +7198,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -7106,6 +7210,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -7209,7 +7314,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -7307,6 +7413,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -7318,6 +7425,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -7481,7 +7589,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -7497,6 +7606,8 @@ compiler_moc_header_clean:
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -7603,6 +7714,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -7614,6 +7726,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -7666,6 +7779,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -7677,6 +7791,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -7780,7 +7895,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -7890,6 +8006,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -7901,6 +8018,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -8004,7 +8122,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -8114,6 +8233,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -8125,6 +8245,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -8228,7 +8349,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -8329,6 +8451,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -8340,6 +8463,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -8443,7 +8567,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -8555,6 +8680,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -8566,6 +8692,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -8669,7 +8796,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -8828,6 +8956,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -8838,6 +8967,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -8979,6 +9109,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -8989,6 +9120,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -9096,6 +9228,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -9107,6 +9240,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -9210,7 +9344,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -9464,6 +9599,7 @@ compiler_moc_header_clean:
 .moc/moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -9475,6 +9611,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -9608,7 +9745,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -9877,6 +10015,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -9888,6 +10027,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -10070,6 +10210,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -10081,6 +10222,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -10367,6 +10509,7 @@ compiler_moc_header_clean:
 		/usr/include/qt5/QtCore/qitemselectionmodel.h \
 		/usr/include/qt5/QtWidgets/qtreewidgetitemiterator.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -10378,6 +10521,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -10534,6 +10678,7 @@ compiler_moc_header_clean:
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -10545,6 +10690,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -10595,6 +10741,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/COptVal.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -10606,6 +10753,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -10730,7 +10878,8 @@ compiler_moc_header_clean:
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		/usr/include/qt5/QtWidgets/QFrame \
 		/usr/include/qt5/QtWidgets/qframe.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -11069,6 +11218,135 @@ compiler_moc_header_clean:
 		CQGnuPlotPaletteDialog.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPaletteDialog.h -o .moc/moc_CQGnuPlotPaletteDialog.cpp
 
+.moc/moc_CQGnuPlotTreeView.cpp: /usr/include/qt5/QtWidgets/QTreeView \
+		/usr/include/qt5/QtWidgets/qtreeview.h \
+		/usr/include/qt5/QtWidgets/qabstractitemview.h \
+		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h \
+		/usr/include/qt5/QtCore/qitemselectionmodel.h \
+		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
+		/usr/include/qt5/QtWidgets/qstyleoption.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qstyle.h \
+		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
+		/usr/include/qt5/QtWidgets/qrubberband.h \
+		CQGnuPlotTreeView.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTreeView.h -o .moc/moc_CQGnuPlotTreeView.cpp
+
 .moc/moc_CQGnuPlotTreeWidget.cpp: /usr/include/qt5/QtWidgets/QTreeWidget \
 		/usr/include/qt5/QtWidgets/qtreewidget.h \
 		/usr/include/qt5/QtWidgets/qtreeview.h \
@@ -11200,7 +11478,8 @@ compiler_moc_header_clean:
 		CQGnuPlotTreeWidget.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTreeWidget.h -o .moc/moc_CQGnuPlotTreeWidget.cpp
 
-.moc/moc_CQGnuPlotDataTree.cpp: /usr/include/qt5/QtWidgets/QTreeView \
+.moc/moc_CQGnuPlotDataTree.cpp: CQGnuPlotTreeView.h \
+		/usr/include/qt5/QtWidgets/QTreeView \
 		/usr/include/qt5/QtWidgets/qtreeview.h \
 		/usr/include/qt5/QtWidgets/qabstractitemview.h \
 		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
@@ -11574,6 +11853,2267 @@ compiler_moc_header_clean:
 		/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		CQGnuPlotPositionEdit.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPositionEdit.h -o .moc/moc_CQGnuPlotPositionEdit.cpp
+
+.moc/moc_CQGnuPlotAdjacencyStyleValue.cpp: CGnuPlotAdjacencyStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CGnuPlotStyleAdjacencyRenderer.h \
+		CAdjacency.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CUtil/include/CAlignType.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		CGnuPlotRenderer.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprOperatorMgr.h \
+		Expr/CExprVariableMgr.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/COptVal.h \
+		../../CUtil/include/CColor.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotTypes.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		CGnuPlotPalette.h \
+		CGradientPalette.h \
+		CGnuPlotDash.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotMouseEvent.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowData.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotLabelData.h \
+		CGnuPlotText.h \
+		CGnuPlotLabelStyle.h \
+		CGnuPlotFill.h \
+		CGnuPlotStroke.h \
+		../../CUtil/include/CLineCapType.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
+		CGnuPlotCamera.h \
+		CGnuPlotXYPlane.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotKeyEvent.h \
+		../../CUtil/include/CKeyType.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotLineProp.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CGnuPlotKeyTitle.h \
+		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotTextRenderer.h \
+		CGnuPlotMark.h \
+		../../CImageLib/include/CImagePtr.h \
+		../../CMath/include/CMatrix2D.h \
+		CQGnuPlotPlot.h \
+		CQGnuPlotEnum.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CQGnuPlot.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		../../CMath/include/CLine3D.h \
+		CGnuPlotSurface.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotKey.h \
+		CDirectionType.h \
+		CGnuPlotRotate.h \
+		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
+		CQGnuPlotObject.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		CQGnuPlotAdjacencyStyleValue.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotAdjacencyStyleValue.h -o .moc/moc_CQGnuPlotAdjacencyStyleValue.cpp
+
+.moc/moc_CQGnuPlotChordDiagramStyleValue.cpp: CGnuPlotChordDiagramStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CGnuPlotStyleChordDiagramRenderer.h \
+		CGnuPlotStyleChordDiagram.h \
+		CGnuPlotStyleBase.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/COptVal.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CAlignType.h \
+		CGnuPlotMouseEvent.h \
+		CGnuPlotProbeEvent.h \
+		CGnuPlotRenderer.h \
+		CGnuPlot.h \
+		Expr/CExpr.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprOperatorMgr.h \
+		Expr/CExprVariableMgr.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		../../CUtil/include/CColor.h \
+		../../CMath/include/CAngle.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotPalette.h \
+		CGradientPalette.h \
+		CGnuPlotDash.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTipData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotObject.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotArrowData.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotLabelData.h \
+		CGnuPlotText.h \
+		CGnuPlotLabelStyle.h \
+		CGnuPlotFill.h \
+		CGnuPlotStroke.h \
+		../../CUtil/include/CLineCapType.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
+		CGnuPlotCamera.h \
+		CGnuPlotXYPlane.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotKeyEvent.h \
+		../../CUtil/include/CKeyType.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotLineProp.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CGnuPlotKeyTitle.h \
+		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotTextRenderer.h \
+		CGnuPlotMark.h \
+		../../CImageLib/include/CImagePtr.h \
+		../../CMath/include/CMatrix2D.h \
+		ChordDiagram.h \
+		CQGnuPlotPlot.h \
+		CQGnuPlotEnum.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CQGnuPlot.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		../../CMath/include/CLine3D.h \
+		CGnuPlotSurface.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotKey.h \
+		CDirectionType.h \
+		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
+		CQGnuPlotObject.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		CQGnuPlotChordDiagramStyleValue.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotChordDiagramStyleValue.h -o .moc/moc_CQGnuPlotChordDiagramStyleValue.cpp
+
+.moc/moc_CQGnuPlotDelaunayStyleValue.cpp: CGnuPlotDelaunayStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CDelaunay.h \
+		CHull3D.h \
+		CListLink.h \
+		CStateIterator.h \
+		../../CUtil/include/CGeneric.h \
+		../../CUtil/include/CTypeTraits.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		CQGnuPlotPlot.h \
+		CQGnuPlotEnum.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CAlignType.h \
+		CGnuPlotPalette.h \
+		CGradientPalette.h \
+		Expr/CExpr.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprOperatorMgr.h \
+		Expr/CExprVariableMgr.h \
+		../../CUtil/include/CColor.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotObject.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
+		CGnuPlotMouseEvent.h \
+		CGnuPlotArrowData.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotDash.h \
+		../../CMath/include/CAngle.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		../../CUtil/include/CLineCapType.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotLabelData.h \
+		CGnuPlotText.h \
+		CGnuPlotLabelStyle.h \
+		CGnuPlotFill.h \
+		CGnuPlotStroke.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
+		CGnuPlotCamera.h \
+		CGnuPlotXYPlane.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotKeyEvent.h \
+		../../CUtil/include/CKeyType.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotLineProp.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CGnuPlotKeyTitle.h \
+		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		../../CMath/include/CLine3D.h \
+		CGnuPlotSurface.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotKey.h \
+		CDirectionType.h \
+		CGnuPlotRotate.h \
+		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
+		CQGnuPlotObject.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		CQGnuPlotUtil.h \
+		/usr/include/qt5/QtGui/QIcon \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/QPixmap \
+		CQGnuPlotDelaunayStyleValue.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDelaunayStyleValue.h -o .moc/moc_CQGnuPlotDelaunayStyleValue.cpp
+
+.moc/moc_CQGnuPlotDendrogramStyleValue.cpp: CGnuPlotDendrogramStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CDendrogram.h \
+		CQGnuPlotPlot.h \
+		CQGnuPlotEnum.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/COptVal.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CAlignType.h \
+		CGnuPlotPalette.h \
+		CGradientPalette.h \
+		Expr/CExpr.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprOperatorMgr.h \
+		Expr/CExprVariableMgr.h \
+		../../CUtil/include/CColor.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotObject.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
+		CGnuPlotMouseEvent.h \
+		CGnuPlotArrowData.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotDash.h \
+		../../CMath/include/CAngle.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		../../CUtil/include/CLineCapType.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotLabelData.h \
+		CGnuPlotText.h \
+		CGnuPlotLabelStyle.h \
+		CGnuPlotFill.h \
+		CGnuPlotStroke.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
+		CGnuPlotCamera.h \
+		CGnuPlotXYPlane.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotKeyEvent.h \
+		../../CUtil/include/CKeyType.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotLineProp.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CGnuPlotKeyTitle.h \
+		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		../../CMath/include/CLine3D.h \
+		CGnuPlotSurface.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotKey.h \
+		CDirectionType.h \
+		CGnuPlotRotate.h \
+		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
+		CQGnuPlotObject.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		CQGnuPlotDendrogramStyleValue.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDendrogramStyleValue.h -o .moc/moc_CQGnuPlotDendrogramStyleValue.cpp
+
+.moc/moc_CQGnuPlotForceDirectedStyleValue.cpp: CGnuPlotForceDirectedStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CForceDirected.h \
+		Springy.h \
+		CQGnuPlotPlot.h \
+		CQGnuPlotEnum.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/COptVal.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CAlignType.h \
+		CGnuPlotPalette.h \
+		CGradientPalette.h \
+		Expr/CExpr.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprOperatorMgr.h \
+		Expr/CExprVariableMgr.h \
+		../../CUtil/include/CColor.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotObject.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
+		CGnuPlotMouseEvent.h \
+		CGnuPlotArrowData.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotDash.h \
+		../../CMath/include/CAngle.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		../../CUtil/include/CLineCapType.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotLabelData.h \
+		CGnuPlotText.h \
+		CGnuPlotLabelStyle.h \
+		CGnuPlotFill.h \
+		CGnuPlotStroke.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
+		CGnuPlotCamera.h \
+		CGnuPlotXYPlane.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotKeyEvent.h \
+		../../CUtil/include/CKeyType.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotLineProp.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CGnuPlotKeyTitle.h \
+		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		../../CMath/include/CLine3D.h \
+		CGnuPlotSurface.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotKey.h \
+		CDirectionType.h \
+		CGnuPlotRotate.h \
+		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
+		CQGnuPlotObject.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		CQGnuPlotForceDirectedStyleValue.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotForceDirectedStyleValue.h -o .moc/moc_CQGnuPlotForceDirectedStyleValue.cpp
+
+.moc/moc_CQGnuPlotHierBubbleStyleValue.cpp: CGnuPlotHierBubbleStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CHierBubblePack.h \
+		CirclePack.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		CMathMacros.h \
+		CEnclosingCircle.h \
+		CPointsCircle.h \
+		CQGnuPlotPlot.h \
+		CQGnuPlotEnum.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/COptVal.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CAlignType.h \
+		CGnuPlotPalette.h \
+		CGradientPalette.h \
+		Expr/CExpr.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprOperatorMgr.h \
+		Expr/CExprVariableMgr.h \
+		../../CUtil/include/CColor.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotObject.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
+		CGnuPlotMouseEvent.h \
+		CGnuPlotArrowData.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotDash.h \
+		../../CMath/include/CAngle.h \
+		../../CUtil/include/CLineCapType.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotLabelData.h \
+		CGnuPlotText.h \
+		CGnuPlotLabelStyle.h \
+		CGnuPlotFill.h \
+		CGnuPlotStroke.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
+		CGnuPlotCamera.h \
+		CGnuPlotXYPlane.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotKeyEvent.h \
+		../../CUtil/include/CKeyType.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotLineProp.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CGnuPlotKeyTitle.h \
+		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		../../CMath/include/CLine3D.h \
+		CGnuPlotSurface.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotKey.h \
+		CDirectionType.h \
+		CGnuPlotRotate.h \
+		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
+		CQGnuPlotObject.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		CQGnuPlotHierBubbleStyleValue.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotHierBubbleStyleValue.h -o .moc/moc_CQGnuPlotHierBubbleStyleValue.cpp
+
+.moc/moc_CQGnuPlotPieChartStyleValue.cpp: CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CQGnuPlotPlot.h \
+		CQGnuPlotEnum.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/COptVal.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CAlignType.h \
+		CGnuPlotPalette.h \
+		CGradientPalette.h \
+		Expr/CExpr.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprOperatorMgr.h \
+		Expr/CExprVariableMgr.h \
+		../../CUtil/include/CColor.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotObject.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
+		CGnuPlotMouseEvent.h \
+		CGnuPlotArrowData.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotDash.h \
+		../../CMath/include/CAngle.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		../../CUtil/include/CLineCapType.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotLabelData.h \
+		CGnuPlotText.h \
+		CGnuPlotLabelStyle.h \
+		CGnuPlotFill.h \
+		CGnuPlotStroke.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
+		CGnuPlotCamera.h \
+		CGnuPlotXYPlane.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotKeyEvent.h \
+		../../CUtil/include/CKeyType.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotLineProp.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CGnuPlotKeyTitle.h \
+		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		../../CMath/include/CLine3D.h \
+		CGnuPlotSurface.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotKey.h \
+		CDirectionType.h \
+		CGnuPlotRotate.h \
+		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
+		CQGnuPlotObject.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		CQGnuPlotUtil.h \
+		/usr/include/qt5/QtGui/QIcon \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/QPixmap \
+		CQGnuPlotPieChartStyleValue.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPieChartStyleValue.h -o .moc/moc_CQGnuPlotPieChartStyleValue.cpp
+
+.moc/moc_CQGnuPlotSunburstStyleValue.cpp: CGnuPlotSunburstStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CSunburst.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		../../CFont/include/CFontMgr.h \
+		../../CFont/include/CFont.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CQGnuPlotPlot.h \
+		CQGnuPlotEnum.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CAlignType.h \
+		CGnuPlotPalette.h \
+		CGradientPalette.h \
+		Expr/CExpr.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprOperatorMgr.h \
+		Expr/CExprVariableMgr.h \
+		../../CUtil/include/CColor.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotObject.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
+		CGnuPlotMouseEvent.h \
+		CGnuPlotArrowData.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotDash.h \
+		../../CMath/include/CAngle.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		../../CUtil/include/CLineCapType.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotLabelData.h \
+		CGnuPlotText.h \
+		CGnuPlotLabelStyle.h \
+		CGnuPlotFill.h \
+		CGnuPlotStroke.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
+		CGnuPlotCamera.h \
+		CGnuPlotXYPlane.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotKeyEvent.h \
+		../../CUtil/include/CKeyType.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotLineProp.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CGnuPlotKeyTitle.h \
+		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		../../CMath/include/CLine3D.h \
+		CGnuPlotSurface.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotKey.h \
+		CDirectionType.h \
+		CGnuPlotRotate.h \
+		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
+		CQGnuPlotObject.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		CQGnuPlotUtil.h \
+		/usr/include/qt5/QtGui/QIcon \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/QPixmap \
+		CQGnuPlotSunburstStyleValue.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotSunburstStyleValue.h -o .moc/moc_CQGnuPlotSunburstStyleValue.cpp
+
+.moc/moc_CQGnuPlotTreeMapStyleValue.cpp: CGnuPlotTreeMapStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CTreeMap.h \
+		../../CUtil/include/CRGBA.h \
+		../../CUtil/include/CRGB.h \
+		../../CUtil/include/CHSV.h \
+		CRGBUtil.h \
+		../../CUtil/include/CCMYK.h \
+		../../CUtil/include/CHSL.h \
+		../../CUtil/include/CHSB.h \
+		../../CUtil/include/CHSI.h \
+		../../CMath/include/CMathGen.h \
+		../../COS/include/NaN.h \
+		../../CUtil/include/CRGBName.h \
+		../../CUtil/include/CColorComponent.h \
+		CQGnuPlotPlot.h \
+		CQGnuPlotEnum.h \
+		CGnuPlotTypes.h \
+		../../CUtil/include/COptVal.h \
+		../../CMath/include/CPoint2D.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint3D.h \
+		../../CMath/include/CIPoint3D.h \
+		../../CMath/include/CBBox2D.h \
+		../../CMath/include/CVector2D.h \
+		../../CMath/include/CSize2D.h \
+		../../CMath/include/CISize2D.h \
+		../../CMath/include/CBBox3D.h \
+		../../CMath/include/CVector3D.h \
+		../../CUtil/include/CLineDash.h \
+		../../CUtil/include/CILineDash.h \
+		../../CUtil/include/CAlignType.h \
+		CGnuPlotPalette.h \
+		CGradientPalette.h \
+		Expr/CExpr.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprOperatorMgr.h \
+		Expr/CExprVariableMgr.h \
+		../../CUtil/include/CColor.h \
+		CGnuPlotArrow.h \
+		CGnuPlotAnnotation.h \
+		CGnuPlotObject.h \
+		CGnuPlotColorSpec.h \
+		CGnuPlotStyle.h \
+		CGnuPlotPosition.h \
+		CGnuPlotSize.h \
+		CGnuPlotTipData.h \
+		CGnuPlotMouseEvent.h \
+		CGnuPlotArrowData.h \
+		CGnuPlotArrowStyle.h \
+		CGnuPlotCoordValue.h \
+		CGnuPlotDash.h \
+		../../CMath/include/CAngle.h \
+		../../CMath/include/CLine2D.h \
+		../../CMath/include/CShape2D.h \
+		CMathGeom2D.h \
+		../../CMath/include/CPolygonOrientation.h \
+		../../CUtil/include/CLineJoinType.h \
+		../../CMath/include/C3Bezier2D.h \
+		../../CMath/include/C2Bezier2D.h \
+		../../CUtil/include/CLineCapType.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		CQGnuPlot.h \
+		CGnuPlot.h \
+		../../CFont/include/CFont.h \
+		../../CFont/include/CFontStyle.h \
+		../../CUtil/include/CFlags.h \
+		CGnuPlotLineStyle.h \
+		CGnuPlotLineType.h \
+		CGnuPlotFillStyle.h \
+		CGnuPlotPointStyle.h \
+		CGnuPlotKeyData.h \
+		CGnuPlotAxisData.h \
+		CGnuPlotUtil.h \
+		CGnuPlotGridData.h \
+		CGnuPlotTitle.h \
+		CGnuPlotCircle.h \
+		CGnuPlotEllipse.h \
+		CGnuPlotLabel.h \
+		CGnuPlotLabelData.h \
+		CGnuPlotText.h \
+		CGnuPlotLabelStyle.h \
+		CGnuPlotFill.h \
+		CGnuPlotStroke.h \
+		CGnuPlotPolygon.h \
+		CGnuPlotRectangle.h \
+		CGnuPlotFile.h \
+		CGnuPlotBinaryFormat.h \
+		CGnuPlotEveryData.h \
+		CGnuPlotIndexData.h \
+		CGnuPlotCamera.h \
+		CGnuPlotXYPlane.h \
+		CCoordFrame3D.h \
+		COrthonormalBasis3D.h \
+		../../CMath/include/CMatrix3D.h \
+		../../CMath/include/CMatrixType.h \
+		../../CUtil/include/CThrow.h \
+		../../CMath/include/CMatrix3DH.h \
+		CGnuPlotColorBox.h \
+		CGnuPlotTicLabel.h \
+		CGnuPlotUsingCols.h \
+		CGnuPlotImageStyle.h \
+		CGnuPlotHistogramData.h \
+		CGnuPlotMultiplot.h \
+		CGnuPlotPrefValue.h \
+		CStrUniqueMatch.h \
+		CGnuPlotBoxWidth.h \
+		CGnuPlotKeyEvent.h \
+		../../CUtil/include/CKeyType.h \
+		CGnuPlotBoxPlot.h \
+		CGnuPlotCircleStyle.h \
+		CGnuPlotEllipseStyle.h \
+		CGnuPlotRectStyle.h \
+		CGnuPlotTimeStampData.h \
+		CGnuPlotMouseData.h \
+		CGnuPlotClip.h \
+		CGnuPlotContourData.h \
+		CGnuPlotSurfaceData.h \
+		CGnuPlotAxesData.h \
+		CGnuPlotBorderData.h \
+		CGnuPlotPrintFile.h \
+		CGnuPlotBlock.h \
+		CGnuPlotPm3DData.h \
+		CGnuPlotLineProp.h \
+		CGnuPlotPlotSize.h \
+		CGnuPlotFilledCurve.h \
+		CGnuPlotFitData.h \
+		CGnuPlotHidden3DData.h \
+		CGnuPlotKeyTitle.h \
+		CGnuPlotMargin.h \
+		CGnuPlotStyleData.h \
+		CGnuPlotTextBoxStyle.h \
+		CGnuPlotTextStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QRect \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		CGnuPlotPlot.h \
+		CGnuPlotContour.h \
+		../../CMath/include/CLine3D.h \
+		CGnuPlotSurface.h \
+		CGnuPlotPoint.h \
+		CGnuPlotCache.h \
+		CGnuPlotKey.h \
+		CDirectionType.h \
+		CGnuPlotRotate.h \
+		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
+		CQGnuPlotObject.h \
+		/usr/include/qt5/QtGui/QColor \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		CQGnuPlotTreeMapStyleValue.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTreeMapStyleValue.h -o .moc/moc_CQGnuPlotTreeMapStyleValue.cpp
 
 .moc/moc_CQHeaderView.cpp: /usr/include/qt5/QtWidgets/QHeaderView \
 		/usr/include/qt5/QtWidgets/qheaderview.h \
@@ -12397,6 +14937,7 @@ compiler_moc_header_clean:
 
 .moc/moc_CQGradientPalette.cpp: CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -12408,6 +14949,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -12547,6 +15089,7 @@ compiler_moc_header_clean:
 
 .moc/moc_CQGradientPaletteControl.cpp: CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -12558,6 +15101,7 @@ compiler_moc_header_clean:
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -12733,6 +15277,7 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CQGnuPlotTest.o: CQGnuPlotTest.cpp CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -12744,6 +15289,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -12877,7 +15423,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -13010,6 +15557,7 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CQGnuPlot.o: CQGnuPlot.cpp CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -13021,6 +15569,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -13154,7 +15703,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -13352,6 +15902,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -13363,6 +15914,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -13466,7 +16018,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -13673,6 +16226,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -13684,6 +16238,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -13787,7 +16342,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -13989,6 +16545,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -14000,6 +16557,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -14103,7 +16661,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -14186,6 +16745,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
@@ -14342,6 +16903,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -14353,6 +16915,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -14486,7 +17049,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -14633,6 +17197,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -14644,6 +17209,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -14748,7 +17314,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -14823,6 +17390,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -14872,6 +17441,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -14883,6 +17453,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -14988,7 +17559,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -15063,6 +17635,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -15168,6 +17742,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -15179,6 +17754,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -15285,7 +17861,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -15301,6 +17878,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -15349,6 +17928,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -15360,6 +17940,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -15463,7 +18044,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -15548,6 +18130,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotUtil.h \
 		/usr/include/qt5/QtGui/QIcon \
@@ -15655,6 +18239,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -15666,6 +18251,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -15784,7 +18370,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -15916,6 +18503,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -15927,6 +18515,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -16058,7 +18647,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QString \
@@ -16086,6 +18676,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		/usr/include/qt5/QtGui/QColor \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h \
@@ -16175,6 +18767,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -16186,6 +18779,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -16289,7 +18883,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -16552,6 +19147,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -16563,6 +19159,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -16664,7 +19261,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -16698,6 +19296,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
 		/usr/include/qt5/QtGui/qrgb.h \
@@ -16826,6 +19426,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -16836,6 +19437,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -17001,7 +19603,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -17082,6 +19685,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotLineStyle.h \
 		CQGnuPlotAnnotation.h \
 		CQGnuPlotArrow.h \
@@ -17145,6 +19750,49 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotRectObject.h \
 		CGnuPlotRectObject.h \
 		CQGnuPlotMark.h \
+		CQGnuPlotAdjacencyStyleValue.h \
+		CGnuPlotAdjacencyStyleValue.h \
+		CGnuPlotStyleAdjacencyRenderer.h \
+		CAdjacency.h \
+		CQGnuPlotChordDiagramStyleValue.h \
+		CGnuPlotChordDiagramStyleValue.h \
+		CGnuPlotStyleChordDiagramRenderer.h \
+		CGnuPlotStyleChordDiagram.h \
+		CGnuPlotStyleBase.h \
+		ChordDiagram.h \
+		CQGnuPlotDelaunayStyleValue.h \
+		CGnuPlotDelaunayStyleValue.h \
+		CDelaunay.h \
+		CHull3D.h \
+		CListLink.h \
+		CStateIterator.h \
+		../../CUtil/include/CGeneric.h \
+		../../CUtil/include/CTypeTraits.h \
+		CQGnuPlotUtil.h \
+		/usr/include/qt5/QtGui/QIcon \
+		/usr/include/qt5/QtGui/QPixmap \
+		CQGnuPlotDendrogramStyleValue.h \
+		CGnuPlotDendrogramStyleValue.h \
+		CDendrogram.h \
+		CQGnuPlotForceDirectedStyleValue.h \
+		CGnuPlotForceDirectedStyleValue.h \
+		CForceDirected.h \
+		Springy.h \
+		CQGnuPlotHierBubbleStyleValue.h \
+		CGnuPlotHierBubbleStyleValue.h \
+		CHierBubblePack.h \
+		CirclePack.h \
+		CMathMacros.h \
+		CEnclosingCircle.h \
+		CPointsCircle.h \
+		CQGnuPlotPieChartStyleValue.h \
+		CQGnuPlotSunburstStyleValue.h \
+		CGnuPlotSunburstStyleValue.h \
+		CSunburst.h \
+		../../CFont/include/CFontMgr.h \
+		CQGnuPlotTreeMapStyleValue.h \
+		CGnuPlotTreeMapStyleValue.h \
+		CTreeMap.h \
 		/usr/include/qt5/QtWidgets/QApplication \
 		/usr/include/qt5/QtWidgets/qapplication.h \
 		/usr/include/qt5/QtCore/qcoreapplication.h \
@@ -17189,6 +19837,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -17200,6 +19849,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -17303,7 +19953,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -17508,6 +20159,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -17519,6 +20171,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -17622,7 +20275,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -17696,6 +20350,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -17745,6 +20401,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -17756,6 +20413,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -17860,7 +20518,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -17935,6 +20594,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -17979,6 +20640,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -17990,6 +20652,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -18120,6 +20783,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -18131,6 +20795,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -18236,7 +20901,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -18311,6 +20977,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -18359,6 +21027,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -18369,6 +21038,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -18541,7 +21211,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -18557,6 +21228,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotUtil.h \
 		/usr/include/qt5/QtGui/QIcon \
@@ -18621,6 +21294,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -18632,6 +21306,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -18737,7 +21412,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -18812,6 +21488,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -18830,6 +21508,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -18841,6 +21520,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -18974,7 +21654,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -19109,6 +21790,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		/usr/include/qt5/QtGui/QColor \
 		CQGnuPlotCanvas.h \
 		/usr/include/qt5/QtWidgets/QWidget \
@@ -19183,6 +21866,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -19192,6 +21876,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -19295,7 +21980,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -19370,6 +22056,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -19543,6 +22231,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -19554,6 +22243,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -19658,7 +22348,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -19736,6 +22427,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/QIcon \
 		/usr/include/qt5/QtGui/QPixmap \
@@ -19817,6 +22510,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -19828,6 +22522,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -19931,7 +22626,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -20032,6 +22728,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		/usr/include/qt5/QtGui/QIcon \
 		/usr/include/qt5/QtGui/qicon.h \
 		/usr/include/qt5/QtGui/qpixmap.h \
@@ -20150,6 +22848,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -20161,6 +22860,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -20264,7 +22964,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -20364,6 +23065,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotUtil.h \
 		/usr/include/qt5/QtGui/QIcon \
 		/usr/include/qt5/QtGui/qicon.h \
@@ -20518,6 +23221,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -20529,6 +23233,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -20662,7 +23367,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -20681,6 +23387,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QIcon \
 		/usr/include/qt5/QtGui/qicon.h \
@@ -20857,6 +23565,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -20867,6 +23576,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -20983,7 +23693,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -20999,6 +23710,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h \
@@ -21084,6 +23797,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -21094,6 +23808,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -21222,7 +23937,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -21383,6 +24099,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -21394,6 +24111,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -21527,7 +24245,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -21580,6 +24299,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -21591,6 +24311,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -21694,7 +24415,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -21769,6 +24491,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -21819,6 +24543,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -21830,6 +24555,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -21933,7 +24659,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -22007,6 +24734,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -22053,6 +24782,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -22064,6 +24794,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -22227,7 +24958,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -22243,6 +24975,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -22484,6 +25218,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -22495,6 +25230,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -22598,7 +25334,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -22654,6 +25391,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -22664,6 +25402,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -22805,7 +25544,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -22853,6 +25593,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		/usr/include/qt5/QtGui/QPainter \
 		/usr/include/qt5/QtGui/qpainter.h \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -22886,6 +25628,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -22897,6 +25640,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -23030,7 +25774,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -23145,6 +25890,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -23156,6 +25902,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -23259,7 +26006,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -23342,6 +26090,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotUtil.h \
 		/usr/include/qt5/QtGui/QIcon \
@@ -23467,6 +26217,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -23478,6 +26229,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -23581,7 +26333,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -23706,6 +26459,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -23717,6 +26471,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -23820,7 +26575,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -23895,6 +26651,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -23944,6 +26702,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -23955,6 +26714,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -24058,7 +26818,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -24156,6 +26917,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		/usr/include/qt5/QtGui/QIcon \
 		/usr/include/qt5/QtGui/qicon.h \
 		/usr/include/qt5/QtGui/qpixmap.h \
@@ -24274,6 +27037,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -24285,6 +27049,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -24388,7 +27153,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -24462,6 +27228,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -24479,6 +27247,7 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CQGnuPlotRenderer.o: CQGnuPlotRenderer.cpp CQGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -24490,6 +27259,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -24623,7 +27393,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -24764,6 +27535,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotCanvas.h \
 		/usr/include/qt5/QtWidgets/QWidget \
@@ -24910,6 +27683,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -24920,6 +27694,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -25033,7 +27808,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		/usr/include/qt5/QtCore/qrect.h \
@@ -25049,6 +27825,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h \
@@ -25155,6 +27933,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -25165,6 +27944,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -25266,7 +28046,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -25374,6 +28155,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -25385,6 +28167,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -25488,7 +28271,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
@@ -25530,6 +28314,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		/usr/include/qt5/QtGui/QIcon \
 		/usr/include/qt5/QtGui/qicon.h \
 		/usr/include/qt5/QtGui/qpixmap.h \
@@ -25888,6 +28674,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -25899,6 +28686,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -26032,7 +28820,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -26107,6 +28896,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/qcolor.h \
@@ -26143,6 +28934,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -26154,6 +28946,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -26287,7 +29080,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
@@ -26424,6 +29218,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		/usr/include/qt5/QtGui/QColor \
 		CQGnuPlotCanvas.h \
 		/usr/include/qt5/QtWidgets/QWidget \
@@ -26523,6 +29319,48 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotRectObject.h \
 		CGnuPlotRectObject.h \
 		CQGnuPlotMark.h \
+		CGnuPlotStyleValueMgr.h \
+		CTypeInfo.h \
+		CQGnuPlotAdjacencyStyleValue.h \
+		CGnuPlotAdjacencyStyleValue.h \
+		CGnuPlotStyleAdjacencyRenderer.h \
+		CAdjacency.h \
+		CQGnuPlotChordDiagramStyleValue.h \
+		CGnuPlotChordDiagramStyleValue.h \
+		CGnuPlotStyleChordDiagramRenderer.h \
+		CGnuPlotStyleChordDiagram.h \
+		CGnuPlotStyleBase.h \
+		ChordDiagram.h \
+		CQGnuPlotDelaunayStyleValue.h \
+		CGnuPlotDelaunayStyleValue.h \
+		CDelaunay.h \
+		CHull3D.h \
+		CListLink.h \
+		CStateIterator.h \
+		../../CUtil/include/CGeneric.h \
+		../../CUtil/include/CTypeTraits.h \
+		CQGnuPlotDendrogramStyleValue.h \
+		CGnuPlotDendrogramStyleValue.h \
+		CDendrogram.h \
+		CQGnuPlotForceDirectedStyleValue.h \
+		CGnuPlotForceDirectedStyleValue.h \
+		CForceDirected.h \
+		Springy.h \
+		CQGnuPlotHierBubbleStyleValue.h \
+		CGnuPlotHierBubbleStyleValue.h \
+		CHierBubblePack.h \
+		CirclePack.h \
+		CMathMacros.h \
+		CEnclosingCircle.h \
+		CPointsCircle.h \
+		CQGnuPlotPieChartStyleValue.h \
+		CQGnuPlotSunburstStyleValue.h \
+		CGnuPlotSunburstStyleValue.h \
+		CSunburst.h \
+		../../CFont/include/CFontMgr.h \
+		CQGnuPlotTreeMapStyleValue.h \
+		CGnuPlotTreeMapStyleValue.h \
+		CTreeMap.h \
 		CQGnuPlotToolBar.h \
 		/usr/include/qt5/QtWidgets/QToolBar \
 		/usr/include/qt5/QtWidgets/qtoolbar.h \
@@ -26755,6 +29593,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -26766,6 +29605,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -26877,7 +29717,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		CQGnuPlotPlot.h \
@@ -26891,6 +29732,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/QIcon \
@@ -27075,6 +29918,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -27086,6 +29930,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -27194,7 +30039,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		/usr/include/qt5/QtCore/QString \
 		/usr/include/qt5/QtCore/QRect \
 		CQGnuPlotPlot.h \
@@ -27208,6 +30054,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		/usr/include/qt5/QtGui/QColor \
 		/usr/include/qt5/QtGui/QIcon \
@@ -27376,6 +30224,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -27387,6 +30236,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -27520,7 +30370,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QString \
@@ -27538,7 +30389,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
 		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		/usr/include/qt5/QtGui/qicon.h \
-		CParseLine.h \
+		CQGnuPlotTreeWidget.h \
 		/usr/include/qt5/QtWidgets/QTreeWidget \
 		/usr/include/qt5/QtWidgets/qtreewidget.h \
 		/usr/include/qt5/QtWidgets/qtreeview.h \
@@ -27558,6 +30409,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qtabbar.h \
 		/usr/include/qt5/QtWidgets/qrubberband.h \
 		/usr/include/qt5/QtWidgets/qtreewidgetitemiterator.h \
+		CParseLine.h \
 		/usr/include/qt5/QtWidgets/QHeaderView \
 		/usr/include/qt5/QtWidgets/qheaderview.h \
 		/usr/include/qt5/QtWidgets/QGroupBox \
@@ -27715,6 +30567,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtCore/qitemselectionmodel.h \
 		/usr/include/qt5/QtWidgets/qtreewidgetitemiterator.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -27726,6 +30579,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -27862,7 +30716,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QString \
@@ -28075,6 +30930,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -28086,6 +30942,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -28230,6 +31087,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/COptVal.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -28241,6 +31099,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -28365,7 +31224,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		/usr/include/qt5/QtWidgets/QFrame \
 		/usr/include/qt5/QtWidgets/qframe.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -28476,6 +31336,7 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
 		CQGnuPlotDataTree.h \
+		CQGnuPlotTreeView.h \
 		/usr/include/qt5/QtWidgets/QTreeView \
 		/usr/include/qt5/QtWidgets/qtreeview.h \
 		/usr/include/qt5/QtWidgets/qabstractitemview.h \
@@ -28523,6 +31384,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotWhereData.h \
 		CQHeaderView.h \
 		/usr/include/qt5/QtWidgets/QHeaderView \
@@ -28802,6 +31665,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -28813,6 +31677,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -28946,7 +31811,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QString \
@@ -28995,6 +31861,142 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/qlayoutitem.h \
 		/usr/include/qt5/QtWidgets/qgridlayout.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotPaletteDialog.o CQGnuPlotPaletteDialog.cpp
+
+../obj/CQGnuPlotTreeView.o: CQGnuPlotTreeView.cpp CQGnuPlotTreeView.h \
+		/usr/include/qt5/QtWidgets/QTreeView \
+		/usr/include/qt5/QtWidgets/qtreeview.h \
+		/usr/include/qt5/QtWidgets/qabstractitemview.h \
+		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtWidgets/qwidget.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qmargins.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qpalette.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtGui/qbrush.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qfont.h \
+		/usr/include/qt5/QtGui/qfontmetrics.h \
+		/usr/include/qt5/QtGui/qfontinfo.h \
+		/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		/usr/include/qt5/QtGui/qcursor.h \
+		/usr/include/qt5/QtGui/qkeysequence.h \
+		/usr/include/qt5/QtGui/qevent.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qurl.h \
+		/usr/include/qt5/QtCore/qurlquery.h \
+		/usr/include/qt5/QtCore/qfile.h \
+		/usr/include/qt5/QtCore/qfiledevice.h \
+		/usr/include/qt5/QtGui/qvector2d.h \
+		/usr/include/qt5/QtGui/qtouchdevice.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h \
+		/usr/include/qt5/QtCore/qitemselectionmodel.h \
+		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
+		/usr/include/qt5/QtWidgets/qstyleoption.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtGui/qicon.h \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qstyle.h \
+		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qtabwidget.h \
+		/usr/include/qt5/QtWidgets/qrubberband.h \
+		CQHeaderView.h \
+		/usr/include/qt5/QtWidgets/QHeaderView \
+		/usr/include/qt5/QtWidgets/qheaderview.h \
+		/usr/include/qt5/QtWidgets/QMenu \
+		/usr/include/qt5/QtWidgets/qmenu.h \
+		/usr/include/qt5/QtWidgets/qaction.h \
+		/usr/include/qt5/QtWidgets/qactiongroup.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotTreeView.o CQGnuPlotTreeView.cpp
 
 ../obj/CQGnuPlotTreeWidget.o: CQGnuPlotTreeWidget.cpp CQGnuPlotTreeWidget.h \
 		/usr/include/qt5/QtWidgets/QTreeWidget \
@@ -29134,6 +32136,7 @@ compiler_clean: compiler_moc_header_clean
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotTreeWidget.o CQGnuPlotTreeWidget.cpp
 
 ../obj/CQGnuPlotDataTree.o: CQGnuPlotDataTree.cpp CQGnuPlotDataTree.h \
+		CQGnuPlotTreeView.h \
 		/usr/include/qt5/QtWidgets/QTreeView \
 		/usr/include/qt5/QtWidgets/qtreeview.h \
 		/usr/include/qt5/QtWidgets/qabstractitemview.h \
@@ -29552,6 +32555,7 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CGnuPlot.o: CGnuPlot.cpp CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -29563,6 +32567,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -29696,7 +32701,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -29713,6 +32719,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotDevice.h \
 		CGnuPlotSVGDevice.h \
 		CGnuPlotPSDevice.h \
@@ -29789,8 +32797,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFile/include/CDir.h \
 		../../CReadLine/include/CReadLine.h \
 		../../CReadLine/include/CHistory.h \
-		../../CFont/include/CFontMgr.h \
-		../../CUtil/include/CAutoFree.h
+		../../CFont/include/CFontMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlot.o CGnuPlot.cpp
 
 ../obj/CGnuPlotAnnotation.o: CGnuPlotAnnotation.cpp CGnuPlotAnnotation.h \
@@ -29827,6 +32834,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -29838,6 +32846,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -29940,7 +32949,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -29985,6 +32995,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -29996,6 +33007,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -30097,7 +33109,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -30157,6 +33170,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -30168,6 +33182,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -30259,7 +33274,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -30309,6 +33325,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -30320,6 +33337,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -30423,7 +33441,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -30438,6 +33457,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -30480,6 +33501,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -30491,6 +33513,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -30591,7 +33614,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotArrowStyle.o CGnuPlotArrowStyle.cpp
 
 ../obj/CGnuPlotAxis.o: CGnuPlotAxis.cpp CGnuPlotAxis.h \
@@ -30628,6 +33652,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -30639,6 +33664,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -30743,7 +33769,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
@@ -30757,6 +33784,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -30797,6 +33826,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -30808,6 +33838,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -30911,7 +33942,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -30956,6 +33988,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -30967,6 +34000,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -31071,7 +34105,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -31081,6 +34116,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -31122,6 +34159,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -31133,6 +34171,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -31238,7 +34277,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotTextRenderer.h \
 		../../CImageLib/include/CImagePtr.h \
 		../../CMath/include/CMatrix2D.h \
@@ -31251,7 +34291,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
-		CGnuPlotProbeEvent.h
+		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBoxObject.o CGnuPlotBoxObject.cpp
 
 ../obj/CGnuPlotBoxPlot.o: CGnuPlotBoxPlot.cpp CGnuPlotBoxPlot.h \
@@ -31287,6 +34329,7 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CGnuPlotBBoxRenderer.o: CGnuPlotBBoxRenderer.cpp CGnuPlotBBoxRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -31298,6 +34341,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -31431,7 +34475,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -31511,6 +34556,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -31522,6 +34568,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -31625,7 +34672,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -31634,6 +34682,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -31659,6 +34709,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -31670,6 +34721,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -31788,7 +34840,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -31833,6 +34886,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -31844,6 +34898,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -31945,7 +35000,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -31995,6 +35051,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -32006,6 +35063,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -32107,7 +35165,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -32154,6 +35213,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -32165,6 +35225,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -32269,7 +35330,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -32283,7 +35345,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotRotate.h
+		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotColorSpec.o CGnuPlotColorSpec.cpp
 
 ../obj/CGnuPlotContour.o: CGnuPlotContour.cpp CGnuPlotContour.h \
@@ -32310,6 +35374,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -32321,6 +35386,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -32434,7 +35500,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -32449,6 +35516,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -32488,6 +35557,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -32499,6 +35569,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -32604,7 +35675,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -32650,6 +35722,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -32661,6 +35734,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -32766,7 +35840,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotDash.o CGnuPlotDash.cpp
 
 ../obj/CGnuPlotDevice.o: CGnuPlotDevice.cpp CGnuPlotDevice.h \
@@ -32808,6 +35883,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -32818,6 +35894,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -32919,7 +35996,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
@@ -32933,6 +36011,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotArrowObject.h \
 		CGnuPlotBoxBarObject.h \
 		CGnuPlotEndBar.h \
@@ -32962,7 +36042,40 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPointObject.h \
 		CGnuPlotPolygonObject.h \
 		CGnuPlotRectObject.h \
-		../../CFont/include/CFontMgr.h
+		CGnuPlotAdjacencyStyleValue.h \
+		CGnuPlotStyleAdjacencyRenderer.h \
+		CAdjacency.h \
+		CGnuPlotRenderer.h \
+		CGnuPlotTextRenderer.h \
+		../../CMath/include/CMatrix2D.h \
+		CGnuPlotChordDiagramStyleValue.h \
+		CGnuPlotStyleChordDiagramRenderer.h \
+		CGnuPlotStyleChordDiagram.h \
+		CGnuPlotStyleBase.h \
+		ChordDiagram.h \
+		CGnuPlotDendrogramStyleValue.h \
+		CDendrogram.h \
+		CGnuPlotDelaunayStyleValue.h \
+		CDelaunay.h \
+		CHull3D.h \
+		CListLink.h \
+		CStateIterator.h \
+		../../CUtil/include/CGeneric.h \
+		../../CUtil/include/CTypeTraits.h \
+		CGnuPlotForceDirectedStyleValue.h \
+		CForceDirected.h \
+		Springy.h \
+		CGnuPlotHierBubbleStyleValue.h \
+		CHierBubblePack.h \
+		CirclePack.h \
+		CMathMacros.h \
+		CEnclosingCircle.h \
+		CPointsCircle.h \
+		CGnuPlotSunburstStyleValue.h \
+		CSunburst.h \
+		../../CFont/include/CFontMgr.h \
+		CGnuPlotTreeMapStyleValue.h \
+		CTreeMap.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotDevice.o CGnuPlotDevice.cpp
 
 ../obj/CGnuPlotEllipse.o: CGnuPlotEllipse.cpp CGnuPlotEllipse.h \
@@ -33000,6 +36113,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -33011,6 +36125,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -33112,7 +36227,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -33162,6 +36278,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -33173,6 +36290,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -33276,7 +36394,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -33285,6 +36404,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -33316,6 +36437,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -33326,6 +36448,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -33440,7 +36563,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -33450,6 +36574,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -33492,6 +36618,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -33503,6 +36630,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -33608,7 +36736,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -33618,6 +36747,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -33655,6 +36786,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -33666,6 +36798,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -33772,7 +36905,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -33829,6 +36963,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -33839,6 +36974,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -33941,7 +37077,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -33951,6 +37088,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -33992,6 +37131,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -34003,6 +37143,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -34106,7 +37247,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -34151,6 +37293,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -34162,6 +37305,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -34267,7 +37411,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -34277,6 +37422,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -34291,6 +37438,7 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CGnuPlotFunctions.o: CGnuPlotFunctions.cpp CGnuPlotFunctions.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -34302,6 +37450,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -34435,12 +37584,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotFunctions.o CGnuPlotFunctions.cpp
 
 ../obj/CGnuPlotGroup.o: CGnuPlotGroup.cpp CGnuPlotGroup.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -34452,6 +37603,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -34585,7 +37737,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -34601,6 +37754,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotDevice.h \
 		CGnuPlotBBoxRenderer.h \
 		CGnuPlotRenderer.h \
@@ -34659,6 +37814,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -34668,6 +37824,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -34771,7 +37928,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -34786,6 +37944,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -34827,6 +37987,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -34838,6 +37999,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -34942,7 +38104,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -34955,6 +38118,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
@@ -34997,6 +38162,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -35008,6 +38174,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -35065,6 +38232,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -35076,6 +38244,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -35144,6 +38313,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -35154,6 +38324,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -35252,7 +38423,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -35272,6 +38444,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotDevice.h \
 		../../CFont/include/CFontMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotLabelData.o CGnuPlotLabelData.cpp
@@ -35310,6 +38484,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -35321,6 +38496,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -35424,7 +38600,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -35440,6 +38617,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -35480,6 +38659,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -35491,6 +38671,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -35593,7 +38774,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -35609,7 +38791,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotRotate.h
+		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotLineStyle.o CGnuPlotLineStyle.cpp
 
 ../obj/CGnuPlotLineType.o: CGnuPlotLineType.cpp CGnuPlotLineType.h \
@@ -35645,6 +38829,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -35656,6 +38841,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -35759,7 +38945,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -35809,6 +38996,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -35819,6 +39007,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -35920,7 +39109,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -35939,12 +39129,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotRotate.h
+		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotLogDevice.o CGnuPlotLogDevice.cpp
 
 ../obj/CGnuPlotLogRenderer.o: CGnuPlotLogRenderer.cpp CGnuPlotLogRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -35956,6 +39149,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -36089,7 +39283,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -36132,6 +39327,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -36143,6 +39339,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -36248,7 +39445,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -36290,6 +39488,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -36300,6 +39499,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -36403,7 +39603,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -36412,7 +39613,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
-		CGnuPlotProbeEvent.h
+		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotMark.o CGnuPlotMark.cpp
 
 ../obj/CGnuPlotMultiplot.o: CGnuPlotMultiplot.cpp CGnuPlotMultiplot.h \
@@ -36456,6 +39659,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -36467,6 +39671,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -36570,7 +39775,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -36584,12 +39790,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotRotate.h
+		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotObject.o CGnuPlotObject.cpp
 
 ../obj/CGnuPlotPalette.o: CGnuPlotPalette.cpp CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -36601,6 +39810,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -36734,7 +39944,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -36778,6 +39989,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -36789,6 +40001,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -36892,7 +40105,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -36902,6 +40116,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -36945,6 +40161,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -36956,6 +40173,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -37059,7 +40277,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -37068,6 +40287,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -37078,6 +40299,7 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CGnuPlotPlot.o: CGnuPlotPlot.cpp CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -37089,6 +40311,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -37222,7 +40445,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -37232,6 +40456,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -37273,12 +40499,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotDevice.h \
 		CGnuPlotBBoxRenderer.h \
 		CGnuPlotStyleBase.h \
-		CGnuPlotStyleAdjacencyRenderer.h \
-		CAdjacency.h \
-		CGnuPlotStyleChordDiagramRenderer.h \
-		CGnuPlotStyleChordDiagram.h \
-		ChordDiagram.h \
-		CSunburst.h \
 		CSmooth.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPlot.o CGnuPlotPlot.cpp
 
@@ -37317,6 +40537,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -37328,6 +40549,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -37346,6 +40568,7 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CGnuPlotPoint.o: CGnuPlotPoint.cpp CGnuPlotPoint.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -37357,6 +40580,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -37437,6 +40661,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -37448,6 +40673,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -37551,7 +40777,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -37566,6 +40793,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -37608,6 +40837,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -37619,6 +40849,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -37720,7 +40951,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -37770,6 +41002,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -37781,6 +41014,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -37884,7 +41118,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -37899,6 +41134,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -37937,6 +41174,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -37948,6 +41186,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -38053,7 +41292,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -38063,6 +41303,7 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CGnuPlotPrintFile.o: CGnuPlotPrintFile.cpp CGnuPlotPrintFile.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -38074,6 +41315,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -38206,7 +41448,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPrintFile.o CGnuPlotPrintFile.cpp
 
 ../obj/CGnuPlotRectangle.o: CGnuPlotRectangle.cpp CGnuPlotRectangle.h \
@@ -38244,6 +41487,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -38255,6 +41499,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -38356,7 +41601,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -38407,6 +41653,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -38418,6 +41665,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -38521,7 +41769,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -38530,6 +41779,8 @@ compiler_clean: compiler_moc_header_clean
 		CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -38540,6 +41791,7 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CGnuPlotRenderer.o: CGnuPlotRenderer.cpp CGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -38551,6 +41803,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -38684,7 +41937,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -38738,6 +41992,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -38748,6 +42003,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -38848,7 +42104,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -38857,7 +42114,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
-		CGnuPlotProbeEvent.h
+		CGnuPlotProbeEvent.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStroke.o CGnuPlotStroke.cpp
 
 ../obj/CGnuPlotStyle.o: CGnuPlotStyle.cpp CGnuPlotStyle.h \
@@ -38891,6 +42150,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -38902,6 +42162,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -38936,6 +42197,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -38947,6 +42209,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -39065,7 +42328,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -39079,6 +42343,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -39125,6 +42391,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -39135,6 +42402,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -39235,7 +42503,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -39251,6 +42520,7 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CGnuPlotUsingCols.o: CGnuPlotUsingCols.cpp CGnuPlotUsingCols.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -39262,6 +42532,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -39395,12 +42666,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CParseLine.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotUsingCols.o CGnuPlotUsingCols.cpp
 
 ../obj/CGnuPlotEveryData.o: CGnuPlotEveryData.cpp CGnuPlotEveryData.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -39412,6 +42685,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -39428,6 +42702,7 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CGnuPlotIndexData.o: CGnuPlotIndexData.cpp CGnuPlotIndexData.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -39439,6 +42714,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -39455,6 +42731,7 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CGnuPlotWhereData.o: CGnuPlotWhereData.cpp CGnuPlotWhereData.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -39466,6 +42743,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -39529,6 +42807,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -39540,6 +42819,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -39645,7 +42925,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -39658,7 +42939,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotRotate.h
+		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleBase.o CGnuPlotStyleBase.cpp
 
 ../obj/CGnuPlotStyleAdjacency.o: CGnuPlotStyleAdjacency.cpp CGnuPlotStyleAdjacency.h \
@@ -39692,9 +42975,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotProbeEvent.h \
-		CGnuPlotPlot.h \
+		CGnuPlotAdjacencyStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CGnuPlotStyleAdjacencyRenderer.h \
+		CAdjacency.h \
+		CGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -39706,6 +42994,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -39811,7 +43100,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotTextRenderer.h \
+		CGnuPlotMark.h \
+		../../CImageLib/include/CImagePtr.h \
+		../../CMath/include/CMatrix2D.h \
+		CGnuPlotStyleValueMgr.h \
+		CTypeInfo.h \
+		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -39820,18 +43116,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
 		../../CMath/include/CRange.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotTextRenderer.h \
-		CGnuPlotMark.h \
-		../../CImageLib/include/CImagePtr.h \
-		../../CMath/include/CMatrix2D.h \
-		CGnuPlotStyleAdjacencyRenderer.h \
-		CAdjacency.h
+		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleAdjacency.o CGnuPlotStyleAdjacency.cpp
 
 ../obj/CGnuPlotStyleBivariate.o: CGnuPlotStyleBivariate.cpp CGnuPlotStyleBivariate.h \
@@ -39868,6 +43160,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -39879,6 +43172,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -39984,7 +43278,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -39993,6 +43288,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -40040,6 +43337,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -40051,6 +43349,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -40156,7 +43455,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -40165,6 +43465,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -40208,6 +43510,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -40219,6 +43522,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -40324,7 +43628,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -40339,6 +43644,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -40382,6 +43689,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -40393,6 +43701,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -40498,7 +43807,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -40507,6 +43817,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -40556,6 +43868,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -40567,6 +43880,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -40672,7 +43986,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -40681,6 +43996,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -40724,6 +44041,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -40735,6 +44053,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -40840,7 +44159,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -40849,6 +44169,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -40895,6 +44217,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -40906,6 +44229,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -41011,7 +44335,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -41020,6 +44345,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -41066,9 +44393,13 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotProbeEvent.h \
-		CGnuPlotGroup.h \
+		CGnuPlotChordDiagramStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CGnuPlotStyleChordDiagramRenderer.h \
+		CGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -41080,6 +44411,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -41185,28 +44517,31 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
-		CGnuPlotAxis.h \
-		CDirectionType.h \
-		CGnuPlotKey.h \
-		CGnuPlotTimeStamp.h \
-		CGnuPlotPm3D.h \
-		../../CMath/include/CRange.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotTextRenderer.h \
+		CGnuPlotMark.h \
+		../../CImageLib/include/CImagePtr.h \
+		../../CMath/include/CMatrix2D.h \
+		ChordDiagram.h \
+		CGnuPlotStyleValueMgr.h \
+		CTypeInfo.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
+		CGnuPlotKey.h \
+		CDirectionType.h \
 		CGnuPlotRotate.h \
-		CGnuPlotDevice.h \
-		ChordDiagram.h \
-		CGnuPlotStyleChordDiagramRenderer.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotTextRenderer.h \
-		CGnuPlotMark.h \
-		../../CImageLib/include/CImagePtr.h \
-		../../CMath/include/CMatrix2D.h
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
+		CGnuPlotGroup.h \
+		CGnuPlotAxis.h \
+		CGnuPlotTimeStamp.h \
+		CGnuPlotPm3D.h \
+		../../CMath/include/CRange.h \
+		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleChordDiagram.o CGnuPlotStyleChordDiagram.cpp
 
 ../obj/CGnuPlotStyleCircles.o: CGnuPlotStyleCircles.cpp CGnuPlotStyleCircles.h \
@@ -41243,6 +44578,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -41254,6 +44590,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -41359,7 +44696,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -41368,6 +44706,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotPieObject.h \
 		CGnuPlotEllipseObject.h \
 		CGnuPlotRenderer.h \
@@ -41408,9 +44748,20 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotDelaunayStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CDelaunay.h \
+		CHull3D.h \
+		CListLink.h \
+		CStateIterator.h \
+		../../CUtil/include/CGeneric.h \
+		../../CUtil/include/CTypeTraits.h \
+		CGnuPlotStyleValueMgr.h \
+		CTypeInfo.h \
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -41422,6 +44773,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -41527,7 +44879,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -41536,6 +44888,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -41547,12 +44901,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
 		../../CMath/include/CMatrix2D.h \
-		CDelaunay.h \
-		CHull3D.h \
-		CListLink.h \
-		CStateIterator.h \
-		../../CUtil/include/CGeneric.h \
-		../../CUtil/include/CTypeTraits.h
+		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleDelaunay.o CGnuPlotStyleDelaunay.cpp
 
 ../obj/CGnuPlotStyleDendrogram.o: CGnuPlotStyleDendrogram.cpp CGnuPlotStyleDendrogram.h \
@@ -41587,9 +44936,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMouseEvent.h \
 		CGnuPlotProbeEvent.h \
 		CDendrogram.h \
+		CGnuPlotDendrogramStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CGnuPlotStyleValueMgr.h \
+		CTypeInfo.h \
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -41601,6 +44955,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -41706,7 +45061,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -41715,6 +45070,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -41725,7 +45082,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
-		../../CMath/include/CMatrix2D.h
+		../../CMath/include/CMatrix2D.h \
+		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleDendrogram.o CGnuPlotStyleDendrogram.cpp
 
 ../obj/CGnuPlotStyleDots.o: CGnuPlotStyleDots.cpp CGnuPlotStyleDots.h \
@@ -41762,6 +45120,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -41773,6 +45132,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -41878,7 +45238,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -41887,6 +45248,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -41933,6 +45296,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -41944,6 +45308,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -42046,7 +45411,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -42054,6 +45420,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -42095,6 +45463,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -42106,6 +45475,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -42211,7 +45581,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -42220,6 +45591,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -42269,6 +45642,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -42280,6 +45654,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -42385,7 +45760,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -42399,6 +45775,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotWindow.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
@@ -42446,6 +45824,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -42457,6 +45836,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -42561,7 +45941,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -42575,6 +45956,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -42612,9 +45995,16 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotForceDirectedStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CForceDirected.h \
+		Springy.h \
+		CGnuPlotStyleValueMgr.h \
+		CTypeInfo.h \
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -42626,6 +46016,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -42731,7 +46122,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -42740,18 +46131,19 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
 		../../CMath/include/CRange.h \
+		CGnuPlotDevice.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
-		../../CMath/include/CMatrix2D.h \
-		CForceDirected.h \
-		Springy.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleForceDirected.o CGnuPlotStyleForceDirected.cpp
 
 ../obj/CGnuPlotStyleHierBubblePlot.o: CGnuPlotStyleHierBubblePlot.cpp CGnuPlotStyleHierBubblePlot.h \
@@ -42797,9 +46189,14 @@ compiler_clean: compiler_moc_header_clean
 		CMathMacros.h \
 		CEnclosingCircle.h \
 		CPointsCircle.h \
+		CGnuPlotHierBubbleStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CGnuPlotStyleValueMgr.h \
+		CTypeInfo.h \
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -42811,6 +46208,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -42909,7 +46307,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -42918,12 +46316,16 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
 		../../CMath/include/CMatrix2D.h \
-		CGnuPlotBubbleObject.h
+		CGnuPlotBubbleObject.h \
+		CGnuPlotDevice.h \
+		CGnuPlotAxis.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleHierBubblePlot.o CGnuPlotStyleHierBubblePlot.cpp
 
 ../obj/CGnuPlotStyleImage.o: CGnuPlotStyleImage.cpp CGnuPlotStyleImage.h \
@@ -42960,6 +46362,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -42971,6 +46374,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -43076,7 +46480,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -43085,6 +46490,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -43146,6 +46553,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -43157,6 +46565,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -43262,7 +46671,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -43271,6 +46681,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -43321,6 +46733,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -43332,6 +46745,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -43434,7 +46848,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -43449,6 +46864,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -43491,6 +46908,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -43502,6 +46920,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -43607,7 +47026,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -43616,6 +47036,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -43663,6 +47085,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -43674,6 +47097,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -43779,7 +47203,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -43788,6 +47213,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -43837,6 +47264,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -43848,6 +47276,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -43953,7 +47382,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -43962,6 +47392,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -44006,9 +47438,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CGnuPlotStyleValueMgr.h \
+		CTypeInfo.h \
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -44020,6 +47457,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -44125,7 +47563,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -44134,6 +47571,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -44145,7 +47584,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
 		../../CMath/include/CMatrix2D.h \
-		CGnuPlotPieObject.h
+		CGnuPlotPieObject.h \
+		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStylePieChart.o CGnuPlotStylePieChart.cpp
 
 ../obj/CGnuPlotStylePoints.o: CGnuPlotStylePoints.cpp CGnuPlotStylePoints.h \
@@ -44182,6 +47622,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -44193,6 +47634,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -44298,7 +47740,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -44307,6 +47750,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -44354,6 +47799,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -44365,6 +47811,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -44470,7 +47917,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -44479,6 +47927,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotPolygonObject.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
@@ -44521,6 +47971,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -44532,6 +47983,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -44637,7 +48089,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -44646,6 +48099,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -44693,6 +48148,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -44704,6 +48160,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -44809,7 +48266,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -44818,6 +48276,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -44864,6 +48324,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -44875,6 +48336,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -44980,7 +48442,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -44989,6 +48452,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -45027,9 +48492,12 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotProbeEvent.h \
-		CGnuPlotPlot.h \
+		CGnuPlotStyleSunburstPainter.h \
+		CSunburst.h \
+		CGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -45041,6 +48509,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -45146,7 +48615,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CGnuPlotTextRenderer.h \
+		CGnuPlotMark.h \
+		../../CImageLib/include/CImagePtr.h \
+		../../CMath/include/CMatrix2D.h \
+		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -45155,20 +48630,20 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
+		CGnuPlotPieObject.h \
+		CGnuPlotSunburstStyleValue.h \
+		../../CFont/include/CFontMgr.h \
+		CGnuPlotStyleValueMgr.h \
+		CTypeInfo.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
 		../../CMath/include/CRange.h \
 		CGnuPlotWindow.h \
-		CGnuPlotRenderer.h \
-		CGnuPlotTextRenderer.h \
-		CGnuPlotMark.h \
-		../../CImageLib/include/CImagePtr.h \
-		../../CMath/include/CMatrix2D.h \
-		CSunburst.h \
-		../../CFont/include/CFontMgr.h \
-		CGnuPlotPieObject.h
+		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleSunburst.o CGnuPlotStyleSunburst.cpp
 
 ../obj/CGnuPlotStyleTestPalette.o: CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestPalette.h \
@@ -45205,6 +48680,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -45216,6 +48692,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -45321,7 +48798,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -45330,6 +48808,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -45376,6 +48856,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -45387,6 +48868,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -45492,7 +48974,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -45501,6 +48984,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h \
 		CGnuPlotRenderer.h \
@@ -45541,9 +49026,15 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotProbeEvent.h \
+		CGnuPlotTreeMapStyleValue.h \
+		CGnuPlotStyleValue.h \
+		CTreeMap.h \
+		CGnuPlotStyleValueMgr.h \
+		CTypeInfo.h \
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -45555,6 +49046,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -45660,7 +49152,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -45669,6 +49161,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -45681,7 +49175,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CImageLib/include/CImagePtr.h \
 		../../CMath/include/CMatrix2D.h \
 		CGnuPlotRectObject.h \
-		CTreeMap.h
+		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleTreeMap.o CGnuPlotStyleTreeMap.cpp
 
 ../obj/CGnuPlotStyleVectors.o: CGnuPlotStyleVectors.cpp CGnuPlotStyleVectors.h \
@@ -45723,6 +49217,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -45734,6 +49229,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -45836,7 +49332,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -45844,6 +49341,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -45885,6 +49384,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -45896,6 +49396,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -46001,7 +49502,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -46010,6 +49512,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -46059,6 +49563,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -46070,6 +49575,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -46175,7 +49681,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -46184,6 +49691,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -46225,6 +49734,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -46236,6 +49746,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -46341,7 +49852,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -46350,6 +49862,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -46399,6 +49913,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -46410,6 +49925,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -46515,7 +50031,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -46524,6 +50041,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -46565,6 +50084,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -46576,6 +50096,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -46681,7 +50202,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -46690,6 +50212,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CGnuPlotTimeStamp.h \
@@ -46739,6 +50263,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -46750,6 +50275,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -46855,7 +50381,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
 		CGnuPlotSurface.h \
@@ -46864,6 +50391,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CDirectionType.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -46911,6 +50440,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -46921,6 +50451,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -47022,7 +50553,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -47041,12 +50573,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotRotate.h
+		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotSVGDevice.o CGnuPlotSVGDevice.cpp
 
 ../obj/CGnuPlotSVGRenderer.o: CGnuPlotSVGRenderer.cpp CGnuPlotSVGRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -47058,6 +50593,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -47191,7 +50727,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -47245,6 +50782,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
@@ -47255,6 +50793,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -47362,7 +50901,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -47380,12 +50920,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
-		CGnuPlotRotate.h
+		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPSDevice.o CGnuPlotPSDevice.cpp
 
 ../obj/CGnuPlotPSRenderer.o: CGnuPlotPSRenderer.cpp CGnuPlotPSRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -47397,6 +50940,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -47530,7 +51074,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
@@ -47580,6 +51125,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -47591,6 +51137,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -47696,7 +51243,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -47736,6 +51284,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -47747,6 +51296,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -47850,7 +51400,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
 		CGnuPlotKey.h \
@@ -47870,6 +51421,7 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CGnuPlotWindow.o: CGnuPlotWindow.cpp CGnuPlotWindow.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -47881,6 +51433,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -48014,7 +51567,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleData.h \
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
-		CGnuPlotPieStyle.h \
+		CGnuPlotPieChartStyleValue.h \
+		CGnuPlotStyleValue.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		CDirectionType.h \
@@ -48030,6 +51584,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotRotate.h \
+		CGnuPlotPlotCacheFactoriesDcl.h \
+		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotDevice.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
@@ -49433,6 +52989,7 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CGradientPalette.o: CGradientPalette.cpp CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -49444,6 +53001,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -49476,6 +53034,7 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CQGradientPalette.o: CQGradientPalette.cpp CQGradientPalette.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -49487,6 +53046,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -49630,6 +53190,7 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CQGradientPaletteControl.o: CQGradientPaletteControl.cpp CQGradientPaletteControl.h \
 		CGradientPalette.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -49641,6 +53202,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50004,6 +53566,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50014,6 +53577,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50037,6 +53601,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50047,6 +53612,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50062,43 +53628,13 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprBValue.o Expr/CExprBValue.cpp
 
-../obj/CExprCompile.o: Expr/CExprCompile.cpp Expr/CExprI.h \
-		../../CStrUtil/include/CStrUtil.h \
-		../../CFile/include/CFile.h \
-		../../CFile/include/CFileBase.h \
-		../../CFile/include/CFileType.h \
-		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
-		Expr/CExprBValue.h \
-		Expr/CExprIValue.h \
-		Expr/CExprRValue.h \
-		Expr/CExprSValue.h \
-		Expr/CExprCValue.h \
-		Expr/CExprValue.h \
-		Expr/CExprOperator.h \
-		Expr/CExprToken.h \
-		Expr/CExprTokenStack.h \
-		Expr/CExprParse.h \
-		Expr/CExprVariable.h \
-		Expr/CExprInterp.h \
-		Expr/CExprCompile.h \
-		Expr/CExprFunction.h \
-		Expr/CExprExecute.h \
-		Expr/CExprStrgen.h \
-		Expr/CExprError.h \
-		Expr/CExprFunctionMgr.h \
-		Expr/CExprOperatorMgr.h \
-		Expr/CExprVariableMgr.h \
-		Expr/CExprTokenMgr.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprCompile.o Expr/CExprCompile.cpp
-
 ../obj/CExprCValue.o: Expr/CExprCValue.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50109,6 +53645,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50124,12 +53661,13 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprCValue.o Expr/CExprCValue.cpp
 
-../obj/CExprExecute.o: Expr/CExprExecute.cpp Expr/CExprI.h \
+../obj/CExprCompile.o: Expr/CExprCompile.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50140,6 +53678,40 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprOperatorMgr.h \
+		Expr/CExprVariableMgr.h \
+		Expr/CExprTokenMgr.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprCompile.o Expr/CExprCompile.cpp
+
+../obj/CExprExecute.o: Expr/CExprExecute.cpp Expr/CExprI.h \
+		../../CStrUtil/include/CStrUtil.h \
+		../../CFile/include/CFile.h \
+		../../CFile/include/CFileBase.h \
+		../../CFile/include/CFileType.h \
+		Expr/CExpr.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50161,6 +53733,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50171,6 +53744,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50189,43 +53763,13 @@ compiler_clean: compiler_moc_header_clean
 		CInvNorm.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprFunction.o Expr/CExprFunction.cpp
 
-../obj/CExprInterp.o: Expr/CExprInterp.cpp Expr/CExprI.h \
-		../../CStrUtil/include/CStrUtil.h \
-		../../CFile/include/CFile.h \
-		../../CFile/include/CFileBase.h \
-		../../CFile/include/CFileType.h \
-		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
-		Expr/CExprBValue.h \
-		Expr/CExprIValue.h \
-		Expr/CExprRValue.h \
-		Expr/CExprSValue.h \
-		Expr/CExprCValue.h \
-		Expr/CExprValue.h \
-		Expr/CExprOperator.h \
-		Expr/CExprToken.h \
-		Expr/CExprTokenStack.h \
-		Expr/CExprParse.h \
-		Expr/CExprVariable.h \
-		Expr/CExprInterp.h \
-		Expr/CExprCompile.h \
-		Expr/CExprFunction.h \
-		Expr/CExprExecute.h \
-		Expr/CExprStrgen.h \
-		Expr/CExprError.h \
-		Expr/CExprFunctionMgr.h \
-		Expr/CExprOperatorMgr.h \
-		Expr/CExprVariableMgr.h \
-		Expr/CExprTokenMgr.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprInterp.o Expr/CExprInterp.cpp
-
 ../obj/CExprIValue.o: Expr/CExprIValue.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50236,6 +53780,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50251,12 +53796,13 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprIValue.o Expr/CExprIValue.cpp
 
-../obj/CExprOperator.o: Expr/CExprOperator.cpp Expr/CExprI.h \
+../obj/CExprInterp.o: Expr/CExprInterp.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50267,6 +53813,40 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprOperatorMgr.h \
+		Expr/CExprVariableMgr.h \
+		Expr/CExprTokenMgr.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprInterp.o Expr/CExprInterp.cpp
+
+../obj/CExprOperator.o: Expr/CExprOperator.cpp Expr/CExprI.h \
+		../../CStrUtil/include/CStrUtil.h \
+		../../CFile/include/CFile.h \
+		../../CFile/include/CFileBase.h \
+		../../CFile/include/CFileType.h \
+		Expr/CExpr.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50288,6 +53868,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50298,6 +53879,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50319,6 +53901,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50329,6 +53912,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50346,43 +53930,13 @@ compiler_clean: compiler_moc_header_clean
 		../../COS/include/NaN.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprRValue.o Expr/CExprRValue.cpp
 
-../obj/CExprStrgen.o: Expr/CExprStrgen.cpp Expr/CExprI.h \
-		../../CStrUtil/include/CStrUtil.h \
-		../../CFile/include/CFile.h \
-		../../CFile/include/CFileBase.h \
-		../../CFile/include/CFileType.h \
-		Expr/CExpr.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
-		Expr/CExprBValue.h \
-		Expr/CExprIValue.h \
-		Expr/CExprRValue.h \
-		Expr/CExprSValue.h \
-		Expr/CExprCValue.h \
-		Expr/CExprValue.h \
-		Expr/CExprOperator.h \
-		Expr/CExprToken.h \
-		Expr/CExprTokenStack.h \
-		Expr/CExprParse.h \
-		Expr/CExprVariable.h \
-		Expr/CExprInterp.h \
-		Expr/CExprCompile.h \
-		Expr/CExprFunction.h \
-		Expr/CExprExecute.h \
-		Expr/CExprStrgen.h \
-		Expr/CExprError.h \
-		Expr/CExprFunctionMgr.h \
-		Expr/CExprOperatorMgr.h \
-		Expr/CExprVariableMgr.h \
-		Expr/CExprTokenMgr.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprStrgen.o Expr/CExprStrgen.cpp
-
 ../obj/CExprSValue.o: Expr/CExprSValue.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50393,6 +53947,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50408,12 +53963,13 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprSValue.o Expr/CExprSValue.cpp
 
-../obj/CExprToken.o: Expr/CExprToken.cpp Expr/CExprI.h \
+../obj/CExprStrgen.o: Expr/CExprStrgen.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50424,6 +53980,40 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTokenStack.h \
+		Expr/CExprParse.h \
+		Expr/CExprVariable.h \
+		Expr/CExprInterp.h \
+		Expr/CExprCompile.h \
+		Expr/CExprFunction.h \
+		Expr/CExprExecute.h \
+		Expr/CExprStrgen.h \
+		Expr/CExprError.h \
+		Expr/CExprFunctionMgr.h \
+		Expr/CExprOperatorMgr.h \
+		Expr/CExprVariableMgr.h \
+		Expr/CExprTokenMgr.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprStrgen.o Expr/CExprStrgen.cpp
+
+../obj/CExprToken.o: Expr/CExprToken.cpp Expr/CExprI.h \
+		../../CStrUtil/include/CStrUtil.h \
+		../../CFile/include/CFile.h \
+		../../CFile/include/CFileBase.h \
+		../../CFile/include/CFileType.h \
+		Expr/CExpr.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CRefPtr.h \
+		../../CUtil/include/CAutoPtr.h \
+		Expr/CExprBValue.h \
+		Expr/CExprIValue.h \
+		Expr/CExprRValue.h \
+		Expr/CExprSValue.h \
+		Expr/CExprCValue.h \
+		Expr/CExprValue.h \
+		Expr/CExprOperator.h \
+		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50439,12 +54029,20 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprTokenMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprToken.o Expr/CExprToken.cpp
 
+../obj/CExprTokenStack.o: Expr/CExprTokenStack.cpp Expr/CExprTokenStack.h \
+		Expr/CExprTokenBase.h \
+		Expr/CExprTypes.h \
+		../../CUtil/include/CRefPtr.h \
+		Expr/CExprFunction.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprTokenStack.o Expr/CExprTokenStack.cpp
+
 ../obj/CExprValue.o: Expr/CExprValue.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50455,6 +54053,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50476,6 +54075,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CFile/include/CFileBase.h \
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
+		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
@@ -50486,6 +54086,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprValue.h \
 		Expr/CExprOperator.h \
 		Expr/CExprToken.h \
+		Expr/CExprTokenBase.h \
 		Expr/CExprTokenStack.h \
 		Expr/CExprParse.h \
 		Expr/CExprVariable.h \
@@ -50663,6 +54264,9 @@ compiler_clean: compiler_moc_header_clean
 ../obj/moc_CQGnuPlotPaletteDialog.o: .moc/moc_CQGnuPlotPaletteDialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotPaletteDialog.o .moc/moc_CQGnuPlotPaletteDialog.cpp
 
+../obj/moc_CQGnuPlotTreeView.o: .moc/moc_CQGnuPlotTreeView.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotTreeView.o .moc/moc_CQGnuPlotTreeView.cpp
+
 ../obj/moc_CQGnuPlotTreeWidget.o: .moc/moc_CQGnuPlotTreeWidget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotTreeWidget.o .moc/moc_CQGnuPlotTreeWidget.cpp
 
@@ -50674,6 +54278,33 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/moc_CQGnuPlotPositionEdit.o: .moc/moc_CQGnuPlotPositionEdit.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotPositionEdit.o .moc/moc_CQGnuPlotPositionEdit.cpp
+
+../obj/moc_CQGnuPlotAdjacencyStyleValue.o: .moc/moc_CQGnuPlotAdjacencyStyleValue.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotAdjacencyStyleValue.o .moc/moc_CQGnuPlotAdjacencyStyleValue.cpp
+
+../obj/moc_CQGnuPlotChordDiagramStyleValue.o: .moc/moc_CQGnuPlotChordDiagramStyleValue.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotChordDiagramStyleValue.o .moc/moc_CQGnuPlotChordDiagramStyleValue.cpp
+
+../obj/moc_CQGnuPlotDelaunayStyleValue.o: .moc/moc_CQGnuPlotDelaunayStyleValue.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotDelaunayStyleValue.o .moc/moc_CQGnuPlotDelaunayStyleValue.cpp
+
+../obj/moc_CQGnuPlotDendrogramStyleValue.o: .moc/moc_CQGnuPlotDendrogramStyleValue.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotDendrogramStyleValue.o .moc/moc_CQGnuPlotDendrogramStyleValue.cpp
+
+../obj/moc_CQGnuPlotForceDirectedStyleValue.o: .moc/moc_CQGnuPlotForceDirectedStyleValue.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotForceDirectedStyleValue.o .moc/moc_CQGnuPlotForceDirectedStyleValue.cpp
+
+../obj/moc_CQGnuPlotHierBubbleStyleValue.o: .moc/moc_CQGnuPlotHierBubbleStyleValue.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotHierBubbleStyleValue.o .moc/moc_CQGnuPlotHierBubbleStyleValue.cpp
+
+../obj/moc_CQGnuPlotPieChartStyleValue.o: .moc/moc_CQGnuPlotPieChartStyleValue.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotPieChartStyleValue.o .moc/moc_CQGnuPlotPieChartStyleValue.cpp
+
+../obj/moc_CQGnuPlotSunburstStyleValue.o: .moc/moc_CQGnuPlotSunburstStyleValue.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotSunburstStyleValue.o .moc/moc_CQGnuPlotSunburstStyleValue.cpp
+
+../obj/moc_CQGnuPlotTreeMapStyleValue.o: .moc/moc_CQGnuPlotTreeMapStyleValue.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotTreeMapStyleValue.o .moc/moc_CQGnuPlotTreeMapStyleValue.cpp
 
 ../obj/moc_CQHeaderView.o: .moc/moc_CQHeaderView.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQHeaderView.o .moc/moc_CQHeaderView.cpp

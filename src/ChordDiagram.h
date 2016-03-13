@@ -14,7 +14,7 @@ class ChordDiagram {
  public:
   class ValueSet {
    public:
-    ValueSet() : name_(), color_(0.5,0.5,0.5), r1_(1), r2_(1), angle_(0), dangle_(90) { }
+    ValueSet() : name_(), colorInd_(0), r1_(1), r2_(1), angle_(0), dangle_(90) { }
 
     void resize(int n) {
       values_.resize(n);
@@ -35,8 +35,8 @@ class ChordDiagram {
     void setName(const std::string &name) { name_ = name; }
     const std::string &name() const { return name_; }
 
-    const CRGBA &color() const { return color_; }
-    void setColor(const CRGBA &color) { color_ = color; }
+    int colorInd() const { return colorInd_; }
+    void setColorInd(int colorInd) { colorInd_ = colorInd; }
 
     double total(int n) const {
       double total = 0.0;
@@ -148,7 +148,7 @@ class ChordDiagram {
 
     std::vector<double> values_;
     std::string         name_;
-    CRGBA               color_;
+    int                 colorInd_;
     Inds                sortedInds_;
     double              r1_, r2_;
     double              angle_, dangle_;
@@ -163,8 +163,9 @@ class ChordDiagram {
 
   void setValue(int i, int j, double value);
 
-  void setName (int i, const std::string &name);
-  void setColor(int i, const CRGBA &c);
+  void setName(int i, const std::string &name);
+
+  void setColorInd(int i, int ind);
 
   int currentInd() const { return currentInd_; }
   void setCurrentInd(int i) { currentInd_ = i; }
@@ -213,6 +214,8 @@ class ChordDiagramRenderer {
 
   virtual void drawComplexChord(const CPoint2D &p, double r, double a11, double a12,
                                 double a21, double a22, const CRGBA &fc, const CRGBA &lc) = 0;
+
+  virtual CRGBA indexColor(int ind) const = 0;
 };
 
 #endif

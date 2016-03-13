@@ -22,7 +22,7 @@ class CExprFunctionMgr {
   CExprFunctionPtr addProcFunction(const std::string &name, const std::string &args,
                                    CExprFunctionProc proc);
   CExprFunctionPtr addObjFunction (const std::string &name, const std::string &args,
-                                   CExprFunctionObj *proc);
+                                   CExprFunctionObj *proc, bool resetCompiled=true);
   CExprFunctionPtr addUserFunction(const std::string &name, const std::vector<std::string> &args,
                                    const std::string &proc);
 
@@ -34,7 +34,7 @@ class CExprFunctionMgr {
   static bool parseArgs(const std::string &argsStr, Args &args, bool &variableArgs);
 
  private:
-  void resetCompiled();
+  void resetCompiled(const std::string &name);
 
  private:
   CExprFunctionMgr(CExpr *expr);

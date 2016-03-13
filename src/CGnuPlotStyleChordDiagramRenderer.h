@@ -11,6 +11,9 @@ class CGnuPlotStyleChordDiagramRenderer : public ChordDiagramRenderer {
    renderer_(renderer), chord_(chord) {
   }
 
+  const std::string &palette() const { return palette_; }
+  void setPalette(const std::string &v) { palette_ = v; }
+
   void setRenderer(CGnuPlotRenderer *renderer) { renderer_ = renderer; }
 
   double pixelLengthToWindowLength(double l) {
@@ -49,7 +52,7 @@ class CGnuPlotStyleChordDiagramRenderer : public ChordDiagramRenderer {
     if (! valueSet) return false;
 
     name = valueSet->name();
-    c    = valueSet->color();
+    c    = indexColor(valueSet->colorInd());
 
     return true;
   }
@@ -58,9 +61,14 @@ class CGnuPlotStyleChordDiagramRenderer : public ChordDiagramRenderer {
     chord_->setCurrentInd(ind);
   }
 
+  CRGBA indexColor(int ind) const {
+    return CGnuPlotStyleInst->indexColor(palette(), ind);
+  }
+
  private:
-  CGnuPlotRenderer *renderer_;
-  ChordDiagram     *chord_;
+  CGnuPlotRenderer *renderer_ { 0 };
+  ChordDiagram     *chord_    { 0 };
+  std::string       palette_  { "chord" };
 };
 
 #endif

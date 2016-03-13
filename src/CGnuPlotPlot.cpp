@@ -24,9 +24,6 @@
 #include <CGnuPlotBBoxRenderer.h>
 #include <CGnuPlotStyleBase.h>
 #include <CGnuPlotUtil.h>
-#include <CGnuPlotStyleAdjacencyRenderer.h>
-#include <CGnuPlotStyleChordDiagramRenderer.h>
-#include <CSunburst.h>
 
 #include <CExpr.h>
 #include <CRGBName.h>
@@ -37,11 +34,11 @@ int CGnuPlotPlot::nextId_ = 1;
 
 CGnuPlotPlot::
 CGnuPlotPlot(CGnuPlotGroup *group, PlotStyle style) :
- group_(group), style_(style), id_(nextId_++), lineStyle_(app()), contour_(this), surface_(this),
- arrowCache_(this), boxBarCache_(this), boxCache_(this), bubbleCache_(this), ellipseCache_(this),
- errorBarCache_(this), financeBarCache_(this), imageCache_(this), labelCache_(this),
- pathCache_(this), pieCache_(this), pointCache_(this), polygonCache_(this), rectCache_(this),
- tableFile_(group->app())
+ group_(group), style_(style), id_(nextId_++), usingCols_(app()), imageStyle_(app()),
+ lineStyle_(app()), contour_(this), surface_(this), arrowCache_(this), boxBarCache_(this),
+ boxCache_(this), bubbleCache_(this), ellipseCache_(this), errorBarCache_(this),
+ financeBarCache_(this), imageCache_(this), labelCache_(this), pathCache_(this), pieCache_(this),
+ pointCache_(this), polygonCache_(this), rectCache_(this), tableFile_(app())
 {
   setSmooth(app()->getSmooth());
 }
@@ -776,10 +773,10 @@ clearCaches()
   imageCache_     .clear();
   labelCache_     .clear();
   pathCache_      .clear();
-  pieCache_       .clear();
+  clearPieCache   ();
   pointCache_     .clear();
   polygonCache_   .clear();
-  rectCache_      .clear();
+  clearRectCache  ();
 }
 
 void
@@ -868,6 +865,13 @@ updatePieCacheSize(int n)
 
 void
 CGnuPlotPlot::
+clearPieCache()
+{
+  pieCache_.clear();
+}
+
+void
+CGnuPlotPlot::
 updatePointCacheSize(int n)
 {
   pointCache_.updateSize(n);
@@ -885,6 +889,20 @@ CGnuPlotPlot::
 updateRectCacheSize(int n)
 {
   rectCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
+clearRectCache()
+{
+  rectCache_.clear();
+}
+
+void
+CGnuPlotPlot::
+resetRectCache()
+{
+  rectCache_.reset();
 }
 
 //---
@@ -2168,7 +2186,7 @@ angleToDeg(double a) const
 
 void
 CGnuPlotPlot::
-setStyleValue(const std::string &name, StyleValue *value)
+setStyleValue(const std::string &name, CGnuPlotStyleValue *value)
 {
   auto p = styleValues_.find(name);
 
@@ -2178,7 +2196,7 @@ setStyleValue(const std::string &name, StyleValue *value)
   styleValues_[name] = value;
 }
 
-CGnuPlotPlot::StyleValue *
+CGnuPlotStyleValue *
 CGnuPlotPlot::
 styleValue(const std::string &name) const
 {
@@ -2188,30 +2206,4 @@ styleValue(const std::string &name) const
     return 0;
 
   return (*p).second;
-}
-
-//------
-
-CGnuPlotAdjacencyData::
-~CGnuPlotAdjacencyData()
-{
-  delete adjacency_;
-  delete renderer_;
-}
-
-//------
-
-CGnuPlotChordDiagramData::
-~CGnuPlotChordDiagramData()
-{
-  delete chord_;
-  delete renderer_;
-}
-
-//------
-
-CGnuPlotSunburstData::
-~CGnuPlotSunburstData()
-{
-  delete sunburst_;
 }

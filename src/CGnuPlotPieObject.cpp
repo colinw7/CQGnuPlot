@@ -68,6 +68,7 @@ tip() const
 
   tip.setBorderColor(fill_->color());
   tip.setXColor     (fill_->color());
+  tip.setYColor     (CRGBA(0,0,0));
 
   tip.setBBox(rect);
 

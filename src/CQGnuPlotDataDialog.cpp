@@ -310,8 +310,20 @@ loadSlot()
 
   QString sepStr = separatorEdit_->text();
 
-  if (sepStr.length())
-    dataFile.setSeparator(sepStr[0].toLatin1());
+  if (sepStr.length()) {
+    char c = '\0';
+
+    if      (sepStr == "whitespace")
+      c = ' ';
+    else if (sepStr == "tab" || sepStr == "\\t")
+      c = '\t';
+    else if (sepStr == "comma")
+      c = ',';
+    else
+      c = sepStr[0].toLatin1();
+
+    dataFile.setSeparator(c);
+  }
 
   dataFile.processFile();
 
@@ -375,7 +387,7 @@ filterSlot()
   QString everyStr = everyEdit_->text();
   QString whereStr = whereEdit_->text();
 
-  CGnuPlotUsingCols usingCols;
+  CGnuPlotUsingCols usingCols(window_->app());
   CGnuPlotIndexData indexData;
   CGnuPlotEveryData everyData;
   CGnuPlotWhereData whereData;
@@ -718,7 +730,7 @@ doPlot(bool add)
   QString everyStr = everyEdit_->text();
   QString whereStr = whereEdit_->text();
 
-  CGnuPlotUsingCols usingCols;
+  CGnuPlotUsingCols usingCols(window_->app());
   CGnuPlotIndexData indexData;
   CGnuPlotEveryData everyData;
   CGnuPlotWhereData whereData;

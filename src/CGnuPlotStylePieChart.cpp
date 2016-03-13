@@ -2,12 +2,15 @@
 // TODO: label style (font, color, ...)
 
 #include <CGnuPlotStylePieChart.h>
+#include <CGnuPlotPieChartStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotKey.h>
 #include <CGnuPlotPieObject.h>
+#include <CGnuPlotDevice.h>
 
 namespace {
   typedef std::pair<CRGBA,CRGBA>            LineFillColor;
@@ -16,14 +19,14 @@ namespace {
 
   typedef std::vector<NameValueColor> NameValueColors;
 
-  void getPointsColor(int pi, CRGBA &lc, CRGBA &fc) {
-    lc = CGnuPlotStyleInst->indexColor("subtle", pi + 1);
+  void getPointsColor(const std::string &palette, double alpha, int pi, CRGBA &lc, CRGBA &fc) {
+    lc = CGnuPlotStyleInst->indexColor(palette, pi + 1);
     fc = lc;
 
-    fc.setAlpha(0.5);
+    fc.setAlpha(alpha);
   }
 
-  NameValueColors nameValueColors(CGnuPlotPlot *plot) {
+  NameValueColors nameValueColors(CGnuPlotPlot *plot, const std::string &palette, double alpha) {
     NameValueColors values;
 
     int i = 0;
@@ -40,7 +43,7 @@ namespace {
 
       CRGBA lc, fc;
 
-      getPointsColor(i, lc, fc);
+      getPointsColor(palette, alpha, i, lc, fc);
 
       if (point.hasParam("linecolor"))
         lc = point.getParamColor("linecolor");
@@ -67,20 +70,34 @@ CGnuPlotStylePieChart::
 CGnuPlotStylePieChart() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::PIECHART)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotPieChartStyleValue>("piechart");
 }
 
 void
 CGnuPlotStylePieChart::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotPieChartStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotPieChartStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createPieChartStyleValue(plot);
+
+    value->init(plot->app()->pieChartStyleValue());
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotPieChartStyleValue>(plot, value);
+  }
+
+  //---
+
   const CBBox2D &bbox = plot->bbox2D();
 
   CPoint2D pc = bbox.getCenter();
   double   r  = bbox.getWidth()/2;
 
-  NameValueColors values = nameValueColors(plot);
+  NameValueColors values = nameValueColors(plot, value->palette(), value->alpha());
 
-  const CGnuPlotPieStyle &pieStyle = plot->pieStyle();
+  //const CGnuPlotPieStyle &pieStyle = plot->pieStyle();
 
   //---
 
@@ -97,11 +114,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   if (! renderer->isPseudo())
     plot->updatePieCacheSize(values.size());
 
-  double ir = pieStyle.innerRadius().getValue(0.0);
-  double lr = pieStyle.labelRadius().getValue(0.5);
+//double ir = pieStyle.innerRadius().getValue(0.0);
+//double lr = pieStyle.labelRadius().getValue(0.5);
+  double ir = value->innerRadius();
+  double lr = value->labelRadius();
 
   int    i      = 0;
-  double angle1 = pieStyle.startAngle ().getValue(90.0);
+//double angle1 = pieStyle.startAngle().getValue(90.0);
+  double angle1 = value->startAngle();
 
   for (const auto &v : values) {
     const std::string   &name = v .first;
@@ -118,8 +138,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       pie->setCenter(pc);
       pie->setRadius(r);
-      pie->setAngle1(angle1);
-      pie->setAngle2(angle2);
+      pie->setAngle1(angle2);
+      pie->setAngle2(angle1);
 
       CRGBA fc = lfc.second;
 
@@ -134,6 +154,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         pie->setLabelRadius(lr);
 
         fill  ->setColor(fc);
+        fill  ->setType (CGnuPlotTypes::FillType::SOLID);
         stroke->setColor(lfc.first);
 
         pie->setFill  (fill  );
@@ -158,6 +179,12 @@ void
 CGnuPlotStylePieChart::
 drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotPieChartStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotPieChartStyleValue>(plot);
+  if (! value) return;
+
+  //---
+
   CGnuPlotGroup *group = plot->group();
 
   const CGnuPlotKeyP     &key   = group->key();
@@ -200,7 +227,7 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       textHeight += font_size*ph;
   }
 
-  NameValueColors values = nameValueColors(plot);
+  NameValueColors values = nameValueColors(plot, value->palette(), value->alpha());
 
   for (const auto &v : values) {
     std::string label = v.first;
@@ -257,6 +284,9 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     y -= font_size*ph;
   }
+
+  if (! renderer->isPseudo())
+    plot->updatePieCacheSize(values.size());
 
   int pi = 0;
 

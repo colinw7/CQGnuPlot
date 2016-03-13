@@ -103,11 +103,11 @@ size() const
 {
   double s = 0.0;
 
-  for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
-    s += (*p)->size();
+  for (const auto &c : children_)
+    s += c->size();
 
-  for (Nodes::const_iterator pn = nodes_.begin(); pn != nodes_.end(); ++pn)
-    s += (*pn)->size();
+  for (const auto &n : nodes_)
+    s += n->size();
 
   return s;
 }
@@ -122,8 +122,8 @@ depth() const
     if (! nodes_.empty())
       max_depth = 1;
 
-    for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
-      max_depth = std::max(max_depth, (*p)->depth());
+    for (const auto &c : children_)
+      max_depth = std::max(max_depth, c->depth());
   }
 
   return max_depth + 1;
@@ -145,8 +145,8 @@ maxNodes()
   if (isOpen()) {
     maxNum = nodes_.size();
 
-    for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
-      maxNum += (*p)->maxNodes();
+    for (const auto &c : children_)
+      maxNum += c->maxNodes();
   }
 
   return std::max(maxNum, 1);
@@ -163,9 +163,9 @@ CDendrogram::HierNode *
 CDendrogram::HierNode::
 findChild(const std::string &name) const
 {
-  for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
-    if ((*p)->name() == name)
-      return *p;
+  for (const auto &c : children_)
+    if (c->name() == name)
+      return c;
 
   return 0;
 }
@@ -176,11 +176,11 @@ resetPlaced()
 {
   Node::resetPlaced();
 
-  for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
-    (*p)->resetPlaced();
+  for (const auto &c : children_)
+    c->resetPlaced();
 
-  for (Nodes::const_iterator pn = nodes_.begin(); pn != nodes_.end(); ++pn)
-    (*pn)->resetPlaced();
+  for (const auto &n : nodes_)
+    n->resetPlaced();
 }
 
 void
@@ -190,11 +190,11 @@ placeSubNodes(RootNode *root, int depth, double row)
   // make single list of nodes to place
   Nodes nodes;
 
-  for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p)
-    nodes.push_back(*p);
+  for (const auto &c : children_)
+    nodes.push_back(c);
 
-  for (Nodes::const_iterator pn = nodes_.begin(); pn != nodes_.end(); ++pn)
-    nodes.push_back(*pn);
+  for (const auto &n : nodes_)
+    nodes.push_back(n);
 
   // sort nodes by name
   std::sort(nodes.begin(), nodes.end(), NodeCmp());
@@ -204,17 +204,15 @@ placeSubNodes(RootNode *root, int depth, double row)
   // place nodes in a grid (depth by max nodes)
   double row1 = row;
 
-  for (Nodes::const_iterator p = nodes.begin(); p != nodes.end(); ++p) {
-    Node *node = (*p);
-
+  for (const auto &n : nodes) {
     // get maximum number of child nodes
-    int maxNodes = node->maxNodes();
+    int maxNodes = n->maxNodes();
 
     // place node
-    root->placeNode(node, depth, row1, maxNodes);
+    root->placeNode(n, depth, row1, maxNodes);
 
     // place child nodes
-    HierNode *hierNode = dynamic_cast<HierNode *>(*p);
+    HierNode *hierNode = dynamic_cast<HierNode *>(n);
 
     if (hierNode && hierNode->isOpen())
       hierNode->placeSubNodes(root, depth + 1, row1);
@@ -265,16 +263,16 @@ getNodeAtPoint(double x, double y, double tol) const
     return const_cast<HierNode *>(this);
 
   // make single list of nodes to place
-  for (Children::const_iterator p = children_.begin(); p != children_.end(); ++p) {
-    Node *node = (*p)->getNodeAtPoint(x, y, tol);
+  for (const auto &c : children_) {
+    Node *node = c->getNodeAtPoint(x, y, tol);
 
     if (node)
       return node;
   }
 
-  for (Nodes::const_iterator pn = nodes_.begin(); pn != nodes_.end(); ++pn) {
-    if ((*pn)->isNodeAtPoint(x, y, tol))
-      return *pn;
+  for (const auto &n : nodes_) {
+    if (n->isNodeAtPoint(x, y, tol))
+      return n;
   }
 
   return 0;
@@ -552,20 +550,16 @@ getLowestChild(HierNode *hierNode)
 
   const Children &children = hierNode->getChildren();
 
-  for (Children::const_iterator p = children.begin(); p != children.end(); ++p) {
-    HierNode *hierNode1 = *p;
-
-    if (! lowestNode || hierNode1->row() < lowestNode->row())
-      lowestNode = hierNode1;
+  for (const auto &c : children) {
+    if (! lowestNode || c->row() < lowestNode->row())
+      lowestNode = c;
   }
 
   const Nodes &nodes = hierNode->getNodes();
 
-  for (Nodes::const_iterator pn = nodes.begin(); pn != nodes.end(); ++pn) {
-    Node *node1 = *pn;
-
-    if (! lowestNode || node1->row() < lowestNode->row())
-      lowestNode = node1;
+  for (const auto &n : nodes) {
+    if (! lowestNode || n->row() < lowestNode->row())
+      lowestNode = n;
   }
 
   return lowestNode;
@@ -619,10 +613,8 @@ compressNode(Node *node, const Nodes &lowestChildren, double d)
     if (! lowestChildren.empty()) {
       std::cerr << " (Lowest:";
 
-      for (Nodes::const_iterator p = lowestChildren.begin(); p != lowestChildren.end(); ++p) {
-        Node *lowestChild = *p;
-
-        std::cerr << " " << lowestChild->name() << "," << lowestChild->gap();
+      for (const auto &c : lowestChildren) {
+        std::cerr << " " << c->name() << "," << c->gap();
       }
 
       std::cerr << ")";
@@ -637,12 +629,10 @@ compressNode(Node *node, const Nodes &lowestChildren, double d)
   compressNodeUp(node, d);
 
   // move children
-  for (Nodes::const_iterator p = lowestChildren.begin(); p != lowestChildren.end(); ++p) {
-    Node *lowestChild = *p;
+  for (const auto &c : lowestChildren) {
+    c->moveNode(d);
 
-    lowestChild->moveNode(d);
-
-    moveHigherNodes(lowestChild, d);
+    moveHigherNodes(c, d);
   }
 
   //if (node->hasChildren())
@@ -659,20 +649,16 @@ moveChildNodes(HierNode *hierNode, double d)
 
   const Children &children = hierNode->getChildren();
 
-  for (Children::const_iterator p = children.begin(); p != children.end(); ++p) {
-    HierNode *hierNode1 = *p;
+  for (const auto &c : children_) {
+    c->moveNode(d);
 
-    hierNode1->moveNode(d);
-
-    moveChildNodes(hierNode1, d);
+    moveChildNodes(c, d);
   }
 
   const Nodes &nodes = hierNode->getNodes();
 
-  for (Nodes::const_iterator pn = nodes.begin(); pn != nodes.end(); ++pn) {
-    Node *node1 = *pn;
-
-    node1->moveNode(d);
+  for (const auto &n : nodes) {
+    n->moveNode(d);
   }
 }
 #endif

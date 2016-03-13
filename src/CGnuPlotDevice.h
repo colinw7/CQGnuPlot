@@ -55,6 +55,16 @@ class CGnuPlotTitle;
 class CGnuPlotWindow;
 class CGnuPlotMultiplot;
 
+class CGnuPlotAdjacencyStyleValue;
+class CGnuPlotChordDiagramStyleValue;
+class CGnuPlotDendrogramStyleValue;
+class CGnuPlotDelaunayStyleValue;
+class CGnuPlotForceDirectedStyleValue;
+class CGnuPlotHierBubbleStyleValue;
+class CGnuPlotPieChartStyleValue;
+class CGnuPlotSunburstStyleValue;
+class CGnuPlotTreeMapStyleValue;
+
 typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 
 class CGnuPlotDevice {
@@ -171,6 +181,16 @@ class CGnuPlotDevice {
   virtual CGnuPlotFill   *createFill  (CGnuPlotPlot *plot);
   virtual CGnuPlotStroke *createStroke(CGnuPlotPlot *plot);
   virtual CGnuPlotMark   *createMark  (CGnuPlotPlot *plot);
+
+  virtual CGnuPlotAdjacencyStyleValue     *createAdjacencyStyleValue    (CGnuPlotPlot *plot);
+  virtual CGnuPlotChordDiagramStyleValue  *createChordDiagramStyleValue (CGnuPlotPlot *plot);
+  virtual CGnuPlotDendrogramStyleValue    *createDendrogramStyleValue   (CGnuPlotPlot *plot);
+  virtual CGnuPlotDelaunayStyleValue      *createDelaunayStyleValue     (CGnuPlotPlot *plot);
+  virtual CGnuPlotForceDirectedStyleValue *createForceDirectedStyleValue(CGnuPlotPlot *plot);
+  virtual CGnuPlotHierBubbleStyleValue    *createHierBubbleStyleValue   (CGnuPlotPlot *plot);
+  virtual CGnuPlotPieChartStyleValue      *createPieChartStyleValue     (CGnuPlotPlot *plot);
+  virtual CGnuPlotSunburstStyleValue      *createSunburstStyleValue     (CGnuPlotPlot *plot);
+  virtual CGnuPlotTreeMapStyleValue       *createTreeMapStyleValue      (CGnuPlotPlot *plot);
 
   virtual void timeout() { }
 

@@ -45,6 +45,11 @@ class CGnuPlotCache {
     updateSize(0);
   }
 
+  void reset() {
+    for (auto &o : objects_)
+      o->setUsed(false);
+  }
+
  private:
   Factory factory_;
   Objects objects_;

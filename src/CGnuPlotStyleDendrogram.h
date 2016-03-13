@@ -4,6 +4,8 @@
 #include <CGnuPlotStyleBase.h>
 #include <CDendrogram.h>
 
+class CGnuPlotDendrogramStyleValue;
+
 class CGnuPlotStyleDendrogram : public CGnuPlotStyleBase {
  public:
   CGnuPlotStyleDendrogram();
@@ -34,12 +36,7 @@ class CGnuPlotStyleDendrogram : public CGnuPlotStyleBase {
   void unmapPoint(double x1, double y1, double &x2, double &y2) const;
 
  private:
-  double circleSize_   { 0.005 };
-  double textMargin_   { 0.001 };
-  double marginLeft_   { 0.05 };
-  double marginRight_  { 0.0 };
-  double marginBottom_ { 0.0 };
-  double marginTop_    { 0.0 };
+  CGnuPlotDendrogramStyleValue *value_ { 0 };
 };
 
 #endif

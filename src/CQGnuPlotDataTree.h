@@ -1,13 +1,13 @@
 #ifndef CQGnuPlotDataTree_H
 #define CQGnuPlotDataTree_H
 
-#include <QTreeView>
+#include <CQGnuPlotTreeView.h>
 
 class CGnuPlotFile;
 class CQGnuPlotDataModel;
 class CQHeaderView;
 
-class CQGnuPlotDataTree : public QTreeView {
+class CQGnuPlotDataTree : public CQGnuPlotTreeView {
   Q_OBJECT
 
  public:

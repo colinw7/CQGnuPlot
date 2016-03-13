@@ -1,70 +1,29 @@
 #include <CGnuPlotStyleForceDirected.h>
+#include <CGnuPlotForceDirectedStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
+#include <CGnuPlotDevice.h>
 #include <CGnuPlotRenderer.h>
-#include <CForceDirected.h>
-
-class CGnuPlotStyleForceDirectedValue : public CGnuPlotPlot::StyleValue {
- public:
-  CGnuPlotStyleForceDirectedValue() {
-    forceDirected_ = new CForceDirected;
-  }
-
- ~CGnuPlotStyleForceDirectedValue() {
-    delete forceDirected_;
-  }
-
-  CForceDirected *forceDirected() const { return forceDirected_; }
-
-  bool isInited() const { return inited_; }
-  void setInited(bool b) { inited_ = b; }
-
-  void init() {
-    delete forceDirected_;
-
-    forceDirected_ = new CForceDirected;
-  }
-
- private:
-  CForceDirected *forceDirected_ { 0 };
-  bool            inited_        { false };
-};
-
-//------
-
-static CRGBA colors[] = {
-  CRGBA(CRGBA::IVal(),0x88,0x88,0x88),
-  CRGBA(CRGBA::IVal(),0xFF,0x7F,0x0E),
-  CRGBA(CRGBA::IVal(),0x2C,0xA0,0x2C),
-  CRGBA(CRGBA::IVal(),0xD6,0x27,0x28),
-  CRGBA(CRGBA::IVal(),0x94,0x67,0xBD),
-  CRGBA(CRGBA::IVal(),0x8C,0x56,0x4B),
-  CRGBA(CRGBA::IVal(),0xEA,0xCF,0xE2),
-  CRGBA(CRGBA::IVal(),0xD1,0xD1,0xD1),
-  CRGBA(CRGBA::IVal(),0xBC,0xBD,0x22),
-  CRGBA(CRGBA::IVal(),0x4C,0xDA,0xD6),
-  CRGBA(CRGBA::IVal(),0x1F,0x77,0xB4),
-};
-
-//------
 
 CGnuPlotStyleForceDirected::
 CGnuPlotStyleForceDirected() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::FORCEDIRECTED)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotForceDirectedStyleValue>("force_directed");
 }
 
 void
 CGnuPlotStyleForceDirected::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  CGnuPlotStyleForceDirectedValue *value =
-    dynamic_cast<CGnuPlotStyleForceDirectedValue *>(plot->styleValue("force_directed"));
+  CGnuPlotForceDirectedStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotForceDirectedStyleValue>(plot);
 
   if (! value) {
-    value = new CGnuPlotStyleForceDirectedValue;
+    value = plot->app()->device()->createForceDirectedStyleValue(plot);
 
-    plot->setStyleValue("force_directed", value);
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotForceDirectedStyleValue>(plot, value);
   }
 
   //---
@@ -158,10 +117,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     renderer->drawLine(CPoint2D(p1.x(), p1.y()), CPoint2D(p2.x(), p2.y()), CRGBA(0,0,0,0.5), w);
   }
 
-  double CIRCLE_SIZE = 12;
-
-  double dw = renderer->pixelWidthToWindowWidth  (CIRCLE_SIZE);
-  double dh = renderer->pixelHeightToWindowHeight(CIRCLE_SIZE);
+  double dw = renderer->pixelWidthToWindowWidth  (value->circleSize());
+  double dh = renderer->pixelHeightToWindowHeight(value->circleSize());
 
   for (auto node : forceDirected->nodes()) {
     auto point = forceDirected->point(node);
@@ -177,7 +134,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (node == forceDirected->currentNode())
       c = CRGBA(1,0,0);
     else
-      c = colors[node->value()];
+      c = CGnuPlotStyleInst->indexColor(value->palette(), node->value());
 
     renderer->fillEllipse(CPoint2D(p1.x(), p1.y()), dw/2, dh/2, 0, c);
     renderer->drawEllipse(CPoint2D(p1.x(), p1.y()), dw/2, dh/2, 0, CRGBA(0,0,0), 1);
@@ -197,8 +154,8 @@ mousePress(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent)
 {
   pressed_ = true;
 
-  CGnuPlotStyleForceDirectedValue *value =
-    dynamic_cast<CGnuPlotStyleForceDirectedValue *>(plot->styleValue("force_directed"));
+  CGnuPlotForceDirectedStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotForceDirectedStyleValue>(plot);
 
   if (! value)
     return;
@@ -220,8 +177,8 @@ mouseMove(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent, bool pressed
   if (! pressed)
     return;
 
-  CGnuPlotStyleForceDirectedValue *value =
-    dynamic_cast<CGnuPlotStyleForceDirectedValue *>(plot->styleValue("force_directed"));
+  CGnuPlotForceDirectedStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotForceDirectedStyleValue>(plot);
 
   if (! value)
     return;
@@ -242,8 +199,8 @@ mouseRelease(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent)
 {
   pressed_ = false;
 
-  CGnuPlotStyleForceDirectedValue *value =
-    dynamic_cast<CGnuPlotStyleForceDirectedValue *>(plot->styleValue("force_directed"));
+  CGnuPlotForceDirectedStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotForceDirectedStyleValue>(plot);
 
   if (! value)
     return;
@@ -266,10 +223,13 @@ animate(CGnuPlotPlot *plot) const
   if (pressed_)
     return;
 
-  CGnuPlotStyleForceDirectedValue *value =
-    dynamic_cast<CGnuPlotStyleForceDirectedValue *>(plot->styleValue("force_directed"));
+  CGnuPlotForceDirectedStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotForceDirectedStyleValue>(plot);
 
   if (! value)
+    return;
+
+  if (! value->isAnimating())
     return;
 
   CForceDirected *forceDirected = value->forceDirected();

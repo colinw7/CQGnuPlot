@@ -1,14 +1,6 @@
 #include <ChordDiagram.h>
 
 #if 0
-namespace {
-CRGBA colors[] = {
-  CRGBA("#000000"), // black
-  CRGBA("#FFDD89"), // blond
-  CRGBA("#957244"), // brown
-  CRGBA("#F26223"), // red
-};
-
 // cells are ribbons
 const int num_sets = 4;
 
@@ -155,9 +147,9 @@ setName(int i, const std::string &name)
 
 void
 ChordDiagram::
-setColor(int i, const CRGBA &c)
+setColorInd(int i, int ind)
 {
-  valueSets_[i].setColor(c);
+  valueSets_[i].setColorInd(ind);
 }
 
 void
@@ -193,7 +185,9 @@ draw(ChordDiagramRenderer *renderer)
 
     double angle2 = angle1 + dangle;
 
-    renderer->drawArc(CPoint2D(xc, yc), r1, r2, angle1, angle2, values.color());
+    CRGBA c = renderer->indexColor(values.colorInd());
+
+    renderer->drawArc(CPoint2D(xc, yc), r1, r2, angle1, angle2, c);
 
     values.setAngles(angle1, dangle);
     values.setRadii (r2, r1);
@@ -223,12 +217,13 @@ draw(ChordDiagramRenderer *renderer)
 
       int j1 = values2.sortedIndToInd(i);
 
+      CRGBA c1 = renderer->indexColor(values1.colorInd());
+      CRGBA c2 = renderer->indexColor(values2.colorInd());
+
 #if 0
-      CRGBA fc = (values1.sortedValue(j) < values2.sortedValue(j1) ?
-                   values1.color() : values2.color());
+      CRGBA fc = (values1.sortedValue(j) < values2.sortedValue(j1) ?  c1 : c2);
 #else
-      CRGBA fc = (values1.sortedValue(j) > values2.sortedValue(j1) ?
-                   values1.color() : values2.color());
+      CRGBA fc = (values1.sortedValue(j) > values2.sortedValue(j1) ?  c1 : c2);
 #endif
 
       int alpha = (current ? 128 : 32);

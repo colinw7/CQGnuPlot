@@ -1,54 +1,30 @@
 #include <CGnuPlotStyleHierBubblePlot.h>
+#include <CGnuPlotHierBubbleStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotBubbleObject.h>
+#include <CGnuPlotDevice.h>
 #include <CGnuPlotUtil.h>
-
-class CGnuPlotStyleHierBubbleValue : public CGnuPlotPlot::StyleValue {
- public:
-  CGnuPlotStyleHierBubbleValue() {
-    pack_ = new CHierBubblePack;
-  }
-
- ~CGnuPlotStyleHierBubbleValue() {
-    delete pack_;
-  }
-
-  CHierBubblePack *pack() const { return pack_; }
-
-  bool isInited() const { return inited_; }
-  void setInited(bool b) { inited_ = b; }
-
-  void init() {
-    delete pack_;
-
-    pack_ = new CHierBubblePack;
-  }
-
- private:
-  CHierBubblePack *pack_ { 0 };
-  bool             inited_ { false };
-};
-
-//------
 
 CGnuPlotStyleHierBubblePlot::
 CGnuPlotStyleHierBubblePlot() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::HIERBUBBLEPLOT)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotHierBubbleStyleValue>("hier_bubble");
 }
 
 void
 CGnuPlotStyleHierBubblePlot::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  CGnuPlotStyleHierBubbleValue *value =
-    dynamic_cast<CGnuPlotStyleHierBubbleValue *>(plot->styleValue("hier_bubble"));
+  CGnuPlotHierBubbleStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotHierBubbleStyleValue>(plot);
 
   if (! value) {
-    value = new CGnuPlotStyleHierBubbleValue;
+    value = plot->app()->device()->createHierBubbleStyleValue(plot);
 
-    plot->setStyleValue("hier_bubble", value);
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotHierBubbleStyleValue>(plot, value);
   }
 
   //---
@@ -160,13 +136,20 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   CHierBubblePack::HierNode *root = pack->root();
 
   if (root)
-    drawNodes(renderer, root, 0);
+    drawNodes(plot, renderer, root, 0);
 }
 
 void
 CGnuPlotStyleHierBubblePlot::
-drawNodes(CGnuPlotRenderer *renderer, CHierBubblePack::HierNode *hier, int depth)
+drawNodes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
+          CHierBubblePack::HierNode *hier, int depth)
 {
+  CGnuPlotHierBubbleStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotHierBubbleStyleValue>(plot);
+  if (! value) return;
+
+  //---
+
   CRGBA c(0.5, 0.5, 0.5, 0.5);
 
   //QFontMetrics fm(renderer->font());
@@ -186,9 +169,9 @@ drawNodes(CGnuPlotRenderer *renderer, CHierBubblePack::HierNode *hier, int depth
   //renderer->setBrush(bg_colors[depth]);
   //renderer->drawPath(path);
 
-  CRGBA c1 = CGnuPlotStyleInst->indexColor("subtle", 4* depth      + 2);
-  CRGBA c2 = CGnuPlotStyleInst->indexColor("subtle", 4*(depth + 1) + 1);
-  CRGBA c3 = CGnuPlotStyleInst->indexColor("subtle", 4*(depth + 1) + 3);
+  CRGBA c1 = CGnuPlotStyleInst->indexColor(value->palette(), 4* depth      + 2);
+  CRGBA c2 = CGnuPlotStyleInst->indexColor(value->palette(), 4*(depth + 1) + 1);
+  CRGBA c3 = CGnuPlotStyleInst->indexColor(value->palette(), 4*(depth + 1) + 3);
 
   renderer->fillEllipse(CBBox2D(px1, py1, px2, py2), c1);
   renderer->drawEllipse(CBBox2D(px1, py1, px2, py2), CRGBA(0,0,0), 0);
@@ -198,7 +181,7 @@ drawNodes(CGnuPlotRenderer *renderer, CHierBubblePack::HierNode *hier, int depth
   const CHierBubblePack::HierNode::Children &children = hier->getChildren();
 
   for (auto hierNode : children)
-    drawNodes(renderer, hierNode, depth + 1);
+    drawNodes(plot, renderer, hierNode, depth + 1);
 
   //------
 
@@ -218,14 +201,14 @@ drawNodes(CGnuPlotRenderer *renderer, CHierBubblePack::HierNode *hier, int depth
     mapPoint(node->x() - r, node->y() + r, px1, py1);
     mapPoint(node->x() + r, node->y() - r, px2, py2);
 
-    //QPainterPath path;
-    //path.addEllipse(QRectF(px1, py1, px2 - px1, py2 - py1));
-    //renderer->setPen(border_color);
-    //renderer->setBrush(fg_color);
-    //renderer->drawPath(path);
+  //QPainterPath path;
+  //path.addEllipse(QRectF(px1, py1, px2 - px1, py2 - py1));
+  //renderer->setPen(border_color);
+  //renderer->setBrush(fg_color);
+  //renderer->drawPath(path);
 
-    //CRGBA c1 = (node->id() > 0 ? CGnuPlotStyleInst->indexColor("subtle", node->id()) : c);
-    //CRGBA c = CGnuPlotUtil::map(in, 0, nn - 1, c1, c2);
+  //CRGBA c1 = (node->id() > 0 ? CGnuPlotStyleInst->indexColor(value->palette(), node->id()) : c);
+  //CRGBA c = CGnuPlotUtil::map(in, 0, nn - 1, c1, c2);
     CRGBA c = c2 + (1.0*in)*(c3 - c2)/(nn - 1);
 
     renderer->fillEllipse(CBBox2D(px1, py1, px2, py2), c);
@@ -246,22 +229,27 @@ drawNodes(CGnuPlotRenderer *renderer, CHierBubblePack::HierNode *hier, int depth
 #else
     mapPoint(node->x(), node->y(), px1, py1);
 
+#if 0
     int len = node->name().size();
 
     for (int i = len; i >= 1; --i) {
       std::string name1 = node->name().substr(0, i);
 
-      //int tw = fm.width(name1.c_str());
-      //if (tw > 2*(px2 - px1)) continue;
+      int tw = fm.width(name1.c_str());
+      if (tw > 2*(px2 - px1)) continue;
 
-      //renderer->drawText(px1 - tw/2, py1 + fm.descent(), name1.c_str());
-      renderer->drawHAlignedText(CPoint2D(px1, py1),
-                                 CGnuPlotTypes::HAlignPos(CHALIGN_TYPE_CENTER, 0),
-                                 CGnuPlotTypes::VAlignPos(CVALIGN_TYPE_CENTER, 0),
-                                 name1, CRGBA(0,0,0));
+      renderer->drawText(px1 - tw/2, py1 + fm.descent(), name1.c_str());
 
       break;
     }
+#endif
+
+    CRGBA tc = c.bwContrast();
+
+    renderer->drawHAlignedText(CPoint2D(px1, py1),
+                               CGnuPlotTypes::HAlignPos(CHALIGN_TYPE_CENTER, 0),
+                               CGnuPlotTypes::VAlignPos(CVALIGN_TYPE_CENTER, 0),
+                               node->name(), tc);
 #endif
 
     ++in;
@@ -287,8 +275,8 @@ bool
 CGnuPlotStyleHierBubblePlot::
 mouseTip(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tipData)
 {
-  CGnuPlotStyleHierBubbleValue *value =
-    dynamic_cast<CGnuPlotStyleHierBubbleValue *>(plot->styleValue("hier_bubble"));
+  CGnuPlotHierBubbleStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotHierBubbleStyleValue>(plot);
   if (! value) return false;
 
   CHierBubblePack *pack = value->pack();

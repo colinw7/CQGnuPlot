@@ -104,6 +104,8 @@ typedef std::shared_ptr<CGnuPlotPlot>   CGnuPlotPlotP;
 #include <CGnuPlotLineProp.h>
 #include <CGnuPlotStyleData.h>
 
+#include <CGnuPlotPieChartStyleValue.h>
+
 //------
 
 class CGnuPlotMatrixData {
@@ -801,6 +803,11 @@ class CGnuPlot {
 
   const VarAnnotations &annotations() const { return varAnnotations_; }
   void setAnnotations(const VarAnnotations &annotations) { varAnnotations_ = annotations; }
+
+  //------
+
+  const CGnuPlotPieChartStyleValue &pieChartStyleValue() const { return pieChartStyleValue_; }
+  void setPieChartStyleValue(const CGnuPlotPieChartStyleValue &v) { pieChartStyleValue_ = v; }
 
   //------
 
@@ -1519,6 +1526,8 @@ class CGnuPlot {
   Blocks                 blocks_;
   SampleVars             sampleVars_;
   SampleVars             saveSampleVars_;
+
+  CGnuPlotPieChartStyleValue pieChartStyleValue_;
 
   mutable CoordSys       defSystem_      { CoordSys::FIRST };
   mutable Values         fieldValues_;

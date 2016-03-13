@@ -18,7 +18,7 @@ class CQGnuPlotDataTreeWidgetFactory : public CQHeaderViewWidgetFactory {
 
 CQGnuPlotDataTree::
 CQGnuPlotDataTree(const CGnuPlotFile &file) :
- QTreeView()
+ CQGnuPlotTreeView()
 {
   setObjectName("dataTree");
 
@@ -27,6 +27,8 @@ CQGnuPlotDataTree(const CGnuPlotFile &file) :
   model_->setWidgetHeaders(true);
 
   header_ = new CQHeaderView;
+
+  header_->setStretchLastSection(true);
 
   header_->setWidgetFactory(new CQGnuPlotDataTreeWidgetFactory(this));
 

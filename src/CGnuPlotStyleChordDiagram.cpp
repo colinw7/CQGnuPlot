@@ -1,9 +1,9 @@
 #include <CGnuPlotStyleChordDiagram.h>
+#include <CGnuPlotChordDiagramStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotDevice.h>
-#include <ChordDiagram.h>
-#include <CGnuPlotStyleChordDiagramRenderer.h>
 
 //------
 
@@ -11,19 +11,31 @@ CGnuPlotStyleChordDiagram::
 CGnuPlotStyleChordDiagram() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::CHORDDIAGRAM)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotChordDiagramStyleValue>("chord_diagram");
 }
 
 void
 CGnuPlotStyleChordDiagram::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotChordDiagramStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotChordDiagramStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createChordDiagramStyleValue(plot);
+
+    value->initRenderer(renderer);
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotChordDiagramStyleValue>(plot, value);
+  }
+
+  //---
+
   plot->group()->setMargin(CGnuPlotMargin(0, 0, 0, 0));
 
-  ChordDiagram *chord = plot->chordDiagramData().chordDiagram();
+  ChordDiagram *chord = value->chordDiagram();
 
-  if (! chord) {
-    chord = new ChordDiagram;
-
+  if (! value->isInited()) {
     CRGBA fc(0.5,0.5,0.5,0.5);
     CRGBA lc(0,0,0);
 
@@ -68,37 +80,37 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (point.hasParam("name"))
         chord->setName(iy, point.getParamString("name"));
 
-      if (point.hasParam("color"))
-        chord->setColor(iy, point.getParamColor("color"));
+      if (point.hasParam("colorInd"))
+        chord->setColorInd(iy, point.getParamInt("colorInd"));
 
       ++iy;
     }
 
     chord->init();
 
-    plot->setChordDiagram(chord);
+    value->setInited(true);
   }
 
   //---
 
-  CGnuPlotStyleChordDiagramRenderer *cr = plot->chordDiagramData().renderer();
+  CGnuPlotStyleChordDiagramRenderer *crenderer = value->renderer();
 
-  if (! cr) {
-    cr = new CGnuPlotStyleChordDiagramRenderer(renderer, chord);
+  crenderer->setRenderer(renderer);
 
-    plot->setChordDiagramRenderer(cr);
-  }
-  else
-    cr->setRenderer(renderer);
+  crenderer->setPalette(value->palette());
 
-  chord->draw(cr);
+  chord->draw(crenderer);
 }
 
 bool
 CGnuPlotStyleChordDiagram::
 mouseTip(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tipData)
 {
-  CGnuPlotStyleChordDiagramRenderer *cr = plot->chordDiagramData().renderer();
+  CGnuPlotChordDiagramStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotChordDiagramStyleValue>(plot);
+  if (! value) return false;
+
+  CGnuPlotStyleChordDiagramRenderer *cr = value->renderer();
 
   std::string name;
   CRGBA       c;
@@ -118,7 +130,11 @@ void
 CGnuPlotStyleChordDiagram::
 mousePress(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent)
 {
-  CGnuPlotStyleChordDiagramRenderer *cr = plot->chordDiagramData().renderer();
+  CGnuPlotChordDiagramStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotChordDiagramStyleValue>(plot);
+  if (! value) return;
+
+  CGnuPlotStyleChordDiagramRenderer *cr = value->renderer();
 
   int ind = cr->getIndAtPos(mouseEvent.window());
 

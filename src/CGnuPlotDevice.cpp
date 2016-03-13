@@ -18,6 +18,16 @@
 #include <CGnuPlotPolygonObject.h>
 #include <CGnuPlotRectObject.h>
 
+#include <CGnuPlotAdjacencyStyleValue.h>
+#include <CGnuPlotChordDiagramStyleValue.h>
+#include <CGnuPlotDendrogramStyleValue.h>
+#include <CGnuPlotDelaunayStyleValue.h>
+#include <CGnuPlotForceDirectedStyleValue.h>
+#include <CGnuPlotHierBubbleStyleValue.h>
+#include <CGnuPlotPieChartStyleValue.h>
+#include <CGnuPlotSunburstStyleValue.h>
+#include <CGnuPlotTreeMapStyleValue.h>
+
 #include <CFontMgr.h>
 
 CGnuPlotDevice::
@@ -295,6 +305,71 @@ CGnuPlotDevice::
 createMark(CGnuPlotPlot *plot)
 {
   return new CGnuPlotMark(plot);
+}
+
+//---
+
+CGnuPlotAdjacencyStyleValue *
+CGnuPlotDevice::
+createAdjacencyStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotAdjacencyStyleValue(plot);
+}
+
+CGnuPlotChordDiagramStyleValue *
+CGnuPlotDevice::
+createChordDiagramStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotChordDiagramStyleValue(plot);
+}
+
+CGnuPlotDendrogramStyleValue *
+CGnuPlotDevice::
+createDendrogramStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotDendrogramStyleValue(plot);
+}
+
+CGnuPlotDelaunayStyleValue *
+CGnuPlotDevice::
+createDelaunayStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotDelaunayStyleValue(plot);
+}
+
+CGnuPlotForceDirectedStyleValue *
+CGnuPlotDevice::
+createForceDirectedStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotForceDirectedStyleValue(plot);
+}
+
+CGnuPlotHierBubbleStyleValue *
+CGnuPlotDevice::
+createHierBubbleStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotHierBubbleStyleValue(plot);
+}
+
+CGnuPlotPieChartStyleValue *
+CGnuPlotDevice::
+createPieChartStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotPieChartStyleValue(plot);
+}
+
+CGnuPlotSunburstStyleValue *
+CGnuPlotDevice::
+createSunburstStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotSunburstStyleValue(plot);
+}
+
+CGnuPlotTreeMapStyleValue *
+CGnuPlotDevice::
+createTreeMapStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotTreeMapStyleValue(plot);
 }
 
 //---
