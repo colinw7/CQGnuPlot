@@ -1,19 +1,35 @@
 #include <CGnuPlotStyleBoxPlot.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotBBoxRenderer.h>
 #include <CGnuPlotBoxObject.h>
+#include <CGnuPlotDevice.h>
 
 CGnuPlotStyleBoxPlot::
 CGnuPlotStyleBoxPlot() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::BOXPLOT)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotBoxPlotStyleValue>("boxplot");
 }
 
 void
 CGnuPlotStyleBoxPlot::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotBoxPlotStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBoxPlotStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createBoxPlotStyleValue(plot);
+
+    value->init(plot->app()->boxPlotStyleValue());
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotBoxPlotStyleValue>(plot, value);
+  }
+
+  //---
+
   CGnuPlotGroup *group = plot->group();
 
   // get x value (first value of first set of values)
@@ -117,10 +133,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       ww = renderer->pixelWidthToWindowWidth(12*plot->bars().size());
   }
 
-  CGnuPlotBoxPlot *boxPlot = plot->getBoxPlot();
-
   CGnuPlotTypes::SymbolType outlierSymbol =
-    CGnuPlotTypes::SymbolType(boxPlot->pointType().getValue(7));
+    CGnuPlotTypes::SymbolType(value->pointType().getValue(7));
 
   double ps = plot->pointSize();
 
@@ -130,7 +144,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   std::vector<int> inds;
 
-  if (boxPlot->sorted()) {
+  if (value->sorted()) {
     for (const auto &so : sorder)
       inds.push_back(so.second);
   }
@@ -155,7 +169,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   double ix = (syv.empty() && iyv.size() == 1 ? x : 1);
 
   for (const auto &yv : iyv) {
-    double ix1 = ix + ic*boxPlot->separation().getValue(1.0);
+    double ix1 = ix + ic*value->separation().getValue(1.0);
 
     std::string s = xaxis->getValueStr(ix1, ix1);
 
@@ -173,10 +187,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (renderer->isPseudo() || ! boxObj->testAndSetUsed()) {
       boxObj->setLineWidth   (ww);
       boxObj->setBoxWidth    (bw);
-      boxObj->setRange       (boxPlot->range   ().getValue(1.5));
-      boxObj->setFraction    (boxPlot->fraction().getValue(0.95));
-      boxObj->setShowOutliers(boxPlot->outliers());
-      boxObj->setBoxLabels   (boxPlot->labels());
+      boxObj->setRange       (value->range   ().getValue(1.5));
+      boxObj->setFraction    (value->fraction().getValue(0.95));
+      boxObj->setShowOutliers(value->outliers());
+      boxObj->setBoxLabels   (value->labels());
       boxObj->setValueStr    (s);
 
       boxObj->outlierMark()->setType(outlierSymbol);
@@ -197,7 +211,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   for (const auto &i : inds) {
-    double ix1 = ix + ic*boxPlot->separation().getValue(1.0);
+    double ix1 = ix + ic*value->separation().getValue(1.0);
 
     auto yv = syv[i];
 
@@ -224,10 +238,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (renderer->isPseudo() || ! boxObj->testAndSetUsed()) {
       boxObj->setLineWidth   (ww);
       boxObj->setBoxWidth    (bw);
-      boxObj->setRange       (boxPlot->range   ().getValue(1.5));
-      boxObj->setFraction    (boxPlot->fraction().getValue(0.95));
-      boxObj->setShowOutliers(boxPlot->outliers());
-      boxObj->setBoxLabels   (boxPlot->labels());
+      boxObj->setRange       (value->range   ().getValue(1.5));
+      boxObj->setFraction    (value->fraction().getValue(0.95));
+      boxObj->setShowOutliers(value->outliers());
+      boxObj->setBoxLabels   (value->labels());
       boxObj->setValueStr    (s);
 
       boxObj->outlierMark()->setType(outlierSymbol);

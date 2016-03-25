@@ -118,7 +118,7 @@ draw(CGnuPlotRenderer *renderer) const
   double ir = innerRadius()*radius();
 
   renderer->fillPieSlice  (c, ir, radius(), angle1(), angle2(), *fill  );
-  renderer->strokePieSlice(c, ir, radius(), angle1(), angle2(), *stroke);
+  renderer->strokePieSlice(c, ir, radius(), angle1(), angle2(), isWedge(), *stroke);
 
   //---
 

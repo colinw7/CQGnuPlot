@@ -530,7 +530,7 @@ drawRotatedText(const CPoint2D &p, const std::string &text, double /*ta*/,
 void
 CGnuPlotSVGRenderer::
 drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
-             const CRGBA &c, double width, const CLineDash &)
+             bool /*wedge*/, const CRGBA &c, double width, const CLineDash &)
 {
   double x1, y1, x2, y2;
 

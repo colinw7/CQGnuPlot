@@ -125,18 +125,12 @@ init()
 
   //---
 
-  boxPlot_ = app()->device()->createBoxPlot(this);
+  setBars(plot->bars());
 
-  boxPlot_->init(app()->getBoxPlot());
-
-  //---
-
-  setBars    (plot->bars());
-  setBoxWidth(plot->boxWidth());
+  //setBoxWidth(plot->boxWidth());
 
   setFillStyle (plot->fillStyle ());
   setPointStyle(plot->pointStyle());
-  setArrowStyle(plot->arrowStyle());
 
   setAngleType(plot->angleType());
 
@@ -816,6 +810,20 @@ updateBubbleCacheSize(int n)
 
 void
 CGnuPlotPlot::
+resetArrowCache()
+{
+  arrowCache_.reset();
+}
+
+void
+CGnuPlotPlot::
+resetBubbleCache()
+{
+  bubbleCache_.reset();
+}
+
+void
+CGnuPlotPlot::
 updateEllipseCacheSize(int n)
 {
   ellipseCache_.updateSize(n);
@@ -851,6 +859,13 @@ updateLabelCacheSize(int n)
 
 void
 CGnuPlotPlot::
+resetLabelCache()
+{
+  labelCache_.reset();
+}
+
+void
+CGnuPlotPlot::
 updatePathCacheSize(int n)
 {
   pathCache_.updateSize(n);
@@ -882,6 +897,13 @@ CGnuPlotPlot::
 updatePolygonCacheSize(int n)
 {
   polygonCache_.updateSize(n);
+}
+
+void
+CGnuPlotPlot::
+resetPolygonCache()
+{
+  polygonCache_.reset();
 }
 
 void

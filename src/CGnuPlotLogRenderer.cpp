@@ -170,7 +170,7 @@ drawRotatedText(const CPoint2D &point, const std::string &text, double angle,
 void
 CGnuPlotLogRenderer::
 drawPieSlice(const CPoint2D &center, double ri, double ro, double angle1, double angle2,
-             const CRGBA &c, double width, const CLineDash &d)
+             bool /*wedge*/, const CRGBA &c, double width, const CLineDash &d)
 {
   log("drawPieSlice " + logValue("center", center) + " " + logValue("ri", ri) + " " +
       logValue("ro", ro) + " " + logValue("angle1", angle1) + " " +

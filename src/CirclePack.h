@@ -41,6 +41,11 @@ class CirclePack {
  public:
   CirclePack() : ind1_(0), ind2_(1) { }
 
+ ~CirclePack() {
+    for (auto &n : nodes_)
+      delete n;
+  }
+
   bool addNode(NODE *node) {
     double r = node->radius();
 

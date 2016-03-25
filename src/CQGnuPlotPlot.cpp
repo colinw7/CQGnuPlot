@@ -210,7 +210,7 @@ void
 CQGnuPlotPlot::
 setXRangeMin(double x)
 {
-  CGnuPlotPlot::xaxis(1).setMin(x);
+  CGnuPlotPlot::setXRangeMin(x);
 }
 
 double
@@ -228,7 +228,7 @@ void
 CQGnuPlotPlot::
 setXRangeMax(double x)
 {
-  CGnuPlotPlot::xaxis(1).setMax(x);
+  CGnuPlotPlot::setXRangeMax(x);
 }
 
 double
@@ -246,7 +246,7 @@ void
 CQGnuPlotPlot::
 setYRangeMin(double y)
 {
-  CGnuPlotPlot::yaxis(1).setMin(y);
+  CGnuPlotPlot::setYRangeMin(y);
 }
 
 double
@@ -264,7 +264,7 @@ void
 CQGnuPlotPlot::
 setYRangeMax(double y)
 {
-  CGnuPlotPlot::yaxis(1).setMax(y);
+  CGnuPlotPlot::setYRangeMax(y);
 }
 
 QString
@@ -359,22 +359,6 @@ setPointType(const CQGnuPlotEnum::SymbolType &type)
 {
   if (type != pointType()) {
     CGnuPlotPlot::setPointType(int(CQGnuPlotEnum::symbolConv(type)));
-  }
-}
-
-CQGnuPlotEnum::BoxWidthType
-CQGnuPlotPlot::
-getBoxWidthType() const
-{
-  return CQGnuPlotEnum::boxWidthTypeConv(CGnuPlotPlot::getBoxWidthType());
-}
-
-void
-CQGnuPlotPlot::
-setBoxWidthType(const CQGnuPlotEnum::BoxWidthType &type)
-{
-  if (type != getBoxWidthType()) {
-    CGnuPlotPlot::setBoxWidthType(CQGnuPlotEnum::boxWidthTypeConv(type));
   }
 }
 
@@ -706,17 +690,31 @@ mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip)
     return true;
   }
 
-  for (auto &polygon : polygonObjects()) {
-    if (! polygon->inside(mouseEvent))
-      continue;
+  {
+    double                  minArea    = -1;
+    CQGnuPlotPolygonObject *minPolygon = 0;
 
-    CQGnuPlotPolygonObject *qpolygon = dynamic_cast<CQGnuPlotPolygonObject *>(polygon);
+    for (auto &polygon : polygonObjects()) {
+      if (! polygon->inside(mouseEvent))
+        continue;
 
-    qwindow()->highlightObject(qpolygon);
+      CQGnuPlotPolygonObject *qpolygon = dynamic_cast<CQGnuPlotPolygonObject *>(polygon);
 
-    tip = polygon->tip();
+      double area = qpolygon->area();
 
-    return true;
+      if (! minPolygon || area < minArea) {
+        minPolygon = qpolygon;
+        minArea    = area;
+      }
+    }
+
+    if (minPolygon) {
+      qwindow()->highlightObject(minPolygon);
+
+      tip = minPolygon->tip();
+
+      return true;
+    }
   }
 
   for (auto &rect : rectObjects()) {

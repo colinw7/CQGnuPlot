@@ -1,6 +1,9 @@
 #ifndef CGnuPlotBoxWidth_H
 #define CGnuPlotBoxWidth_H
 
+#include <CGnuPlotTypes.h>
+#include <iostream>
+
 class CGnuPlotBoxWidth {
  public:
   typedef CGnuPlotTypes::BoxWidthType BoxWidthType;
@@ -31,7 +34,7 @@ class CGnuPlotBoxWidth {
     type_ = BoxWidthType::AUTO;
   }
 
-  void show(std::ostream &os) {
+  void show(std::ostream &os) const {
     if (type() == BoxWidthType::AUTO)
       os << "boxwidth is auto" << std::endl;
     else
@@ -39,7 +42,7 @@ class CGnuPlotBoxWidth {
             (type() == BoxWidthType::ABSOLUTE ? "absolute" : "relative") << std::endl;
   }
 
-  void save(std::ostream &os) {
+  void save(std::ostream &os) const {
     if (type() == BoxWidthType::AUTO)
       os << "set boxwidth" << std::endl;
     else

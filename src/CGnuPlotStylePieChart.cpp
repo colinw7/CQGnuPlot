@@ -83,7 +83,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   if (! value) {
     value = plot->app()->device()->createPieChartStyleValue(plot);
 
-    value->init(plot->app()->pieChartStyleValue());
+    value->init(plot->pieChartStyleValue());
 
     CGnuPlotStyleValueMgrInst->setValue<CGnuPlotPieChartStyleValue>(plot, value);
   }

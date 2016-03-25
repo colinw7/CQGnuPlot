@@ -6,7 +6,6 @@
 #include <CGnuPlotStroke.h>
 #include <CGnuPlotFill.h>
 #include <CGnuPlotMark.h>
-#include <CGnuPlotBoxPlot.h>
 #include <CBoxWhisker.h>
 
 class CGnuPlotPlot;

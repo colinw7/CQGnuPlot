@@ -1,19 +1,36 @@
 #include <CGnuPlotStyleBivariate.h>
+#include <CGnuPlotBivariateStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotPointObject.h>
+#include <CGnuPlotDevice.h>
 
 CGnuPlotStyleBivariate::
 CGnuPlotStyleBivariate() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::BIVARIATE)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotBivariateStyleValue>("bivariate");
 }
 
 void
 CGnuPlotStyleBivariate::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotBivariateStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBivariateStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createBivariateStyleValue(plot);
+
+    //value->init(plot->bivariateStyleValue());
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotBivariateStyleValue>(plot, value);
+  }
+
+  //---
+
   CGnuPlotStroke stroke(plot);
 
   //------
@@ -42,7 +59,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     data.setSize     (y2 - y1);
     data.setPointType(CGnuPlotTypes::SymbolType::BIVARIATE);
     data.setLineWidth(stroke.width());
-    data.setColor(c1);
+    data.setColor    (c1);
 
     pointDatas.push_back(data);
   }

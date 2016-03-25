@@ -54,7 +54,7 @@ class CGnuPlotPSRenderer : public CGnuPlotRenderer {
                        const CRGBA &c) override;
 
   void drawPieSlice(const CPoint2D &pc, double ro, double ri, double angle1, double angle2,
-                    const CRGBA &c, double width, const CLineDash &dash) override;
+                    bool wedge, const CRGBA &c, double width, const CLineDash &dash) override;
   void fillPieSlice(const CPoint2D &pc, double ro, double ri, double angle1, double angle2,
                     const CRGBA &c) override;
 

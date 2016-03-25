@@ -38,6 +38,13 @@ inside(const CGnuPlotMouseEvent &mouseEvent) const
   return CMathGeom2D::PointInsideEvenOdd(p, points_);
 }
 
+double
+CGnuPlotPolygonObject::
+area() const
+{
+  return CMathGeom2D::PolygonArea(points_);
+}
+
 void
 CGnuPlotPolygonObject::
 draw(CGnuPlotRenderer *renderer) const

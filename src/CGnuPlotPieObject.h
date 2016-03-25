@@ -56,6 +56,9 @@ class CGnuPlotPieObject : public CGnuPlotPlotObject {
   bool isRotatedText() const { return rotatedText_; }
   void setRotatedText(bool b) { rotatedText_ = b; }
 
+  bool isWedge() const { return wedge_; }
+  void setWedge(bool b) { wedge_ = b; }
+
   const CBBox2D &keyRect() const { return keyRect_; }
   void setKeyRect(const CBBox2D &r) { keyRect_ = r; }
 
@@ -85,6 +88,7 @@ class CGnuPlotPieObject : public CGnuPlotPlotObject {
   std::string     name_            { "" };
   double          value_           { 0 };
   bool            rotatedText_     { false };
+  bool            wedge_           { true };
   bool            exploded_        { false };
   bool            explodeSelected_ { true };
   CBBox2D         keyRect_;

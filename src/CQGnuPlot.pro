@@ -81,6 +81,8 @@ CQGnuPlotDataTree.cpp \
 CQGnuPlotDataModel.cpp \
 CQGnuPlotPositionEdit.cpp \
 \
+CQGnuPlotBoxPlotStyleValue.cpp \
+\
 CGnuPlot.cpp \
 CGnuPlotAnnotation.cpp \
 CGnuPlotArrow.cpp \
@@ -148,6 +150,13 @@ CGnuPlotStyle.cpp \
 CGnuPlotSurface.cpp \
 CGnuPlotTimeStamp.cpp \
 CGnuPlotUsingCols.cpp \
+\
+CGnuPlotBoxErrorBarsStyleValue.cpp \
+CGnuPlotBoxesStyleValue.cpp \
+CGnuPlotBoxPlotStyleValue.cpp \
+CGnuPlotCandlesticksStyleValue.cpp \
+CGnuPlotVectorsStyleValue.cpp \
+\
 CGnuPlotEveryData.cpp \
 CGnuPlotIndexData.cpp \
 CGnuPlotWhereData.cpp \
@@ -208,7 +217,6 @@ CGnuPlotWindow.cpp \
 CGnuPlotText.cpp \
 CGnuPlotTextRenderer.cpp \
 \
-CQStyle.cpp \
 CQHeaderView.cpp \
 CQToolTip.cpp \
 CQFloatLabel.cpp \
@@ -307,6 +315,27 @@ CQGnuPlotFilename.h \
 CQGnuPlotUtil.h \
 CQGnuPlotWindow.h \
 \
+CQGnuPlotAdjacencyStyleValue.h \
+CQGnuPlotBivariateStyleValue.h \
+CQGnuPlotBoxErrorBarsStyleValue.h \
+CQGnuPlotBoxesStyleValue.h \
+CQGnuPlotBoxPlotStyleValue.h \
+CQGnuPlotBubbleStyleValue.h \
+CQGnuPlotCandlesticksStyleValue.h \
+CQGnuPlotChordDiagramStyleValue.h \
+CQGnuPlotCirclesStyleValue.h \
+CQGnuPlotDelaunayStyleValue.h \
+CQGnuPlotDendrogramStyleValue.h \
+CQGnuPlotEllipsesStyleValue.h \
+CQGnuPlotForceDirectedStyleValue.h \
+CQGnuPlotHierBubbleStyleValue.h \
+CQGnuPlotLabelsStyleValue.h \
+CQGnuPlotPieChartStyleValue.h \
+CQGnuPlotRadarStyleValue.h \
+CQGnuPlotSunburstStyleValue.h \
+CQGnuPlotTreeMapStyleValue.h \
+CQGnuPlotVectorsStyleValue.h \
+\
 CQGnuPlotLoadFileDialog.h \
 CQGnuPlotLoadFunctionDialog.h \
 CQGnuPlotManageFunctionsDialog.h \
@@ -320,16 +349,6 @@ CQGnuPlotTreeWidget.h \
 CQGnuPlotDataTree.h \
 CQGnuPlotDataModel.h \
 CQGnuPlotPositionEdit.h \
-\
-CQGnuPlotAdjacencyStyleValue.h \
-CQGnuPlotChordDiagramStyleValue.h \
-CQGnuPlotDelaunayStyleValue.h \
-CQGnuPlotDendrogramStyleValue.h \
-CQGnuPlotForceDirectedStyleValue.h \
-CQGnuPlotHierBubbleStyleValue.h \
-CQGnuPlotPieChartStyleValue.h \
-CQGnuPlotSunburstStyleValue.h \
-CQGnuPlotTreeMapStyleValue.h \
 \
 CGnuPlot.h \
 CGnuPlotArrow.h \
@@ -457,7 +476,6 @@ CGnuPlotWindow.h \
 CGnuPlotText.h \
 CGnuPlotTextRenderer.h \
 \
-CQStyle.h \
 CQHeaderView.h \
 CQToolTip.h \
 CQFloatLabel.h \

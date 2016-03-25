@@ -1486,7 +1486,7 @@ saveCmd(const std::string &args)
   set x2data
   */
 
-  boxWidth_.save(os);
+  styleData_.boxWidth.save(os);
 
   /*
   set style fill empty border
@@ -2519,11 +2519,11 @@ plotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
       int as;
 
       if (parseInteger(line, as))
-        styleData.arrow = this->arrowStyle(as);
+        styleData.vectorsStyleValue = this->arrowStyle(as);
     }
     // heads
     else if (plotVar == PlotVar::HEADS) {
-      styleData.arrow.setHeads(true, true);
+      styleData.vectorsStyleValue.setHeads(true, true);
     }
     // binary
     else if (plotVar == PlotVar::BINARY) {
@@ -2599,8 +2599,8 @@ plotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
       }
     }
     else {
-      addFile2D(plots, group, filename, style, usingCols,
-                lineStyle, fillStyle, styleData, keyTitle);
+      addFile2D(plots, group, filename, style, usingCols, lineStyle, fillStyle,
+                styleData, keyTitle);
     }
   }
   else if (! functions.empty()) {
@@ -3060,25 +3060,25 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       int as;
 
       if (style == "variable" || style == "var")
-        styleData.arrow.setVariable(true);
+        styleData.vectorsStyleValue.setVariable(true);
       else {
         line.setPos(pos);
 
         if (parseInteger(line, as))
-          styleData.arrow = this->arrowStyle(as);
+          styleData.vectorsStyleValue = this->arrowStyle(as);
       }
 
       found = true;
     }
     else if (line.isString("filled")) {
-      styleData.arrow.setFilled(true);
+      styleData.vectorsStyleValue.setFilled(true);
 
       line.skipNonSpace();
 
       found = true;
     }
     else if (line.isString("nohead")) {
-      styleData.arrow.setHeads(false, false);
+      styleData.vectorsStyleValue.setHeads(false, false);
 
       line.skipNonSpace();
 
@@ -3445,8 +3445,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
         double a;
 
         if (parseReal(line, a))
-          pieChartStyleValue_.setStartAngle(a);
-          //styleData.pie.setStartAngle(a);
+          styleData_.pieChartStyleValue.setStartAngle(a);
 
         found = true;
       }
@@ -3456,8 +3455,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
         double r;
 
         if (parseReal(line, r))
-          //styleData.pie.setInnerRadius(r);
-          pieChartStyleValue_.setInnerRadius(r);
+          styleData_.pieChartStyleValue.setInnerRadius(r);
 
         found = true;
       }
@@ -3467,8 +3465,7 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
         double r;
 
         if (parseReal(line, r))
-          //styleData.pie.setLabelRadius(r);
-          pieChartStyleValue_.setLabelRadius(r);
+          styleData_.pieChartStyleValue.setLabelRadius(r);
 
         found = true;
       }
@@ -3485,11 +3482,11 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
         std::string arg = line.readNonSpace();
 
         if      (arg == "xx")
-          styleData.ellipse.setUnits(CGnuPlotTypes::EllipseUnits::XX);
+          styleData_.ellipsesStyleValue.setUnits(CGnuPlotTypes::EllipseUnits::XX);
         else if (arg == "xy")
-          styleData.ellipse.setUnits(CGnuPlotTypes::EllipseUnits::XY);
+          styleData_.ellipsesStyleValue.setUnits(CGnuPlotTypes::EllipseUnits::XY);
         else if (arg == "yy")
-          styleData.ellipse.setUnits(CGnuPlotTypes::EllipseUnits::YY);
+          styleData_.ellipsesStyleValue.setUnits(CGnuPlotTypes::EllipseUnits::YY);
         else
           errorMsg("Invalid ellipse style \'" + arg + "'");
 
@@ -4802,11 +4799,11 @@ splotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
       int as;
 
       if (parseInteger(line, as))
-        styleData.arrow = this->arrowStyle(as);
+        styleData.vectorsStyleValue = this->arrowStyle(as);
     }
     // heads
     else if (plotVar == PlotVar::HEADS) {
-      styleData.arrow.setHeads(true, true);
+      styleData.vectorsStyleValue.setHeads(true, true);
     }
     // binary
     else if (plotVar == PlotVar::BINARY) {
@@ -4860,8 +4857,8 @@ splotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
       }
     }
     else {
-      addFile3D(plots, group, filename, style, usingCols,
-                lineStyle, fillStyle, styleData, keyTitle);
+      addFile3D(plots, group, filename, style, usingCols, lineStyle, fillStyle,
+                styleData, keyTitle);
     }
   }
   else if (! functions.empty()) {
@@ -5007,25 +5004,25 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       int as;
 
       if (style == "variable" || style == "var")
-        styleData.arrow.setVariable(true);
+        styleData.vectorsStyleValue.setVariable(true);
       else {
         line.setPos(pos);
 
         if (parseInteger(line, as))
-          styleData.arrow = this->arrowStyle(as);
+          styleData.vectorsStyleValue = this->arrowStyle(as);
       }
 
       found = true;
     }
     else if (line.isString("filled")) {
-      styleData.arrow.setFilled(true);
+      styleData.vectorsStyleValue.setFilled(true);
 
       line.skipNonSpace();
 
       found = true;
     }
     else if (line.isString("nohead")) {
-      styleData.arrow.setHeads(false, false);
+      styleData.vectorsStyleValue.setHeads(false, false);
 
       line.skipNonSpace();
 
@@ -5372,6 +5369,29 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       else
         modifiers = false;
     }
+    else if (style == CGnuPlotTypes::PlotStyle::ELLIPSES) {
+      if      (line.isString("units")) {
+        line.skipNonSpace();
+
+        line.skipSpace();
+
+        // xx, xy, yy
+        std::string arg = line.readNonSpace();
+
+        if      (arg == "xx")
+          styleData_.ellipsesStyleValue.setUnits(CGnuPlotTypes::EllipseUnits::XX);
+        else if (arg == "xy")
+          styleData_.ellipsesStyleValue.setUnits(CGnuPlotTypes::EllipseUnits::XY);
+        else if (arg == "yy")
+          styleData_.ellipsesStyleValue.setUnits(CGnuPlotTypes::EllipseUnits::YY);
+        else
+          errorMsg("Invalid ellipse style \'" + arg + "'");
+
+        found = true;
+      }
+      else
+        modifiers = false;
+    }
     else
       modifiers = false;
   }
@@ -5501,7 +5521,7 @@ setCmd(const std::string &args)
         int as;
 
         if (parseInteger(line, as)) {
-          const CGnuPlotArrowStyle &as1 = arrowStyles_[as];
+          const CGnuPlotVectorsStyleValue &as1 = arrowStyles_[as];
 
           arrow->setStyle(as1);
         }
@@ -5754,7 +5774,7 @@ setCmd(const std::string &args)
   // set boxwidth [ {size:r} ] [ absolute | relative ]
   else if (var == VariableName::BOXWIDTH) {
     CGnuPlotTypes::BoxWidthType boxWidthType = CGnuPlotTypes::BoxWidthType::AUTO;
-    double                      boxWidth     = boxWidth_.width();
+    double                      boxWidth     = styleData_.boxWidth.width();
 
     if (line.isValid()) {
       std::string sizeStr = readNonSpace(line);
@@ -5781,7 +5801,7 @@ setCmd(const std::string &args)
       }
     }
 
-    setBoxWidth(CGnuPlotBoxWidth(boxWidth, boxWidthType));
+    styleData_.boxWidth = CGnuPlotBoxWidth(boxWidth, boxWidthType);
   }
   // set clip <clip-type>
   else if (var == VariableName::CLIP) {
@@ -8408,7 +8428,7 @@ setCmd(const std::string &args)
     if      (var1 == StyleVar::ARROW) {
       defSystem_ = CoordSys::FIRST;
 
-      CGnuPlotArrowStyle *arrowStyle1 = &styleData_.arrow;
+      CGnuPlotVectorsStyleValue *arrowStyle1 = &styleData_.vectorsStyleValue;
 
       int arrowId = -1;
 
@@ -8416,7 +8436,7 @@ setCmd(const std::string &args)
         auto p = arrowStyles_.find(arrowId);
 
         if (p == arrowStyles_.end())
-          p = arrowStyles_.insert(p, ArrowStyles::value_type(arrowId, CGnuPlotArrowStyle()));
+          p = arrowStyles_.insert(p, ArrowStyles::value_type(arrowId, CGnuPlotVectorsStyleValue()));
 
         arrowStyle1 = &(*p).second;
       }
@@ -8426,7 +8446,7 @@ setCmd(const std::string &args)
       while (arg != "") {
         // default
         if      (arg == "default") {
-          *arrowStyle1 = CGnuPlotArrowStyle();
+          *arrowStyle1 = CGnuPlotVectorsStyleValue();
         }
         // {nohead | head | backhead | heads}
         else if (arg == "nohead" || arg == "head" || arg == "backhead" || arg == "heads") {
@@ -8529,56 +8549,61 @@ setCmd(const std::string &args)
           double r;
 
           if (parseReal(line, r))
-            boxPlot_.setRange(r);
+            styleData_.boxPlotStyleValue.setRange(r);
         }
         // fraction <f>
         else if (arg == "fraction" || arg == "frac") {
           double r;
 
           if (parseReal(line, r))
-            boxPlot_.setFraction(r);
+            styleData_.boxPlotStyleValue.setFraction(r);
         }
         // {no}outliers}
         else if (arg == "outliers" || arg == "nooutliers") {
-          boxPlot_.setOutliers(arg == "outliers");
+          styleData_.boxPlotStyleValue.setOutliers(arg == "outliers");
         }
         // {pointtype <p>
         else if (arg == "pointtype") {
           int pt;
 
           if (parseInteger(line, pt))
-            boxPlot_.setPointType(pt);
+            styleData_.boxPlotStyleValue.setPointType(pt);
           else
             errorMsg("Invalid pointtype");
         }
         // candlesticks
         else if (arg == "candlesticks") {
-          boxPlot_.setType(CGnuPlotTypes::BoxType::CandleSticks);
+          styleData_.boxPlotStyleValue.setType(CGnuPlotTypes::BoxType::CandleSticks);
         }
         // financebars
         else if (arg == "financebars") {
-          boxPlot_.setType(CGnuPlotTypes::BoxType::FinanceBars);
+          styleData_.boxPlotStyleValue.setType(CGnuPlotTypes::BoxType::FinanceBars);
         }
         // separation <x>
         else if (arg == "separation") {
           double r;
 
           if (parseReal(line, r))
-            boxPlot_.setSeparation(r);
+            styleData_.boxPlotStyleValue.setSeparation(r);
         }
         // labels off | auto | x | x2
         else if (arg == "labels") {
           arg = readNonSpace(line);
 
-          if      (arg == "off" ) boxPlot_.setLabels(CGnuPlotTypes::BoxLabels::Off);
-          else if (arg == "auto") boxPlot_.setLabels(CGnuPlotTypes::BoxLabels::Auto);
-          else if (arg == "x"   ) boxPlot_.setLabels(CGnuPlotTypes::BoxLabels::X);
-          else if (arg == "x2"  ) boxPlot_.setLabels(CGnuPlotTypes::BoxLabels::X2);
-          else                    errorMsg("Invalid arg '" + arg + "'");
+          if      (arg == "off" )
+            styleData_.boxPlotStyleValue.setLabels(CGnuPlotTypes::BoxLabels::Off);
+          else if (arg == "auto")
+            styleData_.boxPlotStyleValue.setLabels(CGnuPlotTypes::BoxLabels::Auto);
+          else if (arg == "x"   )
+            styleData_.boxPlotStyleValue.setLabels(CGnuPlotTypes::BoxLabels::X);
+          else if (arg == "x2"  )
+            styleData_.boxPlotStyleValue.setLabels(CGnuPlotTypes::BoxLabels::X2);
+          else
+            errorMsg("Invalid arg '" + arg + "'");
         }
         // sorted | unsorted
         else if (arg == "sorted" || arg == "unsorted") {
-          boxPlot_.setSorted(arg == "sorted");
+          styleData_.boxPlotStyleValue.setSorted(arg == "sorted");
         }
         else {
           errorMsg("Invalid arg '" + arg + "'");
@@ -8732,17 +8757,17 @@ setCmd(const std::string &args)
             if (! parseCoordValue(line, c))
               break;
 
-            circleStyle_.setRadius(i, c);
+            styleData_.circlesStyleValue.setRadius(i, c);
 
             if (! line.skipSpaceAndChar(','))
               break;
           }
         }
         else if (arg == "wedge" || arg == "nowedge") {
-          circleStyle_.setWedge(arg == "wedge");
+          styleData_.circlesStyleValue.setWedge(arg == "wedge");
         }
         else if (arg == "clip" || arg == "noclip") {
-          circleStyle_.setClip(arg == "clip");
+          styleData_.circlesStyleValue.setClip(arg == "clip");
         }
         else {
           errorMsg("Invalid arg '" + arg + "'");
@@ -8803,11 +8828,11 @@ setCmd(const std::string &args)
           arg = readNonSpace(line);
 
           if      (arg == "xx")
-            styleData_.ellipse.setUnits(CGnuPlotTypes::EllipseUnits::XX);
+            styleData_.ellipsesStyleValue.setUnits(CGnuPlotTypes::EllipseUnits::XX);
           else if (arg == "xy")
-            styleData_.ellipse.setUnits(CGnuPlotTypes::EllipseUnits::XY);
+            styleData_.ellipsesStyleValue.setUnits(CGnuPlotTypes::EllipseUnits::XY);
           else if (arg == "yy")
-            styleData_.ellipse.setUnits(CGnuPlotTypes::EllipseUnits::YY);
+            styleData_.ellipsesStyleValue.setUnits(CGnuPlotTypes::EllipseUnits::YY);
           else {
             errorMsg("Invalid arg '" + arg + "'");
           }
@@ -8816,23 +8841,23 @@ setCmd(const std::string &args)
           CGnuPlotCoordValue sac;
 
           if (parseCoordValue(line, sac))
-            styleData_.ellipse.setSize(0, sac);
+            styleData_.ellipsesStyleValue.setSize(0, sac);
 
           if (line.skipSpaceAndChar(',')) {
             CGnuPlotCoordValue sbc;
 
             if (parseCoordValue(line, sbc))
-              styleData_.ellipse.setSize(1, sbc);
+              styleData_.ellipsesStyleValue.setSize(1, sbc);
           }
         }
         else if (arg == "angle") {
           double a;
 
           if (parseReal(line, a))
-            styleData_.ellipse.setAngle(a);
+            styleData_.ellipsesStyleValue.setAngle(a);
         }
         else if (arg == "clip" || arg == "noclip") {
-          styleData_.ellipse.setClip(arg == "clip");
+          styleData_.ellipsesStyleValue.setClip(arg == "clip");
         }
         else {
           errorMsg("Invalid arg '" + arg + "'");
@@ -8934,23 +8959,23 @@ setCmd(const std::string &args)
 
       if      (arg == "palette") {
         if (parseString(line, name))
-          pieChartStyleValue_.setPalette(name);
+          styleData_.pieChartStyleValue.setPalette(name);
       }
       else if (arg == "alpha") {
         if (parseReal(line, r))
-          pieChartStyleValue_.setAlpha(r);
+          styleData_.pieChartStyleValue.setAlpha(r);
       }
       else if (arg == "startAngle") {
         if (parseReal(line, r))
-          pieChartStyleValue_.setStartAngle(r);
+          styleData_.pieChartStyleValue.setStartAngle(r);
       }
       else if (arg == "innerRadius") {
         if (parseReal(line, r))
-          pieChartStyleValue_.setInnerRadius(r);
+          styleData_.pieChartStyleValue.setInnerRadius(r);
       }
       else if (arg == "labelRadius") {
         if (parseReal(line, r))
-          pieChartStyleValue_.setLabelRadius(r);
+          styleData_.pieChartStyleValue.setLabelRadius(r);
       }
     }
   }
@@ -9788,7 +9813,7 @@ showCmd(const std::string &args)
   }
   // show boxwidth
   else if (var == VariableName::BOXWIDTH) {
-    boxWidth_.show(std::cout);
+    styleData_.boxWidth.show(std::cout);
   }
   // show clip
   else if (var == VariableName::CLIP) {
@@ -10293,7 +10318,7 @@ showCmd(const std::string &args)
     }
     // show style boxplot
     else if (show.empty() || show.find("boxplot") != show.end()) {
-      boxPlot_.show(std::cout);
+      styleData_.boxPlotStyleValue.show(std::cout);
     }
     // show style data
     else if (show.empty() || show.find("data") != show.end()) {
@@ -10326,7 +10351,7 @@ showCmd(const std::string &args)
     }
     // show style circle
     else if (show.empty() || show.find("circle") != show.end()) {
-      circleStyle_.show(std::cout);
+      styleData_.circlesStyleValue.show(std::cout);
     }
     // show style rectangle
     else if (show.empty() || show.find("rectangle") != show.end()) {
@@ -10334,7 +10359,7 @@ showCmd(const std::string &args)
     }
     // show style ellipse
     else if (show.empty() || show.find("ellipse") != show.end()) {
-      styleData_.ellipse.show(std::cout);
+      styleData_.ellipsesStyleValue.show(std::cout);
     }
     // show style textbox
     else if (show.empty() || show.find("textbox") != show.end()) {
@@ -11011,7 +11036,7 @@ unsetCmd(const std::string &args)
   }
   // unset boxwidth
   else if (var == VariableName::BOXWIDTH) {
-    boxWidth_.unset();
+    styleData_.boxWidth.unset();
   }
   // unset clip <clip-type>
   else if (var == VariableName::CLIP) {
@@ -11362,7 +11387,7 @@ unsetCmd(const std::string &args)
     }
     // unset style boxplot
     else if (unset.empty() || unset.find("boxplot") != unset.end()) {
-      boxPlot_.unset();
+      styleData_.boxPlotStyleValue.unset();
     }
     // unset style data
     else if (unset.empty() || unset.find("data") != unset.end()) {
@@ -11386,7 +11411,7 @@ unsetCmd(const std::string &args)
     }
     // unset style circle
     else if (unset.empty() || unset.find("circle") != unset.end()) {
-      circleStyle_.unset();
+      styleData_.circlesStyleValue.unset();
     }
     // unset style rectangle
     else if (unset.empty() || unset.find("rectangle") != unset.end()) {
@@ -11394,7 +11419,7 @@ unsetCmd(const std::string &args)
     }
     // unset style ellipse
     else if (unset.empty() || unset.find("ellipse") != unset.end()) {
-      styleData_.ellipse.unset();
+      styleData_.ellipsesStyleValue.unset();
     }
     // unset style textbox
     else if (unset.empty() || unset.find("textbox") != unset.end()) {
@@ -12017,14 +12042,14 @@ ifCmd(int &i, const Statements &statements)
     fileData_.bufferLines.push_back(line);
 }
 
-CGnuPlotArrowStyle
+CGnuPlotVectorsStyleValue
 CGnuPlot::
 arrowStyle(int id) const
 {
   auto p = arrowStyles_.find(id);
 
   if (p == arrowStyles_.end())
-    return styleData_.arrow;
+    return styleData_.vectorsStyleValue;
 
   return (*p).second;
 }
@@ -13005,9 +13030,10 @@ updateFunction2D(CGnuPlotPlot *plot)
 
   //---
 
-  const CGnuPlotAxisData &xaxis = plot->xaxis(plot->xind());
+  //const CGnuPlotAxisData &xaxis = plot->xaxis(plot->xind());
+  const CGnuPlotAxisData &xaxis = plot->app()->xaxis(plot->xind());
 
-  const SampleVars &sampleVars = plot->sampleVars();
+  const CGnuPlotSampleVars &sampleVars = plot->sampleVars();
 
   int nx = plot->samplesNX();
 
@@ -13220,7 +13246,7 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
 
   //---
 
-  const SampleVars &sampleVars = plot->sampleVars();
+  const CGnuPlotSampleVars &sampleVars = plot->sampleVars();
 
   int nx, ny;
 
@@ -13514,7 +13540,8 @@ void
 CGnuPlot::
 addFile2D(Plots &plots, CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
           const CGnuPlotUsingCols &usingCols, CGnuPlotLineStyle &lineStyle,
-          CGnuPlotFillStyle &fillStyle, CGnuPlotStyleData &styleData, CGnuPlotKeyTitle &keyTitle)
+          CGnuPlotFillStyle &fillStyle, CGnuPlotStyleData &styleData,
+          CGnuPlotKeyTitle &keyTitle)
 {
   // gen file lines (one dimension)
   if      (filename == "+") {
@@ -13881,6 +13908,8 @@ setPlotValues2D(CGnuPlotPlot *plot)
       }
     }
   }
+
+  plot->setKeyData(keyData);
 }
 
 void
@@ -13920,7 +13949,7 @@ initGen1File2D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols)
   //---
 
   // get sample range
-  const SampleVars &sampleVars = plot->sampleVars();
+  const CGnuPlotSampleVars &sampleVars = plot->sampleVars();
 
   double xmin, xmax;
 
@@ -14931,6 +14960,8 @@ setPlotValues3D(CGnuPlotPlot *plot)
       }
     }
   }
+
+  plot->setKeyData(keyData);
 }
 
 void
@@ -14971,7 +15002,7 @@ initGen1File3D(CGnuPlotPlot *plot, const CGnuPlotUsingCols &usingCols)
   //---
 
   // get sample range
-  const SampleVars &sampleVars = plot->sampleVars();
+  const CGnuPlotSampleVars &sampleVars = plot->sampleVars();
 
   double xmin, xmax;
 

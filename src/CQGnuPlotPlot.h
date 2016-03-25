@@ -93,11 +93,6 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
   Q_PROPERTY(double barsSize  READ barsSize  WRITE setBarsSize )
   Q_PROPERTY(bool   barsFront READ barsFront WRITE setBarsFront)
 
-  Q_PROPERTY(double boxWidthValue READ getBoxWidthValue WRITE setBoxWidthValue)
-  Q_PROPERTY(bool   boxWidthCalc  READ getBoxWidthCalc  WRITE setBoxWidthCalc )
-
-  Q_PROPERTY(CQGnuPlotEnum::BoxWidthType boxWidthType READ getBoxWidthType WRITE setBoxWidthType)
-
   Q_PROPERTY(bool   surfaceEnabled READ isSurfaceEnabled WRITE setSurfaceEnabled)
   Q_PROPERTY(QColor surfaceColor   READ surfaceColor     WRITE setSurfaceColor  )
 
@@ -163,9 +158,6 @@ class CQGnuPlotPlot : public CQGnuPlotObject, public CGnuPlotPlot {
 
   CQGnuPlotEnum::SymbolType pointType() const;
   void setPointType(const CQGnuPlotEnum::SymbolType &type);
-
-  CQGnuPlotEnum::BoxWidthType getBoxWidthType() const;
-  void setBoxWidthType(const CQGnuPlotEnum::BoxWidthType &type);
 
   CQGnuPlotPlotArrowObjects*      arrowObjectsObj     () { return arrowObjects_     ; }
   CQGnuPlotPlotBoxBarObjects*     boxBarObjectsObj    () { return boxBarObjects_    ; }

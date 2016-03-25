@@ -28,7 +28,6 @@ class CGnuPlotPm3D;
 class CGnuPlotPolygon;
 class CGnuPlotRectangle;
 class CGnuPlotTimeStamp;
-class CGnuPlotBoxPlot;
 
 class CGnuPlotArrowObject;
 class CGnuPlotBoxBarObject;
@@ -56,14 +55,25 @@ class CGnuPlotWindow;
 class CGnuPlotMultiplot;
 
 class CGnuPlotAdjacencyStyleValue;
+class CGnuPlotBivariateStyleValue;
+class CGnuPlotBoxErrorBarsStyleValue;
+class CGnuPlotBoxesStyleValue;
+class CGnuPlotBoxPlotStyleValue;
+class CGnuPlotBubbleStyleValue;
+class CGnuPlotCandlesticksStyleValue;
 class CGnuPlotChordDiagramStyleValue;
+class CGnuPlotCirclesStyleValue;
 class CGnuPlotDendrogramStyleValue;
 class CGnuPlotDelaunayStyleValue;
+class CGnuPlotEllipsesStyleValue;
 class CGnuPlotForceDirectedStyleValue;
 class CGnuPlotHierBubbleStyleValue;
+class CGnuPlotLabelsStyleValue;
 class CGnuPlotPieChartStyleValue;
+class CGnuPlotRadarStyleValue;
 class CGnuPlotSunburstStyleValue;
 class CGnuPlotTreeMapStyleValue;
+class CGnuPlotVectorsStyleValue;
 
 typedef std::shared_ptr<CGnuPlotWindow> CGnuPlotWindowP;
 
@@ -160,8 +170,6 @@ class CGnuPlotDevice {
 
   virtual CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group);
 
-  virtual CGnuPlotBoxPlot *createBoxPlot(CGnuPlotPlot *plot);
-
   virtual CGnuPlotArrowObject      *createArrowObject     (CGnuPlotPlot *plot);
   virtual CGnuPlotBoxBarObject     *createBoxBarObject    (CGnuPlotPlot *plot);
   virtual CGnuPlotEndBar           *createEndBar          (CGnuPlotPlot *plot);
@@ -183,14 +191,25 @@ class CGnuPlotDevice {
   virtual CGnuPlotMark   *createMark  (CGnuPlotPlot *plot);
 
   virtual CGnuPlotAdjacencyStyleValue     *createAdjacencyStyleValue    (CGnuPlotPlot *plot);
+  virtual CGnuPlotBivariateStyleValue     *createBivariateStyleValue    (CGnuPlotPlot *plot);
+  virtual CGnuPlotBoxErrorBarsStyleValue  *createBoxErrorBarsStyleValue (CGnuPlotPlot *plot);
+  virtual CGnuPlotBoxesStyleValue         *createBoxesStyleValue        (CGnuPlotPlot *plot);
+  virtual CGnuPlotBoxPlotStyleValue       *createBoxPlotStyleValue      (CGnuPlotPlot *plot);
+  virtual CGnuPlotBubbleStyleValue        *createBubbleStyleValue       (CGnuPlotPlot *plot);
+  virtual CGnuPlotCandlesticksStyleValue  *createCandlesticksStyleValue (CGnuPlotPlot *plot);
   virtual CGnuPlotChordDiagramStyleValue  *createChordDiagramStyleValue (CGnuPlotPlot *plot);
+  virtual CGnuPlotCirclesStyleValue       *createCirclesStyleValue      (CGnuPlotPlot *plot);
   virtual CGnuPlotDendrogramStyleValue    *createDendrogramStyleValue   (CGnuPlotPlot *plot);
   virtual CGnuPlotDelaunayStyleValue      *createDelaunayStyleValue     (CGnuPlotPlot *plot);
+  virtual CGnuPlotEllipsesStyleValue      *createEllipsesStyleValue     (CGnuPlotPlot *plot);
   virtual CGnuPlotForceDirectedStyleValue *createForceDirectedStyleValue(CGnuPlotPlot *plot);
   virtual CGnuPlotHierBubbleStyleValue    *createHierBubbleStyleValue   (CGnuPlotPlot *plot);
+  virtual CGnuPlotLabelsStyleValue        *createLabelsStyleValue       (CGnuPlotPlot *plot);
   virtual CGnuPlotPieChartStyleValue      *createPieChartStyleValue     (CGnuPlotPlot *plot);
+  virtual CGnuPlotRadarStyleValue         *createRadarStyleValue        (CGnuPlotPlot *plot);
   virtual CGnuPlotSunburstStyleValue      *createSunburstStyleValue     (CGnuPlotPlot *plot);
   virtual CGnuPlotTreeMapStyleValue       *createTreeMapStyleValue      (CGnuPlotPlot *plot);
+  virtual CGnuPlotVectorsStyleValue       *createVectorsStyleValue      (CGnuPlotPlot *plot);
 
   virtual void timeout() { }
 

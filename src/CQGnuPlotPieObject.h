@@ -21,6 +21,7 @@ class CQGnuPlotPieObject : public QObject, public CGnuPlotPieObject {
   Q_PROPERTY(double  labelRadius     READ labelRadius       WRITE setLabelRadius    )
   Q_PROPERTY(bool    exploded        READ isExploded        WRITE setExploded       )
   Q_PROPERTY(bool    rotatedText     READ isRotatedText     WRITE setRotatedText    )
+  Q_PROPERTY(bool    wedge           READ isWedge           WRITE setWedge          )
   Q_PROPERTY(bool    explodeSelected READ isExplodeSelected WRITE setExplodeSelected)
 
  public:

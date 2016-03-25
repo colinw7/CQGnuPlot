@@ -45,6 +45,8 @@ class CGnuPlotStyleFinanceData {
   double lineWidth_ { 0.0 };
 };
 
+//------
+
 CGnuPlotStyleFinanceBars::
 CGnuPlotStyleFinanceBars() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::FINANCEBARS)

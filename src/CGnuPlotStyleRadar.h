@@ -3,6 +3,8 @@
 
 #include <CGnuPlotStyleBase.h>
 
+class CGnuPlotRadarStyleValue;
+
 class CGnuPlotStyleRadar : public CGnuPlotStyleBase {
  public:
   typedef std::pair<CHAlignType,double> HAlignPos;
@@ -25,6 +27,12 @@ class CGnuPlotStyleRadar : public CGnuPlotStyleBase {
 
  private:
   double getRange(CGnuPlotPlot *plot) const;
+
+  void getPointsColor(CGnuPlotRadarStyleValue *value, int pi, CRGBA &lc, CRGBA &fc);
+
+  CPoint2D radarPoint(const CPoint2D &o, double r, double a) const;
+
+  std::vector<CPoint2D> radarPoints(double a0, const CPoint2D &o, double r, int np) const;
 };
 
 #endif

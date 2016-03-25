@@ -5,8 +5,6 @@
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotDevice.h>
 
-//------
-
 CGnuPlotStyleChordDiagram::
 CGnuPlotStyleChordDiagram() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::CHORDDIAGRAM)

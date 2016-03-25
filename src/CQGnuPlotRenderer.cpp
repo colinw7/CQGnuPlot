@@ -745,7 +745,7 @@ fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double ang
 void
 CQGnuPlotRenderer::
 drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
-             const CRGBA &c, double w, const CLineDash &dash)
+             bool wedge, const CRGBA &c, double w, const CLineDash &dash)
 {
   QPainterPath path;
 
@@ -759,11 +759,17 @@ drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double ang
   double dangle = angle2 - angle1;
 
   if (ri <= 0) {
-    path.moveTo(QPointF((x1 + x2)/2, (y1 + y2)/2));
+    if (wedge) {
+      path.moveTo(QPointF((x1 + x2)/2, (y1 + y2)/2));
 
-    path.arcTo(orect, angle1, dangle);
+      path.arcTo(orect, angle1, dangle);
 
-    path.closeSubpath();
+      path.closeSubpath();
+    }
+    else {
+      path.arcMoveTo(orect, angle1);
+      path.arcTo(orect, angle1, dangle);
+    }
   }
   else {
     windowToPixel(pc.x - ri, pc.y + ri, &x1, &y1);

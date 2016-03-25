@@ -81,9 +81,6 @@ typedef std::shared_ptr<CGnuPlotPlot>   CGnuPlotPlotP;
 #include <CGnuPlotTypes.h>
 #include <CGnuPlotMouseEvent.h>
 #include <CGnuPlotKeyEvent.h>
-#include <CGnuPlotBoxPlot.h>
-#include <CGnuPlotCircleStyle.h>
-#include <CGnuPlotEllipseStyle.h>
 #include <CGnuPlotRectStyle.h>
 #include <CGnuPlotTimeStampData.h>
 #include <CGnuPlotMouseData.h>
@@ -102,43 +99,19 @@ typedef std::shared_ptr<CGnuPlotPlot>   CGnuPlotPlotP;
 #include <CGnuPlotKeyTitle.h>
 #include <CGnuPlotMargin.h>
 #include <CGnuPlotLineProp.h>
+#include <CGnuPlotBars.h>
+#include <CGnuPlotMatrixData.h>
+#include <CGnuPlotSamples.h>
+#include <CGnuPlotISOSamples.h>
+#include <CGnuPlotSampleVars.h>
+#include <CGnuPlotDummyVars.h>
+
 #include <CGnuPlotStyleData.h>
-
+#include <CGnuPlotBoxPlotStyleValue.h>
+#include <CGnuPlotCirclesStyleValue.h>
+#include <CGnuPlotEllipsesStyleValue.h>
 #include <CGnuPlotPieChartStyleValue.h>
-
-//------
-
-class CGnuPlotMatrixData {
- public:
-  CGnuPlotMatrixData() { }
-
-  bool isMatrix() const { return matrix_; }
-  void setMatrix(bool m) { matrix_ = m; }
-
-  bool isRowHeaders() const { return rowheaders_; }
-  void setRowHeaders(bool b) { rowheaders_ = b; }
-
-  bool isColumnHeaders() const { return columnheaders_; }
-  void setColumnHeaders(bool b) { columnheaders_ = b; }
-
-  bool isPixels() const { return pixels_; }
-  void setPixels(bool b) { pixels_ = b; }
-
-  void reset() {
-    matrix_        = false;
-    rowheaders_    = false;
-    columnheaders_ = false;
-    pixels_        = false;
-  }
-
- private:
-  bool matrix_        { false };
-  bool rowheaders_    { false };
-  bool columnheaders_ { false };
-  bool pixels_        { false };
-};
-
-//------
+#include <CGnuPlotVectorsStyleValue.h>
 
 class CGnuPlot {
  public:
@@ -175,99 +148,6 @@ class CGnuPlot {
   typedef std::vector<float>                     Floats;
   typedef std::vector<int>                       Integers;
 
-  class DummyVars {
-   public:
-    DummyVars() { }
-
-    void dummyVars(std::string &dummyVar1, std::string &dummyVar2,
-                   bool isParametric, bool isPolar, bool is3D) const {
-      DummyVars *th = const_cast<DummyVars *>(this);
-
-      if      (isParametric) {
-        if (! is3D) {
-          dummyVar1 = th->varMap_["t"]; if (dummyVar1 == "") dummyVar1 = "t";
-          dummyVar2 = th->varMap_["y"]; if (dummyVar2 == "") dummyVar2 = "y";
-        }
-        else {
-          dummyVar1 = th->varMap_["u"]; if (dummyVar1 == "") dummyVar1 = "u";
-          dummyVar2 = th->varMap_["v"]; if (dummyVar2 == "") dummyVar2 = "v";
-        }
-      }
-      else if (isPolar) {
-        if (! is3D) {
-          dummyVar1 = th->varMap_["t"]; if (dummyVar1 == "") dummyVar1 = "t";
-          dummyVar2 = th->varMap_["y"]; if (dummyVar2 == "") dummyVar2 = "y";
-        }
-        else {
-          dummyVar1 = th->varMap_["u"]; if (dummyVar1 == "") dummyVar1 = "u";
-          dummyVar2 = th->varMap_["v"]; if (dummyVar2 == "") dummyVar2 = "v";
-        }
-      }
-      else {
-        dummyVar1 = th->varMap_["x"]; if (dummyVar1 == "") dummyVar1 = "x";
-        dummyVar2 = th->varMap_["y"]; if (dummyVar2 == "") dummyVar2 = "y";
-      }
-    }
-
-    void setDummyVar(const std::string &name, const std::string &value) {
-      varMap_[name] = value;
-    }
-
-    void setDummyVars(const std::string &dummyVar1, const std::string &dummyVar2,
-                      bool isParametric, bool isPolar) {
-      if      (isParametric) {
-        if (dummyVar1 != "") varMap_["t"] = dummyVar1;
-        if (dummyVar2 != "") varMap_["y"] = dummyVar2;
-      }
-      else if (isPolar) {
-        if (dummyVar1 != "") varMap_["t"] = dummyVar1;
-        if (dummyVar2 != "") varMap_["y"] = dummyVar2;
-      }
-      else {
-        if (dummyVar1 != "") varMap_["x"] = dummyVar1;
-        if (dummyVar2 != "") varMap_["y"] = dummyVar2;
-      }
-    }
-
-    void resetDummyVars() {
-      varMap_.clear();
-    }
-
-   private:
-    typedef std::map<std::string,std::string> VarMap;
-
-    VarMap varMap_;
-  };
-
-  class Bars {
-   public:
-    Bars(double s=1, bool f=true) :
-     size_(s), front_(f) {
-    }
-
-    double size() const { return size_; }
-    void setSize(double r) { size_ = r; }
-
-    bool isFront() const { return front_; }
-    void setFront(bool b) { front_ = b; }
-
-    void show(std::ostream &os) const {
-      if (size_ <= 0.0)
-        os << "errors are plotted without bars" << std::endl;
-      else
-        os << "errorbars are plotted in " << (front_ ? "front" : "back") <<
-              " with bars of size " << size_ << std::endl;
-    }
-
-    void save(std::ostream &os) const {
-      os << "set bar " << size_ << " " << (front_ ? "front" : "back") << std::endl;
-    }
-
-   private:
-    double size_ { 1 };
-    bool   front_ { true };
-  };
-
   //---
 
   typedef std::map<int,CGnuPlotAxisData> IAxisMap;
@@ -282,10 +162,10 @@ class CGnuPlot {
 
   //---
 
-  typedef std::map<int,CGnuPlotArrowStyle>      ArrowStyles;
-  typedef std::map<int,CLineDash>               LineDashes;
-  typedef std::vector<CGnuPlotGroupAnnotationP> Annotations;
-  typedef std::map<VariableName,Annotations>    VarAnnotations;
+  typedef std::map<int,CGnuPlotVectorsStyleValue> ArrowStyles;
+  typedef std::map<int,CLineDash>                 LineDashes;
+  typedef std::vector<CGnuPlotGroupAnnotationP>   Annotations;
+  typedef std::map<VariableName,Annotations>      VarAnnotations;
 
   //---
 
@@ -309,26 +189,6 @@ class CGnuPlot {
     bool trim    { true };
   };
 
-  class Samples {
-   public:
-    void get(int &s1, int &s2) const { s1 = samples1_; s2 = samples2_; }
-    void set(int s1, int s2) { samples1_ = s1; samples2_ = s2; }
-
-    void unset() { set(100, 100); }
-
-    void save(std::ostream &os) const {
-      os << "set samples " << samples1_ << ", " << samples2_ << std::endl;
-    }
-
-    void show(std::ostream &os) {
-      os << "sampling rate is " << samples1_ << ", " << samples2_ << std::endl;
-    }
-
-   private:
-    int samples1_ { 100 };
-    int samples2_ { 100 };
-  };
-
   struct LinkAxisData {
     bool        enabled { false };
     std::string expr;
@@ -338,40 +198,6 @@ class CGnuPlot {
   struct LinkData {
     LinkAxisData linkX2;
     LinkAxisData linkY2;
-  };
-
-  class ISOSamples {
-   public:
-    ISOSamples() { }
-
-    void get(int &s1, int &s2) const { s1 = samples1_; s2 = samples2_; }
-    void set(int s1, int s2) { samples1_ = s1; samples2_ = s2; }
-
-    void unset() { set(10, 10); }
-
-    void save(std::ostream &os) const {
-      os << "set isosamples " << samples1_ << ", " << samples2_ << std::endl;
-    }
-
-    void show(std::ostream &os) const {
-      os << "iso sampling rate is " << samples1_ << ", " << samples2_ << std::endl;
-    }
-
-   private:
-    int samples1_ { 10 };
-    int samples2_ { 10 };
-  };
-
-  struct SampleVar {
-    std::string var;
-    COptReal    min;
-    COptReal    max;
-  };
-
-  struct SampleVars {
-    SampleVar x;
-    SampleVar y;
-    SampleVar z;
   };
 
   struct DecimalSign {
@@ -549,9 +375,6 @@ class CGnuPlot {
 
   //---
 
-  const CGnuPlotArrowStyle &arrowStyle() const { return styleData_.arrow; }
-  void setArrowStyle(const CGnuPlotArrowStyle &as) { styleData_.arrow = as; }
-
   const CGnuPlotStyleData &styleData() const { return styleData_; }
   void setStyleData(const CGnuPlotStyleData &d) { styleData_ = d; }
 
@@ -686,8 +509,8 @@ class CGnuPlot {
 
   //---
 
-  const Bars &bars() const { return bars_; }
-  void setBars(const Bars &s) { bars_ = s; }
+  const CGnuPlotBars &bars() const { return bars_; }
+  void setBars(const CGnuPlotBars &s) { bars_ = s; }
 
   double barsSize() const { return bars_.size(); }
   void setBarsSize(double s) { bars_.setSize(s); }
@@ -700,14 +523,6 @@ class CGnuPlot {
   const CGnuPlotFile &dataFile() const { return dataFile_; }
 
   //---
-
-  const CGnuPlotBoxWidth &boxWidth() const { return boxWidth_; }
-  void setBoxWidth(const CGnuPlotBoxWidth &w) { boxWidth_ = w; }
-
-  //---
-
-  void setBoxPlot(const CGnuPlotBoxPlot &b) { boxPlot_ = b; }
-  const CGnuPlotBoxPlot &getBoxPlot() const { return boxPlot_; }
 
   void setSmooth(Smooth s) { smooth_ = s; }
   Smooth getSmooth() const { return smooth_; }
@@ -806,8 +621,33 @@ class CGnuPlot {
 
   //------
 
-  const CGnuPlotPieChartStyleValue &pieChartStyleValue() const { return pieChartStyleValue_; }
-  void setPieChartStyleValue(const CGnuPlotPieChartStyleValue &v) { pieChartStyleValue_ = v; }
+  const CGnuPlotBoxWidth &boxWidth() const { return styleData_.boxWidth; }
+  void setBoxWidth(const CGnuPlotBoxWidth &v) { styleData_.boxWidth = v; }
+
+  const CGnuPlotBoxPlotStyleValue &boxPlotStyleValue() const {
+    return styleData_.boxPlotStyleValue; }
+  void setBoxPlotStyleValue(const CGnuPlotBoxPlotStyleValue &v) {
+    styleData_.boxPlotStyleValue = v; }
+
+  const CGnuPlotCirclesStyleValue &circlesStyleValue() const {
+    return styleData_.circlesStyleValue; }
+  void setCirclesStyleValue(const CGnuPlotCirclesStyleValue &v) {
+    styleData_.circlesStyleValue = v; }
+
+  const CGnuPlotEllipsesStyleValue &ellipsesStyleValue() const {
+    return styleData_.ellipsesStyleValue; }
+  void setEllipsesStyleValue(const CGnuPlotEllipsesStyleValue &v) {
+    styleData_.ellipsesStyleValue = v; }
+
+  const CGnuPlotPieChartStyleValue &pieChartStyleValue() const {
+    return styleData_.pieChartStyleValue; }
+  void setPieChartStyleValue(const CGnuPlotPieChartStyleValue &v) {
+    styleData_.pieChartStyleValue = v; }
+
+  const CGnuPlotVectorsStyleValue &vectorsStyleValue() const {
+    return styleData_.vectorsStyleValue; }
+  void setVectorsStyleValue(const CGnuPlotVectorsStyleValue &v) {
+    styleData_.vectorsStyleValue = v; }
 
   //------
 
@@ -989,7 +829,7 @@ class CGnuPlot {
 
   void drawWindows();
 
-  CGnuPlotArrowStyle arrowStyle(int id) const;
+  CGnuPlotVectorsStyleValue arrowStyle(int id) const;
 
   CLineDash getLineDash(int dt) const;
 
@@ -1010,17 +850,17 @@ class CGnuPlot {
 
   const CGnuPlotPrintFile &tableFile() const { return tableFile_; }
 
-  const Samples &samples() const { return samples_; }
-  void setSamples(const Samples &s) { samples_ = s; }
+  const CGnuPlotSamples &samples() const { return samples_; }
+  void setSamples(const CGnuPlotSamples &s) { samples_ = s; }
 
-  const ISOSamples &isoSamples() const { return isoSamples_; }
-  void setISOSamples(const ISOSamples &s) { isoSamples_ = s; }
+  const CGnuPlotISOSamples &isoSamples() const { return isoSamples_; }
+  void setISOSamples(const CGnuPlotISOSamples &s) { isoSamples_ = s; }
 
-  const SampleVars &sampleVars() const { return sampleVars_; }
-  void setSampleVars(const SampleVars &v) { sampleVars_ = v; }
+  const CGnuPlotSampleVars &sampleVars() const { return sampleVars_; }
+  void setSampleVars(const CGnuPlotSampleVars &v) { sampleVars_ = v; }
 
-  const DummyVars &dummyVars() const { return dummyVars_; }
-  void setDummyVars(const DummyVars &v) { dummyVars_ = v; }
+  const CGnuPlotDummyVars &dummyVars() const { return dummyVars_; }
+  void setDummyVars(const CGnuPlotDummyVars &v) { dummyVars_ = v; }
 
   const CGnuPlotMultiplotP &multiplot() const { return multiplot_; }
   void setMultiplot(const CGnuPlotMultiplotP &m) { multiplot_ = m; }
@@ -1426,18 +1266,20 @@ class CGnuPlot {
   bool                      edebug_ { false };
   bool                      autoContinue_ { false };
   CExpr*                    expr_ { 0 };
+
+  // devices
   CGnuPlotSVGDevice*        svgDevice_ { 0 };
   CGnuPlotPSDevice*         psDevice_ { 0 };
   CGnuPlotLogDevice*        logDevice_ { 0 };
   CGnuPlotDevice*           device_ { 0 };
   Devices                   devices_;
   DeviceStack               deviceStack_;
+
   PlotStyles                plotStyles_;
   FileData                  fileData_;
   FileDataArray             fileDataArray_;
   CGnuPlotFile              dataFile_;
-  CGnuPlotBoxWidth          boxWidth_;
-  Bars                      bars_;
+  CGnuPlotBars              bars_;
   std::string               outputFile_;
   CGnuPlotPrintFile         printFile_;
   std::string               lastPlotCmd_;
@@ -1465,7 +1307,6 @@ class CGnuPlot {
 
   // styles
   ArrowStyles            arrowStyles_;
-  CGnuPlotBoxPlot        boxPlot_;
   PlotStyle              dataStyle_      { PlotStyle::POINTS };
   CGnuPlotFillStyle      fillStyle_;
   PlotStyle              functionStyle_  { PlotStyle::LINES };
@@ -1475,7 +1316,6 @@ class CGnuPlot {
   CGnuPlotLineTypeP      blackLineType_;
   CGnuPlotLineTypeP      nodrawLineType_;
   CGnuPlotLineTypeP      bgndLineType_;
-  CGnuPlotCircleStyle    circleStyle_;
   CGnuPlotRectStyle      rectStyle_;
   CGnuPlotStyleData      styleData_;
 
@@ -1498,9 +1338,9 @@ class CGnuPlot {
   CGnuPlotColorBoxData   colorBox_;
   CGnuPlotFilledCurve    filledCurve_;
   COptString             timeFmt_;
-  DummyVars              dummyVars_;
-  Samples                samples_;
-  ISOSamples             isoSamples_;
+  CGnuPlotDummyVars      dummyVars_;
+  CGnuPlotSamples        samples_;
+  CGnuPlotISOSamples     isoSamples_;
   LinkData               linkData_;
   CGnuPlotTypes::Mapping mapping_ { CGnuPlotTypes::Mapping::CARTESIAN_MAPPING };
   CGnuPlotPlotSize       plotSize_;
@@ -1524,10 +1364,8 @@ class CGnuPlot {
   COptReal               whiskerBars_;
   mutable ReadLineP      readLine_;
   Blocks                 blocks_;
-  SampleVars             sampleVars_;
-  SampleVars             saveSampleVars_;
-
-  CGnuPlotPieChartStyleValue pieChartStyleValue_;
+  CGnuPlotSampleVars     sampleVars_;
+  CGnuPlotSampleVars     saveSampleVars_;
 
   mutable CoordSys       defSystem_      { CoordSys::FIRST };
   mutable Values         fieldValues_;

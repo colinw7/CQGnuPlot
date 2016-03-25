@@ -20,7 +20,6 @@
 #include <CQGnuPlotCamera.h>
 #include <CQGnuPlotPm3D.h>
 #include <CQGnuPlotTimeStamp.h>
-#include <CQGnuPlotBoxPlot.h>
 #include <CQGnuPlotLabel.h>
 #include <CQGnuPlotDevice.h>
 #include <CQGnuPlotUtil.h>
@@ -48,14 +47,24 @@
 
 #include <CGnuPlotStyleValueMgr.h>
 #include <CQGnuPlotAdjacencyStyleValue.h>
+#include <CQGnuPlotBoxErrorBarsStyleValue.h>
+#include <CQGnuPlotBoxesStyleValue.h>
+#include <CQGnuPlotBoxPlotStyleValue.h>
+#include <CQGnuPlotBubbleStyleValue.h>
+#include <CQGnuPlotCandlesticksStyleValue.h>
 #include <CQGnuPlotChordDiagramStyleValue.h>
+#include <CQGnuPlotCirclesStyleValue.h>
 #include <CQGnuPlotDelaunayStyleValue.h>
 #include <CQGnuPlotDendrogramStyleValue.h>
+#include <CQGnuPlotEllipsesStyleValue.h>
 #include <CQGnuPlotForceDirectedStyleValue.h>
 #include <CQGnuPlotHierBubbleStyleValue.h>
+#include <CQGnuPlotLabelsStyleValue.h>
 #include <CQGnuPlotPieChartStyleValue.h>
+#include <CQGnuPlotRadarStyleValue.h>
 #include <CQGnuPlotSunburstStyleValue.h>
 #include <CQGnuPlotTreeMapStyleValue.h>
+#include <CQGnuPlotVectorsStyleValue.h>
 
 #include <CQGnuPlotToolBar.h>
 #include <CQGnuPlotLoadFileDialog.h>
@@ -969,30 +978,6 @@ addPlotProperties(CGnuPlotPlot *plot)
   tree_->addProperty(plotName, qplot, "barsSize"   )->setEditorFactory(realEdit("-1000:1000:0.1"));
   tree_->addProperty(plotName, qplot, "barsFront"  );
 
-  QString boxWidthName = plotName + "/boxWidth";
-
-  tree_->addProperty(boxWidthName, qplot, "boxWidthValue")->
-    setLabel("value")->setEditorFactory(realEdit("-2:2:0.01"));
-  tree_->addProperty(boxWidthName, qplot, "boxWidthType")->
-    setLabel("type");
-  tree_->addProperty(boxWidthName, qplot, "boxWidthCalc")->
-    setLabel("calc");
-
-  //---
-
-  CQGnuPlotBoxPlot *qboxPlot = static_cast<CQGnuPlotBoxPlot *>(qplot->getBoxPlot());
-
-  QString boxPlotName = plotName + "/boxPlot";
-
-  tree_->addProperty(boxPlotName, qboxPlot, "boxType");
-  tree_->addProperty(boxPlotName, qboxPlot, "range");
-  tree_->addProperty(boxPlotName, qboxPlot, "fraction");
-  tree_->addProperty(boxPlotName, qboxPlot, "outliers");
-  tree_->addProperty(boxPlotName, qboxPlot, "separation");
-  tree_->addProperty(boxPlotName, qboxPlot, "pointType");
-  tree_->addProperty(boxPlotName, qboxPlot, "boxLabels");
-  tree_->addProperty(boxPlotName, qboxPlot, "sorted");
-
   //---
 
   CQGnuPlotAdjacencyStyleValue *qadjacency = static_cast<CQGnuPlotAdjacencyStyleValue *>(
@@ -1002,6 +987,80 @@ addPlotProperties(CGnuPlotPlot *plot)
     QString adjacencyName = plotName + "/adjacency";
 
     tree_->addProperty(adjacencyName, qadjacency, "palette");
+  }
+
+  //---
+
+  CQGnuPlotBoxErrorBarsStyleValue *qboxerrorbars = static_cast<CQGnuPlotBoxErrorBarsStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBoxErrorBarsStyleValue>(qplot));
+
+  if (qboxerrorbars) {
+    QString boxErrorBarsName = plotName + "/boxErrorBars";
+
+    tree_->addProperty(boxErrorBarsName, qboxerrorbars, "type");
+    tree_->addProperty(boxErrorBarsName, qboxerrorbars, "width");
+    tree_->addProperty(boxErrorBarsName, qboxerrorbars, "calc");
+    tree_->addProperty(boxErrorBarsName, qboxerrorbars, "spacing");
+    tree_->addProperty(boxErrorBarsName, qboxerrorbars, "autoWidth");
+  }
+
+  //---
+
+  CQGnuPlotBoxesStyleValue *qboxes = static_cast<CQGnuPlotBoxesStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBoxesStyleValue>(qplot));
+
+  if (qboxes) {
+    QString boxesName = plotName + "/boxes";
+
+    tree_->addProperty(boxesName, qboxes, "type");
+    tree_->addProperty(boxesName, qboxes, "width");
+    tree_->addProperty(boxesName, qboxes, "calc");
+    tree_->addProperty(boxesName, qboxes, "spacing");
+    tree_->addProperty(boxesName, qboxes, "autoWidth");
+  }
+
+  //---
+
+  CQGnuPlotBoxPlotStyleValue *qboxPlot = static_cast<CQGnuPlotBoxPlotStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBoxPlotStyleValue>(qplot));
+
+  if (qboxPlot) {
+    QString boxPlotName = plotName + "/boxPlot";
+
+    tree_->addProperty(boxPlotName, qboxPlot, "boxType");
+    tree_->addProperty(boxPlotName, qboxPlot, "range");
+    tree_->addProperty(boxPlotName, qboxPlot, "fraction");
+    tree_->addProperty(boxPlotName, qboxPlot, "outliers");
+    tree_->addProperty(boxPlotName, qboxPlot, "separation");
+    tree_->addProperty(boxPlotName, qboxPlot, "pointType");
+    tree_->addProperty(boxPlotName, qboxPlot, "boxLabels");
+    tree_->addProperty(boxPlotName, qboxPlot, "sorted");
+  }
+
+  //---
+
+  CQGnuPlotBubbleStyleValue *qbubble = static_cast<CQGnuPlotBubbleStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBubbleStyleValue>(qplot));
+
+  if (qbubble) {
+    QString bubbleName = plotName + "/bubble";
+
+    tree_->addProperty(bubbleName, qbubble, "palette");
+  }
+
+  //---
+
+  CQGnuPlotCandlesticksStyleValue *qcandlesticks = static_cast<CQGnuPlotCandlesticksStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotCandlesticksStyleValue>(qplot));
+
+  if (qcandlesticks) {
+    QString candlesticksName = plotName + "/candlesticks";
+
+    tree_->addProperty(candlesticksName, qcandlesticks, "type");
+    tree_->addProperty(candlesticksName, qcandlesticks, "width");
+    tree_->addProperty(candlesticksName, qcandlesticks, "calc");
+    tree_->addProperty(candlesticksName, qcandlesticks, "spacing");
+    tree_->addProperty(candlesticksName, qcandlesticks, "autoWidth");
   }
 
   //---
@@ -1017,6 +1076,18 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
+  CQGnuPlotCirclesStyleValue *qcircles = static_cast<CQGnuPlotCirclesStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotCirclesStyleValue>(qplot));
+
+  if (qcircles) {
+    QString circlesName = plotName + "/circles";
+
+    tree_->addProperty(circlesName, qcircles, "wedge");
+    tree_->addProperty(circlesName, qcircles, "clip" );
+  }
+
+  //---
+
   CQGnuPlotDelaunayStyleValue *qdelaunay = static_cast<CQGnuPlotDelaunayStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotDelaunayStyleValue>(qplot));
 
@@ -1025,6 +1096,18 @@ addPlotProperties(CGnuPlotPlot *plot)
 
     tree_->addProperty(delaunayName, qdelaunay, "lineColor");
     tree_->addProperty(delaunayName, qdelaunay, "lineWidth");
+  }
+
+  //---
+
+  CQGnuPlotEllipsesStyleValue *qellipses = static_cast<CQGnuPlotEllipsesStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotEllipsesStyleValue>(qplot));
+
+  if (qellipses) {
+    QString ellipsesName = plotName + "/ellipses";
+
+    tree_->addProperty(ellipsesName, qellipses, "angle");
+    tree_->addProperty(ellipsesName, qellipses, "clip" );
   }
 
   //---
@@ -1068,6 +1151,22 @@ addPlotProperties(CGnuPlotPlot *plot)
 
   //---
 
+  CQGnuPlotLabelsStyleValue *qlabels = static_cast<CQGnuPlotLabelsStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotLabelsStyleValue>(qplot));
+
+  if (qlabels) {
+    QString labelsName = plotName + "/labels";
+
+    tree_->addProperty(labelsName, qlabels, "boxed");
+    tree_->addProperty(labelsName, qlabels, "transparent");
+    tree_->addProperty(labelsName, qlabels, "showPoint");
+    tree_->addProperty(labelsName, qlabels, "pointType");
+    tree_->addProperty(labelsName, qlabels, "pointSize");
+    tree_->addProperty(labelsName, qlabels, "lineWidth");
+  }
+
+  //---
+
   CQGnuPlotPieChartStyleValue *qpiechart = static_cast<CQGnuPlotPieChartStyleValue *>(
     CGnuPlotStyleValueMgrInst->getValue<CGnuPlotPieChartStyleValue>(qplot));
 
@@ -1079,6 +1178,24 @@ addPlotProperties(CGnuPlotPlot *plot)
     tree_->addProperty(piechartName, qpiechart, "startAngle");
     tree_->addProperty(piechartName, qpiechart, "innerRadius");
     tree_->addProperty(piechartName, qpiechart, "labelRadius");
+  }
+
+  //---
+
+  CQGnuPlotRadarStyleValue *qradar = static_cast<CQGnuPlotRadarStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotRadarStyleValue>(qplot));
+
+  if (qradar) {
+    QString radarName = plotName + "/radar";
+
+    tree_->addProperty(radarName, qradar, "palette");
+    tree_->addProperty(radarName, qradar, "borderColor");
+    tree_->addProperty(radarName, qradar, "borderWidth");
+    tree_->addProperty(radarName, qradar, "angleStart");
+    tree_->addProperty(radarName, qradar, "axisColor");
+    tree_->addProperty(radarName, qradar, "axisAlpha");
+    tree_->addProperty(radarName, qradar, "axisWidth");
+    tree_->addProperty(radarName, qradar, "strokeWidth");
   }
 
   //---
@@ -1106,6 +1223,25 @@ addPlotProperties(CGnuPlotPlot *plot)
     tree_->addProperty(treemapName, qtreemap, "openBorderWidth");
     tree_->addProperty(treemapName, qtreemap, "closedBorderWidth");
     tree_->addProperty(treemapName, qtreemap, "palette");
+  }
+
+  //---
+
+  CQGnuPlotVectorsStyleValue *qvectors = static_cast<CQGnuPlotVectorsStyleValue *>(
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotVectorsStyleValue>(qplot));
+
+  if (qvectors) {
+    QString vectorsName = plotName + "/vectors";
+
+    tree_->addProperty(vectorsName, qvectors, "fhead");
+    tree_->addProperty(vectorsName, qvectors, "thead");
+    tree_->addProperty(vectorsName, qvectors, "angle");
+    tree_->addProperty(vectorsName, qvectors, "backAngle");
+    tree_->addProperty(vectorsName, qvectors, "filled");
+    tree_->addProperty(vectorsName, qvectors, "empty");
+    tree_->addProperty(vectorsName, qvectors, "border");
+    tree_->addProperty(vectorsName, qvectors, "front");
+    tree_->addProperty(vectorsName, qvectors, "fixed");
   }
 
   //---
@@ -1525,6 +1661,7 @@ addPlotProperties(CGnuPlotPlot *plot)
       tree_->addProperty(pieName, qpie, "labelRadius"    );
       tree_->addProperty(pieName, qpie, "exploded"       );
       tree_->addProperty(pieName, qpie, "rotatedText"    );
+      tree_->addProperty(pieName, qpie, "wedge"          );
       tree_->addProperty(pieName, qpie, "explodeSelected");
 
       CQGnuPlotFill   *qfill   = qpie->fill();
@@ -1957,7 +2094,7 @@ loadFunctionSlot()
   group->set2D(  is2D);
   group->set3D(! is2D);
 
-  CGnuPlot::Samples samples = app()->samples();
+  CGnuPlotSamples samples = app()->samples();
 
   samples.set(ns, ns);
 

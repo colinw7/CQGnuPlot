@@ -1,20 +1,37 @@
 #include <CGnuPlotStyleCandlesticks.h>
+#include <CGnuPlotCandlesticksStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotBoxBarObject.h>
+#include <CGnuPlotDevice.h>
 
 CGnuPlotStyleCandlesticks::
 CGnuPlotStyleCandlesticks() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::CANDLESTICKS)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotCandlesticksStyleValue>("candlesticks");
 }
 
 void
 CGnuPlotStyleCandlesticks::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotCandlesticksStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotCandlesticksStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createCandlesticksStyleValue(plot);
+
+    value->init();
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotCandlesticksStyleValue>(plot, value);
+  }
+
+  //---
+
   CGnuPlotGroup *group = plot->group();
 
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
@@ -24,7 +41,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   bool isCalcColor = lineStyle.isCalcColor();
 
-  double bw = plot->boxWidth().getSpacing(0.1);
+  double bw = value->getSpacing();
 
   //---
 

@@ -1,6 +1,9 @@
 #ifndef CGnuPlotTextStyle_H
 #define CGnuPlotTextStyle_H
 
+#include <CPoint2D.h>
+#include <CAlignType.h>
+
 class CGnuPlotTextStyle {
  public:
   CGnuPlotTextStyle() { }

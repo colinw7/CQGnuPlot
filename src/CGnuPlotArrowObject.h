@@ -40,8 +40,8 @@ class CGnuPlotArrowObject : public CGnuPlotPlotObject {
   const CAngle &getAngle() const { return data_.getAngle(); }
   void setAngle(const CAngle &a) { data_.setAngle(a); }
 
-  const CGnuPlotArrowStyle &style() const { return data_.style(); }
-  void setStyle(const CGnuPlotArrowStyle &s) { data_.setStyle(s); }
+  const CGnuPlotVectorsStyleValue &style() const { return data_.style(); }
+  void setStyle(const CGnuPlotVectorsStyleValue &s) { data_.setStyle(s); }
 
   bool getFHead() const { return data_.getFHead(); }
   void setFHead(bool b) { data_.setFHead(b); }

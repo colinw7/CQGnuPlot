@@ -1,83 +1,77 @@
 #include <CGnuPlotStyleBubblePlot.h>
+#include <CGnuPlotBubbleStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotBubbleObject.h>
 #include <CGnuPlotUtil.h>
-#include <CirclePack.h>
-
-class BubbleNode : public CircleNode {
- public:
-  BubbleNode(const std::string &name, double value, int id) :
-   CircleNode(sqrt(value/M_PI)), name_(name), value_(value), id_(id) {
-  }
-
-  const std::string &name() const { return name_; }
-
-  int id() const { return id_; }
-
-  double value() const { return value_; }
-
- private:
-  std::string name_;
-  double      value_;
-  int         id_;
-};
-
-//---
+#include <CGnuPlotDevice.h>
 
 CGnuPlotStyleBubblePlot::
 CGnuPlotStyleBubblePlot() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::BUBBLEPLOT)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotBubbleStyleValue>("bubble");
 }
 
 void
 CGnuPlotStyleBubblePlot::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotBubbleStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBubbleStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createBubbleStyleValue(plot);
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotBubbleStyleValue>(plot, value);
+  }
+
+  //---
+
   typedef std::map<std::string, int> Ids;
 
   Ids ids;
 
-  typedef CirclePack<BubbleNode> Pack;
+  CBubblePack *pack = value->pack();
 
-  Pack pack;
+  if (! value->isInited()) {
+    for (const auto &point : plot->getPoints2D()) {
+      std::string name;
+      double      value;
 
-  for (const auto &point : plot->getPoints2D()) {
-    std::string name;
-    double      value;
+      if (! point.getValue(1, name) || ! point.getValue(2, value))
+        continue;
 
-    if (! point.getValue(1, name) || ! point.getValue(2, value))
-      continue;
+      int id = -1;
 
-    int id = -1;
+      std::string idName;
 
-    std::string idName;
+      if (point.getValue(3, idName)) {
+        auto p = ids.find(idName);
 
-    if (point.getValue(3, idName)) {
-      auto p = ids.find(idName);
+        if (p == ids.end()) {
+          id = ids.size() + 1;
 
-      if (p == ids.end()) {
-        id = ids.size() + 1;
-
-        ids[idName] = id;
+          ids[idName] = id;
+        }
+        else
+          id = (*p).second;
       }
-      else
-        id = (*p).second;
+
+      pack->addNode(name, value, id);
     }
 
-    double r = sqrt(value/M_PI);
-
-    BubbleNode *node = new BubbleNode(name, r, id);
-
-    pack.addNode(node);
+    value->setInited(true);
   }
+
+  //---
 
   CRGBA c(0.5, 0.5, 0.5, 0.5);
 
   double xmin, ymin, xmax, ymax;
 
-  pack.boundingBox(xmin, ymin, xmax, ymax);
+  pack->boundingBox(xmin, ymin, xmax, ymax);
 
   double xc = (xmin + xmax)/2;
   double yc = (ymin + ymax)/2;
@@ -92,11 +86,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   ymax = yc + s/2;
 
   if (! renderer->isPseudo())
-    plot->updateBubbleCacheSize(pack.nodes().size());
+    plot->updateBubbleCacheSize(pack->nodes().size());
 
   int i = 0;
 
-  for (const auto &n : pack.nodes()) {
+  for (const auto &n : pack->nodes()) {
     double x1 = CGnuPlotUtil::map(n->x() - n->radius(), xmin, xmax, -1, 1);
     double y1 = CGnuPlotUtil::map(n->y() - n->radius(), ymin, ymax, -1, 1);
     double x2 = CGnuPlotUtil::map(n->x() + n->radius(), xmin, xmax, -1, 1);
@@ -113,7 +107,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       bubble->setName(n->name());
       bubble->setValue(n->value());
 
-      CRGBA c1 = (n->id() > 0 ? CGnuPlotStyleInst->indexColor("subtle", n->id()) : c);
+      CRGBA c1 = (n->id() > 0 ? CGnuPlotStyleInst->indexColor(value->palette(), n->id()) : c);
 
       if (! bubble->testAndSetUsed()) {
         bubble->fill()->setType (CGnuPlotTypes::FillType::SOLID);
@@ -127,9 +121,6 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     ++i;
   }
-
-  for (auto &n : pack.nodes())
-    delete n;
 
   if (! renderer->isPseudo()) {
     for (const auto &bubble : plot->bubbleObjects())

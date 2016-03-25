@@ -1,52 +1,35 @@
 #include <CGnuPlotStyleRadar.h>
+#include <CGnuPlotRadarStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
+#include <CGnuPlotPolygonObject.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotGroup.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotRenderer.h>
-
-namespace {
-  CPoint2D radarPoint(const CPoint2D &o, double r, double a) {
-    double x = o.x + r*cos(CAngle::Deg2Rad(a));
-    double y = o.y + r*sin(CAngle::Deg2Rad(a));
-
-    return CPoint2D(x, y);
-  }
-
-  std::vector<CPoint2D> radarPoints(const CPoint2D &o, double r, int np) {
-    std::vector<CPoint2D> points;
-
-    double a  = 90;
-    double da = 360/np;
-
-    for (int i = 0; i < np; ++i) {
-      CPoint2D p = radarPoint(o, r, a);
-
-      points.push_back(p);
-
-      a -= da;
-    }
-
-    return points;
-  }
-
-  void getPointsColor(int pi, CRGBA &lc, CRGBA &fc) {
-    lc = CGnuPlotStyleInst->indexColor(pi);
-    fc = lc;
-
-    fc.setAlpha(0.5);
-  }
-}
+#include <CGnuPlotDevice.h>
 
 CGnuPlotStyleRadar::
 CGnuPlotStyleRadar() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::RADAR)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotRadarStyleValue>("radar");
 }
 
 void
 CGnuPlotStyleRadar::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotRadarStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotRadarStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createRadarStyleValue(plot);
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotRadarStyleValue>(plot, value);
+  }
+
+  //---
+
   const CBBox2D &bbox = plot->bbox2D();
 
   CPoint2D pc = bbox.getCenter();
@@ -66,27 +49,27 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CGnuPlotGroup *group = plot->group();
 
-  const CGnuPlotKeyP     &key   = group->key();
-  const CGnuPlotAxisData &xaxis = group->xaxis(1);
+  const CGnuPlotKeyData  &keyData = plot->keyData();
+  const CGnuPlotAxisData &xaxis   = group->xaxis(1);
 
-  const CGnuPlotKey::Columns &columns = key->columns();
+  const CGnuPlotKey::Columns &columns = keyData.columns();
 
   double da = 360/np;
 
-  std::vector<CPoint2D> points = radarPoints(pc, r, np);
+  std::vector<CPoint2D> points = radarPoints(value->angleStart(), pc, r, np);
 
   double v = getRange(plot);
 
   //---
 
   // draw border
-  renderer->drawPolygon(points, CRGBA(0,0,0), 0, CLineDash());
+  renderer->drawPolygon(points, value->borderColor(), value->borderWidth(), value->borderDash());
 
   //---
 
   // draw column labels (how determine indices)
   {
-    double a = 90;
+    double a = value->angleStart();
 
     for (int i = 1; i <= np && i < int(columns.size()); ++i) {
       CPoint2D p = radarPoint(pc, r, a);
@@ -115,8 +98,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         dy     = -8;
       }
 
-      renderer->drawHAlignedText(p, HAlignPos(halign, dx), VAlignPos(valign, dy),
-                                 columns[i], CRGBA(0,0,0));
+      CRGBA tc = CRGBA(0,0,0);
+
+      renderer->drawHAlignedText(p, HAlignPos(halign, dx), VAlignPos(valign, dy), columns[i], tc),
 
       a -= da;
     }
@@ -126,29 +110,41 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   // draw axis if needed
   if (xaxis.isDisplayed()) {
+    CRGBA ac = value->axisColor();
+
+    ac.setAlpha(value->axisAlpha());
+
     double dr = 0.1;
     double ra = 0.1;
 
     while (ra < v) {
-      std::vector<CPoint2D> points1 = radarPoints(pc, ra, np);
+      std::vector<CPoint2D> points1 = radarPoints(value->angleStart(), pc, ra, np);
 
-      renderer->drawPolygon(points1, CRGBA(0.5,0.5,0.5,0.5), 0, CLineDash());
+      renderer->drawPolygon(points1, ac, value->axisWidth(), value->axisDash());
 
       ra += dr;
     }
 
     for (const auto &p : points)
-      renderer->drawLine(p, pc, CRGBA(0.5,0.5,0.5,0.5), 0);
+      renderer->drawLine(p, pc, ac, value->axisWidth(), value->axisDash());
   }
 
   //---
 
-  int pi = 1;
+  bool cache = false;
+
+  if (! renderer->isPseudo() && plot->isCacheActive()) {
+    plot->updatePolygonCacheSize(plot->numPoints2D());
+
+    cache = true;
+  }
+
+  int pi = 0;
 
   for (const auto &point : plot->getPoints2D()) {
     std::vector<CPoint2D> points1;
 
-    double a = 90;
+    double a = value->angleStart();
 
     for (int i = 0; i < np; ++i) {
       double v1;
@@ -165,13 +161,44 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CRGBA lc, fc;
 
-    getPointsColor(pi, lc, fc);
+    getPointsColor(value, pi + 1, lc, fc);
 
-    renderer->fillPolygon(points1, fc);
+    if (cache) {
+    //std::string label = (pi < int(columns.size()) ? columns[pi] : "");
+      std::string label = xaxis.iticLabel(pi);
 
-    renderer->drawPolygon(points1, lc, 2, CLineDash());
+      auto polygon = plot->polygonObjects()[pi];
+
+      polygon->setPoints(points1);
+      polygon->setTipText(label);
+
+      if (! polygon->testAndSetUsed()) {
+        CGnuPlotFillP   fill  (polygon->fill  ()->dup());
+        CGnuPlotStrokeP stroke(polygon->stroke()->dup());
+
+        fill->setColor(fc);
+        fill->setType (CGnuPlotTypes::FillType::SOLID);
+
+        stroke->setColor   (lc);
+        stroke->setWidth   (value->strokeWidth());
+        stroke->setLineDash(value->strokeDash());
+
+        polygon->setFill  (fill  );
+        polygon->setStroke(stroke);
+      }
+    }
+    else {
+      renderer->fillPolygon(points1, fc);
+
+      renderer->drawPolygon(points1, lc, value->strokeWidth(), value->strokeDash());
+    }
 
     ++pi;
+  }
+
+  if (cache) {
+    for (const auto &polygon : plot->polygonObjects())
+      polygon->draw(renderer);
   }
 }
 
@@ -179,10 +206,16 @@ void
 CGnuPlotStyleRadar::
 drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotRadarStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotRadarStyleValue>(plot);
+  if (! value) return;
+
+  //---
+
   CGnuPlotGroup *group = plot->group();
 
   const CGnuPlotKeyP     &key   = group->key();
-//const CGnuPlotAxisData &xaxis = group->xaxis(1);
+  const CGnuPlotAxisData &xaxis = group->xaxis(1);
 
   if (! key->isDisplayed()) return;
 
@@ -221,12 +254,19 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       textHeight += font_size*ph;
   }
 
+  int i = 0;
+
   for (const auto &point : plot->getPoints2D()) {
-    std::string label = point.label();
+    assert(! point.isDiscontinuity());
+
+    std::string label = xaxis.iticLabel(i);
+    //std::string label = point.label();
 
     textWidth = std::max(textWidth, font->getStringWidth(label)*pw);
 
     textHeight += font_size*ph;
+
+    ++i;
   }
 
   size = CSize2D(textWidth + bw*pw + 3*bx, textHeight + 2*by);
@@ -263,7 +303,7 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     CRGBA c(0, 0, 0);
 
     if (key->hasLineType())
-      c = CGnuPlotStyleInst->indexColor(key->getLineType());
+      c = CGnuPlotStyleInst->indexColor(value->palette(), key->getLineType());
 
     renderer->drawRect(bbox, c, 1);
   }
@@ -271,15 +311,19 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   double y = y2 - by;
 
   if (header != "") {
+    CRGBA tc = CRGBA(0,0,0);
+
     renderer->drawHAlignedText(CPoint2D((x1 + x2)/2, y), HAlignPos(CHALIGN_TYPE_CENTER, 0),
-                               VAlignPos(CVALIGN_TYPE_TOP, 0), header, CRGBA(0,0,0));
+                               VAlignPos(CVALIGN_TYPE_TOP, 0), header, tc);
 
     y -= font_size*ph;
   }
 
-  int pi = 1;
+  int pi = 0;
 
   for (const auto &point : plot->getPoints2D()) {
+    assert(! point.isDiscontinuity());
+
     double xx = (key->isReverse() ? x1 + bx : x2 - bw*pw - bx);
     double yy = y - font_size*ph/2;
 
@@ -287,14 +331,15 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CRGBA lc, fc;
 
-    getPointsColor(pi, lc, fc);
+    getPointsColor(value, pi + 1, lc, fc);
 
     CBBox2D bbox(p1, p2);
 
     renderer->fillRect(bbox, fc);
     renderer->drawRect(bbox, lc, 1);
 
-    std::string label = point.label();
+    std::string label = xaxis.iticLabel(pi);
+    //std::string label = point.label();
 
     //double lw = font->getStringWidth(label);
 
@@ -319,7 +364,7 @@ fit(CGnuPlotPlot *plot)
 {
   double v = getRange(plot);
 
-  return CBBox2D(0, 0, v, v);
+  return CBBox2D(0, 0, 2*v, 2*v);
 }
 
 double
@@ -343,4 +388,44 @@ getRange(CGnuPlotPlot *plot) const
   }
 
   return vmax.getValue(1);
+}
+
+void
+CGnuPlotStyleRadar::
+getPointsColor(CGnuPlotRadarStyleValue *value, int pi, CRGBA &lc, CRGBA &fc)
+{
+  lc = CGnuPlotStyleInst->indexColor(value->palette(), pi);
+  fc = lc;
+
+  fc.setAlpha(0.5);
+}
+
+CPoint2D
+CGnuPlotStyleRadar::
+radarPoint(const CPoint2D &o, double r, double a) const
+{
+  double x = o.x + r*cos(CAngle::Deg2Rad(a));
+  double y = o.y + r*sin(CAngle::Deg2Rad(a));
+
+  return CPoint2D(x, y);
+}
+
+std::vector<CPoint2D>
+CGnuPlotStyleRadar::
+radarPoints(double a0, const CPoint2D &o, double r, int np) const
+{
+  std::vector<CPoint2D> points;
+
+  double a  = a0;
+  double da = 360/np;
+
+  for (int i = 0; i < np; ++i) {
+    CPoint2D p = radarPoint(o, r, a);
+
+    points.push_back(p);
+
+    a -= da;
+  }
+
+  return points;
 }

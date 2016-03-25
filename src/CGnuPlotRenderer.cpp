@@ -1466,10 +1466,11 @@ drawSymbol(const CPoint3D &p, SymbolType type, double size, const CRGBA &c,
 void
 CGnuPlotRenderer::
 strokePieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
-               double angle2, const CGnuPlotStroke &stroke)
+               double angle2, bool wedge, const CGnuPlotStroke &stroke)
 {
   if (stroke.isEnabled())
-    drawPieSlice(pc, ri, ro, angle1, angle2, stroke.color(), stroke.width(), stroke.lineDash());
+    drawPieSlice(pc, ri, ro, angle1, angle2, wedge,
+                 stroke.color(), stroke.width(), stroke.lineDash());
 }
 
 void

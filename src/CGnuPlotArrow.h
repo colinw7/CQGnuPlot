@@ -38,8 +38,8 @@ class CGnuPlotArrow : public CGnuPlotGroupAnnotation {
   const CAngle &getAngle() const { return data_.getAngle(); }
   void setAngle(const CAngle &a) { data_.setAngle(a); }
 
-  const CGnuPlotArrowStyle &style() const { return data_.style(); }
-  void setStyle(const CGnuPlotArrowStyle &s) { data_.setStyle(s); }
+  const CGnuPlotVectorsStyleValue &style() const { return data_.style(); }
+  void setStyle(const CGnuPlotVectorsStyleValue &s) { data_.setStyle(s); }
 
   void setFromTo(const CGnuPlotPosition &from, const CGnuPlotPosition &to) {
     setCoordType(CoordType::FROM_TO);

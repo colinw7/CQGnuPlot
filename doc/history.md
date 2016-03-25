@@ -259,3 +259,7 @@
 
 ### 03/13/2016
  + Add generic support for per plot style data and add more config for plot styles
+
+### 03/25/2016
+ + Add more per plot style data
+ + Support wedge in circles plot

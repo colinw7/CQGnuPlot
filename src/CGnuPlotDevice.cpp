@@ -19,14 +19,25 @@
 #include <CGnuPlotRectObject.h>
 
 #include <CGnuPlotAdjacencyStyleValue.h>
+#include <CGnuPlotBivariateStyleValue.h>
+#include <CGnuPlotBoxErrorBarsStyleValue.h>
+#include <CGnuPlotBoxesStyleValue.h>
+#include <CGnuPlotBoxPlotStyleValue.h>
+#include <CGnuPlotBubbleStyleValue.h>
+#include <CGnuPlotCandlesticksStyleValue.h>
 #include <CGnuPlotChordDiagramStyleValue.h>
-#include <CGnuPlotDendrogramStyleValue.h>
+#include <CGnuPlotCirclesStyleValue.h>
 #include <CGnuPlotDelaunayStyleValue.h>
+#include <CGnuPlotDendrogramStyleValue.h>
+#include <CGnuPlotEllipsesStyleValue.h>
 #include <CGnuPlotForceDirectedStyleValue.h>
 #include <CGnuPlotHierBubbleStyleValue.h>
+#include <CGnuPlotLabelsStyleValue.h>
 #include <CGnuPlotPieChartStyleValue.h>
+#include <CGnuPlotRadarStyleValue.h>
 #include <CGnuPlotSunburstStyleValue.h>
 #include <CGnuPlotTreeMapStyleValue.h>
+#include <CGnuPlotVectorsStyleValue.h>
 
 #include <CFontMgr.h>
 
@@ -172,13 +183,6 @@ createTimeStamp(CGnuPlotGroup *group)
   return new CGnuPlotTimeStamp(group);
 }
 
-CGnuPlotBoxPlot *
-CGnuPlotDevice::
-createBoxPlot(CGnuPlotPlot *plot)
-{
-  return new CGnuPlotBoxPlot(plot);
-}
-
 //---
 
 CGnuPlotArrowObject *
@@ -316,6 +320,48 @@ createAdjacencyStyleValue(CGnuPlotPlot *plot)
   return new CGnuPlotAdjacencyStyleValue(plot);
 }
 
+CGnuPlotBivariateStyleValue *
+CGnuPlotDevice::
+createBivariateStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotBivariateStyleValue(plot);
+}
+
+CGnuPlotBoxErrorBarsStyleValue *
+CGnuPlotDevice::
+createBoxErrorBarsStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotBoxErrorBarsStyleValue(plot);
+}
+
+CGnuPlotBoxesStyleValue *
+CGnuPlotDevice::
+createBoxesStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotBoxesStyleValue(plot);
+}
+
+CGnuPlotBoxPlotStyleValue *
+CGnuPlotDevice::
+createBoxPlotStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotBoxPlotStyleValue(plot);
+}
+
+CGnuPlotBubbleStyleValue *
+CGnuPlotDevice::
+createBubbleStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotBubbleStyleValue(plot);
+}
+
+CGnuPlotCandlesticksStyleValue *
+CGnuPlotDevice::
+createCandlesticksStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotCandlesticksStyleValue(plot);
+}
+
 CGnuPlotChordDiagramStyleValue *
 CGnuPlotDevice::
 createChordDiagramStyleValue(CGnuPlotPlot *plot)
@@ -351,11 +397,39 @@ createHierBubbleStyleValue(CGnuPlotPlot *plot)
   return new CGnuPlotHierBubbleStyleValue(plot);
 }
 
+CGnuPlotLabelsStyleValue *
+CGnuPlotDevice::
+createLabelsStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotLabelsStyleValue(plot);
+}
+
 CGnuPlotPieChartStyleValue *
 CGnuPlotDevice::
 createPieChartStyleValue(CGnuPlotPlot *plot)
 {
   return new CGnuPlotPieChartStyleValue(plot);
+}
+
+CGnuPlotCirclesStyleValue *
+CGnuPlotDevice::
+createCirclesStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotCirclesStyleValue(plot);
+}
+
+CGnuPlotEllipsesStyleValue *
+CGnuPlotDevice::
+createEllipsesStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotEllipsesStyleValue(plot);
+}
+
+CGnuPlotRadarStyleValue *
+CGnuPlotDevice::
+createRadarStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotRadarStyleValue(plot);
 }
 
 CGnuPlotSunburstStyleValue *
@@ -370,6 +444,13 @@ CGnuPlotDevice::
 createTreeMapStyleValue(CGnuPlotPlot *plot)
 {
   return new CGnuPlotTreeMapStyleValue(plot);
+}
+
+CGnuPlotVectorsStyleValue *
+CGnuPlotDevice::
+createVectorsStyleValue(CGnuPlotPlot *plot)
+{
+  return new CGnuPlotVectorsStyleValue(plot);
 }
 
 //---

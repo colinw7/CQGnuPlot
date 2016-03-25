@@ -107,7 +107,7 @@ class CGnuPlotStyleSunburstPainter : public CSunburstPainter {
       //---
 
       renderer_->fillPieSlice(pc, r1, r2, a1, a2, color);
-      renderer_->drawPieSlice(pc, r1, r2, a1, a2, borderColor(), 1);
+      renderer_->drawPieSlice(pc, r1, r2, a1, a2, true, borderColor(), 1);
 
 #if 0
       renderer_->drawText(tp, node->name(), tc1);

@@ -20,7 +20,6 @@
 #include <CQGnuPlotCamera.h>
 #include <CQGnuPlotPm3D.h>
 #include <CQGnuPlotTimeStamp.h>
-#include <CQGnuPlotBoxPlot.h>
 #include <CQGnuPlotBubbleObject.h>
 
 #include <CQGnuPlotArrowObject.h>
@@ -43,14 +42,24 @@
 #include <CQGnuPlotMark.h>
 
 #include <CQGnuPlotAdjacencyStyleValue.h>
+#include <CQGnuPlotBoxErrorBarsStyleValue.h>
+#include <CQGnuPlotBoxesStyleValue.h>
+#include <CQGnuPlotBoxPlotStyleValue.h>
+#include <CQGnuPlotBubbleStyleValue.h>
+#include <CQGnuPlotCandlesticksStyleValue.h>
 #include <CQGnuPlotChordDiagramStyleValue.h>
+#include <CQGnuPlotCirclesStyleValue.h>
 #include <CQGnuPlotDelaunayStyleValue.h>
 #include <CQGnuPlotDendrogramStyleValue.h>
+#include <CQGnuPlotEllipsesStyleValue.h>
 #include <CQGnuPlotForceDirectedStyleValue.h>
 #include <CQGnuPlotHierBubbleStyleValue.h>
+#include <CQGnuPlotLabelsStyleValue.h>
 #include <CQGnuPlotPieChartStyleValue.h>
+#include <CQGnuPlotRadarStyleValue.h>
 #include <CQGnuPlotSunburstStyleValue.h>
 #include <CQGnuPlotTreeMapStyleValue.h>
+#include <CQGnuPlotVectorsStyleValue.h>
 
 #include <QApplication>
 
@@ -309,17 +318,6 @@ createTimeStamp(CGnuPlotGroup *group)
   CQGnuPlotTimeStamp *timeStamp = new CQGnuPlotTimeStamp(qgroup);
 
   return timeStamp;
-}
-
-CGnuPlotBoxPlot *
-CQGnuPlotDevice::
-createBoxPlot(CGnuPlotPlot *plot)
-{
-  CQGnuPlotPlot *qplot = dynamic_cast<CQGnuPlotPlot *>(plot);
-
-  CQGnuPlotBoxPlot *boxPlot = new CQGnuPlotBoxPlot(qplot);
-
-  return boxPlot;
 }
 
 //---
@@ -587,11 +585,53 @@ createAdjacencyStyleValue(CGnuPlotPlot *plot)
   return new CQGnuPlotAdjacencyStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
 }
 
+CGnuPlotBoxErrorBarsStyleValue *
+CQGnuPlotDevice::
+createBoxErrorBarsStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotBoxErrorBarsStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotBoxesStyleValue *
+CQGnuPlotDevice::
+createBoxesStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotBoxesStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotBoxPlotStyleValue *
+CQGnuPlotDevice::
+createBoxPlotStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotBoxPlotStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotBubbleStyleValue *
+CQGnuPlotDevice::
+createBubbleStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotBubbleStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotCandlesticksStyleValue *
+CQGnuPlotDevice::
+createCandlesticksStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotCandlesticksStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
 CGnuPlotChordDiagramStyleValue *
 CQGnuPlotDevice::
 createChordDiagramStyleValue(CGnuPlotPlot *plot)
 {
   return new CQGnuPlotChordDiagramStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotCirclesStyleValue *
+CQGnuPlotDevice::
+createCirclesStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotCirclesStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
 }
 
 CGnuPlotDelaunayStyleValue *
@@ -608,6 +648,13 @@ createDendrogramStyleValue(CGnuPlotPlot *plot)
   return new CQGnuPlotDendrogramStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
 }
 
+CGnuPlotEllipsesStyleValue *
+CQGnuPlotDevice::
+createEllipsesStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotEllipsesStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
 CGnuPlotForceDirectedStyleValue *
 CQGnuPlotDevice::
 createForceDirectedStyleValue(CGnuPlotPlot *plot)
@@ -622,11 +669,25 @@ createHierBubbleStyleValue(CGnuPlotPlot *plot)
   return new CQGnuPlotHierBubbleStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
 }
 
+CGnuPlotLabelsStyleValue *
+CQGnuPlotDevice::
+createLabelsStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotLabelsStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
 CGnuPlotPieChartStyleValue *
 CQGnuPlotDevice::
 createPieChartStyleValue(CGnuPlotPlot *plot)
 {
   return new CQGnuPlotPieChartStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotRadarStyleValue *
+CQGnuPlotDevice::
+createRadarStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotRadarStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
 }
 
 CGnuPlotSunburstStyleValue *
@@ -641,6 +702,13 @@ CQGnuPlotDevice::
 createTreeMapStyleValue(CGnuPlotPlot *plot)
 {
   return new CQGnuPlotTreeMapStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
+}
+
+CGnuPlotVectorsStyleValue *
+CQGnuPlotDevice::
+createVectorsStyleValue(CGnuPlotPlot *plot)
+{
+  return new CQGnuPlotVectorsStyleValue(dynamic_cast<CQGnuPlotPlot *>(plot));
 }
 
 //---

@@ -1,18 +1,35 @@
 #include <CGnuPlotStyleBoxErrorBars.h>
+#include <CGnuPlotBoxErrorBarsStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotBoxBarObject.h>
+#include <CGnuPlotDevice.h>
 
 CGnuPlotStyleBoxErrorBars::
 CGnuPlotStyleBoxErrorBars() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::BOXERRORBARS)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotBoxErrorBarsStyleValue>("boxerrorbars");
 }
 
 void
 CGnuPlotStyleBoxErrorBars::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotBoxErrorBarsStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBoxErrorBarsStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createBoxErrorBarsStyleValue(plot);
+
+    value->init();
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotBoxErrorBarsStyleValue>(plot, value);
+  }
+
+  //---
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   CGnuPlotFill   fill  (plot);
@@ -26,10 +43,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   double y2 = std::max(0.0, ymin);
 
+  double bw = value->getSpacing();
+
   //---
 
   if (! renderer->isPseudo())
     plot->updateBoxBarCacheSize(plot->getPoints2D().size());
+
+  //---
 
   int i = 0;
 
@@ -51,7 +72,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     double x  = reals[0];
     double y  = reals[1];
-    double dx = plot->boxWidth().getSpacing(plot->getXSpacing());
+    double dx = bw;
     double dy = 0.0;
     double yl = y;
     double yh = y;
@@ -65,7 +86,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
     else if (reals.size() == 4) {
       // x y ydelta xdelta
-      if (! plot->boxWidth().isAutoWidth()) {
+      if (! value->isAutoWidth()) {
         dx = reals[2];
         dy = reals[3];
 

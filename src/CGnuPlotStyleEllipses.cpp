@@ -1,7 +1,9 @@
 #include <CGnuPlotStyleEllipses.h>
+#include <CGnuPlotEllipsesStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotEllipseObject.h>
-#include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotDevice.h>
 
 namespace {
 
@@ -24,20 +26,33 @@ CGnuPlotStyleEllipses::
 CGnuPlotStyleEllipses() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::ELLIPSES)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotEllipsesStyleValue>("ellipses");
 }
 
 void
 CGnuPlotStyleEllipses::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
-  typedef std::vector<Ellipse> Ellipses;
+  CGnuPlotEllipsesStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotEllipsesStyleValue>(plot);
 
-  Ellipses  ellipses;
+  if (! value) {
+    value = plot->app()->device()->createEllipsesStyleValue(plot);
+
+    value->init(plot->ellipsesStyleValue());
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotEllipsesStyleValue>(plot, value);
+  }
 
   //---
 
-  const CGnuPlotEllipseStyle &ellipseStyle = plot->ellipseStyle();
-  const CGnuPlotLineStyle    &lineStyle    = plot->lineStyle();
+  typedef std::vector<Ellipse> Ellipses;
+
+  Ellipses ellipses;
+
+  //---
+
+  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   CGnuPlotFill   fill  (plot);
   CGnuPlotStroke stroke(plot);
@@ -62,7 +77,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     double w, h;
 
-    double a = ellipseStyle.angle();
+    double a = value->angle();
 
     CRGBA lc1 = stroke.color();
 
@@ -85,8 +100,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     if      ((! isCalcColor && reals.size() == 2) || (isCalcColor && reals.size() == 3)) {
       // TODO: get from set circle
-      w = ellipseStyle.size(0).getXDistance(renderer);
-      h = ellipseStyle.size(1).getYDistance(renderer);
+      w = value->size(0).getXDistance(renderer);
+      h = value->size(1).getYDistance(renderer);
     }
     else if ((! isCalcColor && reals.size() == 3) || (isCalcColor && reals.size() == 4)) {
       w = reals[2];
@@ -116,10 +131,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     double w1 = w;
     double h1 = h;
 
-    if (ellipseStyle.isWidthY())
+    if (value->isWidthY())
       w1 = renderer->pixelWidthToWindowWidth(renderer->windowHeightToPixelHeight(w1));
 
-    if (ellipseStyle.isHeightX())
+    if (value->isHeightX())
       h1 = renderer->pixelHeightToWindowHeight(renderer->windowWidthToPixelWidth(h1));
 
     //---

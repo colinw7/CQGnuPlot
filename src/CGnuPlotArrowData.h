@@ -1,7 +1,7 @@
 #ifndef CGnuPlotArrowData_H
 #define CGnuPlotArrowData_H
 
-#include <CGnuPlotArrowStyle.h>
+#include <CGnuPlotVectorsStyleValue.h>
 #include <CGnuPlotPosition.h>
 #include <CGnuPlotTipData.h>
 #include <CGnuPlotMouseEvent.h>
@@ -37,9 +37,9 @@ class CGnuPlotArrowData {
   const CAngle &getAngle() const { return angle_; }
   void setAngle(const CAngle &a) { angle_ = a; }
 
-  const CGnuPlotArrowStyle &style() const { return style_; }
-  CGnuPlotArrowStyle &style() { return style_; }
-  void setStyle(const CGnuPlotArrowStyle &s) { style_ = s; }
+  const CGnuPlotVectorsStyleValue &style() const { return style_; }
+  CGnuPlotVectorsStyleValue &style() { return style_; }
+  void setStyle(const CGnuPlotVectorsStyleValue &s) { style_ = s; }
 
   const COptRGBA &getLineColor() const { return lineColor_; }
   void setLineColor(const CRGBA &c) { lineColor_.setValue(c); }
@@ -103,18 +103,18 @@ class CGnuPlotArrowData {
   const CBBox2D &bbox() const { return bbox_; }
 
  protected:
-  CoordType          coordType_ { CoordType::FROM_TO };
-  CGnuPlotPosition   from_;
-  CGnuPlotPosition   to_;
-  CGnuPlotCoordValue length_;
-  CAngle             angle_;
-  CGnuPlotArrowStyle style_;
-  COptRGBA           lineColor_;
-  mutable CLine2D    line_;
-  mutable CLine2D    pline_;
-  mutable double     tol_;
-  mutable CRGBA      lc_;
-  mutable CBBox2D    bbox_;
+  CoordType                 coordType_ { CoordType::FROM_TO };
+  CGnuPlotPosition          from_;
+  CGnuPlotPosition          to_;
+  CGnuPlotCoordValue        length_;
+  CAngle                    angle_;
+  CGnuPlotVectorsStyleValue style_;
+  COptRGBA                  lineColor_;
+  mutable CLine2D           line_;
+  mutable CLine2D           pline_;
+  mutable double            tol_;
+  mutable CRGBA             lc_;
+  mutable CBBox2D           bbox_;
 };
 
 #endif

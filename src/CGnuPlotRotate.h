@@ -1,6 +1,8 @@
 #ifndef CGnuPlotRotate_H
 #define CGnuPlotRotate_H
 
+#include <CAngle.h>
+
 class CGnuPlotRotate {
  public:
   CGnuPlotRotate() { }

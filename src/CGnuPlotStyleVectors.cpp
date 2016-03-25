@@ -1,27 +1,42 @@
 #include <CGnuPlotStyleVectors.h>
+#include <CGnuPlotVectorsStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotArrowObject.h>
-#include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotDevice.h>
 
 CGnuPlotStyleVectors::
 CGnuPlotStyleVectors() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::VECTORS)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotVectorsStyleValue>("vectors");
 }
 
 void
 CGnuPlotStyleVectors::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotVectorsStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotVectorsStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createVectorsStyleValue(plot);
+
+    value->init(plot->vectorsStyleValue());
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotVectorsStyleValue>(plot, value);
+  }
+
+  //---
+
   CGnuPlotGroup *group = plot->group();
 
-  const CGnuPlotLineStyle  &lineStyle  = plot->lineStyle();
-  const CGnuPlotArrowStyle &arrowStyle = plot->arrowStyle();
+  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   CGnuPlotStroke stroke(plot);
 
   bool isCalcColor = lineStyle.isCalcColor();
-  bool isVarArrow  = plot->arrowStyle().isVariable();
+  bool isVarArrow  = value->isVariable();
 
   uint numExtra = 0;
 
@@ -69,7 +84,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         lc1 = lineStyle.calcColor(plot, z);
     }
 
-    CGnuPlotArrowStyle as = arrowStyle;
+    CGnuPlotVectorsStyleValue as = *value;
 
     if (isVarArrow) {
       double x = reals[pos++];
@@ -147,8 +162,13 @@ void
 CGnuPlotStyleVectors::
 drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, const CPoint2D &p2)
 {
-  const CGnuPlotLineStyle  &lineStyle  = plot->lineStyle();
-  const CGnuPlotArrowStyle &arrowStyle = plot->arrowStyle();
+  CGnuPlotVectorsStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotVectorsStyleValue>(plot);
+  if (value) return;
+
+  //---
+
+  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   CRGBA lc = lineStyle.calcColor(plot->group(), CRGBA(1,0,0));
 
@@ -156,7 +176,7 @@ drawKeyLine(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer, const CPoint2D &p1, 
 
   CGnuPlotArrow arrow(plot->group());
 
-  arrow.setStyle(arrowStyle);
+  arrow.setStyle(*value);
 
   arrow.setLineColor(lc);
 

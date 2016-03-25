@@ -11,7 +11,9 @@ class CGnuPlotStyleValue {
 
   virtual ~CGnuPlotStyleValue() { }
 
- private:
+  CGnuPlotPlot *plot() const { return plot_; }
+
+ protected:
   CGnuPlotPlot *plot_ { 0 };
 };
 

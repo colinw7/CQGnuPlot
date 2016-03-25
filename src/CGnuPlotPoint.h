@@ -71,8 +71,8 @@ class CGnuPlotPoint {
 
   bool getForceReal(int n, double &r) const;
 
-  const std::string &label() const { return label_; }
-  void setLabel(const std::string &str) { label_ = str; }
+  //const std::string &label() const { return label_; }
+  //void setLabel(const std::string &str) { label_ = str; }
 
   bool isDiscontinuity() const { return discontinuity_; }
   void setDiscontinuity(bool b) { discontinuity_ = b; }
@@ -108,7 +108,7 @@ class CGnuPlotPoint {
 
  private:
   Values      values_;
-  std::string label_;
+//std::string label_;
   bool        discontinuity_;
   bool        bad_;
   Params      params_;

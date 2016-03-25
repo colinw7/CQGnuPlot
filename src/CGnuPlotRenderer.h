@@ -380,7 +380,7 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
                                const CRGBA &c) override = 0;
 
   virtual void drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
-                            double angle2, const CRGBA &c, double width,
+                            double angle2, bool wedge, const CRGBA &c, double width,
                             const CLineDash &dash=CLineDash()) = 0;
   virtual void fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
                             double angle2, const CRGBA &c) = 0;
@@ -565,7 +565,7 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   CBBox2D getHAlignedTextBBox(const std::string &str);
 
   void strokePieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double angle2,
-                      const CGnuPlotStroke &stroke);
+                      bool wedge, const CGnuPlotStroke &stroke);
   void fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1,
                     double angle2, const CGnuPlotFill &fill);
 

@@ -1,19 +1,36 @@
 #include <CGnuPlotStyleBoxes.h>
+#include <CGnuPlotBoxesStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotPlot.h>
 #include <CGnuPlotRenderer.h>
 #include <CGnuPlotBoxBarObject.h>
+#include <CGnuPlotDevice.h>
 
 CGnuPlotStyleBoxes::
 CGnuPlotStyleBoxes() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::BOXES)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotBoxesStyleValue>("boxes");
 }
 
 void
 CGnuPlotStyleBoxes::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotBoxesStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotBoxesStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createBoxesStyleValue(plot);
+
+    value->init();
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotBoxesStyleValue>(plot, value);
+  }
+
+  //---
+
   const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   bool isCalcColor = lineStyle.isCalcColor();
@@ -22,9 +39,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   double ymin = bbox.getYMin();
 
-  double bw = plot->boxWidth().getSpacing(plot->getXSpacing());
-
   double y2 = std::max(0.0, ymin);
+
+  double bw = value->getSpacing();
 
   //---
 
@@ -71,7 +88,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     double bw1 = bw;
 
-    if (plot->boxWidth().isCalc()) {
+    if (value->isCalc()) {
       if ((isCalcColor && reals.size() == 4) || (! isCalcColor && reals.size() == 3)) {
         bw1 = reals[ind++];
       }
@@ -113,12 +130,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
     }
     else {
-      //CGnuPlotFill   fill;
       CGnuPlotStroke stroke;
 
       stroke.setEnabled(true);
 
-      //renderer->fillRect  (bbox, fill  );
       renderer->strokeRect(bbox, stroke);
     }
 

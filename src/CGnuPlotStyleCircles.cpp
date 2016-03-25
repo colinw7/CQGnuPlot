@@ -1,8 +1,10 @@
 #include <CGnuPlotStyleCircles.h>
-#include <CGnuPlotPlot.h>
+#include <CGnuPlotCirclesStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotPieObject.h>
 #include <CGnuPlotEllipseObject.h>
 #include <CGnuPlotRenderer.h>
+#include <CGnuPlotDevice.h>
 
 namespace {
 
@@ -36,12 +38,26 @@ CGnuPlotStyleCircles::
 CGnuPlotStyleCircles() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::CIRCLES)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotCirclesStyleValue>("circles");
 }
 
 void
 CGnuPlotStyleCircles::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotCirclesStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotCirclesStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createCirclesStyleValue(plot);
+
+    value->init(plot->circlesStyleValue());
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotCirclesStyleValue>(plot, value);
+  }
+
+  //---
+
   typedef std::vector<PieSlice> PieSlices;
   typedef std::vector<Ellipse>  Ellipses;
 
@@ -174,6 +190,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       pie->setRadius(o.r);
       pie->setAngle1(o.a1);
       pie->setAngle2(o.a2);
+      pie->setWedge (value->wedge());
 
       if (! pie->testAndSetUsed()) {
         CGnuPlotFillP   fill  (pie->fill  ()->dup());

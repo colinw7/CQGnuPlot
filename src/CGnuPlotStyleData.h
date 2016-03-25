@@ -1,18 +1,25 @@
 #ifndef CGnuPlotStyleData_H
 #define CGnuPlotStyleData_H
 
+#include <CGnuPlotBoxWidth.h>
+#include <CGnuPlotBoxPlotStyleValue.h>
+#include <CGnuPlotCirclesStyleValue.h>
+#include <CGnuPlotEllipsesStyleValue.h>
+#include <CGnuPlotPieChartStyleValue.h>
 #include <CGnuPlotTextBoxStyle.h>
-#include <CGnuPlotEllipseStyle.h>
 #include <CGnuPlotTextStyle.h>
-//#include <CGnuPlotPieStyle.h>
+#include <CGnuPlotVectorsStyleValue.h>
 
 struct CGnuPlotStyleData {
-  CGnuPlotArrowStyle   arrow;
-  CGnuPlotTextBoxStyle textBox;
-  CGnuPlotEllipseStyle ellipse;
-  CGnuPlotTextStyle    text;
-  CGnuPlotLabelStyle   label;
-//CGnuPlotPieStyle     pie;
+  CGnuPlotBoxWidth            boxWidth;
+  CGnuPlotBoxPlotStyleValue   boxPlotStyleValue;
+  CGnuPlotCirclesStyleValue   circlesStyleValue;
+  CGnuPlotEllipsesStyleValue  ellipsesStyleValue;
+  CGnuPlotLabelStyle          label;
+  CGnuPlotPieChartStyleValue  pieChartStyleValue;
+  CGnuPlotTextBoxStyle        textBox;
+  CGnuPlotTextStyle           text;
+  CGnuPlotVectorsStyleValue   vectorsStyleValue;
 };
 
 #endif

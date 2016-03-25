@@ -1,4 +1,6 @@
 #include <CGnuPlotStyleLabels.h>
+#include <CGnuPlotLabelsStyleValue.h>
+#include <CGnuPlotStyleValueMgr.h>
 #include <CGnuPlotLabelObject.h>
 #include <CGnuPlotWindow.h>
 #include <CGnuPlotGroup.h>
@@ -10,20 +12,31 @@ CGnuPlotStyleLabels::
 CGnuPlotStyleLabels() :
  CGnuPlotStyleBase(CGnuPlot::PlotStyle::LABELS)
 {
+  CGnuPlotStyleValueMgrInst->setId<CGnuPlotLabelsStyleValue>("labels");
 }
 
 void
 CGnuPlotStyleLabels::
 draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotLabelsStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotLabelsStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createLabelsStyleValue(plot);
+
+    //value->init(plot->labelsStyleValue());
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotLabelsStyleValue>(plot, value);
+  }
+
+  //---
+
   CGnuPlotGroup *group = plot->group();
 
   bool enhanced = plot->isEnhanced();
 
-  const CGnuPlotLineStyle    &lineStyle    = plot->lineStyle();
-  const CGnuPlotTextStyle    &textStyle    = plot->textStyle();
-  const CGnuPlotTextBoxStyle &textBoxStyle = plot->textBoxStyle();
-  const CGnuPlotLabelStyle   &labelStyle   = plot->labelStyle();
+  const CGnuPlotLineStyle &lineStyle = plot->lineStyle();
 
   CGnuPlotFill fill(plot);
 
@@ -31,8 +44,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CRGBA tc(0, 0, 0);
 
-  if (labelStyle.textColor().isValid())
-    tc = labelStyle.textColor().getValue().calcColor(group);
+  if (value->textColor().isValid())
+    tc = value->textColor().getValue().calcColor(group);
 
   //CFontPtr font = renderer->getFont();
   //double tw1 = renderer->pixelWidthToWindowWidth(font->getStringWidth("X"));
@@ -90,25 +103,25 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     labelData->setEnhanced(enhanced);
 
-    labelData->setAlign(labelStyle.align());
+    labelData->setAlign(value->align());
 
-    if (labelStyle.font().isValid())
-      labelData->setFont(labelStyle.font());
+    if (value->font().isValid())
+      labelData->setFont(value->font());
 
-    labelData->setOffset(textStyle.offset());
+    labelData->setOffset(value->offset());
 
-    labelData->boxFill()->setType(! textBoxStyle.isTransparent() ?
+    labelData->boxFill()->setType(! value->isTransparent() ?
       CGnuPlotTypes::FillType::SOLID : CGnuPlotTypes::FillType::EMPTY);
     labelData->boxFill()->setColor(fill.background());
 
-    labelData->boxStroke()->setEnabled(textStyle.isBoxed());
+    labelData->boxStroke()->setEnabled(value->isBoxed());
     labelData->boxStroke()->setColor(CRGBA(0,0,0));
     labelData->boxStroke()->setWidth(1);
 
-    labelData->setShowPoint (labelStyle.showPoint ());
-    labelData->setPointType ((int) labelStyle.symbolType());
-    labelData->setPointSize (labelStyle.pointSize());
-    labelData->setPointWidth(labelStyle.lineWidth());
+    labelData->setShowPoint (value->showPoint());
+    labelData->setPointType ((int) value->symbolType());
+    labelData->setPointSize (value->pointSize());
+    labelData->setPointWidth(value->lineWidth());
 
     labelDatas.push_back(labelData);
 
@@ -131,38 +144,38 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CPoint2D d(-bbox.getWidth()/2, -bbox.getHeight()/2);
 
-    CPoint2D of = textStyle.offset()*CPoint2D(tw1, th);
+    CPoint2D of = value->offset()*CPoint2D(tw1, th);
 
     bbox.moveBy(d + of);
 
     //---
 
-    if (! textBoxStyle.isTransparent())
+    if (! value->isTransparent())
       renderer->fillRect(bbox, fill.background());
 
-    if (textStyle.isBoxed())
+    if (value->isBoxed())
       renderer->drawRect(bbox, CRGBA(0,0,0), 1);
 
     //---
 
-    if (labelStyle.font().isValid())
-      renderer->setFont(labelStyle.font());
+    if (value->font().isValid())
+      renderer->setFont(value->font());
 
     if (enhanced)
-      text.draw(renderer, bbox, labelStyle.align(), tc1);
+      text.draw(renderer, bbox, value->align(), tc1);
     else {
       double fd = renderer->pixelHeightToWindowHeight(font->getCharDescent());
 
-      renderer->drawHAlignedText(p + d + of + CPoint2D(0, fd), HAlignPos(labelStyle.align(), 0),
+      renderer->drawHAlignedText(p + d + of + CPoint2D(0, fd), HAlignPos(value->align(), 0),
                                  VAlignPos(CVALIGN_TYPE_CENTER, 0), str, tc1);
     }
 
     //---
 
-    if (labelStyle.showPoint()) {
-      CGnuPlotTypes::SymbolType pt = labelStyle.symbolType();
+    if (value->showPoint()) {
+      CGnuPlotTypes::SymbolType pt = value->symbolType();
 
-      renderer->drawSymbol(p, pt, labelStyle.pointSize(), tc1, labelStyle.lineWidth(), true);
+      renderer->drawSymbol(p, pt, value->pointSize(), tc1, value->lineWidth(), true);
     }
 #endif
   }
@@ -205,14 +218,24 @@ void
 CGnuPlotStyleLabels::
 draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 {
+  CGnuPlotLabelsStyleValue *value =
+    CGnuPlotStyleValueMgrInst->getValue<CGnuPlotLabelsStyleValue>(plot);
+
+  if (! value) {
+    value = plot->app()->device()->createLabelsStyleValue(plot);
+
+    //value->init(plot->labelsStyleValue());
+
+    CGnuPlotStyleValueMgrInst->setValue<CGnuPlotLabelsStyleValue>(plot, value);
+  }
+
+  //---
+
   CGnuPlotGroup *group = plot->group();
 
   bool enhanced = plot->isEnhanced();
 
   const CGnuPlotLineStyle    &lineStyle    = plot->lineStyle();
-  const CGnuPlotTextStyle    &textStyle    = plot->textStyle();
-  const CGnuPlotTextBoxStyle &textBoxStyle = plot->textBoxStyle();
-  const CGnuPlotLabelStyle   &labelStyle   = plot->labelStyle();
 
   CGnuPlotFill fill(plot);
 
@@ -220,8 +243,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   CRGBA tc(0, 0, 0);
 
-  if (labelStyle.textColor().isValid())
-    tc = labelStyle.textColor().getValue().calcColor(group);
+  if (value->textColor().isValid())
+    tc = value->textColor().getValue().calcColor(group);
 
   CFontPtr font = renderer->getFont();
 
@@ -264,8 +287,8 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       CFontPtr font1 = font;
 
-      if (labelStyle.font().isValid())
-        font1 = labelStyle.font();
+      if (value->font().isValid())
+        font1 = value->font();
 
       renderer->setFont(font1);
 
@@ -290,34 +313,34 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       CPoint2D d(-bbox.getWidth()/2, -bbox.getHeight()/2);
 
-      CPoint2D of = textStyle.offset()*CPoint2D(tw1, th);
+      CPoint2D of = value->offset()*CPoint2D(tw1, th);
 
       bbox.moveBy(d + of);
 
-      if (! textBoxStyle.isTransparent())
+      if (! value->isTransparent())
         renderer->fillRect(bbox, fill.background());
 
-      if (textStyle.isBoxed())
+      if (value->isBoxed())
         renderer->drawRect(bbox, CRGBA(0,0,0), 1);
 #else
-      CRGBA bg = (! textBoxStyle.isTransparent() ? fill.background() : CRGBA(0,0,0,0));
-      CRGBA fg = (textStyle.isBoxed()            ? CRGBA(1,1,1)      : CRGBA(0,0,0,0));
+      CRGBA bg = (! value->isTransparent() ? fill.background() : CRGBA(0,0,0,0));
+      CRGBA fg = (value->isBoxed()         ? CRGBA(1,1,1)      : CRGBA(0,0,0,0));
 
-      CBBox2D bbox = renderer->drawTextBox(p2, str, enhanced, textStyle.offset(), bg, fg, 1);
+      CBBox2D bbox = renderer->drawTextBox(p2, str, enhanced, value->offset(), bg, fg, 1);
 
       CPoint2D d(-bbox.getWidth()/2, -bbox.getHeight()/2);
 
       double th = renderer->pixelHeightToWindowHeight(font1->getCharHeight());
 
-      CPoint2D of = textStyle.offset()*CPoint2D(tw1, th);
+      CPoint2D of = value->offset()*CPoint2D(tw1, th);
 #endif
 
       if (enhanced) {
         if (group->isHidden3D())
-          renderer->drawHiddenEnhancedText(bbox, p1.z, HAlignPos(labelStyle.align(), 0),
+          renderer->drawHiddenEnhancedText(bbox, p1.z, HAlignPos(value->align(), 0),
                                            str, font1, tc1);
         else
-          renderer->drawEnhancedText(bbox, HAlignPos(labelStyle.align(), 0),
+          renderer->drawEnhancedText(bbox, HAlignPos(value->align(), 0),
                                      str, font1, tc1);
       }
       else {
@@ -325,25 +348,25 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
         if (group->isHidden3D())
           renderer->drawHiddenHAlignedText(p2 + d + of + CPoint2D(0, fd), p1.z,
-                                           HAlignPos(labelStyle.align(), 0),
+                                           HAlignPos(value->align(), 0),
                                            VAlignPos(CVALIGN_TYPE_CENTER, 0),
                                            str, font1, tc1, /*angle*/0);
         else
           renderer->drawHAlignedText(p2 + d + of + CPoint2D(0, fd),
-                                     HAlignPos(labelStyle.align(), 0),
+                                     HAlignPos(value->align(), 0),
                                      VAlignPos(CVALIGN_TYPE_CENTER, 0),
                                      str, tc1, /*angle*/0);
       }
 
-      if (labelStyle.showPoint()) {
-        CGnuPlotTypes::SymbolType pt = (CGnuPlotTypes::SymbolType) labelStyle.pointType();
+      if (value->showPoint()) {
+        CGnuPlotTypes::SymbolType pt = (CGnuPlotTypes::SymbolType) value->pointType();
 
         if (group->isHidden3D())
-          renderer->drawHiddenSymbol(p2, p1.z, pt, labelStyle.pointSize(),
-                                     tc1, labelStyle.lineWidth(), true);
+          renderer->drawHiddenSymbol(p2, p1.z, pt, value->pointSize(),
+                                     tc1, value->lineWidth(), true);
         else
-          renderer->drawSymbol(p2, pt, labelStyle.pointSize(),
-                               tc1, labelStyle.lineWidth(), true);
+          renderer->drawSymbol(p2, pt, value->pointSize(),
+                               tc1, value->lineWidth(), true);
       }
     }
   }

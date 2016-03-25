@@ -48,6 +48,8 @@ class CGnuPlotPolygonObject : public CGnuPlotPlotObject {
 
   const CBBox2D &bbox() const override { return bbox_; }
 
+  double area() const;
+
   CGnuPlotTipData tip() const override;
 
   void draw(CGnuPlotRenderer *renderer) const override;

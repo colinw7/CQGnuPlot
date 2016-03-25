@@ -1,6 +1,7 @@
 #ifndef CGnuPlotAxesData_H
 #define CGnuPlotAxesData_H
 
+#include <CGnuPlotAxisData.h>
 #include <CGnuPlotGridData.h>
 #include <CGnuPlotBorderData.h>
 

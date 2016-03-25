@@ -1,6 +1,8 @@
 #ifndef CGnuPlotTextBoxStyle_H
 #define CGnuPlotTextBoxStyle_H
 
+#include <CSize2D.h>
+
 class CGnuPlotTextBoxStyle {
  public:
   CGnuPlotTextBoxStyle() {

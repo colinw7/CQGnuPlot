@@ -55,8 +55,6 @@ class CQGnuPlotDevice : public QObject, public CGnuPlotDevice {
 
   CGnuPlotTimeStamp *createTimeStamp(CGnuPlotGroup *group) override;
 
-  CGnuPlotBoxPlot *createBoxPlot(CGnuPlotPlot *plot) override;
-
   CGnuPlotArrowObject      *createArrowObject     (CGnuPlotPlot *plot) override;
   CGnuPlotBoxBarObject     *createBoxBarObject    (CGnuPlotPlot *plot) override;
   CGnuPlotEndBar           *createEndBar          (CGnuPlotPlot *plot) override;
@@ -78,14 +76,24 @@ class CQGnuPlotDevice : public QObject, public CGnuPlotDevice {
   CGnuPlotMark   *createMark  (CGnuPlotPlot *plot) override;
 
   CGnuPlotAdjacencyStyleValue     *createAdjacencyStyleValue    (CGnuPlotPlot *plot) override;
+  CGnuPlotBoxErrorBarsStyleValue  *createBoxErrorBarsStyleValue (CGnuPlotPlot *plot) override;
+  CGnuPlotBoxesStyleValue         *createBoxesStyleValue        (CGnuPlotPlot *plot) override;
+  CGnuPlotBoxPlotStyleValue       *createBoxPlotStyleValue      (CGnuPlotPlot *plot) override;
+  CGnuPlotBubbleStyleValue        *createBubbleStyleValue       (CGnuPlotPlot *plot) override;
+  CGnuPlotCandlesticksStyleValue  *createCandlesticksStyleValue (CGnuPlotPlot *plot) override;
   CGnuPlotChordDiagramStyleValue  *createChordDiagramStyleValue (CGnuPlotPlot *plot) override;
+  CGnuPlotCirclesStyleValue       *createCirclesStyleValue      (CGnuPlotPlot *plot) override;
   CGnuPlotDelaunayStyleValue      *createDelaunayStyleValue     (CGnuPlotPlot *plot) override;
   CGnuPlotDendrogramStyleValue    *createDendrogramStyleValue   (CGnuPlotPlot *plot) override;
+  CGnuPlotEllipsesStyleValue      *createEllipsesStyleValue     (CGnuPlotPlot *plot) override;
   CGnuPlotForceDirectedStyleValue *createForceDirectedStyleValue(CGnuPlotPlot *plot) override;
   CGnuPlotHierBubbleStyleValue    *createHierBubbleStyleValue   (CGnuPlotPlot *plot) override;
+  CGnuPlotLabelsStyleValue        *createLabelsStyleValue       (CGnuPlotPlot *plot) override;
   CGnuPlotPieChartStyleValue      *createPieChartStyleValue     (CGnuPlotPlot *plot) override;
+  CGnuPlotRadarStyleValue         *createRadarStyleValue        (CGnuPlotPlot *plot) override;
   CGnuPlotSunburstStyleValue      *createSunburstStyleValue     (CGnuPlotPlot *plot) override;
   CGnuPlotTreeMapStyleValue       *createTreeMapStyleValue      (CGnuPlotPlot *plot) override;
+  CGnuPlotVectorsStyleValue       *createVectorsStyleValue      (CGnuPlotPlot *plot) override;
 
   const Objects &objects() const { return objects_; }
 
