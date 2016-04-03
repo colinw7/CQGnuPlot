@@ -5,5 +5,3 @@ moc_*.cpp
 bin/
 obj/
 lib/
-
-src/CQGnuPlot

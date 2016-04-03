@@ -6,8 +6,6 @@ TARGET = CQGnuPlot
 
 DEPENDPATH += .
 
-INCLUDEPATH += . ../include
-
 QMAKE_CXXFLAGS += -std=c++11 -DGNUPLOT_EXPR -DRGB_UTIL
 
 MOC_DIR = .moc
