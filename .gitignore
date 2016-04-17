@@ -5,3 +5,6 @@ moc_*.cpp
 bin/
 obj/
 lib/
+
+.moc
+.ui
