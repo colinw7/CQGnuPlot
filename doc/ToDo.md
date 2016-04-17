@@ -1,5 +1,7 @@
 ## ToDo
 
+  + streamgraph
+
   + animation (fade in/out)
   + per style data/properties
   + less reload on data change
