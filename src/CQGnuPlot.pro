@@ -550,12 +550,14 @@ unix:LIBS += \
 -L../../CUtil/lib \
 -L../../CImageLib/lib \
 -L../../CConfig/lib \
+-L../../CFileUtil/lib \
 -L../../CFile/lib \
+-L../../CUtil/lib \
 -L../../COS/lib \
 -L../../CStrUtil/lib \
 -L../../CRegExp/lib \
 -L../../CRGBName/lib \
 -lCQPropertyTree -lCQUtil \
 -lCXML -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
--lCRGBName -lCFile -lCOS -lCStrUtil -lCRegExp \
+-lCRGBName -lCFileUtil -lCFile -lCUtil -lCOS -lCStrUtil -lCRegExp \
 -lpng -ljpeg -ltre -lreadline

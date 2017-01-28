@@ -2,6 +2,7 @@
 #define CQGnuPlotPNGRenderer_H
 
 #include <CQGnuPlotRenderer.h>
+#include <QSize>
 
 class CQGnuPlotPNGDevice;
 

@@ -26,8 +26,6 @@ class CQGnuPlotPointObject : public QObject, public CGnuPlotPointObject {
   Q_PROPERTY(bool                      erasePoint  READ isErasePoint WRITE setErasePoint )
   Q_PROPERTY(bool                      visible     READ isVisible    WRITE setVisible    )
 
-  Q_PROPERTY(CQGnuPlotEnum::SymbolType pointType READ pointType WRITE setPointType)
-
  public:
   CQGnuPlotPointObject(CQGnuPlotPlot *plot);
  ~CQGnuPlotPointObject();
