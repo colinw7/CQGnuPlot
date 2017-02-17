@@ -225,10 +225,6 @@ CQRubberBand.cpp \
 CQDialog.cpp \
 CQEnumCombo.cpp \
 \
-CGradientPalette.cpp \
-CQGradientPalette.cpp \
-CQGradientPaletteControl.cpp \
-\
 CAdjacency.cpp \
 CDelaunay.cpp \
 ChordDiagram.cpp  \
@@ -484,10 +480,6 @@ CQRubberBand.h \
 CQDialog.h \
 CQEnumCombo.h \
 \
-CGradientPalette.h \
-CQGradientPalette.h \
-CQGradientPaletteControl.h \
-\
 CAdjacency.h \
 CDelaunay.h \
 ChordDiagram.h \
@@ -543,6 +535,7 @@ Expr \
 unix:LIBS += \
 -L$$LIB_DIR \
 -L../../CQUtil/lib \
+-L../../CQGradientPalette/lib \
 -L../../CQPropertyTree/lib \
 -L../../CXML/lib \
 -L../../CReadLine/lib \
@@ -557,7 +550,7 @@ unix:LIBS += \
 -L../../CStrUtil/lib \
 -L../../CRegExp/lib \
 -L../../CRGBName/lib \
--lCQPropertyTree -lCQUtil \
+-lCQGradientPalette -lCQPropertyTree -lCQUtil \
 -lCXML -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
 -lCRGBName -lCFileUtil -lCFile -lCUtil -lCOS -lCStrUtil -lCRegExp \
 -lpng -ljpeg -ltre -lreadline
