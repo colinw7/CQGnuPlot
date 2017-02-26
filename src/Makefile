@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -m64 -pipe -std=c++11 -DGNUPLOT_EXPR -DRGB_UTIL -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -I. -IExpr -I../include -I../../CQApp/include -I../../CQUtil/include -I../../CQPropertyTree/include -I../../CFont/include -I../../CImageLib/include -I../../CReadLine/include -I../../CFile/include -I../../COS/include -I../../CUtil/include -I../../CMath/include -I../../CStrUtil/include -I../../CRGBName/include -I../../CXML/include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I.moc -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+INCPATH       = -I. -I. -IExpr -I../include -I../../CQApp/include -I../../CQUtil/include -I../../CQPropertyTree/include -I../../CQGradientPalette/include -I../../CRenderer/include -I../../CFont/include -I../../CImageLib/include -I../../CReadLine/include -I../../CFile/include -I../../COS/include -I../../CUtil/include -I../../CMath/include -I../../CStrUtil/include -I../../CRGBName/include -I../../CXML/include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I.moc -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = CQGnuPlot1.0.0
 DISTDIR = /home/colinw/git/CQGnuPlot/obj/CQGnuPlot1.0.0
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L../lib -L../../CQUtil/lib -L../../CQGradientPalette/lib -L../../CQPropertyTree/lib -L../../CXML/lib -L../../CReadLine/lib -L../../CFont/lib -L../../CUtil/lib -L../../CImageLib/lib -L../../CConfig/lib -L../../CFileUtil/lib -L../../CFile/lib -L../../COS/lib -L../../CStrUtil/lib -L../../CRegExp/lib -L../../CRGBName/lib -lCQGradientPalette -lCQPropertyTree -lCQUtil -lCXML -lCReadLine -lCFont -lCImageLib -lCConfig -lCRGBName -lCFileUtil -lCFile -lCUtil -lCOS -lCStrUtil -lCRegExp -lpng -ljpeg -ltre -lreadline -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L../lib -L../../CQUtil/lib -L../../CQGradientPalette/lib -L../../CQPropertyTree/lib -L../../CXML/lib -L../../CReadLine/lib -L../../CFont/lib -L../../CUtil/lib -L../../CRenderer/lib -L../../CImageLib/lib -L../../CConfig/lib -L../../CFileUtil/lib -L../../CFile/lib -L../../COS/lib -L../../CStrUtil/lib -L../../CRegExp/lib -L../../CRGBName/lib -lCQGradientPalette -lCQPropertyTree -lCQUtil -lCXML -lCRenderer -lCReadLine -lCFont -lCImageLib -lCConfig -lCRGBName -lCFileUtil -lCFile -lCUtil -lCOS -lCStrUtil -lCRegExp -lpng -ljpeg -ltre -lreadline -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -259,7 +259,6 @@ SOURCES       = CQGnuPlotTest.cpp \
 		CMathGeom2D.cpp \
 		CInvNorm.cpp \
 		CArcToBezier.cpp \
-		CSymbol2D.cpp \
 		Expr/CExpr.cpp \
 		Expr/CExprBValue.cpp \
 		Expr/CExprCValue.cpp \
@@ -573,7 +572,6 @@ OBJECTS       = ../obj/CQGnuPlotTest.o \
 		../obj/CMathGeom2D.o \
 		../obj/CInvNorm.o \
 		../obj/CArcToBezier.o \
-		../obj/CSymbol2D.o \
 		../obj/CExpr.o \
 		../obj/CExprBValue.o \
 		../obj/CExprCValue.o \
@@ -961,7 +959,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CPrint.h \
 		CMathGeom2D.h \
 		CArcToBezier.h \
-		CSymbol2D.h \
 		CStrUniqueMatch.h \
 		Expr/CExpr.h \
 		Expr/CExprBValue.h \
@@ -1189,7 +1186,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CMathGeom2D.cpp \
 		CInvNorm.cpp \
 		CArcToBezier.cpp \
-		CSymbol2D.cpp \
 		Expr/CExpr.cpp \
 		Expr/CExprBValue.cpp \
 		Expr/CExprCValue.cpp \
@@ -1387,8 +1383,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotArrowObject.h CQGnuPlotAxis.h CQGnuPlotBoxBarObject.h CQGnuPlotBoxObject.h CQGnuPlotBoxPlot.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEndBar.h CQGnuPlotEnum.h CQGnuPlotErrorBarObject.h CQGnuPlotFill.h CQGnuPlotFinanceBarObject.h CQGnuPlotGroup.h CQGnuPlotImageObject.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLabelObject.h CQGnuPlotLineStyle.h CQGnuPlotMark.h CQGnuPlotMultiplot.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPathObject.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPm3D.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPointObject.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotStroke.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotFilename.h CQGnuPlotUtil.h CQGnuPlotWindow.h CQGnuPlotAdjacencyStyleValue.h CQGnuPlotBivariateStyleValue.h CQGnuPlotBoxErrorBarsStyleValue.h CQGnuPlotBoxesStyleValue.h CQGnuPlotBoxPlotStyleValue.h CQGnuPlotBubbleStyleValue.h CQGnuPlotCandlesticksStyleValue.h CQGnuPlotChordDiagramStyleValue.h CQGnuPlotCirclesStyleValue.h CQGnuPlotDelaunayStyleValue.h CQGnuPlotDendrogramStyleValue.h CQGnuPlotEllipsesStyleValue.h CQGnuPlotForceDirectedStyleValue.h CQGnuPlotHierBubbleStyleValue.h CQGnuPlotLabelsStyleValue.h CQGnuPlotPieChartStyleValue.h CQGnuPlotRadarStyleValue.h CQGnuPlotSunburstStyleValue.h CQGnuPlotTreeMapStyleValue.h CQGnuPlotVectorsStyleValue.h CQGnuPlotLoadFileDialog.h CQGnuPlotLoadFunctionDialog.h CQGnuPlotManageFunctionsDialog.h CQGnuPlotManageVariablesDialog.h CQGnuPlotCreateDialog.h CQGnuPlotDataDialog.h CQGnuPlotSaveDialog.h CQGnuPlotPaletteDialog.h CQGnuPlotTreeView.h CQGnuPlotTreeWidget.h CQGnuPlotDataTree.h CQGnuPlotDataModel.h CQGnuPlotPositionEdit.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowData.h CGnuPlotArrowObject.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBoxBarObject.h CGnuPlotBoxObject.h CGnuPlotBoxPlot.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotEndBar.h CGnuPlotErrorBarObject.h CGnuPlotErrorBarData.h CGnuPlotFile.h CGnuPlotFill.h CGnuPlotFillStyle.h CGnuPlotFinanceBarObject.h CGnuPlotFunctions.h CGnuPlotGroup.h CGnuPlotImageObject.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLabelData.h CGnuPlotLabelObject.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotLogDevice.h CGnuPlotLogRenderer.h CGnuPlotMark.h CGnuPlotMultiplot.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPathObject.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPm3D.h CGnuPlotPoint.h CGnuPlotPointObject.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotPSDevice.h CGnuPlotPSRenderer.h CGnuPlotSize.h CGnuPlotStroke.h CGnuPlotSurface.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotEveryData.h CGnuPlotIndexData.h CGnuPlotWhereData.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyleForceDirected.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CGnuPlotText.h CGnuPlotTextRenderer.h CQHeaderView.h CQToolTip.h CQFloatLabel.h CQRotatedText.h CQIntegerSpin.h CQCursor.h CQRubberBand.h CQDialog.h CQEnumCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CPrint.h CMathGeom2D.h CArcToBezier.h CSymbol2D.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h $(DISTDIR)/
-	$(COPY_FILE) --parents CQGnuPlotTest.cpp CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotArrowObject.cpp CQGnuPlotAxis.cpp CQGnuPlotBoxBarObject.cpp CQGnuPlotBoxObject.cpp CQGnuPlotBoxPlot.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotEndBar.cpp CQGnuPlotEnum.cpp CQGnuPlotErrorBarObject.cpp CQGnuPlotFill.cpp CQGnuPlotFinanceBarObject.cpp CQGnuPlotGroup.cpp CQGnuPlotImageObject.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLabelObject.cpp CQGnuPlotLineStyle.cpp CQGnuPlotMark.cpp CQGnuPlotMultiplot.cpp CQGnuPlotPalette.cpp CQGnuPlotPathObject.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPm3D.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPointObject.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotStroke.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotFilename.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CQGnuPlotLoadFileDialog.cpp CQGnuPlotLoadFunctionDialog.cpp CQGnuPlotManageFunctionsDialog.cpp CQGnuPlotManageVariablesDialog.cpp CQGnuPlotCreateDialog.cpp CQGnuPlotDataDialog.cpp CQGnuPlotSaveDialog.cpp CQGnuPlotPaletteDialog.cpp CQGnuPlotTreeView.cpp CQGnuPlotTreeWidget.cpp CQGnuPlotDataTree.cpp CQGnuPlotDataModel.cpp CQGnuPlotPositionEdit.cpp CQGnuPlotBoxPlotStyleValue.cpp CGnuPlot.cpp CGnuPlotAnnotation.cpp CGnuPlotArrow.cpp CGnuPlotArrowData.cpp CGnuPlotArrowObject.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBoxBarObject.cpp CGnuPlotBoxObject.cpp CGnuPlotBoxPlot.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotEndBar.cpp CGnuPlotErrorBarObject.cpp CGnuPlotErrorBarData.cpp CGnuPlotFile.cpp CGnuPlotFill.cpp CGnuPlotFillStyle.cpp CGnuPlotFinanceBarObject.cpp CGnuPlotFunctions.cpp CGnuPlotGroup.cpp CGnuPlotImageObject.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLabelData.cpp CGnuPlotLabelObject.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotLogDevice.cpp CGnuPlotLogRenderer.cpp CGnuPlotMargin.cpp CGnuPlotMark.cpp CGnuPlotMultiplot.cpp CGnuPlotObject.cpp CGnuPlotPalette.cpp CGnuPlotPathObject.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPm3D.cpp CGnuPlotPoint.cpp CGnuPlotPointObject.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStroke.cpp CGnuPlotStyle.cpp CGnuPlotSurface.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotBoxErrorBarsStyleValue.cpp CGnuPlotBoxesStyleValue.cpp CGnuPlotBoxPlotStyleValue.cpp CGnuPlotCandlesticksStyleValue.cpp CGnuPlotVectorsStyleValue.cpp CGnuPlotEveryData.cpp CGnuPlotIndexData.cpp CGnuPlotWhereData.cpp CGnuPlotStyleBase.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBivariate.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDendrogram.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleForceDirected.cpp CGnuPlotStyleHierBubblePlot.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleStackedArea.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotPSDevice.cpp CGnuPlotPSRenderer.cpp CGnuPlotSize.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlotText.cpp CGnuPlotTextRenderer.cpp CQHeaderView.cpp CQToolTip.cpp CQFloatLabel.cpp CQRotatedText.cpp CQIntegerSpin.cpp CQCursor.cpp CQRubberBand.cpp CQDialog.cpp CQEnumCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CDendrogram.cpp CPrint.cpp CMathGeom2D.cpp CInvNorm.cpp CArcToBezier.cpp CSymbol2D.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprIValue.cpp Expr/CExprInterp.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprSValue.cpp Expr/CExprStrgen.cpp Expr/CExprToken.cpp Expr/CExprTokenStack.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotArrowObject.h CQGnuPlotAxis.h CQGnuPlotBoxBarObject.h CQGnuPlotBoxObject.h CQGnuPlotBoxPlot.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEndBar.h CQGnuPlotEnum.h CQGnuPlotErrorBarObject.h CQGnuPlotFill.h CQGnuPlotFinanceBarObject.h CQGnuPlotGroup.h CQGnuPlotImageObject.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLabelObject.h CQGnuPlotLineStyle.h CQGnuPlotMark.h CQGnuPlotMultiplot.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPathObject.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPm3D.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPointObject.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotStroke.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotFilename.h CQGnuPlotUtil.h CQGnuPlotWindow.h CQGnuPlotAdjacencyStyleValue.h CQGnuPlotBivariateStyleValue.h CQGnuPlotBoxErrorBarsStyleValue.h CQGnuPlotBoxesStyleValue.h CQGnuPlotBoxPlotStyleValue.h CQGnuPlotBubbleStyleValue.h CQGnuPlotCandlesticksStyleValue.h CQGnuPlotChordDiagramStyleValue.h CQGnuPlotCirclesStyleValue.h CQGnuPlotDelaunayStyleValue.h CQGnuPlotDendrogramStyleValue.h CQGnuPlotEllipsesStyleValue.h CQGnuPlotForceDirectedStyleValue.h CQGnuPlotHierBubbleStyleValue.h CQGnuPlotLabelsStyleValue.h CQGnuPlotPieChartStyleValue.h CQGnuPlotRadarStyleValue.h CQGnuPlotSunburstStyleValue.h CQGnuPlotTreeMapStyleValue.h CQGnuPlotVectorsStyleValue.h CQGnuPlotLoadFileDialog.h CQGnuPlotLoadFunctionDialog.h CQGnuPlotManageFunctionsDialog.h CQGnuPlotManageVariablesDialog.h CQGnuPlotCreateDialog.h CQGnuPlotDataDialog.h CQGnuPlotSaveDialog.h CQGnuPlotPaletteDialog.h CQGnuPlotTreeView.h CQGnuPlotTreeWidget.h CQGnuPlotDataTree.h CQGnuPlotDataModel.h CQGnuPlotPositionEdit.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowData.h CGnuPlotArrowObject.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBoxBarObject.h CGnuPlotBoxObject.h CGnuPlotBoxPlot.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotEndBar.h CGnuPlotErrorBarObject.h CGnuPlotErrorBarData.h CGnuPlotFile.h CGnuPlotFill.h CGnuPlotFillStyle.h CGnuPlotFinanceBarObject.h CGnuPlotFunctions.h CGnuPlotGroup.h CGnuPlotImageObject.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLabelData.h CGnuPlotLabelObject.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotLogDevice.h CGnuPlotLogRenderer.h CGnuPlotMark.h CGnuPlotMultiplot.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPathObject.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPm3D.h CGnuPlotPoint.h CGnuPlotPointObject.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotPSDevice.h CGnuPlotPSRenderer.h CGnuPlotSize.h CGnuPlotStroke.h CGnuPlotSurface.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotEveryData.h CGnuPlotIndexData.h CGnuPlotWhereData.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyleForceDirected.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CGnuPlotText.h CGnuPlotTextRenderer.h CQHeaderView.h CQToolTip.h CQFloatLabel.h CQRotatedText.h CQIntegerSpin.h CQCursor.h CQRubberBand.h CQDialog.h CQEnumCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CPrint.h CMathGeom2D.h CArcToBezier.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h $(DISTDIR)/
+	$(COPY_FILE) --parents CQGnuPlotTest.cpp CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotArrowObject.cpp CQGnuPlotAxis.cpp CQGnuPlotBoxBarObject.cpp CQGnuPlotBoxObject.cpp CQGnuPlotBoxPlot.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotEndBar.cpp CQGnuPlotEnum.cpp CQGnuPlotErrorBarObject.cpp CQGnuPlotFill.cpp CQGnuPlotFinanceBarObject.cpp CQGnuPlotGroup.cpp CQGnuPlotImageObject.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLabelObject.cpp CQGnuPlotLineStyle.cpp CQGnuPlotMark.cpp CQGnuPlotMultiplot.cpp CQGnuPlotPalette.cpp CQGnuPlotPathObject.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPm3D.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPointObject.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotStroke.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotFilename.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CQGnuPlotLoadFileDialog.cpp CQGnuPlotLoadFunctionDialog.cpp CQGnuPlotManageFunctionsDialog.cpp CQGnuPlotManageVariablesDialog.cpp CQGnuPlotCreateDialog.cpp CQGnuPlotDataDialog.cpp CQGnuPlotSaveDialog.cpp CQGnuPlotPaletteDialog.cpp CQGnuPlotTreeView.cpp CQGnuPlotTreeWidget.cpp CQGnuPlotDataTree.cpp CQGnuPlotDataModel.cpp CQGnuPlotPositionEdit.cpp CQGnuPlotBoxPlotStyleValue.cpp CGnuPlot.cpp CGnuPlotAnnotation.cpp CGnuPlotArrow.cpp CGnuPlotArrowData.cpp CGnuPlotArrowObject.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBoxBarObject.cpp CGnuPlotBoxObject.cpp CGnuPlotBoxPlot.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotEndBar.cpp CGnuPlotErrorBarObject.cpp CGnuPlotErrorBarData.cpp CGnuPlotFile.cpp CGnuPlotFill.cpp CGnuPlotFillStyle.cpp CGnuPlotFinanceBarObject.cpp CGnuPlotFunctions.cpp CGnuPlotGroup.cpp CGnuPlotImageObject.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLabelData.cpp CGnuPlotLabelObject.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotLogDevice.cpp CGnuPlotLogRenderer.cpp CGnuPlotMargin.cpp CGnuPlotMark.cpp CGnuPlotMultiplot.cpp CGnuPlotObject.cpp CGnuPlotPalette.cpp CGnuPlotPathObject.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPm3D.cpp CGnuPlotPoint.cpp CGnuPlotPointObject.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStroke.cpp CGnuPlotStyle.cpp CGnuPlotSurface.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotBoxErrorBarsStyleValue.cpp CGnuPlotBoxesStyleValue.cpp CGnuPlotBoxPlotStyleValue.cpp CGnuPlotCandlesticksStyleValue.cpp CGnuPlotVectorsStyleValue.cpp CGnuPlotEveryData.cpp CGnuPlotIndexData.cpp CGnuPlotWhereData.cpp CGnuPlotStyleBase.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBivariate.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDendrogram.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleForceDirected.cpp CGnuPlotStyleHierBubblePlot.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleStackedArea.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotPSDevice.cpp CGnuPlotPSRenderer.cpp CGnuPlotSize.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlotText.cpp CGnuPlotTextRenderer.cpp CQHeaderView.cpp CQToolTip.cpp CQFloatLabel.cpp CQRotatedText.cpp CQIntegerSpin.cpp CQCursor.cpp CQRubberBand.cpp CQDialog.cpp CQEnumCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CDendrogram.cpp CPrint.cpp CMathGeom2D.cpp CInvNorm.cpp CArcToBezier.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprIValue.cpp Expr/CExprInterp.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprSValue.cpp Expr/CExprStrgen.cpp Expr/CExprToken.cpp Expr/CExprTokenStack.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -1490,7 +1486,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -1587,7 +1583,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlot.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlot.h -o .moc/moc_CQGnuPlot.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlot.h -o .moc/moc_CQGnuPlot.cpp
 
 .moc/moc_CQGnuPlotAnnotation.cpp: CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -1620,7 +1616,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -1762,7 +1758,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotAnnotation.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotAnnotation.h -o .moc/moc_CQGnuPlotAnnotation.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotAnnotation.h -o .moc/moc_CQGnuPlotAnnotation.cpp
 
 .moc/moc_CQGnuPlotArrow.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotObject.h \
@@ -1796,7 +1792,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -1938,7 +1934,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotArrow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotArrow.h -o .moc/moc_CQGnuPlotArrow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotArrow.h -o .moc/moc_CQGnuPlotArrow.cpp
 
 .moc/moc_CQGnuPlotArrowObject.cpp: CGnuPlotArrowObject.h \
 		../../CUtil/include/COptVal.h \
@@ -1973,7 +1969,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -2115,7 +2111,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotArrowObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotArrowObject.h -o .moc/moc_CQGnuPlotArrowObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotArrowObject.h -o .moc/moc_CQGnuPlotArrowObject.cpp
 
 .moc/moc_CQGnuPlotAxis.cpp: CQGnuPlotObject.h \
 		CQGnuPlot.h \
@@ -2194,7 +2190,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -2291,9 +2287,9 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CQGnuPlotAxis.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotAxis.h -o .moc/moc_CQGnuPlotAxis.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotAxis.h -o .moc/moc_CQGnuPlotAxis.cpp
 
 .moc/moc_CQGnuPlotBoxBarObject.cpp: CGnuPlotBoxBarObject.h \
 		../../CMath/include/CPoint2D.h \
@@ -2327,7 +2323,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -2470,7 +2466,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotBoxBarObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBoxBarObject.h -o .moc/moc_CQGnuPlotBoxBarObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBoxBarObject.h -o .moc/moc_CQGnuPlotBoxBarObject.cpp
 
 .moc/moc_CQGnuPlotBoxObject.cpp: CGnuPlotBoxObject.h \
 		CGnuPlotObject.h \
@@ -2504,7 +2500,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -2648,7 +2644,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotBoxObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBoxObject.h -o .moc/moc_CQGnuPlotBoxObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBoxObject.h -o .moc/moc_CQGnuPlotBoxObject.cpp
 
 .moc/moc_CQGnuPlotBoxPlot.cpp: CGnuPlotBoxPlot.h \
 		../../CUtil/include/COptVal.h \
@@ -2680,7 +2676,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -2732,7 +2728,7 @@ compiler_moc_header_clean:
 		../../CMath/include/C2Bezier2D.h \
 		../../CUtil/include/CLineCapType.h \
 		CQGnuPlotBoxPlot.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBoxPlot.h -o .moc/moc_CQGnuPlotBoxPlot.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBoxPlot.h -o .moc/moc_CQGnuPlotBoxPlot.cpp
 
 .moc/moc_CQGnuPlotBubbleObject.cpp: CGnuPlotBubbleObject.h \
 		../../CUtil/include/COptVal.h \
@@ -2767,7 +2763,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -2911,7 +2907,7 @@ compiler_moc_header_clean:
 		CQGnuPlotFill.h \
 		CQGnuPlotStroke.h \
 		CQGnuPlotBubbleObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBubbleObject.h -o .moc/moc_CQGnuPlotBubbleObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBubbleObject.h -o .moc/moc_CQGnuPlotBubbleObject.cpp
 
 .moc/moc_CQGnuPlotCamera.cpp: CQGnuPlotObject.h \
 		CGnuPlotCamera.h \
@@ -2931,12 +2927,12 @@ compiler_moc_header_clean:
 		../../CMath/include/CGaussianMatrix.h \
 		../../CMath/include/CMatrix3DH.h \
 		CQGnuPlotCamera.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCamera.h -o .moc/moc_CQGnuPlotCamera.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCamera.h -o .moc/moc_CQGnuPlotCamera.cpp
 
 .moc/moc_CQGnuPlotCanvas.cpp: ../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
 		CQGnuPlotCanvas.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCanvas.h -o .moc/moc_CQGnuPlotCanvas.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCanvas.h -o .moc/moc_CQGnuPlotCanvas.cpp
 
 .moc/moc_CQGnuPlotCircle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotObject.h \
@@ -2970,7 +2966,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -3112,7 +3108,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotCircle.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCircle.h -o .moc/moc_CQGnuPlotCircle.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCircle.h -o .moc/moc_CQGnuPlotCircle.cpp
 
 .moc/moc_CQGnuPlotColorBox.cpp: CQGnuPlotObject.h \
 		CGnuPlotColorBox.h \
@@ -3148,7 +3144,7 @@ compiler_moc_header_clean:
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -3288,7 +3284,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotColorBox.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotColorBox.h -o .moc/moc_CQGnuPlotColorBox.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotColorBox.h -o .moc/moc_CQGnuPlotColorBox.cpp
 
 .moc/moc_CQGnuPlotDevice.cpp: CGnuPlotDevice.h \
 		../../CMath/include/CISize2D.h \
@@ -3341,7 +3337,7 @@ compiler_moc_header_clean:
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -3376,9 +3372,9 @@ compiler_moc_header_clean:
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CQGnuPlotDevice.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDevice.h -o .moc/moc_CQGnuPlotDevice.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDevice.h -o .moc/moc_CQGnuPlotDevice.cpp
 
 .moc/moc_CQGnuPlotEllipse.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotObject.h \
@@ -3412,7 +3408,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -3554,7 +3550,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotEllipse.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotEllipse.h -o .moc/moc_CQGnuPlotEllipse.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotEllipse.h -o .moc/moc_CQGnuPlotEllipse.cpp
 
 .moc/moc_CQGnuPlotEllipseObject.cpp: CGnuPlotEllipseObject.h \
 		../../CUtil/include/COptVal.h \
@@ -3589,7 +3585,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -3731,7 +3727,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotEllipseObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotEllipseObject.h -o .moc/moc_CQGnuPlotEllipseObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotEllipseObject.h -o .moc/moc_CQGnuPlotEllipseObject.cpp
 
 .moc/moc_CQGnuPlotEndBar.cpp: CGnuPlotBoxBarObject.h \
 		../../CMath/include/CPoint2D.h \
@@ -3765,7 +3761,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -3908,7 +3904,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotEndBar.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotEndBar.h -o .moc/moc_CQGnuPlotEndBar.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotEndBar.h -o .moc/moc_CQGnuPlotEndBar.cpp
 
 .moc/moc_CQGnuPlotEnum.cpp: CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
@@ -3938,7 +3934,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -3990,7 +3986,7 @@ compiler_moc_header_clean:
 		../../CMath/include/C2Bezier2D.h \
 		../../CUtil/include/CLineCapType.h \
 		CQGnuPlotEnum.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotEnum.h -o .moc/moc_CQGnuPlotEnum.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotEnum.h -o .moc/moc_CQGnuPlotEnum.cpp
 
 .moc/moc_CQGnuPlotErrorBarObject.cpp: CGnuPlotErrorBarObject.h \
 		CGnuPlotObject.h \
@@ -4024,7 +4020,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -4168,7 +4164,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotErrorBarObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotErrorBarObject.h -o .moc/moc_CQGnuPlotErrorBarObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotErrorBarObject.h -o .moc/moc_CQGnuPlotErrorBarObject.cpp
 
 .moc/moc_CQGnuPlotFill.cpp: CGnuPlotFill.h \
 		CGnuPlotTypes.h \
@@ -4201,7 +4197,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRefPtr.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -4252,7 +4248,7 @@ compiler_moc_header_clean:
 		../../CMath/include/C2Bezier2D.h \
 		../../CUtil/include/CLineCapType.h \
 		CQGnuPlotFill.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotFill.h -o .moc/moc_CQGnuPlotFill.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotFill.h -o .moc/moc_CQGnuPlotFill.cpp
 
 .moc/moc_CQGnuPlotFinanceBarObject.cpp: CGnuPlotFinanceBarObject.h \
 		CGnuPlotObject.h \
@@ -4286,7 +4282,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -4430,7 +4426,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotFinanceBarObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotFinanceBarObject.h -o .moc/moc_CQGnuPlotFinanceBarObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotFinanceBarObject.h -o .moc/moc_CQGnuPlotFinanceBarObject.cpp
 
 .moc/moc_CQGnuPlotGroup.cpp: CQGnuPlot.h \
 		CGnuPlot.h \
@@ -4508,7 +4504,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -4606,7 +4602,7 @@ compiler_moc_header_clean:
 		CQGnuPlotEnum.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -4614,7 +4610,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CRange.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotGroup.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotGroup.h -o .moc/moc_CQGnuPlotGroup.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotGroup.h -o .moc/moc_CQGnuPlotGroup.cpp
 
 .moc/moc_CQGnuPlotImageObject.cpp: CGnuPlotImageObject.h \
 		../../CUtil/include/COptVal.h \
@@ -4663,7 +4659,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -4790,7 +4786,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotImageObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotImageObject.h -o .moc/moc_CQGnuPlotImageObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotImageObject.h -o .moc/moc_CQGnuPlotImageObject.cpp
 
 .moc/moc_CQGnuPlotKey.cpp: CQGnuPlotObject.h \
 		CGnuPlotKey.h \
@@ -4825,7 +4821,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -4873,7 +4869,7 @@ compiler_moc_header_clean:
 		../../CImageLib/include/CImageAnim.h \
 		../../CImageLib/include/CImageFile.h \
 		CGnuPlotMouseEvent.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -4968,7 +4964,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotKey.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotKey.h -o .moc/moc_CQGnuPlotKey.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotKey.h -o .moc/moc_CQGnuPlotKey.cpp
 
 .moc/moc_CQGnuPlotLabel.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotObject.h \
@@ -5002,7 +4998,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -5144,7 +5140,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotLabel.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotLabel.h -o .moc/moc_CQGnuPlotLabel.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotLabel.h -o .moc/moc_CQGnuPlotLabel.cpp
 
 .moc/moc_CQGnuPlotLabelObject.cpp: CGnuPlotLabelObject.h \
 		CGnuPlotObject.h \
@@ -5178,7 +5174,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -5320,7 +5316,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotLabelObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotLabelObject.h -o .moc/moc_CQGnuPlotLabelObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotLabelObject.h -o .moc/moc_CQGnuPlotLabelObject.cpp
 
 .moc/moc_CQGnuPlotLineStyle.cpp: CQGnuPlot.h \
 		CGnuPlot.h \
@@ -5398,7 +5394,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -5495,7 +5491,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotLineStyle.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotLineStyle.h -o .moc/moc_CQGnuPlotLineStyle.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotLineStyle.h -o .moc/moc_CQGnuPlotLineStyle.cpp
 
 .moc/moc_CQGnuPlotMark.cpp: CGnuPlotMark.h \
 		../../CUtil/include/CRGBA.h \
@@ -5528,7 +5524,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -5579,7 +5575,7 @@ compiler_moc_header_clean:
 		../../CMath/include/C2Bezier2D.h \
 		../../CUtil/include/CLineCapType.h \
 		CQGnuPlotMark.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotMark.h -o .moc/moc_CQGnuPlotMark.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotMark.h -o .moc/moc_CQGnuPlotMark.cpp
 
 .moc/moc_CQGnuPlotMultiplot.cpp: CGnuPlotMultiplot.h \
 		../../CFont/include/CFont.h \
@@ -5617,14 +5613,14 @@ compiler_moc_header_clean:
 		../../CImageLib/include/CImageAnim.h \
 		../../CImageLib/include/CImageFile.h \
 		CQGnuPlotMultiplot.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotMultiplot.h -o .moc/moc_CQGnuPlotMultiplot.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotMultiplot.h -o .moc/moc_CQGnuPlotMultiplot.cpp
 
 .moc/moc_CQGnuPlotObject.cpp: CQGnuPlotObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotObject.h -o .moc/moc_CQGnuPlotObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotObject.h -o .moc/moc_CQGnuPlotObject.cpp
 
 .moc/moc_CQGnuPlotPalette.cpp: CQGnuPlotObject.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -5796,7 +5792,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotPalette.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPalette.h -o .moc/moc_CQGnuPlotPalette.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPalette.h -o .moc/moc_CQGnuPlotPalette.cpp
 
 .moc/moc_CQGnuPlotPathObject.cpp: CGnuPlotPathObject.h \
 		../../CUtil/include/COptVal.h \
@@ -5830,7 +5826,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -5972,7 +5968,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotPathObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPathObject.h -o .moc/moc_CQGnuPlotPathObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPathObject.h -o .moc/moc_CQGnuPlotPathObject.cpp
 
 .moc/moc_CQGnuPlotPieObject.cpp: CGnuPlotPieObject.h \
 		../../CUtil/include/COptVal.h \
@@ -6007,7 +6003,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -6149,7 +6145,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotPieObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPieObject.h -o .moc/moc_CQGnuPlotPieObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPieObject.h -o .moc/moc_CQGnuPlotPieObject.cpp
 
 .moc/moc_CQGnuPlotPlot.cpp: CQGnuPlotEnum.h \
 		CGnuPlotTypes.h \
@@ -6180,7 +6176,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -6330,14 +6326,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotPlot.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPlot.h -o .moc/moc_CQGnuPlotPlot.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPlot.h -o .moc/moc_CQGnuPlotPlot.cpp
 
 .moc/moc_CQGnuPlotPm3D.cpp: CQGnuPlotObject.h \
 		CGnuPlotPm3D.h \
@@ -6373,7 +6369,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -6403,7 +6399,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CColor.h \
 		CGnuPlotDash.h \
 		CQGnuPlotPm3D.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPm3D.h -o .moc/moc_CQGnuPlotPm3D.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPm3D.h -o .moc/moc_CQGnuPlotPm3D.cpp
 
 .moc/moc_CQGnuPlotPointObject.cpp: CGnuPlotPointObject.h \
 		../../CUtil/include/COptVal.h \
@@ -6438,7 +6434,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -6580,7 +6576,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotPointObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPointObject.h -o .moc/moc_CQGnuPlotPointObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPointObject.h -o .moc/moc_CQGnuPlotPointObject.cpp
 
 .moc/moc_CQGnuPlotPolygon.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotObject.h \
@@ -6614,7 +6610,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -6756,7 +6752,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotPolygon.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPolygon.h -o .moc/moc_CQGnuPlotPolygon.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPolygon.h -o .moc/moc_CQGnuPlotPolygon.cpp
 
 .moc/moc_CQGnuPlotPolygonObject.cpp: CGnuPlotPolygonObject.h \
 		../../CUtil/include/COptVal.h \
@@ -6790,7 +6786,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -6932,7 +6928,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotPolygonObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPolygonObject.h -o .moc/moc_CQGnuPlotPolygonObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPolygonObject.h -o .moc/moc_CQGnuPlotPolygonObject.cpp
 
 .moc/moc_CQGnuPlotRectangle.cpp: CQGnuPlotAnnotation.h \
 		CGnuPlotObject.h \
@@ -6966,7 +6962,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -7108,7 +7104,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotRectangle.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotRectangle.h -o .moc/moc_CQGnuPlotRectangle.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotRectangle.h -o .moc/moc_CQGnuPlotRectangle.cpp
 
 .moc/moc_CQGnuPlotRectObject.cpp: CGnuPlotRectObject.h \
 		../../CUtil/include/COptVal.h \
@@ -7143,7 +7139,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -7285,7 +7281,7 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotRectObject.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotRectObject.h -o .moc/moc_CQGnuPlotRectObject.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotRectObject.h -o .moc/moc_CQGnuPlotRectObject.cpp
 
 .moc/moc_CQGnuPlotStroke.cpp: CGnuPlotStroke.h \
 		../../CUtil/include/CRGBA.h \
@@ -7320,7 +7316,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -7369,7 +7365,7 @@ compiler_moc_header_clean:
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
 		CQGnuPlotStroke.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotStroke.h -o .moc/moc_CQGnuPlotStroke.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotStroke.h -o .moc/moc_CQGnuPlotStroke.cpp
 
 .moc/moc_CQGnuPlotTimeStamp.cpp: CQGnuPlotObject.h \
 		CGnuPlotTimeStamp.h \
@@ -7422,7 +7418,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -7449,7 +7445,7 @@ compiler_moc_header_clean:
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CQGnuPlotTimeStamp.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTimeStamp.h -o .moc/moc_CQGnuPlotTimeStamp.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTimeStamp.h -o .moc/moc_CQGnuPlotTimeStamp.cpp
 
 .moc/moc_CQGnuPlotTitle.cpp: CQGnuPlotObject.h \
 		CGnuPlotTitle.h \
@@ -7483,7 +7479,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -7625,13 +7621,13 @@ compiler_moc_header_clean:
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlotTitle.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTitle.h -o .moc/moc_CQGnuPlotTitle.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTitle.h -o .moc/moc_CQGnuPlotTitle.cpp
 
 .moc/moc_CQGnuPlotToolBar.cpp: CQGnuPlotToolBar.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotToolBar.h -o .moc/moc_CQGnuPlotToolBar.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotToolBar.h -o .moc/moc_CQGnuPlotToolBar.cpp
 
 .moc/moc_CQGnuPlotFilename.cpp: CQGnuPlotFilename.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotFilename.h -o .moc/moc_CQGnuPlotFilename.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotFilename.h -o .moc/moc_CQGnuPlotFilename.cpp
 
 .moc/moc_CQGnuPlotWindow.cpp: CQGnuPlot.h \
 		CGnuPlot.h \
@@ -7709,7 +7705,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -7808,14 +7804,14 @@ compiler_moc_header_clean:
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
 		CGnuPlotProbeEvent.h \
 		../../CMath/include/CRange.h \
 		CQGnuPlotWindow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotWindow.h -o .moc/moc_CQGnuPlotWindow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotWindow.h -o .moc/moc_CQGnuPlotWindow.cpp
 
 .moc/moc_CQGnuPlotAdjacencyStyleValue.cpp: CGnuPlotAdjacencyStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -7897,7 +7893,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -8005,14 +8001,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotAdjacencyStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotAdjacencyStyleValue.h -o .moc/moc_CQGnuPlotAdjacencyStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotAdjacencyStyleValue.h -o .moc/moc_CQGnuPlotAdjacencyStyleValue.cpp
 
 .moc/moc_CQGnuPlotBivariateStyleValue.cpp: CGnuPlotBivariateStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -8102,7 +8098,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -8114,7 +8110,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -8202,7 +8198,7 @@ compiler_moc_header_clean:
 		CGnuPlotMargin.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotBivariateStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBivariateStyleValue.h -o .moc/moc_CQGnuPlotBivariateStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBivariateStyleValue.h -o .moc/moc_CQGnuPlotBivariateStyleValue.cpp
 
 .moc/moc_CQGnuPlotBoxErrorBarsStyleValue.cpp: CGnuPlotBoxErrorBarsStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -8237,7 +8233,7 @@ compiler_moc_header_clean:
 		CQGnuPlotPlot.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -8385,14 +8381,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotBoxErrorBarsStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBoxErrorBarsStyleValue.h -o .moc/moc_CQGnuPlotBoxErrorBarsStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBoxErrorBarsStyleValue.h -o .moc/moc_CQGnuPlotBoxErrorBarsStyleValue.cpp
 
 .moc/moc_CQGnuPlotBoxesStyleValue.cpp: CGnuPlotBoxesStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -8427,7 +8423,7 @@ compiler_moc_header_clean:
 		CQGnuPlotPlot.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -8575,14 +8571,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotBoxesStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBoxesStyleValue.h -o .moc/moc_CQGnuPlotBoxesStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBoxesStyleValue.h -o .moc/moc_CQGnuPlotBoxesStyleValue.cpp
 
 .moc/moc_CQGnuPlotBoxPlotStyleValue.cpp: CGnuPlotBoxPlotStyleValue.h \
 		../../CUtil/include/COptVal.h \
@@ -8615,7 +8611,7 @@ compiler_moc_header_clean:
 		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -8666,7 +8662,7 @@ compiler_moc_header_clean:
 		../../CMath/include/C2Bezier2D.h \
 		../../CUtil/include/CLineCapType.h \
 		CQGnuPlotBoxPlotStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBoxPlotStyleValue.h -o .moc/moc_CQGnuPlotBoxPlotStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBoxPlotStyleValue.h -o .moc/moc_CQGnuPlotBoxPlotStyleValue.cpp
 
 .moc/moc_CQGnuPlotBubbleStyleValue.cpp: CGnuPlotBubbleStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -8712,7 +8708,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -8854,14 +8850,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotBubbleStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBubbleStyleValue.h -o .moc/moc_CQGnuPlotBubbleStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotBubbleStyleValue.h -o .moc/moc_CQGnuPlotBubbleStyleValue.cpp
 
 .moc/moc_CQGnuPlotCandlesticksStyleValue.cpp: CGnuPlotCandlesticksStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -8896,7 +8892,7 @@ compiler_moc_header_clean:
 		CQGnuPlotPlot.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -9044,14 +9040,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotCandlesticksStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCandlesticksStyleValue.h -o .moc/moc_CQGnuPlotCandlesticksStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCandlesticksStyleValue.h -o .moc/moc_CQGnuPlotCandlesticksStyleValue.cpp
 
 .moc/moc_CQGnuPlotChordDiagramStyleValue.cpp: CGnuPlotChordDiagramStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -9136,7 +9132,7 @@ compiler_moc_header_clean:
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -9244,13 +9240,13 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotChordDiagramStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotChordDiagramStyleValue.h -o .moc/moc_CQGnuPlotChordDiagramStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotChordDiagramStyleValue.h -o .moc/moc_CQGnuPlotChordDiagramStyleValue.cpp
 
 .moc/moc_CQGnuPlotCirclesStyleValue.cpp: CGnuPlotCirclesStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -9285,7 +9281,7 @@ compiler_moc_header_clean:
 		CQGnuPlotPlot.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -9432,14 +9428,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotCirclesStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCirclesStyleValue.h -o .moc/moc_CQGnuPlotCirclesStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCirclesStyleValue.h -o .moc/moc_CQGnuPlotCirclesStyleValue.cpp
 
 .moc/moc_CQGnuPlotDelaunayStyleValue.cpp: CGnuPlotDelaunayStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -9479,7 +9475,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -9628,7 +9624,7 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -9636,7 +9632,7 @@ compiler_moc_header_clean:
 		CQGnuPlotObject.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotDelaunayStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDelaunayStyleValue.h -o .moc/moc_CQGnuPlotDelaunayStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDelaunayStyleValue.h -o .moc/moc_CQGnuPlotDelaunayStyleValue.cpp
 
 .moc/moc_CQGnuPlotDendrogramStyleValue.cpp: CGnuPlotDendrogramStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -9671,7 +9667,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -9820,14 +9816,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotDendrogramStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDendrogramStyleValue.h -o .moc/moc_CQGnuPlotDendrogramStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDendrogramStyleValue.h -o .moc/moc_CQGnuPlotDendrogramStyleValue.cpp
 
 .moc/moc_CQGnuPlotEllipsesStyleValue.cpp: CGnuPlotEllipsesStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -9862,7 +9858,7 @@ compiler_moc_header_clean:
 		CQGnuPlotPlot.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -10009,14 +10005,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotEllipsesStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotEllipsesStyleValue.h -o .moc/moc_CQGnuPlotEllipsesStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotEllipsesStyleValue.h -o .moc/moc_CQGnuPlotEllipsesStyleValue.cpp
 
 .moc/moc_CQGnuPlotForceDirectedStyleValue.cpp: CGnuPlotForceDirectedStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -10052,7 +10048,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -10201,14 +10197,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotForceDirectedStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotForceDirectedStyleValue.h -o .moc/moc_CQGnuPlotForceDirectedStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotForceDirectedStyleValue.h -o .moc/moc_CQGnuPlotForceDirectedStyleValue.cpp
 
 .moc/moc_CQGnuPlotHierBubbleStyleValue.cpp: CGnuPlotHierBubbleStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -10254,7 +10250,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -10396,14 +10392,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotHierBubbleStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotHierBubbleStyleValue.h -o .moc/moc_CQGnuPlotHierBubbleStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotHierBubbleStyleValue.h -o .moc/moc_CQGnuPlotHierBubbleStyleValue.cpp
 
 .moc/moc_CQGnuPlotLabelsStyleValue.cpp: CGnuPlotLabelsStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -10440,7 +10436,7 @@ compiler_moc_header_clean:
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -10508,7 +10504,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -10593,7 +10589,7 @@ compiler_moc_header_clean:
 		CGnuPlotMargin.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotLabelsStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotLabelsStyleValue.h -o .moc/moc_CQGnuPlotLabelsStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotLabelsStyleValue.h -o .moc/moc_CQGnuPlotLabelsStyleValue.cpp
 
 .moc/moc_CQGnuPlotPieChartStyleValue.cpp: CGnuPlotPieChartStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -10627,7 +10623,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -10775,7 +10771,7 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -10783,7 +10779,7 @@ compiler_moc_header_clean:
 		CQGnuPlotObject.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPieChartStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPieChartStyleValue.h -o .moc/moc_CQGnuPlotPieChartStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPieChartStyleValue.h -o .moc/moc_CQGnuPlotPieChartStyleValue.cpp
 
 .moc/moc_CQGnuPlotRadarStyleValue.cpp: CGnuPlotRadarStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -10817,7 +10813,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -10966,7 +10962,7 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -10974,7 +10970,7 @@ compiler_moc_header_clean:
 		CQGnuPlotObject.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotRadarStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotRadarStyleValue.h -o .moc/moc_CQGnuPlotRadarStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotRadarStyleValue.h -o .moc/moc_CQGnuPlotRadarStyleValue.cpp
 
 .moc/moc_CQGnuPlotSunburstStyleValue.cpp: CGnuPlotSunburstStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -11028,7 +11024,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -11159,7 +11155,7 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -11167,7 +11163,7 @@ compiler_moc_header_clean:
 		CQGnuPlotObject.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotSunburstStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotSunburstStyleValue.h -o .moc/moc_CQGnuPlotSunburstStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotSunburstStyleValue.h -o .moc/moc_CQGnuPlotSunburstStyleValue.cpp
 
 .moc/moc_CQGnuPlotTreeMapStyleValue.cpp: CGnuPlotTreeMapStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -11202,7 +11198,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -11351,14 +11347,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotTreeMapStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTreeMapStyleValue.h -o .moc/moc_CQGnuPlotTreeMapStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTreeMapStyleValue.h -o .moc/moc_CQGnuPlotTreeMapStyleValue.cpp
 
 .moc/moc_CQGnuPlotVectorsStyleValue.cpp: CGnuPlotVectorsStyleValue.h \
 		CGnuPlotStyleValue.h \
@@ -11394,7 +11390,7 @@ compiler_moc_header_clean:
 		CQGnuPlotPlot.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -11540,14 +11536,14 @@ compiler_moc_header_clean:
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		CQGnuPlotVectorsStyleValue.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotVectorsStyleValue.h -o .moc/moc_CQGnuPlotVectorsStyleValue.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotVectorsStyleValue.h -o .moc/moc_CQGnuPlotVectorsStyleValue.cpp
 
 .moc/moc_CQGnuPlotLoadFileDialog.cpp: CQDialog.h \
 		CGnuPlotTypes.h \
@@ -11579,7 +11575,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -11631,7 +11627,7 @@ compiler_moc_header_clean:
 		../../CMath/include/C2Bezier2D.h \
 		../../CUtil/include/CLineCapType.h \
 		CQGnuPlotLoadFileDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotLoadFileDialog.h -o .moc/moc_CQGnuPlotLoadFileDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotLoadFileDialog.h -o .moc/moc_CQGnuPlotLoadFileDialog.cpp
 
 .moc/moc_CQGnuPlotLoadFunctionDialog.cpp: CQDialog.h \
 		CGnuPlotTypes.h \
@@ -11663,7 +11659,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -11715,11 +11711,11 @@ compiler_moc_header_clean:
 		../../CMath/include/C2Bezier2D.h \
 		../../CUtil/include/CLineCapType.h \
 		CQGnuPlotLoadFunctionDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotLoadFunctionDialog.h -o .moc/moc_CQGnuPlotLoadFunctionDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotLoadFunctionDialog.h -o .moc/moc_CQGnuPlotLoadFunctionDialog.cpp
 
 .moc/moc_CQGnuPlotManageFunctionsDialog.cpp: CQDialog.h \
 		CQGnuPlotManageFunctionsDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotManageFunctionsDialog.h -o .moc/moc_CQGnuPlotManageFunctionsDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotManageFunctionsDialog.h -o .moc/moc_CQGnuPlotManageFunctionsDialog.cpp
 
 .moc/moc_CQGnuPlotManageVariablesDialog.cpp: CQDialog.h \
 		Expr/CExpr.h \
@@ -11749,7 +11745,7 @@ compiler_moc_header_clean:
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
 		CQGnuPlotManageVariablesDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotManageVariablesDialog.h -o .moc/moc_CQGnuPlotManageVariablesDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotManageVariablesDialog.h -o .moc/moc_CQGnuPlotManageVariablesDialog.cpp
 
 .moc/moc_CQGnuPlotCreateDialog.cpp: CQDialog.h \
 		CQGnuPlotEnum.h \
@@ -11781,7 +11777,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -11833,7 +11829,7 @@ compiler_moc_header_clean:
 		../../CMath/include/C2Bezier2D.h \
 		../../CUtil/include/CLineCapType.h \
 		CQGnuPlotCreateDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCreateDialog.h -o .moc/moc_CQGnuPlotCreateDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCreateDialog.h -o .moc/moc_CQGnuPlotCreateDialog.cpp
 
 .moc/moc_CQGnuPlotDataDialog.cpp: CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
@@ -11914,7 +11910,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -12006,25 +12002,25 @@ compiler_moc_header_clean:
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CQGnuPlotDataDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDataDialog.h -o .moc/moc_CQGnuPlotDataDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDataDialog.h -o .moc/moc_CQGnuPlotDataDialog.cpp
 
 .moc/moc_CQGnuPlotSaveDialog.cpp: CQDialog.h \
 		CQGnuPlotSaveDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotSaveDialog.h -o .moc/moc_CQGnuPlotSaveDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotSaveDialog.h -o .moc/moc_CQGnuPlotSaveDialog.cpp
 
 .moc/moc_CQGnuPlotPaletteDialog.cpp: CQDialog.h \
 		CQGnuPlotPaletteDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPaletteDialog.h -o .moc/moc_CQGnuPlotPaletteDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPaletteDialog.h -o .moc/moc_CQGnuPlotPaletteDialog.cpp
 
 .moc/moc_CQGnuPlotTreeView.cpp: CQGnuPlotTreeView.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTreeView.h -o .moc/moc_CQGnuPlotTreeView.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTreeView.h -o .moc/moc_CQGnuPlotTreeView.cpp
 
 .moc/moc_CQGnuPlotTreeWidget.cpp: CQGnuPlotTreeWidget.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTreeWidget.h -o .moc/moc_CQGnuPlotTreeWidget.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotTreeWidget.h -o .moc/moc_CQGnuPlotTreeWidget.cpp
 
 .moc/moc_CQGnuPlotDataTree.cpp: CQGnuPlotTreeView.h \
 		CQGnuPlotDataTree.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDataTree.h -o .moc/moc_CQGnuPlotDataTree.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDataTree.h -o .moc/moc_CQGnuPlotDataTree.cpp
 
 .moc/moc_CQGnuPlotDataModel.cpp: CGnuPlotFile.h \
 		CGnuPlotBinaryFormat.h \
@@ -12036,7 +12032,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/COptVal.h \
 		CQGnuPlotDataModel.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDataModel.h -o .moc/moc_CQGnuPlotDataModel.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDataModel.h -o .moc/moc_CQGnuPlotDataModel.cpp
 
 .moc/moc_CQGnuPlotPositionEdit.cpp: CQIconCombo.h \
 		CGnuPlotPosition.h \
@@ -12068,28 +12064,28 @@ compiler_moc_header_clean:
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlotPositionEdit.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPositionEdit.h -o .moc/moc_CQGnuPlotPositionEdit.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPositionEdit.h -o .moc/moc_CQGnuPlotPositionEdit.cpp
 
 .moc/moc_CQHeaderView.cpp: CQHeaderView.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQHeaderView.h -o .moc/moc_CQHeaderView.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQHeaderView.h -o .moc/moc_CQHeaderView.cpp
 
 .moc/moc_CQToolTip.cpp: CQToolTip.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQToolTip.h -o .moc/moc_CQToolTip.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQToolTip.h -o .moc/moc_CQToolTip.cpp
 
 .moc/moc_CQFloatLabel.cpp: CQFloatLabel.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQFloatLabel.h -o .moc/moc_CQFloatLabel.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQFloatLabel.h -o .moc/moc_CQFloatLabel.cpp
 
 .moc/moc_CQIntegerSpin.cpp: CQIntegerSpin.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQIntegerSpin.h -o .moc/moc_CQIntegerSpin.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQIntegerSpin.h -o .moc/moc_CQIntegerSpin.cpp
 
 .moc/moc_CQRubberBand.cpp: CQRubberBand.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQRubberBand.h -o .moc/moc_CQRubberBand.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQRubberBand.h -o .moc/moc_CQRubberBand.cpp
 
 .moc/moc_CQDialog.cpp: CQDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQDialog.h -o .moc/moc_CQDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQDialog.h -o .moc/moc_CQDialog.cpp
 
 .moc/moc_CQEnumCombo.cpp: CQEnumCombo.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQEnumCombo.h -o .moc/moc_CQEnumCombo.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQEnumCombo.h -o .moc/moc_CQEnumCombo.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -12181,7 +12177,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -12358,7 +12354,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -12457,7 +12453,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotDevice.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CQGnuPlotPNGDevice.h \
 		../../CQPropertyTree/include/CQPropertyEditor.h \
 		../../CQUtil/include/CQUtil.h \
@@ -12503,7 +12499,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -12648,7 +12644,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -12703,7 +12699,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -12847,7 +12843,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -12899,7 +12895,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -13047,7 +13043,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -13153,7 +13149,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -13250,7 +13246,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextStyle.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
@@ -13306,7 +13302,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -13456,7 +13452,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -13499,7 +13495,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -13650,7 +13646,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -13692,7 +13688,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -13843,7 +13839,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -13885,7 +13881,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -14035,7 +14031,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -14138,7 +14134,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -14227,7 +14223,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotEnum.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -14313,7 +14309,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -14412,7 +14408,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -14479,7 +14475,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -14623,7 +14619,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -14679,7 +14675,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -14821,7 +14817,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -14904,7 +14900,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -14939,7 +14935,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -15197,7 +15193,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -15341,7 +15337,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -15396,7 +15392,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -15544,7 +15540,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -15587,7 +15583,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -15737,7 +15733,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -15775,7 +15771,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -15862,7 +15858,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -16013,7 +16009,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -16055,7 +16051,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRefPtr.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -16204,7 +16200,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -16252,7 +16248,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -16403,7 +16399,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -16490,7 +16486,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -16588,7 +16584,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotEnum.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -16674,7 +16670,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -16808,7 +16804,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -16859,7 +16855,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -16907,7 +16903,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CImageLib/include/CImageAnim.h \
 		../../CImageLib/include/CImageFile.h \
 		CGnuPlotMouseEvent.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -17068,7 +17064,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -17212,7 +17208,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -17280,7 +17276,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -17424,7 +17420,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -17536,7 +17532,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -17641,7 +17637,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -17690,7 +17686,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -17840,7 +17836,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -17932,7 +17928,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -18029,7 +18025,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotEnum.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -18050,7 +18046,7 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CQGnuPlotPalette.o: CQGnuPlotPalette.cpp CQGnuPlotPalette.h \
 		CQGnuPlotObject.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -18224,7 +18220,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -18265,7 +18261,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -18414,7 +18410,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -18458,7 +18454,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -18606,7 +18602,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -18646,7 +18642,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -18796,7 +18792,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -18894,7 +18890,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -19037,7 +19033,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotEnum.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotProbeEvent.h \
@@ -19096,7 +19092,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -19131,7 +19127,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CQGnuPlotPNGRenderer.h \
 		CQGnuPlotRenderer.h \
 		CGnuPlot.h \
@@ -19320,7 +19316,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -19423,7 +19419,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotPNGDevice.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h
+		../../CUtil/include/CDirectionType.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotPNGRenderer.o CQGnuPlotPNGRenderer.cpp
 
 ../obj/CQGnuPlotPointObject.o: CQGnuPlotPointObject.cpp CQGnuPlotPointObject.h \
@@ -19460,7 +19456,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -19608,7 +19604,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -19663,7 +19659,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -19807,7 +19803,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -19854,7 +19850,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -20003,7 +19999,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -20046,7 +20042,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -20190,7 +20186,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -20256,7 +20252,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -20404,7 +20400,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSurface.h \
 		CGnuPlotPoint.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -20490,7 +20486,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -20596,7 +20592,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -20616,7 +20612,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotCanvas.h \
 		CQGnuPlotUtil.h \
 		CQRotatedText.h \
-		CSymbol2D.h \
+		../../CRenderer/include/CSymbol2D.h \
 		../../CQUtil/include/CQFont.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
@@ -20662,7 +20658,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector3D.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -20809,7 +20805,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -20875,7 +20871,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -21001,7 +20997,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotEnum.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotPm3D.h \
 		CGnuPlotProbeEvent.h \
@@ -21041,7 +21037,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -21185,7 +21181,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotGroup.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -21302,7 +21298,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -21406,7 +21402,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -21492,7 +21488,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -21591,7 +21587,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -21800,7 +21796,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -21953,7 +21949,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -21997,7 +21993,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -22149,7 +22145,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -22240,7 +22236,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -22339,7 +22335,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -22428,7 +22424,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -22527,7 +22523,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -22578,7 +22574,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -22754,7 +22750,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -22854,7 +22850,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -22964,7 +22960,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -23063,14 +23059,14 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
 		CGnuPlotProbeEvent.h \
 		../../CMath/include/CRange.h \
-		CQGradientPalette.h \
-		CQGradientPaletteControl.h \
+		../../CQGradientPalette/include/CQGradientPalette.h \
+		../../CQGradientPalette/include/CQGradientPaletteControl.h \
 		CQGnuPlotGroup.h \
 		CQGnuPlotObject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotPaletteDialog.o CQGnuPlotPaletteDialog.cpp
@@ -23184,7 +23180,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleValue.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -23333,7 +23329,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -23416,7 +23412,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -23514,7 +23510,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -23628,7 +23624,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -23768,7 +23764,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -23809,7 +23805,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -23948,7 +23944,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -24052,7 +24048,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -24133,7 +24129,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -24179,7 +24175,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -24321,7 +24317,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -24375,7 +24371,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -24547,7 +24543,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -24600,7 +24596,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CImageLib/include/CImageMgr.h \
 		../../CImageLib/include/CImageAnim.h \
 		../../CImageLib/include/CImageFile.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotWindow.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -24741,7 +24737,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -24882,7 +24878,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -24923,7 +24919,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -24994,7 +24990,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -25114,7 +25110,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -25266,7 +25262,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotProbeEvent.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -25379,7 +25375,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -25479,7 +25475,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
 		CMathMacros.h \
-		CSymbol2D.h
+		../../CRenderer/include/CSymbol2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBBoxRenderer.o CGnuPlotBBoxRenderer.cpp
 
 ../obj/CGnuPlotBinaryFormat.o: CGnuPlotBinaryFormat.cpp CGnuPlotBinaryFormat.h \
@@ -25551,7 +25547,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -25620,7 +25616,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -25793,7 +25789,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -25880,7 +25876,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -25921,7 +25917,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -26065,7 +26061,7 @@ compiler_clean: compiler_moc_header_clean
 		CMathMacros.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -26106,7 +26102,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -26245,7 +26241,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -26288,7 +26284,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -26430,7 +26426,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -26533,7 +26529,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -26622,7 +26618,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -26720,7 +26716,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -26821,7 +26817,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -26905,7 +26901,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -27052,7 +27048,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -27087,7 +27083,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotWindow.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -27284,7 +27280,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -27428,7 +27424,7 @@ compiler_clean: compiler_moc_header_clean
 		CMathMacros.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -27469,7 +27465,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -27538,7 +27534,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -27715,7 +27711,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTypes.h \
 		../../CMath/include/CBBox3D.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -27727,7 +27723,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -27849,7 +27845,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -27920,7 +27916,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -28085,7 +28081,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -28234,7 +28230,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -28301,7 +28297,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
 		CGnuPlotKeyData.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -28422,7 +28418,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -28563,7 +28559,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -28604,7 +28600,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -28675,7 +28671,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -28844,7 +28840,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -29017,7 +29013,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -29113,7 +29109,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -29186,7 +29182,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -29312,7 +29308,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -29367,7 +29363,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -29415,7 +29411,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CImageLib/include/CImageAnim.h \
 		../../CImageLib/include/CImageFile.h \
 		CGnuPlotMouseEvent.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -29562,7 +29558,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -29645,7 +29641,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -29753,7 +29749,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -29879,7 +29875,7 @@ compiler_clean: compiler_moc_header_clean
 		CMathMacros.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -29930,7 +29926,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -30072,7 +30068,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -30125,7 +30121,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -30267,7 +30263,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -30315,7 +30311,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -30456,7 +30452,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -30516,7 +30512,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -30551,7 +30547,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotLogRenderer.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -30738,7 +30734,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -30841,7 +30837,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotLogDevice.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h
+		../../CUtil/include/CDirectionType.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotLogRenderer.o CGnuPlotLogRenderer.cpp
 
 ../obj/CGnuPlotMargin.o: CGnuPlotMargin.cpp CGnuPlotMargin.h \
@@ -30921,7 +30917,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -31054,7 +31050,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -31121,7 +31117,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
 		CGnuPlotKeyData.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -31232,7 +31228,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -31373,7 +31369,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -31391,7 +31387,7 @@ compiler_clean: compiler_moc_header_clean
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotObject.o CGnuPlotObject.cpp
 
 ../obj/CGnuPlotPalette.o: CGnuPlotPalette.cpp CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -31562,7 +31558,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -31602,7 +31598,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -31671,7 +31667,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -31794,7 +31790,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -31863,7 +31859,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -32037,7 +32033,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -32049,7 +32045,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -32199,7 +32195,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -32286,7 +32282,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPoint.o CGnuPlotPoint.cpp
 
@@ -32323,7 +32319,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -32465,7 +32461,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -32519,7 +32515,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -32663,7 +32659,7 @@ compiler_clean: compiler_moc_header_clean
 		CMathMacros.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -32704,7 +32700,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -32845,7 +32841,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -32944,7 +32940,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -33120,7 +33116,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -33249,7 +33245,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -33388,7 +33384,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -33435,7 +33431,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -33504,7 +33500,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -33668,7 +33664,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -33770,7 +33766,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -33814,7 +33810,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -33880,7 +33876,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
 		CGnuPlotKeyData.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -33952,7 +33948,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -34059,7 +34055,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -34155,7 +34151,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -34227,7 +34223,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -34350,7 +34346,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotPm3D.h \
 		CGnuPlotProbeEvent.h \
@@ -34439,7 +34435,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -34624,7 +34620,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -34636,7 +34632,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -34767,7 +34763,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -34779,7 +34775,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -34941,7 +34937,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -34953,7 +34949,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotProbeEvent.h \
@@ -35029,7 +35025,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -35349,7 +35345,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -35444,7 +35440,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -35544,7 +35540,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -35650,7 +35646,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
@@ -35754,7 +35750,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -35765,7 +35761,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -35958,7 +35954,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -35969,7 +35965,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -36156,7 +36152,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -36167,7 +36163,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -36357,7 +36353,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -36368,7 +36364,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -36556,7 +36552,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -36567,7 +36563,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -36758,7 +36754,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -36769,7 +36765,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -36955,7 +36951,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -36966,7 +36962,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -37146,7 +37142,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -37253,7 +37249,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
@@ -37360,7 +37356,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -37371,7 +37367,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -37562,7 +37558,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -37573,7 +37569,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -37764,7 +37760,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -37775,7 +37771,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -37961,7 +37957,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -37972,7 +37968,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -38157,7 +38153,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -38168,7 +38164,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -38348,7 +38344,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -38359,7 +38355,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -38537,7 +38533,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -38632,7 +38628,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -38691,7 +38687,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -38833,7 +38829,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -38949,7 +38945,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -38960,7 +38956,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -39154,7 +39150,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -39165,7 +39161,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -39346,7 +39342,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -39357,7 +39353,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -39546,7 +39542,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -39557,7 +39553,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -39691,7 +39687,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -39758,7 +39754,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -39944,7 +39940,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -39955,7 +39951,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -40141,7 +40137,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -40152,7 +40148,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -40340,7 +40336,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -40351,7 +40347,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -40541,7 +40537,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -40552,7 +40548,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -40738,7 +40734,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -40749,7 +40745,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -40935,7 +40931,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -40946,7 +40942,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -41131,7 +41127,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -41142,7 +41138,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -41329,7 +41325,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -41340,7 +41336,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -41525,7 +41521,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -41536,7 +41532,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -41708,7 +41704,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -41813,7 +41809,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPoint.h \
 		CGnuPlotCache.h \
 		CGnuPlotKey.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
@@ -41921,7 +41917,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -41932,7 +41928,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -42117,7 +42113,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -42128,7 +42124,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -42316,7 +42312,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -42327,7 +42323,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -42520,7 +42516,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -42530,7 +42526,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKey.h \
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -42710,7 +42706,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -42721,7 +42717,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -42909,7 +42905,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -42920,7 +42916,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -43100,7 +43096,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -43111,7 +43107,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -43299,7 +43295,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -43310,7 +43306,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -43490,7 +43486,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -43501,7 +43497,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -43689,7 +43685,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotPosition.h \
 		CGnuPlotSize.h \
@@ -43700,7 +43696,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotFillStyle.h \
 		CGnuPlotDash.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotRotate.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotPlotCacheFactoriesDcl.h \
@@ -43842,7 +43838,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -43877,7 +43873,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotSVGRenderer.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -44064,7 +44060,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -44167,9 +44163,9 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSVGDevice.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		../../CXML/include/CXMLNamedChar.h \
-		CSymbol2D.h
+		../../CRenderer/include/CSymbol2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotSVGRenderer.o CGnuPlotSVGRenderer.cpp
 
 ../obj/CGnuPlotPSDevice.o: CGnuPlotPSDevice.cpp CGnuPlotPSDevice.h \
@@ -44224,7 +44220,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CAutoPtr.h \
@@ -44259,7 +44255,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotGridData.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CPrint.h \
 		CGnuPlotPSRenderer.h \
 		CGnuPlot.h \
@@ -44447,7 +44443,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -44550,10 +44546,10 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPSDevice.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CPrint.h \
 		../../CXML/include/CXMLNamedChar.h \
-		CSymbol2D.h
+		../../CRenderer/include/CSymbol2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPSRenderer.o CGnuPlotPSRenderer.cpp
 
 ../obj/CGnuPlotSize.o: CGnuPlotSize.cpp CGnuPlotSize.h \
@@ -44633,7 +44629,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -44764,7 +44760,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
 		../../CUtil/include/CRefPtr.h \
@@ -44905,7 +44901,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextBoxStyle.h \
 		CGnuPlotTextStyle.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -44996,7 +44992,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
-		CGradientPalette.h \
+		../../CQGradientPalette/include/CGradientPalette.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -45093,7 +45089,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextStyle.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
-		CDirectionType.h \
+		../../CUtil/include/CDirectionType.h \
 		CGnuPlotKey.h \
 		CGnuPlotTimeStamp.h \
 		CGnuPlotPm3D.h \
@@ -45462,9 +45458,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CArcToBezier.o CArcToBezier.cpp
-
-../obj/CSymbol2D.o: CSymbol2D.cpp CSymbol2D.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CSymbol2D.o CSymbol2D.cpp
 
 ../obj/CExpr.o: Expr/CExpr.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \

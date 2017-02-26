@@ -237,7 +237,6 @@ CPrint.cpp \
 CMathGeom2D.cpp \
 CInvNorm.cpp \
 CArcToBezier.cpp \
-CSymbol2D.cpp \
 \
 Expr/CExpr.cpp \
 Expr/CExprBValue.cpp \
@@ -490,7 +489,6 @@ CPrint.h \
 \
 CMathGeom2D.h \
 CArcToBezier.h \
-CSymbol2D.h \
 CStrUniqueMatch.h \
 \
 Expr/CExpr.h \
@@ -521,6 +519,8 @@ Expr \
 ../../CQApp/include \
 ../../CQUtil/include \
 ../../CQPropertyTree/include \
+../../CQGradientPalette/include \
+../../CRenderer/include \
 ../../CFont/include \
 ../../CImageLib/include \
 ../../CReadLine/include \
@@ -541,6 +541,7 @@ unix:LIBS += \
 -L../../CReadLine/lib \
 -L../../CFont/lib \
 -L../../CUtil/lib \
+-L../../CRenderer/lib \
 -L../../CImageLib/lib \
 -L../../CConfig/lib \
 -L../../CFileUtil/lib \
@@ -551,6 +552,6 @@ unix:LIBS += \
 -L../../CRegExp/lib \
 -L../../CRGBName/lib \
 -lCQGradientPalette -lCQPropertyTree -lCQUtil \
--lCXML -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
+-lCXML -lCRenderer -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
 -lCRGBName -lCFileUtil -lCFile -lCUtil -lCOS -lCStrUtil -lCRegExp \
 -lpng -ljpeg -ltre -lreadline
