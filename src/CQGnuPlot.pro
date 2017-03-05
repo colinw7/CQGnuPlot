@@ -234,10 +234,6 @@ CTreeMap.cpp \
 CDendrogram.cpp \
 CPrint.cpp \
 \
-CMathGeom2D.cpp \
-CInvNorm.cpp \
-CArcToBezier.cpp \
-\
 Expr/CExpr.cpp \
 Expr/CExprBValue.cpp \
 Expr/CExprCValue.cpp \
@@ -487,8 +483,6 @@ CSunburst.h \
 CTreeMap.h \
 CPrint.h \
 \
-CMathGeom2D.h \
-CArcToBezier.h \
 CStrUniqueMatch.h \
 \
 Expr/CExpr.h \
@@ -543,6 +537,7 @@ unix:LIBS += \
 -L../../CUtil/lib \
 -L../../CRenderer/lib \
 -L../../CImageLib/lib \
+-L../../CMath/lib \
 -L../../CConfig/lib \
 -L../../CFileUtil/lib \
 -L../../CFile/lib \
@@ -553,5 +548,5 @@ unix:LIBS += \
 -L../../CRGBName/lib \
 -lCQGradientPalette -lCQPropertyTree -lCQUtil \
 -lCXML -lCRenderer -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
--lCRGBName -lCFileUtil -lCFile -lCUtil -lCOS -lCStrUtil -lCRegExp \
--lpng -ljpeg -ltre -lreadline
+-lCMath -lCRGBName -lCFileUtil -lCFile -lCUtil -lCOS -lCStrUtil -lCRegExp \
+-lfreetype -lpng -ljpeg -ltre -lreadline

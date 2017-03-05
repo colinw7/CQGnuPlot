@@ -83,7 +83,7 @@ setDirection(const CVector3D &dir)
   right = up  .crossProduct(dir1);
   up    = dir1.crossProduct(right);
 
-  if (COrthonormalBasis3DT<double>::validate(right, up, dir1)) {
+  if (COrthonormalBasis3D::validate(right, up, dir1)) {
     coordFrame_.setBasis(right, up, dir1);
 
     direction_ = dir;

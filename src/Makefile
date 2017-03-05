@@ -36,7 +36,7 @@ DISTNAME      = CQGnuPlot1.0.0
 DISTDIR = /home/colinw/git/CQGnuPlot/obj/CQGnuPlot1.0.0
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L../lib -L../../CQUtil/lib -L../../CQGradientPalette/lib -L../../CQPropertyTree/lib -L../../CXML/lib -L../../CReadLine/lib -L../../CFont/lib -L../../CUtil/lib -L../../CRenderer/lib -L../../CImageLib/lib -L../../CConfig/lib -L../../CFileUtil/lib -L../../CFile/lib -L../../COS/lib -L../../CStrUtil/lib -L../../CRegExp/lib -L../../CRGBName/lib -lCQGradientPalette -lCQPropertyTree -lCQUtil -lCXML -lCRenderer -lCReadLine -lCFont -lCImageLib -lCConfig -lCRGBName -lCFileUtil -lCFile -lCUtil -lCOS -lCStrUtil -lCRegExp -lpng -ljpeg -ltre -lreadline -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L../lib -L../../CQUtil/lib -L../../CQGradientPalette/lib -L../../CQPropertyTree/lib -L../../CXML/lib -L../../CReadLine/lib -L../../CFont/lib -L../../CUtil/lib -L../../CRenderer/lib -L../../CImageLib/lib -L../../CMath/lib -L../../CConfig/lib -L../../CFileUtil/lib -L../../CFile/lib -L../../COS/lib -L../../CStrUtil/lib -L../../CRegExp/lib -L../../CRGBName/lib -lCQGradientPalette -lCQPropertyTree -lCQUtil -lCXML -lCRenderer -lCReadLine -lCFont -lCImageLib -lCConfig -lCMath -lCRGBName -lCFileUtil -lCFile -lCUtil -lCOS -lCStrUtil -lCRegExp -lfreetype -lpng -ljpeg -ltre -lreadline -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -256,9 +256,6 @@ SOURCES       = CQGnuPlotTest.cpp \
 		CTreeMap.cpp \
 		CDendrogram.cpp \
 		CPrint.cpp \
-		CMathGeom2D.cpp \
-		CInvNorm.cpp \
-		CArcToBezier.cpp \
 		Expr/CExpr.cpp \
 		Expr/CExprBValue.cpp \
 		Expr/CExprCValue.cpp \
@@ -569,9 +566,6 @@ OBJECTS       = ../obj/CQGnuPlotTest.o \
 		../obj/CTreeMap.o \
 		../obj/CDendrogram.o \
 		../obj/CPrint.o \
-		../obj/CMathGeom2D.o \
-		../obj/CInvNorm.o \
-		../obj/CArcToBezier.o \
 		../obj/CExpr.o \
 		../obj/CExprBValue.o \
 		../obj/CExprCValue.o \
@@ -957,8 +951,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CSunburst.h \
 		CTreeMap.h \
 		CPrint.h \
-		CMathGeom2D.h \
-		CArcToBezier.h \
 		CStrUniqueMatch.h \
 		Expr/CExpr.h \
 		Expr/CExprBValue.h \
@@ -1183,9 +1175,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CTreeMap.cpp \
 		CDendrogram.cpp \
 		CPrint.cpp \
-		CMathGeom2D.cpp \
-		CInvNorm.cpp \
-		CArcToBezier.cpp \
 		Expr/CExpr.cpp \
 		Expr/CExprBValue.cpp \
 		Expr/CExprCValue.cpp \
@@ -1383,8 +1372,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotArrowObject.h CQGnuPlotAxis.h CQGnuPlotBoxBarObject.h CQGnuPlotBoxObject.h CQGnuPlotBoxPlot.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEndBar.h CQGnuPlotEnum.h CQGnuPlotErrorBarObject.h CQGnuPlotFill.h CQGnuPlotFinanceBarObject.h CQGnuPlotGroup.h CQGnuPlotImageObject.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLabelObject.h CQGnuPlotLineStyle.h CQGnuPlotMark.h CQGnuPlotMultiplot.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPathObject.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPm3D.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPointObject.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotStroke.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotFilename.h CQGnuPlotUtil.h CQGnuPlotWindow.h CQGnuPlotAdjacencyStyleValue.h CQGnuPlotBivariateStyleValue.h CQGnuPlotBoxErrorBarsStyleValue.h CQGnuPlotBoxesStyleValue.h CQGnuPlotBoxPlotStyleValue.h CQGnuPlotBubbleStyleValue.h CQGnuPlotCandlesticksStyleValue.h CQGnuPlotChordDiagramStyleValue.h CQGnuPlotCirclesStyleValue.h CQGnuPlotDelaunayStyleValue.h CQGnuPlotDendrogramStyleValue.h CQGnuPlotEllipsesStyleValue.h CQGnuPlotForceDirectedStyleValue.h CQGnuPlotHierBubbleStyleValue.h CQGnuPlotLabelsStyleValue.h CQGnuPlotPieChartStyleValue.h CQGnuPlotRadarStyleValue.h CQGnuPlotSunburstStyleValue.h CQGnuPlotTreeMapStyleValue.h CQGnuPlotVectorsStyleValue.h CQGnuPlotLoadFileDialog.h CQGnuPlotLoadFunctionDialog.h CQGnuPlotManageFunctionsDialog.h CQGnuPlotManageVariablesDialog.h CQGnuPlotCreateDialog.h CQGnuPlotDataDialog.h CQGnuPlotSaveDialog.h CQGnuPlotPaletteDialog.h CQGnuPlotTreeView.h CQGnuPlotTreeWidget.h CQGnuPlotDataTree.h CQGnuPlotDataModel.h CQGnuPlotPositionEdit.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowData.h CGnuPlotArrowObject.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBoxBarObject.h CGnuPlotBoxObject.h CGnuPlotBoxPlot.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotEndBar.h CGnuPlotErrorBarObject.h CGnuPlotErrorBarData.h CGnuPlotFile.h CGnuPlotFill.h CGnuPlotFillStyle.h CGnuPlotFinanceBarObject.h CGnuPlotFunctions.h CGnuPlotGroup.h CGnuPlotImageObject.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLabelData.h CGnuPlotLabelObject.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotLogDevice.h CGnuPlotLogRenderer.h CGnuPlotMark.h CGnuPlotMultiplot.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPathObject.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPm3D.h CGnuPlotPoint.h CGnuPlotPointObject.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotPSDevice.h CGnuPlotPSRenderer.h CGnuPlotSize.h CGnuPlotStroke.h CGnuPlotSurface.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotEveryData.h CGnuPlotIndexData.h CGnuPlotWhereData.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyleForceDirected.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CGnuPlotText.h CGnuPlotTextRenderer.h CQHeaderView.h CQToolTip.h CQFloatLabel.h CQRotatedText.h CQIntegerSpin.h CQCursor.h CQRubberBand.h CQDialog.h CQEnumCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CPrint.h CMathGeom2D.h CArcToBezier.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h $(DISTDIR)/
-	$(COPY_FILE) --parents CQGnuPlotTest.cpp CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotArrowObject.cpp CQGnuPlotAxis.cpp CQGnuPlotBoxBarObject.cpp CQGnuPlotBoxObject.cpp CQGnuPlotBoxPlot.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotEndBar.cpp CQGnuPlotEnum.cpp CQGnuPlotErrorBarObject.cpp CQGnuPlotFill.cpp CQGnuPlotFinanceBarObject.cpp CQGnuPlotGroup.cpp CQGnuPlotImageObject.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLabelObject.cpp CQGnuPlotLineStyle.cpp CQGnuPlotMark.cpp CQGnuPlotMultiplot.cpp CQGnuPlotPalette.cpp CQGnuPlotPathObject.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPm3D.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPointObject.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotStroke.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotFilename.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CQGnuPlotLoadFileDialog.cpp CQGnuPlotLoadFunctionDialog.cpp CQGnuPlotManageFunctionsDialog.cpp CQGnuPlotManageVariablesDialog.cpp CQGnuPlotCreateDialog.cpp CQGnuPlotDataDialog.cpp CQGnuPlotSaveDialog.cpp CQGnuPlotPaletteDialog.cpp CQGnuPlotTreeView.cpp CQGnuPlotTreeWidget.cpp CQGnuPlotDataTree.cpp CQGnuPlotDataModel.cpp CQGnuPlotPositionEdit.cpp CQGnuPlotBoxPlotStyleValue.cpp CGnuPlot.cpp CGnuPlotAnnotation.cpp CGnuPlotArrow.cpp CGnuPlotArrowData.cpp CGnuPlotArrowObject.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBoxBarObject.cpp CGnuPlotBoxObject.cpp CGnuPlotBoxPlot.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotEndBar.cpp CGnuPlotErrorBarObject.cpp CGnuPlotErrorBarData.cpp CGnuPlotFile.cpp CGnuPlotFill.cpp CGnuPlotFillStyle.cpp CGnuPlotFinanceBarObject.cpp CGnuPlotFunctions.cpp CGnuPlotGroup.cpp CGnuPlotImageObject.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLabelData.cpp CGnuPlotLabelObject.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotLogDevice.cpp CGnuPlotLogRenderer.cpp CGnuPlotMargin.cpp CGnuPlotMark.cpp CGnuPlotMultiplot.cpp CGnuPlotObject.cpp CGnuPlotPalette.cpp CGnuPlotPathObject.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPm3D.cpp CGnuPlotPoint.cpp CGnuPlotPointObject.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStroke.cpp CGnuPlotStyle.cpp CGnuPlotSurface.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotBoxErrorBarsStyleValue.cpp CGnuPlotBoxesStyleValue.cpp CGnuPlotBoxPlotStyleValue.cpp CGnuPlotCandlesticksStyleValue.cpp CGnuPlotVectorsStyleValue.cpp CGnuPlotEveryData.cpp CGnuPlotIndexData.cpp CGnuPlotWhereData.cpp CGnuPlotStyleBase.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBivariate.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDendrogram.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleForceDirected.cpp CGnuPlotStyleHierBubblePlot.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleStackedArea.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotPSDevice.cpp CGnuPlotPSRenderer.cpp CGnuPlotSize.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlotText.cpp CGnuPlotTextRenderer.cpp CQHeaderView.cpp CQToolTip.cpp CQFloatLabel.cpp CQRotatedText.cpp CQIntegerSpin.cpp CQCursor.cpp CQRubberBand.cpp CQDialog.cpp CQEnumCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CDendrogram.cpp CPrint.cpp CMathGeom2D.cpp CInvNorm.cpp CArcToBezier.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprIValue.cpp Expr/CExprInterp.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprSValue.cpp Expr/CExprStrgen.cpp Expr/CExprToken.cpp Expr/CExprTokenStack.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotArrowObject.h CQGnuPlotAxis.h CQGnuPlotBoxBarObject.h CQGnuPlotBoxObject.h CQGnuPlotBoxPlot.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEndBar.h CQGnuPlotEnum.h CQGnuPlotErrorBarObject.h CQGnuPlotFill.h CQGnuPlotFinanceBarObject.h CQGnuPlotGroup.h CQGnuPlotImageObject.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLabelObject.h CQGnuPlotLineStyle.h CQGnuPlotMark.h CQGnuPlotMultiplot.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPathObject.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPm3D.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPointObject.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotStroke.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotFilename.h CQGnuPlotUtil.h CQGnuPlotWindow.h CQGnuPlotAdjacencyStyleValue.h CQGnuPlotBivariateStyleValue.h CQGnuPlotBoxErrorBarsStyleValue.h CQGnuPlotBoxesStyleValue.h CQGnuPlotBoxPlotStyleValue.h CQGnuPlotBubbleStyleValue.h CQGnuPlotCandlesticksStyleValue.h CQGnuPlotChordDiagramStyleValue.h CQGnuPlotCirclesStyleValue.h CQGnuPlotDelaunayStyleValue.h CQGnuPlotDendrogramStyleValue.h CQGnuPlotEllipsesStyleValue.h CQGnuPlotForceDirectedStyleValue.h CQGnuPlotHierBubbleStyleValue.h CQGnuPlotLabelsStyleValue.h CQGnuPlotPieChartStyleValue.h CQGnuPlotRadarStyleValue.h CQGnuPlotSunburstStyleValue.h CQGnuPlotTreeMapStyleValue.h CQGnuPlotVectorsStyleValue.h CQGnuPlotLoadFileDialog.h CQGnuPlotLoadFunctionDialog.h CQGnuPlotManageFunctionsDialog.h CQGnuPlotManageVariablesDialog.h CQGnuPlotCreateDialog.h CQGnuPlotDataDialog.h CQGnuPlotSaveDialog.h CQGnuPlotPaletteDialog.h CQGnuPlotTreeView.h CQGnuPlotTreeWidget.h CQGnuPlotDataTree.h CQGnuPlotDataModel.h CQGnuPlotPositionEdit.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowData.h CGnuPlotArrowObject.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBoxBarObject.h CGnuPlotBoxObject.h CGnuPlotBoxPlot.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotEndBar.h CGnuPlotErrorBarObject.h CGnuPlotErrorBarData.h CGnuPlotFile.h CGnuPlotFill.h CGnuPlotFillStyle.h CGnuPlotFinanceBarObject.h CGnuPlotFunctions.h CGnuPlotGroup.h CGnuPlotImageObject.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLabelData.h CGnuPlotLabelObject.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotLogDevice.h CGnuPlotLogRenderer.h CGnuPlotMark.h CGnuPlotMultiplot.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPathObject.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPm3D.h CGnuPlotPoint.h CGnuPlotPointObject.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotPSDevice.h CGnuPlotPSRenderer.h CGnuPlotSize.h CGnuPlotStroke.h CGnuPlotSurface.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotEveryData.h CGnuPlotIndexData.h CGnuPlotWhereData.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyleForceDirected.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CGnuPlotText.h CGnuPlotTextRenderer.h CQHeaderView.h CQToolTip.h CQFloatLabel.h CQRotatedText.h CQIntegerSpin.h CQCursor.h CQRubberBand.h CQDialog.h CQEnumCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CPrint.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h $(DISTDIR)/
+	$(COPY_FILE) --parents CQGnuPlotTest.cpp CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotArrowObject.cpp CQGnuPlotAxis.cpp CQGnuPlotBoxBarObject.cpp CQGnuPlotBoxObject.cpp CQGnuPlotBoxPlot.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotEndBar.cpp CQGnuPlotEnum.cpp CQGnuPlotErrorBarObject.cpp CQGnuPlotFill.cpp CQGnuPlotFinanceBarObject.cpp CQGnuPlotGroup.cpp CQGnuPlotImageObject.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLabelObject.cpp CQGnuPlotLineStyle.cpp CQGnuPlotMark.cpp CQGnuPlotMultiplot.cpp CQGnuPlotPalette.cpp CQGnuPlotPathObject.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPm3D.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPointObject.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotStroke.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotFilename.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CQGnuPlotLoadFileDialog.cpp CQGnuPlotLoadFunctionDialog.cpp CQGnuPlotManageFunctionsDialog.cpp CQGnuPlotManageVariablesDialog.cpp CQGnuPlotCreateDialog.cpp CQGnuPlotDataDialog.cpp CQGnuPlotSaveDialog.cpp CQGnuPlotPaletteDialog.cpp CQGnuPlotTreeView.cpp CQGnuPlotTreeWidget.cpp CQGnuPlotDataTree.cpp CQGnuPlotDataModel.cpp CQGnuPlotPositionEdit.cpp CQGnuPlotBoxPlotStyleValue.cpp CGnuPlot.cpp CGnuPlotAnnotation.cpp CGnuPlotArrow.cpp CGnuPlotArrowData.cpp CGnuPlotArrowObject.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBoxBarObject.cpp CGnuPlotBoxObject.cpp CGnuPlotBoxPlot.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotEndBar.cpp CGnuPlotErrorBarObject.cpp CGnuPlotErrorBarData.cpp CGnuPlotFile.cpp CGnuPlotFill.cpp CGnuPlotFillStyle.cpp CGnuPlotFinanceBarObject.cpp CGnuPlotFunctions.cpp CGnuPlotGroup.cpp CGnuPlotImageObject.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLabelData.cpp CGnuPlotLabelObject.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotLogDevice.cpp CGnuPlotLogRenderer.cpp CGnuPlotMargin.cpp CGnuPlotMark.cpp CGnuPlotMultiplot.cpp CGnuPlotObject.cpp CGnuPlotPalette.cpp CGnuPlotPathObject.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPm3D.cpp CGnuPlotPoint.cpp CGnuPlotPointObject.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStroke.cpp CGnuPlotStyle.cpp CGnuPlotSurface.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotBoxErrorBarsStyleValue.cpp CGnuPlotBoxesStyleValue.cpp CGnuPlotBoxPlotStyleValue.cpp CGnuPlotCandlesticksStyleValue.cpp CGnuPlotVectorsStyleValue.cpp CGnuPlotEveryData.cpp CGnuPlotIndexData.cpp CGnuPlotWhereData.cpp CGnuPlotStyleBase.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBivariate.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDendrogram.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleForceDirected.cpp CGnuPlotStyleHierBubblePlot.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleStackedArea.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotPSDevice.cpp CGnuPlotPSRenderer.cpp CGnuPlotSize.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlotText.cpp CGnuPlotTextRenderer.cpp CQHeaderView.cpp CQToolTip.cpp CQFloatLabel.cpp CQRotatedText.cpp CQIntegerSpin.cpp CQCursor.cpp CQRubberBand.cpp CQDialog.cpp CQEnumCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CDendrogram.cpp CPrint.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprIValue.cpp Expr/CExprInterp.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprSValue.cpp Expr/CExprStrgen.cpp Expr/CExprToken.cpp Expr/CExprTokenStack.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -1449,13 +1438,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -1463,7 +1453,6 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -1483,6 +1472,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -1498,7 +1488,7 @@ compiler_moc_header_clean:
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -1533,11 +1523,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -1591,19 +1581,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -1612,6 +1602,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -1676,7 +1667,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -1708,11 +1699,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -1767,19 +1758,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -1788,6 +1779,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -1852,7 +1844,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -1884,11 +1876,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -1939,17 +1931,17 @@ compiler_moc_header_clean:
 .moc/moc_CQGnuPlotArrowObject.cpp: CGnuPlotArrowObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -1965,6 +1957,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -2009,7 +2002,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -2061,11 +2054,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -2153,13 +2146,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -2167,7 +2161,6 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -2187,6 +2180,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -2202,7 +2196,7 @@ compiler_moc_header_clean:
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -2237,11 +2231,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -2293,20 +2287,20 @@ compiler_moc_header_clean:
 
 .moc/moc_CQGnuPlotBoxBarObject.cpp: CGnuPlotBoxBarObject.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
@@ -2319,6 +2313,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -2388,7 +2383,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -2416,11 +2411,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -2475,19 +2470,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -2496,6 +2491,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -2566,7 +2562,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -2594,11 +2590,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -2652,17 +2648,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -2671,6 +2667,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -2721,7 +2718,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -2733,17 +2730,17 @@ compiler_moc_header_clean:
 .moc/moc_CQGnuPlotBubbleObject.cpp: CGnuPlotBubbleObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -2759,6 +2756,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -2827,7 +2825,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -2855,11 +2853,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -2914,23 +2912,23 @@ compiler_moc_header_clean:
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CVector3D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CQGnuPlotCamera.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCamera.h -o .moc/moc_CQGnuPlotCamera.cpp
 
 .moc/moc_CQGnuPlotCanvas.cpp: ../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		CQGnuPlotCanvas.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotCanvas.h -o .moc/moc_CQGnuPlotCanvas.cpp
 
@@ -2941,19 +2939,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -2962,6 +2960,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -3026,7 +3025,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -3058,11 +3057,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -3118,17 +3117,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -3137,6 +3136,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -3173,7 +3173,7 @@ compiler_moc_header_clean:
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -3235,11 +3235,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotTicLabel.h \
 		CGnuPlotUsingCols.h \
@@ -3300,20 +3300,20 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -3330,6 +3330,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxis.h \
@@ -3364,7 +3365,7 @@ compiler_moc_header_clean:
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -3383,19 +3384,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -3404,6 +3405,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -3468,7 +3470,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -3500,11 +3502,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -3555,17 +3557,17 @@ compiler_moc_header_clean:
 .moc/moc_CQGnuPlotEllipseObject.cpp: CGnuPlotEllipseObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -3581,6 +3583,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -3649,7 +3652,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -3677,11 +3680,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -3731,20 +3734,20 @@ compiler_moc_header_clean:
 
 .moc/moc_CQGnuPlotEndBar.cpp: CGnuPlotBoxBarObject.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
@@ -3757,6 +3760,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -3826,7 +3830,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -3854,11 +3858,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -3911,17 +3915,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -3930,6 +3934,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -3979,7 +3984,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -3995,19 +4000,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -4016,6 +4021,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -4085,7 +4091,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -4114,11 +4120,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -4172,17 +4178,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -4191,6 +4197,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -4241,7 +4248,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -4257,19 +4264,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -4278,6 +4285,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -4347,7 +4355,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -4376,11 +4384,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -4467,13 +4475,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -4481,7 +4490,6 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -4501,6 +4509,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -4516,7 +4525,7 @@ compiler_moc_header_clean:
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -4551,11 +4560,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -4615,17 +4624,17 @@ compiler_moc_header_clean:
 .moc/moc_CQGnuPlotImageObject.cpp: CGnuPlotImageObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageLib.h \
@@ -4656,6 +4665,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -4708,7 +4718,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -4736,11 +4746,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -4796,19 +4806,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -4817,6 +4827,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -4880,7 +4891,7 @@ compiler_moc_header_clean:
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -4914,11 +4925,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -4973,19 +4984,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -4994,6 +5005,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -5058,7 +5070,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -5090,11 +5102,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -5149,19 +5161,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -5170,6 +5182,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -5241,7 +5254,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -5266,11 +5279,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -5357,13 +5370,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -5371,7 +5385,6 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -5391,6 +5404,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -5406,7 +5420,7 @@ compiler_moc_header_clean:
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -5441,11 +5455,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -5497,20 +5511,20 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/CRefPtr.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -5519,6 +5533,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -5568,7 +5583,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -5590,13 +5605,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -5604,7 +5620,6 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -5651,13 +5666,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CQGnuPlot.h \
@@ -5675,7 +5691,6 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -5694,6 +5709,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotDash.h \
@@ -5707,7 +5723,7 @@ compiler_moc_header_clean:
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -5742,11 +5758,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -5797,17 +5813,17 @@ compiler_moc_header_clean:
 .moc/moc_CQGnuPlotPathObject.cpp: CGnuPlotPathObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotObject.h \
@@ -5822,6 +5838,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -5889,7 +5906,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -5918,11 +5935,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -5973,17 +5990,17 @@ compiler_moc_header_clean:
 .moc/moc_CQGnuPlotPieObject.cpp: CGnuPlotPieObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -5999,6 +6016,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -6067,7 +6085,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -6095,11 +6113,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -6153,17 +6171,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -6172,6 +6190,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -6221,7 +6240,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -6271,11 +6290,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -6345,18 +6364,18 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -6365,6 +6384,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -6404,17 +6424,17 @@ compiler_moc_header_clean:
 .moc/moc_CQGnuPlotPointObject.cpp: CGnuPlotPointObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -6430,6 +6450,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -6494,7 +6515,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -6526,11 +6547,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -6585,19 +6606,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -6606,6 +6627,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -6670,7 +6692,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -6702,11 +6724,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -6757,17 +6779,17 @@ compiler_moc_header_clean:
 .moc/moc_CQGnuPlotPolygonObject.cpp: CGnuPlotPolygonObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotObject.h \
@@ -6782,6 +6804,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -6850,7 +6873,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -6878,11 +6901,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -6937,19 +6960,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -6958,6 +6981,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -7022,7 +7046,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -7054,11 +7078,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -7109,17 +7133,17 @@ compiler_moc_header_clean:
 .moc/moc_CQGnuPlotRectObject.cpp: CGnuPlotRectObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -7135,6 +7159,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -7203,7 +7228,7 @@ compiler_moc_header_clean:
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -7231,11 +7256,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -7287,13 +7312,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/CLineDash.h \
@@ -7305,7 +7331,6 @@ compiler_moc_header_clean:
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -7314,6 +7339,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
 		../../CQGradientPalette/include/CGradientPalette.h \
@@ -7360,7 +7386,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
@@ -7371,7 +7397,6 @@ compiler_moc_header_clean:
 		CGnuPlotTimeStamp.h \
 		CGnuPlotTimeStampData.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
@@ -7384,13 +7409,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -7415,6 +7441,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -7454,19 +7481,19 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -7475,6 +7502,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -7537,7 +7565,7 @@ compiler_moc_header_clean:
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -7571,11 +7599,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -7668,13 +7696,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -7682,7 +7711,6 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -7702,6 +7730,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -7717,7 +7746,7 @@ compiler_moc_header_clean:
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -7752,11 +7781,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -7818,18 +7847,18 @@ compiler_moc_header_clean:
 		CGnuPlotStyleAdjacencyRenderer.h \
 		CAdjacency.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -7890,6 +7919,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -7905,7 +7935,7 @@ compiler_moc_header_clean:
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -7939,11 +7969,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -7990,7 +8020,6 @@ compiler_moc_header_clean:
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CQGnuPlotPlot.h \
 		CQGnuPlotEnum.h \
 		CQGnuPlot.h \
@@ -8017,22 +8046,23 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CLine3D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
@@ -8062,7 +8092,7 @@ compiler_moc_header_clean:
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
@@ -8173,11 +8203,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -8208,17 +8238,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -8227,6 +8257,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -8277,7 +8308,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -8327,11 +8358,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -8398,17 +8429,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -8417,6 +8448,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -8467,7 +8499,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -8517,11 +8549,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -8586,17 +8618,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -8605,6 +8637,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -8655,7 +8688,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -8668,12 +8701,12 @@ compiler_moc_header_clean:
 		CGnuPlotStyleValue.h \
 		CBubblePack.h \
 		CirclePack.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -8683,7 +8716,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CShape2D.h \
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
-		CMathMacros.h \
+		../../CMath/include/CMathMacros.h \
 		../../CMath/include/CEnclosingCircle.h \
 		../../CMath/include/CPointsCircle.h \
 		CQGnuPlotPlot.h \
@@ -8693,7 +8726,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -8795,11 +8828,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -8867,17 +8900,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -8886,6 +8919,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -8936,7 +8970,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -8986,11 +9020,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -9057,8 +9091,8 @@ compiler_moc_header_clean:
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -9067,7 +9101,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -9078,6 +9112,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -9144,7 +9179,7 @@ compiler_moc_header_clean:
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -9177,11 +9212,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -9228,7 +9263,6 @@ compiler_moc_header_clean:
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		ChordDiagram.h \
 		CQGnuPlotPlot.h \
 		CQGnuPlotEnum.h \
@@ -9256,17 +9290,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -9275,6 +9309,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -9324,7 +9359,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -9374,11 +9409,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -9441,20 +9476,21 @@ compiler_moc_header_clean:
 		CGnuPlotStyleValue.h \
 		CDelaunay.h \
 		CHull3D.h \
-		CListLink.h \
-		CStateIterator.h \
+		../../CUtil/include/CListLink.h \
+		../../CUtil/include/CStateIterator.h \
 		../../CUtil/include/CGeneric.h \
 		../../CUtil/include/CTypeTraits.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CQGnuPlotPlot.h \
@@ -9462,7 +9498,6 @@ compiler_moc_header_clean:
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -9471,6 +9506,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -9519,7 +9555,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -9569,11 +9605,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -9644,17 +9680,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -9663,6 +9699,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -9711,7 +9748,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -9761,11 +9798,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -9833,17 +9870,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -9852,6 +9889,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -9901,7 +9939,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -9951,11 +9989,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -10025,17 +10063,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -10044,6 +10082,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -10092,7 +10131,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -10142,11 +10181,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -10210,12 +10249,12 @@ compiler_moc_header_clean:
 		CGnuPlotStyleValue.h \
 		CHierBubblePack.h \
 		CirclePack.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -10225,7 +10264,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CShape2D.h \
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
-		CMathMacros.h \
+		../../CMath/include/CMathMacros.h \
 		../../CMath/include/CEnclosingCircle.h \
 		../../CMath/include/CPointsCircle.h \
 		CQGnuPlotPlot.h \
@@ -10235,7 +10274,7 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -10337,11 +10376,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -10405,7 +10444,6 @@ compiler_moc_header_clean:
 		CGnuPlotStyleValue.h \
 		CGnuPlotTextStyle.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotTextBoxStyle.h \
 		../../CMath/include/CSize2D.h \
@@ -10416,13 +10454,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint3D.h \
@@ -10431,6 +10470,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotColorSpec.h \
@@ -10485,7 +10525,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -10564,11 +10604,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -10600,17 +10640,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -10619,6 +10659,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -10667,7 +10708,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -10717,11 +10758,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -10788,13 +10829,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CQGnuPlotPlot.h \
@@ -10802,7 +10844,6 @@ compiler_moc_header_clean:
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -10811,6 +10852,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
 		../../CQGradientPalette/include/CGradientPalette.h \
@@ -10857,7 +10899,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -10907,11 +10949,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -10978,13 +11020,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CFont/include/CFontMgr.h \
@@ -11002,7 +11045,6 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -11021,6 +11063,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -11066,7 +11109,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -11100,11 +11143,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -11171,13 +11214,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CQGnuPlotPlot.h \
@@ -11185,7 +11229,6 @@ compiler_moc_header_clean:
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -11194,6 +11237,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -11242,7 +11286,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -11292,11 +11336,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -11364,17 +11408,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -11383,6 +11427,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -11431,7 +11476,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -11481,11 +11526,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -11551,17 +11596,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -11570,6 +11615,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -11620,7 +11666,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -11635,17 +11681,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -11654,6 +11700,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -11704,7 +11751,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -11754,17 +11801,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -11773,6 +11820,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -11822,7 +11870,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -11838,7 +11886,6 @@ compiler_moc_header_clean:
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/COptVal.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -11878,13 +11925,14 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -11907,6 +11955,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -11922,7 +11971,7 @@ compiler_moc_header_clean:
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -11953,11 +12002,11 @@ compiler_moc_header_clean:
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -12029,7 +12078,6 @@ compiler_moc_header_clean:
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/COptVal.h \
 		CQGnuPlotDataModel.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotDataModel.h -o .moc/moc_CQGnuPlotDataModel.cpp
@@ -12041,17 +12089,17 @@ compiler_moc_header_clean:
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -12060,6 +12108,7 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -12140,13 +12189,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -12154,7 +12204,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -12174,6 +12223,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -12189,7 +12239,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -12224,11 +12274,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -12317,13 +12367,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -12331,7 +12382,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -12351,6 +12401,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -12366,7 +12417,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -12401,11 +12452,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -12459,7 +12510,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CUtil/include/CBrush.h \
 		../../CUtil/include/CBrushStyle.h \
 		../../CUtil/include/CFillType.h \
@@ -12474,19 +12524,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -12495,6 +12545,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -12559,7 +12610,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -12591,11 +12642,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -12656,7 +12707,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CBrush.h \
@@ -12674,19 +12724,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -12695,6 +12745,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -12759,7 +12810,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -12791,11 +12842,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -12853,7 +12904,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CUtil/include/CBrush.h \
 		../../CUtil/include/CBrushStyle.h \
 		../../CUtil/include/CFillType.h \
@@ -12865,17 +12915,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotArrowObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -12891,6 +12941,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -12935,7 +12986,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -12987,11 +13038,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -13060,7 +13111,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CQGnuPlotStroke.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
@@ -13112,13 +13162,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -13126,7 +13177,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -13146,6 +13196,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -13161,7 +13212,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -13196,11 +13247,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -13259,7 +13310,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CBrush.h \
@@ -13272,20 +13322,20 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CQGnuPlotBoxBarObject.o: CQGnuPlotBoxBarObject.cpp CQGnuPlotBoxBarObject.h \
 		CGnuPlotBoxBarObject.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
@@ -13298,6 +13348,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -13367,7 +13418,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -13395,11 +13446,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -13470,19 +13521,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -13491,6 +13542,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -13561,7 +13613,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -13589,11 +13641,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -13664,17 +13716,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -13683,6 +13735,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -13733,7 +13786,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -13784,11 +13837,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -13851,17 +13904,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotBubbleObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -13877,6 +13930,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -13945,7 +13999,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -13973,11 +14027,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -14042,8 +14096,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotBubbleObject.o CQGnuPlotBubbleObject.cpp
 
 ../obj/CQGnuPlotCamera.o: CQGnuPlotCamera.cpp CQGnuPlotCamera.h \
@@ -14052,17 +14105,18 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CVector3D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CQGnuPlotGroup.h \
 		CQGnuPlot.h \
@@ -14104,7 +14158,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -14146,7 +14200,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -14233,7 +14287,6 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CQGnuPlotCanvas.o: CQGnuPlotCanvas.cpp CQGnuPlotCanvas.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		CQGnuPlotWindow.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -14274,13 +14327,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -14306,6 +14360,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -14321,7 +14376,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -14356,11 +14411,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -14431,7 +14486,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CQToolTip.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
@@ -14450,19 +14504,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -14471,6 +14525,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -14535,7 +14590,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -14567,11 +14622,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -14630,7 +14685,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CBrush.h \
@@ -14649,17 +14703,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -14668,6 +14722,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -14704,7 +14759,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -14766,11 +14821,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotTicLabel.h \
 		CGnuPlotUsingCols.h \
@@ -14838,7 +14893,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CBrush.h \
@@ -14863,20 +14917,20 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -14893,6 +14947,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxis.h \
@@ -14927,7 +14982,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -14975,11 +15030,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -15027,7 +15082,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CQGnuPlotWindow.h \
 		CQGnuPlot.h \
 		CQGnuPlotEnum.h \
@@ -15129,8 +15183,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotDelaunayStyleValue.h \
 		CDelaunay.h \
 		CHull3D.h \
-		CListLink.h \
-		CStateIterator.h \
+		../../CUtil/include/CListLink.h \
+		../../CUtil/include/CStateIterator.h \
 		../../CUtil/include/CGeneric.h \
 		../../CUtil/include/CTypeTraits.h \
 		CQGnuPlotUtil.h \
@@ -15168,19 +15222,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -15189,6 +15243,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -15253,7 +15308,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -15285,11 +15340,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -15348,7 +15403,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CBrush.h \
@@ -15362,17 +15416,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotEllipseObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -15388,6 +15442,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -15456,7 +15511,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -15484,11 +15539,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -15553,20 +15608,20 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CQGnuPlotEndBar.o: CQGnuPlotEndBar.cpp CQGnuPlotEndBar.h \
 		CGnuPlotBoxBarObject.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
@@ -15579,6 +15634,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -15648,7 +15704,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -15676,11 +15732,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -15748,17 +15804,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -15767,6 +15823,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -15816,7 +15873,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -15833,19 +15890,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -15854,6 +15911,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -15923,7 +15981,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -15952,11 +16010,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -16026,17 +16084,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -16045,6 +16103,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -16095,7 +16154,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -16145,11 +16204,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -16211,8 +16270,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotFill.o CQGnuPlotFill.cpp
 
 ../obj/CQGnuPlotFinanceBarObject.o: CQGnuPlotFinanceBarObject.cpp CQGnuPlotFinanceBarObject.h \
@@ -16223,19 +16281,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -16244,6 +16302,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -16313,7 +16372,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -16342,11 +16401,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -16449,13 +16508,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -16463,7 +16523,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -16483,6 +16542,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -16498,7 +16558,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -16533,11 +16593,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -16611,7 +16671,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CQGnuPlotLabel.h \
 		CQGnuPlotAnnotation.h \
 		CQGnuPlotKey.h \
@@ -16626,17 +16685,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotImageObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageLib.h \
@@ -16667,6 +16726,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -16719,7 +16779,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -16747,11 +16807,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -16813,7 +16873,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CUtil/include/CBrush.h \
 		../../CUtil/include/CBrushStyle.h \
 		../../CUtil/include/CFillType.h \
@@ -16830,19 +16889,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -16851,6 +16910,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -16914,7 +16974,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -16948,11 +17008,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -17021,7 +17081,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CBrush.h \
@@ -17039,19 +17098,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -17060,6 +17119,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -17124,7 +17184,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -17156,11 +17216,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -17231,7 +17291,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CQGnuPlotFill.h \
 		CQGnuPlotStroke.h \
 		../../CQUtil/include/CQUtil.h \
@@ -17251,19 +17310,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -17272,6 +17331,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -17343,7 +17403,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -17368,11 +17428,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -17443,7 +17503,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CQGnuPlotFill.h \
 		CQGnuPlotStroke.h \
 		../../CQUtil/include/CQUtil.h \
@@ -17495,13 +17554,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -17509,7 +17569,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -17529,6 +17588,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -17544,7 +17604,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -17579,11 +17639,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -17646,7 +17706,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CUtil/include/CBrush.h \
 		../../CUtil/include/CBrushStyle.h \
 		../../CUtil/include/CFillType.h \
@@ -17659,20 +17718,20 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/CRefPtr.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -17681,6 +17740,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -17730,7 +17790,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -17781,11 +17841,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -17845,8 +17905,7 @@ compiler_clean: compiler_moc_header_clean
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotMark.o CQGnuPlotMark.cpp
 
 ../obj/CQGnuPlotMultiplot.o: CQGnuPlotMultiplot.cpp CQGnuPlotMultiplot.h \
@@ -17863,13 +17922,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -17877,7 +17937,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -17925,6 +17984,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -17940,7 +18000,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -17975,11 +18035,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -18035,7 +18095,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CUtil/include/CBrush.h \
 		../../CUtil/include/CBrushStyle.h \
 		../../CUtil/include/CFillType.h \
@@ -18077,13 +18136,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CQGnuPlot.h \
@@ -18101,7 +18161,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -18120,6 +18179,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotDash.h \
@@ -18133,7 +18193,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -18168,11 +18228,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -18232,17 +18292,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPathObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotObject.h \
@@ -18257,6 +18317,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -18324,7 +18385,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -18353,11 +18414,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -18424,17 +18485,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPieObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -18450,6 +18511,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -18518,7 +18580,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -18546,11 +18608,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -18619,17 +18681,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -18638,6 +18700,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -18687,7 +18750,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -18737,11 +18800,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -18844,7 +18907,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CQGnuPlotUtil.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
@@ -18866,18 +18928,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -18886,6 +18948,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -18949,7 +19012,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -18984,11 +19047,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -19055,20 +19118,20 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -19085,6 +19148,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxis.h \
@@ -19119,7 +19183,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -19168,11 +19232,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -19220,7 +19284,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
@@ -19279,13 +19342,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -19293,7 +19357,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -19313,6 +19376,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -19328,7 +19392,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -19363,11 +19427,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -19415,7 +19479,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CQGnuPlotPNGDevice.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h \
@@ -19426,17 +19489,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPointObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -19452,6 +19515,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -19516,7 +19580,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -19548,11 +19612,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -19616,7 +19680,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CBrush.h \
@@ -19634,19 +19697,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -19655,6 +19718,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -19719,7 +19783,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -19751,11 +19815,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -19813,25 +19877,24 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotPolygon.o CQGnuPlotPolygon.cpp
 
 ../obj/CQGnuPlotPolygonObject.o: CQGnuPlotPolygonObject.cpp CQGnuPlotPolygonObject.h \
 		CGnuPlotPolygonObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotObject.h \
@@ -19846,6 +19909,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -19914,7 +19978,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -19942,11 +20006,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -20017,19 +20081,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -20038,6 +20102,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -20102,7 +20167,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -20134,11 +20199,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -20197,7 +20262,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CQGnuPlotUtil.h \
 		CQGnuPlotPlot.h \
 		CGnuPlotPlot.h \
@@ -20222,17 +20286,17 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRectObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -20248,6 +20312,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -20316,7 +20381,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -20344,11 +20409,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -20449,13 +20514,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -20463,7 +20529,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -20483,6 +20548,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -20498,7 +20564,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -20533,11 +20599,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -20585,7 +20651,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CQGnuPlotWindow.h \
 		CQGnuPlot.h \
 		CQGnuPlotEnum.h \
@@ -20629,13 +20694,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/CLineDash.h \
@@ -20647,7 +20713,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -20656,6 +20721,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotPalette.h \
 		../../CQGradientPalette/include/CGradientPalette.h \
@@ -20702,7 +20768,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
@@ -20750,11 +20816,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -20815,8 +20881,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotStroke.o CQGnuPlotStroke.cpp
 
 ../obj/CQGnuPlotTimeStamp.o: CQGnuPlotTimeStamp.cpp CQGnuPlotTimeStamp.h \
@@ -20824,7 +20889,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTimeStamp.h \
 		CGnuPlotTimeStampData.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
@@ -20837,13 +20901,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -20868,6 +20933,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -20912,7 +20978,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -20947,11 +21013,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -21012,19 +21078,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -21033,6 +21099,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -21095,7 +21162,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -21129,11 +21196,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -21203,7 +21270,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CBrush.h \
@@ -21261,13 +21327,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -21275,7 +21342,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -21295,6 +21361,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -21310,7 +21377,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -21345,11 +21412,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -21451,13 +21518,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -21465,7 +21533,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -21485,6 +21552,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -21500,7 +21568,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -21535,11 +21603,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -21612,7 +21680,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CQGnuPlotLineStyle.h \
 		CQGnuPlotAnnotation.h \
 		CQGnuPlotArrow.h \
@@ -21698,8 +21765,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotDelaunayStyleValue.h \
 		CDelaunay.h \
 		CHull3D.h \
-		CListLink.h \
-		CStateIterator.h \
+		../../CUtil/include/CListLink.h \
+		../../CUtil/include/CStateIterator.h \
 		../../CUtil/include/CGeneric.h \
 		../../CUtil/include/CTypeTraits.h \
 		CQGnuPlotDendrogramStyleValue.h \
@@ -21772,17 +21839,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -21791,6 +21858,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -21841,7 +21909,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -21893,11 +21961,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -21969,17 +22037,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -21988,6 +22056,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -22038,7 +22107,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -22089,11 +22158,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -22199,13 +22268,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -22213,7 +22283,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -22233,6 +22302,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -22248,7 +22318,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -22283,11 +22353,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -22387,13 +22457,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -22401,7 +22472,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -22421,6 +22491,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -22436,7 +22507,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -22471,11 +22542,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -22533,7 +22604,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CUtil/include/CBrush.h \
 		../../CUtil/include/CBrushStyle.h \
 		../../CUtil/include/CFillType.h \
@@ -22551,17 +22621,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -22570,6 +22640,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -22619,7 +22690,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -22653,7 +22724,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CImageLib/include/CImageAnim.h \
 		../../CImageLib/include/CImageFile.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CMath/include/CMatrixType.h \
 		../../CUtil/include/CThrow.h \
 		../../CUtil/include/CBrush.h \
@@ -22678,7 +22748,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/COptVal.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -22718,13 +22787,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -22747,6 +22817,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -22762,7 +22833,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -22793,11 +22864,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -22923,13 +22994,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -22937,7 +23009,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -22957,6 +23028,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -22972,7 +23044,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -23007,11 +23079,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -23088,7 +23160,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/COptVal.h \
 		CQHeaderView.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotDataTree.o CQGnuPlotDataTree.cpp
@@ -23101,7 +23172,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/COptVal.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotDataModel.o CQGnuPlotDataModel.cpp
 
@@ -23113,17 +23183,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -23132,6 +23202,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -23155,17 +23226,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -23174,6 +23245,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -23224,7 +23296,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -23275,11 +23347,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -23375,13 +23447,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -23389,7 +23462,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -23409,6 +23481,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -23424,7 +23497,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -23459,11 +23532,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -23557,7 +23630,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleHierBubblePlot.h \
 		CHierBubblePack.h \
 		CirclePack.h \
-		CMathMacros.h \
 		../../CMath/include/CEnclosingCircle.h \
 		../../CMath/include/CPointsCircle.h \
 		CGnuPlotStyleImage.h \
@@ -23599,19 +23671,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -23620,6 +23692,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -23684,7 +23757,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -23715,11 +23788,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -23780,19 +23853,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -23801,6 +23874,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -23845,7 +23919,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -23895,11 +23969,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -23953,8 +24027,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotArrow.o CGnuPlotArrow.cpp
 
 ../obj/CGnuPlotArrowData.o: CGnuPlotArrowData.cpp CGnuPlotArrowData.h \
@@ -23966,17 +24039,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -23985,6 +24058,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -23995,7 +24069,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -24080,11 +24154,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -24138,24 +24212,23 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotArrowData.o CGnuPlotArrowData.cpp
 
 ../obj/CGnuPlotArrowObject.o: CGnuPlotArrowObject.cpp CGnuPlotArrowObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -24171,6 +24244,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -24215,7 +24289,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CAngle.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/C3Bezier2D.h \
@@ -24267,11 +24341,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -24334,8 +24408,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotArrowObject.o CGnuPlotArrowObject.cpp
 
 ../obj/CGnuPlotArrowStyle.o: CGnuPlotArrowStyle.cpp CGnuPlotArrowStyle.h \
@@ -24345,17 +24418,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -24364,6 +24437,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -24426,7 +24500,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -24461,11 +24535,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -24517,17 +24591,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -24536,6 +24610,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -24572,7 +24647,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -24636,11 +24711,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -24702,8 +24777,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotAxis.o CGnuPlotAxis.cpp
 
 ../obj/CGnuPlotAxisData.o: CGnuPlotAxisData.cpp CGnuPlotAxisData.h \
@@ -24712,19 +24786,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -24733,6 +24807,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -24766,7 +24841,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -24829,11 +24904,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -24889,20 +24964,20 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CGnuPlotBoxBarObject.o: CGnuPlotBoxBarObject.cpp CGnuPlotBoxBarObject.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
@@ -24915,6 +24990,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -24961,7 +25037,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -25049,11 +25125,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -25074,8 +25150,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBoxBarObject.o CGnuPlotBoxBarObject.cpp
 
 ../obj/CGnuPlotBoxObject.o: CGnuPlotBoxObject.cpp CGnuPlotBoxObject.h \
@@ -25085,19 +25160,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -25106,6 +25181,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -25176,7 +25252,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -25204,11 +25280,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -25254,7 +25330,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextStyle.h \
 		CGnuPlotTextRenderer.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -25275,17 +25350,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -25294,6 +25369,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h
@@ -25338,13 +25414,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -25352,7 +25429,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -25372,6 +25448,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -25387,7 +25464,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -25422,11 +25499,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -25474,7 +25551,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CRenderer/include/CSymbol2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBBoxRenderer.o CGnuPlotBBoxRenderer.cpp
 
@@ -25489,17 +25565,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -25508,6 +25584,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -25517,17 +25594,17 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CGnuPlotBubbleObject.o: CGnuPlotBubbleObject.cpp CGnuPlotBubbleObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -25543,6 +25620,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -25588,7 +25666,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -25675,11 +25753,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -25700,25 +25778,25 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotBubbleObject.o CGnuPlotBubbleObject.cpp
 
 ../obj/CGnuPlotCamera.o: CGnuPlotCamera.cpp CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CVector3D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
@@ -25759,7 +25837,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -25801,7 +25879,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -25892,19 +25970,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -25913,6 +25991,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -25977,7 +26056,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -26007,11 +26086,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -26058,7 +26137,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		../../CUtil/include/CDirectionType.h \
@@ -26076,17 +26154,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -26095,6 +26173,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -26131,7 +26210,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -26193,11 +26272,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotTicLabel.h \
 		CGnuPlotUsingCols.h \
@@ -26250,8 +26329,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotColorBox.o CGnuPlotColorBox.cpp
 
 ../obj/CGnuPlotColorSpec.o: CGnuPlotColorSpec.cpp CGnuPlotColorSpec.h \
@@ -26259,19 +26337,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -26280,6 +26358,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -26342,7 +26421,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -26377,11 +26456,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -26447,22 +26526,23 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CLine3D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
@@ -26492,7 +26572,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
@@ -26568,11 +26648,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -26635,7 +26715,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotPathObject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotContour.o CGnuPlotContour.cpp
 
@@ -26645,17 +26724,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -26664,6 +26743,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -26727,7 +26807,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -26762,11 +26842,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -26813,7 +26893,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -26831,17 +26910,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -26850,6 +26929,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -26912,7 +26992,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -26947,11 +27027,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -27011,20 +27091,20 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -27041,6 +27121,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxis.h \
@@ -27075,7 +27156,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -27123,11 +27204,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -27209,7 +27290,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotBivariateStyleValue.h \
 		CGnuPlotBoxErrorBarsStyleValue.h \
 		CGnuPlotBoxesStyleValue.h \
@@ -27227,8 +27307,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotDelaunayStyleValue.h \
 		CDelaunay.h \
 		CHull3D.h \
-		CListLink.h \
-		CStateIterator.h \
+		../../CUtil/include/CListLink.h \
+		../../CUtil/include/CStateIterator.h \
 		../../CUtil/include/CGeneric.h \
 		../../CUtil/include/CTypeTraits.h \
 		CGnuPlotDendrogramStyleValue.h \
@@ -27255,19 +27335,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -27276,6 +27356,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -27340,7 +27421,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -27370,11 +27451,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -27421,7 +27502,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		../../CUtil/include/CDirectionType.h \
@@ -27435,17 +27515,17 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CGnuPlotEllipseObject.o: CGnuPlotEllipseObject.cpp CGnuPlotEllipseObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -27461,6 +27541,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -27506,7 +27587,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -27593,11 +27674,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -27618,24 +27699,23 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotEllipseObject.o CGnuPlotEllipseObject.cpp
 
 ../obj/CGnuPlotEndBar.o: CGnuPlotEndBar.cpp CGnuPlotEndBar.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/CLineDash.h \
@@ -27650,6 +27730,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
@@ -27678,7 +27759,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
@@ -27783,11 +27864,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -27809,7 +27890,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotBoxBarObject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotEndBar.o CGnuPlotEndBar.cpp
 
@@ -27820,19 +27900,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -27841,6 +27921,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -27887,7 +27968,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -27976,11 +28057,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -28000,8 +28081,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotFitData.h \
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotErrorBarObject.o CGnuPlotErrorBarObject.cpp
 
 ../obj/CGnuPlotErrorBarData.o: CGnuPlotErrorBarData.cpp CGnuPlotErrorBarData.h \
@@ -28010,17 +28090,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -28029,6 +28109,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -28093,7 +28174,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -28128,11 +28209,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -28178,8 +28259,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextStyle.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotErrorBarData.o CGnuPlotErrorBarData.cpp
 
 ../obj/CGnuPlotFile.o: CGnuPlotFile.cpp CGnuPlotFile.h \
@@ -28189,7 +28269,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/COptVal.h \
 		CUnixFile.h \
 		CCsv.h \
@@ -28203,17 +28282,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -28222,6 +28301,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -28264,7 +28344,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -28357,11 +28437,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -28393,17 +28473,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -28412,6 +28492,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -28475,7 +28556,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -28510,11 +28591,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -28575,19 +28656,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -28596,6 +28677,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -28642,7 +28724,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -28731,11 +28813,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -28760,8 +28842,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CRange.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotFinanceBarObject.o CGnuPlotFinanceBarObject.cpp
 
 ../obj/CGnuPlotFunctions.o: CGnuPlotFunctions.cpp CGnuPlotFunctions.h \
@@ -28803,13 +28884,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -28817,7 +28899,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -28837,6 +28918,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -28852,7 +28934,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -28887,11 +28969,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -28976,13 +29058,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -28990,7 +29073,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -29010,6 +29092,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -29025,7 +29108,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -29060,11 +29143,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -29131,24 +29214,23 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotStyleBase.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotGroup.o CGnuPlotGroup.cpp
 
 ../obj/CGnuPlotImageObject.o: CGnuPlotImageObject.cpp CGnuPlotImageObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageLib.h \
@@ -29179,6 +29261,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -29231,7 +29314,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -29259,11 +29342,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -29327,7 +29410,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CMath/include/CRotBBox2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotImageObject.o CGnuPlotImageObject.cpp
 
@@ -29338,19 +29420,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -29359,6 +29441,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -29422,7 +29505,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -29456,11 +29539,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -29523,7 +29606,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotStyleBase.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotKey.o CGnuPlotKey.cpp
 
@@ -29533,19 +29615,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -29554,6 +29636,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -29616,19 +29699,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -29637,6 +29720,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -29703,8 +29787,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -29713,7 +29797,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -29744,6 +29828,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotColorSpec.h \
@@ -29795,7 +29880,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -29821,11 +29906,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -29872,7 +29957,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		../../CUtil/include/CDirectionType.h \
@@ -29901,19 +29985,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -29922,6 +30006,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -29993,7 +30078,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -30018,11 +30103,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -30086,8 +30171,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotLabelObject.o CGnuPlotLabelObject.cpp
 
 ../obj/CGnuPlotLineStyle.o: CGnuPlotLineStyle.cpp CGnuPlotLineStyle.h \
@@ -30096,17 +30180,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -30115,6 +30199,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -30177,7 +30262,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -30212,11 +30297,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -30286,17 +30371,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -30305,6 +30390,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -30368,7 +30454,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -30403,11 +30489,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -30475,20 +30561,20 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -30505,6 +30591,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxis.h \
@@ -30539,7 +30626,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -30587,11 +30674,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -30639,7 +30726,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
@@ -30697,13 +30783,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -30711,7 +30798,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -30731,6 +30817,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -30746,7 +30833,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -30781,11 +30868,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -30833,7 +30920,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotLogDevice.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h \
@@ -30846,17 +30932,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -30865,6 +30951,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -30929,7 +31016,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -30964,11 +31051,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -31013,28 +31100,27 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextStyle.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotMargin.o CGnuPlotMargin.cpp
 
 ../obj/CGnuPlotMark.o: CGnuPlotMark.cpp CGnuPlotMark.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/CRefPtr.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -31043,6 +31129,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -31084,7 +31171,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -31173,13 +31260,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -31187,7 +31275,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -31203,19 +31290,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -31224,6 +31311,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -31288,7 +31376,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -31320,11 +31408,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -31418,13 +31506,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotGroup.h \
@@ -31442,7 +31531,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -31461,6 +31549,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotDash.h \
@@ -31474,7 +31563,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -31509,11 +31598,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -31569,17 +31658,17 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CGnuPlotPathObject.o: CGnuPlotPathObject.cpp CGnuPlotPathObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotObject.h \
@@ -31594,6 +31683,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -31638,7 +31728,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -31727,11 +31817,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -31753,24 +31843,23 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		../../CUtil/include/CIVector.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPathObject.o CGnuPlotPathObject.cpp
 
 ../obj/CGnuPlotPieObject.o: CGnuPlotPieObject.cpp CGnuPlotPieObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -31786,6 +31875,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -31831,7 +31921,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -31918,11 +32008,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -31943,8 +32033,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPieObject.o CGnuPlotPieObject.cpp
 
 ../obj/CGnuPlotPlot.o: CGnuPlotPlot.cpp CGnuPlotPlot.h \
@@ -31952,22 +32041,23 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CLine3D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
@@ -31997,7 +32087,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
@@ -32107,11 +32197,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -32139,7 +32229,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotArrowObject.h \
 		CGnuPlotBoxBarObject.h \
 		CGnuPlotEndBar.h \
@@ -32171,18 +32260,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -32191,6 +32280,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -32254,15 +32344,15 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -32278,6 +32368,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -32289,17 +32380,17 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CGnuPlotPointObject.o: CGnuPlotPointObject.cpp CGnuPlotPointObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -32315,6 +32406,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -32379,7 +32471,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -32411,11 +32503,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -32478,8 +32570,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPointObject.o CGnuPlotPointObject.cpp
 
 ../obj/CGnuPlotPolygon.o: CGnuPlotPolygon.cpp CGnuPlotPolygon.h \
@@ -32490,19 +32581,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -32511,6 +32602,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -32575,7 +32667,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -32605,11 +32697,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -32656,7 +32748,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
 		../../CUtil/include/CDirectionType.h \
@@ -32671,17 +32762,17 @@ compiler_clean: compiler_moc_header_clean
 ../obj/CGnuPlotPolygonObject.o: CGnuPlotPolygonObject.cpp CGnuPlotPolygonObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotObject.h \
@@ -32696,6 +32787,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -32764,7 +32856,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -32792,11 +32884,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -32859,8 +32951,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPolygonObject.o CGnuPlotPolygonObject.cpp
 
 ../obj/CGnuPlotPosition.o: CGnuPlotPosition.cpp CGnuPlotPosition.h \
@@ -32869,17 +32960,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -32888,6 +32979,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -32951,7 +33043,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -32986,11 +33078,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -33036,8 +33128,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextStyle.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotPosition.o CGnuPlotPosition.cpp
 
 ../obj/CGnuPlotPrintFile.o: CGnuPlotPrintFile.cpp CGnuPlotPrintFile.h \
@@ -33079,13 +33170,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -33093,7 +33185,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -33113,6 +33204,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -33128,7 +33220,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -33163,11 +33255,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -33220,19 +33312,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -33241,6 +33333,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -33305,7 +33398,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -33335,11 +33428,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -33394,24 +33487,23 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotWindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotRectangle.o CGnuPlotRectangle.cpp
 
 ../obj/CGnuPlotRectObject.o: CGnuPlotRectObject.cpp CGnuPlotRectObject.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotCache.h \
@@ -33427,6 +33519,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -33472,7 +33565,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -33559,11 +33652,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -33584,8 +33677,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotRectObject.o CGnuPlotRectObject.cpp
 
 ../obj/CGnuPlotRenderer.o: CGnuPlotRenderer.cpp CGnuPlotRenderer.h \
@@ -33627,13 +33719,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -33641,7 +33734,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -33661,6 +33753,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -33676,7 +33769,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -33711,11 +33804,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -33762,7 +33855,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -33779,13 +33871,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/CLineDash.h \
@@ -33797,7 +33890,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -33806,6 +33898,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CAlignType.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
@@ -33844,7 +33937,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -33923,19 +34016,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -33944,6 +34037,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -33980,17 +34074,17 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CGnuPlotSurface.o: CGnuPlotSurface.cpp CGnuPlotSurface.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/COptVal.h \
@@ -34052,6 +34146,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -34067,7 +34162,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -34102,11 +34197,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -34169,14 +34264,12 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotPolygonObject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotSurface.o CGnuPlotSurface.cpp
 
 ../obj/CGnuPlotTimeStamp.o: CGnuPlotTimeStamp.cpp CGnuPlotTimeStamp.h \
 		CGnuPlotTimeStampData.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CFont/include/CFont.h \
 		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
@@ -34189,13 +34282,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -34220,6 +34314,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -34263,7 +34358,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -34298,11 +34393,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -34354,8 +34449,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotTimeStamp.o CGnuPlotTimeStamp.cpp
 
 ../obj/CGnuPlotUsingCols.o: CGnuPlotUsingCols.cpp CGnuPlotUsingCols.h \
@@ -34391,17 +34485,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -34410,6 +34504,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -34447,7 +34542,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -34482,11 +34577,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotImageStyle.h \
@@ -34539,17 +34634,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -34558,6 +34653,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -34592,7 +34688,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -34682,17 +34778,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -34701,6 +34797,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -34735,7 +34832,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -34823,17 +34920,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -34842,6 +34939,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -34856,17 +34954,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -34875,6 +34973,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -34909,7 +35008,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -34999,17 +35098,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -35018,6 +35117,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -35080,7 +35180,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -35113,11 +35213,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -35250,11 +35350,11 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprVariableMgr.h \
 		CGnuPlotUtil.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -35270,8 +35370,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -35280,7 +35380,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -35291,6 +35391,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -35357,7 +35458,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -35391,11 +35492,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -35461,8 +35562,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -35471,7 +35572,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -35482,6 +35583,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -35552,7 +35654,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -35585,11 +35687,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -35636,7 +35738,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotStyleValueMgr.h \
 		CTypeInfo.h \
 		CGnuPlotPlot.h \
@@ -35663,8 +35764,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -35673,7 +35774,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -35684,6 +35785,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -35722,7 +35824,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -35823,11 +35925,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -35854,7 +35956,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotPointObject.h \
 		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleBivariate.o CGnuPlotStyleBivariate.cpp
@@ -35864,8 +35965,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -35874,7 +35975,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -35885,6 +35986,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -35926,7 +36028,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -36024,11 +36126,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -36050,7 +36152,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotBoxBarObject.h \
 		CGnuPlotEndBar.h \
 		CGnuPlotDevice.h \
@@ -36062,8 +36163,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -36072,7 +36173,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -36083,6 +36184,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -36124,7 +36226,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -36222,11 +36324,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -36254,7 +36356,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotBoxBarObject.h \
 		CGnuPlotEndBar.h \
 		CGnuPlotDevice.h
@@ -36265,8 +36366,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -36275,7 +36376,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -36286,6 +36387,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -36325,7 +36427,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -36424,11 +36526,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -36456,7 +36558,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotBoxObject.h \
 		../../CMath/include/CBoxWhisker.h \
 		CGnuPlotDevice.h
@@ -36467,8 +36568,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -36477,7 +36578,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -36488,6 +36589,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -36524,7 +36626,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -36624,11 +36726,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -36650,7 +36752,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotBoxBarObject.h \
 		CGnuPlotEndBar.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleBoxXYErrorBars.o CGnuPlotStyleBoxXYErrorBars.cpp
@@ -36660,8 +36761,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -36670,7 +36771,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -36681,6 +36782,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -36690,14 +36792,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleValue.h \
 		CBubblePack.h \
 		CirclePack.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
-		CMathMacros.h \
 		../../CMath/include/CEnclosingCircle.h \
 		../../CMath/include/CPointsCircle.h \
 		CGnuPlotStyleValueMgr.h \
@@ -36825,11 +36926,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -36861,8 +36962,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -36871,7 +36972,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -36882,6 +36983,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -36923,7 +37025,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -37021,11 +37123,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -37053,7 +37155,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotBoxBarObject.h \
 		CGnuPlotEndBar.h \
 		CGnuPlotDevice.h
@@ -37064,8 +37165,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -37074,7 +37175,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -37085,6 +37186,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -37154,7 +37256,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -37187,11 +37289,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -37238,7 +37340,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		ChordDiagram.h \
 		CGnuPlotStyleValueMgr.h \
 		CTypeInfo.h \
@@ -37266,8 +37367,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -37276,7 +37377,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -37287,6 +37388,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -37328,7 +37430,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -37427,11 +37529,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -37453,7 +37555,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleCircles.o CGnuPlotStyleCircles.cpp
@@ -37463,8 +37564,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -37473,7 +37574,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -37484,6 +37585,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -37493,8 +37595,8 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotStyleValue.h \
 		CDelaunay.h \
 		CHull3D.h \
-		CListLink.h \
-		CStateIterator.h \
+		../../CUtil/include/CListLink.h \
+		../../CUtil/include/CStateIterator.h \
 		../../CUtil/include/CGeneric.h \
 		../../CUtil/include/CTypeTraits.h \
 		CGnuPlotStyleValueMgr.h \
@@ -37530,7 +37632,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -37629,11 +37731,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -37661,7 +37763,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleDelaunay.o CGnuPlotStyleDelaunay.cpp
 
@@ -37670,8 +37771,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -37680,7 +37781,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -37691,6 +37792,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -37732,7 +37834,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -37831,11 +37933,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -37863,7 +37965,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleDendrogram.o CGnuPlotStyleDendrogram.cpp
 
@@ -37872,8 +37973,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -37882,7 +37983,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -37893,6 +37994,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -37929,7 +38031,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -38029,11 +38131,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -38054,8 +38156,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleDots.o CGnuPlotStyleDots.cpp
 
 ../obj/CGnuPlotStyleEllipses.o: CGnuPlotStyleEllipses.cpp CGnuPlotStyleEllipses.h \
@@ -38063,8 +38164,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -38073,7 +38174,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -38084,6 +38185,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -38125,7 +38227,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -38223,11 +38325,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -38249,7 +38351,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleEllipses.o CGnuPlotStyleEllipses.cpp
@@ -38259,8 +38360,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -38269,7 +38370,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -38280,6 +38381,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -38316,7 +38418,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -38416,11 +38518,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -38449,8 +38551,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotErrorBarData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleErrorBars.o CGnuPlotStyleErrorBars.cpp
 
 ../obj/CGnuPlotStyleFilledCurves.o: CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFilledCurves.h \
@@ -38458,8 +38559,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -38468,7 +38569,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -38479,6 +38580,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -38545,7 +38647,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -38579,11 +38681,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -38647,7 +38749,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotPolygonObject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleFilledCurves.o CGnuPlotStyleFilledCurves.cpp
 
@@ -38656,8 +38757,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -38666,7 +38767,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -38677,6 +38778,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -38751,7 +38853,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotKeyData.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
@@ -38780,11 +38882,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -38845,8 +38947,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleFinanceBars.o CGnuPlotStyleFinanceBars.cpp
 
 ../obj/CGnuPlotStyleForceDirected.o: CGnuPlotStyleForceDirected.cpp CGnuPlotStyleForceDirected.h \
@@ -38854,8 +38955,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -38864,7 +38965,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -38875,6 +38976,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -38917,7 +39019,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -39016,11 +39118,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -39047,8 +39149,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleForceDirected.o CGnuPlotStyleForceDirected.cpp
 
 ../obj/CGnuPlotStyleHierBubblePlot.o: CGnuPlotStyleHierBubblePlot.cpp CGnuPlotStyleHierBubblePlot.h \
@@ -39056,8 +39157,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -39066,7 +39167,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -39077,6 +39178,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -39084,14 +39186,13 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotProbeEvent.h \
 		CHierBubblePack.h \
 		CirclePack.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
 		../../CMath/include/CShape2D.h \
 		../../CMath/include/C3Bezier2D.h \
 		../../CMath/include/C2Bezier2D.h \
-		CMathMacros.h \
 		../../CMath/include/CEnclosingCircle.h \
 		../../CMath/include/CPointsCircle.h \
 		CGnuPlotHierBubbleStyleValue.h \
@@ -39221,11 +39322,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -39257,8 +39358,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -39267,7 +39368,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -39278,6 +39379,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -39314,7 +39416,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -39414,11 +39516,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -39445,7 +39547,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotImageObject.h \
 		CGnuPlotRectObject.h \
 		CGnuPlotPolygonObject.h \
@@ -39457,8 +39558,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -39467,7 +39568,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -39478,6 +39579,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -39514,7 +39616,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -39614,11 +39716,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -39644,8 +39746,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleImpulses.o CGnuPlotStyleImpulses.cpp
 
 ../obj/CGnuPlotStyleLabels.o: CGnuPlotStyleLabels.cpp CGnuPlotStyleLabels.h \
@@ -39653,8 +39754,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -39663,7 +39764,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -39674,6 +39775,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -39736,7 +39838,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CLine3D.h \
 		CGnuPlotContourData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -39814,11 +39916,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -39846,7 +39948,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleLabels.o CGnuPlotStyleLabels.cpp
 
@@ -39855,8 +39956,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -39865,7 +39966,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -39876,6 +39977,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -39912,7 +40014,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -40012,11 +40114,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -40043,8 +40145,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleLines.o CGnuPlotStyleLines.cpp
 
 ../obj/CGnuPlotStyleLinesPoints.o: CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleLinesPoints.h \
@@ -40052,8 +40153,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -40062,7 +40163,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -40073,6 +40174,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -40109,7 +40211,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -40209,11 +40311,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -40241,7 +40343,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotPathObject.h \
 		CGnuPlotPointObject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleLinesPoints.o CGnuPlotStyleLinesPoints.cpp
@@ -40251,8 +40352,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -40261,7 +40362,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -40272,6 +40373,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -40308,7 +40410,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -40408,11 +40510,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -40439,8 +40541,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleParallelAxes.o CGnuPlotStyleParallelAxes.cpp
 
 ../obj/CGnuPlotStylePieChart.o: CGnuPlotStylePieChart.cpp CGnuPlotStylePieChart.h \
@@ -40448,8 +40549,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -40458,7 +40559,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -40469,6 +40570,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -40509,7 +40611,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -40607,11 +40709,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -40639,7 +40741,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotPieObject.h \
 		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStylePieChart.o CGnuPlotStylePieChart.cpp
@@ -40649,8 +40750,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -40659,7 +40760,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -40670,6 +40771,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -40706,7 +40808,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -40806,11 +40908,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -40837,7 +40939,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotPointObject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStylePoints.o CGnuPlotStylePoints.cpp
 
@@ -40846,8 +40947,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -40856,7 +40957,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -40867,6 +40968,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -40903,7 +41005,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -41004,11 +41106,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -41029,8 +41131,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStylePolygons.o CGnuPlotStylePolygons.cpp
 
 ../obj/CGnuPlotStyleRadar.o: CGnuPlotStyleRadar.cpp CGnuPlotStyleRadar.h \
@@ -41038,8 +41139,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -41048,7 +41149,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -41059,6 +41160,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -41099,7 +41201,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -41199,11 +41301,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -41231,7 +41333,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotDevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleRadar.o CGnuPlotStyleRadar.cpp
 
@@ -41240,8 +41341,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -41250,7 +41351,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -41261,6 +41362,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -41297,7 +41399,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -41397,11 +41499,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -41427,8 +41529,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleStackedArea.o CGnuPlotStyleStackedArea.cpp
 
 ../obj/CGnuPlotStyleSteps.o: CGnuPlotStyleSteps.cpp CGnuPlotStyleSteps.h \
@@ -41436,8 +41537,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -41446,7 +41547,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -41457,6 +41558,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -41493,7 +41595,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -41593,11 +41695,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -41618,8 +41720,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleSteps.o CGnuPlotStyleSteps.cpp
 
 ../obj/CGnuPlotStyleSunburst.o: CGnuPlotStyleSunburst.cpp CGnuPlotStyleSunburst.h \
@@ -41627,8 +41728,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -41637,7 +41738,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -41648,6 +41749,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -41716,7 +41818,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -41750,11 +41852,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -41801,7 +41903,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -41832,8 +41933,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -41842,7 +41943,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -41853,6 +41954,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -41889,7 +41991,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -41989,11 +42091,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -42019,8 +42121,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleTestPalette.o CGnuPlotStyleTestPalette.cpp
 
 ../obj/CGnuPlotStyleTestTerminal.o: CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTestTerminal.h \
@@ -42028,8 +42129,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -42038,7 +42139,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -42049,6 +42150,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -42085,7 +42187,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -42187,11 +42289,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -42212,8 +42314,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleTestTerminal.o CGnuPlotStyleTestTerminal.cpp
 
 ../obj/CGnuPlotStyleTreeMap.o: CGnuPlotStyleTreeMap.cpp CGnuPlotStyleTreeMap.h \
@@ -42221,8 +42322,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -42231,7 +42332,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -42242,6 +42343,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -42284,7 +42386,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -42383,11 +42485,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -42409,7 +42511,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotRectObject.h \
 		CGnuPlotGroup.h \
 		CGnuPlotAxis.h \
@@ -42425,8 +42526,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -42435,7 +42536,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -42446,6 +42547,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -42488,7 +42590,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -42585,11 +42687,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -42611,7 +42713,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleVectors.o CGnuPlotStyleVectors.cpp
@@ -42621,8 +42722,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -42631,7 +42732,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -42642,6 +42743,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -42678,7 +42780,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -42778,11 +42880,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -42811,8 +42913,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotErrorBarData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleXErrorBars.o CGnuPlotStyleXErrorBars.cpp
 
 ../obj/CGnuPlotStyleXErrorLines.o: CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXErrorLines.h \
@@ -42820,8 +42921,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -42830,7 +42931,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -42841,6 +42942,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -42877,7 +42979,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -42977,11 +43079,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -43002,8 +43104,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleXErrorLines.o CGnuPlotStyleXErrorLines.cpp
 
 ../obj/CGnuPlotStyleXYErrorBars.o: CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorBars.h \
@@ -43011,8 +43112,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -43021,7 +43122,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -43032,6 +43133,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -43068,7 +43170,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -43168,11 +43270,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -43201,8 +43303,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotErrorBarData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleXYErrorBars.o CGnuPlotStyleXYErrorBars.cpp
 
 ../obj/CGnuPlotStyleXYErrorLines.o: CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleXYErrorLines.h \
@@ -43210,8 +43311,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -43220,7 +43321,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -43231,6 +43332,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -43267,7 +43369,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -43367,11 +43469,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -43392,8 +43494,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleXYErrorLines.o CGnuPlotStyleXYErrorLines.cpp
 
 ../obj/CGnuPlotStyleYErrorBars.o: CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorBars.h \
@@ -43401,8 +43502,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -43411,7 +43512,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -43422,6 +43523,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -43458,7 +43560,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -43558,11 +43660,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -43591,8 +43693,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotErrorBarData.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleYErrorBars.o CGnuPlotStyleYErrorBars.cpp
 
 ../obj/CGnuPlotStyleYErrorLines.o: CGnuPlotStyleYErrorLines.cpp CGnuPlotStyleYErrorLines.h \
@@ -43600,8 +43701,8 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -43610,7 +43711,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -43621,6 +43722,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -43657,7 +43759,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprFunctionMgr.h \
 		Expr/CExprOperatorMgr.h \
 		Expr/CExprVariableMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -43757,11 +43859,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotHistogramData.h \
@@ -43782,8 +43884,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotMargin.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotStyleYErrorLines.o CGnuPlotStyleYErrorLines.cpp
 
 ../obj/CGnuPlotSVGDevice.o: CGnuPlotSVGDevice.cpp CGnuPlotSVGDevice.h \
@@ -43801,20 +43902,20 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -43831,6 +43932,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxis.h \
@@ -43865,7 +43967,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -43913,11 +44015,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -43965,7 +44067,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
@@ -44023,13 +44124,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -44037,7 +44139,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -44057,6 +44158,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -44072,7 +44174,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -44107,11 +44209,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -44159,7 +44261,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotSVGDevice.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h \
@@ -44183,20 +44284,20 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -44213,6 +44314,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotAxis.h \
@@ -44247,7 +44349,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprVariableMgr.h \
 		../../CUtil/include/CColor.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -44296,11 +44398,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -44348,7 +44450,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
@@ -44406,13 +44507,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -44420,7 +44522,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -44440,6 +44541,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -44455,7 +44557,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -44490,11 +44592,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -44542,7 +44644,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotPSDevice.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h \
@@ -44558,17 +44659,17 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -44577,6 +44678,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -44640,7 +44742,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotPosition.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -44675,11 +44777,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -44725,8 +44827,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextStyle.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotSize.o CGnuPlotSize.cpp
 
 ../obj/CGnuPlotTitle.o: CGnuPlotTitle.cpp CGnuPlotTitle.h \
@@ -44735,19 +44836,19 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CPoint3D.h \
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox2D.h \
@@ -44756,6 +44857,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		../../CUtil/include/CAlignType.h \
@@ -44818,7 +44920,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -44852,11 +44954,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -44911,7 +45013,6 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
 		CGnuPlotDevice.h \
 		../../CFont/include/CFontMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotTitle.o CGnuPlotTitle.cpp
@@ -44955,13 +45056,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -44969,7 +45071,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -44989,6 +45090,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CIPoint3D.h \
 		../../CMath/include/CBBox3D.h \
 		../../CMath/include/CVector3D.h \
+		../../CMath/include/CMathMacros.h \
 		../../CUtil/include/CLineDash.h \
 		../../CUtil/include/CILineDash.h \
 		CGnuPlotPalette.h \
@@ -45004,7 +45106,7 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotSize.h \
 		CGnuPlotAxisData.h \
 		CGnuPlotUtil.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -45039,11 +45141,11 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotCamera.h \
 		CGnuPlotXYPlane.h \
 		../../CMath/include/CCoordFrame3D.h \
-		COrthonormalBasis3D.h \
+		../../CMath/include/COrthonormalBasis3D.h \
 		../../CMath/include/CMatrix3D.h \
 		../../CMath/include/CMatrixType.h \
-		../../CUtil/include/CThrow.h \
 		../../CMath/include/CGaussianMatrix.h \
+		../../CUtil/include/CThrow.h \
 		../../CMath/include/CMatrix3DH.h \
 		CGnuPlotColorBox.h \
 		CGnuPlotTicLabel.h \
@@ -45108,16 +45210,15 @@ compiler_clean: compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotWindow.o CGnuPlotWindow.cpp
 
 ../obj/CGnuPlotText.o: CGnuPlotText.cpp CGnuPlotText.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
-		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CIPoint2D.h \
+		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
@@ -45126,7 +45227,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -45153,7 +45254,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CImageLib/include/CImageFile.h \
 		CGnuPlotTextRenderer.h \
 		CParseLine.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -45177,13 +45278,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
@@ -45191,7 +45293,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -45204,7 +45305,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CFont/include/CFontMgr.h \
-		CMathGeom2D.h \
+		../../CMath/include/CMathGeom2D.h \
 		../../CMath/include/CPolygonOrientation.h \
 		../../CUtil/include/CLineJoinType.h \
 		../../CMath/include/CLine2D.h \
@@ -45246,7 +45347,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -45284,7 +45385,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CMatrix2D.h \
-		CMathMacros.h \
+		../../CMath/include/CMathMacros.h \
 		../../CMath/include/CMatrixType.h \
 		../../CUtil/include/CThrow.h \
 		../../CUtil/include/CBrush.h \
@@ -45299,18 +45400,18 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CAdjacency.o: CAdjacency.cpp CAdjacency.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
@@ -45321,8 +45422,8 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/CDelaunay.o: CDelaunay.cpp CDelaunay.h \
 		CHull3D.h \
-		CListLink.h \
-		CStateIterator.h \
+		../../CUtil/include/CListLink.h \
+		../../CUtil/include/CStateIterator.h \
 		../../CUtil/include/CGeneric.h \
 		../../CUtil/include/CTypeTraits.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CDelaunay.o CDelaunay.cpp
@@ -45331,27 +45432,27 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/CAlignType.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/ChordDiagram.o ChordDiagram.cpp
 
 ../obj/CHull3D.o: CHull3D.cpp CHull3D.h \
-		CListLink.h \
-		CStateIterator.h \
+		../../CUtil/include/CListLink.h \
+		../../CUtil/include/CStateIterator.h \
 		../../CUtil/include/CGeneric.h \
 		../../CUtil/include/CTypeTraits.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CHull3D.o CHull3D.cpp
@@ -45360,18 +45461,18 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CVector2D.h \
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h
@@ -45387,13 +45488,14 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
 		../../CUtil/include/CHSV.h \
-		CRGBUtil.h \
+		../../CUtil/include/CRGBUtil.h \
 		../../CUtil/include/CCMYK.h \
 		../../CUtil/include/CHSL.h \
 		../../CUtil/include/CHSB.h \
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CRGBName/include/CRGBName.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CUtil/include/CILineDash.h \
@@ -45411,7 +45513,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CIVector2D.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
@@ -45423,41 +45524,6 @@ compiler_clean: compiler_moc_header_clean
 		../../COS/include/COSTime.h \
 		../../COS/include/CHRTime.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CPrint.o CPrint.cpp
-
-../obj/CMathGeom2D.o: CMathGeom2D.cpp CMathGeom2D.h \
-		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
-		../../CMath/include/CBBox2D.h \
-		../../CMath/include/CMathGen.h \
-		../../COS/include/NaN.h \
-		../../CMath/include/CVector2D.h \
-		../../CMath/include/CSize2D.h \
-		../../CMath/include/CISize2D.h \
-		../../CMath/include/CPolygonOrientation.h \
-		../../CUtil/include/CLineJoinType.h \
-		../../CMath/include/CLine2D.h \
-		../../CMath/include/CShape2D.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/C2Bezier2D.h \
-		CArcToBezier.h \
-		../../CMath/include/CBezierToLine.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CMathGeom2D.o CMathGeom2D.cpp
-
-../obj/CInvNorm.o: CInvNorm.cpp ../../CMath/include/CInvNorm.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CInvNorm.o CInvNorm.cpp
-
-../obj/CArcToBezier.o: CArcToBezier.cpp CArcToBezier.h \
-		../../CMath/include/C3Bezier2D.h \
-		../../CMath/include/CPoint2D.h \
-		../../CMath/include/CIPoint2D.h \
-		../../CMath/include/C2Bezier2D.h \
-		../../CMath/include/CBBox2D.h \
-		../../CMath/include/CMathGen.h \
-		../../COS/include/NaN.h \
-		../../CMath/include/CVector2D.h \
-		../../CMath/include/CSize2D.h \
-		../../CMath/include/CISize2D.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CArcToBezier.o CArcToBezier.cpp
 
 ../obj/CExpr.o: Expr/CExpr.cpp Expr/CExprI.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -45659,6 +45725,7 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprTokenMgr.h \
 		../../CMath/include/CMathGen.h \
 		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h \
 		../../CMath/include/CInvNorm.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprFunction.o Expr/CExprFunction.cpp
 
@@ -45826,7 +45893,8 @@ compiler_clean: compiler_moc_header_clean
 		Expr/CExprVariableMgr.h \
 		Expr/CExprTokenMgr.h \
 		../../CMath/include/CMathGen.h \
-		../../COS/include/NaN.h
+		../../COS/include/NaN.h \
+		../../CMath/include/CIPoint2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprRValue.o Expr/CExprRValue.cpp
 
 ../obj/CExprSValue.o: Expr/CExprSValue.cpp Expr/CExprI.h \
