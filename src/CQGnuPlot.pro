@@ -216,7 +216,6 @@ CGnuPlotText.cpp \
 CGnuPlotTextRenderer.cpp \
 \
 CQHeaderView.cpp \
-CQToolTip.cpp \
 CQFloatLabel.cpp \
 CQRotatedText.cpp \
 CQIntegerSpin.cpp \
@@ -466,7 +465,6 @@ CGnuPlotText.h \
 CGnuPlotTextRenderer.h \
 \
 CQHeaderView.h \
-CQToolTip.h \
 CQFloatLabel.h \
 CQRotatedText.h \
 CQIntegerSpin.h \
