@@ -1,8 +1,8 @@
 TEMPLATE = app
 
-QT += widgets
-
 TARGET = CQGnuPlot
+
+QT += widgets
 
 DEPENDPATH += .
 
