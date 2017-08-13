@@ -159,23 +159,23 @@ drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c,
       break;
     }
     case SymbolType::PLUS: { // plus
-      r.setLineColor(c); r.drawSymbol(CSYMBOL_PLUS);
+      r.setLineColor(c); r.drawSymbol(CSymbol2D::Type::PLUS);
       break;
     }
     case SymbolType::CROSS: { // cross
-      r.setLineColor(c); r.drawSymbol(CSYMBOL_CROSS);
+      r.setLineColor(c); r.drawSymbol(CSymbol2D::Type::CROSS);
       break;
     }
     case SymbolType::STAR: { // star
-      r.setLineColor(c); r.drawSymbol(CSYMBOL_STAR1);
+      r.setLineColor(c); r.drawSymbol(CSymbol2D::Type::STAR1);
       break;
     }
     case SymbolType::BOX: { // box
-      r.setLineColor(c); r.drawSymbol(CSYMBOL_BOX);
+      r.setLineColor(c); r.drawSymbol(CSymbol2D::Type::BOX);
       break;
     }
     case SymbolType::FILLED_BOX: { // filled box
-      r.setFillColor(c); r.drawSymbol(CSYMBOL_BOX);
+      r.setFillColor(c); r.drawSymbol(CSymbol2D::Type::BOX);
       break;
     }
     case SymbolType::CIRCLE: { // circle
@@ -187,35 +187,35 @@ drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c,
       break;
     }
     case SymbolType::TRIANGLE: { // triangle
-      r.setLineColor(c); r.drawSymbol(CSYMBOL_TRIANGLE);
+      r.setLineColor(c); r.drawSymbol(CSymbol2D::Type::TRIANGLE);
       break;
     }
     case SymbolType::FILLED_TRIANGLE: { // filled triangle
-      r.setFillColor(c); r.drawSymbol(CSYMBOL_TRIANGLE);
+      r.setFillColor(c); r.drawSymbol(CSymbol2D::Type::TRIANGLE);
       break;
     }
     case SymbolType::INV_TRIANGLE: { // inv triangle
-      r.setLineColor(c); r.drawSymbol(CSYMBOL_ITRIANGLE);
+      r.setLineColor(c); r.drawSymbol(CSymbol2D::Type::ITRIANGLE);
       break;
     }
     case SymbolType::FILLED_INV_TRIANGLE: { // filled inv triangle
-      r.setFillColor(c); r.drawSymbol(CSYMBOL_ITRIANGLE);
+      r.setFillColor(c); r.drawSymbol(CSymbol2D::Type::ITRIANGLE);
       break;
     }
     case SymbolType::DIAMOND: { // diamond
-      r.setLineColor(c); r.drawSymbol(CSYMBOL_DIAMOND);
+      r.setLineColor(c); r.drawSymbol(CSymbol2D::Type::DIAMOND);
       break;
     }
     case SymbolType::FILLED_DIAMOND: { // filled diamond
-      r.setFillColor(c); r.drawSymbol(CSYMBOL_DIAMOND);
+      r.setFillColor(c); r.drawSymbol(CSymbol2D::Type::DIAMOND);
       break;
     }
     case SymbolType::PENTAGON: { // pentagon
-      r.setLineColor(c); r.drawSymbol(CSYMBOL_PENTAGON);
+      r.setLineColor(c); r.drawSymbol(CSymbol2D::Type::PENTAGON);
       break;
     }
     case SymbolType::FILLED_PENTAGON: { // filled pentagon
-      r.setFillColor(c); r.drawSymbol(CSYMBOL_PENTAGON);
+      r.setFillColor(c); r.drawSymbol(CSymbol2D::Type::PENTAGON);
       break;
     }
     default:

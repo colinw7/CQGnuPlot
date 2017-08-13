@@ -140,7 +140,7 @@ reset()
   columnHeaderFields_ = Fields();
 }
 
-void
+bool
 CGnuPlotFile::
 processFile()
 {
@@ -150,8 +150,13 @@ processFile()
   if (isCsv())
     return processCsvFile();
 
-  //---
+  return processDataFile();
+}
 
+bool
+CGnuPlotFile::
+processDataFile()
+{
   sets_.clear();
 
   maxNumFields_ = 0;
@@ -307,6 +312,8 @@ processFile()
 
   if (! set.subSets.empty())
     sets_.push_back(set);
+
+  return true;
 }
 
 void
@@ -383,7 +390,7 @@ parseFileLine(const std::string &str, Fields &fields)
     fields.push_back(Field(s));
 }
 
-void
+bool
 CGnuPlotFile::
 processBinaryFile()
 {
@@ -392,14 +399,14 @@ processBinaryFile()
   CUnixFile file(filename_);
 
   if (! file.open())
-    return;
+    return false;
 
   std::vector<double> values;
 
   binaryFormat_.readValues(file, values);
 
   if (values.empty())
-    return;
+    return false;
 
   if (isMatrix()) {
     int nv = values.size();
@@ -409,7 +416,7 @@ processBinaryFile()
     int i = 1;
 
     if (i + nx > nv)
-      return;
+      return false;
 
     typedef std::map<int,double> IRMap;
 
@@ -467,7 +474,7 @@ processBinaryFile()
 
     if (nd < 0) {
       std::cerr << "Bad image data size" << std::endl;
-      return;
+      return false;
     }
 
     int i = 0;
@@ -501,9 +508,11 @@ processBinaryFile()
 
     sets_.push_back(set);
   }
+
+  return true;
 }
 
-void
+bool
 CGnuPlotFile::
 processCsvFile()
 {
@@ -547,6 +556,8 @@ processCsvFile()
   set.subSets.push_back(subSet);
 
   sets_.push_back(set);
+
+  return true;
 }
 
 void

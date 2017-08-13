@@ -144,7 +144,7 @@ setFilename(const std::string &filename)
   if (filename != "") {
     file_ = new CFile(filename_);
 
-    return file_->open(CFile::WRITE);
+    return file_->open(CFile::Mode::WRITE);
   }
   else
     return true;

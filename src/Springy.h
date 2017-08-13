@@ -206,7 +206,7 @@ namespace Springy {
       auto p = nodeSet_.find(id);
 
       if (p == nodeSet_.end())
-        return 0;
+        return nullptr;
 
       return (*p).second;
     }
@@ -228,11 +228,11 @@ namespace Springy {
         if (edge->id() == id)
           return edge;
 
-      return 0;
+      return nullptr;
     }
 
     Edge *addEdge(Edge *edge) {
-      bool exists = getEdge(edge->id());;
+      bool exists = getEdge(edge->id());
 
       if (! exists)
         edges_.push_back(edge);

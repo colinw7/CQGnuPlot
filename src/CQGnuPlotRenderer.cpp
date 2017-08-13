@@ -172,23 +172,23 @@ drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c,
       break;
     }
     case SymbolType::PLUS: { // plus
-      r.setPen(pen); r.drawSymbol(CSYMBOL_PLUS);
+      r.setPen(pen); r.drawSymbol(CSymbol2D::Type::PLUS);
       break;
     }
     case SymbolType::CROSS: { // cross
-      r.setPen(pen); r.drawSymbol(CSYMBOL_CROSS);
+      r.setPen(pen); r.drawSymbol(CSymbol2D::Type::CROSS);
       break;
     }
     case SymbolType::STAR: { // star
-      r.setPen(pen); r.drawSymbol(CSYMBOL_STAR1);
+      r.setPen(pen); r.drawSymbol(CSymbol2D::Type::STAR1);
       break;
     }
     case SymbolType::BOX: { // box
-      r.setPen(pen); r.drawSymbol(CSYMBOL_BOX);
+      r.setPen(pen); r.drawSymbol(CSymbol2D::Type::BOX);
       break;
     }
     case SymbolType::FILLED_BOX: { // filled box
-      r.setBrush(brush); r.drawSymbol(CSYMBOL_BOX);
+      r.setBrush(brush); r.drawSymbol(CSymbol2D::Type::BOX);
       break;
     }
     case SymbolType::CIRCLE: { // circle
@@ -200,35 +200,35 @@ drawSymbol(const CPoint2D &point, SymbolType type, double size, const CRGBA &c,
       break;
     }
     case SymbolType::TRIANGLE: { // triangle
-      r.setPen(pen); r.drawSymbol(CSYMBOL_TRIANGLE);
+      r.setPen(pen); r.drawSymbol(CSymbol2D::Type::TRIANGLE);
       break;
     }
     case SymbolType::FILLED_TRIANGLE: { // filled triangle
-      r.setBrush(brush); r.drawSymbol(CSYMBOL_TRIANGLE);
+      r.setBrush(brush); r.drawSymbol(CSymbol2D::Type::TRIANGLE);
       break;
     }
     case SymbolType::INV_TRIANGLE: { // inv triangle
-      r.setPen(pen); r.drawSymbol(CSYMBOL_ITRIANGLE);
+      r.setPen(pen); r.drawSymbol(CSymbol2D::Type::ITRIANGLE);
       break;
     }
     case SymbolType::FILLED_INV_TRIANGLE: { // filled inv triangle
-      r.setBrush(brush); r.drawSymbol(CSYMBOL_ITRIANGLE);
+      r.setBrush(brush); r.drawSymbol(CSymbol2D::Type::ITRIANGLE);
       break;
     }
     case SymbolType::DIAMOND: { // diamond
-      r.setPen(pen); r.drawSymbol(CSYMBOL_DIAMOND);
+      r.setPen(pen); r.drawSymbol(CSymbol2D::Type::DIAMOND);
       break;
     }
     case SymbolType::FILLED_DIAMOND: { // filled diamond
-      r.setBrush(brush); r.drawSymbol(CSYMBOL_DIAMOND);
+      r.setBrush(brush); r.drawSymbol(CSymbol2D::Type::DIAMOND);
       break;
     }
     case SymbolType::PENTAGON: { // pentagon
-      r.setPen(pen); r.drawSymbol(CSYMBOL_PENTAGON);
+      r.setPen(pen); r.drawSymbol(CSymbol2D::Type::PENTAGON);
       break;
     }
     case SymbolType::FILLED_PENTAGON: { // filled pentagon
-      r.setBrush(brush); r.drawSymbol(CSYMBOL_PENTAGON);
+      r.setBrush(brush); r.drawSymbol(CSymbol2D::Type::PENTAGON);
       break;
     }
     default:

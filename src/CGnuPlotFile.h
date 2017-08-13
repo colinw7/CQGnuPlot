@@ -128,11 +128,13 @@ class CGnuPlotFile {
 
   void reset();
 
-  void processFile();
+  bool processFile();
 
-  void processBinaryFile();
+  bool processBinaryFile();
 
-  void processCsvFile();
+  bool processCsvFile();
+
+  bool processDataFile();
 
   int numSets() const { return sets_.size(); }
 
