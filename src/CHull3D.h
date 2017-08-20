@@ -15,14 +15,11 @@ class CHull3D {
   /* Define vertex indices. */
   enum { IX = 0, IY = 1, IZ = 2 };
 
-  /* Range of safe coord values. */
-  enum { SAFE = INT_MAX };
-
  public:
   /* Define structures for vertices, edges and faces */
-  struct Face;
-  struct Edge;
-  class  Vertex;
+  class Face;
+  class Edge;
+  class Vertex;
 
   class Vertex : public CListLink<Vertex> {
    private:
@@ -89,7 +86,10 @@ class CHull3D {
 
    private:
     void checkSafe() const {
-      if ((abs(x() > SAFE)) || (abs(y() > SAFE)) || (abs(z() > SAFE))) {
+      /* Range of safe coord values. */
+      static int SAFE = INT_MAX;
+
+      if ((fabs(x()) > SAFE) || (fabs(y()) > SAFE) || (fabs(z()) > SAFE)) {
         printf("Coordinate of vertex below might be too large: run with -c flag\n");
         print();
       }
