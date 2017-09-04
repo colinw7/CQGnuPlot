@@ -18,7 +18,7 @@ class CQRubberBand : public QRubberBand {
   void setColor(const QColor &c);
 
  private:
-  CQRubberBandStyle *style_;
+  CQRubberBandStyle *style_ { nullptr };
 };
 
 #endif
