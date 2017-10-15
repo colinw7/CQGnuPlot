@@ -99,15 +99,15 @@ class CSymbol2DSVGRenderer : public CSymbol2DRenderer {
     }
   }
 
-  void moveTo(double x, double y) {
+  void moveTo(double x, double y) override {
     str_ << "M " << p_.x + x << " " << p_.y + y;
   }
 
-  void lineTo(double x, double y) {
+  void lineTo(double x, double y) override {
     str_ << " L " << p_.x + x << " " << p_.y + y;
   }
 
-  void closePath() {
+  void closePath() override {
     str_ << " z";
   }
 
@@ -123,7 +123,7 @@ class CSymbol2DSVGRenderer : public CSymbol2DRenderer {
     fc_ = c; fill_ = true;
   }
 
-  void stroke() {
+  void stroke() override {
     if      (fill_ && stroke_) {
       r_->os() << "<path d=\"" << str_.str() << "\" style=\"";
       r_->os() << strokeColor(lc_) << " " << fillColor(fc_) << " ";
@@ -140,6 +140,40 @@ class CSymbol2DSVGRenderer : public CSymbol2DRenderer {
     }
 
     str_.str("");
+  }
+
+  void fill() override {
+    if      (fill_ && stroke_) {
+      r_->os() << "<path d=\"" << str_.str() << "\" style=\"";
+      r_->os() << strokeColor(lc_) << " " << fillColor(fc_) << " ";
+      r_->os() << strokeWidth(1) << "\"/>\n";
+    }
+    else if (fill_) {
+      r_->os() << "<path d=\"" << str_.str() << "\" style=\"";
+      r_->os() << strokeNone() << " " << fillColor(fc_) << "\"/>\n";
+    }
+    else if (stroke_) {
+      r_->os() << "<path d=\"" << str_.str() << "\" style=\"";
+      r_->os() << strokeColor(lc_) << " " << fillNone() << " ";
+      r_->os() << strokeWidth(1) << "\"/>\n";
+    }
+
+    str_.str("");
+  }
+
+  void strokeCircle(double x, double y, double r) override {
+    if (stroke_) {
+      r_->os() << "<circle x=\"" << x << "\" y=\"" << y << "\" r=\"" << r << "\" style=\"";
+      r_->os() << strokeColor(lc_) << " " << fillNone() << " ";
+      r_->os() << strokeWidth(1) << "\"/>\n";
+    }
+  }
+
+  void fillCircle(double x, double y, double r) override {
+    if (fill_) {
+      r_->os() << "<circle x=\"" << x << "\" y=\"" << y << "\" r=\"" << r << "\" style=\"";
+      r_->os() << strokeNone() << " " << fillColor(fc_) << "\"/>\n";
+    }
   }
 
  private:

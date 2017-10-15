@@ -525,7 +525,7 @@ processCsvFile()
 
   CCsv csv(filename_);
 
-  CCsv::FieldsArray fieldsArray;
+  CCsv::Data fieldsArray;
 
   csv.getFields(fieldsArray);
 

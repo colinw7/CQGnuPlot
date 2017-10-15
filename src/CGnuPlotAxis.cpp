@@ -146,8 +146,8 @@ calc()
   reverse_ = (start_ > end_);
 
   if (logBase().isValid()) {
-    start1_ = CMathGen::RoundDown(start_);
-    end1_   = CMathGen::RoundUp  (end_);
+    start1_ = CMathRound::RoundDown(start_);
+    end1_   = CMathRound::RoundUp  (end_);
 
     numTicks1_ = end1_ - start1_;
     numTicks2_ = 10;
@@ -201,7 +201,7 @@ calcTics(double start, double end, int tickIncrement, double majorIncrement,
 
   // Calculate nearest Power of Ten to Length
 
-  int power = CMathGen::RoundDown(log10(length));
+  int power = CMathRound::RoundDown(log10(length));
 
   //------
 
@@ -262,13 +262,13 @@ calcTics(double start, double end, int tickIncrement, double majorIncrement,
 
     // Set the Gap Positions
 
-    numTicks1 = CMathGen::RoundDown((end1 - start1)/increment + 0.5);
+    numTicks1 = CMathRound::RoundDown((end1 - start1)/increment + 0.5);
     numTicks2 = numGapTicks;
   }
   else {
-    start1    = CMathGen::RoundDown(start/majorIncrement)*majorIncrement;
-    end1      = CMathGen::RoundUp  (end  /majorIncrement)*majorIncrement;
-    numTicks1 = CMathGen::RoundDown((end1 - start1)/majorIncrement + 0.5);
+    start1    = CMathRound::RoundDown(start/majorIncrement)*majorIncrement;
+    end1      = CMathRound::RoundUp  (end  /majorIncrement)*majorIncrement;
+    numTicks1 = CMathRound::RoundDown((end1 - start1)/majorIncrement + 0.5);
     numTicks2 = 5;
   }
 
@@ -286,11 +286,11 @@ testAxisGaps(double start, double end, double testIncrement, int testNumGapTicks
   // Calculate New Start and End implied by the Test Increment
 
   errno = 0;
-  double newStart = CMathGen::RoundDown(start/testIncrement)*testIncrement;
+  double newStart = CMathRound::RoundDown(start/testIncrement)*testIncrement;
   if (errno == ERANGE) return false;
 
   errno = 0;
-  double newEnd   = CMathGen::RoundUp  (end  /testIncrement)*testIncrement;
+  double newEnd   = CMathRound::RoundUp  (end  /testIncrement)*testIncrement;
   if (errno == ERANGE) return false;
 
   while (newStart > start)
@@ -300,7 +300,7 @@ testAxisGaps(double start, double end, double testIncrement, int testNumGapTicks
     newEnd += testIncrement;
 
   errno = 0;
-  int testNumGaps = CMathGen::RoundUp((newEnd - newStart)/testIncrement);
+  int testNumGaps = CMathRound::RoundUp((newEnd - newStart)/testIncrement);
   if (errno == ERANGE) return false;
 
   //------

@@ -351,8 +351,8 @@ updateImage2() const
           c = CRGBA(0,0,0,0);
       }
       else {
-        int px = CMathGen::Round(p1.x);
-        int py = CMathGen::Round(p1.y);
+        int px = CMathRound::Round(p1.x);
+        int py = CMathRound::Round(p1.y);
 
         if (px >= 0 && px < size_.width && py >= 0 && py < size_.height)
           image1_->getRGBAPixel(px, py, c);

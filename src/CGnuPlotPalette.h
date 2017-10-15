@@ -43,8 +43,14 @@ class CGnuPlotPalette {
   bool isGray() const { return pal_->isGray(); }
   void setGray(bool b) { pal_->setGray(b); }
 
-  bool isNegative() const { return pal_->isNegative(); }
-  void setNegative(bool b) { pal_->setNegative(b); }
+  bool isRedNegative() const { return pal_->isRedNegative(); }
+  void setRedNegative(bool b) { pal_->setRedNegative(b); }
+
+  bool isGreenNegative() const { return pal_->isGreenNegative(); }
+  void setGreenNegative(bool b) { pal_->setGreenNegative(b); }
+
+  bool isBlueNegative() const { return pal_->isBlueNegative(); }
+  void setBlueNegative(bool b) { pal_->setBlueNegative(b); }
 
   int maxColors() const { return pal_->maxColors(); }
   void setMaxColors(int n) { pal_->setMaxColors(n); }

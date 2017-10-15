@@ -54,24 +54,55 @@ class CQSymbol2DRenderer : public CSymbol2DRenderer {
 
   void setLineWidth(double w) { pen_.setWidthF(w); }
 
-  void moveTo(double x, double y) {
+  void moveTo(double x, double y) override {
     path_.moveTo(QPointF(px_ + sw_*x, py_ + sh_*y));
   }
 
-  void lineTo(double x, double y) {
+  void lineTo(double x, double y) override {
     path_.lineTo(QPointF(px_ + sw_*x, py_ + sh_*y));
   }
 
-  void closePath() {
+  void closePath() override {
     path_.closeSubpath();
   }
 
-  void stroke() {
-    if (fill_)
-      r_->painter()->fillPath(path_, brush_);
+  void stroke() override {
+    //if (fill_)
+    //  r_->painter()->fillPath(path_, brush_);
 
     if (stroke_)
       r_->painter()->strokePath(path_, pen_);
+  }
+
+  void fill() override {
+    if (fill_)
+      r_->painter()->fillPath(path_, brush_);
+  }
+
+  void strokeCircle(double x, double y, double r) override {
+    QRectF rect(px_ + (x - r)*sw_, py_ + (y - r)*sw_, 2*r*sw_, 2*r*sw_);
+
+    r_->painter()->save();
+
+    r_->painter()->setBrush(Qt::NoBrush);
+    r_->painter()->setPen  (pen_);
+
+    r_->painter()->drawEllipse(rect);
+
+    r_->painter()->restore();
+  }
+
+  void fillCircle(double x, double y, double r) override {
+    QRectF rect(px_ + (x - r)*sw_, py_ + (y - r)*sw_, 2*r*sw_, 2*r*sw_);
+
+    r_->painter()->save();
+
+    r_->painter()->setBrush(brush_);
+    r_->painter()->setPen  (Qt::NoPen);
+
+    r_->painter()->drawEllipse(rect);
+
+    r_->painter()->restore();
   }
 
   void setPen  (const QPen   &p) { pen_   = p; stroke_ = true; }

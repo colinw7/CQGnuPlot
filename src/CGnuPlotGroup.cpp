@@ -1010,8 +1010,8 @@ normalizeYRange(int ind, double &ymin, double &ymax, double yi) const
     CPoint3D p1 = mapLogPoint(1, ind, 1, CPoint3D(1, ymin, 1));
     CPoint3D p2 = mapLogPoint(1, ind, 1, CPoint3D(1, ymax, 1));
 
-    double y1 = CMathGen::RoundDown(p1.y);
-    double y2 = CMathGen::RoundUp  (p2.y);
+    double y1 = CMathRound::RoundDown(p1.y);
+    double y2 = CMathRound::RoundUp  (p2.y);
 
     CPoint3D p3 = unmapLogPoint(1, ind, 1, CPoint3D(1, y1, 1));
     CPoint3D p4 = unmapLogPoint(1, ind, 1, CPoint3D(1, y2, 1));

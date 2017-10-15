@@ -8220,7 +8220,9 @@ setCmd(const std::string &args)
         else                    { errorMsg("Invalid arg '" + arg1 + "'"); }
       }
       else if (arg == "positive" || arg == "negative") {
-        palette_.setNegative(arg == "negative");
+        palette_.setRedNegative  (arg == "negative");
+        palette_.setGreenNegative(arg == "negative");
+        palette_.setBlueNegative (arg == "negative");
       }
       else if (arg == "nops_allcF" || arg == "ps_allcF") {
         palette_.setPSAllCF(arg == "ps_allcF");

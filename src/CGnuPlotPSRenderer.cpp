@@ -39,7 +39,7 @@ class CSymbol2DPSRenderer : public CSymbol2DRenderer {
     }
   }
 
-  void moveTo(double x, double y) {
+  void moveTo(double x, double y) override {
     points_.clear();
 
     double px = r_->pixelWidthToWindowWidth  (x);
@@ -48,14 +48,14 @@ class CSymbol2DPSRenderer : public CSymbol2DRenderer {
     points_.push_back(p_ + CPoint2D(px, py));
   }
 
-  void lineTo(double x, double y) {
+  void lineTo(double x, double y) override {
     double px = r_->pixelWidthToWindowWidth  (x);
     double py = r_->pixelHeightToWindowHeight(y);
 
     points_.push_back(p_ + CPoint2D(px, py));
   }
 
-  void closePath() {
+  void closePath() override {
   }
 
   void setLineColor(const CRGBA &c) {
@@ -70,7 +70,7 @@ class CSymbol2DPSRenderer : public CSymbol2DRenderer {
     fc_ = c; fill_ = true;
   }
 
-  void stroke() {
+  void stroke() override {
     if      (fill_ && stroke_) {
       r_->fillPolygon(points_, fc_);
       r_->drawPolygon(points_, lc_, lw_, CLineDash());
@@ -83,6 +83,20 @@ class CSymbol2DPSRenderer : public CSymbol2DRenderer {
     }
 
     str_.str("");
+  }
+
+  void fill() override {
+    if (fill_) {
+      r_->fillPolygon(points_, fc_);
+    }
+  }
+
+  void strokeCircle(double /*x*/, double /*y*/, double /*r*/) override {
+    // TODO
+  }
+
+  void fillCircle(double /*x*/, double /*y*/, double /*r*/) override {
+    // TODO
   }
 
  private:
