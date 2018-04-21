@@ -4,8 +4,8 @@
 #include <CQDialog.h>
 
 class CQGnuPlotMainWindow;
-class CQGradientPalette;
-class CQGradientPaletteControl;
+class CQGradientPalettePlot;
+class CQGradientPaletteIFace;
 class CGradientPalette;
 
 class CQGnuPlotPaletteDialog : public CQDialog {
@@ -25,10 +25,10 @@ class CQGnuPlotPaletteDialog : public CQDialog {
   void paletteChanged();
 
  private:
-  CQGnuPlotMainWindow*      window_;
-  CGradientPalette*         pal_;
-  CQGradientPalette*        palette_;
-  CQGradientPaletteControl* control_;
+  CQGnuPlotMainWindow*    window_;
+  CGradientPalette*       pal_;
+  CQGradientPalettePlot*  palette_;
+  CQGradientPaletteIFace* control_;
 };
 
 #endif

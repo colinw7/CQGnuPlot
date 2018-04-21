@@ -55,8 +55,8 @@ class CGnuPlotPalette {
   int maxColors() const { return pal_->maxColors(); }
   void setMaxColors(int n) { pal_->setMaxColors(n); }
 
-  bool isPSAllCF() const { return pal_->isPSAllCF(); }
-  void setPSAllCF(bool b) { pal_->setPSAllCF(b); }
+  //bool isPSAllCF() const { return pal_->isPSAllCF(); }
+  //void setPSAllCF(bool b) { pal_->setPSAllCF(b); }
 
   void setRgbModel(int r, int g, int b) { pal_->setRgbModel(r, g, b); }
 

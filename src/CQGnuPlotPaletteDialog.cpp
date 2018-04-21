@@ -1,7 +1,7 @@
 #include <CQGnuPlotPaletteDialog.h>
 #include <CQGnuPlotWindow.h>
-#include <CQGradientPalette.h>
-#include <CQGradientPaletteControl.h>
+#include <CQGradientPalettePlot.h>
+#include <CQGradientPaletteIFace.h>
 #include <CQGnuPlotGroup.h>
 #include <QHBoxLayout>
 
@@ -31,8 +31,8 @@ createWidgets(QWidget *)
   QHBoxLayout *layout = new QHBoxLayout(frame);
   layout->setMargin(2); layout->setSpacing(2);
 
-  palette_ = new CQGradientPalette(expr);
-  control_ = new CQGradientPaletteControl(palette_);
+  palette_ = new CQGradientPalettePlot(expr);
+  control_ = new CQGradientPaletteIFace(palette_);
 
   layout->addWidget(palette_);
   layout->addWidget(control_);

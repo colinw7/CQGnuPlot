@@ -41,9 +41,13 @@ class CirclePack {
  public:
   CirclePack() : ind1_(0), ind2_(1) { }
 
- ~CirclePack() {
-    for (auto &n : nodes_)
-      delete n;
+ ~CirclePack() { }
+
+  void reset() {
+    nodes_.clear();
+
+    ind1_ = 0;
+    ind2_ = 1;
   }
 
   bool addNode(NODE *node) {
@@ -133,7 +137,7 @@ class CirclePack {
       NODE *node1 = nodes_[ind1];
       NODE *node2 = nodes_[ind2];
 
-      //std::cerr << "Test: " << node1->id() << " and " << node2->id() << std::endl;
+      //std::cerr << "Test: " << node1->id() << " and " << node2->id() << "\n";
 
       double xi1, yi1, xi2, yi2;
 
@@ -162,7 +166,7 @@ class CirclePack {
             yc = yi2;
           }
 
-          //std::cerr << "Place: " << xc << " " << yc << std::endl;
+          //std::cerr << "Place: " << xc << " " << yc << "\n";
 
           return true;
         }

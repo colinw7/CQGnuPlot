@@ -692,9 +692,9 @@ builtinFns[] = {
   { "cerfc"  , "c"  , CExprFunctionCErfC   },
   { "gamma"  , "r"  , CExprFunctionGamma   },
   { "lgamma" , "r"  , CExprFunctionLGamma  },
+#endif
   { "norm"   , "r"  , CExprFunctionNorm    },
   { "invnorm", "r"  , CExprFunctionInvNorm },
-#endif
   { "", "", 0 }
 };
 
@@ -886,7 +886,7 @@ parseArgs(const std::string &argsStr, Args &args, bool &variableArgs)
   for (uint i = 0; i < num_args; ++i) {
     const std::string &arg = args1[i];
 
-    if (arg == "..." && i == num_args -1) {
+    if (arg == "..." && i == num_args - 1) {
       variableArgs = true;
       break;
     }
