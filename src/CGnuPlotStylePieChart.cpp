@@ -247,19 +247,19 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   if      (halign == CHALIGN_TYPE_LEFT)
     x1 = rbbox.getLeft () + bx;
   else if (halign == CHALIGN_TYPE_RIGHT)
-    x1 = rbbox.getRight() - bx - size.width;
+    x1 = rbbox.getRight() - bx - size.getWidth();
   else if (halign == CHALIGN_TYPE_CENTER)
-    x1 = rbbox.getXMid() - size.width/2;
+    x1 = rbbox.getXMid() - size.getWidth()/2;
 
   if      (valign == CVALIGN_TYPE_TOP)
-    y1 = rbbox.getTop   () - by - size.height;
+    y1 = rbbox.getTop   () - by - size.getHeight();
   else if (valign == CVALIGN_TYPE_BOTTOM)
     y1 = rbbox.getBottom() + by;
   else if (valign == CVALIGN_TYPE_CENTER)
-    y1 = rbbox.getYMid() - size.height/2;
+    y1 = rbbox.getYMid() - size.getHeight()/2;
 
-  double x2 = x1 + size.width;
-  double y2 = y1 + size.height;
+  double x2 = x1 + size.getWidth ();
+  double y2 = y1 + size.getHeight();
 
   CBBox2D bbox(x1, y1, x2, y2);
 

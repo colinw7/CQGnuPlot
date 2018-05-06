@@ -66,7 +66,7 @@ calcBBox() const
     else if (size_.isValid()) {
       CSize2D size = size_.getValue().getSize(renderer);
 
-      CPoint3D s(size.width, size.height, 0);
+      CPoint3D s(size.getWidth(), size.getHeight(), 0);
 
       const CPoint3D &p1 = from_.getValue().point();
       CPoint3D        p2 = p1 + s;
@@ -78,7 +78,7 @@ calcBBox() const
     if (size_.isValid()) {
       CSize2D size = size_.getValue().getSize(renderer);
 
-      CPoint3D s(size.width, size.height, 0);
+      CPoint3D s(size.getWidth(), size.getHeight(), 0);
 
       CPoint3D p1 = center_.getValue().point() - s/2;
       CPoint3D p2 = center_.getValue().point() + s/2;

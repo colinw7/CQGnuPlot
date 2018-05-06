@@ -8225,7 +8225,7 @@ setCmd(const std::string &args)
         palette_.setBlueNegative (arg == "negative");
       }
       else if (arg == "nops_allcF" || arg == "ps_allcF") {
-        palette_.setPSAllCF(arg == "ps_allcF");
+        //palette_.setPSAllCF(arg == "ps_allcF");
       }
       else if (arg == "maxcolors") {
         int n;

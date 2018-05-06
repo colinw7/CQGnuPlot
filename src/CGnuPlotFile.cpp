@@ -463,8 +463,8 @@ processBinaryFile()
     sets_.push_back(set);
   }
   else {
-    int w = binarySize_.width;
-    int h = binarySize_.height;
+    int w = binarySize_.getWidth();
+    int h = binarySize_.getHeight();
 
     if (w <= 1) w = 1;
     if (h <= 1) h = 1;

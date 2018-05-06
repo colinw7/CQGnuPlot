@@ -7,26 +7,26 @@ CGnuPlotSize::
 getSize(CGnuPlotRenderer *renderer) const
 {
 #if 0
-  double x = s_.width;
-  double y = s_.height;
+  double x = s_.getWidth ();
+  double y = s_.getHeight();
 
   CPoint2D tw(x, y), gw(x, y), sw(x, y), cw(x, y);
 
   if (systemX_ == CGnuPlotTypes::CoordSys::SECOND ||
       systemY_ == CGnuPlotTypes::CoordSys::SECOND)
-    renderer->secondToWindow(CPoint2D(s_.width, s_.height), tw);
+    renderer->secondToWindow(CPoint2D(s_.getWidth(), s_.getHeight()), tw);
 
   if (systemX_ == CGnuPlotTypes::CoordSys::GRAPH ||
       systemY_ == CGnuPlotTypes::CoordSys::GRAPH)
-    renderer->graphToWindow(CPoint2D(s_.width, s_.height), gw);
+    renderer->graphToWindow(CPoint2D(s_.getWidth(), s_.getHeight()), gw);
 
   if (systemX_ == CGnuPlotTypes::CoordSys::SCREEN ||
       systemY_ == CGnuPlotTypes::CoordSys::SCREEN)
-    renderer->screenToWindow(CPoint2D(s_.width, s_.height), sw);
+    renderer->screenToWindow(CPoint2D(s_.getWidth(), s_.getHeight()), sw);
 
   if (systemX_ == CGnuPlotTypes::CoordSys::CHARACTER ||
       systemY_ == CGnuPlotTypes::CoordSys::CHARACTER)
-    renderer->screenToChar(CPoint2D(s_.width, s_.height), cw);
+    renderer->screenToChar(CPoint2D(s_.getWidth(), s_.getHeight()), cw);
 
   //---
 
@@ -57,8 +57,8 @@ getSize(CGnuPlotRenderer *renderer) const
   }
 #endif
 
-  CGnuPlotPosition p1(CPoint3D(s_.width, s_.height, 0), systemX_);
-  CGnuPlotPosition p2(CPoint3D(s_.width, s_.height, 0), systemY_);
+  CGnuPlotPosition p1(CPoint3D(s_.getWidth(), s_.getHeight(), 0), systemX_);
+  CGnuPlotPosition p2(CPoint3D(s_.getWidth(), s_.getHeight(), 0), systemY_);
 
   double x = p1.getDistance2D(renderer).x;
   double y = p2.getDistance2D(renderer).y;

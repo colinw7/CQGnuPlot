@@ -111,20 +111,20 @@ draw(CGnuPlotRenderer *renderer)
 
       x1 = CGnuPlotUtil::map(origin.x, 0, 1, ax1, ax2);
       y1 = CGnuPlotUtil::map(origin.y, 0, 1, ay1, ay2);
-      x2 = x1 + CGnuPlotUtil::map(size().width , 0, 1, 0, aw1);
-      y2 = y1 + CGnuPlotUtil::map(size().height, 0, 1, 0, ah1);
+      x2 = x1 + CGnuPlotUtil::map(size().getWidth (), 0, 1, 0, aw1);
+      y2 = y1 + CGnuPlotUtil::map(size().getHeight(), 0, 1, 0, ah1);
 #else
       x1 = CGnuPlotUtil::map(origin.x, 0, 1, orbbox.getXMin(), orbbox.getXMax());
       y1 = CGnuPlotUtil::map(origin.y, 0, 1, orbbox.getYMin(), orbbox.getYMax());
-      x2 = x1 + CGnuPlotUtil::map(size().width , 0, 1, 0, orbbox.getWidth ());
-      y2 = y1 + CGnuPlotUtil::map(size().height, 0, 1, 0, orbbox.getHeight());
+      x2 = x1 + CGnuPlotUtil::map(size().getWidth (), 0, 1, 0, orbbox.getWidth ());
+      y2 = y1 + CGnuPlotUtil::map(size().getHeight(), 0, 1, 0, orbbox.getHeight());
 #endif
     }
     else {
       x1 = CGnuPlotUtil::map(origin.x, 0, 1, orbbox.getXMin(), orbbox.getXMax());
       y1 = CGnuPlotUtil::map(origin.y, 0, 1, orbbox.getYMin(), orbbox.getYMax());
-      x2 = x1 + CGnuPlotUtil::map(size().width , 0, 1, 0, orbbox.getWidth ());
-      y2 = y1 + CGnuPlotUtil::map(size().height, 0, 1, 0, orbbox.getHeight());
+      x2 = x1 + CGnuPlotUtil::map(size().getWidth (), 0, 1, 0, orbbox.getWidth ());
+      y2 = y1 + CGnuPlotUtil::map(size().getHeight(), 0, 1, 0, orbbox.getHeight());
     }
 
     if (isVertical()) {
@@ -138,7 +138,7 @@ draw(CGnuPlotRenderer *renderer)
   }
   else {
     if (isVertical()) {
-      dx = CGnuPlotUtil::map(size().width , 0, 1, 0, irbbox.getWidth ());
+      dx = CGnuPlotUtil::map(size().getWidth(), 0, 1, 0, irbbox.getWidth ());
 
       x1 = irbbox.getRight() + bx;
       y1 = irbbox.getBottom();
@@ -149,7 +149,7 @@ draw(CGnuPlotRenderer *renderer)
       ty = y1;
     }
     else {
-      dy = CGnuPlotUtil::map(size().height, 0, 1, 0, irbbox.getWidth ());
+      dy = CGnuPlotUtil::map(size().getHeight(), 0, 1, 0, irbbox.getWidth ());
 
       x1 = irbbox.getLeft();
       y2 = axbbox.getBottom() - by;

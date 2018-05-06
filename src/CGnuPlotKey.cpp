@@ -298,8 +298,8 @@ drawClustered()
 
     sizes.push_back(size1);
 
-    size.width  += size1.width;
-    size.height  = std::max(size.height, size1.height);
+    size.setWidth (size.getWidth() + size1.getWidth());
+    size.setHeight(std::max(size.getHeight(), size1.getHeight()));
   }
 
   //---
@@ -333,9 +333,9 @@ drawClustered()
     }
 
     if (! isReverse())
-      x2 = x1 + sizes[i].width;
+      x2 = x1 + sizes[i].getWidth();
     else
-      x1 = x2 - sizes[i].width;
+      x1 = x2 - sizes[i].getWidth();
 
     double y = y2 - by;
 
@@ -639,16 +639,16 @@ calcBBox(const CSize2D &size)
     if      (halign == CHALIGN_TYPE_LEFT)
       x1 = p.x;
     else if (halign == CHALIGN_TYPE_RIGHT)
-      x1 = p.x - size.width;
+      x1 = p.x - size.getWidth();
     else if (halign == CHALIGN_TYPE_CENTER)
-      x1 = p.x - size.width/2;
+      x1 = p.x - size.getWidth()/2;
 
     if      (valign == CVALIGN_TYPE_TOP)
-      y1 = p.y - size.height;
+      y1 = p.y - size.getHeight();
     else if (valign == CVALIGN_TYPE_BOTTOM)
       y1 = p.y;
     else if (valign == CVALIGN_TYPE_CENTER)
-      y1 = p.y - size.height/2;
+      y1 = p.y - size.getHeight()/2;
   }
   else if (inMargin()) {
 #if 0
@@ -660,47 +660,47 @@ calcBBox(const CSize2D &size)
     CBBox2D rbbox(px1, py1, px2, py2);
 
     if (isLMargin() || isRMargin()) {
-      x1 = (isLMargin() ? rbbox.getXMin() + bx : rbbox.getXMax() - size.width - bx);
+      x1 = (isLMargin() ? rbbox.getXMin() + bx : rbbox.getXMax() - size.getWidth() - bx);
 
       if      (valign == CVALIGN_TYPE_TOP)
-        y1 = rbbox.getYMax() - by - size.height;
+        y1 = rbbox.getYMax() - by - size.getHeight();
       else if (valign == CVALIGN_TYPE_BOTTOM)
         y1 = rbbox.getYMin() + by;
       else if (valign == CVALIGN_TYPE_CENTER)
-        y1 = (rbbox.getYMin() + rbbox.getYMax())/2 - size.height/2;
+        y1 = (rbbox.getYMin() + rbbox.getYMax())/2 - size.getHeight()/2;
     }
     else {
-      y1 = (isBMargin() ? rbbox.getYMin() + by : rbbox.getYMax() - size.height - by);
+      y1 = (isBMargin() ? rbbox.getYMin() + by : rbbox.getYMax() - size.getHeight() - by);
 
       if      (halign == CHALIGN_TYPE_LEFT)
         x1 = rbbox.getXMin() + bx;
       else if (halign == CHALIGN_TYPE_RIGHT)
-        x1 = rbbox.getXMax() - bx - size.width;
+        x1 = rbbox.getXMax() - bx - size.getWidth();
       else if (halign == CHALIGN_TYPE_CENTER)
-        x1 = (rbbox.getXMin() + rbbox.getXMax())/2 - size.width/2;
+        x1 = (rbbox.getXMin() + rbbox.getXMax())/2 - size.getWidth()/2;
     }
 #else
     CBBox2D rbbox = group_->axisBBox2D();
 
     if (isLMargin() || isRMargin()) {
-      x1 = (isLMargin() ? rbbox.getXMin() - size.width - bx : rbbox.getXMax() + bx);
+      x1 = (isLMargin() ? rbbox.getXMin() - size.getWidth() - bx : rbbox.getXMax() + bx);
 
       if      (valign == CVALIGN_TYPE_TOP)
-        y1 = rbbox.getYMax() + by + size.height;
+        y1 = rbbox.getYMax() + by + size.getHeight();
       else if (valign == CVALIGN_TYPE_BOTTOM)
         y1 = rbbox.getYMin() - by;
       else if (valign == CVALIGN_TYPE_CENTER)
-        y1 = (rbbox.getYMin() + rbbox.getYMax())/2 - size.height/2;
+        y1 = (rbbox.getYMin() + rbbox.getYMax())/2 - size.getHeight()/2;
     }
     else {
-      y1 = (isBMargin() ? rbbox.getYMin() - size.height - by : rbbox.getYMax() + by);
+      y1 = (isBMargin() ? rbbox.getYMin() - size.getHeight() - by : rbbox.getYMax() + by);
 
       if      (halign == CHALIGN_TYPE_LEFT)
-        x1 = rbbox.getXMin() - size.width - bx;
+        x1 = rbbox.getXMin() - size.getWidth() - bx;
       else if (halign == CHALIGN_TYPE_RIGHT)
         x1 = rbbox.getXMax() + bx;
       else if (halign == CHALIGN_TYPE_CENTER)
-        x1 = (rbbox.getXMin() + rbbox.getXMax())/2 - size.width/2;
+        x1 = (rbbox.getXMin() + rbbox.getXMax())/2 - size.getWidth()/2;
     }
 #endif
   }
@@ -711,16 +711,16 @@ calcBBox(const CSize2D &size)
       if      (halign == CHALIGN_TYPE_LEFT)
         x1 = rbbox.getLeft () + bx;
       else if (halign == CHALIGN_TYPE_RIGHT)
-        x1 = rbbox.getRight() - bx - size.width;
+        x1 = rbbox.getRight() - bx - size.getWidth();
       else if (halign == CHALIGN_TYPE_CENTER)
-        x1 = rbbox.getXMid() - size.width/2;
+        x1 = rbbox.getXMid() - size.getWidth()/2;
 
       if      (valign == CVALIGN_TYPE_TOP)
-        y1 = rbbox.getTop   () - by - size.height;
+        y1 = rbbox.getTop   () - by - size.getHeight();
       else if (valign == CVALIGN_TYPE_BOTTOM)
         y1 = rbbox.getBottom() + by;
       else if (valign == CVALIGN_TYPE_CENTER)
-        y1 = rbbox.getYMid() - size.height/2;
+        y1 = rbbox.getYMid() - size.getHeight()/2;
     }
     else {
       CBBox2D rbbox = group_->axisBBox2D();
@@ -728,40 +728,40 @@ calcBBox(const CSize2D &size)
       // vertical: place outside left/right
       if (vertical()) {
         if      (halign == CHALIGN_TYPE_LEFT)
-          x1 = rbbox.getLeft () - bx - size.width;
+          x1 = rbbox.getLeft () - bx - size.getWidth();
         else if (halign == CHALIGN_TYPE_RIGHT)
           x1 = rbbox.getRight() + bx;
         else if (halign == CHALIGN_TYPE_CENTER)
-          x1 = rbbox.getXMid() - size.width/2;
+          x1 = rbbox.getXMid() - size.getWidth()/2;
 
         if      (valign == CVALIGN_TYPE_TOP)
-          y1 = rbbox.getTop   () - by - size.height;
+          y1 = rbbox.getTop   () - by - size.getHeight();
         else if (valign == CVALIGN_TYPE_BOTTOM)
           y1 = rbbox.getBottom() + by;
         else if (valign == CVALIGN_TYPE_CENTER)
-          y1 = rbbox.getYMid() - size.height/2;
+          y1 = rbbox.getYMid() - size.getHeight()/2;
       }
       // horizontal: place outside top/bottom
       else {
         if      (halign == CHALIGN_TYPE_LEFT)
           x1 = rbbox.getLeft () + bx;
         else if (halign == CHALIGN_TYPE_RIGHT)
-          x1 = rbbox.getRight() - bx - size.width;
+          x1 = rbbox.getRight() - bx - size.getWidth();
         else if (halign == CHALIGN_TYPE_CENTER)
-          x1 = rbbox.getXMid() - size.width/2;
+          x1 = rbbox.getXMid() - size.getWidth()/2;
 
         if      (valign == CVALIGN_TYPE_TOP)
           y1 = rbbox.getTop   () + by;
         else if (valign == CVALIGN_TYPE_BOTTOM)
-          y1 = rbbox.getBottom() - by - size.height;
+          y1 = rbbox.getBottom() - by - size.getHeight();
         else if (valign == CVALIGN_TYPE_CENTER)
-          y1 = rbbox.getYMid() - size.height/2;
+          y1 = rbbox.getYMid() - size.getHeight()/2;
       }
     }
   }
 
-  double x2 = x1 + size.width;
-  double y2 = y1 + size.height;
+  double x2 = x1 + size.getWidth ();
+  double y2 = y1 + size.getHeight();
 
   bbox_ = CBBox2D(x1, y1, x2, y2);
 }

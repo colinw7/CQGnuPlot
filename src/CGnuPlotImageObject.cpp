@@ -187,8 +187,8 @@ draw2D(CGnuPlotRenderer *renderer) const
   double pw = renderer->pixelWidthToWindowWidth  (1);
   double ph = renderer->pixelHeightToWindowHeight(1);
 
-  int ipw = int(size1_.width /pw + 0.5);
-  int iph = int(size1_.height/ph + 0.5);
+  int ipw = int(size1_.getWidth ()/pw + 0.5);
+  int iph = int(size1_.getHeight()/ph + 0.5);
 
   if (size2_ != CISize2D(ipw, iph)) {
     size2_ = CISize2D(ipw, iph);
@@ -219,11 +219,11 @@ draw3D(CGnuPlotRenderer *renderer) const
 
   double ra = CAngle::Deg2Rad(angle_);
 
-  int nx = size_.width;
-  int ny = size_.height;
+  int nx = size_.getWidth ();
+  int ny = size_.getHeight();
 
-  double w = nx*delta_.width;
-  double h = ny*delta_.height;
+  double w = nx*delta_.getWidth ();
+  double h = ny*delta_.getHeight();
 
   CPoint2D p1(center_.x - w/2.0, center_.y - h/2.0);
   CPoint2D p2(center_.x + w/2.0, center_.y + h/2.0);
@@ -250,8 +250,8 @@ draw3D(CGnuPlotRenderer *renderer) const
 
       double x1 = CGnuPlotUtil::map(ix, 0, nx - 1, p1.x, p2.x);
       double y1 = CGnuPlotUtil::map(iy, 0, ny - 1, p1.y, p2.y);
-      double x2 = x1 + delta_.width;
-      double y2 = y1 + delta_.height;
+      double x2 = x1 + delta_.getWidth ();
+      double y2 = y1 + delta_.getHeight();
 
       CPoint3D pr1(CMathGeom2D::RotatePoint(CPoint2D(x1, y1), ra, o), z);
       CPoint3D pr2(CMathGeom2D::RotatePoint(CPoint2D(x2, y1), ra, o), z);
@@ -323,15 +323,15 @@ updateImage2() const
   double xo = bbox.getXMin();
   double yo = bbox.getYMin();
 
-  double xscale = (size2_.width  - 1)/bbox.getWidth ();
-  double yscale = (size2_.height - 1)/bbox.getHeight();
+  double xscale = (size2_.getWidth () - 1)/bbox.getWidth ();
+  double yscale = (size2_.getHeight() - 1)/bbox.getHeight();
 
   //---
 
-  for (int y = 0; y < size2_.height; ++y) {
+  for (int y = 0; y < size2_.getHeight(); ++y) {
     double y1 = y/yscale + yo;
 
-    for (int x = 0; x < size2_.width; ++x) {
+    for (int x = 0; x < size2_.getWidth(); ++x) {
       double x1 = x/xscale + xo;
 
       CPoint2D p1 = CMathGeom2D::RotatePoint(CPoint2D(x1, y1), ra, o);
@@ -345,7 +345,7 @@ updateImage2() const
       CRGBA c;
 
       if (nearest_) {
-        if (p1.x >= 0 && p1.x < size_.width && p1.y >= 0 && p1.y < size_.height)
+        if (p1.x >= 0 && p1.x < size_.getWidth() && p1.y >= 0 && p1.y < size_.getHeight())
           c = image1_->getBilinearRGBAPixel(p1.x, p1.y);
         else
           c = CRGBA(0,0,0,0);
@@ -354,7 +354,7 @@ updateImage2() const
         int px = CMathRound::Round(p1.x);
         int py = CMathRound::Round(p1.y);
 
-        if (px >= 0 && px < size_.width && py >= 0 && py < size_.height)
+        if (px >= 0 && px < size_.getWidth() && py >= 0 && py < size_.getHeight())
           image1_->getRGBAPixel(px, py, c);
         else
           c = CRGBA(0,0,0,0);

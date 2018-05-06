@@ -46,8 +46,8 @@ draw(CGnuPlotRenderer *renderer) const
 
   CSize2D s = this->getSize().getSize(renderer);
 
-  xr_ = s.width /2;
-  yr_ = s.height/2;
+  xr_ = s.getWidth ()/2;
+  yr_ = s.getHeight()/2;
 
   if (this->getFillColor().isRGB()) {
     CRGBA fc = this->getFillColor().color();
