@@ -147,11 +147,11 @@ drawPoint(const CPoint2D &point, const CRGBA &c)
 {
   CPoint2D ppoint;
 
-  windowToPixel(point, ppoint);
+  windowToPixel1(point, ppoint);
 
   CPoint2D p;
 
-  windowToPixel(point, p);
+  windowToPixel1(point, p);
 
   device_->print().setForeground(c);
 
@@ -260,8 +260,8 @@ drawLine(const CPoint2D &point1, const CPoint2D &point2, const CRGBA &c, double 
 {
   CPoint2D ppoint1, ppoint2;
 
-  windowToPixel(point1, ppoint1);
-  windowToPixel(point2, ppoint2);
+  windowToPixel1(point1, ppoint1);
+  windowToPixel1(point2, ppoint2);
 
   device_->print().setForeground(c);
   device_->print().setLineWidth(width);
@@ -275,7 +275,7 @@ drawRect(const CBBox2D &rect, const CRGBA &c, double width, const CLineDash & /*
 {
   CBBox2D prect;
 
-  windowToPixel(rect, prect);
+  windowToPixel1(rect, prect);
 
   device_->print().setForeground(c);
   device_->print().setLineWidth(width);
@@ -291,7 +291,7 @@ patternRect(const CBBox2D &rect, CGnuPlotTypes::FillPattern /*pattern*/,
 {
   CBBox2D prect;
 
-  windowToPixel(rect, prect);
+  windowToPixel1(rect, prect);
 
   device_->print().setForeground(fg);
 
@@ -305,7 +305,7 @@ fillRect(const CBBox2D &rect, const CRGBA &c)
 {
   CBBox2D prect;
 
-  windowToPixel(rect, prect);
+  windowToPixel1(rect, prect);
 
   device_->print().setForeground(c);
 
@@ -379,7 +379,7 @@ drawEllipse(const CPoint2D &center, double rx, double ry, double /*a*/, const CR
 {
   CPoint2D pcenter;
 
-  windowToPixel(center, pcenter);
+  windowToPixel1(center, pcenter);
 
   device_->print().setForeground(c);
   device_->print().setLineWidth(width);
@@ -393,7 +393,7 @@ fillEllipse(const CPoint2D &center, double rx, double ry, double /*a*/, const CR
 {
   CPoint2D pcenter;
 
-  windowToPixel(center, pcenter);
+  windowToPixel1(center, pcenter);
 
   device_->print().setForeground(c);
 
@@ -407,7 +407,7 @@ patternEllipse(const CPoint2D &center, double rx, double ry, double /*a*/,
 {
   CPoint2D pcenter;
 
-  windowToPixel(center, pcenter);
+  windowToPixel1(center, pcenter);
 
   device_->print().setForeground(fg);
 
@@ -420,7 +420,7 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 {
   CPoint2D ppoint;
 
-  windowToPixel(point, ppoint);
+  windowToPixel1(point, ppoint);
 
   device_->print().setForeground(c);
 
@@ -442,7 +442,7 @@ drawPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double ang
 {
   CPoint2D ppc;
 
-  windowToPixel(pc, ppc);
+  windowToPixel1(pc, ppc);
 
   // TODO: !!!!
   device_->print().setForeground(c);
@@ -459,7 +459,7 @@ fillPieSlice(const CPoint2D &pc, double ri, double ro, double angle1, double ang
 {
   CPoint2D ppc;
 
-  windowToPixel(pc, ppc);
+  windowToPixel1(pc, ppc);
 
   // TODO: !!!!
   device_->print().setForeground(c);
@@ -474,7 +474,7 @@ drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2, const CRG
 {
   CPoint2D pp;
 
-  windowToPixel(p, pp);
+  windowToPixel1(p, pp);
 
   device_->print().setForeground(c);
 
@@ -514,7 +514,7 @@ pointsToXY(const std::vector<CPoint2D> &points, std::vector<double> &x, std::vec
   for (const auto &p : points) {
     CPoint2D pp;
 
-    windowToPixel(p, pp);
+    windowToPixel1(p, pp);
 
     x[i] = pp.x;
     y[i] = pp.y;
@@ -525,19 +525,19 @@ pointsToXY(const std::vector<CPoint2D> &points, std::vector<double> &x, std::vec
 
 void
 CGnuPlotPSRenderer::
-windowToPixel(const CBBox2D &w, CBBox2D &p)
+windowToPixel1(const CBBox2D &w, CBBox2D &p)
 {
   CPoint2D p1, p2;
 
-  windowToPixel(w.getLL(), p1);
-  windowToPixel(w.getUR(), p2);
+  windowToPixel1(w.getLL(), p1);
+  windowToPixel1(w.getUR(), p2);
 
   p = CBBox2D(p1, p2);
 }
 
 void
 CGnuPlotPSRenderer::
-windowToPixel(const CPoint2D &w, CPoint2D &p)
+windowToPixel1(const CPoint2D &w, CPoint2D &p)
 {
   CGnuPlotRenderer::windowToPixel(w, p);
 

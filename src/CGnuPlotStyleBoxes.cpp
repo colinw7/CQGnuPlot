@@ -57,7 +57,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     double y = reals[1];
 
-    if (IsNaN(y))
+    if (COSNaN::is_nan(y))
       continue;
 
     ++n;
@@ -81,7 +81,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     double x = reals[0];
     double y = reals[1];
 
-    if (IsNaN(y))
+    if (COSNaN::is_nan(y))
       continue;
 
     uint ind = 2;

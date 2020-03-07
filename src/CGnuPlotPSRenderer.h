@@ -13,7 +13,7 @@ class CGnuPlotPSRenderer : public CGnuPlotRenderer {
 
   std::ostream &os();
 
-  void setFont(const CFontPtr &font);
+  void setFont(const CFontPtr &font) override;
 
   void clear(const CRGBA &c) override;
 
@@ -73,8 +73,8 @@ class CGnuPlotPSRenderer : public CGnuPlotRenderer {
   void pointsToXY(const std::vector<CPoint2D> &points,
                   std::vector<double> &x, std::vector<double> &y);
 
-  void windowToPixel(const CBBox2D &w, CBBox2D &p);
-  void windowToPixel(const CPoint2D &w, CPoint2D &p);
+  void windowToPixel1(const CBBox2D &w, CBBox2D &p);
+  void windowToPixel1(const CPoint2D &w, CPoint2D &p);
 
  private:
   CGnuPlotPSDevice *device_;

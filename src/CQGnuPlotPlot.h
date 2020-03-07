@@ -222,6 +222,8 @@ class CQGnuPlotPlotArrowObjects : public QObject {
    plot_(plot) {
   }
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
  private:
   CQGnuPlotPlot *plot_;
 };

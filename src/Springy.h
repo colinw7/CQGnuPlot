@@ -549,7 +549,7 @@ namespace Springy {
     double      stiffness_; // spring stiffness constant
     double      repulsion_; // repulsion constant
     double      damping_; // velocity damping factor
-    double      minEnergyThreshold_;
+  //double      minEnergyThreshold_;
     NodePoints  nodePoints_; // keep track of points associated with nodes
     EdgeSprings edgeSprings_; // keep track of springs associated with edges
   };

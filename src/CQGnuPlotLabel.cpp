@@ -4,6 +4,7 @@
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotFill.h>
 #include <CQGnuPlotStroke.h>
+#include <CQFontUtil.h>
 #include <CQUtil.h>
 
 CQGnuPlotLabel::
@@ -63,14 +64,14 @@ QFont
 CQGnuPlotLabel::
 getFont() const
 {
-  return CQUtil::toQFont(CGnuPlotLabel::getFont());
+  return CQFontUtil::toQFont(CGnuPlotLabel::getFont());
 }
 
 void
 CQGnuPlotLabel::
 setFont(const QFont &f)
 {
-  CGnuPlotLabel::setFont(CQUtil::fromQFont(f));
+  CGnuPlotLabel::setFont(CQFontUtil::fromQFont(f));
 }
 
 QPointF

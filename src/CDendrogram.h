@@ -2,6 +2,7 @@
 #define CDendrogram_H
 
 #include <vector>
+#include <string>
 #include <algorithm>
 
 class CDendrogram {
@@ -169,7 +170,7 @@ class CDendrogram {
     void openNode(int depth, const std::string &name);
 
     // compress node and children
-    void compressNode(Node *node, const Nodes &lowestChildren, double d);
+    void compressNode1(Node *node, const Nodes &lowestChildren, double d);
 
     //void moveChildNodes(HierNode *hierNode, double d);
 

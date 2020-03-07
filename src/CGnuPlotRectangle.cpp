@@ -132,7 +132,7 @@ draw(CGnuPlotRenderer *renderer) const
   lc_ = getStrokeColor().getValue(CRGBA(0,0,0));
 
   CRGBA  lc = lc_;
-  double lw = getLineWidth().getValue(0);;
+  double lw = getLineWidth().getValue(0);
 
   if (highlighted) {
     lc = CRGBA(1,0,0);

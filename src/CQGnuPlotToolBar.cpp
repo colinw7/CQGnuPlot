@@ -10,7 +10,7 @@
 class CQWidgetAction : public QWidgetAction {
  public:
   CQWidgetAction(QWidget *w) :
-   QWidgetAction(0), w_(w) {
+   QWidgetAction(nullptr), w_(w) {
   }
 
  ~CQWidgetAction() {
@@ -26,7 +26,7 @@ class CQWidgetAction : public QWidgetAction {
   }
 
  private:
-  QWidget *w_;
+  QWidget *w_ { nullptr };
 };
 
 //---

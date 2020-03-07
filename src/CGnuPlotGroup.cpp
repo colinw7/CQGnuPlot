@@ -485,14 +485,14 @@ fit()
   }
 
   // TODO: can only reuse values if log status matches ?
-  if (! xmin1.isValid()) xmin1 = -10; if (! xmax1.isValid()) xmax1 = 10;
-  if (! ymin1.isValid()) ymin1 = -10; if (! ymax1.isValid()) ymax1 = 10;
+  if (! xmin1.isValid()) { xmin1 = -10; } if (! xmax1.isValid()) { xmax1 = 10; }
+  if (! ymin1.isValid()) { ymin1 = -10; } if (! ymax1.isValid()) { ymax1 = 10; }
 
-  if (! xmin2.isValid()) xmin2 = xmin1; if (! xmax2.isValid()) xmax2 = xmax1;
-  if (! ymin2.isValid()) ymin2 = ymin1; if (! ymax2.isValid()) ymax2 = ymax1;
+  if (! xmin2.isValid()) { xmin2 = xmin1; } if (! xmax2.isValid()) { xmax2 = xmax1; }
+  if (! ymin2.isValid()) { ymin2 = ymin1; } if (! ymax2.isValid()) { ymax2 = ymax1; }
 
   if (is3D()) {
-    if (! zmin1.isValid()) zmin1 = -10; if (! zmax1.isValid()) zmax1 = 10;
+    if (! zmin1.isValid()) { zmin1 = -10; } if (! zmax1.isValid()) { zmax1 = 10; }
   }
 
   //---

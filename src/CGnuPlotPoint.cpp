@@ -154,7 +154,7 @@ getPoint(CPoint2D &p, const GetOpts &opts) const
   if (! getXY(x, y, opts))
     return false;
 
-  if (opts.checkNaN() && (IsNaN(x) || IsNaN(y)))
+  if (opts.checkNaN() && (COSNaN::is_nan(x) || COSNaN::is_nan(y)))
     return false;
 
   p = CPoint2D(x, y);
@@ -175,7 +175,7 @@ getPoint(double x, CPoint2D &p, const GetOpts &opts) const
       return false;
   }
 
-  if (opts.checkNaN() && (IsNaN(x1) || IsNaN(y1)))
+  if (opts.checkNaN() && (COSNaN::is_nan(x1) || COSNaN::is_nan(y1)))
     return false;
 
   p = CPoint2D(x1, y1);

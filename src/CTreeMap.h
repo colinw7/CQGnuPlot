@@ -153,8 +153,8 @@ class CTreeMap {
 
     const Children &getChildren() const { return children_; }
 
-    bool isOpen() const { return open_; }
-    void setOpen(bool b) { open_ = b; }
+    bool isOpen() const override { return open_; }
+    void setOpen(bool b) override { open_ = b; }
 
     HierNode *findChild(const std::string &name) const;
 

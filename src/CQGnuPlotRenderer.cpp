@@ -8,6 +8,8 @@
 #include <CSymbol2D.h>
 
 #include <CQFont.h>
+#include <CQFontUtil.h>
+#include <CQImageUtil.h>
 #include <CQUtil.h>
 #include <CFontMgr.h>
 #include <QPainter>
@@ -692,7 +694,7 @@ drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
   int th = fm.height();
   int tw = fm.width(text.c_str());
 
-  double dx;
+  double dx { 0.0 };
 
   if      (qalign & Qt::AlignLeft)
     dx = 0;
@@ -701,7 +703,7 @@ drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
   else if (qalign & Qt::AlignHCenter)
     dx = -tw/2.0;
 
-  double dy;
+  double dy { 0.0 };
 
   if      (qalign & Qt::AlignBottom)
     dy = 0;
@@ -930,7 +932,7 @@ drawImage(const CPoint2D &p, const CImagePtr &image)
 
   windowToPixel(p.x, p.y, &px, &py);
 
-  painter_->drawImage(px, py, CQUtil::toQImage(image));
+  painter_->drawImage(px, py, CQImageUtil::toQImage(image));
 }
 
 void
@@ -939,5 +941,5 @@ setFont(const CFontPtr &font)
 {
   CGnuPlotRenderer::setFont(font);
 
-  painter_->setFont(CQUtil::toQFont(getFont()));
+  painter_->setFont(CQFontUtil::toQFont(getFont()));
 }

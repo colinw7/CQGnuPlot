@@ -564,7 +564,7 @@ decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) 
           midStr = CGnuPlotUtil::toString(i1);
         }
         else if (value1->isRealValue   () && value1->getRealValue   (r1)) {
-          if (! IsNaN(r1)) {
+          if (! COSNaN::is_nan(r1)) {
             std::string rstr = CGnuPlotUtil::toString(r1);
 
             auto p = rstr.find('.');

@@ -2,6 +2,7 @@
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotEnum.h>
 #include <CQGnuPlotRenderer.h>
+#include <CQFontUtil.h>
 #include <CQUtil.h>
 
 CQGnuPlotAxis::
@@ -75,28 +76,28 @@ QFont
 CQGnuPlotAxis::
 getTicFont() const
 {
-  return CQUtil::toQFont(CGnuPlotAxis::ticFont());
+  return CQFontUtil::toQFont(CGnuPlotAxis::ticFont());
 }
 
 void
 CQGnuPlotAxis::
 setTicFont(const QFont &f)
 {
-  CGnuPlotAxis::setTicFont(CQUtil::fromQFont(f));
+  CGnuPlotAxis::setTicFont(CQFontUtil::fromQFont(f));
 }
 
 QFont
 CQGnuPlotAxis::
 getLabelFont() const
 {
-  return CQUtil::toQFont(CGnuPlotAxis::labelFont());
+  return CQFontUtil::toQFont(CGnuPlotAxis::labelFont());
 }
 
 void
 CQGnuPlotAxis::
 setLabelFont(const QFont &f)
 {
-  CGnuPlotAxis::setLabelFont(CQUtil::fromQFont(f));
+  CGnuPlotAxis::setLabelFont(CQFontUtil::fromQFont(f));
 }
 
 QColor

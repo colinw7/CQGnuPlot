@@ -81,8 +81,8 @@ class CGnuPlotPm3DData {
   bool ftriangles() const { return ftriangles_; }
   void setFTriangles(bool b) { ftriangles_ = b; }
 
-  bool isClipIn() const { return clipin_; }
-  void setClipIn(bool b) { clipin_ = b; }
+  int clipIn() const { return clipin_; }
+  void setClipIn(int i) { clipin_ = i; }
 
   int linetype() const { return linetype_; }
   void setLineType(int lt) { linetype_ = lt; }

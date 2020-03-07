@@ -2,6 +2,7 @@
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotUtil.h>
 #include <CQGnuPlotRenderer.h>
+#include <CQFontUtil.h>
 #include <CQUtil.h>
 
 CQGnuPlotTitle::
@@ -71,14 +72,14 @@ QFont
 CQGnuPlotTitle::
 getFont() const
 {
-  return CQUtil::toQFont(CGnuPlotTitle::font());
+  return CQFontUtil::toQFont(CGnuPlotTitle::font());
 }
 
 void
 CQGnuPlotTitle::
 setFont(const QFont &f)
 {
-  CGnuPlotTitle::setFont(CQUtil::fromQFont(f));
+  CGnuPlotTitle::setFont(CQFontUtil::fromQFont(f));
 }
 
 void

@@ -197,7 +197,7 @@ std::string
 CGnuPlotAxisData::
 formatAxisValue(double r) const
 {
-  if (IsNaN(r))
+  if (COSNaN::is_nan(r))
     return "NaN";
 
   if (isTime()) {

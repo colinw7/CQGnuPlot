@@ -11,7 +11,7 @@ class CQGnuPlotPm3D : public CQGnuPlotObject, public CGnuPlotPm3D {
 
   Q_PROPERTY(bool enabled    READ isEnabled  WRITE setEnabled   )
   Q_PROPERTY(bool ftriangles READ ftriangles WRITE setFTriangles)
-  Q_PROPERTY(bool clipIn     READ isClipIn   WRITE setClipIn    )
+  Q_PROPERTY(int  clipIn     READ clipIn     WRITE setClipIn    )
   Q_PROPERTY(int  lineType   READ lineType   WRITE setLineType  )
   Q_PROPERTY(int  implicit   READ isImplicit WRITE setImplicit  )
 

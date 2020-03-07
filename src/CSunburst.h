@@ -7,6 +7,7 @@
 #include <string>
 #include <map>
 #include <algorithm>
+#include <cmath>
 
 class CSunburstPainter;
 class CSunburstVisitor;

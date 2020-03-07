@@ -1,6 +1,7 @@
 #include <CDendrogram.h>
 #include <iostream>
 #include <cassert>
+#include <cmath>
 
 struct NodeCmp {
   // sort reverse alphabetic no case
@@ -82,7 +83,7 @@ bool
 CDendrogram::Node::
 isNodeAtPoint(double x, double y, double tol) const
 {
-  double d = hypot(this->x() - x, this->yc() - y);
+  double d = std::hypot(this->x() - x, this->yc() - y);
 
   return (d <= tol);
 }
@@ -463,7 +464,7 @@ compressNodes()
       // if can move node, children and parent then compress node
       // (move node and parents down)
       if      (move_gap1 > 0)
-        compressNode(node, lowestChildren, move_gap1);
+        compressNode1(node, lowestChildren, move_gap1);
       // if can't move parent but can move node and children, and
       // node is not the first child of it's parent, then move node
       // and higher child nodes
@@ -605,7 +606,7 @@ openNode(int depth, const std::string &name)
 // compress node and children
 void
 CDendrogram::RootNode::
-compressNode(Node *node, const Nodes &lowestChildren, double d)
+compressNode1(Node *node, const Nodes &lowestChildren, double d)
 {
   if (debug()) {
     std::cerr << "Compress " << node->name() << " by " << d;

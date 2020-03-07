@@ -5,6 +5,7 @@
 #include <CPoint2D.h>
 #include <CMathGeom2D.h>
 #include <algorithm>
+#include <numeric>
 
 namespace CGnuPlotUtil {
   inline double avg(std::initializer_list<double> l) {
@@ -46,7 +47,7 @@ namespace CGnuPlotUtil {
   }
 
   inline bool isNaN(const CPoint2D &p) {
-    return IsNaN(p.x) || IsNaN(p.y);
+    return COSNaN::is_nan(p.x) || COSNaN::is_nan(p.y);
   }
 
   inline bool isNaN(const std::vector<CPoint2D> &points) {
@@ -88,7 +89,7 @@ namespace CGnuPlotUtil {
   inline std::string toString(double real) {
     static char buffer[128];
 
-    if (IsNaN(real))
+    if (COSNaN::is_nan(real))
       return "NaN";
 
     ::sprintf(buffer, "%lf", real);

@@ -146,7 +146,7 @@ class CHierBubblePack {
       nodes_.push_back(node);
     }
 
-    void setPosition(double x, double y) {
+    void setPosition(double x, double y) override {
       double dx = x - this->x();
       double dy = y - this->y();
 

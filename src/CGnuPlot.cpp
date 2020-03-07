@@ -463,10 +463,10 @@ void
 CGnuPlot::
 initReadLine() const
 {
-  if (! readLine_.isValid()) {
+  if (! readLine_) {
     CGnuPlot *th = const_cast<CGnuPlot *>(this);
 
-    readLine_ = new CGnuPlotReadLine(th);
+    readLine_ = std::make_unique<CGnuPlotReadLine>(th);
 
     readLine_->enableTimeoutHook(1);
   }
@@ -527,7 +527,7 @@ void
 CGnuPlot::
 mousePress(const CGnuPlotMouseEvent &mouseEvent)
 {
-  if (readLine_.isValid() && ! readLine_->isInterruptable())
+  if (readLine_ && ! readLine_->isInterruptable())
     return;
 
   bool interrupt = false;
@@ -544,7 +544,7 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
   if (! interrupt)
     return;
 
-  if (readLine_.isValid())
+  if (readLine_)
     readLine_->doInterrupt();
 }
 
@@ -564,7 +564,7 @@ void
 CGnuPlot::
 keyPress(const CGnuPlotKeyEvent &)
 {
-  if (readLine_.isValid() && ! readLine_->isInterruptable())
+  if (readLine_ && ! readLine_->isInterruptable())
     return;
 
   bool interrupt = false;
@@ -575,7 +575,7 @@ keyPress(const CGnuPlotKeyEvent &)
   if (! interrupt)
     return;
 
-  if (readLine_.isValid())
+  if (readLine_)
     readLine_->doInterrupt();
 }
 
@@ -1223,7 +1223,7 @@ historyCmd(const std::string &args)
   if (isDebug()) debugMsg("history " + args);
 
   // TODO: process args
-  if (! readLine_.isValid())
+  if (! readLine_)
     return;
 
   CReadLine::HistoryEntries entries;
@@ -13324,7 +13324,7 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
           double z = 0.0;
 
           if (value.isValid() && value->getRealValue(z)) {
-            //assert(! IsNaN(z));
+            //assert(! COSNaN::is_nan(z));
 
             plot->addPoint3D(iy, x, y, z);
           }

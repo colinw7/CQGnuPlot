@@ -15,7 +15,7 @@ class CQGnuPlotManageFunctionsDialog : public CQDialog {
 
   void createWidgets(QWidget *frame) override;
 
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 
  private slots:
   void addSlot();

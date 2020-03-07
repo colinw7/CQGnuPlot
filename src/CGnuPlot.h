@@ -1,17 +1,8 @@
 #ifndef CGnuPlot_H
 #define CGnuPlot_H
 
-#include <string>
-#include <vector>
-#include <set>
-#include <iostream>
-#include <climits>
-#include <memory>
-#include <sys/types.h>
-
 #include <CExpr.h>
 #include <CFont.h>
-#include <CAutoPtr.h>
 #include <CStrUtil.h>
 #include <COptVal.h>
 #include <CPoint2D.h>
@@ -20,7 +11,15 @@
 #include <CColor.h>
 #include <CAlignType.h>
 #include <CAngle.h>
-#include <NaN.h>
+#include <COSNaN.h>
+
+#include <string>
+#include <vector>
+#include <set>
+#include <iostream>
+#include <climits>
+#include <memory>
+#include <sys/types.h>
 
 class CGnuPlotAxis;
 class CGnuPlotDevice;
@@ -1258,7 +1257,7 @@ class CGnuPlot {
   typedef std::vector<CGnuPlotDevice*>           DeviceStack;
   typedef StringArray                            FileLines;
   typedef std::vector<FileData>                  FileDataArray;
-  typedef CAutoPtr<CGnuPlotReadLine>             ReadLineP;
+  typedef std::unique_ptr<CGnuPlotReadLine>      ReadLineP;
   typedef std::vector<std::string>               PathList;
   typedef std::map<std::string,CGnuPlotBlock *>  Blocks;
 

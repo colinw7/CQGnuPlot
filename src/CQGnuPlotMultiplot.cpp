@@ -1,5 +1,6 @@
 #include <CQGnuPlotMultiplot.h>
 #include <CQGnuPlotGroup.h>
+#include <CQFontUtil.h>
 #include <CQUtil.h>
 
 CQGnuPlotMultiplot::
@@ -26,12 +27,12 @@ QFont
 CQGnuPlotMultiplot::
 titleFont() const
 {
-  return CQUtil::toQFont(CGnuPlotMultiplot::titleFont());
+  return CQFontUtil::toQFont(CGnuPlotMultiplot::titleFont());
 }
 
 void
 CQGnuPlotMultiplot::
 setTitleFont(const QFont &f)
 {
-  CGnuPlotMultiplot::setTitleFont(CQUtil::fromQFont(f));
+  CGnuPlotMultiplot::setTitleFont(CQFontUtil::fromQFont(f));
 }

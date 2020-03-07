@@ -49,7 +49,7 @@ isValid(CExpr *expr, int setNum, int pointNum, const Values &fieldValues) const
       std::string s1;
 
       if (value1->getRealValue(x1)) {
-        if (! IsNaN(x1)) {
+        if (! COSNaN::is_nan(x1)) {
           std::string realStr = CGnuPlotUtil::toString(x1);
 
           auto p = realStr.find('.');

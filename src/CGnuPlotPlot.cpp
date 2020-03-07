@@ -1714,7 +1714,7 @@ calcXRange(double *xmin, double *xmax) const
           if (! mapPoint3D(p, p1, ind))
             continue;
 
-          if (IsNaN(p1.x))
+          if (COSNaN::is_nan(p1.x))
             continue;
 
           th->xmin_.updateMin(p1.x);
@@ -1743,7 +1743,7 @@ calcXRange(double *xmin, double *xmax) const
           if (! p.getX(x))
             continue;
 
-          if (IsNaN(x))
+          if (COSNaN::is_nan(x))
             continue;
 
           th->xmin_.updateMin(x);
@@ -1774,7 +1774,7 @@ calcYRange(double *ymin, double *ymax) const
           if (! mapPoint3D(p, p1, ind))
             continue;
 
-          if (IsNaN(p1.y))
+          if (COSNaN::is_nan(p1.y))
             continue;
 
           th->ymin_.updateMin(p1.y);
@@ -1800,7 +1800,7 @@ calcYRange(double *ymin, double *ymax) const
           if (! p.getY(y))
             continue;
 
-          if (IsNaN(y))
+          if (COSNaN::is_nan(y))
             continue;
 
           th->ymin_.updateMin(y);
@@ -1872,7 +1872,7 @@ calcBoundedYRange(double *ymin, double *ymax) const
           if (p1.x < xmin || p1.x > xmax)
             continue;
 
-          if (IsNaN(p1.y))
+          if (COSNaN::is_nan(p1.y))
             continue;
 
           th->bymin_.updateMin(p1.y);
@@ -1909,7 +1909,7 @@ calcBoundedYRange(double *ymin, double *ymax) const
           if (x < xmin || x > xmax)
             continue;
 
-          if (IsNaN(y))
+          if (COSNaN::is_nan(y))
             continue;
 
           th->bymin_.updateMin(y);
@@ -2043,12 +2043,12 @@ getPointsRange(CBBox2D &bbox) const
         if (! mapPoint3D(p, p1, ind))
           continue;
 
-        if (! IsNaN(p1.x)) {
+        if (! COSNaN::is_nan(p1.x)) {
           xmin.updateMin(p1.x);
           xmax.updateMax(p1.x);
         }
 
-        if (! IsNaN(p1.y)) {
+        if (! COSNaN::is_nan(p1.y)) {
           ymin.updateMin(p1.y);
           ymax.updateMax(p1.y);
         }
@@ -2062,12 +2062,12 @@ getPointsRange(CBBox2D &bbox) const
       if (! p.getXY(x, y))
         continue;
 
-      if (! IsNaN(x)) {
+      if (! COSNaN::is_nan(x)) {
         xmin.updateMin(x);
         xmax.updateMax(x);
       }
 
-      if (! IsNaN(y)) {
+      if (! COSNaN::is_nan(y)) {
         ymin.updateMin(y);
         ymax.updateMax(y);
       }
