@@ -95,9 +95,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
           if (po == sorder.end())
             po = sorder.insert(po, SOrder::value_type(s, sorder.size()));
 
-          int i = (*po).second;
+          int io = (*po).second;
 
-          syv[i].push_back(y);
+          syv[io].push_back(y);
         }
       }
       else

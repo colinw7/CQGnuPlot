@@ -236,29 +236,29 @@ draw(ChordDiagramRenderer *renderer)
 
       // connect arc i, value set_data[i][j] to arc j value set_data[j][i];
       if (j == j1) {
-        double angle1 = values1.angle1();
+        double vangle1 = values1.angle1();
 
         double dangle1 = -values1.sortedTotal(j    )*valueToDegrees_;
         double dangle2 = -values1.sortedTotal(j + 1)*valueToDegrees_;
 
-        double angle2 = angle1 + dangle1;
-        double angle3 = angle1 + dangle2;
+        double angle2 = vangle1 + dangle1;
+        double angle3 = vangle1 + dangle2;
 
         renderer->drawChord(c, r2, angle2, angle3, fc, lc);
       }
       else {
-        double angle1 = values1.angle1();
-        double angle2 = values2.angle1();
+        double vangle1 = values1.angle1();
+        double vangle2 = values2.angle1();
 
         double dangle11 = -values1.sortedTotal(j     )*valueToDegrees_;
         double dangle12 = -values1.sortedTotal(j  + 1)*valueToDegrees_;
         double dangle21 = -values2.sortedTotal(j1    )*valueToDegrees_;
         double dangle22 = -values2.sortedTotal(j1 + 1)*valueToDegrees_;
 
-        double angle11 = angle1 + dangle11;
-        double angle12 = angle1 + dangle12;
-        double angle21 = angle2 + dangle21;
-        double angle22 = angle2 + dangle22;
+        double angle11 = vangle1 + dangle11;
+        double angle12 = vangle1 + dangle12;
+        double angle21 = vangle2 + dangle21;
+        double angle22 = vangle2 + dangle22;
 
         renderer->drawComplexChord(c, r2, angle11, angle12, angle21, angle22, fc, lc);
       }

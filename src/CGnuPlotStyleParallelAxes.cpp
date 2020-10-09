@@ -70,12 +70,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     (void) point.getReals(reals);
 
-    int nr = (isCalcColor ? reals.size() - 1 : reals.size());
+    int nri = (isCalcColor ? reals.size() - 1 : reals.size());
 
-    std::vector<double> ireals;
+    std::vector<double> ireals1;
     std::vector<CRGBA>  colors;
 
-    for (int j = 0; j < nr; ++j) {
+    for (int j = 0; j < nri; ++j) {
       const MinMax &mm = irange[j];
 
       double ymin = mm.first;
@@ -93,7 +93,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       else
         ir = CGnuPlotUtil::map(reals[j], ymax, ymin, 0, 1);
 
-      ireals.push_back(ir);
+      ireals1.push_back(ir);
     }
 
     //---
@@ -101,7 +101,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     double z;
 
     if (isCalcColor)
-      z = reals[nr];
+      z = reals[nri];
     else
       z = i;
 
@@ -114,8 +114,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     //---
 
-    for (uint j = 1; j < ireals.size(); ++j)
-      renderer->drawClipLine(CPoint2D(j, ireals[j - 1]), CPoint2D(j + 1, ireals[j]), c, 1.0);
+    for (uint j = 1; j < ireals1.size(); ++j)
+      renderer->drawClipLine(CPoint2D(j, ireals1[j - 1]), CPoint2D(j + 1, ireals1[j]), c, 1.0);
   }
 
   //------

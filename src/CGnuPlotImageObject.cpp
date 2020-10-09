@@ -244,9 +244,9 @@ draw3D(CGnuPlotRenderer *renderer) const
     for (int ix = 0; ix < nx; ++ix, ++i) {
       int ix1 = (flipX_ ? nx - 1 - ix : ix);
 
-      int i = iy1*nx + ix1;
+      int i1 = iy1*nx + ix1;
 
-      CRGBA rgba = colors_[i];
+      CRGBA rgba = colors_[i1];
 
       double x1 = CGnuPlotUtil::map(ix, 0, nx - 1, p1.x, p2.x);
       double y1 = CGnuPlotUtil::map(iy, 0, ny - 1, p1.y, p2.y);

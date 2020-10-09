@@ -115,7 +115,7 @@ class CGnuPlotTimeColumnFn : public CGnuPlotUsingColsFnObj {
  public:
   CGnuPlotTimeColumnFn(CGnuPlotUsingCols *cols) : CGnuPlotUsingColsFnObj(cols) { }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     std::string fmt;
     long        col = 0;
     bool        hasCol = false;
@@ -141,7 +141,7 @@ class CGnuPlotTimeColumnFn : public CGnuPlotUsingColsFnObj {
 
     //---
 
-    time_t t;
+    time_t t { 0 };
 
     if (hasCol) {
       int ns;
@@ -298,8 +298,8 @@ parse(const std::string &str)
   if (! usingData.usingStr.empty())
     processUsingStr(usingData, usingStrs);
 
-  for (auto &str : usingStrs)
-    str = CStrUtil::stripSpaces(str);
+  for (auto &str1 : usingStrs)
+    str1 = CStrUtil::stripSpaces(str1);
 
   line.skipSpace();
 
@@ -565,14 +565,14 @@ decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) 
         }
         else if (value1->isRealValue   () && value1->getRealValue   (r1)) {
           if (! COSNaN::is_nan(r1)) {
-            std::string rstr = CGnuPlotUtil::toString(r1);
+            std::string rstr1 = CGnuPlotUtil::toString(r1);
 
-            auto p = rstr.find('.');
+            auto p = rstr1.find('.');
 
             if (p == std::string::npos)
-              rstr += ".";
+              rstr1 += ".";
 
-            midStr = rstr;
+            midStr = rstr1;
           }
           else
             midStr = "NaN";
@@ -616,10 +616,10 @@ decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) 
       if (j < name1.size())
         name1 = name1.substr(0, j);
 
-      CExprValuePtr value;
+      CExprValuePtr value1;
 
-      if (! CGnuPlotUtil::evaluateExpression(expr_, name1, value, true))
-        value = CExprValuePtr();
+      if (! CGnuPlotUtil::evaluateExpression(expr_, name1, value1, true))
+        value1 = CExprValuePtr();
 
 #if 0
       bool valid = false;
@@ -627,7 +627,7 @@ decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) 
       long        icol;
       std::string str1;
 
-      if (value.isValid() && value->getIntegerValue(icol)) {
+      if (value1.isValid() && value1->getIntegerValue(icol)) {
         CExprValuePtr value1 = getFieldValue(icol, ns);
 
         if (value1.isValid() && value1->getStringValue(str1))
@@ -637,7 +637,7 @@ decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) 
       if (valid)
         params[name] = str1;
 #endif
-      params[name] = value;
+      params[name] = value1;
 
       ignore  = true; // ignore parameter values
       exprStr = "";

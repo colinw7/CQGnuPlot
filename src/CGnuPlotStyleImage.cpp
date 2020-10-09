@@ -246,11 +246,11 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
             for (const auto &xc : yxc.second) {
               int ix2 = xc.first - xo;
 
-              for (int iy = iy1; iy <= iy2; ++iy) {
+              for (int iiy = iy1; iiy <= iy2; ++iiy) {
                 for (int ix = ix1; ix <= ix2; ++ix) {
-                  int iy1 = ny - 1 - iy;
+                  int iiy1 = ny - 1 - iiy;
 
-                  CPoint2D p(ix, iy1);
+                  CPoint2D p(ix, iiy1);
 
                   image->drawPoint(p, xc.second);
                 }
@@ -526,12 +526,12 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         c = CRGBA(r, g, b, a);
       }
 
-      CBBox2D bbox(x - pw/2, y - ph/2, x + pw/2, y + ph/2);
+      CBBox2D bbox1(x - pw/2, y - ph/2, x + pw/2, y + ph/2);
 
       if (! renderer->isPseudo()) {
         CGnuPlotRectObject *rect = plot->rectObjects()[i];
 
-        rect->setBBox(bbox);
+        rect->setBBox(bbox1);
 
         if (! rect->testAndSetUsed()) {
           rect->fill()->setType (CGnuPlotTypes::FillType::SOLID);
@@ -545,7 +545,7 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         ++i;
       }
       else
-        renderer->fillRect(bbox, c);
+        renderer->fillRect(bbox1, c);
 #endif
 
       ++y;
@@ -613,8 +613,8 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       // count number of rects
       int n = 0;
 
-      for (const auto &points : pointsArray)
-        n += points.size();
+      for (const auto &points1 : pointsArray)
+        n += points1.size();
 
       // udpate cache size
       plot->updateRectCacheSize(n);
@@ -622,8 +622,8 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     //---
 
-    for (const auto &points : pointsArray) {
-      for (const auto &point : points) {
+    for (const auto &points1 : pointsArray) {
+      for (const auto &point : points1) {
         double x1 = point.x;
         double y1 = point.y;
 
@@ -839,14 +839,14 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
           return r;
       }
       else {
-        CExprValuePtr value;
+        CExprValuePtr evalue;
 
-        if (! expr->evaluateExpression(exprStr, value))
-          value = CExprValuePtr();
+        if (! expr->evaluateExpression(exprStr, evalue))
+          evalue = CExprValuePtr();
 
         long l;
 
-        if (value.isValid() && value->getIntegerValue(l))
+        if (evalue.isValid() && evalue->getIntegerValue(l))
           return indexImageColor(l, rgba);
       }
 

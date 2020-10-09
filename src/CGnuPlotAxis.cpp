@@ -1361,9 +1361,9 @@ drawHAlignedText(const CPoint3D &pos, const HAlignPos &halignPos, const VAlignPo
     double ta = renderer_->pixelHeightToWindowHeight(font->getCharAscent ());
     double td = renderer_->pixelHeightToWindowHeight(font->getCharDescent());
 
-    CPoint2D pos1 = renderer_->transform2D(pos);
+    CPoint2D tpos1 = renderer_->transform2D(pos);
 
-    CBBox2D bbox(CPoint2D(pos1.x, pos1.y - td), CPoint2D(pos1.x + tw, pos1.y + ta));
+    CBBox2D bbox(CPoint2D(tpos1.x, tpos1.y - td), CPoint2D(tpos1.x + tw, tpos1.y + ta));
 
     double dx = 0.0, dy = 0.0;
 

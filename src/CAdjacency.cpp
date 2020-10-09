@@ -152,20 +152,20 @@ draw(CAdjacencyRenderer *renderer)
   py = ts_;
 
   for (auto node1 : sortedNodes_) {
-    double px = ts_;
+    double ptx = ts_;
 
     for (auto node2 : sortedNodes_) {
       int value = node1->nodeValue(node2);
 
       CRGBA bc = nodeColor(renderer, node1, node2);
 
-      CBBox2D r(px, py, px + cs_, py + cs_);
+      CBBox2D pr(ptx, py, ptx + cs_, py + cs_);
 
-      pixelRectToWindow(r);
+      pixelRectToWindow(pr);
 
-      renderer->drawNodeRect(r, bc, value, node1, node2);
+      renderer->drawNodeRect(pr, bc, value, node1, node2);
 
-      px += cs_;
+      ptx += cs_;
     }
 
     py += cs_;

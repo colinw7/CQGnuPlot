@@ -128,9 +128,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     const ValueColor    &vc   = v .second;
     const LineFillColor &lfc  = vc.second;
 
-    double value = vc.first;
+    double vvalue = vc.first;
 
-    double dangle = 360.0*value/sum;
+    double dangle = 360.0*vvalue/sum;
     double angle2 = angle1 - dangle;
 
     if (! renderer->isPseudo()) {
@@ -148,7 +148,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         CGnuPlotStrokeP stroke(pie->stroke()->dup());
 
         pie->setName(name);
-        pie->setValue(value);
+        pie->setValue(vvalue);
 
         pie->setInnerRadius(ir);
         pie->setLabelRadius(lr);
@@ -307,10 +307,10 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     CPoint2D p1(xx, yy - bw*ph/2), p2(xx + bw*pw, yy + bw*ph/2);
 
-    CBBox2D bbox(p1, p2);
+    CBBox2D ebbox(p1, p2);
 
-    renderer->fillEllipse(bbox, lfc.second);
-    renderer->drawEllipse(bbox, lfc.first, 1);
+    renderer->fillEllipse(ebbox, lfc.second);
+    renderer->drawEllipse(ebbox, lfc.first, 1);
 
     //double lw = font->getStringWidth(name);
 

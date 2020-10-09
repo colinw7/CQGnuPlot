@@ -38,9 +38,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   if (! value->isInited()) {
     for (const auto &point : plot->getPoints2D()) {
       std::string name;
-      double      value;
+      double      value2;
 
-      if (! point.getValue(1, name) || ! point.getValue(2, value))
+      if (! point.getValue(1, name) || ! point.getValue(2, value2))
         continue;
 
       int id = -1;
@@ -59,7 +59,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
           id = (*p).second;
       }
 
-      pack->addNode(name, value, id);
+      pack->addNode(name, value2, id);
     }
 
     value->setInited(true);

@@ -131,13 +131,13 @@ void closePoints(std::vector<CPoint2D> &points,
     int n = 50;
 
     for (int i = 1; i < n; ++i) {
-      double r = r1 + i*(r3 - r1)/(n - 1);
-      double a = a1 + i*(a3 - a1)/(n - 1);
+      double ri = r1 + i*(r3 - r1)/(n - 1);
+      double ai = a1 + i*(a3 - a1)/(n - 1);
 
-      double x = r*cos(a);
-      double y = r*sin(a);
+      double xi = ri*cos(ai);
+      double yi = ri*sin(ai);
 
-      points.push_back(CPoint2D(x, y));
+      points.push_back(CPoint2D(xi, yi));
     }
   }
 }
@@ -282,8 +282,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
           if (inside) {
             points1.push_back(pi);
 
-            for (auto p1 = points2.rbegin(), p2 = points2.rend(); p1 != p2; ++p1)
-              points1.push_back(*p1);
+            for (auto pp1 = points2.rbegin(), pp2 = points2.rend(); pp1 != pp2; ++pp1)
+              points1.push_back(*pp1);
 
             polygons.push_back(points1);
           }

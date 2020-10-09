@@ -587,11 +587,11 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
     double fd = renderer->pixelHeightToWindowHeight(state.font->getCharDescent());
 
     if (fa > line.ascent) {
-      double dy = fa - line.ascent;
+      double dy1 = fa - line.ascent;
 
       // adjust characters at previous ascent (aligned to top of bbox)
       for (auto &c : line.chars)
-        c.pos.y -= dy;
+        c.pos.y -= dy1;
 
       line.ascent = fa;
     }

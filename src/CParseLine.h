@@ -201,9 +201,9 @@ class CParseLine {
     skipChar();
 
     while (isValid()) {
-      char c = lookChar();
+      char c1 = lookChar();
 
-      if (! isalnum(c) && c != '_')
+      if (! isalnum(c1) && c1 != '_')
         break;
 
       skipChar();

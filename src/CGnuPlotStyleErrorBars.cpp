@@ -168,12 +168,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (! bar->testAndSetUsed()) {
         bar->setBarWidth(barData.barWidth());
 
-        CGnuPlotStrokeP stroke(plot->createStroke());
+        CGnuPlotStrokeP stroke1(plot->createStroke());
 
-        stroke->setColor(barData.lineColor());
-        stroke->setWidth(barData.lineWidth());
+        stroke1->setColor(barData.lineColor());
+        stroke1->setWidth(barData.lineWidth());
 
-        bar->setStroke(stroke);
+        bar->setStroke(stroke1);
 
         CGnuPlotMarkP mark(plot->createMark());
 

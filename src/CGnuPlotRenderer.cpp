@@ -1189,14 +1189,14 @@ drawVAlignedText(const CPoint2D &pos, const HAlignPos &halignPos,
   while (pstr1 != std::string::npos) {
     std::string str2 = str1.substr(0, pstr1);
 
-    double width2 = font->getStringWidth(str2);
+    double width3 = font->getStringWidth(str2);
 
     if      (valignPos.first == CVALIGN_TYPE_TOP)
       y1 = pos.y;
     else if (valignPos.first == CVALIGN_TYPE_CENTER)
-      y1 = pos.y - pixelHeightToWindowHeight(width2/2);
+      y1 = pos.y - pixelHeightToWindowHeight(width3/2);
     else if (valignPos.first == CVALIGN_TYPE_BOTTOM)
-      y1 = pos.y - pixelHeightToWindowHeight(width2);
+      y1 = pos.y - pixelHeightToWindowHeight(width3);
 
     CPoint2D w(x1 + pixelWidthToWindowWidth  (halignPos.second),
                y1 - pixelHeightToWindowHeight(valignPos.second));
@@ -1309,7 +1309,7 @@ strokeClippedPath(const Points3D &points, const CGnuPlotStroke &stroke)
   for (const auto &p : points)
     points1.push_back(transform2D(p));
 
-  strokeClippedPath(points, stroke);
+  strokeClippedPath(points1, stroke);
 }
 
 void

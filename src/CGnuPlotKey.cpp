@@ -532,13 +532,13 @@ drawColumnStacked()
 
     //---
 
-    double y = y2 - by;
+    double y2b = y2 - by;
 
     clearPlotRects();
 
     for (uint i = 0; i < plot->numPoints2D(); ++i) {
       double xx = (isReverse() ? x1 + bx : x2 - ll - bx);
-      double yy = y - ls/2;
+      double yy = y2b - ls/2;
 
       //const CGnuPlotPoint &point = plot->getPoint2D(i);
 
@@ -568,13 +568,13 @@ drawColumnStacked()
       CRGBA tc = CRGBA(0,0,0);
 
       if (isReverse())
-        drawHAlignedText(CPoint2D(xx + ll + bx, y), HAlignPos(CHALIGN_TYPE_LEFT, 0),
+        drawHAlignedText(CPoint2D(xx + ll + bx, y2b), HAlignPos(CHALIGN_TYPE_LEFT, 0),
                          VAlignPos(CVALIGN_TYPE_TOP, 0), pointStr, tc);
       else
-        drawHAlignedText(CPoint2D(xx - bx, y), HAlignPos(CHALIGN_TYPE_RIGHT, 0),
+        drawHAlignedText(CPoint2D(xx - bx, y2b), HAlignPos(CHALIGN_TYPE_RIGHT, 0),
                          VAlignPos(CVALIGN_TYPE_TOP, 0), pointStr, tc);
 
-      y -= ls;
+      y2b -= ls;
     }
 
     ++pi;

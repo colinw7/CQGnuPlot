@@ -119,7 +119,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     //---
 
-    CBBox2D bbox(x - dx/2, y2, x + dx/2, y);
+    CBBox2D bbox1(x - dx/2, y2, x + dx/2, y);
 
     CPoint2D p1(x, yl);
     CPoint2D p2(x, yh);
@@ -127,18 +127,18 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (! renderer->isPseudo()) {
       CGnuPlotBoxBarObject *bar = plot->boxBarObjects()[i];
 
-      bar->setBBox(bbox);
+      bar->setBBox(bbox1);
 
       bar->setValues(x, y);
 
       bar->setVertical(true);
 
       if (! bar->testAndSetUsed()) {
-        CGnuPlotFillP   fill  (bar->fill  ()->dup());
-        CGnuPlotStrokeP stroke(bar->stroke()->dup());
+        CGnuPlotFillP   fill1  (bar->fill  ()->dup());
+        CGnuPlotStrokeP stroke1(bar->stroke()->dup());
 
-        bar->setFill  (fill  );
-        bar->setStroke(stroke);
+        bar->setFill  (fill1  );
+        bar->setStroke(stroke1);
 
         //---
 
@@ -156,18 +156,18 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
     }
     else {
-      CGnuPlotStroke stroke;
+      CGnuPlotStroke stroke1;
 
-      stroke.setEnabled(true);
+      stroke1.setEnabled(true);
 
-      renderer->strokeRect(bbox, stroke);
+      renderer->strokeRect(bbox1, stroke1);
 
-      renderer->strokeClipLine(p1, p2, stroke);
+      renderer->strokeClipLine(p1, p2, stroke1);
 
       double w = dx/2;
 
-      renderer->strokeClipLine(p1 - CPoint2D(w/2, 0), p1 + CPoint2D(w/2, 0), stroke);
-      renderer->strokeClipLine(p2 - CPoint2D(w/2, 0), p2 + CPoint2D(w/2, 0), stroke);
+      renderer->strokeClipLine(p1 - CPoint2D(w/2, 0), p1 + CPoint2D(w/2, 0), stroke1);
+      renderer->strokeClipLine(p2 - CPoint2D(w/2, 0), p2 + CPoint2D(w/2, 0), stroke1);
     }
 
     ++i;

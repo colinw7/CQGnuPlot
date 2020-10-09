@@ -268,7 +268,7 @@ class CQGnuPlotPlotBoxBarObjects : public QObject {
   CQGnuPlotBoxBarObject *firstBar() const;
 
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot *plot_ { nullptr };
 };
 
 //------
@@ -281,8 +281,10 @@ class CQGnuPlotPlotBoxObjects : public QObject {
    plot_(plot) {
   }
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot *plot_ { nullptr };
 };
 
 //------
@@ -295,8 +297,10 @@ class CQGnuPlotPlotBubbleObjects : public QObject {
    plot_(plot) {
   }
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot *plot_ { nullptr };
 };
 
 //------
@@ -309,8 +313,10 @@ class CQGnuPlotPlotEllipseObjects : public QObject {
    plot_(plot) {
   }
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot *plot_ { nullptr };
 };
 
 //------
@@ -323,8 +329,10 @@ class CQGnuPlotPlotErrorBarObjects : public QObject {
    plot_(plot) {
   }
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot *plot_ { nullptr };
 };
 
 //------
@@ -337,8 +345,10 @@ class CQGnuPlotPlotFinanceBarObjects : public QObject {
    plot_(plot) {
   }
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot *plot_ { nullptr };
 };
 
 //------
@@ -351,8 +361,10 @@ class CQGnuPlotPlotImageObjects : public QObject {
    plot_(plot) {
   }
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot *plot_ { nullptr };
 };
 
 //------
@@ -365,8 +377,10 @@ class CQGnuPlotPlotLabelObjects : public QObject {
    plot_(plot) {
   }
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot *plot_ { nullptr };
 };
 
 //------
@@ -379,8 +393,10 @@ class CQGnuPlotPlotPathObjects : public QObject {
    plot_(plot) {
   }
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot *plot_ { nullptr };
 };
 
 //------
@@ -396,6 +412,8 @@ class CQGnuPlotPlotPieObjects : public QObject {
    plot_(plot) {
   }
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
   double innerRadius() const;
   void   setInnerRadius(double r);
 
@@ -406,7 +424,7 @@ class CQGnuPlotPlotPieObjects : public QObject {
   CQGnuPlotPieObject *firstPie() const;
 
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot *plot_ { nullptr };
 };
 
 //------
@@ -423,6 +441,8 @@ class CQGnuPlotPlotPointObjects : public QObject {
    plot_(plot) {
   }
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
   CQGnuPlotEnum::SymbolType pointType() const;
   void setPointType(const CQGnuPlotEnum::SymbolType &type);
 
@@ -436,7 +456,7 @@ class CQGnuPlotPlotPointObjects : public QObject {
   CQGnuPlotPointObject *firstPoint() const;
 
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot *plot_ { nullptr };
 };
 
 //------
@@ -447,6 +467,8 @@ class CQGnuPlotPlotPolygonObjects : public QObject {
  public:
   CQGnuPlotPlotPolygonObjects(CQGnuPlotPlot *plot);
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
   CQGnuPlotStroke *stroke() const { return stroke_; }
   CQGnuPlotFill   *fill  () const { return fill_  ; }
 
@@ -455,7 +477,7 @@ class CQGnuPlotPlotPolygonObjects : public QObject {
   void updateFill();
 
  private:
-  CQGnuPlotPlot   *plot_;
+  CQGnuPlotPlot   *plot_ { nullptr };
   CQGnuPlotStroke *stroke_;
   CQGnuPlotFill   *fill_;
 };
@@ -470,8 +492,10 @@ class CQGnuPlotPlotRectObjects : public QObject {
    plot_(plot) {
   }
 
+  CQGnuPlotPlot *plot() const { return plot_; }
+
  private:
-  CQGnuPlotPlot *plot_;
+  CQGnuPlotPlot *plot_ { nullptr };
 };
 
 //------

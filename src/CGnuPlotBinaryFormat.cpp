@@ -58,10 +58,10 @@ init(const std::string &fmt)
 
     //std::cerr << skip << ":" << n << ":" << s << std::endl;
 
-    CGnuPlotBinaryFormat::Format fmt = CGnuPlotBinaryFormat::stringToFormat(s);
+    CGnuPlotBinaryFormat::Format fmt1 = CGnuPlotBinaryFormat::stringToFormat(s);
 
-    if (fmt != Format::INVALID)
-      addFormat(skip, n, fmt);
+    if (fmt1 != Format::INVALID)
+      addFormat(skip, n, fmt1);
     else
       std::cerr << "Unsupported format '" << s << "'" << std::endl;
   }

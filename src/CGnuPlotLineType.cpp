@@ -37,9 +37,9 @@ CGnuPlotLineType::
 calcColor(const CGnuPlotGroup *group, const CRGBA &c) const
 {
   if      (ind_ < 0) {
-    CGnuPlotColorSpec c = lineColor();
+    CGnuPlotColorSpec lc = lineColor();
 
-    return c.color();
+    return lc.color();
   }
   else if (ind_ == -3) {
     if (group)

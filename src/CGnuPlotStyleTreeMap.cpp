@@ -61,32 +61,32 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       for (const auto &p : plot->getPoints2D()) {
         std::string name;
-        double      value;
+        double      value2;
 
-        if (! p.getValue(1, name) || ! p.getValue(2, value))
+        if (! p.getValue(1, name) || ! p.getValue(2, value2))
           continue;
 
         std::string group;
 
         if (p.getValue(3, group)) {
-          auto p = groups.find(group);
+          auto pg = groups.find(group);
 
-          if (p == groups.end()) {
+          if (pg == groups.end()) {
             CTreeMap::HierNode *hierNode = tree->addHierNode(group);
 
-            p = groups.insert(p, GroupMap::value_type(group, hierNode));
+            pg = groups.insert(pg, GroupMap::value_type(group, hierNode));
 
             hierNode->setColorId(groups.size());
           }
 
-          CTreeMap::HierNode *hierNode = (*p).second;
+          CTreeMap::HierNode *hierNode = (*pg).second;
 
-          CTreeMap::Node *node = tree->addNode(hierNode, name, value);
+          CTreeMap::Node *node = tree->addNode(hierNode, name, value2);
 
           node->setColorId(hierNode->getNodes().size());
         }
         else {
-          CTreeMap::Node *node = tree->addNode(name, value);
+          CTreeMap::Node *node = tree->addNode(name, value2);
 
           node->setColorId(i);
         }
@@ -123,10 +123,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         //---
 
         std::string op;
-        double      value;
+        double      value2;
 
         if (name != "...") {
-          if (! point.getValue(2, value))
+          if (! point.getValue(2, value2))
             continue;
         }
         else {
@@ -169,7 +169,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
             //hierNode->setOpen(false);
           }
           else
-            (void) tree->addNode(hierNode, name, value);
+            (void) tree->addNode(hierNode, name, value2);
         }
         else {
           if (! hierNode)

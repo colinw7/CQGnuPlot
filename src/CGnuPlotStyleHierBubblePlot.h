@@ -21,7 +21,7 @@ class CGnuPlotStyleHierBubblePlot : public CGnuPlotStyleBase {
   //CBBox2D fit(CGnuPlotPlot *plot) override;
 
   bool mouseTip(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent,
-                CGnuPlotTipData &tipData);
+                CGnuPlotTipData &tipData) override;
 
  private:
   void drawNodes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,

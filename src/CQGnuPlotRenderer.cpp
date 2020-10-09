@@ -12,6 +12,8 @@
 #include <CQImageUtil.h>
 #include <CQUtil.h>
 #include <CFontMgr.h>
+#include <CImageLib.h>
+
 #include <QPainter>
 
 class CQSymbol2DRenderer : public CSymbol2DRenderer {

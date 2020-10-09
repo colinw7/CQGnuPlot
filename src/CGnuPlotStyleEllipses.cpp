@@ -160,14 +160,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (! ellipse->testAndSetUsed()) {
         ellipse->setAngle(o.a);
 
-        CGnuPlotFillP   fill  (ellipse->fill  ()->dup());
-        CGnuPlotStrokeP stroke(ellipse->stroke()->dup());
+        CGnuPlotFillP   fill1  (ellipse->fill  ()->dup());
+        CGnuPlotStrokeP stroke1(ellipse->stroke()->dup());
 
-        stroke->setColor(o.lc);
-        fill  ->setColor(o.fc);
+        stroke1->setColor(o.lc);
+        fill1  ->setColor(o.fc);
 
-        ellipse->setFill  (fill  );
-        ellipse->setStroke(stroke);
+        ellipse->setFill  (fill1  );
+        ellipse->setStroke(stroke1);
       }
 
       ++i;

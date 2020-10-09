@@ -20,9 +20,9 @@ class CGnuPlotStyleTreeMap : public CGnuPlotStyleBase {
   CBBox2D fit(CGnuPlotPlot *plot) override;
 
   bool mouseTip(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent,
-                CGnuPlotTipData &tipData);
+                CGnuPlotTipData &tipData) override;
 
-  void mousePress(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent);
+  void mousePress(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent) override;
 
  private:
   bool hier_ { false };

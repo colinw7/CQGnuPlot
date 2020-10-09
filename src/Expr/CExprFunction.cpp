@@ -1060,12 +1060,12 @@ exec(CExpr *expr, const CExprValueArray &values)
   // restore variables
   for (const auto &v : varValues) {
     const std::string varName = v.first;
-    CExprValuePtr     value   = v.second;
+    CExprValuePtr     vvalue  = v.second;
 
-    if (value.isValid()) {
+    if (vvalue.isValid()) {
       CExprVariablePtr var = expr->getVariable(varName);
 
-      var->setValue(value);
+      var->setValue(vvalue);
     }
     else
       expr->removeVariable(varName);

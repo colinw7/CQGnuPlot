@@ -333,10 +333,10 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     getPointsColor(value, pi + 1, lc, fc);
 
-    CBBox2D bbox(p1, p2);
+    CBBox2D bbox1(p1, p2);
 
-    renderer->fillRect(bbox, fc);
-    renderer->drawRect(bbox, lc, 1);
+    renderer->fillRect(bbox1, fc);
+    renderer->drawRect(bbox1, lc, 1);
 
     std::string label = xaxis.iticLabel(pi);
     //std::string label = point.label();

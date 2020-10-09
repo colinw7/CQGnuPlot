@@ -34,6 +34,8 @@ class CGnuPlotMultiplot {
     titleFont_ = CFontPtr();
   }
 
+  CGnuPlot *plot() const { return plot_; }
+
   bool isEnabled() const { return enabled_; }
   void setEnabled(bool b) { enabled_ = b; }
 
@@ -104,7 +106,7 @@ class CGnuPlotMultiplot {
   CIPoint2D pos(int n) const;
 
  private:
-  CGnuPlot*   plot_      { 0 };
+  CGnuPlot*   plot_      { nullptr };
   bool        enabled_   { false };
   bool        autoFit_   { false };
   bool        enhanced_  { false };

@@ -92,24 +92,24 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       bar->setValues(x, y);
 
       if (! bar->testAndSetUsed()) {
-        CGnuPlotFillP   fill  (bar->fill  ()->dup());
-        CGnuPlotStrokeP stroke(bar->stroke()->dup());
+        CGnuPlotFillP   fill1  (bar->fill  ()->dup());
+        CGnuPlotStrokeP stroke1(bar->stroke()->dup());
 
         if (fc.isValid())
-          fill->setColor(fc.getValue());
+          fill1->setColor(fc.getValue());
 
-        bar->setFill  (fill  );
-        bar->setStroke(stroke);
+        bar->setFill  (fill1  );
+        bar->setStroke(stroke1);
       }
     }
     else {
-      //CGnuPlotFill   fill;
-      CGnuPlotStroke stroke;
+    //CGnuPlotFill   fill1;
+      CGnuPlotStroke stroke1;
 
-      stroke.setEnabled(true);
+      stroke1.setEnabled(true);
 
-      //renderer->fillRect  (bbox, fill  );
-      renderer->strokeRect(bbox, stroke);
+    //renderer->fillRect  (bbox, fill1  );
+      renderer->strokeRect(bbox, stroke1);
     }
 
     ++i;

@@ -71,10 +71,10 @@ setData(double *x, double *y, double *z, double *c, int no_x, int no_y, bool has
   xmin_.setInvalid(); ymin_.setInvalid(); zmin_.setInvalid();
   xmax_.setInvalid(); ymax_.setInvalid(); zmax_.setInvalid();
 
-  for (auto x : x_) { xmin_.updateMin(x); xmax_.updateMax(x); }
-  for (auto y : y_) { ymin_.updateMin(y); ymax_.updateMax(y); }
-  for (auto z : z_) { zmin_.updateMin(z); zmax_.updateMax(z); }
-  for (auto c : c_) { cmin_.updateMin(c); cmax_.updateMax(c); }
+  for (auto x1 : x_) { xmin_.updateMin(x1); xmax_.updateMax(x1); }
+  for (auto y1 : y_) { ymin_.updateMin(y1); ymax_.updateMax(y1); }
+  for (auto z1 : z_) { zmin_.updateMin(z1); zmax_.updateMax(z1); }
+  for (auto c1 : c_) { cmin_.updateMin(c1); cmax_.updateMax(c1); }
 
   auto *group = plot_->group();
 
@@ -215,7 +215,7 @@ drawContourLines(CGnuPlotRenderer *renderer)
 
           int li = contourData.labelStart().getValue(-1);
 
-          CPoint3D p1, p2;
+          CPoint3D p1;
 
           int j = 0;
 

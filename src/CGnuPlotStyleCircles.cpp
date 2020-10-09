@@ -193,17 +193,17 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       pie->setWedge (value->wedge());
 
       if (! pie->testAndSetUsed()) {
-        CGnuPlotFillP   fill  (pie->fill  ()->dup());
-        CGnuPlotStrokeP stroke(pie->stroke()->dup());
+        CGnuPlotFillP   fill1  (pie->fill  ()->dup());
+        CGnuPlotStrokeP stroke1(pie->stroke()->dup());
 
         if (o.lc.isValid())
-          stroke->setColor(o.lc.getValue());
+          stroke1->setColor(o.lc.getValue());
 
         if (o.fc.isValid())
-          fill->setColor(o.fc.getValue());
+          fill1->setColor(o.fc.getValue());
 
-        pie->setFill  (fill  );
-        pie->setStroke(stroke);
+        pie->setFill  (fill1  );
+        pie->setStroke(stroke1);
       }
 
       ++i;
@@ -218,17 +218,17 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       ellipse->setSize  (CSize2D(o.w, o.h));
 
       if (! ellipse->testAndSetUsed()) {
-        CGnuPlotFillP   fill  (ellipse->fill  ()->dup());
-        CGnuPlotStrokeP stroke(ellipse->stroke()->dup());
+        CGnuPlotFillP   fill1  (ellipse->fill  ()->dup());
+        CGnuPlotStrokeP stroke1(ellipse->stroke()->dup());
 
         if (o.lc.isValid())
-          stroke->setColor(o.lc.getValue());
+          stroke1->setColor(o.lc.getValue());
 
         if (o.fc.isValid())
-          fill->setColor(o.fc.getValue());
+          fill1->setColor(o.fc.getValue());
 
-        ellipse->setFill  (fill  );
-        ellipse->setStroke(stroke);
+        ellipse->setFill  (fill1  );
+        ellipse->setStroke(stroke1);
       }
 
       ++i;

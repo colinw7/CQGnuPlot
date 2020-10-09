@@ -465,10 +465,10 @@ fit()
     //---
 
     if (isPolar()) {
-      double xmax2 = (xamax1.isValid() ? xamax1.getValue(10) : xmax1.getValue(10));
-      double ymax2 = (yamax1.isValid() ? yamax1.getValue(10) : ymax1.getValue(10));
+      double xmax3 = (xamax1.isValid() ? xamax1.getValue(10) : xmax1.getValue(10));
+      double ymax3 = (yamax1.isValid() ? yamax1.getValue(10) : ymax1.getValue(10));
 
-      double r = plotRAxis->mapLogValue(std::max(xmax2, ymax2));
+      double r = plotRAxis->mapLogValue(std::max(xmax3, ymax3));
 
       if (! xmin1.isValid()) xmin1 = -r;
       if (! xmax1.isValid()) xmax1 =  r;
@@ -1204,7 +1204,7 @@ updatePosition(const CPoint2D &pixel, CGnuPlotPosition &pos) const
   CPoint2D screen; renderer->windowToScreen(window, screen);
   CPoint2D chr   ; renderer->windowToChar  (window, chr   );
 
-  double x, y;
+  double x { 0 }, y { 0 };
 
   if      (pos.systemX() == CGnuPlotPosition::CoordSys::FIRST    ) x = window.x;
   else if (pos.systemX() == CGnuPlotPosition::CoordSys::SECOND   ) x = second.x;
@@ -1929,13 +1929,13 @@ drawBorder(CGnuPlotRenderer *renderer)
   renderer->setReverse(plotXAxis->isReverse(), plotYAxis->isReverse());
 
   if (is3D()) {
-    CBBox3D bbox = getPlotBorderBox(1, 1, 1);
+    CBBox3D borderBox = getPlotBorderBox(1, 1, 1);
 
     if (! axesData().getBorderSides())
       return;
 
-    double xmin1 = bbox.getXMin(), ymin1 = bbox.getYMin(), zmin1 = bbox.getZMin();
-    double xmax1 = bbox.getXMax(), ymax1 = bbox.getYMax(), zmax1 = bbox.getZMax();
+    double xmin1 = borderBox.getXMin(), ymin1 = borderBox.getYMin(), zmin1 = borderBox.getZMin();
+    double xmax1 = borderBox.getXMax(), ymax1 = borderBox.getYMax(), zmax1 = borderBox.getZMax();
 
     updateAxisBBox(1, 1, 1, CPoint3D(xmin1, ymin1, zmin1));
     updateAxisBBox(1, 1, 1, CPoint3D(xmin1, ymin1, zmax1));

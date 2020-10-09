@@ -109,12 +109,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     //---
 
-    CBBox2D bbox(x - bw1/2, y2, x + bw1/2, y);
+    CBBox2D bbox1(x - bw1/2, y2, x + bw1/2, y);
 
     if (! renderer->isPseudo()) {
       CGnuPlotBoxBarObject *bar = plot->boxBarObjects()[i];
 
-      bar->setBBox(bbox);
+      bar->setBBox(bbox1);
 
       bar->setValues(x, y);
 
@@ -134,7 +134,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       stroke.setEnabled(true);
 
-      renderer->strokeRect(bbox, stroke);
+      renderer->strokeRect(bbox1, stroke);
     }
 
     ++i;

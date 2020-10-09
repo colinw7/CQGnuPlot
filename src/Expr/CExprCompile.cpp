@@ -892,9 +892,9 @@ compilePostfixExpression(CExprITokenPtr itoken)
       compileArgumentExpressionList(itoken->getChild(2));
     }
 
-    CExprITokenPtr itoken0 = itoken->getChild(0);
+    CExprITokenPtr citoken0 = itoken->getChild(0);
 
-    const std::string &identifier = itoken0->getIdentifier();
+    const std::string &identifier = citoken0->getIdentifier();
 
     CExprFunctionMgr::Functions functions;
 
@@ -949,9 +949,9 @@ compilePostfixExpression(CExprITokenPtr itoken)
   else if (op == CExprOpType::OPEN_SBRACKET) {
     // <var> [ <ind> ]
     if (num_children == 4) {
-      CExprITokenPtr itoken0 = itoken->getChild(0);
+      CExprITokenPtr citoken0 = itoken->getChild(0);
 
-      stackCToken(itoken0->base());
+      stackCToken(citoken0->base());
 
       stackCToken(itoken1->base());
 
@@ -961,9 +961,9 @@ compilePostfixExpression(CExprITokenPtr itoken)
     }
     // <var> [ <ind> : <ind> ]
     else {
-      CExprITokenPtr itoken0 = itoken->getChild(0);
+      CExprITokenPtr citoken0 = itoken->getChild(0);
 
-      stackCToken(itoken0->base());
+      stackCToken(citoken0->base());
 
       stackCToken(itoken1->base());
 

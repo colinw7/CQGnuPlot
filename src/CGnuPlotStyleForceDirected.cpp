@@ -78,9 +78,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         if (! point.getValue(2, target))
           continue;
 
-        int value = 0;
+        int value3 = 0;
 
-        if (! point.getValue(3, value))
+        if (! point.getValue(3, value3))
           continue;
 
         Springy::Node *node1 = forceDirected->getNode(source);
@@ -88,8 +88,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
         Springy::Edge *edge = forceDirected->newEdge(node1, node2);
 
-        edge->setLength(1.0/value);
-        edge->setValue(value);
+        edge->setLength(1.0/value3);
+        edge->setValue(value3);
       }
     }
 

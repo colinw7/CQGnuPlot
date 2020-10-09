@@ -94,11 +94,11 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
         key += group;
 
-        auto p = groups.find(key);
+        auto pg = groups.find(key);
 
         CSunburst::HierNode *hierNode = 0;
 
-        if (p == groups.end()) {
+        if (pg == groups.end()) {
           if (parentNode) {
             hierNode = sunburst->addHierNode(parentNode, group);
 
@@ -112,10 +112,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
             hierNode->setColorId(nr);
           }
 
-          p = groups.insert(p, GroupMap::value_type(key, hierNode));
+          pg = groups.insert(pg, GroupMap::value_type(key, hierNode));
         }
 
-        parentNode = (*p).second;
+        parentNode = (*pg).second;
       }
 
       std::string name;
@@ -123,9 +123,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (! p.getValue(nv - 1, name))
         continue;
 
-      double value;
+      double valuen;
 
-      if (! p.getValue(nv, value))
+      if (! p.getValue(nv, valuen))
         continue;
 
       std::string group;
@@ -133,9 +133,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       CSunburst::Node *node = 0;
 
       if (parentNode)
-        node = sunburst->addNode(parentNode, name, value);
+        node = sunburst->addNode(parentNode, name, valuen);
       else
-        node = sunburst->addNode(name, value);
+        node = sunburst->addNode(name, valuen);
 
       node->setColorId(-1);
     }

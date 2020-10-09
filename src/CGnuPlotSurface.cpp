@@ -123,9 +123,9 @@ draw(CGnuPlotRenderer *renderer)
         else {
           double r = (z - zmin_.getValue())/(zmax_.getValue() - zmin_.getValue());
 
-          CColor c = plot_->group()->palette()->getColor(r);
+          CColor c1 = plot_->group()->palette()->getColor(r);
 
-          rgba = c.rgba();
+          rgba = c1.rgba();
         }
 
         if (! renderer->isPseudo()) {

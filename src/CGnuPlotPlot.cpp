@@ -682,9 +682,9 @@ printSurfaceValues() const
         continue;
 
       // TODO: inside/outside test
-      std::stringstream ss;
-      ss << reals[0] << " " << reals[1] << " " << reals[2] << " i" << std::endl;
-      tableFile_.print(ss.str());
+      std::stringstream ss1;
+      ss1 << reals[0] << " " << reals[1] << " " << reals[2] << " i" << std::endl;
+      tableFile_.print(ss1.str());
     }
 
     ++iy;
@@ -714,9 +714,9 @@ printContourValues() const
       double x = contour_.x(i);
       double z = contour_.z(i, j);
 
-      std::stringstream ss;
-      ss << x << " " << y << " " << z << std::endl;
-      tableFile_.print(ss.str());
+      std::stringstream ss1;
+      ss1 << x << " " << y << " " << z << std::endl;
+      tableFile_.print(ss1.str());
     }
   }
 #endif
@@ -737,14 +737,14 @@ printContourValues() const
     int il = 0;
 
     for (const auto &line : lines) {
-      std::stringstream ss;
+      std::stringstream ss1;
 
       if (il == 0)
-        ss << line.start().x << " " << line.start().y << " " << z << std::endl;
+        ss1 << line.start().x << " " << line.start().y << " " << z << std::endl;
 
-      ss << line.end().x << " " << line.end().y << " " << z << std::endl;
+      ss1 << line.end().x << " " << line.end().y << " " << z << std::endl;
 
-      tableFile_.print(ss.str());
+      tableFile_.print(ss1.str());
 
       ++il;
     }
@@ -1355,24 +1355,24 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
       bar->setValues(x, y);
 
       if (! bar->testAndSetUsed()) {
-        CGnuPlotFillP   fill  (bar->fill  ()->dup());
-        CGnuPlotStrokeP stroke(bar->stroke()->dup());
+        CGnuPlotFillP   fill1  (bar->fill  ()->dup());
+        CGnuPlotStrokeP stroke1(bar->stroke()->dup());
 
         if (fc.isValid())
-          fill->setColor(fc.getValue());
+          fill1->setColor(fc.getValue());
 
-        bar->setFill  (fill);
-        bar->setStroke(stroke);
+        bar->setFill  (fill1);
+        bar->setStroke(stroke1);
       }
     }
     else {
-      //CGnuPlotFill   fill;
-      CGnuPlotStroke stroke;
+    //CGnuPlotFill   fill1;
+      CGnuPlotStroke stroke1;
 
-      stroke.setEnabled(true);
+      stroke1.setEnabled(true);
 
-      //renderer->fillRect  (bbox, fill);
-      renderer->strokeRect(bbox, stroke);
+    //renderer->fillRect  (bbox, fill1);
+      renderer->strokeRect(bbox, stroke1);
     }
 
     ++i;
@@ -1439,22 +1439,22 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
       bar->setValues(i, y);
 
       if (! bar->testAndSetUsed()) {
-        CGnuPlotFillP   fill   = bar->fill  ();
-        CGnuPlotStrokeP stroke = bar->stroke();
+        CGnuPlotFillP   fill1   = bar->fill  ();
+        CGnuPlotStrokeP stroke1 = bar->stroke();
 
         if (fc.isValid())
-          fill->setColor(fc.getValue());
+          fill1->setColor(fc.getValue());
 
-        bar->setFill  (fill  );
-        bar->setStroke(stroke);
+        bar->setFill  (fill1  );
+        bar->setStroke(stroke1);
       }
     }
     else {
-      CGnuPlotFill   fill;
-      CGnuPlotStroke stroke;
+      CGnuPlotFill   fill1;
+      CGnuPlotStroke stroke1;
 
-      renderer->fillRect  (bbox, fill);
-      renderer->strokeRect(bbox, stroke);
+      renderer->fillRect  (bbox, fill1);
+      renderer->strokeRect(bbox, stroke1);
     }
 
     double xm = (xlb + + xrb)/2;
@@ -1889,14 +1889,14 @@ calcBoundedYRange(double *ymin, double *ymax) const
       brenderer.setXRange(p1.x, p2.x);
 
       if (renderBBox(brenderer)) {
-        CBBox2D bbox = brenderer.bbox();
+        CBBox2D bbox1 = brenderer.bbox();
 
-        if (bbox.isSet()) {
-          CPoint2D p1 = group_->unmapLogPoint(xind(), yind(), 1, bbox.getLL());
-          CPoint2D p2 = group_->unmapLogPoint(xind(), yind(), 1, bbox.getUR());
+        if (bbox1.isSet()) {
+          CPoint2D pl1 = group_->unmapLogPoint(xind(), yind(), 1, bbox1.getLL());
+          CPoint2D pl2 = group_->unmapLogPoint(xind(), yind(), 1, bbox1.getUR());
 
-          th->bymin_.updateMin(p1.y);
-          th->bymax_.updateMax(p2.y);
+          th->bymin_.updateMin(pl1.y);
+          th->bymax_.updateMax(pl2.y);
         }
       }
       else {

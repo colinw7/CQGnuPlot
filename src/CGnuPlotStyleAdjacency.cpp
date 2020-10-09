@@ -76,12 +76,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         if (! point.getValue(2, target))
           continue;
 
-        int value = 0;
+        int value3 = 0;
 
-        if (! point.getValue(3, value))
+        if (! point.getValue(3, value3))
           continue;
 
-        adjacency->connectNodes(source, target, value);
+        adjacency->connectNodes(source, target, value3);
       }
     }
 

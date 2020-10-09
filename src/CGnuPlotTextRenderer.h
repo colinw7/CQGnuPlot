@@ -15,6 +15,8 @@ class CGnuPlotTextRenderer {
  public:
   CGnuPlotTextRenderer();
 
+  virtual ~CGnuPlotTextRenderer() { }
+
   virtual CFontPtr getFont() const { return font_; }
   virtual void setFont(const CFontPtr &font) { font_ = font; }
 

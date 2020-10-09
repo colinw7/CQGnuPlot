@@ -145,12 +145,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (! bar->testAndSetUsed()) {
         bar->setBarWidth(financeData.barWidth());
 
-        CGnuPlotStrokeP stroke(plot->createStroke());
+        CGnuPlotStrokeP stroke1(plot->createStroke());
 
-        stroke->setColor(financeData.lineColor());
-        stroke->setWidth(financeData.lineWidth());
+        stroke1->setColor(financeData.lineColor());
+        stroke1->setWidth(financeData.lineWidth());
 
-        bar->setStroke(stroke);
+        bar->setStroke(stroke1);
       }
     }
     else {

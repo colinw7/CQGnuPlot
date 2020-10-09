@@ -18,6 +18,9 @@ class CQIntegerSpin : public QSpinBox {
   bool isAutoStep() const { return autoStep_; }
   void setAutoStep(bool b) { autoStep_ = b; }
 
+  int cursorPosition() const;
+  void setCursorPosition(int pos);
+
   int step() const { return step_; }
 
   void stepBy(int n);
@@ -36,8 +39,8 @@ class CQIntegerSpin : public QSpinBox {
   bool isNegative() const;
 
  private:
-  bool   autoStep_;
-  double step_;
+  bool autoStep_ { true };
+  int  step_     { 1 };
 };
 
 #endif

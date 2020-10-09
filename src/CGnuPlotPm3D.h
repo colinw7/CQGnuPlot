@@ -12,6 +12,8 @@ class CGnuPlotPm3D {
 
   virtual ~CGnuPlotPm3D() { }
 
+  CGnuPlotGroup *group() const { return group_; }
+
   void setData(const CGnuPlotPm3DData &data);
 
   bool isEnabled() const { return data_.isEnabled(); }

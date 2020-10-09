@@ -68,10 +68,10 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       //---
 
       std::string op;
-      double      value;
+      double      value2;
 
       if (name != "...") {
-        if (! point.getValue(2, value))
+        if (! point.getValue(2, value2))
           continue;
       }
       else {
@@ -114,7 +114,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
           //hierNode->setOpen(false);
         }
         else
-          (void) pack->createNode(hierNode, name, value);
+          (void) pack->createNode(hierNode, name, value2);
       }
       else {
         if (! hierNode)
@@ -194,25 +194,25 @@ drawNodes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
   for (auto node : nodes) {
     if (! node->placed()) continue;
 
-    double r = node->radiusOrig();
+    double rn = node->radiusOrig();
 
-    double px1, py1, px2, py2;
+    double pnx1, pny1, pnx2, pny2;
 
-    mapPoint(node->x() - r, node->y() + r, px1, py1);
-    mapPoint(node->x() + r, node->y() - r, px2, py2);
+    mapPoint(node->x() - rn, node->y() + rn, pnx1, pny1);
+    mapPoint(node->x() + rn, node->y() - rn, pnx2, pny2);
 
   //QPainterPath path;
-  //path.addEllipse(QRectF(px1, py1, px2 - px1, py2 - py1));
+  //path.addEllipse(QRectF(pnx1, pny1, pnx2 - pnx1, pny2 - pny1));
   //renderer->setPen(border_color);
   //renderer->setBrush(fg_color);
   //renderer->drawPath(path);
 
   //CRGBA c1 = (node->id() > 0 ? CGnuPlotStyleInst->indexColor(value->palette(), node->id()) : c);
-  //CRGBA c = CGnuPlotUtil::map(in, 0, nn - 1, c1, c2);
-    CRGBA c = c2 + (1.0*in)*(c3 - c2)/(nn - 1);
+  //CRGBA ce = CGnuPlotUtil::map(in, 0, nn - 1, c1, c2);
+    CRGBA ce = c2 + (1.0*in)*(c3 - c2)/(nn - 1);
 
-    renderer->fillEllipse(CBBox2D(px1, py1, px2, py2), c);
-    renderer->drawEllipse(CBBox2D(px1, py1, px2, py2), CRGBA(0,0,0), 0);
+    renderer->fillEllipse(CBBox2D(pnx1, pny1, pnx2, pny2), ce);
+    renderer->drawEllipse(CBBox2D(pnx1, pny1, pnx2, pny2), CRGBA(0,0,0), 0);
 
     //---
 
@@ -225,9 +225,9 @@ drawNodes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
 
     int tw = fm.width(buffer);
 
-    renderer->drawText(px1 - tw/2, py1 + fm.descent(), buffer);
+    renderer->drawText(pnx1 - tw/2, pny1 + fm.descent(), buffer);
 #else
-    mapPoint(node->x(), node->y(), px1, py1);
+    mapPoint(node->x(), node->y(), pnx1, pny1);
 
 #if 0
     int len = node->name().size();
@@ -236,17 +236,17 @@ drawNodes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
       std::string name1 = node->name().substr(0, i);
 
       int tw = fm.width(name1.c_str());
-      if (tw > 2*(px2 - px1)) continue;
+      if (tw > 2*(pnx2 - pnx1)) continue;
 
-      renderer->drawText(px1 - tw/2, py1 + fm.descent(), name1.c_str());
+      renderer->drawText(pnx1 - tw/2, pny1 + fm.descent(), name1.c_str());
 
       break;
     }
 #endif
 
-    CRGBA tc = c.bwContrast();
+    CRGBA tc = ce.bwContrast();
 
-    renderer->drawHAlignedText(CPoint2D(px1, py1),
+    renderer->drawHAlignedText(CPoint2D(pnx1, pny1),
                                CGnuPlotTypes::HAlignPos(CHALIGN_TYPE_CENTER, 0),
                                CGnuPlotTypes::VAlignPos(CVALIGN_TYPE_CENTER, 0),
                                node->name(), tc);

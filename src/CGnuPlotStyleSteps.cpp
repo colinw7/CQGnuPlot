@@ -113,9 +113,9 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         renderer->drawClipLine(p3, p2, c, lw);
       }
       else if (plot->style() == CGnuPlotTypes::PlotStyle::FILLSTEPS) {
-        CBBox2D bbox(p1.x, ymin, p2.x, p1.y);
+        CBBox2D bbox1(p1.x, ymin, p2.x, p1.y);
 
-        renderer->fillRect(bbox, c);
+        renderer->fillRect(bbox1, c);
       }
     }
   }

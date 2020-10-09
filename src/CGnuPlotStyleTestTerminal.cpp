@@ -184,13 +184,13 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   for (int i = 0; i < 6; ++i) {
     double a = CAngle::Deg2Rad(i*60);
 
-    CPoint2D p1, p2;
+    CPoint2D pw1, pw2;
 
-    renderer->pixelToWindow(pp1 + CPoint2D(pl*cos(a), pl*sin(a)), p1);
-    renderer->pixelToWindow(pp2 + CPoint2D(pl*cos(a), pl*sin(a)), p2);
+    renderer->pixelToWindow(pp1 + CPoint2D(pl*cos(a), pl*sin(a)), pw1);
+    renderer->pixelToWindow(pp2 + CPoint2D(pl*cos(a), pl*sin(a)), pw2);
 
-    points1.push_back(p1);
-    points2.push_back(p2);
+    points1.push_back(pw1);
+    points2.push_back(pw2);
   }
 
   renderer->fillPolygon(points1, CRGBA(0,0,1));
@@ -211,12 +211,12 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     double a = i*CAngle::Deg2Rad(45);
 
-    double dx = al*cos(a);
-    double dy = -al*sin(a);
+    double dax =  al*cos(a);
+    double day = -al*sin(a);
 
     CPoint2D ac1;
 
-    renderer->pixelToWindow(CPoint2D(pxm - 100 + dx, pym + 100 + dy), ac1);
+    renderer->pixelToWindow(CPoint2D(pxm - 100 + dax, pym + 100 + day), ac1);
 
     arrow.setFrom(CPoint3D(ac .x, ac .y, 0));
     arrow.setTo  (CPoint3D(ac1.x, ac1.y, 0));
