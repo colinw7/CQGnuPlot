@@ -217,19 +217,15 @@ CGnuPlotWindow.cpp \
 CGnuPlotText.cpp \
 CGnuPlotTextRenderer.cpp \
 \
-CQHeaderView.cpp \
 CQFloatLabel.cpp \
 CQRotatedText.cpp \
-CQIntegerSpin.cpp \
 CQCursor.cpp \
 CQRubberBand.cpp \
 CQDialog.cpp \
 CQEnumCombo.cpp \
 \
 CAdjacency.cpp \
-CDelaunay.cpp \
 ChordDiagram.cpp  \
-CHull3D.cpp \
 CSunburst.cpp \
 CTreeMap.cpp \
 CDendrogram.cpp \
@@ -466,19 +462,15 @@ CGnuPlotWindow.h \
 CGnuPlotText.h \
 CGnuPlotTextRenderer.h \
 \
-CQHeaderView.h \
 CQFloatLabel.h \
 CQRotatedText.h \
-CQIntegerSpin.h \
 CQCursor.h \
 CQRubberBand.h \
 CQDialog.h \
 CQEnumCombo.h \
 \
 CAdjacency.h \
-CDelaunay.h \
 ChordDiagram.h \
-CHull3D.h \
 CSunburst.h \
 CTreeMap.h \
 CPrint.h \

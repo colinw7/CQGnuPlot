@@ -243,18 +243,14 @@ SOURCES       = CQGnuPlotTest.cpp \
 		CGnuPlotWindow.cpp \
 		CGnuPlotText.cpp \
 		CGnuPlotTextRenderer.cpp \
-		CQHeaderView.cpp \
 		CQFloatLabel.cpp \
 		CQRotatedText.cpp \
-		CQIntegerSpin.cpp \
 		CQCursor.cpp \
 		CQRubberBand.cpp \
 		CQDialog.cpp \
 		CQEnumCombo.cpp \
 		CAdjacency.cpp \
-		CDelaunay.cpp \
 		ChordDiagram.cpp \
-		CHull3D.cpp \
 		CSunburst.cpp \
 		CTreeMap.cpp \
 		CDendrogram.cpp \
@@ -354,9 +350,7 @@ SOURCES       = CQGnuPlotTest.cpp \
 		.moc/moc_CQGnuPlotDataTree.cpp \
 		.moc/moc_CQGnuPlotDataModel.cpp \
 		.moc/moc_CQGnuPlotPositionEdit.cpp \
-		.moc/moc_CQHeaderView.cpp \
 		.moc/moc_CQFloatLabel.cpp \
-		.moc/moc_CQIntegerSpin.cpp \
 		.moc/moc_CQRubberBand.cpp \
 		.moc/moc_CQDialog.cpp \
 		.moc/moc_CQEnumCombo.cpp
@@ -551,18 +545,14 @@ OBJECTS       = ../obj/CQGnuPlotTest.o \
 		../obj/CGnuPlotWindow.o \
 		../obj/CGnuPlotText.o \
 		../obj/CGnuPlotTextRenderer.o \
-		../obj/CQHeaderView.o \
 		../obj/CQFloatLabel.o \
 		../obj/CQRotatedText.o \
-		../obj/CQIntegerSpin.o \
 		../obj/CQCursor.o \
 		../obj/CQRubberBand.o \
 		../obj/CQDialog.o \
 		../obj/CQEnumCombo.o \
 		../obj/CAdjacency.o \
-		../obj/CDelaunay.o \
 		../obj/ChordDiagram.o \
-		../obj/CHull3D.o \
 		../obj/CSunburst.o \
 		../obj/CTreeMap.o \
 		../obj/CDendrogram.o \
@@ -663,9 +653,7 @@ OBJECTS       = ../obj/CQGnuPlotTest.o \
 		../obj/moc_CQGnuPlotDataTree.o \
 		../obj/moc_CQGnuPlotDataModel.o \
 		../obj/moc_CQGnuPlotPositionEdit.o \
-		../obj/moc_CQHeaderView.o \
 		../obj/moc_CQFloatLabel.o \
-		../obj/moc_CQIntegerSpin.o \
 		../obj/moc_CQRubberBand.o \
 		../obj/moc_CQDialog.o \
 		../obj/moc_CQEnumCombo.o
@@ -964,18 +952,14 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CGnuPlotWindow.h \
 		CGnuPlotText.h \
 		CGnuPlotTextRenderer.h \
-		CQHeaderView.h \
 		CQFloatLabel.h \
 		CQRotatedText.h \
-		CQIntegerSpin.h \
 		CQCursor.h \
 		CQRubberBand.h \
 		CQDialog.h \
 		CQEnumCombo.h \
 		CAdjacency.h \
-		CDelaunay.h \
 		ChordDiagram.h \
-		CHull3D.h \
 		CSunburst.h \
 		CTreeMap.h \
 		CPrint.h \
@@ -1186,18 +1170,14 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CGnuPlotWindow.cpp \
 		CGnuPlotText.cpp \
 		CGnuPlotTextRenderer.cpp \
-		CQHeaderView.cpp \
 		CQFloatLabel.cpp \
 		CQRotatedText.cpp \
-		CQIntegerSpin.cpp \
 		CQCursor.cpp \
 		CQRubberBand.cpp \
 		CQDialog.cpp \
 		CQEnumCombo.cpp \
 		CAdjacency.cpp \
-		CDelaunay.cpp \
 		ChordDiagram.cpp \
-		CHull3D.cpp \
 		CSunburst.cpp \
 		CTreeMap.cpp \
 		CDendrogram.cpp \
@@ -1433,8 +1413,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotArrowObject.h CQGnuPlotAxis.h CQGnuPlotBoxBarObject.h CQGnuPlotBoxObject.h CQGnuPlotBoxPlot.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEndBar.h CQGnuPlotEnum.h CQGnuPlotErrorBarObject.h CQGnuPlotFill.h CQGnuPlotFinanceBarObject.h CQGnuPlotGroup.h CQGnuPlotImageObject.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLabelObject.h CQGnuPlotLineStyle.h CQGnuPlotMark.h CQGnuPlotMultiplot.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPathObject.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPm3D.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPointObject.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotStroke.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotFilename.h CQGnuPlotUtil.h CQGnuPlotWindow.h CQGnuPlotAdjacencyStyleValue.h CQGnuPlotBivariateStyleValue.h CQGnuPlotBoxErrorBarsStyleValue.h CQGnuPlotBoxesStyleValue.h CQGnuPlotBoxPlotStyleValue.h CQGnuPlotBubbleStyleValue.h CQGnuPlotCandlesticksStyleValue.h CQGnuPlotChordDiagramStyleValue.h CQGnuPlotCirclesStyleValue.h CQGnuPlotDelaunayStyleValue.h CQGnuPlotDendrogramStyleValue.h CQGnuPlotEllipsesStyleValue.h CQGnuPlotForceDirectedStyleValue.h CQGnuPlotHierBubbleStyleValue.h CQGnuPlotLabelsStyleValue.h CQGnuPlotPieChartStyleValue.h CQGnuPlotRadarStyleValue.h CQGnuPlotSunburstStyleValue.h CQGnuPlotTreeMapStyleValue.h CQGnuPlotVectorsStyleValue.h CQGnuPlotLoadFileDialog.h CQGnuPlotLoadFunctionDialog.h CQGnuPlotManageFunctionsDialog.h CQGnuPlotManageVariablesDialog.h CQGnuPlotCreateDialog.h CQGnuPlotDataDialog.h CQGnuPlotSaveDialog.h CQGnuPlotPaletteDialog.h CQGnuPlotTreeView.h CQGnuPlotTreeWidget.h CQGnuPlotDataTree.h CQGnuPlotDataModel.h CQGnuPlotPositionEdit.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowData.h CGnuPlotArrowObject.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBoxBarObject.h CGnuPlotBoxObject.h CGnuPlotBoxPlot.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotEndBar.h CGnuPlotErrorBarObject.h CGnuPlotErrorBarData.h CGnuPlotFile.h CGnuPlotFill.h CGnuPlotFillStyle.h CGnuPlotFinanceBarObject.h CGnuPlotFunctions.h CGnuPlotGroup.h CGnuPlotImageObject.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLabelData.h CGnuPlotLabelObject.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotLogDevice.h CGnuPlotLogRenderer.h CGnuPlotMark.h CGnuPlotMultiplot.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPathObject.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPm3D.h CGnuPlotPoint.h CGnuPlotPointObject.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotPSDevice.h CGnuPlotPSRenderer.h CGnuPlotSize.h CGnuPlotStroke.h CGnuPlotSurface.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotEveryData.h CGnuPlotIndexData.h CGnuPlotWhereData.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyleForceDirected.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CGnuPlotText.h CGnuPlotTextRenderer.h CQHeaderView.h CQFloatLabel.h CQRotatedText.h CQIntegerSpin.h CQCursor.h CQRubberBand.h CQDialog.h CQEnumCombo.h CAdjacency.h CDelaunay.h ChordDiagram.h CHull3D.h CSunburst.h CTreeMap.h CPrint.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h $(DISTDIR)/
-	$(COPY_FILE) --parents CQGnuPlotTest.cpp CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotArrowObject.cpp CQGnuPlotAxis.cpp CQGnuPlotBoxBarObject.cpp CQGnuPlotBoxObject.cpp CQGnuPlotBoxPlot.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotEndBar.cpp CQGnuPlotEnum.cpp CQGnuPlotErrorBarObject.cpp CQGnuPlotFill.cpp CQGnuPlotFinanceBarObject.cpp CQGnuPlotGroup.cpp CQGnuPlotImageObject.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLabelObject.cpp CQGnuPlotLineStyle.cpp CQGnuPlotMark.cpp CQGnuPlotMultiplot.cpp CQGnuPlotPalette.cpp CQGnuPlotPathObject.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPm3D.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPointObject.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotStroke.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotFilename.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CQGnuPlotLoadFileDialog.cpp CQGnuPlotLoadFunctionDialog.cpp CQGnuPlotManageFunctionsDialog.cpp CQGnuPlotManageVariablesDialog.cpp CQGnuPlotCreateDialog.cpp CQGnuPlotDataDialog.cpp CQGnuPlotSaveDialog.cpp CQGnuPlotPaletteDialog.cpp CQGnuPlotTreeView.cpp CQGnuPlotTreeWidget.cpp CQGnuPlotDataTree.cpp CQGnuPlotDataModel.cpp CQGnuPlotPositionEdit.cpp CQGnuPlotBoxPlotStyleValue.cpp CGnuPlot.cpp CGnuPlotAnnotation.cpp CGnuPlotArrow.cpp CGnuPlotArrowData.cpp CGnuPlotArrowObject.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBoxBarObject.cpp CGnuPlotBoxObject.cpp CGnuPlotBoxPlot.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotEndBar.cpp CGnuPlotErrorBarObject.cpp CGnuPlotErrorBarData.cpp CGnuPlotFile.cpp CGnuPlotFill.cpp CGnuPlotFillStyle.cpp CGnuPlotFinanceBarObject.cpp CGnuPlotFunctions.cpp CGnuPlotGroup.cpp CGnuPlotImageObject.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLabelData.cpp CGnuPlotLabelObject.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotLogDevice.cpp CGnuPlotLogRenderer.cpp CGnuPlotMargin.cpp CGnuPlotMark.cpp CGnuPlotMultiplot.cpp CGnuPlotObject.cpp CGnuPlotPalette.cpp CGnuPlotPathObject.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPm3D.cpp CGnuPlotPoint.cpp CGnuPlotPointObject.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStroke.cpp CGnuPlotStyle.cpp CGnuPlotSurface.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotBoxErrorBarsStyleValue.cpp CGnuPlotBoxesStyleValue.cpp CGnuPlotBoxPlotStyleValue.cpp CGnuPlotCandlesticksStyleValue.cpp CGnuPlotVectorsStyleValue.cpp CGnuPlotEveryData.cpp CGnuPlotIndexData.cpp CGnuPlotWhereData.cpp CGnuPlotStyleBase.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBivariate.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDendrogram.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleForceDirected.cpp CGnuPlotStyleHierBubblePlot.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleStackedArea.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotPSDevice.cpp CGnuPlotPSRenderer.cpp CGnuPlotSize.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlotText.cpp CGnuPlotTextRenderer.cpp CQHeaderView.cpp CQFloatLabel.cpp CQRotatedText.cpp CQIntegerSpin.cpp CQCursor.cpp CQRubberBand.cpp CQDialog.cpp CQEnumCombo.cpp CAdjacency.cpp CDelaunay.cpp ChordDiagram.cpp CHull3D.cpp CSunburst.cpp CTreeMap.cpp CDendrogram.cpp CPrint.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprIValue.cpp Expr/CExprInterp.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprSValue.cpp Expr/CExprStrgen.cpp Expr/CExprToken.cpp Expr/CExprTokenStack.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents CQGnuPlot.h CQGnuPlotAnnotation.h CQGnuPlotArrow.h CQGnuPlotArrowObject.h CQGnuPlotAxis.h CQGnuPlotBoxBarObject.h CQGnuPlotBoxObject.h CQGnuPlotBoxPlot.h CQGnuPlotBubbleObject.h CQGnuPlotCamera.h CQGnuPlotCanvas.h CQGnuPlotCircle.h CQGnuPlotColorBox.h CQGnuPlotDevice.h CQGnuPlotEllipse.h CQGnuPlotEllipseObject.h CQGnuPlotEndBar.h CQGnuPlotEnum.h CQGnuPlotErrorBarObject.h CQGnuPlotFill.h CQGnuPlotFinanceBarObject.h CQGnuPlotGroup.h CQGnuPlotImageObject.h CQGnuPlotKey.h CQGnuPlotLabel.h CQGnuPlotLabelObject.h CQGnuPlotLineStyle.h CQGnuPlotMark.h CQGnuPlotMultiplot.h CQGnuPlotObject.h CQGnuPlotPalette.h CQGnuPlotPathObject.h CQGnuPlotPieObject.h CQGnuPlotPlot.h CQGnuPlotPm3D.h CQGnuPlotPNGDevice.h CQGnuPlotPNGRenderer.h CQGnuPlotPointObject.h CQGnuPlotPolygon.h CQGnuPlotPolygonObject.h CQGnuPlotRectangle.h CQGnuPlotRectObject.h CQGnuPlotRenderer.h CQGnuPlotStroke.h CQGnuPlotTimeStamp.h CQGnuPlotTitle.h CQGnuPlotToolBar.h CQGnuPlotFilename.h CQGnuPlotUtil.h CQGnuPlotWindow.h CQGnuPlotAdjacencyStyleValue.h CQGnuPlotBivariateStyleValue.h CQGnuPlotBoxErrorBarsStyleValue.h CQGnuPlotBoxesStyleValue.h CQGnuPlotBoxPlotStyleValue.h CQGnuPlotBubbleStyleValue.h CQGnuPlotCandlesticksStyleValue.h CQGnuPlotChordDiagramStyleValue.h CQGnuPlotCirclesStyleValue.h CQGnuPlotDelaunayStyleValue.h CQGnuPlotDendrogramStyleValue.h CQGnuPlotEllipsesStyleValue.h CQGnuPlotForceDirectedStyleValue.h CQGnuPlotHierBubbleStyleValue.h CQGnuPlotLabelsStyleValue.h CQGnuPlotPieChartStyleValue.h CQGnuPlotRadarStyleValue.h CQGnuPlotSunburstStyleValue.h CQGnuPlotTreeMapStyleValue.h CQGnuPlotVectorsStyleValue.h CQGnuPlotLoadFileDialog.h CQGnuPlotLoadFunctionDialog.h CQGnuPlotManageFunctionsDialog.h CQGnuPlotManageVariablesDialog.h CQGnuPlotCreateDialog.h CQGnuPlotDataDialog.h CQGnuPlotSaveDialog.h CQGnuPlotPaletteDialog.h CQGnuPlotTreeView.h CQGnuPlotTreeWidget.h CQGnuPlotDataTree.h CQGnuPlotDataModel.h CQGnuPlotPositionEdit.h CGnuPlot.h CGnuPlotArrow.h CGnuPlotArrowData.h CGnuPlotArrowObject.h CGnuPlotArrowStyle.h CGnuPlotAxis.h CGnuPlotAxisData.h CGnuPlotBBoxRenderer.h CGnuPlotBoxBarObject.h CGnuPlotBoxObject.h CGnuPlotBoxPlot.h CGnuPlotBinaryFormat.h CGnuPlotBubbleObject.h CGnuPlotCache.h CGnuPlotCamera.h CGnuPlotCircle.h CGnuPlotColorBox.h CGnuPlotColorSpec.h CGnuPlotContour.h CGnuPlotCoordValue.h CGnuPlotDevice.h CGnuPlotEllipse.h CGnuPlotEllipseObject.h CGnuPlotEndBar.h CGnuPlotErrorBarObject.h CGnuPlotErrorBarData.h CGnuPlotFile.h CGnuPlotFill.h CGnuPlotFillStyle.h CGnuPlotFinanceBarObject.h CGnuPlotFunctions.h CGnuPlotGroup.h CGnuPlotImageObject.h CGnuPlotKey.h CGnuPlotKeyData.h CGnuPlotLabel.h CGnuPlotLabelData.h CGnuPlotLabelObject.h CGnuPlotLineStyle.h CGnuPlotLineType.h CGnuPlotLogDevice.h CGnuPlotLogRenderer.h CGnuPlotMark.h CGnuPlotMultiplot.h CGnuPlotNameValues.h CGnuPlotObject.h CGnuPlotPalette.h CGnuPlotPathObject.h CGnuPlotPieObject.h CGnuPlotPlot.h CGnuPlotPm3D.h CGnuPlotPoint.h CGnuPlotPointObject.h CGnuPlotPointStyle.h CGnuPlotPolygon.h CGnuPlotPolygonObject.h CGnuPlotPosition.h CGnuPlotPrefValue.h CGnuPlotPrintFile.h CGnuPlotRectangle.h CGnuPlotRectObject.h CGnuPlotRenderer.h CGnuPlotSVGDevice.h CGnuPlotSVGRenderer.h CGnuPlotPSDevice.h CGnuPlotPSRenderer.h CGnuPlotSize.h CGnuPlotStroke.h CGnuPlotSurface.h CGnuPlotTimeStamp.h CGnuPlotUsingCols.h CGnuPlotEveryData.h CGnuPlotIndexData.h CGnuPlotWhereData.h CGnuPlotStyleAdjacency.h CGnuPlotStyleBase.h CGnuPlotStyleBoxErrorBars.h CGnuPlotStyleBoxes.h CGnuPlotStyleBoxPlot.h CGnuPlotStyleBoxXYErrorBars.h CGnuPlotStyleBubblePlot.h CGnuPlotStyleCandlesticks.h CGnuPlotStyleChordDiagram.h CGnuPlotStyleCircles.h CGnuPlotStyleDelaunay.h CGnuPlotStyleDots.h CGnuPlotStyleEllipses.h CGnuPlotStyleErrorBars.h CGnuPlotStyleFilledCurves.h CGnuPlotStyleFinanceBars.h CGnuPlotStyleForceDirected.h CGnuPlotStyle.h CGnuPlotStyleImage.h CGnuPlotStyleImpulses.h CGnuPlotStyleLabels.h CGnuPlotStyleLines.h CGnuPlotStyleLinesPoints.h CGnuPlotStyleParallelAxes.h CGnuPlotStylePieChart.h CGnuPlotStylePoints.h CGnuPlotStylePolygons.h CGnuPlotStyleRadar.h CGnuPlotStyleSteps.h CGnuPlotStyleSunburst.h CGnuPlotStyleTestPalette.h CGnuPlotStyleTestTerminal.h CGnuPlotStyleTreeMap.h CGnuPlotStyleVectors.h CGnuPlotStyleXErrorBars.h CGnuPlotStyleXErrorLines.h CGnuPlotStyleXYErrorBars.h CGnuPlotStyleXYErrorLines.h CGnuPlotStyleYErrorBars.h CGnuPlotStyleYErrorLines.h CGnuPlotTitle.h CGnuPlotTypes.h CGnuPlotUtil.h CGnuPlotWindow.h CGnuPlotText.h CGnuPlotTextRenderer.h CQFloatLabel.h CQRotatedText.h CQCursor.h CQRubberBand.h CQDialog.h CQEnumCombo.h CAdjacency.h ChordDiagram.h CSunburst.h CTreeMap.h CPrint.h CStrUniqueMatch.h Expr/CExpr.h Expr/CExprBValue.h Expr/CExprCValue.h Expr/CExprCompile.h Expr/CExprError.h Expr/CExprExecute.h Expr/CExprFunction.h Expr/CExprI.h Expr/CExprInterp.h Expr/CExprIValue.h Expr/CExprOperator.h Expr/CExprParse.h Expr/CExprRValue.h Expr/CExprSValue.h Expr/CExprValue.h Expr/CExprVariable.h $(DISTDIR)/
+	$(COPY_FILE) --parents CQGnuPlotTest.cpp CQGnuPlot.cpp CQGnuPlotAnnotation.cpp CQGnuPlotArrow.cpp CQGnuPlotArrowObject.cpp CQGnuPlotAxis.cpp CQGnuPlotBoxBarObject.cpp CQGnuPlotBoxObject.cpp CQGnuPlotBoxPlot.cpp CQGnuPlotBubbleObject.cpp CQGnuPlotCamera.cpp CQGnuPlotCanvas.cpp CQGnuPlotCircle.cpp CQGnuPlotColorBox.cpp CQGnuPlotDevice.cpp CQGnuPlotEllipse.cpp CQGnuPlotEllipseObject.cpp CQGnuPlotEndBar.cpp CQGnuPlotEnum.cpp CQGnuPlotErrorBarObject.cpp CQGnuPlotFill.cpp CQGnuPlotFinanceBarObject.cpp CQGnuPlotGroup.cpp CQGnuPlotImageObject.cpp CQGnuPlotKey.cpp CQGnuPlotLabel.cpp CQGnuPlotLabelObject.cpp CQGnuPlotLineStyle.cpp CQGnuPlotMark.cpp CQGnuPlotMultiplot.cpp CQGnuPlotPalette.cpp CQGnuPlotPathObject.cpp CQGnuPlotPieObject.cpp CQGnuPlotPlot.cpp CQGnuPlotPm3D.cpp CQGnuPlotPNGDevice.cpp CQGnuPlotPNGRenderer.cpp CQGnuPlotPointObject.cpp CQGnuPlotPolygon.cpp CQGnuPlotPolygonObject.cpp CQGnuPlotRectangle.cpp CQGnuPlotRectObject.cpp CQGnuPlotRenderer.cpp CQGnuPlotStroke.cpp CQGnuPlotTimeStamp.cpp CQGnuPlotTitle.cpp CQGnuPlotToolBar.cpp CQGnuPlotFilename.cpp CQGnuPlotUtil.cpp CQGnuPlotWindow.cpp CQGnuPlotLoadFileDialog.cpp CQGnuPlotLoadFunctionDialog.cpp CQGnuPlotManageFunctionsDialog.cpp CQGnuPlotManageVariablesDialog.cpp CQGnuPlotCreateDialog.cpp CQGnuPlotDataDialog.cpp CQGnuPlotSaveDialog.cpp CQGnuPlotPaletteDialog.cpp CQGnuPlotTreeView.cpp CQGnuPlotTreeWidget.cpp CQGnuPlotDataTree.cpp CQGnuPlotDataModel.cpp CQGnuPlotPositionEdit.cpp CQGnuPlotBoxPlotStyleValue.cpp CGnuPlot.cpp CGnuPlotAnnotation.cpp CGnuPlotArrow.cpp CGnuPlotArrowData.cpp CGnuPlotArrowObject.cpp CGnuPlotArrowStyle.cpp CGnuPlotAxis.cpp CGnuPlotAxisData.cpp CGnuPlotBoxBarObject.cpp CGnuPlotBoxObject.cpp CGnuPlotBoxPlot.cpp CGnuPlotBBoxRenderer.cpp CGnuPlotBinaryFormat.cpp CGnuPlotBorderData.cpp CGnuPlotBubbleObject.cpp CGnuPlotCamera.cpp CGnuPlotCircle.cpp CGnuPlotColorBox.cpp CGnuPlotColorSpec.cpp CGnuPlotContour.cpp CGnuPlotCoordValue.cpp CGnuPlotDash.cpp CGnuPlotDevice.cpp CGnuPlotEllipse.cpp CGnuPlotEllipseObject.cpp CGnuPlotEndBar.cpp CGnuPlotErrorBarObject.cpp CGnuPlotErrorBarData.cpp CGnuPlotFile.cpp CGnuPlotFill.cpp CGnuPlotFillStyle.cpp CGnuPlotFinanceBarObject.cpp CGnuPlotFunctions.cpp CGnuPlotGroup.cpp CGnuPlotImageObject.cpp CGnuPlotKey.cpp CGnuPlotKeyData.cpp CGnuPlotLabel.cpp CGnuPlotLabelData.cpp CGnuPlotLabelObject.cpp CGnuPlotLineStyle.cpp CGnuPlotLineType.cpp CGnuPlotLogDevice.cpp CGnuPlotLogRenderer.cpp CGnuPlotMargin.cpp CGnuPlotMark.cpp CGnuPlotMultiplot.cpp CGnuPlotObject.cpp CGnuPlotPalette.cpp CGnuPlotPathObject.cpp CGnuPlotPieObject.cpp CGnuPlotPlot.cpp CGnuPlotPm3D.cpp CGnuPlotPoint.cpp CGnuPlotPointObject.cpp CGnuPlotPolygon.cpp CGnuPlotPolygonObject.cpp CGnuPlotPosition.cpp CGnuPlotPrintFile.cpp CGnuPlotRectangle.cpp CGnuPlotRectObject.cpp CGnuPlotRenderer.cpp CGnuPlotStroke.cpp CGnuPlotStyle.cpp CGnuPlotSurface.cpp CGnuPlotTimeStamp.cpp CGnuPlotUsingCols.cpp CGnuPlotBoxErrorBarsStyleValue.cpp CGnuPlotBoxesStyleValue.cpp CGnuPlotBoxPlotStyleValue.cpp CGnuPlotCandlesticksStyleValue.cpp CGnuPlotVectorsStyleValue.cpp CGnuPlotEveryData.cpp CGnuPlotIndexData.cpp CGnuPlotWhereData.cpp CGnuPlotStyleBase.cpp CGnuPlotStyleAdjacency.cpp CGnuPlotStyleBivariate.cpp CGnuPlotStyleBoxErrorBars.cpp CGnuPlotStyleBoxes.cpp CGnuPlotStyleBoxPlot.cpp CGnuPlotStyleBoxXYErrorBars.cpp CGnuPlotStyleBubblePlot.cpp CGnuPlotStyleCandlesticks.cpp CGnuPlotStyleChordDiagram.cpp CGnuPlotStyleCircles.cpp CGnuPlotStyleDelaunay.cpp CGnuPlotStyleDendrogram.cpp CGnuPlotStyleDots.cpp CGnuPlotStyleEllipses.cpp CGnuPlotStyleErrorBars.cpp CGnuPlotStyleFilledCurves.cpp CGnuPlotStyleFinanceBars.cpp CGnuPlotStyleForceDirected.cpp CGnuPlotStyleHierBubblePlot.cpp CGnuPlotStyleImage.cpp CGnuPlotStyleImpulses.cpp CGnuPlotStyleLabels.cpp CGnuPlotStyleLines.cpp CGnuPlotStyleLinesPoints.cpp CGnuPlotStyleParallelAxes.cpp CGnuPlotStylePieChart.cpp CGnuPlotStylePoints.cpp CGnuPlotStylePolygons.cpp CGnuPlotStyleRadar.cpp CGnuPlotStyleStackedArea.cpp CGnuPlotStyleSteps.cpp CGnuPlotStyleSunburst.cpp CGnuPlotStyleTestPalette.cpp CGnuPlotStyleTestTerminal.cpp CGnuPlotStyleTreeMap.cpp CGnuPlotStyleVectors.cpp CGnuPlotStyleXErrorBars.cpp CGnuPlotStyleXErrorLines.cpp CGnuPlotStyleXYErrorBars.cpp CGnuPlotStyleXYErrorLines.cpp CGnuPlotStyleYErrorBars.cpp CGnuPlotStyleYErrorLines.cpp CGnuPlotSVGDevice.cpp CGnuPlotSVGRenderer.cpp CGnuPlotPSDevice.cpp CGnuPlotPSRenderer.cpp CGnuPlotSize.cpp CGnuPlotTitle.cpp CGnuPlotWindow.cpp CGnuPlotText.cpp CGnuPlotTextRenderer.cpp CQFloatLabel.cpp CQRotatedText.cpp CQCursor.cpp CQRubberBand.cpp CQDialog.cpp CQEnumCombo.cpp CAdjacency.cpp ChordDiagram.cpp CSunburst.cpp CTreeMap.cpp CDendrogram.cpp CPrint.cpp Expr/CExpr.cpp Expr/CExprBValue.cpp Expr/CExprCValue.cpp Expr/CExprCompile.cpp Expr/CExprExecute.cpp Expr/CExprFunction.cpp Expr/CExprIValue.cpp Expr/CExprInterp.cpp Expr/CExprOperator.cpp Expr/CExprParse.cpp Expr/CExprRValue.cpp Expr/CExprSValue.cpp Expr/CExprStrgen.cpp Expr/CExprToken.cpp Expr/CExprTokenStack.cpp Expr/CExprValue.cpp Expr/CExprVariable.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -1466,10 +1446,10 @@ compiler_moc_predefs_clean:
 .moc/moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -std=c++14 -DGNUPLOT_EXPR -DRGB_UTIL -DCQUTIL_FONT -DCQUTIL_IMAGE -DCQUTIL_EVENT -g -Wall -W -dM -E -o .moc/moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: .moc/moc_CQGnuPlot.cpp .moc/moc_CQGnuPlotAnnotation.cpp .moc/moc_CQGnuPlotArrow.cpp .moc/moc_CQGnuPlotArrowObject.cpp .moc/moc_CQGnuPlotAxis.cpp .moc/moc_CQGnuPlotBoxBarObject.cpp .moc/moc_CQGnuPlotBoxObject.cpp .moc/moc_CQGnuPlotBoxPlot.cpp .moc/moc_CQGnuPlotBubbleObject.cpp .moc/moc_CQGnuPlotCamera.cpp .moc/moc_CQGnuPlotCanvas.cpp .moc/moc_CQGnuPlotCircle.cpp .moc/moc_CQGnuPlotColorBox.cpp .moc/moc_CQGnuPlotDevice.cpp .moc/moc_CQGnuPlotEllipse.cpp .moc/moc_CQGnuPlotEllipseObject.cpp .moc/moc_CQGnuPlotEndBar.cpp .moc/moc_CQGnuPlotEnum.cpp .moc/moc_CQGnuPlotErrorBarObject.cpp .moc/moc_CQGnuPlotFill.cpp .moc/moc_CQGnuPlotFinanceBarObject.cpp .moc/moc_CQGnuPlotGroup.cpp .moc/moc_CQGnuPlotImageObject.cpp .moc/moc_CQGnuPlotKey.cpp .moc/moc_CQGnuPlotLabel.cpp .moc/moc_CQGnuPlotLabelObject.cpp .moc/moc_CQGnuPlotLineStyle.cpp .moc/moc_CQGnuPlotMark.cpp .moc/moc_CQGnuPlotMultiplot.cpp .moc/moc_CQGnuPlotObject.cpp .moc/moc_CQGnuPlotPalette.cpp .moc/moc_CQGnuPlotPathObject.cpp .moc/moc_CQGnuPlotPieObject.cpp .moc/moc_CQGnuPlotPlot.cpp .moc/moc_CQGnuPlotPm3D.cpp .moc/moc_CQGnuPlotPointObject.cpp .moc/moc_CQGnuPlotPolygon.cpp .moc/moc_CQGnuPlotPolygonObject.cpp .moc/moc_CQGnuPlotRectangle.cpp .moc/moc_CQGnuPlotRectObject.cpp .moc/moc_CQGnuPlotStroke.cpp .moc/moc_CQGnuPlotTimeStamp.cpp .moc/moc_CQGnuPlotTitle.cpp .moc/moc_CQGnuPlotToolBar.cpp .moc/moc_CQGnuPlotFilename.cpp .moc/moc_CQGnuPlotWindow.cpp .moc/moc_CQGnuPlotAdjacencyStyleValue.cpp .moc/moc_CQGnuPlotBivariateStyleValue.cpp .moc/moc_CQGnuPlotBoxErrorBarsStyleValue.cpp .moc/moc_CQGnuPlotBoxesStyleValue.cpp .moc/moc_CQGnuPlotBoxPlotStyleValue.cpp .moc/moc_CQGnuPlotBubbleStyleValue.cpp .moc/moc_CQGnuPlotCandlesticksStyleValue.cpp .moc/moc_CQGnuPlotChordDiagramStyleValue.cpp .moc/moc_CQGnuPlotCirclesStyleValue.cpp .moc/moc_CQGnuPlotDelaunayStyleValue.cpp .moc/moc_CQGnuPlotDendrogramStyleValue.cpp .moc/moc_CQGnuPlotEllipsesStyleValue.cpp .moc/moc_CQGnuPlotForceDirectedStyleValue.cpp .moc/moc_CQGnuPlotHierBubbleStyleValue.cpp .moc/moc_CQGnuPlotLabelsStyleValue.cpp .moc/moc_CQGnuPlotPieChartStyleValue.cpp .moc/moc_CQGnuPlotRadarStyleValue.cpp .moc/moc_CQGnuPlotSunburstStyleValue.cpp .moc/moc_CQGnuPlotTreeMapStyleValue.cpp .moc/moc_CQGnuPlotVectorsStyleValue.cpp .moc/moc_CQGnuPlotLoadFileDialog.cpp .moc/moc_CQGnuPlotLoadFunctionDialog.cpp .moc/moc_CQGnuPlotManageFunctionsDialog.cpp .moc/moc_CQGnuPlotManageVariablesDialog.cpp .moc/moc_CQGnuPlotCreateDialog.cpp .moc/moc_CQGnuPlotDataDialog.cpp .moc/moc_CQGnuPlotSaveDialog.cpp .moc/moc_CQGnuPlotPaletteDialog.cpp .moc/moc_CQGnuPlotTreeView.cpp .moc/moc_CQGnuPlotTreeWidget.cpp .moc/moc_CQGnuPlotDataTree.cpp .moc/moc_CQGnuPlotDataModel.cpp .moc/moc_CQGnuPlotPositionEdit.cpp .moc/moc_CQHeaderView.cpp .moc/moc_CQFloatLabel.cpp .moc/moc_CQIntegerSpin.cpp .moc/moc_CQRubberBand.cpp .moc/moc_CQDialog.cpp .moc/moc_CQEnumCombo.cpp
+compiler_moc_header_make_all: .moc/moc_CQGnuPlot.cpp .moc/moc_CQGnuPlotAnnotation.cpp .moc/moc_CQGnuPlotArrow.cpp .moc/moc_CQGnuPlotArrowObject.cpp .moc/moc_CQGnuPlotAxis.cpp .moc/moc_CQGnuPlotBoxBarObject.cpp .moc/moc_CQGnuPlotBoxObject.cpp .moc/moc_CQGnuPlotBoxPlot.cpp .moc/moc_CQGnuPlotBubbleObject.cpp .moc/moc_CQGnuPlotCamera.cpp .moc/moc_CQGnuPlotCanvas.cpp .moc/moc_CQGnuPlotCircle.cpp .moc/moc_CQGnuPlotColorBox.cpp .moc/moc_CQGnuPlotDevice.cpp .moc/moc_CQGnuPlotEllipse.cpp .moc/moc_CQGnuPlotEllipseObject.cpp .moc/moc_CQGnuPlotEndBar.cpp .moc/moc_CQGnuPlotEnum.cpp .moc/moc_CQGnuPlotErrorBarObject.cpp .moc/moc_CQGnuPlotFill.cpp .moc/moc_CQGnuPlotFinanceBarObject.cpp .moc/moc_CQGnuPlotGroup.cpp .moc/moc_CQGnuPlotImageObject.cpp .moc/moc_CQGnuPlotKey.cpp .moc/moc_CQGnuPlotLabel.cpp .moc/moc_CQGnuPlotLabelObject.cpp .moc/moc_CQGnuPlotLineStyle.cpp .moc/moc_CQGnuPlotMark.cpp .moc/moc_CQGnuPlotMultiplot.cpp .moc/moc_CQGnuPlotObject.cpp .moc/moc_CQGnuPlotPalette.cpp .moc/moc_CQGnuPlotPathObject.cpp .moc/moc_CQGnuPlotPieObject.cpp .moc/moc_CQGnuPlotPlot.cpp .moc/moc_CQGnuPlotPm3D.cpp .moc/moc_CQGnuPlotPointObject.cpp .moc/moc_CQGnuPlotPolygon.cpp .moc/moc_CQGnuPlotPolygonObject.cpp .moc/moc_CQGnuPlotRectangle.cpp .moc/moc_CQGnuPlotRectObject.cpp .moc/moc_CQGnuPlotStroke.cpp .moc/moc_CQGnuPlotTimeStamp.cpp .moc/moc_CQGnuPlotTitle.cpp .moc/moc_CQGnuPlotToolBar.cpp .moc/moc_CQGnuPlotFilename.cpp .moc/moc_CQGnuPlotWindow.cpp .moc/moc_CQGnuPlotAdjacencyStyleValue.cpp .moc/moc_CQGnuPlotBivariateStyleValue.cpp .moc/moc_CQGnuPlotBoxErrorBarsStyleValue.cpp .moc/moc_CQGnuPlotBoxesStyleValue.cpp .moc/moc_CQGnuPlotBoxPlotStyleValue.cpp .moc/moc_CQGnuPlotBubbleStyleValue.cpp .moc/moc_CQGnuPlotCandlesticksStyleValue.cpp .moc/moc_CQGnuPlotChordDiagramStyleValue.cpp .moc/moc_CQGnuPlotCirclesStyleValue.cpp .moc/moc_CQGnuPlotDelaunayStyleValue.cpp .moc/moc_CQGnuPlotDendrogramStyleValue.cpp .moc/moc_CQGnuPlotEllipsesStyleValue.cpp .moc/moc_CQGnuPlotForceDirectedStyleValue.cpp .moc/moc_CQGnuPlotHierBubbleStyleValue.cpp .moc/moc_CQGnuPlotLabelsStyleValue.cpp .moc/moc_CQGnuPlotPieChartStyleValue.cpp .moc/moc_CQGnuPlotRadarStyleValue.cpp .moc/moc_CQGnuPlotSunburstStyleValue.cpp .moc/moc_CQGnuPlotTreeMapStyleValue.cpp .moc/moc_CQGnuPlotVectorsStyleValue.cpp .moc/moc_CQGnuPlotLoadFileDialog.cpp .moc/moc_CQGnuPlotLoadFunctionDialog.cpp .moc/moc_CQGnuPlotManageFunctionsDialog.cpp .moc/moc_CQGnuPlotManageVariablesDialog.cpp .moc/moc_CQGnuPlotCreateDialog.cpp .moc/moc_CQGnuPlotDataDialog.cpp .moc/moc_CQGnuPlotSaveDialog.cpp .moc/moc_CQGnuPlotPaletteDialog.cpp .moc/moc_CQGnuPlotTreeView.cpp .moc/moc_CQGnuPlotTreeWidget.cpp .moc/moc_CQGnuPlotDataTree.cpp .moc/moc_CQGnuPlotDataModel.cpp .moc/moc_CQGnuPlotPositionEdit.cpp .moc/moc_CQFloatLabel.cpp .moc/moc_CQRubberBand.cpp .moc/moc_CQDialog.cpp .moc/moc_CQEnumCombo.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) .moc/moc_CQGnuPlot.cpp .moc/moc_CQGnuPlotAnnotation.cpp .moc/moc_CQGnuPlotArrow.cpp .moc/moc_CQGnuPlotArrowObject.cpp .moc/moc_CQGnuPlotAxis.cpp .moc/moc_CQGnuPlotBoxBarObject.cpp .moc/moc_CQGnuPlotBoxObject.cpp .moc/moc_CQGnuPlotBoxPlot.cpp .moc/moc_CQGnuPlotBubbleObject.cpp .moc/moc_CQGnuPlotCamera.cpp .moc/moc_CQGnuPlotCanvas.cpp .moc/moc_CQGnuPlotCircle.cpp .moc/moc_CQGnuPlotColorBox.cpp .moc/moc_CQGnuPlotDevice.cpp .moc/moc_CQGnuPlotEllipse.cpp .moc/moc_CQGnuPlotEllipseObject.cpp .moc/moc_CQGnuPlotEndBar.cpp .moc/moc_CQGnuPlotEnum.cpp .moc/moc_CQGnuPlotErrorBarObject.cpp .moc/moc_CQGnuPlotFill.cpp .moc/moc_CQGnuPlotFinanceBarObject.cpp .moc/moc_CQGnuPlotGroup.cpp .moc/moc_CQGnuPlotImageObject.cpp .moc/moc_CQGnuPlotKey.cpp .moc/moc_CQGnuPlotLabel.cpp .moc/moc_CQGnuPlotLabelObject.cpp .moc/moc_CQGnuPlotLineStyle.cpp .moc/moc_CQGnuPlotMark.cpp .moc/moc_CQGnuPlotMultiplot.cpp .moc/moc_CQGnuPlotObject.cpp .moc/moc_CQGnuPlotPalette.cpp .moc/moc_CQGnuPlotPathObject.cpp .moc/moc_CQGnuPlotPieObject.cpp .moc/moc_CQGnuPlotPlot.cpp .moc/moc_CQGnuPlotPm3D.cpp .moc/moc_CQGnuPlotPointObject.cpp .moc/moc_CQGnuPlotPolygon.cpp .moc/moc_CQGnuPlotPolygonObject.cpp .moc/moc_CQGnuPlotRectangle.cpp .moc/moc_CQGnuPlotRectObject.cpp .moc/moc_CQGnuPlotStroke.cpp .moc/moc_CQGnuPlotTimeStamp.cpp .moc/moc_CQGnuPlotTitle.cpp .moc/moc_CQGnuPlotToolBar.cpp .moc/moc_CQGnuPlotFilename.cpp .moc/moc_CQGnuPlotWindow.cpp .moc/moc_CQGnuPlotAdjacencyStyleValue.cpp .moc/moc_CQGnuPlotBivariateStyleValue.cpp .moc/moc_CQGnuPlotBoxErrorBarsStyleValue.cpp .moc/moc_CQGnuPlotBoxesStyleValue.cpp .moc/moc_CQGnuPlotBoxPlotStyleValue.cpp .moc/moc_CQGnuPlotBubbleStyleValue.cpp .moc/moc_CQGnuPlotCandlesticksStyleValue.cpp .moc/moc_CQGnuPlotChordDiagramStyleValue.cpp .moc/moc_CQGnuPlotCirclesStyleValue.cpp .moc/moc_CQGnuPlotDelaunayStyleValue.cpp .moc/moc_CQGnuPlotDendrogramStyleValue.cpp .moc/moc_CQGnuPlotEllipsesStyleValue.cpp .moc/moc_CQGnuPlotForceDirectedStyleValue.cpp .moc/moc_CQGnuPlotHierBubbleStyleValue.cpp
-	-$(DEL_FILE) .moc/moc_CQGnuPlotLabelsStyleValue.cpp .moc/moc_CQGnuPlotPieChartStyleValue.cpp .moc/moc_CQGnuPlotRadarStyleValue.cpp .moc/moc_CQGnuPlotSunburstStyleValue.cpp .moc/moc_CQGnuPlotTreeMapStyleValue.cpp .moc/moc_CQGnuPlotVectorsStyleValue.cpp .moc/moc_CQGnuPlotLoadFileDialog.cpp .moc/moc_CQGnuPlotLoadFunctionDialog.cpp .moc/moc_CQGnuPlotManageFunctionsDialog.cpp .moc/moc_CQGnuPlotManageVariablesDialog.cpp .moc/moc_CQGnuPlotCreateDialog.cpp .moc/moc_CQGnuPlotDataDialog.cpp .moc/moc_CQGnuPlotSaveDialog.cpp .moc/moc_CQGnuPlotPaletteDialog.cpp .moc/moc_CQGnuPlotTreeView.cpp .moc/moc_CQGnuPlotTreeWidget.cpp .moc/moc_CQGnuPlotDataTree.cpp .moc/moc_CQGnuPlotDataModel.cpp .moc/moc_CQGnuPlotPositionEdit.cpp .moc/moc_CQHeaderView.cpp .moc/moc_CQFloatLabel.cpp .moc/moc_CQIntegerSpin.cpp .moc/moc_CQRubberBand.cpp .moc/moc_CQDialog.cpp .moc/moc_CQEnumCombo.cpp
+	-$(DEL_FILE) .moc/moc_CQGnuPlotLabelsStyleValue.cpp .moc/moc_CQGnuPlotPieChartStyleValue.cpp .moc/moc_CQGnuPlotRadarStyleValue.cpp .moc/moc_CQGnuPlotSunburstStyleValue.cpp .moc/moc_CQGnuPlotTreeMapStyleValue.cpp .moc/moc_CQGnuPlotVectorsStyleValue.cpp .moc/moc_CQGnuPlotLoadFileDialog.cpp .moc/moc_CQGnuPlotLoadFunctionDialog.cpp .moc/moc_CQGnuPlotManageFunctionsDialog.cpp .moc/moc_CQGnuPlotManageVariablesDialog.cpp .moc/moc_CQGnuPlotCreateDialog.cpp .moc/moc_CQGnuPlotDataDialog.cpp .moc/moc_CQGnuPlotSaveDialog.cpp .moc/moc_CQGnuPlotPaletteDialog.cpp .moc/moc_CQGnuPlotTreeView.cpp .moc/moc_CQGnuPlotTreeWidget.cpp .moc/moc_CQGnuPlotDataTree.cpp .moc/moc_CQGnuPlotDataModel.cpp .moc/moc_CQGnuPlotPositionEdit.cpp .moc/moc_CQFloatLabel.cpp .moc/moc_CQRubberBand.cpp .moc/moc_CQDialog.cpp .moc/moc_CQEnumCombo.cpp
 .moc/moc_CQGnuPlot.cpp: CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
@@ -9146,8 +9126,8 @@ compiler_moc_header_clean:
 .moc/moc_CQGnuPlotDelaunayStyleValue.cpp: CQGnuPlotDelaunayStyleValue.h \
 		CGnuPlotDelaunayStyleValue.h \
 		CGnuPlotStyleValue.h \
-		CDelaunay.h \
-		CHull3D.h \
+		../../CMath/include/CDelaunay.h \
+		../../CMath/include/CHull3D.h \
 		../../CUtil/include/CListLink.h \
 		../../CUtil/include/CStateIterator.h \
 		../../CUtil/include/CGeneric.h \
@@ -11687,20 +11667,10 @@ compiler_moc_header_clean:
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/colinw/git/CQGnuPlot/src/.moc/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/8 -I/usr/include/x86_64-linux-gnu/c++/8 -I/usr/include/c++/8/backward -I/usr/lib/gcc/x86_64-linux-gnu/8/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include CQGnuPlotPositionEdit.h -o .moc/moc_CQGnuPlotPositionEdit.cpp
 
-.moc/moc_CQHeaderView.cpp: CQHeaderView.h \
-		.moc/moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/colinw/git/CQGnuPlot/src/.moc/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/8 -I/usr/include/x86_64-linux-gnu/c++/8 -I/usr/include/c++/8/backward -I/usr/lib/gcc/x86_64-linux-gnu/8/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include CQHeaderView.h -o .moc/moc_CQHeaderView.cpp
-
 .moc/moc_CQFloatLabel.cpp: CQFloatLabel.h \
 		.moc/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/colinw/git/CQGnuPlot/src/.moc/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/8 -I/usr/include/x86_64-linux-gnu/c++/8 -I/usr/include/c++/8/backward -I/usr/lib/gcc/x86_64-linux-gnu/8/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include CQFloatLabel.h -o .moc/moc_CQFloatLabel.cpp
-
-.moc/moc_CQIntegerSpin.cpp: CQIntegerSpin.h \
-		.moc/moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/colinw/git/CQGnuPlot/src/.moc/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src -I/home/colinw/git/CQGnuPlot/src/Expr -I/home/colinw/git/CQGnuPlot/include -I/home/colinw/git/CQApp/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CQPropertyTree/include -I/home/colinw/git/CQGradientPalette/include -I/home/colinw/git/CRenderer/include -I/home/colinw/git/CFont/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CReadLine/include -I/home/colinw/git/CFile/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/8 -I/usr/include/x86_64-linux-gnu/c++/8 -I/usr/include/c++/8/backward -I/usr/lib/gcc/x86_64-linux-gnu/8/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include CQIntegerSpin.h -o .moc/moc_CQIntegerSpin.cpp
 
 .moc/moc_CQRubberBand.cpp: CQRubberBand.h \
 		.moc/moc_predefs.h \
@@ -14701,8 +14671,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CQGnuPlotCirclesStyleValue.h \
 		CQGnuPlotDelaunayStyleValue.h \
 		CGnuPlotDelaunayStyleValue.h \
-		CDelaunay.h \
-		CHull3D.h \
+		../../CMath/include/CDelaunay.h \
+		../../CMath/include/CHull3D.h \
 		../../CUtil/include/CListLink.h \
 		../../CUtil/include/CStateIterator.h \
 		../../CUtil/include/CGeneric.h \
@@ -21075,8 +21045,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CQGnuPlotCirclesStyleValue.h \
 		CQGnuPlotDelaunayStyleValue.h \
 		CGnuPlotDelaunayStyleValue.h \
-		CDelaunay.h \
-		CHull3D.h \
+		../../CMath/include/CDelaunay.h \
+		../../CMath/include/CHull3D.h \
 		../../CUtil/include/CListLink.h \
 		../../CUtil/include/CStateIterator.h \
 		../../CUtil/include/CGeneric.h \
@@ -26314,8 +26284,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStyleBase.h \
 		ChordDiagram.h \
 		CGnuPlotDelaunayStyleValue.h \
-		CDelaunay.h \
-		CHull3D.h \
+		../../CMath/include/CDelaunay.h \
+		../../CMath/include/CHull3D.h \
 		../../CUtil/include/CListLink.h \
 		../../CUtil/include/CStateIterator.h \
 		../../CUtil/include/CGeneric.h \
@@ -35957,8 +35927,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotProbeEvent.h \
 		CGnuPlotDelaunayStyleValue.h \
 		CGnuPlotStyleValue.h \
-		CDelaunay.h \
-		CHull3D.h \
+		../../CMath/include/CDelaunay.h \
+		../../CMath/include/CHull3D.h \
 		../../CUtil/include/CListLink.h \
 		../../CUtil/include/CStateIterator.h \
 		../../CUtil/include/CGeneric.h \
@@ -43203,17 +43173,11 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CAngle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotTextRenderer.o CGnuPlotTextRenderer.cpp
 
-../obj/CQHeaderView.o: CQHeaderView.cpp CQHeaderView.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQHeaderView.o CQHeaderView.cpp
-
 ../obj/CQFloatLabel.o: CQFloatLabel.cpp CQFloatLabel.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQFloatLabel.o CQFloatLabel.cpp
 
 ../obj/CQRotatedText.o: CQRotatedText.cpp CQRotatedText.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQRotatedText.o CQRotatedText.cpp
-
-../obj/CQIntegerSpin.o: CQIntegerSpin.cpp CQIntegerSpin.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQIntegerSpin.o CQIntegerSpin.cpp
 
 ../obj/CQCursor.o: CQCursor.cpp CQCursor.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQCursor.o CQCursor.cpp
@@ -43291,14 +43255,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CUtil/include/CRGBName.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CAdjacency.o CAdjacency.cpp
 
-../obj/CDelaunay.o: CDelaunay.cpp CDelaunay.h \
-		CHull3D.h \
-		../../CUtil/include/CListLink.h \
-		../../CUtil/include/CStateIterator.h \
-		../../CUtil/include/CGeneric.h \
-		../../CUtil/include/CTypeTraits.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CDelaunay.o CDelaunay.cpp
-
 ../obj/ChordDiagram.o: ChordDiagram.cpp ChordDiagram.h \
 		../../CUtil/include/CRGBA.h \
 		../../CUtil/include/CRGB.h \
@@ -43314,13 +43270,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CSize2D.h \
 		../../CMath/include/CISize2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/ChordDiagram.o ChordDiagram.cpp
-
-../obj/CHull3D.o: CHull3D.cpp CHull3D.h \
-		../../CUtil/include/CListLink.h \
-		../../CUtil/include/CStateIterator.h \
-		../../CUtil/include/CGeneric.h \
-		../../CUtil/include/CTypeTraits.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CHull3D.o CHull3D.cpp
 
 ../obj/CSunburst.o: CSunburst.cpp CSunburst.h \
 		../../CUtil/include/CRGBA.h \
@@ -44157,14 +44106,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 ../obj/moc_CQGnuPlotPositionEdit.o: .moc/moc_CQGnuPlotPositionEdit.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQGnuPlotPositionEdit.o .moc/moc_CQGnuPlotPositionEdit.cpp
 
-../obj/moc_CQHeaderView.o: .moc/moc_CQHeaderView.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQHeaderView.o .moc/moc_CQHeaderView.cpp
-
 ../obj/moc_CQFloatLabel.o: .moc/moc_CQFloatLabel.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQFloatLabel.o .moc/moc_CQFloatLabel.cpp
-
-../obj/moc_CQIntegerSpin.o: .moc/moc_CQIntegerSpin.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQIntegerSpin.o .moc/moc_CQIntegerSpin.cpp
 
 ../obj/moc_CQRubberBand.o: .moc/moc_CQRubberBand.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQRubberBand.o .moc/moc_CQRubberBand.cpp

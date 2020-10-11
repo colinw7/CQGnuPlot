@@ -41,6 +41,9 @@ CQFloatLabel::
 show(const QPoint &pos)
 {
   int h = sizeHint().height() + 4;
+  int w = sizeHint().width () + 4;
+
+  resize(w, h);
 
   move(pos - QPoint(0, h));
 
