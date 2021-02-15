@@ -28,7 +28,7 @@ class CExprOperator {
   }
 
  private:
-  CExprOpType type_;
+  CExprOpType type_ { CExprOpType::UNKNOWN };
   std::string name_;
 };
 

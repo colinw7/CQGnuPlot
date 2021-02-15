@@ -148,10 +148,10 @@ class CExpr {
   typedef std::vector<CExprCompile *> Compiles;
   typedef std::vector<CExprExecute *> Executes;
 
-  bool                       quiet_;
-  bool                       debug_;
-  bool                       trace_;
-  bool                       degrees_;
+  bool                       quiet_ { false };
+  bool                       debug_ { false };
+  bool                       trace_ { false };
+  bool                       degrees_ { false };
   CAutoPtr<CExprParse>       parse_;
   CAutoPtr<CExprInterp>      interp_;
   CAutoPtr<CExprCompile>     compile_;

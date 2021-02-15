@@ -22,7 +22,7 @@ class CExprParse {
   CExprParse(CExpr *expr);
 
  private:
-  CExpr*                   expr_;
+  CExpr*                   expr_ { nullptr };
   CAutoPtr<CExprParseImpl> impl_;
 };
 

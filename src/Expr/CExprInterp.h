@@ -60,7 +60,7 @@ class CExprIToken {
  private:
   typedef std::vector<CExprITokenPtr> ITokenList;
 
-  CExprITokenType itype_;
+  CExprITokenType itype_ { CExprITokenType::NONE };
   CExprTokenBaseP base_;
   ITokenList      children_;
 };
@@ -76,7 +76,8 @@ class CExprITokenStack {
   }
 
   CExprITokenPtr pop_back() {
-    if (stack_.empty()) return CExprITokenPtr();
+    if (stack_.empty())
+      return CExprITokenPtr();
 
     CExprITokenPtr token = stack_.back();
 
@@ -128,7 +129,7 @@ class CExprInterp {
   CExprInterp(CExpr *expr);
 
  private:
-  CExpr*                    expr_;
+  CExpr*                    expr_ { nullptr };
   CAutoPtr<CExprInterpImpl> impl_;
 };
 

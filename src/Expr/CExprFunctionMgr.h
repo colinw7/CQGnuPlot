@@ -42,8 +42,8 @@ class CExprFunctionMgr {
  private:
   typedef std::list<CExprFunctionPtr> FunctionList;
 
-  CExpr        *expr_;
-  FunctionList  functions_;
+  CExpr*       expr_ { nullptr };
+  FunctionList functions_;
 };
 
 #endif

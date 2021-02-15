@@ -77,7 +77,7 @@ class CExprValue {
   }
 
  private:
-  CExprValueType           type_;
+  CExprValueType           type_ { CExprValueType::NONE };
   CAutoPtr<CExprValueBase> base_;
   uint                     attributes_ { 0 };
 };

@@ -20,7 +20,7 @@ class CExprCompile {
   CExprCompile(CExpr *expr);
 
  private:
-  CExpr*                     expr_;
+  CExpr*                     expr_ { nullptr };
   CAutoPtr<CExprCompileImpl> impl_;
 };
 
