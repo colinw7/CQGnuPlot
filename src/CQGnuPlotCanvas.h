@@ -16,19 +16,19 @@ class CQGnuPlotCanvas : public QWidget {
   CQGnuPlotMainWindow *qwindow() const { return window_; }
 
  private:
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 
-  void mousePressEvent  (QMouseEvent *);
-  void mouseMoveEvent   (QMouseEvent *);
-  void mouseReleaseEvent(QMouseEvent *);
+  void mousePressEvent  (QMouseEvent *) override;
+  void mouseMoveEvent   (QMouseEvent *) override;
+  void mouseReleaseEvent(QMouseEvent *) override;
 
-  void wheelEvent(QWheelEvent *e);
+  void wheelEvent(QWheelEvent *e) override;
 
-  void keyPressEvent(QKeyEvent *);
+  void keyPressEvent(QKeyEvent *) override;
 
   bool pixelToWindow(const CPoint2D &p, CPoint2D &w);
 
-  bool event(QEvent *e);
+  bool event(QEvent *e) override;
 
  private:
   CQGnuPlotMainWindow *window_;

@@ -221,8 +221,6 @@ CQFloatLabel.cpp \
 CQRotatedText.cpp \
 CQCursor.cpp \
 CQRubberBand.cpp \
-CQDialog.cpp \
-CQEnumCombo.cpp \
 \
 CAdjacency.cpp \
 ChordDiagram.cpp  \
@@ -466,8 +464,6 @@ CQFloatLabel.h \
 CQRotatedText.h \
 CQCursor.h \
 CQRubberBand.h \
-CQDialog.h \
-CQEnumCombo.h \
 \
 CAdjacency.h \
 ChordDiagram.h \

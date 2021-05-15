@@ -28,7 +28,7 @@ class CQZoomRegion : public QWidget {
   void setEnd  (const QPointF &end  ) { end_   = end  ; }
 
  protected:
-  void paintEvent(QPaintEvent *) {
+  void paintEvent(QPaintEvent *) override {
     QPainter p(this);
 
     p.fillRect(rect(), QColor(80, 80, 255, 128));
