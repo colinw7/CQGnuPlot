@@ -18,7 +18,7 @@ class CGnuPlotFinanceBarObject : public CGnuPlotPlotObject {
   virtual ~CGnuPlotFinanceBarObject() { }
 
   CGnuPlotFinanceBarObject(const CGnuPlotFinanceBarObject &) = delete;
-  const CGnuPlotFinanceBarObject &operator=(const CGnuPlotFinanceBarObject &) = delete;
+  CGnuPlotFinanceBarObject &operator=(const CGnuPlotFinanceBarObject &) = delete;
 
   double value() const { return value_; }
   void setValue(double r) { value_ = r; }

@@ -1,6 +1,8 @@
 #ifndef CEnumConv_H
 #define CEnumConv_H
 
+#include <cassert>
+
 template<typename E1, typename E2>
 class CEnumConv {
  public:

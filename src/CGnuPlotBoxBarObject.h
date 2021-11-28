@@ -21,7 +21,7 @@ class CGnuPlotBoxBarObject : public CGnuPlotPlotObject {
   virtual ~CGnuPlotBoxBarObject() { }
 
   CGnuPlotBoxBarObject(const CGnuPlotBoxBarObject &) = delete;
-  const CGnuPlotBoxBarObject &operator=(const CGnuPlotBoxBarObject &) = delete;
+  CGnuPlotBoxBarObject &operator=(const CGnuPlotBoxBarObject &) = delete;
 
   const CBBox2D &bbox() const override { return bbox_; }
   void setBBox(const CBBox2D &b) override { bbox_ = b; }

@@ -16,7 +16,7 @@ class CGnuPlotEndBar {
   virtual ~CGnuPlotEndBar() { }
 
   CGnuPlotEndBar(const CGnuPlotEndBar &) = delete;
-  const CGnuPlotEndBar &operator=(const CGnuPlotEndBar &) = delete;
+  CGnuPlotEndBar &operator=(const CGnuPlotEndBar &) = delete;
 
   void setBarObject(CGnuPlotBoxBarObject *bar) { bar_ = bar; }
 

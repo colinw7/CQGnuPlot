@@ -18,7 +18,7 @@ class CGnuPlotErrorBarObject : public CGnuPlotPlotObject {
   virtual ~CGnuPlotErrorBarObject() { }
 
   CGnuPlotErrorBarObject(const CGnuPlotErrorBarObject &) = delete;
-  const CGnuPlotErrorBarObject &operator=(const CGnuPlotErrorBarObject &) = delete;
+  CGnuPlotErrorBarObject &operator=(const CGnuPlotErrorBarObject &) = delete;
 
   double x() const { return x_; }
   void setX(double x) { x_ = x; }

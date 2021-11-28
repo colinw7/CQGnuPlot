@@ -1,6 +1,7 @@
 #ifndef Springy_H
 #define Springy_H
 
+#include <string>
 #include <vector>
 #include <map>
 #include <cmath>
