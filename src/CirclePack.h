@@ -84,9 +84,9 @@ class CCirclePack {
 
   const Nodes &nodes() const { return nodes_; }
 
-  NODE *node(int i) const { assert(i >= 0 && i < int(nodes_.size())); return nodes_[i]; }
+  NODE *node(int i) const { assert(i >= 0 && i < int(nodes_.size())); return nodes_[size_t(i)]; }
 
-  uint size() const { return nodes_.size(); }
+  uint size() const { return uint(nodes_.size()); }
 
   void boundingBox(double &xmin, double &ymin, double &xmax, double &ymax) const {
     xmin = 0.0;
@@ -94,10 +94,10 @@ class CCirclePack {
     xmax = 0.0;
     ymax = 0.0;
 
-    int n = size();
+    auto n = size();
 
-    for (int i = 0; i < n; ++i) {
-      NODE *node = this->node(i);
+    for (size_t i = 0; i < n; ++i) {
+      auto *node = this->node(int(i));
 
       xmin = std::min(xmin, node->x() - node->radius());
       ymin = std::min(ymin, node->y() - node->radius());
@@ -113,13 +113,13 @@ class CCirclePack {
 
     CEnclosingCircle enclose;
 
-    int n = size();
+    auto n = size();
 
     if (n <= 0)
       return false;
 
-    for (int i = 0; i < n; ++i) {
-      NODE *node = this->node(i);
+    for (size_t i = 0; i < n; ++i) {
+      auto *node = this->node(int(i));
 
       enclose.addCircle(node->x(), node->y(), node->radius());
     }
@@ -131,7 +131,7 @@ class CCirclePack {
 
  private:
   bool findAddPos(double r, double &xc, double &yc) const {
-    int n = size();
+    auto n = size();
 
     if (n == 0) {
       xc = 0.0;
@@ -150,7 +150,7 @@ class CCirclePack {
     // try to place next to node starting at last
     while (ind2_ > ind1_) {
       if (testIndices(ind1_, ind2_, r, xc, yc)) {
-        ind2_ = n;
+        ind2_ = int(n);
 
         return true;
       }
@@ -163,12 +163,12 @@ class CCirclePack {
 
   // intersect last node with each previous node until find place to add with no overlap
   bool testIndices(int ind1, int ind2, double r, double &xc, double &yc, bool force=false) const {
-    NODE *node2 = node(ind2);
+    auto *node2 = node(ind2);
 
     int ind = ind2 - 1;
 
     while (ind >= ind1) {
-      NODE *node1 = node(ind);
+      auto *node1 = node(ind);
 
       //std::cerr << "Test: " << node1->id() << " and " << node2->id() << "\n";
 
@@ -237,10 +237,10 @@ class CCirclePack {
   }
 
   bool isTouching(double x, double y, double r) const {
-    int n = size();
+    auto n = size();
 
-    for (int i = n - 1; i >= 0; --i) {
-      NODE *node = this->node(i);
+    for (size_t i = n - 1; i >= 0; --i) {
+      auto *node = this->node(int(i));
 
       double dx = x - node->x();
       double dy = y - node->y();
