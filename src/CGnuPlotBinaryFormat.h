@@ -57,7 +57,7 @@ class CGnuPlotBinaryFormat {
 
   void clear();
 
-  int numFormats() const { return formats_.size(); }
+  int numFormats() const { return int(formats_.size()); }
 
   const FmtData &format(int i) const { return formats_[i]; }
 

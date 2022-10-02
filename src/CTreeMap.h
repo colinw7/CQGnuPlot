@@ -180,7 +180,7 @@ class CTreeMap {
 
     void packSubNodes(double x, double y, double w, double h, const Nodes &nodes) {
       // place nodes
-      int n = nodes.size();
+      int n = int(nodes.size());
       if (n == 0) return;
 
       if (n >= 2) {

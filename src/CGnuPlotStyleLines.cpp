@@ -128,7 +128,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo() && plot->isCacheActive()) {
-    plot->updatePathCacheSize(pointsArray.size());
+    plot->updatePathCacheSize(int(pointsArray.size()));
 
     int j = 0;
 
@@ -184,7 +184,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   XPoints xpoints;
 
   for (const auto &ip : plot->getPoints3D()) {
-    uint np = ip.second.size();
+    uint np = uint(ip.second.size());
 
     CPoint3D p1;
     int      ind1;
@@ -238,7 +238,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         renderer->drawClippedPath(points, c, lw, stroke.lineDash());
 
       if (n < 0)
-        n = points.size();
+        n = int(points.size());
 
       if (grid && n != int(points.size()))
         grid = false;

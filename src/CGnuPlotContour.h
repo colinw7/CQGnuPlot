@@ -51,8 +51,8 @@ class CGnuPlotContour {
 
   void setData(double *x, double *y, double *z, double *c, int no_x, int no_y, bool has_c);
 
-  int nx() const { return x_.size(); }
-  int ny() const { return y_.size(); }
+  int nx() const { return int(x_.size()); }
+  int ny() const { return int(y_.size()); }
 
   double x(int i) const { return x_[i]; }
   double y(int j) const { return y_[j]; }

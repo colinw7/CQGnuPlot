@@ -1914,7 +1914,7 @@ print(std::ostream &os, bool children) const
     os << "<" << CExprInterpUtil::getTypeName(getIType(), CExprTokenType::UNKNOWN) << ">";
 
   if (children) {
-    uint num_children = children_.size();
+    uint num_children = uint(children_.size());
 
     if (num_children > 0) {
       os << " [";
@@ -1936,7 +1936,7 @@ void
 CExprITokenStack::
 print(std::ostream &os) const
 {
-  uint len = stack_.size();
+  uint len = uint(stack_.size());
 
   for (uint i = 0; i < len; ++i) {
     if (i > 0) os << " ";

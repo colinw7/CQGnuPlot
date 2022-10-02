@@ -250,7 +250,7 @@ drawPath(const std::vector<CPoint2D> &points, const CGnuPlotStroke &stroke)
 
   device_->print().setForeground(stroke.color());
 
-  device_->print().drawPath(&x[0], &y[0], x.size());
+  device_->print().drawPath(&x[0], &y[0], int(x.size()));
 }
 
 void
@@ -337,7 +337,7 @@ drawPolygon(const std::vector<CPoint2D> &points, const CRGBA &c, double width, c
 
   pointsToXY(points, x, y);
 
-  device_->print().drawPolygon(&x[0], &y[0], x.size());
+  device_->print().drawPolygon(&x[0], &y[0], int(x.size()));
 }
 
 void
@@ -352,7 +352,7 @@ fillPolygon(const std::vector<CPoint2D> &points, const CRGBA &c)
 
   pointsToXY(points, x, y);
 
-  device_->print().fillPolygon(&x[0], &y[0], x.size());
+  device_->print().fillPolygon(&x[0], &y[0], int(x.size()));
 }
 
 void
@@ -369,7 +369,7 @@ patternPolygon(const std::vector<CPoint2D> &points, CGnuPlotTypes::FillPattern,
 
   pointsToXY(points, x, y);
 
-  device_->print().fillPolygon(&x[0], &y[0], x.size());
+  device_->print().fillPolygon(&x[0], &y[0], int(x.size()));
 }
 
 void

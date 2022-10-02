@@ -62,16 +62,16 @@ double DegToRad(double x) {
 
 class CExprSubStr {
  public:
-  std::string operator()(const std::string &str, int i1, int i2) {
+  std::string operator()(const std::string &str, long i1, long i2) {
     if (i1 < 1              ) i1 = 1;
-    if (i1 > int(str.size())) i1 = str.size();
+    if (i1 > int(str.size())) i1 = int(str.size());
 
-    if (i2 < 0              ) i2 = str.size();
-    if (i2 > int(str.size())) i2 = str.size();
+    if (i2 < 0              ) i2 = int(str.size());
+    if (i2 > int(str.size())) i2 = int(str.size());
 
     std::string str1;
 
-    for (int j = i1 - 1; j <= i2 - 1; ++j)
+    for (long j = i1 - 1; j <= i2 - 1; ++j)
       str1 += str[j];
 
     return str1;
@@ -81,30 +81,30 @@ class CExprSubStr {
 class CExprStrStrT {
  public:
   // find position of str2 in str1
-  int operator()(const std::string &str1, const std::string &str2) {
+  long operator()(const std::string &str1, const std::string &str2) {
     auto p = str1.find(str2);
 
     if (p == std::string::npos)
       return 0;
     else
-      return p + 1;
+      return long(p + 1);
   }
 };
 
 class CExprWords {
  public:
-  int operator()(const std::string &str) {
+  long operator()(const std::string &str) {
     std::vector<std::string> words;
 
     (void) CStrUtil::addWords(str, words);
 
-    return words.size();
+    return int(words.size());
   }
 };
 
 class CExprWord {
  public:
-  std::string operator()(const std::string &str, int i) {
+  std::string operator()(const std::string &str, long i) {
     std::vector<std::string> words;
 
     (void) CStrUtil::addWords(str, words);
@@ -119,7 +119,7 @@ class CExprWord {
 class CExprStrLen {
  public:
   int operator()(const std::string &str) {
-    return str.size();
+    return int(str.size());
   }
 };
 
@@ -296,7 +296,7 @@ CExprFunction##NAME(CExpr *expr, const CExprValueArray &values) { \
       return expr->createRealValue(r1); \
     } \
     else if (errno == EDOM) { \
-      std::complex<double> c(r,0); \
+      std::complex<double> c(r, 0); \
       errno = 0; \
       std::complex<double> c1 = F(c); \
       if (errno != 0) return CExprValuePtr(); \
@@ -451,7 +451,7 @@ class CExprFunctionRand : public CExprFunctionObj {
       if     (integer < 0)
         srand(0);
       else if (integer > 0)
-        srand(integer);
+        srand(uint(integer));
       double r = (1.0*rand())/RAND_MAX;
       return expr->createRealValue(r);
     }
@@ -472,7 +472,7 @@ class CExprFunction##NAME : public CExprFunctionObj { \
     else if (values[0]->isIntegerValue()) { \
       long i = 0; \
       if (! values[0]->getIntegerValue(i)) return CExprValuePtr(); \
-      r = i; \
+      r = double(i); \
     } \
     else if (values[0]->isComplexValue()) { \
       std::complex<double> c; \
@@ -498,7 +498,7 @@ class CExprFunctionInt : public CExprFunctionObj {
     else if (values[0]->isIntegerValue()) {
       long i = 0;
       if (! values[0]->getIntegerValue(i)) return CExprValuePtr();
-      r = i;
+      r = double(i);
     }
     else if (values[0]->isComplexValue()) {
       std::complex<double> c;
@@ -735,17 +735,17 @@ addFunctions()
   addObjFunction("rand", "i", new CExprFunctionRand)->setBuiltin(true);
 
   // input types ..., return type, function
-  (new CExprFunctionObjT1<std::string,long,CExprStrLen>
+  (new CExprFunctionObjT1<std::string, long, CExprStrLen>
          (this, "strlen" ))->setBuiltin(true);
-  (new CExprFunctionObjT2<std::string,std::string,long,CExprStrStrT>
+  (new CExprFunctionObjT2<std::string, std::string, long, CExprStrStrT>
          (this, "strstrt"))->setBuiltin(true);
-  (new CExprFunctionObjT3<std::string,long,long,std::string,CExprSubStr>
+  (new CExprFunctionObjT3<std::string, long, long, std::string, CExprSubStr>
          (this, "substr" ))->setBuiltin(true);
-  (new CExprFunctionObjT1<std::string,std::string,CExprSystem>
+  (new CExprFunctionObjT1<std::string, std::string, CExprSystem>
          (this, "system" ))->setBuiltin(true);
-  (new CExprFunctionObjT2<std::string,long,std::string,CExprWord>
+  (new CExprFunctionObjT2<std::string, long, std::string, CExprWord>
          (this, "word"   ))->setBuiltin(true);
-  (new CExprFunctionObjT1<std::string,long,CExprWords>
+  (new CExprFunctionObjT1<std::string, long, CExprWords>
          (this, "words"  ))->setBuiltin(true);
 
   // gprintf ?
@@ -883,7 +883,7 @@ parseArgs(const std::string &argsStr, Args &args, bool &variableArgs)
 
   CStrUtil::addTokens(argsStr, args1, ", ");
 
-  uint num_args = args1.size();
+  uint num_args = uint(args1.size());
 
   for (uint i = 0; i < num_args; ++i) {
     const std::string &arg = args1[i];
@@ -895,7 +895,7 @@ parseArgs(const std::string &argsStr, Args &args, bool &variableArgs)
 
     uint types = uint(CExprValueType::NONE);
 
-    uint len = arg.size();
+    uint len = uint(arg.size());
 
     for (uint j = 0; j < len; j++) {
       char c = arg[j];
@@ -913,7 +913,7 @@ parseArgs(const std::string &argsStr, Args &args, bool &variableArgs)
       }
     }
 
-    args.push_back(CExprFunctionArg((CExprValueType) types));
+    args.push_back(CExprFunctionArg(CExprValueType(types)));
   }
 
   return rc;
@@ -1021,7 +1021,7 @@ exec(CExpr *expr, const CExprValueArray &values)
 
   //---
 
-  typedef std::map<std::string,CExprValuePtr> VarValues;
+  typedef std::map<std::string, CExprValuePtr> VarValues;
 
   VarValues varValues;
 

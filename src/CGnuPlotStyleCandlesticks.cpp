@@ -46,7 +46,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   if (! renderer->isPseudo())
-    plot->updateBoxBarCacheSize(plot->getPoints2D().size());
+    plot->updateBoxBarCacheSize(int(plot->getPoints2D().size()));
 
   int i = 0;
 

@@ -1158,7 +1158,7 @@ helpCmd(const std::string &args)
     COptInt len;
 
     for (const auto &name : names)
-      len.updateMax(name.size());
+      len.updateMax(int(name.size()));
 
     int cols = 100/(len.getValue(0) + 1);
 
@@ -2100,7 +2100,7 @@ plotCmd1(const std::string &args, CGnuPlotGroupP &group, Plots &plots,
         newHistogramData.setX(x);
     }
 
-    newHistogramData.setInd(newHistogramDatas_.size());
+    newHistogramData.setInd(int(newHistogramDatas_.size()));
 
     newHistogramDatas_.push_back(newHistogramData);
 
@@ -3157,8 +3157,8 @@ parseModifiers2D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       parseArrayValues(line, sizes);
 
       if (! sizes.empty()) {
-        imageStyle_.setWidth (sizes[0].getWidth ());
-        imageStyle_.setHeight(sizes[0].getHeight());
+        imageStyle_.setWidth (int(sizes[0].getWidth ()));
+        imageStyle_.setHeight(int(sizes[0].getHeight()));
       }
 
       found = true;
@@ -4036,7 +4036,7 @@ decodeRange(const StringArray &fields, CGnuPlotAxisData &axis)
     bool     force = false;
 
     if (axis.isTime()) {
-      int len = field1.size();
+      int len = int(field1.size());
 
       if (len > 0 && field1[0] == '"' && field1[len - 1] == '"') {
         double t;
@@ -5099,8 +5099,8 @@ parseModifiers3D(PlotStyle style, CParseLine &line, CGnuPlotLineStyle &lineStyle
       parseArrayValues(line, sizes);
 
       if (! sizes.empty()) {
-        imageStyle_.setWidth (sizes[0].getWidth ());
-        imageStyle_.setHeight(sizes[0].getHeight());
+        imageStyle_.setWidth (int(sizes[0].getWidth ()));
+        imageStyle_.setHeight(int(sizes[0].getHeight()));
       }
 
       found = true;
@@ -8721,7 +8721,7 @@ setCmd(const std::string &args)
           double pi;
 
           if (parseReal(line, pi))
-            lineStyle->setPointInterval(pi);
+            lineStyle->setPointInterval(int(pi));
         }
         else if (arg == "palette" || arg == "pal") {
           lineStyle->setPalette(true);
@@ -9774,7 +9774,7 @@ showCmd(const std::string &args)
 
     std::cout << ostr.str();
 
-    for (int i = ostr.str().size(); i < 24; ++i)
+    for (int i = int(ostr.str().size()); i < 24; ++i)
       std::cout << " ";
 
     std::cout << "y: ";
@@ -10710,7 +10710,7 @@ showColorNames()
 
     std::cout << name;
 
-    int l = name.size();
+    int l = int(name.size());
 
     for (int j = l; j < 24; ++j)
       std::cout << " ";
@@ -12019,7 +12019,7 @@ ifCmd(int &i, const Statements &statements)
           line1.setPos(pos1);
 
           if (processing) {
-            i = statements.size() - 1;
+            i = int(statements.size() - 1);
             break;
           }
           else {
@@ -13723,7 +13723,7 @@ setPlotValues2D(CGnuPlotPlot *plot)
       for (const auto &field : fields) {
         bool missing;
 
-        CExprValuePtr value = fieldToValue(fieldValues_.size(), field.str(), missing);
+        CExprValuePtr value = fieldToValue(int(fieldValues_.size()), field.str(), missing);
 
         if (missing)
           value->setMissing(true);
@@ -13819,7 +13819,7 @@ setPlotValues2D(CGnuPlotPlot *plot)
 
         // no columns specified so use default number of columns for style
         if (usingCols.numCols() == 0) {
-          int nv = fieldValues_.size();
+          int nv = int(fieldValues_.size());
 
           CGnuPlotStyleBase *plotStyle = getPlotStyle(plot->style());
 
@@ -14155,8 +14155,8 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
     CImagePtr image = CImageMgrInst->createImage(src);
     if (! image.isValid()) return 0;
 
-    istyle.setWidth (image->getWidth ());
-    istyle.setHeight(image->getHeight());
+    istyle.setWidth (int(image->getWidth ()));
+    istyle.setHeight(int(image->getHeight()));
 
     for (auto iy : IRangeItr::range(0, istyle.height().getValue())) {
       ymin.updateMin(iy); ymax.updateMax(iy);
@@ -14210,7 +14210,7 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
           chars.push_back(c);
 
         // how set image size ???
-        int nv = chars.size();
+        int nv = int(chars.size());
 
         iw = int(sqrt(nv));
         ih = nv/iw;
@@ -14239,7 +14239,7 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
           chars.push_back(c);
 
         if (iw < 0 || ih < 0) {
-          int nv = chars.size();
+          int nv = int(chars.size());
 
           iw = int(sqrt(nv));
           ih = nv/iw;
@@ -14301,7 +14301,7 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
 
         binaryFormat_.readValues(*file, values);
 
-        int nv = values.size()/3;
+        int nv = int(values.size()/3);
 
         valuesArray.resize(nv);
 
@@ -14381,7 +14381,7 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
           }
         }
         else {
-          int nv = values.size();
+          int nv = int(values.size());
 
           if (style == PlotStyle::IMAGE) { // palette
             double r = (nv > 0 ? values[0] : 0);
@@ -14531,7 +14531,7 @@ readBinaryFormatFile2D(CUnixFile *file, CGnuPlotGroupP &group, PlotStyle style,
   //---
 
   // add values
-  int n = vals.size();
+  int n = int(vals.size());
 
   if (n < nv) {
     errorMsg("Missing values for binary plot");
@@ -14604,7 +14604,7 @@ readBinaryFile2D(CUnixFile *file, CGnuPlotPlotP &plot)
     return false;
   }
 
-  int nx = fn;
+  int nx = int(fn);
 
   if (nx <= 0) {
     errorMsg("no data in file");
@@ -14659,7 +14659,7 @@ readBinaryFile2D(CUnixFile *file, CGnuPlotPlotP &plot)
     return false;
   }
 
-  int ny = data[0].size();
+  int ny = int(data[0].size());
 
   //---
 
@@ -14876,7 +14876,7 @@ setPlotValues3D(CGnuPlotPlot *plot)
       for (const auto &field : fields) {
         bool missing;
 
-        CExprValuePtr value = fieldToValue(fieldValues_.size(), field.str(), missing);
+        CExprValuePtr value = fieldToValue(int(fieldValues_.size()), field.str(), missing);
 
         if (missing)
           value->setMissing(true);
@@ -15207,8 +15207,8 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
     CImagePtr image = CImageMgrInst->createImage(src);
     if (! image.isValid()) return 0;
 
-    istyle.setWidth (image->getWidth ());
-    istyle.setHeight(image->getHeight());
+    istyle.setWidth (int(image->getWidth ()));
+    istyle.setHeight(int(image->getHeight()));
 
     for (auto iy : IRangeItr::range(0, istyle.height().getValue())) {
       ymin.updateMin(iy); ymax.updateMax(iy);
@@ -15262,7 +15262,7 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
           chars.push_back(c);
 
         // how set image size ???
-        int nv = chars.size();
+        int nv = int(chars.size());
 
         iw = int(sqrt(nv));
         ih = nv/iw;
@@ -15291,7 +15291,7 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
           chars.push_back(c);
 
         if (iw < 0 || ih < 0) {
-          int nv = chars.size();
+          int nv = int(chars.size());
 
           iw = int(sqrt(nv));
           ih = nv/iw;
@@ -15353,7 +15353,7 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
 
         binaryFormat_.readValues(*file, values);
 
-        int nv = values.size()/3;
+        int nv = int(values.size()/3);
 
         valuesArray.resize(nv);
 
@@ -15433,7 +15433,7 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
           }
         }
         else {
-          int nv = values.size();
+          int nv = int(values.size());
 
           if (style == PlotStyle::IMAGE) { // palette
             double r = (nv > 0 ? values[0] : 0);
@@ -15594,7 +15594,7 @@ readBinaryFormatFile3D(CUnixFile *file, CGnuPlotGroupP &group, PlotStyle style,
   int iy = 0;
 
   for (const auto &reals : realsArray) {
-    int n = reals.size();
+    int n = int(reals.size());
 
     if (n < nv)
       warnMsg("Missing values for binary 3d plot");
@@ -15676,7 +15676,7 @@ readBinaryFile3D(CUnixFile *file, CGnuPlotPlotP &plot, const CGnuPlotUsingCols &
       return false;
     }
 
-    int nx = fn;
+    int nx = int(fn);
 
     if (nx <= 0) {
       errorMsg("no data in file");
@@ -15732,7 +15732,7 @@ readBinaryFile3D(CUnixFile *file, CGnuPlotPlotP &plot, const CGnuPlotUsingCols &
       return false;
     }
 
-    int ny = data[0].size();
+    int ny = int(data[0].size());
 
     //---
 
@@ -15853,7 +15853,7 @@ readEndianFloat(CUnixFile *file, Endian endian, float &f)
       return false;
 
     if (endian == Endian::SWAP) {
-      uchar *data = (uchar *) &f;
+      uchar *data = reinterpret_cast<uchar *>(&f);
 
       // swap the bytes into a temporary buffer
       std::swap(data[0], data[3]);
@@ -15868,7 +15868,7 @@ readEndianFloat(CUnixFile *file, Endian endian, float &f)
         return false;
     }
 
-    uchar *data = (uchar *) &f;
+    uchar *data = reinterpret_cast<uchar *>(&f);
 
     if (endian == Endian::LITTLE) {
       for (size_t i = 0; i < sizeof(float); ++i)
@@ -15925,7 +15925,7 @@ timeToValue(const std::string &str, double &t)
 
   if (! p) return false;
 
-  t = mktime(&tm1);
+  t = double(mktime(&tm1));
 
   return true;
 }
@@ -15985,7 +15985,7 @@ fieldToReal(const std::string &str, double &r)
 
   errno = 0;
 
-  r = strtod(&c_str[i], (char **) &p1);
+  r = strtod(&c_str[i], const_cast<char **>(&p1));
 
   if (errno == ERANGE)
     return false;
@@ -16189,7 +16189,7 @@ int
 CGnuPlot::
 numWindows() const
 {
-  return device_->windows().size();
+  return int(device_->windows().size());
 }
 
 void
@@ -16917,7 +16917,7 @@ getIntegerVariable(const std::string &name, int &value) const
   if (! evalue->getIntegerValue(l))
     return false;
 
-  value = l;
+  value = int(l);
 
   return true;
 }
@@ -17589,10 +17589,10 @@ readDataFileLines()
       }
     }
     else {
-      char c;
+      int c;
 
       while ((c = fgetc(stdin)) != EOF) {
-        chars.push_back(c);
+        chars.push_back(char(c));
       }
     }
   }
@@ -17681,8 +17681,8 @@ bool
 CGnuPlot::
 isEOFStr(const std::string &line, const std::string &eofStr) const
 {
-  int len1 = line  .size();
-  int len2 = eofStr.size();
+  int len1 = int(line  .size());
+  int len2 = int(eofStr.size());
 
   if (len1 < len2) return false;
 
@@ -17860,7 +17860,7 @@ exprToInteger(const std::string &expr, int &i, bool quiet) const
   if (! value.isValid() || ! value->getIntegerValue(i1))
     return false;
 
-  i = i1;
+  i = int(i1);
 
   return true;
 }
@@ -17918,7 +17918,7 @@ getBlockLines(const std::string &name, CGnuPlotFile::Lines &lines)
   CGnuPlotBlock *block = getBlock(name);
 
   const std::string &str = block->str();
-  uint               len = str.size();
+  uint               len = uint(str.size());
 
   std::string line;
 

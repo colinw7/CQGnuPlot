@@ -67,7 +67,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //----
 
   if (! renderer->isPseudo())
-    plot->updatePointCacheSize(pointDatas.size());
+    plot->updatePointCacheSize(int(pointDatas.size()));
 
   int pointNum = 0;
 

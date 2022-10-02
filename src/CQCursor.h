@@ -105,8 +105,8 @@ class CQCursorMgr {
   }
 
  private:
-  typedef std::vector<CQCursor *>      Cursors;
-  typedef std::map<QString,CQCursor *> NamedCursors;
+  typedef std::vector<CQCursor *>       Cursors;
+  typedef std::map<QString, CQCursor *> NamedCursors;
 
   Cursors      cursors_;
   NamedCursors namedCursors_;

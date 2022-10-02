@@ -25,11 +25,11 @@ class CGnuPlotStyleAdjacencyRenderer : public CAdjacencyRenderer {
   }
 
   int textWidth(const std::string &str) {
-    return renderer_->getFont()->getStringWidth(str);
+    return int(renderer_->getFont()->getStringWidth(str));
   }
 
   int charDescent() {
-    return renderer_->getFont()->getCharDescent();
+    return int(renderer_->getFont()->getCharDescent());
   }
 
   void clearRects() { rects_.clear(); }

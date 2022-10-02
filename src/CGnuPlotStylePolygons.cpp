@@ -57,7 +57,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo() && plot->isCacheActive()) {
-    plot->updatePolygonCacheSize(pointsArray.size());
+    plot->updatePolygonCacheSize(int(pointsArray.size()));
 
     int i = 0;
 

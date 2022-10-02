@@ -901,9 +901,9 @@ drawText(double x, double y, const std::string &str, int angle)
 
   std::string str1;
 
-  int len = str.size();
+  auto len = str.size();
 
-  for (int i = 0; i < len; i++) {
+  for (uint i = 0; i < len; i++) {
     if (str[i] == '(' || str[i] == ')')
       str1 += '\\';
 
@@ -959,9 +959,9 @@ fillText(double x, double y, const std::string &str, int angle)
 
   std::string str1;
 
-  int len = str.size();
+  auto len = str.size();
 
-  for (int i = 0; i < len; i++) {
+  for (uint i = 0; i < len; i++) {
     if (str[i] == '(' || str[i] == ')')
       str1 += '\\';
 
@@ -1073,8 +1073,8 @@ drawSubImage(const CImagePtr &image, double src_x, double src_y,
 
   /*------*/
 
-  int width2  = image->getWidth ();
-  int height2 = image->getHeight();
+  int width2  = int(image->getWidth ());
+  int height2 = int(image->getHeight());
 
   if (src_x + width1 > width2)
     width1 = width2 - src_x;
@@ -1095,12 +1095,12 @@ drawSubImage(const CImagePtr &image, double src_x, double src_y,
 
   if (output_color_) {
     file_->write("/buffer ");
-    file_->write(CStrUtil::toString((int) (3*width1)));
+    file_->write(CStrUtil::toString(int(3*width1)));
     file_->write(" string def\n");
 
-    file_->write(CStrUtil::toString((int) width1));
+    file_->write(CStrUtil::toString(int(width1)));
     file_->write(" ");
-    file_->write(CStrUtil::toString((int) height1));
+    file_->write(CStrUtil::toString(int(height1)));
     file_->write(" 8\n");
     file_->write("[");
     file_->write(CStrUtil::toString(width2));
@@ -1115,16 +1115,15 @@ drawSubImage(const CImagePtr &image, double src_x, double src_y,
 
     double r, g, b, a;
 
-    for (int y1 = 0; y1 < (int) height1; y1++) {
+    for (int y1 = 0; y1 < int(height1); y1++) {
       int byte_count = 0;
 
-      for (int x1 = 0; x1 < (int) width1; x1++) {
-        image->getRGBAPixel((int) (src_x + x1), (int) (src_y + y1),
-                            &r, &g, &b, &a);
+      for (int x1 = 0; x1 < int(width1); x1++) {
+        image->getRGBAPixel(int(src_x + x1), int(src_y + y1), &r, &g, &b, &a);
 
-        int r1 = (int) (r*255);
-        int g1 = (int) (g*255);
-        int b1 = (int) (b*255);
+        int r1 = int(r*255);
+        int g1 = int(g*255);
+        int b1 = int(b*255);
 
         file_->write(CStrUtil::toHexString(r1 & 0xFF, 2));
         file_->write(CStrUtil::toHexString(g1 & 0xFF, 2));
@@ -1141,12 +1140,12 @@ drawSubImage(const CImagePtr &image, double src_x, double src_y,
   }
   else if (output_depth_ == 8) {
     file_->write("/buffer ");
-    file_->write(CStrUtil::toString((int) width1));
+    file_->write(CStrUtil::toString(int(width1)));
     file_->write(" string def\n");
 
-    file_->write(CStrUtil::toString((int) width1));
+    file_->write(CStrUtil::toString(int(width1)));
     file_->write(" ");
-    file_->write(CStrUtil::toString((int) height1));
+    file_->write(CStrUtil::toString(int(height1)));
     file_->write(" 8\n");
     file_->write("[");
     file_->write(CStrUtil::toString(width2));
@@ -1161,16 +1160,15 @@ drawSubImage(const CImagePtr &image, double src_x, double src_y,
 
     double r, g, b, a;
 
-    for (int y1 = 0; y1 < (int) height1; y1++) {
+    for (int y1 = 0; y1 < int(height1); y1++) {
       int byte_count = 0;
 
-      for (int x1 = 0; x1 < (int) width1; x1++) {
-        image->getRGBAPixel((int) (src_x + x1), (int) (src_y + y1),
-                            &r, &g, &b, &a);
+      for (int x1 = 0; x1 < int(width1); x1++) {
+        image->getRGBAPixel(int(src_x + x1), int(src_y + y1), &r, &g, &b, &a);
 
         double gray = (r + g + b)/3.0;
 
-        int gray1 = (int) (gray*255);
+        int gray1 = int(gray*255);
 
         if (output_invert_)
           gray1 = ~gray1;
@@ -1188,12 +1186,12 @@ drawSubImage(const CImagePtr &image, double src_x, double src_y,
   }
   else if (output_depth_ == 4) {
     file_->write("/buffer ");
-    file_->write(CStrUtil::toString((int) ((width1 + 1)/2)));
+    file_->write(CStrUtil::toString(int((width1 + 1)/2)));
     file_->write(" string def\n");
 
-    file_->write(CStrUtil::toString((int) width1));
+    file_->write(CStrUtil::toString(int(width1)));
     file_->write(" ");
-    file_->write(CStrUtil::toString((int) height1));
+    file_->write(CStrUtil::toString(int(height1)));
     file_->write(" 4\n");
     file_->write("[");
     file_->write(CStrUtil::toString(width2));
@@ -1208,19 +1206,18 @@ drawSubImage(const CImagePtr &image, double src_x, double src_y,
 
     double r, g, b, a;
 
-    for (int y1 = 0; y1 < (int) height1; y1++) {
+    for (int y1 = 0; y1 < int(height1); y1++) {
       int byte_count = 0;
 
       int pos  = 7;
       int byte = 0;
 
-      for (int x1 = 0; x1 < (int) width1; x1++) {
-        image->getRGBAPixel((int) (src_x + x1), (int) (src_y + y1),
-                            &r, &g, &b, &a);
+      for (int x1 = 0; x1 < int(width1); x1++) {
+        image->getRGBAPixel(int(src_x + x1), int(src_y + y1), &r, &g, &b, &a);
 
         double gray = (r + g + b)/3.0;
 
-        int gray1 = (int) (gray*255);
+        int gray1 = int(gray*255);
 
         if      (gray1 >= 0xF0) {
           byte |= 1 << (pos    );
@@ -1315,12 +1312,12 @@ drawSubImage(const CImagePtr &image, double src_x, double src_y,
   }
   else if (output_depth_ == 2) {
     file_->write("/buffer ");
-    file_->write(CStrUtil::toString((int) ((width1 + 3)/4)));
+    file_->write(CStrUtil::toString(int((width1 + 3)/4)));
     file_->write(" string def\n");
 
-    file_->write(CStrUtil::toString((int) width1));
+    file_->write(CStrUtil::toString(int(width1)));
     file_->write(" ");
-    file_->write(CStrUtil::toString((int) height1));
+    file_->write(CStrUtil::toString(int(height1)));
     file_->write(" 2\n");
     file_->write("[");
     file_->write(CStrUtil::toString(width2));
@@ -1335,19 +1332,18 @@ drawSubImage(const CImagePtr &image, double src_x, double src_y,
 
     double r, g, b, a;
 
-    for (int y1 = 0; y1 < (int) height1; y1++) {
+    for (int y1 = 0; y1 < int(height1); y1++) {
       int byte_count = 0;
 
       int pos  = 7;
       int byte = 0;
 
-      for (int x1 = 0; x1 < (int) width1; x1++) {
-        image->getRGBAPixel((int) (src_x + x1), (int) (src_y + y1),
-                            &r, &g, &b, &a);
+      for (int x1 = 0; x1 < int(width1); x1++) {
+        image->getRGBAPixel(int(src_x + x1), int(src_y + y1), &r, &g, &b, &a);
 
         double gray = (r + g + b)/3.0;
 
-        int gray1 = (int) (gray*255);
+        int gray1 = int(gray*255);
 
         if      (gray1 >= 0xC0) {
           byte |= 1 << (pos    );
@@ -1388,12 +1384,12 @@ drawSubImage(const CImagePtr &image, double src_x, double src_y,
   }
   else if (output_depth_ == 1) {
     file_->write("/buffer ");
-    file_->write(CStrUtil::toString((int) ((width1 + 7)/8)));
+    file_->write(CStrUtil::toString(int((width1 + 7)/8)));
     file_->write(" string def\n");
 
-    file_->write(CStrUtil::toString((int) width1));
+    file_->write(CStrUtil::toString(int(width1)));
     file_->write(" ");
-    file_->write(CStrUtil::toString((int) height1));
+    file_->write(CStrUtil::toString(int(height1)));
     file_->write(" 1\n");
     file_->write("[");
     file_->write(CStrUtil::toString(width2));
@@ -1408,19 +1404,18 @@ drawSubImage(const CImagePtr &image, double src_x, double src_y,
 
     double r, g, b, a;
 
-    for (int y1 = 0; y1 < (int) height1; y1++) {
+    for (int y1 = 0; y1 < int(height1); y1++) {
       int byte_count = 0;
 
       int pos  = 7;
       int byte = 0;
 
-      for (int x1 = 0; x1 < (int) width1; x1++) {
-        image->getRGBAPixel((int) (src_x + x1), (int) (src_y + y1),
-                            &r, &g, &b, &a);
+      for (int x1 = 0; x1 < int(width1); x1++) {
+        image->getRGBAPixel(int(src_x + x1), int(src_y + y1), &r, &g, &b, &a);
 
         double gray = (r + g + b)/3.0;
 
-        int gray1 = (int) (gray*255);
+        int gray1 = int(gray*255);
 
         if (gray1 >= 0x80)
           byte |= 1 << pos;
@@ -1515,7 +1510,7 @@ setLineDash(const CILineDash &line_dash)
   if (active_) {
     file_->write("[");
 
-    int num_dashes = line_dash_.getNumLengths();
+    int num_dashes = int(line_dash_.getNumLengths());
 
     for (int i = 0; i < num_dashes; i++) {
       file_->write(" ");
@@ -1561,8 +1556,8 @@ setFont(CFontPtr font)
 
   std::string name    = font->getFamily();
   CFontStyle  style   = font->getStyle ();
-  int         ascent  = font->getICharAscent ();
-  int         descent = font->getICharDescent();
+  int         ascent  = int(font->getICharAscent ());
+  int         descent = int(font->getICharDescent());
   double      aspect  = font->getCharAspect ();
 
   //------

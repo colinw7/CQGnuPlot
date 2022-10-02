@@ -96,7 +96,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo() && plot->isCacheActive()) {
-    plot->updatePathCacheSize(pointsArray.size());
+    plot->updatePathCacheSize(int(pointsArray.size()));
 
     int j = 0;
 
@@ -151,7 +151,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     uint valueNum = 0;
 
     if      (reals.size() == 1) {
-      p.x = pointDatas.size();
+      p.x = double(pointDatas.size());
       p.y = reals[valueNum++];
     }
     else if (reals.size() >= 2) {
@@ -216,7 +216,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   CRGBA bg = fill.background();
 
   if (! renderer->isPseudo() && lineStyle.isTipPoints())
-    plot->updatePointCacheSize(pointDatas.size());
+    plot->updatePointCacheSize(int(pointDatas.size()));
 
   int pointNum = 0;
 
@@ -279,7 +279,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //------
 
   for (const auto &ip : plot->getPoints3D()) {
-    uint np = ip.second.size();
+    uint np = uint(ip.second.size());
 
     CPoint3D p1;
     int      ind1;

@@ -379,7 +379,7 @@ class CGnuPlotPlot {
 
   const Points2D &getPoints2D() const { return points2D_; }
 
-  uint numPoints2D() const { return points2D_.size(); }
+  uint numPoints2D() const { return uint(points2D_.size()); }
 
   const CGnuPlotPoint &getPoint2D(int i) const {
     assert(i >= 0 && i < int(points2D_.size()));

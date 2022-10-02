@@ -89,7 +89,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     if (isVarArrow) {
       double x = reals[pos++];
 
-      as = plot->app()->arrowStyle(x);
+      as = plot->app()->arrowStyle(int(x));
 
       if (as.lineColor().isValid())
         lc1 = as.lineColor().getValue();
@@ -128,7 +128,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo() && plot->isCacheActive()) {
-    plot->updateArrowCacheSize(arrowDatas.size());
+    plot->updateArrowCacheSize(int(arrowDatas.size()));
 
     int i = 0;
 

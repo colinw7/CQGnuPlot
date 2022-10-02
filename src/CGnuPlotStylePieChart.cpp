@@ -112,7 +112,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   if (! renderer->isPseudo())
-    plot->updatePieCacheSize(values.size());
+    plot->updatePieCacheSize(int(values.size()));
 
 //double ir = pieStyle.innerRadius().getValue(0.0);
 //double lr = pieStyle.labelRadius().getValue(0.5);
@@ -286,7 +286,7 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo())
-    plot->updatePieCacheSize(values.size());
+    plot->updatePieCacheSize(int(values.size()));
 
   int pi = 0;
 

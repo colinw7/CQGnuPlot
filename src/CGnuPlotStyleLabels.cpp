@@ -119,7 +119,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     labelData->boxStroke()->setWidth(1);
 
     labelData->setShowPoint (value->showPoint());
-    labelData->setPointType ((int) value->symbolType());
+    labelData->setPointType (int(value->symbolType()));
     labelData->setPointSize (value->pointSize());
     labelData->setPointWidth(value->lineWidth());
 
@@ -182,7 +182,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //------
 
-  uint n = labelDatas.size();
+  uint n = uint(labelDatas.size());
 
   if (! renderer->isPseudo())
     plot->updateLabelCacheSize(n);
@@ -359,7 +359,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       }
 
       if (value->showPoint()) {
-        CGnuPlotTypes::SymbolType pt = (CGnuPlotTypes::SymbolType) value->pointType();
+        CGnuPlotTypes::SymbolType pt = CGnuPlotTypes::SymbolType(value->pointType());
 
         if (group->isHidden3D())
           renderer->drawHiddenSymbol(p2, p1.z, pt, value->pointSize(),

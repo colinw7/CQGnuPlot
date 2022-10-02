@@ -177,12 +177,12 @@ class CSunburst {
       const std::string &name1 = n1->name();
       const std::string &name2 = n2->name();
 
-      int l1 = name1.size();
-      int l2 = name2.size();
+      int l1 = int(name1.size());
+      int l2 = int(name2.size());
 
       for (int i = 0; i < std::max(l1, l2); ++i) {
-        char c1 = (i < l1 ? tolower(name1[i]) : '\0');
-        char c2 = (i < l2 ? tolower(name2[i]) : '\0');
+        char c1 = char(i < l1 ? tolower(name1[i]) : '\0');
+        char c2 = char(i < l2 ? tolower(name2[i]) : '\0');
 
         if (c1 > c2) return true;
         if (c1 < c2) return false;
@@ -246,7 +246,7 @@ class CSunburst {
     }
 
     int numNodes() const override {
-      int num = nodes_.size();
+      int num = int(nodes_.size());
 
       for (const auto &c : children_)
         num += c->numNodes();

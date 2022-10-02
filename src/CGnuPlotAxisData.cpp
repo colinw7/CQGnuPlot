@@ -203,7 +203,7 @@ formatAxisValue(double r) const
   if (isTime()) {
     static char buffer[512];
 
-    time_t t(r);
+    auto t = time_t(r);
 
     struct tm *tm1 = localtime(&t);
 

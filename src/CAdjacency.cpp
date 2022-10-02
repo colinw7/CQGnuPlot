@@ -106,7 +106,7 @@ draw(CAdjacencyRenderer *renderer)
 
   //---
 
-  int nn = sortedNodes_.size();
+  int nn = int(sortedNodes_.size());
 
   cs_ = std::max(std::min(renderer->pixelWidth(), renderer->pixelHeight()) - ts_, 0)/(1.0*nn);
 
@@ -176,10 +176,10 @@ void
 CAdjacency::
 nodeAtPoint(double x, double y)
 {
-  int nn = sortedNodes_.size();
+  int nn = int(sortedNodes_.size());
 
-  int ix = (x - ts_)/cs_;
-  int iy = (y - ts_)/cs_;
+  int ix = int((x - ts_)/cs_);
+  int iy = int((y - ts_)/cs_);
 
   if (ix >= 0 && ix < nn && iy >= 0 && iy < nn) {
     ix_ = ix;

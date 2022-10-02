@@ -35,7 +35,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     (void) point.getReals(reals);
 
-    int nr = (isCalcColor ? reals.size() - 1 : reals.size());
+    int nr = int(isCalcColor ? reals.size() - 1 : reals.size());
 
     for (int i = 0; i < nr; ++i)
       ireals[i].push_back(reals[i]);
@@ -56,7 +56,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     irange[i] = MinMax(rmin.getValue(0), rmax.getValue(0));
   }
 
-  int nr = irange.size();
+  int nr = int(irange.size());
 
   //------
 
@@ -70,7 +70,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     (void) point.getReals(reals);
 
-    int nri = (isCalcColor ? reals.size() - 1 : reals.size());
+    int nri = int(isCalcColor ? reals.size() - 1 : reals.size());
 
     std::vector<double> ireals1;
     std::vector<CRGBA>  colors;

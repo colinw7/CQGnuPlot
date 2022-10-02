@@ -55,7 +55,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       GroupMap groups;
 
-      plot->updateRectCacheSize(plot->getPoints2D().size());
+      plot->updateRectCacheSize(int(plot->getPoints2D().size()));
 
       int i = 1;
 
@@ -76,14 +76,14 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
             pg = groups.insert(pg, GroupMap::value_type(group, hierNode));
 
-            hierNode->setColorId(groups.size());
+            hierNode->setColorId(int(groups.size()));
           }
 
           CTreeMap::HierNode *hierNode = (*pg).second;
 
           CTreeMap::Node *node = tree->addNode(hierNode, name, value2);
 
-          node->setColorId(hierNode->getNodes().size());
+          node->setColorId(int(hierNode->getNodes().size()));
         }
         else {
           CTreeMap::Node *node = tree->addNode(name, value2);

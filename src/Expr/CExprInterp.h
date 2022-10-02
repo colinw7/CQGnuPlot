@@ -32,7 +32,7 @@ class CExprIToken {
   const std::complex<double> &getComplex   () const { return base()->getComplex   (); }
 
   uint getNumChildren() const {
-    return children_.size();
+    return uint(children_.size());
   }
 
   CExprITokenPtr getChild(uint i) {
@@ -87,7 +87,7 @@ class CExprITokenStack {
   }
 
   uint getNumTokens() const {
-    return stack_.size();
+    return uint(stack_.size());
   }
 
   CExprITokenPtr getToken(uint i) const {

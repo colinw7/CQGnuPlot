@@ -158,7 +158,7 @@ drawContourLines(CGnuPlotRenderer *renderer)
   //---
 
   if (! renderer->isPseudo()) {
-    auto n = 0;
+    int n = 0;
 
     for (const auto &llines : llines_) {
       const auto &lines = llines.second;
@@ -167,7 +167,7 @@ drawContourLines(CGnuPlotRenderer *renderer)
 
       getPaths(lines, paths);
 
-      n += paths.size();
+      n += int(paths.size());
     }
 
     plot_->updatePathCacheSize(n);
@@ -175,7 +175,7 @@ drawContourLines(CGnuPlotRenderer *renderer)
 
   //---
 
-  auto i = 0;
+  int i = 0;
 
   auto width = lineStyle.calcWidth();
 
@@ -405,7 +405,7 @@ calcContourLines()
     // sort lines
     Lines &lines = llines_[l];
 
-    int nl = lines.size();
+    int nl = int(lines.size());
 
     for (int i = 0; i < nl - 1; ++i) {
       // find best start matching this line's end
@@ -580,7 +580,7 @@ fillContourBox(CGnuPlotRenderer *renderer, double x1, double y1, double x2, doub
     l = 0;
   else if (z1 > levels[levels.size() - 1] && z2 > levels[levels.size() - 1] &&
            z3 > levels[levels.size() - 1] && z4 > levels[levels.size() - 1])
-    l = levels.size();
+    l = int(levels.size());
   else {
     for (l = 1; l < int(levels.size()); ++l) {
       if (z1 >= levels[l - 1] && z2 >= levels[l - 1] &&

@@ -5,8 +5,10 @@
 #include <CQGnuPlotRenderer.h>
 #include <CQToolTip.h>
 #include <CQUtil.h>
+#include <CQWidgetUtil.h>
 
 #include <QPainter>
+#include <QPainterPath>
 #include <QMouseEvent>
 #include <QKeyEvent>
 
@@ -33,7 +35,7 @@ class CQGnuPlotCanvasTipLabel : public QWidget {
 
     double rr = r.height()/6.0;
 
-    path.addRoundedRect(r.adjusted(1,1,-1,-1), rr, rr);
+    path.addRoundedRect(r.adjusted(1, 1, -1, -1), rr, rr);
 
     QColor bg = palette().color(QPalette::ToolTipBase);
 
@@ -65,7 +67,7 @@ class CQGnuPlotCanvasTipLabel : public QWidget {
 
       QString text = QString("%1: %2").arg(tip_.xstr().c_str()).arg(tip_.ystr().c_str());
 
-      int tw = fm.width(text);
+      int tw = fm.horizontalAdvance(text);
 
       int dx = (rect().width() - tw)/2;
       int dy = (fm.ascent() - fm.descent())/2;
@@ -76,7 +78,7 @@ class CQGnuPlotCanvasTipLabel : public QWidget {
 
       painter.drawText(dx, rect().height()/2 + dy, xtext);
 
-      int xtw = fm.width(xtext);
+      int xtw = fm.horizontalAdvance(xtext);
 
       painter.setPen(CQUtil::toQColor(tip_.ycolor()));
 
@@ -102,7 +104,7 @@ class CQGnuPlotCanvasTipLabel : public QWidget {
     else
       text = QString("%1 : %2").arg(tip_.xstr().c_str()).arg(tip_.ystr().c_str());
 
-    return QSize(fm.width(text) + 2*border_, fm.height() + 2*border_);
+    return QSize(fm.horizontalAdvance(text) + 2*border_, fm.height() + 2*border_);
   }
 
  private:
@@ -292,7 +294,7 @@ void
 CQGnuPlotCanvas::
 wheelEvent(QWheelEvent *e)
 {
-  window_->mouseWheel(e->delta());
+  window_->mouseWheel(CQWidgetUtil::wheelDelta(e));
 }
 
 void

@@ -136,7 +136,7 @@ class CGnuPlotFile {
 
   bool processDataFile();
 
-  int numSets() const { return sets_.size(); }
+  int numSets() const { return int(sets_.size()); }
 
   int numSubSets(int setNum=0) const {
     if (setNum < 0 || setNum >= numSets())
@@ -144,7 +144,7 @@ class CGnuPlotFile {
 
     const Set &set = sets_[setNum];
 
-    return set.subSets.size();
+    return int(set.subSets.size());
   }
 
   int numLines(int subSetNum=0) const {
@@ -162,7 +162,7 @@ class CGnuPlotFile {
 
     const SubSet &subSet = set.subSets[subSetNum];
 
-    return subSet.lines.size();
+    return int(subSet.lines.size());
   }
 
   const Fields &fields(int lineNum) const {
@@ -195,7 +195,7 @@ class CGnuPlotFile {
   }
 
   int numFields(int setNum, int subSetNum, int lineNum) const {
-    return fields(setNum, subSetNum, lineNum).size();
+    return int(fields(setNum, subSetNum, lineNum).size());
   }
 
   const Field field(int setNum, int subSetNum, int lineNum, int fieldNum) const {
@@ -212,7 +212,7 @@ class CGnuPlotFile {
   int maxNumFields() const { return maxNumFields_; }
 
   int numColumnHeaders() const {
-    return columnHeaderFields_.size();
+    return int(columnHeaderFields_.size());
   }
 
   std::string columnHeader(int fieldNum) const {

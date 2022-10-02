@@ -83,7 +83,7 @@ class CGnuPlotLabelData {
   bool hasHypertext() const { return labelStyle_.hasHypertext(); }
   void setHypertext(bool b) { labelStyle_.setHypertext(b); }
 
-  SymbolType symbolType() const { return (SymbolType) pointType(); }
+  SymbolType symbolType() const { return SymbolType(pointType()); }
 
   //---
 

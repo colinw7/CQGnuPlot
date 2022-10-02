@@ -188,6 +188,8 @@ QModelIndex
 CQGnuPlotDataModel::
 index(int row, int column, const QModelIndex &parent) const
 {
+  auto *th = const_cast<CQGnuPlotDataModel *>(this);
+
   if      (! isHierarchical1() && ! isHierarchical2()) {
     return createIndex(row, column, nullptr);
   }
@@ -197,7 +199,7 @@ index(int row, int column, const QModelIndex &parent) const
 
       assert(subSet >= 0 && subSet < int(rows1_.size()));
 
-      return createIndex(row, column, (void *) &rows1_[subSet]);
+      return createIndex(row, column, reinterpret_cast<void *>(&th->rows1_[subSet]));
     }
     else
       return createIndex(row, column, nullptr);
@@ -216,12 +218,12 @@ index(int row, int column, const QModelIndex &parent) const
         assert(set >= 0 && set < int(rows2_.size()));
         assert(subSet >= 0 && subSet < int(rows2_[set].size()));
 
-        return createIndex(row, column, (void *) &rows2_[set][subSet]);
+        return createIndex(row, column, reinterpret_cast<void *>(&th->rows2_[set][subSet]));
       }
       else {
         assert(set >= 0 && set < int(rows1_.size()));
 
-        return createIndex(row, column, (void *) &rows1_[set]);
+        return createIndex(row, column, reinterpret_cast<void *>(&th->rows1_[set]));
       }
     }
     else
@@ -233,6 +235,8 @@ QModelIndex
 CQGnuPlotDataModel::
 parent(const QModelIndex &index) const
 {
+  auto *th = const_cast<CQGnuPlotDataModel *>(this);
+
   if (! index.isValid())
     return QModelIndex();
 
@@ -257,7 +261,7 @@ parent(const QModelIndex &index) const
       else {
         assert(row->set >= 0 && row->set < int(rows1_.size()));
 
-        return createIndex(row->subSet, 0, (void *) &rows1_[row->set]);
+        return createIndex(row->subSet, 0, reinterpret_cast<void *>(&th->rows1_[row->set]));
       }
     }
     else

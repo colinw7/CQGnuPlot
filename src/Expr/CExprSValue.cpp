@@ -146,7 +146,7 @@ subscript(CExpr *expr, const CExprValueArray &values) const
 
     std::string str;
 
-    for (int j = i1 - 1; j <= i2 - 1; ++j)
+    for (long j = i1 - 1; j <= i2 - 1; ++j)
       str += str_[j];
 
     return expr->createStringValue(str);

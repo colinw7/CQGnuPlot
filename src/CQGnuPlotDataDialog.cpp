@@ -1120,7 +1120,7 @@ CGnuPlotFile::SubSetLines
 CQGnuPlotDataDialog::
 smoothLines(const CGnuPlotFile::SubSetLines &lines, Smooth /*smooth*/) const
 {
-  typedef std::map<std::string,CGnuPlotFile::SubSetLines> KeyLines;
+  typedef std::map<std::string, CGnuPlotFile::SubSetLines> KeyLines;
 
   KeyLines keyLines;
 
@@ -1146,7 +1146,7 @@ smoothValuesList(const ValuesDataList &valuesDataList, Smooth smooth) const
 {
   CExpr *expr = window_->app()->expr();
 
-  typedef std::map<double,ValuesDataList> KeyValuesDataList;
+  typedef std::map<double, ValuesDataList> KeyValuesDataList;
 
   KeyValuesDataList keyValuesDataList;
 
@@ -1205,7 +1205,7 @@ smoothValuesList(const CGnuPlot::Matrix &valuesList, Smooth smooth) const
 {
   CExpr *expr = window_->app()->expr();
 
-  typedef std::map<double,CGnuPlot::Matrix> KeyMatrix;
+  typedef std::map<double, CGnuPlot::Matrix> KeyMatrix;
 
   KeyMatrix keyMatrix;
 
@@ -1271,5 +1271,5 @@ sizeHint() const
 {
   QFontMetrics fm(font());
 
-  return QSize(fm.width(QString("X").repeated(60)), fm.height()*40);
+  return QSize(fm.horizontalAdvance(QString("X").repeated(60)), fm.height()*40);
 }

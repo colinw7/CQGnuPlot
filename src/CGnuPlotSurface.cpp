@@ -62,12 +62,12 @@ draw(CGnuPlotRenderer *renderer)
     else {
       int pattern = plot_->hidden3D().trianglePattern;
 
-      int nx = ijpoints_.size();
+      int nx = int(ijpoints_.size());
 
       for (auto ijpoly : ijpoints_) {
         int ix = ijpoly.first;
 
-        int ny = ijpoly.second.size();
+        int ny = int(ijpoly.second.size());
 
         for (auto ipoly : ijpoly.second) {
           int iy = ipoly.first;
@@ -93,7 +93,7 @@ draw(CGnuPlotRenderer *renderer)
     int np = 0;
 
     for (auto polys : zpolygons_)
-      np += polys.second.size();
+      np += int(polys.second.size());
 
     if (! renderer->isPseudo())
       plot_->updatePolygonCacheSize(np);

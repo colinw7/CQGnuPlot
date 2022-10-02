@@ -149,7 +149,7 @@ calc()
     start1_ = CMathRound::RoundDown(start_);
     end1_   = CMathRound::RoundUp  (end_);
 
-    numTicks1_ = end1_ - start1_;
+    numTicks1_ = int(end1_ - start1_);
     numTicks2_ = 10;
 
     return true;
@@ -245,9 +245,9 @@ calcTics(double start, double end, int tickIncrement, double majorIncrement,
       const CGnuPlotAxisIncrementTest &tval = axesIncrementTests[i];
 
       if (tickIncrement > 0) {
-        int incFactor1 = (int) tval.incFactor;
+        int incFactor1 = int(tval.incFactor);
 
-        if (((double) incFactor1) != tval.incFactor)
+        if (double(incFactor1) != tval.incFactor)
           continue;
 
         if (incFactor1 % tickIncrement != 0)
@@ -788,11 +788,11 @@ drawAxisLabel()
   const std::string &astr = getLabel();
 
   if      (direction_ == AxisDirection::X)
-    drawAxisLabelStr(m, astr, maxH_, first);
+    drawAxisLabelStr(m, astr, int(maxH_), first);
   else if (direction_ == AxisDirection::Y)
-    drawAxisLabelStr(m, astr, maxH_, first);
+    drawAxisLabelStr(m, astr, int(maxH_), first);
   else
-    drawAxisLabelStr(m, astr, maxH_, first);
+    drawAxisLabelStr(m, astr, int(maxH_), first);
 }
 
 void

@@ -80,7 +80,7 @@ class CGnuPlotUsingCols {
 
   void parse(const std::string &str);
 
-  uint numCols() const { return cols_.size(); }
+  uint numCols() const { return uint(cols_.size()); }
 
   void addCol(const std::string &str);
 

@@ -174,7 +174,7 @@ drawNodes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
   CRGBA c3 = CGnuPlotStyleInst->indexColor(value->palette(), 4*(depth + 1) + 3);
 
   renderer->fillEllipse(CBBox2D(px1, py1, px2, py2), c1);
-  renderer->drawEllipse(CBBox2D(px1, py1, px2, py2), CRGBA(0,0,0), 0);
+  renderer->drawEllipse(CBBox2D(px1, py1, px2, py2), CRGBA(0, 0, 0), 0);
 
   //------
 
@@ -187,7 +187,7 @@ drawNodes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
 
   const CHierBubblePack::Nodes &nodes = hier->getNodes();
 
-  uint nn = nodes.size();
+  uint nn = uint(nodes.size());
 
   int in = 0;
 
@@ -212,18 +212,18 @@ drawNodes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
     CRGBA ce = c2 + (1.0*in)*(c3 - c2)/(nn - 1);
 
     renderer->fillEllipse(CBBox2D(pnx1, pny1, pnx2, pny2), ce);
-    renderer->drawEllipse(CBBox2D(pnx1, pny1, pnx2, pny2), CRGBA(0,0,0), 0);
+    renderer->drawEllipse(CBBox2D(pnx1, pny1, pnx2, pny2), CRGBA(0, 0, 0), 0);
 
     //---
 
-    //renderer->setPen(QColor(0,0,0));
+    //renderer->setPen(QColor(0, 0, 0));
 
 #if 0
     char buffer[32];
 
     sprintf(buffer, "%d", node->id());
 
-    int tw = fm.width(buffer);
+    int tw = fm.horizontalAdvance(buffer);
 
     renderer->drawText(pnx1 - tw/2, pny1 + fm.descent(), buffer);
 #else
@@ -235,7 +235,7 @@ drawNodes(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer,
     for (int i = len; i >= 1; --i) {
       std::string name1 = node->name().substr(0, i);
 
-      int tw = fm.width(name1.c_str());
+      int tw = fm.horizontalAdvance(name1.c_str());
       if (tw > 2*(pnx2 - pnx1)) continue;
 
       renderer->drawText(pnx1 - tw/2, pny1 + fm.descent(), name1.c_str());

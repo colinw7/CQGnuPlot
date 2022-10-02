@@ -104,7 +104,7 @@ init()
 {
   double total = 0.0;
 
-  int n = valueSets_.size();
+  int n = int(valueSets_.size());
 
   for (int i = 0; i < n; ++i) {
     ValueSet &values = valueSets_[i];
@@ -174,7 +174,7 @@ draw(ChordDiagramRenderer *renderer)
 
   double angle1 = 90.0;
 
-  int n = valueSets_.size();
+  int n = int(valueSets_.size());
 
   for (int i = 0; i < n; ++i) {
     ValueSet &values = valueSets_[i];
@@ -281,7 +281,7 @@ int
 ChordDiagram::
 getIndAtPos(double x, double y) const
 {
-  int n = valueSets_.size();
+  int n = int(valueSets_.size());
 
   for (int i = 0; i < n; ++i) {
     const ValueSet &values = valueSets_[i];

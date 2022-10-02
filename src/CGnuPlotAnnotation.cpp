@@ -24,5 +24,5 @@ void
 CGnuPlotGroupAnnotation::
 autoSetInd()
 {
-  setInd(group()->varAnnotations(varName()).size() + 1);
+  setInd(int(group()->varAnnotations(varName()).size()) + 1);
 }

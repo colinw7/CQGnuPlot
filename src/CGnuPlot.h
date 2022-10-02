@@ -367,7 +367,7 @@ class CGnuPlot {
   void setNewHistogramDatas(const CGnuPlotNewHistogramDatas &v) { newHistogramDatas_ = v; }
   void clearNewHistogramDatas() { newHistogramDatas_.clear(); }
 
-  int newHistogramId() const { return newHistogramDatas_.size() - 1; }
+  int newHistogramId() const { return int(newHistogramDatas_.size()) - 1; }
 
   int histogramPointOffset() const { return histogramPointOffset_; }
   void setHistogramPointOffset(int i) { histogramPointOffset_ = i; }
@@ -732,7 +732,7 @@ class CGnuPlot {
         auto p = varAnnotations_.find(varName);
 
         if (p != varAnnotations_.end())
-          ind = (*p).second.size() + 1;
+          ind = int((*p).second.size() + 1);
         else
           ind = 1;
       }
@@ -795,7 +795,7 @@ class CGnuPlot {
 
   //---
 
-  int numFieldValues() const { return fieldValues_.size(); }
+  int numFieldValues() const { return int(fieldValues_.size()); }
 
   CExprValuePtr fieldValue(int i) const {
     if (i < 1 || i > int(fieldValues_.size())) return CExprValuePtr();

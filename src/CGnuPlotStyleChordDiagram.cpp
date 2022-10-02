@@ -46,7 +46,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       if (! point.getReals(reals))
         continue;
 
-      int np = reals.size();
+      int np = int(reals.size());
 
       nx = (nx >= 0 ? std::min(nx, np) : np);
 

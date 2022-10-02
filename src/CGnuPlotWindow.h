@@ -34,7 +34,7 @@ class CGnuPlotWindow {
   void addGroup(CGnuPlotGroupP &group);
 
   const Groups &groups() const { return groups_; }
-  uint numGroups() const { return groups_.size(); }
+  uint numGroups() const { return int(groups_.size()); }
 
   void fitGroups();
 

@@ -47,7 +47,7 @@ getNumColors(const std::string &name)
   if (p == namedColors_.end())
     return 0;
 
-  return (*p).second.size();
+  return uint((*p).second.size());
 }
 
 const CRGBA &

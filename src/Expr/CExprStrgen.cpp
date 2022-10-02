@@ -41,9 +41,9 @@ CExprInsertEscapeCodes(const std::string &str)
         int digit2 = (c - digit1*64)/8;
         int digit3 = c - digit1*64 - digit2*8;
 
-        str1 += '0' + digit1;
-        str1 += '0' + digit2;
-        str1 += '0' + digit3;
+        str1 += char('0' + digit1);
+        str1 += char('0' + digit2);
+        str1 += char('0' + digit3);
 
         break;
       }
@@ -81,7 +81,7 @@ CExprStringToNumber(const std::string &str, uint *i, long &integer, double &real
     sscanf(str1.c_str(), "%lx", &integer1);
 
     integer = integer1;
-    real    = integer1;
+    real    = double(integer1);
     is_int  = true;
 
     return true;
@@ -135,7 +135,7 @@ CExprStringToNumber(const std::string &str, uint *i, long &integer, double &real
 
   if (point_found || exponent_found) {
     real    = CStrUtil::toReal(str1);
-    integer = real;
+    integer = long(real);
     is_int  = false;
 
     return true;
@@ -161,7 +161,7 @@ CExprStringToNumber(const std::string &str, uint *i, long &integer, double &real
     sscanf(str1.c_str(), "%lo", &integer1);
 
     integer = integer1;
-    real    = integer1;
+    real    = double(integer1);
     is_int  = true;
 
     return true;
@@ -172,7 +172,7 @@ CExprStringToNumber(const std::string &str, uint *i, long &integer, double &real
   sscanf(str1.c_str(), "%ld", &integer1);
 
   integer = integer1;
-  real    = integer1;
+  real    = double(integer1);
   is_int  = true;
 
   return true;

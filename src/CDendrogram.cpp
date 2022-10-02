@@ -9,12 +9,12 @@ struct NodeCmp {
     const std::string &name1 = n1->name();
     const std::string &name2 = n2->name();
 
-    int l1 = name1.size();
-    int l2 = name2.size();
+    int l1 = int(name1.size());
+    int l2 = int(name2.size());
 
     for (int i = 0; i < std::max(l1, l2); ++i) {
-      char c1 = (i < l1 ? tolower(name1[i]) : '\0');
-      char c2 = (i < l2 ? tolower(name2[i]) : '\0');
+      char c1 = char(i < l1 ? tolower(name1[i]) : '\0');
+      char c2 = char(i < l2 ? tolower(name2[i]) : '\0');
 
       if (c1 > c2) return true;
       if (c1 < c2) return false;
@@ -134,7 +134,7 @@ int
 CDendrogram::HierNode::
 numNodes() const
 {
-  return nodes_.size() + children_.size();
+  return int(nodes_.size() + children_.size());
 }
 
 int
@@ -144,7 +144,7 @@ maxNodes()
   int maxNum = 0;
 
   if (isOpen()) {
-    maxNum = nodes_.size();
+    maxNum = int(nodes_.size());
 
     for (const auto &c : children_)
       maxNum += c->maxNodes();
@@ -336,12 +336,12 @@ setGaps()
   max_rows_ = 1;
 
   // process nodes at each depth
-  int d = depthNodes_.size();
+  int d = int(depthNodes_.size());
 
   for (int i = 0; i < d; ++i) {
     Nodes &dnodes = depthNodes_[i];
 
-    int n = dnodes.size();
+    int n = int(dnodes.size());
 
     // process nodes at depth
     double row = 0;
@@ -386,12 +386,12 @@ void
 CDendrogram::RootNode::
 printGaps() const
 {
-  int d = depthNodes_.size();
+  int d = int(depthNodes_.size());
 
   for (int i = 0; i < d; ++i) {
     const Nodes &dnodes = depthNodes_[i];
 
-    int n = dnodes.size();
+    int n = int(dnodes.size());
 
     for (int j = 0; j < n; ++j) {
       Node *node = dnodes[j];
@@ -419,12 +419,12 @@ compressNodes()
   bool moved = false;
 
   // work from lowest depth up
-  int d = depthNodes_.size();
+  int d = int(depthNodes_.size());
 
   for (int i = d - 1; i > 0; --i) {
     Nodes &dnodes = depthNodes_[i];
 
-    int n = dnodes.size();
+    int n = int(dnodes.size());
 
     for (int j = 0; j < n; ++j) {
       Node *node = dnodes[j];
@@ -503,7 +503,7 @@ canMoveNode(Node *node, double &move_gap, Nodes &lowestChildren)
   // find location of node in depth nodes array
   Nodes &dnodes = depthNodes_[node->depth()];
 
-  int n = dnodes.size();
+  int n = int(dnodes.size());
 
   int i = 0;
 
@@ -571,12 +571,12 @@ void
 CDendrogram::RootNode::
 setOpenDepth(int depth)
 {
-  int d = depthNodes_.size();
+  int d = int(depthNodes_.size());
 
   for (int i = 0; i < d; ++i) {
     Nodes &dnodes = depthNodes_[i];
 
-    int n = dnodes.size();
+    int n = int(dnodes.size());
 
     for (int j = 0; j < n; ++j) {
       Node *node = dnodes[j];
@@ -593,7 +593,7 @@ openNode(int depth, const std::string &name)
 {
   Nodes &dnodes = depthNodes_[depth];
 
-  int n = dnodes.size();
+  int n = int(dnodes.size());
 
   for (int j = 0; j < n; ++j) {
     Node *node = dnodes[j];
@@ -687,7 +687,7 @@ moveHigherNodes(Node *node, double d)
   Nodes &dnodes = depthNodes_[node->depth()];
 
   // work down from top until hit node
-  int n = dnodes.size();
+  int n = int(dnodes.size());
 
   for (int i = n - 1; i >= 0; --i) {
     Node *dnode = dnodes[i];

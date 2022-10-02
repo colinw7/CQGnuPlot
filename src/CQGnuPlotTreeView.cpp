@@ -48,7 +48,7 @@ fitSlot()
   for (int c = 0; c < header->count(); ++c) {
     QString str = header->model()->headerData(c, Qt::Horizontal).toString();
 
-    columnWidths[c] = qMax(columnWidths[c], fm.width(str) + 10);
+    columnWidths[c] = qMax(columnWidths[c], fm.horizontalAdvance(str) + 10);
 
     QWidget *w = (qheader ? qheader->widget(c) : 0);
 
@@ -64,7 +64,7 @@ fitSlot()
 
       QString str = model()->data(ind).toString();
 
-      columnWidths[c] = qMax(columnWidths[c], fm.width(str) + 28);
+      columnWidths[c] = qMax(columnWidths[c], fm.horizontalAdvance(str) + 28);
     }
   }
 
@@ -92,7 +92,7 @@ updateItemWidths(const QModelIndex &ind, ColumnWidths &columnWidths)
 
       QString str = model()->data(ind1).toString();
 
-      columnWidths[c] = qMax(columnWidths[c], fm.width(str) + 28);
+      columnWidths[c] = qMax(columnWidths[c], fm.horizontalAdvance(str) + 28);
     }
   }
 

@@ -15,6 +15,7 @@
 #include <CImageLib.h>
 
 #include <QPainter>
+#include <QPainterPath>
 
 class CQSymbol2DRenderer : public CSymbol2DRenderer {
  public:
@@ -540,9 +541,9 @@ drawEllipse(const CPoint2D &center, double rx, double ry, double angle, const CR
 
   path.addEllipse(rect);
 
-  QMatrix m = painter_->worldMatrix();
+  auto m = painter_->worldTransform();
 
-  painter_->setWorldMatrix(QMatrix());
+  painter_->setWorldTransform(QTransform());
 
   QTransform t1, t2, t3;
 
@@ -561,7 +562,7 @@ drawEllipse(const CPoint2D &center, double rx, double ry, double angle, const CR
 
   painter_->strokePath(path, pen);
 
-  painter_->setWorldMatrix(m);
+  painter_->setWorldTransform(m);
 }
 
 void
@@ -579,9 +580,9 @@ fillEllipse(const CPoint2D &center, double rx, double ry, double angle, const CR
 
   path.addEllipse(rect);
 
-  QMatrix m = painter_->worldMatrix();
+  QTransform m = painter_->worldTransform();
 
-  painter_->setWorldMatrix(QMatrix());
+  painter_->setWorldTransform(QTransform());
 
   QTransform t1, t2, t3;
 
@@ -594,7 +595,7 @@ fillEllipse(const CPoint2D &center, double rx, double ry, double angle, const CR
 
   painter_->fillPath(path, QBrush(toQColor(c)));
 
-  painter_->setWorldMatrix(m);
+  painter_->setWorldTransform(m);
 }
 
 void
@@ -613,9 +614,9 @@ patternEllipse(const CPoint2D &center, double rx, double ry, double angle,
 
   path.addEllipse(rect);
 
-  QMatrix m = painter_->worldMatrix();
+  QTransform m = painter_->worldTransform();
 
-  painter_->setWorldMatrix(QMatrix());
+  painter_->setWorldTransform(QTransform());
 
   QTransform t1, t2, t3;
 
@@ -634,7 +635,7 @@ patternEllipse(const CPoint2D &center, double rx, double ry, double angle,
 
   painter_->fillPath(path, b);
 
-  painter_->setWorldMatrix(m);
+  painter_->setWorldTransform(m);
 }
 
 void
@@ -651,9 +652,9 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 
   //painter_->drawText(px, py, text.c_str());
 
-  QMatrix m = painter_->worldMatrix();
+  QTransform m = painter_->worldTransform();
 
-  painter_->setWorldMatrix(QMatrix());
+  painter_->setWorldTransform(QTransform());
 
   QTransform t1, t2, t3;
 
@@ -665,7 +666,7 @@ drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 
   painter_->drawText(px, py, text.c_str());
 
-  painter_->setWorldMatrix(m);
+  painter_->setWorldTransform(m);
 }
 
 void
@@ -694,7 +695,7 @@ drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
   QFontMetrics fm(painter_->font());
 
   int th = fm.height();
-  int tw = fm.width(text.c_str());
+  int tw = fm.horizontalAdvance(text.c_str());
 
   double dx { 0.0 };
 
@@ -855,7 +856,7 @@ drawArc(const CPoint2D &p, double r1, double r2, double a1, double a2, const CRG
 
   path.closeSubpath();
 
-  painter_->setPen  (QColor(0,0,0));
+  painter_->setPen  (QColor(0, 0, 0));
   painter_->setBrush(toQColor(c));
 
   painter_->drawPath(path);

@@ -625,7 +625,7 @@ placeChars(CGnuPlotTextState &state, CGnuPlotCharType type) const
 
   state.pos += CPoint2D(0, dy);
 
-  placePartChars(state, estr_.size(), type);
+  placePartChars(state, int(estr_.size()), type);
 
   state.font = origFont;
 
@@ -819,7 +819,7 @@ int
 CGnuPlotText::
 numLines() const
 {
-  return state_.lines.size();
+  return int(state_.lines.size());
 }
 
 double
@@ -861,7 +861,7 @@ print(std::ostream &os) const
     os << estr_[i];
   }
 
-  printParts(os, estr_.size());
+  printParts(os, int(estr_.size()));
 }
 
 void
@@ -914,8 +914,8 @@ placeChars(CGnuPlotTextState &state) const
 
     double dx1 = pos2.x - pos1.x;
 
-    int nl1 = state.lines.size();
-    int nc1 = state.lines.back().chars.size();
+    int nl1 = int(state.lines.size());
+    int nc1 = int(state.lines.back().chars.size());
 
     state.pos = pos1;
 
@@ -923,8 +923,8 @@ placeChars(CGnuPlotTextState &state) const
 
     double dx2 = state.pos.x - pos1.x;
 
-    int nl2 = state.lines.size();
-    int nc2 = state.lines.back().chars.size();
+    int nl2 = int(state.lines.size());
+    int nc2 = int(state.lines.back().chars.size());
 
     if (nl1 == nl2) {
       double dx = dx1/2 - dx2/2;

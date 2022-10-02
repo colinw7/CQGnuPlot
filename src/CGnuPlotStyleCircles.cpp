@@ -178,8 +178,8 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo() && plot->isCacheActive()) {
-    plot->updatePieCacheSize    (pieSlices.size());
-    plot->updateEllipseCacheSize(ellipses .size());
+    plot->updatePieCacheSize    (int(pieSlices.size()));
+    plot->updateEllipseCacheSize(int(ellipses .size()));
 
     int i = 0;
 

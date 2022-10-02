@@ -333,7 +333,7 @@ class CExprPrintF : public CPrintF {
     return format();
   }
 
-  int  getInt     () const { return getLong(); }
+  int  getInt     () const { return int(getLong()); }
   long getLongLong() const { return getLong(); }
 
   long getLong() const {

@@ -262,7 +262,7 @@ processDataFile()
           if (pline.isChars(comment)) {
             line1 = CStrUtil::stripSpaces(pline.substr(0, pline.pos()));
 
-            std::string cstr = CStrUtil::stripSpaces(pline.substr(pline.pos() + comment.length()));
+            auto cstr = CStrUtil::stripSpaces(pline.substr(pline.pos() + int(comment.length())));
 
             commentStrs_[setNum][subSetNum][lineNum] = cstr;
 
@@ -409,9 +409,9 @@ processBinaryFile()
     return false;
 
   if (isMatrix()) {
-    int nv = values.size();
+    int nv = int(values.size());
 
-    int nx = values[0];
+    int nx = int(values[0]);
 
     int i = 1;
 
@@ -463,14 +463,14 @@ processBinaryFile()
     sets_.push_back(set);
   }
   else {
-    int w = binarySize_.getWidth();
-    int h = binarySize_.getHeight();
+    int w = int(binarySize_.getWidth ());
+    int h = int(binarySize_.getHeight());
 
     if (w <= 1) w = 1;
     if (h <= 1) h = 1;
 
     int wh = w*h;
-    int nd = values.size()/wh;
+    int nd = int(values.size())/wh;
 
     if (nd < 0) {
       std::cerr << "Bad image data size" << std::endl;

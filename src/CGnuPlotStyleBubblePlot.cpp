@@ -51,7 +51,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         auto p = ids.find(idName);
 
         if (p == ids.end()) {
-          id = ids.size() + 1;
+          id = int(ids.size() + 1);
 
           ids[idName] = id;
         }
@@ -86,7 +86,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   ymax = yc + s/2;
 
   if (! renderer->isPseudo())
-    plot->updateBubbleCacheSize(pack->nodes().size());
+    plot->updateBubbleCacheSize(int(pack->nodes().size()));
 
   int i = 0;
 

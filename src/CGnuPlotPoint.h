@@ -59,7 +59,7 @@ class CGnuPlotPoint {
 
   bool getPoint(CPoint3D &p, const GetOpts &opts=GetOpts()) const;
 
-  int getNumValues() const { return values_.size(); }
+  int getNumValues() const { return int(values_.size()); }
 
   const CExprValuePtr &getValue(int i) const { return values_[i]; }
 

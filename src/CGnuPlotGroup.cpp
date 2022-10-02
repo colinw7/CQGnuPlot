@@ -685,7 +685,7 @@ fitHistograms(COptReal &xmin1, COptReal &ymin1, COptReal &xmax1, COptReal &ymax1
     const Plots &plots1 = nplot.second;
 
     drawData.i  = 0;
-    drawData.np = plots1.size();
+    drawData.np = int(plots1.size());
     drawData.xb = 0;
 
   //drawData.w = 1.0/std::max(drawData.np, 1); // TODO: bbox width
@@ -1629,7 +1629,7 @@ drawHistogram(CGnuPlotRenderer *renderer, const Plots &plots)
     const Plots &plots1 = nplot.second;
 
     drawData.i  = 0;
-    drawData.np = plots1.size();
+    drawData.np = int(plots1.size());
   //drawData.xb = renderer->pixelWidthToWindowWidth(2);
     drawData.xb = 0;
 

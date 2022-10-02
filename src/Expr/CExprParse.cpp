@@ -148,7 +148,7 @@ parseFile(CFile &file)
 
   tokenStack_.clear();
 
-  uint num_lines = lines.size();
+  uint num_lines = uint(lines.size());
 
   for (uint i = 0; i < num_lines; i++)
     if (! parseLine(tokenStack_, lines[i]))
@@ -283,7 +283,7 @@ skipExpression(const std::string &line, uint &i, const std::string &echars)
   CExprOpType    lastOpType    = CExprOpType::UNKNOWN;
 
   uint i1   = i;
-  uint len1 = line.size();
+  uint len1 = uint(line.size());
 
   while (true) {
     CStrUtil::skipSpace(line, &i);
@@ -745,7 +745,7 @@ std::string
 CExprParseImpl::
 replaceEscapeCodes(const std::string &str)
 {
-  int len = str.size();
+  int len = int(str.size());
 
   bool has_escape = false;
 
@@ -821,7 +821,7 @@ replaceEscapeCodes(const std::string &str)
               hex_value += (str[i] - 'A' + 10);
           }
 
-          str1 += hex_value;
+          str1 += char(hex_value);
         }
         else {
           str1 += '\\';
@@ -856,7 +856,7 @@ replaceEscapeCodes(const std::string &str)
             oct_value += (str[i] - '0');
           }
 
-          str1 += oct_value;
+          str1 += char(oct_value);
         }
         else {
           str1 += '\\';

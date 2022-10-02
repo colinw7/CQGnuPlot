@@ -86,7 +86,7 @@ updateFunctions()
   QFontMetrics fm(font());
 
   int nf = 0;
-  int w  = fm.width("Name") + fm.width("Definition") + 32;
+  int w  = fm.horizontalAdvance("Name") + fm.horizontalAdvance("Definition") + 32;
 
   for (const auto &n : names) {
     CExprFunctionPtr function = expr->getFunction(n);
@@ -111,7 +111,7 @@ updateFunctions()
 
     ++nf;
 
-    w = std::max(w, fm.width(name.c_str()) + fm.width(value.c_str()) + 32);
+    w = std::max(w, fm.horizontalAdvance(name.c_str()) + fm.horizontalAdvance(value.c_str()) + 32);
   }
 
   nf = std::max(nf, 8);

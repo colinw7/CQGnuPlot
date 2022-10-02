@@ -158,7 +158,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   CGnuPlotBoxObject *tempBoxObj = 0;
 
   if (! renderer->isPseudo())
-    plot->updateBoxCacheSize(iyv.size() + inds.size());
+    plot->updateBoxCacheSize(int(iyv.size() + inds.size()));
   else
     tempBoxObj = new CGnuPlotBoxObject(plot);
 
@@ -171,7 +171,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   for (const auto &yv : iyv) {
     double ix1 = ix + ic*value->separation().getValue(1.0);
 
-    std::string s = xaxis->getValueStr(ix1, ix1);
+    std::string s = xaxis->getValueStr(int(ix1), ix1);
 
     CGnuPlotBoxObject *boxObj;
 

@@ -103,7 +103,7 @@ class CGnuPlotAxis {
   void setTickIncrement(int tickIncrement);
 
   const double *getTickSpaces   () const { return &tickSpaces_[0]; }
-  int           getNumTickSpaces() const { return tickSpaces_.size(); }
+  int           getNumTickSpaces() const { return int(tickSpaces_.size()); }
 
   //---
 

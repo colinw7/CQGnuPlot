@@ -52,7 +52,7 @@ fitSlot()
   for (int c = 0; c < nc - 1; ++c) {
     QString str = item->text(c);
 
-    columnWidths[c] = qMax(columnWidths[c], fm.width(str) + 10);
+    columnWidths[c] = qMax(columnWidths[c], fm.horizontalAdvance(str) + 10);
   }
 
   int nr = topLevelItemCount();
@@ -78,7 +78,7 @@ updateItemWidths(QTreeWidgetItem *item, ColumnWidths &columnWidths)
   for (int c = 0; c < nc - 1; ++c) {
     QString str = item->text(c);
 
-    columnWidths[c] = qMax(columnWidths[c], fm.width(str) + 28);
+    columnWidths[c] = qMax(columnWidths[c], fm.horizontalAdvance(str) + 28);
   }
 
   int nr = item->childCount();

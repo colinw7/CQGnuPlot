@@ -27,7 +27,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     double x = reals[0];
 
-    int nr = reals.size() - 1;
+    int nr = int(reals.size() - 1);
 
     while (int(polygons.size()) < nr)
       polygons.push_back(CGnuPlot::Points2D());
@@ -46,7 +46,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
   }
 
-  int np = polygons.size();
+  int np = int(polygons.size());
 
   for (int i = 0; i < np; ++i) {
     CGnuPlot::Points2D &poly = polygons[i];

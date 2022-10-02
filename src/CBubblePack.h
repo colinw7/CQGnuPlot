@@ -3,10 +3,10 @@
 
 #include <CirclePack.h>
 
-class CBubbleNode : public CircleNode {
+class CBubbleNode : public CCircleNode {
  public:
   CBubbleNode(const std::string &name, double value, int id) :
-   CircleNode(sqrt(value/M_PI)), name_(name), value_(value), id_(id) {
+   CCircleNode(sqrt(value/M_PI), 0.0, 0.0), name_(name), value_(value), id_(id) {
   }
 
   const std::string &name() const { return name_; }
@@ -17,13 +17,13 @@ class CBubbleNode : public CircleNode {
 
  private:
   std::string name_;
-  double      value_ { 0 };
+  double      value_ { 0.0 };
   int         id_    { 0 };
 };
 
 class CBubblePack {
  public:
-  typedef CirclePack<CBubbleNode> Pack;
+  typedef CCirclePack<CBubbleNode> Pack;
 
  public:
   CBubblePack() { }

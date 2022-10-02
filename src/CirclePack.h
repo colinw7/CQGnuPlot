@@ -239,8 +239,8 @@ class CCirclePack {
   bool isTouching(double x, double y, double r) const {
     auto n = size();
 
-    for (size_t i = n - 1; i >= 0; --i) {
-      auto *node = this->node(int(i));
+    for (int i = n - 1; i >= 0; --i) {
+      auto *node = this->node(i);
 
       double dx = x - node->x();
       double dy = y - node->y();

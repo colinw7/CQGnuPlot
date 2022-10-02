@@ -138,7 +138,7 @@ class CGnuPlotValueStrPTime : public CGnuPlotFn {
 
     time_t t2 = mktime(&tm1);
 
-    return expr->createIntegerValue(difftime(t1, t2));
+    return expr->createIntegerValue(int(difftime(t1, t2)));
   }
 };
 
@@ -306,7 +306,7 @@ class CGnuPlotSumRangeFn : public CGnuPlotFn {
 
     double sum = 0;
 
-    for (int i = start; i <= end; ++i) {
+    for (int i = int(start); i <= int(end); ++i) {
       varPtr->setIntegerValue(expr, i);
 
       CExprValuePtr rvalue;

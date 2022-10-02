@@ -7,7 +7,7 @@ QT += widgets
 DEPENDPATH += .
 
 QMAKE_CXXFLAGS += \
--std=c++14 -DGNUPLOT_EXPR -DRGB_UTIL \
+-std=c++17 -DGNUPLOT_EXPR -DRGB_UTIL \
 -DCQUTIL_FONT -DCQUTIL_IMAGE -DCQUTIL_EVENT
 
 MOC_DIR = .moc
@@ -520,6 +520,7 @@ unix:LIBS += \
 -L../../CQGradientPalette/lib \
 -L../../CQPropertyTree/lib \
 -L../../CXML/lib \
+-L../../CCsv/lib \
 -L../../CReadLine/lib \
 -L../../CFont/lib \
 -L../../CUtil/lib \
@@ -535,6 +536,6 @@ unix:LIBS += \
 -L../../CRegExp/lib \
 -L../../CRGBName/lib \
 -lCQGradientPalette -lCQPropertyTree -lCQUtil \
--lCXML -lCRenderer -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
+-lCXML -lCCsv -lCRenderer -lCReadLine -lCUtil -lCFont -lCImageLib -lCConfig \
 -lCMath -lCRGBName -lCFileUtil -lCFile -lCUtil -lCOS -lCStrUtil -lCRegExp \
 -lfreetype -lpng -ljpeg -ltre -lreadline

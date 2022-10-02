@@ -23,7 +23,7 @@ class CGnuPlotCache {
   const Objects &objects() const { return objects_; }
 
   void updateSize(int n) {
-    int no = objects_.size();
+    int no = int(objects_.size());
 
     if (no > n) {
       for (int i = n; i < no; ++i)

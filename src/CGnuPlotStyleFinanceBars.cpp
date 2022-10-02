@@ -128,7 +128,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo())
-    plot->updateFinanceBarCacheSize(financeDatas.size());
+    plot->updateFinanceBarCacheSize(int(financeDatas.size()));
 
   int i = 0;
 

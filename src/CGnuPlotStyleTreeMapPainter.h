@@ -86,7 +86,7 @@ class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
       double r = 0.0;
 
       if (parent->getNodes().size() > 1)
-        r = (node->colorId() - 1.0)/(parent->getNodes().size() - 1);
+        r = (node->colorId() - 1.0)/double(parent->getNodes().size() - 1);
 
       c = c1 + r*c2;
     }

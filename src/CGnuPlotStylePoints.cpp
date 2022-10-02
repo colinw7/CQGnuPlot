@@ -42,7 +42,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     uint valueNum = 0;
 
     if      (reals.size() == 1) {
-      p.x = pointDatas.size();
+      p.x = double(pointDatas.size());
       p.y = reals[valueNum++];
     }
     else if (reals.size() >= 2) {
@@ -107,7 +107,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //----
 
   if (! renderer->isPseudo() && lineStyle.isTipPoints())
-    plot->updatePointCacheSize(pointDatas.size());
+    plot->updatePointCacheSize(int(pointDatas.size()));
 
   int pointNum = 0;
 

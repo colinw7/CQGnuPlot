@@ -63,8 +63,8 @@ struct CGnuPlotTextState {
 
 class CGnuPlotText {
  public:
-  typedef std::pair<CHAlignType,double> HAlignPos;
-  typedef std::pair<CVAlignType,double> VAlignPos;
+  typedef std::pair<CHAlignType, double> HAlignPos;
+  typedef std::pair<CVAlignType, double> VAlignPos;
 
  public:
   CGnuPlotText(const std::string &str="");
@@ -90,7 +90,7 @@ class CGnuPlotText {
   void draw(CGnuPlotTextRenderer *renderer, const CPoint2D &pos, const CRGBA &c, double a) const;
 
   void draw(CGnuPlotTextRenderer *renderer, const CBBox2D &bbox, CHAlignType halign,
-            const CRGBA &c=CRGBA(0,0,0), double a=0, const COptPoint2D &o=COptPoint2D()) const;
+            const CRGBA &c=CRGBA(0, 0, 0), double a=0, const COptPoint2D &o=COptPoint2D()) const;
 
   CBBox2D calcBBox(CGnuPlotTextRenderer *renderer, const CPoint2D &pos) const;
 
@@ -121,7 +121,7 @@ class CGnuPlotText {
   bool readPartText(CParseLine &line, CGnuPlotText &text);
   bool readBraceString(CParseLine &line, std::string &tstr);
 
-  void addPart(CGnuPlotTextPart *part) { parts_[estr_.size()].push_back(part); }
+  void addPart(CGnuPlotTextPart *part) { parts_[int(estr_.size())].push_back(part); }
 
   void placePartChars(CGnuPlotTextState &state, int i, CGnuPlotCharType type) const;
 
@@ -129,7 +129,7 @@ class CGnuPlotText {
 
  private:
   typedef std::vector<CGnuPlotTextPart *> Parts;
-  typedef std::map<int,Parts>             PosParts;
+  typedef std::map<int, Parts>            PosParts;
 
   std::string               str_;
   std::string               estr_;

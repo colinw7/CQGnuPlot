@@ -32,7 +32,7 @@ class CStrUniqueMatchValues {
     valueStrs_[value].push_back(str);
   }
 
-  int numValues() const { return strValues_.size(); }
+  int numValues() const { return int(strValues_.size()); }
 
   bool match(const std::string &str, T &value) {
     std::set<T> partialValues;

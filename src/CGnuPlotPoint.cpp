@@ -134,7 +134,7 @@ getForceReal(int n, double &r) const
 
   errno = 0;
 
-  r = strtod(&c_str[i], (char **) &p1);
+  r = strtod(&c_str[i], const_cast<char **>(&p1));
 
   if (errno == ERANGE)
     return false;
@@ -219,7 +219,7 @@ getValue(int n, int &i) const
   if (! values_[n - 1]->getIntegerValue(l))
     return false;
 
-  i = l;
+  i = int(l);
 
   return true;
 }
@@ -290,12 +290,12 @@ getParamInt(const std::string &name) const
   CExprValuePtr value = getParam(name);
 
   if (! value.isValid())
-    return i;
+    return int(i);
 
   if (value->isIntegerValue() || value->isRealValue())
     (void) value->getIntegerValue(i);
 
-  return i;
+  return int(i);
 }
 
 CRGBA
@@ -319,7 +319,7 @@ getParamColor(const std::string &name) const
     long i;
 
     if (value->getIntegerValue(i))
-      c = CGnuPlotStyleInst->indexColor(i);
+      c = CGnuPlotStyleInst->indexColor(int(i));
   }
 
   return c;

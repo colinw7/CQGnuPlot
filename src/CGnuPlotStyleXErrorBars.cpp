@@ -123,7 +123,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   }
 
   if (! renderer->isPseudo())
-    plot->updateErrorBarCacheSize(barDatas.size());
+    plot->updateErrorBarCacheSize(int(barDatas.size()));
 
   int i = 0;
 

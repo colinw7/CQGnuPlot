@@ -5,7 +5,7 @@
 
 class CHierBubblePack {
  public:
-  class Node : public CircleNode {
+  class Node : public CCircleNode {
    private:
     static uint nextId() {
       static int lastId = 0;
@@ -15,7 +15,7 @@ class CHierBubblePack {
 
    public:
     Node(const std::string &name, double size) :
-     CircleNode(), id_(nextId()), name_(name), size_(size) {
+     CCircleNode(), id_(nextId()), name_(name), size_(size) {
       double r = sqrt(size/(2*M_PI));
 
       setRadius(r);
@@ -34,7 +34,7 @@ class CHierBubblePack {
     double radiusOrig() const { return r_; }
 
     void setPosition(double x, double y) override {
-      CircleNode::setPosition(x, y);
+      CCircleNode::setPosition(x, y);
 
       placed_ = true;
     }
@@ -188,7 +188,7 @@ class CHierBubblePack {
     }
 
    private:
-    typedef CirclePack<Node> Pack;
+    typedef CCirclePack<Node> Pack;
 
     HierNode *parent_;
     Nodes     nodes_;

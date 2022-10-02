@@ -79,8 +79,8 @@ drawBinaryImage(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   int nx = 0, ny = 0;
 
   if (style_ == CGnuPlotTypes::PlotStyle::IMAGE) {
-    ny = imageValues.size();
-    nx = (ny > 0 ? (*imageValues.begin()).second.size() : 0);
+    ny = int(imageValues.size());
+    nx = (ny > 0 ? int((*imageValues.begin()).second.size()) : 0);
   }
   else {
     COptInt xmin, ymin, xmax, ymax;
@@ -398,7 +398,7 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   if (numSets == 1) {
 #if 0
-    int ny = plot->getPoints2D().size();
+    int ny = int(plot->getPoints2D().size());
 #endif
 
     if (! renderer->isPseudo()) {
@@ -411,7 +411,7 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
         (void) p.getReals(reals);
 
-        n += reals.size();
+        n += int(reals.size());
       }
 #else
       int n = plot->numPoints2D();
@@ -614,7 +614,7 @@ drawImage2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       int n = 0;
 
       for (const auto &points1 : pointsArray)
-        n += points1.size();
+        n += int(points1.size());
 
       // udpate cache size
       plot->updateRectCacheSize(n);
@@ -803,7 +803,7 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
       while (pos != std::string::npos) {
         lookup = false;
 
-        int pos1 = ++pos;
+        int pos1 = int(++pos);
 
         while (isdigit(exprStr[pos1]))
           ++pos1;
@@ -847,7 +847,7 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
         long l;
 
         if (evalue.isValid() && evalue->getIntegerValue(l))
-          return indexImageColor(l, rgba);
+          return indexImageColor(int(l), rgba);
       }
 
       return 1;

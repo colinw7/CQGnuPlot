@@ -193,8 +193,8 @@ createEdit(QWidget *parent, const QString &text) const
   // set background of preview text to window background
   QPalette plt = QApplication::palette();
   QColor bgColor = plt.color(QPalette::Window);
-  QString styleStr;
-  styleStr.sprintf("background: #%2x%2x%2x", bgColor.red(), bgColor.green(), bgColor.blue());
+  auto styleStr =
+    QString::asprintf("background: #%2x%2x%2x", bgColor.red(), bgColor.green(), bgColor.blue());
   edit->setStyleSheet(styleStr);
 
   return edit;
@@ -467,7 +467,7 @@ updateVariables()
 
     ++nv;
 
-    w = std::max(w, fm.width(name.c_str()) + fm.width(value.c_str() + 32));
+    w = std::max(w, fm.horizontalAdvance(name.c_str()) + fm.horizontalAdvance(value.c_str() + 32));
   }
 
   size_ = QSize(w, (nv + 2)*fm.height());

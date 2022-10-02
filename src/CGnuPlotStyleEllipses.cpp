@@ -147,7 +147,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   //---
 
   if (! renderer->isPseudo() && plot->isCacheActive()) {
-    plot->updateEllipseCacheSize(ellipses.size());
+    plot->updateEllipseCacheSize(int(ellipses.size()));
 
     int i = 0;
 

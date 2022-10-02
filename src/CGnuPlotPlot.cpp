@@ -430,7 +430,7 @@ smooth()
         for (const auto &y1 : p.second)
           y += y1;
 
-        y /= p.second.size();
+        y /= double(p.second.size());
 
         (void) addPoint2D(x, y);
       }
@@ -469,7 +469,7 @@ smooth()
         for (const auto &y1 : p.second)
           y += y1;
 
-        points.push_back(CPoint2D(x, y/p.second.size()));
+        points.push_back(CPoint2D(x, y/double(p.second.size())));
       }
 
       CSmooth smooth(points);
@@ -1046,14 +1046,14 @@ bool
 CGnuPlotPlot::
 isSurfaceData() const
 {
-  int nx = points3D_.size();
+  int nx = int(points3D_.size());
 
   if (nx <= 1) return false;
 
   int ny = -1;
 
   for (const auto &p : points3D_) {
-    int ny1 = p.second.size();
+    int ny1 = int(p.second.size());
 
     if      (ny < 0)
       ny = ny1;
@@ -1307,7 +1307,7 @@ drawClusteredHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
   //---
 
   if (! renderer->isPseudo())
-    updateBoxBarCacheSize(getPoints2D().size());
+    updateBoxBarCacheSize(int(getPoints2D().size()));
 
   int i = 0;
 
@@ -1396,7 +1396,7 @@ drawErrorBarsHistogram(CGnuPlotRenderer *renderer, const DrawHistogramData &draw
   //---
 
   if (! renderer->isPseudo())
-    updateBoxBarCacheSize(getPoints2D().size());
+    updateBoxBarCacheSize(int(getPoints2D().size()));
 
   int i = 0;
 
@@ -2102,7 +2102,7 @@ mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const
 
     p1 = CPoint3D(x, y, z);
 
-    ind = (reals.size() > 3 ? 3 : reals.size());
+    ind = (reals.size() > 3 ? 3 : int(reals.size()));
   }
   else if (mapping() == CGnuPlotTypes::Mapping::CYLINDRICAL_MAPPING) {
     double theta = (reals.size() > 0 ? reals[0] : 0.0);
@@ -2116,7 +2116,7 @@ mapPoint3D(const CGnuPlotPoint &p, CPoint3D &p1, int &ind) const
 
     p1 = CPoint3D(x, y, z);
 
-    ind = (reals.size() > 3 ? 3 : reals.size());
+    ind = (reals.size() > 3 ? 3 : int(reals.size()));
   }
   else {
     if (! p.getPoint(p1, CGnuPlotPoint::GetOpts().setForce(true)))

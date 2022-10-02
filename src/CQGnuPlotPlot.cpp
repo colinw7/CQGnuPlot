@@ -287,7 +287,7 @@ CQGnuPlotPlot::
 setFunctions(const QString &functions)
 {
   if (functions != this->functions()) {
-    QStringList fns = functions.split(" ", QString::SkipEmptyParts);
+    QStringList fns = functions.split(" ", Qt::SkipEmptyParts);
 
     CGnuPlotPlot::StringArray fns1;
 

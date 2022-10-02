@@ -41,7 +41,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
   lc_ = calcLineColor(group);
 
   if (isVariable() && style().varValue().isValid())
-    lc_ = CGnuPlotStyleInst->indexColor(getVarValue());
+    lc_ = CGnuPlotStyleInst->indexColor(int(getVarValue()));
 
   CRGBA lc = lc_;
 

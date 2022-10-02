@@ -60,7 +60,7 @@ addGroup(CGnuPlotGroupP &group)
   if (plot_->isDebug())
     std::cerr << "Add Group" << std::endl;
 
-  group->setInd(groups_.size() + 1);
+  group->setInd(int(groups_.size() + 1));
 
   groups_.push_back(group);
 }
@@ -70,7 +70,7 @@ CGnuPlotWindow::
 fitGroups()
 {
   double y  = 0.0;
-  double dy = 1.0/groups_.size();
+  double dy = 1.0/double(groups_.size());
 
   for (auto &group : groups_) {
     group->setRegion(CBBox2D(0.0, y, 1.0, y + dy));

@@ -227,7 +227,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       addPolygons(plot, points, pointsArray);
 
     if (! renderer->isPseudo() && plot->isCacheActive()) {
-      plot->updatePolygonCacheSize(pointsArray.size());
+      plot->updatePolygonCacheSize(int(pointsArray.size()));
     }
 
     int pi = 0;
@@ -307,7 +307,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
     }
 
     if (! renderer->isPseudo() && plot->isCacheActive()) {
-      plot->updatePolygonCacheSize(polygons.size());
+      plot->updatePolygonCacheSize(int(polygons.size()));
 
       int pi = 0;
 

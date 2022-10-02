@@ -1372,7 +1372,7 @@ void
 CGnuPlotRenderer::
 drawClippedPath(const Points2D &points, const CRGBA &c, double width, const CLineDash &dash)
 {
-  int np = points.size();
+  int np = int(points.size());
   if (np < 2) return;
 
   CGnuPlotStroke stroke;

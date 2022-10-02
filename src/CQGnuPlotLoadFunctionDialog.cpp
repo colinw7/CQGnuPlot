@@ -129,7 +129,7 @@ functions() const
 
   fns << str.c_str();
 
-  //return fnEdit_->text().split(",", QString::SkipEmptyParts);
+  //return fnEdit_->text().split(",", Qt::SkipEmptyParts);
   return fns;
 }
 

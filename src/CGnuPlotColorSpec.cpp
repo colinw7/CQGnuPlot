@@ -66,10 +66,10 @@ calcColor(CGnuPlotGroup *group, double x) const
     int g = (ix >>  8) & 0xFF;
     int b = (ix >>  0) & 0xFF;
 
-    a = CGnuPlotUtil::clamp(a, 0, 255);
-    r = CGnuPlotUtil::clamp(r, 0, 255);
-    g = CGnuPlotUtil::clamp(g, 0, 255);
-    b = CGnuPlotUtil::clamp(b, 0, 255);
+    a = int(CGnuPlotUtil::clamp(a, 0, 255));
+    r = int(CGnuPlotUtil::clamp(r, 0, 255));
+    g = int(CGnuPlotUtil::clamp(g, 0, 255));
+    b = int(CGnuPlotUtil::clamp(b, 0, 255));
 
     return CRGBA(r/255.0, g/255.0, b/255.0, a/255.0);
   }

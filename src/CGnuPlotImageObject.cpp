@@ -136,7 +136,7 @@ init() const
 
     //---
 
-    size1_ = CISize2D(rbbox_.getWidth(), rbbox_.getHeight());
+    size1_ = CISize2D(int(rbbox_.getWidth()), int(rbbox_.getHeight()));
     size2_ = CISize2D(0, 0);
 
     image2_ = CImageMgrInst->createImage();
@@ -149,7 +149,7 @@ drawPoint(const CPoint2D &p, const CRGBA &c)
 {
   init();
 
-  image1_->drawRGBAPoint(p.x, p.y, c);
+  image1_->drawRGBAPoint(int(p.x), int(p.y), c);
 }
 
 void

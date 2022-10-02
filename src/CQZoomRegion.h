@@ -7,7 +7,7 @@
 class CQZoomRegion : public QWidget {
  public:
   CQZoomRegion(QWidget *parent=0) :
-   QWidget(parent), tl_(0,0), br_(0, 0) {
+   QWidget(parent), tl_(0, 0), br_(0, 0) {
     setAttribute(Qt::WA_NoSystemBackground);
     setAttribute(Qt::WA_TransparentForMouseEvents);
 
@@ -33,15 +33,15 @@ class CQZoomRegion : public QWidget {
 
     p.fillRect(rect(), QColor(80, 80, 255, 128));
 
-    p.setPen(QColor(0,0,0,128));
+    p.setPen(QColor(0, 0, 0, 128));
 
     QFontMetrics fm(font());
 
     QString str1 = QString("%1,%2").arg(start_.x()).arg(start_.y());
     QString str2 = QString("%1,%2").arg(end_  .x()).arg(end_  .y());
 
-//  int fw1 = fm.width(str1);
-    int fw2 = fm.width(str2);
+//  int fw1 = fm.horizontalAdvance(str1);
+    int fw2 = fm.horizontalAdvance(str2);
 
     int fa = fm.ascent();
     int fd = fm.descent();

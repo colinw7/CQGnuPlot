@@ -51,7 +51,7 @@ parse(CExpr *expr, const std::string &str)
         long l;
 
         if (value.isValid() && value->getIntegerValue(l))
-          var = l;
+          var = int(l);
       }
     }
   };

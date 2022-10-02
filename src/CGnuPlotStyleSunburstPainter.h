@@ -49,9 +49,11 @@ class CGnuPlotStyleSunburstPainter : public CSunburstPainter {
     double r = 0.0;
 
     if (node->isHier())
-      r = (parent ? (1.0*parent->childIndex(node))/(parent->getChildren().size() - 1.0) : 0.0);
+      r = (parent ? (1.0*parent->childIndex(node))/
+                    (double(parent->getChildren().size()) - 1.0) : 0.0);
     else
-      r = (parent ? (1.0*parent->nodeIndex(node))/(parent->getNodes().size() - 1.0) : 0.0);
+      r = (parent ? (1.0*parent->nodeIndex(node))/
+                    (double(parent->getNodes().size()) - 1.0) : 0.0);
 
     CPoint2D pc(xc, yc);
 

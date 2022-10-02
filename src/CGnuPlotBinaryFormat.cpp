@@ -205,7 +205,7 @@ readValue(CUnixFile &file, Format fmt, double &r)
     if (! file.readData<long>(v))
       return false;
 
-    r = v;
+    r = double(v);
   }
   else if (fmt == Format::ULONG) {
     ulong v;
@@ -213,7 +213,7 @@ readValue(CUnixFile &file, Format fmt, double &r)
     if (! file.readData<ulong>(v))
       return false;
 
-    r = v;
+    r = double(v);
   }
   else if (fmt == Format::FLOAT) {
     float v;
@@ -245,7 +245,7 @@ indexFormat(int i) const
   if (i < 0 || formats_.empty())
     return FmtData();
 
-  int i1 = (i % formats_.size());
+  int i1 = (i % int(formats_.size()));
 
   return formats_[i1];
 }

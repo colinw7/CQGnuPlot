@@ -26,7 +26,7 @@ isValid(CExpr *expr, int setNum, int pointNum, const Values &fieldValues) const
   auto pos = exprStr.find('$');
 
   while (pos != std::string::npos) {
-    int pos1 = ++pos;
+    int pos1 = int(++pos);
 
     while (isdigit(exprStr[pos1]))
       ++pos1;
@@ -97,7 +97,7 @@ getFieldValue(CExpr *expr, int setNum, int pointNum, const Values &fieldValues, 
 {
   CExprValuePtr value;
 
-  int nf = fieldValues.size();
+  int nf = int(fieldValues.size());
 
   if      (icol == 0) {
     value = expr->createRealValue(pointNum);

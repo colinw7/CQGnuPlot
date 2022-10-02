@@ -7,7 +7,7 @@
 class CParseLine {
  public:
   CParseLine(const std::string &line="") :
-   str_(line), pos_(0), len_(str_.size()) {
+   str_(line), pos_(0), len_(int(str_.size())) {
   }
 
   void clear() {
@@ -156,7 +156,7 @@ class CParseLine {
   }
 
   bool isChars(const std::string &str) const {
-    int n = str.size();
+    int n = int(str.size());
 
     if (pos_ + n > len_) return false;
 
@@ -176,7 +176,7 @@ class CParseLine {
   }
 
   bool isString(const std::string &str) const {
-    int n = str.size();
+    int n = int(str.size());
 
     if (pos_ + n > len_) return false;
 
@@ -215,7 +215,7 @@ class CParseLine {
   void insert(const std::string &str) {
     str_ = str_.substr(0, pos_) + str + str_.substr(pos_);
 
-    len_ += str.size();
+    len_ += int(str.size());
   }
 
   static bool isodigit(char c) {
