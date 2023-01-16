@@ -32,18 +32,18 @@ class CQGnuPlotDataModel : public QAbstractItemModel {
   bool isHierarchical1() const;
   bool isHierarchical2() const;
 
-  int columnCount(const QModelIndex &parent=QModelIndex()) const;
+  int columnCount(const QModelIndex &parent=QModelIndex()) const override;
 
   QVariant headerData(int section, Qt::Orientation orientation=Qt::Horizontal,
-                      int role=Qt::DisplayRole) const;
+                      int role=Qt::DisplayRole) const override;
 
-  QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
+  QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const override;
 
-  QModelIndex index(int row, int column, const QModelIndex &parent=QModelIndex()) const;
+  QModelIndex index(int row, int column, const QModelIndex &parent=QModelIndex()) const override;
 
-  QModelIndex parent(const QModelIndex &index) const;
+  QModelIndex parent(const QModelIndex &index) const override;
 
-  int rowCount(const QModelIndex &parent = QModelIndex()) const;
+  int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
  private:
   void init();

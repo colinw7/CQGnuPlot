@@ -45,7 +45,7 @@ class CQGnuPlotDataDialog : public QFrame {
 
   void doPlot(bool add);
 
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
 
  private:
   void initPlotStyle(CGnuPlotPlotP plot);

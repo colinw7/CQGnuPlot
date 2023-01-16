@@ -5,6 +5,7 @@
 #include <CQGnuPlotRenderer.h>
 #include <CQToolTip.h>
 #include <CQUtil.h>
+#include <CQUtilEvent.h>
 #include <CQWidgetUtil.h>
 
 #include <QPainter>
@@ -24,7 +25,7 @@ class CQGnuPlotCanvasTipLabel : public QWidget {
     tip_ = t;
   }
 
-  void paintEvent(QPaintEvent *) {
+  void paintEvent(QPaintEvent *) override {
     QPainter painter(this);
 
     painter.setRenderHint(QPainter::Antialiasing);
@@ -94,7 +95,7 @@ class CQGnuPlotCanvasTipLabel : public QWidget {
     painter.strokePath(path, pen);
   }
 
-  QSize sizeHint() const {
+  QSize sizeHint() const override {
     QFontMetrics fm(font());
 
     QString text;
@@ -122,7 +123,7 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
     delete label_;
   }
 
-  bool canTip(const QPoint &pos) const {
+  bool canTip(const QPoint &pos) const override {
     CGnuPlotTipData tip;
 
     QPoint p = canvas_->mapFromGlobal(pos);
@@ -134,7 +135,7 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
     return canvas_->qwindow()->mouseTip(mouseEvent, tip);
   }
 
-  QWidget *showWidget(const QPoint &pos) {
+  QWidget *showWidget(const QPoint &pos) override {
     if (! label_)
       label_ = new CQGnuPlotCanvasTipLabel();
 
@@ -144,7 +145,7 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
     return label_;
   }
 
-  void hideWidget() {
+  void hideWidget() override {
     canvas_->qwindow()->highlightObject(0);
 
     delete label_;
@@ -152,9 +153,9 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
     label_ = 0;
   }
 
-  bool trackMouse() const { return true; }
+  bool trackMouse() const override { return true; }
 
-  bool updateWidget(const QPoint &pos) {
+  bool updateWidget(const QPoint &pos) override {
     QPoint p = canvas_->mapFromGlobal(pos);
 
     CGnuPlotMouseEvent mouseEvent;
@@ -171,15 +172,15 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
     return true;
   }
 
-  int margin() const { return 0; }
+  int margin() const override { return 0; }
 
-  double opacity() const { return 1.0; }
+  double opacity() const override { return 1.0; }
 
-  bool isTransparent() const { return true; }
+  bool isTransparent() const override { return true; }
 
-  bool outside() const { return canvas_->qwindow()->isTipOutside(); }
+  bool outside() const override { return canvas_->qwindow()->isTipOutside(); }
 
-  Qt::Alignment alignment() const {
+  Qt::Alignment alignment() const override {
     if (outside())
       return Qt::AlignLeft | Qt::AlignBottom;
     else

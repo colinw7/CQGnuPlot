@@ -50,21 +50,22 @@ class CGnuPlotBBoxTextRenderer : public CGnuPlotTextRenderer {
  public:
   CGnuPlotBBoxTextRenderer(CGnuPlotTextRenderer *renderer);
 
-  bool isPseudo() const { return true; }
+  bool isPseudo() const override { return true; }
 
   CGnuPlotTextRenderer *renderer() const { return renderer_; }
 
   const CBBox2D &bbox() const { return bbox_; }
 
-  void setFont(const CFontPtr &font);
+  void setFont(const CFontPtr &font) override;
 
-  void pixelToWindow(double px, double py, double *wx, double *wy);
-  void windowToPixel(double wx, double wy, double *px, double *py);
+  void pixelToWindow(double px, double py, double *wx, double *wy) override;
+  void windowToPixel(double wx, double wy, double *px, double *py) override;
 
-  void drawText(const CPoint2D &p, const std::string &str, const CRGBA &c);
+  void drawText(const CPoint2D &p, const std::string &str, const CRGBA &c) override;
 
   void drawRotatedText(const CPoint2D &p, const std::string &str, double a,
-                       const HAlignPos &halignPos, const VAlignPos &valignPos, const CRGBA &c);
+                       const HAlignPos &halignPos, const VAlignPos &valignPos,
+                       const CRGBA &c) override;
 
  protected:
   CGnuPlotTextRenderer *renderer_;

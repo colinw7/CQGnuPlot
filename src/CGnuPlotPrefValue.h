@@ -39,14 +39,14 @@ class CGnuPlotPrefValue : public CGnuPlotPrefValueBase {
 
   void set(const T &value) { value_ = value; }
 
-  void set(const std::string &str) {
+  void set(const std::string &str) override {
     T value;
 
     if (CStrUniqueMatch::stringToValueWithErr(str, value, name_))
       set(value);
   }
 
-  void reset() {
+  void reset() override {
     value_ = init_;
   }
 
@@ -54,11 +54,11 @@ class CGnuPlotPrefValue : public CGnuPlotPrefValueBase {
     return toString(value_);
   }
 
-  void show(std::ostream &os) const {
+  void show(std::ostream &os) const override {
     os << "set " << pref_ << " " << toString(value_) << std::endl;
   }
 
-  void print(std::ostream &os) const {
+  void print(std::ostream &os) const override {
     os << name_ << " is " << toString(value_) << std::endl;
   }
 

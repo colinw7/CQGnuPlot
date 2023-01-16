@@ -3,6 +3,7 @@
 
 #include <CGnuPlot.h>
 #include <CGnuPlotRenderer.h>
+#include <CQUtilRGBA.h>
 #include <QColor>
 
 class CQGnuPlotCanvas;

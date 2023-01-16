@@ -21,7 +21,7 @@ draw(CGnuPlotRenderer *renderer) const
 
   CFontPtr saveFont = renderer->getFont();
 
-  if (font().isValid())
+  if (font())
     renderer->setFont(font());
 
   double xmin, xmax, ymax;
@@ -93,6 +93,6 @@ draw(CGnuPlotRenderer *renderer) const
 
   group_->updateMarginBBox(bbox_);
 
-  if (font().isValid())
+  if (font())
     renderer->setFont(saveFont);
 }

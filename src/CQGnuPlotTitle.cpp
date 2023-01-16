@@ -4,6 +4,7 @@
 #include <CQGnuPlotRenderer.h>
 #include <CQFontUtil.h>
 #include <CQUtil.h>
+#include <CQUtilGeom.h>
 
 CQGnuPlotTitle::
 CQGnuPlotTitle(CQGnuPlotGroup *group) :

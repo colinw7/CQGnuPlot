@@ -11,6 +11,8 @@
 #include <CQFontUtil.h>
 #include <CQImageUtil.h>
 #include <CQUtil.h>
+#include <CQUtilLineDash.h>
+#include <CQUtilAlignType.h>
 #include <CFontMgr.h>
 #include <CImageLib.h>
 
@@ -642,7 +644,7 @@ void
 CQGnuPlotRenderer::
 drawText(const CPoint2D &point, const std::string &text, const CRGBA &c)
 {
-  CQFont *qfont = getFont().cast<CQFont>();
+  auto *qfont = dynamic_cast<CQFont *>(getFont().get());
 
   painter_->setFont(qfont->getQFont());
 
@@ -674,7 +676,7 @@ CQGnuPlotRenderer::
 drawRotatedText(const CPoint2D &p, const std::string &text, double ta,
                 const HAlignPos &halignPos, const VAlignPos &valignPos, const CRGBA &tc)
 {
-  CQFont *qfont = getFont().cast<CQFont>();
+  auto *qfont = dynamic_cast<CQFont *>(getFont().get());
 
   painter_->setFont(qfont->getQFont());
 

@@ -34,7 +34,7 @@ class CGnuPlotTitleData {
   void save(std::ostream &os) const {
     os << "set title \"" << text() << "\"" << std::endl;
 
-    if (font().isValid())
+    if (font())
       os << "set title font \"\" norotate" << std::endl;
     else
       os << "set title font \" norotate" << font()->getFamily() << "\"" << std::endl;
@@ -44,7 +44,7 @@ class CGnuPlotTitleData {
     os << "title is \"" << text() << "\"";
     os << ", " << "offset at (" << offset() << ")";
 
-    if (font().isValid())
+    if (font())
       os << ", using font \"" << font() << "\"";
 
     if (color().isValid())

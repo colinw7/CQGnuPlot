@@ -24,7 +24,7 @@ class CExprVariableMgr {
   void removeVariable(CExprVariablePtr variable);
 
  private:
-  typedef std::list<CExprVariablePtr> VariableList;
+  using VariableList = std::list<CExprVariablePtr>;
 
   CExpr*       expr_ { nullptr };
   VariableList variables_;

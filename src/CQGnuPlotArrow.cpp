@@ -2,6 +2,7 @@
 #include <CQGnuPlotGroup.h>
 #include <CQGnuPlotEnum.h>
 #include <CQUtil.h>
+#include <CQUtilGeom.h>
 
 CQGnuPlotArrow::
 CQGnuPlotArrow(CQGnuPlotGroup *group) :

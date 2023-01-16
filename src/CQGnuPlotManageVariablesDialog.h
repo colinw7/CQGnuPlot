@@ -20,22 +20,23 @@ class CQGnuPlotVariablesDelegate : public QItemDelegate {
 
   // Override to create editor
   QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                        const QModelIndex &index) const;
+                        const QModelIndex &index) const override;
 
   // Override to get content from editor
-  void setEditorData(QWidget *editor, const QModelIndex &index) const;
+  void setEditorData(QWidget *editor, const QModelIndex &index) const override;
 
-  void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+  void setModelData(QWidget *editor, QAbstractItemModel *model,
+                    const QModelIndex &index) const override;
 
   void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
-                            const QModelIndex &index) const;
+                            const QModelIndex &index) const override;
 
   void paint(QPainter *painter, const QStyleOptionViewItem &option,
-             const QModelIndex &index) const;
+             const QModelIndex &index) const override;
 
   QTreeWidgetItem *getModelItem(const QModelIndex &index) const;
 
-  QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+  QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index ) const override;
 
   QWidget *createEdit(QWidget *parent, const QString &text) const;
 
@@ -67,7 +68,7 @@ class CQGnuPlotVariableItem : public QObject, public QTreeWidgetItem {
   CQGnuPlotVariableItem(const CQGnuPlotVariableItem &item);
 
   //! clone (required by QTreeWidgetItem interface)
-  QTreeWidgetItem *clone() const { return new CQGnuPlotVariableItem(*this); }
+  QTreeWidgetItem *clone() const override { return new CQGnuPlotVariableItem(*this); }
 
   //! handle click
   bool click();

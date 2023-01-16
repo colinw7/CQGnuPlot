@@ -10,7 +10,7 @@ class CQGnuPlotDataTreeWidgetFactory : public CQHeaderViewWidgetFactory {
    tree_(tree) {
   }
 
-  QWidget *createWidget(int i);
+  QWidget *createWidget(int i) override;
 
  private:
   CQGnuPlotDataTree *tree_;

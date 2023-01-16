@@ -100,7 +100,7 @@ class CDendrogram {
    public:
     HierNode(HierNode *parent=0, const std::string &name="");
 
-    double size() const;
+    double size() const override;
 
     const Nodes    &getNodes   () const { return nodes_; }
     const Children &getChildren() const { return children_; }
@@ -109,19 +109,19 @@ class CDendrogram {
 
     int numNodes() const;
 
-    int maxNodes();
+    int maxNodes() override;
 
-    bool hasChildren() const;
+    bool hasChildren() const override;
 
     HierNode *findChild(const std::string &name) const;
 
-    void resetPlaced();
+    void resetPlaced() override;
 
     void placeSubNodes(RootNode *root, int depth, double row);
 
     void addNode(Node *node);
 
-    void compressNode(double d);
+    void compressNode(double d) override;
 
     Node *getNodeAtPoint(double x, double y, double tol) const;
 

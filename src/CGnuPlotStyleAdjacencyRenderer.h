@@ -17,29 +17,29 @@ class CGnuPlotStyleAdjacencyRenderer : public CAdjacencyRenderer {
   const std::string &palette() const { return palette_; }
   void setPalette(const std::string &v) { palette_ = v; }
 
-  int pixelWidth () const { return renderer_->width (); }
-  int pixelHeight() const { return renderer_->height(); }
+  int pixelWidth () const override { return renderer_->width (); }
+  int pixelHeight() const override { return renderer_->height(); }
 
-  void setFontSize(int h) {
+  void setFontSize(int h) override {
     renderer_->setFontSize(h);
   }
 
-  int textWidth(const std::string &str) {
+  int textWidth(const std::string &str) override {
     return int(renderer_->getFont()->getStringWidth(str));
   }
 
-  int charDescent() {
+  int charDescent() override {
     return int(renderer_->getFont()->getCharDescent());
   }
 
   void clearRects() { rects_.clear(); }
 
-  void fillRect(const CBBox2D &r, const CRGBA &c) {
+  void fillRect(const CBBox2D &r, const CRGBA &c) override {
     renderer_->fillRect(r, c);
   }
 
   void drawNodeRect(const CBBox2D &r, const CRGBA &c, int value,
-                    CAdjacencyNode *node1, CAdjacencyNode *node2) {
+                    CAdjacencyNode *node1, CAdjacencyNode *node2) override {
     CRGBA lc = c.getLightRGBA();
 
     renderer_->fillRect(r, c);
@@ -49,12 +49,13 @@ class CGnuPlotStyleAdjacencyRenderer : public CAdjacencyRenderer {
       NodeNodeRect(node1, NodeRect(node2, r))));
   }
 
-  void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) {
+  void drawText(const CPoint2D &p, const std::string &text, const CRGBA &c) override {
     renderer_->drawText(p, text, c);
   }
 
   void drawRotatedText(const CPoint2D &p, const std::string &text, double a,
-                       const HAlignPos &halignPos, const VAlignPos &valignPos, const CRGBA &c) {
+                       const HAlignPos &halignPos, const VAlignPos &valignPos,
+                       const CRGBA &c) override {
     renderer_->drawRotatedText(p, text, a, halignPos, valignPos, c);
   }
 
@@ -76,7 +77,7 @@ class CGnuPlotStyleAdjacencyRenderer : public CAdjacencyRenderer {
     return false;
   }
 
-  CRGBA indexColor(int i) const {
+  CRGBA indexColor(int i) const override {
     return CGnuPlotStyleInst->indexColor(palette(), i);
   }
 

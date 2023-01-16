@@ -4,6 +4,7 @@
 #include <CGnuPlotRenderer.h>
 #include <CQGnuPlotEnum.h>
 #include <CQUtil.h>
+#include <CQUtilRGBA.h>
 
 CQGnuPlotAnnotation::
 CQGnuPlotAnnotation(CQGnuPlotGroup *qgroup, CGnuPlotGroupAnnotation *obj) :

@@ -5,6 +5,7 @@
 #include <CQGnuPlotRenderer.h>
 #include <CQGnuPlotStroke.h>
 #include <CQUtil.h>
+#include <CQUtilGeom.h>
 
 CQGnuPlotArrowObject::
 CQGnuPlotArrowObject(CQGnuPlotPlot *plot) :

@@ -40,7 +40,7 @@ class CGnuPlotGroupAnnotation : public CGnuPlotGroupObject {
 
   virtual void initClip() = 0;
 
-  virtual bool inside(const CGnuPlotMouseEvent &p) const = 0;
+  bool inside(const CGnuPlotMouseEvent &p) const override = 0;
 
   virtual void print(std::ostream &os) const = 0;
 

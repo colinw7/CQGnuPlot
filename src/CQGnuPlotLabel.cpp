@@ -6,6 +6,7 @@
 #include <CQGnuPlotStroke.h>
 #include <CQFontUtil.h>
 #include <CQUtil.h>
+#include <CQUtilGeom.h>
 
 CQGnuPlotLabel::
 CQGnuPlotLabel(CQGnuPlotGroup *group) :

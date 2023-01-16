@@ -2,6 +2,7 @@
 #include <CQGnuPlotGroup.h>
 #include <CGnuPlotRenderer.h>
 #include <CQUtil.h>
+#include <CQUtilGeom.h>
 
 CQGnuPlotEllipse::
 CQGnuPlotEllipse(CQGnuPlotGroup *group) :

@@ -1,6 +1,7 @@
 #include <CQGnuPlotLineStyle.h>
 #include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
+#include <CQUtilRGBA.h>
 
 CQGnuPlotLineStyle::
 CQGnuPlotLineStyle(CGnuPlot *plot) :

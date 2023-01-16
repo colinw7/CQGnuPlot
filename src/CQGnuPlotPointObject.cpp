@@ -3,6 +3,7 @@
 #include <CQGnuPlotUtil.h>
 #include <CQGnuPlotRenderer.h>
 #include <CQUtil.h>
+#include <CQUtilGeom.h>
 
 CQGnuPlotPointObject::
 CQGnuPlotPointObject(CQGnuPlotPlot *plot) :

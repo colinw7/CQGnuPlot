@@ -7,6 +7,7 @@
 #include <CQGnuPlotStroke.h>
 #include <CQFontUtil.h>
 #include <CQUtil.h>
+#include <CQUtilGeom.h>
 
 CQGnuPlotLabelObject::
 CQGnuPlotLabelObject(CQGnuPlotPlot *plot) :

@@ -7,6 +7,7 @@
 #include <CQRealSpin.h>
 #include <CQLineDash.h>
 #include <CQUtil.h>
+#include <CQUtilRGBA.h>
 #include <CQPixmapCache.h>
 #include <QVBoxLayout>
 #include <QStackedWidget>

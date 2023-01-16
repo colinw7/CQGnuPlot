@@ -1,6 +1,7 @@
 #include <CQGnuPlotImageObject.h>
 #include <CQGnuPlotPlot.h>
 #include <CQUtil.h>
+#include <CQUtilGeom.h>
 
 CQGnuPlotImageObject::
 CQGnuPlotImageObject(CQGnuPlotPlot *plot) :

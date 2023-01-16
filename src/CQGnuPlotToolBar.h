@@ -9,7 +9,7 @@ class CQGnuPlotToolBar : public QToolBar {
  public:
   CQGnuPlotToolBar(const QString &text=QString());
 
-  void contextMenuEvent(QContextMenuEvent *e);
+  void contextMenuEvent(QContextMenuEvent *e) override;
 
  private slots:
   void sizeSlot(int);

@@ -40,7 +40,7 @@ class CGnuPlotTimeStampData {
   void show(std::ostream &os) {
     os << "time is \"" << format_ << "\", offset at (" << offset_ << ")";
 
-    if (font_.isValid())
+    if (font_)
       os << ", using font " << font_;
 
     os << std::endl;

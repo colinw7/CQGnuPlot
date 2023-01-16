@@ -3,6 +3,7 @@
 #include <CQGnuPlotUtil.h>
 #include <CGnuPlotRenderer.h>
 #include <CQUtil.h>
+#include <CQUtilGeom.h>
 
 CQGnuPlotColorBox::
 CQGnuPlotColorBox(CQGnuPlotGroup *group) :

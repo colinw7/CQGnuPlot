@@ -3,6 +3,7 @@
 #include <CGnuPlotRenderer.h>
 #include <CQGnuPlotUtil.h>
 #include <CQUtil.h>
+#include <CQUtilGeom.h>
 
 CQGnuPlotRectangle::
 CQGnuPlotRectangle(CQGnuPlotGroup *group) :
