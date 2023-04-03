@@ -6,7 +6,7 @@
 
 CGnuPlotWindow::
 CGnuPlotWindow(CGnuPlot *plot) :
- plot_(0), size_(640, 480)
+ plot_(nullptr), size_(640, 480)
 {
   setApp(plot);
 }

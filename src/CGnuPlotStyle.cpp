@@ -372,7 +372,7 @@ initPalette(const std::string &name)
 {
   auto p = namedColors_.find(name);
 
-  CGnuPlotPalette palette(0);
+  CGnuPlotPalette palette(nullptr);
 
   palette.setColorType(CGradientPalette::ColorType::DEFINED);
 

@@ -11,7 +11,7 @@ class CGnuPlotBoxErrorBarsStyleValue : public CGnuPlotStyleValue {
   typedef CGnuPlotTypes::BoxWidthType BoxWidthType;
 
  public:
-  CGnuPlotBoxErrorBarsStyleValue(CGnuPlotPlot *plot=0) :
+  CGnuPlotBoxErrorBarsStyleValue(CGnuPlotPlot *plot=nullptr) :
    CGnuPlotStyleValue(plot) {
   }
 

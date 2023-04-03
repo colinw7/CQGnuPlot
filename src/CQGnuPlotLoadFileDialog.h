@@ -16,7 +16,7 @@ class CQGnuPlotLoadFileDialog : public CQDialog {
   Q_OBJECT
 
  public:
-  CQGnuPlotLoadFileDialog(QWidget *parent=0);
+  CQGnuPlotLoadFileDialog(QWidget *parent=nullptr);
 
   void createWidgets(QWidget *frame) override;
 

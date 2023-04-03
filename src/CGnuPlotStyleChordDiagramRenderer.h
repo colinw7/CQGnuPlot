@@ -7,7 +7,8 @@
 
 class CGnuPlotStyleChordDiagramRenderer : public ChordDiagramRenderer {
  public:
-  CGnuPlotStyleChordDiagramRenderer(CGnuPlotRenderer *renderer=0, ChordDiagram *chord=0) :
+  CGnuPlotStyleChordDiagramRenderer(CGnuPlotRenderer *renderer=nullptr,
+                                    ChordDiagram *chord=nullptr) :
    renderer_(renderer), chord_(chord) {
   }
 
@@ -67,8 +68,8 @@ class CGnuPlotStyleChordDiagramRenderer : public ChordDiagramRenderer {
   }
 
  private:
-  CGnuPlotRenderer *renderer_ { 0 };
-  ChordDiagram     *chord_    { 0 };
+  CGnuPlotRenderer *renderer_ { nullptr };
+  ChordDiagram     *chord_    { nullptr };
   std::string       palette_  { "chord" };
 };
 

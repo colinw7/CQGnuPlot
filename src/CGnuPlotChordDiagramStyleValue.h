@@ -7,7 +7,7 @@
 
 class CGnuPlotChordDiagramStyleValue : public CGnuPlotStyleValue {
  public:
-  CGnuPlotChordDiagramStyleValue(CGnuPlotPlot *plot=0) :
+  CGnuPlotChordDiagramStyleValue(CGnuPlotPlot *plot=nullptr) :
    CGnuPlotStyleValue(plot) {
   }
 
@@ -34,8 +34,8 @@ class CGnuPlotChordDiagramStyleValue : public CGnuPlotStyleValue {
   void setPalette(const std::string &v) { palette_ = v; }
 
  private:
-  ChordDiagram                      *chord_    { 0 };
-  CGnuPlotStyleChordDiagramRenderer *renderer_ { 0 };
+  ChordDiagram                      *chord_    { nullptr };
+  CGnuPlotStyleChordDiagramRenderer *renderer_ { nullptr };
   bool                               inited_   { false };
   std::string                        palette_  { "chord" };
 };

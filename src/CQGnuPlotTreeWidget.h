@@ -10,7 +10,7 @@ class CQGnuPlotTreeWidget : public QTreeWidget {
   typedef std::map<int,int> ColumnWidths;
 
  public:
-  CQGnuPlotTreeWidget(QWidget *parent=0);
+  CQGnuPlotTreeWidget(QWidget *parent=nullptr);
 
  public slots:
   void fitSlot();

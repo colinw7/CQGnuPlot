@@ -105,7 +105,7 @@ getNodeAt(HierNode *hier, double x, double y) const
       return node;
   }
 
-  return 0;
+  return nullptr;
 }
 
 //---

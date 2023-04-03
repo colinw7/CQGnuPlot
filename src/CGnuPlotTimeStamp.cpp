@@ -26,7 +26,7 @@ draw(CGnuPlotRenderer *renderer)
 
   std::string s;
 
-  time_t t = time(0);
+  time_t t = time(nullptr);
 
   struct tm *tm1 = localtime(&t);
 

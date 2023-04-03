@@ -18,7 +18,7 @@ class CQGnuPlotPositionEdit : public QFrame {
   Q_OBJECT
 
  public:
-  CQGnuPlotPositionEdit(QWidget *w=0);
+  CQGnuPlotPositionEdit(QWidget *w=nullptr);
 
   const CGnuPlotPosition &position() const { return position_; }
   void setPosition(const CGnuPlotPosition &v);
@@ -106,7 +106,7 @@ class CQGnuPlotPositionTypeCombo : public CQIconCombo {
   Q_OBJECT
 
  public:
-  CQGnuPlotPositionTypeCombo(QWidget *w=0);
+  CQGnuPlotPositionTypeCombo(QWidget *w=nullptr);
 };
 
 #endif

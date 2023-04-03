@@ -13,7 +13,7 @@ class CQGnuPlotLoadFunctionDialog : public CQDialog {
   Q_OBJECT
 
  public:
-  CQGnuPlotLoadFunctionDialog(QWidget *parent=0);
+  CQGnuPlotLoadFunctionDialog(QWidget *parent=nullptr);
 
   void createWidgets(QWidget *frame) override;
 

@@ -18,7 +18,7 @@ class CGnuPlotStringColumnFn : public CGnuPlotUsingColsFnObj {
  public:
   CGnuPlotStringColumnFn(CGnuPlotUsingCols *cols) : CGnuPlotUsingColsFnObj(cols) { }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     assert(values.size() == 1);
 
     std::string str;
@@ -42,7 +42,7 @@ class CGnuPlotColumnFn : public CGnuPlotUsingColsFnObj {
  public:
   CGnuPlotColumnFn(CGnuPlotUsingCols *cols) : CGnuPlotUsingColsFnObj(cols) { }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     long icol = 0;
 
     if      (values[0]->isIntegerValue()) {
@@ -90,7 +90,7 @@ class CGnuPlotStringValidFn : public CGnuPlotUsingColsFnObj {
  public:
   CGnuPlotStringValidFn(CGnuPlotUsingCols *cols) : CGnuPlotUsingColsFnObj(cols) { }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     assert(values.size() == 1);
 
     std::string str;

@@ -391,7 +391,7 @@ namespace Springy {
       auto p = edgeSprings_.find(edge->id());
 
       if (p == edgeSprings_.end()) {
-        Spring *existingSpring = 0;
+        Spring *existingSpring = nullptr;
 
         const Edges &from = graph_->getEdges(edge->source(), edge->target());
 
@@ -523,7 +523,7 @@ namespace Springy {
 
     // Find the nearest point to a particular position
     NodePoint nearest(const Vector &p) {
-      Node*  minNode = 0;
+      Node*  minNode = nullptr;
       Point* minPoint;
       double minDistance = 0;
 

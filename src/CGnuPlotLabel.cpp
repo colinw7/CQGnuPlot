@@ -99,7 +99,7 @@ print(std::ostream &os) const
   else if (getLayer() == CGnuPlotTypes::DrawLayer::BEHIND)
     os << " behind";
 
-  if (getFont().isValid())
+  if (getFont())
     os << " font \"" << getFont() << "\"";
 
   if (textColor().isValid())

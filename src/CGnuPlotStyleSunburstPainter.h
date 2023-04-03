@@ -23,7 +23,7 @@ class CGnuPlotStyleSunburstPainter : public CSunburstPainter {
   const std::string &palette() const { return palette_; }
   void setPalette(const std::string &v) { palette_ = v; }
 
-  void drawNode(CSunburst::Node *node) {
+  void drawNode(CSunburst::Node *node) override {
     double xc = 0.0;
     double yc = 0.0;
 
@@ -34,7 +34,7 @@ class CGnuPlotStyleSunburstPainter : public CSunburstPainter {
     double da = node->da();
     double a2 = a1 + da;
 
-    CSunburst::HierNode *parent = 0;
+    CSunburst::HierNode *parent = nullptr;
 
     if (node->parent() && ! node->parent()->isRoot())
       parent = node->parent();

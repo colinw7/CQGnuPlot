@@ -33,7 +33,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   Ids ids;
 
-  CHierBubblePack *pack { 0 };
+  CHierBubblePack *pack { nullptr };
 
   if (! value->isInited()) {
     value->init();
@@ -82,7 +82,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       //---
 
       // create nodes
-      CHierBubblePack::HierNode *hierNode = 0;
+      CHierBubblePack::HierNode *hierNode = nullptr;
 
       for (const auto &n : names) {
         if (! hierNode) {

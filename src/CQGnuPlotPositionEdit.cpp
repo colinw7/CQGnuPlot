@@ -43,7 +43,7 @@ CQGnuPlotPositionGrabMgr::
 removeGrab(CQGnuPlotPositionGrab *grab)
 {
   if (grab == grab_)
-    grab_ = 0;
+    grab_ = nullptr;
 
   grabs_.erase(grab);
 }
@@ -71,7 +71,7 @@ ungrab(CQGnuPlotPositionGrab *grab)
   if (grab_ != grab)
     return;
 
-  grab_ = 0;
+  grab_ = nullptr;
 
   if (grab)
     grab->setChecked(false);
@@ -81,7 +81,7 @@ ungrab(CQGnuPlotPositionGrab *grab)
 
 CQGnuPlotPositionGrab::
 CQGnuPlotPositionGrab(CQGnuPlotPositionEdit *edit) :
- QToolButton(0), edit_(edit)
+ QToolButton(nullptr), edit_(edit)
 {
   setObjectName("grab");
 
@@ -318,7 +318,7 @@ updateStack()
 
 CQGnuPlotCoordSys::
 CQGnuPlotCoordSys(const char *name) :
- CQIconCombo(0)
+ CQIconCombo(nullptr)
 {
   setObjectName(QString("%1coordSys").arg(name));
 

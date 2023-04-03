@@ -103,7 +103,7 @@ open()
         fp_ = fopen(filename_.c_str(), "w");
     }
 
-    return (fp_ != 0);
+    return (fp_ != nullptr);
   }
   else if (isBlock_ && filename_ != "") {
     plot_->getBlock(filename_)->clear();
@@ -119,7 +119,7 @@ close()
   if (fp_) {
     fclose(fp_);
 
-    fp_ = 0;
+    fp_ = nullptr;
   }
 
   valid_ = true;

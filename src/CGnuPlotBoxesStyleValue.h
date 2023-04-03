@@ -11,7 +11,7 @@ class CGnuPlotBoxesStyleValue : public CGnuPlotStyleValue {
   typedef CGnuPlotTypes::BoxWidthType BoxWidthType;
 
  public:
-  CGnuPlotBoxesStyleValue(CGnuPlotPlot *plot=0) :
+  CGnuPlotBoxesStyleValue(CGnuPlotPlot *plot=nullptr) :
    CGnuPlotStyleValue(plot) {
   }
 

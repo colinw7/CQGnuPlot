@@ -44,7 +44,7 @@ class CGnuPlotLineType {
 
   SymbolType symbolType() const;
 
-  CRGBA calcColor(const CGnuPlotGroup *group=0, const CRGBA &c=CRGBA(0,0,0)) const;
+  CRGBA calcColor(const CGnuPlotGroup *group=nullptr, const CRGBA &c=CRGBA(0, 0, 0)) const;
 
   CLineDash calcDash(CGnuPlot *plot, const CLineDash &d=CLineDash()) const;
 

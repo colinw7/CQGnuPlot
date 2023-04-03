@@ -10,7 +10,7 @@ class CQGnuPlotSaveDialog : public CQDialog {
   Q_OBJECT
 
  public:
-  CQGnuPlotSaveDialog(QWidget *parent=0);
+  CQGnuPlotSaveDialog(QWidget *parent=nullptr);
 
   void createWidgets(QWidget *frame) override;
 

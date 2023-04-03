@@ -192,7 +192,7 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   if (! key->isDisplayed()) return;
 
-  if (key->getFont().isValid())
+  if (key->getFont())
     renderer->setFont(key->getFont());
 
   CGnuPlotFill fill(plot);
@@ -291,7 +291,7 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   int pi = 0;
 
   for (const auto &v : values) {
-    CGnuPlotPieObject *pieObject = 0;
+    CGnuPlotPieObject *pieObject = nullptr;
 
     if (! renderer->isPseudo())
       pieObject = plot->pieObjects()[pi];

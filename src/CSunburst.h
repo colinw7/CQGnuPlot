@@ -211,7 +211,7 @@ class CSunburst {
     typedef std::vector<HierNode *> Children;
 
    public:
-    HierNode(HierNode *parent=0, const std::string &name="") :
+    HierNode(HierNode *parent=nullptr, const std::string &name="") :
      Node(parent, name) {
       if (parent_)
         parent_->children_.push_back(this);
@@ -357,7 +357,7 @@ class CSunburst {
   class RootNode : public HierNode {
    public:
     RootNode(const std::string &name="") :
-     HierNode(0, name) {
+     HierNode(nullptr, name) {
     }
 
     bool isRoot() const override { return true; }

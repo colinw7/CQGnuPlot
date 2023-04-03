@@ -12,7 +12,7 @@ class CGnuPlotFill {
   typedef CGnuPlotTypes::FillPattern FillPattern;
 
  public:
-  CGnuPlotFill(CGnuPlotPlot *plot=0);
+  CGnuPlotFill(CGnuPlotPlot *plot=nullptr);
 
   virtual ~CGnuPlotFill() { }
 
@@ -33,7 +33,7 @@ class CGnuPlotFill {
   void setPattern(const FillPattern &p) { pattern_ = p; }
 
  protected:
-  CGnuPlotPlot* plot_    { 0 };
+  CGnuPlotPlot* plot_    { nullptr };
   CRGBA         color_;
   CRGBA         bg_;
   FillType      type_    { FillType::EMPTY };

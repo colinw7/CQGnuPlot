@@ -36,8 +36,8 @@ class CQGnuPlotWindow : public CGnuPlotWindow {
   typedef std::vector<QObject *> Objects;
 
   struct ProbeWidget {
-    CQRubberBand* line { 0 };
-    CQFloatLabel* tip  { 0 };
+    CQRubberBand* line { nullptr };
+    CQFloatLabel* tip  { nullptr };
 
     ProbeWidget(CQGnuPlotCanvas *canvas);
    ~ProbeWidget();
@@ -46,7 +46,7 @@ class CQGnuPlotWindow : public CGnuPlotWindow {
   typedef std::vector<ProbeWidget *> ProbeWidgets;
 
  public:
-  CQGnuPlotWindow(CQGnuPlot *plot=0);
+  CQGnuPlotWindow(CQGnuPlot *plot=nullptr);
 
   void setApp(CQGnuPlot *plot);
   CQGnuPlot *qapp() const { return plot_; }
@@ -64,7 +64,7 @@ class CQGnuPlotWindow : public CGnuPlotWindow {
 
   virtual void updateProperties() { }
 
-  virtual CQGnuPlotGroup *getGroupAt(const CPoint2D &) { return 0; }
+  virtual CQGnuPlotGroup *getGroupAt(const CPoint2D &) { return nullptr; }
 
   virtual void setCurrentGroup(CQGnuPlotGroup *) { }
 
@@ -81,7 +81,7 @@ class CQGnuPlotWindow : public CGnuPlotWindow {
   virtual void showPos(const QString &, double, double, double, double) { }
 
  protected:
-  CQGnuPlot* plot_ { 0 };
+  CQGnuPlot* plot_ { nullptr };
 };
 
 //---
@@ -243,34 +243,34 @@ class CQGnuPlotMainWindow : public QMainWindow, public CQGnuPlotWindow {
   static uint lastId;
 
   uint                            id_               { 0 };
-  CQGnuPlotRenderer*              renderer_         { 0 };
-  CQGnuPlotCanvas*                canvas_           { 0 };
-  CQPropertyTree*                 tree_             { 0 };
-  CQGnuPlotDataDialog*            dataDialog_       { 0 };
-  CQGnuPlotCreateDialog*          createDialog_     { 0 };
-  CQGnuPlotManageFunctionsDialog* manageFnsDialog_  { 0 };
-  CQGnuPlotManageVariablesDialog* manageVarsDialog_ { 0 };
-  CQGnuPlotPaletteDialog*         paletteDialog_    { 0 };
-  QLineEdit*                      edit_             { 0 };
+  CQGnuPlotRenderer*              renderer_         { nullptr };
+  CQGnuPlotCanvas*                canvas_           { nullptr };
+  CQPropertyTree*                 tree_             { nullptr };
+  CQGnuPlotDataDialog*            dataDialog_       { nullptr };
+  CQGnuPlotCreateDialog*          createDialog_     { nullptr };
+  CQGnuPlotManageFunctionsDialog* manageFnsDialog_  { nullptr };
+  CQGnuPlotManageVariablesDialog* manageVarsDialog_ { nullptr };
+  CQGnuPlotPaletteDialog*         paletteDialog_    { nullptr };
+  QLineEdit*                      edit_             { nullptr };
   RealEdits                       redits_;
   IntegerEdits                    iedits_;
   RealSliders                     rsliders_;
-  QTimer*                         propTimer_        { 0 };
-  QLabel*                         plotLabel_        { 0 };
-  QLabel*                         posLabel_         { 0 };
-  CQGnuPlotGroup*                 currentGroup_     { 0 };
+  QTimer*                         propTimer_        { nullptr };
+  QLabel*                         plotLabel_        { nullptr };
+  QLabel*                         posLabel_         { nullptr };
+  CQGnuPlotGroup*                 currentGroup_     { nullptr };
   Mode                            mode_             { Mode::SELECT };
   bool                            showPixels_       { false };
-  QAction*                        selectAction_     { 0 };
-  QAction*                        moveAction_       { 0 };
-  QAction*                        zoomAction_       { 0 };
-  QAction*                        probeAction_      { 0 };
-  QAction*                        pointsAction_     { 0 };
-  CQZoomRegion*                   zoomRegion_       { 0 };
+  QAction*                        selectAction_     { nullptr };
+  QAction*                        moveAction_       { nullptr };
+  QAction*                        zoomAction_       { nullptr };
+  QAction*                        probeAction_      { nullptr };
+  QAction*                        pointsAction_     { nullptr };
+  CQZoomRegion*                   zoomRegion_       { nullptr };
   CPoint2D                        zoomPress_        { 0, 0 };
   CPoint2D                        zoomRelease_      { 0, 0 };
-  CQGnuPlotGroup*                 zoomGroup_        { 0 };
-  CQCursor*                       cursor_           { 0 };
+  CQGnuPlotGroup*                 zoomGroup_        { nullptr };
+  CQCursor*                       cursor_           { nullptr };
   ProbeWidgets                    probeWidgets_     { 0 };
   bool                            tipOutside_       { false };
   mutable bool                    escape_           { false };

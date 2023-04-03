@@ -50,11 +50,11 @@ struct CGnuPlotTextLine {
 struct CGnuPlotTextState {
   typedef std::vector<CGnuPlotTextLine> Lines;
 
-  CGnuPlotTextState(CGnuPlotTextRenderer *r=0) :
+  CGnuPlotTextState(CGnuPlotTextRenderer *r=nullptr) :
    renderer(r) {
   }
 
-  CGnuPlotTextRenderer *renderer { 0 };
+  CGnuPlotTextRenderer *renderer { nullptr };
   CFontPtr              font;
   CPoint2D              pos { 0, 0 };
   Lines                 lines;

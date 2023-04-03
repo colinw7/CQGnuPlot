@@ -37,7 +37,7 @@ class CGnuPlotDelaunayStyleValue : public CGnuPlotStyleValue {
   }
 
  private:
-  CDelaunay *delaunay_  { 0 };
+  CDelaunay *delaunay_  { nullptr };
   bool       inited_    { false };
   bool       clipped_   { false };
   CRGBA      lineColor_ { 0, 0, 0.8 };

@@ -71,7 +71,7 @@ class CGnuPlotColorBox {
   typedef std::pair<CVAlignType,double> VAlignPos;
 
  public:
-  CGnuPlotColorBox(CGnuPlotGroup *group=0);
+  CGnuPlotColorBox(CGnuPlotGroup *group=nullptr);
 
   virtual ~CGnuPlotColorBox();
 
@@ -129,7 +129,7 @@ class CGnuPlotColorBox {
   virtual void draw(CGnuPlotRenderer *renderer);
 
  private:
-  CGnuPlotGroup*       group_ { 0 };
+  CGnuPlotGroup*       group_ { nullptr };
   CGnuPlotColorBoxData data_;
   mutable CBBox2D      bbox_;
 };

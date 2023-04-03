@@ -6,7 +6,7 @@
 
 class CGnuPlotPieChartStyleValue : public CGnuPlotStyleValue {
  public:
-  CGnuPlotPieChartStyleValue(CGnuPlotPlot *plot=0) :
+  CGnuPlotPieChartStyleValue(CGnuPlotPlot *plot=nullptr) :
    CGnuPlotStyleValue(plot) {
   }
 

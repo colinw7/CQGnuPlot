@@ -62,7 +62,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  CDelaunay *delaunay { 0 };
+  CDelaunay *delaunay { nullptr };
 
   bool clipped = clip.isOn();
 

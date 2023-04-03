@@ -36,7 +36,7 @@ class CGnuPlotForceDirectedStyleValue : public CGnuPlotStyleValue {
   void setAnimating(bool b) { animating_ = b; }
 
  private:
-  CForceDirected *forceDirected_ { 0 };
+  CForceDirected *forceDirected_ { nullptr };
   bool            inited_        { false };
   std::string     palette_       { "adjacency" };
   double          circleSize_    { 12 };

@@ -692,7 +692,7 @@ mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip)
 
   {
     double                  minArea    = -1;
-    CQGnuPlotPolygonObject *minPolygon = 0;
+    CQGnuPlotPolygonObject *minPolygon = nullptr;
 
     for (auto &polygon : polygonObjects()) {
       if (! polygon->inside(mouseEvent))
@@ -894,7 +894,7 @@ CQGnuPlotPlotBoxBarObjects::
 firstBar() const
 {
   if (plot_->boxBarObjects().empty())
-    return 0;
+    return nullptr;
 
   return dynamic_cast<CQGnuPlotBoxBarObject *>(plot_->boxBarObjects()[0]);
 }
@@ -940,7 +940,7 @@ CQGnuPlotPlotPieObjects::
 firstPie() const
 {
   if (plot_->pieObjects().empty())
-    return 0;
+    return nullptr;
 
   return dynamic_cast<CQGnuPlotPieObject *>(plot_->pieObjects()[0]);
 }
@@ -1012,7 +1012,7 @@ CQGnuPlotPlotPointObjects::
 firstPoint() const
 {
   if (plot_->pointObjects().empty())
-    return 0;
+    return nullptr;
 
   return dynamic_cast<CQGnuPlotPointObject *>(plot_->pointObjects()[0]);
 }

@@ -219,7 +219,7 @@ drawKey(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   if (! key->isDisplayed()) return;
 
-  if (key->getFont().isValid())
+  if (key->getFont())
     renderer->setFont(key->getFont());
 
   CGnuPlotFill fill(plot);

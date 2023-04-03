@@ -11,12 +11,12 @@ CGnuPlotLabelData::
 CGnuPlotLabelData(CGnuPlotGroup *group) :
  group_(group)
 {
-  if (! defFont_.isValid())
+  if (! defFont_)
     defFont_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
 
   if (group) {
-    boxFill_   = group->app()->device()->createFill  (0);
-    boxStroke_ = group->app()->device()->createStroke(0);
+    boxFill_   = group->app()->device()->createFill  (nullptr);
+    boxStroke_ = group->app()->device()->createStroke(nullptr);
   }
 }
 
@@ -24,7 +24,7 @@ CGnuPlotLabelData::
 CGnuPlotLabelData(CGnuPlotPlot *plot) :
  plot_(plot)
 {
-  if (! defFont_.isValid())
+  if (! defFont_)
     defFont_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 12);
 
   boxFill_   = plot->createFill();
@@ -52,8 +52,8 @@ dup() const
   data->labelStyle_ =  labelStyle_;
   data->textColor_  =  textColor_;
   data->lineType_   =  lineType_;
-  data->boxFill_    =  (boxFill_   ? boxFill_  ->dup() : 0);
-  data->boxStroke_  =  (boxStroke_ ? boxStroke_->dup() : 0);
+  data->boxFill_    =  (boxFill_   ? boxFill_  ->dup() : nullptr);
+  data->boxStroke_  =  (boxStroke_ ? boxStroke_->dup() : nullptr);
   data->hypertext_  =  hypertext_;
   data->pointSize_  =  pointSize_;
   data->pointWidth_ =  pointWidth_;
@@ -68,8 +68,8 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
   if (! group_ && ! plot_) {
     CGnuPlotLabelData *th = const_cast<CGnuPlotLabelData *>(this);
 
-    th->boxFill_   = group->app()->device()->createFill  (0);
-    th->boxStroke_ = group->app()->device()->createStroke(0);
+    th->boxFill_   = group->app()->device()->createFill  (nullptr);
+    th->boxStroke_ = group->app()->device()->createStroke(nullptr);
 
     th->group_ = group;
   }
@@ -79,7 +79,7 @@ draw(CGnuPlotRenderer *renderer, CGnuPlotGroup *group, bool highlighted) const
   // get font, align and angle
   CFontPtr font1 = defFont_;
 
-  if (getFont().isValid())
+  if (getFont())
     font1 = getFont();
 
   renderer->setFont(font1);

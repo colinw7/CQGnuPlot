@@ -7,7 +7,8 @@
 
 class CGnuPlotStyleAdjacencyRenderer : public CAdjacencyRenderer {
  public:
-  CGnuPlotStyleAdjacencyRenderer(CGnuPlotRenderer *renderer=0, CAdjacency *adjacency=0) :
+  CGnuPlotStyleAdjacencyRenderer(CGnuPlotRenderer *renderer=nullptr,
+                                 CAdjacency *adjacency=nullptr) :
    renderer_(renderer), adjacency_(adjacency) {
   }
 

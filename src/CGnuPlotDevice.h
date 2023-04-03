@@ -112,7 +112,7 @@ class CGnuPlotDevice {
 
   CGnuPlotWindowP multiWindow() const { return multiWindow_; }
   void setMultiWindow(const CGnuPlotWindowP &w) { multiWindow_ = w; }
-  void resetMultiWindow() { multiWindow_ = 0; }
+  void resetMultiWindow() { multiWindow_ = nullptr; }
 
   const Windows &windows() const { return windows_; }
 
@@ -227,14 +227,14 @@ class CGnuPlotDevice {
   virtual void show(std::ostream &os) const;
 
  protected:
-  CGnuPlot*       plot_      { 0 };
+  CGnuPlot*       plot_      { nullptr };
   std::string     name_;
   CISize2D        size_      { 600, 480 };
   bool            enhanced_  { true };
   CFontPtr        font_;
   double          fontScale_ { 1 };
   bool            dashed_    { false };
-  bool            lineWidth_ { 0 };
+  double          lineWidth_ { 0 };
   Windows         windows_;
   CGnuPlotWindowP multiWindow_;
 };

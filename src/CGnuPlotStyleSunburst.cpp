@@ -17,7 +17,7 @@ class CGnuPlotStyleSunburstVisitor : public CSunburstVisitor {
 
   int numNodes() const { return numNodes_; }
 
-  void visitNode(CSunburst::Node *) {
+  void visitNode(CSunburst::Node *) override {
     ++numNodes_;
   }
 
@@ -81,7 +81,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       std::string key;
 
-      CSunburst::HierNode *parentNode = 0;
+      CSunburst::HierNode *parentNode = nullptr;
 
       for (int i = 0; i < nv - 2; ++i) {
         std::string group;
@@ -96,7 +96,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
         auto pg = groups.find(key);
 
-        CSunburst::HierNode *hierNode = 0;
+        CSunburst::HierNode *hierNode = nullptr;
 
         if (pg == groups.end()) {
           if (parentNode) {
@@ -130,7 +130,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       std::string group;
 
-      CSunburst::Node *node = 0;
+      CSunburst::Node *node = nullptr;
 
       if (parentNode)
         node = sunburst->addNode(parentNode, name, valuen);

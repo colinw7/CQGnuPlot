@@ -155,7 +155,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  CGnuPlotBoxObject *tempBoxObj = 0;
+  CGnuPlotBoxObject *tempBoxObj = nullptr;
 
   if (! renderer->isPseudo())
     plot->updateBoxCacheSize(int(iyv.size() + inds.size()));

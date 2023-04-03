@@ -50,7 +50,7 @@ fitSlot()
 
     columnWidths[c] = qMax(columnWidths[c], fm.horizontalAdvance(str) + 10);
 
-    QWidget *w = (qheader ? qheader->widget(c) : 0);
+    QWidget *w = (qheader ? qheader->widget(c) : nullptr);
 
     if (w)
       columnWidths[c] = qMax(columnWidths[c], w->sizeHint().width() + 8);

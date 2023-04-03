@@ -29,7 +29,7 @@ calcLineWidth(CGnuPlotGroup *group) const
   if (group)
     return style().lineWidth(group->app());
   else
-    return style().lineWidth(0);
+    return style().lineWidth(nullptr);
 }
 
 void

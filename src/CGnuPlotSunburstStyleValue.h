@@ -8,7 +8,7 @@
 
 class CGnuPlotSunburstStyleValue : public CGnuPlotStyleValue {
  public:
-  CGnuPlotSunburstStyleValue(CGnuPlotPlot *plot=0) :
+  CGnuPlotSunburstStyleValue(CGnuPlotPlot *plot=nullptr) :
    CGnuPlotStyleValue(plot) {
     font_ = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, 6);
   }
@@ -43,10 +43,10 @@ class CGnuPlotSunburstStyleValue : public CGnuPlotStyleValue {
   void setStartAngle(double r) { startAngle_ = r; }
 
  private:
-  CSunburst*  sunburst_    { 0 };
+  CSunburst*  sunburst_    { nullptr };
   bool        inited_      { false };
   CFontPtr    font_;
-  CRGBA       borderColor_ { 0,0,0 };
+  CRGBA       borderColor_ { 0, 0, 0 };
   std::string palette_     { "sunburst" };
   double      innerRadius_ { 0.5 };
   double      startAngle_  { -90 };

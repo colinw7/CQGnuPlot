@@ -67,7 +67,7 @@ class CGnuPlotTitle {
   typedef std::pair<CVAlignType,double> VAlignPos;
 
  public:
-  CGnuPlotTitle(CGnuPlotGroup *group=0);
+  CGnuPlotTitle(CGnuPlotGroup *group=nullptr);
 
   virtual ~CGnuPlotTitle() { }
 
@@ -104,7 +104,7 @@ class CGnuPlotTitle {
   virtual void draw(CGnuPlotRenderer *renderer) const;
 
  private:
-  CGnuPlotGroup*    group_ { 0 };
+  CGnuPlotGroup*    group_ { nullptr };
   CGnuPlotTitleData data_;
   bool              displayed_ { true };
   mutable CBBox2D   bbox_;

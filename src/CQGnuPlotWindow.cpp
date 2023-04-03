@@ -501,7 +501,7 @@ addProperties()
   //---
 
   CQGnuPlotMultiplot *qmultiplot = (plot_->multiplot().isValid() ?
-    static_cast<CQGnuPlotMultiplot *>(plot_->multiplot().getPtr()) : 0);
+    static_cast<CQGnuPlotMultiplot *>(plot_->multiplot().getPtr()) : nullptr);
 
   if (qmultiplot) {
     QString multiplotName("Multiplot");
@@ -772,12 +772,12 @@ addGroupProperties(CGnuPlotGroup *group)
 
   for (auto &vann : group->annotations()) {
     for (auto &ann : vann.second) {
-      CGnuPlotArrow     *arrow   = 0;
-      CGnuPlotCircle    *circle  = 0;
-      CGnuPlotEllipse   *ellipse = 0;
-      CGnuPlotLabel     *label   = 0;
-      CGnuPlotPolygon   *poly    = 0;
-      CGnuPlotRectangle *rect    = 0;
+      CGnuPlotArrow     *arrow   = nullptr;
+      CGnuPlotCircle    *circle  = nullptr;
+      CGnuPlotEllipse   *ellipse = nullptr;
+      CGnuPlotLabel     *label   = nullptr;
+      CGnuPlotPolygon   *poly    = nullptr;
+      CGnuPlotRectangle *rect    = nullptr;
 
       if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann.get()))) {
         QString arrowName =
@@ -2146,7 +2146,7 @@ showData()
   CQGnuPlotGroup *currentGroup = this->currentGroup();
 
   if (currentGroup) {
-    CGnuPlotPlot *currentPlot = 0;
+    CGnuPlotPlot *currentPlot = nullptr;
 
     for (auto plot : currentGroup->plots())
       currentPlot = plot.get();
@@ -2411,7 +2411,7 @@ saveDevice(const QString &filename, const QString &deviceName, int width, int he
 
   app()->setOutputFile(filename.toStdString());
 
-  CGnuPlotRenderer *renderer = 0;
+  CGnuPlotRenderer *renderer = nullptr;
 
   if      (deviceName == "svg") {
     CGnuPlotSVGRenderer *svgRenderer =
@@ -2628,7 +2628,7 @@ getGroupAt(const CPoint2D &p)
       return qgroup;
   }
 
-  return 0;
+  return nullptr;
 }
 
 void
@@ -3132,7 +3132,7 @@ mouseTip(const CGnuPlotMouseEvent &mouseEvent, CGnuPlotTipData &tip)
       return true;
   }
 
-  highlightObject(0);
+  highlightObject(nullptr);
 
   return false;
 }

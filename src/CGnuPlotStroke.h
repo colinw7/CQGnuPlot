@@ -11,7 +11,7 @@ class CGnuPlotPlot;
 
 class CGnuPlotStroke {
  public:
-  CGnuPlotStroke(CGnuPlotPlot *plot=0);
+  CGnuPlotStroke(CGnuPlotPlot *plot=nullptr);
 
   virtual ~CGnuPlotStroke() { }
 
@@ -41,7 +41,7 @@ class CGnuPlotStroke {
   void setMitreLimit(double mlimit) { mlimit_ = mlimit; }
 
  protected:
-  CGnuPlotPlot* plot_    { 0 };
+  CGnuPlotPlot* plot_    { nullptr };
   bool          enabled_ { false };
   CRGBA         color_   { 0, 0, 0 };
   double        width_   { 1 };

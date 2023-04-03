@@ -20,7 +20,7 @@ class CQGnuPlotCreateDialog : public CQDialog {
   Q_OBJECT
 
  public:
-  CQGnuPlotCreateDialog(QWidget *parent=0);
+  CQGnuPlotCreateDialog(QWidget *parent=nullptr);
 
   void createWidgets(QWidget *frame) override;
 

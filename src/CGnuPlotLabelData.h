@@ -17,7 +17,7 @@ class CGnuPlotLabelData {
   typedef std::pair<CVAlignType,double> VAlignPos;
 
  public:
-  CGnuPlotLabelData(CGnuPlotGroup *group=0);
+  CGnuPlotLabelData(CGnuPlotGroup *group=nullptr);
   CGnuPlotLabelData(CGnuPlotPlot *plot);
  ~CGnuPlotLabelData();
 
@@ -102,8 +102,8 @@ class CGnuPlotLabelData {
  protected:
   static CFontPtr defFont_;
 
-  CGnuPlotGroup*     group_ { 0 };
-  CGnuPlotPlot*      plot_  { 0 };
+  CGnuPlotGroup*     group_ { nullptr };
+  CGnuPlotPlot*      plot_  { nullptr };
   std::string        text_;
   CGnuPlotPosition   pos_;
   COptReal           angle_;
@@ -111,8 +111,8 @@ class CGnuPlotLabelData {
   CGnuPlotLabelStyle labelStyle_;
   CGnuPlotColorSpec  textColor_;
   int                lineType_   { -1 };
-  CGnuPlotFill*      boxFill_    { 0 };
-  CGnuPlotStroke*    boxStroke_  { 0 };
+  CGnuPlotFill*      boxFill_    { nullptr };
+  CGnuPlotStroke*    boxStroke_  { nullptr };
   bool               hypertext_  { false };
   double             pointSize_  { 1 };
   double             pointWidth_ { 1 };

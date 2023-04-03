@@ -39,7 +39,7 @@ app() const
   if (window_)
     return window_->app();
   else
-    return 0;
+    return nullptr;
 }
 
 void
@@ -177,7 +177,7 @@ set3D(bool b)
     }
   }
   else {
-    pm3D_ = 0;
+    pm3D_ = nullptr;
   }
 }
 
@@ -247,12 +247,12 @@ addAnnotation(CGnuPlotGroupAnnotation *ann)
 
   CGnuPlotDevice *device = plot->device();
 
-  CGnuPlotArrow     *arrow   = 0;
-  CGnuPlotCircle    *circle  = 0;
-  CGnuPlotEllipse   *ellipse = 0;
-  CGnuPlotLabel     *label   = 0;
-  CGnuPlotPolygon   *poly    = 0;
-  CGnuPlotRectangle *rect    = 0;
+  CGnuPlotArrow     *arrow   = nullptr;
+  CGnuPlotCircle    *circle  = nullptr;
+  CGnuPlotEllipse   *ellipse = nullptr;
+  CGnuPlotLabel     *label   = nullptr;
+  CGnuPlotPolygon   *poly    = nullptr;
+  CGnuPlotRectangle *rect    = nullptr;
 
   if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann))) {
     varAnnotations_[ann->varName()].push_back(
@@ -1439,7 +1439,7 @@ getPlotAxis(AxisType type, int ind, bool create) const
   auto p = th->axes_.find(type);
 
   if (p == th->axes_.end()) {
-    if (! create) return 0;
+    if (! create) return nullptr;
 
     p = th->axes_.insert(p, Axes::value_type(type, IAxes()));
   }
@@ -1449,7 +1449,7 @@ getPlotAxis(AxisType type, int ind, bool create) const
   auto p1 = iaxis.find(ind);
 
   if (p1 == iaxis.end()) {
-    if (! create) return 0;
+    if (! create) return nullptr;
 
     const CGnuPlotAxisData &axisData = this->axis(type, ind);
 

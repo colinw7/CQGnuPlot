@@ -98,7 +98,7 @@ class CDendrogram {
     typedef std::vector<HierNode *> Children;
 
    public:
-    HierNode(HierNode *parent=0, const std::string &name="");
+    HierNode(HierNode *parent=nullptr, const std::string &name="");
 
     double size() const override;
 
@@ -226,7 +226,7 @@ class CDendrogram {
   void printGaps();
 
  private:
-  RootNode *root_ { 0 };
+  RootNode *root_ { nullptr };
 };
 
 #endif

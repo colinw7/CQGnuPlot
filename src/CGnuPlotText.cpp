@@ -190,7 +190,7 @@ bool
 CGnuPlotText::
 readPart(CParseLine &line, CGnuPlotTextPart **part)
 {
-  *part = 0;
+  *part = nullptr;
 
   if (! line.isValid())
     return false;

@@ -31,7 +31,7 @@ createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &i
 
   CQGnuPlotVariablesDelegate *th = const_cast<CQGnuPlotVariablesDelegate *>(this);
 
-  QWidget *w = 0;
+  QWidget *w = nullptr;
 
   if (CQGnuPlotVariableItem::isType(item->type())) {
     CQGnuPlotVariableItem *item1 = dynamic_cast<CQGnuPlotVariableItem *>(item);
@@ -219,7 +219,8 @@ drawString(QPainter *painter, const QStyleOptionViewItem &option,
 CQGnuPlotVariableItem::
 CQGnuPlotVariableItem(CQGnuPlotManageVariablesDialog *dialog, QTreeWidgetItem *parent,
                       CExprVariablePtr var) :
- QObject(), QTreeWidgetItem(parent, VARIABLE_ITEM_TYPE), dialog_(dialog), var_(var), widget_(0)
+ QObject(), QTreeWidgetItem(parent, VARIABLE_ITEM_TYPE), dialog_(dialog),
+ var_(var), widget_(nullptr)
 {
   CExprValuePtr value = var_->value();
 
@@ -235,7 +236,7 @@ CQGnuPlotVariableItem(CQGnuPlotManageVariablesDialog *dialog, QTreeWidgetItem *p
 */
 CQGnuPlotVariableItem::
 CQGnuPlotVariableItem(const CQGnuPlotVariableItem &item) :
- QObject(), QTreeWidgetItem(item), dialog_(item.dialog_), var_(item.var_), widget_(0)
+ QObject(), QTreeWidgetItem(item), dialog_(item.dialog_), var_(item.var_), widget_(nullptr)
 {
   CExprValuePtr value = var_->value();
 
@@ -461,7 +462,7 @@ updateVariables()
 
     (void) v->getStringValue(value);
 
-    QTreeWidgetItem *item = new CQGnuPlotVariableItem(this, 0, var);
+    QTreeWidgetItem *item = new CQGnuPlotVariableItem(this, nullptr, var);
 
     tree_->addTopLevelItem(item);
 

@@ -4,7 +4,7 @@
 
 CGnuPlotGroupObject::
 CGnuPlotGroupObject(CGnuPlotGroup *group) :
- CGnuPlotObject(group ? group->app() : 0), group_(group)
+ CGnuPlotObject(group ? group->app() : nullptr), group_(group)
 {
 }
 
@@ -12,7 +12,7 @@ CGnuPlotGroupObject(CGnuPlotGroup *group) :
 
 CGnuPlotPlotObject::
 CGnuPlotPlotObject(CGnuPlotPlot *plot) :
- CGnuPlotObject(plot ? plot->app() : 0), plot_(plot)
+ CGnuPlotObject(plot ? plot->app() : nullptr), plot_(plot)
 {
 }
 

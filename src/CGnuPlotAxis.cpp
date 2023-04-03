@@ -668,7 +668,7 @@ drawAxis()
 
     // Draw Minor Ticks (use user defined distribution if defined)
 
-    if      (getTickSpaces() == 0) {
+    if      (getTickSpaces() == nullptr) {
       if (! hasMinorTicLabels()) {
         double mpos1 = unmapLogValue(pos1);
         double mpos2 = unmapLogValue(pos2);
@@ -911,7 +911,7 @@ void
 CGnuPlotAxis::
 drawTickLabel(double pos, const std::string &str, bool first)
 {
-  if (ticFont().isValid())
+  if (ticFont())
     renderer_->setFont(ticFont());
 
   CPoint3D p = valueToPoint(reverse_ ? end_ - (pos - start_) : pos, first, ! isBorderTics());
@@ -999,7 +999,7 @@ void
 CGnuPlotAxis::
 drawAxisLabelStr(double pos, const std::string &str, int maxSize, bool first)
 {
-  if (labelFont().isValid())
+  if (labelFont())
     renderer_->setFont(labelFont());
 
   CRGBA c = labelColor().color();

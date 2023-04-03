@@ -5,7 +5,7 @@
 CGnuPlotPalette::
 CGnuPlotPalette(CGnuPlotGroup *group)
 {
-  pal_ = new CGradientPalette(group ? group->app()->expr() : 0);
+  pal_ = new CGradientPalette(group ? group->app()->expr() : nullptr);
 }
 
 CGnuPlotPalette::

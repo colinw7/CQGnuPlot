@@ -11,7 +11,7 @@ class CGnuPlotWindow {
   typedef std::vector<CGnuPlotGroupP> Groups;
 
  public:
-  CGnuPlotWindow(CGnuPlot *plot=0);
+  CGnuPlotWindow(CGnuPlot *plot=nullptr);
 
   virtual ~CGnuPlotWindow();
 
@@ -54,7 +54,7 @@ class CGnuPlotWindow {
   void draw();
 
  private:
-  CGnuPlot* plot_     { 0 };
+  CGnuPlot* plot_     { nullptr };
   CISize2D  size_     { 100, 100 };
   bool      is3D_     { false };
   Groups    groups_;

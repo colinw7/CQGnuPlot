@@ -50,7 +50,7 @@ draw(CGnuPlotRenderer *renderer)
 
   //---
 
-  if (getFont().isValid())
+  if (getFont())
     renderer_->setFont(getFont());
 
   //---
@@ -226,7 +226,7 @@ void
 CGnuPlotKey::
 drawClustered()
 {
-  if (getFont().isValid())
+  if (getFont())
     renderer_->setFont(getFont());
 
   //---
@@ -429,7 +429,7 @@ void
 CGnuPlotKey::
 drawColumnStacked()
 {
-  if (getFont().isValid())
+  if (getFont())
     renderer_->setFont(getFont());
 
   //---

@@ -105,7 +105,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     labelData->setAlign(value->align());
 
-    if (value->font().isValid())
+    if (value->font())
       labelData->setFont(value->font());
 
     labelData->setOffset(value->offset());
@@ -158,7 +158,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
     //---
 
-    if (value->font().isValid())
+    if (value->font())
       renderer->setFont(value->font());
 
     if (enhanced)
@@ -287,7 +287,7 @@ draw3D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
       CFontPtr font1 = font;
 
-      if (value->font().isValid())
+      if (value->font())
         font1 = value->font();
 
       renderer->setFont(font1);

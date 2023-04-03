@@ -28,7 +28,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  CDendrogram *dendrogram { 0 };
+  CDendrogram *dendrogram { nullptr };
 
   if (! value_->isInited()) {
     value_->init();
@@ -77,7 +77,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
       //---
 
       // create nodes
-      CDendrogram::HierNode *hierNode = 0;
+      CDendrogram::HierNode *hierNode = nullptr;
 
       for (const auto &n : names) {
         if (! hierNode) {
@@ -130,7 +130,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
   CDendrogram::HierNode *root = dendrogram->root();
 
   if (root) {
-    drawNode(renderer, 0, root);
+    drawNode(renderer, nullptr, root);
 
     drawNodes(renderer, root, 0);
   }

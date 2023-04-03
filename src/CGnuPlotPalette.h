@@ -12,7 +12,7 @@ class CGnuPlotPalette {
   typedef CGradientPalette::ColorModel ColorModel;
 
  public:
-  CGnuPlotPalette(CGnuPlotGroup *group=0);
+  CGnuPlotPalette(CGnuPlotGroup *group=nullptr);
 
   virtual ~CGnuPlotPalette();
 
@@ -97,8 +97,8 @@ class CGnuPlotPalette {
   }
 
  private:
-  CGnuPlotGroup*    group_ { 0 };
-  CGradientPalette* pal_   { 0 };
+  CGnuPlotGroup*    group_ { nullptr };
+  CGradientPalette* pal_   { nullptr };
 };
 
 typedef std::unique_ptr<CGnuPlotPalette> CGnuPlotPaletteP;

@@ -30,7 +30,7 @@ class CGnuPlotBubbleStyleValue : public CGnuPlotStyleValue {
   void setPalette(const std::string &v) { palette_ = v; }
 
  private:
-  CBubblePack *pack_    { 0 };
+  CBubblePack *pack_    { nullptr };
   bool         inited_  { false };
   std::string  palette_ { "subtle" };
 };

@@ -449,7 +449,7 @@ filterSlot()
       CGnuPlot::Params params;
 
       if (usingStr != "")
-        usingCols.decodeValues(0, setNum, lineNum, values, bad, newValues, params);
+        usingCols.decodeValues(nullptr, setNum, lineNum, values, bad, newValues, params);
       else
         newValues = values;
 
@@ -535,7 +535,7 @@ filterSlot()
         CGnuPlot::Params params;
 
         if (usingStr != "")
-          usingCols.decodeValues(0, setNum, lineNum, values, bad, newValues, params);
+          usingCols.decodeValues(nullptr, setNum, lineNum, values, bad, newValues, params);
         else
           newValues = values;
 
@@ -626,7 +626,7 @@ filterSlot()
           CGnuPlot::Params params;
 
           if (usingStr != "")
-            usingCols.decodeValues(0, setNum, lineNum, values, bad, newValues, params);
+            usingCols.decodeValues(nullptr, setNum, lineNum, values, bad, newValues, params);
           else
             newValues = values;
 
@@ -829,7 +829,7 @@ doPlot(bool add)
       CGnuPlot::Params params;
 
       if (usingStr != "")
-        usingCols.decodeValues(0, setNum, lineNum, values, bad, newValues, params);
+        usingCols.decodeValues(nullptr, setNum, lineNum, values, bad, newValues, params);
       else
         newValues = values;
 
@@ -921,7 +921,7 @@ doPlot(bool add)
         CGnuPlot::Params params;
 
         if (usingStr != "")
-          usingCols.decodeValues(0, setNum, lineNum, values, bad, newValues, params);
+          usingCols.decodeValues(nullptr, setNum, lineNum, values, bad, newValues, params);
         else
           newValues = values;
 
@@ -1043,7 +1043,7 @@ doPlot(bool add)
           CGnuPlot::Params params;
 
           if (usingStr != "")
-            usingCols.decodeValues(0, setNum, lineNum, values, bad, newValues, params);
+            usingCols.decodeValues(nullptr, setNum, lineNum, values, bad, newValues, params);
           else
             newValues = values;
 

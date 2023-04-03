@@ -28,7 +28,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  CForceDirected *forceDirected { 0 };
+  CForceDirected *forceDirected { nullptr };
 
   if (! value->isInited()) {
     value->init();
@@ -212,8 +212,8 @@ mouseRelease(CGnuPlotPlot *plot, const CGnuPlotMouseEvent &mouseEvent)
   if (forceDirected->currentPoint())
     forceDirected->currentPoint()->setP(v);
 
-  forceDirected->setCurrentNode (0);
-  forceDirected->setCurrentPoint(0);
+  forceDirected->setCurrentNode (nullptr);
+  forceDirected->setCurrentPoint(nullptr);
 }
 
 void

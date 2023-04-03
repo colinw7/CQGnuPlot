@@ -85,7 +85,7 @@ class CGnuPlotReadLine : public CReadLine {
    plot_(plot) {
   }
 
-  void timeout() {
+  void timeout() override {
     plot_->timeout();
   }
 
@@ -288,7 +288,7 @@ getPlotStyle(PlotStyle plotStyle) const
 {
   auto p = plotStyles_.find(plotStyle);
 
-  return (p == plotStyles_.end() ? 0 : (*p).second);
+  return (p == plotStyles_.end() ? nullptr : (*p).second);
 }
 
 void
@@ -441,7 +441,7 @@ load(const std::string &filename, const StringArray &args)
     parseLine(line);
   }
 
-  fileData_.file = 0;
+  fileData_.file = nullptr;
 
   fileData_ = fileDataArray_.back();
 
@@ -12314,7 +12314,7 @@ parseFont(CParseLine &line, CFontPtr &font)
   std::string family = readNonSpaceNonComma(line1);
 
   if (family != "") {
-    if (! font.isValid())
+    if (! font)
       font = CFontMgrInst->lookupFont(family, CFONT_STYLE_NORMAL, 12);
     else
       font = font->dup(family, font->getStyle(), font->getSize());
@@ -12326,7 +12326,7 @@ parseFont(CParseLine &line, CFontPtr &font)
     if (! parseReal(line1, size))
       return false;
 
-    if (! font.isValid())
+    if (! font)
       font = CFontMgrInst->lookupFont("helvetica", CFONT_STYLE_NORMAL, size);
     else
       font = font->dup(font->getFamily(), font->getStyle(), size);
@@ -12917,7 +12917,7 @@ CGnuPlotRenderer *
 CGnuPlot::
 renderer()
 {
-  return (device() ? device()->renderer() : 0);
+  return (device() ? device()->renderer() : nullptr);
 }
 
 void
@@ -13424,7 +13424,7 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
 
     if (functions.size() < 3) {
       errorMsg("Too few functions");
-      return 0;
+      return nullptr;
     }
 
     //------
@@ -14147,13 +14147,13 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
   if (istyle.fileType() == CGnuPlotTypes::ImageType::PNG) {
     if (filename == "-") {
       errorMsg("no \"-\" filename support for PNG");
-      return 0;
+      return nullptr;
     }
 
     CImageFileSrc src(filename);
 
     CImagePtr image = CImageMgrInst->createImage(src);
-    if (! image.isValid()) return 0;
+    if (! image.isValid()) return nullptr;
 
     istyle.setWidth (int(image->getWidth ()));
     istyle.setHeight(int(image->getHeight()));
@@ -14187,7 +14187,7 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
       unixFile.init(filename);
 
     if (! unixFile.isValid())
-      return 0;
+      return nullptr;
 
     CUnixFile *file = unixFile.file();
 
@@ -15199,13 +15199,13 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
   if (istyle.fileType() == CGnuPlotTypes::ImageType::PNG) {
     if (filename == "-") {
       errorMsg("no \"-\" filename support for PNG");
-      return 0;
+      return nullptr;
     }
 
     CImageFileSrc src(filename);
 
     CImagePtr image = CImageMgrInst->createImage(src);
-    if (! image.isValid()) return 0;
+    if (! image.isValid()) return nullptr;
 
     istyle.setWidth (int(image->getWidth ()));
     istyle.setHeight(int(image->getHeight()));
@@ -15239,7 +15239,7 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
       unixFile.init(filename);
 
     if (! unixFile.isValid())
-      return 0;
+      return nullptr;
 
     CUnixFile *file = unixFile.file();
 

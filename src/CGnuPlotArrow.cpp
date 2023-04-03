@@ -23,7 +23,7 @@ CGnuPlot *
 CGnuPlotArrow::
 app() const
 {
-  return (group_ ? group_->app() : 0);
+  return (group_ ? group_->app() : nullptr);
 }
 
 void

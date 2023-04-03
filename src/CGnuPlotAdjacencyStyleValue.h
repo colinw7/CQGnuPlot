@@ -7,7 +7,7 @@
 
 class CGnuPlotAdjacencyStyleValue : public CGnuPlotStyleValue {
  public:
-  CGnuPlotAdjacencyStyleValue(CGnuPlotPlot *plot=0) :
+  CGnuPlotAdjacencyStyleValue(CGnuPlotPlot *plot=nullptr) :
    CGnuPlotStyleValue(plot) {
   }
 
@@ -34,8 +34,8 @@ class CGnuPlotAdjacencyStyleValue : public CGnuPlotStyleValue {
   void setPalette(const std::string &v) { palette_ = v; }
 
  private:
-  CAdjacency                     *adjacency_ { 0 };
-  CGnuPlotStyleAdjacencyRenderer *renderer_  { 0 };
+  CAdjacency                     *adjacency_ { nullptr };
+  CGnuPlotStyleAdjacencyRenderer *renderer_  { nullptr };
   bool                            inited_    { false };
   std::string                     palette_   { "adjacency" };
 };

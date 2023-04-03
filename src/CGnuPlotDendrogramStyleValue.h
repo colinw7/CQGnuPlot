@@ -45,7 +45,7 @@ class CGnuPlotDendrogramStyleValue : public CGnuPlotStyleValue {
   void setMarginTop(double r) { marginTop_ = r; }
 
  private:
-  CDendrogram *dendrogram_   { 0 };
+  CDendrogram *dendrogram_   { nullptr };
   bool         inited_       { false };
   double       circleSize_   { 0.005 };
   double       textMargin_   { 0.001 };

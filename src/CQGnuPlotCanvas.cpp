@@ -15,7 +15,7 @@
 
 class CQGnuPlotCanvasTipLabel : public QWidget {
  public:
-  CQGnuPlotCanvasTipLabel(QWidget *parent=0) :
+  CQGnuPlotCanvasTipLabel(QWidget *parent=nullptr) :
    QWidget(parent) {
   }
 
@@ -116,7 +116,7 @@ class CQGnuPlotCanvasTipLabel : public QWidget {
 class CQGnuPlotCanvasTip : public CQToolTipIFace {
  public:
   CQGnuPlotCanvasTip(CQGnuPlotCanvas *canvas) :
-   canvas_(canvas), label_(0) {
+   canvas_(canvas), label_(nullptr) {
   }
 
  ~CQGnuPlotCanvasTip() {
@@ -146,11 +146,11 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
   }
 
   void hideWidget() override {
-    canvas_->qwindow()->highlightObject(0);
+    canvas_->qwindow()->highlightObject(nullptr);
 
     delete label_;
 
-    label_ = 0;
+    label_ = nullptr;
   }
 
   bool trackMouse() const override { return true; }
@@ -197,7 +197,7 @@ class CQGnuPlotCanvasTip : public CQToolTipIFace {
 
 CQGnuPlotCanvas::
 CQGnuPlotCanvas(CQGnuPlotMainWindow *window) :
- QWidget(0), window_(window), pressed_(false)
+ QWidget(nullptr), window_(window), pressed_(false)
 {
   setObjectName("canvas");
 

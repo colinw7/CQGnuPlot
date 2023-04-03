@@ -23,7 +23,7 @@ class CGnuPlotHiddenObject {
   typedef std::vector<CPoint2D> Points2D;
 
  public:
-  CGnuPlotHiddenObject(const CRGBA &c=CRGBA(0,0,0)) :
+  CGnuPlotHiddenObject(const CRGBA &c=CRGBA(0, 0, 0)) :
    c_(c) {
   }
 
@@ -231,7 +231,7 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
 
   CGnuPlotCamera *camera() const { return camera_; }
   void setCamera(CGnuPlotCamera *c) { camera_ = c; }
-  void unsetCamera() { camera_ = 0; }
+  void unsetCamera() { camera_ = nullptr; }
 
   bool is3D() const { return camera_; }
 
@@ -614,18 +614,18 @@ class CGnuPlotRenderer : public CGnuPlotTextRenderer {
   void updateMatrix();
 
  protected:
-  CGnuPlotWindow*   window_ { 0 };     // current window
-  CGnuPlotCamera*   camera_ { 0 };     // camera
-  int               width_  { 100 };   // pixel width
-  int               height_ { 100 };   // pixel height
-  bool              mapping_ { true }; // mapping enabled
-  CBBox2D           region_;           // window region (0,0) -> (1,1)
-  CGnuPlotMargin    margin_;           // margin for plot
-  CBBox2D           range1_;           // data first range
-  CBBox2D           range2_;           // data second range
-  COptReal          ratio_;            // aspect ratio
-  COptBBox2D        clip_;             // clip area
-  CFontPtr          font_;             // font
+  CGnuPlotWindow*   window_ { nullptr }; // current window
+  CGnuPlotCamera*   camera_ { nullptr }; // camera
+  int               width_  { 100 };     // pixel width
+  int               height_ { 100 };     // pixel height
+  bool              mapping_ { true };   // mapping enabled
+  CBBox2D           region_;             // window region (0,0) -> (1,1)
+  CGnuPlotMargin    margin_;             // margin for plot
+  CBBox2D           range1_;             // data first range
+  CBBox2D           range2_;             // data second range
+  COptReal          ratio_;              // aspect ratio
+  COptBBox2D        clip_;               // clip area
+  CFontPtr          font_;               // font
   bool              reverseX_ { false };
   bool              reverseY_ { false };
   ZHiddenObjects    hiddenObjects_;

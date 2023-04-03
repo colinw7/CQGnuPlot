@@ -6,7 +6,7 @@
 
 class CGnuPlotCirclesStyleValue : public CGnuPlotStyleValue {
  public:
-  CGnuPlotCirclesStyleValue(CGnuPlotPlot *plot=0) :
+  CGnuPlotCirclesStyleValue(CGnuPlotPlot *plot=nullptr) :
    CGnuPlotStyleValue(plot) {
     radius_[0] = CGnuPlotCoordValue(0.02);
   }

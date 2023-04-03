@@ -11,7 +11,7 @@ createRootNode(const std::string &name)
 {
   assert(! root_);
 
-  root_ = new HierNode(0, name);
+  root_ = new HierNode(nullptr, name);
 
   return root_;
 }
@@ -71,7 +71,7 @@ CTreeMap::
 getHierNodeAt(HierNode *hier, double x, double y)
 {
   if (! hier->contains(x, y))
-    return 0;
+    return nullptr;
 
   const HierNode::Children &children = hier->getChildren();
 
@@ -97,7 +97,7 @@ CTreeMap::
 getNodeAt(HierNode *hier, double x, double y)
 {
   if (! hier->contains(x, y))
-    return 0;
+    return nullptr;
 
   if (hier->isOpen()) {
     const HierNode::Children &children = hier->getChildren();
@@ -166,5 +166,5 @@ findChild(const std::string &name) const
       return c;
   }
 
-  return 0;
+  return nullptr;
 }

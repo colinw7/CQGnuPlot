@@ -272,7 +272,7 @@ getValueSetAtPos(double x, double y) const
 {
   int ind = getIndAtPos(x, y);
 
-  if (ind < 0) return 0;
+  if (ind < 0) return nullptr;
 
   return const_cast<ValueSet *>(&valueSets_[ind]);
 }

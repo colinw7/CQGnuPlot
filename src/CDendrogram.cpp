@@ -168,7 +168,7 @@ findChild(const std::string &name) const
     if (c->name() == name)
       return c;
 
-  return 0;
+  return nullptr;
 }
 
 void
@@ -276,7 +276,7 @@ getNodeAtPoint(double x, double y, double tol) const
       return n;
   }
 
-  return 0;
+  return nullptr;
 }
 
 // print node gaps
@@ -284,7 +284,7 @@ getNodeAtPoint(double x, double y, double tol) const
 
 CDendrogram::RootNode::
 RootNode(const std::string &name) :
- HierNode(0, name)
+ HierNode(nullptr, name)
 {
 }
 
@@ -512,7 +512,7 @@ canMoveNode(Node *node, double &move_gap, Nodes &lowestChildren)
       break;
 
   // check gaps of child nodes for node and all siblings above it
-  Node *lowestChild = 0;
+  Node *lowestChild = nullptr;
 
   for ( ; i < n; ++i) {
     Node *node1 = dnodes[i];
@@ -547,7 +547,7 @@ CDendrogram::Node *
 CDendrogram::RootNode::
 getLowestChild(HierNode *hierNode)
 {
-  Node *lowestNode = 0;
+  Node *lowestNode = nullptr;
 
   const Children &children = hierNode->getChildren();
 
@@ -827,7 +827,7 @@ getNodeAtPoint(double x, double y, double tol) const
   if (root_)
     return root_->getNodeAtPoint(x, y, tol);
   else
-    return 0;
+    return nullptr;
 }
 
 void

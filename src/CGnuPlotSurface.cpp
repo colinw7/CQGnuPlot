@@ -105,7 +105,7 @@ draw(CGnuPlotRenderer *renderer)
         const CGnuPlotSurface::PointsIndColor &pic = poly.second;
         const CGnuPlotSurface::PointsInd      &pi  = pic.first;
 
-        CGnuPlotPolygonObject *polygon = 0;
+        CGnuPlotPolygonObject *polygon = nullptr;
 
         if (! renderer->isPseudo())
           polygon = plot_->polygonObjects()[pi.second];

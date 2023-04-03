@@ -48,7 +48,7 @@ class CGnuPlotKey {
   typedef CGnuPlotKeyData::Columns Columns;
 
  public:
-  CGnuPlotKey(CGnuPlotGroup *group=0);
+  CGnuPlotKey(CGnuPlotGroup *group=nullptr);
 
   virtual ~CGnuPlotKey();
 
@@ -171,11 +171,11 @@ class CGnuPlotKey {
   typedef std::vector<double>   TickSpaces;
   typedef std::map<int,CBBox2D> PlotRects;
 
-  CGnuPlotGroup*            group_ { 0 };
+  CGnuPlotGroup*            group_ { nullptr };
   CGnuPlotKeyData           keyData_;
   CBBox2D                   bbox_ { 0, 0, 1, 1};
   mutable PlotRects         prects_;
-  mutable CGnuPlotRenderer* renderer_ { 0 };
+  mutable CGnuPlotRenderer* renderer_ { nullptr };
 };
 
 typedef CRefPtr<CGnuPlotKey> CGnuPlotKeyP;

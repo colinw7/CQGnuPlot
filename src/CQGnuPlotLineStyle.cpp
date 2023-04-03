@@ -46,7 +46,7 @@ QColor
 CQGnuPlotLineStyle::
 lineColor() const
 {
-  return CQUtil::rgbaToColor(CGnuPlotLineStyle::calcColor(0, CRGBA(0,0,0)));
+  return CQUtil::rgbaToColor(CGnuPlotLineStyle::calcColor(nullptr, CRGBA(0,0,0)));
 }
 
 void

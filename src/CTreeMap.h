@@ -129,7 +129,7 @@ class CTreeMap {
     typedef std::vector<HierNode *> Children;
 
    public:
-    HierNode(HierNode *parent=0, const std::string &name="") :
+    HierNode(HierNode *parent=nullptr, const std::string &name="") :
      Node(parent, name) {
       if (parent_)
         parent_->children_.push_back(this);

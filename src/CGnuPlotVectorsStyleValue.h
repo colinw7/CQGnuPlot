@@ -11,7 +11,7 @@ class CGnuPlot;
 
 class CGnuPlotVectorsStyleValue : public CGnuPlotStyleValue {
  public:
-  CGnuPlotVectorsStyleValue(CGnuPlotPlot *plot=0) :
+  CGnuPlotVectorsStyleValue(CGnuPlotPlot *plot=nullptr) :
    CGnuPlotStyleValue(plot) {
   }
 
@@ -67,7 +67,7 @@ class CGnuPlotVectorsStyleValue : public CGnuPlotStyleValue {
   bool front() const { return front_; }
   void setFront(bool b) { front_ = b; }
 
-  double lineWidth(CGnuPlot *plot=0) const;
+  double lineWidth(CGnuPlot *plot=nullptr) const;
   void setLineWidth(double w) { lineWidth_ = w; }
 
   const COptRGBA &lineColor() const { return lineColor_; }

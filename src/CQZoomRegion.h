@@ -6,7 +6,7 @@
 
 class CQZoomRegion : public QWidget {
  public:
-  CQZoomRegion(QWidget *parent=0) :
+  CQZoomRegion(QWidget *parent=nullptr) :
    QWidget(parent), tl_(0, 0), br_(0, 0) {
     setAttribute(Qt::WA_NoSystemBackground);
     setAttribute(Qt::WA_TransparentForMouseEvents);

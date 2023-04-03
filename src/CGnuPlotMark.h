@@ -12,7 +12,7 @@ class CGnuPlotMark {
   typedef CGnuPlotTypes::SymbolType SymbolType;
 
  public:
-  CGnuPlotMark(CGnuPlotPlot *plot=0);
+  CGnuPlotMark(CGnuPlotPlot *plot=nullptr);
 
   virtual ~CGnuPlotMark() { }
 
@@ -36,7 +36,7 @@ class CGnuPlotMark {
   void setPixelSize(bool b) { pixelSize_ = b; }
 
  protected:
-  CGnuPlotPlot* plot_      { 0 };
+  CGnuPlotPlot* plot_      { nullptr };
   SymbolType    type_      { SymbolType::CROSS };
   double        size_      { 1 };
   CRGBA         color_     { 0, 0, 0 };

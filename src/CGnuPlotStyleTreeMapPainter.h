@@ -13,7 +13,7 @@ class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
    plot_(plot), renderer_(renderer), hier_(hier), ind_(0) {
   }
 
-  void drawHierNode(CTreeMap::HierNode *node, int depth) {
+  void drawHierNode(CTreeMap::HierNode *node, int depth) override {
     if (! hier_) return;
 
     CGnuPlotTreeMapStyleValue *value =
@@ -51,7 +51,7 @@ class CGnuPlotStyleTreeMapPainter : public CTreeMapPainter {
     }
   }
 
-  void drawNode(CTreeMap::Node *node, int depth) {
+  void drawNode(CTreeMap::Node *node, int depth) override {
     if (renderer_->isPseudo()) return;
 
     CGnuPlotTreeMapStyleValue *value =

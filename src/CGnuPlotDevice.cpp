@@ -43,7 +43,7 @@
 
 CGnuPlotDevice::
 CGnuPlotDevice(const std::string &name) :
- plot_(0)
+ plot_(nullptr)
 {
   name_ = CStrUtil::toLower(name);
   size_ = CISize2D(600, 480);

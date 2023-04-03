@@ -17,7 +17,7 @@ class CGnuPlotAssertFn : public CGnuPlotFn {
  public:
   CGnuPlotAssertFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValuePtr operator()(CExpr *, const Values &values) {
+  CExprValuePtr operator()(CExpr *, const Values &values) override {
     long value = 0;
 
     if (! values[0]->getIntegerValue(value))
@@ -34,7 +34,7 @@ class CGnuPlotExistsFn : public CGnuPlotFn {
  public:
   CGnuPlotExistsFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     std::string name;
 
     if (! values[0]->getStringValue(name))
@@ -51,7 +51,7 @@ class CGnuPlotValueFn : public CGnuPlotFn {
  public:
   CGnuPlotValueFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     std::string name;
 
     if (! values[0]->getStringValue(name))
@@ -68,7 +68,7 @@ class CGnuPlotValueHSV2RGBFn : public CGnuPlotFn {
  public:
   CGnuPlotValueHSV2RGBFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     if (values.size() != 3) return CExprValuePtr();
 
     double h, s, v;
@@ -91,7 +91,7 @@ class CGnuPlotValueStrFTime : public CGnuPlotFn {
  public:
   CGnuPlotValueStrFTime(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     if (values.size() != 2) return CExprValuePtr();
 
     std::string s;
@@ -118,7 +118,7 @@ class CGnuPlotValueStrPTime : public CGnuPlotFn {
  public:
   CGnuPlotValueStrPTime(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     if (values.size() != 2) return CExprValuePtr();
 
     std::string s1, s2;
@@ -149,7 +149,7 @@ class CGnuPlotValueTmValue : public CGnuPlotFn {
    CGnuPlotFn(plot), value_(value) {
   }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     if (values.size() != 1) return CExprValuePtr();
 
     long i;
@@ -183,10 +183,10 @@ class CGnuPlotValueTime : public CGnuPlotFn {
  public:
   CGnuPlotValueTime(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     if (values.size() != 1) return CExprValuePtr();
 
-    time_t t = time(0);
+    time_t t = time(nullptr);
 
     return expr->createIntegerValue(t);
   }
@@ -197,7 +197,7 @@ class CGnuPlotTimeColumnFn : public CGnuPlotFn {
  public:
   CGnuPlotTimeColumnFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     time_t t;
 
     if      (values.size() == 2) {
@@ -261,7 +261,7 @@ class CGnuPlotSumRangeFn : public CGnuPlotFn {
  public:
   CGnuPlotSumRangeFn(CGnuPlot *plot) : CGnuPlotFn(plot) { }
 
-  CExprValuePtr operator()(CExpr *expr, const Values &values) {
+  CExprValuePtr operator()(CExpr *expr, const Values &values) override {
     if (values.size() != 4) return CExprValuePtr();
 
     std::string var;

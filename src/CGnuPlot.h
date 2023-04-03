@@ -712,14 +712,14 @@ class CGnuPlot {
     auto p = varAnnotations_.find(varName);
 
     if (p == varAnnotations_.end())
-      return 0;
+      return nullptr;
 
     for (auto &ann : (*p).second) {
-      if (ann->getInd() == ind && (dynamic_cast<T *>(ann.get()) != 0))
+      if (ann->getInd() == ind && (dynamic_cast<T *>(ann.get()) != nullptr))
         return dynamic_cast<T *>(ann.get());
     }
 
-    return 0;
+    return nullptr;
   }
 
   template<typename T>
@@ -737,7 +737,7 @@ class CGnuPlot {
           ind = 1;
       }
 
-      annotation = new T(0);
+      annotation = new T(nullptr);
 
       annotation->setInd(ind);
 
@@ -1264,13 +1264,13 @@ class CGnuPlot {
   bool                      debug_  { false };
   bool                      edebug_ { false };
   bool                      autoContinue_ { false };
-  CExpr*                    expr_ { 0 };
+  CExpr*                    expr_ { nullptr };
 
   // devices
-  CGnuPlotSVGDevice*        svgDevice_ { 0 };
-  CGnuPlotPSDevice*         psDevice_ { 0 };
-  CGnuPlotLogDevice*        logDevice_ { 0 };
-  CGnuPlotDevice*           device_ { 0 };
+  CGnuPlotSVGDevice*        svgDevice_ { nullptr };
+  CGnuPlotPSDevice*         psDevice_ { nullptr };
+  CGnuPlotLogDevice*        logDevice_ { nullptr };
+  CGnuPlotDevice*           device_ { nullptr };
   Devices                   devices_;
   DeviceStack               deviceStack_;
 

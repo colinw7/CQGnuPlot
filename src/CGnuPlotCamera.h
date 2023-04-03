@@ -19,7 +19,7 @@ class CGnuPlotCamera {
   };
 
  public:
-  CGnuPlotCamera(CGnuPlotGroup *group=0);
+  CGnuPlotCamera(CGnuPlotGroup *group=nullptr);
 
   virtual ~CGnuPlotCamera();
 
@@ -134,7 +134,7 @@ class CGnuPlotCamera {
   void unsetView();
 
  private:
-  CGnuPlotGroup*     group_      { 0 };
+  CGnuPlotGroup*     group_      { nullptr };
   bool               enabled_    { true };
   double             xmin_       { -1 };
   double             xmax_       {  1 };

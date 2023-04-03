@@ -73,7 +73,7 @@ class CHierBubblePack {
     typedef std::vector<HierNode *> Children;
 
    public:
-    HierNode(HierNode *parent=0, const std::string &name="") :
+    HierNode(HierNode *parent=nullptr, const std::string &name="") :
      Node(name, 0), parent_(parent) {
       if (parent_)
         parent_->children_.push_back(this);
@@ -100,7 +100,7 @@ class CHierBubblePack {
         if ((*p)->name() == name)
           return *p;
 
-      return 0;
+      return nullptr;
     }
 
     void packNodes() {
@@ -184,7 +184,7 @@ class CHierBubblePack {
       if (contains(x, y))
         return const_cast<HierNode *>(this);
 
-      return 0;
+      return nullptr;
     }
 
    private:
@@ -204,7 +204,7 @@ class CHierBubblePack {
   HierNode *createRootNode(const std::string &name) {
     assert(! root_);
 
-    root_ = new HierNode(0, name);
+    root_ = new HierNode(nullptr, name);
 
     return root_;
   }
@@ -231,11 +231,11 @@ class CHierBubblePack {
    if (root_)
       return root_->getNodeAtPoint(x, y);
     else
-      return 0;
+      return nullptr;
   }
 
  private:
-  HierNode *root_ { 0 };
+  HierNode *root_ { nullptr };
 };
 
 #endif

@@ -8,7 +8,7 @@ class CExpr;
 
 class CGnuPlotEveryData {
  public:
-  CGnuPlotEveryData(CExpr *expr=0, const std::string &str="");
+  CGnuPlotEveryData(CExpr *expr=nullptr, const std::string &str="");
 
   bool parse(CExpr *expr, const std::string &str);
 

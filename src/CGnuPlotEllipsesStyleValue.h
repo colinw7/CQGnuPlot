@@ -9,7 +9,7 @@ class CGnuPlotEllipsesStyleValue : public CGnuPlotStyleValue {
   typedef CGnuPlotTypes::EllipseUnits EllipseUnits;
 
  public:
-  CGnuPlotEllipsesStyleValue(CGnuPlotPlot *plot=0) :
+  CGnuPlotEllipsesStyleValue(CGnuPlotPlot *plot=nullptr) :
    CGnuPlotStyleValue(plot) {
     size_[0] = CGnuPlotCoordValue(0.05, CGnuPlotTypes::CoordSys::GRAPH);
     size_[1] = CGnuPlotCoordValue(0.03, CGnuPlotTypes::CoordSys::GRAPH);

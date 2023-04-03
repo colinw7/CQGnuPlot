@@ -43,7 +43,7 @@ class CGnuPlotTreeMapStyleValue : public CGnuPlotStyleValue {
   }
 
  private:
-  CTreeMap*   tree_ { 0 };
+  CTreeMap*   tree_ { nullptr };
   bool        inited_ { false };
   CRGBA       openBorderColor_ { 0, 0, 0 };
   double      openBorderWidth_ { 2 };

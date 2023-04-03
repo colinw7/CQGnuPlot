@@ -128,12 +128,12 @@ mousePress(const CGnuPlotMouseEvent &mouseEvent)
       if (ann->inside(mouseEvent))
         continue;
 
-      CGnuPlotArrow     *arrow   = 0;
-      CGnuPlotCircle    *circle  = 0;
-      CGnuPlotEllipse   *ellipse = 0;
-      CGnuPlotLabel     *label   = 0;
-      CGnuPlotPolygon   *poly    = 0;
-      CGnuPlotRectangle *rect    = 0;
+      CGnuPlotArrow     *arrow   = nullptr;
+      CGnuPlotCircle    *circle  = nullptr;
+      CGnuPlotEllipse   *ellipse = nullptr;
+      CGnuPlotLabel     *label   = nullptr;
+      CGnuPlotPolygon   *poly    = nullptr;
+      CGnuPlotRectangle *rect    = nullptr;
 
       if      ((arrow = dynamic_cast<CGnuPlotArrow *>(ann.get()))) {
         CQGnuPlotArrow *qarrow = static_cast<CQGnuPlotArrow *>(arrow);

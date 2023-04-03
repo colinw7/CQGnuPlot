@@ -11,7 +11,7 @@ class CGnuPlotBoxPlotStyleValue : public CGnuPlotStyleValue {
   typedef CGnuPlotTypes::BoxLabels BoxLabels;
 
  public:
-  CGnuPlotBoxPlotStyleValue(CGnuPlotPlot *plot=0);
+  CGnuPlotBoxPlotStyleValue(CGnuPlotPlot *plot=nullptr);
 
   virtual ~CGnuPlotBoxPlotStyleValue() { }
 

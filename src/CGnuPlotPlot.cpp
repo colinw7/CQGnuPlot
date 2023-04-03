@@ -2225,7 +2225,7 @@ styleValue(const std::string &name) const
   auto p = styleValues_.find(name);
 
   if (p == styleValues_.end())
-    return 0;
+    return nullptr;
 
   return (*p).second;
 }

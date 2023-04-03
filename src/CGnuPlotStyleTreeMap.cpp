@@ -38,7 +38,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
 
   //---
 
-  CTreeMap *tree { 0 };
+  CTreeMap *tree { nullptr };
 
   if (! value->isInited()) {
     value->init();
@@ -137,7 +137,7 @@ draw2D(CGnuPlotPlot *plot, CGnuPlotRenderer *renderer)
         //---
 
         // create nodes
-        CTreeMap::HierNode *hierNode = 0;
+        CTreeMap::HierNode *hierNode = nullptr;
 
         for (const auto &n : names) {
           if (! hierNode) {

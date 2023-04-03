@@ -39,7 +39,7 @@ namespace {
 
 class CQGnuPlotRenderer : public CGnuPlotRenderer {
  public:
-  CQGnuPlotRenderer(CQGnuPlotCanvas *canvas=0);
+  CQGnuPlotRenderer(CQGnuPlotCanvas *canvas=nullptr);
  ~CQGnuPlotRenderer() override;
 
   void setCanvas(CQGnuPlotCanvas *canvas);
