@@ -2,15 +2,15 @@
 #define CEXPR_H
 
 #include <CExprTypes.h>
-#include <CAutoPtr.h>
 #include <CStrUtil.h>
 #include <complex>
+#include <cassert>
 
 class CExprValueBase {
  public:
   virtual ~CExprValueBase() { }
 
-  virtual CExprValueBase *dup() const { return 0; }
+  virtual CExprValueBase *dup() const { return nullptr; }
 
   virtual bool getBooleanValue(bool                 &) const { return false; }
   virtual bool getIntegerValue(long                 &) const { return false; }
@@ -69,14 +69,15 @@ class CExprValueBase {
 
 class CExpr {
  public:
-  typedef std::vector<CExprFunctionPtr> Functions;
-  typedef std::vector<std::string>      StringArray;
+  using Functions   = std::vector<CExprFunctionPtr>;
+  using StringArray = std::vector<std::string>;
 
  public:
   static CExpr *instance();
 
   CExpr();
- ~CExpr() { }
+
+  virtual ~CExpr();
 
   bool getQuiet() const { return quiet_; }
   void setQuiet(bool b) { quiet_ = b; }
@@ -145,22 +146,31 @@ class CExpr {
   void errorMsg(const std::string &msg) const;
 
  private:
-  typedef std::vector<CExprCompile *> Compiles;
-  typedef std::vector<CExprExecute *> Executes;
+  using CExprCompileP = std::shared_ptr<CExprCompile>;
+  using Compiles      = std::vector<CExprCompileP>;
 
-  bool                       quiet_ { false };
-  bool                       debug_ { false };
-  bool                       trace_ { false };
-  bool                       degrees_ { false };
-  CAutoPtr<CExprParse>       parse_;
-  CAutoPtr<CExprInterp>      interp_;
-  CAutoPtr<CExprCompile>     compile_;
-  CAutoPtr<CExprExecute>     execute_;
-  Compiles                   compiles_;
-  Executes                   executes_;
-  CAutoPtr<CExprOperatorMgr> operatorMgr_;
-  CAutoPtr<CExprVariableMgr> variableMgr_;
-  CAutoPtr<CExprFunctionMgr> functionMgr_;
+  using CExprExecuteP = std::shared_ptr<CExprExecute>;
+  using Executes      = std::vector<CExprExecuteP>;
+
+  using CExprParseP       = std::unique_ptr<CExprParse>;
+  using CExprInterpP      = std::unique_ptr<CExprInterp>;
+  using CExprOperatorMgrP = std::unique_ptr<CExprOperatorMgr>;
+  using CExprVariableMgrP = std::unique_ptr<CExprVariableMgr>;
+  using CExprFunctionMgrP = std::unique_ptr<CExprFunctionMgr>;
+
+  bool              quiet_   { false };
+  bool              debug_   { false };
+  bool              trace_   { false };
+  bool              degrees_ { false };
+  CExprParseP       parse_;
+  CExprInterpP      interp_;
+  CExprCompileP     compile_;
+  CExprExecuteP     execute_;
+  Compiles          compiles_;
+  Executes          executes_;
+  CExprOperatorMgrP operatorMgr_;
+  CExprVariableMgrP variableMgr_;
+  CExprFunctionMgrP functionMgr_;
 };
 
 //------

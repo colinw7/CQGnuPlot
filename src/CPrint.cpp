@@ -139,7 +139,7 @@ setFilename(const std::string &filename)
   filename_ = filename;
 
   if (filename == "") {
-    file_ = 0;
+    file_ = nullptr;
 
     return true;
   }
@@ -201,7 +201,7 @@ term()
 {
   writeFooter();
 
-  file_ = 0;
+  file_ = nullptr;
 }
 
 void

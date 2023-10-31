@@ -42,7 +42,7 @@ class CGnuPlotExistsFn : public CGnuPlotFn {
 
     CExprVariablePtr var = expr->getVariable(name);
 
-    return expr->createIntegerValue(var.isValid() ? 1 : 0);
+    return expr->createIntegerValue(var ? 1 : 0);
   }
 };
 
@@ -59,7 +59,7 @@ class CGnuPlotValueFn : public CGnuPlotFn {
 
     CExprVariablePtr var = expr->getVariable(name);
 
-    return (var.isValid() ? var->getValue() : CExprValuePtr());
+    return (var ? var->getValue() : CExprValuePtr());
   }
 };
 
@@ -294,7 +294,7 @@ class CGnuPlotSumRangeFn : public CGnuPlotFn {
       CExprTokenStack pstack = expr->parseLine(exprStr_);
       CExprITokenPtr  itoken = expr->interpPTokenStack(pstack);
 
-      if (itoken.isValid())
+      if (itoken)
         cstack_ = expr->compileIToken(itoken);
       else
         cstack_ = CExprTokenStack();
@@ -316,7 +316,7 @@ class CGnuPlotSumRangeFn : public CGnuPlotFn {
 
       double r = 0;
 
-      if (! rvalue.isValid() || ! rvalue->getRealValue(r))
+      if (! rvalue || ! rvalue->getRealValue(r))
         continue;
 
       sum += r;

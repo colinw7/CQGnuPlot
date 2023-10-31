@@ -2,7 +2,7 @@
 
 CExprValue::
 CExprValue() :
- type_(CExprValueType::NONE), base_(0)
+ type_(CExprValueType::NONE)
 {
 }
 
@@ -47,13 +47,14 @@ CExprValue *
 CExprValue::
 dup() const
 {
-  CExprValue *value1 = new CExprValue;
+  auto *value1 = new CExprValue;
 
-  value1->type_       = type_;
+  value1->type_ = type_;
+
   value1->attributes_ = attributes_;
 
   if (base_)
-    value1->base_ = base_->dup();
+    value1->base_ = CExprValueBaseP(base_->dup());
 
   return value1;
 }
@@ -216,7 +217,7 @@ convToBoolean()
     return false;
 
   type_ = CExprValueType::BOOLEAN;
-  base_ = new CExprBooleanValue(boolean);
+  base_ = CExprValueBaseP(new CExprBooleanValue(boolean));
 
   return true;
 }
@@ -233,7 +234,7 @@ convToInteger()
     return false;
 
   type_ = CExprValueType::INTEGER;
-  base_ = new CExprIntegerValue(integer);
+  base_ = CExprValueBaseP(new CExprIntegerValue(integer));
 
   return true;
 }
@@ -250,7 +251,7 @@ convToReal()
     return false;
 
   type_ = CExprValueType::REAL;
-  base_ = new CExprRealValue(real);
+  base_ = CExprValueBaseP(new CExprRealValue(real));
 
   return true;
 }
@@ -267,7 +268,7 @@ convToString()
     return false;
 
   type_ = CExprValueType::STRING;
-  base_ = new CExprStringValue(str);
+  base_ = CExprValueBaseP(new CExprStringValue(str));
 
   return true;
 }
@@ -285,7 +286,7 @@ convToComplex()
     return false;
 
   type_ = CExprValueType::COMPLEX;
-  base_ = new CExprComplexValue(c);
+  base_ = CExprValueBaseP(new CExprComplexValue(c));
 
   return true;
 }

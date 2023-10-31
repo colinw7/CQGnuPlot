@@ -13,11 +13,11 @@
 class Trace {
  public:
   Trace(const std::string &name) : name_(name) {
-    std::cerr << ">" << name_ << std::endl;
+    std::cerr << ">" << name_ << "\n";
   }
 
  ~Trace() {
-    std::cerr << "<" << name_ << std::endl;
+    std::cerr << "<" << name_ << "\n";
   }
 
  private:
@@ -135,7 +135,7 @@ CExprInterp::
 CExprInterp(CExpr *expr) :
  expr_(expr)
 {
-  impl_ = new CExprInterpImpl(expr);
+  impl_ = std::make_unique<CExprInterpImpl>(expr);
 }
 
 CExprInterp::
@@ -165,7 +165,7 @@ interpStack(const CExprTokenStack &stack)
 
   itokenStack_.clear();
 
-  CExprITokenPtr itoken = readExpression();
+  auto itoken = readExpression();
 
   if (! isLastToken()) {
     stackIToken(itoken);
@@ -191,26 +191,26 @@ readExpression()
 {
   DEBUG_ENTER("readExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readAssignmentExpression();
+  if (! itoken) {
+    auto itoken1 = readAssignmentExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::EXPRESSION);
 
       addITokenToType(itoken1, itoken);
     }
   }
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::COMMA)) {
-      CExprITokenPtr itoken2 = readAssignmentExpression();
+      auto itoken2 = readAssignmentExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 = CExprIToken::createIToken(CExprITokenType::EXPRESSION);
+      if (itoken2) {
+        auto itoken3 = CExprIToken::createIToken(CExprITokenType::EXPRESSION);
 
         addITokenToType(itoken , itoken3);
         addITokenToType(itoken1, itoken3);
@@ -261,18 +261,18 @@ readAssignmentExpression()
 {
   DEBUG_ENTER("readAssignmentExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::ASSIGNMENT_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::ASSIGNMENT_EXPRESSION);
 
-  if (itoken.isValid())
+  if (itoken)
     return itoken;
 
-  CExprITokenPtr itoken1 = readConditionalExpression();
+  auto itoken1 = readConditionalExpression();
 
-  if (itoken1.isValid()) {
-    CExprITokenPtr itoken2 = collapseITokenToType(itoken1, CExprITokenType::UNARY_EXPRESSION);
+  if (itoken1) {
+    auto itoken2 = collapseITokenToType(itoken1, CExprITokenType::UNARY_EXPRESSION);
 
-    if (itoken2.isValid()) {
-      CExprITokenPtr itoken3 = unstackIToken();
+    if (itoken2) {
+      auto itoken3 = unstackIToken();
 
       if (isOperatorIToken(itoken3, CExprOpType::EQUALS           ) ||
           isOperatorIToken(itoken3, CExprOpType::TIMES_EQUALS     ) ||
@@ -285,9 +285,9 @@ readAssignmentExpression()
           isOperatorIToken(itoken3, CExprOpType::BIT_AND_EQUALS   ) ||
           isOperatorIToken(itoken3, CExprOpType::BIT_XOR_EQUALS   ) ||
           isOperatorIToken(itoken3, CExprOpType::BIT_OR_EQUALS    )) {
-        CExprITokenPtr itoken4 = readAssignmentExpression();
+        auto itoken4 = readAssignmentExpression();
 
-        if (itoken4.isValid()) {
+        if (itoken4) {
           deleteCollapsedIToken(itoken1, itoken2);
 
           itoken = CExprIToken::createIToken(CExprITokenType::ASSIGNMENT_EXPRESSION);
@@ -303,7 +303,7 @@ readAssignmentExpression()
         stackIToken(itoken3);
     }
 
-    if (! itoken.isValid()) {
+    if (! itoken) {
       itoken = CExprIToken::createIToken(CExprITokenType::ASSIGNMENT_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
@@ -314,10 +314,10 @@ readAssignmentExpression()
 
   itoken1 = readUnaryExpression();
 
-  if (! itoken1.isValid())
+  if (! itoken1)
     return itoken;
 
-  CExprITokenPtr itoken2 = unstackIToken();
+  auto itoken2 = unstackIToken();
 
   if (! isOperatorIToken(itoken2, CExprOpType::EQUALS           ) &&
       ! isOperatorIToken(itoken2, CExprOpType::TIMES_EQUALS     ) &&
@@ -336,9 +336,9 @@ readAssignmentExpression()
     return itoken;
   }
 
-  CExprITokenPtr itoken3 = readAssignmentExpression();
+  auto itoken3 = readAssignmentExpression();
 
-  if (! itoken3.isValid()) {
+  if (! itoken3) {
     stackIToken(itoken2);
     stackIToken(itoken1);
 
@@ -367,28 +367,28 @@ readConditionalExpression()
 {
   DEBUG_ENTER("readConditionalExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::CONDITIONAL_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::CONDITIONAL_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readLogicalOrExpression();
+  if (! itoken) {
+    auto itoken1 = readLogicalOrExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::CONDITIONAL_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
 
-      CExprITokenPtr itoken2 = unstackIToken();
+      auto itoken2 = unstackIToken();
 
       if (isOperatorIToken(itoken2, CExprOpType::QUESTION)) {
-        CExprITokenPtr itoken3 = readExpression();
+        auto itoken3 = readExpression();
 
-        if (itoken3.isValid()) {
-          CExprITokenPtr itoken4 = unstackIToken();
+        if (itoken3) {
+          auto itoken4 = unstackIToken();
 
           if (isOperatorIToken(itoken4, CExprOpType::COLON)) {
-            CExprITokenPtr itoken5 = readConditionalExpression();
+            auto itoken5 = readConditionalExpression();
 
-            if (itoken5.isValid()) {
+            if (itoken5) {
               addITokenToType(itoken2, itoken);
               addITokenToType(itoken3, itoken);
               addITokenToType(itoken4, itoken);
@@ -436,26 +436,26 @@ readLogicalOrExpression()
 {
   DEBUG_ENTER("readLogicalOrExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::LOGICAL_OR_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::LOGICAL_OR_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readLogicalAndExpression();
+  if (! itoken) {
+    auto itoken1 = readLogicalAndExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::LOGICAL_OR_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
     }
   }
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::LOGICAL_OR)) {
-      CExprITokenPtr itoken2 = readLogicalAndExpression();
+      auto itoken2 = readLogicalAndExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 = CExprIToken::createIToken(CExprITokenType::LOGICAL_OR_EXPRESSION);
+      if (itoken2) {
+        auto itoken3 = CExprIToken::createIToken(CExprITokenType::LOGICAL_OR_EXPRESSION);
 
         addITokenToType(itoken , itoken3);
         addITokenToType(itoken1, itoken3);
@@ -488,26 +488,26 @@ readLogicalAndExpression()
 {
   DEBUG_ENTER("readLogicalAndExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::LOGICAL_AND_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::LOGICAL_AND_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readInclusiveOrExpression();
+  if (! itoken) {
+    auto itoken1 = readInclusiveOrExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::LOGICAL_AND_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
     }
   }
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::LOGICAL_AND)) {
-      CExprITokenPtr itoken2 = readInclusiveOrExpression();
+      auto itoken2 = readInclusiveOrExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 = CExprIToken::createIToken(CExprITokenType::LOGICAL_AND_EXPRESSION);
+      if (itoken2) {
+        auto itoken3 = CExprIToken::createIToken(CExprITokenType::LOGICAL_AND_EXPRESSION);
 
         addITokenToType(itoken , itoken3);
         addITokenToType(itoken1, itoken3);
@@ -540,27 +540,26 @@ readInclusiveOrExpression()
 {
   DEBUG_ENTER("readInclusiveOrExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::INCLUSIVE_OR_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::INCLUSIVE_OR_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readExclusiveOrExpression();
+  if (! itoken) {
+    auto itoken1 = readExclusiveOrExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::INCLUSIVE_OR_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
     }
   }
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::BIT_OR)) {
-      CExprITokenPtr itoken2 = readExclusiveOrExpression();
+      auto itoken2 = readExclusiveOrExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 =
-          CExprIToken::createIToken(CExprITokenType::INCLUSIVE_OR_EXPRESSION);
+      if (itoken2) {
+        auto itoken3 = CExprIToken::createIToken(CExprITokenType::INCLUSIVE_OR_EXPRESSION);
 
         addITokenToType(itoken , itoken3);
         addITokenToType(itoken1, itoken3);
@@ -593,27 +592,26 @@ readExclusiveOrExpression()
 {
   DEBUG_ENTER("readExclusiveOrExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::EXCLUSIVE_OR_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::EXCLUSIVE_OR_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readAndExpression();
+  if (! itoken) {
+    auto itoken1 = readAndExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::EXCLUSIVE_OR_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
     }
   }
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::BIT_XOR)) {
-      CExprITokenPtr itoken2 = readAndExpression();
+      auto itoken2 = readAndExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 =
-          CExprIToken::createIToken(CExprITokenType::EXCLUSIVE_OR_EXPRESSION);
+      if (itoken2) {
+        auto itoken3 = CExprIToken::createIToken(CExprITokenType::EXCLUSIVE_OR_EXPRESSION);
 
         addITokenToType(itoken , itoken3);
         addITokenToType(itoken1, itoken3);
@@ -646,26 +644,26 @@ readAndExpression()
 {
   DEBUG_ENTER("readAndExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::AND_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::AND_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readEqualityExpression();
+  if (! itoken) {
+    auto itoken1 = readEqualityExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::AND_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
     }
   }
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::BIT_AND)) {
-      CExprITokenPtr itoken2 = readEqualityExpression();
+      auto itoken2 = readEqualityExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 = CExprIToken::createIToken(CExprITokenType::AND_EXPRESSION);
+      if (itoken2) {
+        auto itoken3 = CExprIToken::createIToken(CExprITokenType::AND_EXPRESSION);
 
         addITokenToType(itoken , itoken3);
         addITokenToType(itoken1, itoken3);
@@ -700,20 +698,20 @@ readEqualityExpression()
 {
   DEBUG_ENTER("readEqualityExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::EQUALITY_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::EQUALITY_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readRelationalExpression();
+  if (! itoken) {
+    auto itoken1 = readRelationalExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::EQUALITY_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
     }
   }
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::EQUAL        ) ||
 #ifdef GNUPLOT_EXPR
@@ -724,10 +722,10 @@ readEqualityExpression()
            isOperatorIToken(itoken1, CExprOpType::STR_NOT_EQUAL) ||
 #endif
            isOperatorIToken(itoken1, CExprOpType::APPROX_EQUAL )) {
-      CExprITokenPtr itoken2 = readRelationalExpression();
+      auto itoken2 = readRelationalExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 = CExprIToken::createIToken(CExprITokenType::EQUALITY_EXPRESSION);
+      if (itoken2) {
+        auto itoken3 = CExprIToken::createIToken(CExprITokenType::EQUALITY_EXPRESSION);
 
         addITokenToType(itoken , itoken3);
         addITokenToType(itoken1, itoken3);
@@ -763,29 +761,29 @@ readRelationalExpression()
 {
   DEBUG_ENTER("readRelationalExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::RELATIONAL_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::RELATIONAL_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readShiftExpression();
+  if (! itoken) {
+    auto itoken1 = readShiftExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::RELATIONAL_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
     }
   }
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::LESS         ) ||
            isOperatorIToken(itoken1, CExprOpType::GREATER      ) ||
            isOperatorIToken(itoken1, CExprOpType::LESS_EQUAL   ) ||
            isOperatorIToken(itoken1, CExprOpType::GREATER_EQUAL)) {
-      CExprITokenPtr itoken2 = readShiftExpression();
+      auto itoken2 = readShiftExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 = CExprIToken::createIToken(CExprITokenType::RELATIONAL_EXPRESSION);
+      if (itoken2) {
+        auto itoken3 = CExprIToken::createIToken(CExprITokenType::RELATIONAL_EXPRESSION);
 
         addITokenToType(itoken , itoken3);
         addITokenToType(itoken1, itoken3);
@@ -819,27 +817,27 @@ readShiftExpression()
 {
   DEBUG_ENTER("readShiftExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::SHIFT_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::SHIFT_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readAdditiveExpression();
+  if (! itoken) {
+    auto itoken1 = readAdditiveExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::SHIFT_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
     }
   }
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::BIT_LSHIFT) ||
            isOperatorIToken(itoken1, CExprOpType::BIT_RSHIFT)) {
-      CExprITokenPtr itoken2 = readAdditiveExpression();
+      auto itoken2 = readAdditiveExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 = CExprIToken::createIToken(CExprITokenType::SHIFT_EXPRESSION);
+      if (itoken2) {
+        auto itoken3 = CExprIToken::createIToken(CExprITokenType::SHIFT_EXPRESSION);
 
         addITokenToType(itoken , itoken3);
         addITokenToType(itoken1, itoken3);
@@ -878,20 +876,20 @@ readAdditiveExpression()
 {
   DEBUG_ENTER("readAdditiveExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::ADDITIVE_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::ADDITIVE_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readMultiplicativeExpression();
+  if (! itoken) {
+    auto itoken1 = readMultiplicativeExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::ADDITIVE_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
     }
   }
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
 #ifdef GNUPLOT_EXPR
     while (isOperatorIToken(itoken1, CExprOpType::PLUS ) ||
@@ -901,10 +899,10 @@ readAdditiveExpression()
     while (isOperatorIToken(itoken1, CExprOpType::PLUS ) ||
            isOperatorIToken(itoken1, CExprOpType::MINUS)) {
 #endif
-      CExprITokenPtr itoken2 = readMultiplicativeExpression();
+      auto itoken2 = readMultiplicativeExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 = CExprIToken::createIToken(CExprITokenType::ADDITIVE_EXPRESSION);
+      if (itoken2) {
+        auto itoken3 = CExprIToken::createIToken(CExprITokenType::ADDITIVE_EXPRESSION);
 
         addITokenToType(itoken , itoken3);
         addITokenToType(itoken1, itoken3);
@@ -952,29 +950,28 @@ readMultiplicativeExpression()
 {
   DEBUG_ENTER("readMultiplicativeExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::MULTIPLICATIVE_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::MULTIPLICATIVE_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readUnaryExpression();
+  if (! itoken) {
+    auto itoken1 = readUnaryExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::MULTIPLICATIVE_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
     }
   }
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::TIMES  ) ||
            isOperatorIToken(itoken1, CExprOpType::DIVIDE ) ||
            isOperatorIToken(itoken1, CExprOpType::MODULUS)) {
-      CExprITokenPtr itoken2 = readUnaryExpression();
+      auto itoken2 = readUnaryExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 =
-          CExprIToken::createIToken(CExprITokenType::MULTIPLICATIVE_EXPRESSION);
+      if (itoken2) {
+        auto itoken3 = CExprIToken::createIToken(CExprITokenType::MULTIPLICATIVE_EXPRESSION);
 
         addITokenToType(itoken , itoken3);
         addITokenToType(itoken1, itoken3);
@@ -1013,10 +1010,10 @@ readUnaryExpression()
 {
   DEBUG_ENTER("readUnaryExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::UNARY_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::UNARY_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (! itoken) {
+    auto itoken1 = unstackIToken();
 
     if (isOperatorIToken(itoken1, CExprOpType::INCREMENT  ) ||
         isOperatorIToken(itoken1, CExprOpType::DECREMENT  ) ||
@@ -1024,9 +1021,9 @@ readUnaryExpression()
         isOperatorIToken(itoken1, CExprOpType::MINUS      ) ||
         isOperatorIToken(itoken1, CExprOpType::BIT_NOT    ) ||
         isOperatorIToken(itoken1, CExprOpType::LOGICAL_NOT)) {
-      CExprITokenPtr itoken2 = readUnaryExpression();
+      auto itoken2 = readUnaryExpression();
 
-      if (itoken2.isValid()) {
+      if (itoken2) {
         itoken = CExprIToken::createIToken(CExprITokenType::UNARY_EXPRESSION);
 
         addITokenToType(itoken1, itoken);
@@ -1040,7 +1037,7 @@ readUnaryExpression()
 
     itoken1 = readPowerExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::UNARY_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
@@ -1048,8 +1045,8 @@ readUnaryExpression()
   }
 
 #ifdef GNUPLOT_EXPR
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken2 = unstackIToken();
+  if (itoken) {
+    auto itoken2 = unstackIToken();
 
     if (isOperatorIToken(itoken2, CExprOpType::FACTORIAL)) {
       addITokenToType(itoken2, itoken);
@@ -1076,22 +1073,22 @@ readPowerExpression()
 {
   DEBUG_ENTER("readPowerExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::POWER_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::POWER_EXPRESSION);
 
-  if (itoken.isValid())
+  if (itoken)
     return itoken;
 
-  CExprITokenPtr itoken1 = readPostfixExpression();
+  auto itoken1 = readPostfixExpression();
 
-  if (! itoken1.isValid())
+  if (! itoken1)
     return itoken;
 
-  CExprITokenPtr itoken2 = unstackIToken();
+  auto itoken2 = unstackIToken();
 
   if (isOperatorIToken(itoken2, CExprOpType::POWER)) {
-    CExprITokenPtr itoken3 = readPowerExpression();
+    auto itoken3 = readPowerExpression();
 
-    if (itoken3.isValid()) {
+    if (itoken3) {
       itoken = CExprIToken::createIToken(CExprITokenType::POWER_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
@@ -1132,19 +1129,19 @@ readPostfixExpression()
 {
   DEBUG_ENTER("readPostfixExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::POSTFIX_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::POSTFIX_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (! itoken) {
+    auto itoken1 = unstackIToken();
 
     if (isIdentifierIToken(itoken1)) {
-      CExprITokenPtr itoken2 = unstackIToken();
+      auto itoken2 = unstackIToken();
 
       if (isOperatorIToken(itoken2, CExprOpType::OPEN_RBRACKET)) {
-        CExprITokenPtr itoken3 = readArgumentExpressionList();
+        auto itoken3 = readArgumentExpressionList();
 
-        if (itoken3.isValid() || ! errorData_.isError()) {
-          CExprITokenPtr itoken4 = unstackIToken();
+        if (itoken3 || ! errorData_.isError()) {
+          auto itoken4 = unstackIToken();
 
           if (isOperatorIToken(itoken4, CExprOpType::CLOSE_RBRACKET)) {
             itoken = CExprIToken::createIToken(CExprITokenType::POSTFIX_EXPRESSION);
@@ -1166,16 +1163,16 @@ readPostfixExpression()
       }
 #ifdef GNUPLOT_EXPR
       else if (isOperatorIToken(itoken2, CExprOpType::OPEN_SBRACKET)) {
-        CExprITokenPtr itoken3 = readExpression();
+        auto itoken3 = readExpression();
 
-        if (itoken3.isValid() || ! errorData_.isError()) {
-          CExprITokenPtr itoken4 = unstackIToken();
+        if (itoken3 || ! errorData_.isError()) {
+          auto itoken4 = unstackIToken();
 
           if (isOperatorIToken(itoken4, CExprOpType::TIMES))
             itoken4 = unstackIToken();
 
           if      (isOperatorIToken(itoken4, CExprOpType::CLOSE_SBRACKET)) {
-            if (itoken3.isValid()) {
+            if (itoken3) {
               itoken = CExprIToken::createIToken(CExprITokenType::POSTFIX_EXPRESSION);
 
               addITokenToType(itoken1, itoken);
@@ -1193,10 +1190,10 @@ readPostfixExpression()
             }
           }
           else if (isOperatorIToken(itoken4, CExprOpType::COLON)) {
-            CExprITokenPtr itoken5 = readExpression();
+            auto itoken5 = readExpression();
 
-            if (itoken5.isValid() || ! errorData_.isError()) {
-              CExprITokenPtr itoken6 = unstackIToken();
+            if (itoken5 || ! errorData_.isError()) {
+              auto itoken6 = unstackIToken();
 
               if (isOperatorIToken(itoken6, CExprOpType::TIMES))
                 itoken6 = unstackIToken();
@@ -1204,9 +1201,9 @@ readPostfixExpression()
               if (isOperatorIToken(itoken6, CExprOpType::CLOSE_SBRACKET)) {
                 itoken = CExprIToken::createIToken(CExprITokenType::POSTFIX_EXPRESSION);
 
-                if (! itoken3.isValid())
+                if (! itoken3)
                   itoken3 = CExprIToken::createIToken(CExprITokenType::DUMMY_EXPRESSION);
-                if (! itoken5.isValid())
+                if (! itoken5)
                   itoken5 = CExprIToken::createIToken(CExprITokenType::DUMMY_EXPRESSION);
 
                 addITokenToType(itoken1, itoken);
@@ -1256,10 +1253,10 @@ readPostfixExpression()
       stackIToken(itoken1);
   }
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readPrimaryExpression();
+  if (! itoken) {
+    auto itoken1 = readPrimaryExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::POSTFIX_EXPRESSION);
 
       addITokenToType(itoken1, itoken);
@@ -1267,20 +1264,20 @@ readPostfixExpression()
   }
 
 #ifdef GNUPLOT_EXPR
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken2 = unstackIToken();
+  if (itoken) {
+    auto itoken2 = unstackIToken();
 
     if (isOperatorIToken(itoken2, CExprOpType::OPEN_SBRACKET)) {
-      CExprITokenPtr itoken3 = readExpression();
+      auto itoken3 = readExpression();
 
-      if (itoken3.isValid() || ! errorData_.isError()) {
-        CExprITokenPtr itoken4 = unstackIToken();
+      if (itoken3 || ! errorData_.isError()) {
+        auto itoken4 = unstackIToken();
 
         if (isOperatorIToken(itoken4, CExprOpType::TIMES))
           itoken4 = unstackIToken();
 
         if      (isOperatorIToken(itoken4, CExprOpType::CLOSE_SBRACKET)) {
-          if (itoken3.isValid()) {
+          if (itoken3) {
             CExprITokenPtr itoken1 =
               collapseITokenToType(itoken, CExprITokenType::PRIMARY_EXPRESSION);
 
@@ -1300,10 +1297,10 @@ readPostfixExpression()
           }
         }
         else if (isOperatorIToken(itoken4, CExprOpType::COLON)) {
-          CExprITokenPtr itoken5 = readExpression();
+          auto itoken5 = readExpression();
 
-          if (itoken5.isValid() || ! errorData_.isError()) {
-            CExprITokenPtr itoken6 = unstackIToken();
+          if (itoken5 || ! errorData_.isError()) {
+            auto itoken6 = unstackIToken();
 
             if (isOperatorIToken(itoken6, CExprOpType::TIMES))
               itoken6 = unstackIToken();
@@ -1314,9 +1311,9 @@ readPostfixExpression()
 
               itoken = CExprIToken::createIToken(CExprITokenType::POSTFIX_EXPRESSION);
 
-              if (! itoken3.isValid())
+              if (! itoken3)
                 itoken3 = CExprIToken::createIToken(CExprITokenType::DUMMY_EXPRESSION);
-              if (! itoken5.isValid())
+              if (! itoken5)
                 itoken5 = CExprIToken::createIToken(CExprITokenType::DUMMY_EXPRESSION);
 
               addITokenToType(itoken1, itoken);
@@ -1359,12 +1356,12 @@ readPostfixExpression()
   }
 #endif
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::INCREMENT) ||
            isOperatorIToken(itoken1, CExprOpType::DECREMENT)) {
-      CExprITokenPtr itoken2 = CExprIToken::createIToken(CExprITokenType::POSTFIX_EXPRESSION);
+      auto itoken2 = CExprIToken::createIToken(CExprITokenType::POSTFIX_EXPRESSION);
 
       addITokenToType(itoken , itoken2);
       addITokenToType(itoken1, itoken2);
@@ -1399,10 +1396,10 @@ readPrimaryExpression()
 {
   DEBUG_ENTER("readPrimaryExpression");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::PRIMARY_EXPRESSION);
+  auto itoken = readITokenOfType(CExprITokenType::PRIMARY_EXPRESSION);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (! itoken) {
+    auto itoken1 = unstackIToken();
 
 #ifdef GNUPLOT_EXPR
     if      (isIntegerIToken(itoken1) || isStringIToken(itoken1) ||
@@ -1420,10 +1417,10 @@ readPrimaryExpression()
       addITokenToType(itoken1, itoken);
     }
     else if (isOperatorIToken(itoken1, CExprOpType::OPEN_RBRACKET)) {
-      CExprITokenPtr itoken2 = readExpression();
+      auto itoken2 = readExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 = unstackIToken();
+      if (itoken2) {
+        auto itoken3 = unstackIToken();
 
         if (isOperatorIToken(itoken3, CExprOpType::CLOSE_RBRACKET)) {
           itoken = CExprIToken::createIToken(CExprITokenType::PRIMARY_EXPRESSION);
@@ -1465,27 +1462,26 @@ readArgumentExpressionList()
 {
   DEBUG_ENTER("readArgumentExpressionList");
 
-  CExprITokenPtr itoken = readITokenOfType(CExprITokenType::ARGUMENT_EXPRESSION_LIST);
+  auto itoken = readITokenOfType(CExprITokenType::ARGUMENT_EXPRESSION_LIST);
 
-  if (! itoken.isValid()) {
-    CExprITokenPtr itoken1 = readAssignmentExpression();
+  if (! itoken) {
+    auto itoken1 = readAssignmentExpression();
 
-    if (itoken1.isValid()) {
+    if (itoken1) {
       itoken = CExprIToken::createIToken(CExprITokenType::ARGUMENT_EXPRESSION_LIST);
 
       addITokenToType(itoken1, itoken);
     }
   }
 
-  if (itoken.isValid()) {
-    CExprITokenPtr itoken1 = unstackIToken();
+  if (itoken) {
+    auto itoken1 = unstackIToken();
 
     while (isOperatorIToken(itoken1, CExprOpType::COMMA)) {
-      CExprITokenPtr itoken2 = readAssignmentExpression();
+      auto itoken2 = readAssignmentExpression();
 
-      if (itoken2.isValid()) {
-        CExprITokenPtr itoken3 =
-          CExprIToken::createIToken(CExprITokenType::ARGUMENT_EXPRESSION_LIST);
+      if (itoken2) {
+        auto itoken3 = CExprIToken::createIToken(CExprITokenType::ARGUMENT_EXPRESSION_LIST);
 
         addITokenToType(itoken , itoken3);
         addITokenToType(itoken1, itoken3);
@@ -1511,9 +1507,9 @@ CExprITokenPtr
 CExprInterpImpl::
 readITokenOfType(CExprITokenType type)
 {
-  CExprITokenPtr itoken = unstackIToken();
+  auto itoken = unstackIToken();
 
-  if (itoken.isValid()) {
+  if (itoken) {
     if (itoken->getIType() == type)
       return itoken;
 
@@ -1527,9 +1523,9 @@ bool
 CExprInterpImpl::
 isLastToken()
 {
-  CExprITokenPtr itoken = unstackIToken();
+  auto itoken = unstackIToken();
 
-  if (! itoken.isValid())
+  if (! itoken)
     return true;
 
   stackIToken(itoken);
@@ -1541,7 +1537,7 @@ void
 CExprInterpImpl::
 addITokenToType(CExprITokenPtr child, CExprITokenPtr itoken)
 {
-  if (! itoken.isValid() || ! child.isValid())
+  if (! itoken || ! child)
     return;
 
   itoken->addChild(child);
@@ -1551,9 +1547,9 @@ CExprITokenPtr
 CExprInterpImpl::
 collapseITokenToType(CExprITokenPtr itoken, CExprITokenType type)
 {
-  CExprITokenPtr itoken1 = itoken;
+  auto itoken1 = itoken;
 
-  while (itoken1.isValid()) {
+  while (itoken1) {
     if (itoken1->getIType() == type)
       break;
 
@@ -1570,10 +1566,10 @@ void
 CExprInterpImpl::
 deleteCollapsedIToken(CExprITokenPtr itoken, CExprITokenPtr itoken1)
 {
-  CExprITokenPtr itoken2 = itoken;
+  auto itoken2 = itoken;
 
   while (itoken2 != itoken1) {
-    CExprITokenPtr itoken3 = itoken2->getChild(0);
+    auto itoken3 = itoken2->getChild(0);
 
     itoken2->removeAllChildren();
 
@@ -1585,7 +1581,7 @@ bool
 CExprInterpImpl::
 isOperatorIToken(const CExprITokenPtr &itoken, CExprOpType id)
 {
-  if (! itoken.isValid())
+  if (! itoken)
     return false;
 
   if (itoken->getType() != CExprTokenType::OPERATOR)
@@ -1598,7 +1594,7 @@ bool
 CExprInterpImpl::
 isIdentifierIToken(const CExprITokenPtr &itoken)
 {
-  if (! itoken.isValid())
+  if (! itoken)
     return false;
 
   return (itoken->getType() == CExprTokenType::IDENTIFIER);
@@ -1608,7 +1604,7 @@ bool
 CExprInterpImpl::
 isIntegerIToken(const CExprITokenPtr &itoken)
 {
-  if (! itoken.isValid())
+  if (! itoken)
     return false;
 
   return (itoken->getType() == CExprTokenType::INTEGER);
@@ -1618,7 +1614,7 @@ bool
 CExprInterpImpl::
 isRealIToken(const CExprITokenPtr &itoken)
 {
-  if (! itoken.isValid())
+  if (! itoken)
     return false;
 
   return (itoken->getType() == CExprTokenType::REAL);
@@ -1628,7 +1624,7 @@ bool
 CExprInterpImpl::
 isStringIToken(const CExprITokenPtr &itoken)
 {
-  if (! itoken.isValid())
+  if (! itoken)
     return false;
 
   return (itoken->getType() == CExprTokenType::STRING);
@@ -1639,7 +1635,7 @@ bool
 CExprInterpImpl::
 isComplexIToken(const CExprITokenPtr &itoken)
 {
-  if (! itoken.isValid())
+  if (! itoken)
     return false;
 
   return (itoken->getType() == CExprTokenType::COMPLEX);
@@ -1650,7 +1646,7 @@ void
 CExprInterpImpl::
 stackIToken(const CExprITokenPtr &itoken)
 {
-  if (! itoken.isValid())
+  if (! itoken)
     return;
 
   itokenStack_.addToken(itoken);
@@ -1660,15 +1656,15 @@ CExprITokenPtr
 CExprInterpImpl::
 unstackIToken()
 {
-  CExprITokenPtr itoken = itokenStack_.pop_back();
+  auto itoken = itokenStack_.pop_back();
 
-  if (itoken.isValid())
+  if (itoken)
     return itoken;
 
   if (ptokenStack_.getNumTokens() == 0)
     return CExprITokenPtr();
 
-  CExprTokenBaseP ptoken = ptokenStack_.pop_front();
+  auto ptoken = ptokenStack_.pop_front();
 
   return CExprIToken::createIToken(ptoken);
 }
@@ -1690,32 +1686,32 @@ printTrackBack(std::ostream &os)
   uint size = itokenStack_.getNumTokens();
 
   for (uint i = size - 1; i >= 1; --i) {
-    CExprITokenPtr itoken = itokenStack_.getToken(i);
+    auto itoken = itokenStack_.getToken(i);
 
     if (i < size)
       os << " ";
 
-    os << itoken;
+    os << *itoken;
   }
 
-  CExprITokenPtr itoken = itokenStack_.getToken(0);
+  auto itoken = itokenStack_.getToken(0);
 
-  if (itoken.isValid()) {
+  if (itoken) {
     if (size > 1)
       os << " ";
 
-    os << ">>" << itoken << "<<";
+    os << ">>" << *itoken << "<<";
   }
 
   size = ptokenStack_.getNumTokens();
 
   for (uint i = 0; i < size; ++i) {
-    CExprTokenBaseP ptoken = ptokenStack_.getToken(i);
+    auto ptoken = ptokenStack_.getToken(i);
 
     os << " " << ptoken;
   }
 
-  os << std::endl;
+  os << "\n";
 }
 
 #ifdef CEXPR_DEBUG
@@ -1723,7 +1719,7 @@ void
 CExprInterpImpl::
 printTypeIToken(std::ostream &os, CExprITokenPtr itoken)
 {
-  if (! itoken.isValid())
+  if (! itoken)
     return;
 
   if (! expr_->getDebug())
@@ -1731,7 +1727,7 @@ printTypeIToken(std::ostream &os, CExprITokenPtr itoken)
 
   printTypeIToken1(os, itoken);
 
-  os << std::endl;
+  os << "\n";
 }
 
 void
@@ -1765,7 +1761,7 @@ void
 CExprInterpImpl::
 concatITokenString(std::string &str, CExprITokenPtr itoken)
 {
-  if (! itoken.isValid())
+  if (! itoken)
     return;
 
   if (itoken->getType() == CExprTokenType::STRING) {
@@ -1860,7 +1856,7 @@ CExprTokenType
 CExprIToken::
 getType() const
 {
-  if (base_.isValid())
+  if (base_)
     return base_->type();
 
   return CExprTokenType::NONE;
@@ -1871,9 +1867,9 @@ CExprIToken *
 CExprIToken::
 dup() const
 {
-  CExprIToken *itoken = new CExprIToken(itype_);
+  auto *itoken = new CExprIToken(itype_);
 
-  if (base_.isValid())
+  if (base_)
     itoken->base_ = base_->dup();
 
   uint num_children = children_.size();
@@ -1908,13 +1904,13 @@ void
 CExprIToken::
 print(std::ostream &os, bool children) const
 {
-  if (base_.isValid())
+  if (base_)
     base_->print(os);
   else
     os << "<" << CExprInterpUtil::getTypeName(getIType(), CExprTokenType::UNKNOWN) << ">";
 
   if (children) {
-    uint num_children = uint(children_.size());
+    auto num_children = children_.size();
 
     if (num_children > 0) {
       os << " [";
@@ -1936,7 +1932,7 @@ void
 CExprITokenStack::
 print(std::ostream &os) const
 {
-  uint len = uint(stack_.size());
+  auto len = stack_.size();
 
   for (uint i = 0; i < len; ++i) {
     if (i > 0) os << " ";

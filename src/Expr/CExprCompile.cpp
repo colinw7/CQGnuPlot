@@ -58,7 +58,7 @@ CExprCompile::
 CExprCompile(CExpr *expr) :
  expr_(expr)
 {
-  impl_ = new CExprCompileImpl(expr);
+  impl_ = std::make_unique<CExprCompileImpl>(expr);
 }
 
 CExprCompile::
@@ -88,7 +88,7 @@ compileIToken(CExprITokenPtr itoken)
 {
   tokenStack_.clear();
 
-  if (! itoken.isValid())
+  if (! itoken)
     return tokenStack_;
 
   errorData_.setLastError("");
@@ -266,9 +266,9 @@ compileAssignmentExpression(CExprITokenPtr itoken)
   if (num_children == 3) {
     compileUnaryExpression(itoken->getChild(0));
 
-    CExprITokenPtr itoken1 = itoken->getChild(1);
+    auto itoken1 = itoken->getChild(1);
 
-    CExprOpType op = itoken1->getOperator();
+    auto op = itoken1->getOperator();
 
     switch (op) {
       case CExprOpType::EQUALS:
@@ -532,9 +532,9 @@ compileEqualityExpression(CExprITokenPtr itoken)
   uint num_children = itoken->getNumChildren();
 
   if (num_children == 3) {
-    CExprITokenPtr itoken1 = itoken->getChild(1);
+    auto itoken1 = itoken->getChild(1);
 
-    CExprOpType op = itoken1->getOperator();
+    auto op = itoken1->getOperator();
 
 #ifdef GNUPLOT_EXPR
     if      (op == CExprOpType::EQUAL || op == CExprOpType::STR_EQUAL) {
@@ -591,7 +591,7 @@ compileRelationalExpression(CExprITokenPtr itoken)
 
     compileShiftExpression(itoken->getChild(2));
 
-    CExprITokenPtr itoken1 = itoken->getChild(1);
+    auto itoken1 = itoken->getChild(1);
 
     stackCToken(itoken1->base());
   }
@@ -616,9 +616,9 @@ compileShiftExpression(CExprITokenPtr itoken)
 
     compileAdditiveExpression(itoken->getChild(2));
 
-    CExprITokenPtr itoken1 = itoken->getChild(1);
+    auto itoken1 = itoken->getChild(1);
 
-    CExprOpType op = itoken1->getOperator();
+    auto op = itoken1->getOperator();
 
     if      (op == CExprOpType::BIT_LSHIFT)
       stackCToken(itoken1->base());
@@ -653,9 +653,9 @@ compileAdditiveExpression(CExprITokenPtr itoken)
 
     compileMultiplicativeExpression(itoken->getChild(2));
 
-    CExprITokenPtr itoken1 = itoken->getChild(1);
+    auto itoken1 = itoken->getChild(1);
 
-    CExprOpType op = itoken1->getOperator();
+    auto op = itoken1->getOperator();
 
     if      (op == CExprOpType::PLUS)
       stackCToken(itoken1->base());
@@ -690,9 +690,9 @@ compileMultiplicativeExpression(CExprITokenPtr itoken)
 
     compileUnaryExpression(itoken->getChild(2));
 
-    CExprITokenPtr itoken1 = itoken->getChild(1);
+    auto itoken1 = itoken->getChild(1);
 
-    CExprOpType op = itoken1->getOperator();
+    auto op = itoken1->getOperator();
 
     if      (op == CExprOpType::TIMES)
       stackCToken(itoken1->base());
@@ -725,10 +725,10 @@ compileUnaryExpression(CExprITokenPtr itoken)
   uint num_children = itoken->getNumChildren();
 
   if (num_children == 2) {
-    CExprITokenPtr itoken0 = itoken->getChild(0);
+    auto itoken0 = itoken->getChild(0);
 
-    if (itoken0->base().isValid()) {
-      CExprOpType op = itoken0->getOperator();
+    if (itoken0->base()) {
+      auto op = itoken0->getOperator();
 
       switch (op) {
         case CExprOpType::INCREMENT:
@@ -781,7 +781,7 @@ compileUnaryExpression(CExprITokenPtr itoken)
     else {
       compilePowerExpression(itoken->getChild(0));
 
-      CExprITokenPtr itoken1 = itoken->getChild(1);
+      auto itoken1 = itoken->getChild(1);
 
       stackCToken(itoken1->base());
     }
@@ -827,7 +827,7 @@ void
 CExprCompileImpl::
 compilePostfixExpression(CExprITokenPtr itoken)
 {
-  CExprITokenPtr itoken0 = itoken->getChild(0);
+  auto itoken0 = itoken->getChild(0);
 
   uint num_children = itoken->getNumChildren();
 
@@ -836,9 +836,9 @@ compilePostfixExpression(CExprITokenPtr itoken)
     return;
   }
 
-  CExprITokenPtr itoken1 = itoken->getChild(1);
+  auto itoken1 = itoken->getChild(1);
 
-  CExprOpType op = itoken1->getOperator();
+  auto op = itoken1->getOperator();
 
 #ifdef GNUPLOT_EXPR
   if      (num_children == 4 && itoken0->getIType() == CExprITokenType::PRIMARY_EXPRESSION &&
@@ -892,9 +892,9 @@ compilePostfixExpression(CExprITokenPtr itoken)
       compileArgumentExpressionList(itoken->getChild(2));
     }
 
-    CExprITokenPtr citoken0 = itoken->getChild(0);
+    auto itoken00 = itoken->getChild(0);
 
-    const std::string &identifier = citoken0->getIdentifier();
+    const auto &identifier = itoken00->getIdentifier();
 
     CExprFunctionMgr::Functions functions;
 
@@ -903,23 +903,23 @@ compilePostfixExpression(CExprITokenPtr itoken)
     CExprFunctionPtr function;
 
     for (auto &function1 : functions) {
-      if (! function1.isValid())
+      if (! function1)
         continue;
 
       function = function1;
 
-      uint function_num_args = function1->numArgs();
+      auto function_num_args = function1->numArgs();
 
       if (function_num_args == num_args)
         break;
     }
 
-    if (! function.isValid()) {
+    if (! function) {
       errorData_.setLastError("Invalid Function '" + identifier + "'");
       return;
     }
 
-    uint function_num_args = function->numArgs();
+    auto function_num_args = function->numArgs();
 
     for (uint i = num_args; i < function_num_args; ++i) {
       if (! (uint(function->argType(i)) & uint(CExprValueType::NUL)))
@@ -949,7 +949,7 @@ compilePostfixExpression(CExprITokenPtr itoken)
   else if (op == CExprOpType::OPEN_SBRACKET) {
     // <var> [ <ind> ]
     if (num_children == 4) {
-      CExprITokenPtr citoken0 = itoken->getChild(0);
+      auto citoken0 = itoken->getChild(0);
 
       stackCToken(citoken0->base());
 
@@ -961,7 +961,7 @@ compilePostfixExpression(CExprITokenPtr itoken)
     }
     // <var> [ <ind> : <ind> ]
     else {
-      CExprITokenPtr citoken0 = itoken->getChild(0);
+      auto citoken0 = itoken->getChild(0);
 
       stackCToken(citoken0->base());
 
@@ -1086,7 +1086,7 @@ void
 CExprCompileImpl::
 compileInteger(CExprITokenPtr itoken)
 {
-  CExprValuePtr value = expr_->createIntegerValue(itoken->getInteger());
+  auto value = expr_->createIntegerValue(itoken->getInteger());
 
   CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(value));
 
@@ -1097,7 +1097,7 @@ void
 CExprCompileImpl::
 compileReal(CExprITokenPtr itoken)
 {
-  CExprValuePtr value = expr_->createRealValue(itoken->getReal());
+  auto value = expr_->createRealValue(itoken->getReal());
 
   CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(value));
 
@@ -1108,7 +1108,7 @@ void
 CExprCompileImpl::
 compileString(CExprITokenPtr itoken)
 {
-  CExprValuePtr value = expr_->createStringValue(itoken->getString());
+  auto value = expr_->createStringValue(itoken->getString());
 
   CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(value));
 

@@ -5,14 +5,10 @@
 
 class CExprOperatorMgr {
  public:
+  CExprOperatorMgr(CExpr *expr);
  ~CExprOperatorMgr() { }
 
   CExprOperatorPtr getOperator(CExprOpType type) const;
-
- private:
-  friend class CExpr;
-
-  CExprOperatorMgr(CExpr *expr);
 
  private:
   typedef std::map<CExprOpType,CExprOperatorPtr> OperatorMap;

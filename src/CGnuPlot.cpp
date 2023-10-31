@@ -96,6 +96,11 @@ class CGnuPlotReadLine : public CReadLine {
 //------
 
 namespace {
+  double getNaN() {
+    //return CMathGen::getNaN();
+    return COSNaN::get_nan();
+  }
+
   bool readOptionString(CParseLine &line, std::string &id) {
     line.skipSpace();
 
@@ -168,7 +173,7 @@ CGnuPlot() :
     new CGnuPlotPrefValue<AngleType>("Angle Type", "angles", AngleType::RADIANS);
 
   expr_->createRealVariable("pi" , M_PI);
-  expr_->createRealVariable("NaN", CMathGen::getNaN());
+  expr_->createRealVariable("NaN", getNaN());
 
   expr_->createIntegerVariable("ARGC", 0);
   expr_->createStringVariable ("ARG0", "");
@@ -182,7 +187,7 @@ CGnuPlot() :
   expr_->createStringVariable("GPVAL_TERM"     , "qt");
   expr_->createStringVariable("GPVAL_TERMINALS", "qt svg");
   expr_->createRealVariable  ("GPVAL_pi"       , M_PI);
-  expr_->createRealVariable  ("GPVAL_NaN"      , CMathGen::getNaN());
+  expr_->createRealVariable  ("GPVAL_NaN"      , getNaN());
 
   expr_->createStringVariable("GPVAL_COMPILE_OPTIONS", "+GD_PNG");
 
@@ -1119,7 +1124,7 @@ parseVariableDef(const std::string &identifier, CParseLine &line)
   if (! evaluateExpression(expr, value))
     value = CExprValuePtr();
 
-  if (! value.isValid())
+  if (! value)
     return false;
 
   expr_->createVariable(identifier, value);
@@ -1406,16 +1411,16 @@ callCmd(const std::string &args)
         std::string   str;
 
         if (evaluateExpression(arg.substr(1, arg.size() - 2), value) &&
-            value.isValid() && value->getStringValue(str))
+            value && value->getStringValue(str))
           arg = str;
       }
       else {
         CExprVariablePtr var = expr_->getVariable(arg);
 
-        CExprValuePtr value = (var.isValid() ? var->getValue() : CExprValuePtr());
+        CExprValuePtr value = (var ? var->getValue() : CExprValuePtr());
         std::string   str;
 
-        if (value.isValid() && value->isStringValue() && value->getStringValue(str))
+        if (value && value->isStringValue() && value->getStringValue(str))
           arg = str;
       }
     }
@@ -3524,18 +3529,18 @@ plotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroupP &group,
   else {
     CExprValuePtr value1;
 
-    if (! evaluateExpression(forCmd.start, value1) || ! value1.isValid())
+    if (! evaluateExpression(forCmd.start, value1) || ! value1)
       return;
 
     CExprValuePtr value2;
 
-    if (! evaluateExpression(forCmd.end, value2) || ! value2.isValid())
+    if (! evaluateExpression(forCmd.end, value2) || ! value2)
       return;
 
     CExprValuePtr value3;
 
     if (forCmd.inc != "") {
-      if (! evaluateExpression(forCmd.inc, value3) || ! value3.isValid())
+      if (! evaluateExpression(forCmd.inc, value3) || ! value3)
         value3 = CExprValuePtr();
     }
 
@@ -3544,7 +3549,7 @@ plotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroupP &group,
     if (! value1->getIntegerValue(i1) || ! value2->getIntegerValue(i2))
       return;
 
-    if (value3.isValid() && ! value3->getIntegerValue(i3))
+    if (value3 && ! value3->getIntegerValue(i3))
       return;
 
     while (i1 <= i2) {
@@ -3577,18 +3582,18 @@ splotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroupP &group
   else {
     CExprValuePtr value1;
 
-    if (! evaluateExpression(forCmd.start, value1) || ! value1.isValid())
+    if (! evaluateExpression(forCmd.start, value1) || ! value1)
       return;
 
     CExprValuePtr value2;
 
-    if (! evaluateExpression(forCmd.end, value2) || ! value2.isValid())
+    if (! evaluateExpression(forCmd.end, value2) || ! value2)
       return;
 
     CExprValuePtr value3;
 
     if (forCmd.inc != "") {
-      if (! evaluateExpression(forCmd.inc, value3) || ! value3.isValid())
+      if (! evaluateExpression(forCmd.inc, value3) || ! value3)
         value3 = CExprValuePtr();
     }
 
@@ -3597,7 +3602,7 @@ splotForCmd(const ForCmd &forCmd, const std::string &args, CGnuPlotGroupP &group
     if (! value1->getIntegerValue(i1) || ! value2->getIntegerValue(i2))
       return;
 
-    if (value3.isValid() && ! value3->getIntegerValue(i3))
+    if (value3 && ! value3->getIntegerValue(i3))
       return;
 
     while (i1 <= i2) {
@@ -9639,18 +9644,18 @@ setForCmd(const ForCmd &forCmd, const std::string &args)
   else {
     CExprValuePtr value1;
 
-    if (! evaluateExpression(forCmd.start, value1) || ! value1.isValid())
+    if (! evaluateExpression(forCmd.start, value1) || ! value1)
       return;
 
     CExprValuePtr value2;
 
-    if (! evaluateExpression(forCmd.end, value2) || ! value2.isValid())
+    if (! evaluateExpression(forCmd.end, value2) || ! value2)
       return;
 
     CExprValuePtr value3;
 
     if (forCmd.inc != "") {
-      if (! evaluateExpression(forCmd.inc, value3) || ! value3.isValid())
+      if (! evaluateExpression(forCmd.inc, value3) || ! value3)
         value3 = CExprValuePtr();
     }
 
@@ -9659,7 +9664,7 @@ setForCmd(const ForCmd &forCmd, const std::string &args)
     if (! value1->getIntegerValue(i1) || ! value2->getIntegerValue(i2))
       return;
 
-    if (value3.isValid() && ! value3->getIntegerValue(i3))
+    if (value3 && ! value3->getIntegerValue(i3))
       return;
 
     while (i1 <= i2) {
@@ -10762,7 +10767,7 @@ showVariables(std::ostream &os, const StringArray &args)
 
       CExprValuePtr value = var->value();
 
-      CExprValueType type = (value.isValid() ? value->getType() : CExprValueType::NONE);
+      CExprValueType type = (value ? value->getType() : CExprValueType::NONE);
 
       if (type == CExprValueType::STRING)
         os << "\"" << value << "\"";
@@ -11701,18 +11706,18 @@ unsetForCmd(const ForCmd &forCmd, const std::string &args)
   else {
     CExprValuePtr value1;
 
-    if (! evaluateExpression(forCmd.start, value1) || ! value1.isValid())
+    if (! evaluateExpression(forCmd.start, value1) || ! value1)
       return;
 
     CExprValuePtr value2;
 
-    if (! evaluateExpression(forCmd.end, value2) || ! value2.isValid())
+    if (! evaluateExpression(forCmd.end, value2) || ! value2)
       return;
 
     CExprValuePtr value3;
 
     if (forCmd.inc != "") {
-      if (! evaluateExpression(forCmd.inc, value3) || ! value3.isValid())
+      if (! evaluateExpression(forCmd.inc, value3) || ! value3)
         value3 = CExprValuePtr();
     }
 
@@ -11721,7 +11726,7 @@ unsetForCmd(const ForCmd &forCmd, const std::string &args)
     if (! value1->getIntegerValue(i1) || ! value2->getIntegerValue(i2))
       return;
 
-    if (value3.isValid() && ! value3->getIntegerValue(i3))
+    if (value3 && ! value3->getIntegerValue(i3))
       return;
 
     while (i1 <= i2) {
@@ -12401,7 +12406,7 @@ parseBoolExpression(CParseLine &line, bool &res)
 
   long l;
 
-  if (! value.isValid() || ! value->getIntegerValue(l))
+  if (! value || ! value->getIntegerValue(l))
     return false;
 
   res = (l != 0);
@@ -12576,7 +12581,7 @@ doCmd(const std::string &args)
     if (! value1->getIntegerValue(i1) || ! value2->getIntegerValue(i2))
       return;
 
-    if (value3.isValid() && ! value3->getIntegerValue(i3))
+    if (value3 && ! value3->getIntegerValue(i3))
       return;
 
     while (i1 <= i2) {
@@ -12638,7 +12643,7 @@ whileCmd(const std::string &args)
 
     long l;
 
-    if (! value.isValid() || ! value->getIntegerValue(l))
+    if (! value || ! value->getIntegerValue(l))
       break;
 
     bool res = (l != 0);
@@ -12664,7 +12669,7 @@ evaluateCmd(const std::string &args)
 
   std::string str;
 
-  if (! value.isValid() || ! value->getStringValue(str))
+  if (! value || ! value->getStringValue(str))
     return;
 
   parseLine(str);
@@ -13088,7 +13093,7 @@ updateFunction2D(CGnuPlotPlot *plot)
 
         double y = 0.0;
 
-        if (value.isValid() && value->getRealValue(y)) {
+        if (value && value->getRealValue(y)) {
           plot->addPoint2D(x, y);
         }
       }
@@ -13132,7 +13137,7 @@ updateFunction2D(CGnuPlotPlot *plot)
 
         double r = 0.0;
 
-        if (value.isValid() && value->getRealValue(r)) {
+        if (value && value->getRealValue(r)) {
           //double x = r*c;
           //double y = r*s;
 
@@ -13186,11 +13191,11 @@ updateFunction2D(CGnuPlotPlot *plot)
           value = CExprValuePtr();
         }
 
-        if (! value.isValid() || ! value->getRealValue(x))
-          x = CMathGen::getNaN();
+        if (! value || ! value->getRealValue(x))
+          x = getNaN();
       }
       else
-        x = CMathGen::getNaN();
+        x = getNaN();
 
       //---
 
@@ -13203,11 +13208,11 @@ updateFunction2D(CGnuPlotPlot *plot)
           value = CExprValuePtr();
         }
 
-        if (! value.isValid() || ! value->getRealValue(y))
-          y = CMathGen::getNaN();
+        if (! value || ! value->getRealValue(y))
+          y = getNaN();
       }
       else
-        y = CMathGen::getNaN();
+        y = getNaN();
 
       //---
 
@@ -13319,7 +13324,7 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
 
           double z = 0.0;
 
-          if (value.isValid() && value->getRealValue(z)) {
+          if (value && value->getRealValue(z)) {
             //assert(! COSNaN::is_nan(z));
 
             plot->addPoint3D(iy, x, y, z);
@@ -13384,11 +13389,11 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
             value1 = CExprValuePtr();
           }
 
-          if (! value1.isValid() || ! value1->getRealValue(r1))
-            r1 = CMathGen::getNaN();
+          if (! value1 || ! value1->getRealValue(r1))
+            r1 = getNaN();
         }
         else
-          r1 = CMathGen::getNaN();
+          r1 = getNaN();
 
         //---
 
@@ -13403,11 +13408,11 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
             value2 = CExprValuePtr();
           }
 
-          if (! value2.isValid() || ! value2->getRealValue(r2))
-            r2 = CMathGen::getNaN();
+          if (! value2 || ! value2->getRealValue(r2))
+            r2 = getNaN();
         }
         else
-          r2 = CMathGen::getNaN();
+          r2 = getNaN();
 
         //---
 
@@ -13480,11 +13485,11 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
             value = CExprValuePtr();
           }
 
-          if (! value.isValid() || ! value->getRealValue(x))
-            x = CMathGen::getNaN();
+          if (! value || ! value->getRealValue(x))
+            x = getNaN();
         }
         else
-          x = CMathGen::getNaN();
+          x = getNaN();
 
         //---
 
@@ -13497,11 +13502,11 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
             value = CExprValuePtr();
           }
 
-          if (! value.isValid() || ! value->getRealValue(y))
-            y = CMathGen::getNaN();
+          if (! value || ! value->getRealValue(y))
+            y = getNaN();
         }
         else
-          y = CMathGen::getNaN();
+          y = getNaN();
 
         //---
 
@@ -13514,11 +13519,11 @@ addFunction3D(CGnuPlotGroupP &group, const StringArray &functions, PlotStyle sty
             value = CExprValuePtr();
           }
 
-          if (! value.isValid() || ! value->getRealValue(z))
-            z = CMathGen::getNaN();
+          if (! value || ! value->getRealValue(z))
+            z = getNaN();
         }
         else
-          z = CMathGen::getNaN();
+          z = getNaN();
 
         //---
 
@@ -13744,7 +13749,7 @@ setPlotValues2D(CGnuPlotPlot *plot)
           for (const auto &value : fieldValues_) {
             std::string str;
 
-            if (! value.isValid() || ! value->getStringValue(str))
+            if (! value || ! value->getStringValue(str))
               str = "";
 
             strs.push_back(str);
@@ -13770,7 +13775,7 @@ setPlotValues2D(CGnuPlotPlot *plot)
 
                 std::string str;
 
-                if (! value.isValid() || ! value->getStringValue(str))
+                if (! value || ! value->getStringValue(str))
                   str = "";
 
                 //matrixData().setRowHeader(rowNum, str);
@@ -13827,7 +13832,7 @@ setPlotValues2D(CGnuPlotPlot *plot)
             nv = std::min(nv, plotStyle->numUsing());
 
           for (const auto &i : IRangeItr::range(0, nv)) {
-            if (! fieldValues_[i].isValid())
+            if (! fieldValues_[i])
               bad = true;
 
             values.push_back(fieldValues_[i]);
@@ -14350,26 +14355,26 @@ addImage2D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
           if (style == PlotStyle::IMAGE) { // palette
             double r = 0;
 
-            if (uvalues.size() > 0 && uvalues[0].isValid()) uvalues[0]->getRealValue(r);
+            if (uvalues.size() > 0 && uvalues[0]) uvalues[0]->getRealValue(r);
 
             rowValues[iy].push_back(r);
           }
           else {
             double r = 0, g = 0, b = 0;
 
-            if (uvalues.size() > 0 && uvalues[0].isValid()) {
+            if (uvalues.size() > 0 && uvalues[0]) {
               uvalues[0]->getRealValue(r);
               if (! binaryFormat_.indexFormat(0).isReal())
                 r = scaleColorComponent(r);
             }
 
-            if (uvalues.size() > 1 && uvalues[1].isValid()) {
+            if (uvalues.size() > 1 && uvalues[1]) {
               uvalues[1]->getRealValue(g);
               if (! binaryFormat_.indexFormat(1).isReal())
                 g = scaleColorComponent(g);
             }
 
-            if (uvalues.size() > 2 && uvalues[2].isValid()) {
+            if (uvalues.size() > 2 && uvalues[2]) {
               uvalues[2]->getRealValue(b);
               if (! binaryFormat_.indexFormat(2).isReal())
                 b = scaleColorComponent(b);
@@ -14900,7 +14905,7 @@ setPlotValues3D(CGnuPlotPlot *plot)
         // no columns specified so use all columns
         if (usingCols.numCols() == 0) {
           for (const auto &value : fieldValues_) {
-            if (! value.isValid())
+            if (! value)
               bad = true;
 
             values.push_back(value);
@@ -14915,7 +14920,7 @@ setPlotValues3D(CGnuPlotPlot *plot)
             CExprValuePtr value1 = expr_->createRealValue(lineNum);
             CExprValuePtr value2 = expr_->createRealValue(subSetNum);
 
-            if (value1.isValid() && value2.isValid()) {
+            if (value1 && value2) {
               values.push_back(value1);
               values.push_back(value2);
 
@@ -15402,26 +15407,26 @@ addImage3D(CGnuPlotGroupP &group, const std::string &filename, PlotStyle style,
           if (style == PlotStyle::IMAGE) { // palette
             double r = 0;
 
-            if (uvalues.size() > 0 && uvalues[0].isValid()) uvalues[0]->getRealValue(r);
+            if (uvalues.size() > 0 && uvalues[0]) uvalues[0]->getRealValue(r);
 
             rowValues[iy].push_back(r);
           }
           else {
             double r = 0, g = 0, b = 0;
 
-            if (uvalues.size() > 0 && uvalues[0].isValid()) {
+            if (uvalues.size() > 0 && uvalues[0]) {
               uvalues[0]->getRealValue(r);
               if (! binaryFormat_.indexFormat(0).isReal())
                 r = scaleColorComponent(r);
             }
 
-            if (uvalues.size() > 1 && uvalues[1].isValid()) {
+            if (uvalues.size() > 1 && uvalues[1]) {
               uvalues[1]->getRealValue(g);
               if (! binaryFormat_.indexFormat(1).isReal())
                 g = scaleColorComponent(g);
             }
 
-            if (uvalues.size() > 2 && uvalues[2].isValid()) {
+            if (uvalues.size() > 2 && uvalues[2]) {
               uvalues[2]->getRealValue(b);
               if (! binaryFormat_.indexFormat(2).isReal())
                 b = scaleColorComponent(b);
@@ -15905,7 +15910,7 @@ compileExpression(const std::string &expr) const
 
   CExprTokenStack cstack;
 
-  if (itoken.isValid())
+  if (itoken)
     cstack = expr_->compileIToken(itoken);
   else
     errorMsg("Eval failed: '" + expr + "'");
@@ -15943,7 +15948,7 @@ fieldToValue(int /*nf*/, const std::string &field, bool &missing)
   double r;
 
   if      (field == dataFile_.missingStr()) {
-    value = expr_->createRealValue(CMathGen::getNaN());
+    value = expr_->createRealValue(getNaN());
 
     missing = true;
   }
@@ -16800,7 +16805,7 @@ parseAssignment(CParseLine &line)
       return false;
     }
 
-    if (! value.isValid()) {
+    if (! value) {
       line.setPos(pos);
       return false;
     }
@@ -16892,7 +16897,7 @@ parseValue(CParseLine &line, CExprValuePtr &value, const std::string &msg) const
 
   bool quiet = (msg == "");
 
-  if (! evaluateExpression(expr, value, quiet) || ! value.isValid()) {
+  if (! evaluateExpression(expr, value, quiet) || ! value) {
     if (msg != "") errorMsg(msg + ": '" + expr + "'");
     line.setPos(pos);
     return false;
@@ -16905,10 +16910,8 @@ bool
 CGnuPlot::
 getIntegerVariable(const std::string &name, int &value) const
 {
-  CExprVariablePtr var = expr_->getVariable(name);
-
-  if (! var.isValid())
-    return false;
+  auto var = expr_->getVariable(name);
+  if (! var) return false;
 
   CExprValuePtr evalue = var->value();
 
@@ -16926,10 +16929,8 @@ bool
 CGnuPlot::
 getRealVariable(const std::string &name, double &value) const
 {
-  CExprVariablePtr var = expr_->getVariable(name);
-
-  if (! var.isValid())
-    return false;
+  auto var = expr_->getVariable(name);
+  if (! var) return false;
 
   CExprValuePtr evalue = var->value();
 
@@ -17000,10 +17001,8 @@ bool
 CGnuPlot::
 getStringVariable(const std::string &name, std::string &value) const
 {
-  CExprVariablePtr var = expr_->getVariable(name);
-
-  if (! var.isValid())
-    return false;
+  auto var = expr_->getVariable(name);
+  if (! var) return false;
 
   CExprValuePtr evalue = var->value();
 
@@ -17735,7 +17734,7 @@ evaluateExpression(const std::string &expr, CExprValuePtr &value, bool quiet) co
   if (! expr_->evaluateExpression(expr1, value))
     value = CExprValuePtr();
 
-  if (! value.isValid() && ! quiet)
+  if (! value && ! quiet)
     errorMsg("Eval failed: '" + expr1 + "'");
 
   expr_->setQuiet(oldQuiet);
@@ -17857,7 +17856,7 @@ exprToInteger(const std::string &expr, int &i, bool quiet) const
 
   long i1;
 
-  if (! value.isValid() || ! value->getIntegerValue(i1))
+  if (! value || ! value->getIntegerValue(i1))
     return false;
 
   i = int(i1);
@@ -17876,7 +17875,7 @@ exprToReal(const std::string &expr, double &r, bool quiet) const
 
   double r1;
 
-  if (! value.isValid() || ! value->getRealValue(r1))
+  if (! value || ! value->getRealValue(r1))
     return false;
 
   r = r1;
@@ -17896,11 +17895,11 @@ exprToString(const std::string &expr, std::string &s, bool quiet, bool conv) con
   std::string s1;
 
   if (conv) {
-    if (! value.isValid() || ! value->getStringValue(s1))
+    if (! value || ! value->getStringValue(s1))
       return false;
   }
   else {
-    if (! value.isValid() || ! value->isStringValue())
+    if (! value || ! value->isStringValue())
      return false;
 
     (void) value->getStringValue(s1);

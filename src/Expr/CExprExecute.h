@@ -6,19 +6,19 @@ class CExprExecuteImpl;
 
 class CExprExecute {
  public:
+  CExprExecute(CExpr *expr);
  ~CExprExecute();
+
+  CExpr *expr() const { return expr_; }
 
   bool executeCTokenStack(const CExprTokenStack &stack, CExprValueArray &values);
   bool executeCTokenStack(const CExprTokenStack &stack, CExprValuePtr &value);
 
  private:
-  friend class CExpr;
+  using CExprExecuteImplP = std::unique_ptr<CExprExecuteImpl>;
 
-  CExprExecute(CExpr *expr);
-
- private:
-  CExpr*                     expr_ { nullptr };
-  CAutoPtr<CExprExecuteImpl> impl_;
+  CExpr*            expr_ { nullptr };
+  CExprExecuteImplP impl_;
 };
 
 #endif

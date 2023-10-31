@@ -30,7 +30,7 @@ class CGnuPlotStringColumnFn : public CGnuPlotUsingColsFnObj {
 
       CExprValuePtr value = cols_->getFieldValue(int(col), ns);
 
-      if (value.isValid() && value->isStringValue())
+      if (value && value->isStringValue())
         (void) value->getStringValue(str);
     }
 
@@ -77,7 +77,7 @@ class CGnuPlotColumnFn : public CGnuPlotUsingColsFnObj {
 
         value = cols_->getFieldValue(int(icol), ns);
 
-        if (! value.isValid())
+        if (! value)
           value = expr->createStringValue("column(" + std::to_string(icol) + ")");
       }
     }
@@ -104,7 +104,7 @@ class CGnuPlotStringValidFn : public CGnuPlotUsingColsFnObj {
 
       CExprValuePtr value = cols_->getFieldValue(int(icol), ns);
 
-      valid = value.isValid();
+      valid = bool(value);
     }
 
     return expr->createIntegerValue(valid ? 0 : 1);
@@ -402,7 +402,7 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
     CExprValuePtr value = decodeValue(col, ns, ignore, params);
     if (ignore) continue;
 
-    if (! value.isValid() || value->isMissing())
+    if (! value || value->isMissing())
       bad = true;
 
     values.push_back(value);
@@ -429,7 +429,7 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
 
     long icol;
 
-    if (! value.isValid() || ! value->getIntegerValue(icol))
+    if (! value || ! value->getIntegerValue(icol))
       continue;
 
     int ns1;
@@ -438,7 +438,7 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
 
     std::string str1;
 
-    if (! value1.isValid() || ! value1->getStringValue(str1))
+    if (! value1 || ! value1->getStringValue(str1))
       continue;
 
     if (type == CGnuPlotTypes::AxisType::X) {
@@ -462,14 +462,14 @@ decodeValues(CGnuPlot *plot, int setNum, int pointNum, const Values &fieldValues
     if (CGnuPlotUtil::evaluateExpression(expr_, keyLabel_, value, true)) {
       long icol;
 
-      if (value.isValid() && value->getIntegerValue(icol)) {
+      if (value && value->getIntegerValue(icol)) {
         int ns1;
 
         CExprValuePtr value1 = getFieldValue(int(icol), ns1);
 
         std::string str1;
 
-        if (value1.isValid() && value1->getStringValue(str1)) {
+        if (value1 && value1->getStringValue(str1)) {
           if (plot_)
             plot_->setKeyPointLabel(this->pointNum(), str1);
         }
@@ -555,7 +555,7 @@ decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) 
 
       std::string midStr;
 
-      if (value1.isValid()) {
+      if (value1) {
         long        i1;
         double      r1;
         std::string s1;
@@ -627,10 +627,10 @@ decodeValue(const CGnuPlotUsingCol &col, int &ns, bool &ignore, Params &params) 
       long        icol;
       std::string str1;
 
-      if (value1.isValid() && value1->getIntegerValue(icol)) {
+      if (value1 && value1->getIntegerValue(icol)) {
         CExprValuePtr value1 = getFieldValue(int(icol), ns);
 
-        if (value1.isValid() && value1->getStringValue(str1))
+        if (value1 && value1->getStringValue(str1))
           valid = true;
       }
 
@@ -675,7 +675,7 @@ getFieldValue(int icol, int &ns) const
   else if (icol > 0 && icol <= nf) {
     value = fieldValues_[icol - 1];
 
-    if (! value.isValid()) {
+    if (! value) {
       ++ns;
       return CExprValuePtr();
     }
@@ -790,7 +790,7 @@ CGnuPlotUsingCol(CExpr *expr, const std::string &str) :
     long i;
 
     if (expr->evaluateExpression(str, value) &&
-        value.isValid() && value->getIntegerValue(i)) {
+        value && value->getIntegerValue(i)) {
       ival_  = int(i);
       isInt_ = true;
     }

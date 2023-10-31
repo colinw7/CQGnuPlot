@@ -13,11 +13,11 @@ typedef unsigned char uchar;
 class CUnixFile {
  public:
   explicit CUnixFile(const char *filename="") :
-   filename_(filename), fp_(0), owner_(true) {
+   filename_(filename), fp_(nullptr), owner_(true) {
   }
 
   explicit CUnixFile(const std::string &filename) :
-   filename_(filename), fp_(0), owner_(true) {
+   filename_(filename), fp_(nullptr), owner_(true) {
   }
 
   explicit CUnixFile(FILE *fp) :
@@ -32,7 +32,7 @@ class CUnixFile {
 
   FILE *fp() const { return fp_; }
 
-  bool isValid() const { return (fp_ != 0); }
+  bool isValid() const { return (fp_ != nullptr); }
 
   bool open() {
     if (owner_) {
@@ -55,7 +55,7 @@ class CUnixFile {
 
       fclose(fp_);
 
-      fp_ = 0;
+      fp_ = nullptr;
     }
   }
 
@@ -116,7 +116,7 @@ class CUnixFile {
 
  private:
   std::string  filename_;
-  FILE        *fp_    { 0 };
+  FILE        *fp_    { nullptr };
   bool         owner_ { true };
 };
 

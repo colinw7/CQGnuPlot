@@ -10,10 +10,10 @@ CExprVariablePtr
 CExprVariableMgr::
 createVariable(const std::string &name, CExprValuePtr value)
 {
-  CExprVariablePtr variable = getVariable(name);
+  auto variable = getVariable(name);
 
-  if (! variable.isValid()) {
-    variable = CExprVariablePtr(new CExprVariable(name, value));
+  if (! variable) {
+    variable = std::make_shared<CExprVariable>(name, value);
 
     addVariable(variable);
   }
@@ -69,6 +69,13 @@ CExprVariable::
 {
 }
 
+CExprValuePtr
+CExprVariable::
+getValue() const
+{
+  return value_;
+}
+
 void
 CExprVariable::
 setValue(const CExprValuePtr &value)
@@ -83,22 +90,22 @@ setRealValue(CExpr *expr, double r)
   if (value_->isRealValue())
     value_->setRealValue(r);
   else
-    value_ = expr->createRealValue(r);
+    setValue(expr->createRealValue(r));
 }
 
 void
 CExprVariable::
-setIntegerValue(CExpr *expr, int i)
+setIntegerValue(CExpr *expr, long i)
 {
   if (value_->isIntegerValue())
     value_->setIntegerValue(i);
   else
-    value_ = expr->createIntegerValue(i);
+    setValue(expr->createIntegerValue(i));
 }
 
 CExprValueType
 CExprVariable::
 getValueType() const
 {
-  return value_->getType();
+  return getValue()->getType();
 }

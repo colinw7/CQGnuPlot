@@ -82,7 +82,7 @@ CExprParse::
 CExprParse(CExpr *expr) :
  expr_(expr)
 {
-  impl_ = new CExprParseImpl(expr);
+  impl_ = std::make_unique<CExprParseImpl>(expr);
 }
 
 CExprParse::
@@ -148,7 +148,7 @@ parseFile(CFile &file)
 
   tokenStack_.clear();
 
-  uint num_lines = uint(lines.size());
+  auto num_lines = lines.size();
 
   for (uint i = 0; i < num_lines; i++)
     if (! parseLine(tokenStack_, lines[i]))
@@ -186,7 +186,8 @@ parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
 {
   CExprTokenBaseP ptoken;
   CExprTokenBaseP lastPToken;
-  CExprTokenType  lastPTokenType = CExprTokenType::UNKNOWN;
+
+  auto lastPTokenType = CExprTokenType::UNKNOWN;
 
   while (true) {
     CStrUtil::skipSpace(line, &i);
@@ -194,7 +195,7 @@ parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
 
     if      (CExprOperator::isOperatorChar(line[i])) {
       CExprOpType lastOpType =
-       (lastPToken.isValid() && lastPToken->type() == CExprTokenType::OPERATOR ?
+       (lastPToken && lastPToken->type() == CExprTokenType::OPERATOR ?
         lastPToken->getOperator() : CExprOpType::UNKNOWN);
 
       if (lastPTokenType == CExprTokenType::UNKNOWN || lastOpType != CExprOpType::UNKNOWN) {
@@ -207,11 +208,11 @@ parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
         ptoken = readOperator(line, &i);
 
 #ifdef GNUPLOT_EXPR
-      if (! ptoken.isValid() && line[i] == '.')
+      if (! ptoken && line[i] == '.')
         ptoken = readNumber(line, &i);
 #endif
 
-      if (ptoken.isValid() && ptoken->type() == CExprTokenType::OPERATOR) {
+      if (ptoken && ptoken->type() == CExprTokenType::OPERATOR) {
         if      (ptoken->getOperator() == CExprOpType::OPEN_RBRACKET) {
           stack.addToken(ptoken);
 
@@ -231,9 +232,9 @@ parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
       }
 
 #ifdef GNUPLOT_EXPR
-      if (ptoken.isValid() && ptoken->type() == CExprTokenType::OPERATOR &&
+      if (ptoken && ptoken->type() == CExprTokenType::OPERATOR &&
           ptoken->getOperator() == CExprOpType::LOGICAL_NOT &&
-          lastPToken.isValid() && lastPToken->type() == CExprTokenType::INTEGER) {
+          lastPToken && lastPToken->type() == CExprTokenType::INTEGER) {
         ptoken = createOperatorToken(CExprOpType::FACTORIAL);
       }
 #endif
@@ -242,7 +243,7 @@ parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
     else if (CExprOperator::isOperatorStr(line[i])) {
       ptoken = readOperatorStr(line, &i);
 
-      if (! ptoken.isValid())
+      if (! ptoken)
         ptoken = readIdentifier(line, &i);
     }
 #endif
@@ -261,7 +262,7 @@ parseLine(CExprTokenStack &stack, const std::string &line, uint &i)
       return false;
     }
 
-    if (! ptoken.isValid()) {
+    if (! ptoken) {
       parseError("Invalid Token", line, i);
       return false;
     }
@@ -279,8 +280,8 @@ bool
 CExprParseImpl::
 skipExpression(const std::string &line, uint &i, const std::string &echars)
 {
-  CExprTokenType lastTokenType = CExprTokenType::UNKNOWN;
-  CExprOpType    lastOpType    = CExprOpType::UNKNOWN;
+  auto lastTokenType = CExprTokenType::UNKNOWN;
+  auto lastOpType    = CExprOpType::UNKNOWN;
 
   uint i1   = i;
   uint len1 = uint(line.size());
@@ -289,8 +290,8 @@ skipExpression(const std::string &line, uint &i, const std::string &echars)
     CStrUtil::skipSpace(line, &i);
     if (i >= len1) break;
 
-    CExprTokenType lastTokenType1 = lastTokenType;
-    CExprOpType    lastOpType1    = lastOpType;
+    auto lastTokenType1 = lastTokenType;
+    auto lastOpType1    = lastOpType;
 
     lastTokenType = CExprTokenType::UNKNOWN;
     lastOpType    = CExprOpType::UNKNOWN;
@@ -299,7 +300,7 @@ skipExpression(const std::string &line, uint &i, const std::string &echars)
       if (line[i] == ',' || echars.find(line[i]) != std::string::npos)
         break;
 
-      int i2 = i;
+      uint i2 = i;
 
       if (lastTokenType1 == CExprTokenType::OPERATOR && lastOpType1 != CExprOpType::UNKNOWN) {
         if ((line[i] == '-' || line[i] == '+') && i < len1 - 1 && isdigit(line[i + 1])) {
@@ -469,7 +470,7 @@ skipExpression(const std::string &line, uint &i, const std::string &echars)
     else if (CExprOperator::isOperatorStr(line[i])) {
       int i2 = i;
 
-      CExprOpType lastOpType2 = skipOperatorStr(line, &i);
+      auto lastOpType2 = skipOperatorStr(line, &i);
 
       if (lastOpType2 == CExprOpType::UNKNOWN) {
         if (lastTokenType1 != CExprTokenType::UNKNOWN &&
@@ -557,7 +558,7 @@ parseError(const std::string &msg, const std::string &line, uint i)
   std::stringstream ostr;
 
   ostr << msg << " \"" << line.substr(0, i - 1) << "#" << line[i] << "#" <<
-          (i < line.size() ? line.substr(i + 1) : "") << std::endl;
+          (i < line.size() ? line.substr(i + 1) : "") << "\n";
 
   for (uint j = 0; j < i + msg.size() + 1; j++)
     ostr << " ";
@@ -745,11 +746,11 @@ std::string
 CExprParseImpl::
 replaceEscapeCodes(const std::string &str)
 {
-  int len = int(str.size());
+  auto len = str.size();
 
   bool has_escape = false;
 
-  for (int i = 0; i < len - 1; ++i)
+  for (uint i = 0; i < len - 1; ++i)
     if (str[i] == '\\') {
       has_escape = true;
       break;
@@ -760,7 +761,7 @@ replaceEscapeCodes(const std::string &str)
 
   std::string str1;
 
-  int i = 0;
+  uint i = 0;
 
   while (i < len - 1) {
     if (str[i] != '\\') {
@@ -771,33 +772,18 @@ replaceEscapeCodes(const std::string &str)
     ++i;
 
     switch (str[i]) {
-      case 'a':
-        str1 += '\a';
-        break;
-      case 'b':
-        str1 += '\b';
-        break;
-      case 'e':
-        str1 += '\033';
-        break;
-      case 'f':
-        str1 += '\f';
-        break;
-      case 'n':
-        str1 += '\n';
-        break;
-      case 'r':
-        str1 += '\r';
-        break;
-      case 't':
-        str1 += '\t';
-        break;
-      case 'v':
-        str1 += '\v';
-        break;
-      case 'x':
+      case 'a': str1 += '\a'  ; break;
+      case 'b': str1 += '\b'  ; break;
+      case 'e': str1 += '\033'; break;
+      case 'f': str1 += '\f'  ; break;
+      case 'n': str1 += '\n'  ; break;
+      case 'r': str1 += '\r'  ; break;
+      case 't': str1 += '\t'  ; break;
+      case 'v': str1 += '\v'  ; break;
+
+      case 'x': {
         if (i < len - 1 && ::isxdigit(str[i + 1])) {
-          int hex_value = 0;
+          uint hex_value = 0;
 
           ++i;
 
@@ -829,12 +815,13 @@ replaceEscapeCodes(const std::string &str)
         }
 
         break;
-      case '\\':
-        str1 += '\\';
-        break;
-      case '0':
+      }
+
+      case '\\': str1 += '\\'; break;
+
+      case '0': {
         if (i < len - 1 && CStrUtil::isodigit(str[i + 1])) {
-          int oct_value = 0;
+          uint oct_value = 0;
 
           ++i;
 
@@ -864,14 +851,12 @@ replaceEscapeCodes(const std::string &str)
         }
 
         break;
-      case '\'':
-      case '\"':
-        str1 += str[i];
-        break;
-      default:
-        str1 += '\\';
-        str1 += str[i];
-        break;
+      }
+
+      case '\'': str1 += str[i]; break;
+      case '\"': str1 += str[i]; break;
+
+      default: str1 += '\\'; str1 += str[i]; break;
     }
 
     ++i;
@@ -956,7 +941,7 @@ CExprTokenBaseP
 CExprParseImpl::
 readOperator(const std::string &str, uint *i)
 {
-  CExprOpType id = skipOperator(str, i);
+  auto id = skipOperator(str, i);
 
   if (id == CExprOpType::UNKNOWN)
     return CExprTokenBaseP();
@@ -968,7 +953,7 @@ CExprOpType
 CExprParseImpl::
 skipOperator(const std::string &str, uint *i)
 {
-  CExprOpType id = CExprOpType::UNKNOWN;
+  auto id = CExprOpType::UNKNOWN;
 
   switch (str[*i]) {
     case '(':
@@ -1210,7 +1195,7 @@ CExprTokenBaseP
 CExprParseImpl::
 readOperatorStr(const std::string &str, uint *i)
 {
-  CExprOpType op = skipOperatorStr(str, i);
+  auto op = skipOperatorStr(str, i);
 
   if (op == CExprOpType::UNKNOWN)
     return CExprTokenBaseP();
@@ -1229,7 +1214,7 @@ skipOperatorStr(const std::string &str, uint *i)
 
   std::string identifier = str.substr(j, *i - j);
 
-  CExprOpType id = CExprOpType::UNKNOWN;
+  auto id = CExprOpType::UNKNOWN;
 
   if      (identifier == "eq")
     id = CExprOpType::STR_EQUAL;

@@ -41,10 +41,10 @@ class CExprExecuteImpl {
   CExprTokenBaseP unstackEToken();
 
  private:
-  CExpr*          expr_;
+  CExpr*          expr_       { nullptr };
   CExprTokenStack ctokenStack_;
-  uint            ctokenPos_;
-  uint            numCTokens_;
+  uint            ctokenPos_  { 0 };
+  uint            numCTokens_ { 0 };
   CExprTokenStack etokenStack_;
 };
 
@@ -54,7 +54,7 @@ CExprExecute::
 CExprExecute(CExpr *expr) :
  expr_(expr)
 {
-  impl_ = new CExprExecuteImpl(expr);
+  impl_ = std::make_unique<CExprExecuteImpl>(expr);
 }
 
 CExprExecute::
@@ -90,13 +90,13 @@ executeCTokenStack(const CExprTokenStack &stack, CExprValueArray &values)
   ctokenPos_  = 0;
 
   while (ctokenPos_ < numCTokens_) {
-    CExprTokenBaseP ctoken = ctokenStack_.getToken(ctokenPos_++);
+    auto ctoken = ctokenStack_.getToken(ctokenPos_++);
 
     if (! executeToken(ctoken))
       return false;
 
     if (expr_->getDebug())
-      std::cerr << "EToken Stack:" << etokenStack_ << std::endl;
+      std::cerr << "EToken Stack:" << etokenStack_ << "\n";
   }
 
   std::deque<CExprValuePtr> values1;
@@ -104,9 +104,9 @@ executeCTokenStack(const CExprTokenStack &stack, CExprValueArray &values)
   bool rc = true;
 
   while (! etokenStack_.empty()) {
-    CExprValuePtr value = unstackValue();
+    auto value = unstackValue();
 
-    if (value.isValid())
+    if (value)
       values1.push_front(value);
     else
       rc = false;
@@ -149,21 +149,21 @@ executeToken(const CExprTokenBaseP &ctoken)
 
       break;
     case CExprTokenType::INTEGER: {
-      CExprValuePtr value = expr_->createIntegerValue(ctoken->getInteger());
+      auto value = expr_->createIntegerValue(ctoken->getInteger());
 
       stackValue(value);
 
       break;
     }
     case CExprTokenType::REAL: {
-      CExprValuePtr value = expr_->createRealValue(ctoken->getReal());
+      auto value = expr_->createRealValue(ctoken->getReal());
 
       stackValue(value);
 
       break;
     }
     case CExprTokenType::STRING: {
-      CExprValuePtr value = expr_->createStringValue(ctoken->getString());
+      auto value = expr_->createStringValue(ctoken->getString());
 
       stackValue(value);
 
@@ -171,7 +171,7 @@ executeToken(const CExprTokenBaseP &ctoken)
     }
 #ifdef GNUPLOT_EXPR
     case CExprTokenType::COMPLEX: {
-      CExprValuePtr value = expr_->createComplexValue(ctoken->getComplex());
+      auto value = expr_->createComplexValue(ctoken->getComplex());
 
       stackValue(value);
 
@@ -199,7 +199,7 @@ bool
 CExprExecuteImpl::
 executeOperator(const CExprTokenBaseP &ctoken)
 {
-  CExprOpType type = ctoken->getOperator();
+  auto type = ctoken->getOperator();
 
   switch (type) {
     case CExprOpType::LOGICAL_NOT:
@@ -294,10 +294,8 @@ CExprExecuteImpl::
 executeQuestionOperator()
 {
   // pop boolean
-  CExprValuePtr value = unstackValue();
-
-  if (! value.isValid())
-    return;
+  auto value = unstackValue();
+  if (! value) return;
 
   bool flag;
 
@@ -307,27 +305,27 @@ executeQuestionOperator()
   //---
 
   // pop second token (rhs=false)
-  CExprTokenBaseP etoken2 = unstackEToken();
+  auto etoken2 = unstackEToken();
 
   //---
 
   // pop first token (lhs=tue)
-  CExprTokenBaseP etoken1 = unstackEToken();
+  auto etoken1 = unstackEToken();
 
   //---
 
   CExprValuePtr value1;
 
   if (flag) {
-    if (etoken1.isValid())
+    if (etoken1)
       value1 = etokenToValue(etoken1);
   }
   else {
-    if (etoken2.isValid())
+    if (etoken2)
       value1 = etokenToValue(etoken2);
   }
 
-  if (! value1.isValid())
+  if (! value1)
     return;
 
   stackValue(value1);
@@ -338,15 +336,11 @@ void
 CExprExecuteImpl::
 executeUnaryOperator(CExprOpType type)
 {
-  CExprValuePtr value = unstackValue();
+  auto value = unstackValue();
+  if (! value) return;
 
-  if (! value.isValid())
-    return;
-
-  CExprValuePtr value1 = value->execUnaryOp(expr_, type);
-
-  if (! value1.isValid())
-    return;
+  auto value1 = value->execUnaryOp(expr_, type);
+  if (! value1) return;
 
   stackValue(value1);
 }
@@ -356,22 +350,18 @@ void
 CExprExecuteImpl::
 executeLogicalUnaryOperator(CExprOpType type)
 {
-  CExprValuePtr value = unstackValue();
-
-  if (! value.isValid())
-    return;
+  auto value = unstackValue();
+  if (! value) return;
 
   if (! value->isBooleanValue()) {
-    value = value->dup();
+    value = CExprValuePtr(value->dup());
 
     if (! value->convToBoolean())
       return;
   }
 
-  CExprValuePtr value1 = value->execUnaryOp(expr_, type);
-
-  if (! value1.isValid())
-    return;
+  auto value1 = value->execUnaryOp(expr_, type);
+  if (! value1) return;
 
   stackValue(value1);
 }
@@ -381,22 +371,18 @@ void
 CExprExecuteImpl::
 executeBitwiseUnaryOperator(CExprOpType type)
 {
-  CExprValuePtr value = unstackValue();
-
-  if (! value.isValid())
-    return;
+  auto value = unstackValue();
+  if (! value) return;
 
   if (! value->isIntegerValue()) {
-    value = value->dup();
+    value = CExprValuePtr(value->dup());
 
     if (! value->convToInteger())
       return;
   }
 
-  CExprValuePtr value1 = value->execUnaryOp(expr_, type);
-
-  if (! value1.isValid())
-    return;
+  auto value1 = value->execUnaryOp(expr_, type);
+  if (! value1) return;
 
   stackValue(value1);
 }
@@ -407,20 +393,20 @@ CExprExecuteImpl::
 executeBinaryOperator(CExprOpType type)
 {
   // pop rhs
-  CExprValuePtr value2 = unstackValue();
+  auto value2 = unstackValue();
 
   // pop lhs
-  CExprValuePtr value1 = unstackValue();
+  auto value1 = unstackValue();
 
   //---
 
-  if (! value1.isValid() || ! value2.isValid())
+  if (! value1 || ! value2)
     return false;
 
 #ifdef GNUPLOT_EXPR
   if (value1->isComplexValue() || value2->isComplexValue()) {
-    if (! value1->isComplexValue()) value1 = value1->dup();
-    if (! value2->isComplexValue()) value2 = value2->dup();
+    if (! value1->isComplexValue()) value1 = CExprValuePtr(value1->dup());
+    if (! value2->isComplexValue()) value2 = CExprValuePtr(value2->dup());
 
     if (! value1->convToComplex()) return false;
     if (! value2->convToComplex()) return false;
@@ -428,8 +414,8 @@ executeBinaryOperator(CExprOpType type)
 #endif
 
   if (value1->isRealValue() || value2->isRealValue()) {
-    if (! value1->isRealValue()) value1 = value1->dup();
-    if (! value2->isRealValue()) value2 = value2->dup();
+    if (! value1->isRealValue()) value1 = CExprValuePtr(value1->dup());
+    if (! value2->isRealValue()) value2 = CExprValuePtr(value2->dup());
 
     if (! value1->convToReal()) return false;
     if (! value2->convToReal()) return false;
@@ -437,13 +423,13 @@ executeBinaryOperator(CExprOpType type)
 
 #ifdef GNUPLOT_EXPR
   if (value2->isStringValue() && ! value1->isStringValue()) {
-    if (! value1->isStringValue()) value1 = value1->dup();
+    if (! value1->isStringValue()) value1 = CExprValuePtr(value1->dup());
 
     if (! value1->convToString()) return false;
   }
 #endif
 
-  CExprValuePtr value = value1->execBinaryOp(expr_, value2, type);
+  auto value = value1->execBinaryOp(expr_, value2, type);
 
   stackValue(value);
 
@@ -456,31 +442,31 @@ CExprExecuteImpl::
 executeLogicalBinaryOperator(CExprOpType type)
 {
   // pop rhs
-  CExprValuePtr value2 = unstackValue();
+  auto value2 = unstackValue();
 
   // pop lhs
-  CExprValuePtr value1 = unstackValue();
+  auto value1 = unstackValue();
 
   //---
 
-  if (! value1.isValid() || ! value2.isValid())
+  if (! value1 || ! value2)
     return;
 
   if (! value1->isBooleanValue()) {
-    value1 = value1->dup();
+    value1 = CExprValuePtr(value1->dup());
 
     if (! value1->convToBoolean())
       return;
   }
 
   if (! value2->isBooleanValue()) {
-    value2 = value2->dup();
+    value2 = CExprValuePtr(value2->dup());
 
     if (! value2->convToBoolean())
       return;
   }
 
-  CExprValuePtr value = value1->execBinaryOp(expr_, value2, type);
+  auto value = value1->execBinaryOp(expr_, value2, type);
 
   stackValue(value);
 }
@@ -491,31 +477,31 @@ CExprExecuteImpl::
 executeBitwiseBinaryOperator(CExprOpType type)
 {
   // pop rhs
-  CExprValuePtr value2 = unstackValue();
+  auto value2 = unstackValue();
 
   // pop lhs
-  CExprValuePtr value1 = unstackValue();
+  auto value1 = unstackValue();
 
   //---
 
-  if (! value1.isValid() || ! value2.isValid())
+  if (! value1 || ! value2)
     return;
 
   if (! value1->isIntegerValue()) {
-    value1 = value1->dup();
+    value1 = CExprValuePtr(value1->dup());
 
     if (! value1->convToInteger())
       return;
   }
 
   if (! value2->isIntegerValue()) {
-    value2 = value2->dup();
+    value2 = CExprValuePtr(value2->dup());
 
     if (! value2->convToInteger())
       return;
   }
 
-  CExprValuePtr value = value1->execBinaryOp(expr_, value2, type);
+  auto value = value1->execBinaryOp(expr_, value2, type);
 
   stackValue(value);
 }
@@ -540,9 +526,9 @@ executeSubscriptOperator()
   // get subscript values (popped in reverse order)
   std::deque<CExprValuePtr> values;
 
-  CExprTokenBaseP etoken1 = unstackEToken();
+  auto etoken1 = unstackEToken();
 
-  while (etoken1.isValid()) {
+  while (etoken1) {
     CExprValuePtr value1;
 
     if (etoken1->type() != CExprTokenType::OPERATOR) {
@@ -565,14 +551,14 @@ executeSubscriptOperator()
   //---
 
   // unscript value
-  CExprValuePtr value2 = unstackValue();
+  auto value2 = unstackValue();
 
-  if (! value2.isValid())
+  if (! value2)
     return;
 
   //---
 
-  CExprValuePtr value = value2->subscript(expr_, values1);
+  auto value = value2->subscript(expr_, values1);
 
   stackValue(value);
 }
@@ -583,24 +569,20 @@ CExprExecuteImpl::
 executeEqualsOperator()
 {
   // rhs
-  CExprValuePtr value1 = unstackValue();
-
-  if (! value1.isValid())
-    return;
+  auto value1 = unstackValue();
+  if (! value1) return;
 
   //---
 
-  CExprTokenBaseP etoken2 = unstackEToken();
-
-  if (! etoken2.isValid())
-    return;
+  auto etoken2 = unstackEToken();
+  if (! etoken2) return;
 
   //---
 
   CExprValuePtr value;
 
   if (etoken2->type() == CExprTokenType::IDENTIFIER) {
-    CExprVariablePtr variable = expr_->createVariable(etoken2->getIdentifier(), value1);
+    auto variable = expr_->createVariable(etoken2->getIdentifier(), value1);
 
     value = variable->getValue();
   }
@@ -618,26 +600,24 @@ executeFunction(const CExprFunctionPtr &function, CExprValuePtr &value)
 {
   std::deque<CExprValuePtr> values;
 
-  CExprTokenBaseP etoken = unstackEToken();
-
-  if (! etoken.isValid())
-    return false;
+  auto etoken = unstackEToken();
+  if (! etoken) return false;
 
   while (etoken->type() != CExprTokenType::OPERATOR) {
-    CExprValuePtr value1 = etokenToValue(etoken);
+    auto value1 = etokenToValue(etoken);
 
     values.push_front(value1);
 
     etoken = unstackEToken();
-    assert(etoken.isValid());
+    assert(etoken);
   }
 
   for (uint i = 0; i < values.size(); ++i) {
-    CExprValuePtr value1 = values[i];
+    auto value1 = values[i];
 
-    CExprValueType argType = function->argType(i);
+    auto argType = function->argType(i);
 
-    if (! value1.isValid()) {
+    if (! value1) {
       if (! (uint(argType) & uint(CExprValueType::NUL))) {
         expr_->errorMsg("Invalid type for function argument");
         return false;
@@ -646,7 +626,7 @@ executeFunction(const CExprFunctionPtr &function, CExprValuePtr &value)
     else {
       if (! (uint(argType) & uint(CExprValueType::NUL))) {
         if (! (uint(value1->getType()) & uint(argType)))
-          value1 = value1->dup();
+          value1 = CExprValuePtr(value1->dup());
 
         if (! value1->convToType(argType)) {
           expr_->errorMsg("Invalid type for function argument");
@@ -690,9 +670,11 @@ etokenToValue(const CExprTokenBaseP &etoken)
 {
   switch (etoken->type()) {
     case CExprTokenType::IDENTIFIER: {
-      CExprVariablePtr variable = expr_->getVariable(etoken->getIdentifier());
+      auto varName = etoken->getIdentifier();
 
-      if (variable.isValid())
+      auto variable = expr_->getVariable(varName);
+
+      if (variable)
         return variable->getValue();
 
       break;
@@ -726,7 +708,7 @@ void
 CExprExecuteImpl::
 stackValue(const CExprValuePtr &value)
 {
-  if (! value.isValid()) return;
+  if (! value) return;
 
   CExprTokenBaseP base(CExprTokenMgrInst->createValueToken(value));
 
@@ -739,16 +721,16 @@ stackBlock()
 {
   CExprTokenStack stack;
 
-  int brackets = 1;
+  long brackets = 1;
 
   while (ctokenPos_ < numCTokens_) {
-    CExprTokenBaseP ctoken = ctokenStack_.getToken(ctokenPos_++);
+    auto ctoken = ctokenStack_.getToken(ctokenPos_++);
 
-    if (! ctoken.isValid())
+    if (! ctoken)
       break;
 
     if (ctoken->type() == CExprTokenType::OPERATOR) {
-      CExprOpType op = ctoken->getOperator();
+      auto op = ctoken->getOperator();
 
       if      (op == CExprOpType::START_BLOCK)
         ++brackets;
@@ -779,10 +761,8 @@ CExprValuePtr
 CExprExecuteImpl::
 unstackValue()
 {
-  CExprTokenBaseP etoken = unstackEToken();
-
-  if (! etoken.isValid())
-    return CExprValuePtr();
+  auto etoken = unstackEToken();
+  if (! etoken) return CExprValuePtr();
 
   return etokenToValue(etoken);
 }
@@ -791,7 +771,7 @@ CExprTokenBaseP
 CExprExecuteImpl::
 unstackEToken()
 {
-  CExprTokenBaseP etoken = etokenStack_.pop_back();
+  auto etoken = etokenStack_.pop_back();
 
   return etoken;
 }

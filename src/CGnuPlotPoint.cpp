@@ -99,7 +99,8 @@ getReals(std::vector<double> &reals, const GetOpts &opts) const
       }
     }
 
-    reals.push_back(CMathGen::getNaN());
+  //reals.push_back(CMathGen::getNaN());
+    reals.push_back(COSNaN::get_nan());
 
     b = false;
   }
@@ -201,7 +202,7 @@ bool
 CGnuPlotPoint::
 getValue(int n, double &r) const
 {
-  if (int(values_.size()) < n || ! values_[n - 1].isValid())
+  if (int(values_.size()) < n || ! values_[n - 1])
     return false;
 
   return values_[n - 1]->getRealValue(r);
@@ -211,7 +212,7 @@ bool
 CGnuPlotPoint::
 getValue(int n, int &i) const
 {
-  if (int(values_.size()) < n || ! values_[n - 1].isValid())
+  if (int(values_.size()) < n || ! values_[n - 1])
     return false;
 
   long l;
@@ -228,7 +229,7 @@ bool
 CGnuPlotPoint::
 getValue(int n, std::string &str) const
 {
-  if (int(values_.size()) < n || ! values_[n - 1].isValid())
+  if (int(values_.size()) < n || ! values_[n - 1])
     return false;
 
   return values_[n - 1]->getStringValue(str);
@@ -272,7 +273,7 @@ getParamString(const std::string &name) const
 
   CExprValuePtr value = getParam(name);
 
-  if (! value.isValid())
+  if (! value)
     return str;
 
   if (value->isStringValue())
@@ -289,7 +290,7 @@ getParamInt(const std::string &name) const
 
   CExprValuePtr value = getParam(name);
 
-  if (! value.isValid())
+  if (! value)
     return int(i);
 
   if (value->isIntegerValue() || value->isRealValue())
@@ -306,7 +307,7 @@ getParamColor(const std::string &name) const
 
   CExprValuePtr value = getParam(name);
 
-  if (! value.isValid())
+  if (! value)
     return c;
 
   if (value->isStringValue()) {

@@ -343,7 +343,7 @@ CExprFunction##NAME(CExpr *expr, const CExprValueArray &values) { \
 
 class CExprFunctionAbs : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) override {
     assert(values.size() == 1);
     if      (values[0]->isRealValue()) {
       double real;
@@ -366,7 +366,7 @@ class CExprFunctionAbs : public CExprFunctionObj {
 
 class CExprFunctionCArg : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) override {
     assert(values.size() == 1);
     if (values[0]->isComplexValue()) {
       std::complex<double> c;
@@ -383,7 +383,7 @@ class CExprFunctionCArg : public CExprFunctionObj {
 
 class CExprFunctionImag : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) override {
     assert(values.size() == 1);
     if (values[0]->isComplexValue()) {
       std::complex<double> c;
@@ -396,7 +396,7 @@ class CExprFunctionImag : public CExprFunctionObj {
 
 class CExprFunctionSign : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) override {
     assert(values.size() == 1);
     if      (values[0]->isRealValue()) {
       double real;
@@ -419,7 +419,7 @@ class CExprFunctionSign : public CExprFunctionObj {
 
 class CExprFunctionExpr : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) override {
     assert(values.size() == 1);
 
     std::string exprStr;
@@ -443,7 +443,7 @@ class CExprFunctionExpr : public CExprFunctionObj {
 #ifdef GNUPLOT_EXPR
 class CExprFunctionRand : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) override {
     assert(values.size() == 1);
     if (values[0]->isIntegerValue()) {
       long integer = 0;
@@ -463,7 +463,7 @@ class CExprFunctionRand : public CExprFunctionObj {
 #define CEXPR_REALC_TO_REAL_FOBJ(NAME, F) \
 class CExprFunction##NAME : public CExprFunctionObj { \
  public: \
-  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) { \
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) override { \
     assert(values.size() == 1); \
     double r = 0.0; \
     if      (values[0]->isRealValue()) { \
@@ -489,7 +489,7 @@ class CExprFunction##NAME : public CExprFunctionObj { \
 
 class CExprFunctionInt : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) override {
     assert(values.size() == 1);
     double r = 0.0;
     if      (values[0]->isRealValue()) {
@@ -520,7 +520,7 @@ CEXPR_REALC_TO_REAL_FOBJ(Real , static_cast<double>)
 #ifdef GNUPLOT_EXPR
 class CExprFunctionSPrintF : public CExprFunctionObj {
  public:
-  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) override {
     assert(values.size() >= 1);
 
     std::string fmt;
@@ -549,7 +549,7 @@ class CExprFunctionObjT1 : public CExprFunctionObj {
     func_ = mgr->addObjFunction(name, argsStr, this);
   }
 
-  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) override {
     assert(values.size() == 1);
     T v;
     if (CExprUtil<T>::getTypeValue(values[0], v))
@@ -575,7 +575,7 @@ class CExprFunctionObjT2 : public CExprFunctionObj {
     func_ = mgr->addObjFunction(name, argsStr, this);
   }
 
-  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) override {
     assert(values.size() == 2);
     T1 v1; T2 v2;
     if (CExprUtil<T1>::getTypeValue(values[0], v1) &&
@@ -603,7 +603,7 @@ class CExprFunctionObjT3 : public CExprFunctionObj {
     func_ = mgr->addObjFunction(name, argsStr, this);
   }
 
-  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) {
+  CExprValuePtr operator()(CExpr *expr, const CExprValueArray &values) override {
     assert(values.size() == 3);
     T1 v1; T2 v2; T3 v3;
     if (CExprUtil<T1>::getTypeValue(values[0], v1) &&
@@ -697,7 +697,7 @@ builtinFns[] = {
 #endif
   { "norm"   , "r"  , CExprFunctionNorm    },
   { "invnorm", "r"  , CExprFunctionInvNorm },
-  { "", "", 0 }
+  { ""       , ""   , nullptr }
 };
 
 //------
@@ -713,8 +713,7 @@ CExprFunctionMgr::
 addFunctions()
 {
   for (uint i = 0; builtinFns[i].proc; ++i) {
-    CExprFunctionPtr function =
-      addProcFunction(builtinFns[i].name, builtinFns[i].args, builtinFns[i].proc);
+    auto function = addProcFunction(builtinFns[i].name, builtinFns[i].args, builtinFns[i].proc);
 
     function->setBuiltin(true);
   }
@@ -784,7 +783,7 @@ addProcFunction(const std::string &name, const std::string &argsStr, CExprFuncti
 
   (void) parseArgs(argsStr, args, variableArgs);
 
-  CExprFunctionPtr function(new CExprProcFunction(name, args, proc));
+  auto function = std::make_shared<CExprProcFunction>(name, args, proc);
 
   function->setVariableArgs(variableArgs);
 
@@ -807,7 +806,7 @@ addObjFunction(const std::string &name, const std::string &argsStr,
 
   (void) parseArgs(argsStr, args, variableArgs);
 
-  CExprFunctionPtr function(new CExprObjFunction(name, args, proc));
+  auto function = std::make_shared<CExprObjFunction>(name, args, proc);
 
   function->setVariableArgs(variableArgs);
 
@@ -827,7 +826,7 @@ CExprFunctionMgr::
 addUserFunction(const std::string &name, const std::vector<std::string> &args,
                 const std::string &proc)
 {
-  CExprFunctionPtr function(new CExprUserFunction(name, args, proc));
+  auto function = std::make_shared<CExprUserFunction>(name, args, proc);
 
   removeFunction(name);
 
@@ -849,7 +848,7 @@ void
 CExprFunctionMgr::
 removeFunction(CExprFunctionPtr function)
 {
-  if (function.isValid())
+  if (function)
     functions_.remove(function);
 }
 
@@ -883,7 +882,7 @@ parseArgs(const std::string &argsStr, Args &args, bool &variableArgs)
 
   CStrUtil::addTokens(argsStr, args1, ", ");
 
-  uint num_args = uint(args1.size());
+  auto num_args = args1.size();
 
   for (uint i = 0; i < num_args; ++i) {
     const std::string &arg = args1[i];
@@ -895,7 +894,7 @@ parseArgs(const std::string &argsStr, Args &args, bool &variableArgs)
 
     uint types = uint(CExprValueType::NONE);
 
-    uint len = uint(arg.size());
+    auto len = arg.size();
 
     for (uint j = 0; j < len; j++) {
       char c = arg[j];
@@ -1027,11 +1026,11 @@ exec(CExpr *expr, const CExprValueArray &values)
 
   // set arg values (save previous values)
   for (uint i = 0; i < numArgs(); ++i) {
-    const std::string &arg = args_[i];
+    const auto &arg = args_[i];
 
-    CExprVariablePtr var = expr->getVariable(arg);
+    auto var = expr->getVariable(arg);
 
-    if (var.isValid()) {
+    if (var) {
       varValues[arg] = var->getValue();
 
       var->setValue(values[i]);
@@ -1059,13 +1058,13 @@ exec(CExpr *expr, const CExprValueArray &values)
 
   // restore variables
   for (const auto &v : varValues) {
-    const std::string varName = v.first;
-    CExprValuePtr     vvalue  = v.second;
+    const auto &varName = v.first;
+    auto        value1  = v.second;
 
-    if (vvalue.isValid()) {
-      CExprVariablePtr var = expr->getVariable(varName);
+    if (value1) {
+      auto var = expr->getVariable(varName);
 
-      var->setValue(vvalue);
+      var->setValue(value1);
     }
     else
       expr->removeVariable(varName);

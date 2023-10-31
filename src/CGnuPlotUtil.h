@@ -64,7 +64,7 @@ namespace CGnuPlotUtil {
     if (! expr->evaluateExpression(str, value))
       value = CExprValuePtr();
 
-    if (! value.isValid() && ! quiet)
+    if (! value && ! quiet)
       std::cerr << "Eval failed: " << str << std::endl;
 
     return true;

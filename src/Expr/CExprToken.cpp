@@ -86,36 +86,16 @@ CExprTokenBase::
 printQualified(std::ostream &os) const
 {
   switch (type()) {
-    case CExprTokenType::IDENTIFIER:
-      os << "<identifier>";
-      break;
-    case CExprTokenType::OPERATOR:
-      os << "<operator>";
-      break;
-    case CExprTokenType::INTEGER:
-      os << "<integer>";
-      break;
-    case CExprTokenType::REAL:
-      os << "<real>";
-      break;
-    case CExprTokenType::STRING:
-      os << "<string>";
-      break;
-    case CExprTokenType::COMPLEX:
-      os << "<complex>";
-      break;
-    case CExprTokenType::FUNCTION:
-      os << "<function>";
-      break;
-    case CExprTokenType::VALUE:
-      os << "<value>";
-      break;
-    case CExprTokenType::BLOCK:
-      os << "<block>";
-      break;
-    default:
-      os << "<-?->";
-      break;
+    case CExprTokenType::IDENTIFIER: os << "<identifier>"; break;
+    case CExprTokenType::OPERATOR  : os << "<operator>"; break;
+    case CExprTokenType::INTEGER   : os << "<integer>"; break;
+    case CExprTokenType::REAL      : os << "<real>"; break;
+    case CExprTokenType::STRING    : os << "<string>"; break;
+    case CExprTokenType::COMPLEX   : os << "<complex>"; break;
+    case CExprTokenType::FUNCTION  : os << "<function>"; break;
+    case CExprTokenType::VALUE     : os << "<value>"; break;
+    case CExprTokenType::BLOCK     : os << "<block>"; break;
+    default                        : os << "<-?->"; break;
   }
 
   print(os);
@@ -143,7 +123,7 @@ void
 CExprTokenStack::
 print(std::ostream &os) const
 {
-  uint len = uint(stack_.size());
+  auto len = stack_.size();
 
   for (uint i = 0; i < len; ++i) {
     if (i > 0) os << " ";

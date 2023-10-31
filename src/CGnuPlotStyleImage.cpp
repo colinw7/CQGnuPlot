@@ -835,7 +835,7 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
       if (! lookup) {
         double r;
 
-        if (value.isValid() && value->getRealValue(r))
+        if (value && value->getRealValue(r))
           return r;
       }
       else {
@@ -846,7 +846,7 @@ decodeImageUsingColor(CGnuPlotPlot *plot, int col, const CRGBA &rgba) const
 
         long l;
 
-        if (evalue.isValid() && evalue->getIntegerValue(l))
+        if (evalue && evalue->getIntegerValue(l))
           return indexImageColor(int(l), rgba);
       }
 

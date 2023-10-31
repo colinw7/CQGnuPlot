@@ -2,26 +2,25 @@
 #define CExprCompile_H
 
 #include <CExprToken.h>
-#include <CAutoPtr.h>
 
 class CExprCompileImpl;
 
 class CExprCompile {
  public:
+  CExprCompile(CExpr *expr);
  ~CExprCompile();
+
+  CExpr *expr() const { return expr_; }
 
   CExprTokenStack compileIToken(CExprITokenPtr itoken);
 
   bool hasFunction(const std::string &name) const;
 
  private:
-  friend class CExpr;
+  using CExprCompileImplP = std::unique_ptr<CExprCompileImpl>;
 
-  CExprCompile(CExpr *expr);
-
- private:
-  CExpr*                     expr_ { nullptr };
-  CAutoPtr<CExprCompileImpl> impl_;
+  CExpr*            expr_ { nullptr };
+  CExprCompileImplP impl_;
 };
 
 #endif

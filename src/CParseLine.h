@@ -152,7 +152,7 @@ class CParseLine {
   bool isOneOf(const std::string &chars) const {
     if (pos_ >= len_) return false;
 
-    return std::strchr(chars.c_str(), str_[pos_]) != 0;
+    return std::strchr(chars.c_str(), str_[pos_]) != nullptr;
   }
 
   bool isChars(const std::string &str) const {

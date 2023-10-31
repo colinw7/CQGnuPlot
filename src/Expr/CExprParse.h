@@ -8,7 +8,10 @@ class CExprParseImpl;
 
 class CExprParse {
  public:
+  CExprParse(CExpr *expr);
  ~CExprParse();
+
+  CExpr *expr() const { return expr_; }
 
   CExprTokenStack parseFile(const std::string &filename);
   CExprTokenStack parseFile(FILE *fp);
@@ -17,13 +20,10 @@ class CExprParse {
   bool skipExpression(const std::string &str, uint &i);
 
  private:
-  friend class CExpr;
+  using CExprParseImplP = std::unique_ptr<CExprParseImpl>;
 
-  CExprParse(CExpr *expr);
-
- private:
-  CExpr*                   expr_ { nullptr };
-  CAutoPtr<CExprParseImpl> impl_;
+  CExpr*          expr_ { nullptr };
+  CExprParseImplP impl_;
 };
 
 #endif

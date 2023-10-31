@@ -224,7 +224,7 @@ CQGnuPlotVariableItem(CQGnuPlotManageVariablesDialog *dialog, QTreeWidgetItem *p
 {
   CExprValuePtr value = var_->value();
 
-  type_ = (value.isValid() ? value->getType() : CExprValueType::NONE);
+  type_ = (value ? value->getType() : CExprValueType::NONE);
 
   setText(0, var_->name().c_str());
   setData(1, Qt::EditRole, getEditorData());
@@ -240,7 +240,7 @@ CQGnuPlotVariableItem(const CQGnuPlotVariableItem &item) :
 {
   CExprValuePtr value = var_->value();
 
-  type_ = (value.isValid() ? value->getType() : CExprValueType::NONE);
+  type_ = (value ? value->getType() : CExprValueType::NONE);
 
   setText(0, var_->name().c_str());
   setData(1, Qt::EditRole, getEditorData());

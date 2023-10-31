@@ -44,7 +44,7 @@ isValid(CExpr *expr, int setNum, int pointNum, const Values &fieldValues) const
 
     std::string midStr;
 
-    if (value1.isValid()) {
+    if (value1) {
       double      x1;
       std::string s1;
 
@@ -85,7 +85,7 @@ isValid(CExpr *expr, int setNum, int pointNum, const Values &fieldValues) const
 
   long l;
 
-  if (! value.isValid() || ! value->getIntegerValue(l))
+  if (! value || ! value->getIntegerValue(l))
     return false;
 
   return (l != 0);
@@ -108,7 +108,7 @@ getFieldValue(CExpr *expr, int setNum, int pointNum, const Values &fieldValues, 
   else if (icol > 0 && icol <= nf) {
     value = fieldValues[icol - 1];
 
-    if (! value.isValid())
+    if (! value)
       return CExprValuePtr();
   }
 

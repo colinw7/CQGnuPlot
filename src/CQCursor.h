@@ -87,7 +87,7 @@ class CQCursorMgr {
 
   CQCursor *findNamedCursor(const QString &name) const {
     auto p = namedCursors_.find(name);
-    if (p == namedCursors_.end()) return 0;
+    if (p == namedCursors_.end()) return nullptr;
 
     return (*p).second;
   }

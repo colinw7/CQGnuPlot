@@ -111,7 +111,7 @@ subscript(CExpr *expr, const CExprValueArray &values) const
   if      (values.size() == 1) {
     long i1 = 1;
 
-    if (values[0].isValid()) {
+    if (values[0]) {
       if (! values[0]->getIntegerValue(i1))
         return CExprValuePtr();
 
@@ -128,7 +128,7 @@ subscript(CExpr *expr, const CExprValueArray &values) const
   else if (values.size() == 2) {
     long i1 = 1, i2 = str_.size();
 
-    if (values[0].isValid()) {
+    if (values[0]) {
       if (! values[0]->getIntegerValue(i1))
         return CExprValuePtr();
 
@@ -136,7 +136,7 @@ subscript(CExpr *expr, const CExprValueArray &values) const
       if (i1 > int(str_.size())) i1 = str_.size();
     }
 
-    if (values[1].isValid()) {
+    if (values[1]) {
       if (! values[1]->getIntegerValue(i2))
         return CExprValuePtr();
 

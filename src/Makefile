@@ -16,7 +16,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -std=c++14 -DGNUPLOT_EXPR -DRGB_UTIL -DCQUTIL_FONT -DCQUTIL_IMAGE -DCQUTIL_EVENT -g -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -std=c++17 -DGNUPLOT_EXPR -DRGB_UTIL -DCQUTIL_FONT -DCQUTIL_IMAGE -DCQUTIL_EVENT -g -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I. -I. -IExpr -I../include -I../../CQApp/include -I../../CQUtil/include -I../../CQPropertyTree/include -I../../CQGradientPalette/include -I../../CRenderer/include -I../../CFont/include -I../../CImageLib/include -I../../CReadLine/include -I../../CFile/include -I../../COS/include -I../../CUtil/include -I../../CMath/include -I../../CStrUtil/include -I../../CRGBName/include -I../../CXML/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I.moc -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
 QMAKE         = /usr/lib/qt5/bin/qmake
 DEL_FILE      = rm -f
@@ -660,6 +660,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/qconfig.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_accessibility_support_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_bootstrap_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_charts.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_concurrent.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_concurrent_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_core.pri \
@@ -1207,6 +1208,7 @@ Makefile: CQGnuPlot.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.co
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/qconfig.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_accessibility_support_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_bootstrap_private.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_charts.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_concurrent.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_concurrent_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_core.pri \
@@ -1298,6 +1300,7 @@ Makefile: CQGnuPlot.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.co
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/qconfig.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_accessibility_support_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_bootstrap_private.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_charts.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_concurrent.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_concurrent_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_core.pri:
@@ -1423,7 +1426,7 @@ compiler_moc_predefs_make_all: .moc/moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) .moc/moc_predefs.h
 .moc/moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
-	g++ -pipe -std=c++14 -DGNUPLOT_EXPR -DRGB_UTIL -DCQUTIL_FONT -DCQUTIL_IMAGE -DCQUTIL_EVENT -g -Wall -Wextra -dM -E -o .moc/moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
+	g++ -pipe -std=c++17 -DGNUPLOT_EXPR -DRGB_UTIL -DCQUTIL_FONT -DCQUTIL_IMAGE -DCQUTIL_EVENT -g -Wall -Wextra -dM -E -o .moc/moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
 compiler_moc_header_make_all: .moc/moc_CQGnuPlot.cpp .moc/moc_CQGnuPlotAnnotation.cpp .moc/moc_CQGnuPlotArrow.cpp .moc/moc_CQGnuPlotArrowObject.cpp .moc/moc_CQGnuPlotAxis.cpp .moc/moc_CQGnuPlotBoxBarObject.cpp .moc/moc_CQGnuPlotBoxObject.cpp .moc/moc_CQGnuPlotBoxPlot.cpp .moc/moc_CQGnuPlotBubbleObject.cpp .moc/moc_CQGnuPlotCamera.cpp .moc/moc_CQGnuPlotCanvas.cpp .moc/moc_CQGnuPlotCircle.cpp .moc/moc_CQGnuPlotColorBox.cpp .moc/moc_CQGnuPlotDevice.cpp .moc/moc_CQGnuPlotEllipse.cpp .moc/moc_CQGnuPlotEllipseObject.cpp .moc/moc_CQGnuPlotEndBar.cpp .moc/moc_CQGnuPlotEnum.cpp .moc/moc_CQGnuPlotErrorBarObject.cpp .moc/moc_CQGnuPlotFill.cpp .moc/moc_CQGnuPlotFinanceBarObject.cpp .moc/moc_CQGnuPlotGroup.cpp .moc/moc_CQGnuPlotImageObject.cpp .moc/moc_CQGnuPlotKey.cpp .moc/moc_CQGnuPlotLabel.cpp .moc/moc_CQGnuPlotLabelObject.cpp .moc/moc_CQGnuPlotLineStyle.cpp .moc/moc_CQGnuPlotMark.cpp .moc/moc_CQGnuPlotMultiplot.cpp .moc/moc_CQGnuPlotObject.cpp .moc/moc_CQGnuPlotPalette.cpp .moc/moc_CQGnuPlotPathObject.cpp .moc/moc_CQGnuPlotPieObject.cpp .moc/moc_CQGnuPlotPlot.cpp .moc/moc_CQGnuPlotPm3D.cpp .moc/moc_CQGnuPlotPointObject.cpp .moc/moc_CQGnuPlotPolygon.cpp .moc/moc_CQGnuPlotPolygonObject.cpp .moc/moc_CQGnuPlotRectangle.cpp .moc/moc_CQGnuPlotRectObject.cpp .moc/moc_CQGnuPlotStroke.cpp .moc/moc_CQGnuPlotTimeStamp.cpp .moc/moc_CQGnuPlotTitle.cpp .moc/moc_CQGnuPlotToolBar.cpp .moc/moc_CQGnuPlotFilename.cpp .moc/moc_CQGnuPlotWindow.cpp .moc/moc_CQGnuPlotAdjacencyStyleValue.cpp .moc/moc_CQGnuPlotBivariateStyleValue.cpp .moc/moc_CQGnuPlotBoxErrorBarsStyleValue.cpp .moc/moc_CQGnuPlotBoxesStyleValue.cpp .moc/moc_CQGnuPlotBoxPlotStyleValue.cpp .moc/moc_CQGnuPlotBubbleStyleValue.cpp .moc/moc_CQGnuPlotCandlesticksStyleValue.cpp .moc/moc_CQGnuPlotChordDiagramStyleValue.cpp .moc/moc_CQGnuPlotCirclesStyleValue.cpp .moc/moc_CQGnuPlotDelaunayStyleValue.cpp .moc/moc_CQGnuPlotDendrogramStyleValue.cpp .moc/moc_CQGnuPlotEllipsesStyleValue.cpp .moc/moc_CQGnuPlotForceDirectedStyleValue.cpp .moc/moc_CQGnuPlotHierBubbleStyleValue.cpp .moc/moc_CQGnuPlotLabelsStyleValue.cpp .moc/moc_CQGnuPlotPieChartStyleValue.cpp .moc/moc_CQGnuPlotRadarStyleValue.cpp .moc/moc_CQGnuPlotSunburstStyleValue.cpp .moc/moc_CQGnuPlotTreeMapStyleValue.cpp .moc/moc_CQGnuPlotVectorsStyleValue.cpp .moc/moc_CQGnuPlotLoadFileDialog.cpp .moc/moc_CQGnuPlotLoadFunctionDialog.cpp .moc/moc_CQGnuPlotManageFunctionsDialog.cpp .moc/moc_CQGnuPlotManageVariablesDialog.cpp .moc/moc_CQGnuPlotCreateDialog.cpp .moc/moc_CQGnuPlotDataDialog.cpp .moc/moc_CQGnuPlotSaveDialog.cpp .moc/moc_CQGnuPlotPaletteDialog.cpp .moc/moc_CQGnuPlotTreeView.cpp .moc/moc_CQGnuPlotTreeWidget.cpp .moc/moc_CQGnuPlotDataTree.cpp .moc/moc_CQGnuPlotDataModel.cpp .moc/moc_CQGnuPlotPositionEdit.cpp .moc/moc_CQFloatLabel.cpp .moc/moc_CQRubberBand.cpp
 compiler_moc_header_clean:
@@ -1433,8 +1436,6 @@ compiler_moc_header_clean:
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -1462,6 +1463,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -1625,8 +1627,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -1669,6 +1669,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -1793,8 +1794,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -1837,6 +1836,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -1962,8 +1962,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -2014,6 +2012,7 @@ compiler_moc_header_clean:
 		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
+		../../CUtil/include/CRefPtr.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		../../CFont/include/CFont.h \
@@ -2105,8 +2104,6 @@ compiler_moc_header_clean:
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -2134,6 +2131,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -2300,8 +2298,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -2341,6 +2337,7 @@ compiler_moc_header_clean:
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotFill.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -2469,8 +2466,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -2509,6 +2504,7 @@ compiler_moc_header_clean:
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotFill.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CBoxWhisker.h \
@@ -2637,8 +2633,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -2729,8 +2723,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -2767,6 +2759,7 @@ compiler_moc_header_clean:
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -2927,8 +2920,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -2971,6 +2962,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -3097,8 +3089,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -3144,6 +3134,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -3237,10 +3228,10 @@ compiler_moc_header_clean:
 		../../CMath/include/CISize2D.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CUtil/include/CRGBA.h \
@@ -3270,7 +3261,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -3347,8 +3337,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -3391,6 +3379,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -3516,8 +3505,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -3554,6 +3541,7 @@ compiler_moc_header_clean:
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -3684,8 +3672,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -3725,6 +3711,7 @@ compiler_moc_header_clean:
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotFill.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -3849,8 +3836,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -3940,8 +3925,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -3981,6 +3964,7 @@ compiler_moc_header_clean:
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotMark.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -4109,7 +4093,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -4199,8 +4182,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -4240,6 +4221,7 @@ compiler_moc_header_clean:
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotMark.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -4343,8 +4325,6 @@ compiler_moc_header_clean:
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -4372,6 +4352,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -4540,7 +4521,6 @@ compiler_moc_header_clean:
 		../../CImageLib/include/CImageMgr.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
-		../../CStrUtil/include/CStrUtil.h \
 		../../CImageLib/include/CImageAnim.h \
 		../../CImageLib/include/CImageFile.h \
 		CGnuPlotObject.h \
@@ -4563,7 +4543,7 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -4729,8 +4709,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -4770,6 +4748,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotMouseEvent.h \
 		../../CUtil/include/CDirectionType.h \
 		CQGnuPlot.h \
@@ -4898,8 +4877,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -4942,6 +4919,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -5066,8 +5044,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -5110,6 +5086,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLabelStyle.h \
 		CGnuPlotFill.h \
 		CGnuPlotStroke.h \
@@ -5208,8 +5185,6 @@ compiler_moc_header_clean:
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -5237,6 +5212,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -5400,7 +5376,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -5463,10 +5438,10 @@ compiler_moc_header_clean:
 		CGnuPlotMultiplot.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CIPoint2D.h \
 		.moc/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
@@ -5483,8 +5458,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -5527,6 +5500,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -5676,8 +5650,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -5716,6 +5688,7 @@ compiler_moc_header_clean:
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		../../CFont/include/CFont.h \
@@ -5845,8 +5818,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -5883,6 +5854,7 @@ compiler_moc_header_clean:
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -6010,8 +5982,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -6073,6 +6043,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -6195,8 +6166,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -6265,8 +6234,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -6309,6 +6276,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -6433,8 +6401,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -6477,6 +6443,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -6601,8 +6568,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -6639,6 +6604,7 @@ compiler_moc_header_clean:
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -6769,8 +6735,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -6813,6 +6777,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -6938,8 +6903,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -6976,6 +6939,7 @@ compiler_moc_header_clean:
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -7107,7 +7071,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -7171,10 +7134,10 @@ compiler_moc_header_clean:
 		../../CMath/include/CPoint2D.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		../../CUtil/include/CRGBA.h \
@@ -7202,7 +7165,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -7269,8 +7231,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -7308,6 +7268,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -7421,8 +7382,6 @@ compiler_moc_header_clean:
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -7450,6 +7409,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -7614,8 +7574,6 @@ compiler_moc_header_clean:
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -7643,6 +7601,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
@@ -7804,8 +7763,6 @@ compiler_moc_header_clean:
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -7844,6 +7801,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -7994,8 +7952,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -8056,6 +8012,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -8176,8 +8133,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -8238,6 +8193,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -8356,8 +8312,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -8457,8 +8411,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -8512,6 +8464,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -8633,8 +8586,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -8695,6 +8646,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -8817,8 +8769,6 @@ compiler_moc_header_clean:
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -8846,6 +8796,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -9005,8 +8956,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -9066,6 +9015,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -9191,8 +9141,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -9253,6 +9201,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -9375,8 +9324,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -9437,6 +9384,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -9558,8 +9506,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -9619,6 +9565,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -9740,8 +9687,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -9802,6 +9747,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -9933,8 +9879,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -9988,6 +9932,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -10111,8 +10056,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -10149,6 +10092,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -10290,8 +10234,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -10352,6 +10294,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -10472,8 +10415,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -10534,6 +10475,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -10634,10 +10576,10 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontMgr.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CQGnuPlotPlot.h \
 		CQGnuPlotEnum.h \
 		CGnuPlotTypes.h \
@@ -10663,7 +10605,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -10841,8 +10782,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -10903,6 +10842,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -11025,8 +10965,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -11084,6 +11022,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -11202,8 +11141,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -11291,8 +11228,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -11361,8 +11296,6 @@ compiler_moc_header_clean:
 		../../CQUtil/include/CQDialog.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -11418,8 +11351,6 @@ compiler_moc_header_clean:
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -11490,8 +11421,6 @@ compiler_moc_header_clean:
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -11519,6 +11448,7 @@ compiler_moc_header_clean:
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../CMath/include/CIPoint2D.h \
@@ -11743,8 +11673,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -11772,6 +11700,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -11911,8 +11840,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -11940,6 +11867,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -12076,10 +12004,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CQGnuPlotPNGDevice.h \
 		../../CQPropertyTree/include/CQPropertyEditor.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
-		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CMath/include/CMatrix2D.h \
 		../../CQUtil/include/CQUtilMeta.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlot.o CQGnuPlot.cpp
 
@@ -12113,8 +12037,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -12157,6 +12079,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -12263,10 +12186,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
-		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilRGBA.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotAnnotation.o CQGnuPlotAnnotation.cpp
 
 ../obj/CQGnuPlotArrow.o: CQGnuPlotArrow.cpp CQGnuPlotArrow.h \
@@ -12300,8 +12221,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -12344,6 +12263,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -12444,11 +12364,11 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CRange.h \
 		CQGnuPlotObject.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilGeom.h \
 		../../CMath/include/CIBBox2D.h \
 		../../CMath/include/CIVector2D.h \
-		../../CMath/include/CMatrix2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotArrow.o CQGnuPlotArrow.cpp
 
 ../obj/CQGnuPlotArrowObject.o: CQGnuPlotArrowObject.cpp CQGnuPlotArrowObject.h \
@@ -12483,8 +12403,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -12535,6 +12453,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
+		../../CUtil/include/CRefPtr.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		../../CFont/include/CFont.h \
@@ -12640,12 +12559,13 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		CQGnuPlotStroke.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilGeom.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CMath/include/CIVector2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotArrowObject.o CQGnuPlotArrowObject.cpp
 
 ../obj/CQGnuPlotAxis.o: CQGnuPlotAxis.cpp CQGnuPlotAxis.h \
@@ -12654,8 +12574,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -12683,6 +12601,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -12826,11 +12745,9 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		../../CQUtil/include/CQFontUtil.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
-		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
 		../../CQUtil/include/CQUtilMeta.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotAxis.o CQGnuPlotAxis.cpp
 
@@ -12865,8 +12782,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -12906,6 +12821,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotFill.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -13048,8 +12964,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -13088,6 +13002,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotFill.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CBoxWhisker.h \
@@ -13231,8 +13146,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -13295,6 +13208,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -13414,8 +13328,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -13452,6 +13364,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -13567,7 +13480,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h
+		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotBubbleObject.o CQGnuPlotBubbleObject.cpp
 
 ../obj/CQGnuPlotCamera.o: CQGnuPlotCamera.cpp CQGnuPlotCamera.h \
@@ -13593,8 +13507,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -13622,6 +13534,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
@@ -13752,8 +13665,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -13781,6 +13692,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -13935,12 +13847,12 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		../../CQUtil/include/CQToolTip.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
-		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
 		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilEvent.h \
+		../../CUtil/include/CEvent.h \
 		../../CQUtil/include/CQWidgetUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotCanvas.o CQGnuPlotCanvas.cpp
 
@@ -13975,8 +13887,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -14019,6 +13929,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -14123,10 +14034,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilGeom.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CMath/include/CIVector2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotCircle.o CQGnuPlotCircle.cpp
 
 ../obj/CQGnuPlotColorBox.o: CQGnuPlotColorBox.cpp CQGnuPlotColorBox.h \
@@ -14162,8 +14073,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -14209,6 +14118,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -14318,10 +14228,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilGeom.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CMath/include/CIVector2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotColorBox.o CQGnuPlotColorBox.cpp
 
 ../obj/CQGnuPlotDevice.o: CQGnuPlotDevice.cpp CQGnuPlotDevice.h \
@@ -14329,10 +14239,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CUtil/include/CRGBA.h \
@@ -14362,7 +14272,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -14493,6 +14402,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		CQGnuPlotWindow.h \
 		CQGnuPlot.h \
 		CQGnuPlotEnum.h \
@@ -14671,8 +14581,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -14715,6 +14623,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -14819,10 +14728,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilGeom.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CMath/include/CIVector2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotEllipse.o CQGnuPlotEllipse.cpp
 
 ../obj/CQGnuPlotEllipseObject.o: CQGnuPlotEllipseObject.cpp CQGnuPlotEllipseObject.h \
@@ -14857,8 +14766,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -14895,6 +14802,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -15038,8 +14946,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -15079,6 +14985,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotFill.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -15216,8 +15123,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -15306,8 +15211,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -15347,6 +15250,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotMark.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -15489,7 +15393,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -15641,7 +15544,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h
+		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotFill.o CQGnuPlotFill.cpp
 
 ../obj/CQGnuPlotFinanceBarObject.o: CQGnuPlotFinanceBarObject.cpp CQGnuPlotFinanceBarObject.h \
@@ -15675,8 +15579,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -15716,6 +15618,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotMark.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
@@ -15833,8 +15736,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -15862,6 +15763,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -16020,6 +15922,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		CQGnuPlotLabel.h \
 		CQGnuPlotAnnotation.h \
 		CQGnuPlotKey.h \
@@ -16056,7 +15959,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CImageLib/include/CImageMgr.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
-		../../CStrUtil/include/CStrUtil.h \
 		../../CImageLib/include/CImageAnim.h \
 		../../CImageLib/include/CImageFile.h \
 		CGnuPlotObject.h \
@@ -16079,7 +15981,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -16224,9 +16126,9 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
-		../../CMath/include/CMatrix2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilGeom.h \
+		../../CMath/include/CMatrix2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotImageObject.o CQGnuPlotImageObject.cpp
 
 ../obj/CQGnuPlotKey.o: CQGnuPlotKey.cpp CQGnuPlotKey.h \
@@ -16261,8 +16163,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -16302,6 +16202,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotMouseEvent.h \
 		../../CUtil/include/CDirectionType.h \
 		CQGnuPlot.h \
@@ -16421,9 +16322,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CMatrix2D.h \
 		../../CQUtil/include/CQFontUtil.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
-		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
 		../../CQUtil/include/CQUtilMeta.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotKey.o CQGnuPlotKey.cpp
 
@@ -16458,8 +16356,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -16502,6 +16398,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -16617,14 +16514,15 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		CQGnuPlotFill.h \
 		CQGnuPlotStroke.h \
 		../../CQUtil/include/CQFontUtil.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilGeom.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CMath/include/CIVector2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotLabel.o CQGnuPlotLabel.cpp
 
 ../obj/CQGnuPlotLabelObject.o: CQGnuPlotLabelObject.cpp CQGnuPlotLabelObject.h \
@@ -16658,8 +16556,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -16702,6 +16598,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLabelStyle.h \
 		CGnuPlotFill.h \
 		CGnuPlotStroke.h \
@@ -16817,14 +16714,15 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		CQGnuPlotFill.h \
 		CQGnuPlotStroke.h \
 		../../CQUtil/include/CQFontUtil.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilGeom.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CMath/include/CIVector2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotLabelObject.o CQGnuPlotLabelObject.cpp
 
 ../obj/CQGnuPlotLineStyle.o: CQGnuPlotLineStyle.cpp CQGnuPlotLineStyle.h \
@@ -16832,8 +16730,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -16861,6 +16757,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -17006,11 +16903,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotPlotCacheFactoriesDef.h \
 		CQGnuPlotObject.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
-		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CMath/include/CMatrix2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilRGBA.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotLineStyle.o CQGnuPlotLineStyle.cpp
 
 ../obj/CQGnuPlotMark.o: CQGnuPlotMark.cpp CQGnuPlotMark.h \
@@ -17043,7 +16937,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -17194,24 +17087,24 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CQGnuPlotRenderer.h \
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
-		../../CMath/include/CMatrix2D.h
+		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotMark.o CQGnuPlotMark.cpp
 
 ../obj/CQGnuPlotMultiplot.o: CQGnuPlotMultiplot.cpp CQGnuPlotMultiplot.h \
 		CGnuPlotMultiplot.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CIPoint2D.h \
 		CQGnuPlotGroup.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -17372,10 +17265,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CQGnuPlotObject.h \
 		../../CQUtil/include/CQFontUtil.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
-		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CMath/include/CMatrix2D.h \
 		../../CQUtil/include/CQUtilMeta.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotMultiplot.o CQGnuPlotMultiplot.cpp
 
@@ -17385,8 +17274,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -17429,6 +17316,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -17585,8 +17473,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -17625,6 +17511,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		../../CFont/include/CFont.h \
@@ -17768,8 +17655,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -17806,6 +17691,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -17946,8 +17832,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -18009,6 +17893,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -18155,9 +18040,9 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		CQGnuPlotUtil.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
 		../../CQUtil/include/CQUtilMeta.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotPlot.o CQGnuPlotPlot.cpp
 
@@ -18194,8 +18079,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -18236,6 +18119,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
@@ -18341,10 +18225,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CUtil/include/CRGBA.h \
@@ -18374,7 +18258,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -18506,6 +18389,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		CGnuPlotWindow.h \
 		CGnuPlotGroup.h \
 		CGnuPlotKey.h \
@@ -18529,8 +18413,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -18558,6 +18440,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -18690,6 +18573,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		CQGnuPlotPNGDevice.h \
 		CGnuPlotDevice.h \
 		CGnuPlotAxis.h \
@@ -18728,8 +18612,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -18772,6 +18654,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -18880,11 +18763,12 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilGeom.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CMath/include/CIVector2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotPointObject.o CQGnuPlotPointObject.cpp
 
 ../obj/CQGnuPlotPolygon.o: CQGnuPlotPolygon.cpp CQGnuPlotPolygon.h \
@@ -18918,8 +18802,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -18962,6 +18844,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -19098,8 +18981,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -19136,6 +19017,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -19280,8 +19162,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -19324,6 +19204,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -19439,10 +19320,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotPlotCacheFactoriesDcl.h \
 		CGnuPlotPlotCacheFactoriesDef.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilGeom.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CMath/include/CIVector2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotRectangle.o CQGnuPlotRectangle.cpp
 
 ../obj/CQGnuPlotRectObject.o: CQGnuPlotRectObject.cpp CQGnuPlotRectObject.h \
@@ -19477,8 +19358,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -19515,6 +19394,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -19631,8 +19511,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -19660,6 +19538,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -19792,6 +19671,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		CQGnuPlotWindow.h \
 		CQGnuPlot.h \
 		CQGnuPlotEnum.h \
@@ -19823,15 +19703,16 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQUtil/include/CQFontUtil.h \
 		../../CQUtil/include/CQImageUtil.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
-		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
 		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilLineDash.h \
+		../../CQUtil/include/CQUtilAlignType.h \
 		../../CFont/include/CFontMgr.h \
 		../../CImageLib/include/CImageLib.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
 		../../CUtil/include/CRGBACombineDef.h \
+		../../CMath/include/CIBBox2D.h \
+		../../CMath/include/CIVector2D.h \
 		../../CFile/include/CFileType.h \
 		../../CImageLib/include/CImageResizeType.h \
 		../../CImageLib/include/CImageConvolveData.h \
@@ -19875,7 +19756,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -20024,7 +19904,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotRenderer.h \
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
-		../../CMath/include/CMatrix2D.h
+		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotStroke.o CQGnuPlotStroke.cpp
 
 ../obj/CQGnuPlotTimeStamp.o: CQGnuPlotTimeStamp.cpp CQGnuPlotTimeStamp.h \
@@ -20034,10 +19915,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CPoint2D.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		../../CUtil/include/CRGBA.h \
@@ -20065,7 +19946,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -20233,8 +20113,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -20272,6 +20150,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CQGnuPlot.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -20391,12 +20270,13 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		../../CQUtil/include/CQFontUtil.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
+		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilGeom.h \
 		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CQUtil/include/CQUtilMeta.h
+		../../CMath/include/CIVector2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQGnuPlotTitle.o CQGnuPlotTitle.cpp
 
 ../obj/CQGnuPlotToolBar.o: CQGnuPlotToolBar.cpp CQGnuPlotToolBar.h \
@@ -20412,8 +20292,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -20441,6 +20319,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -20592,8 +20471,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -20621,6 +20498,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -20778,6 +20656,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTextRenderer.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CMatrix2D.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		CQGnuPlotLineStyle.h \
 		CQGnuPlotAnnotation.h \
 		CQGnuPlotArrow.h \
@@ -20920,7 +20799,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotSVGRenderer.h \
 		CGnuPlotPSRenderer.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
 		../../CQUtil/include/CQUtilMeta.h \
 		CQZoomRegion.h \
 		CQCursor.h \
@@ -20970,8 +20848,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -21035,6 +20911,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -21157,8 +21034,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -21221,6 +21096,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -21320,8 +21196,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -21349,6 +21223,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -21495,8 +21370,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQUtil/include/CQDialog.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -21527,6 +21400,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -21667,10 +21541,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CRange.h \
 		CQGnuPlotTreeWidget.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
-		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CMath/include/CMatrix2D.h \
 		../../CQUtil/include/CQUtilMeta.h \
 		../../CQUtil/include/CQRealSpin.h \
 		CQIntegerSpin.h
@@ -21705,8 +21575,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -21770,14 +21638,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQUtil/include/CQRealSpin.h \
 		../../CQUtil/include/CQLineDash.h \
 		../../CQUtil/include/CQUtil.h \
-		../../CUtil/include/CEvent.h \
-		../../CUtil/include/CKeyType.h \
-		../../CFont/include/CFontStyle.h \
-		../../CUtil/include/CFlags.h \
-		../../CMath/include/CIBBox2D.h \
-		../../CMath/include/CIVector2D.h \
-		../../CMath/include/CMatrix2D.h \
 		../../CQUtil/include/CQUtilMeta.h \
+		../../CQUtil/include/CQUtilRGBA.h \
 		../../CQUtil/include/CQPixmapCache.h \
 		svg/arrow_obj_svg.h \
 		svg/circle_obj_svg.h \
@@ -21799,8 +21661,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -21828,6 +21688,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../CMath/include/CIPoint2D.h \
@@ -21995,8 +21856,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -22024,6 +21883,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -22268,8 +22128,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -22331,6 +22189,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -22420,8 +22279,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 ../obj/CGnuPlot.o: CGnuPlot.cpp CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -22449,6 +22306,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -22706,8 +22564,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -22750,6 +22606,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -22877,8 +22734,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -22934,6 +22789,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLineStyle.h \
 		CGnuPlotLineType.h \
 		CGnuPlotFillStyle.h \
@@ -23062,8 +22918,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -23091,6 +22945,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -23225,8 +23080,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -23277,6 +23130,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/C2Bezier2D.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotWindow.h \
 		CGnuPlot.h \
 		../../CFont/include/CFont.h \
@@ -23410,8 +23264,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -23444,6 +23296,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathRound.h \
 		CGnuPlotLineStyle.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlot.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
@@ -23572,8 +23425,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -23619,6 +23470,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CDirectionType.h \
 		CGnuPlotWindow.h \
 		CGnuPlot.h \
@@ -23755,8 +23607,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -23802,6 +23652,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -23927,8 +23778,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -23968,6 +23817,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotFill.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
@@ -24107,8 +23957,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -24147,6 +23995,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotFill.h \
 		CGnuPlotMark.h \
 		../../CMath/include/CBoxWhisker.h \
@@ -24286,8 +24135,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -24315,6 +24162,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -24512,8 +24360,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -24550,6 +24396,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -24680,8 +24527,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -24709,6 +24554,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CVector2D.h \
@@ -24861,8 +24707,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -24907,6 +24751,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -25035,8 +24880,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -25082,6 +24925,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -25206,8 +25050,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -25246,6 +25088,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -25377,8 +25220,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -25417,6 +25258,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlot.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
@@ -25569,8 +25411,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -25598,6 +25438,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -25743,8 +25584,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -25772,6 +25611,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -25883,10 +25723,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CUtil/include/CRGBA.h \
@@ -25916,7 +25756,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -26164,8 +26003,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -26209,6 +26046,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -26338,8 +26176,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -26376,6 +26212,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -26514,7 +26351,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -26696,8 +26532,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -26737,6 +26571,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotMark.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
@@ -26873,8 +26708,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -26902,6 +26735,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -27058,7 +26892,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -27236,8 +27069,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -27276,6 +27107,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -27408,8 +27240,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -27449,6 +27279,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotMark.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
@@ -27567,8 +27398,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -27596,6 +27425,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -27730,8 +27560,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -27759,6 +27587,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -27938,7 +27767,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CImageLib/include/CImageMgr.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
-		../../CStrUtil/include/CStrUtil.h \
 		../../CImageLib/include/CImageAnim.h \
 		../../CImageLib/include/CImageFile.h \
 		CGnuPlotObject.h \
@@ -27961,7 +27789,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
+		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -28143,8 +27971,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -28184,6 +28010,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotMouseEvent.h \
 		../../CUtil/include/CDirectionType.h \
 		CGnuPlotGroup.h \
@@ -28327,8 +28154,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -28368,6 +28193,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontMgr.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotKeyData.o CGnuPlotKeyData.cpp
 
@@ -28402,8 +28228,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -28446,6 +28270,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLabelStyle.h \
 		CGnuPlotFill.h \
 		CGnuPlotStroke.h \
@@ -28471,10 +28296,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CUtil/include/CRGBName.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLabelStyle.h \
 		CGnuPlotTypes.h \
 		../../CMath/include/CPoint3D.h \
@@ -28490,7 +28315,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -28668,8 +28492,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -28712,6 +28534,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotLabelStyle.h \
 		CGnuPlotFill.h \
 		CGnuPlotStroke.h \
@@ -28852,8 +28675,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -28886,6 +28707,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathRound.h \
 		CGnuPlotDash.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlot.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
@@ -29032,8 +28854,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -29066,6 +28886,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathRound.h \
 		CGnuPlotDash.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
 		../../CFont/include/CFont.h \
@@ -29178,10 +28999,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CUtil/include/CRGBA.h \
@@ -29211,7 +29032,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -29364,8 +29184,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -29393,6 +29211,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -29558,8 +29377,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -29587,6 +29404,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -29728,7 +29546,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -29835,10 +29652,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 ../obj/CGnuPlotMultiplot.o: CGnuPlotMultiplot.cpp CGnuPlotMultiplot.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CIPoint2D.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CGnuPlotMultiplot.o CGnuPlotMultiplot.cpp
 
@@ -29871,8 +29688,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -29915,6 +29730,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -30025,8 +29841,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -30069,6 +29883,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -30221,8 +30036,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -30261,6 +30074,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -30402,8 +30216,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -30440,6 +30252,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -30571,8 +30384,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -30611,6 +30422,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -30800,8 +30612,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -30839,8 +30649,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 ../obj/CGnuPlotPoint.o: CGnuPlotPoint.cpp CGnuPlotPoint.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -30930,8 +30738,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -30974,6 +30780,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -31115,8 +30922,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -31160,6 +30965,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -31289,8 +31095,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -31327,6 +31131,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -31470,8 +31275,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -31499,6 +31302,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -31613,8 +31417,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -31642,6 +31444,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -31802,8 +31605,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -31847,6 +31648,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CAngle.h \
 		CGnuPlotDash.h \
 		CGnuPlotLineStyle.h \
@@ -31977,8 +31779,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -32015,6 +31815,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotTipData.h \
 		CGnuPlotMouseEvent.h \
 		CGnuPlotFill.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
@@ -32129,8 +31930,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -32158,6 +31957,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -32334,7 +32134,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -32464,8 +32263,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -32509,8 +32306,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -32538,6 +32333,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
 		../../CMath/include/CIPoint2D.h \
@@ -32688,10 +32484,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CPoint2D.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotColorSpec.h \
 		CGnuPlotStyle.h \
 		../../CUtil/include/CRGBA.h \
@@ -32719,7 +32515,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -32860,8 +32655,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 ../obj/CGnuPlotUsingCols.o: CGnuPlotUsingCols.cpp CGnuPlotUsingCols.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -32913,6 +32706,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -33052,8 +32846,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -33088,6 +32880,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -33187,8 +32980,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -33223,6 +33014,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -33348,8 +33140,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -33384,6 +33174,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -33483,8 +33274,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -33517,6 +33306,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CUtil/include/CHSI.h \
 		../../CMath/include/CMathRound.h \
 		CGnuPlotLineStyle.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlot.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
@@ -33616,8 +33406,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 ../obj/CGnuPlotEveryData.o: CGnuPlotEveryData.cpp CGnuPlotEveryData.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -33645,8 +33433,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 ../obj/CGnuPlotIndexData.o: CGnuPlotIndexData.cpp CGnuPlotIndexData.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -33674,8 +33460,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 ../obj/CGnuPlotWhereData.o: CGnuPlotWhereData.cpp CGnuPlotWhereData.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -33746,8 +33530,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -33775,6 +33557,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -33931,8 +33714,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -33960,6 +33741,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -34123,8 +33905,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -34159,6 +33939,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -34316,8 +34097,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -34352,6 +34131,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -34503,8 +34283,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -34539,6 +34317,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -34693,8 +34472,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -34729,6 +34506,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -34881,8 +34659,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -34917,6 +34693,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -35078,8 +34855,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -35107,6 +34882,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -35258,8 +35034,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -35294,6 +35068,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -35445,8 +35220,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -35474,6 +35247,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -35641,8 +35415,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -35677,6 +35449,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -35832,8 +35605,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -35868,6 +35639,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -36023,8 +35795,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -36059,6 +35829,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -36209,8 +35980,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -36245,6 +36014,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -36394,8 +36164,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -36430,6 +36198,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -36574,8 +36343,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -36610,6 +36377,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -36759,8 +36527,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -36788,6 +36554,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -36950,8 +36717,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -36990,6 +36755,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotStroke.h \
 		../../CUtil/include/CLineCapType.h \
 		../../CUtil/include/CLineJoinType.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotMark.h \
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
@@ -37142,8 +36908,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -37178,6 +36942,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -37342,8 +37107,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -37371,6 +37134,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -37517,8 +37281,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -37553,6 +37315,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -37721,8 +37484,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -37757,6 +37518,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -37910,8 +37672,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -37948,6 +37708,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotPlot.h \
 		CGnuPlotContour.h \
 		../../CMath/include/CLine3D.h \
@@ -38097,8 +37858,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -38133,6 +37892,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -38283,8 +38043,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -38319,6 +38077,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -38471,8 +38230,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -38507,6 +38264,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -38661,8 +38419,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -38697,6 +38453,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -38847,8 +38604,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -38883,6 +38638,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -39033,8 +38789,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -39069,6 +38823,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -39218,8 +38973,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -39254,6 +39007,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -39405,8 +39159,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -39441,6 +39193,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -39590,8 +39343,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -39626,6 +39377,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -39769,8 +39521,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -39798,6 +39548,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -39964,8 +39715,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -40000,6 +39749,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -40149,8 +39899,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -40185,6 +39933,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -40337,8 +40086,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -40373,6 +40120,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -40530,8 +40278,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -40566,6 +40312,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -40709,8 +40456,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -40745,6 +40490,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -40897,8 +40643,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -40933,6 +40677,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -41077,8 +40822,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -41113,6 +40856,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -41265,8 +41009,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -41301,6 +41043,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -41445,8 +41188,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -41481,6 +41222,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -41633,8 +41375,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlotUtil.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -41669,6 +41409,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotSurface.h \
 		CGnuPlotObject.h \
 		CGnuPlotColorSpec.h \
@@ -41785,10 +41526,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CUtil/include/CRGBA.h \
@@ -41818,7 +41559,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -41971,8 +41711,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -42000,6 +41738,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -42145,10 +41884,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CMath/include/CISize2D.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotTypes.h \
 		../../CUtil/include/COptVal.h \
 		../../CUtil/include/CRGBA.h \
@@ -42178,7 +41917,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -42340,8 +42078,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -42369,6 +42105,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -42545,8 +42282,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -42574,6 +42309,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/CColor.h \
 		../../CUtil/include/CHSV.h \
 		../../CUtil/include/CRGBUtil.h \
@@ -42713,8 +42449,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CQGradientPalette/include/CGradientPalette.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -42752,6 +42486,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotGroup.h \
 		CGnuPlot.h \
 		../../CMath/include/CAngle.h \
@@ -42864,8 +42599,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		CGnuPlot.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		../../CStrUtil/include/CStrUtil.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
@@ -42893,6 +42626,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CUtil/include/COptVal.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
@@ -43062,10 +42796,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CUtil/include/CRGBName.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		CGnuPlotTextRenderer.h \
 		CParseLine.h \
 		../../CStrUtil/include/CStrUtil.h \
@@ -43083,10 +42817,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 ../obj/CGnuPlotTextRenderer.o: CGnuPlotTextRenderer.cpp CGnuPlotTextRenderer.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CMath/include/CPoint2D.h \
 		../../CMath/include/CBBox2D.h \
 		../../CMath/include/CMathGen.h \
@@ -43183,10 +42917,10 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CUtil/include/CILineDash.h \
 		../../CFont/include/CFont.h \
 		../../CFont/include/CFontPtr.h \
-		../../CUtil/include/CRefPtr.h \
 		../../CFont/include/CFontStyle.h \
 		../../CUtil/include/CFlags.h \
 		../../CImageLib/include/CImagePtr.h \
+		../../CUtil/include/CRefPtr.h \
 		../../CImageLib/include/CImage.h \
 		../../CUtil/include/CRGBACombineDef.h \
 		../../CUtil/include/CAlignType.h \
@@ -43219,8 +42953,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43254,8 +42986,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43287,8 +43017,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43320,8 +43048,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43353,8 +43079,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43386,8 +43110,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43423,8 +43145,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43456,8 +43176,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43489,8 +43207,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43522,8 +43238,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43555,8 +43269,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43591,8 +43303,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43624,8 +43334,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43657,8 +43365,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43686,7 +43392,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 ../obj/CExprTokenStack.o: Expr/CExprTokenStack.cpp Expr/CExprTokenStack.h \
 		Expr/CExprTokenBase.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
 		Expr/CExprFunction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CExprTokenStack.o Expr/CExprTokenStack.cpp
 
@@ -43697,8 +43402,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \
@@ -43730,8 +43433,6 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 		../../CFile/include/CFileType.h \
 		Expr/CExpr.h \
 		Expr/CExprTypes.h \
-		../../CUtil/include/CRefPtr.h \
-		../../CUtil/include/CAutoPtr.h \
 		Expr/CExprBValue.h \
 		Expr/CExprIValue.h \
 		Expr/CExprRValue.h \

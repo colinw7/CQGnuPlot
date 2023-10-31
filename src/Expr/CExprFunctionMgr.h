@@ -7,11 +7,14 @@ class CExprFunctionMgr {
  public:
   friend class CExpr;
 
-  typedef std::vector<CExprFunctionPtr> Functions;
-  typedef std::vector<CExprFunctionArg> Args;
+  using Functions = std::vector<CExprFunctionPtr>;
+  using Args      = std::vector<CExprFunctionArg>;
 
  public:
+  CExprFunctionMgr(CExpr *expr);
  ~CExprFunctionMgr() { }
+
+  CExpr *expr() const { return expr_; }
 
   void addFunctions();
 
@@ -37,10 +40,7 @@ class CExprFunctionMgr {
   void resetCompiled(const std::string &name);
 
  private:
-  CExprFunctionMgr(CExpr *expr);
-
- private:
-  typedef std::list<CExprFunctionPtr> FunctionList;
+  using FunctionList = std::list<CExprFunctionPtr>;
 
   CExpr*       expr_ { nullptr };
   FunctionList functions_;

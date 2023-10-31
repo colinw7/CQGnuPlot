@@ -486,7 +486,7 @@ getValueStr(int i, double pos) const
   double pos1 = unmapLogValue(pos);
 
   if (type() == AxisType::Y && group_->isPolar()) {
-    CGnuPlotAxis *plotRAxis = group_->getPlotAxis(AxisType::R, 1, true);
+    auto *plotRAxis = group_->getPlotAxis(AxisType::R, 1, true);
 
     if (pos1 > 0)
       pos1 = pos1 + plotRAxis->getStart();

@@ -3,11 +3,12 @@
 
 #include <set>
 #include <map>
+#include <iostream>
 
 template<typename T>
 class CStrUniqueMatchValues {
  public:
-  typedef std::pair<std::string, T> NameValue;
+  using NameValue = std::pair<std::string, T>;
 
  public:
   CStrUniqueMatchValues() { }
@@ -101,6 +102,18 @@ class CStrUniqueMatchValues {
   StringValueMap  strValues_;
   ValueStringsMap valueStrs_;
 };
+
+class CStrUniqueMatchInds : public CStrUniqueMatchValues<int> {
+ public:
+  CStrUniqueMatchInds(const std::vector<std::string> &strs) {
+    int i = 0;
+
+    for (const auto &str : strs)
+      addValue(str, i++);
+  }
+};
+
+//---
 
 namespace CStrUniqueMatch {
   template<typename T>

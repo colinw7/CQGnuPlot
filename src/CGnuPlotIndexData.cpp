@@ -50,7 +50,7 @@ parse(CExpr *expr, const std::string &str)
       if (inds[i] != "" && evaluateExpression(expr, inds[i], value)) {
         long l;
 
-        if (value.isValid() && value->getIntegerValue(l))
+        if (value && value->getIntegerValue(l))
           var = int(l);
       }
     }

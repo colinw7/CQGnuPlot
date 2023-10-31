@@ -7,7 +7,7 @@ hasFunction(const std::string &name) const
 {
   auto n = stack_.size();
 
-  for (size_t i = 0; i < n; ++i) {
+  for (uint i = 0; i < n; ++i) {
     auto ctoken = stack_[i];
 
     if (ctoken->type() == CExprTokenType::FUNCTION) {

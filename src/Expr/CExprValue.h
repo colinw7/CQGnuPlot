@@ -1,6 +1,8 @@
 #ifndef CExprValue_H
 #define CExprValue_H
 
+#include <memory>
+
 class CExprValue {
  public:
   enum class AttributeType {
@@ -77,9 +79,11 @@ class CExprValue {
   }
 
  private:
-  CExprValueType           type_ { CExprValueType::NONE };
-  CAutoPtr<CExprValueBase> base_;
-  uint                     attributes_ { 0 };
+  using CExprValueBaseP = std::unique_ptr<CExprValueBase>;
+
+  CExprValueType  type_ { CExprValueType::NONE };
+  CExprValueBaseP base_;
+  uint            attributes_ { 0 };
 };
 
 #endif
