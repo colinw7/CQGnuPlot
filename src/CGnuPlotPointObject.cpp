@@ -95,7 +95,7 @@ draw(CGnuPlotRenderer *renderer) const
 
   //---
 
-  if (renderer->clip().isValid() & ! renderer->clip().getValue().inside(bbox_))
+  if (renderer->clip().isValid() && ! renderer->clip().getValue().inside(bbox_))
     return;
 
   //---
